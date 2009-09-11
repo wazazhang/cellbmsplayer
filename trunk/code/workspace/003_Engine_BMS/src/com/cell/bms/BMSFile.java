@@ -1,0 +1,339 @@
+package com.cell.bms;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import com.cell.CIO;
+import com.cell.CUtil;
+import com.cell.j2se.CAppBridge;
+import com.cell.util.EnumManager;
+import com.cell.util.EnumManager.ValueEnum;
+
+/**
+---------------------- HEADER FIELD ----------------------<br>
+#PLAYER		WAZA<br>
+#GENRE		WAZA<br>
+#TITLE		song title<br>
+#ARTIST		waza<br>
+#BPM		120<br>
+#PLAYLEVEL	1<br>
+#RANK		3<br>
+#TOTAL		123<br>
+#VOLWAV		123<br>
+#STAGEFILE	123<br>
+<br>
+#WAV01		Ba_b_4.wav<br>
+#WAV02		Ba_b_8.wav<br>
+#WAV03		Ba_c#_4.wav<br>
+<br>
+#BMP00		bg.bmp<br>
+#BMP01		back.bmp<br>
+#BMP02		end01.bmp<br>
+#BMP03		Fade01.bmp<br>
+<br>
+#BPM01		256<br>
+<br>
+#STOP01		123<br>
+<br>
+<br>
+---------------------- MAIN DATA FIELD ----------------------<br>
+- XXXCC:0001<br>
+- 	XXX 	= 小节标记<br>
+- 	CC 		= 指令<br>
+-	0001	= 值(音符或者图片)<br>
+<br>
+#00008:0001			- 在2/2小节处，改变的BPM索引为01，也就是#BPM01对应的值<br>
+#00009:00010000		- <br>
+#00022:00010000		- <br>
+#00061:01<br>
+<br>
+#00161:01<br>
+<br>
+<br>
+---------------------- MAIN DATA COMMAND ----------------------<br>
+01 = 背景NOTE音。<br>
+03 = 0~255（0h~FFh）整数BPM变化。<br>
+04 = 改变BGA的图片索引。<br>
+06 = 改变POOR的图片索引。<br>
+07 = 改变Layer的图片索引。<br>
+08 = 改变的BPM索引。表示小数的BPM变化或者大于255的BPM。（前方定义的 #BPMXX）<br>
+09 = STOP停止的时间索引。（前方定义的 #STOPXX）<br>
+<br>
+11~19 = 1P KEY<br>
+21~29 = 2P KEY<br>
+51~59 = 1P LONG KEY<br>
+61~69 = 2P LONG KEY<br>
+<br>
+*/
+public class BMSFile
+{	
+	public static enum HeadInfo
+	{
+		PLAYER, 
+		GENRE, 
+		TITLE,
+		ARTIST,
+		BPM, 
+		PLAYLEVEL,
+		RANK,
+		TOTAL, 
+		VOLWAV,
+		STAGEFILE,
+	}
+	
+	public static enum HeadDefine
+	{
+		WAV,
+		BMP,
+		BPM,
+		STOP,
+	}
+	
+	public static enum DataCommand implements ValueEnum<String>
+	{
+		/** 背景音索引 WAVXX */
+		INDEX_WAV_BG			("01"),
+		/** 整数BPM变化。00h~FFh */
+		BPM_CHANGE				("03"),
+		
+		/** 改变BGA的图片索引。	BMPXX */
+		INDEX_BMP_BG			("04"),
+		/** 改变POOR的图片索引。	BMPXX */
+		INDEX_BMP_POOR			("06"),
+		/** 改变Layer的图片索引。	BMPXX */
+		INDEX_BMP_LAYER			("07"),
+
+		/** 改变的BPM索引。表示小数的BPM变化或者大于255的BPM。前方定义的 #BPMXX */
+		INDEX_BPM				("08"),
+		/** STOP停止的时间索引。前方定义的 #STOPXX */
+		INDEX_STOP				("09"),
+
+		/** WAV KEY */
+		INDEX_WAV_KEY_1P_		("1*"),
+		INDEX_WAV_KEY_2P_		("2*"),
+		INDEX_WAV_LONG_KEY_1P_	("5*"),
+		INDEX_WAV_LONG_KEY_2P_	("6*"),
+
+		;
+		
+		final String value;
+		private DataCommand(String value) {
+			this.value = value;
+		}
+		
+		@Override
+		public String getValue() {
+			return value;
+		}
+		
+		public static DataCommand valueOfDataCommand(String str) {
+			return EnumManager.getEnum(DataCommand.class, str);
+		}
+	}
+	
+//	--------------------------------------------------------------------------------------------------------------
+
+	/** 将每小节分割为多少份来处理，默认256 */
+	public static int	LINE_SPLIT_DIV = 256;
+	
+	/**
+	 * 定义在 Header 的 HeaderDefine 
+	 * @author WAZA
+	 */
+	public class NoteValue
+	{
+		final public HeadDefine	command;
+		final public String		index;
+		final public String		value;
+		
+		public NoteValue(
+				HeadDefine	command,
+				String		index,
+				String		value) 
+		{
+			this.command	= command;
+			this.index		= index;
+			this.value		= value;
+		}
+	}
+	
+	/**
+	 * 在数据区域内的音符数据
+	 * @author WAZA
+	 */
+	public class Note
+	{
+		final public int			line;
+		final public DataCommand	command;
+		final public String			value;
+		
+		private long 				begin_position;
+		private long 				end_position;
+		
+		// 仅在LongKey有效，作为标记是否已经被按下
+		transient private boolean	downed = false;
+		transient private boolean	upped = false;
+		
+		public Note(
+				int line,
+				DataCommand command,
+				String value)
+		{
+			this.line		= line;
+			this.command	= command;
+			this.value		= value;
+		}
+		
+		public long getBeginPosition() {
+			return begin_position;
+		}
+		public long getEndPosition() {
+			return end_position;
+		}
+
+		void setBeginPosition(int npos, int ncount) {
+			this.end_position = this.begin_position = LINE_SPLIT_DIV * npos / ncount;
+		}
+
+		void setEndPosition(int npos, int ncount) {
+			this.end_position = LINE_SPLIT_DIV * npos / ncount;
+		}
+
+	}
+
+	
+//	--------------------------------------------------------------------------------------------------------------
+	
+	final public String bms_file;
+	final public String bms_dir;
+	
+	HashMap<HeadInfo, String> 		header_info		= new HashMap<HeadInfo, String>();
+	
+	HashMap<String, NoteValue>		header_wav_map	= new HashMap<String, NoteValue>();
+	HashMap<String, NoteValue>		header_img_map	= new HashMap<String, NoteValue>();
+	HashMap<String, NoteValue>		header_bpm_map	= new HashMap<String, NoteValue>();
+	HashMap<String, NoteValue>		header_stp_map	= new HashMap<String, NoteValue>();
+	
+	
+	HashMap<DataCommand, ArrayList<Note>> data_note_table = new HashMap<DataCommand, ArrayList<Note>>();
+	
+	
+	public BMSFile(String file)
+	{
+		bms_file	= file.replace('\\', '/');
+		bms_dir		= file.substring(0, bms_file.lastIndexOf("/"));
+		
+		for (DataCommand cmd : DataCommand.values()) {
+			data_note_table.put(cmd, new ArrayList<Note>());
+		}
+		
+		String[] lines = CIO.readAllLine(bms_file);
+		
+		for (String line : lines)
+		{
+			if (line.startsWith("#"))
+			{
+				try
+				{
+					line = line.substring(1);
+					
+					// header field
+					if (!line.contains(":")) 
+					{
+						String[] kv = line.split("\\s", 2);
+						if (kv.length > 1) {
+							if (initHeadInfo(kv[0], kv[1]) || initHeadMap(kv[0], kv[1])) {
+								System.out.println("#"+
+										CUtil.snapStringRightSize(kv[0], 12, ' ') + " " +
+										CUtil.snapStringRightSize(kv[1], 12, ' ') + " ");
+							}
+						}
+					}
+					// data field
+					else
+					{
+						String[] kv = line.split(":", 2);
+						if (kv.length > 1) {
+							if (initDataLine(kv[0], kv[1])) {
+								System.out.println("#"+
+										CUtil.snapStringRightSize(kv[0], 12, ' ') + " " +
+										CUtil.snapStringRightSize(kv[1], 12, ' ') + " ");
+							}
+						}
+						
+					}
+					
+				}catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+	}
+	
+	boolean initHeadInfo(String k, String v)
+	{
+		try{
+			HeadInfo head = HeadInfo.valueOf(k);
+			header_info.put(head, v);
+			return true;
+		}catch (Exception e) {}
+		return false;
+	}
+	
+	boolean initHeadMap(String k, String v)
+	{
+		if (k.length() > 2)
+		{
+			try{
+				HeadDefine	define		= HeadDefine.valueOf(k.substring(0, k.length()-2));
+				String		index		= k.substring(k.length()-2);
+				NoteValue	note_value	= new NoteValue(define, index, v);
+				switch(define)
+				{
+				case WAV:	header_wav_map.put(index, note_value); break;
+				case BMP:	header_img_map.put(index, note_value); break;
+				case BPM:	header_bpm_map.put(index, note_value); break;
+				case STOP:	header_stp_map.put(index, note_value); break;
+				}
+				return true;
+			}catch (Exception e) {}
+		}
+		return false;
+	}
+	
+	boolean initDataLine(String c, String v)
+	{
+		if (c.length()==5 && v.length()%2==0)
+		{
+			try{
+				int			line	= Integer.parseInt(c.substring(0, 4));
+				String		cmd		= c.substring(3);
+				DataCommand	command	= DataCommand.valueOfDataCommand(cmd);
+				int			ncount	= (v.length()>>1);
+				for (int npos=0; npos<ncount; npos++) {
+					int i = (npos<<1);
+					String nvalue = v.substring(i, i+2);
+					Note note = new Note(line, command, nvalue);
+					note.setBeginPosition(npos, ncount);
+					data_note_table.get(command).add(note);
+				}
+			}catch (Exception e) {}
+		}
+		return false;
+	}
+	
+	
+	
+	
+	
+	
+	public static void main(String[] args)
+	{
+		CAppBridge.init();
+		new BMSFile("/library.bms");
+	}
+	
+	
+}
+
