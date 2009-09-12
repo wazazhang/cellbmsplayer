@@ -127,14 +127,29 @@ public class BMSFile
 		}
 		
 		public static DataCommand valueOfDataCommand(String str) {
-			return EnumManager.getEnum(DataCommand.class, str);
+			if (str.length()==2) {
+				if (str.startsWith("1")) {
+					return INDEX_WAV_KEY_1P_;
+				}
+				if (str.startsWith("2")) {
+					return INDEX_WAV_KEY_2P_;
+				}
+				if (str.startsWith("5")) {
+					return INDEX_WAV_LONG_KEY_1P_;
+				}
+				if (str.startsWith("6")) {
+					return INDEX_WAV_LONG_KEY_2P_;
+				}
+				return EnumManager.getEnum(DataCommand.class, str);
+			}
+			return null;
 		}
 	}
 	
 //	--------------------------------------------------------------------------------------------------------------
 
 	/** 将每小节分割为多少份来处理，默认256 */
-	public static int	LINE_SPLIT_DIV = 256;
+	private int	LINE_SPLIT_DIV = 256;
 	
 	/**
 	 * 定义在 Header 的 HeaderDefine 
@@ -161,7 +176,7 @@ public class BMSFile
 	 * 在数据区域内的音符数据
 	 * @author WAZA
 	 */
-	public class Note
+	public class Note implements Comparable<Note>
 	{
 		final public int			line;
 		final public DataCommand	command;
@@ -169,10 +184,6 @@ public class BMSFile
 		
 		private long 				begin_position;
 		private long 				end_position;
-		
-		// 仅在LongKey有效，作为标记是否已经被按下
-		transient private boolean	downed = false;
-		transient private boolean	upped = false;
 		
 		public Note(
 				int line,
@@ -197,6 +208,16 @@ public class BMSFile
 
 		void setEndPosition(int npos, int ncount) {
 			this.end_position = LINE_SPLIT_DIV * npos / ncount;
+		}
+		
+		/** 是否为长音 */
+		public boolean isLongKey() {
+			return this.begin_position != this.end_position;
+		}
+		
+		@Override
+		public int compareTo(Note o) {
+			return (int)(o.begin_position - this.begin_position);
 		}
 
 	}
@@ -318,6 +339,7 @@ public class BMSFile
 					note.setBeginPosition(npos, ncount);
 					data_note_table.get(command).add(note);
 				}
+				return true;
 			}catch (Exception e) {}
 		}
 		return false;
