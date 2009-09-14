@@ -1,11 +1,14 @@
 package com.cell.bms;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 import com.cell.CIO;
 import com.cell.CUtil;
 import com.cell.j2se.CAppBridge;
+import com.cell.reflect.Parser;
 import com.cell.util.EnumManager;
 import com.cell.util.EnumManager.ValueEnum;
 
@@ -69,16 +72,23 @@ public class BMSFile
 {	
 	public static enum HeadInfo
 	{
-		PLAYER, 
-		GENRE, 
-		TITLE,
-		ARTIST,
-		BPM, 
-		PLAYLEVEL,
-		RANK,
-		TOTAL, 
-		VOLWAV,
-		STAGEFILE,
+		PLAYER(String.class), 
+		GENRE(String.class), 
+		TITLE(String.class),
+		ARTIST(String.class),
+		BPM(Integer.class), 
+		PLAYLEVEL(Integer.class),
+		RANK(Integer.class),
+		TOTAL(Integer.class), 
+		VOLWAV(Integer.class),
+		STAGEFILE(String.class),
+		;
+		
+		final public Class<?> value_type;
+		
+		private HeadInfo(Class<?> type) {
+			value_type = type;
+		}
 	}
 	
 	public static enum HeadDefine
@@ -148,15 +158,14 @@ public class BMSFile
 	
 //	--------------------------------------------------------------------------------------------------------------
 
-	/** 将每小节分割为多少份来处理，默认256 */
-	private int	LINE_SPLIT_DIV = 256;
-	
 	/**
 	 * 定义在 Header 的 HeaderDefine 
 	 * @author WAZA
 	 */
-	public class NoteValue
+	public class NoteValue implements Serializable
 	{
+		private static final long serialVersionUID = 1L;
+		
 		final public HeadDefine	command;
 		final public String		index;
 		final public String		value;
@@ -176,8 +185,10 @@ public class BMSFile
 	 * 在数据区域内的音符数据
 	 * @author WAZA
 	 */
-	public class Note implements Comparable<Note>
+	public class Note implements Comparable<Note>, Serializable
 	{
+		private static final long serialVersionUID = 1L;
+		
 		final public int			line;
 		final public DataCommand	command;
 		final public String			value;
@@ -227,6 +238,9 @@ public class BMSFile
 	
 	final public String bms_file;
 	final public String bms_dir;
+
+	/** 将每小节分割为多少份来处理，默认256 */
+	final public int	LINE_SPLIT_DIV;
 	
 	HashMap<HeadInfo, String> 		header_info		= new HashMap<HeadInfo, String>();
 	
@@ -238,11 +252,16 @@ public class BMSFile
 	
 	HashMap<DataCommand, ArrayList<Note>> data_note_table = new HashMap<DataCommand, ArrayList<Note>>();
 	
-	
 	public BMSFile(String file)
 	{
-		bms_file	= file.replace('\\', '/');
-		bms_dir		= file.substring(0, bms_file.lastIndexOf("/"));
+		this(file, 256);
+	}
+	
+	public BMSFile(String file, int line_div)
+	{
+		LINE_SPLIT_DIV	= line_div;
+		bms_file		= file.replace('\\', '/');
+		bms_dir			= file.substring(0, bms_file.lastIndexOf("/"));
 		
 		for (DataCommand cmd : DataCommand.values()) {
 			data_note_table.put(cmd, new ArrayList<Note>());
@@ -290,6 +309,27 @@ public class BMSFile
 			}
 		}
 		
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T> T getHeadInfo(HeadInfo head) {
+		return (T)Parser.stringToObject(header_info.get(head), head.value_type);
+	}
+	
+	public ArrayList<Note> getNoteList(DataCommand track) {
+		ArrayList<Note> ret = data_note_table.get(track);
+		Collections.sort(ret);
+		return CIO.cloneObject(ret);
+	}
+
+	public ArrayList<Note> getAllNoteList() {
+		ArrayList<Note> ret = new ArrayList<Note>();
+		for (DataCommand cmd : DataCommand.values()) {
+			ArrayList<Note> track = data_note_table.get(cmd);
+			ret.addAll(track);
+		}
+		Collections.sort(ret);
+		return ret;
 	}
 	
 	boolean initHeadInfo(String k, String v)
