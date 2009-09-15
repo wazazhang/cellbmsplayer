@@ -214,11 +214,14 @@ public class BMSFile
 		}
 
 		void setBeginPosition(int npos, int ncount) {
-			this.end_position = this.begin_position = LINE_SPLIT_DIV * npos / ncount;
+			this.end_position = 
+			this.begin_position 
+			= (line * LINE_SPLIT_DIV) + LINE_SPLIT_DIV * npos / ncount;
 		}
 
 		void setEndPosition(int npos, int ncount) {
-			this.end_position = LINE_SPLIT_DIV * npos / ncount;
+			this.end_position 
+			= (line * LINE_SPLIT_DIV) + LINE_SPLIT_DIV * npos / ncount;
 		}
 		
 		/** 是否为长音 */
