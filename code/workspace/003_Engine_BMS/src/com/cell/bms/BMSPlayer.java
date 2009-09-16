@@ -1,5 +1,6 @@
 package com.cell.bms;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
@@ -11,7 +12,7 @@ import com.cell.bms.BMSFile.NoteValue;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.Sprite;
 
-public class BMSPlayer extends Sprite implements Runnable
+public class BMSPlayer extends Sprite
 {
 //	-------------------------------------------------------------------------------------------------
 	
@@ -23,19 +24,17 @@ public class BMSPlayer extends Sprite implements Runnable
 	
 	ArrayList<Note>	play_tracks;
 	
-	double 			play_bpm;
-	
 	/** 创建Note单位的检查范围 */
 	double			play_create_length;
 	
 	/** 丢弃Note单位的检查范围  */
 	double			play_drop_length;
 	
-	boolean			play_exit = false;
-
-	long			play_start_time;
-	
-	Thread 			play_thread;
+	// dynamic
+	double 			play_bpm;
+	double			play_position;
+	double			play_pre_beat_position;
+	double 			play_pre_record_time;
 	
 //	-------------------------------------------------------------------------------------------------
 //	game refer
@@ -45,6 +44,8 @@ public class BMSPlayer extends Sprite implements Runnable
 	
 	/** note 移动方向 */
 	Point2D			geme_note_direct;
+	
+	double			game_speed		= 1;
 	
 //	-------------------------------------------------------------------------------------------------
 	
@@ -57,57 +58,55 @@ public class BMSPlayer extends Sprite implements Runnable
 	
 	public void start()
 	{
-		if (!play_exit) {
-			play_exit = true;
-		}
-		if (play_thread!=null){
-			try {
-				play_thread.join(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		play_thread = new Thread(this);
-		play_thread.start();
-	}
-	
-	@Override
-	public void run() 
-	{
+
 		try{
-			play_tracks			= bms_file.getAllNoteList();
-			play_bpm			= (Integer)bms_file.getHeadInfo(HeadInfo.BPM);
-			play_create_length	= (Integer)bms_file.LINE_SPLIT_DIV * 10;
-			play_drop_length	= (Integer)bms_file.LINE_SPLIT_DIV;
-			play_start_time		= System.currentTimeMillis();
+			play_tracks				= bms_file.getAllNoteList();
+			for (Note note : play_tracks) {
+				System.out.println(note);
+			}
+			play_bpm				= bms_file.getHeadInfo(HeadInfo.BPM);
+			play_create_length		= bms_file.LINE_SPLIT_DIV * 10;
+			play_drop_length		= bms_file.LINE_SPLIT_DIV;
+			play_position			= 0;
+			play_pre_beat_position	= 0;
+			play_pre_record_time	= System.currentTimeMillis();
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
 		
-		while (!play_exit)
-		{
-			try
-			{
-				
-				Thread.sleep(1);
-			}
-			catch (Throwable e) {
-				e.printStackTrace();
-			}
-		}
 	}
 	
-	/**
-	 * 得到歌曲毫秒播放位置
-	 * @return
-	 */
-	public long getPlayPosition()
+	
+	boolean processSystemNote(Note note) 
 	{
-		return System.currentTimeMillis() - play_start_time;
+		if (note.track<=9)
+		{
+			switch(note.command)
+			{
+			case BPM_CHANGE:
+				play_bpm = Integer.parseInt(note.value, 16);
+				System.out.println(note.command + " " + play_bpm);
+				break;
+				
+			case INDEX_BPM:
+				play_bpm = Double.parseDouble(note.note_value.value);
+				System.out.println(note.command + " " + play_bpm);
+				break;
+				
+			default:
+				System.out.println(note.command + " " + note.value);
+			}
+
+			
+			return true;
+		}
+		return false;
 	}
 	
+	void removeNote(Note note) {
+		
+	}
 	
-
 //	-------------------------------------------------------------------------------------------------
 	
 	@Override
@@ -118,13 +117,60 @@ public class BMSPlayer extends Sprite implements Runnable
 	public void removed(DisplayObjectContainer parent) {}
 	
 	@Override
-	public void render(Graphics2D g) 
-	{
-
+	public void render(Graphics2D g)
+	{	
+		try
+		{
+			double	cur_time		= System.currentTimeMillis();
+			double	deta_time		= cur_time - play_pre_record_time; 
+			play_pre_record_time	= cur_time;
+			
+			// 已缓冲的音符
+			{
+				ArrayList<Note> removed = new ArrayList<Note>();
+				for (Note note : play_tracks) {
+					// 如果该音符过线
+					if (note.getBeginPosition() <= play_position) {
+						if (processSystemNote(note)) {}
+						removed.add(note);
+					}
+//					// 如果该音符过丢弃线
+//					if (note.getBeginPosition() <= play_position) {
+//						removed.add(note);
+//						removeNote(note);
+//					}
+				}
+				play_tracks.removeAll(removed);
+			}
+			
+			play_position += bms_file.timeToPosition(deta_time, play_bpm);
+			
+			if (play_position > play_pre_beat_position + bms_file.BEAT_DIV) {
+				play_pre_beat_position = play_position;
+				System.out.println("BEAT " + play_position);
+			}
+			
+		}
+		catch (Throwable e) {
+			e.printStackTrace();
+		}
+		
+		// paint notes
+		{
+			g.setColor(Color.BLACK);
+			g.fill(local_bounds);
+			
+			g.setColor(Color.WHITE);
+			for (Note note : play_tracks) {
+				double x = (note.track % 100) * 5;
+				double y = (play_position - note.getBeginPosition()) + getHeight()/2;
+				g.fillRect((int)x, (int)y, 4, 1);
+			}
+		}
 	}
 
 	@Override
-	public void update() 
+	public void update()
 	{
 
 	}

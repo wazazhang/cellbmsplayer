@@ -21,8 +21,8 @@ public class StageGame extends Stage
 	{
 		getRoot().setFPS(40);
 		
-		BMSFile file = new BMSFile("/library.bms");
-		
+		BMSFile file = new BMSFile("/mario-5.bms");
+
 		BMSPlayer player = new BMSPlayer(file);
 		
 		player.start();
