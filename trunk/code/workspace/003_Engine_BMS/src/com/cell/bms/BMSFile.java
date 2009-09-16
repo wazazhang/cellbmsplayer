@@ -76,7 +76,7 @@ public class BMSFile
 		GENRE(String.class), 
 		TITLE(String.class),
 		ARTIST(String.class),
-		BPM(Integer.class), 
+		BPM(Double.class), 
 		PLAYLEVEL(Integer.class),
 		RANK(Integer.class),
 		TOTAL(Integer.class), 
@@ -190,38 +190,90 @@ public class BMSFile
 		private static final long serialVersionUID = 1L;
 		
 		final public int			line;
+		final public int			track;
 		final public DataCommand	command;
-		final public String			value;
+		final public String			value; // index of define
+		final public NoteValue		note_value;
 		
-		private long 				begin_position;
-		private long 				end_position;
+		private double 				begin_position;
+		private double 				end_position;
 		
 		public Note(
 				int line,
+				int track, 
+				double npos, 
+				double ncount,
 				DataCommand command,
 				String value)
 		{
 			this.line		= line;
+			this.track		= track;
 			this.command	= command;
 			this.value		= value;
+			
+			switch(command)
+			{
+			case INDEX_BMP_BG:
+			case INDEX_BMP_POOR:
+			case INDEX_BMP_LAYER:
+				note_value = header_img_map.get(value);
+				break;
+			case INDEX_BPM:
+				note_value = header_bpm_map.get(value);
+				break;
+			case INDEX_STOP:
+				note_value = header_stp_map.get(value);
+				break;
+			case INDEX_WAV_BG:
+			case INDEX_WAV_KEY_1P_:
+			case INDEX_WAV_KEY_2P_:
+			case INDEX_WAV_LONG_KEY_1P_:
+			case INDEX_WAV_LONG_KEY_2P_:
+				note_value = header_wav_map.get(value);
+				break;
+			default:
+				note_value = null;
+			}
+			
+			setBeginPosition(npos, ncount);
 		}
 		
-		public long getBeginPosition() {
+		public double getBeginPosition() {
 			return begin_position;
 		}
-		public long getEndPosition() {
+		public double getEndPosition() {
 			return end_position;
 		}
 
-		void setBeginPosition(int npos, int ncount) {
+		boolean validate()
+		{
+			switch(command)
+			{
+			case INDEX_BMP_BG:
+			case INDEX_BMP_POOR:
+			case INDEX_BMP_LAYER:
+			case INDEX_BPM:
+			case INDEX_STOP:
+			case INDEX_WAV_BG:
+			case INDEX_WAV_KEY_1P_:
+			case INDEX_WAV_KEY_2P_:
+			case INDEX_WAV_LONG_KEY_1P_:
+			case INDEX_WAV_LONG_KEY_2P_:
+				return note_value != null;
+			default:
+				return true;
+			}
+		}
+		
+		void setBeginPosition(double npos, double ncount) {
 			this.end_position = 
-			this.begin_position 
-			= (line * LINE_SPLIT_DIV) + LINE_SPLIT_DIV * npos / ncount;
+			this.begin_position = 
+				(line * LINE_SPLIT_DIV) + LINE_SPLIT_DIV * npos / ncount;
 		}
 
-		void setEndPosition(int npos, int ncount) {
-			this.end_position 
-			= (line * LINE_SPLIT_DIV) + LINE_SPLIT_DIV * npos / ncount;
+		void setEndPosition(double npos, double ncount) {
+			this.end_position = 
+				(line * LINE_SPLIT_DIV) + LINE_SPLIT_DIV * npos / ncount;
 		}
 		
 		/** 是否为长音 */
@@ -231,10 +283,17 @@ public class BMSFile
 		
 		@Override
 		public int compareTo(Note o) {
-			return (int)(o.begin_position - this.begin_position);
+			return (int)(this.begin_position - o.begin_position);
 		}
 
+		@Override
+		public String toString() {
+			return line + " : " + track + " : " + command + " : " + value + " : " + begin_position;
+		}
+		
 	}
+
+	
 
 	
 //	--------------------------------------------------------------------------------------------------------------
@@ -242,8 +301,11 @@ public class BMSFile
 	final public String bms_file;
 	final public String bms_dir;
 
-	/** 将每小节分割为多少份来处理，默认256 */
-	final public int	LINE_SPLIT_DIV;
+	/** 将每小节分割为多少份来处理 */
+	final public double	LINE_SPLIT_DIV;
+	
+	/** 将每BEAT分割为多少份来处理 (4 BEAT = 1 LINE)*/
+	final public double BEAT_DIV;
 	
 	HashMap<HeadInfo, String> 		header_info		= new HashMap<HeadInfo, String>();
 	
@@ -260,9 +322,11 @@ public class BMSFile
 		this(file, 256);
 	}
 	
-	public BMSFile(String file, int line_div)
+	public BMSFile(String file, double line_div)
 	{
 		LINE_SPLIT_DIV	= line_div;
+		BEAT_DIV		= line_div / 4;
+		
 		bms_file		= file.replace('\\', '/');
 		bms_dir			= file.substring(0, bms_file.lastIndexOf("/"));
 		
@@ -285,10 +349,15 @@ public class BMSFile
 					{
 						String[] kv = line.split("\\s", 2);
 						if (kv.length > 1) {
-							if (initHeadInfo(kv[0], kv[1]) || initHeadMap(kv[0], kv[1])) {
+							if (initHeadInfo(kv[0], kv[1])) {
 								System.out.println("#"+
 										CUtil.snapStringRightSize(kv[0], 12, ' ') + " " +
 										CUtil.snapStringRightSize(kv[1], 12, ' ') + " ");
+							}
+							else if (initHeadMap(kv[0], kv[1])){
+//								System.out.println("#"+
+//										CUtil.snapStringRightSize(kv[0], 12, ' ') + " " +
+//										CUtil.snapStringRightSize(kv[1], 12, ' ') + " ");
 							}
 						}
 					}
@@ -298,9 +367,9 @@ public class BMSFile
 						String[] kv = line.split(":", 2);
 						if (kv.length > 1) {
 							if (initDataLine(kv[0], kv[1])) {
-								System.out.println("#"+
-										CUtil.snapStringRightSize(kv[0], 12, ' ') + " " +
-										CUtil.snapStringRightSize(kv[1], 12, ' ') + " ");
+//								System.out.println("#"+
+//										CUtil.snapStringRightSize(kv[0], 12, ' ') + " " +
+//										CUtil.snapStringRightSize(kv[1], 12, ' ') + " ");
 							}
 						}
 						
@@ -368,28 +437,35 @@ public class BMSFile
 	
 	boolean initDataLine(String c, String v)
 	{
-		if (c.length()==5 && v.length()%2==0)
+		if (c.length()==5)
 		{
 			try{
-				int			line	= Integer.parseInt(c.substring(0, 4));
+				int			line	= Integer.parseInt(c.substring(0, 3));
 				String		cmd		= c.substring(3);
 				DataCommand	command	= DataCommand.valueOfDataCommand(cmd);
+				int			track	= Integer.parseInt(cmd);
 				int			ncount	= (v.length()>>1);
-				for (int npos=0; npos<ncount; npos++) {
+				for (int npos = 0; npos < ncount; npos++) {
 					int i = (npos<<1);
 					String nvalue = v.substring(i, i+2);
-					Note note = new Note(line, command, nvalue);
-					note.setBeginPosition(npos, ncount);
-					data_note_table.get(command).add(note);
+					Note note = new Note(line, track, npos, ncount, command, nvalue);
+					if (note.validate()){
+						data_note_table.get(command).add(note);
+					}
 				}
 				return true;
-			}catch (Exception e) {}
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return false;
 	}
 	
-	
-	
+	public double timeToPosition(double deta_time_ms, double bpm)
+	{
+		double	deta_min = (deta_time_ms/60000);
+		return deta_min * bpm * BEAT_DIV;
+	}
 	
 	
 	
