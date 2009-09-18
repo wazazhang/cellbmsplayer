@@ -21,13 +21,11 @@ public class StageGame extends Stage
 	{
 		getRoot().setFPS(40);
 		
-		BMSFile file = new BMSFile("/mario-5.bms");
+		BMSFile file = new BMSFile("D:/CellBMSPlayer/resource/data/song/btm_mario/mario-5.bms");
 
 		BMSPlayer player = new BMSPlayer(file);
 		
-		player.start();
-
-		this.addChild(player);
+		this.addChild(new BMSLayer(player));
 	}
 
 	public void removed(DisplayObjectContainer parent) {}

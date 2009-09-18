@@ -12,13 +12,12 @@ import com.cell.bms.BMSFile.NoteValue;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.Sprite;
 
-public class BMSPlayer extends Sprite
+public class BMSPlayer
 {
 //	-------------------------------------------------------------------------------------------------
 	
 	final BMSFile 	bms_file;
 	
-
 //	-------------------------------------------------------------------------------------------------
 //	play refer
 	
@@ -107,18 +106,8 @@ public class BMSPlayer extends Sprite
 		
 	}
 	
-//	-------------------------------------------------------------------------------------------------
-	
-	@Override
-	public void added(DisplayObjectContainer parent) {
-		setSize(parent.getWidth(), parent.getHeight());
-	}
-	@Override
-	public void removed(DisplayObjectContainer parent) {}
-	
-	@Override
-	public void render(Graphics2D g)
-	{	
+	public void update()
+	{
 		try
 		{
 			double	cur_time		= System.currentTimeMillis();
@@ -154,58 +143,15 @@ public class BMSPlayer extends Sprite
 		catch (Throwable e) {
 			e.printStackTrace();
 		}
-		
-		// paint notes
-		{
-			g.setColor(Color.BLACK);
-			g.fill(local_bounds);
-			
-			g.setColor(Color.WHITE);
-			for (Note note : play_tracks) {
-				double x = (note.track % 100) * 5;
-				double y = (play_position - note.getBeginPosition()) + getHeight()/2;
-				g.fillRect((int)x, (int)y, 4, 1);
-			}
-		}
 	}
-
-	@Override
-	public void update()
+	
+	public double getPlayPosition() {
+		return play_position;
+	}
+	
+	public ArrayList<Note> getPlayTracks()
 	{
-
-	}
-
-//	-------------------------------------------------------------------------------------------------
-	
-	
-	
-	class EffectNote extends Sprite
-	{
-		final Note note;
-		
-		public EffectNote(Note note)
-		{
-			this.note = note;
-			
-			
-		}
+		return play_tracks;
 	}
 	
-	
-//	class EffectNoteBGM extends Sprite
-//	{
-//		
-//	}
-	
-//	-------------------------------------------------------------------------------------------------
-	
-	class EffectKeyHit extends Sprite
-	{
-		
-	}
-	
-	class EffectKeyHold extends Sprite
-	{
-		
-	}
 }
