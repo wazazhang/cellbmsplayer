@@ -16,4 +16,5 @@ public interface BMSPlayerListener
 {
 	public void onBeat(BMSPlayer player, int beat_count);
 
+	public void onDropNote(BMSPlayer player, Note note);
 }

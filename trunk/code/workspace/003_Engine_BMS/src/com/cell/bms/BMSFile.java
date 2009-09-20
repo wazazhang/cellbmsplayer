@@ -213,6 +213,9 @@ public class BMSFile
 		private double 				begin_position;
 		private double 				end_position;
 		
+		/** 是否已经按下，仅LongKey有效 */
+		public boolean 				hited;		
+		
 		public Note(
 				int line,
 				int track, 
@@ -284,11 +287,13 @@ public class BMSFile
 			this.end_position = 
 			this.begin_position = 
 				(line * LINE_SPLIT_DIV) + LINE_SPLIT_DIV * npos / ncount;
+			this.hited = true;
 		}
 
 		void setEndPosition(double npos, double ncount) {
 			this.end_position = 
 				(line * LINE_SPLIT_DIV) + LINE_SPLIT_DIV * npos / ncount;
+			this.hited = false;
 		}
 		
 		/** 是否为长音 */
