@@ -25,6 +25,9 @@ public class BMSPlayer
 //	-------------------------------------------------------------------------------------------------
 //	play refer
 	
+	/** 是否自动演奏 */
+	public boolean	is_auto_play	= true;
+
 	ArrayList<Note>	play_tracks;
 	
 	/** 创建Note单位的检查范围 */
@@ -40,6 +43,7 @@ public class BMSPlayer
 	double			play_pre_beat_position;
 	int				play_beat_count;
 	double 			play_pre_record_time;
+	
 	
 	IImage			play_bg_image;
 	IImage			play_poor_image;
@@ -152,10 +156,6 @@ public class BMSPlayer
 		return false;
 	}
 	
-	void removeNote(Note note) {
-		
-	}
-	
 	public void update()
 	{
 		try
@@ -168,25 +168,35 @@ public class BMSPlayer
 			{
 				ArrayList<Note> removed = new ArrayList<Note>();
 				
-				for (Note note : play_tracks) {
+				for (Note note : play_tracks) 
+				{
 					// 如果该音符过线
 					if (note.getBeginPosition() <= play_position) {
 						if (processSystemNote(note)) {
 							// 如果是系统命令，则立即处理
 							removed.add(note); 
+							continue;
+						}
+						// 如果自动演奏，则提供一个命令
+						else if (is_auto_play) {
+							hit(note.track);
 						}
 					}
+					
+					// 处理输入
+					
+					
 					// 如果该音符过丢弃线
 					if (note.getBeginPosition() <= play_position - play_drop_length) {
 						removed.add(note);
+						for (BMSPlayerListener listener : listeners) {
+							listener.onDropNote(this, note);
+						}
+						continue;
 					}
 				}
 				
 				play_tracks.removeAll(removed);
-				
-				for (Note note : removed) {
-					removeNote(note);
-				}
 			}
 			
 			if (play_stop_time>0) {
@@ -199,7 +209,6 @@ public class BMSPlayer
 					for (BMSPlayerListener listener : listeners) {
 						listener.onBeat(this, play_beat_count);
 					}
-					System.out.println("BEAT : " + play_beat_count + " : " + play_position);
 				}
 			}
 			
@@ -215,7 +224,18 @@ public class BMSPlayer
 	
 	public ArrayList<Note> getPlayTracks()
 	{
-		return play_tracks;
+		return getPlayTracks(Double.MAX_VALUE);
+	}
+	
+	public ArrayList<Note> getPlayTracks(double length)
+	{
+		ArrayList<Note> ret = new ArrayList<Note>();
+		for (Note note : play_tracks) {
+			if (note.getBeginPosition() < length) {
+				ret.add(note);
+			}
+		}
+		return ret;
 	}
 	
 	public IImage getPlayBGImage() {
@@ -229,5 +249,33 @@ public class BMSPlayer
 	public IImage getPlayPoorImage() {
 		return play_poor_image;
 	}
+	
+//	-----------------------------------------------------------------------------------------------------------
+	
+	/**
+	 * 击打信息
+	 * @author WAZA
+	 */
+	public class HitInfo
+	{
+		/** 击打到的音符 */
+		public Note		hit_note;
+		
+		/** 绝对值越小，则代表越完美 */
+		public double	hit_deta_time;
+	}
+	
+
+	/**
+	 * 击打一个轨道，如果返回为空，则表示没有击打到，如果不为空，返回值内包含击打到的信息
+	 * @param track
+	 * @return
+	 */
+	public HitInfo hit(int track)
+	{
+		return null;
+	}
+	
+//	-----------------------------------------------------------------------------------------------------------
 	
 }

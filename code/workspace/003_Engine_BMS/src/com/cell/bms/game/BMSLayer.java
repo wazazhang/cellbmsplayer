@@ -4,12 +4,13 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 import com.cell.bms.BMSPlayer;
+import com.cell.bms.BMSPlayerListener;
 import com.cell.bms.IImage;
 import com.cell.bms.BMSFile.Note;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.Sprite;
 
-public class BMSLayer extends Sprite
+public class BMSLayer extends Sprite implements BMSPlayerListener
 {
 
 	BMSPlayer player;
@@ -17,6 +18,7 @@ public class BMSLayer extends Sprite
 	public BMSLayer(BMSPlayer player)
 	{
 		this.player = player;
+		this.player.addListener(this);
 	}
 	
 	
@@ -61,5 +63,14 @@ public class BMSLayer extends Sprite
 		
 	}
 	
+	@Override
+	public void onBeat(BMSPlayer player, int beatCount) {
+		System.out.println("BEAT : " + beatCount + " : " + player.getPlayPosition());
+	}
+	
+	@Override
+	public void onDropNote(BMSPlayer player, Note note) {
+		System.out.println("Drop Note : " + note);
+	}
 	
 }
