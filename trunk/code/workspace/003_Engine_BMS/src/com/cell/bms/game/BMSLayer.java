@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 import com.cell.bms.BMSPlayer;
+import com.cell.bms.IImage;
 import com.cell.bms.BMSFile.Note;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.Sprite;
@@ -30,7 +31,6 @@ public class BMSLayer extends Sprite
 	public void update()
 	{
 		super.update();
-		player.update();
 	}
 	
 	@Override
@@ -39,9 +39,15 @@ public class BMSLayer extends Sprite
 		super.render(g);
 		
 		// paint notes
+		player.update();
 		{
-			g.setColor(Color.BLACK);
-			g.fill(local_bounds);
+			IImage img_bg = player.getPlayBGImage();
+			if (img_bg != null && img_bg.getImage() != null) {
+				g.drawImage(img_bg.getImage(), 0, 0, getWidth(), getHeight(), this);
+			} else {
+				g.setColor(Color.BLACK);
+				g.fill(local_bounds);
+			}
 			
 			g.setColor(Color.WHITE);
 			for (Note note : player.getPlayTracks()) {
@@ -50,6 +56,9 @@ public class BMSLayer extends Sprite
 				g.fillRect((int)x, (int)y, 4, 1);
 			}
 		}
+		
+		
+		
 	}
 	
 	

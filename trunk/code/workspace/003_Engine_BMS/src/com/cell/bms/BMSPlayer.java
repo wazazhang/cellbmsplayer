@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import com.cell.bms.BMSFile.HeadInfo;
 import com.cell.bms.BMSFile.Note;
 import com.cell.bms.BMSFile.NoteValue;
+import com.cell.math.Vector;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.Sprite;
 
@@ -17,6 +18,9 @@ public class BMSPlayer
 //	-------------------------------------------------------------------------------------------------
 	
 	final BMSFile 	bms_file;
+	
+	final ArrayList<BMSPlayerListener> 
+					listeners	= new ArrayList<BMSPlayerListener>(1);
 	
 //	-------------------------------------------------------------------------------------------------
 //	play refer
@@ -31,9 +35,15 @@ public class BMSPlayer
 	
 	// dynamic
 	double 			play_bpm;
-	double			play_position;
+	double			play_position;	
+	double			play_stop_time;
 	double			play_pre_beat_position;
+	int				play_beat_count;
 	double 			play_pre_record_time;
+	
+	IImage			play_bg_image;
+	IImage			play_poor_image;
+	IImage			play_layer_image;
 	
 //	-------------------------------------------------------------------------------------------------
 //	game refer
@@ -53,6 +63,17 @@ public class BMSPlayer
 		bms_file 			= bms;
 	}
 
+	public void addListener(BMSPlayerListener listener) {
+		listeners.add(listener);
+	}
+	
+	public BMSPlayerListener removeListener(BMSPlayerListener listener) {
+		if (listeners.remove(listener)) {
+			return listener;
+		}
+		return null;
+	}
+	
 //	-------------------------------------------------------------------------------------------------
 	
 	public void start()
@@ -69,6 +90,9 @@ public class BMSPlayer
 			play_position			= 0;
 			play_pre_beat_position	= 0;
 			play_pre_record_time	= System.currentTimeMillis();
+			
+			play_stop_time			= 0;
+			play_beat_count			= 0;
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
@@ -80,23 +104,49 @@ public class BMSPlayer
 	{
 		if (note.track<=9)
 		{
-			switch(note.command)
-			{
-			case BPM_CHANGE:
-				play_bpm = Integer.parseInt(note.value, 16);
-				System.out.println(note.command + " " + play_bpm);
-				break;
-				
-			case INDEX_BPM:
-				play_bpm = Double.parseDouble(note.note_value.value);
-				System.out.println(note.command + " " + play_bpm);
-				break;
-				
-			default:
-				System.out.println(note.command + " " + note.value);
+			try{
+				switch(note.command)
+				{
+				case BPM_CHANGE:
+					play_bpm = Integer.parseInt(note.value, 16);
+					System.out.println(note.command + " " + play_bpm);
+					break;
+					
+				case INDEX_BPM:
+					play_bpm = Double.parseDouble(note.note_value.value);
+					System.out.println(note.command + " " + play_bpm);
+					break;
+	
+				case INDEX_STOP:
+					play_stop_time = Double.parseDouble(note.note_value.value);
+					System.out.println(note.command + " " + play_stop_time);
+					break;
+					
+				case INDEX_BMP_BG:
+					play_bg_image		= (IImage)note.note_value.value_object;
+					break;
+				case INDEX_BMP_LAYER:
+					play_layer_image	= (IImage)note.note_value.value_object;
+					break;
+				case INDEX_BMP_POOR:
+					play_poor_image		= (IImage)note.note_value.value_object;
+					break;
+					
+				case INDEX_WAV_BG:
+					ISound sound		= (ISound)note.note_value.value_object;
+					sound.play();
+					break;
+					
+	//			case INDEX_WAV_KEY_1P_:
+	//			case INDEX_WAV_KEY_2P_:
+	//			case INDEX_WAV_LONG_KEY_1P_:
+	//			case INDEX_WAV_LONG_KEY_2P_:
+				default:
+					System.out.println(note.command + " " + note.value);
+				}
+			}catch (Exception e) {
+				e.printStackTrace();
 			}
-
-			
 			return true;
 		}
 		return false;
@@ -117,26 +167,40 @@ public class BMSPlayer
 			// 已缓冲的音符
 			{
 				ArrayList<Note> removed = new ArrayList<Note>();
+				
 				for (Note note : play_tracks) {
 					// 如果该音符过线
 					if (note.getBeginPosition() <= play_position) {
-						if (processSystemNote(note)) {}
+						if (processSystemNote(note)) {
+							// 如果是系统命令，则立即处理
+							removed.add(note); 
+						}
+					}
+					// 如果该音符过丢弃线
+					if (note.getBeginPosition() <= play_position - play_drop_length) {
 						removed.add(note);
 					}
-//					// 如果该音符过丢弃线
-//					if (note.getBeginPosition() <= play_position) {
-//						removed.add(note);
-//						removeNote(note);
-//					}
 				}
+				
 				play_tracks.removeAll(removed);
+				
+				for (Note note : removed) {
+					removeNote(note);
+				}
 			}
 			
-			play_position += bms_file.timeToPosition(deta_time, play_bpm);
-			
-			if (play_position > play_pre_beat_position + bms_file.BEAT_DIV) {
-				play_pre_beat_position = play_position;
-				System.out.println("BEAT " + play_position);
+			if (play_stop_time>0) {
+				play_stop_time	-= bms_file.timeToPosition(deta_time, play_bpm);
+			} else {
+				play_position	+= bms_file.timeToPosition(deta_time, play_bpm);
+				if (play_position > play_pre_beat_position + bms_file.BEAT_DIV) {
+					play_pre_beat_position = play_position;
+					play_beat_count ++;
+					for (BMSPlayerListener listener : listeners) {
+						listener.onBeat(this, play_beat_count);
+					}
+					System.out.println("BEAT : " + play_beat_count + " : " + play_position);
+				}
 			}
 			
 		}
@@ -152,6 +216,18 @@ public class BMSPlayer
 	public ArrayList<Note> getPlayTracks()
 	{
 		return play_tracks;
+	}
+	
+	public IImage getPlayBGImage() {
+		return play_bg_image;
+	}
+	
+	public IImage getPlayLayerImage() {
+		return play_layer_image;
+	}
+	
+	public IImage getPlayPoorImage() {
+		return play_poor_image;
 	}
 	
 }

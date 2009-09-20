@@ -169,6 +169,7 @@ public class BMSFile
 		final public HeadDefine	command;
 		final public String		index;
 		final public String		value;
+		final public INote		value_object;
 		
 		public NoteValue(
 				HeadDefine	command,
@@ -178,7 +179,21 @@ public class BMSFile
 			this.command	= command;
 			this.index		= index;
 			this.value		= value;
+			
+			switch(command) {
+			case BMP:
+				value_object = NoteFactory.getInstance().createImage(BMSFile.this, value);
+				break;
+			case WAV:
+				value_object = NoteFactory.getInstance().createSound(BMSFile.this, value);
+				break;
+			case BPM:
+			case STOP:
+			default:
+				value_object = null; 
+			}
 		}
+		
 	}
 	
 	/**
