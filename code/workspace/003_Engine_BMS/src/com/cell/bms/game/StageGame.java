@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 
 import com.cell.bms.BMSFile;
 import com.cell.bms.BMSPlayer;
+import com.cell.bms.NoteFactory;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.Stage;
 
@@ -15,11 +16,13 @@ public class StageGame extends Stage
 	{
 		setSize(Config.STAGE_WIDTH, Config.STAGE_HEIGHT);
 		
+		NoteFactory.setInstance(new com.cell.bms.jmf.NoteFactory());
 	}
 	
 	public void added(DisplayObjectContainer parent) 
 	{
 		getRoot().setFPS(40);
+		getRoot().setUnactiveFPS(40);
 		
 		BMSFile file = new BMSFile("D:/CellBMSPlayer/resource/data/song/btm_mario/mario-5.bms");
 
