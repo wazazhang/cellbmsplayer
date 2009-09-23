@@ -4,5 +4,17 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/000_Engine_Core"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/000_Engine_G2D"/>
+	<classpathentry kind="lib" path="deployed/joal.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="003_Engine_BMS/deployed"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="deployed/gluegen-rt.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="003_Engine_BMS/deployed"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="deployed/j-ogg-oggd.jar"/>
+	<classpathentry kind="lib" path="deployed/j-ogg-vorbisd.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
