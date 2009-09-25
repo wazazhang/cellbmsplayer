@@ -65,12 +65,12 @@ public class BMSLayer extends Sprite implements BMSPlayerListener
 	
 	@Override
 	public void onBeat(BMSPlayer player, int beatCount) {
-		System.out.println("BEAT : " + beatCount + " : " + player.getPlayPosition());
+//		System.out.println("BEAT : " + beatCount + " : " + player.getPlayPosition());
 	}
 	
 	@Override
 	public void onDropNote(BMSPlayer player, Note note) {
-		System.out.println("Drop Note : " + note);
+//		System.out.println("Drop Note : " + note);
 	}
 	
 }

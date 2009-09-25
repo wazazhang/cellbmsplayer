@@ -4,19 +4,21 @@ import java.awt.Graphics2D;
 
 import com.cell.bms.BMSFile;
 import com.cell.bms.BMSPlayer;
-import com.cell.bms.NoteFactory;
+import com.cell.bms.oal.JALNoteFactory;
+
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.Stage;
 
 public class StageGame extends Stage
 {
-	
+	JALNoteFactory note_factory;
 	
 	public StageGame() 
 	{
 		setSize(Config.STAGE_WIDTH, Config.STAGE_HEIGHT);
+		
 		try{
-			NoteFactory.setInstance(new com.cell.bms.oal.NoteFactory());
+			note_factory = new JALNoteFactory();
 		}catch(Exception err) {
 			err.printStackTrace();
 		}
@@ -27,7 +29,9 @@ public class StageGame extends Stage
 		getRoot().setFPS(40);
 		getRoot().setUnactiveFPS(40);
 		
-		BMSFile file = new BMSFile("D:/CellBMSPlayer/resource/data/song/btm_mario/mario-5.bms");
+		BMSFile file = new BMSFile(
+				note_factory,
+				"D:/CellBMSPlayer/resource/data/song/btm_mario/mario-5.bms");
 
 		BMSPlayer player = new BMSPlayer(file);
 		

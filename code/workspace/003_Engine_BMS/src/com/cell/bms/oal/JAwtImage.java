@@ -15,7 +15,7 @@ public class JAwtImage implements IDefineImage
 		try{
 			String path = bms.bms_dir+"/"+image;
 			buffer = Tools.readImage(path);
-			System.out.println("create JMFImage : " + path);
+//			System.out.println("create JMFImage : " + path);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -24,5 +24,9 @@ public class JAwtImage implements IDefineImage
 	@Override
 	public Image getImage() {
 		return buffer;
-	}
+	}	
+	
+	@Override
+	public void dispose() {}
+	
 }

@@ -180,18 +180,24 @@ public class BMSFile
 			this.index		= index;
 			this.value		= value;
 			
-			switch(command) {
-			case BMP:
-				value_object = NoteFactory.getInstance().defineImage(BMSFile.this, value);
-				break;
-			case WAV:
-				value_object = NoteFactory.getInstance().defineSound(BMSFile.this, value);
-				break;
-			case BPM:
-			case STOP:
-			default:
+			if (note_factory!=null) {
+				switch(command) {
+				case BMP:
+					value_object = note_factory.defineImage(BMSFile.this, value);
+					break;
+				case WAV:
+					value_object = note_factory.defineSound(BMSFile.this, value);
+					break;
+				case BPM:
+				case STOP:
+				default:
+					value_object = null; 
+				}
+			}
+			else {
 				value_object = null; 
 			}
+			
 		}
 		
 	}
@@ -317,33 +323,38 @@ public class BMSFile
 
 	
 //	--------------------------------------------------------------------------------------------------------------
-	
-	final public String bms_file;
-	final public String bms_dir;
 
+	final public NoteFactory	note_factory;
+	
+	final public String 		bms_file;
+	final public String 		bms_dir;
+	
 	/** 将每小节分割为多少份来处理 */
-	final public double	LINE_SPLIT_DIV;
+	final public double			LINE_SPLIT_DIV;
 	
 	/** 将每BEAT分割为多少份来处理 (4 BEAT = 1 LINE)*/
-	final public double BEAT_DIV;
+	final public double 		BEAT_DIV;
 	
-	HashMap<HeadInfo, String> 		header_info		= new HashMap<HeadInfo, String>();
+	HashMap<HeadInfo, String> 	header_info		= new HashMap<HeadInfo, String>();
 	
-	HashMap<String, NoteDefine>		header_wav_map	= new HashMap<String, NoteDefine>();
-	HashMap<String, NoteDefine>		header_img_map	= new HashMap<String, NoteDefine>();
-	HashMap<String, NoteDefine>		header_bpm_map	= new HashMap<String, NoteDefine>();
-	HashMap<String, NoteDefine>		header_stp_map	= new HashMap<String, NoteDefine>();
-	
+	HashMap<String, NoteDefine>	header_wav_map	= new HashMap<String, NoteDefine>();
+	HashMap<String, NoteDefine>	header_img_map	= new HashMap<String, NoteDefine>();
+	HashMap<String, NoteDefine>	header_bpm_map	= new HashMap<String, NoteDefine>();
+	HashMap<String, NoteDefine>	header_stp_map	= new HashMap<String, NoteDefine>();
 	
 	HashMap<DataCommand, ArrayList<Note>> data_note_table = new HashMap<DataCommand, ArrayList<Note>>();
 	
-	public BMSFile(String file)
+//	--------------------------------------------------------------------------------------------------------------
+
+	public BMSFile(NoteFactory factory, String file)
 	{
-		this(file, 256);
+		this(factory, file, 256);
 	}
 	
-	public BMSFile(String file, double line_div)
+	public BMSFile(NoteFactory factory, String file, double line_div)
 	{
+		note_factory	= factory;
+		
 		LINE_SPLIT_DIV	= line_div;
 		BEAT_DIV		= line_div / 4;
 		
@@ -353,6 +364,8 @@ public class BMSFile
 		for (DataCommand cmd : DataCommand.values()) {
 			data_note_table.put(cmd, new ArrayList<Note>());
 		}
+
+		note_factory.initBMS(this);
 		
 		String[] lines = CIO.readAllLine(bms_file);
 		
@@ -492,7 +505,7 @@ public class BMSFile
 	public static void main(String[] args)
 	{
 		CAppBridge.init();
-		new BMSFile("/library.bms");
+		new BMSFile(null, "/library.bms");
 	}
 	
 	
