@@ -162,16 +162,16 @@ public class BMSFile
 	 * 定义在 Header 的 HeaderDefine 
 	 * @author WAZA
 	 */
-	public class NoteValue implements Serializable
+	public class NoteDefine implements Serializable
 	{
 		private static final long serialVersionUID = 1L;
 		
-		final public HeadDefine	command;
-		final public String		index;
-		final public String		value;
-		final public INote		value_object;
+		final public HeadDefine			command;
+		final public String				index;
+		final public String				value;
+		final public IDefineNote		value_object;
 		
-		public NoteValue(
+		public NoteDefine(
 				HeadDefine	command,
 				String		index,
 				String		value) 
@@ -182,10 +182,10 @@ public class BMSFile
 			
 			switch(command) {
 			case BMP:
-				value_object = NoteFactory.getInstance().createImage(BMSFile.this, value);
+				value_object = NoteFactory.getInstance().defineImage(BMSFile.this, value);
 				break;
 			case WAV:
-				value_object = NoteFactory.getInstance().createSound(BMSFile.this, value);
+				value_object = NoteFactory.getInstance().defineSound(BMSFile.this, value);
 				break;
 			case BPM:
 			case STOP:
@@ -208,7 +208,7 @@ public class BMSFile
 		final public int			track;
 		final public DataCommand	command;
 		final public String			value; // index of define
-		final public NoteValue		note_value;
+		final public NoteDefine		note_define;
 		
 		private double 				begin_position;
 		private double 				end_position;
@@ -234,23 +234,23 @@ public class BMSFile
 			case INDEX_BMP_BG:
 			case INDEX_BMP_POOR:
 			case INDEX_BMP_LAYER:
-				note_value = header_img_map.get(value);
+				note_define = header_img_map.get(value);
 				break;
 			case INDEX_BPM:
-				note_value = header_bpm_map.get(value);
+				note_define = header_bpm_map.get(value);
 				break;
 			case INDEX_STOP:
-				note_value = header_stp_map.get(value);
+				note_define = header_stp_map.get(value);
 				break;
 			case INDEX_WAV_BG:
 			case INDEX_WAV_KEY_1P_:
 			case INDEX_WAV_KEY_2P_:
 			case INDEX_WAV_LONG_KEY_1P_:
 			case INDEX_WAV_LONG_KEY_2P_:
-				note_value = header_wav_map.get(value);
+				note_define = header_wav_map.get(value);
 				break;
 			default:
-				note_value = null;
+				note_define = null;
 			}
 			
 			setBeginPosition(npos, ncount);
@@ -277,7 +277,7 @@ public class BMSFile
 			case INDEX_WAV_KEY_2P_:
 			case INDEX_WAV_LONG_KEY_1P_:
 			case INDEX_WAV_LONG_KEY_2P_:
-				return note_value != null;
+				return note_define != null;
 			default:
 				return true;
 			}
@@ -329,10 +329,10 @@ public class BMSFile
 	
 	HashMap<HeadInfo, String> 		header_info		= new HashMap<HeadInfo, String>();
 	
-	HashMap<String, NoteValue>		header_wav_map	= new HashMap<String, NoteValue>();
-	HashMap<String, NoteValue>		header_img_map	= new HashMap<String, NoteValue>();
-	HashMap<String, NoteValue>		header_bpm_map	= new HashMap<String, NoteValue>();
-	HashMap<String, NoteValue>		header_stp_map	= new HashMap<String, NoteValue>();
+	HashMap<String, NoteDefine>		header_wav_map	= new HashMap<String, NoteDefine>();
+	HashMap<String, NoteDefine>		header_img_map	= new HashMap<String, NoteDefine>();
+	HashMap<String, NoteDefine>		header_bpm_map	= new HashMap<String, NoteDefine>();
+	HashMap<String, NoteDefine>		header_stp_map	= new HashMap<String, NoteDefine>();
 	
 	
 	HashMap<DataCommand, ArrayList<Note>> data_note_table = new HashMap<DataCommand, ArrayList<Note>>();
@@ -441,7 +441,7 @@ public class BMSFile
 			try{
 				HeadDefine	define		= HeadDefine.valueOf(k.substring(0, k.length()-2));
 				String		index		= k.substring(k.length()-2);
-				NoteValue	note_value	= new NoteValue(define, index, v);
+				NoteDefine	note_value	= new NoteDefine(define, index, v);
 				switch(define)
 				{
 				case WAV:	header_wav_map.put(index, note_value); break;

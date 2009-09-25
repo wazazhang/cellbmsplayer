@@ -14,9 +14,9 @@ public abstract class NoteFactory {
 	
 	
 	
-	abstract public ISound createSound(BMSFile bms, String sound);
+	abstract public IDefineSound defineSound(BMSFile bms, String sound);
 	
-	abstract public IImage createImage(BMSFile bms, String image);
+	abstract public IDefineImage defineImage(BMSFile bms, String image);
 	
 	
 	

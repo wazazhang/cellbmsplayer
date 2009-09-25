@@ -15,8 +15,11 @@ public class StageGame extends Stage
 	public StageGame() 
 	{
 		setSize(Config.STAGE_WIDTH, Config.STAGE_HEIGHT);
-		
-		NoteFactory.setInstance(new com.cell.bms.jmf.NoteFactory());
+		try{
+			NoteFactory.setInstance(new com.cell.bms.oal.NoteFactory());
+		}catch(Exception err) {
+			err.printStackTrace();
+		}
 	}
 	
 	public void added(DisplayObjectContainer parent) 

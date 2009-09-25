@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 import com.cell.bms.BMSFile.HeadInfo;
 import com.cell.bms.BMSFile.Note;
-import com.cell.bms.BMSFile.NoteValue;
+import com.cell.bms.BMSFile.NoteDefine;
 import com.cell.math.Vector;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.Sprite;
@@ -45,9 +45,9 @@ public class BMSPlayer
 	double 			play_pre_record_time;
 	
 	
-	IImage			play_bg_image;
-	IImage			play_poor_image;
-	IImage			play_layer_image;
+	IDefineImage			play_bg_image;
+	IDefineImage			play_poor_image;
+	IDefineImage			play_layer_image;
 	
 //	-------------------------------------------------------------------------------------------------
 //	game refer
@@ -117,27 +117,27 @@ public class BMSPlayer
 					break;
 					
 				case INDEX_BPM:
-					play_bpm = Double.parseDouble(note.note_value.value);
+					play_bpm = Double.parseDouble(note.note_define.value);
 					System.out.println(note.command + " " + play_bpm);
 					break;
 	
 				case INDEX_STOP:
-					play_stop_time = Double.parseDouble(note.note_value.value);
+					play_stop_time = Double.parseDouble(note.note_define.value);
 					System.out.println(note.command + " " + play_stop_time);
 					break;
 					
 				case INDEX_BMP_BG:
-					play_bg_image		= (IImage)note.note_value.value_object;
+					play_bg_image		= (IDefineImage)note.note_define.value_object;
 					break;
 				case INDEX_BMP_LAYER:
-					play_layer_image	= (IImage)note.note_value.value_object;
+					play_layer_image	= (IDefineImage)note.note_define.value_object;
 					break;
 				case INDEX_BMP_POOR:
-					play_poor_image		= (IImage)note.note_value.value_object;
+					play_poor_image		= (IDefineImage)note.note_define.value_object;
 					break;
 					
 				case INDEX_WAV_BG:
-					ISound sound		= (ISound)note.note_value.value_object;
+					IDefineSound sound		= (IDefineSound)note.note_define.value_object;
 					sound.play();
 					break;
 					
@@ -238,15 +238,15 @@ public class BMSPlayer
 		return ret;
 	}
 	
-	public IImage getPlayBGImage() {
+	public IDefineImage getPlayBGImage() {
 		return play_bg_image;
 	}
 	
-	public IImage getPlayLayerImage() {
+	public IDefineImage getPlayLayerImage() {
 		return play_layer_image;
 	}
 	
-	public IImage getPlayPoorImage() {
+	public IDefineImage getPlayPoorImage() {
 		return play_poor_image;
 	}
 	
