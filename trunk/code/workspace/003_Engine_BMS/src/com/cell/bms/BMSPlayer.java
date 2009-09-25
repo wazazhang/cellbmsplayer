@@ -85,9 +85,6 @@ public class BMSPlayer
 
 		try{
 			play_tracks				= bms_file.getAllNoteList();
-			for (Note note : play_tracks) {
-				System.out.println(note);
-			}
 			play_bpm				= bms_file.getHeadInfo(HeadInfo.BPM);
 			play_create_length		= bms_file.LINE_SPLIT_DIV * 10;
 			play_drop_length		= bms_file.LINE_SPLIT_DIV;
