@@ -54,25 +54,28 @@ public class JALSound implements IDefineSound
 			// Load wav data into a buffer.
 			al.alGenBuffers(1, buffer, 0);
 			
-			if (al.alGetError() != AL.AL_NO_ERROR)
-				throw new ALException("Error generating OpenAL buffers");
+			if (al.alGetError() != AL.AL_NO_ERROR) {
+				System.err.println("Error generating OpenAL buffers : " + sound);
+				return;
+			}
 
 			ALut.alutLoadWAVFile(CIO.loadStream(bms.bms_dir+"/"+sound), 
 					format, data, size, freq, loop);
 			
 			if (data[0] == null) {
-				throw new RuntimeException("Error loading WAV file");
+				System.err.println("Error loading WAV file : " + sound);
+				return;
 			}
 			
-			System.out.println("sound size = " + size[0]);
-			System.out.println("sound freq = " + freq[0]);
 			al.alBufferData(buffer[0], format[0], data[0], size[0], freq[0]);
 
 			// Bind buffer with a source.
 			al.alGenSources(1, source, 0);
 
-			if (al.alGetError() != AL.AL_NO_ERROR)
-				throw new ALException("Error generating OpenAL source");
+			if (al.alGetError() != AL.AL_NO_ERROR) {
+				System.err.println("Error generating OpenAL source : " + sound);
+				return;
+			}
 
 			al.alSourcei(source[0], AL.AL_BUFFER, buffer[0]);
 			al.alSourcef(source[0], AL.AL_PITCH, 1.0f);
@@ -80,9 +83,11 @@ public class JALSound implements IDefineSound
 			al.alSourcei(source[0], AL.AL_LOOPING, loop[0]);
 
 			// Do another error check
-			if (al.alGetError() != AL.AL_NO_ERROR)
-				throw new ALException("Error setting up OpenAL source");
-
+			if (al.alGetError() != AL.AL_NO_ERROR) {
+				System.err.println("Error setting up OpenAL source : " + sound);
+				return;
+			}
+			
 			// Note: for some reason the following two calls are producing an
 			// error on one machine with NVidia's OpenAL implementation. This
 			// appears to be harmless, so just continue past the error if one
@@ -91,6 +96,12 @@ public class JALSound implements IDefineSound
 			al.alSourcefv(source[0], AL.AL_VELOCITY, sourceVel, 0);
 
 			
+			// set listeners
+		    al.alListenerfv(AL.AL_POSITION, listenerPos, 0);
+		    al.alListenerfv(AL.AL_VELOCITY, listenerVel, 0);
+		    al.alListenerfv(AL.AL_ORIENTATION, listenerOri, 0);
+		    
+			System.out.println("Create AL sound : size =" + size[0] + " : freq = " + freq[0] + " : " + sound);
 			
 		}
 		catch(Exception err) {
@@ -98,9 +109,6 @@ public class JALSound implements IDefineSound
 		}
 	  
 
-	    al.alListenerfv(AL.AL_POSITION, listenerPos, 0);
-	    al.alListenerfv(AL.AL_VELOCITY, listenerVel, 0);
-	    al.alListenerfv(AL.AL_ORIENTATION, listenerOri, 0);
 	  
 	}
 	

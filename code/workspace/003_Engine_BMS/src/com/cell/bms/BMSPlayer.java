@@ -137,7 +137,7 @@ public class BMSPlayer
 					break;
 					
 				case INDEX_WAV_BG:
-					IDefineSound sound		= (IDefineSound)note.note_define.value_object;
+					IDefineSound sound	= (IDefineSound)note.note_define.value_object;
 					sound.play();
 					break;
 					
@@ -152,6 +152,19 @@ public class BMSPlayer
 				e.printStackTrace();
 			}
 			return true;
+		}
+		return false;
+	}
+
+	boolean processAutoHit(Note note) {
+		switch(note.command) {
+		case INDEX_WAV_KEY_1P_:
+		case INDEX_WAV_KEY_2P_:
+			IDefineSound sound	= (IDefineSound)note.note_define.value_object;
+			sound.play();
+			return true;
+//		case INDEX_WAV_LONG_KEY_1P_:
+//		case INDEX_WAV_LONG_KEY_2P_:
 		}
 		return false;
 	}
@@ -178,8 +191,10 @@ public class BMSPlayer
 							continue;
 						}
 						// 如果自动演奏，则提供一个命令
-						else if (is_auto_play) {
-							hit(note.track);
+						else if (is_auto_play && processAutoHit(note)) {
+							// 如果是按键命令，则立即处理
+							removed.add(note); 
+							continue;
 						}
 					}
 					
