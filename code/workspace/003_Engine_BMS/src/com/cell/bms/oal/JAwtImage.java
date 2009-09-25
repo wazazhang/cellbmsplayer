@@ -1,17 +1,17 @@
-package com.cell.bms.jmf;
+package com.cell.bms.oal;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 
 import com.cell.bms.BMSFile;
-import com.cell.bms.IImage;
+import com.cell.bms.IDefineImage;
 import com.g2d.Tools;
 
-public class JMFImage implements IImage
+public class JAwtImage implements IDefineImage
 {
 	BufferedImage buffer;
 	
-	public JMFImage(BMSFile bms, String image) {
+	public JAwtImage(BMSFile bms, String image) {
 		try{
 			String path = bms.bms_dir+"/"+image;
 			buffer = Tools.readImage(path);

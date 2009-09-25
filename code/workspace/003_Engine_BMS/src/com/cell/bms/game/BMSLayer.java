@@ -5,7 +5,7 @@ import java.awt.Graphics2D;
 
 import com.cell.bms.BMSPlayer;
 import com.cell.bms.BMSPlayerListener;
-import com.cell.bms.IImage;
+import com.cell.bms.IDefineImage;
 import com.cell.bms.BMSFile.Note;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.Sprite;
@@ -43,7 +43,7 @@ public class BMSLayer extends Sprite implements BMSPlayerListener
 		// paint notes
 		player.update();
 		{
-			IImage img_bg = player.getPlayBGImage();
+			IDefineImage img_bg = player.getPlayBGImage();
 			if (img_bg != null && img_bg.getImage() != null) {
 				g.drawImage(img_bg.getImage(), 0, 0, getWidth(), getHeight(), this);
 			} else {

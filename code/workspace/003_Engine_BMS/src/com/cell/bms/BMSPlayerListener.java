@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 import com.cell.bms.BMSFile.HeadInfo;
 import com.cell.bms.BMSFile.Note;
-import com.cell.bms.BMSFile.NoteValue;
+import com.cell.bms.BMSFile.NoteDefine;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.Sprite;
 
