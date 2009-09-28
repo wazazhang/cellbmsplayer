@@ -15,25 +15,27 @@ public class JALPlayer
 	{
 		this.al = al;
 
-		// Bind buffer with a source.
-		al.alGenSources(1, source, 0);
-
-		if (al.alGetError() != AL.AL_NO_ERROR) {
-			throw new Exception("Error generating OpenAL source !");
+		synchronized(al)
+		{
+			// Bind buffer with a source.
+			al.alGenSources(1, source, 0);
+	
+			if (al.alGetError() != AL.AL_NO_ERROR) {
+				throw new Exception("Error generating OpenAL source !");
+			}
+	
+			// Position of the source sound.
+			float[] sourcePos = { 0.0f, 0.0f, 0.0f };
+			// Velocity of the source sound.
+			float[] sourceVel = { 0.0f, 0.0f, 0.0f };
+			
+			// Note: for some reason the following two calls are producing an
+			// error on one machine with NVidia's OpenAL implementation. This
+			// appears to be harmless, so just continue past the error if one
+			// occurs.
+			al.alSourcefv(source[0], AL.AL_POSITION, sourcePos, 0);
+			al.alSourcefv(source[0], AL.AL_VELOCITY, sourceVel, 0);
 		}
-
-		// Position of the source sound.
-		float[] sourcePos = { 0.0f, 0.0f, 0.0f };
-		// Velocity of the source sound.
-		float[] sourceVel = { 0.0f, 0.0f, 0.0f };
-		
-		// Note: for some reason the following two calls are producing an
-		// error on one machine with NVidia's OpenAL implementation. This
-		// appears to be harmless, so just continue past the error if one
-		// occurs.
-		al.alSourcefv(source[0], AL.AL_POSITION, sourcePos, 0);
-		al.alSourcefv(source[0], AL.AL_VELOCITY, sourceVel, 0);
-		
 	}
 	
 	public void bindBuffer(JALSound sound)
