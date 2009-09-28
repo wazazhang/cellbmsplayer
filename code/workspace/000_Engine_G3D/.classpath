@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="g3d"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="test"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/000_Engine_Core"/>
+	<classpathentry kind="lib" path="/000_Engine_Core/lib/Java3D/1.5.2/lib/ext/j3dcore.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="000_Engine_Core/lib/Java3D/1.5.2/bin"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/000_Engine_Core/lib/Java3D/1.5.2/lib/ext/j3dutils.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="000_Engine_Core/lib/Java3D/1.5.2/bin"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="/000_Engine_Core/lib/Java3D/1.5.2/lib/ext/vecmath.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="000_Engine_Core/lib/Java3D/1.5.2/bin"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
