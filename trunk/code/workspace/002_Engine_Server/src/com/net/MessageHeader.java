@@ -28,7 +28,7 @@ public abstract class MessageHeader implements Serializable
 	
 	/** 标识为 {@link Serializable} 方式序列化 */
 	final public static byte	TRANSMISSION_TYPE_SERIALIZABLE		= 0;
-	/** 标识为 {@link Externalizable} 方式序列化，即以纯手工序列化/反序列化 */
+	/** 标识为 {@link ExternalizableMessage} 方式序列化，即以纯手工序列化/反序列化 */
 	final public static byte	TRANSMISSION_TYPE_EXTERNALIZABLE	= 1;
 	
 //----------------------------------------------------------------------------------------------------------------		
