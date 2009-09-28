@@ -34,10 +34,10 @@ public class JALSound implements IDefineSound
 		this.al			= factory.al;
 		this.sound_name	= sound;
 
-		InputStream is = CIO.loadStream(bms.bms_dir + "/" + sound);
-		
 		synchronized(al)
 		{
+			InputStream is = CIO.loadStream(bms.bms_dir + "/" + sound);
+			
 			if (is != null) 
 			{
 				// variables to load into
@@ -65,6 +65,12 @@ public class JALSound implements IDefineSound
 
 					this.buffer = buffer;
 					
+					// Do another error check and return.
+				    if (al.alGetError() != AL.AL_NO_ERROR) {
+				    	System.err.println("Error bind WAV file : " + sound);
+						return;
+				    }
+				    
 //					System.out.println(
 //							"Create AL sound" +
 //							" : size =" + size[0] +
