@@ -60,6 +60,9 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	DisplayObject				always_top_element;
 //	-------------------------------------------------------------
 
+	transient private Thread	update_thread;
+	transient private Thread	render_thread;
+	
 //	-------------------------------------------------------------
 
 	@Override
@@ -165,28 +168,33 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	
 	void onUpdate(DisplayObjectContainer parent) 
 	{
-		this.parent 			= parent;
-		this.root 				= parent.root;
-		this.timer ++;
-		this.interval_ms 		= (int)(System.currentTimeMillis() - last_update_time);
-		this.last_update_time 	= System.currentTimeMillis();
-		
-		refreshScreen(parent);
-		processEvent();
-		
-		for (int i=elements.size()-1; i>=0; --i) {
-			elements.elementAt(i).onUpdate(this);
-		}
-
-		this.update();
-		
-		if (always_top_element != null) {		
-			if (always_top_element.parent != this) {
-				setAlwaysTopFocus(null);
+		this.update_thread		= Thread.currentThread();
+		try{
+			this.parent 			= parent;
+			this.root 				= parent.root;
+			this.timer ++;
+			this.interval_ms 		= (int)(System.currentTimeMillis() - last_update_time);
+			this.last_update_time 	= System.currentTimeMillis();
+			
+			refreshScreen(parent);
+			processEvent();
+			
+			for (int i=elements.size()-1; i>=0; --i) {
+				elements.elementAt(i).onUpdate(this);
 			}
-			else if (elements.lastElement() != always_top_element) {
-				focus(always_top_element);
+	
+			this.update();
+			
+			if (always_top_element != null) {		
+				if (always_top_element.parent != this) {
+					setAlwaysTopFocus(null);
+				}
+				else if (elements.lastElement() != always_top_element) {
+					focus(always_top_element);
+				}
 			}
+		}finally{
+			this.update_thread		= null;
 		}
 	}
 	
@@ -223,7 +231,7 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	
 	protected void render_childs(Graphics2D g) {
 		int size = elements.size();
-		for (int i=0; i<size; i++) {
+		for (int i = 0; i < size; i++) {
 			elements.elementAt(i).onRender(g);
 		}
 	}
@@ -271,7 +279,7 @@ public abstract class DisplayObjectContainer extends DisplayObject
 				child.parent = this;
 				child.root = this.getRoot();
 				events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_ADD, child));
-				if (immediately) {
+				if (immediately || update_thread==null) {
 					processEvent();
 				}
 			}
@@ -286,7 +294,7 @@ public abstract class DisplayObjectContainer extends DisplayObject
 			if (child.parent == this) {
 				child.parent = null;
 				events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_DELETE, child));
-				if (immediately) {
+				if (immediately || update_thread==null) {
 					processEvent();
 				}
 			}
@@ -379,13 +387,27 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	}
 	
 	public boolean contains(DisplayObject child) {
-		return elements.contains(child);
+		synchronized(elements) {
+			return elements.contains(child);
+		}
 	}
 	
 	public DisplayObject getChildAt(int index) {
-		return elements.elementAt(index);
+		synchronized(elements) {
+			return elements.elementAt(index);
+		}
 	}
 
+	public DisplayObject findChild(Object object) {
+		synchronized(elements) {
+			for (DisplayObject child : elements) {
+				if (object.equals(child)) {
+					return child;
+				}
+			}
+			return null;
+		}
+	}
 	
 	/**
 	 * 得到该类赋值兼容的对象(不包括子类的)

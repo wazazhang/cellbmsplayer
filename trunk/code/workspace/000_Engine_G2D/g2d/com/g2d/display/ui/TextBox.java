@@ -9,6 +9,7 @@ import java.text.AttributedString;
 import java.text.AttributedCharacterIterator.Attribute;
 import java.util.Hashtable;
 
+import com.cell.CMath;
 import com.g2d.Tools;
 import com.g2d.Version;
 import com.g2d.annotation.Property;
@@ -27,6 +28,8 @@ import com.g2d.display.ui.text.MultiTextLayout.AttributedSegment;
 public class TextBox extends Container implements Serializable
 {
 	private static final long serialVersionUID = Version.VersionG2D;
+
+	public static int SCROLL_BAR_SIZE = 12;
 	
 	transient int 						text_draw_x;
 	transient int 						text_draw_y;
@@ -36,7 +39,7 @@ public class TextBox extends Container implements Serializable
 	public Color 						textColor;
 	public boolean 						is_readonly;
 	public boolean						is_show_link;
-	protected ScrollBar.ScrollBarPair	scrollbar;
+	protected ScrollBar					v_scrollbar;
 	
 	transient AnimateCursor				link_cursor;
 	transient Hashtable<Attribute, ClickSegmentListener> click_segment_listeners;
@@ -53,9 +56,9 @@ public class TextBox extends Container implements Serializable
 		enable_key_input	= true;
 		enable_mouse_wheel	= true;
 		
-		scrollbar			= new ScrollBar.ScrollBarPair();
+		v_scrollbar			= ScrollBar.createVScroll(SCROLL_BAR_SIZE);
 		
-		super.addChild(scrollbar);
+		super.addChild(v_scrollbar);
 		
 		setCursor(AnimateCursor.TEXT_CURSOR);
 		link_cursor	= AnimateCursor.HAND_CURSOR;
@@ -65,7 +68,7 @@ public class TextBox extends Container implements Serializable
 	{
 		out.writeBoolean(is_readonly);
 		out.writeObject(textColor);
-		out.writeObject(scrollbar);
+		out.writeObject(v_scrollbar);
 		out.writeUTF(getText());
 	}   
 	  
@@ -73,7 +76,7 @@ public class TextBox extends Container implements Serializable
 	{
 		is_readonly	= in.readBoolean();
 		textColor	= (Color)in.readObject();
-		scrollbar	= (ScrollBar.ScrollBarPair)in.readObject();
+		v_scrollbar	= (ScrollBar)in.readObject();
 		String text	= (String)in.readUTF();
 		{
 			this.text = new MultiTextLayout();
@@ -166,7 +169,7 @@ public class TextBox extends Container implements Serializable
 	
 	protected void onMouseWheelMoved(MouseWheelEvent event) {
 		//System.out.println(" mouseWheelMoved");
-		scrollbar.vScroll.moveInterval(event.scrollDirection);
+		v_scrollbar.moveInterval(event.scrollDirection);
 	}
 	
 	protected void onKeyTyped(KeyEvent event) {
@@ -175,13 +178,20 @@ public class TextBox extends Container implements Serializable
 		}
 	}
 	
-	
-	public ScrollBar getVScrollBar() {
-		return scrollbar.vScroll;
+	@Override
+	protected void trySetCursor() {
+		if (CMath.includeRectPoint(
+				layout.BorderSize, 
+				layout.BorderSize, 
+				getWidth()-(layout.BorderSize<<1), 
+				getHeight()-(layout.BorderSize<<1), 
+				mouse_x, mouse_y)) {
+			super.trySetCursor();
+		}
 	}
 	
-	public ScrollBar getHScrollBar() {
-		return scrollbar.hScroll;
+	public ScrollBar getVScrollBar() {
+		return v_scrollbar;
 	}
 	
 	public void update() 
@@ -201,15 +211,18 @@ public class TextBox extends Container implements Serializable
 			text.is_show_caret = true;
 		}
 		
-		scrollbar.vScroll.setMax(text.getHeight());
-		scrollbar.vScroll.setValue(scrollbar.vScroll.getValue(), getHeight()-(scrollbar.hScroll.visible?scrollbar.hScroll.size:0)-layout.BorderSize*2);
+		v_scrollbar.setLocation(
+				getWidth()-v_scrollbar.size-layout.BorderSize, 
+				layout.BorderSize);
+		v_scrollbar.setSize(v_scrollbar.size, getHeight()-(layout.BorderSize<<1));
 		
-		scrollbar.hScroll.setMax(text.getWidth());
-		scrollbar.hScroll.setValue(scrollbar.hScroll.getValue(), getWidth()-(scrollbar.vScroll.visible?scrollbar.vScroll.size:0)-layout.BorderSize*2);
+		v_scrollbar.setMax(text.getHeight());
+		v_scrollbar.setValue(v_scrollbar.getValue(), getHeight()-(layout.BorderSize<<1));
 		
-		text.setWidth((getWidth()-(scrollbar.vScroll.visible?scrollbar.vScroll.size:0)-layout.BorderSize*2));
-		text_draw_x = layout.BorderSize - (int)scrollbar.hScroll.getValue();
-		text_draw_y = layout.BorderSize - (int)scrollbar.vScroll.getValue();
+		text.setWidth((getWidth()-v_scrollbar.size-(layout.BorderSize<<1)));
+		
+		text_draw_x = layout.BorderSize;
+		text_draw_y = layout.BorderSize - (int)v_scrollbar.getValue();
 	}
 	
 	
@@ -229,10 +242,10 @@ public class TextBox extends Container implements Serializable
 		
 		setCursor(oldcursor);
 		
-		int tsx = (int)scrollbar.hScroll.getValue();
-		int tsy = (int)scrollbar.vScroll.getValue();
-		int tsw = (int)scrollbar.hScroll.getValueLength();
-		int tsh = (int)scrollbar.vScroll.getValueLength();
+		int tsx = 0;
+		int tsy = (int)v_scrollbar.getValue();
+		int tsw = text.getWidth();
+		int tsh = (int)v_scrollbar.getValueLength();
 		
 		g.setColor(textColor);
 		text.drawText(g, text_draw_x, text_draw_y, tsx, tsy, tsw, tsh);

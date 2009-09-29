@@ -64,8 +64,8 @@ public class ScrollBar extends Container
 					parentBorder, 
 					parentBorder);
 			
-			vScroll.setSize(vScroll.size, getHeight() - hScroll.size);
-			hScroll.setSize(getWidth()-vScroll.size, hScroll.size);
+			vScroll.setSize(vScroll.size, getHeight() - hScroll.getHeight());
+			hScroll.setSize(getWidth()-vScroll.getWidth(), hScroll.size);
 			
 			vScroll.setLocation(
 					getWidth()-vScroll.size, 
@@ -76,17 +76,21 @@ public class ScrollBar extends Container
 			
 //			if (vScroll.visible){
 //				System.out.println("vScroll.max = "+ vScroll.max + "");
+//			}else{
+//				System.out.println("dvScroll.max = "+ vScroll.max + "");
 //			}
 //			if (hScroll.visible){
 //				System.out.println("hScroll.max = "+ hScroll.max);
+//			}else{
+//				System.out.println("dhScroll.max = "+ hScroll.max + "");
 //			}
-			if (vScroll.getValueLength()+hScroll.getHeight()>=vScroll.max
-					&& hScroll.getValueLength()+vScroll.getWidth()>=hScroll.max){
-				vScroll.setValue(vScroll.value, vScroll.max);
-				hScroll.setValue(hScroll.value, hScroll.max);
-				vScroll.visible = false;
-				hScroll.visible = false;
-			}
+//			if (vScroll.getValueLength()+hScroll.getHeight()>=vScroll.max && 
+//				hScroll.getValueLength()+vScroll.getWidth()>=hScroll.max){
+//				vScroll.setValue(vScroll.value, vScroll.max);
+//				hScroll.setValue(hScroll.value, hScroll.max);
+//				vScroll.visible = false;
+//				hScroll.visible = false;
+//			}
 			
 		}
 		
