@@ -19,8 +19,9 @@ public class Tip extends DisplayObject
 	public Color				backColor;
 	
 	transient MultiTextLayout	text;
-	transient String 			next_tip;
-	transient AttributedString 	next_atip;
+	transient boolean	paint;
+//	transient String 			next_tip;
+//	transient AttributedString 	next_atip;
 	
 	@Override
 	protected void init_field() {
@@ -42,41 +43,61 @@ public class Tip extends DisplayObject
 	}
 	
 	public Tip(String text){
-		this.text.setText(text);
+		if (text!=null && text.length()>0) {
+			this.text.setText(text);
+			paint = true;
+//			next_tip = text;
+//			next_atip = null;
+		}else{
+			this.text.setText("");
+			paint = false;
+		}
 	}
 	
 	public void clearText() {
-		next_atip	= null;
-		next_tip	= null;
+		text.setText("");
+		paint = false;
+//		next_atip	= null;
+//		next_tip	= null;
 	}
 	
 	public void setText(String text) {
 		if (text!=null && text.length()>0) {
-			next_tip = text;
-			next_atip = null;
+			this.text.setText(text);
+			paint = true;
+//			next_tip = text;
+//			next_atip = null;
+		}else{
+			this.text.setText("");
+			paint = false;
 		}
 	}
 	
 	public void setText(AttributedString text) {
-		if (text!=null) {
-			next_atip = text;
-			next_tip = null;
+		if (text!=null && !text.equals("")) {
+			this.text.setText(text);
+			paint = true;
+//			next_atip = text;
+//			next_tip = null;
+		}else{
+			this.text.setText("");
+			paint = false;
 		}
+
 	}
 	
 	public void update() {}
 	
 	public void render(Graphics2D g) 
 	{
-		boolean paint = false;
-		if (next_tip!=null && !"".equals(next_tip)) {
-			text.setText(next_tip);
-			paint = true;
-		}
-		else if (next_atip!=null) {
-			text.setText(next_atip);
-			paint = true;
-		}
+//		if (next_tip!=null && !"".equals(next_tip)) {
+//			text.setText(next_tip);
+//			paint = true;
+//		}
+//		else if (next_atip!=null) {
+//			text.setText(next_atip);
+//			paint = true;
+//		}
 		
 		if (paint)
 		{
@@ -110,7 +131,6 @@ public class Tip extends DisplayObject
 				this.setSize(twidth, text.getHeight() + (bw<<1));
 			}else{
 				g.setColor(backColor);
-//				g.fillRect(x, y, local_bounds.width, local_bounds.height);
 				g.fill(local_bounds);
 				g.setColor(textColor);
 				twidth = text.drawText(g, 4, 4).width + 8;
@@ -119,7 +139,7 @@ public class Tip extends DisplayObject
 		}
 		else
 		{
-			this.setSize(DefaultTipSize, 1);
+			this.setSize(0, 0);
 		}
 	}
 

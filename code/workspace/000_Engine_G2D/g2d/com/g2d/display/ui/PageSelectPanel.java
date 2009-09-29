@@ -74,6 +74,10 @@ public class PageSelectPanel extends Container
 				return super.createEditorForm();
 			}
 		}
+		
+		public Panel getPanel(){
+			return panel;
+		}
 	}
 	
 //	----------------------------------------------------------------------------------------------------------------------------

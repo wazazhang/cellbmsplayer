@@ -69,24 +69,36 @@ public class Panel extends Container
 		return pan.getHeight();
 	}
 	
+	public void removeScrollBar() {
+		super.removeChild(scrollbar);
+		scrollbar = null;
+		enable_mouse_wheel = false;
+	}
+	
 	public void update() 
 	{
 		super.update();
 		
-		pan.setSize(
-				getWidth()-scrollbar.vScroll.getWidth()-(layout.BorderSize<<1), 
-				getHeight()-scrollbar.hScroll.getHeight()-(layout.BorderSize<<1));
+		if (scrollbar!=null){
+			pan.setSize(
+					getWidth()-scrollbar.vScroll.getWidth()-(layout.BorderSize<<1), 
+					getHeight()-scrollbar.hScroll.getHeight()-(layout.BorderSize<<1));
+			
+			scrollbar.vScroll.setMax(container.local_bounds.height);
+			scrollbar.vScroll.setValue(scrollbar.vScroll.getValue(), pan.getHeight());
+			
+			scrollbar.hScroll.setMax(container.local_bounds.width);
+			scrollbar.hScroll.setValue(scrollbar.hScroll.getValue(), pan.getWidth());
+			
+			int tx = -(int)scrollbar.hScroll.getValue();
+			int ty = -(int)scrollbar.vScroll.getValue();
+			container.setLocation(tx, ty);
+		}else{
+			pan.setSize(
+					getWidth()-(layout.BorderSize<<1), 
+					getHeight()-(layout.BorderSize<<1));
+		}
 		pan.setLocation(layout.BorderSize, layout.BorderSize);
-		
-		scrollbar.vScroll.setMax(container.local_bounds.height);
-		scrollbar.vScroll.setValue(scrollbar.vScroll.getValue(), pan.getHeight());
-		
-		scrollbar.hScroll.setMax(container.local_bounds.width);
-		scrollbar.hScroll.setValue(scrollbar.hScroll.getValue(), pan.getWidth());
-		
-		int tx = -(int)scrollbar.hScroll.getValue();
-		int ty = -(int)scrollbar.vScroll.getValue();
-		container.setLocation(tx, ty);
 
 		
 //		if (scrollbar.hScroll.getValueLength() == scrollbar.hScroll.getMax()) {

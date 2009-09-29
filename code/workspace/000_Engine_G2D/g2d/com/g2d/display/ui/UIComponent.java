@@ -187,7 +187,7 @@ public abstract class UIComponent extends InteractiveObject
 	{
 		if (enable && (root_form==null || root_form.enable)){
 			if (catched_mouse) {
-				getRoot().setCursor(cursor);
+				trySetCursor();
 				if (root_form!=null && root_form.is_focused){
 					if (getStage().getCursorG2D().getFocusedObj()!=this){
 						getStage().getCursorG2D().setFocusedObj(this);
@@ -201,6 +201,9 @@ public abstract class UIComponent extends InteractiveObject
 		}
 	}
 
+	protected void trySetCursor() {
+		getRoot().setCursor(cursor);
+	}
 	
 	@Override
 	protected void afterRender(Graphics2D g) 
