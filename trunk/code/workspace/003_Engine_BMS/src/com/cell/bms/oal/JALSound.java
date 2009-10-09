@@ -155,13 +155,11 @@ public class JALSound implements IDefineSound
 							16, 
 							vStreamHdr.getChannels(),
 							true, true);
-					
-//					System.out.println(audioFormat);
-					
+										
 					try {
-						byte[] data = new byte[1];
+						byte[] data = new byte[2];
 						while(true) {
-							vStream.readPcm(data, 0, 1);
+							vStream.readPcm(data, 0, 2);
 							baos.write(data);
 						}
 					} catch (EndOfOggStreamException e) {}
