@@ -1,15 +1,33 @@
 package com.cell.bms.oal;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.InputStream;
+import java.io.RandomAccessFile;
 import java.net.URL;
 import java.nio.ByteBuffer;
+
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
 
 import net.java.games.joal.AL;
 import net.java.games.joal.util.ALut;
 
 import com.cell.CIO;
+import com.cell.CObject;
 import com.cell.bms.BMSFile;
 import com.cell.bms.IDefineSound;
+import com.cell.bms.oal.OggDecoder.VorbisInputStream;
+import com.cell.j2se.CAppBridge;
+
+import de.jarnbjo.ogg.CachedUrlStream;
+import de.jarnbjo.ogg.EndOfOggStreamException;
+import de.jarnbjo.ogg.FileStream;
+import de.jarnbjo.ogg.LogicalOggStream;
+import de.jarnbjo.ogg.PhysicalOggStream;
+import de.jarnbjo.ogg.UncachedUrlStream;
+import de.jarnbjo.vorbis.IdentificationHeader;
+import de.jarnbjo.vorbis.VorbisStream;
 
 public class JALSound implements IDefineSound
 {
@@ -48,9 +66,9 @@ public class JALSound implements IDefineSound
 
 	}
 	
-	private void initWav(String url)
+	private void initWav(String file)
 	{
-		InputStream is = CIO.loadStream(url);
+		InputStream is = CIO.loadStream(file);
 		
 		if (is != null) {
 			
@@ -61,7 +79,7 @@ public class JALSound implements IDefineSound
 					ALut.alutLoadWAVFile(is, format, data, size, freq, loop);
 	
 					if (data[0] == null) {
-						System.err.println("Error loading WAV file : " + url);
+						System.err.println("Error loading WAV file : " + file);
 						return;
 					}
 				}
@@ -73,7 +91,7 @@ public class JALSound implements IDefineSound
 					al.alGenBuffers(1, buffer, 0);
 	
 					if (al.alGetError() != AL.AL_NO_ERROR) {
-						System.err.println("Error generating OpenAL buffers : " + url);
+						System.err.println("Error generating OpenAL buffers : " + file);
 						return;
 					}
 	
@@ -81,7 +99,7 @@ public class JALSound implements IDefineSound
 	
 					// Do another error check and return.
 					if (al.alGetError() != AL.AL_NO_ERROR) {
-						System.err.println("Error bind WAV file : " + url);
+						System.err.println("Error bind WAV file : " + file);
 						return;
 					}
 					
@@ -102,28 +120,70 @@ public class JALSound implements IDefineSound
 
 	}
 
-	private void initOgg(String url)
+	private void initOgg(String file)
 	{
 		try 
 		{
+			
 			{
-				OggDecoder oggDecoder = new OggDecoder(new URL(url));
-		
-				if (!oggDecoder.initialize()) {
-					System.err.println("Error initializing ogg stream...");
-					return;
-				}
-	
-				int numChannels = oggDecoder.numChannels();
+				PhysicalOggStream os = null;
+				AudioFormat audioFormat = null;
+				ByteArrayOutputStream baos = new ByteArrayOutputStream(10240);
 				
-				if (numChannels == 1)
-				    format[0] = AL.AL_FORMAT_MONO16;
+				URL url = CIO.getResourceURL(file);
+				if (url != null) {
+					os = new UncachedUrlStream(url);
+				} else {
+					File of = new File(file);
+					if (of.exists()) {
+						os = new FileStream(new RandomAccessFile(of, "r"));
+					}
+				}
+				if (os == null) {
+					System.err.println("can not create sound : " + file);
+				}
+				
+				
+				for (Object los : os.getLogicalStreams()) 
+				{
+					LogicalOggStream		loStream	= (LogicalOggStream)los;
+					VorbisStream			vStream		= new VorbisStream(loStream);
+					IdentificationHeader	vStreamHdr	= vStream.getIdentificationHeader();
+					
+					audioFormat	= new AudioFormat(
+							(float) vStreamHdr.getSampleRate(),
+							16, 
+							vStreamHdr.getChannels(),
+							true, true);
+					
+//					System.out.println(audioFormat);
+					
+					try {
+						byte[] data = new byte[1];
+						while(true) {
+							vStream.readPcm(data, 0, 1);
+							baos.write(data);
+						}
+					} catch (EndOfOggStreamException e) {}
+					
+					vStream.close();
+					
+					loStream.close();
+					
+				}
+				
+				os.close();
+				
+//				System.out.println("pcm data size = " + baos.size());
+				
+			    if (audioFormat.getChannels() == 1)
+				    format[0]	= AL.AL_FORMAT_MONO16;
 				else
-				    format[0] = AL.AL_FORMAT_STEREO16;
-			        
-				freq[0] = oggDecoder.sampleRate();
-		
-				// format, data, size, freq,
+				    format[0]	= AL.AL_FORMAT_STEREO16;
+			    
+				data[0]			= ByteBuffer.wrap(baos.toByteArray());
+				size[0]			= baos.size();
+				freq[0]			= (int)audioFormat.getFrameRate();
 			}
 			
 			// variables to load into
@@ -133,7 +193,7 @@ public class JALSound implements IDefineSound
 				al.alGenBuffers(1, buffer, 0);
 
 				if (al.alGetError() != AL.AL_NO_ERROR) {
-					System.err.println("Error generating OpenAL buffers : " + url);
+					System.err.println("Error generating OpenAL buffers : " + file);
 					return;
 				}
 
@@ -141,7 +201,7 @@ public class JALSound implements IDefineSound
 
 				// Do another error check and return.
 				if (al.alGetError() != AL.AL_NO_ERROR) {
-					System.err.println("Error bind WAV file : " + url);
+					System.err.println("Error bind WAV file : " + file);
 					return;
 				}
 
@@ -179,5 +239,56 @@ public class JALSound implements IDefineSound
 	@Override
 	protected void finalize() throws Throwable {
 		dispose();
+	}
+	
+	public static void main(String[] args)
+	{
+
+		CAppBridge.init();
+		
+		try 
+		{
+			ByteArrayOutputStream baos = new ByteArrayOutputStream(10240);
+			
+			UncachedUrlStream os = new UncachedUrlStream(CIO.getResourceURL("broken_glass.ogg"));
+
+			for (Object los : os.getLogicalStreams()) 
+			{
+				LogicalOggStream		loStream	= (LogicalOggStream)los;
+				
+				VorbisStream			vStream		= new VorbisStream(loStream);
+				
+				IdentificationHeader	vStreamHdr	= vStream.getIdentificationHeader();
+				
+				AudioFormat				audioFormat	= new AudioFormat(
+						(float) vStreamHdr.getSampleRate(),
+						16, 
+						vStreamHdr.getChannels(),
+						true, true);
+				
+				System.out.println(audioFormat);
+				
+				try {
+					byte[] data = new byte[1];
+					while(true) {
+						vStream.readPcm(data, 0, 1);
+						baos.write(data);
+					}
+				} catch (EndOfOggStreamException e) {}
+				
+				vStream.close();
+				
+				loStream.close();
+				
+			}
+			
+			os.close();
+			
+			System.out.println("pcm data size = " + baos.size());
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 }

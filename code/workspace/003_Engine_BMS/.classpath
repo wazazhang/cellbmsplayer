@@ -14,7 +14,7 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="003_Engine_BMS/deployed"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="deployed/j-ogg-oggd.jar"/>
-	<classpathentry kind="lib" path="deployed/j-ogg-vorbisd.jar"/>
+	<classpathentry kind="lib" path="deployed/j-ogg-oggd.jar" sourcepath="/000_Engine_Core/lib/j-ogg/j-ogg.zip"/>
+	<classpathentry kind="lib" path="deployed/j-ogg-vorbisd.jar" sourcepath="/000_Engine_Core/lib/j-ogg/j-ogg.zip"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
