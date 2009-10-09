@@ -157,9 +157,13 @@ public class JALSound implements IDefineSound
 							true, true);
 										
 					try {
+						byte t = 0;
 						byte[] data = new byte[2];
 						while(true) {
-							vStream.readPcm(data, 0, 2);
+							vStream.readPcm(data, 0, data.length);
+							t = data[0];
+							data[0] = data[1];
+							data[1] = t;
 							baos.write(data);
 						}
 					} catch (EndOfOggStreamException e) {}
@@ -167,12 +171,10 @@ public class JALSound implements IDefineSound
 					vStream.close();
 					
 					loStream.close();
-					
+
 				}
 				
 				os.close();
-				
-//				System.out.println("pcm data size = " + baos.size());
 				
 			    if (audioFormat.getChannels() == 1)
 				    format[0]	= AL.AL_FORMAT_MONO16;
@@ -182,6 +184,9 @@ public class JALSound implements IDefineSound
 				data[0]			= ByteBuffer.wrap(baos.toByteArray());
 				size[0]			= baos.size();
 				freq[0]			= (int)audioFormat.getFrameRate();
+				
+
+				System.out.println(audioFormat + " size = " + baos.size() + " : " + file);
 			}
 			
 			// variables to load into
@@ -239,6 +244,15 @@ public class JALSound implements IDefineSound
 		dispose();
 	}
 	
+	public static void swapBytes(byte[] b, int off, int len) {
+		byte tempByte;
+		for (int i = off; i < (off + len); i += 2) {
+			tempByte = b[i];
+			b[i] = b[i + 1];
+			b[i + 1] = tempByte;
+		}
+	}
+    
 	public static void main(String[] args)
 	{
 
