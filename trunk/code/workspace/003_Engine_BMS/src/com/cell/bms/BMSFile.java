@@ -481,9 +481,11 @@ public class BMSFile
 				for (int npos = 0; npos < ncount; npos++) {
 					int i = (npos<<1);
 					String nvalue = v.substring(i, i+2);
-					Note note = new Note(line, track, npos, ncount, command, nvalue);
-					if (note.validate()){
-						data_note_table.get(command).add(note);
+					if (!nvalue.equals("00")) {
+						Note note = new Note(line, track, npos, ncount, command, nvalue);
+						if (note.validate()){
+							data_note_table.get(command).add(note);
+						}
 					}
 				}
 				return true;

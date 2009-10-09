@@ -9,7 +9,7 @@ public class JALPlayer
 	final AL al;
 
 	// Sources are points emitting sound.
-	private int[] source;
+	final private int[] source;
 
 	public JALPlayer(AL al) throws Exception
 	{
