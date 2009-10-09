@@ -31,8 +31,8 @@ public class StageGame extends Stage
 		
 		BMSFile file = new BMSFile(
 				note_factory,
-//				"D:/CellBMSPlayer/resource/data/song/btm_mario/mario-5.bms"
-				"D:/CellBMSPlayer/resource/data/song/animusic/animusic-超级多功能竖琴-7K.bms"
+//				"D:/Projects/CellBMSPlayer/resource/data/song/btm_mario/mario-5.bms"
+				"D:/Projects/CellBMSPlayer/resource/data/song/animusic/animusic-超级多功能竖琴-7K.bms"
 				);
 
 		BMSPlayer player = new BMSPlayer(file);
