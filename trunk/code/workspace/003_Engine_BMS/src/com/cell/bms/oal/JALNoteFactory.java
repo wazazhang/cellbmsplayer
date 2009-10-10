@@ -11,6 +11,7 @@ import net.java.games.sound3d.AudioSystem3D;
 import com.cell.bms.BMSFile;
 import com.cell.bms.IDefineImage;
 import com.cell.bms.IDefineSound;
+import com.cell.bms.JAwtImage;
 
 public class JALNoteFactory extends com.cell.bms.NoteFactory
 {  
