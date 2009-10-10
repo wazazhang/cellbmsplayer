@@ -17,7 +17,6 @@ import com.cell.CIO;
 import com.cell.CObject;
 import com.cell.bms.BMSFile;
 import com.cell.bms.IDefineSound;
-import com.cell.bms.oal.OggDecoder.VorbisInputStream;
 import com.cell.j2se.CAppBridge;
 
 import de.jarnbjo.ogg.CachedUrlStream;

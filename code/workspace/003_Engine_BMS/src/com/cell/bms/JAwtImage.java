@@ -1,10 +1,8 @@
-package com.cell.bms.oal;
+package com.cell.bms;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 
-import com.cell.bms.BMSFile;
-import com.cell.bms.IDefineImage;
 import com.g2d.Tools;
 
 public class JAwtImage implements IDefineImage
