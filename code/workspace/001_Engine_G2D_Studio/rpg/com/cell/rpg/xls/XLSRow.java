@@ -1,6 +1,5 @@
 package com.cell.rpg.xls;
 
-import java.io.File;
 import java.io.Serializable;
 
 public class XLSRow implements Serializable

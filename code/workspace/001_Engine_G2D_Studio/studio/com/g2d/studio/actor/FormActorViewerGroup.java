@@ -3,7 +3,6 @@ package com.g2d.studio.actor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.io.File;
 
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -11,8 +10,6 @@ import javax.swing.JTree;
 
 import com.g2d.cell.CellSetResource;
 import com.g2d.cell.CellSetResourceManager;
-
-
 import com.g2d.studio.ATreeNodeGroup;
 import com.g2d.studio.ATreeNodeLeaf;
 import com.g2d.studio.ATreeNodeSet;

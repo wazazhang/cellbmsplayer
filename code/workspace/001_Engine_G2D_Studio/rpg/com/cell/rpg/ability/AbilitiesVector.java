@@ -1,12 +1,12 @@
 package com.cell.rpg.ability;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Vector;
 
 public abstract class AbilitiesVector implements Abilities
 {
-
+	private static final long serialVersionUID = 1L;
+	
 	/**将显示在单位属性的Ability面板*/
 	public Vector<AbstractAbility> abilities = new Vector<AbstractAbility>();
 	

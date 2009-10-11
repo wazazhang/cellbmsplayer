@@ -1,7 +1,6 @@
 package com.cell.rpg.ability;
 
 import com.cell.CUtil;
-
 import com.g2d.annotation.Property;
 
 /**

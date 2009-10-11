@@ -3,26 +3,19 @@ package com.g2d.studio.ui;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.event.MouseEvent;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Rectangle2D;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.ObjectStreamException;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JToggleButton;
 
-import com.g2d.studio.Version;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.Stage;
 import com.g2d.display.ui.Form;
 import com.g2d.display.ui.UIComponent;
 import com.g2d.studio.ATreeNodeLeaf;
+import com.g2d.studio.Version;
 import com.g2d.util.Drawing;
 
 

@@ -53,15 +53,16 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	@Property("如果不在local_bounds内,则忽略事件处理 (包括孩子的)")
 	protected boolean 			enable_bounds;
 	
-	Vector<DisplayObject> 		elements;
+	protected Vector<DisplayObject> 		elements;
 	
 	Queue<DisplayObjectEvent>	events;
 
 	DisplayObject				always_top_element;
+	DisplayObject				always_bottom_element;
 //	-------------------------------------------------------------
 
 	transient private Thread	update_thread;
-	transient private Thread	render_thread;
+//	transient private Thread	render_thread;
 	
 //	-------------------------------------------------------------
 
@@ -238,39 +239,60 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	
 	protected void afterRender(Graphics2D g) {}
 	
+//	-----------------------------------------------------------------------------------------------------------
+	
 	public void sort(){
 		events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_SORT));
 	}
 	
-	public void focus(DisplayObject child){
-		if (always_top_element == null) {
-			events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_MOVE_TOP, child));
-		}else{
-			events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_MOVE_TOP, always_top_element));
-		}
-	}
-	
-	public void removeAlwaysTopFocus(){
-		setAlwaysTopFocus(null);
-	}
-	
-	public void setAlwaysTopFocus(DisplayObject child) {
-		if (child != null) {
-			events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_MOVE_TOP, child));
-		}
-		always_top_element = child;
-	}
-	
-	public DisplayObject getAlwaysTopFocus() {
-		return always_top_element;
-	}
-	
+	// focus
 	public DisplayObject getFocus() {
 		if (!elements.isEmpty()) {
 			return elements.lastElement();
 		}
 		return null;
 	}
+	public void focus(DisplayObject child){
+		if (always_top_element != null) {
+			events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_MOVE_TOP, always_top_element));
+		} else if (child == always_bottom_element){
+			events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_MOVE_BOT, child));
+		} else {
+			events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_MOVE_TOP, child));
+		}
+	}
+	
+//	top element
+	public void removeAlwaysTopFocus(){
+		setAlwaysTopFocus(null);
+	}
+	public void setAlwaysTopFocus(DisplayObject child) {
+		if (child != null) {
+			events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_MOVE_TOP, child));
+		}
+		always_top_element = child;
+	}
+	public DisplayObject getAlwaysTopFocus() {
+		return always_top_element;
+	}
+	
+//	bottom element
+	public void removeAlwaysBottom(){
+		setAlwaysBottom(null);
+	}
+	public void setAlwaysBottom(DisplayObject child) {
+		if (child != null) {
+			events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_MOVE_BOT, child));
+		}
+		always_bottom_element = child;
+	}
+	public DisplayObject getAlwaysBottom() {
+		return always_bottom_element;
+	}
+
+
+//	-----------------------------------------------------------------------------------------------------------
+	
 	
 
 	final public void addChild(DisplayObject child, boolean immediately){

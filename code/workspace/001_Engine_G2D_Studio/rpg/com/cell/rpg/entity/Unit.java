@@ -1,15 +1,10 @@
 package com.cell.rpg.entity;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Vector;
 
 import com.cell.rpg.RPGObject;
 import com.cell.rpg.ability.Abilities;
-import com.cell.rpg.ability.AbilitySceneNPC;
-import com.cell.rpg.ability.AbilitySceneNPCSpawnRegion;
-import com.cell.rpg.ability.AbilitySceneStartRegion;
-import com.cell.rpg.ability.AbilitySceneTransport;
 import com.cell.rpg.ability.AbstractAbility;
 import com.cell.rpg.display.UnitNode;
 import com.cell.rpg.entity.struct.TMotion;

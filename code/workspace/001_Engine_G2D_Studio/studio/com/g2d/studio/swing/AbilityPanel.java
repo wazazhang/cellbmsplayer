@@ -22,11 +22,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListCellRenderer;
 
-
 import com.cell.rpg.ability.Abilities;
 import com.cell.rpg.ability.AbilitySceneNPC;
 import com.cell.rpg.ability.AbilitySceneNPCSpawn;
-import com.cell.rpg.ability.AbilitySceneNPCTeam;
 import com.cell.rpg.ability.AbilitySceneNPCTeamNode;
 import com.cell.rpg.ability.AbilitySceneTransport;
 import com.cell.rpg.ability.AbilityXLS;

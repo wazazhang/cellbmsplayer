@@ -12,6 +12,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Hashtable;
 
 import com.cell.security.MD5;
@@ -42,6 +46,11 @@ public class CIO extends CObject
 //		return is;
 //	}
 
+	public static URL getResourceURL(String resource)
+	{
+		return CObject.AppBridge.getClassLoader().getResource(resource);
+	}
+	
 //	------------------------------------------------------------------------------------------------------------------------
 //	
 	static public int LoadingTimeOut = 20000; //ms

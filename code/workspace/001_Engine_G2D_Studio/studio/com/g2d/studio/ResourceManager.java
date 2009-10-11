@@ -1,26 +1,14 @@
 package com.g2d.studio;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.Serializable;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Vector;
 
 import com.cell.CIO;
-import com.cell.io.TextDeserialize;
-import com.cell.rpg.entity.Actor;
-import com.cell.rpg.entity.Region;
-import com.cell.rpg.entity.Unit;
-import com.cell.rpg.io.Util;
 import com.g2d.cell.CellSetResource;
 import com.g2d.cell.CellSetResourceManager;
 import com.g2d.cell.CellSetResource.CellSetObject;
 import com.g2d.cell.CellSetResource.WORLD;
-import com.thoughtworks.xstream.XStream;
 
 
 /**

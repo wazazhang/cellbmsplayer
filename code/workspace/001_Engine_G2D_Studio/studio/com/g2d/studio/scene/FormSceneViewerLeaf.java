@@ -1,11 +1,5 @@
 package com.g2d.studio.scene;
 
-import java.awt.event.MouseEvent;
-import java.io.File;
-
-import javax.swing.JPopupMenu;
-import javax.swing.JTree;
-
 import com.g2d.studio.ATreeNodeLeaf;
 import com.g2d.studio.ATreeNodeSet;
 

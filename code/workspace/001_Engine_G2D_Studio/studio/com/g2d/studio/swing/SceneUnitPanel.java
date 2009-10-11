@@ -8,10 +8,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import javax.swing.Action;
-import javax.swing.JButton;
 import javax.swing.JList;
-import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -20,14 +17,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.event.PopupMenuListener;
-import javax.swing.text.html.FormView;
 
-import com.g2d.studio.Version;
-import com.g2d.studio.scene.FormSceneViewer;
 import com.g2d.cell.game.Scene;
 import com.g2d.cell.game.SceneUnit;
 import com.g2d.editor.DisplayObjectEditor;
+import com.g2d.studio.Version;
+import com.g2d.studio.scene.FormSceneViewer;
 
 public class SceneUnitPanel<T extends SceneUnit> extends JPanel
 {

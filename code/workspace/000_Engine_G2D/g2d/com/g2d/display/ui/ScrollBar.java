@@ -341,7 +341,7 @@ public class ScrollBar extends Container
 			back.setLocation(0, getWidth());
 
 			double rate = back.getHeight() / max;
-			int sh = (int)(valuelength * rate);
+			int sh = (int)(valuelength * rate) + 1;
 			int sy = getWidth() + (int)(value * rate);
 			strip.setSize(getWidth(), sh);
 			strip.setLocation(0, sy);
@@ -358,7 +358,7 @@ public class ScrollBar extends Container
 			back.setLocation(getHeight(), 0);
 
 			double rate = back.getWidth() / max;
-			int sw = (int)(valuelength * rate);
+			int sw = (int)(valuelength * rate) + 1;
 			int sx = getHeight() + (int)(value * rate);
 			strip.setSize(sw, getHeight());
 			strip.setLocation(sx, 0);
