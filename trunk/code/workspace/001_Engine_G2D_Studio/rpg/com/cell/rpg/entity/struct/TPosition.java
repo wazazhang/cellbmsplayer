@@ -1,7 +1,5 @@
 package com.cell.rpg.entity.struct;
 
-import java.io.Serializable;
-
 import com.cell.rpg.RPGObject;
 
 public class TPosition extends RPGObject

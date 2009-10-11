@@ -44,27 +44,26 @@ package com.g2d.studio;
  *    vm.html
  */
 
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.io.IOException;
+import java.net.URL;
+
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-
 import javax.swing.JTree;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeSelectionModel;
+import javax.swing.ToolTipManager;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.ToolTipManager;
-import javax.swing.ImageIcon;
-import javax.swing.Icon;
-
-import java.net.URL;
-import java.io.IOException;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.Component;
+import javax.swing.tree.TreeSelectionModel;
 
 
 public class TreeIconDemo2 extends JPanel 

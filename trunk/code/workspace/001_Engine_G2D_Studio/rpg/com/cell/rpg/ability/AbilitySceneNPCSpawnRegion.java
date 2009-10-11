@@ -1,6 +1,5 @@
 package com.cell.rpg.ability;
 
-import com.cell.CUtil;
 import com.g2d.annotation.Property;
 
 /**
@@ -11,11 +10,20 @@ public class AbilitySceneNPCSpawnRegion extends AbstractAbility
 {
 	private static final long serialVersionUID = 1L;
 
+	public static enum SpawnType
+	{
+		
+	}
+	
 	@Property("产生的单位最大数量")
 	public int spawn_unit_count;
 	
+	@Property("产生的单位最大数量")
+	public SpawnType spawn_unit_type;
+	
 	@Property("产生的单位")
 	public AbilitiesVector spawn_types = new AbilitiesVector() {
+		private static final long serialVersionUID = 1L;
 		public Class<?>[] getSubAbilityTypes() {
 			return new Class<?>[]{
 					AbilitySceneNPCSpawn.class,

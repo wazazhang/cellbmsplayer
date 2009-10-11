@@ -176,7 +176,13 @@ public class PageSelectPanel extends Container
 			removePage(pages.elementAt(0));
 		}
 	}
+	public Page getSelectedPage(){
+		return selected_page;
+	}
 	
+	public Vector<Page> getPages(){
+		return pages;
+	}
 	
 	protected void onPageSelected(Page page){}
 	

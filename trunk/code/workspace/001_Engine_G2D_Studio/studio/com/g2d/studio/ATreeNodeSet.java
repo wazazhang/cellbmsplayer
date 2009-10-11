@@ -1,7 +1,6 @@
 package com.g2d.studio;
 
 import java.awt.event.MouseEvent;
-import java.io.File;
 
 import javax.swing.JTree;
 

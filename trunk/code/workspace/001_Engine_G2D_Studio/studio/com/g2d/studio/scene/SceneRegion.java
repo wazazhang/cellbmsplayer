@@ -1,30 +1,17 @@
 package com.g2d.studio.scene;
 
 import java.awt.Color;
-
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.geom.Rectangle2D;
 import java.io.IOException;
-import java.io.Writer;
 
-import com.cell.CMath;
-import com.cell.io.TextDeserialize;
-import com.cell.io.TextSerialize;
-import com.cell.reflect.Parser;
 import com.cell.rpg.entity.Region;
-import com.cell.util.MarkedHashtable;
-import com.cell.util.Properties;
-import com.g2d.studio.Version;
 import com.g2d.annotation.Property;
 import com.g2d.cell.game.SceneUnit;
-import com.g2d.display.event.MouseEvent;
 import com.g2d.editor.DisplayObjectEditor;
-import com.g2d.studio.Studio;
-import com.g2d.studio.actor.FormActorViewer;
+import com.g2d.studio.Version;
 import com.g2d.studio.swing.AbilityPanel;
 import com.g2d.studio.swing.RPGUnitPanel;
-import com.g2d.util.Drawing;
 
 
 @Property("一个范围，通常用于触发事件")

@@ -2,10 +2,7 @@ package com.cell.rpg.ability;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
 
-import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.studio.swing.AbilityPanel;
 
 /**

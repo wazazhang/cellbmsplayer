@@ -1,12 +1,7 @@
 package com.cell.rpg.entity;
 
-import java.awt.Rectangle;
-
-import com.cell.CMath;
-import com.cell.rpg.ability.AbilitySceneNPC;
 import com.cell.rpg.ability.AbilitySceneNPCSpawnRegion;
 import com.cell.rpg.ability.AbilitySceneStartRegion;
-import com.cell.rpg.ability.AbilitySceneTransport;
 public class Region extends Unit
 {
 	public int width;

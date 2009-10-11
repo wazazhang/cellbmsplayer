@@ -1,27 +1,31 @@
-package com.g2d.studio.swing;
+package com.g2d.editor.property;
 
 import java.awt.Component;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.EnumSet;
 import java.util.Vector;
 
 import javax.swing.JComboBox;
 
-import com.cell.rpg.xls.XLSFile;
-import com.cell.rpg.xls.XLSRow;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
-import com.g2d.studio.Studio;
 
-public class XLSRowListComboBox extends JComboBox implements PropertyCellEdit<XLSRow>
+/**
+ * 将枚举值列举在ComboBox中
+ * @author WAZA
+ * @param <T>
+ */
+public class ListEnumEdit<T extends Enum<T>> extends JComboBox implements PropertyCellEdit<T>
 {
 	private static final long serialVersionUID = 1L;
-
+	
+	Class<T> type;
 	ObjectPropertyPanel panel;
 	
-	public XLSRowListComboBox(XLSFile xls_file) 
+	public ListEnumEdit(Class<T> cls) 
 	{
-		super(new Vector<XLSRow>(Studio.getInstance().getXLSPrimaryRows(xls_file)));
+		super(new Vector<T>(EnumSet.allOf(cls)));
 		this.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				panel.fireEditingStopped();
@@ -37,11 +41,14 @@ public class XLSRowListComboBox extends JComboBox implements PropertyCellEdit<XL
 		return this;
 	}
 	
-	public XLSRow getValue() {
+	public T getValue() {
 		Object item = getSelectedItem();
 		if (item != null) {
-			XLSRow row = (XLSRow)item;
-			return row;
+			try {
+				T ret = type.cast(item);
+				return ret;
+			} catch (Exception err) {
+			}
 		}
 		return null;
 	}

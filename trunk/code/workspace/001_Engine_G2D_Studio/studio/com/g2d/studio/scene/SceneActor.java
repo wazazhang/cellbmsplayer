@@ -3,27 +3,17 @@ package com.g2d.studio.scene;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.io.IOException;
-import java.io.Writer;
-import java.util.HashMap;
 
-import com.cell.io.TextDeserialize;
-import com.cell.io.TextSerialize;
-import com.cell.rpg.ability.Abilities;
-import com.cell.rpg.ability.AbstractAbility;
 import com.cell.rpg.entity.Actor;
-import com.cell.util.MarkedHashtable;
-import com.cell.util.Properties;
-import com.g2d.studio.Version;
 import com.g2d.annotation.Property;
 import com.g2d.cell.game.SceneSprite;
-import com.g2d.display.event.MouseEvent;
 import com.g2d.editor.DisplayObjectEditor;
 import com.g2d.studio.Studio;
+import com.g2d.studio.Version;
 import com.g2d.studio.actor.FormActorViewer;
 import com.g2d.studio.swing.AbilityPanel;
 import com.g2d.studio.swing.RPGUnitPanel;
 import com.g2d.util.Drawing;
-import com.sun.tools.doclets.internal.toolkit.util.DocFinder.Output;
 
 /**
  * @author WAZA

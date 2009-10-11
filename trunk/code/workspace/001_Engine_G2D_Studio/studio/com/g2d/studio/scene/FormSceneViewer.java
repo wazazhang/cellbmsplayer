@@ -10,13 +10,9 @@ import java.awt.event.ComponentListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.util.Collection;
 import java.util.Vector;
 
@@ -26,8 +22,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.JToggleButton;
 
 import com.cell.CObject;
-import com.cell.io.TextDeserialize;
-import com.cell.io.TextSerialize;
 import com.cell.rpg.entity.Actor;
 import com.cell.rpg.entity.Region;
 import com.cell.rpg.entity.Unit;

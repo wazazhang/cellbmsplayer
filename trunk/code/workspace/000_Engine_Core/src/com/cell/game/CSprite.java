@@ -1027,6 +1027,14 @@ public class CSprite extends CUnit {
 		CurFrame = (short) index;
 	}
 
+	public boolean isEndFrame() {
+		if (CurFrame+1 >= FrameAnimate[CurAnimate].length ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	public boolean nextFrame() {
 		CurFrame++;
 		if (CurFrame >= FrameAnimate[CurAnimate].length ) {

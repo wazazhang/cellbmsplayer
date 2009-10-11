@@ -1,7 +1,5 @@
 package com.g2d.studio.scene;
 
-import java.io.File;
-
 import com.g2d.cell.CellSetResource;
 import com.g2d.cell.CellSetResourceManager;
 import com.g2d.studio.ATreeNodeGroup;
@@ -9,7 +7,6 @@ import com.g2d.studio.ATreeNodeLeaf;
 import com.g2d.studio.ATreeNodeSet;
 import com.g2d.studio.Config;
 import com.g2d.studio.Studio;
-
 import com.g2d.studio.Studio.SetResource;
 
 

@@ -1,13 +1,11 @@
 package com.g2d.studio.swing;
 
 import java.awt.Component;
-import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Vector;
 
 import javax.swing.JComboBox;
-import javax.swing.JList;
 
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;

@@ -1,8 +1,5 @@
 package com.cell.rpg.ability;
 
-import java.io.Serializable;
-
-import com.g2d.annotation.Property;
 
 
 public class AbilitySceneNPCTeam extends AbilitiesVector

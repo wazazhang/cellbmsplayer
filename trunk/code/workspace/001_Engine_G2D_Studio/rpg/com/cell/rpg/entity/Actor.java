@@ -1,8 +1,6 @@
 package com.cell.rpg.entity;
 
 import com.cell.rpg.ability.AbilitySceneNPC;
-import com.cell.rpg.ability.AbilitySceneNPCSpawnRegion;
-import com.cell.rpg.ability.AbilitySceneStartRegion;
 import com.cell.rpg.ability.AbilitySceneTransport;
 import com.cell.rpg.display.UnitNode;
 

@@ -1,25 +1,10 @@
 package com.g2d.studio;
 
-import java.awt.GridLayout;
-import java.awt.MenuItem;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
 
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.MutableTreeNode;
-
-import com.g2d.Version;
-import com.g2d.display.DisplayObject;
-import com.g2d.util.AbstractFrame;
 
 public abstract class ATreeNodeGroup <V extends AFormDisplayObjectViewer<?>> extends TreeNode<Object, DefaultMutableTreeNode, ATreeNodeSet<V>>
 {
