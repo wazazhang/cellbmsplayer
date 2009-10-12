@@ -219,7 +219,9 @@ public class PageSelectPanel extends Container
 			int th = page_header_size;
 			int x = 0;
 			for (Page page : pages) {
-//				page.setSize(tw, th);
+				if (page.getWidth()*pages.size()>w){
+					page.setSize(w/pages.size(), th);
+				}
 				page.setLocation(x, 0);
 				page.panel.setSize(w, getHeight()-th);
 				page.panel.setLocation(0, th);

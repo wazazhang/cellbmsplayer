@@ -26,6 +26,7 @@ public class ListEnumEdit<T extends Enum<T>> extends JComboBox implements Proper
 	public ListEnumEdit(Class<T> cls) 
 	{
 		super(new Vector<T>(EnumSet.allOf(cls)));
+		this.type = cls;
 		this.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				panel.fireEditingStopped();
@@ -48,6 +49,7 @@ public class ListEnumEdit<T extends Enum<T>> extends JComboBox implements Proper
 				T ret = type.cast(item);
 				return ret;
 			} catch (Exception err) {
+				err.printStackTrace();
 			}
 		}
 		return null;
