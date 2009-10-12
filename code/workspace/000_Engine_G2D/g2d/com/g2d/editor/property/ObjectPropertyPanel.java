@@ -202,7 +202,12 @@ public class ObjectPropertyPanel extends JPanel
 	 */
 	public PropertyCellEdit<?> getPropertyCellEdit(Object object, Field field, Object field_value)
 	{
-		if (field.getType().equals(Color.class))
+		if (field.getType().isEnum()) 
+		{
+			ListEnumEdit edit = new ListEnumEdit(field.getType());
+			return edit;
+		}
+		else if (field.getType().equals(Color.class))
 		{
 			PopupCellEditColor edit_color 		= new PopupCellEditColor();
 			edit_color.setValue(field_value!=null ? (Color)field_value : null, ObjectPropertyPanel.this);
@@ -235,7 +240,8 @@ public class ObjectPropertyPanel extends JPanel
 		Object obj = null;
 		if (edit instanceof TextCellEdit) {
 			obj = Util.parseObject(((TextCellEdit) edit).getValue(), src_value == null ? field.getType() : src_value.getClass());
-		} else {
+		}
+		else {
 			obj = edit.getValue();
 		}
 		return obj;

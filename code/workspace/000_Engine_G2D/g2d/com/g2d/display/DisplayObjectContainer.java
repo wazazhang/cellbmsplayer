@@ -151,7 +151,7 @@ public abstract class DisplayObjectContainer extends DisplayObject
 		return false;
 	}
 	
-	void onAdded(DisplayObjectContainer parent) 
+	final void onAdded(DisplayObjectContainer parent) 
 	{
 		for (int i=elements.size()-1; i>=0; --i) {
 			elements.elementAt(i).onAdded(parent);
@@ -159,7 +159,7 @@ public abstract class DisplayObjectContainer extends DisplayObject
 		this.added(parent);
 	}
 	
-	void onRemoved(DisplayObjectContainer parent) 
+	final void onRemoved(DisplayObjectContainer parent) 
 	{
 		for (int i=elements.size()-1; i>=0; --i) {
 			elements.elementAt(i).onRemoved(parent);
@@ -231,9 +231,11 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	}
 	
 	protected void render_childs(Graphics2D g) {
-		int size = elements.size();
-		for (int i = 0; i < size; i++) {
-			elements.elementAt(i).onRender(g);
+		synchronized(elements) {
+			int size = elements.size();
+			for (int i = 0; i < size; i++) {
+				elements.elementAt(i).onRender(g);
+			}
 		}
 	}
 	

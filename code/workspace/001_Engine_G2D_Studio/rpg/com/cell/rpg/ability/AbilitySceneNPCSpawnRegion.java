@@ -9,17 +9,20 @@ import com.g2d.annotation.Property;
 public class AbilitySceneNPCSpawnRegion extends AbstractAbility 
 {
 	private static final long serialVersionUID = 1L;
-
-	public static enum SpawnType
-	{
-		
+	
+	/**
+	 * 生成该区域单位的触发条件
+	 */
+	public static enum UnitTrig {
+		VISIBLE,
+		HIDE,
 	}
+	
+	@Property("产生的单位触发条件")
+	public UnitTrig unit_trig;
 	
 	@Property("产生的单位最大数量")
 	public int spawn_unit_count;
-	
-	@Property("产生的单位最大数量")
-	public SpawnType spawn_unit_type;
 	
 	@Property("产生的单位")
 	public AbilitiesVector spawn_types = new AbilitiesVector() {
@@ -41,7 +44,7 @@ public class AbilitySceneNPCSpawnRegion extends AbstractAbility
 			return sb.toString();
 		}
 	};
-	
+
 	@Override
 	public boolean isMultiField() {
 		return false;
@@ -49,6 +52,6 @@ public class AbilitySceneNPCSpawnRegion extends AbstractAbility
 	
 	@Override
 	public String toString() {
-		return super.toString() + " : max=" + spawn_unit_count + " : types=" + spawn_types;
+		return super.toString() + " : " + unit_trig + " : max=" + spawn_unit_count + " : types=" + spawn_types;
 	}
 }
