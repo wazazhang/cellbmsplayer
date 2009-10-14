@@ -1,0 +1,64 @@
+<SOAP-ENV:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/" xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:clr="http://schemas.microsoft.com/soap/encoding/clr/1.0" SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+<SOAP-ENV:Body>
+<a1:ProjectForm id="ref-1" xmlns:a1="http://schemas.microsoft.com/clr/nsassem/CellGameEdit.PM/CellGameEdit%2C%20Version%3D1.0.0.0%2C%20Culture%3Dneutral%2C%20PublicKeyToken%3Dnull">
+<nodeReses href="#ref-4"/>
+<nodeObjects href="#ref-5"/>
+<nodeLevels href="#ref-6"/>
+<nodeCommands href="#ref-7"/>
+<formTable href="#ref-8"/>
+</a1:ProjectForm>
+<a2:TreeNode id="ref-4" xmlns:a2="http://schemas.microsoft.com/clr/nsassem/System.Windows.Forms/System.Windows.Forms%2C%20Version%3D2.0.0.0%2C%20Culture%3Dneutral%2C%20PublicKeyToken%3Db77a5c561934e089">
+<Text id="ref-9">资源</Text>
+<Name id="ref-10"></Name>
+<IsChecked>false</IsChecked>
+<ImageIndex>-1</ImageIndex>
+<ImageKey href="#ref-10"/>
+<SelectedImageIndex>-1</SelectedImageIndex>
+<SelectedImageKey href="#ref-10"/>
+<ChildCount>0</ChildCount>
+</a2:TreeNode>
+<a2:TreeNode id="ref-5" xmlns:a2="http://schemas.microsoft.com/clr/nsassem/System.Windows.Forms/System.Windows.Forms%2C%20Version%3D2.0.0.0%2C%20Culture%3Dneutral%2C%20PublicKeyToken%3Db77a5c561934e089">
+<Text id="ref-11">对象</Text>
+<Name href="#ref-10"/>
+<IsChecked>false</IsChecked>
+<ImageIndex>-1</ImageIndex>
+<ImageKey href="#ref-10"/>
+<SelectedImageIndex>-1</SelectedImageIndex>
+<SelectedImageKey href="#ref-10"/>
+<ChildCount>0</ChildCount>
+</a2:TreeNode>
+<a2:TreeNode id="ref-6" xmlns:a2="http://schemas.microsoft.com/clr/nsassem/System.Windows.Forms/System.Windows.Forms%2C%20Version%3D2.0.0.0%2C%20Culture%3Dneutral%2C%20PublicKeyToken%3Db77a5c561934e089">
+<Text id="ref-12">场景</Text>
+<Name href="#ref-10"/>
+<IsChecked>false</IsChecked>
+<ImageIndex>-1</ImageIndex>
+<ImageKey href="#ref-10"/>
+<SelectedImageIndex>-1</SelectedImageIndex>
+<SelectedImageKey href="#ref-10"/>
+<ChildCount>0</ChildCount>
+</a2:TreeNode>
+<a2:TreeNode id="ref-7" xmlns:a2="http://schemas.microsoft.com/clr/nsassem/System.Windows.Forms/System.Windows.Forms%2C%20Version%3D2.0.0.0%2C%20Culture%3Dneutral%2C%20PublicKeyToken%3Db77a5c561934e089">
+<Text id="ref-13">命令</Text>
+<Name href="#ref-10"/>
+<IsChecked>false</IsChecked>
+<ImageIndex>-1</ImageIndex>
+<ImageKey href="#ref-10"/>
+<SelectedImageIndex>-1</SelectedImageIndex>
+<SelectedImageKey href="#ref-10"/>
+<ChildCount>0</ChildCount>
+</a2:TreeNode>
+<a3:Hashtable id="ref-8" xmlns:a3="http://schemas.microsoft.com/clr/ns/System.Collections">
+<LoadFactor>0.72</LoadFactor>
+<Version>1127</Version>
+<Comparer xsi:null="1"/>
+<HashCodeProvider xsi:null="1"/>
+<HashSize>521</HashSize>
+<Keys href="#ref-14"/>
+<Values href="#ref-15"/>
+</a3:Hashtable>
+<SOAP-ENC:Array id="ref-14" SOAP-ENC:arrayType="xsd:anyType[0]">
+</SOAP-ENC:Array>
+<SOAP-ENC:Array id="ref-15" SOAP-ENC:arrayType="xsd:anyType[0]">
+</SOAP-ENC:Array>
+</SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
