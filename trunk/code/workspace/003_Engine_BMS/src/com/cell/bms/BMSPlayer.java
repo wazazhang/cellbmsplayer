@@ -67,6 +67,10 @@ public class BMSPlayer
 		bms_file 			= bms;
 	}
 
+	public BMSFile getBMSFile() {
+		return bms_file;
+	}
+	
 	public void addListener(BMSPlayerListener listener) {
 		listeners.add(listener);
 	}
