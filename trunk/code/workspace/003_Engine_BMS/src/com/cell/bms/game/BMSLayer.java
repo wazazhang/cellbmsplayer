@@ -32,6 +32,8 @@ public class BMSLayer extends Sprite implements BMSPlayerListener
 	Key[]			key_map		= new Key[40];
 	
 	
+	
+	
 	public BMSLayer(BMSPlayer player)
 	{
 		this.player = player;
@@ -97,7 +99,7 @@ public class BMSLayer extends Sprite implements BMSPlayerListener
 					nodes.render(cg, (int)x, (int)y, k.anim, timer % nodes.getFrameCount(k.anim));
 				} else {
 					double x = 8;
-					double y = (player.getPlayPosition() - note.getBeginPosition()) + getHeight() / 2;
+					double y = (player.getPlayPosition() - note.getBeginPosition()) + getHeight();
 					g.fillRect((int) x, (int) y, 4, 1);
 				}
 			}

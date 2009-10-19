@@ -104,6 +104,9 @@ public class BMSPlayer
 		
 	}
 	
+	public void stop() {
+		
+	}
 	
 	boolean processSystemNote(Note note) 
 	{
