@@ -2,23 +2,60 @@ package com.cell.bms.game;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
+import java.util.HashMap;
 
 import com.cell.bms.BMSPlayer;
 import com.cell.bms.BMSPlayerListener;
 import com.cell.bms.IDefineImage;
 import com.cell.bms.BMSFile.Note;
+import com.cell.game.CCD;
+import com.cell.game.CSprite;
+import com.cell.j2se.CGraphics;
+import com.g2d.cell.CellSetResource;
+import com.g2d.cell.CellSprite;
+import com.g2d.cell.CellSetResource.WorldSet;
+import com.g2d.cell.CellSetResource.WorldSet.SpriteObject;
+import com.g2d.display.DisplayObject;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.Sprite;
 
 public class BMSLayer extends Sprite implements BMSPlayerListener
 {
-
-	BMSPlayer player;
+	BMSPlayer		player;
+	
+	CellSetResource	skin;
+	CSprite			effect;
+	CSprite			keys;
+	CSprite			nodes;
+	
+	Key[]			key_map		= new Key[40];
+	
 	
 	public BMSLayer(BMSPlayer player)
 	{
 		this.player = player;
 		this.player.addListener(this);
+		
+		try 
+		{
+			skin	= new CellSetResource("/skin.properties");
+			effect	= skin.getSprite("hit");
+			keys	= skin.getSprite("keys");
+			nodes	= skin.getSprite("nodes");
+			
+			WorldSet main_frame = skin.getSetWorld("main_frame");
+			for (SpriteObject obj : main_frame.Sprs) {
+				if (obj.SprID.equals("keys")) {
+					Key k = new Key(obj);
+					addChild(k, true);
+					key_map[k.track] = k;
+				}
+			}
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	
@@ -38,7 +75,7 @@ public class BMSLayer extends Sprite implements BMSPlayerListener
 	@Override
 	public void render(Graphics2D g) 
 	{
-		super.render(g);
+		CGraphics cg = new CGraphics(g);
 		
 		// paint notes
 		player.update();
@@ -53,14 +90,18 @@ public class BMSLayer extends Sprite implements BMSPlayerListener
 			
 			g.setColor(Color.WHITE);
 			for (Note note : player.getPlayTracks()) {
-				double x = (note.track % 100) * 5;
-				double y = (player.getPlayPosition() - note.getBeginPosition()) + getHeight()/2;
-				g.fillRect((int)x, (int)y, 4, 1);
+				Key k = key_map[note.track];
+				if (k != null) {
+					double x = k.getX() + (k.getWidth() >> 1);
+					double y = (player.getPlayPosition() - note.getBeginPosition()) + k.y;
+					nodes.render(cg, (int)x, (int)y, k.anim, timer % nodes.getFrameCount(k.anim));
+				} else {
+					double x = 8;
+					double y = (player.getPlayPosition() - note.getBeginPosition()) + getHeight() / 2;
+					g.fillRect((int) x, (int) y, 4, 1);
+				}
 			}
 		}
-		
-		
-		
 	}
 	
 	@Override
@@ -72,5 +113,68 @@ public class BMSLayer extends Sprite implements BMSPlayerListener
 	public void onDropNote(BMSPlayer player, Note note) {
 //		System.out.println("Drop Note : " + note);
 	}
+
+//	-------------------------------------------------------------------------------------------------------------------------------------
+	
+	class Key extends CellSprite
+	{
+		int anim;
+		int track;
+		int key_value;
+		
+		public Key(SpriteObject obj)
+		{
+			super(keys);
+			super.setLocation(obj.X, obj.Y);
+			
+			this.anim		= obj.Anim;
+			this.track		= Integer.parseInt(cspr.getAnimateName(obj.Anim));
+			this.key_value	= Config.getKey(track);
+			
+			cspr.setCurrentFrame(anim, 0);
+			CCD cd = cspr.getFrameBounds(anim, 0);
+			
+			super.setSize(cd.getWidth(), cd.getHeight());
+		}
+		
+		@Override
+		public void update() {
+			if (getRoot().isKeyHold(key_value)) {
+				cspr.setCurrentFrame(anim, 1);
+			} else {
+				cspr.setCurrentFrame(anim, 0);
+			}
+		}
+	}
+
+//	-------------------------------------------------------------------------------------------------------------------------------------
+	
+	class Node extends CellSprite 
+	{
+		public Node() 
+		{
+			super(nodes);
+		}
+		
+	}
+
+//	-------------------------------------------------------------------------------------------------------------------------------------
+
+	class Effect extends CellSprite
+	{
+		public Effect() {
+			super(effect);
+		}
+		
+		@Override
+		public void render(Graphics2D g) {
+			super.render(g);
+			if (cspr.nextFrame()) {
+				removeFromParent();
+			}
+		}
+	}
+
+//	-------------------------------------------------------------------------------------------------------------------------------------
 	
 }
