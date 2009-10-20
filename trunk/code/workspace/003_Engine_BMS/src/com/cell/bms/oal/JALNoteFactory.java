@@ -41,7 +41,7 @@ public class JALNoteFactory extends com.cell.bms.NoteFactory
 		al.alGetError();
 		alc = ALFactory.getALC();
 		
-		// set device
+		// set device, find device with the maximum source
 		{
 			String[] devices = alc.alcGetDeviceSpecifiers();
 			
