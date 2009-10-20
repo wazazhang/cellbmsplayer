@@ -4,13 +4,17 @@ import net.java.games.joal.AL;
 import net.java.games.sound3d.AudioSystem3D;
 import net.java.games.sound3d.Source;
 
-public class JALPlayer 
+public class JALPlayer implements Comparable<JALPlayer>
 {
 	final AL al;
 
 	// Sources are points emitting sound.
 	final private int[] source;
 
+	private int playing_buffer_id = -1;
+	
+	public long last_bind_time = 0;
+	
 	public JALPlayer(AL al) throws Exception
 	{
 		this.al = al;
@@ -55,9 +59,18 @@ public class JALPlayer
 				System.err.println("Error setting up OpenAL source : " + sound.sound_name);
 				return;
 			}
+			playing_buffer_id = sound.buffer[0];
+			last_bind_time = System.currentTimeMillis();
 		}
 	}
 
+	public boolean isBindBuffer(JALSound sound) {
+		if (source!=null && playing_buffer_id == sound.buffer[0]) {
+			return true;
+		}
+		return false;
+	}
+	
 	public boolean isFree() {
 		if (source!=null) {
 			int state[] = new int[1];
@@ -97,5 +110,8 @@ public class JALPlayer
 		dispose();
 	}
 	
-
+	@Override
+	public int compareTo(JALPlayer o) {
+		return (int)(this.last_bind_time - o.last_bind_time);
+	}
 }

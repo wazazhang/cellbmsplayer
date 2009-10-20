@@ -91,16 +91,16 @@ public class BMSLayer extends Sprite implements BMSPlayerListener
 			}
 			
 			g.setColor(Color.WHITE);
-			for (Note note : player.getPlayTracks()) {
+			for (Note note : player.getPlayTracks(player.getBMSFile().LINE_SPLIT_DIV * 4)) {
 				Key k = key_map[note.track];
 				if (k != null) {
 					double x = k.getX() + (k.getWidth() >> 1);
 					double y = (player.getPlayPosition() - note.getBeginPosition()) + k.y;
 					nodes.render(cg, (int)x, (int)y, k.anim, timer % nodes.getFrameCount(k.anim));
 				} else {
-					double x = 8;
+					double x = getHeight()-8;
 					double y = (player.getPlayPosition() - note.getBeginPosition()) + getHeight();
-					g.fillRect((int) x, (int) y, 4, 1);
+					g.fillRect((int) x, (int) y, 8, 2);
 				}
 			}
 		}

@@ -32,8 +32,16 @@ public class StageGame extends Stage
 	
 	public void added(DisplayObjectContainer parent) 
 	{
+//		"D:/Projects/CellBMSPlayer/resource/data/song/btm_hama/hama_5.bms"
+//		"D:/Projects/CellBMSPlayer/resource/data/song/btm_mario/mario-5.bms"
+//		"D:/Projects/CellBMSPlayer/resource/data/song/animusic/animusic-7K.bms"
+//		"D:/Projects/CellBMSPlayer/resource/data/song/animusic/animusic-8K.bms"
+		
 		getRoot().setFPS(40);
+		
 		getRoot().setUnactiveFPS(40);
+		
+		start("D:/Projects/CellBMSPlayer/resource/data/song/btm_hama/hama_5.bms");
 	}
 
 	public void removed(DisplayObjectContainer parent) {}
@@ -43,15 +51,9 @@ public class StageGame extends Stage
 	public void render(Graphics2D g) {}
 	
 	
-	void start()
+	void start(String path)
 	{
-		BMSFile file = new BMSFile(
-				note_factory,
-				"D:/Projects/CellBMSPlayer/resource/data/song/btm_hama/hama_5.bms"
-//				"D:/Projects/CellBMSPlayer/resource/data/song/btm_mario/mario-5.bms"
-//				"D:/Projects/CellBMSPlayer/resource/data/song/animusic/animusic-7K.bms"
-//				"D:/Projects/CellBMSPlayer/resource/data/song/animusic/animusic-8K.bms"
-				);
+		BMSFile file = new BMSFile(note_factory, path);
 
 		BMSPlayer player = new BMSPlayer(file);
 		
