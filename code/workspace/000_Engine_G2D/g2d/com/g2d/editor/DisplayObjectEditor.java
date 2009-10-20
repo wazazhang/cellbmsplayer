@@ -34,7 +34,7 @@ public class DisplayObjectEditor<V extends DisplayObject> extends AbstractFrame
 	public DisplayObjectEditor(V o, Component ... append_page)
 	{
 		this.setSize(640,480);
-		this.setTitle(o.toString());
+		this.setTitle(o.getClass().getName() + " : " + o.toString());
 		
 		this.object = o;
 	

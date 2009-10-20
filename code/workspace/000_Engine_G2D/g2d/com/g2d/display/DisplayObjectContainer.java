@@ -53,7 +53,7 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	@Property("如果不在local_bounds内,则忽略事件处理 (包括孩子的)")
 	protected boolean 			enable_bounds;
 	
-	protected Vector<DisplayObject> 		elements;
+	Vector<DisplayObject> 		elements;
 	
 	Queue<DisplayObjectEvent>	events;
 
@@ -61,8 +61,8 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	DisplayObject				always_bottom_element;
 //	-------------------------------------------------------------
 
-	transient private Thread	update_thread;
-//	transient private Thread	render_thread;
+	transient private Thread		update_thread;
+//	transient private Thread		render_thread;
 	
 //	-------------------------------------------------------------
 
@@ -126,20 +126,11 @@ public abstract class DisplayObjectContainer extends DisplayObject
 		}
 	}
 	
-
-	public void setDebug(boolean d) {
-		super.setDebug(d);
-		for (int i=elements.size()-1; i>=0; --i) {
-			elements.elementAt(i).setDebug(d);
-		}
-	}
-	
-
 	
 	boolean onPoolEvent(com.g2d.display.event.Event<?> event) 
 	{
 		if (always_top_element!=null) {
-			always_top_element.onPoolEvent(event);
+			return always_top_element.onPoolEvent(event);
 		}else{
 			for (int i=elements.size()-1; i>=0; --i) {
 				if (elements.elementAt(i).onPoolEvent(event)) {
@@ -167,70 +158,53 @@ public abstract class DisplayObjectContainer extends DisplayObject
 		this.removed(parent);
 	}
 	
+//	-----------------------------------------------------------------------------------------------------------------------
+	
 	void onUpdate(DisplayObjectContainer parent) 
 	{
-		this.update_thread		= Thread.currentThread();
-		try{
-			this.parent 			= parent;
-			this.root 				= parent.root;
-			this.timer ++;
-			this.interval_ms 		= (int)(System.currentTimeMillis() - last_update_time);
-			this.last_update_time 	= System.currentTimeMillis();
-			
-			refreshScreen(parent);
-			processEvent();
-			
-			for (int i=elements.size()-1; i>=0; --i) {
-				elements.elementAt(i).onUpdate(this);
-			}
+		this.update_thread = Thread.currentThread();
+		super.onUpdate(parent);
+		this.update_thread = null;
+	}
 	
-			this.update();
-			
-			if (always_top_element != null) {		
-				if (always_top_element.parent != this) {
-					setAlwaysTopFocus(null);
-				}
-				else if (elements.lastElement() != always_top_element) {
-					focus(always_top_element);
-				}
-			}
-		}finally{
-			this.update_thread		= null;
+	@Override
+	final void updateBefore(DisplayObjectContainer parent) {
+		processEvent();
+		for (int i=elements.size()-1; i>=0; --i) {
+			elements.elementAt(i).onUpdate(this);
 		}
 	}
+	
+	@Override
+	final void updateAfter(DisplayObjectContainer parent) {
+		if (always_top_element != null) {		
+			if (always_top_element.parent != this) {
+				setAlwaysTopFocus(null);
+			}
+			else if (elements.lastElement() != always_top_element) {
+				focus(always_top_element);
+			}
+		}
+	}
+	
+//	-----------------------------------------------------------------------------------------------------------------------
+	
 	
 	void onRender(Graphics2D g) 
 	{
 		if (enable_bounds && !g.hitClip((int)x + local_bounds.x, (int)y + local_bounds.y, local_bounds.width, local_bounds.height)){
-			catched_mouse = false;
 			return;
-		}
-		
-		if (visible) 
-		{
-			Shape			clip		= g.getClip();
-			AffineTransform	transfrom	= g.getTransform();
-			Composite		composite	= g.getComposite();
-			{
-				g.translate(x, y);
-				
-				this.render(g);
-
-				this.catched_mouse 	= testCatchMouse(g);
-				
-				this.render_debug(g);
-				
-				this.render_childs(g);
-				
-			}
-			afterRender(g);
-			g.setComposite(composite);
-			g.setTransform(transfrom);
-			g.setClip(clip);
+		} else {
+			super.onRender(g);
 		}
 	}
 	
-	protected void render_childs(Graphics2D g) {
+	@Override
+	void renderInteractive(Graphics2D g) {
+		renderChilds(g);
+	}
+	
+	protected void renderChilds(Graphics2D g) {
 		synchronized(elements) {
 			int size = elements.size();
 			for (int i = 0; i < size; i++) {
@@ -239,10 +213,18 @@ public abstract class DisplayObjectContainer extends DisplayObject
 		}
 	}
 	
-	protected void afterRender(Graphics2D g) {}
-	
 //	-----------------------------------------------------------------------------------------------------------
+
+
+
+	public void setDebug(boolean d) {
+		super.setDebug(d);
+		for (int i=elements.size()-1; i>=0; --i) {
+			elements.elementAt(i).setDebug(d);
+		}
+	}
 	
+
 	public void sort(){
 		events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_SORT));
 	}
@@ -297,40 +279,52 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	
 	
 
-	final public void addChild(DisplayObject child, boolean immediately){
+	public boolean addChild(DisplayObject child){
 		synchronized(child) {
 			if (child.parent==null) {
 				child.parent = this;
 				child.root = this.getRoot();
 				events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_ADD, child));
-				if (immediately || update_thread==null) {
+				if (update_thread==null) {
 					processEvent();
 				}
+				if (always_top_element!=null) {
+					events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_MOVE_TOP, always_top_element));
+				}
+				return true;
 			}
-			if (always_top_element!=null) {
-				events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_MOVE_TOP, always_top_element));
-			}
+			return false;
 		}
 	}
 	
-	final public void removeChild(DisplayObject child, boolean immediately) {
+	public boolean removeChild(DisplayObject child) {
 		synchronized(child) {
 			if (child.parent == this) {
 				child.parent = null;
 				events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_DELETE, child));
-				if (immediately || update_thread==null) {
+				if (update_thread==null) {
 					processEvent();
 				}
+				return true;
 			}
+			return false;
 		}
 	}
 
-	public void addChild(DisplayObject child){
-		addChild(child, false);
+	public boolean addChild(DisplayObject child, boolean immediately){
+		if (addChild(child) && immediately) {
+			processEvent();
+			return true;
+		}
+		return false;
 	}
 	
-	public void removeChild(DisplayObject child) {
-		removeChild(child, false);
+	public boolean removeChild(DisplayObject child, boolean immediately) {
+		if (removeChild(child, false) && immediately) {
+			processEvent();
+			return true;
+		}
+		return false;
 	}
 	
 	public int getChildCount() {
@@ -406,6 +400,14 @@ public abstract class DisplayObjectContainer extends DisplayObject
 		synchronized(elements) {
 			for (DisplayObject child : childs) {
 				addChild(child);
+			}
+		}
+	}
+	
+	public void removeChilds(Collection<? extends DisplayObject> childs) {
+		synchronized(elements) {
+			for (DisplayObject child : childs) {
+				removeChild(child);
 			}
 		}
 	}

@@ -1,7 +1,12 @@
 package com.g2d.display;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.Shape;
+import java.awt.Stroke;
 import java.util.Vector;
 
 import com.cell.CMath;
@@ -16,23 +21,23 @@ import com.g2d.display.event.MouseListener;
 import com.g2d.display.event.MouseMoveEvent;
 import com.g2d.display.event.MouseWheelEvent;
 import com.g2d.display.event.MouseWheelListener;
+import com.g2d.display.ui.text.TextBuilder;
 
+/**
+ * InteractiveObject 二要素<br>
+ * 1. 被聚焦 <br>
+ *    处理键盘，鼠标滚轮事件<br>
+ * 2. 已获得鼠标指针<br>
+ *    处理鼠标点击事件<br>
+ * @author WAZA
+ */
 public abstract class InteractiveObject extends DisplayObjectContainer
 {
 //	private static InteractiveObject s_focused_object = null;
 	private static final long serialVersionUID = Version.VersionG2D;
 
-	
-	transient public boolean 				is_focused;
-	transient int 							catched_mouse_down_tick ;
-	transient MouseMoveEvent 				mouse_draged_event ;
-	
-	transient Vector<KeyListener> 			keylisteners;
-	transient Vector<MouseListener> 		mouselisteners;
-	transient Vector<MouseWheelListener> 	mousewheellisteners;
-	
 	/**是否接收事件,如果为false,该对象就只相当于DisplayObjectContainer,也不向孩子传送事件*/
-	public boolean							enable;
+	public boolean				enable;
 	/**是否处理输入事件,如果为false,则只向孩子传送事件*/
 	@Property("是否处理输入事件,如果为false,则只向孩子传送事件") 
 	public boolean 				enable_input;
@@ -51,7 +56,27 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 	/**是否支持键盘事件*/
 	@Property("是否支持键盘事件")
 	public boolean 				enable_key_input;
+
+//	----------------------------------------------------------------------------------------------
 	
+	/**调整边距时的触碰范围*/
+	private int					drag_border_size;
+	
+	private Dimension			minimum_size;
+	
+//	----------------------------------------------------------------------------------------------
+
+	transient boolean 						is_focused;
+	transient int 							catched_mouse_down_tick ;
+	transient MouseMoveEvent 				mouse_draged_event ;
+
+	transient Vector<KeyListener> 			keylisteners;
+	transient Vector<MouseListener> 		mouselisteners;
+	transient Vector<MouseWheelListener> 	mousewheellisteners;
+	
+	transient private	AnimateCursor		cursor;
+	
+//	-----------------------------------------------------------------------------------------------------------------
 	
 	@Override
 	protected void init_field() 
@@ -65,7 +90,8 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 		enable_drag_resize		= false;
 		enable_mouse_wheel		= false;
 		enable_key_input		= false;
-
+		drag_border_size		= 4;
+		minimum_size			= new Dimension(9, 9);
 	}
 
 	@Override
@@ -78,10 +104,74 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 		mouselisteners 			= new Vector<MouseListener>();
 		mousewheellisteners		= new Vector<MouseWheelListener>();
 	}
+
+//	-----------------------------------------------------------------------------------------------------------------
+	
+	/**
+	 * 设置控件最小值
+	 * @param width
+	 * @param height
+	 */
+	public void setMinimumSize(int width, int height) {
+		minimum_size.setSize(
+				Math.max((drag_border_size<<1)+1, width), 
+				Math.max((drag_border_size<<1)+1, height));
+	}
+	
+	public int getMinimumWidth() {
+		return minimum_size.width;
+	}
+	
+	public int getMinimumHeight() {
+		return minimum_size.height;
+	}
+
+	public void setCursor(AnimateCursor cursor) {
+		this.cursor = cursor;
+	}
+	public AnimateCursor getCursor() {
+		return this.cursor;
+	}
+		
+	/**
+	 * 当前是否被父节点聚焦
+	 * @return the is_focused
+	 */
+	public boolean isFocused() {
+		return is_focused;
+	}
+
+//	-----------------------------------------------------------------------------------------------------------------
+	
+	
+	@Override
+	protected boolean testCatchMouse(Graphics2D g) {
+		return enable && enable_focus;
+	}
+
+	protected void trySetCursor() {
+//		if (cursor!=null) {
+//			System.out.println("trySetCursor");
+//		}
+		getRoot().setCursor(cursor);
+	}
+
+	protected void renderCatchedMouse(Graphics2D g){}
+
+//	protected void renderChilds(Graphics2D g) {
+//		super.renderChilds(g);
+//		if (enable && enable_drag_resize && enable_drag) {
+//			renderDragResize(g);
+//		}
+//	}
+	
+	
+//	-----------------------------------------------------------------------------------------------------------------
+	
 	
 	void onUpdate(DisplayObjectContainer parent) 
 	{
-		is_focused = parent.getFocus() == this/* && parent.getParent() == parent*/;
+		is_focused = parent.getFocus() == this;
 		
 		super.onUpdate(parent);
 		
@@ -89,11 +179,10 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 		{
 			if (enable_input && visible) {
 				if (!getRoot().isMouseHold(java.awt.event.MouseEvent.BUTTON1)){
-					mouse_draged_event = null;
-				}
-				else if (mouse_draged_event!=null) {
+					stopDrag();
+				} else if (mouse_draged_event!=null) {
 					if (enable_drag) {
-						doOnDragged(mouse_draged_event);
+						onDrag();
 					}
 					onMouseDraged(mouse_draged_event);
 				}
@@ -107,50 +196,56 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 	{
 		if (enable)
 		{
-			if (enable_focus && catched_mouse && event instanceof MouseEvent && ((MouseEvent)event).type == MouseEvent.EVENT_MOUSE_DOWN) {
-				getParent().focus(this);
-				is_focused = true;
+			if (getParent()!=null) {
+				if (getParent().getFocus() == this) {
+					is_focused = true;
+				} else if (enable_focus && 
+						isCatchedMouse() &&
+						(event instanceof MouseEvent) && 
+						((MouseEvent)event).type == MouseEvent.EVENT_MOUSE_DOWN) {
+					getParent().focus(this);
+					is_focused = true;
+				}
 			}
 			
+			// 先向孩子传递
 			if (is_focused) {
-				// 先向孩子传递
 				if (super.onPoolEvent(event)) {
 					return true;
 				}
 			}
 			
-			if (enable_input && visible)
-			{
-				if (event instanceof MouseWheelEvent) 
-				{
-					return processMouseWheelEvent((MouseWheelEvent)event);
-				}
-				else if (event instanceof MouseEvent)
-				{
-					return processMouseEvent((MouseEvent)event);
-				}
-				else if (event instanceof KeyEvent) 
-				{
-					return processKeyEvent((KeyEvent)event);
+			if (enable_input && visible) {
+				if (event instanceof MouseWheelEvent) {
+					return processMouseWheelEvent((MouseWheelEvent) event);
+				} else if (event instanceof MouseEvent) {
+					return processMouseEvent((MouseEvent) event);
+				} else if (event instanceof KeyEvent) {
+					return processKeyEvent((KeyEvent) event);
 				}
 			}
 		}
 		return false;
 	}
 	
-	@Override
-	protected boolean testCatchMouse(Graphics2D g) {
-		return enable_focus && g.hitClip(mouse_x, mouse_y, 1, 1) && hit_mouse;
+
+	void renderInteractive(Graphics2D g) {
+		if (enable) {
+			if (isCatchedMouse()) {
+				trySetCursor();
+				renderCatchedMouse(g);
+			}
+			super.renderInteractive(g);
+			if (enable_drag_resize && enable_drag) {
+				renderDragResize(g);
+			}
+		} else {
+			super.renderInteractive(g);
+		}
 	}
 	
 	boolean processKeyEvent(KeyEvent event) 
 	{
-//		System.out.println("key type = "+ event.type);
-//		if (event.superEvent.isActionKey()){
-//			System.out.println("ActionKey");
-//		}
-//		System.out.println("keyCode = "+ event.keyCode);
-//		System.out.println("keyChar = "+ event.keyChar);
 		if (is_focused && enable_key_input)
 		{
 			event.source = this;
@@ -180,9 +275,27 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 		return false;
 	}
 
+
+	boolean processMouseWheelEvent(MouseWheelEvent event)
+	{
+		if (is_focused && enable_mouse_wheel)
+		{
+			event.source = this;
+			onMouseWheelMoved(event);
+			if (!mousewheellisteners.isEmpty()){
+				for (MouseWheelListener listener : mousewheellisteners) {
+					listener.mouseWheelMoved(event);
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+	
+	
 	boolean processMouseEvent(MouseEvent event)
 	{
-		if (catched_mouse)
+		if (isCatchedMouse())
 		{
 			event.source = this;
 			switch(event.type)
@@ -198,10 +311,7 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 				// mouse drag start
 				if (event.mouseButton == MouseEvent.BUTTON_LEFT) {
 //					System.out.println("start drag");
-					mouse_draged_event = new MouseMoveEvent(event.superEvent, getMouseX(), getMouseY());
-					mouse_draged_event.user_tag = mouseLocation(getMouseX(), getMouseY());
-					mouse_draged_event.user_data = local_bounds.getBounds();
-					mouse_draged_event.source = this;
+					startDrag(event);
 				}else{
 					mouse_draged_event = null;
 				}
@@ -220,7 +330,7 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 					}
 				}
 				// mouse drag end
-				mouse_draged_event = null;
+				stopDrag();
 				return true;
 			}
 			
@@ -229,201 +339,40 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 		return false;
 	}
 	
-	boolean processMouseWheelEvent(MouseWheelEvent event) {
-		if (is_focused && enable_mouse_wheel){
-			event.source = this;
-			onMouseWheelMoved(event);
-			if (!mousewheellisteners.isEmpty()){
-				for (MouseWheelListener listener : mousewheellisteners) {
-					listener.mouseWheelMoved(event);
-				}
-			}
-			return true;
-		}
-		return false;
-	}
-	
 //	-----------------------------------------------------------------------------------------------------------------
-	
-	protected void onMouseDown(MouseEvent event) {}
-	protected void onMouseUp(MouseEvent event) {}
-	protected void onMouseClick(MouseEvent event) {}
-	protected void onMouseDraged(MouseMoveEvent event){}
-	protected void onMouseWheelMoved(MouseWheelEvent event){}
-	
-	protected void onKeyDown(KeyEvent event) {}
-	protected void onKeyUp(KeyEvent event) {}
-	protected void onKeyTyped(KeyEvent event) {}
-	
-//	-----------------------------------------------------------------------------------------------------------------
-//	-----------------------------------------------------------------------------------------------------------------
-	/**
-	 * 计算鼠标在控件的位置
-	 * return 0 中间  1 右 2 右下 3 下 4 左下 5 左 6 左上 7 上 8 右上
-	 */
-	int mouseLocation(int sx, int sy) 
+
+	private void startDrag(MouseEvent event) 
 	{
-		if (isDragResizeE(sx, sy)){
-			return 1;
+		mouse_draged_event = new MouseMoveEvent(event.superEvent, getMouseX(), getMouseY());
+		mouse_draged_event.user_data	= local_bounds.getBounds();
+		mouse_draged_event.source		= this;
+		mouse_draged_event.user_tag		= getDragDirect(
+				(Rectangle)mouse_draged_event.getUserData(),
+				Math.max(drag_border_size, 4), 
+				getMouseX(),
+				getMouseY());
+		if (enable_drag_resize && mouse_draged_event.user_tag!=4) {
+			this.onDragResizeStart(mouse_draged_event.user_tag);
 		}
-		else if (isDragResizeSE(sx, sy)){
-			return 2;
-		}
-		else if (isDragResizeS(sx, sy)){
-			return 3;
-		}
-		else if (isDragResizeSW(sx, sy)){
-			return 4;
-		}
-		else if (isDragResizeW(sx, sy)){
-			return 5;
-		}
-		else if (isDragResizeNW(sx, sy)){
-			return 6;
-		}
-		else if (isDragResizeN(sx, sy)){
-			return 7;
-		}
-		else if (isDragResizeNE(sx, sy)){
-			return 8;
-		}
-		return 0;
 	}
 	
-	boolean isDragResizeSE(int sx, int sy)
+	
+	private void stopDrag()
 	{
-		int sw = 4;
-		int sh = 4;
-		int dx = local_bounds.x + local_bounds.width  - sw;
-		int dy = local_bounds.y + local_bounds.height - sh;
-		
-		//System.out.println(dx + "," + dy + "," + sw + "," + sh + "," + " - > " + sx + "," + sy);
-		
-		if (CMath.includeRectPoint2(dx, dy, sw, sh, sx, sy)) 
+		if (enable_drag_resize && mouse_draged_event!=null && mouse_draged_event.user_tag!=4) 
 		{
-			return true;
+			Rectangle start_rect = mouse_draged_event.getUserData();
+			
+			this.setLocation(
+					x + start_rect.x, 
+					y + start_rect.y);
+			this.setSize(
+					Math.max((int)(start_rect.getWidth()), drag_border_size), 
+					Math.max((int)(start_rect.getHeight()), drag_border_size));
+			
+			this.onDragResizeEnd();
 		}
-		
-		return false;
-	}
-	
-	boolean isDragResizeS(int sx, int sy)
-	{
-		int sw = local_bounds.width-8;
-		int sh = 4;
-		int dx = local_bounds.x + 4;
-		int dy = local_bounds.y + local_bounds.height - sh;
-		
-		//System.out.println(dx + "," + dy + "," + sw + "," + sh + "," + " - > " + sx + "," + sy);
-		
-		if (CMath.includeRectPoint2(dx, dy, sw, sh, sx, sy)) 
-		{
-			return true;
-		}
-		
-		return false;
-	}
-	
-	boolean isDragResizeN(int sx, int sy)
-	{
-		int sw = local_bounds.width-8;
-		int sh = 4;
-		int dx = local_bounds.x + 4;
-		int dy = local_bounds.y;
-		
-		//System.out.println(dx + "," + dy + "," + sw + "," + sh + "," + " - > " + sx + "," + sy);
-		
-		if (CMath.includeRectPoint2(dx, dy, sw, sh, sx, sy)) 
-		{
-			return true;
-		}
-		
-		return false;
-	}
-	
-	boolean isDragResizeE(int sx, int sy)
-	{
-		int sw = 4;
-		int sh = local_bounds.height-8;
-		int dx = local_bounds.x + local_bounds.width  - sw;
-		int dy = local_bounds.y + 4;
-		
-		//System.out.println(dx + "," + dy + "," + sw + "," + sh + "," + " - > " + sx + "," + sy);
-		
-		if (CMath.includeRectPoint2(dx, dy, sw, sh, sx, sy)) 
-		{
-			return true;
-		}
-		
-		return false;
-	}
-	
-	boolean isDragResizeW(int sx, int sy)
-	{
-		int sw = 4;
-		int sh = local_bounds.height-8;
-		int dx = local_bounds.x;
-		int dy = local_bounds.y + 4;
-		
-		//System.out.println(dx + "," + dy + "," + sw + "," + sh + "," + " - > " + sx + "," + sy);
-		
-		if (CMath.includeRectPoint2(dx, dy, sw, sh, sx, sy)) 
-		{
-			return true;
-		}
-		
-		return false;
-	}
-	
-	boolean isDragResizeSW(int sx, int sy)
-	{
-		int sw = 4;
-		int sh = 4;
-		int dx = local_bounds.x;
-		int dy = local_bounds.y + local_bounds.height - sh;
-		
-		//System.out.println(dx + "," + dy + "," + sw + "," + sh + "," + " - > " + sx + "," + sy);
-		
-		if (CMath.includeRectPoint2(dx, dy, sw, sh, sx, sy)) 
-		{
-			return true;
-		}
-		
-		return false;
-	}
-	
-	boolean isDragResizeNW(int sx, int sy)
-	{
-		int sw = 4;
-		int sh = 4;
-		int dx = local_bounds.x;
-		int dy = local_bounds.y;
-		
-		//System.out.println(dx + "," + dy + "," + sw + "," + sh + "," + " - > " + sx + "," + sy);
-		
-//		if (CMath.includeRectPoint2(dx, dy, sw, sh, sx, sy)) 
-//		{
-//			return true;
-//		}
-		
-		return false;
-	}
-	
-	boolean isDragResizeNE(int sx ,int sy)
-	{
-		int sw = 4;
-		int sh = 4;
-		int dx = local_bounds.x + local_bounds.width - sw;
-		int dy = local_bounds.y;
-		
-		//System.out.println(dx + "," + dy + "," + sw + "," + sh + "," + " - > " + sx + "," + sy);
-		
-		if (CMath.includeRectPoint2(dx, dy, sw, sh, sx, sy)) 
-		{
-			return true;
-		}
-		
-		return false;
+		mouse_draged_event = null;
 	}
 	
 	/**
@@ -431,123 +380,121 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 	 * （event.user_tag 1 2 3）
 	 * @param event
 	 */
-	public void doOnDragged(MouseMoveEvent event) 
+	private void onDrag() 
 	{
-		if (enable_drag_resize && event.user_tag > 0 && event.user_tag < 4) 
+		if (enable_drag_resize && mouse_draged_event.user_tag!=4) 
 		{
-			Rectangle start_rect = event.getUserData();
-//			int fx = start_rect.x + start_rect.width  - event.mouseDownStartX;
-//			int fy = start_rect.y + start_rect.height - event.mouseDownStartY;
-//			
-//			int w = Math.abs(local_bounds.x - (mouse_x + fx));
-//			int h = Math.abs(local_bounds.y - (mouse_y + fy));
-//			
-//			this.setSize(w, h);
-			int dx = 0;
-			int dy = 0;
+			Rectangle dstart_rect = mouse_draged_event.getUserData();
+			int sx = mouse_draged_event.mouseDownStartX;
+			int sy = mouse_draged_event.mouseDownStartY;
+			int dx = getMouseX() - sx;
+			int dy = getMouseY() - sy;
 			
-//			System.out.println("getMouseX() = "+getMouseX()+"event.mouseDownStartX = "+event.mouseDownStartX);
-//			System.out.println("getMouseY() = "+getMouseY()+"event.mouseDownStartY = "+event.mouseDownStartY);
-			switch (event.user_tag)
+			int rx = dstart_rect.x;
+			int ry = dstart_rect.y;
+			int rw = dstart_rect.width;
+			int rh = dstart_rect.height;
+			
+			switch(mouse_draged_event.user_tag)
 			{
-			case 1:
-				dx = getMouseX()-event.mouseDownStartX;
+			// north
+			case 0: case 1: case 2:
+				rh = local_bounds.height - dy;
+				if (rh < minimum_size.height) {
+					rh = minimum_size.height;
+					ry = local_bounds.height - rh;
+				} else {
+					ry = local_bounds.y + dy;
+				}
 				break;
-			case 2:
-				dx = getMouseX()-event.mouseDownStartX;
-				dy = getMouseY()-event.mouseDownStartY;
+			// south
+			case 6: case 7: case 8:
+				rh = local_bounds.height + dy;
+				if (rh < minimum_size.height) {
+					rh = minimum_size.height;
+				}
 				break;
-			case 3:
-				dy = getMouseY()-event.mouseDownStartY;
-				break;
-//			case 4:
-//				dx = getMouseX()-event.mouseDownStartX;
-//				dy = getMouseY()-event.mouseDownStartY;
-//				this.setLocation(
-//						parent.getMouseX() - event.mouseDownStartX, 
-//						this.getY());
-//				break;
-//			case 5:
-//				dx = getMouseX()-event.mouseDownStartX;
-//				this.setLocation(
-//						parent.getMouseX() - event.mouseDownStartX, 
-//						this.getY());
-//				break;
-//			case 6:
-//				dx = getMouseX()-event.mouseDownStartX;
-//				dy = getMouseY()-event.mouseDownStartY;
-//				this.setLocation(
-//						parent.getMouseX() - event.mouseDownStartX, 
-//						parent.getMouseY() - event.mouseDownStartY);
-//				break;
-//			case 7:
-//				dy = getMouseY()-event.mouseDownStartY;
-//				this.setLocation(
-//						this.getX(), 
-//						parent.getMouseY() - event.mouseDownStartY);
-//				break;
-//			case 8:
-//				dx = getMouseX()-event.mouseDownStartX;
-//				dy = getMouseY()-event.mouseDownStartY;
-//				this.setLocation(
-//						this.getX(), 
-//						parent.getMouseY() - event.mouseDownStartY);
-//				break;
 			}
 			
-			int fw = Math.abs(start_rect.width +dx);
-			int fh = Math.abs(start_rect.height+dy);
+			switch(mouse_draged_event.user_tag)
+			{
+			// west
+			case 0: case 3: case 6:
+				rw = local_bounds.width - dx;
+				if (rw < minimum_size.width) {
+					rw = minimum_size.width;
+					rx = local_bounds.width - rw;
+				} else {
+					rx = local_bounds.x + dx;
+				}
+				break;
+			// east
+			case 2: case 5: case 8:
+				rw = local_bounds.width + dx;
+				if (rw < minimum_size.width) {
+					rw = minimum_size.width;
+				}
+				break;
+			}
 			
-			this.setSize(fw, fh);
+			dstart_rect.setBounds(rx, ry, rw, rh);
 		}
 		else
 		{
 			this.setLocation(
-					parent.getMouseX() - event.mouseDownStartX, 
-					parent.getMouseY() - event.mouseDownStartY);
-			// 修正了鼠标
-			if (getRoot().getStage().cursor!=null){
-				getRoot().getStage().cursor.setLocation(getRoot().getMouseX(), getRoot().getMouseY());
-			}
+					parent.getMouseX() - mouse_draged_event.mouseDownStartX, 
+					parent.getMouseY() - mouse_draged_event.mouseDownStartY);
 		}
 	}
 
-
-	@Override
-	protected void afterRender(Graphics2D g) 
+	private void renderDragResize(Graphics2D g) 
 	{
-		if (enable_drag_resize) 
-		{
-//			if (isDragResizeSE(mouse_x, mouse_y) || (mouse_draged_event!=null && mouse_draged_event.user_tag != 0)){
-//				getRoot().setCursor(Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR));
-//			}
-			int tag;
-			if (mouse_draged_event!=null){
-				tag = mouse_draged_event.user_tag;
-			}else{
-				tag = mouseLocation(mouse_x, mouse_y);
-			}
-			switch (tag){
-			case 1:
-//			case 5:
-				getRoot().setCursor(AnimateCursor.E_RESIZE_CURSOR);
-				break;
-			case 2:
-//			case 6:
-				getRoot().setCursor(AnimateCursor.SE_RESIZE_CURSOR);
-				break;
-			case 3:
-//			case 7:
-				getRoot().setCursor(AnimateCursor.S_RESIZE_CURSOR);
-				break;
-//			case 4:
-//			case 8:
-//				getRoot().setCursor(Cursor.getPredefinedCursor(Cursor.SW_RESIZE_CURSOR));
-//				break;
-			}
-			
+		if (mouse_draged_event != null && mouse_draged_event.user_tag == 4)	{
+			return;
 		}
+
+		int drag_direct = 4;
+		
+		if (mouse_draged_event != null && mouse_draged_event.user_tag != 4)		
+		{
+			drag_direct = mouse_draged_event.user_tag;
+			
+			pushObject(g.getClip());
+			pushObject(g.getStroke());
+			{
+				Rectangle start_rect = mouse_draged_event.getUserData();			
+				g.setClip(start_rect.x, start_rect.y, start_rect.width+1, start_rect.height+1);
+				g.setColor(Color.WHITE);
+				g.setStroke(new BasicStroke(drag_border_size));
+				g.draw(start_rect);
+			}
+			g.setStroke(popObject(Stroke.class));
+			g.setClip(popObject(Shape.class));
+		}
+		
+		if (drag_direct==4) {
+			drag_direct = getDragDirect(
+					local_bounds,
+					Math.max(drag_border_size, 4), 
+					getMouseX(),
+					getMouseY());
+		}
+		
+		switch (drag_direct){
+		case 0: getRoot().setCursor(AnimateCursor.RESIZE_CURSOR_NW); break;
+		case 1: getRoot().setCursor(AnimateCursor.RESIZE_CURSOR_N); break;
+		case 2: getRoot().setCursor(AnimateCursor.RESIZE_CURSOR_NE); break;
+		
+		case 3: getRoot().setCursor(AnimateCursor.RESIZE_CURSOR_W); break;
+		case 5: getRoot().setCursor(AnimateCursor.RESIZE_CURSOR_E); break;
+		
+		case 6: getRoot().setCursor(AnimateCursor.RESIZE_CURSOR_SW); break;
+		case 7: getRoot().setCursor(AnimateCursor.RESIZE_CURSOR_S); break;
+		case 8: getRoot().setCursor(AnimateCursor.RESIZE_CURSOR_SE); break;
+		}
+		
 	}
+
 	
 	public boolean isOnDragged() {
 		return mouse_draged_event!=null;
@@ -578,6 +525,44 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 			mousewheellisteners.remove((MouseWheelListener)listener);
 		}
 	}
+
+//	-----------------------------------------------------------------------------------------------------------------
 	
+	protected void onMouseDown(MouseEvent event) {}
+	protected void onMouseUp(MouseEvent event) {}
+	protected void onMouseClick(MouseEvent event) {}
+	protected void onMouseDraged(MouseMoveEvent event){}
+	protected void onMouseWheelMoved(MouseWheelEvent event){}
+	
+	protected void onKeyDown(KeyEvent event) {}
+	protected void onKeyUp(KeyEvent event) {}
+	protected void onKeyTyped(KeyEvent event) {}
+	
+	protected void onDragResizeStart(int drag_type){}
+	protected void onDragResizeEnd(){}
+//	-----------------------------------------------------------------------------------------------------------------
+	
+	public static int getDragDirect(Rectangle bounds, int bs, int dx, int dy)
+	{
+		int bx = bounds.x;
+		int by = bounds.y;
+		int bw = bounds.width;
+		int bh = bounds.height;
+		int bd = bs<<1;
+		int[][] bounds9 = new int[][] {
+		{bx     , by,      bs,      bs     }, {bx + bs, by,      bw - bd, bs     }, {bw - bs, by,      bs,      bs     },
+		{bx     , by + bs, bs,      bh - bd}, {bx + bs, by + bs, bw - bd, bh - bd}, {bw - bs, by + bs, bs,      bh - bd},
+		{bx     , bh - bs, bs,      bs     }, {bx + bs, bh - bs, bw - bd, bs     }, {bw - bs, bh - bs, bs,      bs     },
+		};
+		for (int i = bounds9.length-1; i >=0; i--) {
+			if (CMath.includeRectPoint2(
+					bounds9[i][0], bounds9[i][1],
+					bounds9[i][2], bounds9[i][3], 
+					dx, dy)) {
+				return i;
+			}
+		}
+		return 4;
+	}
 	
 }

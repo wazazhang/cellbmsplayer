@@ -35,8 +35,6 @@ public abstract class UIComponent extends InteractiveObject
 	@Property("提示文字")
 	public				String			tip;
 	
-	transient private	AnimateCursor	cursor;
-	
 	transient protected	UILayout 		layout;
 	
 	@Property("自定控件图片或颜色")
@@ -123,13 +121,6 @@ public abstract class UIComponent extends InteractiveObject
 		return this.custom_layout;
 	}
 	
-	public void setCursor(AnimateCursor cursor) {
-		this.cursor = cursor;
-	}
-	public AnimateCursor getCursor() {
-		return this.cursor;
-	}
-	
 //	public void setCursorG2D(CursorG2D cursor) {
 //		this.cursorG2D = cursor;
 //	}
@@ -137,13 +128,13 @@ public abstract class UIComponent extends InteractiveObject
 
 	public boolean isFocusedComponent() {
 		if (root_form!=null) {
-			if (root_form.is_focused && is_focused) {
+			if (root_form.isFocused() && isFocused()) {
 				return true;
 			}
 		}else{
 			if (getParent()!=null && getParent() instanceof InteractiveObject) {
 				InteractiveObject p = (InteractiveObject)getParent();
-				if (p.is_focused && is_focused) {
+				if (p.isFocused() && isFocused()) {
 					return true;
 				}
 			}
@@ -168,10 +159,8 @@ public abstract class UIComponent extends InteractiveObject
 	}
 	public void removed(DisplayObjectContainer parent) {}
 	public void update(){}
-	public void render(Graphics2D g)
-	{
+	public void render(Graphics2D g) {
 		renderLayout(g);
-		renderCatchedMouse(g);
 	}
 	
 	protected void renderLayout(Graphics2D g) 
@@ -185,36 +174,27 @@ public abstract class UIComponent extends InteractiveObject
 	
 	protected void renderCatchedMouse(Graphics2D g)
 	{
-		if (enable && (root_form==null || root_form.enable)){
-			if (catched_mouse) {
-				trySetCursor();
-				if (root_form!=null && root_form.is_focused){
-					if (getStage().getCursorG2D().getFocusedObj()!=this){
-						getStage().getCursorG2D().setFocusedObj(this);
-						if (tip!=null && tip.length()>0){
-							getStage().getCursorG2D().setTip(TextBuilder.buildScript(tip));
-						}
-					}
-				}
-				onDrawMouseHover(g);
-			}
+		if ((root_form==null || root_form.enable)){
+			onDrawMouseHover(g);
 		}
 	}
 
-	protected void trySetCursor() {
-		getRoot().setCursor(cursor);
-	}
-	
 	@Override
-	protected void afterRender(Graphics2D g) 
+	protected void renderAfter(Graphics2D g) 
 	{
 		setRootForm(getParent());
 		
-		super.afterRender(g);
+		super.renderAfter(g);
 		
 		if (!enable) {
 			onDrawDisable(g);
 		}
+	}
+	
+	@Override
+	protected void trySetCursor() {
+		super.trySetCursor();
+		getStage().setTip(tip);
 	}
 	
 //	-----------------------------------------------------------------------------------------------------

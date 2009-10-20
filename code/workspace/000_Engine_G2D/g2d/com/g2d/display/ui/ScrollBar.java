@@ -16,98 +16,6 @@ public class ScrollBar extends Container
 {
 	private static final long serialVersionUID = Version.VersionG2D;
 	
-	public static class ScrollBarPair extends Container
-	{
-		private static final long serialVersionUID = Version.VersionG2D;
-		
-		public ScrollBar vScroll;
-		public ScrollBar hScroll;
-		
-		@Override
-		protected void init_field() 
-		{
-			super.init_field();
-			
-			vScroll	= ScrollBar.createVScroll(12);
-			hScroll = ScrollBar.createHScroll(12);
-			
-			super.addChild(vScroll);
-			super.addChild(hScroll);
-			
-			this.enable_bounds 	= false;
-			this.enable_input 	= false;
-		}
-		
-		
-		public ScrollBarPair() 
-		{}
-		
-		synchronized public void addChild(UIComponent child) {
-			Tools.printError("can not add a custom child component in " + getClass().getName() + " !");
-		}
-		synchronized public void removeChild(UIComponent child) {
-			Tools.printError("can not remove a custom child component in " + getClass().getName() + " !");
-		}
-		
-		public void update() 
-		{
-			super.update();
-			
-			int parentBorder = ((UIComponent)getParent()).layout.BorderSize;
-			int parentBorder2 = parentBorder<<1;
-			
-			this.setSize(
-					getParent().getWidth() - parentBorder2, 
-					getParent().getHeight() - parentBorder2);
-			
-			this.setLocation(
-					parentBorder, 
-					parentBorder);
-			
-			vScroll.setSize(vScroll.size, getHeight() - hScroll.getHeight());
-			hScroll.setSize(getWidth()-vScroll.getWidth(), hScroll.size);
-			
-			vScroll.setLocation(
-					getWidth()-vScroll.size, 
-					0);
-			hScroll.setLocation(
-					0,
-					getHeight()-hScroll.size);
-			
-//			if (vScroll.visible){
-//				System.out.println("vScroll.max = "+ vScroll.max + "");
-//			}else{
-//				System.out.println("dvScroll.max = "+ vScroll.max + "");
-//			}
-//			if (hScroll.visible){
-//				System.out.println("hScroll.max = "+ hScroll.max);
-//			}else{
-//				System.out.println("dhScroll.max = "+ hScroll.max + "");
-//			}
-//			if (vScroll.getValueLength()+hScroll.getHeight()>=vScroll.max && 
-//				hScroll.getValueLength()+vScroll.getWidth()>=hScroll.max){
-//				vScroll.setValue(vScroll.value, vScroll.max);
-//				hScroll.setValue(hScroll.value, hScroll.max);
-//				vScroll.visible = false;
-//				hScroll.visible = false;
-//			}
-			
-		}
-		
-		public void render(Graphics2D g) {}
-		
-	}
-	
-	static public ScrollBar createVScroll(int size)
-	{
-		return new ScrollBar(true, size);
-	}
-	
-	static public ScrollBar createHScroll(int size) 
-	{
-		return new ScrollBar(false, size);
-	}
-	
 //	--------------------------------------------------------------------------------------------------------------------------------
 	
 	
@@ -115,14 +23,10 @@ public class ScrollBar extends Container
 	{
 		private static final long serialVersionUID = Version.VersionG2D;
 		
-		public boolean isv = isvscroll;
-		
-		@Override
-		public void added(DisplayObjectContainer parent) {
-			isv = isvscroll;
-			super.added(parent);
+		public boolean isVscroll(){
+			return ScrollBar.this.isvscroll;
 		}
-		
+
 		protected void onMouseDown(MouseEvent event) {
 			ScrollBar.this.moveInterval(-1);
 		}
@@ -131,13 +35,9 @@ public class ScrollBar extends Container
 	public class Tail extends BaseButton
 	{
 		private static final long serialVersionUID = Version.VersionG2D;
-		
-		public boolean isv = isvscroll;
-		
-		@Override
-		public void added(DisplayObjectContainer parent) {
-			isv = isvscroll;
-			super.added(parent);
+
+		public boolean isVscroll(){
+			return ScrollBar.this.isvscroll;
 		}
 		
 		protected void onMouseDown(MouseEvent event)
@@ -149,20 +49,16 @@ public class ScrollBar extends Container
 	public class Back extends BaseButton
 	{
 		private static final long serialVersionUID = Version.VersionG2D;
-		
-		public boolean isv = isvscroll;
-	
+
+		public boolean isVscroll(){
+			return ScrollBar.this.isvscroll;
+		}
+
 		public Back() {
 			enable_focus = false;
 //			enable_input = false;
 		}
 
-		@Override
-		public void added(DisplayObjectContainer parent) {
-			isv = isvscroll;
-			super.added(parent);
-		}
-		
 		protected void onMouseDown(MouseEvent event) 
 		{
 			int direct = 0;
@@ -182,24 +78,15 @@ public class ScrollBar extends Container
 	public class Strip extends BaseButton
 	{
 		private static final long serialVersionUID = Version.VersionG2D;
-		
-		public boolean isv = isvscroll;
-		
+
+		public boolean isVscroll(){
+			return ScrollBar.this.isvscroll;
+		}
+
 		public Strip() {
 			enable_drag = true;
 		}
 
-		@Override
-		public void added(DisplayObjectContainer parent) {
-			isv = isvscroll;
-			super.added(parent);
-		}
-		
-		public void update()
-		{
-			super.update();
-		}
-		
 		protected void onMouseDraged(MouseMoveEvent event) {
 			if (ScrollBar.this.isvscroll) {
 				ScrollBar.this.setStripPos(getParent().getMouseY()-event.mouseDownStartY);
@@ -261,11 +148,11 @@ public class ScrollBar extends Container
 		this.size = size;
 	}
 	
-	synchronized public void addChild(UIComponent child) {
-		Tools.printError("can not add a custom child component in " + getClass().getName() + " !");
+	synchronized public boolean addChild(UIComponent child) {
+		throw new IllegalStateException("can not add a custom child component in " + getClass().getName() + " !");
 	}
-	synchronized public void removeChild(UIComponent child) {
-		Tools.printError("can not remove a custom child component in " + getClass().getName() + " !");
+	synchronized public boolean removeChild(UIComponent child) {
+		throw new IllegalStateException("can not remove a custom child component in " + getClass().getName() + " !");
 	}
 	
 	public double getMax() {
@@ -298,6 +185,10 @@ public class ScrollBar extends Container
 		
 		this.value = Math.min(value, max-this.valuelength);
 		this.value = Math.max(this.value, 0);
+	}
+	
+	public boolean isMaxLength() {
+		return valuelength >= max;
 	}
 	
 	public void moveInterval(int direction){
@@ -364,7 +255,7 @@ public class ScrollBar extends Container
 			strip.setLocation(sx, 0);
 		}
 		
-		if (valuelength == max) {
+		if (isMaxLength()) {
 //			strip.visible = false;
 			this.visible = false;
 		}else{
@@ -373,22 +264,121 @@ public class ScrollBar extends Container
 		}
 		
 	}
+//	
+//	public int getWidth()
+//	{
+//		if (visible){
+//			return super.getWidth();
+//		}else{
+//			return 0;
+//		}
+//	}
+//	
+//	public int getHeight()
+//	{
+//		if (visible){
+//			return super.getHeight();
+//		}else{
+//			return 0;
+//		}
+//	}
+//	
 	
-	public int getWidth()
+
+//	--------------------------------------------------------------------------------------------------------------------------------
+	
+
+
+	public static class ScrollBarPair extends Container
 	{
-		if (visible){
-			return super.getWidth();
-		}else{
-			return 0;
+		private static final long serialVersionUID = Version.VersionG2D;
+		
+		public ScrollBar vScroll;
+		public ScrollBar hScroll;
+		
+		@Override
+		protected void init_field() 
+		{
+			super.init_field();
+			
+			vScroll	= ScrollBar.createVScroll(12);
+			hScroll = ScrollBar.createHScroll(12);
+			
+			super.addChild(vScroll);
+			super.addChild(hScroll);
+			
+			this.enable_bounds 	= false;
+			this.enable_input 	= false;
 		}
+		
+		
+		public ScrollBarPair() 
+		{}
+		
+		synchronized public boolean addChild(UIComponent child) {
+			throw new IllegalStateException("can not add a custom child component in " + getClass().getName() + " !");
+		}
+		synchronized public boolean removeChild(UIComponent child) {
+			throw new IllegalStateException("can not remove a custom child component in " + getClass().getName() + " !");
+		}
+		
+		public void update() 
+		{
+			super.update();
+			
+			int parentBorder = ((UIComponent)getParent()).layout.BorderSize;
+			int parentBorder2 = parentBorder<<1;
+			
+			this.setSize(
+					getParent().getWidth() - parentBorder2, 
+					getParent().getHeight() - parentBorder2);
+			
+			this.setLocation(
+					parentBorder, 
+					parentBorder);
+			
+			vScroll.setSize(vScroll.size, getHeight() - hScroll.getHeight());
+			hScroll.setSize(getWidth()-vScroll.getWidth(), hScroll.size);
+			
+			vScroll.setLocation(
+					getWidth()-vScroll.size, 
+					0);
+			hScroll.setLocation(
+					0,
+					getHeight()-hScroll.size);
+			
+//			if (vScroll.visible){
+//				System.out.println("vScroll.max = "+ vScroll.max + "");
+//			}else{
+//				System.out.println("dvScroll.max = "+ vScroll.max + "");
+//			}
+//			if (hScroll.visible){
+//				System.out.println("hScroll.max = "+ hScroll.max);
+//			}else{
+//				System.out.println("dhScroll.max = "+ hScroll.max + "");
+//			}
+//			if (vScroll.getValueLength()+hScroll.getHeight()>=vScroll.max && 
+//				hScroll.getValueLength()+vScroll.getWidth()>=hScroll.max){
+//				vScroll.setValue(vScroll.value, vScroll.max);
+//				hScroll.setValue(hScroll.value, hScroll.max);
+//				vScroll.visible = false;
+//				hScroll.visible = false;
+//			}
+			
+		}
+		
+		public void render(Graphics2D g) {}
+		
 	}
 	
-	public int getHeight()
+	static public ScrollBar createVScroll(int size)
 	{
-		if (visible){
-			return super.getHeight();
-		}else{
-			return 0;
-		}
+		return new ScrollBar(true, size);
 	}
+	
+	static public ScrollBar createHScroll(int size) 
+	{
+		return new ScrollBar(false, size);
+	}
+	
 }

@@ -786,6 +786,8 @@ public class CUtil extends CObject
 	
 	//-------------------------------------------------------------------------------------------------------------
 	
+	static StringCompare default_string_compare = new StringCompare();
+	
 	static public interface ICompare<T1,T2>
 	{
 		/**
@@ -793,8 +795,6 @@ public class CUtil extends CObject
 		 * @param b i+1
 		 * @return if ret < 0  q[b] -> q[a]
 		 */
-		//public int compare(Object a, Object b);
-		
 		public int compare(T1 a, T2 b);
 	}
 	
@@ -811,6 +811,10 @@ public class CUtil extends CObject
 			}
 			return b.length() - a.length();
 		}
+	}
+	
+	static public StringCompare getStringCompare() {
+		return default_string_compare;
 	}
 	
 //	public static void main(String[] args)

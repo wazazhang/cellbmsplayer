@@ -101,11 +101,11 @@ public class TextBox extends Container implements Serializable
 		this.setSize(w, h);
 	}
 	
-	synchronized public void addChild(UIComponent child) {
-		Tools.printError("can not add a custom child component in " + getClass().getName() + " !");
+	synchronized public boolean addChild(UIComponent child) {
+		throw new IllegalStateException("can not add a custom child component in " + getClass().getName() + " !");
 	}
-	synchronized public void removeChild(UIComponent child) {
-		Tools.printError("can not remove a custom child component in " + getClass().getName() + " !");
+	synchronized public boolean removeChild(UIComponent child) {
+		throw new IllegalStateException("can not remove a custom child component in " + getClass().getName() + " !");
 	}
 	
 	public void setText(String text) {
@@ -185,7 +185,7 @@ public class TextBox extends Container implements Serializable
 				layout.BorderSize, 
 				getWidth()-(layout.BorderSize<<1), 
 				getHeight()-(layout.BorderSize<<1), 
-				mouse_x, mouse_y)) {
+				getMouseX(), getMouseY())) {
 			super.trySetCursor();
 		}
 	}
@@ -231,7 +231,7 @@ public class TextBox extends Container implements Serializable
 		AnimateCursor oldcursor = getCursor();
 		if (is_show_link) {
 			AttributedSegment segment = text.getSegment(
-					text.pointToPosition(mouse_x-text_draw_x, mouse_y-text_draw_y), 
+					text.pointToPosition(getMouseX()-text_draw_x, getMouseY()-text_draw_y), 
 					com.g2d.display.ui.text.TextAttribute.LINK);
 			if (segment!=null) {
 				setCursor(link_cursor);

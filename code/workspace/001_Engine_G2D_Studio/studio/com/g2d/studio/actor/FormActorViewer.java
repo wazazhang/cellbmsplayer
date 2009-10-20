@@ -6,6 +6,7 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -36,6 +37,87 @@ public class FormActorViewer extends AFormDisplayObjectViewer<SceneSprite>
 {
 	private static final long serialVersionUID = Version.VersionGS;
 
+
+	/**
+	 * 为单位绑定RPG属性
+	 */
+	private Actor 		rpg_actor;
+	
+	JButton				tool_info		= new JButton("编辑属性");
+	
+	public FormActorViewer(ATreeNodeLeaf<FormActorViewer> leaf, CellSetResource set, String sprID)
+	{
+		super(leaf, new SceneSprite(set, sprID));
+
+		canvas.getCanvasAdapter().setStage(new ActorStage());
+		setSize(view_object.getWidth()*2, view_object.getHeight()*2);
+
+		this.setTitle("actor " + sprID);
+
+		this.rpg_actor = new Actor(
+					getCpjName(),
+					getCpjObjectID()
+					);
+		
+		// 
+		ButtonGroup 	tool_group 	= new ButtonGroup();
+		{
+			super.addToolButton(tool_info,  "单位绑定的属性", 		tool_group);
+			
+			tool_info.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					//new AbilityForm(rpg_actor).setVisible(true);
+					DisplayObjectEditor<SceneSprite> form = new DisplayObjectEditor<SceneSprite>(
+							getViewObject(),
+							new RPGUnitPanel(rpg_actor), 
+							new AbilityPanel(null, rpg_actor));
+					form.setLocation(getX()+getWidth(), getY());
+					form.setVisible(true);
+				}
+			});
+		}
+
+	}
+	
+	public Actor createRPGActor() {
+		return CIO.cloneObject(rpg_actor);
+	}
+	
+	@Override
+	public void loadObject(ObjectInputStream is, File file) throws Exception {
+		this.rpg_actor = (Actor)is.readObject();
+	}
+	
+	@Override
+	public void saveObject(ObjectOutputStream os, File file) throws Exception {
+		os.writeObject(rpg_actor);
+	}
+	
+	@Override
+	public ImageIcon getSnapshot(boolean update)
+	{
+		if (snapshot==null || update){
+			try {
+				CSprite spr = view_object.getSprite();
+				Image img = spr.getFrameImage(0, 0, 0).getSrc();
+				img = img.getScaledInstance(32, 32, Image.SCALE_FAST);
+				snapshot = Tools.createIcon(img);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return snapshot;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	class ActorStage extends Stage
 	{
 		public ActorStage() {
@@ -78,74 +160,4 @@ public class FormActorViewer extends AFormDisplayObjectViewer<SceneSprite>
 		
 	}
 	
-	/**
-	 * 为单位绑定RPG属性
-	 */
-	private Actor 		rpg_actor;
-	
-	JButton				tool_info		= new JButton("编辑属性");
-	
-	public FormActorViewer(ATreeNodeLeaf<FormActorViewer> leaf, CellSetResource set, String sprID)
-	{
-		super(leaf, new SceneSprite(set, sprID));
-
-		canvas.getCanvasAdapter().setStage(new ActorStage());
-		setSize(view_object.getWidth()*2, view_object.getHeight()*2);
-
-		this.setTitle("actor " + sprID);
-
-		this.rpg_actor = new Actor(
-					getCpjName(),
-					getCpjObjectID()
-					);
-		
-		// 
-		ButtonGroup 	tool_group 	= new ButtonGroup();
-		{
-			super.addToolButton(tool_info,  "单位绑定的属性", 		tool_group);
-			
-			tool_info.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					//new AbilityForm(rpg_actor).setVisible(true);
-					DisplayObjectEditor<SceneSprite> form = new DisplayObjectEditor<SceneSprite>(
-							getViewObject(),
-							new RPGUnitPanel(rpg_actor), 
-							new AbilityPanel(rpg_actor));
-					form.setLocation(getX()+getWidth(), getY());
-					form.setVisible(true);
-				}
-			});
-		}
-
-	}
-	
-	public Actor createRPGActor() {
-		return CIO.cloneObject(rpg_actor);
-	}
-	
-	@Override
-	public void loadObject(ObjectInputStream is) throws IOException, ClassNotFoundException {
-		this.rpg_actor = (Actor)is.readObject();
-	}
-	
-	@Override
-	public void saveObject(ObjectOutputStream os) throws IOException, ClassNotFoundException {
-		os.writeObject(rpg_actor);
-	}
-	
-	@Override
-	public ImageIcon getSnapshot(boolean update)
-	{
-		if (snapshot==null || update){
-			try {
-				CSprite spr = view_object.getSprite();
-				Image img = spr.getFrameImage(0, 0, 0).getSrc();
-				img = img.getScaledInstance(32, 32, Image.SCALE_FAST);
-				snapshot = Tools.createIcon(img);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		return snapshot;
-	}
 }

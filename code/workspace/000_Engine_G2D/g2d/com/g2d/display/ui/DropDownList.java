@@ -85,12 +85,12 @@ public abstract class DropDownList extends Container
 		scroll.moveInterval(event.scrollDirection);
 	}
 	
-	public synchronized void addChild(UIComponent child) {
-		container.addChild(child);
+	public synchronized boolean addChild(UIComponent child) {
+		return container.addChild(child);
 	}
 	
-	public synchronized void removeChild(UIComponent child) {
-		container.removeChild(child);
+	public synchronized boolean removeChild(UIComponent child) {
+		return container.removeChild(child);
 	}
 	
 	

@@ -52,7 +52,7 @@ public class CellCanvas extends InteractiveObject
 	@Override
 	public void update() {
 		try {
-			AScreen.pointerMoved(mouse_x, mouse_y);
+			AScreen.pointerMoved(getMouseX(), getMouseY());
 			AScreen.gobal_update();
 		} catch (Throwable err) {
 			err.printStackTrace();
@@ -142,7 +142,7 @@ public class CellCanvas extends InteractiveObject
 	@Override
 	protected void onMouseDown(com.g2d.display.event.MouseEvent event) {
 		if(event.mouseButton == MouseEvent.BUTTON1){
-			AScreen.pointerPressed(mouse_x, mouse_y);
+			AScreen.pointerPressed(getMouseX(), getMouseY());
 		}else{
 			AScreen.keyPressed(AScreen.KEY_B);
 		}
@@ -151,7 +151,7 @@ public class CellCanvas extends InteractiveObject
 	@Override
 	protected void onMouseUp(com.g2d.display.event.MouseEvent event) {
 		if(event.mouseButton==MouseEvent.BUTTON1){
-			AScreen.pointerReleased(mouse_x, mouse_y);
+			AScreen.pointerReleased(getMouseX(), getMouseY());
 		}else{
 			AScreen.keyReleased(AScreen.KEY_B);
 		}

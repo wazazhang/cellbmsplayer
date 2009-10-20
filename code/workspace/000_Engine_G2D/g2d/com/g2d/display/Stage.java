@@ -5,8 +5,10 @@ import java.awt.Graphics2D;
 import java.awt.event.FocusEvent;
 import java.text.AttributedString;
 
+import com.g2d.Tools;
 import com.g2d.Version;
 import com.g2d.display.event.Event;
+import com.g2d.display.ui.text.TextBuilder;
 
 
 
@@ -16,11 +18,20 @@ public abstract class Stage extends DisplayObjectContainer
 	
 	public static int 	transition_max_time = 10;
 	
-	transient CursorG2D 		cursor;
+//	transient CursorG2D 		cursor;
 	transient private boolean 	is_transition_in 		= true;
 	transient private int 		transition_in_timer		= 0;
 	transient private boolean 	is_transition_out		= false;
 	transient private int 		transition_out_timer	= 0;
+	
+	transient private TextTip			default_tip;
+	transient private Tip				next_tip;
+	transient private String			next_tip_text;
+	transient private AttributedString	next_tip_atext;
+
+	/**当前控件内，最后被鼠标捕获到的单位*/
+	transient private DisplayObject		mouse_picked_object;
+	transient private DisplayObject		last_mouse_picked_object;
 	
 	@Override
 	protected void init_transient() 
@@ -31,7 +42,8 @@ public abstract class Stage extends DisplayObjectContainer
 		transition_in_timer		= 0;
 		is_transition_out		= false;
 		transition_out_timer	= 0;
-		cursor					= new CursorG2D();
+		default_tip				= new TextTip();
+//		cursor					= new CursorG2D();
 	}
 	
 	protected Stage() 
@@ -94,10 +106,10 @@ public abstract class Stage extends DisplayObjectContainer
 		this.local_bounds.width  = w;
 		this.local_bounds.height = h;
 		
-		if (cursor!=null) {
-			cursor.setLocation(mouse_x, mouse_y);
-			cursor.onUpdate(this);
-		}
+//		if (cursor!=null) {
+//			cursor.setLocation(getMouseX(), getMouseY());
+//			cursor.onUpdate(this);
+//		}
 		
 		super.onUpdate(this);
 		
@@ -128,11 +140,40 @@ public abstract class Stage extends DisplayObjectContainer
 	final public void onRender(Graphics2D g)
 	{
 		g.clip(local_bounds);
-		super.onRender(g);
-		if (cursor!=null){
-			cursor.onRender(g);
-		}
 		
+		super.onRender(g);
+		
+//		if (cursor!=null){
+//			cursor.onRender(g);
+//		}
+		
+//		synchronized (default_tip) 
+		{
+			last_mouse_picked_object = mouse_picked_object;
+			mouse_picked_object = null;
+			
+//			System.out.println("last_mouse_picked_object = "+last_mouse_picked_object);
+			
+			if (next_tip != null) {
+				next_tip.setLocation(this, mouse_x, mouse_y);
+				next_tip.onUpdate(this);
+				next_tip.onRender(g);
+				next_tip = null;
+			} else {
+				if (next_tip_text!=null && next_tip_text.length()!=0) {
+					next_tip_atext = TextBuilder.buildScript(next_tip_text);
+					next_tip_text = null;
+				}
+				if (next_tip_atext != null) {
+					default_tip.setText(next_tip_atext);
+					default_tip.setLocation(this, mouse_x, mouse_y);
+					default_tip.onUpdate(this);
+					default_tip.onRender(g);
+					next_tip_atext = null;
+				}
+			}
+		}
+
 		if (is_transition_in) 
 		{
 			g.setColor(new Color(0,0,0, 1 - transition_in_timer / (float)transition_max_time));
@@ -183,91 +224,55 @@ public abstract class Stage extends DisplayObjectContainer
 
 //	---------------------------------------------------------------------------------------------------------------
 	
-	public CursorG2D getCursorG2D() {
-		return this.cursor;
+//	public CursorG2D getCursorG2D() {
+//		return this.cursor;
+//	}
+	
+	/**
+	 * 设置鼠标悬停
+	 * @param text
+	 */
+	public void setTip(AttributedString atext) {
+		synchronized (default_tip) {
+			next_tip_text = null;
+			next_tip_atext = atext;
+			next_tip = null;
+		}
+	}
+
+	/**
+	 * 设置鼠标悬停
+	 * @param text
+	 */
+	public void setTip(String script) {
+		synchronized (default_tip) {
+			next_tip_text = script;
+			next_tip_atext = null;
+			next_tip = null;
+		}
 	}
 	
 	/**
 	 * 设置鼠标悬停
 	 * @param text
 	 */
-	public void setTip(AttributedString text) {
-		cursor.tip.setText(text);
+	public void setTip(Tip tip) {
+		synchronized (default_tip) {
+			next_tip_text = null;
+			next_tip_atext = null;
+			next_tip = tip;
+		}
+	}
+	
+	void setMousePickedObject(DisplayObject object) {
+		mouse_picked_object = object;
 	}
 	
 	/**
-	 * 设置鼠标悬停
-	 * @param text
+	 * 得到当前获得鼠标的最高层单位
+	 * @return
 	 */
-	public void setTip(String text) {
-		cursor.tip.setText(text);
+	public DisplayObject getMousePickedObject() {
+		return last_mouse_picked_object;
 	}
-	
-//	public void serialize(IOutput os) throws IOException {
-//		super.serialize(os);
-//	}
-//	
-//	public void deserialize(IInput is) throws IOException {
-//		super.deserialize(is);
-//	}
-
-	final public class CursorG2D extends DisplayObjectContainer 
-	{
-		private static final long serialVersionUID = Version.VersionG2D;
-		
-		transient protected Tip tip;
-		
-		transient protected DisplayObject Focused;
-		
-		public CursorG2D() {}
-		
-		@Override
-		protected void init_field() {
-			super.init_field();
-			tip = new Tip();
-			tip.setLocation(20, 20);
-			this.addChild(tip);
-		}
-		
-		@Override
-		protected void init_transient() {
-			super.init_transient();
-			priority	= Integer.MAX_VALUE;
-		}
-
-		@Override
-		public void added(DisplayObjectContainer parent) {}
-		@Override
-		public void removed(DisplayObjectContainer parent) {}
-		@Override
-		public void update() {
-			if (Focused!=null && !Focused.hit_mouse){
-				Focused = null;
-				tip.clearText();
-			}
-		}
-		@Override
-		public void render(Graphics2D g) {}
-//		@Override
-//		protected void render_childs(Graphics2D g) {
-//			tip.clearText();
-//		}
-		
-		public void setFocusedObj(DisplayObject obj){
-			Focused = obj;
-		}
-		
-		public DisplayObject getFocusedObj(){
-			return Focused;
-		}
-		
-		public void setTip(String text){
-			tip.setText(text);
-		}
-		
-		public void setTip(AttributedString text) {
-			tip.setText(text);
-		}
-	}
-
 }

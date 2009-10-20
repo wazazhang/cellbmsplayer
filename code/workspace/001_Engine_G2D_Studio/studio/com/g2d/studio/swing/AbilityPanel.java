@@ -24,6 +24,7 @@ import javax.swing.ListCellRenderer;
 
 import com.cell.rpg.ability.Abilities;
 import com.cell.rpg.ability.AbilitySceneNPC;
+import com.cell.rpg.ability.AbilitySceneNPCPathPoint;
 import com.cell.rpg.ability.AbilitySceneNPCSpawn;
 import com.cell.rpg.ability.AbilitySceneNPCTeamNode;
 import com.cell.rpg.ability.AbilitySceneTransport;
@@ -35,6 +36,9 @@ import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.Config;
 import com.g2d.studio.Studio;
 import com.g2d.studio.scene.FormSceneViewer;
+import com.g2d.studio.scene.SceneActor;
+import com.g2d.studio.scene.ScenePoint;
+import com.g2d.studio.scene.SceneUnitTag;
 import com.g2d.util.AbstractDialog;
 
 
@@ -46,18 +50,22 @@ public class AbilityPanel extends JPanel
 {
 	private static final long serialVersionUID = 1L;
 	
-	final Abilities abilities;
+	final Abilities			abilities;
+	
+	final SceneUnitTag<?>	scene_unit;
 	
 	JList list_cur_ability = new JList();
 	
 	JButton btn_add_ability = new JButton("添加能力");
 	JButton btn_del_ability = new JButton("删除能力");
 	
-	public AbilityPanel(Abilities abilities)
+	public AbilityPanel(SceneUnitTag<?> scene_unit, Abilities abilities)
 	{
+		this.scene_unit = scene_unit;
+		this.abilities = abilities;
+		
 		this.setLayout(new BorderLayout());
 		
-		this.abilities = abilities;
 		{
 			this.list_cur_ability.setListData(abilities.getAbilities());
 			this.list_cur_ability.addMouseListener(new MouseAdapter(){
@@ -278,7 +286,7 @@ public class AbilityPanel extends JPanel
 	 * @author WAZA
 	 * 能力属性编辑器
 	 */
-	public static class AbilityPropertyPanel extends ObjectPropertyPanel
+	public class AbilityPropertyPanel extends ObjectPropertyPanel
 	{
 		private static final long serialVersionUID = 1L;
 		
@@ -291,7 +299,7 @@ public class AbilityPanel extends JPanel
 		}
 
 		@Override
-		public PropertyCellEdit<?> getPropertyCellEdit(Object object, Field field, Object value) {
+		protected PropertyCellEdit<?> getPropertyCellEdit(Object object, Field field, Object value) {
 			PropertyCellEdit<?> ret = getAbilityCellEdit(object, field, value);
 			if (ret != null) {
 				return ret;
@@ -307,7 +315,7 @@ public class AbilityPanel extends JPanel
 //		--------------------------------------------------------------------------------------------------------
 		
 		
-		static void fieldChanged(Object object, Field field)
+		void fieldChanged(Object object, Field field)
 		{
 			if (object instanceof AbilitySceneTransport)
 			{
@@ -372,7 +380,7 @@ public class AbilityPanel extends JPanel
 		 * @param value
 		 * @return
 		 */
-		static PropertyCellEdit<?> getAbilityCellEdit(Object object, Field field, Object value) 
+		PropertyCellEdit<?> getAbilityCellEdit(Object object, Field field, Object value) 
 		{
 			// 测试是否是集合
 			try
@@ -382,7 +390,7 @@ public class AbilityPanel extends JPanel
 				if (value == null) {
 					value = field.getType().newInstance();
 				}
-				return new AbilityForm((Abilities) value);
+				return new AbilityForm(scene_unit, (Abilities) value);
 			}catch (Exception e) {}
 			
 			// 如果是传送点，则遍历Scene或者SceneUnit
@@ -396,11 +404,23 @@ public class AbilityPanel extends JPanel
 				
 				if (field.getName().equals("destination_scene_object_name")){
 					if (tp.destination_scene_name!=null) {
-						FormSceneViewer sv = Studio.getInstance().getScene(tp.destination_scene_name);
 						try{
-							return new SceneUnitListComboBox(sv);
+							FormSceneViewer sv = Studio.getInstance().getScene(tp.destination_scene_name);
+							return new SceneUnitListComboBox(sv, SceneActor.class);
 						}catch (Exception e) {}
 					}
+				}
+			}
+			
+			// NPC行动开始点
+			if (object instanceof AbilitySceneNPCPathPoint) 
+			{
+				AbilitySceneNPCPathPoint path = (AbilitySceneNPCPathPoint)object;
+				if (field.getName().equals("point_name") && scene_unit!=null){
+					try{
+//						System.out.println(object.getClass().getName());
+						return new SceneUnitListComboBox(scene_unit.getViewer(), ScenePoint.class);
+					}catch (Exception e) {}
 				}
 			}
 			

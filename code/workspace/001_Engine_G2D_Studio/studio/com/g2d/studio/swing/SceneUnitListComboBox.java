@@ -17,9 +17,9 @@ public class SceneUnitListComboBox extends JComboBox implements PropertyCellEdit
 
 	ObjectPropertyPanel panel;
 	
-	public SceneUnitListComboBox(FormSceneViewer scene_viewer) 
+	public SceneUnitListComboBox(FormSceneViewer scene_viewer, Class<? extends SceneUnitTag<?>> cls) 
 	{
-		for (SceneUnitTag<?> unit : scene_viewer.getViewObject().getWorld().getChildsSubClass(SceneUnitTag.class)) {
+		for (SceneUnitTag<?> unit : scene_viewer.getViewObject().getScene().getWorld().getChildsSubClass(cls)) {
 			super.addItem(unit);
 		}
 		this.addItemListener(new ItemListener() {

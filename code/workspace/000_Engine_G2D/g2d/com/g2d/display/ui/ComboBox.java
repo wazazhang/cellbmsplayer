@@ -248,11 +248,11 @@ public class ComboBox extends Container
 //	----------------------------------------------------------------------------------------------------------
 //	parent implements 
 	
-	synchronized public void addChild(UIComponent child) {
-		Tools.printError("can not add a custom child component in " + getClass().getName() + " !");
+	synchronized public boolean addChild(UIComponent child) {
+		throw new IllegalStateException("can not add a custom child component in " + getClass().getName() + " !");
 	}
-	synchronized public void removeChild(UIComponent child) {
-		Tools.printError("can not remove a custom child component in " + getClass().getName() + " !");
+	synchronized public boolean removeChild(UIComponent child) {
+		throw new IllegalStateException("can not remove a custom child component in " + getClass().getName() + " !");
 	}
 	
 	public void render(Graphics2D g)
@@ -323,7 +323,7 @@ public class ComboBox extends Container
 					ComboBox.this.root_form.x + offsetx, 
 					ComboBox.this.root_form.y + offsety);
 			if (getRoot().isMouseDown(java.awt.event.MouseEvent.BUTTON1)) {
-				if (!hit_mouse && timer>1) {
+				if (!isHitMouse() && timer>1) {
 					closeDropDown();
 				}
 			}

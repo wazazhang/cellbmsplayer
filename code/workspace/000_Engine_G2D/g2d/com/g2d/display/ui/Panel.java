@@ -46,12 +46,12 @@ public class Panel extends Container
 		return container.getChildCount();
 	}
 	
-	public synchronized void addChild(UIComponent child) {
-		container.addChild(child);
+	public synchronized boolean addChild(UIComponent child) {
+		return container.addChild(child);
 	}
 	
-	public synchronized void removeChild(UIComponent child) {
-		container.removeChild(child);
+	public synchronized boolean removeChild(UIComponent child) {
+		return container.removeChild(child);
 	}
 	
 	public ScrollBar getVScrollBar() {

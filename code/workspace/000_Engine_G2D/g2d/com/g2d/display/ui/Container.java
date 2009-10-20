@@ -20,28 +20,28 @@ public abstract class Container extends UIComponent
 	}
 	
 	
-	synchronized public void addChild(UIComponent child) {
+	synchronized public boolean addChild(UIComponent child) {
 		comonents.add(child);
-		super.addChild(child);
+		return super.addChild(child);
 	}
 	
-	synchronized public void removeChild(UIComponent child) {
+	synchronized public boolean removeChild(UIComponent child) {
 		comonents.remove(child);
-		super.removeChild(child);
+		return super.removeChild(child);
 	}
 
-	synchronized public void addComponent(UIComponent child) {
-		this.addChild(child);
+	synchronized public boolean addComponent(UIComponent child) {
+		return this.addChild(child);
 	}
 	
-	synchronized public void addComponent(UIComponent child, int x, int y) {
+	synchronized public boolean addComponent(UIComponent child, int x, int y) {
 		child.x = x;
 		child.y = y;
-		this.addChild(child);
+		return this.addChild(child);
 	}
 	
-	synchronized public void removeComponent(UIComponent child) {
-		this.removeChild(child);
+	synchronized public boolean removeComponent(UIComponent child) {
+		return this.removeChild(child);
 	}
 	
 	@SuppressWarnings("unchecked")

@@ -128,13 +128,13 @@ public class Studio extends AbstractFrame
 				
 //				UILayoutManager.getInstance().save_path = project + "/" + Config.ROOT_UILAYOUT_PATH;
 				
-				UIComponent.editor_mode = true;
+				UIComponent.editor_mode = false;
 			}
 			
 			//
 			this.setTitle("Cell Studio : " + project_path.getPath());
-			this.setSize(300, AbstractFrame.getScreenHeight()-80);
-			this.setLocation(0, 20);
+			this.setSize(300, AbstractFrame.getScreenHeight()-60);
+			this.setLocation(0, 0);
 			this.setLayout(new BorderLayout());
 			
 			// init jtree

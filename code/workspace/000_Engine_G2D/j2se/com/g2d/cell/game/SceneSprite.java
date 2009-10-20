@@ -21,6 +21,7 @@ import com.g2d.display.DisplayObject;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.DisplayShape;
 import com.g2d.display.Sprite;
+import com.g2d.game.rpg.MoveableUnit;
 import com.g2d.util.Drawing;
 import com.g2d.util.Util;
 
@@ -28,7 +29,7 @@ import com.g2d.util.Util;
  * @author WAZA
  * 支持网络缓冲的动态精灵
  */
-public class SceneSprite extends SceneUnit implements CellSetResource.LoadSpriteListener
+public class SceneSprite extends MoveableUnit implements CellSetResource.LoadSpriteListener
 {
 	private static final long serialVersionUID = Version.VersionG2D;
 //	------------------------------------------------------------------------------------------------------------------------------------

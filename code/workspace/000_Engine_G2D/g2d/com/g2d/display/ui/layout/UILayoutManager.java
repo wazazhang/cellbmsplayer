@@ -357,21 +357,21 @@ public abstract class UILayoutManager
 					((Button)component).setLayout(ButtonLayout, ButtonPressLayout); 
 				}
 				else if (component instanceof ScrollBar.Head) {
-					if (((ScrollBar.Head)component).isv) {
+					if (((ScrollBar.Head)component).isVscroll()) {
 						((ScrollBar.Head) component).setLayout(ScroolBarVHeadLayout, ScroolBarVHeadDLayout);
 					}else{
 						((ScrollBar.Head) component).setLayout(ScroolBarHHeadLayout, ScroolBarHHeadDLayout);
 					}
 				}
 				else if (component instanceof ScrollBar.Tail) {
-					if (((ScrollBar.Tail) component).isv) {
+					if (((ScrollBar.Tail) component).isVscroll()) {
 						((ScrollBar.Tail) component).setLayout(ScroolBarVTailLayout, ScroolBarVTailDLayout);
 					} else {
 						((ScrollBar.Tail) component).setLayout(ScroolBarHTailLayout, ScroolBarHTailDLayout);
 					}
 				}
 				else if (component instanceof ScrollBar.Back) {
-					if (((ScrollBar.Back) component).isv) {
+					if (((ScrollBar.Back) component).isVscroll()) {
 						((ScrollBar.Back) component).setLayout(ScroolBarVBackLayout);
 					} else {
 						((ScrollBar.Back) component).setLayout(ScroolBarHBackLayout);
@@ -379,7 +379,7 @@ public abstract class UILayoutManager
 					((BaseButton)component).mouse_catched_mask = null;
 				} 
 				else if (component instanceof ScrollBar.Strip) {
-					if (((ScrollBar.Strip) component).isv) {
+					if (((ScrollBar.Strip) component).isVscroll()) {
 						((ScrollBar.Strip) component).setLayout(ScroolBarVStripLayout);
 					} else {
 						((ScrollBar.Strip) component).setLayout(ScroolBarHStripLayout);

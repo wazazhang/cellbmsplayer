@@ -45,7 +45,7 @@ public class ResourceManager extends CellSetResourceManager
 		
 		public T getSetObject() throws Exception
 		{
-			if (set_object!=null) {
+			if (set_object == null) {
 				set_object = loadSetObject();
 			}
 			return set_object;

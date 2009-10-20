@@ -96,7 +96,7 @@ public class TextBoxSingle extends UIComponent implements Serializable
 	}
 	
 	public void setTextPassword(boolean b) {
-		this.text.is_password = b;
+		this.text.setIsPassword(b);
 	}
 	
 	protected void onMouseDown(MouseEvent event) {

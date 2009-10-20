@@ -9,6 +9,7 @@ import javax.swing.JButton;
 import com.cell.rpg.ability.Abilities;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
+import com.g2d.studio.scene.SceneUnitTag;
 import com.g2d.util.AbstractDialog;
 
 
@@ -26,10 +27,10 @@ public class AbilityForm extends AbstractDialog implements PropertyCellEdit<Abil
 	final AbilityPanel ability_panel;
 	final Abilities abilities;
 	
-	public AbilityForm(Abilities abilities) 
+	public AbilityForm(SceneUnitTag<?> scene_unit, Abilities abilities) 
 	{
 		this.abilities 		= abilities;
-		this.ability_panel 	= new AbilityPanel(abilities);
+		this.ability_panel 	= new AbilityPanel(scene_unit, abilities);
 		this.add(ability_panel);
 		this.setTitle(abilities.toString());
 		

@@ -130,7 +130,7 @@ public class MessageBox extends Form implements ActionListener
 			itemAction(btn_ok, new ActionEvent(btn_ok, btn_ok.getAction())) ;
 		}
 		if (getRoot().isMouseDown(MouseEvent.BUTTON1)) {
-			if (!catched_mouse){
+			if (!isCatchedMouse()){
 				click_out_bounds_timer = click_out_bounds_timer_max;
 				if (click_out_bounds_sound!=null) {
 					click_out_bounds_sound.play();

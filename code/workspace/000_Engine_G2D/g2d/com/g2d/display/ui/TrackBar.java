@@ -62,12 +62,13 @@ public class TrackBar extends Container
 	{
 	}
 	
-	synchronized public void addChild(UIComponent child) {
-		Tools.printError("can not add a custom child component in " + getClass().getName() + " !");
+	synchronized public boolean addChild(UIComponent child) {
+		throw new IllegalStateException("can not add a custom child component in " + getClass().getName() + " !");
 	}
-	synchronized public void removeChild(UIComponent child) {
-		Tools.printError("can not remove a custom child component in " + getClass().getName() + " !");
+	synchronized public boolean removeChild(UIComponent child) {
+		throw new IllegalStateException("can not remove a custom child component in " + getClass().getName() + " !");
 	}
+	
 	
 	private void setStripPos(int pos){
 		double sx = pos - btn_add.getWidth();
@@ -108,7 +109,7 @@ public class TrackBar extends Container
 	}
 	
 	protected void onMouseDown(MouseEvent event) {
-		if (mouse_x < btn_strip.x) {
+		if (getMouseX() < btn_strip.x) {
 			setStripPos((int)btn_strip.x - btn_strip.getWidth());
 		}else{
 			setStripPos((int)btn_strip.x + btn_strip.getWidth());

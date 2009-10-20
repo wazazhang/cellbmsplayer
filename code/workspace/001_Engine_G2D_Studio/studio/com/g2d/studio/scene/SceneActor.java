@@ -2,11 +2,18 @@ package com.g2d.studio.scene;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.Shape;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import com.cell.rpg.entity.Actor;
+import com.cell.rpg.entity.Unit;
+
 import com.g2d.annotation.Property;
 import com.g2d.cell.game.SceneSprite;
+import com.g2d.display.ui.Menu;
+import com.g2d.display.ui.Menu.MenuItem;
 import com.g2d.editor.DisplayObjectEditor;
 import com.g2d.studio.Studio;
 import com.g2d.studio.Version;
@@ -27,7 +34,11 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 	transient FormActorViewer	actor_view;
 	transient FormSceneViewer	scene_view;
 	
+	transient Rectangle snap_shape = new Rectangle(-2, -2, 4, 4);
+	
 	final public Actor actor;
+
+//	--------------------------------------------------------------------------------------------------------
 	
 	public SceneActor(FormActorViewer actor, FormSceneViewer scene) 
 	{
@@ -45,20 +56,26 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 	}
 	
 	protected void init(FormActorViewer actor, FormSceneViewer scene)
-	{
+	{		
 		this.enable			= true;
+		this.enable_focus 	= true;
 		this.enable_drag	= true;
 		this.actor_view		= actor;
 		this.scene_view		= scene;
+		
 		super.init(actor_view.getViewObject());
+
+		priority = 0;
 	}
 
+//	--------------------------------------------------------------------------------------------------------
+	
 	public void onRead(Actor actor)
 	{
 		actor_view	= Studio.getInstance().getActor(
 				actor.display_node.cpj_project_name,
 				actor.display_node.cpj_object_id);
-		setName(scene_view.getViewObject(), 
+		setID(scene_view.getViewObject().getScene().getWorld(), 
 				actor.name);
 		setLocation(
 				actor.pos.x,
@@ -72,7 +89,7 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 	{
 //		actor.display_node.cpj_project_name = actor_view.getCpjName();
 //		actor.display_node.cpj_object_id = actor_view.getCpjObjectID();
-		actor.name					= getName();
+		actor.name					= getID() + "";
 		actor.pos.x					= getX();
 		actor.pos.y					= getY();
 		actor.pos.z					= priority;
@@ -81,6 +98,49 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 		actor.display_node.cur_anim		= cur_anim;
 		return actor;
 	}
+
+	@Override
+	public void onReadComplete(ArrayList<Unit> all) {
+		
+	}
+	@Override
+	public void onWriteComplete(ArrayList<Unit> all) {
+		
+	}
+
+//	--------------------------------------------------------------------------------------------------------
+
+	@Override
+	public Actor getUnit() {
+		return actor;
+	}
+	
+	@Override
+	public com.g2d.game.rpg.Unit getSceneUnit() {
+		return this;
+	}
+	
+	@Override
+	public FormSceneViewer getViewer() {
+		return scene_view;
+	}
+	
+	@Override
+	public Color getSnapColor() {
+		return Color.GREEN;
+	}
+	
+	@Override
+	public Shape getSnapShape() {
+		return snap_shape;
+	}
+	
+	@Override
+	public Menu getEditMenu() {
+		return new UnitMenu(scene_view, this);
+	}
+
+//	--------------------------------------------------------------------------------------------------------
 	
 	public void update() 
 	{
@@ -111,47 +171,41 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 		
 	}
 	
-	public void render(Graphics2D g)
-	{
-		super.render(g);
-		
-		
-	}
-	
 	@Override
-	protected void afterRender(Graphics2D g)
+	protected void renderAfter(Graphics2D g) 
 	{
-		super.afterRender(g);
+		super.renderAfter(g);
 		
-		if (scene_view.selected_unit == this) // 选择了该精灵
+		if (scene_view != null) 
 		{
-			drawTouchRange(g);
-			drawLookRange(g);
-			
-			g.setColor(Color.WHITE);
-			g.draw(local_bounds);
-			
-			g.setColor(Color.WHITE);
-			Drawing.drawStringBorder(g, 
-					getSprite().getCurrentAnimate() + "/" + getSprite().getAnimateCount(), 
-					0, getSprite().getVisibleBotton() + 1, 
-					Drawing.TEXT_ANCHOR_HCENTER | Drawing.TEXT_ANCHOR_TOP
-					);
-			
-		}
-		else if (catched_mouse) // 当鼠标放到该精灵上
-		{	
-			drawTouchRange(g);
-			
-			if (scene_view.tool_selector.isSelected())
-			{
-				g.setColor(Color.GREEN);
-				g.draw(local_bounds);
+			if (scene_view.isSelectedActorBox()) {
+				// 选择了该精灵
+				if (scene_view.selected_unit == this) {
+					drawTouchRange(g);
+					drawLookRange(g);
+					g.setColor(Color.WHITE);
+					g.draw(local_bounds);
+					g.setColor(Color.WHITE);
+					Drawing.drawStringBorder(g, 
+							getSprite().getCurrentAnimate() + "/" + getSprite().getAnimateCount(),
+							0, getSprite().getVisibleBotton() + 1,
+							Drawing.TEXT_ANCHOR_HCENTER | Drawing.TEXT_ANCHOR_TOP);
+				} // 当鼠标放到该精灵上
+				else if (isCatchedMouse()) {
+					drawTouchRange(g);
+					if (scene_view.tool_selector.isSelected()) {
+						g.setColor(Color.GREEN);
+						g.draw(local_bounds);
+					}
+				}
+				this.enable = scene_view.isBushSelect();
+			} else {
+				this.enable = false;
 			}
 		}
-		
-		
 	}
+	
+	
 	
 	protected void drawTouchRange(Graphics2D g)
 	{
@@ -186,12 +240,12 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 		return new DisplayObjectEditor<SceneActor>(
 				this,
 				new RPGUnitPanel(actor), 
-				new AbilityPanel(actor));
+				new AbilityPanel(this, actor));
 	}
 	
 	@Override
 	public String toString() {
-		return getName()+"";
+		return getID()+"";
 	}
 
 }

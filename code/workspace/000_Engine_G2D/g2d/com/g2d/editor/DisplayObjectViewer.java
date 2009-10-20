@@ -35,7 +35,7 @@ public abstract class DisplayObjectViewer<D extends DisplayObject> extends Abstr
 		public void update() {
 			if (view_object!=null) {
 				if (getRoot().isMouseDown(MouseEvent.BUTTON1)) {
-					view_object.setLocation(mouse_x, mouse_y);
+					view_object.setLocation(getMouseX(), getMouseY());
 				}
 			}
 		}
@@ -122,9 +122,11 @@ public abstract class DisplayObjectViewer<D extends DisplayObject> extends Abstr
 			}
 			catch (Exception e) {
 				e.printStackTrace();
-			}
+			}		
+//			System.out.println("paint cc");
+
 		}
-		
+
 		try {
 			canvas.getCanvasAdapter().repaint_game();
 		} catch (Exception e) {
@@ -135,7 +137,11 @@ public abstract class DisplayObjectViewer<D extends DisplayObject> extends Abstr
 	@Override
 	public void setVisible(boolean b) {
 		super.setVisible(b);
-		reopen() ;
+		if (b) {
+			reopen();
+		} else {
+			exited = true;
+		}
 	}
 	
 	public void reopen() 

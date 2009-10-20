@@ -3,6 +3,7 @@ package com.g2d.studio.ui;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -90,7 +91,7 @@ public class FormUIComponentEditView extends FormUIComponentView
 		}
 		
 
-		protected void afterRender(Graphics2D g)
+		protected void renderAfter(Graphics2D g)
 		{
 			if (tool_add.isSelected()) 
 			{
@@ -100,10 +101,10 @@ public class FormUIComponentEditView extends FormUIComponentView
 				{
 					g.setColor(Color.WHITE);
 					Rectangle str_rect = Drawing.drawStringBorder(g, ui.getClass().getName(), 
-							mouse_x+2, mouse_y+2, 0);
+							getMouseX()+2, getMouseY()+2, 0);
 					
 					g.setColor(Color.BLACK);
-					g.drawRect(mouse_x, mouse_y, str_rect.width+4, str_rect.height+4);
+					g.drawRect(getMouseX(), getMouseY(), str_rect.width+4, str_rect.height+4);
 				}
 			}
 		}
@@ -138,15 +139,13 @@ public class FormUIComponentEditView extends FormUIComponentView
 	}
 	
 	@Override
-	public void loadObject(ObjectInputStream is) throws IOException,
-			ClassNotFoundException {
+	public void loadObject(ObjectInputStream is, File file) throws Exception {
 		// TODO Auto-generated method stub
 		
 	}
+	
 	@Override
-	public void saveObject(ObjectOutputStream os) throws IOException,
-			ClassNotFoundException {
-		// TODO Auto-generated method stub
+	public void saveObject(ObjectOutputStream os, File file) throws Exception {
 		
 	}
 	
