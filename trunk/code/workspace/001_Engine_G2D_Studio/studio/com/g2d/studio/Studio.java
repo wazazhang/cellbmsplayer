@@ -593,16 +593,16 @@ public class Studio extends AbstractFrame
 			super(setPath, name, false);
 		}
 		
-		protected IImages getLocalImage(IMG img) throws IOException {
+		protected IImages getLocalImage(ImagesSet img) throws IOException {
 			StreamTiles tiles = new StreamTiles(img);
 			return tiles;
 		}
 		
 		public void initAllStreamImages()
 		{
-			Enumeration<IMG> imgs = ImgTable.elements();
+			Enumeration<ImagesSet> imgs = ImgTable.elements();
 			while (imgs.hasMoreElements()) {
-				IMG ts = imgs.nextElement();
+				ImagesSet ts = imgs.nextElement();
 				IImages images = getImages(ts);
 				if (images instanceof StreamTiles) {
 					((StreamTiles) images).run();

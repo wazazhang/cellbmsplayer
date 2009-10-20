@@ -173,30 +173,6 @@ public abstract class MoveableUnit extends Unit
 	}
 	
 	
-	public int compareTo(DisplayObject o) {
-		return (getY()+priority) - (o.getY()+o.priority);
-	}
-	
-	public boolean isInCamera()
-	{
-		if (getOwnerScene() != null) 
-		{
-			if (CMath.intersectRect2(
-					getOwnerScene().camera_x, 
-					getOwnerScene().camera_y, 
-					getOwnerScene().local_bounds.width, 
-					getOwnerScene().local_bounds.height,
-					x + local_bounds.x,
-					y + local_bounds.y, 
-					local_bounds.width, 
-					local_bounds.height)) {
-				return true;
-			}
-		}
-		
-		return false;
-	}
-	
 	public void update() 
 	{
 		super.update();

@@ -114,10 +114,10 @@ public class ScenePoint extends com.g2d.game.rpg.Unit implements SceneUnitTag<Po
 	@Override
 	public void onReadComplete(ArrayList<Unit> all) {
 		next_nodes.clear();
-		if (point.next_index!=null) {
-			for (Integer next : point.next_index) {
+		if (point.next_names!=null) {
+			for (String next : point.next_names) {
 				try{
-					Unit next_unit = all.get(next);
+					Unit next_unit = findUnit(all, next);
 					ScenePoint next_point = (ScenePoint)(scene_view.getTagUnit(next_unit).getSceneUnit());
 					next_nodes.add(next_point);
 				} catch (Exception err) {
@@ -129,17 +129,24 @@ public class ScenePoint extends com.g2d.game.rpg.Unit implements SceneUnitTag<Po
 	
 	@Override
 	public void onWriteComplete(ArrayList<Unit> all) {
-		point.next_index = new ArrayList<Integer>(next_nodes.size());
+		point.next_names = new ArrayList<String>(next_nodes.size());
 		for (ScenePoint next : next_nodes) {
 			try{
-				int next_i = all.indexOf(next.getUnit());
-				point.next_index.add(next_i);
+				point.next_names.add(next.getUnit().name);
 			} catch (Exception err) {
 				err.printStackTrace();
 			}
 		}
 	}
 
+	private static Unit findUnit(ArrayList<Unit> all, String name) {
+		for (Unit u : all) {
+			if (u.name.equals(name)){
+				return u;
+			}
+		}
+		return null;
+	}
 
 //	--------------------------------------------------------------------------------------------------------
 	

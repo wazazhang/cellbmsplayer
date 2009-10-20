@@ -30,7 +30,7 @@ public class FormSceneViewerGroup  extends ATreeNodeGroup<FormSceneViewer>
 		FormSceneViewerLeaf[] leafs = new FormSceneViewerLeaf[res.WorldTable.size()];
 		                               
 		int i=0;
-		for (CellSetResource.WORLD world : res.WorldTable.values()) {
+		for (CellSetResource.WorldSet world : res.WorldTable.values()) {
 			try{
 				leafs[i] = new FormSceneViewerLeaf(world.Name, parent);
 				viewers[i] = new FormSceneViewer(leafs[i], res, world.Name);

@@ -37,7 +37,7 @@ public abstract class Unit extends Sprite
 	public int compareTo(DisplayObject o) {
 		return (getY()+priority) - (o.getY()+o.priority);
 	}
-	
+
 	public boolean isInCamera()
 	{
 		if (getOwnerScene() != null) 
@@ -56,7 +56,7 @@ public abstract class Unit extends Sprite
 		}
 		return false;
 	}
-
+	
 	void setOwnerWorld(SceneMap owner_world) {
 		this.owner_world = owner_world;
 	}

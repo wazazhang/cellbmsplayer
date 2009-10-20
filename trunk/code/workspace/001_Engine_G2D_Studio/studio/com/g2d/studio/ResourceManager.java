@@ -8,7 +8,7 @@ import com.cell.CIO;
 import com.g2d.cell.CellSetResource;
 import com.g2d.cell.CellSetResourceManager;
 import com.g2d.cell.CellSetResource.CellSetObject;
-import com.g2d.cell.CellSetResource.WORLD;
+import com.g2d.cell.CellSetResource.WorldSet;
 
 
 /**
@@ -65,7 +65,7 @@ public class ResourceManager extends CellSetResourceManager
 //	--------------------------------------------------------------------------------------------------------------------
 	
 	/** 将编辑器导出的output文件里的场景信息的描述 */
-	public static class SceneSet extends ResourceSet<CellSetResource.WORLD>
+	public static class SceneSet extends ResourceSet<CellSetResource.WorldSet>
 	{
 		private static final long serialVersionUID = 1L;
 		
@@ -79,7 +79,7 @@ public class ResourceManager extends CellSetResourceManager
 		}
 		
 		@Override
-		protected WORLD loadSetObject() throws Exception {
+		protected WorldSet loadSetObject() throws Exception {
 			return getSetResource().WorldTable.get(name);
 		}
 		
@@ -95,7 +95,7 @@ public class ResourceManager extends CellSetResourceManager
 	
 //	--------------------------------------------------------------------------------------------------------------------
 	
-	public static class ActorSet extends ResourceSet<CellSetResource.SPR>
+	public static class ActorSet extends ResourceSet<CellSetResource.SpriteSet>
 	{
 		private static final long serialVersionUID = 1L;
 		
@@ -109,7 +109,7 @@ public class ResourceManager extends CellSetResourceManager
 			return getInstance().RES_ACTOR_ROOT + "/" + set_name + "/output/actor.properties";
 		}
 		@Override
-		protected CellSetResource.SPR loadSetObject() throws Exception {
+		protected CellSetResource.SpriteSet loadSetObject() throws Exception {
 			return getSetResource().SprTable.get(name);
 		}
 		
@@ -117,7 +117,7 @@ public class ResourceManager extends CellSetResourceManager
 	
 //	--------------------------------------------------------------------------------------------------------------------
 	
-	public static class AvatarSet extends ResourceSet<CellSetResource.SPR>
+	public static class AvatarSet extends ResourceSet<CellSetResource.SpriteSet>
 	{
 		private static final long serialVersionUID = 1L;
 		
@@ -131,7 +131,7 @@ public class ResourceManager extends CellSetResourceManager
 			return getInstance().RES_AVATAR_ROOT + "/" + set_name + "/output/item.properties";
 		}
 		@Override
-		protected CellSetResource.SPR loadSetObject() throws Exception {
+		protected CellSetResource.SpriteSet loadSetObject() throws Exception {
 			return getSetResource().SprTable.get(name);
 		}
 		

@@ -32,6 +32,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JToggleButton;
 
 import com.cell.CObject;
+import com.cell.CUtil;
 import com.cell.game.CSprite;
 import com.cell.rpg.entity.Actor;
 import com.cell.rpg.entity.Region;
@@ -40,7 +41,7 @@ import com.cell.rpg.io.Util;
 import com.g2d.Tools;
 import com.g2d.cell.CellSetResource;
 
-import com.g2d.cell.CellSetResource.WORLD.SPR;
+import com.g2d.cell.CellSetResource.WorldSet.SpriteObject;
 import com.g2d.cell.game.Scene;
 import com.g2d.cell.game.Scene.WorldObject;
 import com.g2d.cell.game.ui.ScenePanel;
@@ -228,6 +229,15 @@ public class FormSceneViewer extends AFormDisplayObjectViewer<ScenePanel>
 		return null;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public void sortName(Vector<SceneUnitTag> tunits) {
+		CUtil.sort(tunits, new CUtil.ICompare<SceneUnitTag, SceneUnitTag>() {
+			public int compare(SceneUnitTag a, SceneUnitTag b) {
+				return CUtil.getStringCompare().compare(a.getSceneUnit().getID()+"", b.getSceneUnit().getID()+"");
+			}
+		});
+	}
+	
 //	-------------------------------------------------------------------------------------------------------------------------------------
 	
 	@Override
@@ -267,16 +277,20 @@ public class FormSceneViewer extends AFormDisplayObjectViewer<ScenePanel>
 	}
 	
 	@Override
+	@SuppressWarnings("unchecked")
 	public void saveObject(ObjectOutputStream oos, File file) throws Exception
 	{
 		if (view_object!=null) 
 		{
+			Vector<SceneUnitTag> tunits = view_object.getScene().getWorld().getChildsSubClass(SceneUnitTag.class);
+			sortName(tunits);
+			
 			ArrayList<Unit>		tobjects		= new ArrayList<Unit>();
 			
-			for (SceneUnitTag<?> unit : view_object.getScene().getWorld().getChildsSubClass(SceneUnitTag.class)) {
+			for (SceneUnitTag<?> unit : tunits) {
 				tobjects.add(unit.onWrite());
 			}
-			for (SceneUnitTag<?> unit : view_object.getScene().getWorld().getChildsSubClass(SceneUnitTag.class)) {
+			for (SceneUnitTag<?> unit : tunits) {
 				unit.onWriteComplete(tobjects);
 			}
 			
@@ -333,7 +347,7 @@ public class FormSceneViewer extends AFormDisplayObjectViewer<ScenePanel>
 			this.getWorld().runtime_sort = false;
 		}
 		@Override
-		protected WorldObject createWorldObject(CellSetResource set, SPR worldSet) {
+		protected WorldObject createWorldObject(CellSetResource set, SpriteObject worldSet) {
 			return new EatWorldObject(set, worldSet);
 		}
 		@Override
@@ -621,12 +635,12 @@ public class FormSceneViewer extends AFormDisplayObjectViewer<ScenePanel>
 	 * 
 	 */
 	static class EatWorldObject extends WorldObject {
-		public EatWorldObject(CellSetResource set, SPR worldSet) {
+		public EatWorldObject(CellSetResource set, SpriteObject worldSet) {
 			super(set, worldSet);
 		}
 		@Override
 		public synchronized void loaded(CellSetResource set, CSprite cspr,
-				com.g2d.cell.CellSetResource.SPR spr) {
+				com.g2d.cell.CellSetResource.SpriteSet spr) {
 			super.loaded(set, cspr, spr);
 			if (spr.ImagesName.startsWith("jpg")) {
 				this.priority = Integer.MIN_VALUE;
