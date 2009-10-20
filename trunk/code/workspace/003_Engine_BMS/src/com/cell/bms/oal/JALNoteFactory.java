@@ -51,9 +51,7 @@ public class JALNoteFactory extends com.cell.bms.NoteFactory
 	}
 
 	@Override
-	public void initBMS(BMSFile bms) {
-	  	
-	}
+	public void initBMS(BMSFile bms) {}
 	
 	@Override
 	public IDefineImage defineImage(BMSFile bms, String image) {
