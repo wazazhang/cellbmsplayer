@@ -21,7 +21,7 @@ import com.g2d.Tools;
 import com.g2d.Version;
 import com.g2d.cell.CellSetResource;
 import com.g2d.cell.CellSetResourceManager;
-import com.g2d.cell.CellSetResource.WORLD;
+import com.g2d.cell.CellSetResource.WorldSet;
 import com.g2d.display.DisplayObject;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.DisplayShape;
@@ -42,7 +42,7 @@ public class Scene extends com.g2d.game.rpg.Scene
 		addChild(new WorldMap(resource, resource.WorldTable.get(worldname)));
 	}
 	
-	protected WorldObject createWorldObject(CellSetResource set, CellSetResource.WORLD.SPR world_set) {
+	protected WorldObject createWorldObject(CellSetResource set, CellSetResource.WorldSet.SpriteObject world_set) {
 		return new WorldObject(set, world_set);
 	}
 	
@@ -52,9 +52,9 @@ public class Scene extends com.g2d.game.rpg.Scene
 	public class WorldMap extends com.g2d.game.rpg.SceneMap implements Astar.AstarMap
 	{
 		final protected CellSetResource			set_resource;
-		final protected CellSetResource.WORLD	set_world;
+		final protected CellSetResource.WorldSet	set_world;
 
-		public WorldMap(CellSetResource resource, CellSetResource.WORLD set_world) 
+		public WorldMap(CellSetResource resource, CellSetResource.WorldSet set_world) 
 		{
 			super(Scene.this, set_world.GridW, set_world.GridH, set_world.GridXCount, set_world.GridYCount);
 
@@ -68,7 +68,7 @@ public class Scene extends com.g2d.game.rpg.Scene
 			}
 			
 			for (int i=set_world.Sprs.size()-1; i>=0; --i){
-				WORLD.SPR wspr = set_world.Sprs.elementAt(i);
+				WorldSet.SpriteObject wspr = set_world.Sprs.elementAt(i);
 				WorldObject cs = createWorldObject(resource, wspr);
 				addChild(cs);
 			}
@@ -78,7 +78,7 @@ public class Scene extends com.g2d.game.rpg.Scene
 			return set_resource;
 		}
 		
-		public CellSetResource.WORLD getSetWorld() {
+		public CellSetResource.WorldSet getSetWorld() {
 			return set_world;
 		}
 
@@ -94,7 +94,7 @@ public class Scene extends com.g2d.game.rpg.Scene
 				g2d.scale(scalew, scaleh);
 				CGraphics cg = new CGraphics(g2d);
 				for (int i = set_world.Sprs.size() - 1; i >= 0; --i) {
-					WORLD.SPR wspr = set_world.Sprs.elementAt(i);
+					WorldSet.SpriteObject wspr = set_world.Sprs.elementAt(i);
 					CSprite csprite = set_resource.getSprite(wspr.SprID);
 					csprite.render(cg, wspr.X, wspr.Y, wspr.Anim, wspr.Frame);
 				}
@@ -108,9 +108,9 @@ public class Scene extends com.g2d.game.rpg.Scene
 
 	public static class WorldObject extends SceneSprite
 	{
-		final protected CellSetResource.WORLD.SPR 		set_world_sprite;
+		final protected CellSetResource.WorldSet.SpriteObject 		set_world_sprite;
 		
-		public WorldObject(CellSetResource set, CellSetResource.WORLD.SPR world_set) 
+		public WorldObject(CellSetResource set, CellSetResource.WorldSet.SpriteObject world_set) 
 		{
 			super(set, world_set.SprID);
 			set_world_sprite = world_set;
@@ -118,7 +118,7 @@ public class Scene extends com.g2d.game.rpg.Scene
 		}
 		
 		@Override
-		synchronized public void loaded(CellSetResource set, CSprite cspr, com.g2d.cell.CellSetResource.SPR spr) {
+		synchronized public void loaded(CellSetResource set, CSprite cspr, com.g2d.cell.CellSetResource.SpriteSet spr) {
 			super.loaded(set, cspr, spr);
 			while (set_world_sprite==null) {}
 			csprite.setCurrentFrame(set_world_sprite.Anim, set_world_sprite.Frame);

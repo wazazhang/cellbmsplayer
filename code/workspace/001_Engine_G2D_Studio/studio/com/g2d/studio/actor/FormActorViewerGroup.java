@@ -37,7 +37,7 @@ public class FormActorViewerGroup extends ATreeNodeGroup<FormActorViewer>
 		ATreeNodeLeaf<FormActorViewer>[] leafs = new ATreeNodeLeaf[res.SprTable.size()];
 		
 		int i=0;
-		for (CellSetResource.SPR spr : res.SprTable.values()) {
+		for (CellSetResource.SpriteSet spr : res.SprTable.values()) {
 			try{
 				leafs[i] = new ATreeNodeLeaf(spr.Name, parent);
 				viewers[i] = new FormActorViewer(leafs[i], res, spr.Name);

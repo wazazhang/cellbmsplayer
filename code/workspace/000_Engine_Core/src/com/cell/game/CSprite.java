@@ -41,6 +41,7 @@ public class CSprite extends CUnit {
 
 	protected CCollides collides;
 	
+	protected String AnimateNames[];
 	protected short FrameAnimate[][];
 	protected short FrameCDMap[][];
 	protected short FrameCDAtk[][];
@@ -100,12 +101,26 @@ public class CSprite extends CUnit {
 			short[][] frameCDMap,
 			short[][] frameCDAtk,
 			short[][] frameCDDef,
-			short[][] frameCDExt
-			) {
-
+			short[][] frameCDExt) 
+	{
+		this(canimates, ccollides, null, frameAnimate, frameCDMap, frameCDAtk, frameCDDef, frameCDExt);
+	}
+	
+	public CSprite(
+			CAnimates canimates, 
+			CCollides ccollides,
+			String[] animateNames, 
+			short[][] frameAnimate, 
+			short[][] frameCDMap,
+			short[][] frameCDAtk, 
+			short[][] frameCDDef, 
+			short[][] frameCDExt) 
+	{
 		animates = canimates;
 		collides = ccollides;
 
+		AnimateNames = animateNames;
+		
 		FrameAnimate = frameAnimate;
 		FrameCDMap = frameCDMap;
 		FrameCDAtk = frameCDAtk;
@@ -122,6 +137,8 @@ public class CSprite extends CUnit {
 		animates = spr.animates;
 		collides = spr.collides;
 
+		AnimateNames		= spr.AnimateNames;
+		
 		FrameAnimate 	= spr.FrameAnimate;
 		FrameCDMap 		= spr.FrameCDMap;
 		FrameCDAtk 		= spr.FrameCDAtk;
@@ -995,6 +1012,20 @@ public class CSprite extends CUnit {
 	
 //	------------------------------------------------------------------------------------------
 
+	public int getAnimateIndex(String animate_name) {
+		if (AnimateNames!=null) {
+			for (int i = 0; i<AnimateNames.length; i++) {
+				if (animate_name.equals(AnimateNames[i])) {
+					return i;
+				}
+			}
+		}
+		return -1;
+	}
+	
+	public String getAnimateName(int anim) {
+		return AnimateNames[anim];
+	}
 	
 	public CAnimates getAnimates(){
 		return animates;

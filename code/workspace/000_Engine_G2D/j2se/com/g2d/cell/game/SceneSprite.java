@@ -16,7 +16,7 @@ import com.g2d.Tools;
 import com.g2d.Version;
 import com.g2d.cell.CellSetResource;
 import com.g2d.cell.CellSetResourceManager;
-import com.g2d.cell.CellSetResource.SPR;
+import com.g2d.cell.CellSetResource.SpriteSet;
 import com.g2d.display.DisplayObject;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.DisplayShape;
@@ -37,7 +37,7 @@ public class SceneSprite extends MoveableUnit implements CellSetResource.LoadSpr
 	
 	transient protected CSprite 				csprite;
 	transient protected CellSetResource			set_resource;
-	transient protected CellSetResource.SPR 	set_sprite;
+	transient protected CellSetResource.SpriteSet 	set_sprite;
 	
 	protected String 	set_resource_name;
 	protected String 	set_sprite_id;
@@ -160,7 +160,7 @@ public class SceneSprite extends MoveableUnit implements CellSetResource.LoadSpr
 		return set_resource;
 	}
 	
-	public CellSetResource.SPR 	getSetSprite() {
+	public CellSetResource.SpriteSet 	getSetSprite() {
 		return set_sprite;
 	}
 	
@@ -191,7 +191,7 @@ public class SceneSprite extends MoveableUnit implements CellSetResource.LoadSpr
 //	------------------------------------------------------------------------------------------------------------------------------------
 //	resource
 	
-	public void loaded(CellSetResource set, CSprite cspr, SPR spr) {
+	public void loaded(CellSetResource set, CSprite cspr, SpriteSet spr) {
 //		System.out.println("loaded : " + spr.SprID);
 		setSprite(cspr) ;
 	}

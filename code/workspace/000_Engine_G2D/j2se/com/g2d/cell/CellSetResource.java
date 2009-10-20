@@ -38,8 +38,8 @@ import com.cell.j2se.CImage;
 import com.cell.util.PropertyGroup;
 import com.g2d.Version;
 
-import com.g2d.cell.CellSetResource.WORLD.REGION;
-import com.g2d.cell.CellSetResource.WORLD.WAYPOINT;
+import com.g2d.cell.CellSetResource.WorldSet.RegionObject;
+import com.g2d.cell.CellSetResource.WorldSet.WaypointObject;
 
 import com.g2d.display.DisplayObject;
 import com.g2d.util.Drawing;
@@ -58,10 +58,10 @@ public class CellSetResource //implements Serializable
 	
 	protected boolean 				is_stream_image = false;
 
-	transient public Hashtable<String, IMG>		ImgTable;
-	transient public Hashtable<String, SPR>		SprTable;
-	transient public Hashtable<String, MAP>		MapTable;
-	transient public Hashtable<String, WORLD>	WorldTable;
+	transient public Hashtable<String, ImagesSet>		ImgTable;
+	transient public Hashtable<String, SpriteSet>		SprTable;
+	transient public Hashtable<String, MapSet>		MapTable;
+	transient public Hashtable<String, WorldSet>	WorldTable;
 
 	transient protected Map<String, Object> 	ResourceManager;
 	transient protected ThreadPoolExecutor 		loading_service;
@@ -126,13 +126,13 @@ public class CellSetResource //implements Serializable
 		int MapCount 		= Config.getInteger("MapCount", 0);
 		int WorldCount 		= Config.getInteger("WorldCount", 0);
 
-		ImgTable 		= new Hashtable<String, IMG>();
-		SprTable 		= new Hashtable<String, SPR>();
-		MapTable 		= new Hashtable<String, MAP>();
-		WorldTable		= new Hashtable<String, WORLD>();
+		ImgTable 		= new Hashtable<String, ImagesSet>();
+		SprTable 		= new Hashtable<String, SpriteSet>();
+		MapTable 		= new Hashtable<String, MapSet>();
+		WorldTable		= new Hashtable<String, WorldSet>();
 		
 		for (int i=0; i<ImagesCount; i++){
-			IMG img = new IMG(
+			ImagesSet img = new ImagesSet(
 					Config.getString("Images_" + i), 
 					Config.getString("Images_" + i + "_tiles"));
 			ImgTable.put(img.Name, img);
@@ -140,7 +140,7 @@ public class CellSetResource //implements Serializable
 
 		for (int i = 0; i < SpriteCount; i++) {
 			try{
-				SPR spr = new SPR(
+				SpriteSet spr = new SpriteSet(
 						Config.getString("Sprite_" + i),
 						Config.getString("Sprite_" + i + "_parts"),
 						Config.getString("Sprite_" + i + "_frames"),
@@ -163,7 +163,7 @@ public class CellSetResource //implements Serializable
 		
 		for (int i = 0; i < MapCount; i++) {
 			try{
-				MAP map = new MAP(
+				MapSet map = new MapSet(
 						Config.getString("Map_" + i),
 						Config.getString("Map_" + i + "_parts"),
 						Config.getString("Map_" + i + "_frames"),
@@ -179,7 +179,7 @@ public class CellSetResource //implements Serializable
 		
 		for (int i = 0; i < WorldCount; i++) {
 			try{
-				WORLD world = new WORLD(
+				WorldSet world = new WorldSet(
 						Config.getString("World_" + i),
 						Config.getString("World_" + i + "_maps"),
 						Config.getString("World_" + i + "_sprs"),
@@ -219,7 +219,7 @@ public class CellSetResource //implements Serializable
 	
 //	-------------------------------------------------------------------------------------------------------------------------------
 	
-	public IImages getImages(IMG img) 
+	public IImages getImages(ImagesSet img) 
 	{
 		IImages stuff = null;
 
@@ -252,7 +252,7 @@ public class CellSetResource //implements Serializable
 	
 	
 	public IImages getImages(String key){
-		IMG img = ImgTable.get(key);
+		ImagesSet img = ImgTable.get(key);
 		return getImages(img);
 			
 	}
@@ -263,7 +263,7 @@ public class CellSetResource //implements Serializable
 	 * @return
 	 * @throws IOException
 	 */
-	protected IImages getLocalImage(IMG img) throws IOException {
+	protected IImages getLocalImage(ImagesSet img) throws IOException {
 		StreamTiles tiles = new StreamTiles(img);
 		tiles.run();
 		return tiles;
@@ -275,7 +275,7 @@ public class CellSetResource //implements Serializable
 	 * @return
 	 * @throws IOException
 	 */
-	protected IImages getStreamImage(IMG img) throws IOException
+	protected IImages getStreamImage(ImagesSet img) throws IOException
 	{
 		StreamTiles tiles = new StreamTiles(img);
 		loading_service.execute(tiles);
@@ -283,12 +283,12 @@ public class CellSetResource //implements Serializable
 	}
 	
 	
-	public CSprite getSprite(SPR spr){
+	public CSprite getSprite(SpriteSet spr){
 		IImages tiles = getImages(spr.ImagesName);
 		return getSprite(spr, tiles);
 	}
 	
-	public CSprite getSprite(SPR spr, IImages tiles)
+	public CSprite getSprite(SpriteSet spr, IImages tiles)
 	{
 		CSprite cspr = null;
 		
@@ -312,18 +312,18 @@ public class CellSetResource //implements Serializable
 	}
 	
 	public CSprite getSprite(String key){
-		SPR spr = SprTable.get(key);
+		SpriteSet spr = SprTable.get(key);
 		return getSprite(spr);
 	}
 
 	public CSprite getSprite(String key, IImages images){
-		SPR spr = SprTable.get(key);
+		SpriteSet spr = SprTable.get(key);
 		return getSprite(spr, images);
 	}
 
 	public void getSpriteAsync(String key, LoadSpriteListener listener)
 	{
-		SPR spr = SprTable.get(key);
+		SpriteSet spr = SprTable.get(key);
 		
 		if (ResourceManager!=null) {
 			Object obj = ResourceManager.get("SPR_"+key);
@@ -342,7 +342,7 @@ public class CellSetResource //implements Serializable
 	//
 	public CWayPoint[] getWorldWayPoints(String key)
 	{
-		WORLD world = WorldTable.get(key);
+		WorldSet world = WorldTable.get(key);
 		
 		CWayPoint[] points = null;
 		
@@ -366,7 +366,7 @@ public class CellSetResource //implements Serializable
 	
 	public CCD[] getWorldRegions(String key)
 	{
-		WORLD world = WorldTable.get(key);
+		WorldSet world = WorldTable.get(key);
 		
 		CCD[] regions = null;
 		
@@ -389,21 +389,21 @@ public class CellSetResource //implements Serializable
 	}
 	
 	
-	public WORLD getSetWorld(String key)
+	public WorldSet getSetWorld(String key)
 	{
-		WORLD world = WorldTable.get(key);
+		WorldSet world = WorldTable.get(key);
 		return world;
 	}
 	
-	public SPR getSetSprite(String key)
+	public SpriteSet getSetSprite(String key)
 	{
-		SPR spr = SprTable.get(key);
+		SpriteSet spr = SprTable.get(key);
 		return spr;
 	}
 	
-	public IMG getSetImages(String key)
+	public ImagesSet getSetImages(String key)
 	{
-		IMG img = ImgTable.get(key);
+		ImagesSet img = ImgTable.get(key);
 		return img;
 	}
 	
@@ -415,9 +415,9 @@ public class CellSetResource //implements Serializable
 		{
 			int count = ImgTable.size();
 			int index = 0;
-			Enumeration<IMG> imgs = ImgTable.elements();
+			Enumeration<ImagesSet> imgs = ImgTable.elements();
 			while (imgs.hasMoreElements()) {
-				IMG ts = imgs.nextElement();
+				ImagesSet ts = imgs.nextElement();
 				IImages images = getImages(ts);
 				if (progress!=null) {
 					progress.progress(this, images, index, count);
@@ -430,9 +430,9 @@ public class CellSetResource //implements Serializable
 		{
 			int count = SprTable.size();
 			int index = 0;
-			Enumeration<SPR> sprs = SprTable.elements();
+			Enumeration<SpriteSet> sprs = SprTable.elements();
 			while (sprs.hasMoreElements()) {
-				SPR ss = sprs.nextElement();
+				SpriteSet ss = sprs.nextElement();
 				CSprite sprite = getSprite(ss);
 				if (progress!=null) {
 					progress.progress(this, sprite, index, count);
@@ -445,9 +445,9 @@ public class CellSetResource //implements Serializable
 		{
 			int count = WorldTable.size();
 			int index = 0;
-			Enumeration<WORLD> worlds = WorldTable.elements();
+			Enumeration<WorldSet> worlds = WorldTable.elements();
 			while (worlds.hasMoreElements()) {
-				WORLD ws = worlds.nextElement();
+				WorldSet ws = worlds.nextElement();
 				CWayPoint[] points = getWorldWayPoints(ws.Name);
 				CCD[] regions = getWorldRegions(ws.Name);
 				if (progress!=null) {
@@ -533,7 +533,7 @@ public class CellSetResource //implements Serializable
 
 //	Images_<IMAGES INDEX>		=<IMAGES INDEX>,<NAME>,<COUNT>
 //	Images_<IMAGES INDEX>_tiles	=#<CLIP>{<INDEX>,<X>,<Y>,<W>,<H>,<DATA>,},#<END CLIP>
-	public static class IMG implements CellSetObject
+	public static class ImagesSet implements CellSetObject
 	{
 		private static final long serialVersionUID = Version.VersionG2D;
 
@@ -547,7 +547,7 @@ public class CellSetResource //implements Serializable
 		final public int ClipsH[];
 		final public String ClipsKey[];
 		
-		public IMG(String images, String tiles)
+		public ImagesSet(String images, String tiles)
 		{
 			String[]	args0 = CUtil.splitString(images, ",");
 			Index 		= Integer.parseInt(args0[0]);
@@ -593,7 +593,7 @@ public class CellSetResource //implements Serializable
 //	Sprite_<SPR INDEX>_frame_cd_atk		=<FRAME CD ATK>
 //	Sprite_<SPR INDEX>_frame_cd_def		=<FRAME CD DEF>
 //	Sprite_<SPR INDEX>_frame_cd_ext		=<FRAME CD EXT>
-	public 	static class SPR implements CellSetObject
+	public 	static class SpriteSet implements CellSetObject
 	{
 		private static final long serialVersionUID = Version.VersionG2D;
 
@@ -622,7 +622,7 @@ public class CellSetResource //implements Serializable
 		final public short[][]	FrameCDDef ;
 		final public short[][]	FrameCDExt ;
 		
-		public SPR(String spr,
+		public SpriteSet(String spr,
 				String _parts, 
 				String _frames,
 				String _cds, 
@@ -787,7 +787,7 @@ public class CellSetResource //implements Serializable
 //	Map_<MAP INDEX>_cds			=#<CD PART>{<INDEX>,<TYPE>,<MASK>,<X1>,<Y1>,<X2>,<Y2>,<W>,<H>},#<END CD PART>
 //	Map_<MAP INDEX>_tile_matrix	=<TILE MATRIX>
 //	Map_<MAP INDEX>_cd_matrix	=<FLAG MATRIX>
-	public 	static class MAP implements CellSetObject
+	public 	static class MapSet implements CellSetObject
 	{
 		private static final long serialVersionUID = Version.VersionG2D;
 
@@ -822,7 +822,7 @@ public class CellSetResource //implements Serializable
 		/** TerrainBlock2D[y][x] == BlocksType[index] */
 		final public int[][] 	TerrainBlock2D;
 		
-		public MAP(String map, String _parts, String _frames, String _cds, String _tile_matrix, String _cd_matrix)
+		public MapSet(String map, String _parts, String _frames, String _cds, String _tile_matrix, String _cd_matrix)
 		{
 			String[] args = CUtil.splitString(map, ",");
 			
@@ -951,7 +951,7 @@ public class CellSetResource //implements Serializable
 //	World_<WORLD INDEX>_regions			=#<REGION>{<INDEX>,<X>,<Y>,<W>,<H>,<REGION DATA>},#<END REGION>
 //	World_<WORLD INDEX>_data			=<DATA>
 //	World_<WORLD INDEX>_terrain			=<TERRAIN>
-	public 	static class WORLD implements CellSetObject
+	public 	static class WorldSet implements CellSetObject
 	{
 		private static final long serialVersionUID = Version.VersionG2D;
 
@@ -964,15 +964,15 @@ public class CellSetResource //implements Serializable
 		final public int		Width;
 		final public int		Height;
 		
-		final public Vector<SPR> 		Sprs 			= new Vector<SPR>();
-		final public Vector<MAP> 		Maps 			= new Vector<MAP>();
-		final public Vector<WAYPOINT> 	WayPoints		= new Vector<WAYPOINT>();
-		final public Vector<REGION> 	Regions			= new Vector<REGION>();
+		final public Vector<SpriteObject> 		Sprs 			= new Vector<SpriteObject>();
+		final public Vector<MapObject> 		Maps 			= new Vector<MapObject>();
+		final public Vector<WaypointObject> 	WayPoints		= new Vector<WaypointObject>();
+		final public Vector<RegionObject> 	Regions			= new Vector<RegionObject>();
 		
 		final public String		Data;
 		final public int[][]	Terrian;
 		
-		public WORLD(String world, 
+		public WorldSet(String world, 
 				String _maps,
 				String _sprs, 
 				String _waypoints, 
@@ -1007,16 +1007,16 @@ public class CellSetResource //implements Serializable
 			String[] wrss	= getArray2D(_regions);
 			
 			for (int i=0; i<maps_count; i++){
-				Maps.add(new WORLD.MAP(maps[i]));
+				Maps.add(new WorldSet.MapObject(maps[i]));
 			}
 			for (int i=0; i<sprs_count; i++){
-				Sprs.add(new WORLD.SPR(sprs[i]));
+				Sprs.add(new WorldSet.SpriteObject(sprs[i]));
 			}
 			for (int i=0; i<wpss_count; i++) {
-				WayPoints.add(new WORLD.WAYPOINT(wpss[i]));
+				WayPoints.add(new WorldSet.WaypointObject(wpss[i]));
 			}
 			for (int i=0; i<wrss_count; i++) {
-				Regions.add(new WORLD.REGION(wrss[i]));
+				Regions.add(new WorldSet.RegionObject(wrss[i]));
 			}
 			
 			for (int i = 0; i < wpsl.length; i++) {
@@ -1064,7 +1064,7 @@ public class CellSetResource //implements Serializable
 		
 		
 
-		public 	static class MAP implements Serializable
+		public 	static class MapObject implements Serializable
 		{
 			private static final long serialVersionUID = Version.VersionG2D;
 			
@@ -1077,7 +1077,7 @@ public class CellSetResource //implements Serializable
 			final public	String		Data;
 			
 			// <INDEX>,<MAP NAME>,<IDENTIFY>,<X>,<Y>,<SUPER>,<MAP DATA>
-			public MAP(String segment) throws IOException
+			public MapObject(String segment) throws IOException
 			{
 				String[] args = segment.split(",", 7);
 				
@@ -1091,7 +1091,7 @@ public class CellSetResource //implements Serializable
 			}
 		}
 		
-		public 	static class SPR implements Serializable
+		public 	static class SpriteObject implements Serializable
 		{
 			private static final long serialVersionUID = Version.VersionG2D;
 			
@@ -1106,7 +1106,7 @@ public class CellSetResource //implements Serializable
 			final public	String		Data;
 			
 			// <INDEX>,<SPR NAME>,<IDENTIFY>,<ANIMATE ID>,<FRAME ID>,<X>,<Y>,<SUPER>,<SPR DATA>
-			public SPR(String segment) throws IOException
+			public SpriteObject(String segment) throws IOException
 			{
 				String[] args = segment.split(",", 9);
 				
@@ -1122,7 +1122,7 @@ public class CellSetResource //implements Serializable
 			}
 		}
 		
-		public static class WAYPOINT implements Serializable
+		public static class WaypointObject implements Serializable
 		{
 			private static final long serialVersionUID = Version.VersionG2D;
 			
@@ -1131,10 +1131,10 @@ public class CellSetResource //implements Serializable
 			final public	int			Y;
 			final public	String		Data;
 			
-			final public ArrayList<WAYPOINT> Nexts = new ArrayList<WAYPOINT>();
+			final public ArrayList<WaypointObject> Nexts = new ArrayList<WaypointObject>();
 		
 			// <INDEX>,<X>,<Y>,<PATH DATA>
-			public WAYPOINT(String segment) throws IOException
+			public WaypointObject(String segment) throws IOException
 			{
 				String[] args = segment.split(",", 4);
 				
@@ -1147,7 +1147,7 @@ public class CellSetResource //implements Serializable
 		}
 		
 		
-		public static class REGION implements Serializable
+		public static class RegionObject implements Serializable
 		{
 			private static final long serialVersionUID = Version.VersionG2D;
 			
@@ -1159,7 +1159,7 @@ public class CellSetResource //implements Serializable
 			final public	String		Data;
 			
 			//<INDEX>,<X>,<Y>,<W>,<H>,<REGION DATA>
-			public REGION(String segment) throws IOException
+			public RegionObject(String segment) throws IOException
 			{
 				String[] args = segment.split(",", 6);
 				
@@ -1178,7 +1178,7 @@ public class CellSetResource //implements Serializable
 //	-------------------------------------------------------------------------------------
 	
 
-	public static IImages createImagesFromSet(IMG img, IImage image, IImages stuff)
+	public static IImages createImagesFromSet(ImagesSet img, IImage image, IImages stuff)
 	{
 		try{
 			if (img != null)
@@ -1208,7 +1208,7 @@ public class CellSetResource //implements Serializable
 	
 //	########################################################################################################################
 
-	public static CMap createMapFromSet(MAP tmap, IImages tiles, boolean isAnimate, boolean isCyc)
+	public static CMap createMapFromSet(MapSet tmap, IImages tiles, boolean isAnimate, boolean isCyc)
 	{
 
 		CMap ret = null;
@@ -1303,7 +1303,7 @@ public class CellSetResource //implements Serializable
 	
 //	########################################################################################################################
 	
-	public static CSprite createSpriteFromSet(SPR tsprite, IImages tiles){
+	public static CSprite createSpriteFromSet(SpriteSet tsprite, IImages tiles){
 		
 		CSprite ret = null;
 			 
@@ -1351,6 +1351,7 @@ public class CellSetResource //implements Serializable
 				ret = new CSprite(
 			            animates, 
 			            collides, 
+			            tsprite.AnimateNames,
 			            frameAnimate, 
 			            frameCDMap, 
 			            frameCDAtk, 
@@ -1374,20 +1375,20 @@ public class CellSetResource //implements Serializable
 	
 //	########################################################################################################################
 
-	public static CWayPoint[] createWayPointsFromSet(Vector<WAYPOINT> waypoints)
+	public static CWayPoint[] createWayPointsFromSet(Vector<WaypointObject> waypoints)
 	{
 		CWayPoint wayPoints[] = new CWayPoint[waypoints.size()];
 		for (int i = waypoints.size() - 1; i >= 0; --i) {
-			WAYPOINT src = waypoints.get(i);
+			WaypointObject src = waypoints.get(i);
 			CWayPoint wp = new CWayPoint(src.X, src.Y);
 			wp.SetData = getArray1D(src.Data);
 			wayPoints[i] = wp;
 		}
 		for (int i = waypoints.size() - 1; i >= 0; --i) {
-			WAYPOINT src = waypoints.get(i);
+			WaypointObject src = waypoints.get(i);
 			CWayPoint wp = wayPoints[i];
 			for (int j = src.Nexts.size() - 1; j >= 0; --j) {
-				WAYPOINT next = src.Nexts.get(i);
+				WaypointObject next = src.Nexts.get(i);
 				wp.link(wayPoints[next.Index]);
 			}
 		}
@@ -1396,11 +1397,11 @@ public class CellSetResource //implements Serializable
 	}
 	
 	
-	public static CCD[] createRegionsFromSet(Vector<REGION> regions)
+	public static CCD[] createRegionsFromSet(Vector<RegionObject> regions)
 	{
 		CCD cds[] = new CCD[regions.size()];
 		for (int i = regions.size() - 1; i >= 0; --i) {
-			REGION src = regions.get(i);
+			RegionObject src = regions.get(i);
 			CCD cd = CCD.createCDRect(0, src.X, src.Y, src.W, src.H);
 			cd.SetData = getArray1D(src.Data);
 			cds[i] = cd;
@@ -1427,16 +1428,16 @@ public class CellSetResource //implements Serializable
 
 	public static interface LoadSpriteListener
 	{
-		public void loaded(CellSetResource set, CSprite cspr, SPR spr);
+		public void loaded(CellSetResource set, CSprite cspr, SpriteSet spr);
 	}
 	
 	protected class LoadSpriteTask implements Runnable
 	{
 		final LoadSpriteListener listener;
 		
-		final SPR spr;
+		final SpriteSet spr;
 		
-		public LoadSpriteTask(SPR spr, LoadSpriteListener listener) {
+		public LoadSpriteTask(SpriteSet spr, LoadSpriteListener listener) {
 			this.spr		= spr;
 			this.listener 	= listener;
 		}
@@ -1462,12 +1463,12 @@ public class CellSetResource //implements Serializable
 	 */
 	protected class StreamTiles implements IImages, Runnable
 	{
-		final public IMG				img;
+		final public ImagesSet				img;
 		final public IImage[]			images;
 
 		private boolean 				loaded			= false;
 		
-		public StreamTiles(IMG img) throws IOException {
+		public StreamTiles(ImagesSet img) throws IOException {
 			this.images = new CImage[img.Count];
 			this.img = img;
 		}

@@ -36,6 +36,9 @@ public class CellSprite extends Sprite
 		z = getY();
 	}
 	
+	public CSprite getSprite() {
+		return cspr;
+	}
 	
 	/**
 	 * 由指定的精灵，创建一个动画鼠标

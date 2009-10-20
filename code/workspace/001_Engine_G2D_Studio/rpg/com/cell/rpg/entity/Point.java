@@ -8,7 +8,7 @@ public class Point extends Unit
 	public int 		color;
 	public float 	alpha;
 
-	public ArrayList<Integer> next_index = new ArrayList<Integer>();
+	public ArrayList<String> next_names = new ArrayList<String>();
 	
 	public Point(int x, int y) 
 	{
