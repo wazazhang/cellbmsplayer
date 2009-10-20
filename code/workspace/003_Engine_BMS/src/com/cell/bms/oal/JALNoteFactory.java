@@ -1,6 +1,7 @@
 package com.cell.bms.oal;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import net.java.games.joal.AL;
 import net.java.games.joal.ALException;
@@ -70,7 +71,22 @@ public class JALNoteFactory extends com.cell.bms.NoteFactory
 				return player;
 			}
 		}
+		if (players.size()>0) {
+			Collections.sort(players);
+			JALPlayer player = players.get(0);
+			player.stop();
+			System.err.println("no free source, cut an active source !");
+			return player;
+		}
 		return null;
 	}
 	
+	JALPlayer getActivePlayer(JALSound buffer) {
+		for (JALPlayer player : players) {
+			if (player.isBindBuffer(buffer)) {
+				return player;
+			}
+		}
+		return null;
+	}
 }

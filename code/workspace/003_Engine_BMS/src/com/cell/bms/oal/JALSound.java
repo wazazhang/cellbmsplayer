@@ -231,6 +231,16 @@ public class JALSound implements IDefineSound
 	}
 	
 	@Override
+	public void stop() {
+		if (buffer!=null) {
+			JALPlayer player = factory.getActivePlayer(this);
+			if (player != null) {
+				player.stop();
+			}
+		}
+	}
+	
+	@Override
 	public void dispose() {
 		if (buffer!=null) {
 			al.alDeleteBuffers(1, buffer, 0);

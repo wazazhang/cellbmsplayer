@@ -84,9 +84,8 @@ public class BMSPlayer
 	
 //	-------------------------------------------------------------------------------------------------
 	
-	public void start()
+	synchronized public void start()
 	{
-
 		try{
 			play_tracks				= bms_file.getAllNoteList();
 			play_bpm				= bms_file.getHeadInfo(HeadInfo.BPM);
@@ -95,20 +94,19 @@ public class BMSPlayer
 			play_position			= 0;
 			play_pre_beat_position	= 0;
 			play_pre_record_time	= System.currentTimeMillis();
-			
 			play_stop_time			= 0;
 			play_beat_count			= 0;
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
+	}
+	
+	synchronized public void stop() 
+	{
 		
 	}
 	
-	public void stop() {
-		
-	}
-	
-	boolean processSystemNote(Note note) 
+	private boolean processSystemNote(Note note) 
 	{
 		if (note.track<=9)
 		{
@@ -160,7 +158,7 @@ public class BMSPlayer
 		return false;
 	}
 
-	boolean processAutoHit(Note note) {
+	private boolean processAutoHit(Note note) {
 		switch(note.command) {
 		case INDEX_WAV_KEY_1P_:
 		case INDEX_WAV_KEY_2P_:
@@ -173,7 +171,7 @@ public class BMSPlayer
 		return false;
 	}
 	
-	public void update()
+	synchronized public void update()
 	{
 		try
 		{
@@ -237,24 +235,25 @@ public class BMSPlayer
 		}
 	}
 	
+	synchronized public ArrayList<Note> getPlayTracks(double length)
+	{
+		ArrayList<Note> ret = new ArrayList<Note>();
+		for (Note note : play_tracks) {
+			if (note.getBeginPosition() - play_position < length) {
+				ret.add(note);
+			} else {
+				break;
+			}
+		}
+		return ret;
+	}
+
 	public double getPlayPosition() {
 		return play_position;
 	}
 	
-	public ArrayList<Note> getPlayTracks()
-	{
+	public ArrayList<Note> getPlayTracks() {
 		return getPlayTracks(Double.MAX_VALUE);
-	}
-	
-	public ArrayList<Note> getPlayTracks(double length)
-	{
-		ArrayList<Note> ret = new ArrayList<Note>();
-		for (Note note : play_tracks) {
-			if (note.getBeginPosition() < length) {
-				ret.add(note);
-			}
-		}
-		return ret;
 	}
 	
 	public IDefineImage getPlayBGImage() {
