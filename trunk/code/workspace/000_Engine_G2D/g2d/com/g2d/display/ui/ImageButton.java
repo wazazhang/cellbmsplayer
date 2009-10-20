@@ -59,7 +59,7 @@ public class ImageButton extends BaseButton implements Runnable
 			g.setTransform(trans);
 		}
 		
-		renderCatchedMouse(g);
+//		renderCatchedMouse(g);
 	}
 	
 	

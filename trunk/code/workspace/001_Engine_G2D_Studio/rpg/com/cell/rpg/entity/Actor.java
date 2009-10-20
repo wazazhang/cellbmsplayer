@@ -1,6 +1,7 @@
 package com.cell.rpg.entity;
 
 import com.cell.rpg.ability.AbilitySceneNPC;
+import com.cell.rpg.ability.AbilitySceneNPCPathPoint;
 import com.cell.rpg.ability.AbilitySceneTransport;
 import com.cell.rpg.display.UnitNode;
 
@@ -17,6 +18,7 @@ public class Actor extends Unit
 		return new Class<?>[]{
 				AbilitySceneTransport.class,	
 				AbilitySceneNPC.class,
+				AbilitySceneNPCPathPoint.class,
 			};
 	}
 }

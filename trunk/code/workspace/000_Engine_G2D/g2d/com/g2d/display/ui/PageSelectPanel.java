@@ -81,7 +81,10 @@ public class PageSelectPanel extends Container
 	}
 	
 //	----------------------------------------------------------------------------------------------------------------------------
-	public int 		page_header_size = 20;
+	
+	public int 		page_header_width	= 60;
+	
+	public int		page_header_height	= 20;
 	
 	Vector<Page>	pages;
 	
@@ -114,7 +117,7 @@ public class PageSelectPanel extends Container
 		if (selected_page!=null) {
 			return selected_page.panel.getViewPortHeight();
 		}
-		return getHeight() - this.page_header_size;
+		return getHeight() - this.page_header_height;
 	}
 	
 //	----------------------------------------------------------------------------------------------------------------------------
@@ -139,10 +142,10 @@ public class PageSelectPanel extends Container
 
 	public void addPage(Page page) {
 		if (page!=null) {
+			page.setMinimumSize(page_header_width, page_header_height);
 			pages.add(page);
 			page.page_select = this;
 			super.addChild(page);
-			
 			if (selected_page==null) {
 				selectPage(page);
 			}
@@ -181,7 +184,7 @@ public class PageSelectPanel extends Container
 	}
 	
 	public Vector<Page> getPages(){
-		return pages;
+		return new Vector<Page>(pages);
 	}
 	
 	protected void onPageSelected(Page page){}
@@ -189,53 +192,32 @@ public class PageSelectPanel extends Container
 	
 //	----------------------------------------------------------------------------------------------------------------------------
 
-	public void render(Graphics2D g) 
+	@Override
+	protected void renderAfter(Graphics2D g) 
 	{
-		super.render(g);
+		super.renderAfter(g);
 		
-//		if (!pages.isEmpty())
-//		{
-//			int w = Math.min(getWidth() / pages.size(), 100);
-//			int h = page_header_size;
-//			int x = 0;
-//			for (Page page : pages) {
-//				page.setSize(w, h);
-//				page.setLocation(x, 0);
-//				page.panel.setSize(getWidth(), getHeight()-h);
-//				page.panel.setLocation(0, h);
-//				x += w;
-//			}
-//			
-//		}
-		
-	}
-	
-	public void setSize(int w, int h)
-	{
-		super.setSize(w, h);
 		if (!pages.isEmpty())
 		{
-//			int tw = Math.min(w / pages.size(), 100);
-			int th = page_header_size;
+			int h = page_header_height;
+			int w = Math.min(getWidth()/pages.size(), page_header_width);
 			int x = 0;
 			for (Page page : pages) {
-				if (page.getWidth()*pages.size()>w){
-					page.setSize(w/pages.size(), th);
-				}
+				page.setSize(w, h);
 				page.setLocation(x, 0);
-				page.panel.setSize(w, getHeight()-th);
-				page.panel.setLocation(0, th);
+				page.panel.setSize(getWidth(), getHeight()-h);
+				page.panel.setLocation(0, h);
 				x += page.getWidth();
 			}
-			
 		}
 	}
 	
-	synchronized public void addChild(UIComponent child) {
-		Tools.printError("can not add a custom child component in " + getClass().getName() + " !");
+	
+	synchronized public boolean addChild(UIComponent child) {
+		throw new IllegalStateException("can not add a custom child component in " + getClass().getName() + " !");
 	}
-	synchronized public void removeChild(UIComponent child) {
-		Tools.printError("can not remove a custom child component in " + getClass().getName() + " !");
+	synchronized public boolean removeChild(UIComponent child) {
+		throw new IllegalStateException("can not remove a custom child component in " + getClass().getName() + " !");
 	}
 	
 	

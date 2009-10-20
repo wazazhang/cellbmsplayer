@@ -150,7 +150,7 @@ public class NetService
 					notify();
 				}
 			}
-			
+
 			for (WaitingListener wait : Listener) {
 				wait.response(NetService.this, Message, response);
 			}
@@ -412,7 +412,7 @@ public class NetService
 							removed = new ArrayList<MessageHeader>(UnhandledMessages.size());
 						}
 						removed.add(unotify);
-						log.info("pop a unhandled notify : " + unotify);
+//						log.info("pop a unhandled notify : " + unotify);
 					}
 				}
 				if (removed!=null) {
@@ -481,7 +481,7 @@ public class NetService
 		try{
 			if (message.PacketNumber == 0) {
 				UnhandledMessages.add(message);
-				log.info("push a unhandled notify, wait for notify listener : " + message);
+//				log.info("push a unhandled notify, wait for notify listener : " + message);
 				return true;
 			}
     	} finally {

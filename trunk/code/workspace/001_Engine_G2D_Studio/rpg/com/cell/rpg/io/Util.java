@@ -11,13 +11,13 @@ import com.cell.rpg.entity.Unit;
 public class Util
 {
 	
-	final static public void wirteObjects(Collection<Unit> objects, ObjectOutputStream oos) throws IOException
+	final static public void wirteObjects(ArrayList<Unit> objects, ObjectOutputStream oos) throws IOException
 	{
 		ArrayList<Unit> outputs = new ArrayList<Unit>(objects);
 		oos.writeObject(outputs);
 	}
 	
-	final static public Collection<Unit> readObjects(ObjectInputStream ois) throws IOException, ClassNotFoundException
+	final static public ArrayList<Unit> readObjects(ObjectInputStream ois) throws IOException, ClassNotFoundException
 	{
 		@SuppressWarnings("unchecked")
 		ArrayList<Unit> outputs = (ArrayList<Unit>)ois.readObject();

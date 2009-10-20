@@ -6,9 +6,6 @@ import java.awt.Font;
 import java.awt.Window;
 import java.text.AttributedString;
 
-import com.g2d.display.Stage.CursorG2D;
-
-
 
 public interface Canvas
 {
@@ -36,7 +33,7 @@ public interface Canvas
 	 */
 	public void setCursor(AnimateCursor cursor);
 	
-	public CursorG2D getCursorG2D();
+//	public CursorG2D getCursorG2D();
 	
 	/**
 	 * 设置默认渲染子体

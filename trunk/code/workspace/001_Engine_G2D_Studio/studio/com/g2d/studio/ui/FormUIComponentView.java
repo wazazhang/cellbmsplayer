@@ -2,6 +2,7 @@ package com.g2d.studio.ui;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -57,15 +58,11 @@ public class FormUIComponentView extends AFormDisplayObjectViewer<UIComponent>
 	}
 	
 	@Override
-	public void loadObject(ObjectInputStream is) throws IOException,
-			ClassNotFoundException {
-		// TODO Auto-generated method stub
+	public void loadObject(ObjectInputStream is, File file) throws Exception {
 		
 	}
 	@Override
-	public void saveObject(ObjectOutputStream os) throws IOException,
-			ClassNotFoundException {
-		// TODO Auto-generated method stub
+	public void saveObject(ObjectOutputStream os, File file) throws Exception {
 		
 	}
 	

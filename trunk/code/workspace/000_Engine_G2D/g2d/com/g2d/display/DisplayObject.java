@@ -32,6 +32,7 @@ import com.g2d.annotation.Property;
 import com.g2d.display.ui.UIComponent;
 import com.g2d.editor.DisplayObjectEditor;
 import com.g2d.editor.UIComponentEditor;
+import com.sun.org.apache.bcel.internal.classfile.Code;
 
 
 /**
@@ -42,21 +43,12 @@ public abstract class DisplayObject extends DObject implements Comparable<Displa
 {
 	private static final long serialVersionUID = Version.VersionG2D;
 
-//	-------------------------------------------------------------
+//	--------------------------------------------------------------------------------------------------------------------------
 	
 	public static int 		main_timer;
 
-//	-------------------------------------------------------------
 	static Stack<Object>	display_stack = new Stack<Object>();
 	
-	public <T> void pushObject(T value){
-		display_stack.push(value);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public <T> T popObject(Class<T> type){
-		return (T)display_stack.pop();
-	}
 
 //	-------------------------------------------------------------
 //	 public
@@ -94,18 +86,14 @@ public abstract class DisplayObject extends DObject implements Comparable<Displa
 //	extends 
 	
 	/**表示鼠标是否在local_bounds内*/
-	transient protected boolean	hit_mouse;
-	/**鼠标在当前对象的相对坐标*/
-	transient protected int		mouse_x, mouse_y;
-	/**
-	 * 表示该控件是否得到鼠标<br>
-	 * 最先得到鼠标的控件将获得鼠标输入,键盘输入的焦点<br>
-	 * 默认情况下是鼠标在local_bounds内,并且鼠标在graphics的clip内<br>
-	 * 也可以重写 testCatchMouse 方法来自定义判断是否抓住鼠标
-	 */
-	transient protected boolean	catched_mouse;
+	transient private boolean	hit_mouse;
+	transient private boolean	catched_mouse;
 	
-//	-------------------------------------------------------------
+	/**鼠标在当前对象的相对坐标*/
+	transient int		mouse_y;
+	transient int 		mouse_x;
+	
+	//	-------------------------------------------------------------
 //	 local
 	
 	/** 父节点 */
@@ -131,19 +119,16 @@ public abstract class DisplayObject extends DObject implements Comparable<Displa
 //	}
 	
 	/**初始化可序列化字段*/
-	protected void init_field()
-	{
+	protected void init_field() {
 		visible 			= true;
 		local_bounds 		= new Rectangle(0,0,100,100);
-		
 	}
 	
 	/**初始化不可序列化字段, 该方法将在构造函数和反序列化后调用*/
-	protected void init_transient()
-	{
+	protected void init_transient()	{
 		screen_rectangle	= new Rectangle(0,0,0,0);
-		
 	}
+	
 	
 //	protected void onRead(MarkedHashtable data){}
 //	
@@ -207,6 +192,10 @@ public abstract class DisplayObject extends DObject implements Comparable<Displa
 		return parent;
 	}
 	
+	/**
+	 * 得到当前所在的stage
+	 * @return
+	 */
 	public Stage getStage() {
 		return root.getStage();
 	}
@@ -424,6 +413,11 @@ public abstract class DisplayObject extends DObject implements Comparable<Displa
 	
 //	-------------------------------------------------------------
 
+	/**表示鼠标是否在local_bounds内*/
+	public boolean isHitMouse() {
+		return hit_mouse;
+	}
+	
 	public boolean hitTestScreenObject(DisplayObject obj) {
 		return screen_rectangle.intersects(obj.screen_rectangle);
 	}
@@ -437,20 +431,53 @@ public abstract class DisplayObject extends DObject implements Comparable<Displa
 	 * @return
 	 */
 	public boolean hitTestMouse(){
-		return hit_mouse;
+		return isHitMouse();
 	}
-
+	
+	/**鼠标在当前对象的相对坐标*/
 	public int getMouseX() {
 		return mouse_x;
 	}
 	
+	/**鼠标在当前对象的相对坐标*/
 	public int getMouseY() {
 		return mouse_y;
+	}
+
+	/**
+	 * 表示该控件是否得到鼠标<br>
+	 * 最先得到鼠标的控件将获得鼠标输入,键盘输入的焦点<br>
+	 * 默认情况下是鼠标在local_bounds内,并且鼠标在graphics的clip内<br>
+	 * 可以覆盖 {@link testCatchMouse(Graphics2D g)}方法来确定是否能获取鼠标
+	 */
+	public boolean isCatchedMouse() {
+		return catched_mouse;
+	}
+
+	/**
+	 * 提供是否能被鼠标获取的能力
+	 * @param g
+	 * @return
+	 */
+	protected boolean testCatchMouse(Graphics2D g) {
+		return true;
+	}
+	
+	/**
+	 * 是否是当前唯一获得鼠标的最高层对象
+	 * @return
+	 */
+	public boolean isPickedMouse() {
+		if (root!=null) {
+			return root.getStage().getMousePickedObject() == this;
+		}
+		return false;
 	}
 	
 //	-------------------------------------------------------------
 
 	
+
 	void refreshScreen(DisplayObjectContainer parent) 
 	{
 		this.screen_x = parent.screen_x + (int)this.x;
@@ -462,7 +489,7 @@ public abstract class DisplayObject extends DObject implements Comparable<Displa
 		
 		this.mouse_x = screenToLocalX(root.getMouseX());
 		this.mouse_y = screenToLocalY(root.getMouseY());
-		this.hit_mouse = screen_rectangle.contains(root.getMouseX(), root.getMouseY());
+		this.hit_mouse = (screen_rectangle.contains(root.getMouseX(), root.getMouseY()));
 	}
 	
 	
@@ -492,6 +519,8 @@ public abstract class DisplayObject extends DObject implements Comparable<Displa
 		this.removed(parent);
 	}
 	
+//	---------------------------------------------------------------------------------------------------------------------------------------
+	
 	/**
 	 * 递归方法
 	 * @param parent
@@ -503,11 +532,19 @@ public abstract class DisplayObject extends DObject implements Comparable<Displa
 		this.timer ++;
 		this.interval_ms 		= (int)(System.currentTimeMillis() - last_update_time);
 		this.last_update_time 	= System.currentTimeMillis();
-		
-		refreshScreen(parent);
+		this.refreshScreen(parent);
+
+		updateBefore(parent);
 		
 		this.update();
+		
+		updateAfter(parent);
 	}
+	
+	void updateBefore(DisplayObjectContainer parent) {}
+	void updateAfter(DisplayObjectContainer parent) {}
+	
+//	---------------------------------------------------------------------------------------------------------------------------------------
 	
 	/**
 	 * 递归方法
@@ -515,25 +552,31 @@ public abstract class DisplayObject extends DObject implements Comparable<Displa
 	 */
 	void onRender(Graphics2D g) 
 	{
-		if (!g.hitClip((int)x + local_bounds.x, (int)y + local_bounds.y, local_bounds.width, local_bounds.height)){
-			catched_mouse = false;
-			// return;
-		}
-		
 		if (visible) 
 		{
-			Shape 			clip 		= g.getClip();
-			AffineTransform transfrom 	= g.getTransform();
-			Composite 		composite	= g.getComposite();
+			Shape			clip		= g.getClip();
+			AffineTransform	transfrom	= g.getTransform();
+			Composite		composite	= g.getComposite();
 			{
-				g.translate(this.x, this.y);
+				g.translate(x, y);
 				
+				this.renderBefore(g);
+
 				this.render(g);
+				if (debug) {
+					this.renderDebug(g);
+				}
 				
-				this.render_debug(g);
+				if (hit_mouse && testCatchMouse(g)) {
+					catched_mouse = true;
+					getStage().setMousePickedObject(this);
+				} else {
+					catched_mouse = false;
+				}
 				
-				this.catched_mouse	= testCatchMouse(g);
-				this.hit_mouse 		= g.hitClip(mouse_x, mouse_y, 1, 1);
+				this.renderInteractive(g);
+				
+				this.renderAfter(g);
 			}
 			g.setComposite(composite);
 			g.setTransform(transfrom);
@@ -541,25 +584,27 @@ public abstract class DisplayObject extends DObject implements Comparable<Displa
 		}
 	}
 	
-	protected void render_debug(Graphics2D g)
+
+	protected void renderBefore(Graphics2D g){}
+	
+	protected void renderAfter(Graphics2D g) {}
+	
+	void renderInteractive(Graphics2D g){}
+	
+	protected void renderDebug(Graphics2D g)
 	{
-		if (debug)
-		{
-			g.setColor(Color.GREEN);
-			g.drawRect(local_bounds.x, local_bounds.y, local_bounds.width-1, local_bounds.height-1);
-			g.setColor(Color.CYAN);
-			g.drawLine(-10, 0, 0+10, 0);
-			g.drawLine(0, 0-10, 0, 0+10);
-			g.setColor(Color.YELLOW);
-			g.drawLine(-10, priority, 0+10, priority);
-			g.drawLine(0, priority-10, 0, priority+10);
-		}
+		g.setColor(Color.GREEN);
+		g.drawRect(local_bounds.x, local_bounds.y, local_bounds.width-1, local_bounds.height-1);
+		g.setColor(Color.CYAN);
+		g.drawLine(-10, 0, 0+10, 0);
+		g.drawLine(0, 0-10, 0, 0+10);
+		g.setColor(Color.YELLOW);
+		g.drawLine(-10, priority, 0+10, priority);
+		g.drawLine(0, priority-10, 0, priority+10);
 	}
 	
 	
-	protected boolean testCatchMouse(Graphics2D g) {
-		return g.hitClip(mouse_x, mouse_y, 1, 1) && hit_mouse;
-	}
+//	---------------------------------------------------------------------------------------------------------------------------------------
 	
 	/**在该对象被添加到场景中后发生</br>注意:不要在此处初始化持久性数据*/
 	abstract public void added(DisplayObjectContainer parent);
@@ -588,5 +633,14 @@ public abstract class DisplayObject extends DObject implements Comparable<Displa
 	public void setAlpha(Graphics2D g, float alpha)
 	{
 		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+	}
+
+
+	public <T> void pushObject(T value){
+		display_stack.push(value);
+	}
+	
+	public <T> T popObject(Class<T> type){
+		return type.cast(display_stack.pop());
 	}
 }

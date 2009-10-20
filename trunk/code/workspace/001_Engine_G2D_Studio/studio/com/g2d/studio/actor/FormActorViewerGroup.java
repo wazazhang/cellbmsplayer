@@ -14,6 +14,7 @@ import com.g2d.studio.ATreeNodeGroup;
 import com.g2d.studio.ATreeNodeLeaf;
 import com.g2d.studio.ATreeNodeSet;
 import com.g2d.studio.Config;
+import com.g2d.studio.ResourceManager;
 import com.g2d.studio.Studio;
 import com.g2d.studio.Studio.SetResource;
 

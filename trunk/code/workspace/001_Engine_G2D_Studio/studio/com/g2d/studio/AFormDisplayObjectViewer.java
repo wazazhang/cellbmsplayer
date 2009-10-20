@@ -200,18 +200,20 @@ public abstract class AFormDisplayObjectViewer<D extends DisplayObject> extends 
 	
 //	-------------------------------------------------------------------------------------------------------------------------
 	
-	abstract public void saveObject(ObjectOutputStream os) throws IOException, ClassNotFoundException;
+	abstract public void saveObject(ObjectOutputStream os, File file) throws Exception;
 	
-	abstract public void loadObject(ObjectInputStream is) throws IOException, ClassNotFoundException;
+	abstract public void loadObject(ObjectInputStream is, File file) throws Exception;
 	
 	public void load()
 	{
 		if (no_save) return;
-		
+
+		File file = null;
+			
 		try 
-		{
-			File file = new File(studio.project_path.getPath() + "/" + leaf_node.path + ".xml");
-				
+		{ 
+			file = new File(studio.project_path.getPath() + "/" + leaf_node.path + ".xml");
+			
 			if (file.exists())
 			{
 				byte[] data = com.cell.io.File.readData(file);
@@ -223,19 +225,19 @@ public abstract class AFormDisplayObjectViewer<D extends DisplayObject> extends 
 						XStream xstream = new XStream();
 						ObjectInputStream in = xstream.createObjectInputStream(reader);
 						try{
-							loadObject(in);
+							loadObject(in, file);
 						}finally{
 							in.close();
 						}
 					}finally{
 						reader.close();
 					}
-					System.out.println("load obj : " + file.getPath());
+//					System.out.println("load obj : " + file.getPath());
 				}
 			}
 		} 
 		catch (Exception e) {
-			System.err.println("load error : " + leaf_node.getID());
+			System.err.println("load error : " + leaf_node.getID() + " : " + file);
 			e.printStackTrace();
 			is_changed = true;
 		}
@@ -245,10 +247,12 @@ public abstract class AFormDisplayObjectViewer<D extends DisplayObject> extends 
 	public void save()
 	{
 		if (no_save) return;
+
+		File file = null ;
 		
 		try 
 		{	
-			File file = studio.createFile(leaf_node.path + ".xml") ;
+			file = studio.createFile(leaf_node.path + ".xml") ;
 			
 			if (!file.exists()) {
 				file.createNewFile();
@@ -262,7 +266,7 @@ public abstract class AFormDisplayObjectViewer<D extends DisplayObject> extends 
 				XStream xstream = new XStream();
 				ObjectOutputStream out = xstream.createObjectOutputStream(writer);
 				try{
-					saveObject(out);
+					saveObject(out, file);
 				}finally{
 					out.close();
 				}
@@ -274,10 +278,10 @@ public abstract class AFormDisplayObjectViewer<D extends DisplayObject> extends 
 				writer.close();
 			}
 			
-			System.out.println("save obj : " + file.getPath());
+//			System.out.println("save obj : " + file.getPath());
 		} 
 		catch (Exception e) {
-			System.err.println("save error : " + leaf_node.getID());
+			System.err.println("save error : " + leaf_node.getID() + " : " + file);
 			e.printStackTrace();
 			is_changed = true;
 		}

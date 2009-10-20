@@ -29,29 +29,15 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.awt.image.BufferedImage;
 import java.awt.image.VolatileImage;
 import java.text.AttributedString;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Vector;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import javax.swing.JApplet;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JWindow;
-
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
-import com.cell.CObject;
-import com.g2d.Tools;
-import com.g2d.Version;
+import com.cell.exception.NotImplementedException;
 import com.g2d.display.AnimateCursor;
 import com.g2d.display.Stage;
-import com.g2d.display.Stage.CursorG2D;
 import com.g2d.display.event.Event;
 import com.g2d.editor.DisplayObjectEditor;
 
@@ -504,7 +490,7 @@ FocusListener
 			{
 				//buffer = gc.createCompatibleImage(stageWidth, stageHeight, Transparency.OPAQUE);
 				vm_buffer = gc.createCompatibleVolatileImage(stageWidth, stageHeight, Transparency.OPAQUE);
-				System.out.println("create vm buffer !");
+//				System.out.println("create vm buffer !");
 			}
 			else if (vm_buffer.validate(gc) == VolatileImage.IMAGE_INCOMPATIBLE) 
 			{
@@ -903,11 +889,11 @@ FocusListener
 	}
 
 
-	@Override
-	public CursorG2D getCursorG2D() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+//	@Override
+//	public CursorG2D getCursorG2D() {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 	
 //	--------------------------------------------------------------------------------
 

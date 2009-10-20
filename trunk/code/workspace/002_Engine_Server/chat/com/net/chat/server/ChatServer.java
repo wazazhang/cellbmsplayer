@@ -31,17 +31,23 @@ public class ChatServer extends ServerImpl
 	private static final Logger _log = LoggerFactory.getLogger(ChatServer.class.getName());
 	
     public static void main(String args[]) throws Exception
-    {
-    	String Port = "16000";
-    	
-    	if (args!=null && args.length >= 1) {
-    		Port = args[0];
-    	}
-    	
-    	ChatServer server = new ChatServer();
-    	
-    	server.open(Integer.parseInt(Port));
-    }
+	{
+		try {
+			String Port = "16000";
+
+			if (args != null && args.length >= 1) {
+				Port = args[0];
+			}
+
+			ChatServer server = new ChatServer();
+
+			server.open(Integer.parseInt(Port));
+			
+		} catch (Throwable err) {
+			err.printStackTrace();
+			System.exit(-1);
+		}
+	}
     
     public ChatServer() {
     	super(16, 1000000);

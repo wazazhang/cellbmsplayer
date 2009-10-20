@@ -35,6 +35,8 @@ public class Sprite extends InteractiveObject implements Vector
 		alpha			= 1f;
 		enable 			= false;
 		enable_bounds	= false;
+		enable_input	= false;
+		enable_focus	= false;
 	}
 	
 	@Override
@@ -96,42 +98,21 @@ public class Sprite extends InteractiveObject implements Vector
 		super.onUpdate(parent);
 	}
 	
-	final protected void onRender(Graphics2D g)
-	{
-		if (visible) 
-		{
-			Shape 			clip		= g.getClip();
-			AffineTransform	transfrom	= g.getTransform();
-			Composite 		composite	= g.getComposite();
-			{
-				g.translate(x, y);
-				
-				if (scale_x != 1 || scale_y != 1)
-					g.scale(scale_x, scale_y);
-				
-				if (rotate != 0)
-					g.rotate(rotate);
-				
-				if (alpha < 1f)
-					g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
-
-				this.render(g);
-				
-				this.catched_mouse = testCatchMouse(g);
-				
-				this.render_debug(g);
-				
-				this.render_childs(g);
-			}
-			
-			afterRender(g);
-			g.setComposite(composite);
-			g.setTransform(transfrom);
-			g.setClip(clip);
-		}
-		
+	final protected void onRender(Graphics2D g) {
+		super.onRender(g);
 	}
 
+	@Override
+	final protected void renderBefore(Graphics2D g) {
+		super.renderBefore(g);
+		if (scale_x != 1 || scale_y != 1)
+			g.scale(scale_x, scale_y);
+		if (rotate != 0)
+			g.rotate(rotate);
+		if (alpha < 1f)
+			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+	}
+	
 	public void added(DisplayObjectContainer parent) {}
 	public void removed(DisplayObjectContainer parent) {}
 	public void render(Graphics2D g) {}

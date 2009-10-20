@@ -63,7 +63,7 @@ public class Button extends BaseButton
 	
 	protected void render_text(Graphics2D g)
 	{
-		if (getRoot()!=null && catched_mouse) {
+		if (getRoot()!=null && isCatchedMouse()) {
 			g.setColor(focusTextColor);
 		}else{
 			g.setColor(unfocusTextColor);

@@ -44,18 +44,19 @@ public abstract class Window extends Container
 		super.init_field();
 		enable_drag = true;
 		root_form = this;
+		setMinimumSize(100, 100);
 	}
 	
 	public Window(){}
 	
 	@Override
-	protected void render_childs(Graphics2D g) {
+	protected void renderChilds(Graphics2D g) {
 		if (transition!=null) {
 			if (transition.isClosing() || transition.isOpening()){
 				return;
 			}
 		}
-		super.render_childs(g);
+		super.renderChilds(g);
 	}
 	
 	

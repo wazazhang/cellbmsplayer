@@ -22,30 +22,6 @@ public class Form extends Window
 {
 	private static final long serialVersionUID = Version.VersionG2D;
 	
-	public class ButtonClose extends Button 
-	{
-		private static final long serialVersionUID = Version.VersionG2D;
-		
-		public ButtonClose() {
-			super("");
-			this.setSize(17, 17);
-		}
-		protected void onMouseClick(MouseEvent event) {
-			super.onMouseClick(event);
-			if (event.mouseButton == MouseEvent.BUTTON_LEFT) {
-				if (!onCloseButtonClick()){
-					Form.this.close();
-				}
-			}
-		}
-		public void update() {
-			super.update();
-			this.setLocation(
-					Form.this.getWidth()-getWidth()-8, 
-					4
-					);
-		}
-	}
 //	--------------------------------------------------------------------------------------------------------------------------
 
 	protected Button 			btn_close;
@@ -110,5 +86,29 @@ public class Form extends Window
 	
 //	--------------------------------------------------------------------------------------------------------------------------
 	
-	
+
+	public class ButtonClose extends Button 
+	{
+		private static final long serialVersionUID = Version.VersionG2D;
+		
+		public ButtonClose() {
+			super("");
+			this.setSize(17, 17);
+		}
+		protected void onMouseClick(MouseEvent event) {
+			super.onMouseClick(event);
+			if (event.mouseButton == MouseEvent.BUTTON_LEFT) {
+				if (!onCloseButtonClick()){
+					Form.this.close();
+				}
+			}
+		}
+		public void update() {
+			super.update();
+			this.setLocation(
+					Form.this.getWidth()-getWidth()-8, 
+					4
+					);
+		}
+	}
 }

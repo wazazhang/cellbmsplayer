@@ -109,13 +109,17 @@ public class Crypt
 //					System.out.println("str2hex " + src + " -> " + hex);
 //					String str = hex2str(hex);
 //					System.out.println("hex2str " + hex + " -> " + str);
-					
-					String enc = encryptHex(src, key);
-					String dec = decryptHex(enc, key);
-
-					System.out.println("encryptHex: " + src + " -> " + enc);
-					System.out.println("decryptHex: " + enc + " -> " + dec);
-					
+					{
+						String enc = encrypt(src, key);
+						String dec = decrypt(enc, key);
+						System.out.println("encrypt: " + src + " -> " + enc);
+						System.out.println("decrypt: " + enc + " -> " + dec);
+					}{
+						String enc = encryptHex(src, key);
+						String dec = decryptHex(enc, key);
+						System.out.println("encryptHex: " + src + " -> " + enc);
+						System.out.println("decryptHex: " + enc + " -> " + dec);
+					}
 					break;
 				}
 			}

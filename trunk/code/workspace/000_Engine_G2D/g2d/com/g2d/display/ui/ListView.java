@@ -117,11 +117,11 @@ public class ListView extends Container
 			super.removeChild(child);
 		}
 		
-		synchronized public void addChild(UIComponent child) {
-			Tools.printError("can not add a custom child component in " + getClass().getName() + " !");
+		synchronized public boolean addChild(UIComponent child) {
+			throw new IllegalStateException("can not add a custom child component in " + getClass().getName() + " !");
 		}
-		synchronized public void removeChild(UIComponent child) {
-			Tools.printError("can not remove a custom child component in " + getClass().getName() + " !");
+		synchronized public boolean removeChild(UIComponent child) {
+			throw new IllegalStateException("can not remove a custom child component in " + getClass().getName() + " !");
 		}
 		
 		@Override
@@ -304,11 +304,11 @@ public class ListView extends Container
 //	----------------------------------------------------------------------------------------------------------
 
 	
-	synchronized public void addChild(UIComponent child) {
-		Tools.printError("can not add a custom child component in " + getClass().getName() + " !");
+	synchronized public boolean addChild(UIComponent child) {
+		throw new IllegalStateException("can not add a custom child component in " + getClass().getName() + " !");
 	}
-	synchronized public void removeChild(UIComponent child) {
-		Tools.printError("can not remove a custom child component in " + getClass().getName() + " !");
+	synchronized public boolean removeChild(UIComponent child) {
+		throw new IllegalStateException("can not remove a custom child component in " + getClass().getName() + " !");
 	}
 	
 	

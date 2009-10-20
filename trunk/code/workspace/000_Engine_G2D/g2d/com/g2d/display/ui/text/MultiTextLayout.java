@@ -167,11 +167,13 @@ public class MultiTextLayout
 	/**是否显示光标*/
 	public boolean 				is_show_caret 	= true;
 	/**是否显示为密码*/
-	public boolean 				is_password 	= false;
+	private boolean 			is_password 	= false;
 	
 //	----------------------------------------------------------------------------------------------------------------
 //	交互
 	
+
+
 	// 文字光标
 	Rectangle 					caret_bounds 	= new Rectangle();
 	
@@ -200,7 +202,21 @@ public class MultiTextLayout
 		this(false);
 	}
 	
-	
+	synchronized public boolean isIsPassword() {
+		return is_password;
+	}
+
+	synchronized public void setIsPassword(boolean isPassword) {
+		is_password = isPassword;
+		if (textChange!=null) {
+			textChange.set(textChange.text);
+		} else {
+			setText(text);
+		}
+	}
+
+//	----------------------------------------------------------------------------------------------------------------
+
 	synchronized public void setCaret(int x, int y)
 	{
 		if (x<0) x = 0;
@@ -959,11 +975,11 @@ public class MultiTextLayout
 	private String encodeChars(String text)
 	{
 		if (is_password) {
-			String ret = "";
-			for (char c : text.toCharArray()) {
-				ret += "*";
+			char[] chars = new char[text.length()];
+			for (int i = text.length() - 1; i >= 0; --i) {
+				chars[i] = ('*');
 			}
-			return ret;
+			return new String(chars);
 		}
 		return text;
 	}

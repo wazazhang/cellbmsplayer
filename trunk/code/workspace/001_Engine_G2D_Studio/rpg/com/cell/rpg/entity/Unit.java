@@ -32,9 +32,9 @@ public abstract class Unit extends RPGObject implements Abilities
 	
 	public TPosition	pos			= new TPosition();
 	
-	public TMotion 		motion		= new TMotion();
-
-	public TState		state		= new TState();
+//	public TMotion 		motion		= new TMotion();
+//
+//	public TState		state		= new TState();
 
 //	--------------------------------------------------------------------------------------------------------------------
 //	properties 
@@ -69,7 +69,7 @@ public abstract class Unit extends RPGObject implements Abilities
 	{
 		this.name	= other.name;
 		this.pos	= other.pos;
-		this.motion	= other.motion;
+//		this.motion	= other.motion;
 	}
 	
 //	-------------------------------------------------------------------------------------------------------

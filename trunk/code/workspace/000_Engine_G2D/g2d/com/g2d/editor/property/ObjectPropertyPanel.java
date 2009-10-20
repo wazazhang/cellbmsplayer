@@ -195,15 +195,16 @@ public class ObjectPropertyPanel extends JPanel
 	/**
 	 * 创建一个单元格的编辑器，该编辑器必须实现 PropertyCellEdit<br>
 	 * 用于用户自自定义子类的编辑器
-	 * @param object
-	 * @param field
-	 * @param field_value
+	 * @param object		被编辑的对象
+	 * @param field			被编辑的对象类的字段
+	 * @param field_value	被编辑的对象类的字段当前值
 	 * @return
 	 */
-	public PropertyCellEdit<?> getPropertyCellEdit(Object object, Field field, Object field_value)
+	protected PropertyCellEdit<?> getPropertyCellEdit(Object object, Field field, Object field_value)
 	{
 		if (field.getType().isEnum()) 
 		{
+			@SuppressWarnings("unchecked")
 			ListEnumEdit edit = new ListEnumEdit(field.getType());
 			return edit;
 		}
@@ -227,15 +228,15 @@ public class ObjectPropertyPanel extends JPanel
 	}
 	
 	/**
-	 * 得到单元格的值<br>
+	 * 当字段属性编辑器完成编辑后，得到单元格的值<br>
 	 * 用于用户自自定义子类的编辑器
-	 * @param object
-	 * @param field
-	 * @param edit
-	 * @param src_value
+	 * @param object		被编辑的对象
+	 * @param field			被编辑的对象类的字段
+	 * @param edit			字段属性编辑器
+	 * @param src_value		被编辑的对象类的字段原值
 	 * @return
 	 */
-	public Object getPropertyCellEditValue(Object object, Field field, PropertyCellEdit<?> edit, Object src_value)
+	protected Object getPropertyCellEditValue(Object object, Field field, PropertyCellEdit<?> edit, Object src_value)
 	{
 		Object obj = null;
 		if (edit instanceof TextCellEdit) {
