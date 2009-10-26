@@ -1,8 +1,11 @@
 package com.g2d.display.ui;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Cursor;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.AttributedString;
@@ -14,6 +17,7 @@ import com.g2d.Tools;
 import com.g2d.Version;
 import com.g2d.annotation.Property;
 import com.g2d.display.AnimateCursor;
+import com.g2d.display.DisplayObject;
 import com.g2d.display.event.EventListener;
 import com.g2d.display.event.KeyEvent;
 import com.g2d.display.event.MouseEvent;
@@ -25,24 +29,35 @@ import com.g2d.display.ui.text.MultiTextLayout.AttributedSegment;
 
 
 
-public class TextBox extends Container implements Serializable
+public class TextBox extends UIComponent implements Serializable
 {
 	private static final long serialVersionUID = Version.VersionG2D;
 
 	public static int SCROLL_BAR_SIZE = 12;
-	
-	transient int 						text_draw_x;
-	transient int 						text_draw_y;
-	transient MultiTextLayout			text;
 	
 	@Property("文字颜色")
 	public Color 						textColor;
 	public boolean 						is_readonly;
 	public boolean						is_show_link;
 	protected ScrollBar					v_scrollbar;
+
+	/**文字是否抗锯齿*/
+	@Property("文字是否抗锯齿")
+	public boolean						enable_antialiasing	 = false;
+
+	public int							text_shadow_x = 0;
+	public int							text_shadow_y = 0;
+
+//	-------------------------------------------------------------------------------------------------------------------
 	
+	transient int 						text_draw_x;
+	transient int 						text_draw_y;
+	transient MultiTextLayout			text;
+
 	transient AnimateCursor				link_cursor;
 	transient Hashtable<Attribute, ClickSegmentListener> click_segment_listeners;
+	
+//	-------------------------------------------------------------------------------------------------------------------
 	
 	@Override
 	protected void init_field() 
@@ -101,10 +116,12 @@ public class TextBox extends Container implements Serializable
 		this.setSize(w, h);
 	}
 	
-	synchronized public boolean addChild(UIComponent child) {
+	@Deprecated
+	public boolean addChild(DisplayObject child) {
 		throw new IllegalStateException("can not add a custom child component in " + getClass().getName() + " !");
 	}
-	synchronized public boolean removeChild(UIComponent child) {
+	@Deprecated
+	public boolean removeChild(DisplayObject child) {
 		throw new IllegalStateException("can not remove a custom child component in " + getClass().getName() + " !");
 	}
 	
@@ -179,14 +196,29 @@ public class TextBox extends Container implements Serializable
 	}
 	
 	@Override
-	protected void trySetCursor() {
+	protected void trySetCursor() 
+	{
 		if (CMath.includeRectPoint(
 				layout.BorderSize, 
 				layout.BorderSize, 
 				getWidth()-(layout.BorderSize<<1), 
 				getHeight()-(layout.BorderSize<<1), 
 				getMouseX(), getMouseY())) {
+
+			AnimateCursor oldcursor = getCursor();
+			
+			if (is_show_link) {
+				AttributedSegment segment = text.getSegment(
+						text.pointToPosition(getMouseX()-text_draw_x, getMouseY()-text_draw_y), 
+						com.g2d.display.ui.text.TextAttribute.LINK);
+				if (segment!=null) {
+					setCursor(link_cursor);
+				}
+			}
+			
 			super.trySetCursor();
+			
+			setCursor(oldcursor);
 		}
 	}
 	
@@ -196,8 +228,6 @@ public class TextBox extends Container implements Serializable
 	
 	public void update() 
 	{
-		super.update();
-		
 		if (is_readonly){
 			text.is_show_caret = false;
 		}
@@ -211,44 +241,58 @@ public class TextBox extends Container implements Serializable
 			text.is_show_caret = true;
 		}
 		
-		v_scrollbar.setLocation(
-				getWidth()-v_scrollbar.size-layout.BorderSize, 
-				layout.BorderSize);
-		v_scrollbar.setSize(v_scrollbar.size, getHeight()-(layout.BorderSize<<1));
+		{
+			int sw = getWidth() -(layout.BorderSize<<1);
+			int sh = getHeight()-(layout.BorderSize<<1);
+			
+			v_scrollbar.setMax(Math.max(text.getHeight(), sh));
+			v_scrollbar.setValue(v_scrollbar.getValue(), sh);
+			
+			v_scrollbar.setLocation(getWidth()-layout.BorderSize-v_scrollbar.size, layout.BorderSize);
+			v_scrollbar.setSize(v_scrollbar.size, sh);
+			
+			if (v_scrollbar.isMaxLength()) {
+				text.setWidth(sw);
+			} else {
+				text.setWidth(sw-v_scrollbar.size);
+			}
+			
+			text_draw_x = layout.BorderSize;
+			text_draw_y = layout.BorderSize - (int)v_scrollbar.getValue();
+		}
 		
-		v_scrollbar.setMax(text.getHeight());
-		v_scrollbar.setValue(v_scrollbar.getValue(), getHeight()-(layout.BorderSize<<1));
+		super.update();
 		
-		text.setWidth((getWidth()-v_scrollbar.size-(layout.BorderSize<<1)));
-		
-		text_draw_x = layout.BorderSize;
-		text_draw_y = layout.BorderSize - (int)v_scrollbar.getValue();
 	}
 	
 	
 	public void render(Graphics2D g) 
 	{
-		AnimateCursor oldcursor = getCursor();
-		if (is_show_link) {
-			AttributedSegment segment = text.getSegment(
-					text.pointToPosition(getMouseX()-text_draw_x, getMouseY()-text_draw_y), 
-					com.g2d.display.ui.text.TextAttribute.LINK);
-			if (segment!=null) {
-				setCursor(link_cursor);
-			}
-		}
-		
 		super.render(g);
-		
-		setCursor(oldcursor);
-		
-		int tsx = 0;
-		int tsy = (int)v_scrollbar.getValue();
-		int tsw = text.getWidth();
-		int tsh = (int)v_scrollbar.getValueLength();
-		
-		g.setColor(textColor);
-		text.drawText(g, text_draw_x, text_draw_y, tsx, tsy, tsw, tsh);
+		{
+			int tsx = 0;
+			int tsy = (int)v_scrollbar.getValue();
+			int tsw = text.getWidth();
+			int tsh = (int)v_scrollbar.getValueLength();
+			
+			Object v = g.getRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING);
+			{
+				if (enable_antialiasing) {
+					g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+				}
+				if (text_shadow_x!=0 || text_shadow_y!=0) {
+					Composite composite = g.getComposite();
+					g.setComposite(AlphaComposite.SrcOut);
+					g.setColor(Color.BLACK);
+					text.drawText(g, text_draw_x+text_shadow_x, text_draw_y+text_shadow_y, tsx, tsy, tsw, tsh);
+					g.setComposite(composite);
+				}
+				g.setColor(textColor);
+				text.drawText(g, text_draw_x, text_draw_y, tsx, tsy, tsw, tsh);
+			}
+			g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, v);
+			
+		}
 	}
 
 	public void addClickSegmentListener(Attribute attribute, ClickSegmentListener listener)

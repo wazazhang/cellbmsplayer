@@ -46,6 +46,20 @@ public class Tools
 	static GraphicsDevice			gd	= ge.getDefaultScreenDevice();
 	static GraphicsConfiguration	gc	= gd.getDefaultConfiguration();
 	
+	static AlphaComposite[] all_composite = new AlphaComposite[] {
+			AlphaComposite.Clear, 
+			AlphaComposite.Src,
+			AlphaComposite.Dst,
+			AlphaComposite.SrcOver,
+			AlphaComposite.DstOver,
+			AlphaComposite.SrcIn, 
+			AlphaComposite.DstIn, 
+			AlphaComposite.SrcOut,
+			AlphaComposite.DstOut,
+			AlphaComposite.SrcAtop,
+			AlphaComposite.DstAtop, 
+			AlphaComposite.Xor,
+			};
 //	--------------------------------------------------------------------------------
 
 	public static Cursor createCustomCursor(Image cursor, Point hotSpot, String name)

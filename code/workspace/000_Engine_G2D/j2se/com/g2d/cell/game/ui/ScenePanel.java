@@ -1,18 +1,24 @@
 package com.g2d.cell.game.ui;
 
+import java.awt.Rectangle;
+
 import com.g2d.cell.game.Scene;
 import com.g2d.display.ui.Container;
-import com.g2d.display.ui.ScrollBar.ScrollBarPair;
+import com.g2d.display.ui.Panel;
+import com.g2d.display.ui.ScrollBar;
+
 import com.g2d.editor.UIComponentEditor;
 
 public class ScenePanel extends Container
 {
 	Scene 			scene;
-	ScrollBarPair	scrollbar;
+	ScrollBar		vScroll;
+	ScrollBar		hScroll;
 	
-	public ScenePanel() {
-		this.scrollbar 	= new ScrollBarPair();
-		this.addChild(scrollbar);
+	public ScenePanel()
+	{
+		vScroll = ScrollBar.createVScroll(Panel.DEFAULT_SCROLL_BAR_SIZE);
+		hScroll = ScrollBar.createHScroll(Panel.DEFAULT_SCROLL_BAR_SIZE);
 	}
 	
 	public ScenePanel(Scene scene) {
@@ -38,17 +44,24 @@ public class ScenePanel extends Container
 	{
 		int view_x		= layout.BorderSize;
 		int view_y		= layout.BorderSize;
-		int camera_w	= getWidth() -scrollbar.vScroll.getWidth() -(layout.BorderSize<<1);
-		int camera_h	= getHeight()-scrollbar.hScroll.getHeight()-(layout.BorderSize<<1);
+		int view_w		= getWidth() -(layout.BorderSize<<1);
+		int view_h		= getHeight()-(layout.BorderSize<<1);
+		int camera_w	= view_w -vScroll.getWidth();
+		int camera_h	= view_h -hScroll.getHeight();
 		int world_w		= scene.getWorld().getWidth();
 		int world_h		= scene.getWorld().getHeight();
-		double camera_x	= scrollbar.hScroll.getValue();
-		double camera_y	= scrollbar.vScroll.getValue();
+		double camera_x	= hScroll.getValue();
+		double camera_y	= vScroll.getValue();
 		
-		scrollbar.hScroll.setMax(world_w);
-		scrollbar.vScroll.setMax(world_h);
-		scrollbar.hScroll.setValue(camera_x, camera_w);
-		scrollbar.vScroll.setValue(camera_y, camera_h);
+		vScroll.setSize(vScroll.size, view_h - hScroll.size);
+		hScroll.setSize(view_w - vScroll.size, hScroll.size);
+		vScroll.setLocation(view_x + view_w - vScroll.size, view_y);
+		hScroll.setLocation(view_x, view_y + view_h - hScroll.size);
+
+		hScroll.setMax(world_w);
+		vScroll.setMax(world_h);
+		hScroll.setValue(camera_x, camera_w);
+		vScroll.setValue(camera_y, camera_h);
 		
 		scene.setLocation(view_x, view_y);
 		scene.setSize(camera_w, camera_h);
@@ -58,13 +71,13 @@ public class ScenePanel extends Container
 	}
 	
 	public void locationCameraCenter(double x, double y) {
-		scrollbar.hScroll.setValue(x-scene.getCameraWidth()/2);
-		scrollbar.vScroll.setValue(y-scene.getCameraHeight()/2);
+		hScroll.setValue(x-scene.getCameraWidth()/2);
+		vScroll.setValue(y-scene.getCameraHeight()/2);
 	}
 	
 	public void locationCamera(double x, double y) {
-		scrollbar.hScroll.setValue(x);
-		scrollbar.vScroll.setValue(y);
+		hScroll.setValue(x);
+		vScroll.setValue(y);
 	}
 	
 	@Override

@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.font.TextAttribute;
 import java.io.IOException;
 import java.io.Serializable;
@@ -30,6 +31,11 @@ public class TextPan extends UIComponent implements Serializable
 	
 	@Property("文字颜色")
 	public Color 						textColor;
+
+	/**文字是否抗锯齿*/
+	@Property("文字是否抗锯齿")
+	public boolean	enable_antialiasing	 = false;
+	
 	
 	@Override
 	protected void init_field() 
@@ -106,13 +112,15 @@ public class TextPan extends UIComponent implements Serializable
 	public void render(Graphics2D g) 
 	{
 		super.render(g);
-		
-		
-		
 		g.setColor(textColor);
-		text.drawText(g, text_draw_x, text_draw_y, 0, 0, getWidth(), getHeight());
-	
-		
+		if (enable_antialiasing) {
+			Object v = g.getRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING);
+			g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+			text.drawText(g, text_draw_x, text_draw_y, 0, 0, getWidth(), getHeight());
+			g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, v);
+		} else {
+			text.drawText(g, text_draw_x, text_draw_y, 0, 0, getWidth(), getHeight());
+		}
 	}
 
 	

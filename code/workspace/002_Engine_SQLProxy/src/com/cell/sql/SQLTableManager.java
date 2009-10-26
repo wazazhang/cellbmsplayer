@@ -839,7 +839,7 @@ public abstract class SQLTableManager<K, R extends SQLTableRow<K>>
 			
 				String default_value = column.anno.defaultValue();
 				if (default_value!=null && default_value.length()>0) {
-					sql += " DEFAULT " + column.anno.defaultValue() + ",\n";
+					sql += " DEFAULT '" + column.anno.defaultValue() + "',\n";
 				}else{
 					sql += ",\n";
 				}

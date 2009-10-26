@@ -39,10 +39,11 @@ public class Form extends Window
 	{
 		super.init_field();
 		btn_close = new ButtonClose();
-		addChild(btn_close);
 	}
 	
-	public Form(){}
+	public Form(){
+		addChild(btn_close);
+	}
 	
 	
 	public void setTitle(String title) {

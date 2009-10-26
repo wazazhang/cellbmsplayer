@@ -1,11 +1,13 @@
 package com.g2d.display.ui;
 
 import java.awt.Graphics2D;
+import java.util.Vector;
 
 import com.g2d.Version;
+import com.g2d.display.DisplayObject;
 import com.g2d.display.event.MouseWheelEvent;
 
-public abstract class DropDownList extends Container 
+public abstract class DropDownList extends UIComponent 
 {
 	private static final long serialVersionUID = Version.VersionG2D;
 	
@@ -21,7 +23,7 @@ public abstract class DropDownList extends Container
 		public void update() 
 		{
 			int y = layout.BorderSize;
-			for (UIComponent item : comonents) {
+			for (UIComponent item : getComonents()) {
 				item.setLocation(0, y);
 				item.setSize(pan.getWidth(), 20);
 				y += item.getHeight() + layout.BorderSize;
@@ -85,14 +87,18 @@ public abstract class DropDownList extends Container
 		scroll.moveInterval(event.scrollDirection);
 	}
 	
-	public synchronized boolean addChild(UIComponent child) {
-		return container.addChild(child);
+	@Deprecated
+	public boolean addChild(DisplayObject child) {
+		throw new IllegalStateException("can not add a custom child component in " + getClass().getName() + " !");
+	}
+	@Deprecated
+	public boolean removeChild(DisplayObject child) {
+		throw new IllegalStateException("can not remove a custom child component in " + getClass().getName() + " !");
 	}
 	
-	public synchronized boolean removeChild(UIComponent child) {
-		return container.removeChild(child);
+	public DropDownListContainer getContainer() {
+		return container;
 	}
-	
 	
 
 }

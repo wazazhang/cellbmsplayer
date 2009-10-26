@@ -3,6 +3,7 @@ package com.g2d.display.ui;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.io.IOException;
 import java.io.Serializable;
 
@@ -13,6 +14,7 @@ import com.g2d.display.event.KeyEvent;
 import com.g2d.display.event.MouseEvent;
 import com.g2d.display.event.MouseMoveEvent;
 import com.g2d.display.ui.text.MultiTextLayout;
+import com.g2d.util.Drawing;
 
 public class TextBoxSingle extends UIComponent implements Serializable
 {
@@ -30,6 +32,11 @@ public class TextBoxSingle extends UIComponent implements Serializable
 	
 	/** 光标超出范围的偏移量 */
 	transient int 						xoffset = 0;
+
+	/**文字是否抗锯齿*/
+	@Property("文字是否抗锯齿")
+	public boolean	enable_antialiasing	 = false;
+	
 	
 	@Override
 	protected void init_field() 
@@ -111,55 +118,16 @@ public class TextBoxSingle extends UIComponent implements Serializable
 				getMouseY()-text_draw_y);
 	}
 	
-	/**
-	 * onKeyTyped 接收不到ActionKey的事件
-	 * ActionKey只有Down和Up事件
-	 */
-	
-//	protected void onKeyTyped(KeyEvent event) {
-//	protected void onKeyDown(KeyEvent event) {
-//		if (enable_focus){
-//			if (event.keyCode == java.awt.event.KeyEvent.VK_LEFT){
-//				if (getRoot().isKeyHold(java.awt.event.KeyEvent.VK_SHIFT)){
-//					text.setCaret(
-//							getMouseX()-text_draw_x + xoffset, 
-//							getMouseY()-text_draw_y);
-//					if (text.getCaretPosition()==text.getCaretStartPosition()){
-//						text.moveCaretStartPosition(-1);
-//						text.moveCaretPosition(-1);
-//					}else{
-//						text.moveCaretEndPosition(-1);
-//						text.moveCaretPosition(-1);
-//					}
-//				}else{
-//					text.moveCaretStartPosition(-1);
-//					text.moveCaretPosition(-1);
-//					System.out.println("text.moveCaretPosition(-1);");
-//					System.out.println("text.getCaretPosX() = "+text.getCaretPosX());
-//					text.getCaretPosX();
-//				}
-//			}else if (event.keyCode == java.awt.event.KeyEvent.VK_RIGHT){
-//				if (getRoot().isKeyHold(java.awt.event.KeyEvent.VK_SHIFT)){
-//					if (text.getCaretPosition()==text.getCaretStartPosition()){
-//						text.moveCaretStartPosition(1);
-//						text.moveCaretPosition(1);
-//					}else{
-//						text.moveCaretEndPosition(1);
-//						text.moveCaretPosition(1);
-//					}
-//				}else{
-//					text.moveCaretStartPosition(1);
-//					text.moveCaretPosition(1);
-//					System.out.println("text.moveCaretPosition(1);");
-//					System.out.println("text.getCaretPosition() = "+text.getCaretPosition());
-//					System.out.println("text.getCaretPosX() = "+text.getCaretPosX());
-//				}
-//			}
-//		}
-//	}
-	
 	protected void onKeyTyped(KeyEvent event) {
 		insertCharAtCurrentCaret(event.keyChar);
+	}
+	
+	protected void onKeyDown(KeyEvent event) {
+		if (event.keyCode == java.awt.event.KeyEvent.VK_LEFT) {
+			text.moveCaretPosition(-1);
+		} else if (event.keyCode == java.awt.event.KeyEvent.VK_RIGHT) {
+			text.moveCaretPosition(1);
+		}
 	}
 	
 	public void update() 
@@ -202,17 +170,17 @@ public class TextBoxSingle extends UIComponent implements Serializable
 	public void render(Graphics2D g) 
 	{
 		super.render(g);
-
 		g.setColor(textColor);
-		text.drawText(g, 
-				text_draw_x-xoffset, 
-				text_draw_y, 
-				xoffset, 
-				0, 
-				text_draw_w+2, 
-				getHeight());
-	
-		
+		if (enable_antialiasing) {
+			Object v = g.getRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING);
+			g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+			text.drawText(g, text_draw_x - xoffset, text_draw_y, xoffset, 0,
+					text_draw_w + 2, getHeight());
+			g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, v);
+		} else {
+			text.drawText(g, text_draw_x - xoffset, text_draw_y, xoffset, 0,
+					text_draw_w + 2, getHeight());
+		}
 	}
 
 	

@@ -2,6 +2,7 @@ package com.g2d.display.ui;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 
 import com.g2d.Version;
 import com.g2d.annotation.Property;
@@ -19,7 +20,11 @@ public class Label extends UIComponent
 	
 	@Property("text_anchor")
 	public int		text_anchor;
-	
+
+	/**文字是否抗锯齿*/
+	@Property("文字是否抗锯齿")
+	public boolean	enable_antialiasing	 = false;
+
 	@Override
 	protected void init_field() 
 	{
@@ -64,7 +69,15 @@ public class Label extends UIComponent
 		super.render(g);
 		
 		g.setColor(textColor);
-		Drawing.drawStringBorder(g, text, 0, 0, getWidth(), getHeight(), text_anchor);
+		if (enable_antialiasing) {
+			Object v = g.getRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING);
+			g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+			Drawing.drawStringBorder(g, text, 0, 0, getWidth(), getHeight(), text_anchor);
+			g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, v);
+		} else {
+			Drawing.drawStringBorder(g, text, 0, 0, getWidth(), getHeight(), text_anchor);
+		}
+		
 		
 	}
 	

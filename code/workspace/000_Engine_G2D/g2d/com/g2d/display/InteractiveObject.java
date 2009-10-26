@@ -2,20 +2,29 @@ package com.g2d.display;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.Stroke;
+import java.awt.geom.AffineTransform;
 import java.util.Vector;
 
+import sun.awt.image.ImageWatched.Link;
+
 import com.cell.CMath;
+import com.cell.util.TypedHashtable;
+import com.cell.util.event.EventListeners;
 import com.g2d.Version;
 import com.g2d.annotation.Property;
 import com.g2d.display.event.Event;
 import com.g2d.display.event.EventListener;
 import com.g2d.display.event.KeyEvent;
 import com.g2d.display.event.KeyListener;
+import com.g2d.display.event.MouseDragDropAccepter;
+import com.g2d.display.event.MouseDragDropListener;
+import com.g2d.display.event.MouseDragResizeListener;
 import com.g2d.display.event.MouseEvent;
 import com.g2d.display.event.MouseListener;
 import com.g2d.display.event.MouseMoveEvent;
@@ -56,7 +65,13 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 	/**是否支持键盘事件*/
 	@Property("是否支持键盘事件")
 	public boolean 				enable_key_input;
-
+	/**允许拖拽到其他控件上，被拖拽时，将一直显示在鼠标上*/
+	@Property("允许被拖拽到其他控件上，被拖拽时，将一直显示在鼠标上")
+	public boolean				enable_drag_drop;
+	/**允许接受拖拽的单位到此控件*/
+	@Property("允许接受拖拽的单位到此控件")
+	public boolean				enable_accept_drag_drop;
+	
 //	----------------------------------------------------------------------------------------------
 	
 	/**调整边距时的触碰范围*/
@@ -74,6 +89,11 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 	transient Vector<MouseListener> 		mouselisteners;
 	transient Vector<MouseWheelListener> 	mousewheellisteners;
 	
+	transient Vector<MouseDragResizeListener>	mouse_drag_resize_listeners;
+	transient Vector<MouseDragDropListener>		mouse_drag_drop_listeners;
+	transient Vector<MouseDragDropAccepter>		mouse_drag_drop_accepters;
+	
+	
 	transient private	AnimateCursor		cursor;
 	
 //	-----------------------------------------------------------------------------------------------------------------
@@ -90,6 +110,7 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 		enable_drag_resize		= false;
 		enable_mouse_wheel		= false;
 		enable_key_input		= false;
+		enable_drag_drop		= false;
 		drag_border_size		= 4;
 		minimum_size			= new Dimension(9, 9);
 	}
@@ -103,10 +124,13 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 		keylisteners 			= new Vector<KeyListener>();
 		mouselisteners 			= new Vector<MouseListener>();
 		mousewheellisteners		= new Vector<MouseWheelListener>();
+		
+		mouse_drag_resize_listeners	= new Vector<MouseDragResizeListener>();
+		mouse_drag_drop_listeners	= new Vector<MouseDragDropListener>();
+		mouse_drag_drop_accepters	= new Vector<MouseDragDropAccepter>();
 	}
 
 //	-----------------------------------------------------------------------------------------------------------------
-	
 	/**
 	 * 设置控件最小值
 	 * @param width
@@ -149,22 +173,25 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 		return enable && enable_focus;
 	}
 
-	protected void trySetCursor() {
-//		if (cursor!=null) {
-//			System.out.println("trySetCursor");
-//		}
-		getRoot().setCursor(cursor);
+	protected void trySetCursor() 
+	{
+		if (enable_drag_resize && enable_drag && !enable_drag_drop && mouse_draged_event == null)
+		{
+			int drag_direct = getDragDirect(
+					local_bounds,
+					Math.max(drag_border_size, 4), 
+					getMouseX(),
+					getMouseY());
+			setDragCursor(drag_direct);
+		}
+		else {
+			getRoot().setCursor(cursor);
+		}
 	}
 
 	protected void renderCatchedMouse(Graphics2D g){}
 
-//	protected void renderChilds(Graphics2D g) {
-//		super.renderChilds(g);
-//		if (enable && enable_drag_resize && enable_drag) {
-//			renderDragResize(g);
-//		}
-//	}
-	
+	protected void renderAcceptDrapDrop(Graphics2D g) {}
 	
 //	-----------------------------------------------------------------------------------------------------------------
 	
@@ -180,7 +207,7 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 			if (enable_input && visible) {
 				if (!getRoot().isMouseHold(java.awt.event.MouseEvent.BUTTON1)){
 					stopDrag();
-				} else if (mouse_draged_event!=null) {
+				} else if (mouse_draged_event!=null && !enable_drag_drop) {
 					if (enable_drag) {
 						onDrag();
 					}
@@ -236,8 +263,18 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 				renderCatchedMouse(g);
 			}
 			super.renderInteractive(g);
-			if (enable_drag_resize && enable_drag) {
+			if (enable_drag_resize && enable_drag && !enable_drag_drop) {
 				renderDragResize(g);
+			}
+			if (enable_accept_drag_drop) {
+				if (getStage()!=null) {
+					InteractiveObject dragged = getStage().getDraggedObject();
+					if (dragged!=null && dragged!=this){
+						if (isPickedMouse()) {
+							renderAcceptDrapDrop(g);
+						}
+					}
+				}
 			}
 		} else {
 			super.renderInteractive(g);
@@ -309,7 +346,7 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 				// mouse click record
 				catched_mouse_down_tick = event.mouseDownCount;
 				// mouse drag start
-				if (event.mouseButton == MouseEvent.BUTTON_LEFT) {
+				if (event.mouseButton == MouseEvent.BUTTON_LEFT && !enable_drag_drop) {
 //					System.out.println("start drag");
 					startDrag(event);
 				}else{
@@ -338,9 +375,49 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 		}
 		return false;
 	}
+
+	void onRenderDragDrop(Stage stage, Graphics2D g)
+	{
+		Shape			clip		= g.getClip();
+		AffineTransform	transfrom	= g.getTransform();
+		Composite		composite	= g.getComposite();
+		{
+			int tx = stage.mouse_x - (getWidth()>>1);
+			int ty = stage.mouse_y - (getHeight()>>1);
+			g.translate(tx, ty);
+			setAlpha(g, stage.drag_drop_object_alpha);
+			
+			this.renderBefore(g);
+			this.render(g);
+			this.renderInteractive(g);
+			this.renderAfter(g);
+			
+			stage.getRoot().setCursor(getCursor());
+		}
+		g.setComposite(composite);
+		g.setTransform(transfrom);
+		g.setClip(clip);
+	}
 	
 //	-----------------------------------------------------------------------------------------------------------------
 
+	private void setDragCursor(int drag_direct) 
+	{
+		switch (drag_direct){
+		case 0: getRoot().setCursor(AnimateCursor.RESIZE_CURSOR_NW); break;
+		case 1: getRoot().setCursor(AnimateCursor.RESIZE_CURSOR_N); break;
+		case 2: getRoot().setCursor(AnimateCursor.RESIZE_CURSOR_NE); break;
+		
+		case 3: getRoot().setCursor(AnimateCursor.RESIZE_CURSOR_W); break;
+		case 5: getRoot().setCursor(AnimateCursor.RESIZE_CURSOR_E); break;
+		
+		case 6: getRoot().setCursor(AnimateCursor.RESIZE_CURSOR_SW); break;
+		case 7: getRoot().setCursor(AnimateCursor.RESIZE_CURSOR_S); break;
+		case 8: getRoot().setCursor(AnimateCursor.RESIZE_CURSOR_SE); break;
+		default: getRoot().setCursor(cursor); break;
+		}
+	}
+	
 	private void startDrag(MouseEvent event) 
 	{
 		mouse_draged_event = new MouseMoveEvent(event.superEvent, getMouseX(), getMouseY());
@@ -353,6 +430,9 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 				getMouseY());
 		if (enable_drag_resize && mouse_draged_event.user_tag!=4) {
 			this.onDragResizeStart(mouse_draged_event.user_tag);
+			for (MouseDragResizeListener l : mouse_drag_resize_listeners) {
+				l.onDragResizeStart(this, mouse_draged_event.user_tag);
+			}
 		}
 	}
 	
@@ -371,6 +451,9 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 					Math.max((int)(start_rect.getHeight()), drag_border_size));
 			
 			this.onDragResizeEnd();
+			for (MouseDragResizeListener l : mouse_drag_resize_listeners) {
+				l.onDragResizeEnd(this);
+			}
 		}
 		mouse_draged_event = null;
 	}
@@ -447,18 +530,14 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 		}
 	}
 
+	/**
+	 * 渲染完子控件后被调用
+	 * @param g
+	 */
 	private void renderDragResize(Graphics2D g) 
 	{
-		if (mouse_draged_event != null && mouse_draged_event.user_tag == 4)	{
-			return;
-		}
-
-		int drag_direct = 4;
-		
 		if (mouse_draged_event != null && mouse_draged_event.user_tag != 4)		
 		{
-			drag_direct = mouse_draged_event.user_tag;
-			
 			pushObject(g.getClip());
 			pushObject(g.getStroke());
 			{
@@ -470,35 +549,17 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 			}
 			g.setStroke(popObject(Stroke.class));
 			g.setClip(popObject(Shape.class));
+			
+			setDragCursor(mouse_draged_event.user_tag);
 		}
-		
-		if (drag_direct==4) {
-			drag_direct = getDragDirect(
-					local_bounds,
-					Math.max(drag_border_size, 4), 
-					getMouseX(),
-					getMouseY());
-		}
-		
-		switch (drag_direct){
-		case 0: getRoot().setCursor(AnimateCursor.RESIZE_CURSOR_NW); break;
-		case 1: getRoot().setCursor(AnimateCursor.RESIZE_CURSOR_N); break;
-		case 2: getRoot().setCursor(AnimateCursor.RESIZE_CURSOR_NE); break;
-		
-		case 3: getRoot().setCursor(AnimateCursor.RESIZE_CURSOR_W); break;
-		case 5: getRoot().setCursor(AnimateCursor.RESIZE_CURSOR_E); break;
-		
-		case 6: getRoot().setCursor(AnimateCursor.RESIZE_CURSOR_SW); break;
-		case 7: getRoot().setCursor(AnimateCursor.RESIZE_CURSOR_S); break;
-		case 8: getRoot().setCursor(AnimateCursor.RESIZE_CURSOR_SE); break;
-		}
-		
 	}
 
-	
+
 	public boolean isOnDragged() {
 		return mouse_draged_event!=null;
 	}
+
+//	-----------------------------------------------------------------------------------------------------------------
 	
 //	-----------------------------------------------------------------------------------------------------------------
 	
@@ -512,6 +573,15 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 		if (listener instanceof MouseWheelListener) {
 			mousewheellisteners.add((MouseWheelListener)listener);
 		}
+		if (listener instanceof MouseDragResizeListener) {
+			mouse_drag_resize_listeners.add((MouseDragResizeListener)listener);
+		}
+		if (listener instanceof MouseDragDropListener) {
+			mouse_drag_drop_listeners.add((MouseDragDropListener)listener);
+		}
+		if (listener instanceof MouseDragDropAccepter) {
+			mouse_drag_drop_accepters.add((MouseDragDropAccepter)listener);
+		}
 	}
 	
 	public void removeEventListener(EventListener listener) {
@@ -524,24 +594,99 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 		if (listener instanceof MouseWheelListener) {
 			mousewheellisteners.remove((MouseWheelListener)listener);
 		}
+		if (listener instanceof MouseDragResizeListener) {
+			mouse_drag_resize_listeners.remove((MouseDragResizeListener)listener);
+		}
+		if (listener instanceof MouseDragDropListener) {
+			mouse_drag_drop_listeners.remove((MouseDragDropListener)listener);
+		}
+		if (listener instanceof MouseDragDropAccepter) {
+			mouse_drag_drop_accepters.remove((MouseDragDropAccepter)listener);
+		}
 	}
 
 //	-----------------------------------------------------------------------------------------------------------------
-	
+//	-----------------------------------------------------------------------------------------------------------------
+//	mouse
+	/**当有鼠标按键按下时发生
+	 * @see MouseListener*/
 	protected void onMouseDown(MouseEvent event) {}
+	/**当有鼠标按键松开下时发生
+	 * @see MouseListener*/
 	protected void onMouseUp(MouseEvent event) {}
+	/**当有鼠标按键完成了一次点击时发生(先按下，后松开)
+	 * @see MouseListener*/
 	protected void onMouseClick(MouseEvent event) {}
+	/**当该控件被鼠标按键按住并移动时发生
+	 * @see MouseListener*/
 	protected void onMouseDraged(MouseMoveEvent event){}
+
+//	-----------------------------------------------------------------------------------------------------------------
+//	mouse wheell
+	/**当该控件获得焦点并有鼠标滚轮事件发生时
+	 * @see MouseWheelListener*/
 	protected void onMouseWheelMoved(MouseWheelEvent event){}
-	
+
+//	-----------------------------------------------------------------------------------------------------------------
+//	key
+	/**当该控件获得焦点并有键盘按下某键时发生
+	 * @see KeyListener*/
 	protected void onKeyDown(KeyEvent event) {}
+	/**当该控件获得焦点并有键盘松开某键时发生
+	 * @see KeyListener*/
 	protected void onKeyUp(KeyEvent event) {}
+	/**当该控件获得焦点并有键盘敲入字符时发生
+	 * @see KeyListener*/
 	protected void onKeyTyped(KeyEvent event) {}
-	
+
+//	-----------------------------------------------------------------------------------------------------------------
+//	drag resize
+	/**
+	 * 当该控件被鼠标开始拖动以改变大小时发生
+	 * @param drag_type 拖拽的类型 
+	 * @see InteractiveObject.getDragDirect(Rectangle bounds, int bs, int dx, int dy)
+	 */
 	protected void onDragResizeStart(int drag_type){}
+	/**当该控件被鼠标拖动完成改变大小时发生*/
 	protected void onDragResizeEnd(){}
+
+//	-----------------------------------------------------------------------------------------------------------------
+//	drag drop
+	/**当该控件被鼠标开始拖拽时发生*/
+	protected void onMouseStartDragDrop() {}
+	/**
+	 * 当该控件被鼠标放下拖拽时发生
+	 * @param drop_end_object 放下时，接触到的单位
+	 */
+	protected void onMouseStopDragDrop(DisplayObject drop_end_object) {}
+
+//	-----------------------------------------------------------------------------------------------------------------
+//	drag accepter
+	/**
+	 * 当有某个控件被拖拽，并在此单位上释放时发生
+	 * @param object 被拖拽的控件
+	 */
+	protected void onDragDropedObject(InteractiveObject object) {}
+	
+//	-----------------------------------------------------------------------------------------------------------------
 //	-----------------------------------------------------------------------------------------------------------------
 	
+	/**
+	 * @param bounds
+	 * @param bs
+	 * @param dx
+	 * @param dy
+	 * @return 
+	 * 0 : North West<br>
+	 * 1 : North <br>
+	 * 2 : North East<br>
+	 * 3 : West<br>
+	 * 4 : Center<br>
+	 * 5 : East<br>
+	 * 6 : South West<br>
+	 * 7 : South<br>
+	 * 8 : South East<br>
+	 */
 	public static int getDragDirect(Rectangle bounds, int bs, int dx, int dy)
 	{
 		int bx = bounds.x;

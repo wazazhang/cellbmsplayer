@@ -69,6 +69,8 @@ public abstract class DisplayObject extends DObject implements Comparable<Displa
 	/** 当前坐标系的 rectangle */
 	public Rectangle 			local_bounds;
 	
+	protected boolean			clip_local_bounds;
+	
 //	-------------------------------------------------------------
 	
 	/** debug , transient 代表运行时的数据，不能够序列化*/
@@ -122,6 +124,7 @@ public abstract class DisplayObject extends DObject implements Comparable<Displa
 	protected void init_field() {
 		visible 			= true;
 		local_bounds 		= new Rectangle(0,0,100,100);
+		clip_local_bounds	= false;
 	}
 	
 	/**初始化不可序列化字段, 该方法将在构造函数和反序列化后调用*/
@@ -474,6 +477,8 @@ public abstract class DisplayObject extends DObject implements Comparable<Displa
 		return false;
 	}
 	
+	
+	
 //	-------------------------------------------------------------
 
 	
@@ -559,20 +564,26 @@ public abstract class DisplayObject extends DObject implements Comparable<Displa
 			Composite		composite	= g.getComposite();
 			{
 				g.translate(x, y);
-				
-				this.renderBefore(g);
-
-				this.render(g);
-				if (debug) {
-					this.renderDebug(g);
+			
+				if (clip_local_bounds) {
+					g.clip(local_bounds);
 				}
-				
-				if (hit_mouse && testCatchMouse(g)) {
+
+				boolean hit_mouse_clip = g.hitClip(mouse_x, mouse_y, 1, 1);
+				if (hit_mouse && hit_mouse_clip && testCatchMouse(g)) {
 					catched_mouse = true;
 					getStage().setMousePickedObject(this);
 				} else {
 					catched_mouse = false;
 				}
+				
+//				transfrom.transform(ptSrc, ptDst);
+				
+				this.renderBefore(g);
+
+				this.render(g);
+				
+				this.renderDebug(g);
 				
 				this.renderInteractive(g);
 				
@@ -593,28 +604,50 @@ public abstract class DisplayObject extends DObject implements Comparable<Displa
 	
 	protected void renderDebug(Graphics2D g)
 	{
-		g.setColor(Color.GREEN);
-		g.drawRect(local_bounds.x, local_bounds.y, local_bounds.width-1, local_bounds.height-1);
-		g.setColor(Color.CYAN);
-		g.drawLine(-10, 0, 0+10, 0);
-		g.drawLine(0, 0-10, 0, 0+10);
-		g.setColor(Color.YELLOW);
-		g.drawLine(-10, priority, 0+10, priority);
-		g.drawLine(0, priority-10, 0, priority+10);
+		if (debug) {
+			g.setColor(Color.GREEN);
+			g.drawRect(local_bounds.x, local_bounds.y, local_bounds.width - 1, local_bounds.height - 1);
+			g.setColor(Color.CYAN);
+			g.drawLine(-10, 0, 0 + 10, 0);
+			g.drawLine(0, 0 - 10, 0, 0 + 10);
+			g.setColor(Color.YELLOW);
+			g.drawLine(-10, priority, 0 + 10, priority);
+			g.drawLine(0, priority - 10, 0, priority + 10);
+		}
 	}
 	
 	
 //	---------------------------------------------------------------------------------------------------------------------------------------
 	
-	/**在该对象被添加到场景中后发生</br>注意:不要在此处初始化持久性数据*/
+	/**
+	 * 在该对象被添加到场景中后发生</br>
+	 * 当父控件被添加到爷爷控件时，该方法也会被调用，此时parent等于爷爷<br>
+	 * 注意:不要在此处初始化持久性数据
+	 * @param parent
+	 */
 	abstract public void added(DisplayObjectContainer parent);
 	
+	/**
+	 * 在该对象从父控件中移除后发生</br>
+	 * 当父控件从爷爷控件移除时，该方法也会被调用，此时parent等于爷爷<br>
+	 * 注意:不要在此处初始化持久性数据
+	 * @param parent
+	 */
 	abstract public void removed(DisplayObjectContainer parent);
 	
+	/**
+	 * 主更新
+	 */
 	abstract public void update();
 	
+	/**
+	 * 主渲染
+	 * @param g
+	 */
 	abstract public void render(Graphics2D g);
 	
+	
+//	---------------------------------------------------------------------------------------------------------------------------------------
 	
 	public boolean isInParentBounds(DisplayObjectContainer parent)
 	{

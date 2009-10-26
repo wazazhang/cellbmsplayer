@@ -1,23 +1,26 @@
 package com.g2d.display.ui;
 
 
+import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 
 import com.cell.CMath;
 import com.g2d.Tools;
 import com.g2d.Version;
+import com.g2d.display.DisplayObject;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.event.MouseEvent;
 import com.g2d.display.event.MouseMoveEvent;
 import com.g2d.display.ui.layout.UILayoutManager;
 
 
-public class ScrollBar extends Container
+public class ScrollBar extends UIComponent
 {
 	private static final long serialVersionUID = Version.VersionG2D;
 	
 //	--------------------------------------------------------------------------------------------------------------------------------
-	
+	int mouse_freeze_time = 500;
 	
 	public class Head extends BaseButton
 	{
@@ -28,7 +31,16 @@ public class ScrollBar extends Container
 		}
 
 		protected void onMouseDown(MouseEvent event) {
-			ScrollBar.this.moveInterval(-1);
+			if (event.mouseButton == MouseEvent.BUTTON_LEFT) {
+				ScrollBar.this.moveInterval(-1);
+			}
+		}
+		@Override
+		public void update() {
+			super.update();
+			if (isPickedMouse() && isFocused() && getRoot().isMouseContinuous(mouse_freeze_time, MouseEvent.BUTTON_LEFT)){
+				ScrollBar.this.moveInterval(-1);
+			}
 		}
 	}
 	
@@ -39,10 +51,18 @@ public class ScrollBar extends Container
 		public boolean isVscroll(){
 			return ScrollBar.this.isvscroll;
 		}
-		
-		protected void onMouseDown(MouseEvent event)
-		{
-			ScrollBar.this.moveInterval(1);
+
+		protected void onMouseDown(MouseEvent event) {
+			if (event.mouseButton == MouseEvent.BUTTON_LEFT) {
+				ScrollBar.this.moveInterval(1);
+			}
+		}
+		@Override
+		public void update() {
+			super.update();
+			if (isPickedMouse() && isFocused() && getRoot().isMouseContinuous(mouse_freeze_time, MouseEvent.BUTTON_LEFT)){
+				ScrollBar.this.moveInterval(1);
+			}
 		}
 	}
 	
@@ -54,13 +74,9 @@ public class ScrollBar extends Container
 			return ScrollBar.this.isvscroll;
 		}
 
-		public Back() {
-			enable_focus = false;
-//			enable_input = false;
-		}
+		public Back() {}
 
-		protected void onMouseDown(MouseEvent event) 
-		{
+		private int getDirect() {
 			int direct = 0;
 			if (ScrollBar.this.isvscroll) {
 				direct = getParent().getMouseY() - (int)ScrollBar.this.strip.y;
@@ -69,10 +85,25 @@ public class ScrollBar extends Container
 				direct = getParent().getMouseX() - (int)ScrollBar.this.strip.x;
 				direct = CMath.getDirect(direct) * strip.getWidth();
 			}
-			ScrollBar.this.moveStrip(direct);
+			return direct;
 		}
 		
+		protected void onMouseDown(MouseEvent event) {
+			if (event.mouseButton == MouseEvent.BUTTON_LEFT) {
+				ScrollBar.this.moveStrip(getDirect());
+			}
+		}
+		
+//		@Override
+//		public void update() {
+//			super.update();
+//			if (isPickedMouse() && ScrollBar.this.isFocused() && getRoot().isMouseContinuous(mouse_freeze_time, MouseEvent.BUTTON_LEFT)){
+//				ScrollBar.this.moveStrip(getDirect());
+//			}
+//		}
+		
 		protected void onDrawMouseHover(Graphics2D g) {}
+		
 	}
 	
 	public class Strip extends BaseButton
@@ -129,6 +160,7 @@ public class ScrollBar extends Container
 		super.addChild(head);
 		super.addChild(tail);
 		super.addChild(strip);
+		super.setAlwaysBottom(back);
 	}
 	
 	@Override
@@ -148,10 +180,12 @@ public class ScrollBar extends Container
 		this.size = size;
 	}
 	
-	synchronized public boolean addChild(UIComponent child) {
+	@Deprecated
+	public boolean addChild(DisplayObject child) {
 		throw new IllegalStateException("can not add a custom child component in " + getClass().getName() + " !");
 	}
-	synchronized public boolean removeChild(UIComponent child) {
+	@Deprecated
+	public boolean removeChild(DisplayObject child) {
 		throw new IllegalStateException("can not remove a custom child component in " + getClass().getName() + " !");
 	}
 	
@@ -286,91 +320,7 @@ public class ScrollBar extends Container
 	
 
 //	--------------------------------------------------------------------------------------------------------------------------------
-	
 
-
-	public static class ScrollBarPair extends Container
-	{
-		private static final long serialVersionUID = Version.VersionG2D;
-		
-		public ScrollBar vScroll;
-		public ScrollBar hScroll;
-		
-		@Override
-		protected void init_field() 
-		{
-			super.init_field();
-			
-			vScroll	= ScrollBar.createVScroll(12);
-			hScroll = ScrollBar.createHScroll(12);
-			
-			super.addChild(vScroll);
-			super.addChild(hScroll);
-			
-			this.enable_bounds 	= false;
-			this.enable_input 	= false;
-		}
-		
-		
-		public ScrollBarPair() 
-		{}
-		
-		synchronized public boolean addChild(UIComponent child) {
-			throw new IllegalStateException("can not add a custom child component in " + getClass().getName() + " !");
-		}
-		synchronized public boolean removeChild(UIComponent child) {
-			throw new IllegalStateException("can not remove a custom child component in " + getClass().getName() + " !");
-		}
-		
-		public void update() 
-		{
-			super.update();
-			
-			int parentBorder = ((UIComponent)getParent()).layout.BorderSize;
-			int parentBorder2 = parentBorder<<1;
-			
-			this.setSize(
-					getParent().getWidth() - parentBorder2, 
-					getParent().getHeight() - parentBorder2);
-			
-			this.setLocation(
-					parentBorder, 
-					parentBorder);
-			
-			vScroll.setSize(vScroll.size, getHeight() - hScroll.getHeight());
-			hScroll.setSize(getWidth()-vScroll.getWidth(), hScroll.size);
-			
-			vScroll.setLocation(
-					getWidth()-vScroll.size, 
-					0);
-			hScroll.setLocation(
-					0,
-					getHeight()-hScroll.size);
-			
-//			if (vScroll.visible){
-//				System.out.println("vScroll.max = "+ vScroll.max + "");
-//			}else{
-//				System.out.println("dvScroll.max = "+ vScroll.max + "");
-//			}
-//			if (hScroll.visible){
-//				System.out.println("hScroll.max = "+ hScroll.max);
-//			}else{
-//				System.out.println("dhScroll.max = "+ hScroll.max + "");
-//			}
-//			if (vScroll.getValueLength()+hScroll.getHeight()>=vScroll.max && 
-//				hScroll.getValueLength()+vScroll.getWidth()>=hScroll.max){
-//				vScroll.setValue(vScroll.value, vScroll.max);
-//				hScroll.setValue(hScroll.value, hScroll.max);
-//				vScroll.visible = false;
-//				hScroll.visible = false;
-//			}
-			
-		}
-		
-		public void render(Graphics2D g) {}
-		
-	}
-	
 	static public ScrollBar createVScroll(int size)
 	{
 		return new ScrollBar(true, size);
@@ -379,6 +329,75 @@ public class ScrollBar extends Container
 	static public ScrollBar createHScroll(int size) 
 	{
 		return new ScrollBar(false, size);
+	}
+	
+
+
+	public static class ScrollBarPair
+	{
+		private static final long serialVersionUID = Version.VersionG2D;
+		
+		public ScrollBar v_scroll;
+		public ScrollBar h_scroll;
+		
+		public ScrollBarPair(int size) 
+		{
+			v_scroll = ScrollBar.createVScroll(size);
+			h_scroll = ScrollBar.createHScroll(size);
+			v_scroll.visible = false;
+			h_scroll.visible = false;
+		}
+		
+		public Rectangle update(
+				DisplayObjectContainer parent, 
+				int sx, int sy, 
+				int sw, int sh,
+				double h_len, double h_max,
+				double v_len, double v_max) 
+		{
+			int vw = sw;
+			int vh = sh;
+			
+			{
+				if (v_scroll.enable) {
+					v_scroll.setLocation(sx + sw - v_scroll.size, sy);
+					if (h_scroll.enable && h_scroll.visible) {
+						v_scroll.setSize(v_scroll.size, sh - h_scroll.size);
+					} else {
+						v_scroll.setSize(v_scroll.size, sh);
+					}
+				}
+				if (h_scroll.enable) {
+					h_scroll.setLocation(sx, sy + sh - h_scroll.size);
+					if (v_scroll.enable && v_scroll.visible) {
+						h_scroll.setSize(sw - v_scroll.size, h_scroll.size);
+					} else {
+						h_scroll.setSize(sw, h_scroll.size);
+					}
+				}
+				
+				if (v_scroll.enable) {
+					v_scroll.setMax(v_max);
+					v_scroll.setValue(v_scroll.getValue(), v_len);
+				}
+				if (h_scroll.enable) {
+					h_scroll.setMax(h_max);
+					h_scroll.setValue(h_scroll.getValue(), h_len);
+				}
+				
+				v_scroll.visible = !v_scroll.isMaxLength();
+				h_scroll.visible = !h_scroll.isMaxLength();
+				
+				if (v_scroll.enable && v_scroll.visible) {
+					vh = v_scroll.getHeight();
+				}
+				if (h_scroll.enable && h_scroll.visible) {
+					vw = h_scroll.getWidth();
+				}
+			}
+			return new Rectangle(sx, sy, vw, vh);
+		}
+
 	}
 	
 }

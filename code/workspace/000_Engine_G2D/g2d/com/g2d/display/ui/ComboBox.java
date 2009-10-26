@@ -7,6 +7,7 @@ import java.util.Vector;
 import com.g2d.Tools;
 import com.g2d.Version;
 import com.g2d.annotation.Property;
+import com.g2d.display.DisplayObject;
 import com.g2d.display.event.EventListener;
 import com.g2d.display.event.MouseEvent;
 import com.g2d.display.ui.layout.UILayout;
@@ -17,7 +18,7 @@ import com.g2d.util.Drawing;
  * @author waza
  *
  */
-public class ComboBox extends Container
+public class ComboBox extends UIComponent
 {
 	private static final long serialVersionUID = Version.VersionG2D;
 	
@@ -248,10 +249,12 @@ public class ComboBox extends Container
 //	----------------------------------------------------------------------------------------------------------
 //	parent implements 
 	
-	synchronized public boolean addChild(UIComponent child) {
+	@Deprecated
+	public boolean addChild(DisplayObject child) {
 		throw new IllegalStateException("can not add a custom child component in " + getClass().getName() + " !");
 	}
-	synchronized public boolean removeChild(UIComponent child) {
+	@Deprecated
+	public boolean removeChild(DisplayObject child) {
 		throw new IllegalStateException("can not remove a custom child component in " + getClass().getName() + " !");
 	}
 	
@@ -301,7 +304,7 @@ public class ComboBox extends Container
 		{
 			for (Item<?> item : items) {
 				item.removeFromParent();
-				super.addChild(item);
+				super.getContainer().addChild(item);
 			}
 			
 			offsetx = ComboBox.this.getScreenX()-ComboBox.this.root_form.getScreenX();
