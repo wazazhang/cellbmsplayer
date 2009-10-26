@@ -142,7 +142,7 @@ public abstract class SQLTableManager<K, R extends SQLTableRow<K>>
 		try {
 			for (R row : data_map.values()) {
 				try {
-					updateWithDB(row, conn);
+					updateWithDB(row, conn, table_columns);
 				} catch (Exception e) {
 					log.error(e.getMessage());
 				}
@@ -155,6 +155,13 @@ public abstract class SQLTableManager<K, R extends SQLTableRow<K>>
 //	---------------------------------------------------------------------------------------------------------------------------------------------------------
 //	write operator
 	
+	/** 
+	 * 向数据库插入一行数据，如果该行已经存在于数据库则将会引起SQLExcption
+	 * @param conn
+	 * @param row
+	 * @return 
+	 * @throws Exception
+	 */
 	public boolean insert(Connection conn, R row) throws Exception
 	{
 		data_writeLock.lock();
@@ -167,6 +174,13 @@ public abstract class SQLTableManager<K, R extends SQLTableRow<K>>
 		}
 	}
 
+	/**
+	 * 从数据库删除一行数据
+	 * @param conn
+	 * @param primary_key
+	 * @return 被删除的数据
+	 * @throws Exception
+	 */
 	public R remove(Connection conn, K primary_key) throws Exception
 	{
 		data_writeLock.lock();
@@ -182,21 +196,15 @@ public abstract class SQLTableManager<K, R extends SQLTableRow<K>>
 		}
 	}
 	
-	public R update(Connection conn, K primary_key) throws Exception
-	{
-		data_writeLock.lock();
-		try {
-			R row = data_map.get(primary_key);
-			if (row != null) {
-				updateWithDB(row, conn);
-			}
-			return row;
-		} finally {
-			data_writeLock.unlock();
-		}
-	}
-	
-	public R update(Connection conn, K primary_key, SQLColumn ... fields) throws Exception
+	/**
+	 * 向数据库存储指定key值的指定的字段
+	 * @param conn
+	 * @param primary_key
+	 * @param fields
+	 * @return
+	 * @throws Exception
+	 */
+	public R updateFields(Connection conn, K primary_key, SQLColumn ... fields) throws Exception
 	{
 		data_writeLock.lock();
 		try {
@@ -210,28 +218,20 @@ public abstract class SQLTableManager<K, R extends SQLTableRow<K>>
 		}
 	}
 
-	public R update(Connection conn, R obj) throws Exception
+	/**
+	 * 向数据库存储对象指定的字段
+	 * @param conn
+	 * @param obj
+	 * @param fields
+	 * @return
+	 * @throws Exception
+	 */
+	public R updateFields(Connection conn, R obj, SQLColumn ... fields) throws Exception
 	{
 		data_writeLock.lock();
 		try {
 			R row = data_map.get(obj.getPrimaryKey());
-			if (row.equals(obj)) {
-				updateWithDB(obj, conn);
-				data_map.put(obj.getPrimaryKey(), obj);
-				return row;
-			}
-			return null;
-		} finally {
-			data_writeLock.unlock();
-		}
-	}
-	
-	public R updateField(Connection conn, R obj, SQLColumn ... fields) throws Exception
-	{
-		data_writeLock.lock();
-		try {
-			R row = data_map.get(obj.getPrimaryKey());
-			if (row.equals(obj)) {
+			if (row != null) {
 				updateWithDB(obj, conn, fields);
 				data_map.put(obj.getPrimaryKey(), obj);
 				return row;
@@ -241,10 +241,64 @@ public abstract class SQLTableManager<K, R extends SQLTableRow<K>>
 			data_writeLock.unlock();
 		}
 	}
+
+	/**
+	 * 向数据库存储对象根据key值
+	 * @param conn
+	 * @param primary_key
+	 * @return
+	 * @throws Exception
+	 */
+	public R update(Connection conn, K primary_key) throws Exception
+	{
+		return updateFields(conn, primary_key, table_columns);
+	}
+
+	/**
+	 * 向数据库存储对象
+	 * @param conn
+	 * @param obj
+	 * @return
+	 * @throws Exception
+	 */
+	public R update(Connection conn, R obj) throws Exception
+	{
+		return updateFields(conn, obj, table_columns);
+	}
+
+	/**
+	 * 执行插入或者更新操作，如果该行已经存在于数据库，则执行更新语句，否则执行插入语句。
+	 * @param conn
+	 * @param obj
+	 * @return
+	 * @throws Exception
+	 */
+	public R put(Connection conn, R obj) throws Exception
+	{
+		data_writeLock.lock();
+		try {
+			R row = data_map.get(obj.getPrimaryKey());
+			if (row != null) {
+				updateWithDB(obj, conn, table_columns);
+				data_map.put(obj.getPrimaryKey(), obj);
+				return row;
+			} else {
+				insertWithDB(obj, conn);
+				data_map.put(obj.getPrimaryKey(), obj);
+				return null;
+			}
+		} finally {
+			data_writeLock.unlock();
+		}
+	}
 	
 //	---------------------------------------------------------------------------------------------------------------------------------------------------------
 //	read only
 
+	/**
+	 * 得到所有对象的迭代子
+	 * @return
+	 */
 	public Iterator<R> iterator()
 	{
 		data_readLock.lock();
@@ -255,6 +309,11 @@ public abstract class SQLTableManager<K, R extends SQLTableRow<K>>
 		}
 	}
 	
+	/**
+	 * 根据key值获得对象
+	 * @param primary_key
+	 * @return
+	 */
 	public R get(K primary_key)
 	{
 		data_readLock.lock();
@@ -266,6 +325,12 @@ public abstract class SQLTableManager<K, R extends SQLTableRow<K>>
 		}
 	}
 	
+	/**
+	 * 查找指定的对象
+	 * @param finder 重载finder的equals(Object obj)方法获得对象
+	 * @return
+	 * @see Object.equals(Object obj);
+	 */
 	public R find(Object finder)
 	{
 		data_readLock.lock();
@@ -281,6 +346,10 @@ public abstract class SQLTableManager<K, R extends SQLTableRow<K>>
 		}
 	}
 	
+	/**
+	 * 返回数据库行的数量
+	 * @return
+	 */
 	public int size(){
 		data_readLock.lock();
 		try {
@@ -345,22 +414,22 @@ public abstract class SQLTableManager<K, R extends SQLTableRow<K>>
 		sb = null;
 	}
 
-	/**
-	 * 执行更新指令，将更新指定的行。
-	 * @param conn
-	 * @throws Exception
-	 */
-	final void updateWithDB(R row, Connection conn) throws Exception
-	{
-		updateWithDB(row, conn, table_columns);
-	}
+//	/**
+//	 * 执行更新指令，将更新指定的行。
+//	 * @param conn
+//	 * @throws Exception
+//	 */
+//	final void updateWithDB(R row, Connection conn) throws Exception
+//	{
+//		updateWithDB(row, conn, table_columns);
+//	}
 	
 	/**
 	 * 执行更新指令，将更新指定的行。
 	 * @param conn
 	 * @throws Exception
 	 */
-	final void updateWithDB(R row, Connection conn, SQLColumn ... columns) throws Exception
+	final void updateWithDB(R row, Connection conn, SQLColumn[] columns) throws Exception
 	{
 		StringBuffer sb = new StringBuffer("UPDATE ");
 		sb.append(table_name);
