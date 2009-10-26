@@ -1,18 +1,25 @@
 package com.g2d.display.ui;
 
-import com.g2d.Version;
-import com.g2d.display.event.MouseWheelEvent;
+import java.awt.Rectangle;
+import java.util.Vector;
 
-public class Panel extends Container
+import com.g2d.Version;
+import com.g2d.display.DisplayObject;
+import com.g2d.display.event.MouseWheelEvent;
+import com.g2d.display.ui.DropDownList.DropDownListContainer;
+
+public class Panel extends UIComponent
 {
 	private static final long serialVersionUID = Version.VersionG2D;
+	
+	public static int DEFAULT_SCROLL_BAR_SIZE = 12;
 	
 	ScrollBar.ScrollBarPair		scrollbar;
 	
 	/** 实际的容器 */
 	protected PanelContainer	container;
 	/** 视口 */
-	protected Pan 				pan;
+	protected Pan 				view_port;
 	
 	
 	@Override
@@ -22,99 +29,111 @@ public class Panel extends Container
 		
 		enable_mouse_wheel = true;
 		
-		scrollbar 	= new ScrollBar.ScrollBarPair();
-		pan 		= new Pan();
+		view_port 	= new Pan();
 		container 	= new PanelContainer();
+		scrollbar	= new ScrollBar.ScrollBarPair(DEFAULT_SCROLL_BAR_SIZE);
+
+		super.addChild(scrollbar.v_scroll);		
+		super.addChild(scrollbar.h_scroll);
 		
-		pan.addChild(container);
-		super.addChild(scrollbar);
-		super.addChild(pan);
+		view_port.addChild(container);
+		view_port.enable_input = false;
+		
+		super.addChild(view_port);
 	}
 	
+//	------------------------------------------------------------------------------------------------------------------------------
 	
-	public Panel() 
-	{
+	/** call getContainer().addChild(DisplayObject child); */
+	@Deprecated
+	public boolean addChild(DisplayObject child) {
+		throw new IllegalStateException("can not add a custom child component in " + getClass().getName() + " !");
 	}
+	/**  call getContainer().removeChild(DisplayObject child); */
+	@Deprecated
+	public boolean removeChild(DisplayObject child) {
+		throw new IllegalStateException("can not remove a custom child component in " + getClass().getName() + " !");
+	}
+	
+	public Container getContainer() {
+		return container;
+	}
+	
+//	------------------------------------------------------------------------------------------------------------------------------
+	
 	
 	protected void onMouseWheelMoved(MouseWheelEvent event) {
-		scrollbar.vScroll.moveInterval(event.scrollDirection);
+		scrollbar.v_scroll.moveInterval(event.scrollDirection);
 	}
 
-	
-
-	public int getPanelChildCount() {
-		return container.getChildCount();
-	}
-	
-	public synchronized boolean addChild(UIComponent child) {
-		return container.addChild(child);
-	}
-	
-	public synchronized boolean removeChild(UIComponent child) {
-		return container.removeChild(child);
-	}
-	
 	public ScrollBar getVScrollBar() {
-		return scrollbar.vScroll;
+		return scrollbar.v_scroll;
 	}
 	public ScrollBar getHScrollBar() {
-		return scrollbar.hScroll;
+		return scrollbar.h_scroll;
 	}
 	
 	public int getViewPortWidth() {
-		return pan.getWidth();
+		return view_port.getWidth();
 	}
 	
 	public int getViewPortHeight() {
-		return pan.getHeight();
+		return view_port.getHeight();
 	}
 	
-	public void removeScrollBar() {
-		super.removeChild(scrollbar);
-		scrollbar = null;
-		enable_mouse_wheel = false;
+	public void setAutoScroll(boolean hScroll, boolean vbScroll) {
+		setEnableVScrollBar(hScroll);
+		setEnableVScrollBar(vbScroll);
 	}
 	
-	public void update() 
-	{
-		super.update();
-		
-		if (scrollbar!=null){
-			pan.setSize(
-					getWidth()-scrollbar.vScroll.getWidth()-(layout.BorderSize<<1), 
-					getHeight()-scrollbar.hScroll.getHeight()-(layout.BorderSize<<1));
-			
-			scrollbar.vScroll.setMax(container.local_bounds.height);
-			scrollbar.vScroll.setValue(scrollbar.vScroll.getValue(), pan.getHeight());
-			
-			scrollbar.hScroll.setMax(container.local_bounds.width);
-			scrollbar.hScroll.setValue(scrollbar.hScroll.getValue(), pan.getWidth());
-			
-			int tx = -(int)scrollbar.hScroll.getValue();
-			int ty = -(int)scrollbar.vScroll.getValue();
-			container.setLocation(tx, ty);
-		}else{
-			pan.setSize(
-					getWidth()-(layout.BorderSize<<1), 
-					getHeight()-(layout.BorderSize<<1));
+	public void setEnableVScrollBar(boolean enable) {
+		if (enable) {
+			if (super.contains(scrollbar.v_scroll)==false) {
+				super.addChild(scrollbar.v_scroll);
+			}
+		} else {
+			if (super.contains(scrollbar.v_scroll)==true) {
+				super.removeChild(scrollbar.v_scroll);
+			}
 		}
-		pan.setLocation(layout.BorderSize, layout.BorderSize);
-
-		
-//		if (scrollbar.hScroll.getValueLength() == scrollbar.hScroll.getMax()) {
-//			scrollbar.hScroll.visible = false;
-//		}else{
-//			scrollbar.hScroll.visible = true;
-//		}
-//		
-//		if (scrollbar.vScroll.getValueLength() == scrollbar.vScroll.getMax()) {
-//			scrollbar.vScroll.visible = false;
-//		}else{
-//			scrollbar.vScroll.visible = true;
-//		}
+		scrollbar.v_scroll.enable = enable;
+		enable_mouse_wheel = enable;
 	}
 	
+	public void setEnableHScrollBar(boolean enable) {
+		if (enable) {
+			if (super.contains(scrollbar.h_scroll)==false) {
+				super.addChild(scrollbar.h_scroll);
+			}
+		} else {
+			if (super.contains(scrollbar.h_scroll)==true) {
+				super.removeChild(scrollbar.h_scroll);
+			}
+		}
+		scrollbar.h_scroll.enable = enable;
+	}
 	
+	@Override
+	protected void updateChilds() 
+	{
+		int sx = layout.BorderSize;
+		int sy = layout.BorderSize;
+		int sw = getWidth()-(layout.BorderSize<<1);
+		int sh = getHeight()-(layout.BorderSize<<1);
+		
+		Rectangle view_rect = scrollbar.update(this, sx, sy, sw, sh, 
+				view_port.getWidth(),  container.local_bounds.width,
+				view_port.getHeight(), container.local_bounds.height);
+		
+		view_port.setBounds(view_rect);
+		
+		container.setLocation(
+				-(int)scrollbar.h_scroll.getValue(), 
+				-(int)scrollbar.v_scroll.getValue());
+		
+		super.updateChilds();
+	}
+
 	public class PanelContainer extends Container
 	{
 		private static final long serialVersionUID = Version.VersionG2D;
@@ -126,9 +145,9 @@ public class Panel extends Container
 		
 		public void update() 
 		{
-			local_bounds.width = pan.getWidth();
-			local_bounds.height = pan.getHeight();
-			for (UIComponent item : comonents) {	
+			local_bounds.width = view_port.getWidth();
+			local_bounds.height = view_port.getHeight();
+			for (UIComponent item : getComonents()) {	
 				local_bounds.width  = (int)Math.max(local_bounds.width,  item.x + item.getWidth());
 				local_bounds.height = (int)Math.max(local_bounds.height, item.y + item.getHeight());
 			}

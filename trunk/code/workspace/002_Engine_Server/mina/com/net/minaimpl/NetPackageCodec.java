@@ -286,80 +286,80 @@ public class NetPackageCodec implements ProtocolCodecFactory
     public ProtocolEncoder getEncoder() throws Exception {
     	return encoder;
     }
-
-    public static void main(String[] args)
-    {
-		class SObject implements Serializable
-    	{
-			private static final long serialVersionUID = 1L;
-    		
-			int a = 5;
-			String b = "12323";
-			long c = 1234;
-			byte d = 1;
-			short e = 32;
-    	}
-		
-		int count = 100000;
-		
-		SObject object = new SObject();
-		
-
-		try
-		{
-			long startTime = System.currentTimeMillis();
-			
-			for (int i=0; i<count; i++)
-			{
-				IoBuffer buffer = IoBuffer.allocate(MessageHeader.PACKAGE_DEFAULT_SIZE);
-		    	buffer.setAutoExpand(true);
-				buffer.putObject(object);
-				buffer.shrink();
-    			buffer.flip();
-			}
-			
-	    	System.out.println(System.currentTimeMillis() - startTime);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		try
-		{
-			long startTime = System.currentTimeMillis();
-			
-			for (int i=0; i<count; i++) 
-			{
-				ByteArrayOutputStream baos = new ByteArrayOutputStream(MessageHeader.PACKAGE_DEFAULT_SIZE);
-				ObjectOutputStream oos = new ObjectOutputStream(baos);
-	 			oos.writeObject(object);
-
-	 			IoBuffer buffer = IoBuffer.wrap(baos.toByteArray());
-    			buffer.flip();
-			}
-			
-	    	System.out.println(System.currentTimeMillis() - startTime);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		
-		
+//
+//    public static void main(String[] args)
+//    {
+//		class SObject implements Serializable
+//    	{
+//			private static final long serialVersionUID = 1L;
+//    		
+//			int a = 5;
+//			String b = "12323";
+//			long c = 1234;
+//			byte d = 1;
+//			short e = 32;
+//    	}
+//		
+//		int count = 100000;
+//		
+//		SObject object = new SObject();
+//		
+//
 //		try
 //		{
 //			long startTime = System.currentTimeMillis();
-//			for (int i=0; i<100000; i++) {
-//				SObject obj = (SObject)buffer.getObject();
+//			
+//			for (int i=0; i<count; i++)
+//			{
+//				IoBuffer buffer = IoBuffer.allocate(MessageHeader.PACKAGE_DEFAULT_SIZE);
+//		    	buffer.setAutoExpand(true);
+//				buffer.putObject(object);
+//				buffer.shrink();
+//    			buffer.flip();
 //			}
+//			
 //	    	System.out.println(System.currentTimeMillis() - startTime);
 //		}
 //		catch (Exception e) {
 //			e.printStackTrace();
 //		}
-    	
-    	
-    }
+//		
+//		try
+//		{
+//			long startTime = System.currentTimeMillis();
+//			
+//			for (int i=0; i<count; i++) 
+//			{
+//				ByteArrayOutputStream baos = new ByteArrayOutputStream(MessageHeader.PACKAGE_DEFAULT_SIZE);
+//				ObjectOutputStream oos = new ObjectOutputStream(baos);
+//	 			oos.writeObject(object);
+//
+//	 			IoBuffer buffer = IoBuffer.wrap(baos.toByteArray());
+//    			buffer.flip();
+//			}
+//			
+//	    	System.out.println(System.currentTimeMillis() - startTime);
+//		}
+//		catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		
+//		
+//		
+////		try
+////		{
+////			long startTime = System.currentTimeMillis();
+////			for (int i=0; i<100000; i++) {
+////				SObject obj = (SObject)buffer.getObject();
+////			}
+////	    	System.out.println(System.currentTimeMillis() - startTime);
+////		}
+////		catch (Exception e) {
+////			e.printStackTrace();
+////		}
+//    	
+//    	
+//    }
 }
 
 

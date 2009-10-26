@@ -36,33 +36,40 @@ public class MultiTextLayout
 		// 字符对齐的修正值
 		final int			offsetx;
 		final int			offsety;
-		
-		final TextLayout	textlayout;
-		final int 			line_index;
 
+		final TextLayout	text_layout;
+		final int 			line_index;
+		
 		Rectangle 			selected;
 		Color 				selected_color = new Color(0x40ffffff, true);
 		
 		public TextLine(TextLayout layout, int line)
 		{
-			this.textlayout	= layout;
-			this.line_index	= line;
-			this.offsetx	= -(int)layout.getBounds().getX();
-			this.offsety	= -(int)layout.getBounds().getY();
-			
-			this.width		= (int)textlayout.getBounds().getWidth();
-			this.height		= Math.max(10, (int)textlayout.getBounds().getHeight()+space);
+			this.text_layout	= layout;
+			this.line_index		= line;
+			this.offsetx		= -(int)layout.getBounds().getX();
+			this.offsety		= -(int)layout.getBounds().getY();
+			this.width			= (int)text_layout.getBounds().getWidth();
+			this.height			= Math.max(10, (int)text_layout.getBounds().getHeight()+space);
 		}
 		
 		final public TextLayout getLayout() 
 		{
-			return textlayout;
+			return text_layout;
 		}
 		
-		public void render(Graphics2D g, int x, int y)
+		public void render(Graphics2D g)
 		{
-			x += this.x;
-			y += this.y;
+//			{
+//				Color c = g.getColor();
+//					g.translate(x, y);
+//						g.translate(offsetx, offsety);
+//							g.setColor(Color.green);
+//							g.fill(text_layout.getBounds());
+//						g.translate(-offsetx, -offsety);
+//					g.translate(-x, -y);
+//				g.setColor(c);
+//			}
 			synchronized (g) {
 				g.translate(x, y);
 				if (selected!=null){
@@ -71,7 +78,7 @@ public class MultiTextLayout
 					g.fill(selected);
 					g.setColor(pc);
 				}
-				textlayout.draw(g, offsetx, offsety);
+				text_layout.draw(g, offsetx, offsety);
 				g.translate(-x, -y);
 			}
 		}
@@ -158,8 +165,8 @@ public class MultiTextLayout
 	private AttributedString 	attr_text;
 
 	private Vector<TextLine> 	textlines 		= new Vector<TextLine>();
-	private TextChange 			textChange;
-	
+
+
 	/**是否为单行*/
 	final public boolean 		is_single_line;
 	/**是否只读*/
@@ -172,8 +179,6 @@ public class MultiTextLayout
 //	----------------------------------------------------------------------------------------------------------------
 //	交互
 	
-
-
 	// 文字光标
 	Rectangle 					caret_bounds 	= new Rectangle();
 	
@@ -188,9 +193,14 @@ public class MultiTextLayout
 	
 	TextHitInfo 				caret_start_hit;
 	TextHitInfo 				caret_end_hit;
+
+//	----------------------------------------------------------------------------------------------------------------
+//	设置用以改变状态
 	
+	private TextChange 			textChange;
 	private String 				inserted_text	= null;
 	private char 				inserted_char	= 0;
+	int							set_caret_position	= -1;
 	
 //	----------------------------------------------------------------------------------------------------------------
 
@@ -425,26 +435,30 @@ public class MultiTextLayout
 	/**
 	 * 移动光标位置
 	 * @param d
-	 * @author yagamiya
 	 */
-	public void moveCaretStartPosition(int d) {
-		caret_start_position += d;
-		caret_start_position = Math.max(caret_start_position, 0);
-		caret_start_position = Math.min(caret_start_position, text.length());
+	synchronized public void moveCaretPosition(int d) {
+		setCaretPosition(getCaretPosition() + d);
 	}
 	
-	public void moveCaretEndPosition(int d) {
-		caret_end_position += d;
-		caret_end_position = Math.max(caret_end_position, 0);
-		caret_end_position = Math.min(caret_end_position, text.length());
+	synchronized public void setCaretPosition(int position) {
+		set_caret_position = position;
+		set_caret_position = Math.max(set_caret_position, 0);
+		set_caret_position = Math.min(set_caret_position, getText().length());
 	}
 	
-	public void moveCaretPosition(int d) {
-		caret_position += d;
-		caret_position = Math.max(caret_position, 0);
-		caret_position = Math.min(caret_position, text.length());
-//		caret_bounds.x = caret_position;
-	}
+//	public void moveCaretStartPosition(int d) {
+//		caret_start_position += d;
+//		caret_start_position = Math.max(caret_start_position, 0);
+//		caret_start_position = Math.min(caret_start_position, text.length());
+//	}
+//	
+//	public void moveCaretEndPosition(int d) {
+//		caret_end_position += d;
+//		caret_end_position = Math.max(caret_end_position, 0);
+//		caret_end_position = Math.min(caret_end_position, text.length());
+//	}
+//	
+	
 	
 	synchronized public String getSelectedText(){
 		if (caret_start_hit!=null && caret_end_hit!=null) {
@@ -751,6 +765,49 @@ public class MultiTextLayout
 	
 	synchronized public Dimension drawText(Graphics2D g, int x, int y, int sx, int sy, int sw, int sh) 
 	{
+		x += 1;
+		y += 1;
+		sx -= 1;
+		sy -= 1;
+		sw += 2;
+		sh += 2;
+		
+		tryChangeTextAndCaret(g);
+		
+		render_size.setSize(0, height);
+		{
+			Rectangle rect = new Rectangle(sx, sy, sw, sh);
+			
+			g.translate(x, y);	
+			Shape prewShape = g.getClip();
+			g.clip(rect);
+			{
+				for (TextLine line : textlines) {
+					if (rect.intersects(line.x, line.y, line.width, line.height)) {
+						line.render(g);
+					}
+					render_size.width = Math.max(line.width, render_size.width);
+				}
+				if (!is_read_only && is_show_caret) {
+					if (DisplayObject.main_timer/6%2==0 && caret_bounds!=null) {
+						g.setColor(Color.WHITE);
+						if (text.length()>0) {
+							g.fillRect(caret_bounds.x, caret_bounds.y, 2, caret_bounds.height);
+						}else{
+							g.fillRect(0, 0, 2, g.getFont().getSize());
+						}
+					}
+				}
+			}
+			g.setClip(prewShape);
+			g.translate(-x, -y);
+		}
+		return render_size;
+	}
+
+	private void tryChangeTextAndCaret(Graphics2D g) 
+	{
+		// try insert text
 		if (!is_read_only) {
 			if (inserted_text!=null && inserted_text.length()>0){
 				instertText();
@@ -761,48 +818,33 @@ public class MultiTextLayout
 				inserted_char = 0;
 			}
 		}
+		// try change text
 		if (textChange!=null){
 			resetText(g, textChange.text, textChange.textStyle, textChange.width) ;
 			textChange = null;
-		}
-		
-		render_size.setSize(0, height);
-		
-		Shape prewShape = g.getClip();
-		g.clipRect(x+sx, y+sy, sw, sh);
-		{
-			Rectangle rect = new Rectangle(sx, sy, sw, sh);
-			
-			for (TextLine line : textlines) {
-				if (rect.intersects(line.x, line.y, line.width, line.height)) {
-					line.render(g, x, y);
-				}
-				render_size.width = Math.max(line.width, render_size.width);
-			}
-			if (!is_read_only && is_show_caret) {
-				if (DisplayObject.main_timer/6%2==0 && caret_bounds!=null) {
-					g.translate(x, y);
-					g.setColor(Color.WHITE);
-					if (text.length()>0) {
-						g.fill(caret_bounds);
-					}else{
-						g.fillRect(0, 0, 2, g.getFont().getSize());
-					}
-					g.translate(-x, -y);
-				}
+			// update caret
+			if (!is_read_only) {
+				resetCaret();
 			}
 		}
-		g.setClip(prewShape);
-		
-		return render_size;
+		// try change caret
+		else if (set_caret_position >= 0) {
+			if (!is_read_only) {
+				caret_position			= set_caret_position;
+				caret_start_position	= set_caret_position;
+				caret_end_position		= set_caret_position;
+				set_caret_position		= -1;
+				resetCaret();
+			}
+		}
 	}
-
+	
 	private void resetText(Graphics2D g, String text, AttributedString atext, int width) 
 	{
-		this.text = text;
-		this.attr_text = atext;
-		this.width = width;
-		this.height = space;
+		this.text		= text;
+		this.attr_text	= atext;
+		this.width		= width;
+		this.height		= space;
 		this.textlines.clear();
 		
 		if (text.length()>0)
@@ -845,13 +887,6 @@ public class MultiTextLayout
 				this.textlines.add(line);
 			}
 		}
-		
-		// update caret
-		if (!is_read_only) {
-			resetCaret();
-		}
-		
-		
 	}
 	
 	private void resetCaret() 
@@ -881,7 +916,6 @@ public class MultiTextLayout
 					caret_bounds.height	= line.height+space;
 					caret_bounds.width	= 2;
 					
-						
 					//System.out.println(caret_bounds+" caret_position="+caret_position+" pos="+pos);
 					//System.out.println("caret_position="+caret_position+" pos="+pos);
 				}

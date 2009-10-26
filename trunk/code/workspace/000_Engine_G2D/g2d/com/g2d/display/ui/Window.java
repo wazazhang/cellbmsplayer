@@ -42,8 +42,8 @@ public abstract class Window extends Container
 	protected void init_field() 
 	{
 		super.init_field();
-		enable_drag = true;
-		root_form = this;
+		enable_drag	= true;
+		root_form	= this;
 		setMinimumSize(100, 100);
 	}
 	

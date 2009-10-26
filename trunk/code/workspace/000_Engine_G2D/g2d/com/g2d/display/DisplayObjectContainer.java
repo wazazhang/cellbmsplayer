@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.Queue;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.locks.ReentrantLock;
 
 import com.g2d.Tools;
 import com.g2d.Version;
@@ -51,8 +52,9 @@ public abstract class DisplayObjectContainer extends DisplayObject
 
 	/** true 如果不在local_bounds内,则忽略事件处理 (包括孩子的) */
 	@Property("如果不在local_bounds内,则忽略事件处理 (包括孩子的)")
-	protected boolean 			enable_bounds;
+	protected boolean 			ignore_render_without_parent_bounds;
 	
+	transient ReentrantLock		elements_lock = new ReentrantLock();
 	Vector<DisplayObject> 		elements;
 	
 	Queue<DisplayObjectEvent>	events;
@@ -68,8 +70,9 @@ public abstract class DisplayObjectContainer extends DisplayObject
 
 	@Override
 	protected void init_field() {
+		elements_lock	= new ReentrantLock();
 		super.init_field();
-		enable_bounds 	= false;
+		ignore_render_without_parent_bounds = false;
 		elements		= new Vector<DisplayObject>();
 		events			= new ConcurrentLinkedQueue<DisplayObjectEvent>();
 	}
@@ -86,8 +89,8 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	final public void processEvent()
 	{
 		if (events.isEmpty()) return;
-			
-		synchronized(elements)
+		
+		synchronized(elements_lock)
 		{
 			while (!events.isEmpty()) 
 			{
@@ -170,9 +173,7 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	@Override
 	final void updateBefore(DisplayObjectContainer parent) {
 		processEvent();
-		for (int i=elements.size()-1; i>=0; --i) {
-			elements.elementAt(i).onUpdate(this);
-		}
+		updateChilds();
 	}
 	
 	@Override
@@ -187,12 +188,24 @@ public abstract class DisplayObjectContainer extends DisplayObject
 		}
 	}
 	
+	protected void updateChilds() {
+		synchronized(elements_lock){
+			for (int i=elements.size()-1; i>=0; --i) {
+				elements.elementAt(i).onUpdate(this);
+			}
+		}
+	}
+	
 //	-----------------------------------------------------------------------------------------------------------------------
 	
 	
 	void onRender(Graphics2D g) 
 	{
-		if (enable_bounds && !g.hitClip((int)x + local_bounds.x, (int)y + local_bounds.y, local_bounds.width, local_bounds.height)){
+		if (ignore_render_without_parent_bounds && !g.hitClip(
+				(int)x + local_bounds.x, 
+				(int)y + local_bounds.y, 
+				local_bounds.width, 
+				local_bounds.height)){
 			return;
 		} else {
 			super.onRender(g);
@@ -205,7 +218,7 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	}
 	
 	protected void renderChilds(Graphics2D g) {
-		synchronized(elements) {
+		synchronized(elements_lock){
 			int size = elements.size();
 			for (int i = 0; i < size; i++) {
 				elements.elementAt(i).onRender(g);
@@ -225,18 +238,19 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	}
 	
 
-	public void sort(){
+	final public void sort(){
 		events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_SORT));
 	}
 	
 	// focus
-	public DisplayObject getFocus() {
+	final public DisplayObject getFocus() {
 		if (!elements.isEmpty()) {
 			return elements.lastElement();
 		}
 		return null;
 	}
-	public void focus(DisplayObject child){
+	
+	final public void focus(DisplayObject child){
 		if (always_top_element != null) {
 			events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_MOVE_TOP, always_top_element));
 		} else if (child == always_bottom_element){
@@ -247,40 +261,38 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	}
 	
 //	top element
-	public void removeAlwaysTopFocus(){
+	final public void removeAlwaysTopFocus(){
 		setAlwaysTopFocus(null);
 	}
-	public void setAlwaysTopFocus(DisplayObject child) {
+	final public void setAlwaysTopFocus(DisplayObject child) {
 		if (child != null) {
 			events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_MOVE_TOP, child));
 		}
 		always_top_element = child;
 	}
-	public DisplayObject getAlwaysTopFocus() {
+	final public DisplayObject getAlwaysTopFocus() {
 		return always_top_element;
 	}
 	
 //	bottom element
-	public void removeAlwaysBottom(){
+	final public void removeAlwaysBottom(){
 		setAlwaysBottom(null);
 	}
-	public void setAlwaysBottom(DisplayObject child) {
+	final public void setAlwaysBottom(DisplayObject child) {
 		if (child != null) {
 			events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_MOVE_BOT, child));
 		}
 		always_bottom_element = child;
 	}
-	public DisplayObject getAlwaysBottom() {
+	final public DisplayObject getAlwaysBottom() {
 		return always_bottom_element;
 	}
 
 
 //	-----------------------------------------------------------------------------------------------------------
 	
-	
-
 	public boolean addChild(DisplayObject child){
-		synchronized(child) {
+		synchronized(elements_lock){
 			if (child.parent==null) {
 				child.parent = this;
 				child.root = this.getRoot();
@@ -298,7 +310,7 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	}
 	
 	public boolean removeChild(DisplayObject child) {
-		synchronized(child) {
+		synchronized(elements_lock){
 			if (child.parent == this) {
 				child.parent = null;
 				events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_DELETE, child));
@@ -311,7 +323,7 @@ public abstract class DisplayObjectContainer extends DisplayObject
 		}
 	}
 
-	public boolean addChild(DisplayObject child, boolean immediately){
+	final public boolean addChild(DisplayObject child, boolean immediately){
 		if (addChild(child) && immediately) {
 			processEvent();
 			return true;
@@ -319,21 +331,45 @@ public abstract class DisplayObjectContainer extends DisplayObject
 		return false;
 	}
 	
-	public boolean removeChild(DisplayObject child, boolean immediately) {
+	final public boolean removeChild(DisplayObject child, boolean immediately) {
 		if (removeChild(child, false) && immediately) {
 			processEvent();
 			return true;
 		}
 		return false;
 	}
-	
-	public int getChildCount() {
-		return elements.size();
+
+	final public void addChilds(Collection<? extends DisplayObject> childs){
+		synchronized(elements_lock) {
+			for (DisplayObject child : childs) {
+				addChild(child);
+			}
+		}
 	}
 	
+	final public void removeChilds(Collection<? extends DisplayObject> childs) {
+		synchronized(elements_lock) {
+			for (DisplayObject child : childs) {
+				removeChild(child);
+			}
+		}
+	}
+
+//	-----------------------------------------------------------------------------------------------------------
+
+	final public boolean contains(DisplayObject child) {
+		synchronized(elements_lock) {
+			return elements.contains(child);
+		}
+	}
+	
+	final public int getChildCount() {
+		return elements.size();
+	}
+
 	@SuppressWarnings("unchecked")
-	public Vector<DisplayObject> getChilds() {
-		synchronized(elements) {
+	final public Vector<DisplayObject> getChilds() {
+		synchronized(elements_lock) {
 			Vector<DisplayObject> ret = (Vector<DisplayObject>)(elements.clone());
 			for (DisplayObjectEvent event : events) {
 				if (event.event_type == DisplayObjectEvent.EVENT_ADD) {
@@ -351,8 +387,8 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public<T> Vector<T> getChilds(Class<T> c) {
-		synchronized(elements) {
+	final public<T> Vector<T> getChilds(Class<T> c) {
+		synchronized(elements_lock) {
 			Vector<T> actors = new Vector<T>();
 			for (DisplayObject obj : elements) {
 				if (c.equals(obj.getClass())) {
@@ -377,8 +413,8 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public<T> Vector<T> getChildsSubClass(Class<T> c) {
-		synchronized(elements) {
+	final public<T> Vector<T> getChildsSubClass(Class<T> c) {
+		synchronized(elements_lock) {
 			Vector<T> actors = new Vector<T>();
 			for (DisplayObject obj : elements) {
 				if (c.isInstance(obj)){
@@ -396,36 +432,14 @@ public abstract class DisplayObjectContainer extends DisplayObject
 		}
 	}
 	
-	public void addChilds(Collection<? extends DisplayObject> childs){
-		synchronized(elements) {
-			for (DisplayObject child : childs) {
-				addChild(child);
-			}
-		}
-	}
-	
-	public void removeChilds(Collection<? extends DisplayObject> childs) {
-		synchronized(elements) {
-			for (DisplayObject child : childs) {
-				removeChild(child);
-			}
-		}
-	}
-	
-	public boolean contains(DisplayObject child) {
-		synchronized(elements) {
-			return elements.contains(child);
-		}
-	}
-	
-	public DisplayObject getChildAt(int index) {
-		synchronized(elements) {
+	final public DisplayObject getChildAt(int index) {
+		synchronized(elements_lock) {
 			return elements.elementAt(index);
 		}
 	}
 
-	public DisplayObject findChild(Object object) {
-		synchronized(elements) {
+	final public DisplayObject findChild(Object object) {
+		synchronized(elements_lock) {
 			for (DisplayObject child : elements) {
 				if (object.equals(child)) {
 					return child;
@@ -434,6 +448,12 @@ public abstract class DisplayObjectContainer extends DisplayObject
 			return null;
 		}
 	}
+
+	final public int getChildIndex(DisplayObject child) {
+		return elements.indexOf(child);
+	}
+	
+//	-------------------------------------------------------------------------------------------------------------------------------------
 	
 	/**
 	 * 得到该类赋值兼容的对象(不包括子类的)
@@ -443,19 +463,18 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	 * @param c
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	public<T extends DisplayObject> T getChildAtPos(int x, int y, Class<T> c) {
 		for (int i=elements.size()-1; i>=0; --i) {
 			DisplayObject obj = elements.elementAt(i);
 			if (obj.local_bounds.contains(x-obj.x, y-obj.y)) {
 				if (c.equals(obj.getClass())) {
-					return (T)obj;
+					return c.cast(obj);
 				}
 			}
 		}
 		return null;
 	}
-	
+
 	/***
 	 * 得到该类赋值兼容的对象(包括子类的)
 	 * @param <T>
@@ -464,13 +483,12 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	 * @param c
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
 	public<T extends DisplayObject> T getChildAtPosSubClass(int x, int y, Class<T> c) {
 		for (int i=elements.size()-1; i>=0; --i) {
 			DisplayObject obj = elements.elementAt(i);
 			if (obj.local_bounds.contains(x-obj.x, y-obj.y)) {
 				if (c.isInstance(obj)) {
-					return (T)obj;
+					return c.cast(obj);
 				}
 			}
 		}
@@ -486,61 +504,61 @@ public abstract class DisplayObjectContainer extends DisplayObject
 		}
 		return null;
 	}
-	
-	public int getChildIndex(DisplayObject child) {
-		return elements.indexOf(child);
-	}
-	
-	/**
-	 * 交换两个指定子对象的 Z 轴顺序（从前到后顺序）。 
-	 * @param child1
-	 * @param child2
-	 */
-	public void swapChildren(DisplayObject child1, DisplayObject child2){
-		int index1 = elements.indexOf(child1);
-		int index2 = elements.indexOf(child2);
-		elements.set(index1, child2);
-		elements.set(index2, child1);
-	}
-	 
-	/**
-     * 在子级列表中两个指定的索引位置，交换子对象的 Z 轴顺序（前后顺序）
-     * @param index1
-     * @param index2
-     */   
-	public void swapChildrenAt(int index1, int index2){
-		DisplayObject child1 = elements.elementAt(index1); 
-		DisplayObject child2 = elements.elementAt(index2); 
-		elements.set(index1, child2);
-		elements.set(index2, child1);
-	}
-	 
-	
-	/**
-	 * 返回对象的数组，这些对象位于指定点下，并且是该 DisplayObjectContainer 实例的子项（或孙子项，依此类推）。  
-	 * @param point 屏幕上的点
-	 * @return
-	 */
-	public Vector<DisplayObject> getObjectsUnderScreenPoint(Point point) {
-		Vector<DisplayObject> ret = new Vector<DisplayObject>();
-		for (DisplayObject sub : elements) {
-			getObjectsUnderScreenPoint((DisplayObjectContainer)sub, point, ret);
-		}
-		return ret;
-	}
-	
-	static private void getObjectsUnderScreenPoint(DisplayObjectContainer obj, Point point, Vector<DisplayObject> points) {
-		if (obj.elements.size()>0) {
-			for (DisplayObject sub : obj.elements) {
-				if (sub instanceof DisplayObjectContainer) {
-					getObjectsUnderScreenPoint((DisplayObjectContainer)sub, point, points);
-				}
-			}
-		}
-		if (obj.hitTestScreenPoint(point.x, point.y)) {
-			points.add(obj);
-		}
-	}
 
+//	-------------------------------------------------------------------------------------------------------------------------------------
+	
+//	/**
+//	 * 交换两个指定子对象的 Z 轴顺序（从前到后顺序）。 
+//	 * @param child1
+//	 * @param child2
+//	 */
+//	final public void swapChildren(DisplayObject child1, DisplayObject child2){
+//		int index1 = elements.indexOf(child1);
+//		int index2 = elements.indexOf(child2);
+//		elements.set(index1, child2);
+//		elements.set(index2, child1);
+//	}
+//	 
+//	/**
+//     * 在子级列表中两个指定的索引位置，交换子对象的 Z 轴顺序（前后顺序）
+//     * @param index1
+//     * @param index2
+//     */   
+//	final public void swapChildrenAt(int index1, int index2){
+//		DisplayObject child1 = elements.elementAt(index1); 
+//		DisplayObject child2 = elements.elementAt(index2); 
+//		elements.set(index1, child2);
+//		elements.set(index2, child1);
+//	}
+//	 
+//	
+//	/**
+//	 * 返回对象的数组，这些对象位于指定点下，并且是该 DisplayObjectContainer 实例的子项（或孙子项，依此类推）。  
+//	 * @param point 屏幕上的点
+//	 * @return
+//	 */
+//	final public Vector<DisplayObject> getObjectsUnderScreenPoint(Point point) {
+//		Vector<DisplayObject> ret = new Vector<DisplayObject>();
+//		for (DisplayObject sub : elements) {
+//			getObjectsUnderScreenPoint((DisplayObjectContainer)sub, point, ret);
+//		}
+//		return ret;
+//	}
+//	
+//	static private void getObjectsUnderScreenPoint(DisplayObjectContainer obj, Point point, Vector<DisplayObject> points) {
+//		if (obj.elements.size()>0) {
+//			for (DisplayObject sub : obj.elements) {
+//				if (sub instanceof DisplayObjectContainer) {
+//					getObjectsUnderScreenPoint((DisplayObjectContainer)sub, point, points);
+//				}
+//			}
+//		}
+//		if (obj.hitTestScreenPoint(point.x, point.y)) {
+//			points.add(obj);
+//		}
+//	}
+
+//	-------------------------------------------------------------------------------------------------------------------------------------
+	
 	
 }

@@ -2,6 +2,7 @@ package com.g2d.display.ui;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 
 import sun.font.EAttribute;
 
@@ -143,6 +144,10 @@ public class Menu extends Window implements MouseListener
 	{	
 		public Color 				text_color = new Color(0xffffffff, true);
 		public String 				text = "";
+
+		/**文字是否抗锯齿*/
+		@Property("文字是否抗锯齿")
+		public boolean	enable_antialiasing	 = false;
 		
 		public MenuItemButton(String text){
 			this.text = text;
@@ -164,9 +169,18 @@ public class Menu extends Window implements MouseListener
 		public void render(Graphics2D g) {
 			super.render(g);
 			g.setColor(text_color);
-			Drawing.drawStringBorder(g, text, 
-					0, 0, getWidth(), getHeight(), 
-					Drawing.TEXT_ANCHOR_HCENTER | Drawing.TEXT_ANCHOR_VCENTER);
+			if (enable_antialiasing) {
+				Object v = g.getRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING);
+				g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+				Drawing.drawStringBorder(g, text, 
+						0, 0, getWidth(), getHeight(), 
+						Drawing.TEXT_ANCHOR_HCENTER | Drawing.TEXT_ANCHOR_VCENTER);
+				g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, v);
+			} else {
+				Drawing.drawStringBorder(g, text, 
+						0, 0, getWidth(), getHeight(), 
+						Drawing.TEXT_ANCHOR_HCENTER | Drawing.TEXT_ANCHOR_VCENTER);
+			}
 		}
 		
 		

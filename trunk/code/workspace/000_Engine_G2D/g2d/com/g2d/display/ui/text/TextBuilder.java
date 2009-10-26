@@ -19,6 +19,13 @@ import com.cell.util.EnumManager.ValueEnum;
 
 /** 
  * 通过在字符串中嵌入代码，构造样式文本。<br>
+ * [color:color as AARRGGBB]text[color]<br>
+ * [back:color as AARRGGBB]text[back]<br>
+ * [size:font size]text[size]<br>
+ * [font:font name@style@size]text[font]<br>
+ * [under]text[under]<br>
+ * [link:text or url]text[link]<br>
+ * [anti:1 or 0]text[anti]<br>
  * @see com.g2d.display.ui.text.TextBuilder.Instruction
  */
 final public class TextBuilder extends IObjectiveFactory

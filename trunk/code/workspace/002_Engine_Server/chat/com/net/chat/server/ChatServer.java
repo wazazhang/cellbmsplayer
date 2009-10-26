@@ -32,6 +32,11 @@ public class ChatServer extends ServerImpl
 	
     public static void main(String args[]) throws Exception
 	{
+    	System.out.println(
+			"**********************************************************************************************\n" + 
+			"* Chat Server                                                                                *\n" + 
+			"**********************************************************************************************"
+			);
 		try {
 			String Port = "16000";
 

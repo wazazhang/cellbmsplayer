@@ -7,12 +7,13 @@ import java.util.Vector;
 import com.g2d.Tools;
 import com.g2d.Version;
 import com.g2d.annotation.Property;
+import com.g2d.display.DisplayObject;
 import com.g2d.display.event.EventListener;
 import com.g2d.display.event.MouseEvent;
 import com.g2d.editor.UIComponentEditor;
 import com.g2d.util.Drawing;
 
-public class ListView extends Container 
+public class ListView extends UIComponent 
 {
 	private static final long serialVersionUID = Version.VersionG2D;
 	
@@ -110,18 +111,11 @@ public class ListView extends Container
 	{
 		private static final long serialVersionUID = Version.VersionG2D;
 		
-		synchronized public void addChild(Item<?> child) {
-			super.addChild(child);
+		public void addChild(Item<?> child) {
+			super.getContainer().addChild(child);
 		}
-		synchronized public void removeChild(Item<?> child) {
-			super.removeChild(child);
-		}
-		
-		synchronized public boolean addChild(UIComponent child) {
-			throw new IllegalStateException("can not add a custom child component in " + getClass().getName() + " !");
-		}
-		synchronized public boolean removeChild(UIComponent child) {
-			throw new IllegalStateException("can not remove a custom child component in " + getClass().getName() + " !");
+		public void removeChild(Item<?> child) {
+			super.getContainer().removeChild(child);
 		}
 		
 		@Override
@@ -136,9 +130,9 @@ public class ListView extends Container
 			case LIST: 
 			case DETAIL: {
 				int h = 0;
-				for (UIComponent item : container.comonents) {
+				for (UIComponent item : container.getComonents()) {
 					item.setLocation(0, h);
-					item.setSize(pan.getWidth(), 20);
+					item.setSize(view_port.getWidth(), 20);
 					h += 20;
 				}
 				break;
@@ -148,11 +142,11 @@ public class ListView extends Container
 			case SMALL_ICON: {
 				int h = 0;
 				int w = 0;
-				for (UIComponent item : container.comonents) {
+				for (UIComponent item : container.getComonents()) {
 					item.setLocation(w, h);
 					item.setSize(40, 40);
 					w += 40;
-					if (w >= pan.getWidth()) {
+					if (w >= view_port.getWidth()) {
 						h += 40;
 						w = 0;
 					}
@@ -236,7 +230,7 @@ public class ListView extends Container
 	}
 	
 	public int getItemCount() {
-		return panel.getPanelChildCount();
+		return panel.getContainer().getChildCount();
 	}
 	
 	synchronized public void addItem(Item<?> item) {
@@ -270,7 +264,7 @@ public class ListView extends Container
 		}
 	}
 	synchronized public void clearItem(Item<?> child) {
-		for (UIComponent item : panel.container.comonents) {
+		for (UIComponent item : panel.container.getComonents()) {
 			removeItem((Item<?>)item);
 		}
 	}
@@ -304,10 +298,12 @@ public class ListView extends Container
 //	----------------------------------------------------------------------------------------------------------
 
 	
-	synchronized public boolean addChild(UIComponent child) {
+	@Deprecated
+	public boolean addChild(DisplayObject child) {
 		throw new IllegalStateException("can not add a custom child component in " + getClass().getName() + " !");
 	}
-	synchronized public boolean removeChild(UIComponent child) {
+	@Deprecated
+	public boolean removeChild(DisplayObject child) {
 		throw new IllegalStateException("can not remove a custom child component in " + getClass().getName() + " !");
 	}
 	

@@ -32,28 +32,36 @@ public abstract class UIComponent extends InteractiveObject
 	
 //	-----------------------------------------------------------------------------------------------------
 //	visual
+	
+	@Property("名字")
+	public String 						name;
+	
+	/**提示文字*/
 	@Property("提示文字")
 	public				String			tip;
 	
-	transient protected	UILayout 		layout;
-	
+	/**自定控件图片或颜色*/
 	@Property("自定控件图片或颜色")
 	public				UILayout		custom_layout;	
 	
+	/**被鼠标点击后播放的声音*/
 	public 				Sound			on_click_sound;
 	
+	/**当前被渲染的layout,如果custom_layout不为空，或者在render前设置该值，将改变渲染样式*/
+	transient protected	UILayout 		layout;
+	
+//	-----------------------------------------------------------------------------------------------------
+//	switch
 //	-----------------------------------------------------------------------------------------------------
 //	event
 	
-	transient 
-	protected Window 					root_form;
-	transient 
-	protected Vector<ActionListener>	action_listeners;
+	transient protected Window 			root_form;
+	transient Vector<ActionListener>	action_listeners;
 	protected Action					action;
 	
 //	-----------------------------------------------------------------------------------------------------
-	@Property("名字")
-	public String 						name;
+//	user data
+	
 	MarkedHashtable 					data_map;
 	Object								user_data;
 	public int							tag_data;
@@ -64,7 +72,8 @@ public abstract class UIComponent extends InteractiveObject
 	protected void init_field()
 	{
 		super.init_field();
-		enable_bounds		= true;
+		clip_local_bounds = true;
+		ignore_render_without_parent_bounds = true;
 	}
 	
 	@Override
@@ -74,8 +83,6 @@ public abstract class UIComponent extends InteractiveObject
 		action_listeners	= new Vector<ActionListener>();
 		layout 				= UILayout.createBlankRect();
 	}
-	
-	public UIComponent(){}
 	
 	public void setBounds(int x, int y, int w, int h) {
 		super.setLocation(x, y);
@@ -174,9 +181,16 @@ public abstract class UIComponent extends InteractiveObject
 	
 	protected void renderCatchedMouse(Graphics2D g)
 	{
-		if ((root_form==null || root_form.enable)){
+		if (isPickedMouse()){
 			onDrawMouseHover(g);
 		}
+	}
+	
+	@Override
+	protected void renderAcceptDrapDrop(Graphics2D g) 
+	{
+		g.setColor(new Color(0x40ffffff, true));
+		g.fill(local_bounds);
 	}
 
 	@Override

@@ -192,6 +192,14 @@ public interface Canvas
 	public boolean isMouseHold(int ... button);
 	
 	/**
+	 *  检测当前帧鼠标被连续的按下
+	 * @param freeze_time
+	 * @param button
+	 * @return
+	 */
+	public boolean isMouseContinuous(long freeze_time, int ... button);
+	
+	/**
 	 *  检测当前帧鼠标有没有被按下
 	 * @param button
 	 * @return

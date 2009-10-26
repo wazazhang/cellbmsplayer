@@ -146,9 +146,7 @@ public class SceneSprite extends MoveableUnit implements CellSetResource.LoadSpr
 		spr.scale_x			= this.scale_x;
 		spr.scale_y			= this.scale_y;
 		spr.rotate			= this.rotate;
-		
-		spr.enable_bounds	= this.enable_bounds;
-		
+				
 		spr.set_resource_name 	= this.set_resource_name;
 		spr.set_sprite_id 		= this.set_sprite_id;
 		

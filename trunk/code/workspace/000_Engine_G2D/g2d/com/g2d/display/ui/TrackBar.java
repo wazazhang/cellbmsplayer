@@ -5,11 +5,12 @@ import java.awt.Graphics2D;
 import com.g2d.Tools;
 import com.g2d.Version;
 import com.g2d.annotation.Property;
+import com.g2d.display.DisplayObject;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.event.MouseEvent;
 import com.g2d.display.event.MouseMoveEvent;
 
-public class TrackBar extends Container 
+public class TrackBar extends UIComponent 
 {
 	private static final long serialVersionUID = Version.VersionG2D;
 	
@@ -62,10 +63,12 @@ public class TrackBar extends Container
 	{
 	}
 	
-	synchronized public boolean addChild(UIComponent child) {
+	@Deprecated
+	public boolean addChild(DisplayObject child) {
 		throw new IllegalStateException("can not add a custom child component in " + getClass().getName() + " !");
 	}
-	synchronized public boolean removeChild(UIComponent child) {
+	@Deprecated
+	public boolean removeChild(DisplayObject child) {
 		throw new IllegalStateException("can not remove a custom child component in " + getClass().getName() + " !");
 	}
 	

@@ -2,6 +2,7 @@ package com.g2d.display.ui;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 
 import com.g2d.Version;
 import com.g2d.annotation.Property;
@@ -26,6 +27,11 @@ public class Button extends BaseButton
 	public int 					text_anchor;
 	public int 					text_offset_x;
 	public int 					text_offset_y;
+
+	/**文字是否抗锯齿*/
+	@Property("文字是否抗锯齿")
+	public boolean	enable_antialiasing	 = false;
+	
 	
 	public Button(String text, int width, int height) {
 		super(width, height);
@@ -58,7 +64,16 @@ public class Button extends BaseButton
 	@Override
 	public void render(Graphics2D g) {
 		super.render(g);
-		render_text(g);
+
+		if (enable_antialiasing) {
+			Object v = g.getRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING);
+			g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+			render_text(g);
+			g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, v);
+		} else {
+			render_text(g);
+		}
+		
 	}
 	
 	protected void render_text(Graphics2D g)
@@ -68,7 +83,6 @@ public class Button extends BaseButton
 		}else{
 			g.setColor(unfocusTextColor);
 		}
-		
 		if (isOnDragged()) {
 			Drawing.drawStringBorder(g, text, text_offset_x, text_offset_y+1, getWidth(), getHeight(), text_anchor);
 		}else{

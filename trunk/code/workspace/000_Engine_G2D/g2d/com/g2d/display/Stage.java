@@ -8,6 +8,9 @@ import java.text.AttributedString;
 import com.g2d.Tools;
 import com.g2d.Version;
 import com.g2d.display.event.Event;
+import com.g2d.display.event.MouseDragDropAccepter;
+import com.g2d.display.event.MouseDragDropListener;
+import com.g2d.display.event.MouseEvent;
 import com.g2d.display.ui.text.TextBuilder;
 
 
@@ -15,24 +18,42 @@ import com.g2d.display.ui.text.TextBuilder;
 public abstract class Stage extends DisplayObjectContainer
 {
 	private static final long serialVersionUID = Version.VersionG2D;
+//	-----------------------------------------------------------------------------------------------------------
+
+//	transition
+	/** 切换场景时用的贞数 */
+	private int 						transition_max_time			= 10;
+	transient private boolean 			is_transition_in 		= true;
+	transient private int 				transition_in_timer		= 0;
+	transient private boolean 			is_transition_out		= false;
+	transient private int 				transition_out_timer	= 0;
 	
-	public static int 	transition_max_time = 10;
-	
-//	transient CursorG2D 		cursor;
-	transient private boolean 	is_transition_in 		= true;
-	transient private int 		transition_in_timer		= 0;
-	transient private boolean 	is_transition_out		= false;
-	transient private int 		transition_out_timer	= 0;
-	
+//	tip
 	transient private TextTip			default_tip;
 	transient private Tip				next_tip;
 	transient private String			next_tip_text;
 	transient private AttributedString	next_tip_atext;
 
+//	picked object
 	/**当前控件内，最后被鼠标捕获到的单位*/
 	transient private DisplayObject		mouse_picked_object;
 	transient private DisplayObject		last_mouse_picked_object;
+
+//	drag drop object
+	/** 当鼠标拖拽渲染时，被渲染的单位alpha度 */
+	float								drag_drop_object_alpha		= 0.75f;
+	/**被拖拽的单位，该控件将覆盖显示鼠标提示*/
+	transient private InteractiveObject	mouse_drag_drop_object;
 	
+//	-----------------------------------------------------------------------------------------------------------
+	
+	protected Stage() {}
+	
+	public void inited(Object[] args)
+	{
+		// no args process
+	}
+
 	@Override
 	protected void init_transient() 
 	{
@@ -46,17 +67,11 @@ public abstract class Stage extends DisplayObjectContainer
 //		cursor					= new CursorG2D();
 	}
 	
-	protected Stage() 
-	{
-		
-	}
-	
-	public void inited(Object[] args)
-	{
-		// no args process
-	}
-
 //	---------------------------------------------------------------------------------------------------------------
+
+	public void setTransitionMaxTime(int time) {
+		transition_max_time = Math.max(1, time);
+	}
 	
 	final public void startTransitionIn() {
 		if (!is_transition_in) {
@@ -92,7 +107,27 @@ public abstract class Stage extends DisplayObjectContainer
 //	}
 
 //	---------------------------------------------------------------------------------------------------------------
+
+	@Override
+	final public boolean onPoolEvent(Event<?> event) {
+		return super.onPoolEvent(event);
+	}
+
+	final public void onAdded(Canvas canvas, int w, int h){
+		this.parent = this;
+		this.root = canvas;
+		this.x = 0;
+		this.y = 0;
+		this.local_bounds.x = 0;
+		this.local_bounds.y = 0;
+		this.local_bounds.width  = w;
+		this.local_bounds.height = h;
+		super.onAdded(this);
+	}
 	
+	final public void onRemoved(Canvas canvas) {
+		super.onRemoved(this);
+	}
 	
 	final public void onUpdate(Canvas canvas, int w, int h)
 	{
@@ -106,74 +141,77 @@ public abstract class Stage extends DisplayObjectContainer
 		this.local_bounds.width  = w;
 		this.local_bounds.height = h;
 		
-//		if (cursor!=null) {
-//			cursor.setLocation(getMouseX(), getMouseY());
-//			cursor.onUpdate(this);
-//		}
-		
 		super.onUpdate(this);
 		
 		DisplayObject.main_timer ++;
 	}
-
-	final public void onAdded(Canvas canvas, int w, int h)
-	{
-		this.parent = this;
-		this.root = canvas;
-		
-		this.x = 0;
-		this.y = 0;
-		this.local_bounds.x = 0;
-		this.local_bounds.y = 0;
-		this.local_bounds.width  = w;
-		this.local_bounds.height = h;
-		
-		super.onAdded(this);
-		
-	}
 	
-	final public void onRemoved(Canvas canvas) 
-	{
-		super.onRemoved(this);
-	}
-	
+	@Override
 	final public void onRender(Graphics2D g)
 	{
 		g.clip(local_bounds);
 		
 		super.onRender(g);
 		
-//		if (cursor!=null){
-//			cursor.onRender(g);
-//		}
-		
-//		synchronized (default_tip) 
-		{
-			last_mouse_picked_object = mouse_picked_object;
-			mouse_picked_object = null;
-			
-//			System.out.println("last_mouse_picked_object = "+last_mouse_picked_object);
-			
-			if (next_tip != null) {
-				next_tip.setLocation(this, mouse_x, mouse_y);
-				next_tip.onUpdate(this);
-				next_tip.onRender(g);
-				next_tip = null;
-			} else {
-				if (next_tip_text!=null && next_tip_text.length()!=0) {
-					next_tip_atext = TextBuilder.buildScript(next_tip_text);
-					next_tip_text = null;
-				}
-				if (next_tip_atext != null) {
-					default_tip.setText(next_tip_atext);
-					default_tip.setLocation(this, mouse_x, mouse_y);
-					default_tip.onUpdate(this);
-					default_tip.onRender(g);
-					next_tip_atext = null;
+		if (getRoot().isMouseDown(MouseEvent.BUTTON_LEFT)) {
+			if (mouse_picked_object instanceof InteractiveObject) {
+				InteractiveObject interactive = (InteractiveObject) mouse_picked_object;
+				if (interactive.enable_drag_drop) {
+					startDragDrop(interactive);
 				}
 			}
+		} 
+		if (!getRoot().isMouseHold(MouseEvent.BUTTON_LEFT)) {
+			if (mouse_drag_drop_object!=null) {
+				stopDragDrop();
+			}
 		}
+		
 
+		last_mouse_picked_object = mouse_picked_object;
+		mouse_picked_object = null;
+		
+		if (mouse_drag_drop_object!=null){
+			renderDragged(g);
+		}else{
+			renderTip(g);
+		}
+		
+		renderTransition(g);
+	}
+
+	private void renderDragged(Graphics2D g) 
+	{
+		mouse_drag_drop_object.onRenderDragDrop(this, g);
+	}
+	
+	private void renderTip(Graphics2D g)
+	{
+//		System.out.println("last_mouse_picked_object = "+last_mouse_picked_object);
+		
+		if (next_tip != null) {
+			next_tip.setLocation(this, mouse_x, mouse_y);
+			next_tip.onUpdate(this);
+			next_tip.onRender(g);
+			next_tip = null;
+		} else {
+			if (next_tip_text!=null && next_tip_text.length()!=0) {
+				next_tip_atext = TextBuilder.buildScript(next_tip_text);
+				next_tip_text = null;
+			}
+			if (next_tip_atext != null) {
+				default_tip.setText(next_tip_atext);
+				default_tip.setLocation(this, mouse_x, mouse_y);
+				default_tip.onUpdate(this);
+				default_tip.onRender(g);
+				next_tip_atext = null;
+			}
+		}
+	}
+	
+	private void renderTransition(Graphics2D g)
+	{
+		// default is alpha transition
 		if (is_transition_in) 
 		{
 			g.setColor(new Color(0,0,0, 1 - transition_in_timer / (float)transition_max_time));
@@ -184,7 +222,7 @@ public abstract class Stage extends DisplayObjectContainer
 			}
 			
 			transition_in_timer ++;
-			
+
 			if (transition_in_timer>transition_max_time) {
 				is_transition_in = false;
 			}
@@ -202,23 +240,60 @@ public abstract class Stage extends DisplayObjectContainer
 		}
 	}
 
-	@Override
-	final public boolean onPoolEvent(Event<?> event) {
-		return super.onPoolEvent(event);
+	private void startDragDrop(InteractiveObject obj) {
+//		if (mouse_drag_drop_object == null) {
+			mouse_drag_drop_object = obj;
+			mouse_drag_drop_object.onMouseStartDragDrop();
+			for (MouseDragDropListener l : mouse_drag_drop_object.mouse_drag_drop_listeners) {
+				l.onMouseStartDragDrop(mouse_drag_drop_object);
+			}
+//			System.out.println("start drag drop : " + mouse_drag_drop_object);
+//		}
 	}
 	
+	private void stopDragDrop() {
+		if (mouse_drag_drop_object!=null){
+			mouse_drag_drop_object.onMouseStopDragDrop(last_mouse_picked_object);
+			for (MouseDragDropListener l : mouse_drag_drop_object.mouse_drag_drop_listeners) {
+				l.onMouseStopDragDrop(mouse_drag_drop_object, last_mouse_picked_object);
+			}
+			if (last_mouse_picked_object instanceof InteractiveObject) {
+				InteractiveObject accepter = ((InteractiveObject)last_mouse_picked_object);
+				if (accepter.enable_accept_drag_drop){
+					accepter.onDragDropedObject(mouse_drag_drop_object);
+					for (MouseDragDropAccepter l : accepter.mouse_drag_drop_accepters) {
+						l.onDragDropedObject(accepter, mouse_drag_drop_object);
+					}
+				}
+			}
+//			System.out.println("stop drag drop : " + mouse_drag_drop_object + " in " + last_mouse_picked_object);
+			mouse_drag_drop_object = null;
+		}
+	}
 	
-	protected void renderTransitionSplash(Graphics2D g) {}
+//	---------------------------------------------------------------------------------------------------------------
+
+	final public void focuseClean(Canvas canvas) {
+		stopDragDrop();
+	}
 	
-	public void renderLostFocus(Graphics2D g){}
+	protected void renderTransitionSplash(Graphics2D g) {
+		
+	}
 	
-	public void onFocusGained(FocusEvent e) {}
+	public void renderLostFocus(Graphics2D g){
+		
+	}
 	
-	public void onFocusLost(FocusEvent e) {}
+	public void onFocusGained(FocusEvent e) {
+	}
+	
+	public void onFocusLost(FocusEvent e) {
+	}
 	
 	/**
 	 * 监听客户端窗口关闭按钮
-	 * @return 如果使用默认的关闭方法则返回false，即点击关闭后程序退出
+	 * @return 如果使用默认的关闭方法则返回false，即点击关闭后程序退出，如果返回true，则会阻挡窗口关闭由子控件处理。
 	 */
 	public boolean onWindowClose(){return false;}
 
@@ -263,16 +338,32 @@ public abstract class Stage extends DisplayObjectContainer
 			next_tip = tip;
 		}
 	}
-	
-	void setMousePickedObject(DisplayObject object) {
-		mouse_picked_object = object;
+
+	public void setTipTextAntialiasing(boolean enable) {
+		default_tip.enable_antialiasing = enable;
 	}
 	
+//	----------------------------------------------------------------------------------------------------------------------
+
 	/**
 	 * 得到当前获得鼠标的最高层单位
 	 * @return
 	 */
 	public DisplayObject getMousePickedObject() {
 		return last_mouse_picked_object;
+	}
+	
+	void setMousePickedObject(DisplayObject object) {
+		mouse_picked_object = object;
+	}
+
+//	----------------------------------------------------------------------------------------------------------------------
+	
+	public void setDragDropObjectAlpha(float alpha) {
+		drag_drop_object_alpha = Math.max(0.1f, alpha);
+	}
+
+	public InteractiveObject getDraggedObject() {
+		return mouse_drag_drop_object;
 	}
 }

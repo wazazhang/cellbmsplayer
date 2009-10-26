@@ -5,12 +5,13 @@ import java.util.Vector;
 
 import com.g2d.Tools;
 import com.g2d.Version;
+import com.g2d.display.DisplayObject;
 import com.g2d.display.event.EventListener;
 import com.g2d.display.event.MouseEvent;
 import com.g2d.display.ui.layout.UILayout;
 import com.g2d.editor.UIComponentEditor;
 
-public class PageSelectPanel extends Container
+public class PageSelectPanel extends UIComponent
 {
 	private static final long serialVersionUID = Version.VersionG2D;
 
@@ -35,11 +36,15 @@ public class PageSelectPanel extends Container
 			setSize(60, 20);
 		}
 		
-		synchronized public void addChild(UIComponent child) {
-			panel.addChild(child);
+		/** call getPanel().getContainer().addChild(DisplayObject child); */
+		@Deprecated
+		public boolean addChild(DisplayObject child) {
+			throw new IllegalStateException("can not add a custom child component in " + getClass().getName() + " !");
 		}
-		synchronized public void removeChild(UIComponent child) {
-			panel.removeChild(child);
+		/**  call getPanel().getContainer().removeChild(DisplayObject child); */
+		@Deprecated
+		public boolean removeChild(DisplayObject child) {
+			throw new IllegalStateException("can not remove a custom child component in " + getClass().getName() + " !");
 		}
 		
 		protected void onMouseClick(MouseEvent event) {
@@ -213,10 +218,10 @@ public class PageSelectPanel extends Container
 	}
 	
 	
-	synchronized public boolean addChild(UIComponent child) {
+	synchronized public boolean addChild(DisplayObject child) {
 		throw new IllegalStateException("can not add a custom child component in " + getClass().getName() + " !");
 	}
-	synchronized public boolean removeChild(UIComponent child) {
+	synchronized public boolean removeChild(DisplayObject child) {
 		throw new IllegalStateException("can not remove a custom child component in " + getClass().getName() + " !");
 	}
 	

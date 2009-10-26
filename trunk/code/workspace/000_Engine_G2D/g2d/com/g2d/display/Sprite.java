@@ -29,12 +29,13 @@ public class Sprite extends InteractiveObject implements Vector
 	protected void init_field() 
 	{
 		super.init_field();
+		
 		scale_x			= 1;
 		scale_y			= 1;
 		rotate			= 0;
 		alpha			= 1f;
+		
 		enable 			= false;
-		enable_bounds	= false;
 		enable_input	= false;
 		enable_focus	= false;
 	}

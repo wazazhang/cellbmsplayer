@@ -649,7 +649,7 @@ FocusListener
 	 * @param keycode
 	 * @return
 	 */
-	public boolean isKeyHold(int ... keycode) 
+	synchronized public boolean isKeyHold(int ... keycode) 
 	{
 		for (int k : keycode) 
 			if (keystate.get(k)!=null) 
@@ -662,7 +662,7 @@ FocusListener
 	 * @param keycode
 	 * @return
 	 */
-	public boolean isKeyDown(int ... keycode)
+	synchronized public boolean isKeyDown(int ... keycode)
 	{
 		for (int k : keycode) 
 			if (keystate_query_down.get(k)!=null) 
@@ -675,7 +675,7 @@ FocusListener
 	 * @param keycode
 	 * @return
 	 */
-	public boolean isKeyUp(int ... keycode)
+	synchronized public boolean isKeyUp(int ... keycode)
 	{
 		for (int k : keycode) 
 			if (keystate_query_up.get(k)!=null) 
@@ -688,7 +688,7 @@ FocusListener
 	 * @param button
 	 * @return
 	 */
-	public boolean isMouseHold(int ... button) 
+	synchronized public boolean isMouseHold(int ... button) 
 	{
 		for (int b : button) 
 			if (mousestate.get(b)!=null) 
@@ -701,11 +701,26 @@ FocusListener
 	 * @param button
 	 * @return
 	 */
-	public boolean isMouseDown(int ... button)
+	synchronized public boolean isMouseDown(int ... button)
 	{
 		for (int b : button) 
 			if (mousestate_query_down.get(b)!=null) 
 				return true;
+		return false;
+	}
+	
+	@Override
+	synchronized public boolean isMouseContinuous(long freeze_time, int... button) {
+		for (int b : button) {
+			if (mousestate.get(b)!=null) {
+				Long		prve_time	= mousestate_prev_down_time.get(b);
+				if (prve_time != null) {
+					if (System.currentTimeMillis() - prve_time > freeze_time) {
+						return true;
+					}
+				}
+			}
+		}
 		return false;
 	}
 	
@@ -715,7 +730,7 @@ FocusListener
 	 * @param button
 	 * @return
 	 */
-	public boolean isMouseDoubleDown(long time, int ... button){
+	synchronized public boolean isMouseDoubleDown(long time, int ... button){
 		for (int b : button) {
 			if (mousestate_query_down.get(b)!=null) {
 				Long		prve_time	= mousestate_prev_down_time.get(b);
@@ -737,7 +752,7 @@ FocusListener
 	 * @param button
 	 * @return
 	 */
-	public boolean isMouseUp(int ... button) 
+	synchronized public boolean isMouseUp(int ... button) 
 	{
 		for (int b : button) 
 			if (mousestate_query_up.get(b)!=null) 
@@ -750,7 +765,7 @@ FocusListener
 	 * @param button
 	 * @return
 	 */
-	public boolean isMouseWheelUP() {
+	synchronized public boolean isMouseWheelUP() {
 		return mousewheel_query.get(-1)!=null;
 	}
 	
@@ -759,7 +774,7 @@ FocusListener
 	 * @param button
 	 * @return
 	 */
-	public boolean isMouseWheelDown() {
+	synchronized public boolean isMouseWheelDown() {
 		return mousewheel_query.get(1)!=null;
 	}
 	
@@ -768,7 +783,7 @@ FocusListener
 	 * @param button
 	 * @return
 	 */
-	public int getMouseX() {
+	synchronized public int getMouseX() {
 		return mousex;
 	}
 	
@@ -777,7 +792,7 @@ FocusListener
 	 * @param button
 	 * @return
 	 */
-	public int getMouseY() {
+	synchronized public int getMouseY() {
 		return mousey;
 	}
 	
@@ -830,9 +845,11 @@ FocusListener
 	}
 	synchronized public void mousePressed(MouseEvent e) {
 		mousex = (int)(e.getX() * size_rate_x);
-		mousey = (int)(e.getY() * size_rate_y);
+		mousey = (int)(e.getY() * size_rate_y);		
 		mousestate_down.put(e.getButton(), e);
 		mousestate.put(e.getButton(), e);
+		mousestate_prev_down_time.put(e.getButton(), System.currentTimeMillis());
+		mousestate_prev_down_pos.put(e.getButton(), e);
 		poolEvent(new com.g2d.display.event.MouseEvent(e, com.g2d.display.event.MouseEvent.EVENT_MOUSE_DOWN));
 //		System.out.println(e);
 	}
@@ -841,9 +858,6 @@ FocusListener
 		mousey = (int)(e.getY() * size_rate_y);
 		mousestate_up.put(e.getButton(), e);
 		mousestate.remove(e.getButton());
-		mousestate_prev_down_time.put(e.getButton(), System.currentTimeMillis());
-		mousestate_prev_down_pos.put(e.getButton(), e);
-		
 		poolEvent(new com.g2d.display.event.MouseEvent(e, com.g2d.display.event.MouseEvent.EVENT_MOUSE_UP));
 		//System.out.println(e);
 	}
@@ -878,6 +892,7 @@ FocusListener
 //		System.out.println(e.paramString());
 		if (currentStage!=null) {
 			currentStage.onFocusGained(e);
+			currentStage.focuseClean(this);
 		}
 	}
 	
@@ -885,6 +900,7 @@ FocusListener
 //		System.out.println(e.paramString());
 		if (currentStage!=null) {
 			currentStage.onFocusLost(e);
+			currentStage.focuseClean(this);
 		}
 	}
 
