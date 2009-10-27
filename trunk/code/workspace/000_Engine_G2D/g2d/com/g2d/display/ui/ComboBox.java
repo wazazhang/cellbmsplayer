@@ -2,12 +2,14 @@ package com.g2d.display.ui;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.util.Collection;
 import java.util.Vector;
 
 import com.g2d.Tools;
 import com.g2d.Version;
 import com.g2d.annotation.Property;
 import com.g2d.display.DisplayObject;
+import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.event.EventListener;
 import com.g2d.display.event.MouseEvent;
 import com.g2d.display.ui.layout.UILayout;
@@ -136,15 +138,14 @@ public class ComboBox extends UIComponent
 	private void openDropDown() {
 		if (root_form!=null) {
 			if (drop_down_box==null) {
-				drop_down_box = new DropDownBox();
-				root_form.getParent().addChild(drop_down_box);
+				drop_down_box = new DropDownBox(root_form.getParent());
 			}
 		}
 	}
 	private void closeDropDown() {
 		if (root_form!=null) {
 			if (drop_down_box!=null) {
-				root_form.getParent().removeChild(drop_down_box);
+				drop_down_box.removeFromParent();
 				drop_down_box = null;
 			}
 		}
@@ -204,7 +205,11 @@ public class ComboBox extends UIComponent
 			addItem(item);
 		}
 	}
-	
+	synchronized public void addItems(Collection<? extends Item<?>> items) {
+		for (Item<?> item : items) {
+			addItem(item);
+		}
+	}
 	synchronized public void removeItem(Item<?> item) {
 		items.remove(item);
 		item.combo_box = null;
@@ -300,7 +305,7 @@ public class ComboBox extends UIComponent
 		int offsetx;
 		int offsety;
 		
-		public DropDownBox() 
+		public DropDownBox(DisplayObjectContainer parent) 
 		{
 			for (Item<?> item : items) {
 				item.removeFromParent();
@@ -318,13 +323,22 @@ public class ComboBox extends UIComponent
 			this.setLocation(
 					ComboBox.this.root_form.x + offsetx, 
 					ComboBox.this.root_form.y + offsety);
+			
+			if (this.y + this.getHeight() > parent.getHeight()) {
+//				System.out.println("out y");
+				this.setLocation(
+						this.x, 
+						this.y - this.getHeight() - ComboBox.this.getHeight());
+			}
+
+			parent.addChild(this);
 		}
 		
 		public void update() {
 			super.update();
-			this.setLocation(
-					ComboBox.this.root_form.x + offsetx, 
-					ComboBox.this.root_form.y + offsety);
+//			this.setLocation(
+//					ComboBox.this.root_form.x + offsetx, 
+//					ComboBox.this.root_form.y + offsety);
 			if (getRoot().isMouseDown(java.awt.event.MouseEvent.BUTTON1)) {
 				if (!isHitMouse() && timer>1) {
 					closeDropDown();
