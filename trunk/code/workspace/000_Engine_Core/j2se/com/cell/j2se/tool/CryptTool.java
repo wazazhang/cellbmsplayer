@@ -5,6 +5,8 @@ import java.awt.GridLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -18,7 +20,7 @@ import javax.swing.JTextPane;
 
 import com.cell.security.Crypt;
 
-public class CryptTool extends JFrame implements ActionListener
+public class CryptTool extends JFrame implements ActionListener, WindowListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -38,6 +40,7 @@ public class CryptTool extends JFrame implements ActionListener
 		super.setLocation(
 				Toolkit.getDefaultToolkit().getScreenSize().width/2 - getWidth()/2,
 				Toolkit.getDefaultToolkit().getScreenSize().height/2 - getHeight()/2);
+		super.addWindowListener(this);
 		
 		JSplitPane split_pane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		{
@@ -113,6 +116,23 @@ public class CryptTool extends JFrame implements ActionListener
 			text_dst.setText(Crypt.decryptHex(text_src.getText(), text_key.getText()));
 		}
 	}
+	
+	@Override
+	public void windowActivated(WindowEvent arg0) {}
+	@Override
+	public void windowClosed(WindowEvent arg0) {}
+	@Override
+	public void windowClosing(WindowEvent arg0) {
+		System.exit(1);
+		}
+	@Override
+	public void windowDeactivated(WindowEvent arg0) {}
+	@Override
+	public void windowDeiconified(WindowEvent arg0) {}
+	@Override
+	public void windowIconified(WindowEvent arg0) {}
+	@Override
+	public void windowOpened(WindowEvent arg0) {}
 	
 	public static void main(String[] args)
 	{
