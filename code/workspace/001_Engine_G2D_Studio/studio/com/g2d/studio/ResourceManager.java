@@ -24,6 +24,10 @@ public class ResourceManager extends CellSetResourceManager
 	
 //	--------------------------------------------------------------------------------------------------------------------
 	
+	public static int nameToID(String name) {
+		return Integer.parseInt(name.substring(0, 6));
+	}
+	
 	abstract static class ResourceSet<T extends CellSetObject> implements Serializable
 	{
 		private static final long serialVersionUID = 1L;
@@ -39,7 +43,7 @@ public class ResourceManager extends CellSetResourceManager
 		protected ResourceSet(String set_name, String name)
 		{
 			this.set_name	= set_name;
-			this.id			= Integer.parseInt(name.substring(0, 6));
+			this.id			= nameToID(name);
 			this.name		= name;
 		}
 		
