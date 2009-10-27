@@ -5,11 +5,29 @@ import com.cell.util.Config;
 
 public class StringConfig extends Config
 {
-	
 	public static class ConfigKey
 	{
-		public static char FormatKey		= '\b';
-		public static char FormatArgKey		= '%';
+		/**顺序格式化参数*/
+		final public char FormatKey;
+		
+		/**位置格式化参数*/
+		final public char FormatArgKeyStart, FormatArgKeyEnd;
+		
+		public ConfigKey(char key, char arg_key_start, char arg_key_end) {
+			this.FormatKey			= key;
+			this.FormatArgKeyStart	= arg_key_start;
+			this.FormatArgKeyEnd	= arg_key_end;
+		}
+	}
+	
+	static ConfigKey default_config_key = new ConfigKey('\b', '%', '%');
+	
+	public static void setDefaultConfigKey(ConfigKey key) {
+		if (key != null) {
+			default_config_key = key;
+		} else {
+			throw new NullPointerException();
+		}
 	}
 	
 	/**
@@ -28,10 +46,10 @@ public class StringConfig extends Config
 	 * @author WAZA
 	 */
 	public static String formatString(String src, Object... args) {
-		return formatKeyString(src, "", args);
+		return formatKeyString(src, default_config_key, args);
 	}
 	
-	static String formatKeyString(String src, Object key, Object[] args)
+	public static String formatKeyString(String src, ConfigKey key, Object[] args)
 	{
 		if(args==null || args.length<=0)
 		{
@@ -48,16 +66,16 @@ public class StringConfig extends Config
 			{
 				char ch = src.charAt(h);
 				
-				if (ch == ConfigKey.FormatKey) // eg: \b \b \b
+				if (ch == key.FormatKey) // eg: \b \b \b
 				{
 					if (argCount < args.length) {
 						sb.append(args[argCount]);
 					}
 					argCount ++;
 				}
-				else if (ch == ConfigKey.FormatArgKey) // eg: %1% %2% %3%
+				else if (ch == key.FormatArgKeyStart) // eg: %1% %2% %3%
 				{
-					int t = src.indexOf(ConfigKey.FormatArgKey, h+1);
+					int t = src.indexOf(key.FormatArgKeyEnd, h+1);
 					if (t>h) {
 						String argnum = src.substring(h+1, t);
 						int argi = -1;
