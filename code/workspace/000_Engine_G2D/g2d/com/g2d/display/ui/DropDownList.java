@@ -15,18 +15,43 @@ public abstract class DropDownList extends UIComponent
 	{
 		private static final long serialVersionUID = Version.VersionG2D;
 		
+		Vector<UIComponent> components = new Vector<UIComponent>();
+		
 		public DropDownListContainer()
 		{
 			this.enable_input = false;
 		}
 		
+		@Override
+		public boolean addChild(DisplayObject child) {
+			synchronized (components) {
+				if (child instanceof UIComponent) {
+					components.add((UIComponent) child);
+				}
+			}
+			return super.addChild(child);
+		}
+		
+		@Override
+		public boolean removeChild(DisplayObject child) {
+			synchronized(components) {
+				if (child instanceof UIComponent) {
+					components.remove((UIComponent)child);
+				}
+			}
+			return super.removeChild(child);
+		}
+		
+		
 		public void update() 
 		{
 			int y = layout.BorderSize;
-			for (UIComponent item : getComonents()) {
-				item.setLocation(0, y);
-				item.setSize(pan.getWidth(), 20);
-				y += item.getHeight() + layout.BorderSize;
+			synchronized (components) {
+				for (UIComponent item : components) {
+					item.setLocation(0, y);
+					item.setSize(pan.getWidth(), 20);
+					y += item.getHeight() + layout.BorderSize;
+				}
 			}
 			local_bounds.height = y;
 		}
