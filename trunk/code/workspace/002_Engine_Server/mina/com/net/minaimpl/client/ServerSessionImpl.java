@@ -39,6 +39,9 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 	public ServerSessionImpl(ClassLoader cl, ExternalizableFactory ef)
 	{
 		Codec = new NetPackageCodec(cl, ef);
+		Connector 	= new NioSocketConnector();
+		Connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(Codec));
+		Connector.setHandler(this);
 	}
 	
 	public boolean connect(String host, int port, ServerSessionListener listener) throws IOException {
@@ -53,18 +56,17 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 
 			Listener 	= listener;
 			
-			Connector 	= new NioSocketConnector();
-			Connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(Codec));
-			Connector.setHandler(this);
-			
-            ConnectFuture future1 = Connector.connect(address); 
-			future1.awaitUninterruptibly(timeout);
-			
-            if (!future1.isConnected()) {
-                return false;
-            }
-            Session = future1.getSession();
-			
+			synchronized(this) 
+			{
+	            ConnectFuture future1 = Connector.connect(address); 
+				future1.awaitUninterruptibly(timeout);
+				
+	            if (!future1.isConnected()) {
+	                return false;
+	            }
+	            Session = future1.getSession();
+			}
+
 			if (Session != null && Session.isConnected()) {
 //				System.out.println("connected " + Session);
 				return true;
@@ -80,26 +82,27 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 	}
 	
 	public boolean disconnect(boolean force) {
-		if (Session != null) {
-			Session.close(force);
-			return force;
-		}else{
-			System.err.println("session is null !");
-		}
-		if (Connector!=null) {
-			Connector.dispose();
+		synchronized(this) {
+			if (Session != null) {
+				Session.close(force);
+				Session = null;
+			}else{
+				System.err.println("session is null !");
+			}
 		}
 		return false;
 	}
 	
 	public boolean isConnected() {
-		if (Session != null) {
-			return Session.isConnected();
+		synchronized(this) {
+			if (Session != null) {
+				return Session.isConnected();
+			}
 		}
 		return false;
 	}
 	
-	public boolean send(MessageHeader message) throws IOException {
+	synchronized public boolean send(MessageHeader message) throws IOException {
 		if (isConnected()) {
 			if (Session != null) {
 				message.Protocol = MessageHeader.PROTOCOL_SESSION_MESSAGE;
@@ -128,7 +131,7 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 //		return false;
 //	}
 	
-	protected void sendChannel(MessageHeader message, ClientChannelImpl channel) {
+	synchronized protected void sendChannel(MessageHeader message, ClientChannelImpl channel) {
 		if (Session != null) {
 			message.Protocol	= MessageHeader.PROTOCOL_CHANNEL_MESSAGE;
 			message.ChannelID	= channel.getID();
@@ -136,7 +139,7 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 		}
 	}
 	
-	public long getIdleDuration() {
+	synchronized public long getIdleDuration() {
 		return System.currentTimeMillis() - LastHartBeatTime;
 	}
 
@@ -158,52 +161,30 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 	}
 //	-----------------------------------------------------------------------------------------------------------------------
 
-	
-	
-	
+//	public void sessionCreated(IoSession session) throws Exception {}
+//	public void sessionIdle(IoSession session, IdleStatus status) throws Exception {}
+//	public void messageSent(IoSession session, Object message) throws Exception {}
 	
 	public void exceptionCaught(IoSession session, Throwable cause) throws Exception {
-//		System.err.println("exceptionCaught  : " + session);
-//		Session = session;
 		cause.printStackTrace();
 	}
-	public void sessionCreated(IoSession session) throws Exception {
-//		System.out.println("sessionIdle : " + session);
-		Session = session;
-	}
-	public void sessionIdle(IoSession session, IdleStatus status) throws Exception {
-//		System.out.println("sessionIdle : " + session);
-		Session = session;
-	}
+	
 	public void sessionOpened(IoSession session) throws Exception {
-//		System.out.println("sessionOpened : " + session);
 		LastHartBeatTime = System.currentTimeMillis();
-		Session = session;
 		Listener.connected(this);
 	}
+	
 	public void sessionClosed(IoSession session) throws Exception {
-//		System.out.println("sessionClosed : " + session);
-		Session = session;
-		Listener.disconnected(this, true, "sessionClosed : " + session);
-	}
-	public void messageSent(IoSession session, Object message) throws Exception {
-		//System.out.println("messageSent : " + message);
-		Session = session;
-//		if (message instanceof NetPackageProtocol) {
-//		}else{
-//			System.err.println("messageSent : bad message type : " + session);
-//		}
+		synchronized(this) {
+			Listener.disconnected(this, true, "sessionClosed : " + Session);
+		}
 	}
 	
-	public void messageReceived(final IoSession session, final Object message) throws Exception 
+	public void messageReceived(final IoSession iosession, final Object message) throws Exception 
 	{
-		//System.out.println("messageReceived : " + message);
-	
 		if (message instanceof MessageHeader) 
 		{
 			LastHartBeatTime = System.currentTimeMillis();
-			
-			Session = session;
 			
 			MessageHeader header = (MessageHeader)message;
 			
@@ -256,8 +237,7 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 		else
 		{
 			System.err.println("messageReceived : bad message type : " + message);
-		}	
-		
+		}
 	}
 	
 	public IoSession getIoSession()
