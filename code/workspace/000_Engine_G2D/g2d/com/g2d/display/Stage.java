@@ -49,7 +49,7 @@ public abstract class Stage extends DisplayObjectContainer
 	
 	protected Stage() {}
 	
-	public void inited(Object[] args)
+	public void inited(Canvas root, Object[] args)
 	{
 		// no args process
 	}
