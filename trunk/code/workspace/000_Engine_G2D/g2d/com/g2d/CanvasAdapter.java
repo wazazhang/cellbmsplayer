@@ -293,7 +293,7 @@ FocusListener
 		currentStage = stage;
 		currentStage.onAdded(this, stageWidth, stageHeight);
 		currentStage.startTransitionIn();
-		currentStage.inited(nextStageArgs);
+		currentStage.inited(this, nextStageArgs);
 	}
 	
 	/**
@@ -588,7 +588,7 @@ FocusListener
 		    	
 		    	System.out.println("ChangeStage -> "+ currentStage.getClass().getName());	
 		    	{
-					currentStage.inited(nextStageArgs);
+					currentStage.inited(this, nextStageArgs);
 					currentStage.onAdded(this, stageWidth, stageHeight);
 					currentStage.startTransitionIn();
 				
