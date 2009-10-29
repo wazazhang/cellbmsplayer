@@ -955,13 +955,18 @@ public abstract class SQLTableManager<K, R extends SQLTableRow<K>>
 			}
 			this.name		= name;
 		}
-		
-		void setIndex(int i){
-			index = i;
+
+		@Override
+		public String toString() {
+			return getClass().getSimpleName() + " : " + name;
 		}
 		
 		public int compare(SQLColumn a, SQLColumn b) {
 			return b.index - a.index;
+		}
+		
+		void setIndex(int i){
+			index = i;
 		}
 		
 		SQLFieldGroup getLeafTable(SQLFieldGroup table) throws Exception
