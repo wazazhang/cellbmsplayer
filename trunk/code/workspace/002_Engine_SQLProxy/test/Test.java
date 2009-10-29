@@ -246,8 +246,9 @@ public class Test extends JFrame implements ActionListener
 		static int count = 0;
 		
 		int id = count++;
+		String sql ;
 		public TestTask(String sql) {
-			super(sql);
+			this.sql = sql;
 		}
 		
 		@Override
