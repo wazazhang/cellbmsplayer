@@ -12,16 +12,15 @@ import com.mysql.jdbc.ResultSetMetaData;
 
 public abstract class SQLTask implements Runnable
 {
-	ResultSetMetaData 	meta_data;
+//	ResultSetMetaData 	meta_data;
 	SQLPool		 		pool;
 	long 				commit_time;
 	
-
-	protected String	sql;
+//	protected String	sql;
+//	public SQLTask(String sql) {
+//		this.sql = sql;
+//	}
 	
-	public SQLTask(String sql) {
-		this.sql = sql;
-	}
 	public SQLTask() {}
 	
 	final void commited(SQLPool pool) {

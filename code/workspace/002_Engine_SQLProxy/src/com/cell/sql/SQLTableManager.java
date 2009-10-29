@@ -70,7 +70,16 @@ public abstract class SQLTableManager<K, R extends SQLTableRow<K>>
 	}
 
 //	---------------------------------------------------------------------------------------------------------------------------------------------------------
-
+	
+	public SQLColumn[] getColumns(String ... columns_name)
+	{
+		SQLColumn[] columns = new SQLColumn[columns_name.length];
+		for (int i=columns.length-1; i>=0; --i) {
+			columns[i] = getColumn(columns_name[i]);
+		}
+		return columns;
+	}
+	
 	public SQLColumn getColumn(String column_name)
 	{
 		for (SQLColumn c : table_columns) {
@@ -965,11 +974,11 @@ public abstract class SQLTableManager<K, R extends SQLTableRow<K>>
 			return b.index - a.index;
 		}
 		
-		void setIndex(int i){
+		private void setIndex(int i){
 			index = i;
 		}
 		
-		SQLFieldGroup getLeafTable(SQLFieldGroup table) throws Exception
+		private SQLFieldGroup getLeafTable(SQLFieldGroup table) throws Exception
 		{
 			for (int i=1; i<fields.size(); i++) {
 				table = (SQLFieldGroup)(table.getField(fields.get(i-1)));
