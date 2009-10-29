@@ -92,6 +92,11 @@ public class ClientSessionImpl implements ClientSession
 		Listener = listener;
 	}
 	
+	@Override
+	public ClientSessionListener getListener() {
+		return Listener;
+	}
+	
 	public void send(MessageHeader message) {
 		message.Protocol 		= MessageHeader.PROTOCOL_SESSION_MESSAGE;
 		write(message);
