@@ -41,7 +41,11 @@ public abstract class Stage extends DisplayObjectContainer
 
 //	drag drop object
 	/** 当鼠标拖拽渲染时，被渲染的单位alpha度 */
-	float								drag_drop_object_alpha		= 0.75f;
+	float								drag_drop_object_alpha		= 0.5f;
+	/** 当鼠标拖拽渲染时，被渲染的单位缩放比率 */
+	float								drag_drop_scale_x 			= 1.0f, 
+										drag_drop_scale_y			= 1.0f;
+	
 	/**被拖拽的单位，该控件将覆盖显示鼠标提示*/
 	transient private InteractiveObject	mouse_drag_drop_object;
 	
@@ -360,9 +364,11 @@ public abstract class Stage extends DisplayObjectContainer
 //	----------------------------------------------------------------------------------------------------------------------
 	
 	public void setDragDropObjectAlpha(float alpha) {
-		drag_drop_object_alpha = Math.max(0.1f, alpha);
+		alpha = Math.min(1.0f, alpha);
+		alpha = Math.max(0.1f, alpha);
+		drag_drop_object_alpha = alpha;
 	}
-
+	
 	public InteractiveObject getDraggedObject() {
 		return mouse_drag_drop_object;
 	}
