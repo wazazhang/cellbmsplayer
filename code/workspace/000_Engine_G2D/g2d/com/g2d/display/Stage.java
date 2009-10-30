@@ -369,6 +369,11 @@ public abstract class Stage extends DisplayObjectContainer
 		drag_drop_object_alpha = alpha;
 	}
 	
+	public void setDragDropObjectScale(float sw, float sh) {
+		drag_drop_scale_x = sw;
+		drag_drop_scale_y = sh;
+	}
+	
 	public InteractiveObject getDraggedObject() {
 		return mouse_drag_drop_object;
 	}
