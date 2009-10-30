@@ -587,7 +587,7 @@ public class Studio extends AbstractFrame
 //	----------------------------------------------------------------------------------------------------------------
 //	resource manager
 	
-	static public class SetResource extends CellSetResource
+	static public class SetResource extends Resource
 	{
 		public SetResource(String setPath, String name)  throws Exception{
 			super(setPath, name, false);

@@ -167,7 +167,7 @@ public class ResourceManager extends CellSetResourceManager
 
 	protected CellSetResource createSet(String path) throws Exception
 	{
-		return new CellSetResource(path);
+		return new Resource(path);
 	}
 	
 	protected SceneSet createSceneSet(String set_name, String object_name)
