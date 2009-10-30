@@ -27,6 +27,7 @@ import com.cell.loader.LoadTask.LoadTaskListener;
 	<PARAM name="l_jars"				value="lordol.jar,lordolres.jar">
 	<PARAM name="l_applet"				value="lord.LordApplet">
 	<PARAM name="l_font"				value="System">
+	<PARAM name="dk"					value="gametiler">
 	
 	<PARAM name="img_bg"				value="bg.png">
 	<PARAM name="img_loading_f"			value="loading_f.png">
@@ -39,7 +40,6 @@ import com.cell.loader.LoadTask.LoadTaskListener;
 	
 	<PARAM name="load_retry_count"		value="5">
 	<PARAM name="load_timeout"			value="10000">
-	
  */
 public class LordAppletLoader extends JApplet implements LoadTaskListener
 {
@@ -47,6 +47,7 @@ public class LordAppletLoader extends JApplet implements LoadTaskListener
 	String 			l_jars;
 	String 			l_applet;
 	String			l_font;
+	String			dk;
 
 	String			img_bg;
 	String			img_loading_f;
@@ -59,6 +60,7 @@ public class LordAppletLoader extends JApplet implements LoadTaskListener
 	
 	int				load_retry_count	=5;
 	int				load_timeout		=10000;
+	
 	
 	// other
 	URL 			root_dir;
@@ -92,6 +94,7 @@ public class LordAppletLoader extends JApplet implements LoadTaskListener
 				l_jars				= getParameter("l_jars");
 				l_applet			= getParameter("l_applet");
 				l_font				= getParameter("l_font");
+				dk					= getParameter("dk", null);	
 				
 				img_bg				= getParameter("img_bg", 				"bg.png");
 				img_loading_f		= getParameter("img_loading_f",			"loading_f.png");
@@ -109,7 +112,7 @@ public class LordAppletLoader extends JApplet implements LoadTaskListener
 				load_retry_count	=5;
 				load_timeout		=10000;
 				}
-				
+
 				LoadTask.LoadRetryTime 	= load_retry_count;
 				LoadTask.LoadTimeOut	= load_timeout;
 			}
@@ -207,7 +210,7 @@ public class LordAppletLoader extends JApplet implements LoadTaskListener
 		
 		try
 		{
-			JarClassLoader jar = JarClassLoader.createJarClassLoader(datas);
+			JarClassLoader jar = JarClassLoader.createJarClassLoader(datas, dk, true);
 			Thread.currentThread().setContextClassLoader(jar);
 			Class mainclass = jar.findClass(l_applet);
 			applet_obj = mainclass.newInstance();

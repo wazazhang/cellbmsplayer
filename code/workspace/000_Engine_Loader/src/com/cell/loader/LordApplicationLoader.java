@@ -32,12 +32,12 @@ import com.cell.loader.LordAppletLoader.AppletStubAdapter;
 
 /**
  * 
-
 [main]
 update_path			=http://game.lordol.com/lordol_xc_test/update.val
 ignore_list			=loader.jar,lordol_res.jar,lordol_ressk.jar,lordol_j2se_ui_sk.jar
 l_main				=orc.g2d.Main
 l_font				=宋体
+dk					=gametiler
 
 [image]
 img_bg				=bg.png
@@ -54,8 +54,8 @@ l_text_check		=检查更新中...
 [net]
 load_retry_count	=5
 load_timeout		=10000
+*/
 
- */
 public class LordApplicationLoader extends JFrame implements WindowListener, LoadTask.LoadTaskListener
 {
 	// update.ini
@@ -76,6 +76,8 @@ public class LordApplicationLoader extends JFrame implements WindowListener, Loa
 
 	int				load_retry_count	=5;
 	int				load_timeout		=10000;
+	
+	String			dk;
 	
 	// other
 	Object 			main_obj;
@@ -144,6 +146,7 @@ public class LordApplicationLoader extends JFrame implements WindowListener, Loa
 					ignore_list			= update_ini.get("ignore_list");
 					l_main				= update_ini.get("l_main");
 					l_font				= update_ini.get("l_font");
+					dk					= update_ini.get("dk");	
 					
 					//[image]
 					img_bg				= update_ini.get("img_bg");
@@ -380,7 +383,7 @@ public class LordApplicationLoader extends JFrame implements WindowListener, Loa
 			
 			datas.addAll(local_jar_files.values());
 			
-			JarClassLoader jar = JarClassLoader.createJarClassLoader(datas, false);
+			JarClassLoader jar = JarClassLoader.createJarClassLoader(datas, dk, false);
 			Thread.currentThread().setContextClassLoader(jar);
 			Class mainclass = jar.findClass(l_main);
 			

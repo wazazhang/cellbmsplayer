@@ -20,54 +20,20 @@ import java.util.jar.JarInputStream;
  */
 public class JarClassLoader  extends ClassLoader
 {
-	public static void callMethod(Class<?> clz, String methodName, String[] args)
+	final static public JarClassLoader createJarClassLoader(Vector<byte[]> resources, String key, boolean is_sign_class) throws Exception
 	{
-		Class<?>[] arg = new Class<?>[1];
-		arg[0] = args.getClass();
-		try {
-			Method method = clz.getMethod(methodName, arg);
-			Object[] inArg = new Object[1];
-			inArg[0] = args;
-			method.invoke(clz, inArg);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	final static public void loadAllClass(byte[] jardata, boolean sign)
-	{
-		try
-		{
-			JarClassLoader classloader = new JarClassLoader();
-			classloader.is_set_ProtectionDomain = sign;
-			
-			JarInputStream jar = new JarInputStream(new ByteArrayInputStream(jardata));
-			
-			JarEntry entry;
-			while ((entry = jar.getNextJarEntry()) != null)
-			{
-				if (entry.getName().toLowerCase().endsWith(".class")) 
-				{
-					String name = entry.getName().substring(0, entry.getName().length() - ".class".length()).replace('/', '.');
-					byte[] data = getResourceData(jar);
-					classloader.Classes.put(name, data);
-					classloader.findClass(name);
-				} 
+		if (key != null) {
+			Vector<byte[]> resources_enc = new Vector<byte[]>(resources.size());
+			for (byte[] resource : resources) {
+				CC enc = new CC(key);
+				resources_enc.add(enc.dd(resource));
+				System.out.println("decode jar : " + resource.length + " bytes");
 			}
+			resources = resources_enc;
 		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	final static public JarClassLoader createJarClassLoader(Vector<byte[]> resources) throws IOException
-	{
-		return createJarClassLoader(resources, true);
-	}
-	
-	final static public JarClassLoader createJarClassLoader(Vector<byte[]> resources, boolean is_sign_class) throws IOException
-	{
+		
 		JarClassLoader classloader = new JarClassLoader();
+		
 		classloader.is_set_ProtectionDomain = is_sign_class;
 			
 		for (byte[] resource : resources)
@@ -119,6 +85,46 @@ public class JarClassLoader  extends ClassLoader
 		}
 		return data.toByteArray();
 	}
+
+//	final static public void loadAllClass(byte[] jardata, boolean sign)
+//	{
+//		try
+//		{
+//			JarClassLoader classloader = new JarClassLoader();
+//			classloader.is_set_ProtectionDomain = sign;
+//			
+//			JarInputStream jar = new JarInputStream(new ByteArrayInputStream(jardata));
+//			
+//			JarEntry entry;
+//			while ((entry = jar.getNextJarEntry()) != null)
+//			{
+//				if (entry.getName().toLowerCase().endsWith(".class")) 
+//				{
+//					String name = entry.getName().substring(0, entry.getName().length() - ".class".length()).replace('/', '.');
+//					byte[] data = getResourceData(jar);
+//					classloader.Classes.put(name, data);
+//					classloader.findClass(name);
+//				} 
+//			}
+//		}
+//		catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
+
+	public static void callMethod(Class<?> clz, String methodName, String[] args)
+	{
+		Class<?>[] arg = new Class<?>[1];
+		arg[0] = args.getClass();
+		try {
+			Method method = clz.getMethod(methodName, arg);
+			Object[] inArg = new Object[1];
+			inArg[0] = args;
+			method.invoke(clz, inArg);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
 //	----------------------------------------------------------------------------------------------------------------------------------
 	// 
@@ -131,6 +137,7 @@ public class JarClassLoader  extends ClassLoader
 	//class资源及实体缓存
 	//private ArrayList<String> classNames = new ArrayList<String>();
 	
+	@SuppressWarnings("unchecked")
 	public Class<?> findClass(String className) throws ClassNotFoundException 
 	{
 		try{
