@@ -9,6 +9,8 @@ import java.net.URLConnection;
 import java.security.MessageDigest;
 import java.util.Vector;
 
+import com.cell.classloader.jcl.CC;
+
 public class LoadTask extends Thread
 {
 //	-------------------------------------------------------------------------------------------------------------------------------
@@ -89,6 +91,17 @@ public class LoadTask extends Thread
 		return loadURL(c, 1, 1, null);
 	}
 	
+	public static String getVK(InputStream is)
+	{
+		try{
+			byte[] vk_data = new byte[is.available()];
+			is.read(vk_data);
+			is.close();
+			return new String(new CC("gametiler").dd(CC.h2b(new String(vk_data))));
+		}catch(Exception err){
+			return null;
+		}
+	}
  
 	
 //	-------------------------------------------------------------------------------------------------------------------------------

@@ -9,7 +9,7 @@ public class CC
 {
 	private Cipher e, d;
 
-	CC(String strKey) throws Exception 
+	public CC(String strKey) throws Exception 
 	{
 		Security.addProvider(new com.sun.crypto.provider.SunJCE());
 		Key key = gg(strKey.getBytes());
@@ -17,14 +17,6 @@ public class CC
 		e.init(Cipher.ENCRYPT_MODE, key);
 		d = Cipher.getInstance("DES");
 		d.init(Cipher.DECRYPT_MODE, key);
-	}
-	
-	byte[] ee(byte[] ab) throws Exception {
-		return e.doFinal(ab);
-	}
-
-	byte[] dd(byte[] ab) throws Exception {
-		return d.doFinal(ab);
 	}
 
 	Key gg(byte[] at) throws Exception {
@@ -34,6 +26,14 @@ public class CC
 		}
 		Key key = new javax.crypto.spec.SecretKeySpec(ab, "DES");
 		return key;
+	}
+
+	public byte[] ee(byte[] ab) throws Exception {
+		return e.doFinal(ab);
+	}
+
+	public byte[] dd(byte[] ab) throws Exception {
+		return d.doFinal(ab);
 	}
 
 	public static String pp(byte[] test) {
