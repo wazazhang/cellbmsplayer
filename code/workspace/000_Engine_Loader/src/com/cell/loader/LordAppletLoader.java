@@ -9,12 +9,14 @@ import java.awt.GraphicsConfiguration;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Vector;
 
 import javax.swing.JApplet;
 
 
+import com.cell.classloader.jcl.CC;
 import com.cell.classloader.jcl.JarClassLoader;
 import com.cell.loader.LoadTask.LoadTaskListener;
 
@@ -27,7 +29,6 @@ import com.cell.loader.LoadTask.LoadTaskListener;
 	<PARAM name="l_jars"				value="lordol.jar,lordolres.jar">
 	<PARAM name="l_applet"				value="lord.LordApplet">
 	<PARAM name="l_font"				value="System">
-	<PARAM name="dk"					value="gametiler">
 	
 	<PARAM name="img_bg"				value="bg.png">
 	<PARAM name="img_loading_f"			value="loading_f.png">
@@ -94,7 +95,6 @@ public class LordAppletLoader extends JApplet implements LoadTaskListener
 				l_jars				= getParameter("l_jars");
 				l_applet			= getParameter("l_applet");
 				l_font				= getParameter("l_font");
-				dk					= getParameter("dk", null);	
 				
 				img_bg				= getParameter("img_bg", 				"bg.png");
 				img_loading_f		= getParameter("img_loading_f",			"loading_f.png");
@@ -113,6 +113,16 @@ public class LordAppletLoader extends JApplet implements LoadTaskListener
 				load_timeout		=10000;
 				}
 
+				try{
+					InputStream is = getClass().getClassLoader().getResourceAsStream("vk.enc");
+					byte[] vk_data = new byte[is.available()];
+					is.read(vk_data);
+					is.close();
+					dk = new String(CC.h2b(new String(vk_data)));
+				}catch(Exception err){
+					dk = null;
+				}
+				
 				LoadTask.LoadRetryTime 	= load_retry_count;
 				LoadTask.LoadTimeOut	= load_timeout;
 			}
