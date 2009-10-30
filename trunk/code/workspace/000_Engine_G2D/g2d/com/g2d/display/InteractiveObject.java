@@ -382,9 +382,12 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 		AffineTransform	transfrom	= g.getTransform();
 		Composite		composite	= g.getComposite();
 		{
-			int tx = stage.mouse_x - (getWidth()>>1);
-			int ty = stage.mouse_y - (getHeight()>>1);
+			float tx = stage.mouse_x - (getWidth()>>1)  * stage.drag_drop_scale_x;
+			float ty = stage.mouse_y - (getHeight()>>1) * stage.drag_drop_scale_y;
 			g.translate(tx, ty);
+
+			g.scale(stage.drag_drop_scale_x, stage.drag_drop_scale_y);
+			
 			setAlpha(g, stage.drag_drop_object_alpha);
 			
 			this.renderBefore(g);
