@@ -100,6 +100,8 @@ public class LordApplicationLoader extends JFrame implements WindowListener, Loa
 		this.setLocation(
 				Toolkit.getDefaultToolkit().getScreenSize().width/2 - getWidth()/2,
 				Toolkit.getDefaultToolkit().getScreenSize().height/2 - getHeight()/2);
+
+		dk = LoadTask.getVK(getClass().getResourceAsStream("vk.enc"));
 		
 		paint_canvas = new Canvas(){
 			@Override
@@ -167,16 +169,6 @@ public class LordApplicationLoader extends JFrame implements WindowListener, Loa
 					}catch (Exception e) {
 					load_retry_count	= 5;
 					load_timeout		= 10000;
-					}
-					
-					try{
-						InputStream is = getClass().getClassLoader().getResourceAsStream("vk.enc");
-						byte[] vk_data = new byte[is.available()];
-						is.read(vk_data);
-						is.close();
-						dk = new String(CC.h2b(new String(vk_data)));
-					}catch(Exception err){
-						dk = null;
 					}
 					
 					LoadTask.LoadRetryTime 	= load_retry_count;

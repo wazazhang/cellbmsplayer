@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <jardesc>
-    <jar path="000_Engine_Loader/loader.jar"/>
+    <jar path="000_Engine_Loader/signjar/loader.jar"/>
     <options buildIfNeeded="true" compress="true" descriptionLocation="/000_Engine_Loader/loader.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="true" overwrite="true" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
     <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
     <selectedProjects/>

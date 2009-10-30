@@ -86,6 +86,8 @@ public class LordAppletLoader extends JApplet implements LoadTaskListener
 	{
 		try
 		{
+			dk = LoadTask.getVK(getClass().getResourceAsStream("vk.enc"));
+			
 			paint_task = new PaintTask(this);
 			
 			root_dir 			= new URL(getCodeBase().toString());
@@ -113,16 +115,6 @@ public class LordAppletLoader extends JApplet implements LoadTaskListener
 				load_timeout		=10000;
 				}
 
-				try{
-					InputStream is = getClass().getClassLoader().getResourceAsStream("vk.enc");
-					byte[] vk_data = new byte[is.available()];
-					is.read(vk_data);
-					is.close();
-					dk = new String(CC.h2b(new String(vk_data)));
-				}catch(Exception err){
-					dk = null;
-				}
-				
 				LoadTask.LoadRetryTime 	= load_retry_count;
 				LoadTask.LoadTimeOut	= load_timeout;
 			}
