@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.net.URL;
 import java.net.URLConnection;
@@ -27,6 +28,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 
+import com.cell.classloader.jcl.CC;
 import com.cell.classloader.jcl.JarClassLoader;
 import com.cell.loader.LordAppletLoader.AppletStubAdapter;
 
@@ -37,7 +39,6 @@ update_path			=http://game.lordol.com/lordol_xc_test/update.val
 ignore_list			=loader.jar,lordol_res.jar,lordol_ressk.jar,lordol_j2se_ui_sk.jar
 l_main				=orc.g2d.Main
 l_font				=宋体
-dk					=gametiler
 
 [image]
 img_bg				=bg.png
@@ -146,7 +147,6 @@ public class LordApplicationLoader extends JFrame implements WindowListener, Loa
 					ignore_list			= update_ini.get("ignore_list");
 					l_main				= update_ini.get("l_main");
 					l_font				= update_ini.get("l_font");
-					dk					= update_ini.get("dk");	
 					
 					//[image]
 					img_bg				= update_ini.get("img_bg");
@@ -167,6 +167,16 @@ public class LordApplicationLoader extends JFrame implements WindowListener, Loa
 					}catch (Exception e) {
 					load_retry_count	= 5;
 					load_timeout		= 10000;
+					}
+					
+					try{
+						InputStream is = getClass().getClassLoader().getResourceAsStream("vk.enc");
+						byte[] vk_data = new byte[is.available()];
+						is.read(vk_data);
+						is.close();
+						dk = new String(CC.h2b(new String(vk_data)));
+					}catch(Exception err){
+						dk = null;
 					}
 					
 					LoadTask.LoadRetryTime 	= load_retry_count;
