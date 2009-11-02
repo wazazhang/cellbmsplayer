@@ -54,15 +54,17 @@ public class JALPlayer implements IPlayer, Comparable<JALPlayer>
 	
 	@Override
 	public void setSound(ISound sound) {
-		al_sound = (JALSound)sound;
-		if (source!=null) {
-			al.alSourcei(source[0], AL.AL_BUFFER,	al_sound.buffer[0]);
-			// Do another error check
-			if (al.alGetError() != AL.AL_NO_ERROR) {
-				System.err.println("Error setting up OpenAL source : " + al_sound);
-				return;
+		if (source!=null && sound instanceof JALSound) {
+			al_sound = (JALSound)sound;
+			if (al_sound.buffer != null) {
+				al.alSourcei(source[0], AL.AL_BUFFER,	al_sound.buffer[0]);
+				// Do another error check
+				if (al.alGetError() != AL.AL_NO_ERROR) {
+					System.err.println("Error setting up OpenAL source : " + al_sound);
+					return;
+				}
+				last_bind_time = System.currentTimeMillis();
 			}
-			last_bind_time = System.currentTimeMillis();
 		}
 	}
 
@@ -99,9 +101,10 @@ public class JALPlayer implements IPlayer, Comparable<JALPlayer>
 	}
 	
 	public void dispose() {
+		stop();
 		if (source!=null) {
-			al.alDeleteSources(1, source, 0);
-			System.out.println("alDeleteSources : ");
+			//al.alDeleteSources(1, source, 0);
+			//System.out.println("alDeleteSources : ");
 		}
 	}
 

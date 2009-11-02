@@ -202,18 +202,14 @@ public class JALSoundManager extends SoundManager
 			throw new IOException("InputStream is null !");
 		}
 		
-		PhysicalOggStream os = new BasicStream(input);
-		
-		if (os == null) {
-			throw new IOException("Can not create sound !");
-		}
-		
+		OggInputStream ogg_stream = new OggInputStream(input);
 		try
 		{
-			AudioFormat	audioFormat	= null;
 			ByteArrayOutputStream	baos		= new ByteArrayOutputStream(10240);
+
+			AudioFormat	audioFormat	= null;
 			
-			for (Object los : os.getLogicalStreams()) 
+			for (Object los : ogg_stream.getLogicalStreams()) 
 			{
 				LogicalOggStream		loStream	= (LogicalOggStream)los;
 				VorbisStream			vStream		= new VorbisStream(loStream);
@@ -253,7 +249,7 @@ public class JALSoundManager extends SoundManager
 		}
 		finally
 		{
-			os.close();
+			ogg_stream.close();
 		}
 	}
 	

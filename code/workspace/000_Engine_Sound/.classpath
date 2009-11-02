@@ -14,7 +14,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="/000_Engine_Core/lib/j-ogg/j-ogg-oggd.jar" sourcepath="/000_Engine_Core/lib/j-ogg/j-ogg.zip"/>
-	<classpathentry kind="lib" path="/000_Engine_Core/lib/j-ogg/j-ogg-vorbisd.jar"/>
+	<classpathentry kind="lib" path="/000_Engine_Core/lib/j-ogg/j-ogg-vorbisd.jar" sourcepath="/000_Engine_Core/lib/j-ogg/j-ogg.zip"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/000_Engine_Core"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
