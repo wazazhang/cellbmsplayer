@@ -2,7 +2,7 @@ package com.cell.sound;
 
 public interface IPlayer 
 {
-	public void 	play();
+	public void 	play(boolean looping);
 	
 	public void		pause();
 	

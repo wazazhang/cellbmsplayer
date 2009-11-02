@@ -17,8 +17,8 @@ public class NullPlayer implements IPlayer
 	public ISound getSound() {
 		return sound;
 	}
-	
-	public void play() {}
+
+	public void play(boolean looping) {}
 	public void pause() {}
 	public void stop() {}
 
