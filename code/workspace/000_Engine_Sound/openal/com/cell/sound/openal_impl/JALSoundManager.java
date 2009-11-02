@@ -1,43 +1,27 @@
 package com.cell.sound.openal_impl;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.RandomAccessFile;
-import java.net.URL;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
-
-import javax.sound.sampled.AudioFormat;
 
 import net.java.games.joal.AL;
 import net.java.games.joal.ALC;
 import net.java.games.joal.ALCcontext;
 import net.java.games.joal.ALCdevice;
-import net.java.games.joal.ALConstants;
-import net.java.games.joal.ALException;
 import net.java.games.joal.ALFactory;
 import net.java.games.joal.util.ALut;
-import net.java.games.sound3d.AudioSystem3D;
 
 import com.cell.CIO;
-import com.cell.CUtil;
 import com.cell.sound.IPlayer;
 import com.cell.sound.ISound;
+import com.cell.sound.SoundInfo;
 import com.cell.sound.SoundManager;
+import com.cell.sound.decoder.ogg_impl.OggDecoder;
 import com.cell.sound.mute_impl.NullPlayer;
 import com.cell.sound.mute_impl.NullSound;
 
-import de.jarnbjo.ogg.BasicStream;
-import de.jarnbjo.ogg.EndOfOggStreamException;
-import de.jarnbjo.ogg.FileStream;
-import de.jarnbjo.ogg.LogicalOggStream;
-import de.jarnbjo.ogg.PhysicalOggStream;
-import de.jarnbjo.ogg.UncachedUrlStream;
-import de.jarnbjo.vorbis.IdentificationHeader;
-import de.jarnbjo.vorbis.VorbisStream;
 
 public class JALSoundManager extends SoundManager
 {  
@@ -64,6 +48,8 @@ public class JALSoundManager extends SoundManager
 	ArrayList<JALPlayer>	players = new ArrayList<JALPlayer>(255);
 	
 
+//	--------------------------------------------------------------------------------------------------
+	OggDecoder ogg_decoder = new OggDecoder();
 
 //	--------------------------------------------------------------------------------------------------
 	
@@ -129,21 +115,24 @@ public class JALSoundManager extends SoundManager
 
 //	--------------------------------------------------------------------------------------------------
 	
-	@Override
-	public ISound createSound(String resource, InputStream is) {
+	public SoundInfo createSoundInfo(String resource) {
 		try {
-			return new JALSound(this, resource, is);
+			String name = resource.toLowerCase();
+			if (name.endsWith(".wav")) {
+				return initWav(resource, CIO.loadStream(resource));
+			} else if (name.endsWith(".ogg")) {
+				return initOgg(resource, CIO.loadStream(resource));
+			}
 		} catch (Throwable err) {
 			err.printStackTrace();
 		}
-		return new NullSound();
+		return null;
 	}
 	
 	@Override
-	public ISound createSound(String resource) 
-	{
+	public ISound createSound(SoundInfo info) {
 		try {
-			return new JALSound(this, resource);
+			return new JALSound(this, info);
 		} catch (Throwable err) {
 			err.printStackTrace();
 		}
@@ -172,85 +161,60 @@ public class JALSoundManager extends SoundManager
 //	--------------------------------------------------------------------------------------------------
 	
 
-	static void initWav(
-			InputStream 	input, 
-			int[] 			out_format, 
-			int[] 			out_size, 
-			ByteBuffer[] 	out_data, 
-			int[] 			out_freq, 
-			int[] 			out_loop) throws IOException
+	SoundInfo initWav(String resource, InputStream input) throws Exception
 	{
 		if (input == null) {
 			throw new IOException("InputStream is null !");
 		}
+		int[] 			out_format	= new int[1];
+		int[] 			out_size  	= new int[1];
+		ByteBuffer[] 	out_data	= new ByteBuffer[1];
+		int[] 			out_freq	= new int[1];
+		int[] 			out_loop	= new int[1];
 		// Load wav data into a buffer.
 		ALut.alutLoadWAVFile(input, out_format, out_data, out_size, out_freq, out_loop);
 		if (out_data[0] == null) {
 			throw new IOException("Error loading WAV file !");
 		}
+		
+		SoundInfo info = new SoundInfo();
+		info.data 		= out_data[0];
+		info.size 		= out_size[0];
+		info.frame_rate = out_freq[0];
+		info.resource	= resource;
+		info.comment	= "ALut.alutLoadWAVFile(input, out_format, out_data, out_size, out_freq, out_loop);";
+		
+		switch(out_format[0])
+		{
+		case AL.AL_FORMAT_MONO16:
+		case AL.AL_FORMAT_STEREO16: info.bit_length = 16;
+			break;
+		case AL.AL_FORMAT_MONO8:
+		case AL.AL_FORMAT_STEREO8: info.bit_length = 8;
+			break;
+		}
+		
+		switch(out_format[0])
+		{
+		case AL.AL_FORMAT_MONO8:
+		case AL.AL_FORMAT_MONO16: info.channels = 1;
+			break;
+		case AL.AL_FORMAT_STEREO16:
+		case AL.AL_FORMAT_STEREO8: info.channels = 2;
+			break;
+		}
+		
+		return info;
 	}
 
-	static void initOgg(
-			InputStream 	input, 
-			int[] 			out_format, 
-			int[] 			out_size, 
-			ByteBuffer[] 	out_data, 
-			int[] 			out_freq, 
-			int[] 			out_loop) throws IOException
+	SoundInfo initOgg(String resource, InputStream input) throws Exception
 	{
 		if (input == null) {
 			throw new IOException("InputStream is null !");
 		}
-		
-		OggInputStream ogg_stream = new OggInputStream(input);
-		try
-		{
-			ByteArrayOutputStream	baos		= new ByteArrayOutputStream(10240);
-
-			AudioFormat	audioFormat	= null;
-			
-			for (Object los : ogg_stream.getLogicalStreams()) 
-			{
-				LogicalOggStream		loStream	= (LogicalOggStream)los;
-				VorbisStream			vStream		= new VorbisStream(loStream);
-				IdentificationHeader	vStreamHdr	= vStream.getIdentificationHeader();
-				audioFormat	= new AudioFormat(
-						vStreamHdr.getSampleRate(), 16, 
-						vStreamHdr.getChannels(),
-						true, true);
-				try {
-					byte t = 0;
-					byte[] data = new byte[2];
-					while(true) {
-						vStream.readPcm(data, 0, data.length);
-						t = data[0];
-						data[0] = data[1];
-						data[1] = t;
-						baos.write(data);
-					}
-				}
-				catch (EndOfOggStreamException e) {
-					// ignore 
-				}
-				finally{
-					vStream.close();
-					loStream.close();
-				}
-			}
-			
-		    if (audioFormat.getChannels() == 1)
-			    out_format[0]	= AL.AL_FORMAT_MONO16;
-			else
-				out_format[0]	= AL.AL_FORMAT_STEREO16;
-		    
-		    out_data[0]			= ByteBuffer.wrap(baos.toByteArray());
-		    out_size[0]			= baos.size();
-		    out_freq[0]			= (int)audioFormat.getFrameRate();
-		}
-		finally
-		{
-			ogg_stream.close();
-		}
+		SoundInfo info = ogg_decoder.decode(input);
+		info.resource = resource;
+		return info;
 	}
 	
 	
