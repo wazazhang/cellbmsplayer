@@ -6,58 +6,99 @@ import com.cell.sound.ISound;
 import com.cell.sound.SoundInfo;
 import com.cell.sound.SoundManager;
 
-public class SoundPlayer implements IPlayer
+public class SoundPlayer implements IPlayer, Runnable
 {
-	final SoundInfo info;
-	final ISound	sound;
-	final IPlayer	player;
+	final Thread		stream_thread;
+	final SoundManager	manager; 
+	final String		resource;
+	
+	private SoundInfo	info;
+	private ISound		sound;
+	private IPlayer		player;
 	
 	public SoundPlayer(String resource) 
 	{
-		this(SoundManager.getSoundManager(), SoundManager.getSoundManager().createSoundInfo(resource));
-	}
-
-	public SoundPlayer(SoundManager manager, SoundInfo info) 
-	{
-		this.info	= info;
-		this.sound	= manager.createSound(info);
-		this.player	= manager.createPlayer();
-		this.player.setSound(sound);
+		this.manager	= SoundManager.getSoundManager();
+		this.resource	= resource;
+		this.stream_thread = new Thread(this);
 	}
 	
 	@Override
-	public void dispose() {
-		this.sound.dispose();
-		this.player.dispose();
+	public void run() {
+		boolean play = false;
+		synchronized(this) {
+			if (this.info == null) {
+				this.info	= manager.createSoundInfo(resource);
+				this.sound	= manager.createSound(info);
+				this.player	= manager.createPlayer();
+				this.player.setSound(sound);
+				play = true;
+			}
+		}
+		if (play) {
+			this.player.play();
+		}
 	}
 	
 	@Override
-	public ISound getSound() {
+	synchronized public void dispose() {
+		if (this.sound!=null) {
+			this.sound.dispose();
+		}
+		if (this.player!=null) {
+			this.player.dispose();
+		}
+	}
+	
+	@Override
+	synchronized public ISound getSound() {
 		return sound;
 	}
 	
 	@Override
-	public boolean isPlaying() {
-		return player.isPlaying();
+	synchronized public boolean isPlaying() {
+		if (this.player!=null) {
+			return player.isPlaying();
+		}
+		return false;
 	}
 	
 	@Override
-	public void pause() {
-		player.pause();
+	synchronized public void pause() {
+		if (this.player!=null) {
+			player.pause();
+		}
 	}
 	
 	@Override
-	public void play() {
-		player.play();
+	synchronized public void play() {
+		if (this.info == null) {
+			stream_thread.start();
+		}
+		else if (this.player!=null) {
+			player.play();
+		}
 	}
 
+	synchronized public void play(boolean immediately) {
+		if (this.info == null) {
+			stream_thread.run();
+		}
+		else if (this.player!=null) {
+			player.play();
+		}
+	}
+
+	
 	@Override
-	public void stop() {
-		player.stop();
+	synchronized public void stop() {
+		if (this.player!=null) {
+			player.stop();
+		}
 	}
 	
 	@Override
-	public void setSound(ISound sound) {
+	synchronized public void setSound(ISound sound) {
 		throw new NotImplementedException();
 	}
 	
