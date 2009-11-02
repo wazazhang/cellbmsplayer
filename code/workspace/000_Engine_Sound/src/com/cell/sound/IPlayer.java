@@ -10,6 +10,7 @@ public interface IPlayer
 	
 	public boolean 	isPlaying();
 	
+	public void 	dispose() ;
 	
 	public void		setSound(ISound sound);
 	

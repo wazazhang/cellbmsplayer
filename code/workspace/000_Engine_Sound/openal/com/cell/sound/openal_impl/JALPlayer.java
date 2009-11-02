@@ -1,4 +1,4 @@
-package com.cell.sound.openal;
+package com.cell.sound.openal_impl;
 
 import com.cell.sound.IPlayer;
 import com.cell.sound.ISound;
@@ -59,7 +59,7 @@ public class JALPlayer implements IPlayer, Comparable<JALPlayer>
 			al.alSourcei(source[0], AL.AL_BUFFER,	al_sound.buffer[0]);
 			// Do another error check
 			if (al.alGetError() != AL.AL_NO_ERROR) {
-				System.err.println("Error setting up OpenAL source : " + al_sound.sound_name);
+				System.err.println("Error setting up OpenAL source : " + al_sound);
 				return;
 			}
 			last_bind_time = System.currentTimeMillis();
@@ -72,7 +72,7 @@ public class JALPlayer implements IPlayer, Comparable<JALPlayer>
 	}
 	
 	public void play() {
-		if (source!=null) {
+		if (source!=null && al_sound!=null) {
 			al.alSourcePlay(source[0]);
 		}
 	}
