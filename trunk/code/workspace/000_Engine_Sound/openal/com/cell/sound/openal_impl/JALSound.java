@@ -1,5 +1,6 @@
 package com.cell.sound.openal_impl;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
@@ -15,6 +16,7 @@ import net.java.games.joal.util.ALut;
 
 import com.cell.CIO;
 import com.cell.CObject;
+import com.cell.CUtil;
 import com.cell.j2se.CAppBridge;
 import com.cell.sound.ISound;
 
@@ -67,7 +69,7 @@ public class JALSound implements ISound
 				}
 			}
 			catch(Exception err) {
-				System.err.println("Init error !" + toString());
+				System.err.println("Init error : " + toString());
 				err.printStackTrace();
 			}
 			
