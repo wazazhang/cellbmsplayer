@@ -13,7 +13,7 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="000_Engine_Core/lib/JavaOpenAL/joal-1.1.2-windows-i586/joal-1.1.2-windows-i586/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/000_Engine_Core/lib/j-ogg/j-ogg-oggd.jar"/>
+	<classpathentry kind="lib" path="/000_Engine_Core/lib/j-ogg/j-ogg-oggd.jar" sourcepath="/000_Engine_Core/lib/j-ogg/j-ogg.zip"/>
 	<classpathentry kind="lib" path="/000_Engine_Core/lib/j-ogg/j-ogg-vorbisd.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/000_Engine_Core"/>
 	<classpathentry kind="output" path="bin"/>
