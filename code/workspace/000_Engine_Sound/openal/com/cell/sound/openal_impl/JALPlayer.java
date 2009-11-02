@@ -72,10 +72,11 @@ public class JALPlayer implements IPlayer, Comparable<JALPlayer>
 	public ISound getSound() {
 		return al_sound;
 	}
-	
-	public void play() {
+	@Override
+	public void play(boolean loop) {
 		if (source!=null && al_sound!=null) {
 			al.alSourcePlay(source[0]);
+			al.alSourcei(source[0], AL.AL_LOOPING,	loop?1:0);
 		}
 	}
 	public void pause() {

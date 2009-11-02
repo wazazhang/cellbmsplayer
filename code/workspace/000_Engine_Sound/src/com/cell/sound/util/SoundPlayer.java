@@ -15,6 +15,7 @@ public class SoundPlayer implements IPlayer, Runnable
 	private SoundInfo	info;
 	private ISound		sound;
 	private IPlayer		player;
+	private boolean		looping;
 	
 	public SoundPlayer(String resource) 
 	{
@@ -36,7 +37,7 @@ public class SoundPlayer implements IPlayer, Runnable
 			}
 		}
 		if (play) {
-			this.player.play();
+			this.player.play(looping);
 		}
 	}
 	
@@ -71,21 +72,23 @@ public class SoundPlayer implements IPlayer, Runnable
 	}
 	
 	@Override
-	synchronized public void play() {
+	synchronized public void play(boolean looping) {
+		this.looping = looping;
 		if (this.info == null) {
 			stream_thread.start();
 		}
 		else if (this.player!=null) {
-			player.play();
+			player.play(looping);
 		}
 	}
-
-	synchronized public void play(boolean immediately) {
+	
+	synchronized public void playNow(boolean looping) {
+		this.looping = looping;
 		if (this.info == null) {
 			stream_thread.run();
 		}
 		else if (this.player!=null) {
-			player.play();
+			player.play(looping);
 		}
 	}
 
