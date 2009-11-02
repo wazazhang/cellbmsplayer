@@ -3,22 +3,24 @@ package com.cell.sound.util;
 import com.cell.exception.NotImplementedException;
 import com.cell.sound.IPlayer;
 import com.cell.sound.ISound;
+import com.cell.sound.SoundInfo;
 import com.cell.sound.SoundManager;
 
 public class SoundPlayer implements IPlayer
 {
-	final ISound sound;
-	
-	final IPlayer player;
+	final SoundInfo info;
+	final ISound	sound;
+	final IPlayer	player;
 	
 	public SoundPlayer(String resource) 
 	{
-		this(SoundManager.getSoundManager(), resource);
+		this(SoundManager.getSoundManager(), SoundManager.getSoundManager().createSoundInfo(resource));
 	}
-	
-	public SoundPlayer(SoundManager manager, String resource) 
+
+	public SoundPlayer(SoundManager manager, SoundInfo info) 
 	{
-		this.sound	= manager.createSound(resource);
+		this.info	= info;
+		this.sound	= manager.createSound(info);
 		this.player	= manager.createPlayer();
 		this.player.setSound(sound);
 	}

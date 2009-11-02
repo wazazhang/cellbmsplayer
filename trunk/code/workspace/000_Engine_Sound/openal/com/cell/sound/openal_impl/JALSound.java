@@ -1,76 +1,45 @@
 package com.cell.sound.openal_impl;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.InputStream;
-import java.io.RandomAccessFile;
-import java.net.URL;
 import java.nio.ByteBuffer;
 
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-
 import net.java.games.joal.AL;
-import net.java.games.joal.util.ALut;
 
 import com.cell.CIO;
-import com.cell.CObject;
-import com.cell.CUtil;
-import com.cell.j2se.CAppBridge;
 import com.cell.sound.ISound;
-
-import de.jarnbjo.ogg.BasicStream;
-import de.jarnbjo.ogg.CachedUrlStream;
-import de.jarnbjo.ogg.EndOfOggStreamException;
-import de.jarnbjo.ogg.FileStream;
-import de.jarnbjo.ogg.LogicalOggStream;
-import de.jarnbjo.ogg.PhysicalOggStream;
-import de.jarnbjo.ogg.UncachedUrlStream;
-import de.jarnbjo.vorbis.IdentificationHeader;
-import de.jarnbjo.vorbis.VorbisStream;
+import com.cell.sound.SoundInfo;
 
 public class JALSound implements ISound
 {
 	final JALSoundManager	factory;
 	final AL 				al;
+	final SoundInfo			info;
 	
 	// Buffers hold sound data.
 	int[] 			buffer;
-	String			resource;
 	
-	int[] 			format 	= new int[1];
-	int[] 			size 	= new int[1];
-	ByteBuffer[] 	data 	= new ByteBuffer[1];
-	int[] 			freq 	= new int[1];
-	int[] 			loop	= new int[1];
-
-	
-	JALSound(JALSoundManager factory, String resource)
-	{
-		this(factory, resource, CIO.loadStream(resource));
-	}
-	
-	JALSound(JALSoundManager factory, String name, InputStream is)
+	JALSound(JALSoundManager factory, SoundInfo info)
 	{
 		this.factory	= factory;
 		this.al			= factory.al;
-		this.resource	= name;
-		name 			= name.toLowerCase();
+		this.info		= info;
 		
 		synchronized(al)
 		{
-			try{
-				if (name.endsWith(".wav")) {
-					JALSoundManager.initWav(is, format, size, data, freq, loop);
-				}
-				else if (name.endsWith(".ogg")) {
-					JALSoundManager.initOgg(is, format, size, data, freq, loop);
+			int format = AL.AL_FORMAT_MONO16;
+			if (info.bit_length == 16) {
+				if (info.channels==1) {
+					format = AL.AL_FORMAT_MONO16;
+				} else {
+					format = AL.AL_FORMAT_STEREO16;
 				}
 			}
-			catch(Exception err) {
-				System.err.println("Init error : " + toString());
-				err.printStackTrace();
+			else if (info.bit_length == 8) {
+				if (info.channels==1) {
+					format = AL.AL_FORMAT_MONO8;
+				} else {
+					format = AL.AL_FORMAT_STEREO8;
+				}
 			}
 			
 			// variables to load into
@@ -83,8 +52,8 @@ public class JALSound implements ISound
 					System.err.println("Error generating OpenAL buffers : " + toString());
 					return;
 				}
-
-				al.alBufferData(buffer[0], format[0], data[0], size[0], freq[0]);
+				
+				al.alBufferData(buffer[0], format, info.data, info.size, info.frame_rate);
 
 				// Do another error check and return.
 				if (al.alGetError() != AL.AL_NO_ERROR) {
@@ -101,13 +70,12 @@ public class JALSound implements ISound
 	public void dispose() {
 		if (buffer!=null) {
 			al.alDeleteBuffers(1, buffer, 0);
-			System.out.println("alDeleteBuffers : ");
 		}
 	}
 	
 	@Override
 	public String toString() {
-		return getClass().getName() + " : " + resource;
+		return getClass().getName() + " : " + info.resource;
 	}
 	
 	protected void finalize() throws Throwable {

@@ -2,6 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="openal"/>
+	<classpathentry kind="src" path="ogg"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="lib" path="/000_Engine_Core/lib/JavaOpenAL/joal-1.1.2-windows-i586/joal-1.1.2-windows-i586/lib/gluegen-rt.jar">
 		<attributes>
@@ -13,8 +14,6 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="000_Engine_Core/lib/JavaOpenAL/joal-1.1.2-windows-i586/joal-1.1.2-windows-i586/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/000_Engine_Core/lib/j-ogg/j-ogg-oggd.jar" sourcepath="/000_Engine_Core/lib/j-ogg/j-ogg.zip"/>
-	<classpathentry kind="lib" path="/000_Engine_Core/lib/j-ogg/j-ogg-vorbisd.jar" sourcepath="/000_Engine_Core/lib/j-ogg/j-ogg.zip"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/000_Engine_Core"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
