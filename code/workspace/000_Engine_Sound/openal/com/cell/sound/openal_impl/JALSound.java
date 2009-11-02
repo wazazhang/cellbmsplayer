@@ -44,12 +44,12 @@ public class JALSound implements ISound
 	int[] 			loop	= new int[1];
 
 	
-	public JALSound(JALSoundManager factory, String resource)
+	JALSound(JALSoundManager factory, String resource)
 	{
 		this(factory, resource, CIO.loadStream(resource));
 	}
 	
-	public JALSound(JALSoundManager factory, String name, InputStream is)
+	JALSound(JALSoundManager factory, String name, InputStream is)
 	{
 		this.factory	= factory;
 		this.al			= factory.al;
