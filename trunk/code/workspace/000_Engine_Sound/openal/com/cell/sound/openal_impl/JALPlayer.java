@@ -17,7 +17,7 @@ public class JALPlayer implements IPlayer, Comparable<JALPlayer>
 	
 	public long 		last_bind_time = 0;
 	
-	public JALPlayer(AL al) throws Exception
+	JALPlayer(AL al) throws Exception
 	{
 		this.al = al;
 
