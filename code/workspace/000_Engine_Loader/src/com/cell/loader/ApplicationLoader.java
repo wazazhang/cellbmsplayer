@@ -400,12 +400,13 @@ public class ApplicationLoader extends JFrame implements WindowListener, LoadTas
 			datas.addAll(local_jar_files.values());
 			
 			ClassLoader		old_class_loader	= Thread.currentThread().getContextClassLoader();
-			JarClassLoader	jar_class_loader	= JarClassLoader.createJarClassLoader(datas, dk, true);
-			JarClassLoader.loadNatives(jar_class_loader, l_natives);
+			JarClassLoader	jar_class_loader	= JarClassLoader.createJarClassLoader(
+					old_class_loader, datas, dk, true);
 			Thread.currentThread().setContextClassLoader(jar_class_loader);
 			System.out.println("Class loader changed : " + 
 					old_class_loader.getClass().getName() + " -> " + 
 					jar_class_loader.getClass().getName());
+//			JarClassLoader.loadNatives(jar_class_loader, l_natives);
 			
 			Class mainclass = jar_class_loader.findClass(l_main);
 			
