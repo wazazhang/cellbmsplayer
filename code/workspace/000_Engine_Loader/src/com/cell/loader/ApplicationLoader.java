@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -30,7 +31,7 @@ import javax.swing.JFrame;
 
 import com.cell.classloader.jcl.CC;
 import com.cell.classloader.jcl.JarClassLoader;
-import com.cell.loader.LordAppletLoader.AppletStubAdapter;
+import com.cell.loader.AppletLoader.AppletStubAdapter;
 
 /**
  * 
@@ -39,6 +40,7 @@ update_path			=http://game.lordol.com/lordol_xc_test/update.val
 ignore_list			=loader.jar,lordol_res.jar,lordol_ressk.jar,lordol_j2se_ui_sk.jar
 l_main				=orc.g2d.Main
 l_font				=宋体
+l_natives			=OpenGL32.dll,OpenAL32.dll,warp_openal.dll
 
 [image]
 img_bg				=bg.png
@@ -57,13 +59,16 @@ load_retry_count	=5
 load_timeout		=10000
 */
 
-public class LordApplicationLoader extends JFrame implements WindowListener, LoadTask.LoadTaskListener
+public class ApplicationLoader extends JFrame implements WindowListener, LoadTask.LoadTaskListener
 {
+	private static final long serialVersionUID = 1L;
+	
 	// update.ini
 	String 			update_path;
 	String			ignore_list;
 	String 			l_main;
 	String			l_font;
+	ArrayList<String>	l_natives = new ArrayList<String>();
 
 	String			img_bg;
 	String			img_loading_f;
@@ -93,7 +98,7 @@ public class LordApplicationLoader extends JFrame implements WindowListener, Loa
 	Hashtable<String, String>	ignore_jar_files	= new Hashtable<String, String>();
 	
 	
-	public LordApplicationLoader(String update_ini_file)
+	public ApplicationLoader(String update_ini_file)
 	{
 		this.addWindowListener(this);
 		this.setSize(640, 480);
@@ -170,6 +175,15 @@ public class LordApplicationLoader extends JFrame implements WindowListener, Loa
 					load_retry_count	= 5;
 					load_timeout		= 10000;
 					}
+					
+					try{
+						String natives = update_ini.get("l_natives");
+						if (natives!=null) {
+							for (String n : natives.split(",")) {
+								l_natives.add(n);
+							}
+						}
+					} catch (Exception err) {}
 					
 					LoadTask.LoadRetryTime 	= load_retry_count;
 					LoadTask.LoadTimeOut	= load_timeout;
@@ -385,9 +399,15 @@ public class LordApplicationLoader extends JFrame implements WindowListener, Loa
 			
 			datas.addAll(local_jar_files.values());
 			
-			JarClassLoader jar = JarClassLoader.createJarClassLoader(datas, dk, false);
-			Thread.currentThread().setContextClassLoader(jar);
-			Class mainclass = jar.findClass(l_main);
+			ClassLoader		old_class_loader	= Thread.currentThread().getContextClassLoader();
+			JarClassLoader	jar_class_loader	= JarClassLoader.createJarClassLoader(datas, dk, true);
+			JarClassLoader.loadNatives(jar_class_loader, l_natives);
+			Thread.currentThread().setContextClassLoader(jar_class_loader);
+			System.out.println("Class loader changed : " + 
+					old_class_loader.getClass().getName() + " -> " + 
+					jar_class_loader.getClass().getName());
+			
+			Class mainclass = jar_class_loader.findClass(l_main);
 			
 			if (mainclass != null)
 			{
@@ -433,9 +453,9 @@ public class LordApplicationLoader extends JFrame implements WindowListener, Loa
 
 	public static void main(String[] args) {
 		if (args!=null && args.length>0) {
-			new LordApplicationLoader(args[0]);
+			new ApplicationLoader(args[0]);
 		}else{
-			new LordApplicationLoader("./update.ini");
+			new ApplicationLoader("./update.ini");
 		}
 	}
 	

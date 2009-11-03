@@ -7,6 +7,7 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.MessageDigest;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import com.cell.classloader.jcl.CC;
@@ -102,7 +103,7 @@ public class LoadTask extends Thread
 			return null;
 		}
 	}
- 
+
 	
 //	-------------------------------------------------------------------------------------------------------------------------------
 	

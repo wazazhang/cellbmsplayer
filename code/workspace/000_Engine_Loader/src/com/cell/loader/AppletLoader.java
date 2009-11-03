@@ -11,6 +11,7 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.swing.JApplet;
@@ -29,6 +30,7 @@ import com.cell.loader.LoadTask.LoadTaskListener;
 	<PARAM name="l_jars"				value="lordol.jar,lordolres.jar">
 	<PARAM name="l_applet"				value="lord.LordApplet">
 	<PARAM name="l_font"				value="System">
+	<PARAM name="l_natives"				value="OpenGL32,OpenAL32,warp_openal,joal_native">
 	
 	<PARAM name="img_bg"				value="bg.png">
 	<PARAM name="img_loading_f"			value="loading_f.png">
@@ -42,14 +44,16 @@ import com.cell.loader.LoadTask.LoadTaskListener;
 	<PARAM name="load_retry_count"		value="5">
 	<PARAM name="load_timeout"			value="10000">
  */
-public class LordAppletLoader extends JApplet implements LoadTaskListener
+public class AppletLoader extends JApplet implements LoadTaskListener
 {
+	private static final long serialVersionUID = 1L;
+	
 	// param
 	String 			l_jars;
 	String 			l_applet;
 	String			l_font;
-	String			dk;
-
+	ArrayList<String>	l_natives = new ArrayList<String>();
+	
 	String			img_bg;
 	String			img_loading_f;
 	String			img_loading_s;
@@ -61,8 +65,7 @@ public class LordAppletLoader extends JApplet implements LoadTaskListener
 	
 	int				load_retry_count	=5;
 	int				load_timeout		=10000;
-	
-	
+
 	// other
 	URL 			root_dir;
 	
@@ -72,6 +75,8 @@ public class LordAppletLoader extends JApplet implements LoadTaskListener
 	PaintTask 		paint_task;
 	LoadTask 		load_task;
 
+	String			dk;
+	
 
 
 	public String getParameter(String name, String default_value) {
@@ -97,7 +102,7 @@ public class LordAppletLoader extends JApplet implements LoadTaskListener
 				l_jars				= getParameter("l_jars");
 				l_applet			= getParameter("l_applet");
 				l_font				= getParameter("l_font");
-				
+
 				img_bg				= getParameter("img_bg", 				"bg.png");
 				img_loading_f		= getParameter("img_loading_f",			"loading_f.png");
 				img_loading_s 		= getParameter("img_loading_s",			"loading_s.png");
@@ -114,7 +119,16 @@ public class LordAppletLoader extends JApplet implements LoadTaskListener
 				load_retry_count	=5;
 				load_timeout		=10000;
 				}
-
+				
+				try{
+					String natives = getParameter("l_natives");
+					if (natives!=null) {
+						for (String n : natives.split(",")) {
+							l_natives.add(n);
+						}
+					}
+				} catch (Exception err) {}
+				
 				LoadTask.LoadRetryTime 	= load_retry_count;
 				LoadTask.LoadTimeOut	= load_timeout;
 			}
@@ -211,12 +225,19 @@ public class LordAppletLoader extends JApplet implements LoadTaskListener
 		paint_task.exit();
 		
 		try
-		{
-			JarClassLoader jar = JarClassLoader.createJarClassLoader(datas, dk, true);
-			Thread.currentThread().setContextClassLoader(jar);
-			Class mainclass = jar.findClass(l_applet);
-			applet_obj = mainclass.newInstance();
+		{			
+//			
+			ClassLoader		old_class_loader	= Thread.currentThread().getContextClassLoader();
+			JarClassLoader	jar_class_loader	= JarClassLoader.createJarClassLoader(datas, dk, true);
+			JarClassLoader.loadNatives(jar_class_loader, l_natives);
+			Thread.currentThread().setContextClassLoader(jar_class_loader);
+			System.out.println("Class loader changed : " + 
+					old_class_loader.getClass().getName() + " -> " + 
+					jar_class_loader.getClass().getName());
 
+			
+			Class mainclass = jar_class_loader.findClass(l_applet);
+			applet_obj = mainclass.newInstance();
 			JApplet game = null;
 			
 			if (applet_obj instanceof JApplet)
@@ -268,22 +289,22 @@ public class LordAppletLoader extends JApplet implements LoadTaskListener
 	class AppletStubAdapter implements AppletStub
 	{
 		public void appletResize(int width, int height) {
-			LordAppletLoader.this.resize(width, height);
+			AppletLoader.this.resize(width, height);
 		}
 		public AppletContext getAppletContext() {
-			return LordAppletLoader.this.getAppletContext();
+			return AppletLoader.this.getAppletContext();
 		}
 		public URL getCodeBase() {
-			return LordAppletLoader.this.getCodeBase();
+			return AppletLoader.this.getCodeBase();
 		}
 		public URL getDocumentBase() {
-			return LordAppletLoader.this.getDocumentBase();
+			return AppletLoader.this.getDocumentBase();
 		}
 		public String getParameter(String name) {
-			return LordAppletLoader.this.getParameter(name);
+			return AppletLoader.this.getParameter(name);
 		}
 		public boolean isActive() {
-			return LordAppletLoader.this.isActive();
+			return AppletLoader.this.isActive();
 		}
 	}
 
