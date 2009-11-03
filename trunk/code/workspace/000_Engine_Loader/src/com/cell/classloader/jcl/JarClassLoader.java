@@ -12,6 +12,7 @@ import java.lang.reflect.Method;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
@@ -41,10 +42,44 @@ public class JarClassLoader extends ClassLoader
 		System.out.println("current native suffix : " + NATIVE_SUFFIX);
 	}
 	
-	final static public JarClassLoader createJarClassLoader(
+	final static public void loadClasses(
+			ClassLoader		root_class_loader,
 			Vector<byte[]> 	resources,
 			String 			key,
-			boolean 		is_sign_class) throws Exception
+			boolean 		is_sign_class)
+	{
+		try {
+			resources = dds(resources, key);
+			if (root_class_loader instanceof sun.plugin2.applet.JNLP2ClassLoader) {
+				sun.plugin2.applet.JNLP2ClassLoader jnl = (sun.plugin2.applet.JNLP2ClassLoader)root_class_loader;
+
+			}
+		} catch (Throwable err) {
+			err.printStackTrace();
+		}
+	}
+
+	
+	final static public JarClassLoader createJarClassLoader(
+			ClassLoader		root_class_loader,
+			Vector<byte[]> 	resources,
+			String 			key,
+			boolean 		is_sign_class)
+	{
+		try{
+			JarClassLoader classloader = new JarClassLoader(
+					root_class_loader,
+					resources, 
+					key, 
+					is_sign_class);
+			return classloader;
+		} catch(Throwable err) {
+			err.printStackTrace();
+		}
+		return null;
+	}
+
+	final static private Vector<byte[]> dds(Vector<byte[]> resources, String key) throws Exception
 	{
 		if (key != null) {
 			Vector<byte[]> resources_enc = new Vector<byte[]>(resources.size());
@@ -55,53 +90,9 @@ public class JarClassLoader extends ClassLoader
 			}
 			resources = resources_enc;
 		}
-		
-		JarClassLoader classloader = new JarClassLoader();
-		
-		classloader.is_set_ProtectionDomain	= is_sign_class;
-		
-		for (byte[] resource : resources)
-		{
-			// 将byte[]转为JarInputStream
-			JarInputStream jar = new JarInputStream(new ByteArrayInputStream(resource));
-			
-			// 依次获得对应JAR文件中封装的各个被压缩文件的JarEntry
-			JarEntry entry;
-			while ((entry = jar.getNextJarEntry()) != null)
-			{
-				String name	= entry.getName();
-				String ex	= name.toLowerCase();
-				
-				// put classes
-				if (ex.endsWith(".class")) 
-				{
-					String class_name = getPrefix(name, ".class").replace('/', '.');
-					byte[] data = getResourceData(jar);
-					classloader.Classes.put(class_name, data);
-				}
-				// put windows native
-				else if (ex.endsWith(NATIVE_SUFFIX)) 
-				{
-					String native_name = getPrefix(name, NATIVE_SUFFIX);
-					byte[] data = getResourceData(jar);
-					classloader.Natives.put(native_name, data);
-					System.out.println("get native lib : " + name);
-				}
-				// other resources
-				else
-				{
-					byte[] data = getResourceData(jar);
-					if (name.charAt(0) != '/') {
-						name = "/" + name;
-					}
-					classloader.Resources.put(name, data);
-				}
-			}
-			
-		}
-		return classloader;
+		return resources;
 	}
-
+	
 	final static private String getPrefix(String name, String suffix) {
 		if (name.endsWith(suffix)) {
 			return name.substring(0, name.length() - suffix.length());
@@ -137,18 +128,21 @@ public class JarClassLoader extends ClassLoader
 		}
 	}
 	 
-	final static public void loadNatives(JarClassLoader loader, ArrayList<String> native_libs)
-	{
-		for (String native_lib : native_libs) {
-			try{
-				String path = loader.findLibrary(native_lib);
-				System.load(path);
-				System.out.println("load native : " + native_lib);
-			}catch(Throwable err){
-				err.printStackTrace();
-			}
-		}
-	}
+//	final static public void loadNatives(JarClassLoader loader, ArrayList<String> native_libs)
+//	{
+//		loader.initAllNatives();
+//		for (String native_lib : native_libs) {
+//			try{
+//				if (native_lib.length()>0) {
+//					String path = loader.findLibrary(native_lib);
+//					System.loadLibrary(native_lib);
+//					System.out.println("load native : " + native_lib + " : " + path);
+//				}
+//			}catch(Throwable err){
+//				err.printStackTrace();
+//			}
+//		}
+//	}
 //	----------------------------------------------------------------------------------------------------------------------------------
 	// 
 	private boolean		is_set_ProtectionDomain	= true;
@@ -156,15 +150,102 @@ public class JarClassLoader extends ClassLoader
 	
 	//资源缓存
 	private HashMap<String, byte[]> Resources	= new HashMap<String, byte[]>();
-	private HashMap<String, byte[]> Natives		= new HashMap<String, byte[]>();
 	private HashMap<String, byte[]> Classes		= new HashMap<String, byte[]>();
 	
-	File					native_file_dir 	= null;
 	HashMap<String, String>	native_paths		= new HashMap<String, String>();
 	
 	//class资源及实体缓存
 	//private ArrayList<String> classNames = new ArrayList<String>();
-	
+//	----------------------------------------------------------------------------------------------------------------------------------
+
+	JarClassLoader(
+			ClassLoader		class_loader,
+			Vector<byte[]> 	resources,
+			String 			key,
+			boolean 		is_sign_class) throws Throwable
+	{
+//		super(class_loader);
+		resources = dds(resources, key);
+
+		HashMap<String, byte[]> natives		= new HashMap<String, byte[]>();
+		
+		this.is_set_ProtectionDomain	= is_sign_class;
+		
+		for (byte[] resource : resources)
+		{
+			// 将byte[]转为JarInputStream
+			JarInputStream jar = new JarInputStream(new ByteArrayInputStream(resource));
+			
+			// 依次获得对应JAR文件中封装的各个被压缩文件的JarEntry
+			JarEntry entry;
+			while ((entry = jar.getNextJarEntry()) != null)
+			{
+				String name	= entry.getName();
+				String ex	= name.toLowerCase();
+				
+				// put classes
+				if (ex.endsWith(".class")) 
+				{
+					String class_name = getPrefix(name, ".class").replace('/', '.');
+					byte[] data = getResourceData(jar);
+					this.Classes.put(class_name, data);
+				}
+				// put windows native
+				else if (ex.endsWith(NATIVE_SUFFIX)) 
+				{
+					String native_name = getPrefix(name, NATIVE_SUFFIX);
+					byte[] data = getResourceData(jar);
+					natives.put(native_name, data);
+					System.out.println("get native lib : " + name);
+				}
+				// other resources
+				else
+				{
+					byte[] data = getResourceData(jar);
+					if (name.charAt(0) != '/') {
+						name = "/" + name;
+					}
+					this.Resources.put(name, data);
+				}
+			}
+		}
+		
+		try 
+		{
+			String libpath		= System.getProperty("java.library.path");
+			String user_home	= System.getProperty("user.home");
+
+			File native_file_dir = null;
+			StringTokenizer st	= new StringTokenizer(libpath, File.pathSeparator);
+			if (st.hasMoreElements()) {
+				native_file_dir = new File(st.nextToken());
+			} else {
+				native_file_dir	= new File(user_home+File.separatorChar+"jni_natives_cache");
+				native_file_dir.mkdirs();
+			}
+			
+			for (String libname : natives.keySet()) {
+				File file = new File(native_file_dir, libname + NATIVE_SUFFIX);
+				try{
+					byte[] native_data = natives.get(libname);
+					FileOutputStream fos = new FileOutputStream(file);
+					fos.write(native_data);
+					fos.flush();
+					fos.close();
+				}catch(Throwable err){
+					System.err.println("error save native cache ! " + err.getMessage());
+				}
+				native_paths.put(libname, file.getPath());
+				System.out.println("cache library : " + libname + " : " + file);
+			}
+			natives.clear();
+
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+	}
+//	----------------------------------------------------------------------------------------------------------------------------------
+
 	@SuppressWarnings("unchecked")
 	public Class<?> findClass(String className) throws ClassNotFoundException 
 	{
@@ -182,6 +263,7 @@ public class JarClassLoader extends ClassLoader
 			return clazz;
 		}
 		catch (Exception e) {
+			e.printStackTrace();
 			System.err.println("JarClassLoader : " + e.getMessage());
 		}
 		return super.findClass(className);
@@ -190,43 +272,9 @@ public class JarClassLoader extends ClassLoader
 	@Override
 	protected String findLibrary(String libname)
 	{
-		try
-		{
-			String path = native_paths.get(libname);
-			
-			if (path!=null) {
-				return path;
-			} 
-			else 
-			{
-				byte[] native_data = Natives.get(libname);
-				if (native_data != null) 
-				{
-					if (native_file_dir == null) {
-						File tmp_dir = File.createTempFile("jni_", "");
-						native_file_dir = new File(tmp_dir+"_cache"+File.separatorChar+"natives");
-						native_file_dir.mkdirs();
-					}
-					File file = new File(native_file_dir, libname + NATIVE_SUFFIX);
-					FileOutputStream fos = new FileOutputStream(file);
-					try{
-						fos.write(native_data);
-						fos.flush();
-						file.deleteOnExit();
-						path = file.getPath();
-						native_paths.put(libname, path);
-						System.out.println("find library : " + libname + " : " + path);
-						return file.getPath();
-					}finally{
-						fos.close();
-					}
-				}
-			}
-		}
-		catch(Throwable ex) {
-			ex.printStackTrace();
-		}
-		return null;
+		String path = native_paths.get(libname);
+		System.out.println("JarClassLoader.findLibrary : " + libname + " : " + path);
+		return path;
 	}
 	
 	public InputStream getResourceAsStream(String path) {

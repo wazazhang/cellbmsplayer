@@ -16,6 +16,8 @@ import java.util.Vector;
 
 import javax.swing.JApplet;
 
+import sun.plugin2.applet.JNLP2ClassLoader;
+
 
 import com.cell.classloader.jcl.CC;
 import com.cell.classloader.jcl.JarClassLoader;
@@ -227,13 +229,14 @@ public class AppletLoader extends JApplet implements LoadTaskListener
 		try
 		{			
 //			
-			ClassLoader		old_class_loader	= Thread.currentThread().getContextClassLoader();
-			JarClassLoader	jar_class_loader	= JarClassLoader.createJarClassLoader(datas, dk, true);
-			JarClassLoader.loadNatives(jar_class_loader, l_natives);
+			ClassLoader			old_class_loader	= Thread.currentThread().getContextClassLoader();
+			JarClassLoader		jar_class_loader	= JarClassLoader.createJarClassLoader(
+					old_class_loader, datas, dk, true);
 			Thread.currentThread().setContextClassLoader(jar_class_loader);
 			System.out.println("Class loader changed : " + 
 					old_class_loader.getClass().getName() + " -> " + 
 					jar_class_loader.getClass().getName());
+//			JarClassLoader.loadNatives(jar_class_loader, l_natives);
 
 			
 			Class mainclass = jar_class_loader.findClass(l_applet);
