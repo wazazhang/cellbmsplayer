@@ -3,6 +3,7 @@ package com.cell.classloader.jcl;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.Hashtable;
 
 /**
@@ -14,6 +15,19 @@ public class JavaCompiler extends ClassLoader
 {
 	static JavaCompiler instance_compiler = new JavaCompiler();
 	
+	final static public void callMethod(Class<?> clz, String methodName, String[] args)
+	{
+		Class<?>[] arg = new Class<?>[1];
+		arg[0] = args.getClass();
+		try {
+			Method method = clz.getMethod(methodName, arg);
+			Object[] inArg = new Object[1];
+			inArg[0] = args;
+			method.invoke(clz, inArg);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
 	/**
 	 * @param name
@@ -30,7 +44,7 @@ public class JavaCompiler extends ClassLoader
 //	{
 //		instance_compiler.clearLoadedClasses();
 //	}
-	
+
 //	--------------------------------------------------------------------------------------------------------------------------
 	
 	Hashtable<String, Class> loaded_class = new Hashtable<String, Class>();
@@ -52,10 +66,12 @@ public class JavaCompiler extends ClassLoader
 		System.out.print("Compiling java file : \"" + javaFile + "\" ...");
 		try{
 //			com.sun.tools.javac.Main.compile(new String[]{"-help"});
-			com.sun.tools.javac.Main.compile(new String[]{javaFile});
+//			com.sun.tools.javac.Main.compile(new String[]{javaFile});
+			Class<?> cls = Class.forName("com.sun.tools.javac.Main");
+			callMethod(cls, "compile", new String[]{javaFile});
 			return true;
 		}
-		catch (Exception e) {
+		catch (Throwable e) {
 			e.printStackTrace();
 		}
 		finally {
