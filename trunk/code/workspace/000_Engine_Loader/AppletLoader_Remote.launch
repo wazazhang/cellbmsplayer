@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="org.eclipse.jdt.launching.javaApplet">
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-<listEntry value="/000_Engine_Loader/src/com/cell/loader/LordAppletLoader.java"/>
+<listEntry value="/000_Engine_Loader/src/com/cell/loader/AppletLoader.java"/>
 </listAttribute>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
 <listEntry value="1"/>
@@ -20,6 +20,6 @@
 <mapEntry key="codebase" value="http://wow1.game185.com/wow/"/>
 </mapAttribute>
 <intAttribute key="org.eclipse.jdt.launching.APPLET_WIDTH" value="900"/>
-<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.cell.loader.LordAppletLoader"/>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.cell.loader.AppletLoader"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="000_Engine_Loader"/>
 </launchConfiguration>
