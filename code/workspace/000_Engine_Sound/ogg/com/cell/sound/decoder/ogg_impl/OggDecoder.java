@@ -113,15 +113,15 @@ public class OggDecoder extends Decoder
 			}
 
 			{
-				byte[][] ptr = vc.user_comments;
-				for (int j = 0; j < ptr.length; j++) {
-					if (ptr[j] == null)
-						break;
-					System.err.println(new String(ptr[j], 0, ptr[j].length - 1));
-				}
+//				byte[][] ptr = vc.user_comments;
+//				for (int j = 0; j < ptr.length; j++) {
+//					if (ptr[j] == null)
+//						break;
+//					System.err.println(new String(ptr[j], 0, ptr[j].length - 1));
+//				}
 			
-				System.err.println("\nBitstream is " + vi.channels+ " channel, " + vi.rate + "Hz");
-				System.err.println("Encoded by: "+ new String(vc.vendor, 0, vc.vendor.length - 1)+ "\n");
+//				System.err.println("\nBitstream is " + vi.channels+ " channel, " + vi.rate + "Hz");
+//				System.err.println("Encoded by: "+ new String(vc.vendor, 0, vc.vendor.length - 1)+ "\n");
 			}
 
 			convsize = 4096 / vi.channels;
