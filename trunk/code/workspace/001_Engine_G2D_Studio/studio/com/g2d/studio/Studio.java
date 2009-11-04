@@ -346,31 +346,24 @@ public class Studio extends AbstractFrame
 	public Collection<XLSRow> getXLSPrimaryRows(XLSFile xls_file)
 	{
 		ArrayList<XLSRow> ret = new ArrayList<XLSRow>();
-		
 		InputStream is = CIO.loadStream(createFile(Config.ROOT_XLS + "/" + xls_file.xls_file).getPath());
-		
-		try
-		{
+		try {
 			Workbook	rwb				= Workbook.getWorkbook(is);
-		    Sheet		rs				= rwb.getSheet(0);
-		    int			row_count		= rs.getRows();
-		    
-			for (int r = 2; r < row_count; r++)
-			{
-				try
-				{
-					String primary_key = rs.getCell(1, r).getContents().trim();
-					if (primary_key.length()<=0) {
-						 System.out.println("\ttable eof at row : " + r);
-						break;
+			for (Sheet rs : rwb.getSheets()) {
+				int row_count = rs.getRows();
+				for (int r = 2; r < row_count; r++) {
+					try {
+						String primary_key = rs.getCell(1, r).getContents().trim();
+						if (primary_key.length() <= 0) {
+							System.out.println("\ttable eof at row " + r + " sheet " + rs.getName());
+							break;
+						}
+						String c0 = rs.getCell(0, r).getContents().trim();
+						String c1 = rs.getCell(1, r).getContents().trim();
+						ret.add(new XLSRow(xls_file, c1, c0));
+					} catch (Exception e) {
+						System.err.println("read error at row " + r + " sheet " + rs.getName());
 					}
-					
-					String c0 = rs.getCell(0, r).getContents().trim();
-					String c1 = rs.getCell(1, r).getContents().trim();
-					ret.add(new XLSRow(xls_file, c1, c0));
-				}
-				catch (Exception e) {
-					System.err.println("read error at row " + r);
 				}
 			}
 		}
@@ -384,7 +377,6 @@ public class Studio extends AbstractFrame
 				e.printStackTrace();
 			}
 		}
-
 		return ret;
 	}
 	
