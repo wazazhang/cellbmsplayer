@@ -60,6 +60,8 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 		this.enable			= true;
 		this.enable_focus 	= true;
 		this.enable_drag	= true;
+		this.enable_input	= true;
+		
 		this.actor_view		= actor;
 		this.scene_view		= scene;
 		

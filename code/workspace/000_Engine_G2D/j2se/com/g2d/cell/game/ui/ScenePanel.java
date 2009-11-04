@@ -19,6 +19,8 @@ public class ScenePanel extends Container
 	{
 		vScroll = ScrollBar.createVScroll(Panel.DEFAULT_SCROLL_BAR_SIZE);
 		hScroll = ScrollBar.createHScroll(Panel.DEFAULT_SCROLL_BAR_SIZE);
+		this.addChild(vScroll);
+		this.addChild(hScroll);
 	}
 	
 	public ScenePanel(Scene scene) {
