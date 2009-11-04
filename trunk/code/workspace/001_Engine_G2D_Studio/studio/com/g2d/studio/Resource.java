@@ -27,7 +27,14 @@ public class Resource extends CellSetResource
 	
 	public Resource(String file, String name, boolean stream_image) throws Exception
 	{
-		super(file, name, true);
+		super(file, name, stream_image);
+	}
+
+	@Override
+	protected IImages getLocalImage(ImagesSet img) throws IOException {
+		StreamTypeTiles tiles = new StreamTypeTiles(img);
+		tiles.run();
+		return tiles;
 	}
 	
 	@Override
