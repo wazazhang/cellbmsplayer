@@ -8,6 +8,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
 
 
 import java.util.ArrayList;
@@ -16,6 +18,8 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
+
+import sun.plugin2.applet.Plugin2ClassLoader;
 
 
 /**
@@ -164,6 +168,7 @@ public class JarClassLoader extends ClassLoader
 			String 			key,
 			boolean 		is_sign_class) throws Throwable
 	{
+//		super(new URL[0], null);
 //		super(class_loader);
 		resources = dds(resources, key);
 
@@ -270,7 +275,7 @@ public class JarClassLoader extends ClassLoader
 	}
 
 	@Override
-	protected String findLibrary(String libname)
+	public String findLibrary(String libname)
 	{
 		String path = native_paths.get(libname);
 		System.out.println("JarClassLoader.findLibrary : " + libname + " : " + path);
