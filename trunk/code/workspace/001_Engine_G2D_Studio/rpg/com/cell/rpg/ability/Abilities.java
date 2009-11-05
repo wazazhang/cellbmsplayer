@@ -27,5 +27,5 @@ public interface Abilities extends Serializable
 	
 	public Class<?>[] getSubAbilityTypes();
 	
-	public int size();
+	public int getAbilitiesCount();
 }

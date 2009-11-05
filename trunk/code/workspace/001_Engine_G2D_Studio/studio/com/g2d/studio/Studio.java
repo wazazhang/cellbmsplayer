@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -47,16 +48,22 @@ import com.cell.gfx.IImages;
 import com.cell.j2se.CAppBridge;
 import com.cell.j2se.CStorage;
 import com.cell.rpg.xls.XLSFile;
+import com.cell.rpg.xls.XLSFullRow;
 import com.cell.rpg.xls.XLSRow;
 import com.cell.util.concurrent.ThreadPool;
 import com.g2d.Tools;
 import com.g2d.cell.CellSetResource;
 import com.g2d.cell.CellSetResourceManager;
 import com.g2d.display.ui.UIComponent;
+import com.g2d.studio.Resource.StreamTypeTiles;
 import com.g2d.studio.actor.FormActorViewer;
 import com.g2d.studio.actor.FormActorViewerGroup;
+import com.g2d.studio.cpj.CPJResourceManager;
+import com.g2d.studio.gameedit.ObjectManager;
+import com.g2d.studio.res.Res;
 import com.g2d.studio.scene.FormSceneViewer;
 import com.g2d.studio.scene.FormSceneViewerGroup;
+import com.g2d.studio.sound.SoundManager;
 import com.g2d.studio.ui.FormUIComponentView;
 import com.g2d.util.AbstractFrame;
 import com.g2d.util.Util;
@@ -78,6 +85,15 @@ public class Studio extends AbstractFrame
 	
 	final public File 				project_path;
 	final public File 				project_file;
+	final public File				project_save_path;
+	final public File				project_save_path_scene;
+	final public File				project_save_path_unit;
+	final public File				project_save_path_avatar;
+	final public File				project_save_path_effect;
+
+	CPJResourceManager				frame_cpj_resource_manager;
+	ObjectManager					frame_object_editor;
+	SoundManager					frame_sound_manager;
 	
 	public FormActorViewerGroup		group_actor;
 	public FormSceneViewerGroup		group_scene;
@@ -87,153 +103,185 @@ public class Studio extends AbstractFrame
 	public JTree 					tree;
 	public DefaultMutableTreeNode	tree_root 		= new DefaultMutableTreeNode();
 	
-	//
-	final JToolBar 					state_bar	 	= new JToolBar();
-	
-	
-	
-	
 	// 当前选择的 AObjectViewer
 	protected	AFormDisplayObjectViewer<?>	selected_node;
 	
-	
-	
-	
-	public Studio(String g2d_file) throws Throwable
-	{				
+	private Studio(String g2d_file) throws Throwable
+	{							
+		CObject.initSystem(
+			new CStorage("g2d_studio"), 
+			new CAppBridge(
+			this.getClass().getClassLoader(), 
+			this.getClass()));
+		
+		Config.load(Config.class, g2d_file);
+
 		JComponent.setDefaultLocale(Locale.CHINA);
 		ProgressForm progress_form = new ProgressForm();
 		progress_form.setVisible(true);
 		JProgressBar progress = progress_form.progress;
+		UIComponent.editor_mode = false;
+		
+		instance 			= this;
+		project_file 		= new File(g2d_file);
+		project_path 		= new File(project_file.getParent());
+		
+		project_save_path			= new File(project_file.getPath()+".save");
+		project_save_path_scene		= new File(project_save_path.getPath()+File.separatorChar+"scene");
+		project_save_path_unit		= new File(project_save_path.getPath()+File.separatorChar+"unit");
+		project_save_path_avatar	= new File(project_save_path.getPath()+File.separatorChar+"avatar");
+		project_save_path_effect	= new File(project_save_path.getPath()+File.separatorChar+"effect");
+		project_save_path.mkdirs();
+		project_save_path_scene.mkdirs();
+		project_save_path_unit.mkdirs();
+		project_save_path_avatar.mkdirs();
+		project_save_path_effect.mkdirs();
+		
+		// sysetm init
+		progress_form.setIconImage(Res.icon_edit);
+		progress.setString("init g2d system...");
 		
 		try
 		{
-			project_file = new File(g2d_file);
-			project_path = new File(project_file.getParent());
-			
-			// sysetm init
-			progress.setString("init g2d system...");
-			{
-				instance = this;
-				
-				CObject.initSystem(
-						new CStorage("g2d_studio"), 
-						new CAppBridge(
-						this.getClass().getClassLoader(), 
-						this.getClass()));
-				
-				Config.load(Config.class, g2d_file);
-				
-				new SetResourceManager();
-				
-//				UILayoutManager.getInstance().save_path = project + "/" + Config.ROOT_UILAYOUT_PATH;
-				
-				UIComponent.editor_mode = false;
-			}
-			
 			//
-			this.setTitle("Cell Studio : " + project_path.getPath());
+			this.setTitle(Config.TITLE + " : " + project_path.getPath());
+			this.setIconImage(Res.icon_edit);
 			this.setSize(300, AbstractFrame.getScreenHeight()-60);
 			this.setLocation(0, 0);
 			this.setLayout(new BorderLayout());
-			
+
+			new SetResourceManager();
+
 			// init jtree
 			progress.setString("init objects...");
 			{
-				
-				
-				// resource view
-				{
-					// spr view
-					group_actor = new FormActorViewerGroup(this);
-					tree_root.add(group_actor);
-					
-					group_scene = new FormSceneViewerGroup(this);
-					tree_root.add(group_scene);
-				}
-				
-				
-				// ui view
-				{
-					//group_ui = new FormUIComponentViewGroup(this);
-					//tree_root.add(group_ui);
-				}
-				
-				// stage view
-				{
-	//				Hashtable<String, Hashtable<String,?>> stage_root	= new Hashtable<String, Hashtable<String,?>>();
-	//				tree_root.put("stage", stage_root);
-				}
+				// spr view
+				group_actor = new FormActorViewerGroup(this);
+				tree_root.add(group_actor);
+				group_scene = new FormSceneViewerGroup(this);
+				tree_root.add(group_scene);
 				
 				tree = new JTree(tree_root);
 				tree.setCellRenderer(new TreeRender());
-				tree.setRootVisible(false);
+//				tree.setRootVisible(false);
 				tree.addMouseListener(new TreeMouseListener());
 				tree.addTreeSelectionListener(new TreeSelect());
 				//tree_resources.getSelectionModel().setSelectionMode(TreeSelectionModel.CONTIGUOUS_TREE_SELECTION);
 				//this.add(tree);
-				
 				JScrollPane scroll = new JScrollPane(tree);
 				scroll.setVisible(true);
-				this.add(scroll, BorderLayout.CENTER);
+				this.add(scroll, BorderLayout.CENTER);		
+				
+				loadAll(progress);
 			}
 			
-			
-			
-			// init state
-			{
-				final JPanel mem_state = new JPanel(){
-					public void paint(Graphics g) {
-						super.paint(g);
-						Util.drawHeapStatus(g, Color.BLACK, 1, 1, getWidth()-2, getHeight()-2);
-					}
-				};
-//				state_bar.setMinimumSize(new Dimension(200, 50));
-//				state_bar.setSize(new Dimension(200, 50));
-				
-				thread_pool.scheduleAtFixedRate(new Runnable(){
-					public void run() {
-						mem_state.repaint();
-					}
-				}, 2000, 2000);
 
-				JButton gc = new JButton("gc");
-				gc.addActionListener(new ActionListener(){
-					public void actionPerformed(ActionEvent e) {
-						System.gc();
-					}
-				});
-				state_bar.add(mem_state);
-				state_bar.add(gc);
-				
-				this.add(state_bar, BorderLayout.SOUTH);
-			}
+			initToolBar();
 			
-			
+			initStateBar();
 			
 			this.addWindowListener(new StudioWindowListener());
-			
-			loadAll(progress);
 			
 		}
 		catch (Throwable e) {
 			throw e;
-		}
-		finally{
+		} finally{
 			progress_form.setVisible(false);
 			progress_form.dispose();
 		}
-		
-		
 	}
 
+	// init tool bar
+	private void initToolBar()
+	{
+		JToolBar tool_bar = new JToolBar();
+		
+		// res manager
+		{
+			frame_cpj_resource_manager = new CPJResourceManager();
+			JButton btn = new JButton();
+			btn.setToolTipText(frame_cpj_resource_manager.getTitle());
+			btn.setIcon(Tools.createIcon(Res.icons_bar[7]));
+			btn.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e) {
+					frame_cpj_resource_manager.setVisible(true);
+				}
+			});
+			tool_bar.add(btn);
+		}
+		// unit manager
+		{
+			frame_object_editor = new ObjectManager();
+			JButton btn = new JButton();
+			btn.setToolTipText(frame_object_editor.getTitle());
+			btn.setIcon(Tools.createIcon(Res.icons_bar[4]));
+			btn.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e) {
+					frame_object_editor.setVisible(true);
+				}
+			});
+			tool_bar.add(btn);
+		}
+		// sound manager
+		{
+			frame_sound_manager = new SoundManager();
+			JButton btn = new JButton();
+			btn.setToolTipText(frame_sound_manager.getTitle());
+			btn.setIcon(Tools.createIcon(Res.icons_bar[3]));
+			btn.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e) {
+					frame_sound_manager.setVisible(true);
+				}
+			});
+			tool_bar.add(btn);
+		}
+		
+		this.add(tool_bar, BorderLayout.NORTH);
+	}
+	
+	// init state bar
+	private void initStateBar()
+	{
+		JToolBar state_bar = new JToolBar();
+		
+		// heap state
+		{
+			final JPanel mem_state = new JPanel() {
+				public void paint(Graphics g) {
+					super.paint(g);
+					Util.drawHeapStatus(g, Color.BLACK, 1, 1, getWidth() - 2,
+							getHeight() - 2);
+				}
+			};
+			thread_pool.scheduleAtFixedRate(new Runnable() {
+				public void run() {
+					mem_state.repaint();
+				}
+			}, 2000, 2000);
+			state_bar.add(mem_state);
+		}
+
+		// gc
+		{
+			JButton gc = new JButton("gc");
+			gc.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					System.gc();
+				}
+			});
+			state_bar.add(gc);
+		}
+
+		this.add(state_bar, BorderLayout.SOUTH);
+
+	}
 	
 	/**
 	 * 得到工作空间跟目录下的文件
 	 * @param path
 	 * @return
 	 */
-	public File createFile(String path)
+	public File getFile(String path)
 	{
 		return new File(project_path.getPath() + "/" + path);
 	}
@@ -325,7 +373,7 @@ public class Studio extends AbstractFrame
 	{
 		ArrayList<XLSFile> ret = new ArrayList<XLSFile>();
 		
-		File root_xls = createFile(Config.ROOT_XLS);
+		File root_xls = getFile(Config.ROOT_XLS);
 		
 		for (File xls : root_xls.listFiles(new FilenameFilter(){
 			public boolean accept(File dir, String name) {
@@ -343,41 +391,10 @@ public class Studio extends AbstractFrame
 	 * @param xls_file
 	 * @return
 	 */
-	public Collection<XLSRow> getXLSPrimaryRows(XLSFile xls_file)
+	public<T extends XLSRow> Collection<T> getXLSPrimaryRows(XLSFile xls_file, Class<T> cls)
 	{
-		ArrayList<XLSRow> ret = new ArrayList<XLSRow>();
-		InputStream is = CIO.loadStream(createFile(Config.ROOT_XLS + "/" + xls_file.xls_file).getPath());
-		try {
-			Workbook	rwb				= Workbook.getWorkbook(is);
-			for (Sheet rs : rwb.getSheets()) {
-				int row_count = rs.getRows();
-				for (int r = 2; r < row_count; r++) {
-					try {
-						String primary_key = rs.getCell(1, r).getContents().trim();
-						if (primary_key.length() <= 0) {
-							System.out.println("\ttable eof at row " + r + " sheet " + rs.getName());
-							break;
-						}
-						String c0 = rs.getCell(0, r).getContents().trim();
-						String c1 = rs.getCell(1, r).getContents().trim();
-						ret.add(new XLSRow(xls_file, c1, c0));
-					} catch (Exception e) {
-						System.err.println("read error at row " + r + " sheet " + rs.getName());
-					}
-				}
-			}
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		finally{
-			try {
-				is.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		return ret;
+		File path = getFile(Config.ROOT_XLS + "/" + xls_file.xls_file);
+		return XLSRow.getXLSRows(path, new AtomicReference<XLSFile>(xls_file), cls);
 	}
 	
 //	-----------------------------------------------------------------------------------------------------------
@@ -450,8 +467,11 @@ public class Studio extends AbstractFrame
 		public void windowOpened(WindowEvent e) {}
 	}
 	
+	@SuppressWarnings("unchecked")
 	class TreeRender extends DefaultTreeCellRenderer
 	{
+		private static final long serialVersionUID = 1L;
+		
 		ImageIcon icon = Tools.createIcon(Tools.readImage("/com/g2d/studio/icon.bmp"));
 		
 		@Override
@@ -468,8 +488,8 @@ public class Studio extends AbstractFrame
 			
 			if (value instanceof ATreeNodeLeaf){
 				ATreeNodeLeaf aleaf = ((ATreeNodeLeaf)value);
-				if (aleaf.user_data instanceof FormActorViewer) {
-					FormActorViewer form = (FormActorViewer)(aleaf.user_data);
+				if (aleaf.user_data instanceof AFormDisplayObjectViewer) {
+					AFormDisplayObjectViewer form = (AFormDisplayObjectViewer)(aleaf.user_data);
 					ImageIcon aicon = form.getSnapshot(false);
 					if (aicon == null) {
 						setIcon(icon);
@@ -477,6 +497,9 @@ public class Studio extends AbstractFrame
 						setIcon(aicon);
 					}
 				}
+			}
+			else if (value instanceof ATreeNodeSet){
+				setIcon(Tools.createIcon(Res.icon_cpj));
 			}
 			//System.out.println("getTreeCellRendererComponent");
 			return comp;
@@ -581,12 +604,30 @@ public class Studio extends AbstractFrame
 	
 	static public class SetResource extends Resource
 	{
+		boolean is_load_resource = false;
+		
 		public SetResource(String setPath, String name)  throws Exception{
 			super(setPath, name, false);
 		}
 		
-		public void initAllStreamImages()
+		public SetResource(File file, String name) throws Exception {
+			super(file, name, false);
+		}
+		
+		@Override
+		protected IImages getLocalImage(ImagesSet img) throws IOException {
+			StreamTypeTiles tiles = new StreamTypeTiles(img);
+			return tiles;
+		}
+		
+		synchronized public boolean isLoadImages()
 		{
+			return is_load_resource;
+		}
+		
+		synchronized public void initAllStreamImages()
+		{
+			is_load_resource = true;
 			Enumeration<ImagesSet> imgs = ImgTable.elements();
 			while (imgs.hasMoreElements()) {
 				ImagesSet ts = imgs.nextElement();
@@ -597,7 +638,8 @@ public class Studio extends AbstractFrame
 			}
 		}
 		
-		public void destoryAllStreamImages(){
+		synchronized public void destoryAllStreamImages(){
+			is_load_resource = false;
 			if (ResourceManager!=null) {
 				for (Object obj : ResourceManager.values()) {
 					if (obj instanceof StreamTiles){

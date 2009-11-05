@@ -6,6 +6,7 @@ import java.io.File;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 
+
 public abstract class ATreeNodeGroup <V extends AFormDisplayObjectViewer<?>> extends TreeNode<Object, DefaultMutableTreeNode, ATreeNodeSet<V>>
 {
 	final public Studio studio; 
@@ -16,7 +17,7 @@ public abstract class ATreeNodeGroup <V extends AFormDisplayObjectViewer<?>> ext
 		
 		this.studio 	= studio;
 		
-		File dir 		= studio.createFile(name);
+		File dir 		= studio.getFile(name);
 		
 		// 枚举 character 文件夹
 		for (File subfile : dir.listFiles())

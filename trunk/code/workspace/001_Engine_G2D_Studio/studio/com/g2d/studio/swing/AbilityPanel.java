@@ -435,7 +435,7 @@ public class AbilityPanel extends JPanel
 				
 				if (field.getName().equals("xls_primary_key")){
 					try{
-						return new XLSRowListComboBox(new XLSFile(Studio.getInstance().createFile(
+						return new XLSRowListComboBox(new XLSFile(Studio.getInstance().getFile(
 								Config.ROOT_XLS + "/" + xls.xls_file_name)));
 					}catch (Exception e) {}
 				}

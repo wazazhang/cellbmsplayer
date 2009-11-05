@@ -1,6 +1,7 @@
 package com.g2d.studio;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 
 import com.cell.gfx.IImages;
@@ -29,6 +30,11 @@ public class Resource extends CellSetResource
 	{
 		super(file, name, stream_image);
 	}
+	
+	public Resource(File file, String name, boolean stream_image) throws Exception
+	{
+		super(file, name, stream_image);
+	}
 
 	@Override
 	protected IImages getLocalImage(ImagesSet img) throws IOException {
@@ -45,8 +51,8 @@ public class Resource extends CellSetResource
 	}
 	
 	/**
+	 * 根据图片组名字确定读入jpg或png
 	 * @author WAZA
-	 * 支持网络缓冲的图片组
 	 */
 	protected class StreamTypeTiles extends StreamTiles
 	{

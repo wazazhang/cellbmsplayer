@@ -4,6 +4,7 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JTree;
 
+
 public class ATreeNodeSet<V extends AFormDisplayObjectViewer<?>> extends TreeNode<Object, ATreeNodeGroup<V>, ATreeNodeLeaf<V>>
 {
 	public ATreeNodeSet(String name, ATreeNodeGroup<V> parent) 
