@@ -83,8 +83,6 @@ public class SimpleFrame extends JFrame implements Runnable, WindowListener, Com
 			}
 		}
 		
-		canvas.onExited();
-		
 		System.exit(0);
 	}
 	
