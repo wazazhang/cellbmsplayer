@@ -6,6 +6,7 @@ import javax.swing.JTree;
 
 
 
+
 public class ATreeNodeLeaf<V extends AFormDisplayObjectViewer<?>> extends TreeNode<V, ATreeNodeSet<V>, ATreeNodeLeaf<V>>
 {
 	public ATreeNodeLeaf(String name, ATreeNodeSet<V> parent) {

@@ -60,7 +60,7 @@ public class FormUIComponentViewGroup extends ATreeNodeGroup<FormUIComponentView
 	@Override
 	public ATreeNodeLeaf<FormUIComponentView>[] createViewers(ATreeNodeSet<FormUIComponentView> parent)  throws Exception
 	{
-		File[] files = studio.createFile(parent.path).listFiles();
+		File[] files = studio.getFile(parent.path).listFiles();
 		{
 			Vector<File> fs = new Vector<File>();
 			for (File file : files){

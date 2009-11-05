@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ComponentEvent;
@@ -26,6 +27,7 @@ import java.util.Collection;
 import java.util.Vector;
 
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
@@ -43,6 +45,7 @@ import com.g2d.cell.CellSetResource;
 
 import com.g2d.cell.CellSetResource.WorldSet.SpriteObject;
 import com.g2d.cell.game.Scene;
+import com.g2d.cell.game.Scene.WorldMap;
 import com.g2d.cell.game.Scene.WorldObject;
 import com.g2d.cell.game.ui.ScenePanel;
 
@@ -161,6 +164,7 @@ public class FormSceneViewer extends AFormDisplayObjectViewer<ScenePanel>
 				AbstractFrame.getScreenWidth() - Studio.getInstance().getWidth(),
 				Studio.getInstance().getHeight());
 		
+		this.setVisible(false);
 	}
 
 	@Override
@@ -236,6 +240,18 @@ public class FormSceneViewer extends AFormDisplayObjectViewer<ScenePanel>
 				return CUtil.getStringCompare().compare(a.getSceneUnit().getID()+"", b.getSceneUnit().getID()+"");
 			}
 		});
+	}
+	
+	@Override
+	public ImageIcon getSnapshot(boolean update)
+	{
+		if (snapshot==null || update){
+			String path = studio.project_path.getPath() + "/" + leaf_node.parent.path + "/jpg.jpg";
+			BufferedImage jpg = Tools.readImage(path);
+			float rate = 80f / (float)jpg.getWidth();
+			snapshot = Tools.createIcon(Tools.combianImage(80, (int)(jpg.getHeight()*rate), jpg));
+		}
+		return snapshot;
 	}
 	
 //	-------------------------------------------------------------------------------------------------------------------------------------
@@ -342,6 +358,7 @@ public class FormSceneViewer extends AFormDisplayObjectViewer<ScenePanel>
 		public SceneContainer(FormSceneViewer view, CellSetResource resource, String worldname) 
 		{
 			super(resource, worldname);
+
 			this.enable_input	= true;
 			this.view			= view;
 			this.getWorld().runtime_sort = false;

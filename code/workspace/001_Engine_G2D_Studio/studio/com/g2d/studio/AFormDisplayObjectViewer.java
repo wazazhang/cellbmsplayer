@@ -252,7 +252,7 @@ public abstract class AFormDisplayObjectViewer<D extends DisplayObject> extends 
 		
 		try 
 		{	
-			file = studio.createFile(leaf_node.path + ".xml") ;
+			file = studio.getFile(leaf_node.path + ".xml") ;
 			
 			if (!file.exists()) {
 				file.createNewFile();

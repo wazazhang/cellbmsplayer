@@ -21,7 +21,7 @@ public class XLSRowListComboBox extends JComboBox implements PropertyCellEdit<XL
 	
 	public XLSRowListComboBox(XLSFile xls_file) 
 	{
-		super(new Vector<XLSRow>(Studio.getInstance().getXLSPrimaryRows(xls_file)));
+		super(new Vector<XLSRow>(Studio.getInstance().getXLSPrimaryRows(xls_file, XLSRow.class)));
 		this.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				panel.fireEditingStopped();

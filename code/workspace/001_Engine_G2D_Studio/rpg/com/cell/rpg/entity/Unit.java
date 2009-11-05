@@ -107,7 +107,7 @@ public abstract class Unit extends RPGObject implements Abilities
 		return ret;
 	}
 	
-	public int size() {
+	public int getAbilitiesCount() {
 		return abilities.size();
 	}
 	
