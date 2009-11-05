@@ -37,6 +37,25 @@ public class XLSRow implements Serializable
 	
 //	---------------------------------------------------------------------------------------------------------
 	
+	/**
+	 * 返回以 xls 的 row[c0][c1] 的集合
+	 * @param xls_file
+	 * @return
+	 */
+	public static <T extends XLSRow> Collection<T> getXLSRows(File path, Class<T> cls)
+	{
+		return getXLSRows(path, new AtomicReference<XLSFile>(null), cls);
+	}
+	
+	/**
+	 * 返回以 xls 的 row[c0][c1] 的集合
+	 * @param xls_file
+	 * @return
+	 */
+	public static <T extends XLSRow> Collection<T> getXLSRows(File path, XLSFile xls_file, Class<T> cls)
+	{
+		return getXLSRows(path, new AtomicReference<XLSFile>(xls_file), cls);
+	}
 	
 	/**
 	 * 返回以 xls 的 row[c0][c1] 的集合

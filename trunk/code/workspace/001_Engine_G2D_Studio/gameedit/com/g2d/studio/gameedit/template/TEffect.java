@@ -1,5 +1,13 @@
 package com.g2d.studio.gameedit.template;
 
-public class TEffect {
+import com.cell.rpg.xls.XLSFile;
+import com.cell.rpg.xls.XLSFullRow;
 
+public class TEffect extends TemplateTreeNode
+{
+
+	public TEffect(XLSFile xls_file, XLSFullRow xls_row) {
+		super(xls_file, xls_row);
+	}
+	
 }
