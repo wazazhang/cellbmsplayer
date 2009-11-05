@@ -354,7 +354,11 @@ public abstract class DisplayObjectContainer extends DisplayObject
 			}
 		}
 	}
-
+	final public void clearChilds() {
+		synchronized(elements_lock) {
+			removeChilds(getChilds());
+		}
+	}
 //	-----------------------------------------------------------------------------------------------------------
 
 	final public boolean contains(DisplayObject child) {
