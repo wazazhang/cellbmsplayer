@@ -175,6 +175,9 @@ FocusListener
 	
 	public void exit() {
 		game_exit = true;
+		if (currentStage!=null) {
+			currentStage.onRemoved(this);
+		}
 	}
 	
 	public boolean isFocusOwner() {
@@ -608,13 +611,6 @@ FocusListener
 		
 	
 		
-	}
-	
-	
-	void onExited() {
-		if (currentStage!=null) {
-			currentStage.onRemoved(this);
-		}
 	}
 	
 //	--------------------------------------------------------------------------------

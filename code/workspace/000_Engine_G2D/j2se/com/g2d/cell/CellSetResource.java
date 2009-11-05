@@ -4,6 +4,7 @@ package com.g2d.cell;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectStreamException;
@@ -104,7 +105,18 @@ public class CellSetResource //implements Serializable
 		is_stream_image = stream_image;
 	}
 	
-	
+	public CellSetResource(File file, String name, boolean stream_image) throws Exception
+	{
+		Path			= file.getPath().replace('\\', '/');
+		PathDir 		= Path.substring(0, Path.lastIndexOf("/")+1);
+		PathName		= Path.substring(Path.lastIndexOf("/")+1);
+		
+		Name 			= name;
+		
+		init();
+		
+		is_stream_image = stream_image;
+	}
 	
 	protected void init() throws Exception
 	{
@@ -387,24 +399,45 @@ public class CellSetResource //implements Serializable
 		
 		return regions;
 	}
+
+//	--------------------------------------------------------------------------------------------------------------------------------------------------
+
 	
-	
-	public WorldSet getSetWorld(String key)
-	{
-		WorldSet world = WorldTable.get(key);
-		return world;
+	public WorldSet getSetWorld(String key) {
+		return WorldTable.get(key);
+	}
+
+	public SpriteSet getSetSprite(String key) {
+		return SprTable.get(key);
+	}
+
+	public MapSet getSetMap(String key) {
+		return MapTable.get(key);
+	}
+
+	public ImagesSet getSetImages(String key) {
+		return ImgTable.get(key);
 	}
 	
-	public SpriteSet getSetSprite(String key)
+	public<T extends CellSetObject> T getSetObject(Class<T> cls, String key)
 	{
-		SpriteSet spr = SprTable.get(key);
-		return spr;
-	}
-	
-	public ImagesSet getSetImages(String key)
-	{
-		ImagesSet img = ImgTable.get(key);
-		return img;
+		CellSetObject ret = null;
+		if (ImagesSet.class.isAssignableFrom(cls)) {
+			ret = ImgTable.get(key);
+		}
+		else if (SpriteSet.class.isAssignableFrom(cls)) {
+			ret = SprTable.get(key);
+		}
+		else if (MapSet.class.isAssignableFrom(cls)) {
+			ret = MapTable.get(key);
+		}
+		else if (WorldSet.class.isAssignableFrom(cls)) {
+			ret = WorldTable.get(key);
+		}
+		if (ret!=null) {
+			return cls.cast(ret);
+		}
+		return null;
 	}
 	
 //	--------------------------------------------------------------------------------------------------------------------------------------------------

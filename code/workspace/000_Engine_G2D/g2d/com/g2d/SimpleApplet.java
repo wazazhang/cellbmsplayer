@@ -69,8 +69,6 @@ public class SimpleApplet extends JApplet implements Runnable
 			
 		}
 		
-		canvas.onExited();
-		
 		System.exit(0);
 	}
 	
