@@ -11,18 +11,19 @@ import javax.swing.tree.DefaultMutableTreeNode;
 
 import com.g2d.Tools;
 import com.g2d.studio.Config;
-import com.g2d.studio.Studio;
 import com.g2d.studio.cpj.entity.CPJFile;
 import com.g2d.studio.gameedit.template.TNpc;
 import com.g2d.studio.gameedit.template.TemplateTreeNode;
+import com.g2d.studio.old.Studio;
+import com.g2d.studio.old.swing.G2DTree;
 import com.g2d.studio.res.Res;
-import com.g2d.studio.swing.G2DTree;
 import com.g2d.util.AbstractFrame;
 
 public class ObjectManager extends AbstractFrame
 {
 	private static final long serialVersionUID = 1L;
 	
+	DefaultMutableTreeNode unit_root;
 	public ObjectManager() 
 	{
 		super.setSize(800, 600);
@@ -36,9 +37,9 @@ public class ObjectManager extends AbstractFrame
 		// TNPC
 		{
 			Class<TNpc> clazz = TNpc.class;
-			DefaultMutableTreeNode unit_root = new DefaultMutableTreeNode("NPC模板");
+			unit_root = new DefaultMutableTreeNode("NPC模板");
 			ArrayList<TNpc> files = TemplateTreeNode.listXLSRows(
-					new File(xls_path.getPath()+File.separatorChar+clazz.getSimpleName()),
+					new File(xls_path.getPath()+File.separatorChar+clazz.getSimpleName()+".xls"),
 					clazz
 					);
 			for (TNpc npc : files) {
@@ -52,12 +53,10 @@ public class ObjectManager extends AbstractFrame
 		
 		this.add(table, BorderLayout.CENTER);
 		
-		
-		
-		
-		
-		
-		
+	}
+	
+	public void loadAll()
+	{
 		
 	}
 	
