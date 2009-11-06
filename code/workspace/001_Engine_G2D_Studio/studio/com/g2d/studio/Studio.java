@@ -78,9 +78,12 @@ public class Studio extends AbstractFrame
 		
 		Config.load(Config.class, g2d_file);
 		
-		JComponent.setDefaultLocale(Locale.CHINA);
-		
-		UIManager.setLookAndFeel(new javax.swing.plaf.synth.SynthLookAndFeel());
+		try{
+			JComponent.setDefaultLocale(Locale.CHINA);
+			UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+		}catch(Exception err){
+			err.printStackTrace();
+		}
 		
 		instance 			= this;
 		project_file 		= new File(g2d_file);

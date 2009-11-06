@@ -3,7 +3,8 @@
 	<classpathentry kind="src" path="cpj"/>
 	<classpathentry kind="src" path="rpg"/>
 	<classpathentry kind="src" path="gameedit"/>
-	<classpathentry excluding="com/g2d/studio/old/|com/g2d/studio/old/actor/|com/g2d/studio/old/scene/|com/g2d/studio/old/swing/|com/g2d/studio/old/ui/" kind="src" path="studio"/>
+	<classpathentry kind="src" path="studio"/>
+	<classpathentry kind="src" path="old"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/000_Engine_Core"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/000_Engine_G2D"/>
