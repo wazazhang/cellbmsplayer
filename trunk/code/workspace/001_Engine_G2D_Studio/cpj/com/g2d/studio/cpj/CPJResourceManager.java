@@ -31,9 +31,9 @@ import com.g2d.studio.cpj.entity.CPJFile;
 import com.g2d.studio.cpj.entity.CPJObject;
 import com.g2d.studio.cpj.entity.CPJSprite;
 import com.g2d.studio.cpj.entity.CPJWorld;
-import com.g2d.studio.old.Studio;
-import com.g2d.studio.old.swing.G2DTree;
-import com.g2d.studio.old.swing.G2DTreeNode;
+import com.g2d.studio.Studio;
+import com.g2d.studio.swing.G2DTree;
+import com.g2d.studio.swing.G2DTreeNode;
 import com.g2d.studio.res.Res;
 import com.g2d.util.AbstractFrame;
 

@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import com.cell.rpg.xls.XLSFile;
 import com.cell.rpg.xls.XLSFullRow;
 import com.cell.rpg.xls.XLSRow;
-import com.g2d.studio.old.swing.G2DTreeNode;
+import com.g2d.studio.swing.G2DTreeNode;
 
 public abstract class TemplateTreeNode extends G2DTreeNode<G2DTreeNode<?>>
 {

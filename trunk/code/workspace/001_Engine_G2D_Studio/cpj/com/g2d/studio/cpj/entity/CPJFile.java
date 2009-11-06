@@ -15,8 +15,8 @@ import com.g2d.Tools;
 import com.g2d.cell.CellSetResource.WorldSet;
 import com.g2d.studio.Config;
 import com.g2d.studio.Resource;
-import com.g2d.studio.old.Studio.SetResource;
-import com.g2d.studio.old.swing.G2DTreeNode;
+import com.g2d.studio.Studio.SetResource;
+import com.g2d.studio.swing.G2DTreeNode;
 import com.g2d.studio.res.Res;
 
 public class CPJFile extends G2DTreeNode<CPJObject<?>>

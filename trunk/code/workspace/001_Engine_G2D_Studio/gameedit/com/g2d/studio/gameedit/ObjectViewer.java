@@ -30,7 +30,7 @@ import com.cell.rpg.RPGObject;
 import com.g2d.Tools;
 import com.g2d.display.DisplayObject;
 import com.g2d.editor.DisplayObjectViewer;
-import com.g2d.studio.old.Studio;
+import com.g2d.studio.Studio;
 import com.g2d.util.AbstractFrame;
 import com.thoughtworks.xstream.XStream;
 
