@@ -1,6 +1,6 @@
 package com.g2d.studio.sound;
 
-import com.g2d.studio.Studio;
+import com.g2d.studio.old.Studio;
 import com.g2d.studio.res.Res;
 import com.g2d.util.AbstractFrame;
 

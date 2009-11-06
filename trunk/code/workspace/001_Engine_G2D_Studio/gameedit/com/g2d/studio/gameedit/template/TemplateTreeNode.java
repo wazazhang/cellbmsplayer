@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import com.cell.rpg.xls.XLSFile;
 import com.cell.rpg.xls.XLSFullRow;
 import com.cell.rpg.xls.XLSRow;
-import com.g2d.studio.swing.G2DTreeNode;
+import com.g2d.studio.old.swing.G2DTreeNode;
 
 public abstract class TemplateTreeNode extends G2DTreeNode<G2DTreeNode<?>>
 {
@@ -15,10 +15,19 @@ public abstract class TemplateTreeNode extends G2DTreeNode<G2DTreeNode<?>>
 	final XLSFullRow	xls_fullrow;
 	
 	TemplateTreeNode(XLSFile xls_file, XLSFullRow xls_row) {
-		this.xls_file = xls_file;
-		this.xls_fullrow = xls_row;
+		this.xls_file		= xls_file;
+		this.xls_fullrow	= xls_row;
 	}
 	
+	final public void load()
+	{
+		
+	}
+	
+	final public void save()
+	{
+		
+	}
 	
 	public XLSFile getXLSFile() {
 		return xls_file;
@@ -50,7 +59,8 @@ public abstract class TemplateTreeNode extends G2DTreeNode<G2DTreeNode<?>>
 		ArrayList<T> ret = new ArrayList<T>();
 		for (XLSFullRow row : XLSFullRow.getXLSRows(file, XLSFullRow.class)) {
 			if (cls.equals(TNpc.class)) {
-				
+				TNpc npc = new TNpc(row.xls_file, row);
+				ret.add(cls.cast(npc));
 			}
 		}
 		return ret;

@@ -2,13 +2,14 @@ package com.g2d.studio.cpj.entity;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 
 import javax.swing.ImageIcon;
 
 import com.g2d.Tools;
 import com.g2d.cell.CellSetResource.CellSetObject;
 import com.g2d.display.DisplayObject;
-import com.g2d.studio.swing.G2DTreeNode;
+import com.g2d.studio.old.swing.G2DTreeNode;
 
 public abstract class CPJObject <T extends CellSetObject> extends G2DTreeNode<CPJObject<?>>
 {
@@ -61,5 +62,6 @@ public abstract class CPJObject <T extends CellSetObject> extends G2DTreeNode<CP
 		return false;
 	}
 	
-	
+
+
 }
