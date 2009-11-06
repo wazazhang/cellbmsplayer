@@ -24,9 +24,7 @@ public class MarkedHashtable extends Hashtable<String, Object>
 		try {
 			T t = (T)get(key);
 			return t;
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
+		} catch (Throwable e) {}
 		return default_value;
 	}
 	
