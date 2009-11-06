@@ -10,6 +10,7 @@ import com.cell.game.CSprite;
 import com.g2d.Tools;
 import com.g2d.cell.CellSprite;
 import com.g2d.cell.CellSetResource.SpriteSet;
+import com.g2d.studio.cpj.CPJResourceType;
 
 
 public class CPJSprite extends CPJObject<SpriteSet>
@@ -20,7 +21,7 @@ public class CPJSprite extends CPJObject<SpriteSet>
 		super(parent, name, SpriteSet.class);
 		System.out.println("read a cpj sprite : " + name);
 	}
-
+	
 	@Override
 	public CellSprite getDisplayObject() {
 		if (cell_sprite==null) {

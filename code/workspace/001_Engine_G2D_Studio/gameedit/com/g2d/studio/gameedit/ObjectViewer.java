@@ -1,6 +1,7 @@
 package com.g2d.studio.gameedit;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,6 +15,8 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.lang.reflect.Field;
+import java.util.Vector;
 
 import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
@@ -21,6 +24,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.event.ChangeEvent;
@@ -31,42 +36,45 @@ import com.g2d.Tools;
 import com.g2d.display.DisplayObject;
 import com.g2d.editor.DisplayObjectViewer;
 import com.g2d.studio.Studio;
+import com.g2d.studio.gameedit.template.TemplateTreeNode;
 import com.g2d.util.AbstractFrame;
 import com.thoughtworks.xstream.XStream;
 
-public abstract class ObjectViewer<T extends RPGObject> extends AbstractFrame
+public class ObjectViewer<T extends TemplateTreeNode> extends JPanel
 {
 	private static final long serialVersionUID = 1L;
-
-	final public Studio studio = Studio.getInstance();
 	
-//	属性
-	final  T			rpg_object;
-	protected boolean	no_save			= false;
-	protected boolean	is_changed		= false;
+	final  T tobject;
 	
-//	DisplayObjectPanel
+	protected JTabbedPane table = new JTabbedPane();
 	
-	public ObjectViewer(T object, File save_path) 
+	public ObjectViewer(T object) 
 	{		
-		this.rpg_object = object;
-		this.setLocation(
-				studio.getX() + studio.getWidth(), 
-				studio.getY());
+		this.tobject = object;
 		this.setLayout(new BorderLayout());
-		setMinimumSize(new Dimension(200, 200));
-	}
-	
-	@Override
-	public void setVisible(boolean b) {
-		super.setVisible(b);
-		if (b) {
-			is_changed = true;
+		
+		{
+			Vector<String> c0 = new Vector<String>(getRPGObject().getXLSRow().getColumns());
+			String[][] datas = new String[c0.size()][];
+			for (int i=0; i<c0.size(); i++) {
+				String c = c0.get(i);
+				datas[i] = new String[]{
+						object.getXLSRow().getDesc(c),
+						object.getXLSRow().getValue(c),
+						};
+			}
+			JTable data_list = new JTable(
+					datas,
+					new String[]{"字段名","字段值"});
+			table.addTab("XLS数据", data_list);
 		}
+		
+		this.add(table);
+		
 	}
 	
 	public T getRPGObject() {
-		return rpg_object;
+		return tobject;
 	}
 	
 //	-------------------------------------------------------------------------------------------------------------------------
@@ -75,91 +83,5 @@ public abstract class ObjectViewer<T extends RPGObject> extends AbstractFrame
 	
 //	-------------------------------------------------------------------------------------------------------------------------
 	
-	abstract public void saveObject(ObjectOutputStream os, File file) throws Exception;
-	
-	abstract public void loadObject(ObjectInputStream is, File file) throws Exception;
-	
-	public void load()
-	{
-		if (no_save) return;
-
-		File file = null;
-			
-		try 
-		{ 
-			file = new File(studio.project_path.getPath() + "/" + ".xml");
-			
-			if (file.exists())
-			{
-				byte[] data = com.cell.io.File.readData(file);
-				if (data!=null) {
-					String text_data = new String(data, "UTF-8");
-					Reader reader = new StringReader(text_data);
-					try{
-						XStream xstream = new XStream();
-						ObjectInputStream in = xstream.createObjectInputStream(reader);
-						try{
-							loadObject(in, file);
-						}finally{
-							in.close();
-						}
-					}finally{
-						reader.close();
-					}
-//					System.out.println("load obj : " + file.getPath());
-				}
-			}
-		} 
-		catch (Exception e) {
-			System.err.println("load error : " + " : " + file);
-			e.printStackTrace();
-			is_changed = true;
-		}
-		
-	}
-	
-	public void save()
-	{
-		if (no_save) return;
-
-		File file = null ;
-		
-		try 
-		{	
-			file = studio.getFile(".xml") ;
-			
-			if (!file.exists()) {
-				file.createNewFile();
-			} else if (!is_changed) {
-				return;
-			}
-			
-			Writer writer = new StringWriter(1024);
-			
-			try{
-				XStream xstream = new XStream();
-				ObjectOutputStream out = xstream.createObjectOutputStream(writer);
-				try{
-					saveObject(out, file);
-				}finally{
-					out.close();
-				}
-				writer.flush();
-				String text_data = writer.toString();
-//				System.out.println(text_data);
-				com.cell.io.File.wirteData(file, text_data.getBytes("UTF-8"));
-			}finally{
-				writer.close();
-			}
-			
-//			System.out.println("save obj : " + file.getPath());
-		} 
-		catch (Exception e) {
-			System.err.println("save error : " + " : " + file);
-			e.printStackTrace();
-			is_changed = true;
-		}
-		
-	}
 	
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="cpj"/>
 	<classpathentry kind="src" path="rpg"/>
+	<classpathentry kind="src" path="cpj"/>
 	<classpathentry kind="src" path="gameedit"/>
 	<classpathentry kind="src" path="studio"/>
 	<classpathentry kind="src" path="old"/>

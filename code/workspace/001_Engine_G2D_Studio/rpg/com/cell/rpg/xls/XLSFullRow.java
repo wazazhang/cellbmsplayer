@@ -3,12 +3,15 @@ package com.cell.rpg.xls;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Hashtable;
+import java.util.LinkedHashMap;
+import java.util.TreeMap;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 public class XLSFullRow extends XLSRow implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 	
-	Hashtable<String, String[]> full_columns = new Hashtable<String, String[]>();
+	LinkedHashMap<String, String[]> full_columns = new LinkedHashMap<String, String[]>();
 	
 	public XLSFullRow(XLSFile file, String id, String desc) {
 		super(file, id, desc);

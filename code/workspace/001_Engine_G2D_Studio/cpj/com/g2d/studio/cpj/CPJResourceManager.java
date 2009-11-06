@@ -2,20 +2,34 @@ package com.g2d.studio.cpj;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.GridLayout;
 import java.awt.ScrollPane;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
 
+import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JToggleButton;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -25,8 +39,10 @@ import com.g2d.Tools;
 import com.g2d.display.DisplayObject;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.Stage;
+import com.g2d.editor.DisplayObjectPanel;
 import com.g2d.editor.DisplayObjectViewer;
 import com.g2d.studio.Config;
+import com.g2d.studio.Studio.ProgressForm;
 import com.g2d.studio.cpj.entity.CPJFile;
 import com.g2d.studio.cpj.entity.CPJObject;
 import com.g2d.studio.cpj.entity.CPJSprite;
@@ -42,15 +58,17 @@ public class CPJResourceManager extends AbstractFrame
 	private static final long serialVersionUID = 1L;
 
 //	----------------------------------------------------------------------------------------------------------------------------
+
+	CPJSpriteViewer sprite_viewer = new CPJSpriteViewer();
 	
 	DefaultMutableTreeNode unit_root;
 	DefaultMutableTreeNode avatar_root;
 	DefaultMutableTreeNode effect_root;
 	DefaultMutableTreeNode scene_root;
 	
-	public CPJResourceManager() 
+	public CPJResourceManager(ProgressForm progress) 
 	{
-		super.setSize(800, 600);
+		super.setSize(800, Studio.getInstance().getHeight());
 		super.setLocation(Studio.getInstance().getX()+Studio.getInstance().getWidth(), Studio.getInstance().getY());
 		super.setTitle("资源管理器");
 		super.setIconImage(Res.icon_edit);
@@ -167,5 +185,103 @@ public class CPJResourceManager extends AbstractFrame
 	}
 
 //	----------------------------------------------------------------------------------------------------------------------------
+	
+	public CPJSpriteViewer getSpriteViewer() {
+		return sprite_viewer;
+	}
+	
+	public class CPJSpriteViewer extends JFrame
+	{
+		private static final long serialVersionUID = 1L;
+		
+		DisplayObjectPanel viewer = new DisplayObjectPanel();
+		
+		CPJSpriteViewer() {
+			super.setSize(400, 400);
+			add(viewer);
+		}
+		
+		public DisplayObjectPanel getViewer() {
+			return viewer;
+		}
+	}
+	
+//	----------------------------------------------------------------------------------------------------------------------------
 
+	public CPJResourceList<?> createObjectsPanel(CPJResourceType type)
+	{
+		switch(type)
+		{
+		case ACTOR:
+			return new CPJResourceList<CPJSprite>(CPJSprite.class, unit_root);
+		case EFFECT:
+			return new CPJResourceList<CPJSprite>(CPJSprite.class, effect_root);
+		case WORLD:
+			return new CPJResourceList<CPJWorld>(CPJWorld.class, scene_root);
+		case AVATAR:
+			return new CPJResourceList<CPJSprite>(CPJSprite.class, avatar_root);
+		}
+		return null;
+	}
+	
+	public class CPJResourceList<T extends CPJObject<?>> extends JScrollPane implements ActionListener
+	{
+		private static final long serialVersionUID = 1L;
+		
+		Hashtable<JToggleButton, T> icons = new Hashtable<JToggleButton, T>();
+		ButtonGroup button_group = new ButtonGroup();
+		final Class<T> type;
+		T selected;
+		JLabel selected_info = new JLabel();
+		
+		
+		@SuppressWarnings("unchecked")
+		CPJResourceList(Class<T> type, DefaultMutableTreeNode root) 
+		{
+			this.type = type;
+			int count = 0;
+			int wcount = 12;
+
+			JPanel panel = new JPanel();
+			Enumeration<G2DTreeNode<?>> childs = root.children();
+			while (childs.hasMoreElements()) {
+				G2DTreeNode<?> cpj = childs.nextElement();
+				for (G2DTreeNode<?> set : cpj.getChilds()) {
+					if (type.isInstance(set)) {
+						T t = type.cast(set);
+						ImageIcon imgicon = t.getIcon(true);
+						JToggleButton icon = new JToggleButton(imgicon);
+						icon.setToolTipText(t.getName());
+						icon.setMinimumSize(new Dimension(
+								imgicon.getIconWidth()+4, 
+								imgicon.getIconHeight()+4));
+						icon.addActionListener(this);
+						icons.put(icon, t);
+						button_group.add(icon);
+						panel.add(icon);
+						count ++;
+					}
+				}
+			}
+			panel.setLayout(new GridLayout(count/wcount+1, wcount, 4, 4));
+			panel.setMinimumSize(panel.getSize());
+			this.setViewportView(panel);
+			this.setAutoscrolls(true);
+		}
+		
+		public T getSelectedObject() {
+			return selected;
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			selected = icons.get(e.getSource());
+			if (selected!=null) {
+				selected_info.setText(selected.getName());
+			}
+		}
+	}
+	
+//	----------------------------------------------------------------------------------------------------------------------------
+	
 }
