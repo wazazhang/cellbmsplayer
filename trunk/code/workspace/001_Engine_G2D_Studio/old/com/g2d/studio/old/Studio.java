@@ -189,49 +189,49 @@ public class Studio extends AbstractFrame
 	// init tool bar
 	private void initToolBar()
 	{
-		JToolBar tool_bar = new JToolBar();
-		
-		// res manager
-		{
-			frame_cpj_resource_manager = new CPJResourceManager();
-			JButton btn = new JButton();
-			btn.setToolTipText(frame_cpj_resource_manager.getTitle());
-			btn.setIcon(Tools.createIcon(Res.icons_bar[7]));
-			btn.addActionListener(new ActionListener(){
-				public void actionPerformed(ActionEvent e) {
-					frame_cpj_resource_manager.setVisible(true);
-				}
-			});
-			tool_bar.add(btn);
-		}
-		// unit manager
-		{
-			frame_object_editor = new ObjectManager();
-			JButton btn = new JButton();
-			btn.setToolTipText(frame_object_editor.getTitle());
-			btn.setIcon(Tools.createIcon(Res.icons_bar[4]));
-			btn.addActionListener(new ActionListener(){
-				public void actionPerformed(ActionEvent e) {
-					frame_object_editor.setVisible(true);
-				}
-			});
-			tool_bar.add(btn);
-		}
-		// sound manager
-		{
-			frame_sound_manager = new SoundManager();
-			JButton btn = new JButton();
-			btn.setToolTipText(frame_sound_manager.getTitle());
-			btn.setIcon(Tools.createIcon(Res.icons_bar[3]));
-			btn.addActionListener(new ActionListener(){
-				public void actionPerformed(ActionEvent e) {
-					frame_sound_manager.setVisible(true);
-				}
-			});
-			tool_bar.add(btn);
-		}
-		
-		this.add(tool_bar, BorderLayout.NORTH);
+//		JToolBar tool_bar = new JToolBar();
+//		
+//		// res manager
+//		{
+//			frame_cpj_resource_manager = new CPJResourceManager();
+//			JButton btn = new JButton();
+//			btn.setToolTipText(frame_cpj_resource_manager.getTitle());
+//			btn.setIcon(Tools.createIcon(Res.icons_bar[7]));
+//			btn.addActionListener(new ActionListener(){
+//				public void actionPerformed(ActionEvent e) {
+//					frame_cpj_resource_manager.setVisible(true);
+//				}
+//			});
+//			tool_bar.add(btn);
+//		}
+//		// unit manager
+//		{
+//			frame_object_editor = new ObjectManager();
+//			JButton btn = new JButton();
+//			btn.setToolTipText(frame_object_editor.getTitle());
+//			btn.setIcon(Tools.createIcon(Res.icons_bar[4]));
+//			btn.addActionListener(new ActionListener(){
+//				public void actionPerformed(ActionEvent e) {
+//					frame_object_editor.setVisible(true);
+//				}
+//			});
+//			tool_bar.add(btn);
+//		}
+//		// sound manager
+//		{
+//			frame_sound_manager = new SoundManager();
+//			JButton btn = new JButton();
+//			btn.setToolTipText(frame_sound_manager.getTitle());
+//			btn.setIcon(Tools.createIcon(Res.icons_bar[3]));
+//			btn.addActionListener(new ActionListener(){
+//				public void actionPerformed(ActionEvent e) {
+//					frame_sound_manager.setVisible(true);
+//				}
+//			});
+//			tool_bar.add(btn);
+//		}
+//		
+//		this.add(tool_bar, BorderLayout.NORTH);
 	}
 	
 	// init state bar

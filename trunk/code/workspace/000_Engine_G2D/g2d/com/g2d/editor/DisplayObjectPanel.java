@@ -20,7 +20,7 @@ import com.g2d.display.Stage;
 
 import com.g2d.util.AbstractFrame;
 
-public abstract class DisplayObjectPanel extends JPanel implements Runnable
+public class DisplayObjectPanel extends JPanel implements Runnable
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -87,11 +87,13 @@ public abstract class DisplayObjectPanel extends JPanel implements Runnable
 	public void run()
 	{
 		while (service!=null) {
-			canvas.getCanvasAdapter().repaint_game();
-			try {
-				Thread.sleep(canvas.getCanvasAdapter().getFrameDelay());
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+			if (isVisible()) {
+				canvas.getCanvasAdapter().repaint_game();
+				try {
+					Thread.sleep(canvas.getCanvasAdapter().getFrameDelay());
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}

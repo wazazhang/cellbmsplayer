@@ -2,22 +2,26 @@ package com.g2d.studio;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
@@ -36,6 +40,7 @@ import com.g2d.Tools;
 import com.g2d.cell.CellSetResourceManager;
 import com.g2d.studio.cpj.CPJResourceManager;
 import com.g2d.studio.gameedit.ObjectManager;
+import com.g2d.studio.icon.IconManager;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.sound.SoundManager;
 import com.g2d.util.AbstractFrame;
@@ -53,20 +58,16 @@ public class Studio extends AbstractFrame
 	
 //	------------------------------------------------------------------------------------------------------------------------------------------
 	
-	ThreadPool						thread_pool = new ThreadPool("studio project");
+	final public ThreadPool			thread_pool = new ThreadPool("studio project");
 	
 	final public File 				project_path;
 	final public File 				project_file;
 	final public File				project_save_path;
-	final public File				project_save_path_scene;
-	final public File				project_save_path_unit;
-	final public File				project_save_path_avatar;
-	final public File				project_save_path_effect;
 
-	CPJResourceManager				frame_cpj_resource_manager;
-	ObjectManager					frame_object_editor;
-	SoundManager					frame_sound_manager;
-
+	private CPJResourceManager		frame_cpj_resource_manager;
+	private ObjectManager			frame_object_manager;
+	private SoundManager			frame_sound_manager;
+	private IconManager				frame_icon_manager;
 
 	private Studio(String g2d_file) throws Throwable
 	{							
@@ -89,26 +90,14 @@ public class Studio extends AbstractFrame
 		project_file 		= new File(g2d_file);
 		project_path 		= new File(project_file.getParent());
 		
-		project_save_path			= new File(project_file.getPath()+".save");
-		project_save_path_scene		= new File(project_save_path.getPath()+File.separatorChar+"scene");
-		project_save_path_unit		= new File(project_save_path.getPath()+File.separatorChar+"unit");
-		project_save_path_avatar	= new File(project_save_path.getPath()+File.separatorChar+"avatar");
-		project_save_path_effect	= new File(project_save_path.getPath()+File.separatorChar+"effect");
+		project_save_path	= new File(project_file.getPath()+".save");
 		project_save_path.mkdirs();
-		project_save_path_scene.mkdirs();
-		project_save_path_unit.mkdirs();
-		project_save_path_avatar.mkdirs();
-		project_save_path_effect.mkdirs();
 		
 		// sysetm init
 		ProgressForm progress_form = new ProgressForm();
 		progress_form.setVisible(true);
-		JProgressBar progress = progress_form.progress;
 		progress_form.setIconImage(Res.icon_edit);
-		progress.setString("init g2d system...");
 
-
-		
 		try
 		{
 			//
@@ -120,12 +109,9 @@ public class Studio extends AbstractFrame
 
 			new SetResourceManager();
 
-			// init jtree
-			progress.setString("init objects...");
-		
-			initToolBar();
+			initToolBar(progress_form);
 			
-			initStateBar();
+			initStateBar(progress_form);
 			
 			this.addWindowListener(new StudioWindowListener());
 			
@@ -139,13 +125,42 @@ public class Studio extends AbstractFrame
 	}
 
 	// init tool bar
-	private void initToolBar()
+	private void initToolBar(ProgressForm progress)
 	{
 		JToolBar tool_bar = new JToolBar();
-		
+	
+		// icon manager
+		{
+			progress.startReadBlock("初始化图标...");
+			frame_icon_manager = new IconManager(progress);
+			JButton btn = new JButton();
+			btn.setToolTipText(frame_icon_manager.getTitle());
+			btn.setIcon(Tools.createIcon(Res.icon_hd));
+			btn.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e) {
+					frame_icon_manager.setVisible(true);
+				}
+			});
+			tool_bar.add(btn);
+		}
+		// sound manager
+		{
+			progress.startReadBlock("初始化声音...");
+			frame_sound_manager = new SoundManager(progress);
+			JButton btn = new JButton();
+			btn.setToolTipText(frame_sound_manager.getTitle());
+			btn.setIcon(Tools.createIcon(Res.icons_bar[3]));
+			btn.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e) {
+					frame_sound_manager.setVisible(true);
+				}
+			});
+			tool_bar.add(btn);
+		}
 		// res manager
 		{
-			frame_cpj_resource_manager = new CPJResourceManager();
+			progress.startReadBlock("初始化资源...");
+			frame_cpj_resource_manager = new CPJResourceManager(progress);
 			JButton btn = new JButton();
 			btn.setToolTipText(frame_cpj_resource_manager.getTitle());
 			btn.setIcon(Tools.createIcon(Res.icons_bar[7]));
@@ -158,46 +173,37 @@ public class Studio extends AbstractFrame
 		}
 		// unit manager
 		{
-			frame_object_editor = new ObjectManager();
+			progress.startReadBlock("初始化物体...");
+			frame_object_manager = new ObjectManager(progress);
 			JButton btn = new JButton();
-			btn.setToolTipText(frame_object_editor.getTitle());
+			btn.setToolTipText(frame_object_manager.getTitle());
 			btn.setIcon(Tools.createIcon(Res.icons_bar[4]));
 			btn.addActionListener(new ActionListener(){
 				public void actionPerformed(ActionEvent e) {
-					frame_object_editor.setVisible(true);
+					frame_object_manager.setVisible(true);
 				}
 			});
 			tool_bar.add(btn);
 		}
-		// sound manager
-		{
-			frame_sound_manager = new SoundManager();
-			JButton btn = new JButton();
-			btn.setToolTipText(frame_sound_manager.getTitle());
-			btn.setIcon(Tools.createIcon(Res.icons_bar[3]));
-			btn.addActionListener(new ActionListener(){
-				public void actionPerformed(ActionEvent e) {
-					frame_sound_manager.setVisible(true);
-				}
-			});
-			tool_bar.add(btn);
-		}
-		
+
 		this.add(tool_bar, BorderLayout.NORTH);
 	}
 	
 	// init state bar
-	private void initStateBar()
+	private void initStateBar(ProgressForm progress)
 	{
 		JToolBar state_bar = new JToolBar();
 		
+		progress.startReadBlock("初始化工具...");
+		
 		// heap state
 		{
-			final JPanel mem_state = new JPanel() {
+			final JLabel mem_state = new JLabel("  "+Util.getHeapString()+"  ") {
+				private static final long serialVersionUID = 1L;
 				public void paint(Graphics g) {
 					super.paint(g);
-					Util.drawHeapStatus(g, Color.BLACK, 1, 1, getWidth() - 2,
-							getHeight() - 2);
+					super.setText("  "+Util.getHeapString()+"  ");
+					Util.drawHeapStatus(g, Color.BLACK, 1, 1, getWidth() - 2, getHeight() - 2, false);
 				}
 			};
 			thread_pool.scheduleAtFixedRate(new Runnable() {
@@ -235,6 +241,25 @@ public class Studio extends AbstractFrame
 
 //-----------------------------------------------------------------------------------------------------------
 
+
+	public CPJResourceManager getCPJResourceManager() {
+		return frame_cpj_resource_manager;
+	}
+
+	public ObjectManager getObjectManager() {
+		return frame_object_manager;
+	}
+
+	public SoundManager getSoundManager() {
+		return frame_sound_manager;
+	}
+	
+	public IconManager getIconManager() {
+		return frame_icon_manager;
+	}
+	
+//-----------------------------------------------------------------------------------------------------------
+
 	/**
 	 * 返回以 xls 的 row[c0][c1] 的集合
 	 * @param xls_file
@@ -246,16 +271,12 @@ public class Studio extends AbstractFrame
 		return XLSRow.getXLSRows(path, new AtomicReference<XLSFile>(xls_file), cls);
 	}
 	
+	
 //	-----------------------------------------------------------------------------------------------------------
 	
 	public void saveAll() 
 	{
-
-	}
-	
-	public void loadAll(JProgressBar progress)
-	{
-	
+		frame_object_manager.saveAll();
 	}
 	
 //	----------------------------------------------------------------------------------------------------------------
@@ -282,18 +303,30 @@ public class Studio extends AbstractFrame
 		}
 	}
 	
-	class ProgressForm extends AbstractFrame
+	public class ProgressForm extends AbstractFrame
 	{
-		final public JProgressBar progress = new JProgressBar();
+		private static final long serialVersionUID = 1L;
+		private JProgressBar progress = new JProgressBar();
+		
+		private int total = 10000;
 		
 		public ProgressForm()
 		{
-			progress.setStringPainted(true);
-			progress.setIndeterminate(true);
-			this.setTitle("loading...");
+			this.setTitle("初始化中...");
 			this.setSize(200, 50);
 			this.add(progress);
 			this.setCenter();
+			progress.setStringPainted(true);
+			progress.setMaximum(total);
+		}
+		
+		public void startReadBlock(String title) {
+			progress.setString(title);
+			progress.setValue(progress.getValue()+2500);
+		}
+		
+		public void increment() {
+			progress.setValue(progress.getValue()+1);
 		}
 	}
 	

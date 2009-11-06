@@ -30,6 +30,9 @@ public class Config extends com.cell.util.Config
 	/**
 	 * 
 	 */
-	public static String ROOT_XLS					= "xls";
 	
+	public static String ROOT_XLS					= "xls";
+	public static String ROOT_SOUND					= "sound";	
+	public static String ROOT_ITEM_ICON				= "icons";
+
 }

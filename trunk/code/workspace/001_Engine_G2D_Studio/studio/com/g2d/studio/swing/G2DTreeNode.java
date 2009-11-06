@@ -73,6 +73,10 @@ public abstract class G2DTreeNode<C extends G2DTreeNode<?>> extends ExtObject im
 //		return null;
 //	}
 
+	public Vector<C> getChilds() {
+		return childs;
+	}
+	
 	public Enumeration<C> children() {
 		return childs.elements();
 	}

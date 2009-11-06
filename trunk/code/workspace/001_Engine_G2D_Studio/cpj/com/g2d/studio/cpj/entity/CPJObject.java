@@ -9,6 +9,8 @@ import javax.swing.ImageIcon;
 import com.g2d.Tools;
 import com.g2d.cell.CellSetResource.CellSetObject;
 import com.g2d.display.DisplayObject;
+import com.g2d.studio.cpj.CPJIndex;
+import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.swing.G2DTreeNode;
 
 public abstract class CPJObject <T extends CellSetObject> extends G2DTreeNode<CPJObject<?>>
@@ -29,6 +31,11 @@ public abstract class CPJObject <T extends CellSetObject> extends G2DTreeNode<CP
 	
 	abstract public DisplayObject getDisplayObject();
 
+	public<O extends CPJObject<?>> CPJIndex<O> getCPJIndex(CPJResourceType type)
+	{
+		return new CPJIndex<O>(type, parent.getName(), name);
+	}
+	
 	public BufferedImage getSnapShoot(){
 		return snapshoot;
 	}
