@@ -3,8 +3,6 @@ package com.cell.rpg.ability;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import com.g2d.studio.old.swing.AbilityPanel;
-
 /**
  * 一组能力的集合，如果子类实现该接口，则在
  * {@link AbilityPanel}里就可以添加集合成员
