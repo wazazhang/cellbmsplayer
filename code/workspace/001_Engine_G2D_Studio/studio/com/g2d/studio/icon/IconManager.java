@@ -53,4 +53,12 @@ public class IconManager extends JFrame
 		return icon_files;
 	}
 	
+	public IconFile getIcon(String icon_name) {
+		for (IconFile icon : icon_files) {
+			if (icon.icon_file_name.equals(icon_name)) {
+				return icon;
+			}
+		}
+		return null;
+	}
 }
