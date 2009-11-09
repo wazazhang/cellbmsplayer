@@ -36,11 +36,11 @@ import com.g2d.Tools;
 import com.g2d.display.DisplayObject;
 import com.g2d.editor.DisplayObjectViewer;
 import com.g2d.studio.Studio;
-import com.g2d.studio.gameedit.template.TemplateTreeNode;
+import com.g2d.studio.gameedit.template.TemplateNode;
 import com.g2d.util.AbstractFrame;
 import com.thoughtworks.xstream.XStream;
 
-public class ObjectViewer<T extends TemplateTreeNode> extends JPanel
+public class TemplateObjectViewer<T extends TemplateNode> extends JPanel
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -48,8 +48,8 @@ public class ObjectViewer<T extends TemplateTreeNode> extends JPanel
 	
 	protected JTabbedPane table = new JTabbedPane();
 	
-	public ObjectViewer(T object) 
-	{		
+	public TemplateObjectViewer(T object) 
+	{
 		this.tobject = object;
 		this.setLayout(new BorderLayout());
 		
