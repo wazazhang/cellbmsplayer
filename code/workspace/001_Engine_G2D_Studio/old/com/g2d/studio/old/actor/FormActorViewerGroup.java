@@ -23,14 +23,14 @@ public class FormActorViewerGroup extends ATreeNodeGroup<FormActorViewer>
 {
 	public FormActorViewerGroup(Studio studio)  throws Exception
 	{
-		super(studio, Config.ROOT_CHARACTER, Config.RES_ACTOR_);
+		super(studio, Config.ACTOR_ROOT, Config.ACTOR_CPJ_PREFIX);
 	}
 	
 
 	@Override
 	public ATreeNodeLeaf<FormActorViewer>[] createViewers(ATreeNodeSet<FormActorViewer> parent)  throws Exception
 	{
-		SetResource res = CellSetResourceManager.getManager().getSet(parent.path + "/" + Config.RES_ACTOR_OUTPUT);
+		SetResource res = CellSetResourceManager.getManager().getSet(parent.path + "/" + Config.ACTOR_OUT_SUFFIX);
 		res.initAllStreamImages();
 		
 		FormActorViewer[] viewers = new FormActorViewer[res.SprTable.size()];

@@ -7,11 +7,12 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import com.g2d.studio.Studio;
-import com.g2d.studio.cpj.CPJResourceManager.CPJResourceList;
 import com.g2d.studio.cpj.entity.CPJObject;
 import com.g2d.util.AbstractDialog;
 import com.g2d.util.AbstractFrame;
@@ -32,10 +33,15 @@ public class SelectResourceDialog<T extends CPJObject<?>> extends AbstractDialog
 		super.setLayout(new BorderLayout());
 		super.setSize(400, 400);
 		super.setCenter();
-		list = (CPJResourceList<T>)Studio.getInstance().getCPJResourceManager().createObjectsPanel(type);
-		super.add(list, BorderLayout.CENTER);
-		super.add(ok, BorderLayout.SOUTH);
-		ok.addActionListener(this);
+		{
+			list = (CPJResourceList<T>)Studio.getInstance().getCPJResourceManager().createObjectsPanel(type);
+			list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+			add(new JScrollPane(list), BorderLayout.CENTER);
+		}
+		{
+			add(ok, BorderLayout.SOUTH);
+			ok.addActionListener(this);
+		}
 	}
 	
 	@Override

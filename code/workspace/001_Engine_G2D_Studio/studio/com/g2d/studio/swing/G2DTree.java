@@ -46,6 +46,29 @@ public class G2DTree extends JTree
 	}
 
 //	----------------------------------------------------------------------------------------------------------------------------
+
+	static public<T extends G2DTreeNode<?>> Vector<T> getNodesSubClass(MutableTreeNode root, Class<T> type)
+	{
+		Vector<T> ret = new Vector<T>();
+		getNodesSubClass(root, type, ret);
+		return ret;
+	}
+	
+	@SuppressWarnings("unchecked")
+	static public<T extends G2DTreeNode<?>> void getNodesSubClass(MutableTreeNode root, Class<T> type, Vector<T> list)
+	{
+		Enumeration files = root.children();
+		while(files.hasMoreElements()) {
+			MutableTreeNode node = (MutableTreeNode)files.nextElement();
+			if (type.isInstance(node)) {
+				list.add(type.cast(node));
+			}
+			//深度遍历
+			getNodesSubClass(node, type, list);
+		}
+	}
+	
+//	----------------------------------------------------------------------------------------------------------------------------
 	
 	static public G2DTreeNode<?> getNode(MutableTreeNode root, String ... path)
 	{

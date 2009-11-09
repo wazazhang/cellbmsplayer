@@ -15,7 +15,7 @@ public class FormSceneViewerGroup  extends ATreeNodeGroup<FormSceneViewer>
 {
 	public FormSceneViewerGroup(Studio studio)  throws Exception
 	{
-		super(studio, Config.ROOT_SCENE, Config.RES_SCENE_);
+		super(studio, Config.SCENE_ROOT, Config.SCENE_FPJ_PREFIX);
 	}
 	
 	
@@ -24,7 +24,7 @@ public class FormSceneViewerGroup  extends ATreeNodeGroup<FormSceneViewer>
 	@Override
 	public ATreeNodeLeaf<FormSceneViewer>[] createViewers(ATreeNodeSet<FormSceneViewer> parent) throws Exception
 	{
-		SetResource res = CellSetResourceManager.getManager().getSet(parent.path + "/" + Config.RES_SCENE_OUTPUT);
+		SetResource res = CellSetResourceManager.getManager().getSet(parent.path + "/" + Config.SCENE_OUT_SUFFIX);
 		
 		FormSceneViewer[] viewers = new FormSceneViewer[res.WorldTable.size()];
 		FormSceneViewerLeaf[] leafs = new FormSceneViewerLeaf[res.WorldTable.size()];
