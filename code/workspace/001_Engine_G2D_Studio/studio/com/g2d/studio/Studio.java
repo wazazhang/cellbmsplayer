@@ -34,6 +34,9 @@ import com.cell.j2se.CAppBridge;
 import com.cell.j2se.CStorage;
 import com.cell.rpg.xls.XLSFile;
 import com.cell.rpg.xls.XLSRow;
+import com.cell.sound.mute_impl.NullSound;
+import com.cell.sound.mute_impl.NullSoundManager;
+import com.cell.sound.openal_impl.JALSoundManager;
 import com.cell.util.concurrent.ThreadPool;
 
 import com.g2d.Tools;
@@ -60,10 +63,15 @@ public class Studio extends AbstractFrame
 	
 	final public ThreadPool			thread_pool = new ThreadPool("studio project");
 	
+	com.cell.sound.SoundManager		sound_system;
+	
 	final public File 				project_path;
 	final public File 				project_file;
 	final public File				project_save_path;
 
+	final public File 				root_xls_path;
+	final public File 				root_sound_path;
+	
 	private CPJResourceManager		frame_cpj_resource_manager;
 	private ObjectManager			frame_object_manager;
 	private SoundManager			frame_sound_manager;
@@ -85,6 +93,13 @@ public class Studio extends AbstractFrame
 		}catch(Exception err){
 			err.printStackTrace();
 		}
+		try{
+			sound_system = JALSoundManager.getInstance();
+		}catch(Throwable tr) {			
+			tr.printStackTrace();
+			sound_system = new NullSoundManager();
+		}			
+		com.cell.sound.SoundManager.setSoundManager(sound_system);
 		
 		instance 			= this;
 		project_file 		= new File(g2d_file);
@@ -92,6 +107,10 @@ public class Studio extends AbstractFrame
 		
 		project_save_path	= new File(project_file.getPath()+".save");
 		project_save_path.mkdirs();
+		
+		
+		root_xls_path 		= Studio.getInstance().getFile(Config.XLS_ROOT);
+		root_sound_path		= Studio.getInstance().getFile(Config.SOUND_ROOT);
 		
 		// sysetm init
 		ProgressForm progress_form = new ProgressForm();
@@ -240,7 +259,10 @@ public class Studio extends AbstractFrame
 	}
 
 //-----------------------------------------------------------------------------------------------------------
-
+	public com.cell.sound.SoundManager getSoundSystem() {
+		return sound_system;
+	}		
+	
 
 	public CPJResourceManager getCPJResourceManager() {
 		return frame_cpj_resource_manager;

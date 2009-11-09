@@ -42,8 +42,10 @@ import com.g2d.studio.Config;
 import com.g2d.studio.Studio.ProgressForm;
 import com.g2d.studio.cpj.entity.CPJFile;
 import com.g2d.studio.gameedit.template.ObjectNode;
+import com.g2d.studio.gameedit.template.TAvatar;
 import com.g2d.studio.gameedit.template.TItem;
 import com.g2d.studio.gameedit.template.TNpc;
+import com.g2d.studio.gameedit.template.TSkill;
 import com.g2d.studio.gameedit.template.TemplateNode;
 import com.g2d.studio.Studio;
 import com.g2d.studio.swing.G2DTree;
@@ -61,8 +63,10 @@ public class ObjectManager extends AbstractFrame implements ActionListener
 	
 	G2DWindowToolBar toolbar = new G2DWindowToolBar(this);
 	
-	final ObjectTreeView<TNpc> 	tree_units_view;
-	final ObjectTreeView<TItem> tree_items_view;
+	final ObjectTreeView<TNpc> 		tree_units_view;
+	final ObjectTreeView<TItem> 	tree_items_view;
+	final ObjectTreeView<TSkill>	tree_skills_view;
+	final ObjectTreeView<TAvatar>	tree_avatars_view;
 	
 	public ObjectManager(ProgressForm progress) 
 	{
@@ -88,6 +92,18 @@ public class ObjectManager extends AbstractFrame implements ActionListener
 			tree_items_view = new ObjectTreeView<TItem>("道具模板", TItem.class, items);
 			table.addTab("物品", Tools.createIcon(Res.icon_res_4), tree_items_view);
 		}
+		// TSkill
+		{
+			ArrayList<TSkill> skills = TemplateNode.listXLSRows(TSkill.class);
+			tree_skills_view = new ObjectTreeView<TSkill>("技能模板", TSkill.class, skills);
+			table.addTab("技能", Tools.createIcon(Res.icon_res_3), tree_skills_view);
+		}
+		// TAvatar
+		{
+			ArrayList<TAvatar> avatars = new ArrayList<TAvatar>();
+			tree_avatars_view = new ObjectTreeView<TAvatar>("AVATAR", TAvatar.class, avatars);
+			table.addTab("AVATAR", Tools.createIcon(Res.icon_res_4), tree_avatars_view);
+		}
 		try {
 			loadAll();
 		} catch (Throwable e) {
@@ -96,19 +112,21 @@ public class ObjectManager extends AbstractFrame implements ActionListener
 		this.add(table, BorderLayout.CENTER);
 	}
 	
-	public <T extends ObjectNode> T getObjectAsXLS(Class<T> type, String xls_id)
+	public <T extends ObjectNode> T getObject(Class<T> type, String id)
 	{
 		MutableTreeNode root = null;
 		if (type.equals(TNpc.class)) {
 			root = tree_units_view.tree_root;
 		} else if (type.equals(TItem.class)) {
 			root = tree_items_view.tree_root;
+		} else if (type.equals(TSkill.class)) {
+			root = tree_skills_view.tree_root;
 		} else {
 			return null;
 		}
 		Vector<T> list = G2DTree.getNodesSubClass(root, type);
 		for (T t : list) {
-			if (t.getID().equals(xls_id)) {
+			if (t.getID().equals(id)) {
 				return t;
 			}
 		}
@@ -132,10 +150,13 @@ public class ObjectManager extends AbstractFrame implements ActionListener
 						String type_name = split[0];
 						String xls_id = CUtil.replaceString(split[1], ".xml", "");
 						if (type_name.equals("npc")) {
-							getObjectAsXLS(TNpc.class, xls_id).load(zip_in, entry);
+							getObject(TNpc.class, xls_id).load(zip_in, entry);
 						}
-						if (type_name.equals("item")) {
-							getObjectAsXLS(TItem.class, xls_id).load(zip_in, entry);
+						else if (type_name.equals("item")) {
+							getObject(TItem.class, xls_id).load(zip_in, entry);
+						}
+						else if (type_name.equals("skill")) {
+							getObject(TSkill.class, xls_id).load(zip_in, entry);
 						}
 					}catch(Exception err) {
 						err.printStackTrace();
@@ -158,14 +179,25 @@ public class ObjectManager extends AbstractFrame implements ActionListener
 		
 		ByteArrayOutputStream baos = new ByteArrayOutputStream(10240);
 		ZipOutputStream zip_out = new ZipOutputStream(baos);
-		try{
-			Enumeration<TNpc> npcs = tree_units_view.tree_root.children();
-			while (npcs.hasMoreElements()) {
-				npcs.nextElement().save(zip_out, "npc");
+		try
+		{
+			if (tree_units_view.tree_root.getChildCount() > 0) {
+				Enumeration<TNpc> npcs = tree_units_view.tree_root.children();
+				while (npcs.hasMoreElements()) {
+					npcs.nextElement().save(zip_out, "npc");
+				}
 			}
-			Enumeration<TItem> items = tree_items_view.tree_root.children();
-			while (items.hasMoreElements()) {
-				items.nextElement().save(zip_out, "item");
+			if (tree_items_view.tree_root.getChildCount() > 0) {
+				Enumeration<TItem> items = tree_items_view.tree_root.children();
+				while (items.hasMoreElements()) {
+					items.nextElement().save(zip_out, "item");
+				}
+			}
+			if (tree_skills_view.tree_root.getChildCount() > 0) {
+				Enumeration<TSkill> skills = tree_skills_view.tree_root.children();
+				while (skills.hasMoreElements()) {
+					skills.nextElement().save(zip_out, "skill");
+				}
 			}
 		}finally{
 			zip_out.close();

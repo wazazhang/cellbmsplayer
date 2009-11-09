@@ -27,8 +27,8 @@ public abstract class G2DListSelectDialog<T extends G2DListItem>  extends Abstra
 		super.setCenter();
 		
 		this.list = list;
+		this.list.setLayoutOrientation(JList.HORIZONTAL_WRAP);		
 		this.list.setVisibleRowCount(list.getModel().getSize()/5+1);
-		this.list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
 		this.add(new JScrollPane(list), BorderLayout.CENTER);
 
 		this.add(ok, BorderLayout.SOUTH);

@@ -36,7 +36,9 @@ public class IconManager extends JFrame
 					try{
 						BufferedImage img = Tools.readImage(file.getPath());
 						if (img!=null) {
-							IconFile icon = new IconFile(file.getName().substring(0, file.getName().length() - Config.ICON_SUFFIX.length()), img);
+							IconFile icon = new IconFile(
+									file.getName().substring(0, file.getName().length() - Config.ICON_SUFFIX.length()), 
+									img);
 							icon_files.add(icon);
 						}
 					}catch(Exception err){}
@@ -44,7 +46,8 @@ public class IconManager extends JFrame
 			}
 		}
 		
-		IconList icons = new IconList(getIcons());
+		IconList icons = new IconList(getIcons());		
+		icons.setVisibleRowCount(icon_files.size()/5+1);
 		icons.setLayoutOrientation(JList.HORIZONTAL_WRAP);
 		this.add(new JScrollPane(icons));
 	}

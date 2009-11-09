@@ -77,27 +77,28 @@ public class TNpc extends TemplateNode
 	class NPCObjectViewer extends TemplateObjectViewer<TNpc>
 	{
 		private static final long serialVersionUID = 1L;
-
+		
+		JButton set_binding = new JButton("绑定资源");
+		
 		public NPCObjectViewer() 
 		{
 			super(TNpc.this);
-			
-			JPanel panel = new JPanel();
-			{
-				JButton set_binding = new JButton("绑定资源");
-				set_binding.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						CPJSprite spr = new CPJResourceSelectDialog<CPJSprite>(CPJResourceType.ACTOR).showDialog();
-						if (spr != null) {
-							cpj_sprite = spr;
-							TNpc.this.getIcon(true);
-							Studio.getInstance().getObjectManager().repaint();
-						}
-					}
-				});
-				panel.add(set_binding, BorderLayout.SOUTH);
+			if (cpj_sprite!=null) {
+				set_binding.setIcon(cpj_sprite.getIcon(false));
 			}
-			table.addTab("属性", panel);
+			set_binding.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					CPJSprite spr = new CPJResourceSelectDialog<CPJSprite>(CPJResourceType.ACTOR).showDialog();
+					if (spr != null) {
+						cpj_sprite = spr;
+						TNpc.this.getIcon(true);
+						set_binding.setIcon(cpj_sprite.getIcon(false));
+						Studio.getInstance().getObjectManager().repaint();
+					}
+				}
+			});
+			page_properties.add(set_binding, BorderLayout.SOUTH);
+			
 		}
 		
 		

@@ -19,7 +19,8 @@ public class ObjectTreeView<T extends ObjectNode> extends JSplitPane implements 
 	final public DefaultMutableTreeNode tree_root;
 	
 	final public Class<T> type;
-	
+
+	final JScrollPane left = new JScrollPane();
 	final JScrollPane right = new JScrollPane();
 	
 	public ObjectTreeView(String title, Class<T> type, ArrayList<T> files) 
@@ -32,10 +33,10 @@ public class ObjectTreeView<T extends ObjectNode> extends JSplitPane implements 
 		G2DTree tree = new G2DTree(tree_root);
 		tree.addTreeSelectionListener(this);
 		tree.setMinimumSize(new Dimension(200, 200));
-		JScrollPane scroll = new JScrollPane(tree);	
-		scroll.setVisible(true);
+		left.setViewportView(tree);
+		
 		this.setOrientation(HORIZONTAL_SPLIT);
-		this.setLeftComponent(tree);
+		this.setLeftComponent(left);
 		this.setRightComponent(right);
 	}
 

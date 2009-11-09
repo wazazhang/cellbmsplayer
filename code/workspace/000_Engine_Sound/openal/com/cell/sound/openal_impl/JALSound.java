@@ -63,7 +63,7 @@ public class JALSound implements ISound
 				
 				this.buffer = buffer;
 				
-				System.out.println("init buffer " + buffer[0]);
+//				System.out.println("init buffer " + buffer[0]);
 			}
 		}
 	}
@@ -75,10 +75,10 @@ public class JALSound implements ISound
 				binded_source.stop();
 				binded_source.setSound(null);
 				binded_source = null;
-				System.out.println("source stop ");
+//				System.out.println("source stop ");
 			}
 			if (buffer!=null) {
-				System.out.println("dispose buffer " + buffer[0]);
+//				System.out.println("dispose buffer " + buffer[0]);
 				al.alDeleteBuffers(1, buffer, 0);
 				buffer = null;
 				int error = al.alGetError();

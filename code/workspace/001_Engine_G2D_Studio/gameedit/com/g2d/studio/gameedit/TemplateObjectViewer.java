@@ -24,6 +24,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JToggleButton;
@@ -48,11 +49,20 @@ public class TemplateObjectViewer<T extends TemplateNode> extends JPanel
 	
 	protected JTabbedPane table = new JTabbedPane();
 	
+	protected JPanel page_properties;
+	protected JTable page_xls_list;
+	
+	
 	public TemplateObjectViewer(T object) 
 	{
 		this.tobject = object;
 		this.setLayout(new BorderLayout());
 		
+		
+		{
+			page_properties = new JPanel();
+			table.addTab("属性", page_properties);
+		}
 		{
 			Vector<String> c0 = new Vector<String>(getRPGObject().getXLSRow().getColumns());
 			String[][] datas = new String[c0.size()][];
@@ -63,10 +73,10 @@ public class TemplateObjectViewer<T extends TemplateNode> extends JPanel
 						object.getXLSRow().getValue(c),
 						};
 			}
-			JTable data_list = new JTable(
+			page_xls_list = new JTable(
 					datas,
 					new String[]{"字段名","字段值"});
-			table.addTab("XLS数据", data_list);
+			table.addTab("XLS数据", new JScrollPane(page_xls_list));
 		}
 		
 		this.add(table);
