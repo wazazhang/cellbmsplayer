@@ -1,4 +1,4 @@
-package com.g2d.studio.gameedit.template;
+package com.g2d.studio.gameedit.entity;
 
 import java.awt.Component;
 import java.io.ObjectInputStream;
@@ -12,6 +12,7 @@ import java.util.zip.ZipOutputStream;
 import javax.swing.ImageIcon;
 
 import com.cell.CIO;
+import com.cell.CUtil;
 import com.g2d.studio.gameedit.TemplateObjectViewer;
 import com.g2d.studio.swing.G2DTreeNode;
 import com.thoughtworks.xstream.XStream;
@@ -77,4 +78,16 @@ public abstract class ObjectNode extends G2DTreeNode<ObjectNode>
 		return entry;
 	}
 	
+	public static String getID(ZipEntry entry)
+	{
+		String[] split = CUtil.splitString(entry.getName(), "/");
+		String xls_id = CUtil.replaceString(split[1], ".xml", "");
+		return xls_id;
+	}
+	
+	public static String getTypeName(ZipEntry entry)
+	{
+		String[] split = CUtil.splitString(entry.getName(), "/");
+		return split[0];
+	}
 }

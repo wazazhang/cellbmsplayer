@@ -15,6 +15,7 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
@@ -28,23 +29,40 @@ public class G2DTree extends JTree
 {
 	private static final long serialVersionUID = 1L;
 
+	final protected DefaultTreeModel tree_model;
+	
 	public G2DTree(DefaultMutableTreeNode tree_root) 
 	{
-		super(tree_root);
+		tree_model = new DefaultTreeModel(tree_root);
+		super.setModel(tree_model);
 		this.setCellRenderer(new TreeRender());
 		this.addMouseListener(new TreeMouseListener());
 		this.addTreeSelectionListener(new TreeSelect());
+		
 	}
 	
-	public G2DTreeNode<?> getSelectedNode() {
+	public DefaultTreeModel getTreeModel(){
+		return tree_model;
+	}
+	
+//	
+//	public G2DTreeNode<?> getSelectedNode() {
+//		Object value = getLastSelectedPathComponent();
+//		if (value instanceof G2DTreeNode<?>){
+//			G2DTreeNode<?> node = ((G2DTreeNode<?>)value);
+//			return node;
+//		}
+//		return null;
+//	}
+//	
+	public MutableTreeNode getSelectedNode() {
 		Object value = getLastSelectedPathComponent();
-		if (value instanceof G2DTreeNode<?>){
-			G2DTreeNode<?> node = ((G2DTreeNode<?>)value);
+		if (value instanceof MutableTreeNode){
+			MutableTreeNode node = ((MutableTreeNode)value);
 			return node;
 		}
 		return null;
 	}
-
 //	----------------------------------------------------------------------------------------------------------------------------
 
 	static public<T extends G2DTreeNode<?>> Vector<T> getNodesSubClass(MutableTreeNode root, Class<T> type)
@@ -148,6 +166,7 @@ public class G2DTree extends JTree
 			G2DTree tree = G2DTree.this;
 			int selRow = getRowForLocation(e.getX(), e.getY());
 			TreePath selPath = getPathForLocation(e.getX(), e.getY());
+			tree.setSelectionPath(selPath);
 			
 			if (selRow != -1) 
 			{
@@ -156,7 +175,6 @@ public class G2DTree extends JTree
 				if (obj instanceof G2DTreeNode<?>) 
 				{
 					G2DTreeNode<?> node = (G2DTreeNode<?>)obj;
-					
 					if (e.getButton() == MouseEvent.BUTTON1) {
 						if (e.getClickCount() == 1) {
 							node.onClicked(tree, e);

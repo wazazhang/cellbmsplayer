@@ -1,6 +1,8 @@
-package com.g2d.studio.gameedit.template;
+package com.g2d.studio.gameedit.dynamic;
 
 import java.util.ArrayList;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import javax.swing.ImageIcon;
 
@@ -8,13 +10,16 @@ import com.cell.rpg.xls.XLSFile;
 import com.cell.rpg.xls.XLSFullRow;
 import com.cell.util.MarkedHashtable;
 
-public class TAvatar extends TemplateNode
+public class DAvatar extends DynamicNode
 {
 	ArrayList<String> avatar_resources = new ArrayList<String>();
 	
+	public DAvatar(IDynamicIDFactory<DAvatar> factory, String name) {
+		super(factory, name);
+	}
 	
-	public TAvatar(XLSFile xls_file, XLSFullRow xls_row) {
-		super(xls_file, xls_row);
+	public DAvatar(ZipInputStream zip_in, ZipEntry entry) {
+		super(zip_in, entry);
 	}
 	
 	@Override

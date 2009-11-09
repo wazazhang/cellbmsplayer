@@ -1,6 +1,8 @@
 package com.g2d.studio.gameedit;
 
 import java.awt.Dimension;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 import javax.swing.JScrollPane;
@@ -9,7 +11,7 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import com.g2d.studio.gameedit.template.ObjectNode;
+import com.g2d.studio.gameedit.entity.ObjectNode;
 import com.g2d.studio.swing.G2DTree;
 
 public class ObjectTreeView<T extends ObjectNode> extends JSplitPane implements TreeSelectionListener
@@ -17,7 +19,7 @@ public class ObjectTreeView<T extends ObjectNode> extends JSplitPane implements 
 	private static final long serialVersionUID = 1L;
 
 	final public DefaultMutableTreeNode tree_root;
-	
+	final public G2DTree g2d_tree;
 	final public Class<T> type;
 
 	final JScrollPane left = new JScrollPane();
@@ -30,14 +32,16 @@ public class ObjectTreeView<T extends ObjectNode> extends JSplitPane implements 
 		for (T node : files) {
 			tree_root.add(node);
 		}
-		G2DTree tree = new G2DTree(tree_root);
-		tree.addTreeSelectionListener(this);
-		tree.setMinimumSize(new Dimension(200, 200));
-		left.setViewportView(tree);
+		g2d_tree = new G2DTree(tree_root);
+		g2d_tree.addTreeSelectionListener(this);
+		g2d_tree.setMinimumSize(new Dimension(200, 200));
+		left.setViewportView(g2d_tree);
 		
 		this.setOrientation(HORIZONTAL_SPLIT);
 		this.setLeftComponent(left);
 		this.setRightComponent(right);
+		
+		
 	}
 
 	@Override
