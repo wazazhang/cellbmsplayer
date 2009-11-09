@@ -258,25 +258,14 @@ public class Studio extends AbstractFrame
 		return frame_icon_manager;
 	}
 	
-//-----------------------------------------------------------------------------------------------------------
+//	-----------------------------------------------------------------------------------------------------------
 
-//	/**
-//	 * 返回以 xls 的 row[c0][c1] 的集合
-//	 * @param xls_file
-//	 * @return
-//	 */
-//	public<T extends XLSRow> Collection<T> getXLSPrimaryRows(XLSFile xls_file, Class<T> cls)
-//	{
-//		File path = getFile(Config.XLS_ROOT + "/" + xls_file.xls_file);
-//		return XLSRow.getXLSRows(path, new AtomicReference<XLSFile>(xls_file), cls);
-//	}
-	
-	
 //	-----------------------------------------------------------------------------------------------------------
 	
 	public void saveAll() 
 	{
 		frame_object_manager.saveAll();
+		
 	}
 	
 //	----------------------------------------------------------------------------------------------------------------

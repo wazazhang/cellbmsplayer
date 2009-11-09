@@ -25,6 +25,7 @@ import com.g2d.Tools;
 import com.g2d.studio.Config;
 import com.g2d.studio.Studio.ProgressForm;
 import com.g2d.studio.cpj.entity.CPJFile;
+import com.g2d.studio.gameedit.template.TItem;
 import com.g2d.studio.gameedit.template.TNpc;
 import com.g2d.studio.gameedit.template.TemplateTreeNode;
 import com.g2d.studio.Studio;
@@ -37,10 +38,11 @@ import com.sun.org.apache.bcel.internal.generic.NEW;
 public class ObjectManager extends AbstractFrame implements ActionListener
 {
 	private static final long serialVersionUID = 1L;
-	
-	DefaultMutableTreeNode unit_root;
-	
+
 	G2DWindowToolBar toolbar = new G2DWindowToolBar(this);
+	
+	final ObjectTreeView<TNpc> 	tree_units_view;
+	final ObjectTreeView<TItem> tree_items_view;
 	
 	public ObjectManager(ProgressForm progress) 
 	{
@@ -49,20 +51,26 @@ public class ObjectManager extends AbstractFrame implements ActionListener
 		super.setTitle("物体编辑器");
 		super.setIconImage(Res.icon_edit);
 
-		File xls_path = Studio.getInstance().getFile(Config.XLS_ROOT);
+		this.add(toolbar, BorderLayout.NORTH);
 		
+		
+		File xls_path = Studio.getInstance().getFile(Config.XLS_ROOT);
+
 		JTabbedPane table = new JTabbedPane();
 		// TNPC
 		{
-			table.addTab("NPC", 
-					Tools.createIcon(Res.icon_res_2), 
-					new Split<TNpc>("NPC模板", TNpc.class, xls_path));
+			tree_units_view = new ObjectTreeView<TNpc>("NPC模板", TNpc.class, xls_path);
+			table.addTab("NPC", Tools.createIcon(Res.icon_res_2), tree_units_view);
 		}
-
+		// TItem
+		{
+			tree_items_view = new ObjectTreeView<TItem>("道具模板", TItem.class, xls_path);
+			table.addTab("物品", Tools.createIcon(Res.icon_res_4), tree_items_view);
+		}
+		
+		
 		this.add(table, BorderLayout.CENTER);
 
-		
-		this.add(toolbar, BorderLayout.NORTH);
 	}
 	
 	@Override
@@ -75,53 +83,20 @@ public class ObjectManager extends AbstractFrame implements ActionListener
 	@SuppressWarnings("unchecked")
 	public void saveAll()
 	{
-		Enumeration<TNpc> npcs = unit_root.children();
+		Enumeration<TNpc> npcs = tree_units_view.tree_root.children();
 		while (npcs.hasMoreElements()) {
 			TNpc npc = npcs.nextElement();
 			npc.save();
 		}
+		Enumeration<TItem> items = tree_items_view.tree_root.children();
+		while (items.hasMoreElements()) {
+			TItem item = items.nextElement();
+			item.save();
+		}
 		System.out.println(getClass().getSimpleName() + " : save all");
 	}
 	
-	class Split<T extends TemplateTreeNode> extends JSplitPane implements TreeSelectionListener
-	{
-		private static final long serialVersionUID = 1L;
 
-		final public Class<T> type;
-		
-		final JScrollPane right = new JScrollPane();
-		
-		public Split(String title, Class<T> type, File xls_path) 
-		{
-			this.type = type;
-			unit_root = new DefaultMutableTreeNode("NPC模板");
-			ArrayList<T> files = TemplateTreeNode.listXLSRows(
-					new File(xls_path.getPath()+File.separatorChar+type.getSimpleName().toLowerCase()+Config.XLS_SUFFIX),
-					type);
-			for (T npc : files) {
-				npc.load();
-				unit_root.add(npc);
-			}
-			G2DTree tree = new G2DTree(unit_root);
-			tree.addTreeSelectionListener(this);
-			tree.setMinimumSize(new Dimension(200, 200));
-			JScrollPane scroll = new JScrollPane(tree);	
-			scroll.setVisible(true);
-			this.setOrientation(HORIZONTAL_SPLIT);
-			this.setLeftComponent(tree);
-			this.setRightComponent(right);
-		}
-	
-		@Override
-		public void valueChanged(TreeSelectionEvent e) {
-			if (type.isInstance(e.getPath().getLastPathComponent())) {
-				T node = type.cast(e.getPath().getLastPathComponent());
-				right.setViewportView(node.getEditComponent());
-			}
-		}
-		
-		
-	}
 	
 	
 }

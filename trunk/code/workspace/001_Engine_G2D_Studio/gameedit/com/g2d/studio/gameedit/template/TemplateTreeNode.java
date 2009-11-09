@@ -134,7 +134,10 @@ public abstract class TemplateTreeNode extends G2DTreeNode<G2DTreeNode<?>>
 			if (cls.equals(TNpc.class)) {
 				TNpc npc = new TNpc(row.xls_file, row);
 				ret.add(cls.cast(npc));
-			}
+			} else if (cls.equals(TItem.class)) {
+				TItem item = new TItem(row.xls_file, row);
+				ret.add(cls.cast(item));
+			} 
 		}
 		return ret;
 	}
