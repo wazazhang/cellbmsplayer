@@ -13,7 +13,7 @@ public class CPJResourceList<T extends CPJObject<?>> extends G2DList<T>
 	private static final long serialVersionUID = 1L;
 	
 	final Class<T>	type;
-	private T		selected;
+//	private T		selected;
 
 	CPJResourceList(Class<T> type, DefaultMutableTreeNode root) 
 	{
@@ -22,10 +22,10 @@ public class CPJResourceList<T extends CPJObject<?>> extends G2DList<T>
 		super.setListData(list);
 	}
 	
-	public T getSelectedObject() {
-		selected = type.cast(super.getSelectedValue());
-		return selected;
-	}
+//	public T getSelectedObject() {
+//		selected = type.cast(super.getSelectedValue());
+//		return selected;
+//	}
 	
 }
 

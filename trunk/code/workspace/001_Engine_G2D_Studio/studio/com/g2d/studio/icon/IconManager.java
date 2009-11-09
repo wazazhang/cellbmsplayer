@@ -20,7 +20,7 @@ public class IconManager extends JFrame
 {
 	private static final long serialVersionUID = 1L;
 	
-	G2DList<IconFile> icons;
+	Vector<IconFile> icon_files = new Vector<IconFile>();
 	
 	public IconManager(ProgressForm progress) 
 	{
@@ -29,26 +29,28 @@ public class IconManager extends JFrame
 		super.setTitle("图标管理器");
 		super.setIconImage(Res.icon_edit);
 		
-		icons = new G2DList<IconFile>(getIcons());
+		{
+			File icon_dir = Studio.getInstance().getFile(Config.ICON_ROOT);
+			for (File file : icon_dir.listFiles()) {
+				if (file.getName().endsWith(Config.ICON_SUFFIX)) {
+					try{
+						BufferedImage img = Tools.readImage(file.getPath());
+						if (img!=null) {
+							IconFile icon = new IconFile(file.getName().substring(0, file.getName().length() - Config.ICON_SUFFIX.length()), img);
+							icon_files.add(icon);
+						}
+					}catch(Exception err){}
+				}
+			}
+		}
+		
+		IconList icons = new IconList(getIcons());
 		icons.setLayoutOrientation(JList.HORIZONTAL_WRAP);
 		this.add(new JScrollPane(icons));
 	}
 	
-	public static Vector<IconFile> getIcons() {
-		Vector<IconFile> icons = new Vector<IconFile>();
-		File icon_dir = Studio.getInstance().getFile(Config.ICON_ROOT);
-		for (File file : icon_dir.listFiles()) {
-			if (file.getName().endsWith(Config.ICON_SUFFIX)) {
-				try{
-					BufferedImage img = Tools.readImage(file.getPath());
-					if (img!=null) {
-						IconFile icon = new IconFile(file.getName().substring(0, file.getName().length() - Config.ICON_SUFFIX.length()), img);
-						icons.add(icon);
-					}
-				}catch(Exception err){}
-			}
-		}
-		return icons;
+	public Vector<IconFile> getIcons() {
+		return icon_files;
 	}
 	
 }

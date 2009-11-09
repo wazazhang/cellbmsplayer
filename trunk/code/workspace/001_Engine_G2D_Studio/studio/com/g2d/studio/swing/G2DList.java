@@ -37,7 +37,14 @@ public class G2DList<T extends G2DListItem> extends JList
 	}
 	
 	
-	
+	@SuppressWarnings("unchecked")
+	public T getSelectedItem()
+	{
+		try{
+			return (T)super.getSelectedValue();
+		}catch(Exception err){}
+		return null;
+	}
 	
 	
 	class ListRender extends JToggleButton implements ListCellRenderer

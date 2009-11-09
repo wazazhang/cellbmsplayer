@@ -17,7 +17,7 @@ import com.g2d.editor.DisplayObjectPanel;
 import com.g2d.studio.Studio;
 import com.g2d.studio.cpj.CPJIndex;
 import com.g2d.studio.cpj.CPJResourceType;
-import com.g2d.studio.cpj.SelectResourceDialog;
+import com.g2d.studio.cpj.CPJResourceSelectDialog;
 import com.g2d.studio.cpj.entity.CPJSprite;
 import com.g2d.studio.gameedit.ObjectViewer;
 import com.g2d.studio.res.Res;
@@ -90,7 +90,7 @@ public class TNpc extends TemplateTreeNode
 				JButton set_binding = new JButton("绑定资源");
 				set_binding.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						CPJSprite spr = new SelectResourceDialog<CPJSprite>(CPJResourceType.ACTOR).showDialog();
+						CPJSprite spr = new CPJResourceSelectDialog<CPJSprite>(CPJResourceType.ACTOR).showDialog();
 						cpj_sprite = spr;
 						icon_snapshot = null;
 						Studio.getInstance().getObjectManager().repaint();
