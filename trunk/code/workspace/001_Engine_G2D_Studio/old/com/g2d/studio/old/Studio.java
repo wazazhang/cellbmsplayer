@@ -368,11 +368,11 @@ public class Studio extends AbstractFrame
 	{
 		ArrayList<XLSFile> ret = new ArrayList<XLSFile>();
 		
-		File root_xls = getFile(Config.ROOT_XLS);
+		File root_xls = getFile(Config.XLS_ROOT);
 		
 		for (File xls : root_xls.listFiles(new FilenameFilter(){
 			public boolean accept(File dir, String name) {
-				return name.lastIndexOf(".xls")>0;
+				return name.lastIndexOf(Config.XLS_SUFFIX)>0;
 			}
 		})) {
 			ret.add(new XLSFile(xls));
@@ -388,7 +388,7 @@ public class Studio extends AbstractFrame
 	 */
 	public<T extends XLSRow> Collection<T> getXLSPrimaryRows(XLSFile xls_file, Class<T> cls)
 	{
-		File path = getFile(Config.ROOT_XLS + "/" + xls_file.xls_file);
+		File path = getFile(Config.XLS_ROOT + "/" + xls_file.xls_file);
 		return XLSRow.getXLSRows(path, new AtomicReference<XLSFile>(xls_file), cls);
 	}
 	

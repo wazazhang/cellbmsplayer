@@ -49,7 +49,7 @@ public class ObjectManager extends AbstractFrame implements ActionListener
 		super.setTitle("物体编辑器");
 		super.setIconImage(Res.icon_edit);
 
-		File xls_path = Studio.getInstance().getFile(Config.ROOT_XLS);
+		File xls_path = Studio.getInstance().getFile(Config.XLS_ROOT);
 		
 		JTabbedPane table = new JTabbedPane();
 		// TNPC
@@ -96,7 +96,7 @@ public class ObjectManager extends AbstractFrame implements ActionListener
 			this.type = type;
 			unit_root = new DefaultMutableTreeNode("NPC模板");
 			ArrayList<T> files = TemplateTreeNode.listXLSRows(
-					new File(xls_path.getPath()+File.separatorChar+type.getSimpleName()+".xls"),
+					new File(xls_path.getPath()+File.separatorChar+type.getSimpleName().toLowerCase()+Config.XLS_SUFFIX),
 					type);
 			for (T npc : files) {
 				npc.load();

@@ -80,9 +80,9 @@ public class CPJResourceManager extends AbstractFrame
 		{
 			unit_root = new DefaultMutableTreeNode("单位模板");
 			ArrayList<CPJFile> files = CPJFile.listFile(
-					path + "/" + Config.ROOT_CHARACTER, 
-					Config.RES_ACTOR_, 
-					Config.RES_ACTOR_OUTPUT);
+					path + "/" + Config.ACTOR_ROOT, 
+					Config.ACTOR_CPJ_PREFIX, 
+					Config.ACTOR_OUT_SUFFIX);
 			for (CPJFile file : files) {
 				file.loadAllSprite();
 				unit_root.add(file);
@@ -96,9 +96,9 @@ public class CPJResourceManager extends AbstractFrame
 		{
 			avatar_root = new DefaultMutableTreeNode("AVATAR模板");
 			ArrayList<CPJFile> files = CPJFile.listFile(
-					path + "/" + Config.ROOT_AVATAR, 
-					Config.RES_AVATAR_, 
-					Config.RES_AVATAR_OUTPUT);
+					path + "/" + Config.AVATAR_ROOT, 
+					Config.AVATAR_CPJ_PREFIX, 
+					Config.AVATAR_OUT_SUFFIX);
 			for (CPJFile file : files) {
 				file.loadAllSprite();
 				avatar_root.add(file);
@@ -112,9 +112,9 @@ public class CPJResourceManager extends AbstractFrame
 		{
 			effect_root = new DefaultMutableTreeNode("特效模板");
 			ArrayList<CPJFile> files = CPJFile.listFile(
-					path + "/" + Config.ROOT_EFFECT, 
-					Config.RES_EFFECT_, 
-					Config.RES_EFFECT_OUTPUT);
+					path + "/" + Config.EFFECT_ROOT, 
+					Config.EFFECT_CPJ_PREFIX, 
+					Config.EFFECT_OUT_SUFFIX);
 			for (CPJFile file : files) {
 				file.loadAllSprite();
 				effect_root.add(file);
@@ -128,9 +128,9 @@ public class CPJResourceManager extends AbstractFrame
 		{
 			scene_root = new DefaultMutableTreeNode("场景模板");
 			ArrayList<CPJFile> files = CPJFile.listFile(
-					path + "/" + Config.ROOT_SCENE, 
-					Config.RES_SCENE_, 
-					Config.RES_SCENE_OUTPUT);
+					path + "/" + Config.SCENE_ROOT, 
+					Config.SCENE_FPJ_PREFIX, 
+					Config.SCENE_OUT_SUFFIX);
 			for (CPJFile file : files) {
 				file.loadAllWorld();
 				scene_root.add(file);
@@ -224,64 +224,7 @@ public class CPJResourceManager extends AbstractFrame
 		return null;
 	}
 	
-	public class CPJResourceList<T extends CPJObject<?>> extends JScrollPane implements ActionListener
-	{
-		private static final long serialVersionUID = 1L;
-		
-		Hashtable<JToggleButton, T> icons = new Hashtable<JToggleButton, T>();
-		ButtonGroup button_group = new ButtonGroup();
-		final Class<T> type;
-		T selected;
-		JLabel selected_info = new JLabel();
-		
-		
-		@SuppressWarnings("unchecked")
-		CPJResourceList(Class<T> type, DefaultMutableTreeNode root) 
-		{
-			this.type = type;
-			int count = 0;
-			int wcount = 12;
 
-			JPanel panel = new JPanel();
-			Enumeration<G2DTreeNode<?>> childs = root.children();
-			while (childs.hasMoreElements()) {
-				G2DTreeNode<?> cpj = childs.nextElement();
-				for (G2DTreeNode<?> set : cpj.getChilds()) {
-					if (type.isInstance(set)) {
-						T t = type.cast(set);
-						ImageIcon imgicon = t.getIcon(true);
-						JToggleButton icon = new JToggleButton(imgicon);
-						icon.setToolTipText(t.getName());
-						icon.setMinimumSize(new Dimension(
-								imgicon.getIconWidth()+4, 
-								imgicon.getIconHeight()+4));
-						icon.addActionListener(this);
-						icons.put(icon, t);
-						button_group.add(icon);
-						panel.add(icon);
-						count ++;
-					}
-				}
-			}
-			panel.setLayout(new GridLayout(count/wcount+1, wcount, 4, 4));
-			panel.setMinimumSize(panel.getSize());
-			this.setViewportView(panel);
-			this.setAutoscrolls(true);
-		}
-		
-		public T getSelectedObject() {
-			return selected;
-		}
-		
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			selected = icons.get(e.getSource());
-			if (selected!=null) {
-				selected_info.setText(selected.getName());
-			}
-		}
-	}
-	
 //	----------------------------------------------------------------------------------------------------------------------------
 	
 }

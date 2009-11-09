@@ -11,9 +11,10 @@ import com.g2d.cell.CellSetResource.CellSetObject;
 import com.g2d.display.DisplayObject;
 import com.g2d.studio.cpj.CPJIndex;
 import com.g2d.studio.cpj.CPJResourceType;
+import com.g2d.studio.swing.G2DListItem;
 import com.g2d.studio.swing.G2DTreeNode;
 
-public abstract class CPJObject <T extends CellSetObject> extends G2DTreeNode<CPJObject<?>>
+public abstract class CPJObject <T extends CellSetObject> extends G2DTreeNode<CPJObject<?>> implements G2DListItem
 {
 	final protected CPJFile parent;
 	
@@ -57,6 +58,11 @@ public abstract class CPJObject <T extends CellSetObject> extends G2DTreeNode<CP
 			}
 		}
 		return super.getIcon(update);
+	}
+	
+	@Override
+	public ImageIcon getIcon() {
+		return getIcon(true);
 	}
 	
 	@Override
