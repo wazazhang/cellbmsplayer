@@ -53,17 +53,29 @@ public class JALPlayer implements IPlayer, Comparable<JALPlayer>
 	}
 	
 	@Override
-	public void setSound(ISound sound) {
-		if (source!=null && sound instanceof JALSound) {
-			al_sound = (JALSound)sound;
-			if (al_sound.buffer != null) {
-				al.alSourcei(source[0], AL.AL_BUFFER,	al_sound.buffer[0]);
-				// Do another error check
-				if (al.alGetError() != AL.AL_NO_ERROR) {
-					System.err.println("Error setting up OpenAL source : " + al_sound);
-					return;
+	public void setSound(ISound sound)
+	{
+		if (source!=null) 
+		{
+			synchronized(al) 
+			{
+				if (al_sound!=null && al_sound.buffer!=null) {
+					al.alSourceUnqueueBuffers(source[0], 1, al_sound.buffer, 0);
 				}
-				last_bind_time = System.currentTimeMillis();
+				
+				if (sound instanceof JALSound) {
+					al_sound = (JALSound)sound;
+					if (al_sound.buffer != null) {
+						al.alSourceQueueBuffers(source[0], 1, al_sound.buffer, 0);
+//						al.alSourcei(source[0], AL.AL_BUFFER,	al_sound.buffer[0]);
+						if (al.alGetError() != AL.AL_NO_ERROR) {
+							System.err.println("Error setting up OpenAL source : " + al_sound);
+							return;
+						}
+						al_sound.binded_source = this;
+						last_bind_time = System.currentTimeMillis();
+					}
+				}
 			}
 		}
 	}
@@ -77,17 +89,41 @@ public class JALPlayer implements IPlayer, Comparable<JALPlayer>
 		if (source!=null && al_sound!=null) {
 			al.alSourcePlay(source[0]);
 			al.alSourcei(source[0], AL.AL_LOOPING,	loop?1:0);
+			int error = al.alGetError();
+			if (error != AL.AL_NO_ERROR) {
+				try{
+					throw new Exception("error code " + error);
+				}catch(Exception err){
+					err.printStackTrace();
+				}
+			}
 		}
 	}
 	public void pause() {
 		if (source!=null){
 			al.alSourcePause(source[0]);
+			int error = al.alGetError();
+			if (error != AL.AL_NO_ERROR) {
+				try{
+					throw new Exception("error code " + error);
+				}catch(Exception err){
+					err.printStackTrace();
+				}
+			}
 		}
 	}
 	
 	public void stop() {
 		if (source!=null){
-			al.alSourceStop(source[0]);
+			al.alSourceStop(source[0]);				
+			int error = al.alGetError();
+			if (error != AL.AL_NO_ERROR) {
+				try{
+					throw new Exception("error code " + error);
+				}catch(Exception err){
+					err.printStackTrace();
+				}
+			}
 		}
 	}
 
@@ -103,10 +139,6 @@ public class JALPlayer implements IPlayer, Comparable<JALPlayer>
 	
 	public void dispose() {
 		stop();
-		if (source!=null) {
-			//al.alDeleteSources(1, source, 0);
-			//System.out.println("alDeleteSources : ");
-		}
 	}
 
 	@Override
