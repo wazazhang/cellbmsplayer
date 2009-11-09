@@ -51,18 +51,11 @@ public abstract class CPJObject <T extends CellSetObject> extends G2DTreeNode<CP
 	}
 
 	@Override
-	public ImageIcon getIcon(boolean update) {
-		if (icon_snapshot == null) {
-			if (getSnapShoot()!=null) {
-				icon_snapshot = Tools.createIcon(getSnapShoot());
-			}
+	final public ImageIcon createIcon() {
+		if (getSnapShoot()!=null) {
+			return Tools.createIcon(getSnapShoot());
 		}
-		return super.getIcon(update);
-	}
-	
-	@Override
-	public ImageIcon getIcon() {
-		return getIcon(true);
+		return null;
 	}
 	
 	@Override

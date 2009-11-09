@@ -32,7 +32,6 @@ public class ObjectTreeView<T extends TemplateTreeNode> extends JSplitPane imple
 				new File(xls_path.getPath()+File.separatorChar+type.getSimpleName().toLowerCase()+Config.XLS_SUFFIX),
 				type);
 		for (T node : files) {
-			node.load();
 			tree_root.add(node);
 		}
 		G2DTree tree = new G2DTree(tree_root);

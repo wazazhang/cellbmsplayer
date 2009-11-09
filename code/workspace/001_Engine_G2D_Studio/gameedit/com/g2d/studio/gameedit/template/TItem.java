@@ -54,15 +54,12 @@ public class TItem  extends TemplateTreeNode
 	}
 	
 	@Override
-	public ImageIcon getIcon(boolean update) {
-		if (icon_snapshot == null) {
-			if (icon_file!=null) {
-				icon_snapshot = Tools.createIcon(Tools.combianImage(20, 20, icon_file.image));
-			} else {
-				icon_snapshot = Tools.createIcon(Tools.combianImage(20, 20, Res.icon_error));
-			}
+	public ImageIcon createIcon() {
+		if (icon_file!=null) {
+			return Tools.createIcon(Tools.combianImage(20, 20, icon_file.image));
+		} else {
+			return Tools.createIcon(Tools.combianImage(20, 20, Res.icon_error));
 		}
-		return super.getIcon(update);
 	}
 
 	
@@ -90,9 +87,11 @@ public class TItem  extends TemplateTreeNode
 				set_binding.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						IconFile icon = new IconSelectDialog().showDialog();
-						icon_file = icon;
-						icon_snapshot = null;
-						Studio.getInstance().getObjectManager().repaint();
+						if (icon != null) {
+							icon_file = icon;
+							TItem.this.getIcon(true);
+							Studio.getInstance().getObjectManager().repaint();
+						}
 					}
 				});
 				panel.add(set_binding, BorderLayout.SOUTH);

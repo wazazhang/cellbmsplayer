@@ -32,7 +32,7 @@ public class IconFile implements G2DListItem
 	}
 	
 	@Override
-	public ImageIcon getIcon() {
+	public ImageIcon getIcon(boolean update) {
 		return icon;
 	}
 	
