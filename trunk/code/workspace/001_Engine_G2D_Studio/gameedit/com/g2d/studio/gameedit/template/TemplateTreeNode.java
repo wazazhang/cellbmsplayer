@@ -1,6 +1,8 @@
 package com.g2d.studio.gameedit.template;
 
 import java.awt.Component;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -12,10 +14,14 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
+import com.cell.CIO;
 import com.cell.rpg.xls.XLSFile;
 import com.cell.rpg.xls.XLSFullRow;
 import com.cell.rpg.xls.XLSRow;
@@ -36,15 +42,7 @@ public abstract class TemplateTreeNode extends G2DTreeNode<G2DTreeNode<?>>
 		this.xls_fullrow	= xls_row;
 		System.out.println("read a xls row : " + xls_file.xls_file + " : " + xls_fullrow.id + " : " + xls_fullrow.desc);
 	}
-	
-	final public File getSaveFile()
-	{
-		return new File(Studio.getInstance().project_save_path.getPath() + File.separatorChar +
-			"template" + File.separatorChar +
-			getClass().getSimpleName().toLowerCase() + File.separatorChar +
-			xls_fullrow.id+".xml");
-	}
-	
+
 	public ObjectViewer<?> getEditComponent(){
 		if (edit_component==null) {
 			edit_component = new ObjectViewer<TemplateTreeNode>(this);
@@ -52,54 +50,36 @@ public abstract class TemplateTreeNode extends G2DTreeNode<G2DTreeNode<?>>
 		return edit_component;
 	}
 	
-	final public void load()
-	{
-		File xls_file = getSaveFile();
+	final public void load(ZipInputStream zip_in, ZipEntry entry)
+	{			
+		XStream xstream = new XStream();
 		try {
-			if (xls_file.exists()) {
-				byte[] data = com.cell.io.File.readData(xls_file);
-				if (data!=null) {
-					String text_data = new String(data, "UTF-8");
-					Reader reader = new StringReader(text_data);
-					XStream xstream = new XStream();
-					ObjectInputStream in = xstream.createObjectInputStream(reader);
-					try{
-						readExternal(in);
-					}finally{
-						in.close();
-					}
-				}
-			}
+			String xml = new String(CIO.readBytes(zip_in), "UTF-8");
+			StringReader reader = new StringReader(xml);
+			ObjectInputStream ois = xstream.createObjectInputStream(reader);
+			readExternal(ois);
+			ois.close();
+			getIcon(true);
 		} catch (Throwable ex) {
 			ex.printStackTrace();
 		}
 	}
-	
-	final public void save()
+
+	final public ZipEntry save(ZipOutputStream zip_out, String dir)
 	{
-		File xls_file = getSaveFile();
-		try {
-			if (!xls_file.exists()) {
-				xls_file.getParentFile().mkdirs();
-			}
-			Writer writer = new StringWriter(1024);
-			try{
-				XStream xstream = new XStream();
-				ObjectOutputStream out = xstream.createObjectOutputStream(writer);
-				try{
-					writeExternal(out);
-				}finally{
-					out.close();
-				}
-				writer.flush();
-				String text_data = writer.toString();
-				com.cell.io.File.wirteData(xls_file, text_data.getBytes("UTF-8"));
-			}finally{
-				writer.close();
-			}
-		} catch (Throwable ex) {
-			ex.printStackTrace();
+		ZipEntry entry = new ZipEntry(dir+"/"+getXLSRow().id+".xml");
+		XStream xstream = new XStream();
+		try{
+			zip_out.putNextEntry(entry);
+			StringWriter writer = new StringWriter(1024);
+			ObjectOutputStream oos = xstream.createObjectOutputStream(writer);
+			writeExternal(oos);
+			oos.close();
+			zip_out.write(writer.toString().getBytes("UTF-8"));
+		}catch(Exception err){
+			err.printStackTrace();
 		}
+		return entry;
 	}
 	
 	public XLSFile getXLSFile() {

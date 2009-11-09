@@ -184,11 +184,19 @@ public class CIO extends CObject
 		return data;
 	}
 	
-	
+	public static byte[] readBytes(InputStream is) throws IOException {
+		ByteArrayOutputStream data = new ByteArrayOutputStream(is.available());
+		byte[] buffer = new byte[8192];
+		int size;
+		while (is.available() > 0) {
+			size = is.read(buffer);
+			if (size > 0) {
+				data.write(buffer, 0, size);
+			}
+		}
+		return data.toByteArray();
+	}
 
-	
-
-	
 	
 	public static String readAllText(String file)
 	{

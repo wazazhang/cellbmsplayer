@@ -20,7 +20,7 @@ public abstract class G2DTreeNode<C extends G2DTreeNode<?>> extends ExtObject im
 	MutableTreeNode			parent;
 	
 	protected Object 		user_object	= "node";
-	protected ImageIcon 	icon_snapshot;
+	private ImageIcon 		icon_snapshot;
 	
 	public G2DTreeNode() 
 	{
@@ -28,7 +28,10 @@ public abstract class G2DTreeNode<C extends G2DTreeNode<?>> extends ExtObject im
 	
 //	----------------------------------------------------------------------------------------------------------------------------------
 
-	public abstract String getName();
+	public abstract String			getName();
+	
+	protected abstract ImageIcon	createIcon();
+	
 	
 	public void onDoubleClicked(JTree tree, MouseEvent e){
 //		System.out.println("onDoubleClicked : " + getName());
@@ -59,19 +62,12 @@ public abstract class G2DTreeNode<C extends G2DTreeNode<?>> extends ExtObject im
 		return getName();
 	}
 
-	public ImageIcon getIcon(boolean update){
+	final public ImageIcon getIcon(boolean update){
+		if (icon_snapshot==null || update) {
+			icon_snapshot = createIcon();
+		}
 		return icon_snapshot;
 	}
-
-//	public C getChild(String key)
-//	{
-//		for (C t : childs) {
-//			if (t.getName().equals(key)) {
-//				return t;
-//			}
-//		}
-//		return null;
-//	}
 
 	public Vector<C> getChilds() {
 		return childs;

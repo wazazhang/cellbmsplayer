@@ -72,11 +72,8 @@ public class CPJFile extends G2DTreeNode<CPJObject<?>>
 	}
 
 	@Override
-	public ImageIcon getIcon(boolean update) {
-		if (icon_snapshot==null) {
-			icon_snapshot = Tools.createIcon(Res.icon_cpj);
-		}
-		return super.getIcon(update);
+	public ImageIcon createIcon() {
+		return Tools.createIcon(Res.icon_cpj);
 	}
 
 	// 

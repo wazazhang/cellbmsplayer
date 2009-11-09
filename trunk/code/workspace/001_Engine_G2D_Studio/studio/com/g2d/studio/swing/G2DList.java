@@ -65,7 +65,7 @@ public class G2DList<T extends G2DListItem> extends JList
 		{
 			if (value instanceof G2DListItem) {
 				G2DListItem item = (G2DListItem) value;
-				this.setIcon(item.getIcon());
+				this.setIcon(item.getIcon(false));
 				this.setText(item.getName());
 			} else {
 				setText(value.toString());

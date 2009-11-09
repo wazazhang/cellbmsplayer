@@ -264,8 +264,11 @@ public class Studio extends AbstractFrame
 	
 	public void saveAll() 
 	{
-		frame_object_manager.saveAll();
-		
+		try{
+			frame_object_manager.saveAll();
+		}catch(Throwable ex) {
+			ex.printStackTrace();
+		}
 	}
 	
 //	----------------------------------------------------------------------------------------------------------------

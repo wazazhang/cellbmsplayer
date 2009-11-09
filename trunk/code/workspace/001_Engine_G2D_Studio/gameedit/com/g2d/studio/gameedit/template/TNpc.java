@@ -57,15 +57,12 @@ public class TNpc extends TemplateTreeNode
 	}
 	
 	@Override
-	public ImageIcon getIcon(boolean update) {
-		if (icon_snapshot == null) {
-			if (cpj_sprite!=null) {
-				icon_snapshot = Tools.createIcon(Tools.combianImage(20, 20, cpj_sprite.getIcon(update).getImage()));
-			} else {
-				icon_snapshot = Tools.createIcon(Tools.combianImage(20, 20, Res.icon_error));
-			}
+	public ImageIcon createIcon() {
+		if (cpj_sprite!=null) {
+			return Tools.createIcon(Tools.combianImage(20, 20, cpj_sprite.getIcon(true).getImage()));
+		} else {
+			return Tools.createIcon(Tools.combianImage(20, 20, Res.icon_error));
 		}
-		return super.getIcon(update);
 	}
 
 	public ObjectViewer<?> getEditComponent(){
@@ -91,9 +88,11 @@ public class TNpc extends TemplateTreeNode
 				set_binding.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						CPJSprite spr = new CPJResourceSelectDialog<CPJSprite>(CPJResourceType.ACTOR).showDialog();
-						cpj_sprite = spr;
-						icon_snapshot = null;
-						Studio.getInstance().getObjectManager().repaint();
+						if (spr != null) {
+							cpj_sprite = spr;
+							TNpc.this.getIcon(true);
+							Studio.getInstance().getObjectManager().repaint();
+						}
 					}
 				});
 				panel.add(set_binding, BorderLayout.SOUTH);
