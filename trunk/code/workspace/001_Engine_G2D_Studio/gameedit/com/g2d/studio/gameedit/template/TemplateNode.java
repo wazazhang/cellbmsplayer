@@ -95,6 +95,9 @@ public abstract class TemplateNode extends ObjectNode
 			} else if (cls.equals(TItem.class)) {
 				TItem item = new TItem(row.xls_file, row);
 				ret.add(cls.cast(item));
+			} else if (cls.equals(TSkill.class)) {
+				TSkill skill = new TSkill(row.xls_file, row);
+				ret.add(cls.cast(skill));
 			} 
 		}
 		return ret;

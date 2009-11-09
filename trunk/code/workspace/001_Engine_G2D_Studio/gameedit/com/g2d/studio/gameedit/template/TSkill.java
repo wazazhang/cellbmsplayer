@@ -3,7 +3,6 @@ package com.g2d.studio.gameedit.template;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -14,21 +13,17 @@ import com.cell.rpg.xls.XLSFullRow;
 import com.cell.util.MarkedHashtable;
 import com.g2d.Tools;
 import com.g2d.studio.Studio;
-import com.g2d.studio.cpj.CPJIndex;
-import com.g2d.studio.cpj.CPJResourceSelectDialog;
-import com.g2d.studio.cpj.CPJResourceType;
-import com.g2d.studio.cpj.entity.CPJSprite;
 import com.g2d.studio.gameedit.TemplateObjectViewer;
-import com.g2d.studio.gameedit.template.TNpc.NPCObjectViewer;
+import com.g2d.studio.gameedit.template.TItem.ItemObjectViewer;
 import com.g2d.studio.icon.IconFile;
 import com.g2d.studio.icon.IconSelectDialog;
 import com.g2d.studio.res.Res;
 
-public class TItem  extends TemplateNode
+public class TSkill extends TemplateNode
 {
 	transient IconFile icon_file;
 	
-	public TItem(XLSFile xls_file, XLSFullRow xls_row) {
+	public TSkill(XLSFile xls_file, XLSFullRow xls_row) {
 		super(xls_file, xls_row);
 	}
 
@@ -62,26 +57,25 @@ public class TItem  extends TemplateNode
 		}
 	}
 
-	
-
 	public TemplateObjectViewer<?> getEditComponent(){
 		if (edit_component==null) {
-			edit_component = new ItemObjectViewer();
+			edit_component = new SkillObjectViewer();
 		}
 		return edit_component;
 	}
 	
 //	-----------------------------------------------------------------------------------------------------------------
 	
-	class ItemObjectViewer extends TemplateObjectViewer<TItem>
+	class SkillObjectViewer extends TemplateObjectViewer<TSkill>
 	{
 		private static final long serialVersionUID = 1L;
 		
 		JButton set_binding = new JButton("设置图标");
 		
-		public ItemObjectViewer() 
+		public SkillObjectViewer() 
 		{
-			super(TItem.this);
+			super(TSkill.this);
+
 			if (icon_file!=null) {
 				set_binding.setIcon(icon_file.getIcon(false));
 			}
@@ -90,7 +84,7 @@ public class TItem  extends TemplateNode
 					IconFile icon = new IconSelectDialog().showDialog();
 					if (icon != null) {
 						icon_file = icon;
-						TItem.this.getIcon(true);	
+						TSkill.this.getIcon(true);
 						set_binding.setIcon(icon_file.getIcon(false));
 						Studio.getInstance().getObjectManager().repaint();
 					}
@@ -98,6 +92,8 @@ public class TItem  extends TemplateNode
 			});
 			page_properties.add(set_binding, BorderLayout.SOUTH);
 		}
+		
+		
 		
 	}
 	

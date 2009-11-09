@@ -46,11 +46,9 @@ public class G2DList<T extends G2DListItem> extends JList
 		return null;
 	}
 	
-	
 	class ListRender extends JToggleButton implements ListCellRenderer
 	{
 		private static final long serialVersionUID = 1L;
-
 
 		public ListRender() {
 	         setOpaque(true);
