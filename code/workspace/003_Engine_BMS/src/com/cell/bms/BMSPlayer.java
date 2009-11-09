@@ -26,7 +26,7 @@ public class BMSPlayer
 //	play refer
 	
 	/** 是否自动演奏 */
-	public boolean	is_auto_play	= true;
+	public boolean	is_auto_play	= false;
 
 	ArrayList<Note>	play_tracks;
 	
@@ -83,28 +83,6 @@ public class BMSPlayer
 	}
 	
 //	-------------------------------------------------------------------------------------------------
-	
-	synchronized public void start()
-	{
-		try{
-			play_tracks				= bms_file.getAllNoteList();
-			play_bpm				= bms_file.getHeadInfo(HeadInfo.BPM);
-			play_create_length		= bms_file.LINE_SPLIT_DIV * 10;
-			play_drop_length		= bms_file.LINE_SPLIT_DIV;
-			play_position			= 0;
-			play_pre_beat_position	= 0;
-			play_pre_record_time	= System.currentTimeMillis();
-			play_stop_time			= 0;
-			play_beat_count			= 0;
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
-	}
-	
-	synchronized public void stop() 
-	{
-		
-	}
 	
 	private boolean processSystemNote(Note note) 
 	{
@@ -170,7 +148,31 @@ public class BMSPlayer
 		}
 		return false;
 	}
+
+//	-------------------------------------------------------------------------------------------------
 	
+	synchronized public void start()
+	{
+		try{
+			play_tracks				= bms_file.getAllNoteList();
+			play_bpm				= bms_file.getHeadInfo(HeadInfo.BPM);
+			play_create_length		= bms_file.LINE_SPLIT_DIV * 10;
+			play_drop_length		= bms_file.LINE_SPLIT_DIV;
+			play_position			= 0;
+			play_pre_beat_position	= 0;
+			play_pre_record_time	= System.currentTimeMillis();
+			play_stop_time			= 0;
+			play_beat_count			= 0;
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+	}
+	
+	synchronized public void stop() 
+	{
+		
+	}
+
 	synchronized public void update()
 	{
 		try
@@ -234,6 +236,8 @@ public class BMSPlayer
 			e.printStackTrace();
 		}
 	}
+
+//	-------------------------------------------------------------------------------------------------
 	
 	synchronized public ArrayList<Note> getPlayTracks(double length)
 	{
