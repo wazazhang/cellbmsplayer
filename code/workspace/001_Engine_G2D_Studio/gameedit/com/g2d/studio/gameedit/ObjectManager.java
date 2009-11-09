@@ -5,6 +5,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -27,6 +29,9 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import javax.swing.JFrame;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -41,8 +46,8 @@ import com.g2d.Tools;
 import com.g2d.studio.Config;
 import com.g2d.studio.Studio.ProgressForm;
 import com.g2d.studio.cpj.entity.CPJFile;
-import com.g2d.studio.gameedit.template.ObjectNode;
-import com.g2d.studio.gameedit.template.TAvatar;
+import com.g2d.studio.gameedit.dynamic.DAvatar;
+import com.g2d.studio.gameedit.entity.ObjectNode;
 import com.g2d.studio.gameedit.template.TItem;
 import com.g2d.studio.gameedit.template.TNpc;
 import com.g2d.studio.gameedit.template.TSkill;
@@ -63,10 +68,10 @@ public class ObjectManager extends AbstractFrame implements ActionListener
 	
 	G2DWindowToolBar toolbar = new G2DWindowToolBar(this);
 	
-	final ObjectTreeView<TNpc> 		tree_units_view;
-	final ObjectTreeView<TItem> 	tree_items_view;
-	final ObjectTreeView<TSkill>	tree_skills_view;
-	final ObjectTreeView<TAvatar>	tree_avatars_view;
+	final ObjectTreeView<TNpc> 				tree_units_view;
+	final ObjectTreeView<TItem> 			tree_items_view;
+	final ObjectTreeView<TSkill>			tree_skills_view;
+	final DynamicObjectTreeView<DAvatar>	tree_avatars_view;
 	
 	public ObjectManager(ProgressForm progress) 
 	{
@@ -98,17 +103,30 @@ public class ObjectManager extends AbstractFrame implements ActionListener
 			tree_skills_view = new ObjectTreeView<TSkill>("技能模板", TSkill.class, skills);
 			table.addTab("技能", Tools.createIcon(Res.icon_res_3), tree_skills_view);
 		}
-		// TAvatar
+
+		// DAvatar
 		{
-			ArrayList<TAvatar> avatars = new ArrayList<TAvatar>();
-			tree_avatars_view = new ObjectTreeView<TAvatar>("AVATAR", TAvatar.class, avatars);
+			tree_avatars_view = new DynamicObjectTreeView<DAvatar>("AVATAR", DAvatar.class);
 			table.addTab("AVATAR", Tools.createIcon(Res.icon_res_4), tree_avatars_view);
+			tree_avatars_view.g2d_tree.addMouseListener(new MouseAdapter() {
+				public void mouseClicked(MouseEvent e) {
+					if (e.getButton() == MouseEvent.BUTTON3) {
+						if (tree_avatars_view.tree_root == tree_avatars_view.g2d_tree.getSelectedNode()) {
+							MenuAvatarRoot menu = new MenuAvatarRoot();
+							menu.show(tree_avatars_view.g2d_tree, e.getX(), e.getY());
+						}
+					}
+				}
+			});
 		}
+
 		try {
 			loadAll();
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
+		
+		
 		this.add(table, BorderLayout.CENTER);
 	}
 	
@@ -146,9 +164,8 @@ public class ObjectManager extends AbstractFrame implements ActionListener
 				ZipEntry entry =  null;
 				while ((entry = zip_in.getNextEntry()) != null) {
 					try{
-						String[] split = CUtil.splitString(entry.getName(), "/");
-						String type_name = split[0];
-						String xls_id = CUtil.replaceString(split[1], ".xml", "");
+						String type_name	= ObjectNode.getTypeName(entry);
+						String xls_id		= ObjectNode.getID(entry);
 						if (type_name.equals("npc")) {
 							getObject(TNpc.class, xls_id).load(zip_in, entry);
 						}
@@ -157,6 +174,9 @@ public class ObjectManager extends AbstractFrame implements ActionListener
 						}
 						else if (type_name.equals("skill")) {
 							getObject(TSkill.class, xls_id).load(zip_in, entry);
+						}
+						else if (type_name.equals("avatar")) {
+							tree_avatars_view.addNode(new DAvatar(zip_in, entry));
 						}
 					}catch(Exception err) {
 						err.printStackTrace();
@@ -199,6 +219,12 @@ public class ObjectManager extends AbstractFrame implements ActionListener
 					skills.nextElement().save(zip_out, "skill");
 				}
 			}
+			if (tree_avatars_view.tree_root.getChildCount() > 0) {
+				Enumeration<DAvatar> avatars = tree_avatars_view.tree_root.children();
+				while (avatars.hasMoreElements()) {
+					avatars.nextElement().save(zip_out, "avatar");
+				}
+			}
 		}finally{
 			zip_out.close();
 		}
@@ -223,6 +249,51 @@ public class ObjectManager extends AbstractFrame implements ActionListener
 			}
 		}
 	}
+	
+//	-------------------------------------------------------------------------------------------------------------------------------
+	
+	class MenuAvatarRoot extends JPopupMenu implements ActionListener
+	{
+		private static final long serialVersionUID = 1L;
+		
+		JMenuItem add_avatar = new JMenuItem("添加AVATAR");
+		
+		public MenuAvatarRoot() {
+			add_avatar.addActionListener(this);
+			add(add_avatar);
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (e.getSource() == add_avatar) {
+				String ret = JOptionPane.showInputDialog(ObjectManager.this, "输入AVATAR名字");
+				DAvatar avatar = new DAvatar(tree_avatars_view, ret);
+				tree_avatars_view.addNode(avatar);
+			}
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 }

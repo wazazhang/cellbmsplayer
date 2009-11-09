@@ -31,6 +31,7 @@ import com.cell.rpg.xls.XLSRow;
 import com.g2d.studio.Config;
 import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.TemplateObjectViewer;
+import com.g2d.studio.gameedit.entity.ObjectNode;
 import com.g2d.studio.swing.G2DTree;
 import com.g2d.studio.swing.G2DTreeNode;
 import com.thoughtworks.xstream.XStream;
