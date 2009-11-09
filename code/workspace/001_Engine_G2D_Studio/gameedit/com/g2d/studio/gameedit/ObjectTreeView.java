@@ -1,7 +1,6 @@
 package com.g2d.studio.gameedit;
 
 import java.awt.Dimension;
-import java.io.File;
 import java.util.ArrayList;
 
 import javax.swing.JScrollPane;
@@ -10,11 +9,10 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import com.g2d.studio.Config;
-import com.g2d.studio.gameedit.template.TemplateTreeNode;
+import com.g2d.studio.gameedit.template.ObjectNode;
 import com.g2d.studio.swing.G2DTree;
 
-public class ObjectTreeView<T extends TemplateTreeNode> extends JSplitPane implements TreeSelectionListener
+public class ObjectTreeView<T extends ObjectNode> extends JSplitPane implements TreeSelectionListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -24,13 +22,10 @@ public class ObjectTreeView<T extends TemplateTreeNode> extends JSplitPane imple
 	
 	final JScrollPane right = new JScrollPane();
 	
-	public ObjectTreeView(String title, Class<T> type, File xls_path) 
+	public ObjectTreeView(String title, Class<T> type, ArrayList<T> files) 
 	{
 		this.type = type;
 		this.tree_root = new DefaultMutableTreeNode(title);
-		ArrayList<T> files = TemplateTreeNode.listXLSRows(
-				new File(xls_path.getPath()+File.separatorChar+type.getSimpleName().toLowerCase()+Config.XLS_SUFFIX),
-				type);
 		for (T node : files) {
 			tree_root.add(node);
 		}

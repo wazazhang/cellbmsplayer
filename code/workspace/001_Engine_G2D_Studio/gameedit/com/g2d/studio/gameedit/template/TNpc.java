@@ -19,10 +19,10 @@ import com.g2d.studio.cpj.CPJIndex;
 import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.cpj.CPJResourceSelectDialog;
 import com.g2d.studio.cpj.entity.CPJSprite;
-import com.g2d.studio.gameedit.ObjectViewer;
+import com.g2d.studio.gameedit.TemplateObjectViewer;
 import com.g2d.studio.res.Res;
 
-public class TNpc extends TemplateTreeNode
+public class TNpc extends TemplateNode
 {
 	CPJSprite cpj_sprite;
 	
@@ -65,7 +65,7 @@ public class TNpc extends TemplateTreeNode
 		}
 	}
 
-	public ObjectViewer<?> getEditComponent(){
+	public TemplateObjectViewer<?> getEditComponent(){
 		if (edit_component==null) {
 			edit_component = new NPCObjectViewer();
 		}
@@ -74,7 +74,7 @@ public class TNpc extends TemplateTreeNode
 	
 //	-----------------------------------------------------------------------------------------------------------------
 	
-	class NPCObjectViewer extends ObjectViewer<TNpc>
+	class NPCObjectViewer extends TemplateObjectViewer<TNpc>
 	{
 		private static final long serialVersionUID = 1L;
 

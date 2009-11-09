@@ -41,9 +41,10 @@ import com.g2d.Tools;
 import com.g2d.studio.Config;
 import com.g2d.studio.Studio.ProgressForm;
 import com.g2d.studio.cpj.entity.CPJFile;
+import com.g2d.studio.gameedit.template.ObjectNode;
 import com.g2d.studio.gameedit.template.TItem;
 import com.g2d.studio.gameedit.template.TNpc;
-import com.g2d.studio.gameedit.template.TemplateTreeNode;
+import com.g2d.studio.gameedit.template.TemplateNode;
 import com.g2d.studio.Studio;
 import com.g2d.studio.swing.G2DTree;
 import com.g2d.studio.swing.G2DWindowToolBar;
@@ -74,17 +75,17 @@ public class ObjectManager extends AbstractFrame implements ActionListener
 		
 		zip_file = new File(Studio.getInstance().project_save_path.getPath() + File.separatorChar +"objects.zip");
 		
-		File xls_path = Studio.getInstance().getFile(Config.XLS_ROOT);
-
 		JTabbedPane table = new JTabbedPane();
 		// TNPC
 		{
-			tree_units_view = new ObjectTreeView<TNpc>("NPC模板", TNpc.class, xls_path);
+			ArrayList<TNpc> npcs = TemplateNode.listXLSRows(TNpc.class);
+			tree_units_view = new ObjectTreeView<TNpc>("NPC模板", TNpc.class, npcs);
 			table.addTab("NPC", Tools.createIcon(Res.icon_res_2), tree_units_view);
 		}
 		// TItem
 		{
-			tree_items_view = new ObjectTreeView<TItem>("道具模板", TItem.class, xls_path);
+			ArrayList<TItem> items = TemplateNode.listXLSRows(TItem.class);
+			tree_items_view = new ObjectTreeView<TItem>("道具模板", TItem.class, items);
 			table.addTab("物品", Tools.createIcon(Res.icon_res_4), tree_items_view);
 		}
 		try {
@@ -95,7 +96,7 @@ public class ObjectManager extends AbstractFrame implements ActionListener
 		this.add(table, BorderLayout.CENTER);
 	}
 	
-	public <T extends TemplateTreeNode> T getObjectAsXLS(Class<T> type, String xls_id)
+	public <T extends ObjectNode> T getObjectAsXLS(Class<T> type, String xls_id)
 	{
 		MutableTreeNode root = null;
 		if (type.equals(TNpc.class)) {
@@ -107,7 +108,7 @@ public class ObjectManager extends AbstractFrame implements ActionListener
 		}
 		Vector<T> list = G2DTree.getNodesSubClass(root, type);
 		for (T t : list) {
-			if (t.getXLSRow().id.equals(xls_id)) {
+			if (t.getID().equals(xls_id)) {
 				return t;
 			}
 		}

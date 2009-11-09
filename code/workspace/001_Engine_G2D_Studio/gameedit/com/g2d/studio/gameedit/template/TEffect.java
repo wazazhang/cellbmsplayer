@@ -5,7 +5,7 @@ import javax.swing.ImageIcon;
 import com.cell.rpg.xls.XLSFile;
 import com.cell.rpg.xls.XLSFullRow;
 
-public class TEffect extends TemplateTreeNode
+public class TEffect extends TemplateNode
 {
 
 	public TEffect(XLSFile xls_file, XLSFullRow xls_row) {

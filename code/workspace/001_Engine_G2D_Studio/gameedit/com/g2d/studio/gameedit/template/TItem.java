@@ -18,13 +18,13 @@ import com.g2d.studio.cpj.CPJIndex;
 import com.g2d.studio.cpj.CPJResourceSelectDialog;
 import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.cpj.entity.CPJSprite;
-import com.g2d.studio.gameedit.ObjectViewer;
+import com.g2d.studio.gameedit.TemplateObjectViewer;
 import com.g2d.studio.gameedit.template.TNpc.NPCObjectViewer;
 import com.g2d.studio.icon.IconFile;
 import com.g2d.studio.icon.IconSelectDialog;
 import com.g2d.studio.res.Res;
 
-public class TItem  extends TemplateTreeNode
+public class TItem  extends TemplateNode
 {
 	transient IconFile icon_file;
 	
@@ -64,7 +64,7 @@ public class TItem  extends TemplateTreeNode
 
 	
 
-	public ObjectViewer<?> getEditComponent(){
+	public TemplateObjectViewer<?> getEditComponent(){
 		if (edit_component==null) {
 			edit_component = new ItemObjectViewer();
 		}
@@ -73,7 +73,7 @@ public class TItem  extends TemplateTreeNode
 	
 //	-----------------------------------------------------------------------------------------------------------------
 	
-	class ItemObjectViewer extends ObjectViewer<TItem>
+	class ItemObjectViewer extends TemplateObjectViewer<TItem>
 	{
 		private static final long serialVersionUID = 1L;
 

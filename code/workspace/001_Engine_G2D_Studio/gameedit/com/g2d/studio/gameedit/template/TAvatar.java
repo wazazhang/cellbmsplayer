@@ -5,7 +5,7 @@ import javax.swing.ImageIcon;
 import com.cell.rpg.xls.XLSFile;
 import com.cell.rpg.xls.XLSFullRow;
 
-public class TAvatar extends TemplateTreeNode
+public class TAvatar extends TemplateNode
 {
 	
 	public TAvatar(XLSFile xls_file, XLSFullRow xls_row) {
