@@ -96,22 +96,20 @@ public class ObjectManager extends ManagerForm implements ActionListener
 		JTabbedPane table = new JTabbedPane();
 		// TNPC
 		{
-			ArrayList<TNpc> npcs = TemplateNode.listXLSRows(TNpc.class);
-			tree_units_view = new ObjectTreeView<TNpc>("NPC模板", TNpc.class, npcs);
+			
+			tree_units_view = new ObjectTreeView<TNpc>("NPC模板", TNpc.class, null);
 			table.addTab("NPC", Tools.createIcon(Res.icon_res_2), tree_units_view);
 			table.addChangeListener(tree_units_view);
 		}
 		// TItem
 		{
-			ArrayList<TItem> items = TemplateNode.listXLSRows(TItem.class);
-			tree_items_view = new ObjectTreeView<TItem>("道具模板", TItem.class, items);
+			tree_items_view = new ObjectTreeView<TItem>("道具模板", TItem.class, null);
 			table.addTab("物品", Tools.createIcon(Res.icon_res_4), tree_items_view);
 			table.addChangeListener(tree_items_view);
 		}
 		// TSkill
 		{
-			ArrayList<TSkill> skills = TemplateNode.listXLSRows(TSkill.class);
-			tree_skills_view = new ObjectTreeView<TSkill>("技能模板", TSkill.class, skills);
+			tree_skills_view = new ObjectTreeView<TSkill>("技能模板", TSkill.class, null);
 			table.addTab("技能", Tools.createIcon(Res.icon_res_3), tree_skills_view);
 			table.addChangeListener(tree_skills_view);
 		}
@@ -170,34 +168,37 @@ public class ObjectManager extends ManagerForm implements ActionListener
 	{
 		if (zip_file.exists()) 
 		{
-			ByteArrayInputStream bais = new ByteArrayInputStream(com.cell.io.File.readData(zip_file));
-			ZipInputStream zip_in = new ZipInputStream(bais);
+//			ByteArrayInputStream bais = new ByteArrayInputStream(com.cell.io.File.readData(zip_file));
+//			ZipInputStream zip_in = new ZipInputStream(bais);
+//			
+//			try{
+//				ZipEntry entry =  null;
+//				while ((entry = zip_in.getNextEntry()) != null) {
+//					try{
+//						String type_name	= ObjectNode.getTypeName(entry);
+//						String xls_id		= ObjectNode.getID(entry);
+//						if (type_name.equals("npc")) {
+//							getObject(TNpc.class, xls_id).load(zip_in, entry);
+//						}
+//						else if (type_name.equals("item")) {
+//							getObject(TItem.class, xls_id).load(zip_in, entry);
+//						}
+//						else if (type_name.equals("skill")) {
+//							getObject(TSkill.class, xls_id).load(zip_in, entry);
+//						}
+//						else if (type_name.equals("avatar")) {
+//							tree_avatars_view.addNode(new DAvatar(zip_in, entry));
+//						}
+//					}catch(Exception err) {
+//						err.printStackTrace();
+//					}
+//				}
+//			}finally{
+//				zip_in.close();
+//			}
 			
-			try{
-				ZipEntry entry =  null;
-				while ((entry = zip_in.getNextEntry()) != null) {
-					try{
-						String type_name	= ObjectNode.getTypeName(entry);
-						String xls_id		= ObjectNode.getID(entry);
-						if (type_name.equals("npc")) {
-							getObject(TNpc.class, xls_id).load(zip_in, entry);
-						}
-						else if (type_name.equals("item")) {
-							getObject(TItem.class, xls_id).load(zip_in, entry);
-						}
-						else if (type_name.equals("skill")) {
-							getObject(TSkill.class, xls_id).load(zip_in, entry);
-						}
-						else if (type_name.equals("avatar")) {
-							tree_avatars_view.addNode(new DAvatar(zip_in, entry));
-						}
-					}catch(Exception err) {
-						err.printStackTrace();
-					}
-				}
-			}finally{
-				zip_in.close();
-			}
+			ObjectStreamFilter.loadAll(zip_file, ObjectNode.class);
+			
 		}
 		
 		System.out.println(getClass().getSimpleName() + " : load all");
