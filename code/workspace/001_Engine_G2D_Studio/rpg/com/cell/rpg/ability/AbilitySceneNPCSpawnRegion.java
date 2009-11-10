@@ -25,13 +25,9 @@ public class AbilitySceneNPCSpawnRegion extends AbstractAbility
 	public int spawn_unit_count;
 	
 	@Property("产生的单位")
-	public AbilitiesVector spawn_types = new AbilitiesVector() {
+	public AbilitiesVector spawn_types = new AbilitiesVector(AbilitySceneNPCSpawn.class) 
+	{
 		private static final long serialVersionUID = 1L;
-		public Class<?>[] getSubAbilityTypes() {
-			return new Class<?>[]{
-					AbilitySceneNPCSpawn.class,
-			};
-		}
 		public String toString() {
 			StringBuffer sb = new StringBuffer();
 			for (AbilitySceneNPCSpawn a : getAbilities(AbilitySceneNPCSpawn.class)) {
