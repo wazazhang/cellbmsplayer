@@ -41,6 +41,7 @@ import com.cell.util.concurrent.ThreadPool;
 
 import com.g2d.Tools;
 import com.g2d.cell.CellSetResourceManager;
+import com.g2d.studio.StudioResource;
 import com.g2d.studio.cpj.CPJResourceManager;
 import com.g2d.studio.gameedit.ObjectManager;
 import com.g2d.studio.icon.IconManager;
@@ -347,64 +348,14 @@ public class Studio extends AbstractFrame
 //	----------------------------------------------------------------------------------------------------------------
 //	resource manager
 	
-	static public class SetResource extends Resource
-	{
-		boolean is_load_resource = false;
-		
-		public SetResource(String setPath, String name)  throws Exception{
-			super(setPath, name, false);
-		}
-		
-		public SetResource(File file, String name) throws Exception {
-			super(file, name, false);
-		}
-		
-		@Override
-		protected IImages getLocalImage(ImagesSet img) throws IOException {
-			StreamTypeTiles tiles = new StreamTypeTiles(img);
-			return tiles;
-		}
-		
-		synchronized public boolean isLoadImages()
-		{
-			return is_load_resource;
-		}
-		
-		synchronized public void initAllStreamImages()
-		{
-			is_load_resource = true;
-			Enumeration<ImagesSet> imgs = ImgTable.elements();
-			while (imgs.hasMoreElements()) {
-				ImagesSet ts = imgs.nextElement();
-				IImages images = getImages(ts);
-				if (images instanceof StreamTiles) {
-					((StreamTiles) images).run();
-				}
-			}
-		}
-		
-		synchronized public void destoryAllStreamImages(){
-			is_load_resource = false;
-			if (ResourceManager!=null) {
-				for (Object obj : ResourceManager.values()) {
-					if (obj instanceof StreamTiles){
-						StreamTiles stiles = (StreamTiles)obj;
-						stiles.unloadAllImages();
-					}
-				}
-			}
-		}
-	}
-	
 	public class SetResourceManager extends CellSetResourceManager
 	{
 		public SetResourceManager() {
 			instance = this;
 		}
-		
 		@Override
-		public SetResource createSet(String setPath) throws Exception {
-			return new SetResource(project_path.getPath() + "/" + setPath, setPath);
+		public StudioResource createSet(String setPath) throws Exception {
+			return new StudioResource(project_path.getPath() + "/" + setPath, setPath);
 		}
 		
 	}

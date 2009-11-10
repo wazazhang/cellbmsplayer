@@ -4,12 +4,10 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
-import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -19,12 +17,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
-import javax.swing.tree.TreeSelectionModel;
 
-import com.g2d.Tools;
-import com.g2d.studio.cpj.entity.CPJFile;
-import com.g2d.studio.cpj.entity.CPJObject;
-import com.g2d.studio.res.Res;
 
 public class G2DTree extends JTree
 {

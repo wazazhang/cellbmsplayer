@@ -15,7 +15,7 @@ import com.g2d.Tools;
 import com.g2d.cell.CellSetResource.WorldSet;
 import com.g2d.studio.Config;
 import com.g2d.studio.Resource;
-import com.g2d.studio.Studio.SetResource;
+import com.g2d.studio.StudioResource;
 import com.g2d.studio.swing.G2DTreeNode;
 import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.res.Res;
@@ -26,7 +26,7 @@ public class CPJFile extends G2DTreeNode<CPJObject<?>>
 	File			output_file;
 	File			cpj_dir;
 	
-	SetResource 	set_resource;
+	StudioResource 	set_resource;
 
 	String 			root;
 	String 			dir_prefix;
@@ -59,7 +59,7 @@ public class CPJFile extends G2DTreeNode<CPJObject<?>>
 			throw new IOException("path not a cpj file : " + output_file.getPath());
 		} 
 		
-		set_resource = new SetResource(output_file, name);
+		set_resource = new StudioResource(output_file, name);
 		System.out.println("read a cpj file : " + output_file.getPath());
 		
 		
@@ -87,7 +87,7 @@ public class CPJFile extends G2DTreeNode<CPJObject<?>>
 	}
 	
 	//
-	public SetResource getSetResource() {
+	public StudioResource getSetResource() {
 		return set_resource;
 	}
 	
