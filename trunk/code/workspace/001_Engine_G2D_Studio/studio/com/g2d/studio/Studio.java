@@ -70,8 +70,12 @@ public class Studio extends AbstractFrame
 	final public File 				project_file;
 	final public File				project_save_path;
 
-	final public File 				root_xls_path;
 	final public File 				root_sound_path;
+	final public File 				root_icon_path;
+
+	final public File 				root_xls_tunit;
+	final public File 				root_xls_titem;
+	final public File 				root_xls_tskill;
 	
 	private CPJResourceManager		frame_cpj_resource_manager;
 	private ObjectManager			frame_object_manager;
@@ -108,10 +112,14 @@ public class Studio extends AbstractFrame
 		
 		project_save_path	= new File(project_file.getPath()+".save");
 		project_save_path.mkdirs();
+
+		root_icon_path		= getFile(Config.ICON_ROOT);
+		root_sound_path		= getFile(Config.SOUND_ROOT);
 		
-		
-		root_xls_path 		= Studio.getInstance().getFile(Config.XLS_ROOT);
-		root_sound_path		= Studio.getInstance().getFile(Config.SOUND_ROOT);
+		root_xls_tunit		= getFile(Config.XLS_TUNIT);
+		root_xls_titem		= getFile(Config.XLS_TITEM);
+		root_xls_tskill		= getFile(Config.XLS_TSKILL);
+
 		
 		// sysetm init
 		ProgressForm progress_form = new ProgressForm();

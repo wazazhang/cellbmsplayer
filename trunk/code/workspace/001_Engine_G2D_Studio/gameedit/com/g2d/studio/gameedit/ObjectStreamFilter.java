@@ -20,16 +20,16 @@ import com.cell.util.zip.ZipNodeManager;
 import com.cell.util.zip.ZipStreamFilter;
 import com.g2d.studio.gameedit.entity.ObjectNode;
 import com.g2d.studio.gameedit.template.TItem;
-import com.g2d.studio.gameedit.template.TNpc;
+import com.g2d.studio.gameedit.template.TUnit;
 import com.g2d.studio.gameedit.template.TSkill;
 import com.g2d.studio.gameedit.template.TemplateNode;
 import com.thoughtworks.xstream.XStream;
 
 public class ObjectStreamFilter implements ZipStreamFilter
 {
-	ArrayList<TNpc>		npcs		= TemplateNode.listXLSRows(TNpc.class);
-	ArrayList<TItem>	items		= TemplateNode.listXLSRows(TItem.class);
-	ArrayList<TSkill>	skills		= TemplateNode.listXLSRows(TSkill.class);
+//	ArrayList<TUnit>	npcs		= TemplateNode.listXLSRows(, TUnit.class);
+//	ArrayList<TItem>	items		= TemplateNode.listXLSRows(TItem.class, 	"titem");
+//	ArrayList<TSkill>	skills		= TemplateNode.listXLSRows(TSkill.class,	"tskill");
 	
 	ObjectStreamFilter()
 	{
