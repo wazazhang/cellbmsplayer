@@ -13,7 +13,6 @@ import jxl.Sheet;
 import jxl.Workbook;
 
 import com.cell.CIO;
-import com.g2d.studio.Config;
 
 public class XLSRow implements Serializable
 {
