@@ -1,8 +1,8 @@
 package com.cell.rpg.scene;
 
-import com.cell.rpg.ability.AbilitySceneNPCPathPoint;
-import com.cell.rpg.ability.AbilitySceneTransport;
 import com.cell.rpg.display.UnitNode;
+import com.cell.rpg.scene.ability.NPCPathPoint;
+import com.cell.rpg.scene.ability.Transport;
 import com.cell.rpg.struct.TPosition;
 import com.g2d.annotation.Property;
 
@@ -24,8 +24,8 @@ public class Actor extends SceneUnit
 	public Class<?>[] getSubAbilityTypes()
 	{
 		return new Class<?>[]{
-				AbilitySceneTransport.class,	
-				AbilitySceneNPCPathPoint.class,
+				Transport.class,	
+				NPCPathPoint.class,
 			};
 	}
 }
