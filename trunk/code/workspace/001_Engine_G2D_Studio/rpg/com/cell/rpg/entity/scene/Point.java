@@ -1,9 +1,11 @@
-package com.cell.rpg.entity;
+package com.cell.rpg.entity.scene;
 
 import java.util.ArrayList;
 
+import com.cell.rpg.entity.Unit;
 
-public class Point extends Unit
+
+public class Point extends SceneUnit
 {	
 	public int 		color;
 	public float 	alpha;
@@ -16,8 +18,6 @@ public class Point extends Unit
 		pos.y = y;
 	}
 
-	
-	
 	public Class<?>[] getSubAbilityTypes()
 	{
 		return new Class<?>[]{};
