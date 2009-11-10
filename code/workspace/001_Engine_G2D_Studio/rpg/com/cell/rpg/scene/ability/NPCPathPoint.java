@@ -1,9 +1,10 @@
-package com.cell.rpg.ability;
+package com.cell.rpg.scene.ability;
 
+import com.cell.rpg.ability.AbstractAbility;
 import com.g2d.annotation.Property;
 
 @Property("[单位能力] NPC行动开始点")
-public class AbilitySceneNPCPathPoint extends AbstractAbility {
+public class NPCPathPoint extends AbstractAbility {
 
 	private static final long serialVersionUID = 1L;
 	
