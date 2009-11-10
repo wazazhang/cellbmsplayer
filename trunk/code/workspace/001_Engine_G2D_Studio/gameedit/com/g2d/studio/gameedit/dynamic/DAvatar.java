@@ -15,7 +15,7 @@ import com.g2d.studio.gameedit.AvatarEditor;
 import com.g2d.studio.res.Res;
 
 
-public class DAvatar extends DynamicNode
+final public class DAvatar extends DynamicNode
 {
 	private CPJIndex<CPJSprite>				body;
 	
@@ -31,6 +31,11 @@ public class DAvatar extends DynamicNode
 	
 	public DAvatar(ZipInputStream zip_in, ZipEntry entry) {
 		super(zip_in, entry);
+	}
+	
+	@Override
+	final public String getEntryName() {
+		return "avatar/"+getID()+".xml";
 	}
 	
 	@Override

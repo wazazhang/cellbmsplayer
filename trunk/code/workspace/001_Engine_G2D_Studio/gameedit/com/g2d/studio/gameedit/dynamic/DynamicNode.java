@@ -7,7 +7,7 @@ import com.cell.util.MarkedHashtable;
 import com.g2d.studio.gameedit.TemplateObjectViewer;
 import com.g2d.studio.gameedit.entity.ObjectNode;
 
-public abstract class DynamicNode extends ObjectNode
+public abstract class DynamicNode<C extends DynamicNode<?>> extends ObjectNode<C>
 {
 	final int		id;
 	

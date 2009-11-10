@@ -13,11 +13,12 @@ import javax.swing.ImageIcon;
 
 import com.cell.CIO;
 import com.cell.CUtil;
+import com.cell.util.zip.ZipExtNode;
 import com.g2d.studio.gameedit.TemplateObjectViewer;
 import com.g2d.studio.swing.G2DTreeNode;
 import com.thoughtworks.xstream.XStream;
 
-public abstract class ObjectNode extends G2DTreeNode<ObjectNode>
+public abstract class ObjectNode<C extends ObjectNode<?>> extends G2DTreeNode<C> implements ZipExtNode
 {
 
 	public ObjectNode() {
@@ -28,10 +29,9 @@ public abstract class ObjectNode extends G2DTreeNode<ObjectNode>
 	
 	@Override
 	protected ImageIcon createIcon() {
-		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
 	public boolean isLeaf() {
 		return true;

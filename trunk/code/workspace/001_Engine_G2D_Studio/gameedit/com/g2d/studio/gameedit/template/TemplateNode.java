@@ -36,7 +36,7 @@ import com.g2d.studio.swing.G2DTree;
 import com.g2d.studio.swing.G2DTreeNode;
 import com.thoughtworks.xstream.XStream;
 
-public abstract class TemplateNode extends ObjectNode
+public abstract class TemplateNode extends ObjectNode<TemplateNode>
 {
 	final XLSFile		xls_file;
 	final XLSFullRow	xls_fullrow;
@@ -55,7 +55,7 @@ public abstract class TemplateNode extends ObjectNode
 		}
 		return edit_component;
 	}
-	
+
 	public XLSFile getXLSFile() {
 		return xls_file;
 	}
