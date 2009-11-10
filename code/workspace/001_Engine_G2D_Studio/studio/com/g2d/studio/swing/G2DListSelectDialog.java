@@ -35,10 +35,16 @@ public abstract class G2DListSelectDialog<T extends G2DListItem>  extends Abstra
 		this.ok.addActionListener(this);
 	}
 	
+	public T getSelectedObject() {
+		return list.getSelectedItem();
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		object = list.getSelectedItem();
-		this.setVisible(false);
+		if (checkOK()) {
+			object = list.getSelectedItem();
+			this.setVisible(false);
+		}
 	}
 	
 	public T showDialog() {
@@ -46,4 +52,7 @@ public abstract class G2DListSelectDialog<T extends G2DListItem>  extends Abstra
 		return object;
 	}
 	
+	protected boolean checkOK() {
+		return true;
+	}
 }

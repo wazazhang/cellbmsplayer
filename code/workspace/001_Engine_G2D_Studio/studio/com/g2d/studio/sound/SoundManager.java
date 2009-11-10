@@ -23,6 +23,7 @@ import com.cell.sound.util.StaticSoundPlayer;
 import com.g2d.Tools;
 import com.g2d.display.ui.UIComponent;
 import com.g2d.studio.Config;
+import com.g2d.studio.ManagerForm;
 import com.g2d.studio.Studio;
 import com.g2d.studio.Studio.ProgressForm;
 import com.g2d.studio.icon.IconFile;
@@ -30,7 +31,7 @@ import com.g2d.studio.icon.IconList;
 import com.g2d.studio.res.Res;
 import com.g2d.util.AbstractFrame;
 
-public class SoundManager extends AbstractFrame implements ActionListener
+public class SoundManager extends ManagerForm implements ActionListener
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -45,11 +46,8 @@ public class SoundManager extends AbstractFrame implements ActionListener
 	
 	public SoundManager(ProgressForm progress) 
 	{
-		super.setSize(800, Studio.getInstance().getHeight());
-		super.setLocation(Studio.getInstance().getX()+Studio.getInstance().getWidth(), Studio.getInstance().getY());
-		super.setTitle("声音编辑器");
-		super.setIconImage(Res.icon_edit);
-		
+		super(progress, "声音编辑器");
+
 		{
 			JToolBar play_bar = new JToolBar();
 			btn_play.addActionListener(this);

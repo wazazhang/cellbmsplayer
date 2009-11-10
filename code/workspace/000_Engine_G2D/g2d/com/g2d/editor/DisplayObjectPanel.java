@@ -20,7 +20,7 @@ import com.g2d.display.Stage;
 
 import com.g2d.util.AbstractFrame;
 
-public class DisplayObjectPanel extends JPanel implements Runnable
+public class DisplayObjectPanel extends JPanel implements Runnable, ComponentListener
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -31,19 +31,19 @@ public class DisplayObjectPanel extends JPanel implements Runnable
 	public DisplayObjectPanel()
 	{
 		this.setLayout(new BorderLayout());
+		this.addComponentListener(this);
 		this.canvas.getCanvasAdapter().setStage(new ObjectStage());
 		this.add(canvas);
-		this.setVisible(true);
-		canvas.setVisible(true);	
-		canvas.addComponentListener(new ComponentListener(){
-			public void componentResized(ComponentEvent e) {
-				canvas.getCanvasAdapter().setStageSize(canvas.getWidth(), canvas.getHeight());
-			}
-			public void componentHidden(ComponentEvent e) {}
-			public void componentMoved(ComponentEvent e) {}
-			public void componentShown(ComponentEvent e) {}
-		});
 	}
+	
+	public void componentResized(ComponentEvent e) {
+		canvas.getCanvasAdapter().setStageSize(canvas.getWidth(), canvas.getHeight());
+	}
+	public void componentHidden(ComponentEvent e) {}
+	public void componentMoved(ComponentEvent e) {}
+	public void componentShown(ComponentEvent e) {}
+	
+	
 	
 	public Canvas getCanvas() {
 		return canvas.getCanvasAdapter();
@@ -59,6 +59,7 @@ public class DisplayObjectPanel extends JPanel implements Runnable
 			if (service==null) {
 				service = new Thread(this);
 				service.start();
+				System.out.println("start");
 			}
 		} finally {
 			service_lock.unlock();
@@ -73,11 +74,12 @@ public class DisplayObjectPanel extends JPanel implements Runnable
 				Thread t = service;
 				try {
 					service = null;
-					t.join(1000);
+					t.join(2000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 					t.interrupt();
-				}
+				}				
+				System.out.println("stop");
 			}
 		} finally {
 			service_lock.unlock();
@@ -86,14 +88,17 @@ public class DisplayObjectPanel extends JPanel implements Runnable
 
 	public void run()
 	{
-		while (service!=null) {
-			if (isVisible()) {
-				canvas.getCanvasAdapter().repaint_game();
-				try {
+		while (service != null) {
+			try {
+				if (isVisible()) {
+					canvas.getCanvasAdapter().repaint_game();
 					Thread.sleep(canvas.getCanvasAdapter().getFrameDelay());
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+				} else {
+					Thread.sleep(1000);
+					Thread.yield();
 				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 		}
 	}

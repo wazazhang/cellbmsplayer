@@ -17,16 +17,19 @@ public class CPJSprite extends CPJObject<SpriteSet>
 {
 	CellSprite	cell_sprite;
 	
-	public CPJSprite(CPJFile parent, String name) {
-		super(parent, name, SpriteSet.class);
+	public CPJSprite(CPJFile parent, String name, CPJResourceType res_type) {
+		super(parent, name, SpriteSet.class, res_type);
 		System.out.println("read a cpj sprite : " + name);
 	}
 	
 	@Override
 	public CellSprite getDisplayObject() {
 		if (cell_sprite==null) {
+			parent.getSetResource().initAllStreamImages();
 			CSprite cspr = parent.getSetResource().getSprite(name);
-			cell_sprite = new CellSprite(cspr);
+			cell_sprite = new CellSprite(cspr);					
+			cell_sprite.user_data = parent.getName()+"/" + name;
+
 		}
 		return cell_sprite;
 	}
