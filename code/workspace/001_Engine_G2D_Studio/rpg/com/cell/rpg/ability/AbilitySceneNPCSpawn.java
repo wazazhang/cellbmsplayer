@@ -10,7 +10,7 @@ import com.g2d.annotation.Property;
  * @see AbilitySceneNPCSpawnRegion
  */
 @Property("[区域能力] NPC产生区域单位类型")
-public class AbilitySceneNPCSpawn extends AbilityXLS 
+public class AbilitySceneNPCSpawn extends AbstractAbility 
 {
 	private static final long serialVersionUID = 1L;
 	
