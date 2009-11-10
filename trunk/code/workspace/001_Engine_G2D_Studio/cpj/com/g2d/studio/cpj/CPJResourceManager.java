@@ -42,6 +42,7 @@ import com.g2d.display.Stage;
 import com.g2d.editor.DisplayObjectPanel;
 import com.g2d.editor.DisplayObjectViewer;
 import com.g2d.studio.Config;
+import com.g2d.studio.ManagerForm;
 import com.g2d.studio.Studio.ProgressForm;
 import com.g2d.studio.cpj.entity.CPJFile;
 import com.g2d.studio.cpj.entity.CPJObject;
@@ -53,7 +54,7 @@ import com.g2d.studio.swing.G2DTreeNode;
 import com.g2d.studio.res.Res;
 import com.g2d.util.AbstractFrame;
 
-public class CPJResourceManager extends AbstractFrame
+public class CPJResourceManager extends ManagerForm
 {
 	private static final long serialVersionUID = 1L;
 
@@ -68,10 +69,7 @@ public class CPJResourceManager extends AbstractFrame
 	
 	public CPJResourceManager(ProgressForm progress) 
 	{
-		super.setSize(800, Studio.getInstance().getHeight());
-		super.setLocation(Studio.getInstance().getX()+Studio.getInstance().getWidth(), Studio.getInstance().getY());
-		super.setTitle("资源管理器");
-		super.setIconImage(Res.icon_edit);
+		super(progress, "资源管理器");
 		
 		String path = Studio.getInstance().project_path.getPath();
 		
@@ -84,7 +82,7 @@ public class CPJResourceManager extends AbstractFrame
 					Config.ACTOR_CPJ_PREFIX, 
 					Config.ACTOR_OUT_SUFFIX);
 			for (CPJFile file : files) {
-				file.loadAllSprite();
+				file.loadAllSprite(CPJResourceType.ACTOR);
 				unit_root.add(file);
 			}
 			G2DTree tree = new G2DTree(unit_root);
@@ -100,7 +98,7 @@ public class CPJResourceManager extends AbstractFrame
 					Config.AVATAR_CPJ_PREFIX, 
 					Config.AVATAR_OUT_SUFFIX);
 			for (CPJFile file : files) {
-				file.loadAllSprite();
+				file.loadAllSprite(CPJResourceType.AVATAR);
 				avatar_root.add(file);
 			}
 			G2DTree tree = new G2DTree(avatar_root);
@@ -116,7 +114,7 @@ public class CPJResourceManager extends AbstractFrame
 					Config.EFFECT_CPJ_PREFIX, 
 					Config.EFFECT_OUT_SUFFIX);
 			for (CPJFile file : files) {
-				file.loadAllSprite();
+				file.loadAllSprite(CPJResourceType.EFFECT);
 				effect_root.add(file);
 			}
 			G2DTree tree = new G2DTree(effect_root);
@@ -142,6 +140,11 @@ public class CPJResourceManager extends AbstractFrame
 		}
 
 		this.add(table, BorderLayout.CENTER);
+	}
+	
+	public <T extends CPJObject<?>> CPJIndex<T> getNodeIndex(T node)
+	{
+		return new CPJIndex<T>(node.res_type, node.parent.getName(), node.getName());
 	}
 	
 	public <T extends CPJObject<?>> CPJIndex<T> getNode(CPJResourceType type, String cpj, String set)

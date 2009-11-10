@@ -1052,12 +1052,18 @@ public class CSprite extends CUnit {
 	public int getCurrentAnimate() {
 		return CurAnimate;
 	}
+
+	public void setCurrentAnimate(int id) {
+		CurAnimate	= (short) id;
+		CurAnimate	= CMath.cycNum(CurAnimate, 0, getAnimateCount());
+		CurFrame	= CMath.cycNum(CurFrame, 0, getFrameCount(CurAnimate));
+	}
 	
 	public void setCurrentFrame(int id, int index) {
 		CurAnimate = (short) id;
 		CurFrame = (short) index;
 	}
-
+	
 	public boolean isEndFrame() {
 		if (CurFrame+1 >= FrameAnimate[CurAnimate].length ) {
 			return true;

@@ -17,6 +17,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
@@ -43,6 +44,14 @@ public class G2DTree extends JTree
 	
 	public DefaultTreeModel getTreeModel(){
 		return tree_model;
+	}
+	
+	public void reload() {
+		tree_model.reload();
+	}
+	
+	public void reload(TreeNode node) {
+		tree_model.reload(node);
 	}
 	
 //	

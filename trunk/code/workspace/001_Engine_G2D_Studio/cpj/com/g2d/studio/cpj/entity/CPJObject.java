@@ -16,17 +16,18 @@ import com.g2d.studio.swing.G2DTreeNode;
 
 public abstract class CPJObject <T extends CellSetObject> extends G2DTreeNode<CPJObject<?>> implements G2DListItem
 {
-	final protected CPJFile parent;
+	final public CPJFile			parent;
+	final public String				name;
+	final public CPJResourceType 	res_type;
+	final public T					set_object;
 	
-	final protected String	name;
-	
-	final protected T		set_object;
-	
+	transient
 	protected BufferedImage	snapshoot;
 	
-	public CPJObject(CPJFile parent, String name, Class<T> type) {
-		this.parent = parent;
-		this.name	= name;
+	public CPJObject(CPJFile parent, String name, Class<T> type, CPJResourceType res_type) {
+		this.parent 	= parent;
+		this.name		= name;
+		this.res_type	= res_type;
 		this.set_object	= parent.getSetResource().getSetObject(type, name);
 	}
 	

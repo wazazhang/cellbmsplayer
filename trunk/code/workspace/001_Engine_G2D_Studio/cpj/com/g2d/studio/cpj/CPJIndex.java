@@ -22,4 +22,9 @@ final public class CPJIndex<T extends CPJObject<?>> implements Serializable
 	public T getObject() {
 		return object;
 	}
+	
+	@Override
+	public String toString() {
+		return cpj_file_name + "/" + set_object_name;
+	}
 }

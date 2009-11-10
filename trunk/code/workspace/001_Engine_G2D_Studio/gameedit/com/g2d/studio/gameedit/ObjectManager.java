@@ -3,6 +3,7 @@ package com.g2d.studio.gameedit;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -29,13 +30,17 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -44,8 +49,14 @@ import javax.swing.tree.MutableTreeNode;
 import com.cell.CUtil;
 import com.g2d.Tools;
 import com.g2d.studio.Config;
+import com.g2d.studio.ManagerForm;
 import com.g2d.studio.Studio.ProgressForm;
+import com.g2d.studio.cpj.CPJResourceList;
+import com.g2d.studio.cpj.CPJResourceSelectDialog;
+import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.cpj.entity.CPJFile;
+import com.g2d.studio.cpj.entity.CPJObject;
+import com.g2d.studio.cpj.entity.CPJSprite;
 import com.g2d.studio.gameedit.dynamic.DAvatar;
 import com.g2d.studio.gameedit.entity.ObjectNode;
 import com.g2d.studio.gameedit.template.TItem;
@@ -53,6 +64,7 @@ import com.g2d.studio.gameedit.template.TNpc;
 import com.g2d.studio.gameedit.template.TSkill;
 import com.g2d.studio.gameedit.template.TemplateNode;
 import com.g2d.studio.Studio;
+import com.g2d.studio.swing.G2DListSelectDialog;
 import com.g2d.studio.swing.G2DTree;
 import com.g2d.studio.swing.G2DWindowToolBar;
 import com.g2d.studio.res.Res;
@@ -60,7 +72,7 @@ import com.g2d.util.AbstractFrame;
 import com.sun.org.apache.bcel.internal.generic.NEW;
 import com.thoughtworks.xstream.XStream;
 
-public class ObjectManager extends AbstractFrame implements ActionListener
+public class ObjectManager extends ManagerForm implements ActionListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -75,11 +87,8 @@ public class ObjectManager extends AbstractFrame implements ActionListener
 	
 	public ObjectManager(ProgressForm progress) 
 	{
-		super.setSize(800, Studio.getInstance().getHeight());
-		super.setLocation(Studio.getInstance().getX()+Studio.getInstance().getWidth(), Studio.getInstance().getY());
-		super.setTitle("物体编辑器");
-		super.setIconImage(Res.icon_edit);
-
+		super(progress, "物体编辑器");
+		
 		this.add(toolbar, BorderLayout.NORTH);
 		
 		zip_file = new File(Studio.getInstance().project_save_path.getPath() + File.separatorChar +"objects.zip");
@@ -90,18 +99,21 @@ public class ObjectManager extends AbstractFrame implements ActionListener
 			ArrayList<TNpc> npcs = TemplateNode.listXLSRows(TNpc.class);
 			tree_units_view = new ObjectTreeView<TNpc>("NPC模板", TNpc.class, npcs);
 			table.addTab("NPC", Tools.createIcon(Res.icon_res_2), tree_units_view);
+			table.addChangeListener(tree_units_view);
 		}
 		// TItem
 		{
 			ArrayList<TItem> items = TemplateNode.listXLSRows(TItem.class);
 			tree_items_view = new ObjectTreeView<TItem>("道具模板", TItem.class, items);
 			table.addTab("物品", Tools.createIcon(Res.icon_res_4), tree_items_view);
+			table.addChangeListener(tree_items_view);
 		}
 		// TSkill
 		{
 			ArrayList<TSkill> skills = TemplateNode.listXLSRows(TSkill.class);
 			tree_skills_view = new ObjectTreeView<TSkill>("技能模板", TSkill.class, skills);
 			table.addTab("技能", Tools.createIcon(Res.icon_res_3), tree_skills_view);
+			table.addChangeListener(tree_skills_view);
 		}
 
 		// DAvatar
@@ -112,12 +124,13 @@ public class ObjectManager extends AbstractFrame implements ActionListener
 				public void mouseClicked(MouseEvent e) {
 					if (e.getButton() == MouseEvent.BUTTON3) {
 						if (tree_avatars_view.tree_root == tree_avatars_view.g2d_tree.getSelectedNode()) {
-							MenuAvatarRoot menu = new MenuAvatarRoot();
+							AvatarRootMenu menu = new AvatarRootMenu();
 							menu.show(tree_avatars_view.g2d_tree, e.getX(), e.getY());
 						}
 					}
 				}
 			});
+			table.addChangeListener(tree_avatars_view);
 		}
 
 		try {
@@ -159,7 +172,7 @@ public class ObjectManager extends AbstractFrame implements ActionListener
 		{
 			ByteArrayInputStream bais = new ByteArrayInputStream(com.cell.io.File.readData(zip_file));
 			ZipInputStream zip_in = new ZipInputStream(bais);
-
+			
 			try{
 				ZipEntry entry =  null;
 				while ((entry = zip_in.getNextEntry()) != null) {
@@ -197,8 +210,9 @@ public class ObjectManager extends AbstractFrame implements ActionListener
 			zip_file.getParentFile().mkdirs();
 		}
 		
-		ByteArrayOutputStream baos = new ByteArrayOutputStream(10240);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream(1024*1024);
 		ZipOutputStream zip_out = new ZipOutputStream(baos);
+		zip_out.setLevel(ZipOutputStream.STORED);
 		try
 		{
 			if (tree_units_view.tree_root.getChildCount() > 0) {
@@ -252,13 +266,13 @@ public class ObjectManager extends AbstractFrame implements ActionListener
 	
 //	-------------------------------------------------------------------------------------------------------------------------------
 	
-	class MenuAvatarRoot extends JPopupMenu implements ActionListener
+	class AvatarRootMenu extends JPopupMenu implements ActionListener
 	{
 		private static final long serialVersionUID = 1L;
 		
 		JMenuItem add_avatar = new JMenuItem("添加AVATAR");
 		
-		public MenuAvatarRoot() {
+		public AvatarRootMenu() {
 			add_avatar.addActionListener(this);
 			add(add_avatar);
 		}
@@ -266,14 +280,53 @@ public class ObjectManager extends AbstractFrame implements ActionListener
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() == add_avatar) {
-				String ret = JOptionPane.showInputDialog(ObjectManager.this, "输入AVATAR名字");
-				DAvatar avatar = new DAvatar(tree_avatars_view, ret);
-				tree_avatars_view.addNode(avatar);
+				AvatarAddDialog dialog = new AvatarAddDialog();
+				CPJSprite spr = dialog.showDialog();
+				if (spr!=null) {
+					DAvatar avatar = new DAvatar(
+							tree_avatars_view, 
+							dialog.getAvatarName(),
+							Studio.getInstance().getCPJResourceManager().getNodeIndex(spr));
+					tree_avatars_view.addNode(avatar);
+				}
 			}
 		}
 	}
 	
-	
+	class AvatarAddDialog extends CPJResourceSelectDialog<CPJSprite>
+	{
+		private static final long serialVersionUID = 1L;
+		
+		TextField text = new TextField();
+		
+		public AvatarAddDialog() {
+			super(CPJResourceType.ACTOR);
+			JPanel panel = new JPanel(new BorderLayout());
+			panel.add(new JLabel(" 输入AVATAR名字 "), BorderLayout.WEST);
+			panel.add(text, BorderLayout.CENTER);
+			super.add(panel, BorderLayout.NORTH);
+		}
+		
+		public String getAvatarName() {
+			return text.getText();
+		}
+		
+		@Override
+		protected boolean checkOK() {
+			if (text.getText().length()==0) {
+				JOptionPane.showMessageDialog(this, "AVATAR名字不能为空！");
+				return false;
+			}
+			if (getSelectedObject()==null) {
+				JOptionPane.showMessageDialog(this, "还未选择AVATAR主角身体！");
+				return false;
+			}
+			return true;
+		}
+	}
+
+
+//	-------------------------------------------------------------------------------------------------------------------------------
 	
 	
 	

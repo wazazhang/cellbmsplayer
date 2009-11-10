@@ -9,13 +9,14 @@ import com.g2d.Tools;
 import com.g2d.cell.CellSprite;
 import com.g2d.cell.CellSetResource.WorldSet;
 import com.g2d.cell.game.Scene;
+import com.g2d.studio.cpj.CPJResourceType;
 
 public class CPJWorld extends CPJObject<WorldSet>
 {	
 	Scene scene; 
 	
 	public CPJWorld(CPJFile parent, String name) {
-		super(parent, name, WorldSet.class);
+		super(parent, name, WorldSet.class, CPJResourceType.WORLD);
 	}
 	
 	@Override

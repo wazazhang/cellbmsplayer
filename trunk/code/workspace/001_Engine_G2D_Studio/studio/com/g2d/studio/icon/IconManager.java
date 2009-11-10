@@ -11,12 +11,14 @@ import javax.swing.ListModel;
 
 import com.g2d.Tools;
 import com.g2d.studio.Config;
+import com.g2d.studio.ManagerForm;
 import com.g2d.studio.Studio;
 import com.g2d.studio.Studio.ProgressForm;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.swing.G2DList;
+import com.g2d.util.AbstractFrame;
 
-public class IconManager extends JFrame
+public class IconManager extends ManagerForm
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -24,11 +26,7 @@ public class IconManager extends JFrame
 	
 	public IconManager(ProgressForm progress) 
 	{
-		super.setSize(800, Studio.getInstance().getHeight());
-		super.setLocation(Studio.getInstance().getX()+Studio.getInstance().getWidth(), Studio.getInstance().getY());
-		super.setTitle("图标管理器");
-		super.setIconImage(Res.icon_edit);
-		
+		super(progress, "图标管理器");
 		{
 			File icon_dir = Studio.getInstance().getFile(Config.ICON_ROOT);
 			for (File file : icon_dir.listFiles()) {

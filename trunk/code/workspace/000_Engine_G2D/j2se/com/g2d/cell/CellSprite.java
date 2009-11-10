@@ -21,6 +21,8 @@ public class CellSprite extends Sprite
 	
 	transient final public CSprite cspr;
 	
+	public Object user_data;
+	
 	public CellSprite(CSprite spr) {
 		cspr = spr.copy();
 		this.setLocalBounds(
@@ -32,7 +34,9 @@ public class CellSprite extends Sprite
 	
 	public void render(Graphics2D g) 
 	{
-		cspr.render(new CGraphics(g), 0, 0);
+		try{
+			cspr.render(new CGraphics(g), 0, 0);
+		}catch(Exception err){}
 		z = getY();
 	}
 	
