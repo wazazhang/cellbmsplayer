@@ -13,12 +13,11 @@ import javax.swing.tree.MutableTreeNode;
 import com.cell.game.CSprite;
 import com.g2d.Tools;
 import com.g2d.cell.CellSetResource.WorldSet;
-import com.g2d.studio.Config;
 import com.g2d.studio.Resource;
 import com.g2d.studio.StudioResource;
+import com.g2d.studio.res.Res;
 import com.g2d.studio.swing.G2DTreeNode;
 import com.g2d.studio.cpj.CPJResourceType;
-import com.g2d.studio.res.Res;
 
 public class CPJFile extends G2DTreeNode<CPJObject<?>>
 {	
