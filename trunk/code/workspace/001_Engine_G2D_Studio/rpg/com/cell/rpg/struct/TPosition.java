@@ -1,17 +1,13 @@
-package com.cell.rpg.entity.struct;
+package com.cell.rpg.struct;
+
+import java.io.Serializable;
 
 import com.cell.rpg.RPGObject;
 
-public class TPosition extends RPGObject
+public class TPosition  implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 //	----------------------------------------------------------------------------------------------------------------------------------
 	
-	public float	x;
-	
-	public float	y;
-	
-	public float	z;
-
 
 }

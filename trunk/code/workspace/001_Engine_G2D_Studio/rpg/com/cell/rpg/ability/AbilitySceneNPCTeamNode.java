@@ -5,13 +5,13 @@ import com.g2d.annotation.Property;
 
 
 @Property("[单位能力] NPC队伍中的一个单位")
-public class AbilitySceneNPCTeamNode extends AbilityXLS 
+public class AbilitySceneNPCTeamNode extends AbstractAbility 
 {
 	private static final long serialVersionUID = 1L;
 	
-	/** 对应actor对象名 */
-	@Property("对应actor对象名")
-	public	String		cpj_actor_name;
+	/** 对应单位 */
+	@Property("对应单位")
+	public	String		template_unit_id;
 	
 	/** 战斗时处在第几行 */
 	@Property("战斗时处在第几行")
@@ -21,28 +21,10 @@ public class AbilitySceneNPCTeamNode extends AbilityXLS
 	@Property("战斗时处在第几列")
 	public	int			battle_column;
 	
-	
 	@Override
 	public boolean isMultiField() {
 		return true;
 	}
-	
-	/**
-	 * 获得 ActorSet 名
-	 * @return
-	 */
-	public String getActorCPJName() {
-		return CUtil.splitString(cpj_actor_name, "/")[0];
-	}
-	
-	/**
-	 * 获得 ActorSet 里的 ActorID
-	 * @return
-	 */
-	public String getActorCPJSpriteName() {
-		return CUtil.splitString(cpj_actor_name, "/")[1];
-	}
-	
 	
 	@Override
 	public String toString() {

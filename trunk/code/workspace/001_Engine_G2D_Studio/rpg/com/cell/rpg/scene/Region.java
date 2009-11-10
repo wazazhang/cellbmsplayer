@@ -1,4 +1,4 @@
-package com.cell.rpg.entity.scene;
+package com.cell.rpg.scene;
 
 import com.cell.rpg.ability.AbilitySceneNPCSpawnRegion;
 
@@ -15,8 +15,8 @@ public class Region extends SceneUnit
 	
 	public Region(int x, int y, int width, int height) 
 	{
-		this.pos.x	= x;
-		this.pos.y	= y;
+		this.x		= x;
+		this.y		= y;
 		this.width	= width;
 		this.height	= height;
 	}
