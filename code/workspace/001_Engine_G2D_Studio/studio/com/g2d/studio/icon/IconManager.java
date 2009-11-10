@@ -28,7 +28,7 @@ public class IconManager extends ManagerForm
 	{
 		super(progress, "图标管理器");
 		{
-			File icon_dir = Studio.getInstance().getFile(Config.ICON_ROOT);
+			File icon_dir = Studio.getInstance().root_icon_path;
 			for (File file : icon_dir.listFiles()) {
 				if (file.getName().endsWith(Config.ICON_SUFFIX)) {
 					try{

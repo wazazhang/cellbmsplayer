@@ -22,11 +22,11 @@ import com.g2d.studio.cpj.entity.CPJSprite;
 import com.g2d.studio.gameedit.TemplateObjectViewer;
 import com.g2d.studio.res.Res;
 
-final public class TNpc extends TemplateNode
+final public class TUnit extends TemplateNode
 {
 	CPJSprite cpj_sprite;
 	
-	public TNpc(XLSFile xls_file, XLSFullRow xls_row) {
+	public TUnit(XLSFile xls_file, XLSFullRow xls_row) {
 		super(xls_file, xls_row);
 	}
 	
@@ -79,7 +79,7 @@ final public class TNpc extends TemplateNode
 	
 //	-----------------------------------------------------------------------------------------------------------------
 	
-	class NPCObjectViewer extends TemplateObjectViewer<TNpc>
+	class NPCObjectViewer extends TemplateObjectViewer<TUnit>
 	{
 		private static final long serialVersionUID = 1L;
 		
@@ -87,7 +87,7 @@ final public class TNpc extends TemplateNode
 		
 		public NPCObjectViewer() 
 		{
-			super(TNpc.this);
+			super(TUnit.this);
 			if (cpj_sprite!=null) {
 				set_binding.setIcon(cpj_sprite.getIcon(false));
 			}
@@ -96,7 +96,7 @@ final public class TNpc extends TemplateNode
 					CPJSprite spr = new CPJResourceSelectDialog<CPJSprite>(CPJResourceType.ACTOR).showDialog();
 					if (spr != null) {
 						cpj_sprite = spr;
-						TNpc.this.getIcon(true);
+						TUnit.this.getIcon(true);
 						set_binding.setIcon(cpj_sprite.getIcon(false));
 						Studio.getInstance().getObjectManager().repaint();
 					}

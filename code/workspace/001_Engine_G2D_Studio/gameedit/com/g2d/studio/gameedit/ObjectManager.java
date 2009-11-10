@@ -60,7 +60,7 @@ import com.g2d.studio.cpj.entity.CPJSprite;
 import com.g2d.studio.gameedit.dynamic.DAvatar;
 import com.g2d.studio.gameedit.entity.ObjectNode;
 import com.g2d.studio.gameedit.template.TItem;
-import com.g2d.studio.gameedit.template.TNpc;
+import com.g2d.studio.gameedit.template.TUnit;
 import com.g2d.studio.gameedit.template.TSkill;
 import com.g2d.studio.gameedit.template.TemplateNode;
 import com.g2d.studio.Studio;
@@ -80,7 +80,7 @@ public class ObjectManager extends ManagerForm implements ActionListener
 	
 	G2DWindowToolBar toolbar = new G2DWindowToolBar(this);
 	
-	final ObjectTreeView<TNpc> 				tree_units_view;
+	final ObjectTreeView<TUnit> 			tree_units_view;
 	final ObjectTreeView<TItem> 			tree_items_view;
 	final ObjectTreeView<TSkill>			tree_skills_view;
 	final DynamicObjectTreeView<DAvatar>	tree_avatars_view;
@@ -97,8 +97,8 @@ public class ObjectManager extends ManagerForm implements ActionListener
 		// TNPC
 		{
 			
-			tree_units_view = new ObjectTreeView<TNpc>("NPC模板", TNpc.class, null);
-			table.addTab("NPC", Tools.createIcon(Res.icon_res_2), tree_units_view);
+			tree_units_view = new ObjectTreeView<TUnit>("单位模板", TUnit.class, null);
+			table.addTab("单位", Tools.createIcon(Res.icon_res_2), tree_units_view);
 			table.addChangeListener(tree_units_view);
 		}
 		// TItem
@@ -144,7 +144,7 @@ public class ObjectManager extends ManagerForm implements ActionListener
 	public <T extends ObjectNode> T getObject(Class<T> type, String id)
 	{
 		MutableTreeNode root = null;
-		if (type.equals(TNpc.class)) {
+		if (type.equals(TUnit.class)) {
 			root = tree_units_view.tree_root;
 		} else if (type.equals(TItem.class)) {
 			root = tree_items_view.tree_root;
@@ -217,7 +217,7 @@ public class ObjectManager extends ManagerForm implements ActionListener
 		try
 		{
 			if (tree_units_view.tree_root.getChildCount() > 0) {
-				Enumeration<TNpc> npcs = tree_units_view.tree_root.children();
+				Enumeration<TUnit> npcs = tree_units_view.tree_root.children();
 				while (npcs.hasMoreElements()) {
 					npcs.nextElement().save(zip_out, "npc");
 				}

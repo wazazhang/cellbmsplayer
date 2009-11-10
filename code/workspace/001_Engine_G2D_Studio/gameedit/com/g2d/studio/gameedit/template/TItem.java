@@ -19,7 +19,7 @@ import com.g2d.studio.cpj.CPJResourceSelectDialog;
 import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.cpj.entity.CPJSprite;
 import com.g2d.studio.gameedit.TemplateObjectViewer;
-import com.g2d.studio.gameedit.template.TNpc.NPCObjectViewer;
+import com.g2d.studio.gameedit.template.TUnit.NPCObjectViewer;
 import com.g2d.studio.icon.IconFile;
 import com.g2d.studio.icon.IconSelectDialog;
 import com.g2d.studio.res.Res;

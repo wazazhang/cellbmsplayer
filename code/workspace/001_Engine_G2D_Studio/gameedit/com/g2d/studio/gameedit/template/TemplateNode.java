@@ -75,23 +75,13 @@ public abstract class TemplateNode extends ObjectNode<TemplateNode>
 	}
 	
 //	----------------------------------------------------------------------------------------------------------------------
-	public static <T extends TemplateNode> ArrayList<T> listXLSRows(Class<T> type) 
-	{
-		ArrayList<T> files = TemplateNode.listXLSRows(
-				new File(
-						Studio.getInstance().root_xls_path.getPath()+
-						File.separatorChar+type.getSimpleName().toLowerCase()+
-						Config.XLS_SUFFIX),
-				type);
-		return files;
-	}
-
+	
 	public static <T extends TemplateNode> ArrayList<T> listXLSRows(File file, Class<T> cls)
 	{
 		ArrayList<T> ret = new ArrayList<T>();
 		for (XLSFullRow row : XLSFullRow.getXLSRows(file, XLSFullRow.class)) {
-			if (cls.equals(TNpc.class)) {
-				TNpc npc = new TNpc(row.xls_file, row);
+			if (cls.equals(TUnit.class)) {
+				TUnit npc = new TUnit(row.xls_file, row);
 				ret.add(cls.cast(npc));
 			} else if (cls.equals(TItem.class)) {
 				TItem item = new TItem(row.xls_file, row);
