@@ -22,14 +22,19 @@ import com.g2d.studio.cpj.entity.CPJSprite;
 import com.g2d.studio.gameedit.TemplateObjectViewer;
 import com.g2d.studio.res.Res;
 
-public class TNpc extends TemplateNode
+final public class TNpc extends TemplateNode
 {
 	CPJSprite cpj_sprite;
 	
 	public TNpc(XLSFile xls_file, XLSFullRow xls_row) {
 		super(xls_file, xls_row);
 	}
-
+	
+	@Override
+	final public String getEntryName() {
+		return "npc/"+getID()+".xml";
+	}
+	
 	@Override
 	protected void onRead(MarkedHashtable data) {
 		super.onRead(data);

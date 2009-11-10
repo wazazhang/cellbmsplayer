@@ -1,27 +1,29 @@
-package com.cell.rpg.entity;
+package com.g2d.studio.scene.entity;
 
 import java.util.ArrayList;
 import java.util.Vector;
 
-import com.cell.rpg.RPGObject;
 import com.cell.rpg.ability.Abilities;
 import com.cell.rpg.ability.AbstractAbility;
 
-public class Scene extends RPGObject implements Abilities
+public class SceneAbilities implements Abilities
 {
-	ArrayList<Unit>	units = new ArrayList<Unit>();
+	private static final long serialVersionUID = 1L;
 	
-	public Vector<AbstractAbility> abilities = new Vector<AbstractAbility>();
+	Vector<AbstractAbility> abilities = new Vector<AbstractAbility>();
 	
 	public void clearAbilities() {
 		abilities.clear();
 	}
+	
 	public void addAbility(AbstractAbility element) {
 		abilities.add(element);
 	}
+	
 	public void removeAbility(AbstractAbility element) {
 		abilities.remove(element);
 	}
+	
 	public AbstractAbility[] getAbilities() {
 		return abilities.toArray(new AbstractAbility[abilities.size()]);
 	}
@@ -53,6 +55,5 @@ public class Scene extends RPGObject implements Abilities
 	public Class<?>[] getSubAbilityTypes() {
 		return null;
 	}
-	
 	
 }

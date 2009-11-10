@@ -19,14 +19,19 @@ import com.g2d.studio.icon.IconFile;
 import com.g2d.studio.icon.IconSelectDialog;
 import com.g2d.studio.res.Res;
 
-public class TSkill extends TemplateNode
+final public class TSkill extends TemplateNode
 {
 	transient IconFile icon_file;
 	
 	public TSkill(XLSFile xls_file, XLSFullRow xls_row) {
 		super(xls_file, xls_row);
 	}
-
+	
+	@Override
+	final public String getEntryName() {
+		return "skill/"+getID()+".xml";
+	}
+	
 	@Override
 	protected void onRead(MarkedHashtable data) {
 		super.onRead(data);

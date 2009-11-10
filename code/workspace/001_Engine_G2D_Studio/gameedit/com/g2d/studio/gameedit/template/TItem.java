@@ -24,14 +24,19 @@ import com.g2d.studio.icon.IconFile;
 import com.g2d.studio.icon.IconSelectDialog;
 import com.g2d.studio.res.Res;
 
-public class TItem  extends TemplateNode
+final public class TItem  extends TemplateNode
 {
 	transient IconFile icon_file;
 	
 	public TItem(XLSFile xls_file, XLSFullRow xls_row) {
 		super(xls_file, xls_row);
 	}
-
+	
+	@Override
+	final public String getEntryName() {
+		return "item/"+getID()+".xml";
+	}
+	
 	@Override
 	protected void onRead(MarkedHashtable data) {
 		super.onRead(data);
