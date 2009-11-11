@@ -63,6 +63,14 @@ public abstract class DynamicNode<T extends RPGObject> extends ObjectNode<T>
 	
 //	-------------------------------------------------------------------------------------------------------
 	
+	/**
+	 * 根据数据在此创建已有的节点
+	 * @param <T>
+	 * @param <D>
+	 * @param type
+	 * @param data
+	 * @return
+	 */
 	public static <T extends DynamicNode<?>, D extends RPGObject> T createNode(Class<T> type, D data) 
 	{
 		if (type.equals(DAvatar.class)) {
