@@ -46,6 +46,7 @@ import com.g2d.studio.cpj.CPJResourceManager;
 import com.g2d.studio.gameedit.ObjectManager;
 import com.g2d.studio.icon.IconManager;
 import com.g2d.studio.res.Res;
+import com.g2d.studio.scene.SceneManager;
 import com.g2d.studio.sound.SoundManager;
 import com.g2d.util.AbstractFrame;
 import com.g2d.util.Util;
@@ -82,6 +83,8 @@ public class Studio extends AbstractFrame
 	private SoundManager			frame_sound_manager;
 	private IconManager				frame_icon_manager;
 
+	private SceneManager			scene_manager;
+	
 	private Studio(String g2d_file) throws Throwable
 	{							
 		CObject.initSystem(
@@ -139,6 +142,9 @@ public class Studio extends AbstractFrame
 			initToolBar(progress_form);
 			
 			initStateBar(progress_form);
+			
+			scene_manager = new SceneManager(this, progress_form);
+			this.add(scene_manager, BorderLayout.CENTER);
 			
 			this.addWindowListener(new StudioWindowListener());
 			
@@ -288,6 +294,10 @@ public class Studio extends AbstractFrame
 		return frame_icon_manager;
 	}
 	
+	public SceneManager getSceneManager() {
+		return scene_manager;
+	}
+	
 //	-----------------------------------------------------------------------------------------------------------
 
 //	-----------------------------------------------------------------------------------------------------------
@@ -296,6 +306,11 @@ public class Studio extends AbstractFrame
 	{
 		try{
 			frame_object_manager.saveAll();
+		}catch(Throwable ex) {
+			ex.printStackTrace();
+		}
+		try{
+			scene_manager.saveAll();
 		}catch(Throwable ex) {
 			ex.printStackTrace();
 		}

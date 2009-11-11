@@ -43,7 +43,7 @@ import com.thoughtworks.xstream.XStream;
 
 public abstract class XLSTemplateNode<T extends TemplateNode> extends ObjectNode<T>
 {
-	final T				template_data;
+	final protected T	template_data;
 	final XLSFile		xls_file;
 	final XLSFullRow	xls_fullrow;
 	

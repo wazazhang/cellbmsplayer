@@ -13,9 +13,9 @@ import com.g2d.studio.gameedit.entity.ObjectNode;
 
 public abstract class DynamicNode<T extends RPGObject> extends ObjectNode<T>
 {
-	final T			bind_data;
-	final int		id;
-	final String	name;
+	final protected T	bind_data;
+	final int			id;
+	private String		name;
 	
 	/**
 	 * 创建新节点时
@@ -34,7 +34,7 @@ public abstract class DynamicNode<T extends RPGObject> extends ObjectNode<T>
 	 * @param id
 	 * @param name
 	 */
-	DynamicNode(T data, int id, String name) {
+	protected DynamicNode(T data, int id, String name) {
 		this.id			= id;
 		this.name		= name;
 		this.bind_data	= data;
@@ -59,6 +59,12 @@ public abstract class DynamicNode<T extends RPGObject> extends ObjectNode<T>
 	@Override
 	final public String getName() {
 		return name;
+	}
+	
+	final public void setName(String name) {
+		if (name!=null && name.length()>0) {
+			this.name = name;
+		}
 	}
 	
 //	-------------------------------------------------------------------------------------------------------

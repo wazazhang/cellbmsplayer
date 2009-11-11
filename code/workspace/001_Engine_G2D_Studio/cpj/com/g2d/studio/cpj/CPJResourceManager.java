@@ -78,9 +78,9 @@ public class CPJResourceManager extends ManagerForm
 		{
 			unit_root = new DefaultMutableTreeNode("单位模板");
 			ArrayList<CPJFile> files = CPJFile.listFile(
-					path + "/" + Config.ACTOR_ROOT, 
-					Config.ACTOR_CPJ_PREFIX, 
-					Config.ACTOR_OUT_SUFFIX);
+					path + "/" + Config.RES_ACTOR_ROOT, 
+					Config.RES_ACTOR_CPJ_PREFIX, 
+					Config.RES_ACTOR_OUT_SUFFIX);
 			for (CPJFile file : files) {
 				file.loadAllSprite(CPJResourceType.ACTOR);
 				unit_root.add(file);
@@ -94,9 +94,9 @@ public class CPJResourceManager extends ManagerForm
 		{
 			avatar_root = new DefaultMutableTreeNode("AVATAR模板");
 			ArrayList<CPJFile> files = CPJFile.listFile(
-					path + "/" + Config.AVATAR_ROOT, 
-					Config.AVATAR_CPJ_PREFIX, 
-					Config.AVATAR_OUT_SUFFIX);
+					path + "/" + Config.RES_AVATAR_ROOT, 
+					Config.RES_AVATAR_CPJ_PREFIX, 
+					Config.RES_AVATAR_OUT_SUFFIX);
 			for (CPJFile file : files) {
 				file.loadAllSprite(CPJResourceType.AVATAR);
 				avatar_root.add(file);
@@ -110,9 +110,9 @@ public class CPJResourceManager extends ManagerForm
 		{
 			effect_root = new DefaultMutableTreeNode("特效模板");
 			ArrayList<CPJFile> files = CPJFile.listFile(
-					path + "/" + Config.EFFECT_ROOT, 
-					Config.EFFECT_CPJ_PREFIX, 
-					Config.EFFECT_OUT_SUFFIX);
+					path + "/" + Config.RES_EFFECT_ROOT, 
+					Config.RES_EFFECT_CPJ_PREFIX, 
+					Config.RES_EFFECT_OUT_SUFFIX);
 			for (CPJFile file : files) {
 				file.loadAllSprite(CPJResourceType.EFFECT);
 				effect_root.add(file);
@@ -126,9 +126,9 @@ public class CPJResourceManager extends ManagerForm
 		{
 			scene_root = new DefaultMutableTreeNode("场景模板");
 			ArrayList<CPJFile> files = CPJFile.listFile(
-					path + "/" + Config.SCENE_ROOT, 
-					Config.SCENE_FPJ_PREFIX, 
-					Config.SCENE_OUT_SUFFIX);
+					path + "/" + Config.RES_SCENE_ROOT, 
+					Config.RES_SCENE_FPJ_PREFIX, 
+					Config.RES_SCENE_OUT_SUFFIX);
 			for (CPJFile file : files) {
 				file.loadAllWorld();
 				scene_root.add(file);

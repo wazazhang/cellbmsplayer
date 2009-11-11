@@ -32,24 +32,28 @@ public class StudioResource  extends Resource
 	
 	synchronized public void initAllStreamImages()
 	{
-		is_load_resource = true;
-		Enumeration<ImagesSet> imgs = ImgTable.elements();
-		while (imgs.hasMoreElements()) {
-			ImagesSet ts = imgs.nextElement();
-			IImages images = getImages(ts);
-			if (images instanceof StreamTiles) {
-				((StreamTiles) images).run();
+		if (!is_load_resource) {
+			is_load_resource = true;
+			Enumeration<ImagesSet> imgs = ImgTable.elements();
+			while (imgs.hasMoreElements()) {
+				ImagesSet ts = imgs.nextElement();
+				IImages images = getImages(ts);
+				if (images instanceof StreamTiles) {
+					((StreamTiles) images).run();
+				}
 			}
 		}
 	}
 	
 	synchronized public void destoryAllStreamImages(){
-		is_load_resource = false;
-		if (ResourceManager!=null) {
-			for (Object obj : ResourceManager.values()) {
-				if (obj instanceof StreamTiles){
-					StreamTiles stiles = (StreamTiles)obj;
-					stiles.unloadAllImages();
+		if (is_load_resource) {
+			is_load_resource = false;
+			if (ResourceManager!=null) {
+				for (Object obj : ResourceManager.values()) {
+					if (obj instanceof StreamTiles){
+						StreamTiles stiles = (StreamTiles)obj;
+						stiles.unloadAllImages();
+					}
 				}
 			}
 		}

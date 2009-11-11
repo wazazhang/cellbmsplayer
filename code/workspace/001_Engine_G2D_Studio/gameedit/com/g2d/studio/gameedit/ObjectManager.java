@@ -45,6 +45,8 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 
 import com.cell.CUtil;
 import com.cell.rpg.RPGObject;
@@ -125,17 +127,7 @@ public class ObjectManager extends ManagerForm implements ActionListener
 					new File(zip_dir, "tavatar.zip"));
 			table.addTab("AVATAR", Tools.createIcon(Res.icon_res_4), tree_avatars_view);
 			table.addChangeListener(tree_avatars_view);
-			// right click avatar root node
-			tree_avatars_view.getTree().addMouseListener(new MouseAdapter() {
-				public void mouseClicked(MouseEvent e) {
-					if (e.getButton() == MouseEvent.BUTTON3) {
-						if (tree_avatars_view.getTreeRoot() == tree_avatars_view.getTree().getSelectedNode()) {
-							AvatarRootMenu menu = new AvatarRootMenu();
-							menu.show(tree_avatars_view.getTree(), e.getX(), e.getY());
-						}
-					}
-				}
-			});
+			tree_avatars_view.getTree().addMouseListener(new AvatarRootMouseAdapter());
 		}
 			
 		this.add(table, BorderLayout.CENTER);
@@ -183,6 +175,23 @@ public class ObjectManager extends ManagerForm implements ActionListener
 
 	
 //	-------------------------------------------------------------------------------------------------------------------------------
+//	
+	class AvatarRootMouseAdapter extends MouseAdapter
+	{
+		// right click avatar root node
+		public void mouseClicked(MouseEvent e) {
+			if (e.getButton() == MouseEvent.BUTTON3) {
+				TreePath path = tree_avatars_view.getTree().getPathForLocation(e.getX(), e.getY());
+				if (path != null) {
+					Object click_node = path.getLastPathComponent();
+					if (tree_avatars_view.getTreeRoot() == click_node) {
+						AvatarRootMenu menu = new AvatarRootMenu();
+						menu.show(tree_avatars_view.getTree(), e.getX(), e.getY());
+					}
+				}
+			}
+		}
+	}
 	
 	class AvatarRootMenu extends JPopupMenu implements ActionListener
 	{

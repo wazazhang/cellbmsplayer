@@ -2,6 +2,7 @@ package com.g2d.studio.scene.entity;
 
 import javax.swing.ImageIcon;
 
+import com.g2d.studio.scene.entity.SceneNode;
 import com.g2d.studio.swing.G2DTreeNode;
 
 public class SceneGroup extends G2DTreeNode<SceneNode>
