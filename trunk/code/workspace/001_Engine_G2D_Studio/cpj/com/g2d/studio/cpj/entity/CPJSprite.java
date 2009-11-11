@@ -29,7 +29,6 @@ public class CPJSprite extends CPJObject<SpriteSet>
 			CSprite cspr = parent.getSetResource().getSprite(name);
 			cell_sprite = new CellSprite(cspr);					
 			cell_sprite.user_data = parent.getName()+"/" + name;
-
 		}
 		return cell_sprite;
 	}

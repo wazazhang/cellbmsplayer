@@ -198,6 +198,12 @@ public class Tools
 		return null;
 	}
 	
+	static public BufferedImage scaleImage(Image args, double scale)
+	{
+		double dw = args.getWidth(null) * scale;
+		double dh = args.getHeight(null) * scale;
+		return combianImage((int)dw, (int)dh, args);
+	}
 	
 	static public BufferedImage createTransformImage(Image src, int width, int height, AffineTransform transform)
 	{
