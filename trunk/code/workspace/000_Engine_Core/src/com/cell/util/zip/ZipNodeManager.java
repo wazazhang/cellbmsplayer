@@ -93,7 +93,7 @@ final public class ZipNodeManager
 			ZipEntry entry =  zip_in.getNextEntry();
 			try{
 				String info = new String(CIO.readBytes(zip_in));
-				System.out.println(info);
+//				System.out.println(info);
 			}catch(Exception err){}
 			
 			while ((entry = zip_in.getNextEntry()) != null) {

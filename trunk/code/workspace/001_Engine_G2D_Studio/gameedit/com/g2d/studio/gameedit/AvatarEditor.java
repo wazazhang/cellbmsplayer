@@ -208,29 +208,39 @@ public class AvatarEditor extends JSplitPane implements ActionListener
 			
 			CellSprite selected = getSelectedSprite();
 			Vector<CellSprite> list = getChildsSubClass(CellSprite.class);
+		
 			int i=0;
-			for (CellSprite cspr : list) {
-				cspr.getSprite().setCurrentFrame(
-						body_spr.getSprite().getCurrentAnimate(), 
-						body_spr.getSprite().getCurrentFrame()
-						);
-				int anim = cspr.getSprite().getCurrentAnimate();
-				int fram = cspr.getSprite().getCurrentFrame();
-				int animc = cspr.getSprite().getAnimateCount();
-				int framc = cspr.getSprite().getFrameCount(anim); 
-				if (anim==banim && fram==bfram && animc==banimc && framc==bframc) {
-					if (selected == cspr) {
-						g.setColor(Color.WHITE);
+			for (CellSprite cspr : list) 
+			{	
+				int anim = 0, fram = 0, animc = 0, framc = 0; 
+				boolean error = false;
+				try{
+					cspr.getSprite().setCurrentFrame(
+							body_spr.getSprite().getCurrentAnimate(), 
+							body_spr.getSprite().getCurrentFrame()
+							);
+					anim = cspr.getSprite().getCurrentAnimate();
+					fram = cspr.getSprite().getCurrentFrame();
+					animc = cspr.getSprite().getAnimateCount();
+					framc = cspr.getSprite().getFrameCount(anim); 
+					if (anim == banim && fram == bfram && animc == banimc && framc == bframc) {
 					} else {
-						g.setColor(Color.GREEN);
-					}
-				} else {
-					if (selected == cspr) {
-						g.setColor(Color.YELLOW);
-					} else {
-						g.setColor(Color.RED);
+						error = true;
 					}
 				}
+				catch (Exception err) {
+					error = true;
+					err.printStackTrace();
+				}
+				
+				if (error) {
+					g.setColor(Color.RED);
+				} else if (selected == cspr) {
+					g.setColor(Color.WHITE);
+				} else {
+					g.setColor(Color.GREEN);
+				}
+				
 				Drawing.drawStringBorder(g, 
 						CUtil.snapStringRightSize("资源:" + cspr.user_data, 20, ' ') + "   " +
 						CUtil.snapStringRightSize("动画:" + anim+"/"+animc, 10, ' ') + "   " +

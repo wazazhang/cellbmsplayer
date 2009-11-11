@@ -4,6 +4,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import com.cell.rpg.RPGObject;
+import com.cell.rpg.template.TAvatar;
 import com.cell.rpg.xls.XLSFile;
 import com.cell.rpg.xls.XLSFullRow;
 import com.cell.util.MarkedHashtable;
@@ -14,14 +15,32 @@ public abstract class DynamicNode<T extends RPGObject> extends ObjectNode<T>
 {
 	final T			bind_data;
 	final int		id;
-	public String	name;
+	final String	name;
 	
-	public DynamicNode(IDynamicIDFactory<?> factory, String name, T data) {
-		this.id = factory.createID();
-		this.name = name;
-		this.bind_data	= (data == null) ? newData(factory, name) : data;
+	/**
+	 * 创建新节点时
+	 * @param factory
+	 * @param name
+	 */
+	public DynamicNode(IDynamicIDFactory<?> factory, String name) {
+		this.id 		= factory.createID();
+		this.name 		= name;
+		this.bind_data	= newData(factory, name);
 	}
-
+	
+	/**
+	 * 读取新节点时
+	 * @param data
+	 * @param id
+	 * @param name
+	 */
+	DynamicNode(T data, int id, String name) {
+		this.id			= id;
+		this.name		= name;
+		this.bind_data	= data;
+	}
+	
+	
 	abstract protected T newData(IDynamicIDFactory<?> factory, String name) ;
 
 	public T getData() {
@@ -46,6 +65,9 @@ public abstract class DynamicNode<T extends RPGObject> extends ObjectNode<T>
 	
 	public static <T extends DynamicNode<?>, D extends RPGObject> T createNode(Class<T> type, D data) 
 	{
+		if (type.equals(DAvatar.class)) {
+			return type.cast(new DAvatar((TAvatar)data));
+		}
 		return null;
 	}
 	

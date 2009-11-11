@@ -22,6 +22,10 @@ public class TUnit extends TemplateNode
 		display_node = new UnitNode(cpj_name, set_name);
 	}
 	
+	public UnitNode getDisplayNode() {
+		return display_node;
+	}
+	
 	@Override
 	public Class<?>[] getSubAbilityTypes() {
 		return new Class<?>[]{

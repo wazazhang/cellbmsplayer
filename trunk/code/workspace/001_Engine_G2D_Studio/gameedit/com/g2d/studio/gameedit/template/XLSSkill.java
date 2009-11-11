@@ -27,6 +27,9 @@ final public class XLSSkill extends XLSTemplateNode<TSkill>
 	
 	public XLSSkill(XLSFile xls_file, XLSFullRow xls_row, TemplateNode data) {
 		super(xls_file, xls_row, data);
+		if (template_data.icon_index!=null) {
+			icon_file = Studio.getInstance().getIconManager().getIcon(template_data.icon_index);
+		}
 	}
 	
 	@Override
@@ -36,6 +39,11 @@ final public class XLSSkill extends XLSTemplateNode<TSkill>
 	
 	public IconFile getIconFile() {
 		return icon_file;	
+	}
+	
+	public void setIcon(IconFile icon) {
+		template_data.icon_index = icon.icon_file_name;
+		this.icon_file = icon;
 	}
 	
 	@Override
@@ -53,6 +61,8 @@ final public class XLSSkill extends XLSTemplateNode<TSkill>
 		}
 		return edit_component;
 	}
+	
+	
 	
 //	-----------------------------------------------------------------------------------------------------------------
 	
@@ -73,7 +83,7 @@ final public class XLSSkill extends XLSTemplateNode<TSkill>
 				public void actionPerformed(ActionEvent e) {
 					IconFile icon = new IconSelectDialog().showDialog();
 					if (icon != null) {
-						icon_file = icon;
+						XLSSkill.this.setIcon(icon);
 						XLSSkill.this.getIcon(true);
 						set_binding.setIcon(icon_file.getIcon(false));
 						Studio.getInstance().getObjectManager().repaint();
