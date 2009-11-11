@@ -9,8 +9,9 @@ public class Point extends SceneUnit
 
 	public ArrayList<String> next_names = new ArrayList<String>();
 	
-	public Point(int x, int y) 
+	public Point(String id, int x, int y) 
 	{
+		super(id);
 		this.x = x;
 		this.y = y;
 	}

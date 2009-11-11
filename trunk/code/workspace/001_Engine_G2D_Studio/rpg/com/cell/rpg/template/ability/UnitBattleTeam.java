@@ -6,7 +6,7 @@ import com.g2d.annotation.Property;
 
 
 @Property("[单位能力] 战斗队伍")
-public class BattleTeam extends AbilitiesVector
+public class UnitBattleTeam extends AbilitiesVector
 {
 	private static final long serialVersionUID = 1L;
 	

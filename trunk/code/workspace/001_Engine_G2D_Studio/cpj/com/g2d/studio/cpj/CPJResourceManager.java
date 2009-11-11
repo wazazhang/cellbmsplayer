@@ -67,9 +67,9 @@ public class CPJResourceManager extends ManagerForm
 	DefaultMutableTreeNode effect_root;
 	DefaultMutableTreeNode scene_root;
 	
-	public CPJResourceManager(ProgressForm progress) 
+	public CPJResourceManager(Studio studio, ProgressForm progress) 
 	{
-		super(progress, "资源管理器");
+		super(studio, progress, "资源管理器");
 		
 		String path = Studio.getInstance().project_path.getPath();
 		

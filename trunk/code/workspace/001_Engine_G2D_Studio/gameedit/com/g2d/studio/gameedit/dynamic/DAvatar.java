@@ -7,6 +7,7 @@ import java.util.zip.ZipInputStream;
 
 import javax.swing.ImageIcon;
 
+import com.cell.rpg.template.TAvatar;
 import com.cell.util.MarkedHashtable;
 import com.g2d.Tools;
 import com.g2d.studio.cpj.CPJIndex;
@@ -15,46 +16,28 @@ import com.g2d.studio.gameedit.AvatarEditor;
 import com.g2d.studio.res.Res;
 
 
-final public class DAvatar extends DynamicNode
+final public class DAvatar extends DynamicNode<TAvatar>
 {
-	private CPJIndex<CPJSprite>				body;
+	static AvatarEditor 					editor = new AvatarEditor();
 	
+	private CPJIndex<CPJSprite>				body;
 	private ArrayList<CPJIndex<CPJSprite>>	avatars;
 	
-	static AvatarEditor editor = new AvatarEditor();
-	
-	public DAvatar(IDynamicIDFactory<DAvatar> factory, String name, CPJIndex<CPJSprite> body) {
-		super(factory, name);
+	public DAvatar(IDynamicIDFactory<DAvatar> factory, String name, CPJIndex<CPJSprite> body) 
+	{
+		super(factory, name, null);
 		this.body		= body;
 		this.avatars 	= new ArrayList<CPJIndex<CPJSprite>>();
 	}
 	
-	public DAvatar(ZipInputStream zip_in, ZipEntry entry) {
-		super(zip_in, entry);
-	}
-	
 	@Override
-	final public String getEntryName() {
-		return "avatar/"+getID()+".xml";
+	protected TAvatar newData(IDynamicIDFactory<?> factory, String name) {
+		return new TAvatar(getID(), name);
 	}
 	
 	@Override
 	protected ImageIcon createIcon() {
 		return Tools.createIcon(Res.icon_res_3);
-	}
-	
-	@Override
-	protected void onRead(MarkedHashtable data) {
-		super.onRead(data);
-		body	= data.getObject("body", null);
-		avatars = data.getObject("avatars", new ArrayList<CPJIndex<CPJSprite>>());
-	}
-	
-	@Override
-	protected void onWrite(MarkedHashtable data) {
-		super.onWrite(data);
-		data.put("body", body);
-		data.put("avatars", avatars);
 	}
 	
 	public CPJIndex<CPJSprite> getBody() {

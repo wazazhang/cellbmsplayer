@@ -9,6 +9,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import com.cell.rpg.template.TItem;
+import com.cell.rpg.template.TSkill;
+import com.cell.rpg.template.TemplateNode;
 import com.cell.rpg.xls.XLSFile;
 import com.cell.rpg.xls.XLSFullRow;
 import com.cell.util.MarkedHashtable;
@@ -19,39 +22,22 @@ import com.g2d.studio.cpj.CPJResourceSelectDialog;
 import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.cpj.entity.CPJSprite;
 import com.g2d.studio.gameedit.TemplateObjectViewer;
-import com.g2d.studio.gameedit.template.TUnit.NPCObjectViewer;
+import com.g2d.studio.gameedit.template.XLSUnit.NPCObjectViewer;
 import com.g2d.studio.icon.IconFile;
 import com.g2d.studio.icon.IconSelectDialog;
 import com.g2d.studio.res.Res;
 
-final public class TItem  extends TemplateNode
+final public class XLSItem  extends XLSTemplateNode<TItem>
 {
 	transient IconFile icon_file;
 	
-	public TItem(XLSFile xls_file, XLSFullRow xls_row) {
-		super(xls_file, xls_row);
+	public XLSItem(XLSFile xls_file, XLSFullRow xls_row, TemplateNode data) {
+		super(xls_file, xls_row, data);
 	}
 	
 	@Override
-	final public String getEntryName() {
-		return "item/"+getID()+".xml";
-	}
-	
-	@Override
-	protected void onRead(MarkedHashtable data) {
-		super.onRead(data);
-		String icon_file_name = data.getObject("icon_file_name", null);
-		if (icon_file_name!=null) {
-			icon_file = Studio.getInstance().getIconManager().getIcon(icon_file_name);
-		}
-	}
-	
-	@Override
-	protected void onWrite(MarkedHashtable data) {
-		super.onWrite(data);
-		if (icon_file!=null) {
-			data.put("icon_file_name", icon_file.icon_file_name);
-		}
+	protected TItem newData(XLSFile xlsFile, XLSFullRow xlsRow) {
+		return new TItem(xlsRow.id, xlsRow.desc);
 	}
 	
 	public IconFile getIconFile() {
@@ -78,7 +64,7 @@ final public class TItem  extends TemplateNode
 	
 //	-----------------------------------------------------------------------------------------------------------------
 	
-	class ItemObjectViewer extends TemplateObjectViewer<TItem>
+	class ItemObjectViewer extends TemplateObjectViewer<XLSItem>
 	{
 		private static final long serialVersionUID = 1L;
 		
@@ -86,7 +72,7 @@ final public class TItem  extends TemplateNode
 		
 		public ItemObjectViewer() 
 		{
-			super(TItem.this);
+			super(XLSItem.this);
 			if (icon_file!=null) {
 				set_binding.setIcon(icon_file.getIcon(false));
 			}
@@ -95,7 +81,7 @@ final public class TItem  extends TemplateNode
 					IconFile icon = new IconSelectDialog().showDialog();
 					if (icon != null) {
 						icon_file = icon;
-						TItem.this.getIcon(true);	
+						XLSItem.this.getIcon(true);	
 						set_binding.setIcon(icon_file.getIcon(false));
 						Studio.getInstance().getObjectManager().repaint();
 					}

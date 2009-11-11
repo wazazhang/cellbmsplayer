@@ -44,9 +44,9 @@ public class SoundManager extends ManagerForm implements ActionListener
 	JButton btn_play	= new JButton("播放");
 	JButton btn_stop	= new JButton("停止");
 	
-	public SoundManager(ProgressForm progress) 
+	public SoundManager(Studio studio, ProgressForm progress) 
 	{
-		super(progress, "声音编辑器");
+		super(studio, progress, "声音编辑器");
 
 		{
 			JToolBar play_bar = new JToolBar();

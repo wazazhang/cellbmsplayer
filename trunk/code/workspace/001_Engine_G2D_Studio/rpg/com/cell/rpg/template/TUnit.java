@@ -1,30 +1,31 @@
 package com.cell.rpg.template;
 
 import com.cell.rpg.display.UnitNode;
-import com.cell.rpg.template.ability.BattleTeam;
+import com.cell.rpg.template.ability.UnitBattleTeam;
 
 
 
 public class TUnit extends TemplateNode
 {
-	public UnitNode				display_node;
+	UnitNode		display_node;
 	
-	public BattleTeam			battle_team		= new BattleTeam();
+	UnitBattleTeam	battle_team		= new UnitBattleTeam();
 	
 	public TUnit(
 			String id, 
-			String name, 
-			String cpj_name, 
-			String cpj_set_id) 
+			String name) 
 	{
 		super(id, name);
-		this.display_node = new UnitNode(cpj_name, cpj_set_id);
+	}
+	
+	public void setDisplayNode(String cpj_name, String set_name) {
+		display_node = new UnitNode(cpj_name, set_name);
 	}
 	
 	@Override
 	public Class<?>[] getSubAbilityTypes() {
 		return new Class<?>[]{
-				BattleTeam.class,
+				UnitBattleTeam.class,
 		};
 	}
 }
