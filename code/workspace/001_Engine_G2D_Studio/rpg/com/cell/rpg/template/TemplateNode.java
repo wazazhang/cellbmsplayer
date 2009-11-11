@@ -3,21 +3,16 @@ package com.cell.rpg.template;
 import java.util.ArrayList;
 
 import com.cell.rpg.RPGObject;
+import com.cell.util.zip.ZipNode;
 
 public abstract class TemplateNode extends RPGObject
 {
-	final public String		id;
-	
-	final public String		name;
-	
-	final ArrayList<String> battle_team = new ArrayList<String>();
-	
+	public String	name		= "no name";
+	public String	icon_index;
 	
 	public TemplateNode(String id, String name) {
-		this.id		= id;
+		super(id);
 		this.name	= name;
 	}
-	
-	
 	
 }

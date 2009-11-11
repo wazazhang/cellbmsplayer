@@ -13,8 +13,9 @@ public class Region extends SceneUnit
 	public int 		color;
 	public float 	alpha;
 	
-	public Region(int x, int y, int width, int height) 
+	public Region(String id, int x, int y, int width, int height) 
 	{
+		super(id);
 		this.x		= x;
 		this.y		= y;
 		this.width	= width;

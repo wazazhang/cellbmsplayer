@@ -73,9 +73,9 @@ public class Studio extends AbstractFrame
 	final public File 				root_sound_path;
 	final public File 				root_icon_path;
 
-	final public File 				root_xls_tunit;
-	final public File 				root_xls_titem;
-	final public File 				root_xls_tskill;
+	final public File 				xls_tunit;
+	final public File 				xls_titem;
+	final public File 				xls_tskill;
 	
 	private CPJResourceManager		frame_cpj_resource_manager;
 	private ObjectManager			frame_object_manager;
@@ -107,18 +107,17 @@ public class Studio extends AbstractFrame
 		com.cell.sound.SoundManager.setSoundManager(sound_system);
 		
 		instance 			= this;
+		
 		project_file 		= new File(g2d_file);
 		project_path 		= new File(project_file.getParent());
-		
 		project_save_path	= new File(project_file.getPath()+".save");
-		project_save_path.mkdirs();
 
 		root_icon_path		= getFile(Config.ICON_ROOT);
 		root_sound_path		= getFile(Config.SOUND_ROOT);
 		
-		root_xls_tunit		= getFile(Config.XLS_TUNIT);
-		root_xls_titem		= getFile(Config.XLS_TITEM);
-		root_xls_tskill		= getFile(Config.XLS_TSKILL);
+		xls_tunit			= getFile(Config.XLS_TUNIT);
+		xls_titem			= getFile(Config.XLS_TITEM);
+		xls_tskill			= getFile(Config.XLS_TSKILL);
 
 		
 		// sysetm init
@@ -160,7 +159,7 @@ public class Studio extends AbstractFrame
 		// icon manager
 		{
 			progress.startReadBlock("初始化图标...");
-			frame_icon_manager = new IconManager(progress);
+			frame_icon_manager = new IconManager(this, progress);
 			JButton btn = new JButton();
 			btn.setToolTipText(frame_icon_manager.getTitle());
 			btn.setIcon(Tools.createIcon(Res.icon_hd));
@@ -174,7 +173,7 @@ public class Studio extends AbstractFrame
 		// sound manager
 		{
 			progress.startReadBlock("初始化声音...");
-			frame_sound_manager = new SoundManager(progress);
+			frame_sound_manager = new SoundManager(this, progress);
 			JButton btn = new JButton();
 			btn.setToolTipText(frame_sound_manager.getTitle());
 			btn.setIcon(Tools.createIcon(Res.icons_bar[3]));
@@ -188,7 +187,7 @@ public class Studio extends AbstractFrame
 		// res manager
 		{
 			progress.startReadBlock("初始化资源...");
-			frame_cpj_resource_manager = new CPJResourceManager(progress);
+			frame_cpj_resource_manager = new CPJResourceManager(this, progress);
 			JButton btn = new JButton();
 			btn.setToolTipText(frame_cpj_resource_manager.getTitle());
 			btn.setIcon(Tools.createIcon(Res.icons_bar[7]));
@@ -202,7 +201,7 @@ public class Studio extends AbstractFrame
 		// unit manager
 		{
 			progress.startReadBlock("初始化物体...");
-			frame_object_manager = new ObjectManager(progress);
+			frame_object_manager = new ObjectManager(this, progress);
 			JButton btn = new JButton();
 			btn.setToolTipText(frame_object_manager.getTitle());
 			btn.setIcon(Tools.createIcon(Res.icons_bar[4]));

@@ -34,6 +34,14 @@ final public class ZipNodeManager
 		ZipOutputStream zip_out = new ZipOutputStream(outputstream);
 		try {
 			zip_out.setLevel(ZIP_LEVEL);
+			
+			ZipEntry entry = new ZipEntry(".info/info.properties");
+			zip_out.putNextEntry(entry);
+			String info = 
+				"filter = " + filter.getClass().getName() + "\n" + 
+				"count  = " + list.size() + "\n";
+			zip_out.write(info.getBytes());
+			
 			for (T object : list) {
 				save(zip_out, object, filter);
 			}
@@ -46,7 +54,7 @@ final public class ZipNodeManager
 		}
 	}
 
-	public static ZipEntry save(
+	static ZipEntry save(
 			ZipOutputStream zip_out, 
 			ZipNode node, 
 			ZipStreamFilter filter)
@@ -82,7 +90,12 @@ final public class ZipNodeManager
 		Vector<T> ret = new Vector<T>(20);
 		ZipInputStream zip_in = new ZipInputStream(inputstream);
 		try{
-			ZipEntry entry =  null;
+			ZipEntry entry =  zip_in.getNextEntry();
+			try{
+				String info = new String(CIO.readBytes(zip_in));
+				System.out.println(info);
+			}catch(Exception err){}
+			
 			while ((entry = zip_in.getNextEntry()) != null) {
 				T object = load(zip_in, entry, type, filter);
 				if (object != null) {
@@ -97,7 +110,7 @@ final public class ZipNodeManager
 		return ret;
 	}
 	
-	final static public <T extends ZipNode> T load(
+	static public <T extends ZipNode> T load(
 			ZipInputStream zip_in,
 			ZipEntry entry, 
 			Class<T> type, 

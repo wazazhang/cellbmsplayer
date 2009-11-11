@@ -8,45 +8,30 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import com.cell.rpg.template.TSkill;
+import com.cell.rpg.template.TemplateNode;
 import com.cell.rpg.xls.XLSFile;
 import com.cell.rpg.xls.XLSFullRow;
 import com.cell.util.MarkedHashtable;
 import com.g2d.Tools;
 import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.TemplateObjectViewer;
-import com.g2d.studio.gameedit.template.TItem.ItemObjectViewer;
+import com.g2d.studio.gameedit.template.XLSItem.ItemObjectViewer;
 import com.g2d.studio.icon.IconFile;
 import com.g2d.studio.icon.IconSelectDialog;
 import com.g2d.studio.res.Res;
 
-final public class TSkill extends TemplateNode
+final public class XLSSkill extends XLSTemplateNode<TSkill>
 {
 	transient IconFile icon_file;
 	
-	public TSkill(XLSFile xls_file, XLSFullRow xls_row) {
-		super(xls_file, xls_row);
+	public XLSSkill(XLSFile xls_file, XLSFullRow xls_row, TemplateNode data) {
+		super(xls_file, xls_row, data);
 	}
 	
 	@Override
-	final public String getEntryName() {
-		return "skill/"+getID()+".xml";
-	}
-	
-	@Override
-	protected void onRead(MarkedHashtable data) {
-		super.onRead(data);
-		String icon_file_name = data.getObject("icon_file_name", null);
-		if (icon_file_name!=null) {
-			icon_file = Studio.getInstance().getIconManager().getIcon(icon_file_name);
-		}
-	}
-	
-	@Override
-	protected void onWrite(MarkedHashtable data) {
-		super.onWrite(data);
-		if (icon_file!=null) {
-			data.put("icon_file_name", icon_file.icon_file_name);
-		}
+	protected TSkill newData(XLSFile xlsFile, XLSFullRow xlsRow) {
+		return new TSkill(xlsRow.id, xlsRow.desc);
 	}
 	
 	public IconFile getIconFile() {
@@ -71,7 +56,7 @@ final public class TSkill extends TemplateNode
 	
 //	-----------------------------------------------------------------------------------------------------------------
 	
-	class SkillObjectViewer extends TemplateObjectViewer<TSkill>
+	class SkillObjectViewer extends TemplateObjectViewer<XLSSkill>
 	{
 		private static final long serialVersionUID = 1L;
 		
@@ -79,7 +64,7 @@ final public class TSkill extends TemplateNode
 		
 		public SkillObjectViewer() 
 		{
-			super(TSkill.this);
+			super(XLSSkill.this);
 
 			if (icon_file!=null) {
 				set_binding.setIcon(icon_file.getIcon(false));
@@ -89,7 +74,7 @@ final public class TSkill extends TemplateNode
 					IconFile icon = new IconSelectDialog().showDialog();
 					if (icon != null) {
 						icon_file = icon;
-						TSkill.this.getIcon(true);
+						XLSSkill.this.getIcon(true);
 						set_binding.setIcon(icon_file.getIcon(false));
 						Studio.getInstance().getObjectManager().repaint();
 					}

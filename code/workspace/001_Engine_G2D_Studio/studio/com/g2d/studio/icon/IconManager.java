@@ -24,9 +24,9 @@ public class IconManager extends ManagerForm
 	
 	Vector<IconFile> icon_files = new Vector<IconFile>();
 	
-	public IconManager(ProgressForm progress) 
+	public IconManager(Studio studio, ProgressForm progress) 
 	{
-		super(progress, "图标管理器");
+		super(studio, progress, "图标管理器");
 		{
 			File icon_dir = Studio.getInstance().root_icon_path;
 			for (File file : icon_dir.listFiles()) {

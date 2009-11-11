@@ -9,6 +9,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import com.cell.rpg.template.TUnit;
+import com.cell.rpg.template.TemplateNode;
 import com.cell.rpg.xls.XLSFile;
 import com.cell.rpg.xls.XLSFullRow;
 import com.cell.util.MarkedHashtable;
@@ -22,35 +24,17 @@ import com.g2d.studio.cpj.entity.CPJSprite;
 import com.g2d.studio.gameedit.TemplateObjectViewer;
 import com.g2d.studio.res.Res;
 
-final public class TUnit extends TemplateNode
+final public class XLSUnit extends XLSTemplateNode<TUnit>
 {
 	CPJSprite cpj_sprite;
 	
-	public TUnit(XLSFile xls_file, XLSFullRow xls_row) {
-		super(xls_file, xls_row);
+	public XLSUnit(XLSFile xls_file, XLSFullRow xls_row, TemplateNode data) {
+		super(xls_file, xls_row, data);
 	}
 	
 	@Override
-	final public String getEntryName() {
-		return "npc/"+getID()+".xml";
-	}
-	
-	@Override
-	protected void onRead(MarkedHashtable data) {
-		super.onRead(data);
-		CPJIndex<CPJSprite> res_index = data.getObject("res_index", null);
-		if (res_index != null) {
-			cpj_sprite = Studio.getInstance().getCPJResourceManager().getNode(res_index);
-		}
-	}
-	
-	@Override
-	protected void onWrite(MarkedHashtable data) {
-		super.onWrite(data);
-		if (cpj_sprite!=null) {
-			CPJIndex<CPJSprite> res_index = cpj_sprite.getCPJIndex(CPJResourceType.ACTOR);
-			data.put("res_index", res_index);
-		}
+	protected TUnit newData(XLSFile xls_file, XLSFullRow xls_row) {
+		return new TUnit(xls_row.id, xls_row.desc);
 	}
 	
 	public CPJSprite getCPJSprite() {
@@ -79,7 +63,7 @@ final public class TUnit extends TemplateNode
 	
 //	-----------------------------------------------------------------------------------------------------------------
 	
-	class NPCObjectViewer extends TemplateObjectViewer<TUnit>
+	class NPCObjectViewer extends TemplateObjectViewer<XLSUnit>
 	{
 		private static final long serialVersionUID = 1L;
 		
@@ -87,7 +71,7 @@ final public class TUnit extends TemplateNode
 		
 		public NPCObjectViewer() 
 		{
-			super(TUnit.this);
+			super(XLSUnit.this);
 			if (cpj_sprite!=null) {
 				set_binding.setIcon(cpj_sprite.getIcon(false));
 			}
@@ -96,7 +80,7 @@ final public class TUnit extends TemplateNode
 					CPJSprite spr = new CPJResourceSelectDialog<CPJSprite>(CPJResourceType.ACTOR).showDialog();
 					if (spr != null) {
 						cpj_sprite = spr;
-						TUnit.this.getIcon(true);
+						XLSUnit.this.getIcon(true);
 						set_binding.setIcon(cpj_sprite.getIcon(false));
 						Studio.getInstance().getObjectManager().repaint();
 					}

@@ -37,11 +37,11 @@ import com.g2d.Tools;
 import com.g2d.display.DisplayObject;
 import com.g2d.editor.DisplayObjectViewer;
 import com.g2d.studio.Studio;
-import com.g2d.studio.gameedit.template.TemplateNode;
+import com.g2d.studio.gameedit.template.XLSTemplateNode;
 import com.g2d.util.AbstractFrame;
 import com.thoughtworks.xstream.XStream;
 
-public class TemplateObjectViewer<T extends TemplateNode> extends JPanel
+public class TemplateObjectViewer<T extends XLSTemplateNode> extends JPanel
 {
 	private static final long serialVersionUID = 1L;
 	

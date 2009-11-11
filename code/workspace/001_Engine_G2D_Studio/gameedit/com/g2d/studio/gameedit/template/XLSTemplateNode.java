@@ -14,6 +14,8 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -25,6 +27,9 @@ import javax.swing.JScrollPane;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import com.cell.CIO;
+import com.cell.rpg.io.RPGObjectMap;
+import com.cell.rpg.template.TUnit;
+import com.cell.rpg.template.TemplateNode;
 import com.cell.rpg.xls.XLSFile;
 import com.cell.rpg.xls.XLSFullRow;
 import com.cell.rpg.xls.XLSRow;
@@ -36,60 +41,79 @@ import com.g2d.studio.swing.G2DTree;
 import com.g2d.studio.swing.G2DTreeNode;
 import com.thoughtworks.xstream.XStream;
 
-public abstract class TemplateNode extends ObjectNode<TemplateNode>
+public abstract class XLSTemplateNode<T extends TemplateNode> extends ObjectNode<T>
 {
+	final T				template_data;
 	final XLSFile		xls_file;
 	final XLSFullRow	xls_fullrow;
 	
 	transient TemplateObjectViewer<?> edit_component;;
 	
-	TemplateNode(XLSFile xls_file, XLSFullRow xls_row) {
+	@SuppressWarnings("unchecked")
+	XLSTemplateNode(XLSFile xls_file, XLSFullRow xls_row, TemplateNode data) 
+	{
 		this.xls_file		= xls_file;
 		this.xls_fullrow	= xls_row;
+		this.template_data	= (data == null) ? newData(xls_file, xls_row) : (T)data;
 		System.out.println("read a xls row : " + xls_file.xls_file + " : " + xls_fullrow.id + " : " + xls_fullrow.desc);
 	}
 	
-	public TemplateObjectViewer<?> getEditComponent(){
-		if (edit_component==null) {
-			edit_component = new TemplateObjectViewer<TemplateNode>(this);
-		}
-		return edit_component;
+	/**
+	 * 根据xls创建新的数据对象，当构造函数无法得到数据对象时自动创建
+	 * @param xls_file
+	 * @param xls_row
+	 * @return
+	 */
+	abstract protected T newData(XLSFile xls_file, XLSFullRow xls_row) ;
+	
+	/**
+	 * 获得当前实时数据对象
+	 * @return
+	 */
+	public T getData() {
+		return template_data;
 	}
-
-	public XLSFile getXLSFile() {
+	
+	final public XLSFile getXLSFile() {
 		return xls_file;
 	}
 	
-	public XLSFullRow getXLSRow() {
+	final public XLSFullRow getXLSRow() {
 		return xls_fullrow;
 	}
 	
 	@Override
-	public String getName() {
+	final public String getName() {
 		return getXLSRow().desc;
 	}
 
 	@Override
-	public String getID() {
+	final public String getID() {
 		return getXLSRow().id;
 	}
-	
+
+	public TemplateObjectViewer<?> getEditComponent(){
+		if (edit_component==null) {
+			edit_component = new TemplateObjectViewer<XLSTemplateNode<?>>(this);
+		}
+		return edit_component;
+	}
+
 //	----------------------------------------------------------------------------------------------------------------------
 	
-	public static <T extends TemplateNode> ArrayList<T> listXLSRows(File file, Class<T> cls)
+	static public <D extends ObjectNode<?>> ArrayList<D> listXLSRows(File file, Class<D> cls, RPGObjectMap<?> data_map)
 	{
-		ArrayList<T> ret = new ArrayList<T>();
-		for (XLSFullRow row : XLSFullRow.getXLSRows(file, XLSFullRow.class)) {
-			if (cls.equals(TUnit.class)) {
-				TUnit npc = new TUnit(row.xls_file, row);
-				ret.add(cls.cast(npc));
-			} else if (cls.equals(TItem.class)) {
-				TItem item = new TItem(row.xls_file, row);
-				ret.add(cls.cast(item));
-			} else if (cls.equals(TSkill.class)) {
-				TSkill skill = new TSkill(row.xls_file, row);
-				ret.add(cls.cast(skill));
-			} 
+		ArrayList<D> ret = new ArrayList<D>();
+		for (XLSFullRow row : XLSFullRow.getXLSRows(file, XLSFullRow.class)) 
+		{
+			TemplateNode data = (TemplateNode)data_map.get(row.id);
+			if (cls.equals(XLSUnit.class)) {
+				ret.add(cls.cast(new XLSUnit(row.xls_file, row, data)));
+			} else if (cls.equals(XLSItem.class)) {
+				ret.add(cls.cast(new XLSItem(row.xls_file, row, data)));
+			} else if (cls.equals(XLSSkill.class)) {
+				ret.add(cls.cast(new XLSSkill(row.xls_file, row, data)));
+			}
 		}
 		return ret;
 	}
