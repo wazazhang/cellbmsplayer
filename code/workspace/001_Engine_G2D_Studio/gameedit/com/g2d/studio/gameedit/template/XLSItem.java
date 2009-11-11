@@ -33,6 +33,9 @@ final public class XLSItem  extends XLSTemplateNode<TItem>
 	
 	public XLSItem(XLSFile xls_file, XLSFullRow xls_row, TemplateNode data) {
 		super(xls_file, xls_row, data);
+		if (template_data.icon_index!=null) {
+			icon_file = Studio.getInstance().getIconManager().getIcon(template_data.icon_index);
+		}
 	}
 	
 	@Override
@@ -42,6 +45,11 @@ final public class XLSItem  extends XLSTemplateNode<TItem>
 	
 	public IconFile getIconFile() {
 		return icon_file;	
+	}
+
+	public void setIcon(IconFile icon) {
+		template_data.icon_index = icon.icon_file_name;
+		this.icon_file = icon;
 	}
 	
 	@Override
@@ -80,7 +88,7 @@ final public class XLSItem  extends XLSTemplateNode<TItem>
 				public void actionPerformed(ActionEvent e) {
 					IconFile icon = new IconSelectDialog().showDialog();
 					if (icon != null) {
-						icon_file = icon;
+						XLSItem.this.setIcon(icon);	
 						XLSItem.this.getIcon(true);	
 						set_binding.setIcon(icon_file.getIcon(false));
 						Studio.getInstance().getObjectManager().repaint();

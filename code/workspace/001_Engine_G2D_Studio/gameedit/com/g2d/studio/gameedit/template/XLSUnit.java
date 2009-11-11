@@ -30,6 +30,15 @@ final public class XLSUnit extends XLSTemplateNode<TUnit>
 	
 	public XLSUnit(XLSFile xls_file, XLSFullRow xls_row, TemplateNode data) {
 		super(xls_file, xls_row, data);
+		if (template_data.getDisplayNode()!=null) {
+			CPJIndex<CPJSprite> spr_index = Studio.getInstance().getCPJResourceManager().getNode(
+					CPJResourceType.ACTOR, 
+					template_data.getDisplayNode().cpj_project_name,
+					template_data.getDisplayNode().cpj_object_id);
+			if (spr_index != null) {
+				cpj_sprite = spr_index.getObject();
+			}
+		}
 	}
 	
 	@Override
@@ -42,6 +51,7 @@ final public class XLSUnit extends XLSTemplateNode<TUnit>
 	}
 	
 	public void setCPJSprite(CPJSprite sprite) {
+		template_data.setDisplayNode(sprite.parent.getName(), sprite.getName());
 		this.cpj_sprite = sprite;
 	}
 	
@@ -79,7 +89,7 @@ final public class XLSUnit extends XLSTemplateNode<TUnit>
 				public void actionPerformed(ActionEvent e) {
 					CPJSprite spr = new CPJResourceSelectDialog<CPJSprite>(CPJResourceType.ACTOR).showDialog();
 					if (spr != null) {
-						cpj_sprite = spr;
+						setCPJSprite(spr);
 						XLSUnit.this.getIcon(true);
 						set_binding.setIcon(cpj_sprite.getIcon(false));
 						Studio.getInstance().getObjectManager().repaint();

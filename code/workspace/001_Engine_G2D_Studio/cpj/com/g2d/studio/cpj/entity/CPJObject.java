@@ -38,6 +38,10 @@ public abstract class CPJObject <T extends CellSetObject> extends G2DTreeNode<CP
 		return new CPJIndex<O>(type, parent.getName(), name);
 	}
 	
+	public CPJFile getParent() {
+		return parent;
+	}
+	
 	public BufferedImage getSnapShoot(){
 		return snapshoot;
 	}
