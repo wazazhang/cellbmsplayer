@@ -33,6 +33,7 @@ import com.cell.rpg.scene.Region;
 import com.cell.rpg.scene.SceneUnit;
 import com.g2d.Tools;
 import com.g2d.cell.CellSetResource;
+import com.g2d.cell.CellSprite;
 import com.g2d.cell.CellSetResource.WorldSet.SpriteObject;
 import com.g2d.cell.game.Scene;
 import com.g2d.cell.game.Scene.WorldMap;
@@ -44,8 +45,10 @@ import com.g2d.display.Stage;
 import com.g2d.display.ui.Menu;
 import com.g2d.editor.DisplayObjectPanel;
 import com.g2d.game.rpg.Unit;
+import com.g2d.studio.Config;
 import com.g2d.studio.Studio;
 import com.g2d.studio.StudioResource;
+import com.g2d.studio.cpj.entity.CPJSprite;
 import com.g2d.studio.cpj.entity.CPJWorld;
 import com.g2d.studio.gameedit.SelectUnitTool;
 
@@ -119,7 +122,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 			button_group.add(tool_addactor);
 			tool_addactor.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					if (tool_addactor.isSelected()) {
+					if (isToolAdd() && isPageActor()) {
 						SelectUnitTool.getUnitTool().setVisible(true);
 					}
 				}
@@ -283,12 +286,14 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		return null;
 	}
 
-	public void addUnit(SceneUnitTag<?> unit) {
+	public void addTagUnit(SceneUnitTag<?> unit) {
 		try{
 			scene_container.getWorld().addChild(unit.getGameUnit());
+			scene_container.getWorld().processEvent();
 		}catch(Exception err){
 			err.printStackTrace();
 		}
+		refreshAll();
 	}
 	
 	public void removeUnit(SceneUnitTag<?> unit) {
@@ -297,6 +302,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		}catch(Exception err){
 			err.printStackTrace();
 		}
+		refreshAll();
 	}
 	
 //	-----------------------------------------------------------------------------------------------------------------------------
@@ -364,6 +370,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		
 		public void added(DisplayObjectContainer parent) {			
 			addChild(scene_panel);
+			getRoot().setFPS(Config.DEFAULT_FPS);
 		}
 		public void removed(DisplayObjectContainer parent) {}
 		public void render(Graphics2D g) {}
@@ -412,56 +419,15 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 			return CUtil.getStringCompare().compare(a.getGameUnit().getID()+"", b.getGameUnit().getID()+"");
 		}
 		
-//		-----------------------------------------------------------------------------------------------------------------------------
-//		添加单位时显示在鼠标上的单位
-		
 		@Override
 		protected void renderAfter(Graphics2D g)
 		{
 			AffineTransform trans = g.getTransform();
-			
-			if (isToolAdd())
-			{
-				// 画Actor信息
-				if (isPageActor())
-				{
-//					FormActorViewer actorv = view.studio.getSelectedNodeAsActor();
-//					if (actorv!=null)
-//					{
-//						g.translate(getMouseX(), getMouseY());
-//						actorv.getViewObject().render(g);
-//						g.setColor(Color.WHITE);
-//						Drawing.drawStringBorder(g, 
-//								actorv.getViewObject().getSprite().getCurrentAnimate() + "/" + actorv.getViewObject().getSprite().getAnimateCount(), 
-//								0, actorv.getViewObject().getSprite().getVisibleBotton() + 1, 
-//								Drawing.TEXT_ANCHOR_HCENTER | Drawing.TEXT_ANCHOR_TOP
-//								);
-//					}
-				}
-				// 画Region信息
-				else if (isPageRegion())
-				{
-					if (add_region_sp != null)
-					{
-						g.translate(-getCameraX(), -getCameraY());
-						int sx = Math.min(add_region_sp.x, add_region_dp.x);
-						int sy = Math.min(add_region_sp.y, add_region_dp.y);
-						int sw = Math.abs(add_region_sp.x- add_region_dp.x);
-						int sh = Math.abs(add_region_sp.y- add_region_dp.y);
-						g.setColor(new Color(0x8000ff00,true));
-						g.fillRect(sx, sy, sw, sh);
-					}
-				}
-				// 画Point信息
-				else if (isPagePoint())
-				{
-					g.setColor(Color.WHITE);
-					g.fillRect(getMouseX()-4, getMouseY()-4, 8, 8);
-				}
-			}
-			
+			// 添加单位时显示在鼠标上的单位
+			renderAddUnitObject(g);
 			g.setTransform(trans);
 		}
+		
 		
 		public void update()
 		{
@@ -569,7 +535,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 			// 删除单位
 			else if (getRoot().isKeyDown(java.awt.event.KeyEvent.VK_DELETE)) {
 				if (getSelectedUnit() != null) {
-					removeUnit(getSelectedUnit());
+					removeUnit(getSelectedUnit());				
 				}
 			}
 			// ctrl + c 复制名字
@@ -588,30 +554,29 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		void updateAddUnit(boolean catch_mouse, int worldx, int worldy) 
 		{
 			// 添加单位
-			if (isPageActor())
+			if (isPageActor() && SelectUnitTool.getUnitTool().isVisible() && SelectUnitTool.getUnitTool().getSelectedUnit()!=null)
 			{
-//				FormActorViewer actorv = view.studio.getSelectedNodeAsActor();
-//				
-//				if (actorv!=null)
-//				{
-//					if (getRoot().isMouseWheelUP()) {
-//						actorv.getViewObject().getSprite().nextAnimate(-1);
-//					}
-//					if (getRoot().isMouseWheelDown()) {
-//						actorv.getViewObject().getSprite().nextAnimate(1);
-//					}
-//
-//					if (getRoot().isMouseDown(com.g2d.display.event.MouseEvent.BUTTON_LEFT)) 
-//					{
-//						SceneActor spr = new SceneActor(actorv, view);
-//						spr.setLocation(worldx, worldy);
-//						getWorld().addChild(spr);
-//						getWorld().processEvent();
-//						
-//						view.tb_actors.repaint(500);
-//						view.mini_map.repaint(500);
-//					}
-//				}
+				CellSprite cspr = SelectUnitTool.getUnitTool().getSelectedUnit().getCPJSprite().getDisplayObject();
+				
+				if (cspr!=null)
+				{
+					if (getRoot().isMouseWheelUP()) {
+						cspr.getSprite().nextAnimate(-1);
+					}
+					if (getRoot().isMouseWheelDown()) {
+						cspr.getSprite().nextAnimate(1);
+					}
+					if (getRoot().isMouseDown(com.g2d.display.event.MouseEvent.BUTTON_LEFT)) 
+					{
+						SceneActor spr = new SceneActor(
+								SceneEditor.this, 
+								SelectUnitTool.getUnitTool().getSelectedUnit(),
+								worldx, 
+								worldy,
+								cspr.getSprite().getCurrentAnimate());
+						getWorld().addChild(spr);
+					}
+				}
 				pre_added_point = null;
 				add_region_sp = null;
 			}
@@ -640,10 +605,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 						{
 							SceneRegion region = new SceneRegion(SceneEditor.this, new Rectangle(0, 0, sw, sh));
 							region.setLocation(sx, sy);
-							getWorld().addChild(region);
-							getWorld().processEvent();
-							
-							refreshRegion();
+							addTagUnit(region);
 						}
 					}
 					pre_added_point = null;
@@ -656,9 +618,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 				if (getRoot().isMouseDown(com.g2d.display.event.MouseEvent.BUTTON_LEFT)) 
 				{
 					ScenePoint spr = new ScenePoint(SceneEditor.this, worldx, worldy);
-					spr.setLocation(worldx, worldy);
-					getWorld().addChild(spr);
-					getWorld().processEvent();
+					addTagUnit(spr);
 					
 					// 添加新节点并自动链接
 					if (getRoot().isKeyHold(KeyEvent.VK_SHIFT)) {
@@ -669,19 +629,70 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 							}
 						}
 					}
-					
 					pre_added_point = spr;
-					
-					refreshPoint();
 				}
-			
 				add_region_sp = null;
 			}
 		
 		}
 		
 //		-----------------------------------------------------------------------------------------------------------------------------
+//		渲染当添加单位时，在鼠标上的单位
+		
+		void renderAddUnitObject(Graphics2D g)
+		{
+			if (isToolAdd())
+			{
+				// 画Actor信息
+				if (isPageActor() && SelectUnitTool.getUnitTool().isVisible() && SelectUnitTool.getUnitTool().getSelectedUnit()!=null)
+				{
+					CellSprite cspr = SelectUnitTool.getUnitTool().getSelectedUnit().getCPJSprite().getDisplayObject();
+					
+					if (cspr != null)
+					{
+						g.translate(getMouseX(), getMouseY());
+						setAlpha(g, 0.75f);
+						{
+							cspr.render(g);
+							cspr.getSprite().nextCycFrame();
+							g.setColor(Color.WHITE);
+							Drawing.drawStringBorder(g, 
+									cspr.getSprite().getCurrentAnimate() + "/" + cspr.getSprite().getAnimateCount(), 
+									0, cspr.getSprite().getVisibleBotton() + 1, 
+									Drawing.TEXT_ANCHOR_HCENTER | Drawing.TEXT_ANCHOR_TOP
+									);
+						}
+						setAlpha(g, 1f);
+						g.translate(-getMouseX(), -getMouseY());
+					}
+					
+				}
+				// 画Region信息
+				else if (isPageRegion())
+				{
+					if (add_region_sp != null)
+					{
+						g.translate(-getCameraX(), -getCameraY());
+						int sx = Math.min(add_region_sp.x, add_region_dp.x);
+						int sy = Math.min(add_region_sp.y, add_region_dp.y);
+						int sw = Math.abs(add_region_sp.x- add_region_dp.x);
+						int sh = Math.abs(add_region_sp.y- add_region_dp.y);
+						g.setColor(new Color(0x8000ff00,true));
+						g.fillRect(sx, sy, sw, sh);
+					}
+				}
+				// 画Point信息
+				else if (isPagePoint())
+				{
+					g.setColor(Color.WHITE);
+					g.fillRect(getMouseX()-4, getMouseY()-4, 8, 8);
+				}
+			}
+		}
+		
+//		-----------------------------------------------------------------------------------------------------------------------------
 //		场景单位
+		
 		class EatWorldObject extends WorldObject 
 		{
 			public EatWorldObject(CellSetResource set, SpriteObject worldSet) {

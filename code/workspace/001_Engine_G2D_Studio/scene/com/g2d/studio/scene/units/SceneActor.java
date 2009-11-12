@@ -8,9 +8,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import com.cell.game.CSprite;
 import com.cell.rpg.display.UnitNode;
 import com.cell.rpg.scene.Actor;
 import com.g2d.annotation.Property;
+import com.g2d.cell.CellSetResource;
+import com.g2d.cell.CellSetResource.SpriteSet;
 import com.g2d.cell.game.SceneSprite;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.ui.Menu;
@@ -51,12 +54,13 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 	 * @param x
 	 * @param y
 	 */
-	public SceneActor(SceneEditor editor, XLSUnit xls_unit, int x, int y) 
+	public SceneActor(SceneEditor editor, XLSUnit xls_unit, int x, int y, int anim) 
 	{
 		this.editor = editor;
 		this.xls_unit = xls_unit;
-		this.init(xls_unit.getCPJSprite().getParent().getSetResource(), xls_unit.getCPJSprite().name);
+		this.cur_anim = anim;		
 		this.setLocation(x, y);
+		this.init(xls_unit.getCPJSprite().getParent().getSetResource(), xls_unit.getCPJSprite().name);
 		if (!editor.getGameScene().getWorld().addChild(this)){
 			throw new IllegalStateException();
 		}
@@ -76,16 +80,17 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 			this.xls_unit = Studio.getInstance().getObjectManager().getObject(
 					XLSUnit.class, 
 					actor.template_unit_id);
-			this.init(
-					xls_unit.getCPJSprite().getParent().getSetResource(), 
-					xls_unit.getCPJSprite().name);
+			this.xls_unit.getCPJSprite().getDisplayObject();
+			this.cur_anim = actor.animate;
 			this.setID(
 					editor.getGameScene().getWorld(), 
 					actor.id);
-			this.cur_anim = actor.animate;
 			this.setLocation(
 					actor.x,
 					actor.y);
+			this.init(
+					xls_unit.getCPJSprite().getParent().getSetResource(), 
+					xls_unit.getCPJSprite().name);
 		}
 		if (!editor.getGameScene().getWorld().addChild(this)){
 			throw new IllegalStateException();
@@ -95,7 +100,7 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 	public Actor onWrite()
 	{
 		actor.name				= getID() + "";
-		actor.animate			= csprite.getCurrentAnimate();
+		actor.animate			= cur_anim;
 		actor.x					= getX();
 		actor.y					= getY();
 		actor.z					= priority;
@@ -109,6 +114,12 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 		this.enable_drag	= true;
 		this.enable_input	= true;
 		super.added(parent);
+	}
+	
+	@Override
+	public void loaded(CellSetResource set, CSprite cspr, SpriteSet spr) {
+		super.loaded(set, cspr, spr);
+		this.getSprite().setCurrentAnimate(cur_anim);
 	}
 	
 //	--------------------------------------------------------------------------------------------------------
@@ -179,6 +190,7 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 				if (getRoot().isMouseWheelDown()) {
 					getSprite().nextAnimate(1);
 				}
+				cur_anim = getSprite().getCurrentAnimate();
 			}
 		}
 		
@@ -223,30 +235,34 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 	
 	protected void drawTouchRange(Graphics2D g)
 	{
-		g.setColor(Color.GREEN);
-		g.drawArc(
-				-actor.touch_range, 
-				-actor.touch_range, 
-				actor.touch_range<<1, 
-				actor.touch_range<<1,
-				0, 360);
+		if (actor!=null) {
+			g.setColor(Color.GREEN);
+			g.drawArc(
+					-actor.touch_range, 
+					-actor.touch_range, 
+					actor.touch_range<<1, 
+					actor.touch_range<<1,
+					0, 360);
+		}
 	}
 	protected void drawLookRange(Graphics2D g) 
 	{
-		g.setColor(Color.YELLOW);
-		g.drawArc(
-				-actor.look_range, 
-				-actor.look_range, 
-				actor.look_range<<1, 
-				actor.look_range<<1,
-				0, 360);
-		g.setColor(new Color((int)(Color.YELLOW.getRGB() & 0x7fffffff), true));
-		g.fillArc(
-				-actor.look_range, 
-				-actor.look_range, 
-				actor.look_range<<1, 
-				actor.look_range<<1,
-				0, 360);
+		if (actor!=null) {
+			g.setColor(Color.YELLOW);
+			g.drawArc(
+					-actor.look_range, 
+					-actor.look_range, 
+					actor.look_range<<1, 
+					actor.look_range<<1,
+					0, 360);
+			g.setColor(new Color((int)(Color.YELLOW.getRGB() & 0x7fffffff), true));
+			g.fillArc(
+					-actor.look_range, 
+					-actor.look_range, 
+					actor.look_range<<1, 
+					actor.look_range<<1,
+					0, 360);
+		}
 	}
 		
 	@Override

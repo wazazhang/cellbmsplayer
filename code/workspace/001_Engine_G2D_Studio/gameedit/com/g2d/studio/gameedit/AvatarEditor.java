@@ -21,6 +21,7 @@ import com.g2d.cell.CellSprite;
 import com.g2d.display.Sprite;
 import com.g2d.display.event.MouseWheelEvent;
 import com.g2d.editor.DisplayObjectPanel;
+import com.g2d.studio.Config;
 import com.g2d.studio.Studio;
 import com.g2d.studio.cpj.CPJIndex;
 import com.g2d.studio.cpj.CPJResourceSelectDialog;
@@ -58,6 +59,7 @@ public class AvatarEditor extends JSplitPane implements ActionListener
 		{
 			right.add(stage_view);
 			stage_view.getStage().addChild(avatar_group);
+			stage_view.getCanvas().setFPS(Config.DEFAULT_FPS);
 		}
 		{
 			left.add(part_list, BorderLayout.CENTER);

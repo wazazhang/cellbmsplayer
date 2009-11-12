@@ -35,4 +35,6 @@ public class Config extends com.cell.util.Config
 	public static String ICON_ROOT					= "icons";
 	public static String ICON_SUFFIX				= ".png";
 	
+	public static Integer DEFAULT_FPS				= 30;
+	
 }
