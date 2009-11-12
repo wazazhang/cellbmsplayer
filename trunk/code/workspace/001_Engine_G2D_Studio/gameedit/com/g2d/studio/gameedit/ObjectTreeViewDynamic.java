@@ -19,6 +19,7 @@ import javax.swing.tree.TreePath;
 
 import com.cell.rpg.RPGObject;
 import com.cell.rpg.io.RPGObjectMap;
+import com.cell.util.IDFactoryInteger;
 import com.g2d.studio.gameedit.dynamic.DynamicNode;
 import com.g2d.studio.gameedit.dynamic.IDynamicIDFactory;
 import com.g2d.studio.gameedit.entity.ObjectNode;
@@ -28,9 +29,8 @@ public class ObjectTreeViewDynamic<T extends DynamicNode<D>, D extends RPGObject
 extends ObjectTreeView<T, D> implements IDynamicIDFactory<T>
 {
 	private static final long serialVersionUID = 1L;
-
-	AtomicInteger 					node_index	= new AtomicInteger();
-	ConcurrentHashMap<Integer, T>	nodes_map	= new ConcurrentHashMap<Integer, T>(1000);
+	
+	IDFactoryInteger<T>				node_index	= new IDFactoryInteger<T>();
 	 
 	public ObjectTreeViewDynamic(String title, Class<T> node_type, Class<D> data_type, File zip_file) 
 	{
@@ -46,26 +46,21 @@ extends ObjectTreeView<T, D> implements IDynamicIDFactory<T>
 	
 	public void addNode(T node) {
 		synchronized(node_index) {
-			int id = node.getIntID();
-			if (!nodes_map.containsKey(id)) {
-				if (node_index.get() < id) {
-					node_index.set(id);
-				}
+			if (node_index.storeID(node.getIntID(), node)) {
 				super.addNode(node);
-				nodes_map.put(id, node);
 			}
 		}
 	}
 	
 	public T getNode(int id) {
 		synchronized(node_index) {
-			return nodes_map.get(id);
+			return node_index.get(id);
 		}
 	}
 	
 	@Override
 	public int createID() {
-		return node_index.incrementAndGet();
+		return node_index.createID();
 	}
 	
 }
