@@ -1,4 +1,4 @@
-package com.g2d.studio.scene;
+package com.g2d.studio.scene.editor;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -19,12 +19,18 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.Vector;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JToggleButton;
 
 import com.cell.CObject;
 import com.cell.CUtil;
 import com.cell.game.CSprite;
+import com.cell.rpg.scene.Actor;
+import com.cell.rpg.scene.Region;
+import com.cell.rpg.scene.SceneUnit;
 import com.g2d.Tools;
 import com.g2d.cell.CellSetResource;
 import com.g2d.cell.CellSetResource.WorldSet.SpriteObject;
@@ -56,18 +62,38 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 {
 	private static final long serialVersionUID = 1L;
 
+//	--------------------------------------------------------------------------------------------------------------
+//	game
+
 	final SceneNode			scene_node;
 	final CPJWorld			scene_world;
 	final StudioResource	scene_resource;
 	
-	G2DWindowToolBar		tool_bar;
+	DisplayObjectPanel		display_object_panel;
+	SceneStage				scene_stage;
+	ScenePanel				scene_panel;
+	SceneContainer			scene_container;
+	SceneMiniMap			scene_mini_map;
+
+//	--------------------------------------------------------------------------------------------------------------
+//	ui
+	
+	private G2DWindowToolBar			tool_bar;
+	private JToggleButton				tool_selector	= new JToggleButton(Tools.createIcon(Res.icons_bar[0]), true);
+	private JToggleButton				tool_addactor	= new JToggleButton(Tools.createIcon(Res.icons_bar[1]));
+	
+	private JTabbedPane					unit_page;
+	private SceneUnitList<SceneActor>	page_actors;
+	private SceneUnitList<SceneRegion>	page_regions;
+	private SceneUnitList<ScenePoint>	page_points;
 	
 	
-	DisplayObjectPanel	display_object_panel;
-	SceneStage			scene_stage;
-	ScenePanel			scene_panel;
-	SceneContainer		scene_container;
-	SceneMiniMap		scene_mini_map;
+
+//	--------------------------------------------------------------------------------------------------------------
+//	transient
+	private SceneUnitTag<?> v_selected_unit;
+	
+//	--------------------------------------------------------------------------------------------------------------
 	
 	public SceneEditor(SceneNode scene)
 	{
@@ -80,20 +106,30 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		this.scene_world	= scene_node.getWorldDisplay();
 		this.scene_resource	= scene_world.getParent().getSetResource();
 		
-		tool_bar = new G2DWindowToolBar(this);
-		
+		// tool bar
+		{
+			tool_bar = new G2DWindowToolBar(this);
+			tool_selector.setToolTipText("选择");
+			tool_addactor.setToolTipText("添加");
+			tool_bar.add(tool_selector);
+			tool_bar.add(tool_addactor);
+			ButtonGroup button_group = new ButtonGroup();
+			button_group.add(tool_selector);
+			button_group.add(tool_addactor);
+			
+		}
 		this.add(tool_bar, BorderLayout.NORTH);
 		
 		
-		// g2d components
+		// g2d stage
 		{
 			display_object_panel	= new DisplayObjectPanel();
 			scene_stage				= new SceneStage();
 			scene_container			= new SceneContainer();
 			scene_panel				= new ScenePanel(scene_container);
 			scene_mini_map			= new SceneMiniMap();
-			
 			display_object_panel.getCanvas().changeStage(scene_stage);
+			load();
 		}
 		
 		JSplitPane split_h = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
@@ -106,7 +142,14 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 			} 
 			// bottom
 			{
-				split_v.setBottomComponent(new JPanel());
+				unit_page		= new JTabbedPane();
+				page_actors		= new SceneUnitList<SceneActor>(this, SceneActor.class);
+				page_regions	= new SceneUnitList<SceneRegion>(this, SceneRegion.class);
+				page_points		= new SceneUnitList<ScenePoint>(this, ScenePoint.class);
+				unit_page.addTab("单位", page_actors);
+				unit_page.addTab("区域", page_regions);
+				unit_page.addTab("路点", page_points);
+				split_v.setBottomComponent(unit_page);
 			}
 			split_h.setLeftComponent(split_v);
 		}
@@ -115,8 +158,63 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 			split_h.setRightComponent(display_object_panel);
 		}
 		
-		this.add(split_h, BorderLayout.CENTER);
+		this.add(split_h, BorderLayout.CENTER); 
+		
 	}
+	
+	@SuppressWarnings("unchecked")
+	private void load()
+	{
+		if (scene_node.getData().scene_units!=null) {
+			for (SceneUnit unit : scene_node.getData().scene_units) {
+				SceneUnitTag<?> unit_tag = null;
+				try{
+					if (unit instanceof Actor) {
+						unit_tag = new SceneActor(this, (Actor)unit);
+					} 
+					else if (unit instanceof Region) {
+						unit_tag = new SceneRegion(this, (Region)unit);
+					} 
+					else if (unit instanceof com.cell.rpg.scene.Point) {
+						unit_tag = new ScenePoint(this, (com.cell.rpg.scene.Point)unit);
+					}
+					if (unit_tag != null) {
+						scene_container.getWorld().addChild(unit_tag.getGameUnit());
+					}
+				}catch(Throwable err){
+					err.printStackTrace();
+				}
+			}
+		}
+		scene_container.getWorld().processEvent();
+		
+		Vector<SceneUnitTag> list = scene_container.getWorld().getChildsSubClass(SceneUnitTag.class);
+		for (SceneUnitTag tag : list) {
+			tag.onReadComplete(list);
+		}
+	}
+		
+	
+	@SuppressWarnings("unchecked")
+	private void save()
+	{
+		Vector<SceneUnitTag> list = scene_container.getWorld().getChildsSubClass(SceneUnitTag.class);
+		for (SceneUnitTag tag : list) {
+			tag.onWriteReady(list);
+		}
+		
+		scene_node.getData().scene_units.clear();
+		
+		for (SceneUnitTag tag : list) {
+			try{
+				scene_node.getData().scene_units.add(tag.onWrite());
+			}catch(Throwable err){
+				err.printStackTrace();
+			}
+		}
+	}
+	
+//	-----------------------------------------------------------------------------------------------------------------------------
 
 	@Override
 	public void setVisible(boolean b) {
@@ -137,91 +235,117 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == tool_bar.save) {
+			save();
 			Studio.getInstance().getSceneManager().saveScene(scene_node);
 		}
 	}
 
 //	-----------------------------------------------------------------------------------------------------------------------------
-
+	
 	public Scene getGameScene()
 	{
 		return scene_container;
 	}
 	
-	private SceneUnitTag<?> v_selected_unit;
-	
 	public SceneUnitTag<?> getSelectedUnit() {
-		return null;
+		return v_selected_unit;
 	}
 	
-	private void selectUnit(SceneUnitTag<?> u){
+	public void selectUnit(SceneUnitTag<?> u, boolean updatelist){
 		v_selected_unit = u;
+		if (updatelist) {
+			if (u instanceof SceneActor) {
+				page_actors.setSelecte((SceneActor)u);
+			} 
+			else if (u instanceof SceneRegion) {
+				page_regions.setSelecte((SceneRegion)u);
+			} 
+			else if (u instanceof ScenePoint) {
+				page_points.setSelecte((ScenePoint)u);
+			}
+		}
 	}
 	
-	public <T extends Unit> T getUnit(Class<T> type, String id) {
+	public <T extends Unit> T getUnit(Class<T> type, Object id) {
+		Vector<T> list = scene_container.getWorld().getChildsSubClass(type);
+		for (T t : list) {
+			if (t.getID().equals(id)) {
+				return t;
+			}
+		}
 		return null;
 	}
 
-	public void refreshAll() {
-//		tb_actors.repaint(500);
-//		tb_regions.repaint(500);
-//		tb_points.repaint(500);
-	}
-	public void refreshActor() {
-//		tb_actors.repaint(500);
-//		tb_regions.repaint(500);
-//		tb_points.repaint(500);
-	}
-	public void refreshRegion() {
-//		tb_actors.repaint(500);
-//		tb_regions.repaint(500);
-//		tb_points.repaint(500);
-	}
-	public void refreshPoint() {
-//		tb_actors.repaint(500);
-//		tb_regions.repaint(500);
-//		tb_points.repaint(500);
-	}
-	
-	
-	public void removeUnit(SceneUnitTag<?> unit) {
+	public void addUnit(SceneUnitTag<?> unit) {
 		try{
-	
+			scene_container.getWorld().addChild(unit.getGameUnit());
 		}catch(Exception err){
 			err.printStackTrace();
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
-	public void sortName(Vector<SceneUnitTag> tunits) {
-		CUtil.sort(tunits, new CUtil.ICompare<SceneUnitTag, SceneUnitTag>() {
-			public int compare(SceneUnitTag a, SceneUnitTag b) {
-				return CUtil.getStringCompare().compare(a.getGameUnit().getID()+"", b.getGameUnit().getID()+"");
-			}
-		});
+	public void removeUnit(SceneUnitTag<?> unit) {
+		try{
+			scene_container.getWorld().removeChild(unit.getGameUnit());
+		}catch(Exception err){
+			err.printStackTrace();
+		}
 	}
+	
+//	-----------------------------------------------------------------------------------------------------------------------------
+
+	public void refreshAll() 
+	{
+		page_actors.repaint(500);
+		page_regions.repaint(500);
+		page_points.repaint(500);
+		scene_mini_map.repaint(500);
+	}
+	
+	public void refreshActor() {
+		page_actors.repaint(500);
+		scene_mini_map.repaint(500);
+	}
+	public void refreshRegion() {
+		page_regions.repaint(500);
+		scene_mini_map.repaint(500);
+	}
+	public void refreshPoint() {
+		page_points.repaint(500);
+		scene_mini_map.repaint(500);
+	}
+	
+//	-----------------------------------------------------------------------------------------------------------------------------
+
+//	@SuppressWarnings("unchecked")
+//	public void sortName(Vector<SceneUnitTag> tunits) {
+//		CUtil.sort(tunits, new CUtil.ICompare<SceneUnitTag, SceneUnitTag>() {
+//			public int compare(SceneUnitTag a, SceneUnitTag b) {
+//				return CUtil.getStringCompare().compare(a.getGameUnit().getID()+"", b.getGameUnit().getID()+"");
+//			}
+//		});
+//	}
 	
 //	-----------------------------------------------------------------------------------------------------------------------------
 	
 	public boolean isToolSelect(){
-		return true;
+		return tool_selector.isSelected();
 	}
 	
 	public boolean isToolAdd(){
-		return true;
+		return tool_addactor.isSelected();
 	}
 	
-	
 	public boolean isPageActor(){
-		return true;
+		return unit_page.getSelectedComponent() == page_actors;
 	}
 	
 	public boolean isPageRegion() {
-		return false;
+		return unit_page.getSelectedComponent() == page_regions;
 	}
 	
 	public boolean isPagePoint() {
-		return false;
+		return unit_page.getSelectedComponent() == page_points;
 	}
 
 	
@@ -245,8 +369,8 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 	
 	
 //	-----------------------------------------------------------------------------------------------------------------------------
-	
-	class SceneContainer extends Scene
+
+	class SceneContainer extends Scene implements CUtil.ICompare<SceneUnitTag<?>, SceneUnitTag<?>>
 	{
 		Point			add_region_sp	= null;
 		Point			add_region_dp	= new Point();
@@ -276,6 +400,13 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 				scene_mini_map.repaint(500);
 			}
 		}
+		
+		public int compare(SceneUnitTag<?> a, SceneUnitTag<?> b) {
+			return CUtil.getStringCompare().compare(a.getGameUnit().getID()+"", b.getGameUnit().getID()+"");
+		}
+		
+//		-----------------------------------------------------------------------------------------------------------------------------
+//		添加单位时显示在鼠标上的单位
 		
 		@Override
 		protected void renderAfter(Graphics2D g)
@@ -380,28 +511,19 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 					// actor
 					if (isPageActor()) 
 					{
-						selectUnit(getWorld().getChildAtPos(worldx, worldy, SceneActor.class));
-						if (getSelectedUnit() != null) {
-							//view.tb_actors.setSelecte((SceneActor) view.selected_unit);
-						}
+						selectUnit(getWorld().getChildAtPos(worldx, worldy, SceneActor.class), true);
 					}
 					// region
 					else if (isPageRegion())
 					{
-						selectUnit(getWorld().getChildAtPos(worldx, worldy, SceneRegion.class));
-						if (getSelectedUnit() != null) {
-							//view.tb_regions.setSelecte((SceneRegion) view.selected_unit);
-						}
+						selectUnit(getWorld().getChildAtPos(worldx, worldy, SceneRegion.class), true);
 					}
 					// point
 					else if (isPagePoint())
 					{
 						// 选择节点
 						if (getRoot().isMouseDown(com.g2d.display.event.MouseEvent.BUTTON_LEFT)) {
-							selectUnit(getWorld().getChildAtPos(worldx, worldy, ScenePoint.class));
-							if (getSelectedUnit() != null) {
-								//view.tb_points.setSelecte((ScenePoint) view.selected_unit);
-							}
+							selectUnit(getWorld().getChildAtPos(worldx, worldy, ScenePoint.class), true);
 						}
 						// 已选择节点并且右击了另一个
 						else if (getRoot().isMouseDown(com.g2d.display.event.MouseEvent.BUTTON_RIGHT)){
@@ -533,9 +655,11 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 					
 					// 添加新节点并自动链接
 					if (getRoot().isKeyHold(KeyEvent.VK_SHIFT)) {
-						pre_added_point.linkNext(spr);
-						if (getRoot().isKeyHold(KeyEvent.VK_CONTROL)) {
-							spr.linkNext(pre_added_point);
+						if (pre_added_point!=null){
+							pre_added_point.linkNext(spr);
+							if (getRoot().isKeyHold(KeyEvent.VK_CONTROL)) {
+								spr.linkNext(pre_added_point);
+							}
 						}
 					}
 					

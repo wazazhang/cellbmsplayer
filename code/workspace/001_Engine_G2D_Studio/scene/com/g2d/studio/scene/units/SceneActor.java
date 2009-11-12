@@ -6,6 +6,7 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Vector;
 
 import com.cell.rpg.display.UnitNode;
 import com.cell.rpg.scene.Actor;
@@ -21,7 +22,8 @@ import com.g2d.studio.Version;
 import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.cpj.entity.CPJSprite;
 import com.g2d.studio.gameedit.template.XLSUnit;
-import com.g2d.studio.scene.SceneEditor;
+import com.g2d.studio.scene.editor.SceneEditor;
+import com.g2d.studio.scene.editor.MenuUnit;
 
 import com.g2d.util.Drawing;
 
@@ -112,10 +114,9 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 //	--------------------------------------------------------------------------------------------------------
 	
 	@Override
-	public void onReadComplete(ArrayList<Unit> all) {}
+	public void onReadComplete(Vector<SceneUnitTag<?>> all) {}
 	@Override
-	public void onWriteComplete(ArrayList<Unit> all) {}
-
+	public void onWriteReady(Vector<SceneUnitTag<?>> all) {}
 //	--------------------------------------------------------------------------------------------------------
 
 	@Override
@@ -143,6 +144,17 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 //		return new UnitMenu(scene_view, this);
 //	}
 
+//	--------------------------------------------------------------------------------------------------------
+	
+	public javax.swing.ImageIcon getIcon(boolean update) {
+		return null;
+	}
+	
+	@Override
+	public String getName() {
+		return getID() + "";
+	}
+	
 //	--------------------------------------------------------------------------------------------------------
 	
 	public void update() 
@@ -246,7 +258,6 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 	
 	@Override
 	public Menu getEditMenu() {
-		// TODO Auto-generated method stub
-		return null;
+		return new MenuUnit(editor, this);
 	}
 }

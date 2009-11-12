@@ -10,9 +10,9 @@ import java.awt.Stroke;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Vector;
 
 import com.cell.math.MathVector;
-import com.cell.math.Vector;
 import com.cell.rpg.scene.Point;
 import com.g2d.annotation.Property;
 import com.g2d.display.DisplayObjectContainer;
@@ -21,7 +21,9 @@ import com.g2d.display.ui.Menu.MenuItem;
 import com.g2d.editor.DisplayObjectEditor;
 import com.g2d.game.rpg.Unit;
 import com.g2d.studio.Version;
-import com.g2d.studio.scene.SceneEditor;
+import com.g2d.studio.scene.editor.MenuPointLink;
+import com.g2d.studio.scene.editor.SceneEditor;
+import com.g2d.studio.scene.editor.MenuUnit;
 
 
 @Property("一个点，通常用于路点")
@@ -109,9 +111,9 @@ public class ScenePoint extends com.g2d.game.rpg.Unit implements SceneUnitTag<Po
 	}
 	
 //	--------------------------------------------------------------------------------------------------------
-	
+
 	@Override
-	public void onReadComplete(ArrayList<Unit> all) {
+	public void onReadComplete(Vector<SceneUnitTag<?>> all) {
 		next_nodes.clear();
 		if (point.next_ids!=null) {
 			for (String next : point.next_ids) {
@@ -124,9 +126,8 @@ public class ScenePoint extends com.g2d.game.rpg.Unit implements SceneUnitTag<Po
 			}
 		}
 	}
-	
 	@Override
-	public void onWriteComplete(ArrayList<Unit> all) {
+	public void onWriteReady(Vector<SceneUnitTag<?>> all) {
 		point.next_ids = new ArrayList<String>(next_nodes.size());
 		for (ScenePoint next : next_nodes) {
 			try{
@@ -136,6 +137,7 @@ public class ScenePoint extends com.g2d.game.rpg.Unit implements SceneUnitTag<Po
 			}
 		}
 	}
+	
 
 //	--------------------------------------------------------------------------------------------------------
 	
@@ -158,53 +160,31 @@ public class ScenePoint extends com.g2d.game.rpg.Unit implements SceneUnitTag<Po
 	public Shape getSnapShape() {
 		return snap_shape;
 	}
+
+//	--------------------------------------------------------------------------------------------------------
+	
+	public javax.swing.ImageIcon getIcon(boolean update) {
+		return null;
+	}
+	
+	@Override
+	public String getName() {
+		return getID() + "";
+	}
+	
+//	--------------------------------------------------------------------------------------------------------
 	
 //	@Override
 //	public Menu getEditMenu() {
 //		return new UnitMenu(scene_view, this);
 //	}
 	
-	public Menu getLinkMenu(final ScenePoint next) 
-	{
-		final ScenePoint unit = this;
-		final String item_1 = "单向链接";
-		final String item_2 = "反向链接";
-		final String item_3 = "双向链接";
-		final String itemd_1 = "单向解开";
-		final String itemd_2 = "反向解开";
-		final String itemd_3 = "双向解开";
-		
-		return new Menu(100, new String[]{
-				item_1, item_2, item_3, itemd_1, itemd_2, itemd_3
-		}){
-			protected void onClickMenuItem(MenuItem item) {
-				try{
-					synchronized(unit.next_nodes) {
-						synchronized(next.next_nodes) {
-							if (item.getUserData().equals(item_1)) {
-								unit.next_nodes.add(next);
-							} else if (item.getUserData().equals(item_2)) {
-								next.next_nodes.add(unit);
-							} else if (item.getUserData().equals(item_3)) {
-								unit.next_nodes.add(next);
-								next.next_nodes.add(unit);
-							} else if (item.getUserData().equals(itemd_1)) {
-								unit.next_nodes.remove(next);
-							} else if (item.getUserData().equals(itemd_2)) {
-								next.next_nodes.remove(unit);
-							} else if (item.getUserData().equals(itemd_3)) {
-								unit.next_nodes.remove(next);
-								next.next_nodes.remove(unit);
-							}
-						}
-					}
-				}catch(Exception err){}
-			}
-		};
-	}
-	
 //	--------------------------------------------------------------------------------------------------------
 
+	public HashSet<ScenePoint> getNextNodes() {
+		return next_nodes;
+	}
+	
 	public void linkNext(ScenePoint next) {
 		synchronized(next_nodes) {
 			next_nodes.add(next);
@@ -215,6 +195,11 @@ public class ScenePoint extends com.g2d.game.rpg.Unit implements SceneUnitTag<Po
 		synchronized(next_nodes) {
 			next_nodes.remove(next);
 		}
+	}
+
+	public Menu getLinkMenu(final ScenePoint next) 
+	{
+		return new MenuPointLink(this, next);
 	}
 	
 //	--------------------------------------------------------------------------------------------------------
@@ -298,7 +283,6 @@ public class ScenePoint extends com.g2d.game.rpg.Unit implements SceneUnitTag<Po
 	
 	@Override
 	public Menu getEditMenu() {
-		// TODO Auto-generated method stub
-		return null;
+		return new MenuUnit(editor, this);
 	}
 }

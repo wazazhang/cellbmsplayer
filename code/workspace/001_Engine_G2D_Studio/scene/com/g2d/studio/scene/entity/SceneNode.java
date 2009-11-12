@@ -19,7 +19,7 @@ import com.g2d.studio.cpj.entity.CPJWorld;
 import com.g2d.studio.gameedit.dynamic.DynamicNode;
 import com.g2d.studio.gameedit.dynamic.IDynamicIDFactory;
 import com.g2d.studio.gameedit.entity.ObjectNode;
-import com.g2d.studio.scene.SceneEditor;
+import com.g2d.studio.scene.editor.SceneEditor;
 import com.g2d.studio.swing.G2DTreeNode;
 
 final public class SceneNode extends DynamicNode<Scene>

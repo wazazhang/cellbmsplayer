@@ -7,6 +7,7 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Vector;
 
 import com.cell.rpg.scene.Region;
 import com.g2d.annotation.Property;
@@ -16,7 +17,8 @@ import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.ui.Menu;
 import com.g2d.editor.DisplayObjectEditor;
 import com.g2d.studio.Version;
-import com.g2d.studio.scene.SceneEditor;
+import com.g2d.studio.scene.editor.SceneEditor;
+import com.g2d.studio.scene.editor.MenuUnit;
 
 
 @Property("一个范围，通常用于触发事件")
@@ -24,7 +26,7 @@ public class SceneRegion extends com.g2d.game.rpg.Unit implements SceneUnitTag<R
 {
 	private static final long serialVersionUID = Version.VersionGS;
 
-	final SceneEditor		scene_view;
+	final SceneEditor		editor;
 	final public Region 	region;
 	
 	@Property("color")
@@ -34,7 +36,7 @@ public class SceneRegion extends com.g2d.game.rpg.Unit implements SceneUnitTag<R
 	
 	public SceneRegion(SceneEditor editor, Rectangle rect) 
 	{
-		this.scene_view 	= editor;
+		this.editor 	= editor;
 		this.local_bounds	= rect;
 		this.priority 		= -Integer.MAX_VALUE / 2;
 		if (!editor.getGameScene().getWorld().addChild(this)){
@@ -47,11 +49,11 @@ public class SceneRegion extends com.g2d.game.rpg.Unit implements SceneUnitTag<R
 	
 	public SceneRegion(SceneEditor editor, Region in) throws IOException
 	{
-		this.scene_view = editor;
+		this.editor = editor;
 		this.region = in;
 		{
 			this.setID(
-					scene_view.getGameScene().getWorld(), 
+					editor.getGameScene().getWorld(), 
 					region.name);
 			this.setLocation(
 					region.x,
@@ -97,9 +99,9 @@ public class SceneRegion extends com.g2d.game.rpg.Unit implements SceneUnitTag<R
 //	--------------------------------------------------------------------------------------------------------
 	
 	@Override
-	public void onReadComplete(ArrayList<Unit> all) {}
+	public void onReadComplete(Vector<SceneUnitTag<?>> all) {}
 	@Override
-	public void onWriteComplete(ArrayList<Unit> all) {}
+	public void onWriteReady(Vector<SceneUnitTag<?>> all) {}
 
 //	--------------------------------------------------------------------------------------------------------
 
@@ -123,6 +125,19 @@ public class SceneRegion extends com.g2d.game.rpg.Unit implements SceneUnitTag<R
 		return null;
 	}
 
+//	--------------------------------------------------------------------------------------------------------
+	
+	public javax.swing.ImageIcon getIcon(boolean update) {
+		return null;
+	}
+	
+	@Override
+	public String getName() {
+		return getID() + "";
+	}
+	
+//	--------------------------------------------------------------------------------------------------------
+	
 //	@Override
 //	public Menu getEditMenu() {
 //		return new UnitMenu(scene_view, this);
@@ -137,22 +152,22 @@ public class SceneRegion extends com.g2d.game.rpg.Unit implements SceneUnitTag<R
 	{
 		super.renderAfter(g);
 
-		if (scene_view!=null)
+		if (editor!=null)
 		{
-			if (scene_view.isPageRegion()) {
+			if (editor.isPageRegion()) {
 				g.setColor(color);
 				g.fill(local_bounds);
 				// 选择了该精灵
-				if (scene_view.getSelectedUnit() == this) {
+				if (editor.getSelectedUnit() == this) {
 					g.setColor(Color.WHITE);
 					g.draw(local_bounds);
 				}
 				// 当鼠标放到该精灵上
-				else if (isCatchedMouse() && scene_view.isToolSelect()) {
+				else if (isCatchedMouse() && editor.isToolSelect()) {
 					g.setColor(Color.GREEN);
 					g.draw(local_bounds);
 				}
-				this.enable = scene_view.isToolSelect();
+				this.enable = editor.isToolSelect();
 			} else {
 				Composite composite = g.getComposite();
 				setAlpha(g, alpha * 0.5f);
@@ -183,7 +198,6 @@ public class SceneRegion extends com.g2d.game.rpg.Unit implements SceneUnitTag<R
 	
 	@Override
 	public Menu getEditMenu() {
-		// TODO Auto-generated method stub
-		return null;
+		return new MenuUnit(editor, this);
 	}
 }
