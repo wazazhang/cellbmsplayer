@@ -227,7 +227,7 @@ public class ObjectManager extends ManagerForm implements ActionListener
 		TextField text = new TextField();
 		
 		public AvatarAddDialog() {
-			super(CPJResourceType.ACTOR);
+			super(ObjectManager.this, CPJResourceType.ACTOR);
 			JPanel panel = new JPanel(new BorderLayout());
 			panel.add(new JLabel(" 输入AVATAR名字 "), BorderLayout.WEST);
 			panel.add(text, BorderLayout.CENTER);

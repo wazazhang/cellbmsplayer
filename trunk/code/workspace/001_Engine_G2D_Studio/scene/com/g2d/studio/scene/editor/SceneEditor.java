@@ -47,6 +47,7 @@ import com.g2d.game.rpg.Unit;
 import com.g2d.studio.Studio;
 import com.g2d.studio.StudioResource;
 import com.g2d.studio.cpj.entity.CPJWorld;
+import com.g2d.studio.gameedit.SelectUnitTool;
 
 import com.g2d.studio.res.Res;
 import com.g2d.studio.scene.entity.SceneNode;
@@ -116,7 +117,13 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 			ButtonGroup button_group = new ButtonGroup();
 			button_group.add(tool_selector);
 			button_group.add(tool_addactor);
-			
+			tool_addactor.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if (tool_addactor.isSelected()) {
+						SelectUnitTool.getUnitTool().setVisible(true);
+					}
+				}
+			});
 		}
 		this.add(tool_bar, BorderLayout.NORTH);
 		

@@ -107,13 +107,17 @@ public class AvatarEditor extends JSplitPane implements ActionListener
 	public void actionPerformed(ActionEvent e) {
 		if (current_avatar != null) {
 			if (e.getSource() == btn_change_body) {
-				CPJSprite spr = new CPJResourceSelectDialog<CPJSprite>(CPJResourceType.ACTOR).showDialog();
+				CPJSprite spr = new CPJResourceSelectDialog<CPJSprite>(
+						Studio.getInstance().getObjectManager(),
+						CPJResourceType.ACTOR).showDialog();
 				if (spr != null) {
 					current_avatar.setBody(Studio.getInstance().getCPJResourceManager().getNodeIndex(spr));
 				}
 			} 
 			else if (e.getSource() == btn_add_part) {
-				CPJSprite spr = new CPJResourceSelectDialog<CPJSprite>(CPJResourceType.AVATAR).showDialog();
+				CPJSprite spr = new CPJResourceSelectDialog<CPJSprite>(
+						Studio.getInstance().getObjectManager(), 
+						CPJResourceType.AVATAR).showDialog();
 				if (spr != null) {
 					current_avatar.addAvatarPart(Studio.getInstance().getCPJResourceManager().getNodeIndex(spr));
 				}

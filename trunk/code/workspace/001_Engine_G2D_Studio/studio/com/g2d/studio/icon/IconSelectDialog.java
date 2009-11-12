@@ -20,7 +20,7 @@ public class IconSelectDialog extends G2DListSelectDialog<IconFile>
 	
 	public IconSelectDialog()
 	{
-		super(new IconList());
+		super(Studio.getInstance().getIconManager(),new IconList());
 		super.setTitle("选择一个图标");
 	}
 	

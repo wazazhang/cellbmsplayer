@@ -14,10 +14,11 @@ import javax.swing.ImageIcon;
 import com.cell.CIO;
 import com.cell.CUtil;
 import com.cell.rpg.RPGObject;
+import com.g2d.studio.swing.G2DListItem;
 import com.g2d.studio.swing.G2DTreeNode;
 import com.thoughtworks.xstream.XStream;
 
-public abstract class ObjectNode<T extends RPGObject> extends G2DTreeNode<ObjectNode<?>>
+public abstract class ObjectNode<T extends RPGObject> extends G2DTreeNode<ObjectNode<?>> implements G2DListItem
 {
 	public ObjectNode() {}
 
@@ -45,4 +46,6 @@ public abstract class ObjectNode<T extends RPGObject> extends G2DTreeNode<Object
 	public Component getEditComponent(){
 		return null;
 	}
+	
+	
 }

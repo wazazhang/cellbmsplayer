@@ -20,7 +20,7 @@ public class SoundSelectDialog extends G2DListSelectDialog<SoundFile>
 	
 	public SoundSelectDialog()
 	{
-		super(new SoundList());
+		super(Studio.getInstance().getSoundManager(),new SoundList());
 		super.setTitle("选择一个声音");
 	}
 	

@@ -307,7 +307,7 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 		TextField text = new TextField();
 		
 		public AddSceneDialog() {
-			super(CPJResourceType.WORLD);
+			super(Studio.getInstance(), CPJResourceType.WORLD);
 			JPanel panel = new JPanel(new BorderLayout());
 			panel.add(new JLabel(" 输入场景名字 "), BorderLayout.WEST);
 			panel.add(text, BorderLayout.CENTER);

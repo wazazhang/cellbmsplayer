@@ -87,7 +87,9 @@ final public class XLSUnit extends XLSTemplateNode<TUnit>
 			}
 			set_binding.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					CPJSprite spr = new CPJResourceSelectDialog<CPJSprite>(CPJResourceType.ACTOR).showDialog();
+					CPJSprite spr = new CPJResourceSelectDialog<CPJSprite>(
+							Studio.getInstance().getObjectManager(),
+							CPJResourceType.ACTOR).showDialog();
 					if (spr != null) {
 						setCPJSprite(spr);
 						XLSUnit.this.getIcon(true);

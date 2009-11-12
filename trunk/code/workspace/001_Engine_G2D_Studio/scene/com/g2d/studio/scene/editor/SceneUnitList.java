@@ -134,7 +134,7 @@ public class SceneUnitList<T extends Unit> extends JPanel implements CUtil.IComp
 		public void mouseClicked(MouseEvent e) 
 		{
 			Object	selected	= getSelect(e);
-			if (selected == unit) {
+			if (selected == unit && selected!=null) {
 				if (e.getButton() == MouseEvent.BUTTON1) {
 					if (e.getClickCount() == 2) {
 						viewer.scene_panel.locationCameraCenter(unit.getGameUnit().getX(), unit.getGameUnit().getY());

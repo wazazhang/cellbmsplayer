@@ -20,6 +20,14 @@ public class AbstractDialog extends JDialog
 		setCenter();
 	}
 	
+	public AbstractDialog(Window owner)
+	{
+		super(owner, ModalityType.APPLICATION_MODAL);
+		super.setAlwaysOnTop(true);
+		super.setSize(600, 400);
+		setCenter();
+	}
+	
 	public void setCenter()
 	{
 		setLocation(

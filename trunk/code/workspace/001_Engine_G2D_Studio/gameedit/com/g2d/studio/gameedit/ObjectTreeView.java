@@ -94,6 +94,9 @@ extends JSplitPane implements TreeSelectionListener, ChangeListener
 		return g2d_tree;
 	}
 	
+	public Vector<T> getAllObject() {
+		return G2DTree.getNodesSubClass(tree_root, node_type);
+	}
 	
 	public T getObject(String id)
 	{
