@@ -50,6 +50,8 @@ public class ObjectPropertyPanel extends JPanel
 {
 	private static final long serialVersionUID = 1L;
 	
+	public static int DEFAULT_ROW_HEIGHT = 20;
+	
 	final public Object 	object;
 	
 	final Vector<Object[]> 	rows			= new Vector<Object[]>();
@@ -164,6 +166,7 @@ public class ObjectPropertyPanel extends JPanel
 		public FieldTable(final Object[][] rowData, final Object[] columnNames) 
 		{
 			super(rowData, columnNames);
+			super.setRowHeight(DEFAULT_ROW_HEIGHT);
 		}
 		
 		public void refresh()
