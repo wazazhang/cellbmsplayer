@@ -156,7 +156,7 @@ public class SceneUnitList<T extends Unit> extends JPanel implements CUtil.IComp
 		public UnitListMenu(SceneUnitTag<?> unit)
 		{
 			this.unit = unit;
-			info.setText(unit.getClass().getName() + " : " + unit.getName());
+			info.setText(unit.getClass().getSimpleName() + " : " + unit.getName());
 			info.setEnabled(false);
 			rename.addActionListener(this);
 			property.addActionListener(this);

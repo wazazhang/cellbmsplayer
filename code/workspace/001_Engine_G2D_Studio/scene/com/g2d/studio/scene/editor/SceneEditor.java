@@ -170,6 +170,8 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		
 		this.add(split_h, BorderLayout.CENTER); 
 		
+		
+		refreshAll();
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -202,6 +204,8 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		for (SceneUnitTag tag : list) {
 			tag.onReadComplete(list);
 		}
+		
+		
 	}
 		
 	
