@@ -22,8 +22,6 @@ import com.cell.CIO;
 
 final public class ZipNodeManager
 {
-	public static int ZIP_LEVEL = ZipOutputStream.STORED;
-
 //	---------------------------------------------------------------------------------------------------------------
 	
 	public static <T extends ZipNode> void saveAll(
@@ -33,9 +31,9 @@ final public class ZipNodeManager
 	{
 		ZipOutputStream zip_out = new ZipOutputStream(outputstream);
 		try {
-			zip_out.setLevel(ZIP_LEVEL);
-			
+//			zip_out.setMethod(ZipOutputStream.STORED);
 			ZipEntry entry = new ZipEntry(".info/info.properties");
+			entry.setTime(0);
 			zip_out.putNextEntry(entry);
 			String info = 
 				"filter = " + filter.getClass().getName() + "\n" + 
@@ -110,6 +108,7 @@ final public class ZipNodeManager
 	{
 		ZipEntry entry = new ZipEntry(node.getEntryName());
 		try{
+			entry.setTime(0);
 			zip_out.putNextEntry(entry);
 			ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
 			filter.writeNode(baos, node);
