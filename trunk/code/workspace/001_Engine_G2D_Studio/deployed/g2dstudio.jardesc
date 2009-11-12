@@ -12,14 +12,15 @@
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
         <javaElement handleIdentifier="=002_Engine_SQLProxy/src"/>
+        <javaElement handleIdentifier="=001_Engine_G2D_Studio/scene"/>
         <javaElement handleIdentifier="=001_Engine_G2D_Studio/rpg"/>
         <javaElement handleIdentifier="=000_Engine_Sound/src"/>
         <javaElement handleIdentifier="=000_Engine_Sound/ogg"/>
         <javaElement handleIdentifier="=001_Engine_G2D_Studio/gameedit"/>
         <javaElement handleIdentifier="=001_Engine_G2D_Studio/studio"/>
         <javaElement handleIdentifier="=000_Engine_Core/j2se"/>
-        <javaElement handleIdentifier="=000_Engine_G2D/j2se"/>
         <javaElement handleIdentifier="=000_Engine_G2D/g2d"/>
+        <javaElement handleIdentifier="=000_Engine_G2D/j2se"/>
         <javaElement handleIdentifier="=002_Engine_SQLProxy/test"/>
         <javaElement handleIdentifier="=000_Engine_Sound/openal"/>
         <javaElement handleIdentifier="=001_Engine_G2D_Studio/cpj"/>

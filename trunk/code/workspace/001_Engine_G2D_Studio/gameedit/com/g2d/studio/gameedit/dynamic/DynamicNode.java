@@ -61,10 +61,12 @@ public abstract class DynamicNode<T extends RPGObject> extends ObjectNode<T>
 		return name;
 	}
 	
-	final public void setName(String name) {
+	public boolean setName(String name) {
 		if (name!=null && name.length()>0) {
 			this.name = name;
+			return true;
 		}
+		return false;
 	}
 	
 //	-------------------------------------------------------------------------------------------------------

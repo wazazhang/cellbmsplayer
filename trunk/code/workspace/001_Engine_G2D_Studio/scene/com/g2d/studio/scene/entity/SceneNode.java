@@ -51,6 +51,16 @@ final public class SceneNode extends DynamicNode<Scene>
 	}
 	
 	@Override
+	public boolean setName(String name) {
+		if(super.setName(name)){
+			getData().name = name;
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	@Override
 	protected ImageIcon createIcon() {
 		ImageIcon ico = getWorldDisplay().getIcon(false);
 		return Tools.createIcon(Tools.combianImage(60, 40, ico.getImage()));
@@ -69,6 +79,5 @@ final public class SceneNode extends DynamicNode<Scene>
 		}
 		return world_editor;
 	}
-	
 	
 }

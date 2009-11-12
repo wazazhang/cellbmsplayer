@@ -54,33 +54,6 @@ final public class ZipNodeManager
 		}
 	}
 
-	static ZipEntry save(
-			ZipOutputStream zip_out, 
-			ZipNode node, 
-			ZipStreamFilter filter)
-	{
-		ZipEntry entry = new ZipEntry(node.getEntryName());
-		try{
-			zip_out.putNextEntry(entry);
-			ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
-			ObjectOutputStream oos = filter.createObjectOutputStream(baos);
-			try{
-				if (node instanceof ZipExtNode) {
-					((ZipExtNode) node).writeExternal(oos);
-				} else {
-					oos.writeObject(node);
-				}
-			}finally{
-				oos.close();
-				zip_out.write(baos.toByteArray());
-			}
-		} catch(Exception err){
-			err.printStackTrace();
-		}
-		return entry;
-	}
-	
-//	---------------------------------------------------------------------------------------------------------------
 	
 	public static <T extends ZipNode> Vector<T> loadAll(
 			InputStream inputstream,
@@ -109,6 +82,8 @@ final public class ZipNodeManager
 		}
 		return ret;
 	}
+
+//	---------------------------------------------------------------------------------------------------------------
 	
 	static public <T extends ZipNode> T load(
 			ZipInputStream zip_in,
@@ -119,22 +94,29 @@ final public class ZipNodeManager
 		T ret = null;
 		try {
 			ByteArrayInputStream bais = new ByteArrayInputStream(CIO.readBytes(zip_in));
-			ObjectInputStream ois = filter.createObjectInputStream(bais);
-			try{
-				if (ZipExtNode.class.isAssignableFrom(type)) {
-					ZipExtNode ext = filter.createExtNode(entry, type);
-					ext.readExternal(ois);
-				} else {
-					ret = type.cast(ois.readObject());
-				}
-			}finally{
-				ois.close();
-			}
+			ret = type.cast(filter.readNode(bais, type));
 		} catch (Throwable ex) {
 			ex.printStackTrace();
 		}
 		return ret;
 	}
-
 	
+	
+
+	static ZipEntry save(
+			ZipOutputStream zip_out, 
+			ZipNode node, 
+			ZipStreamFilter filter)
+	{
+		ZipEntry entry = new ZipEntry(node.getEntryName());
+		try{
+			zip_out.putNextEntry(entry);
+			ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
+			filter.writeNode(baos, node);
+			zip_out.write(baos.toByteArray());
+		} catch(Exception err){
+			err.printStackTrace();
+		}
+		return entry;
+	}
 }

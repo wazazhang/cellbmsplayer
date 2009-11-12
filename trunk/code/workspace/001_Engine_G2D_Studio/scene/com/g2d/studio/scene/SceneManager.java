@@ -11,6 +11,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -186,6 +189,7 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 							dialog.getSceneName(),
 							Studio.getInstance().getCPJResourceManager().getNodeIndex(world));
 					tree_root.add(node);
+					g2d_tree.reload();
 				}
 			}
 		}
@@ -260,6 +264,7 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 				String new_name = JOptionPane.showInputDialog(SceneManager.this, "输入场景名字", node.getName());
 				if (new_name!=null && new_name.length()>0) {
 					node.setName(new_name);
+					saveScene(node);
 					g2d_tree.repaint();
 				}
 			}
@@ -277,8 +282,8 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 		if (file.exists())
 		{
 			try{
-				ByteArrayInputStream bais = new ByteArrayInputStream(com.cell.io.File.readData(file));
-				ObjectInputStream ois = new XStream().createObjectInputStream(bais);
+				StringReader reader = new StringReader(com.cell.io.File.readText(file, "UTF-8"));
+				ObjectInputStream ois = new XStream().createObjectInputStream(reader);
 				try{
 					Scene data = (Scene)ois.readObject();
 					SceneNode node = new SceneNode(data);
@@ -301,14 +306,14 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 		try{
 			File file = new File(root, node.getID()+".xml");
 			Scene data = node.getData();
-			ByteArrayOutputStream baos = new ByteArrayOutputStream(10240);
-			ObjectOutputStream oos = new XStream().createObjectOutputStream(baos);
+			StringWriter writer = new StringWriter(10240);
+			ObjectOutputStream oos = new XStream().createObjectOutputStream(writer);
 			try{
 				oos.writeObject(data);
 			}finally{
 				oos.close();
 			}
-			com.cell.io.File.wirteData(file, baos.toByteArray());
+			com.cell.io.File.writeText(file, writer.toString(), "UTF-8");
 		}catch(Throwable ex) {
 			ex.printStackTrace();
 		}
