@@ -43,6 +43,7 @@ final public class SceneNode extends DynamicNode<Scene>
 				CPJResourceType.WORLD, 
 				scene.scene_node.cpj_project_name, 
 				scene.scene_node.cpj_object_id);
+		System.out.println("load a scene : " + scene.name + "   (" + scene.id + ")");
 	}
 	
 	@Override
