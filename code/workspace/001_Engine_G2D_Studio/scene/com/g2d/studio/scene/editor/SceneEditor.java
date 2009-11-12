@@ -100,7 +100,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		super.setSize(AbstractFrame.getScreenWidth()-Studio.getInstance().getWidth(), Studio.getInstance().getHeight());
 		super.setLocation(Studio.getInstance().getX()+Studio.getInstance().getWidth(), Studio.getInstance().getY());
 		super.setIconImage(Res.icon_edit);		
-		super.setTitle("场景 : " + scene.getName() + "   (" + scene.getID() + ")");
+		super.setTitle("场景 : " + scene.getName() + " (" + scene.getID() + ")");
 		
 		this.scene_node		= scene;
 		this.scene_world	= scene_node.getWorldDisplay();
