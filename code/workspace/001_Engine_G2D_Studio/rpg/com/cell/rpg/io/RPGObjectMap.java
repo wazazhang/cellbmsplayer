@@ -8,6 +8,8 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -15,11 +17,14 @@ import java.util.Hashtable;
 import java.util.Vector;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
+import com.cell.CIO;
 import com.cell.exception.NotImplementedException;
 import com.cell.rpg.RPGObject;
 import com.cell.rpg.template.TemplateNode;
 import com.cell.util.zip.ZipExtNode;
+import com.cell.util.zip.ZipNode;
 import com.cell.util.zip.ZipNodeManager;
 import com.cell.util.zip.ZipStreamFilter;
 
@@ -46,16 +51,34 @@ public class RPGObjectMap<T extends RPGObject> extends Hashtable<String, T> impl
 	}
 	
 	@Override
-	public ObjectInputStream createObjectInputStream(InputStream is) throws IOException {
+	public ZipNode readNode(ByteArrayInputStream bais, Class<? extends ZipNode> type) throws Exception {
 		XStream xstream = new XStream();
-		return xstream.createObjectInputStream(is);
+		String xml = new String(CIO.readBytes(bais), "UTF-8");
+		StringReader reader = new StringReader(xml);
+		ObjectInputStream ois = xstream.createObjectInputStream(reader);
+		try{
+			return type.cast(ois.readObject());
+		}finally{
+			ois.close();
+		}
 	}
 	
 	@Override
-	public ObjectOutputStream createObjectOutputStream(OutputStream os) throws IOException {
+	public void writeNode(ByteArrayOutputStream baos, ZipNode node) throws Exception {
 		XStream xstream = new XStream();
-		return xstream.createObjectOutputStream(os);
+		StringWriter writer = new StringWriter(1024);
+		ObjectOutputStream oos = xstream.createObjectOutputStream(writer);
+		try{
+			oos.writeObject(node);
+		}finally{
+			oos.close();
+		}
+		String xml = writer.toString();
+		baos.write(xml.getBytes("UTF-8"));
 	}
+	
+//	-----------------------------------------------------------------------------------------------------------------------
+
 	
 	public void loadAll()
 	{
@@ -88,11 +111,6 @@ public class RPGObjectMap<T extends RPGObject> extends Hashtable<String, T> impl
 
 
 //	------------------------------------------------------------------------------------------------------------------------------
-	
-	@Deprecated
-	@Override
-	public ZipExtNode createExtNode(ZipEntry entry, Class<?> type) {
-		throw new NotImplementedException();
-	}
+
 	
 }

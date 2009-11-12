@@ -80,7 +80,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 	
 	private G2DWindowToolBar			tool_bar;
 	private JToggleButton				tool_selector	= new JToggleButton(Tools.createIcon(Res.icons_bar[0]), true);
-	private JToggleButton				tool_addactor	= new JToggleButton(Tools.createIcon(Res.icons_bar[1]));
+	private JToggleButton				tool_addactor	= new JToggleButton(Tools.createIcon(Res.icons_bar[8]));
 	
 	private JTabbedPane					unit_page;
 	private SceneUnitList<SceneActor>	page_actors;

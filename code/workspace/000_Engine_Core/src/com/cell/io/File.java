@@ -8,7 +8,7 @@ import com.cell.CObject;
 public class File 
 {
 
-	public static String readText(java.io.File file)
+	public static String readText(java.io.File file, String encoding)
 	{
 		String ret = null;
 		FileInputStream fis = null;
@@ -16,7 +16,7 @@ public class File
 			fis = new FileInputStream(file);
 			byte[] data = new byte[fis.available()];
 			fis.read(data);
-			ret = new String(data, CObject.ENCODING);
+			ret = new String(data, encoding);
 		}catch (Exception e) {
 			e.printStackTrace();
 		}finally{
@@ -27,14 +27,13 @@ public class File
 		return ret;
 	}
 	
-	
-	public static void wirteText(java.io.File file, String text)
+	public static void writeText(java.io.File file, String text, String encoding)
 	{
 		try{
 			if (!file.exists()) {
 				file.createNewFile();
 			}
-			byte[] data = text.getBytes(CObject.ENCODING);
+			byte[] data = text.getBytes(encoding);
 			FileOutputStream fos = new FileOutputStream(file);
 			try{
 				fos.write(data);
@@ -46,6 +45,16 @@ public class File
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static String readText(java.io.File file)
+	{
+		return readText(file, CObject.ENCODING);
+	}
+	
+	public static void writeText(java.io.File file, String text)
+	{
+		writeText(file, text, CObject.ENCODING);
 	}
 	
 	public static byte[] readData(java.io.File file)
