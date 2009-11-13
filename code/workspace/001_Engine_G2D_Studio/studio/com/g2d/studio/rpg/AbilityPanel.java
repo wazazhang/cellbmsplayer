@@ -210,7 +210,7 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 		private static final long serialVersionUID = 1L;
 		
 		JComboBox		combo_abilities;
-		JButton			btn_add			= new JButton("添加");
+		JButton			btn_add			= new JButton("确定");
 		JPanel			pan_property	= new JPanel();
 		AbstractAbility	current_ability;
 		
@@ -281,7 +281,7 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 			{
 				btn_add.setForeground(Color.BLACK);
 				btn_add.setEnabled(true);
-				btn_add.setText("添加");
+				btn_add.setText("确定");
 			}
 		}
 		

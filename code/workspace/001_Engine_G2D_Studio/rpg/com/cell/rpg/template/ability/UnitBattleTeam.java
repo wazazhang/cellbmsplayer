@@ -9,11 +9,9 @@ import com.g2d.annotation.Property;
 public class UnitBattleTeam extends AbilitiesVector
 {
 	private static final long serialVersionUID = 1L;
-	
-	public Class<?>[] getSubAbilityTypes() {
-		return new Class<?>[]{
-				TeamNode.class,
-		};
+
+	public UnitBattleTeam() {
+		super(TeamNode.class);
 	}
 	
 	@Property("[单位能力] 战斗队伍中的一个单位")
