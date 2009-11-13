@@ -2,6 +2,7 @@ package com.g2d.studio.scene.editor;
 
 import com.g2d.editor.DisplayObjectEditor;
 import com.g2d.game.rpg.Unit;
+import com.g2d.studio.res.Res;
 import com.g2d.studio.rpg.AbilityPanel;
 import com.g2d.studio.rpg.RPGObjectPanel;
 import com.g2d.studio.rpg.AbilityPanel.AbilityCellEditAdapter;
@@ -20,6 +21,6 @@ public class SceneUnitTagEditor extends DisplayObjectEditor<Unit>
 				new AbilityPanel(unit.getUnit(),
 						adapters));
 		super.setSize(800, 500);
-		
+		this.setIconImage(Res.icon_edit);
 	}
 }

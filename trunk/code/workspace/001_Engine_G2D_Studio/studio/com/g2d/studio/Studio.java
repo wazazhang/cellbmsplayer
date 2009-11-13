@@ -131,7 +131,7 @@ public class Studio extends AbstractFrame
 		try
 		{
 			//
-			this.setTitle(Config.TITLE + " : " + project_path.getPath());
+			this.setTitle(Config.TITLE);
 			this.setIconImage(Res.icon_edit);
 			this.setSize(300, AbstractFrame.getScreenHeight()-60);
 			this.setLocation(0, 0);

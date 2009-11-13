@@ -6,14 +6,22 @@ import com.g2d.annotation.Property;
 
 
 @Property("[单位能力] 战斗队伍")
-public class UnitBattleTeam extends AbilitiesVector
+public class UnitBattleTeam extends AbstractTemplateAbility
 {
 	private static final long serialVersionUID = 1L;
 
-	public UnitBattleTeam() {
-		super(TeamNode.class);
+	@Property("绑定的单位")
+	public AbilitiesVector	spawn_types = new AbilitiesVector(TeamNode.class){
+		public String toString() {
+			return getAbilitiesCount() + "个单位";
+		}
+	};
+
+	@Override
+	public boolean isMultiField() {
+		return false;
 	}
-	
+
 	@Property("[单位能力] 战斗队伍中的一个单位")
 	public static class TeamNode extends AbstractTemplateAbility 
 	{

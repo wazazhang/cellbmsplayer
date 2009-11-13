@@ -38,6 +38,7 @@ import com.cell.rpg.xls.XLSFile;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.Config;
+import com.g2d.studio.res.Res;
 import com.g2d.studio.scene.editor.SceneAbilityAdapters;
 import com.g2d.studio.scene.editor.SceneListCellEdit;
 import com.g2d.studio.scene.editor.SceneUnitListCellEdit;
@@ -218,7 +219,7 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 		{
 			super.setTitle("添加能力到 : " + abilities);
 			super.setLayout(new BorderLayout());
-			
+			this.setIconImage(Res.icon_edit);
 			{
 				combo_abilities = new JComboBox(abilities.getSubAbilityTypes());
 				combo_abilities.setRenderer(this);
@@ -347,7 +348,10 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 				if (value == null) {
 					value = field.getType().newInstance();
 				}
-				return new AbilityForm((Abilities) value, edit_adapters.values());
+				return new AbilityForm(
+						AbstractDialog.getTopWindow(AbilityPanel.this),
+						(Abilities) value,
+						edit_adapters.values());
 			} catch (Exception e) {}
 
 			// 从适配器里选取
