@@ -29,12 +29,7 @@ public class RegionSpawnNPC extends AbstractSceneAbility
 	public int spawn_unit_count;
 	
 	@Property("产生的单位")
-	public AbilitiesVector spawn_types = new AbilitiesVector(){
-		public Class<?>[] getSubAbilityTypes() {
-			return new Class<?>[]{
-					NPCSpawn.class
-			};
-		}
+	public AbilitiesVector spawn_types = new AbilitiesVector(NPCSpawn.class){
 		public String toString() {
 			return getAbilitiesCount() + "个单位";
 		}

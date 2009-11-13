@@ -3,14 +3,18 @@ package com.cell.rpg.ability;
 import java.util.ArrayList;
 import java.util.Vector;
 
-public abstract class AbilitiesVector implements Abilities
+public class AbilitiesVector implements Abilities
 {
 	private static final long serialVersionUID = 1L;
 	
 	/**将显示在单位属性的Ability面板*/
 	final private Vector<AbstractAbility> abilities = new Vector<AbstractAbility>();
+	final private Class<?>[] sub_types;
 	
-	public AbilitiesVector() {}
+	public AbilitiesVector(Class<?> ... sub_types)
+	{
+		this.sub_types = sub_types;
+	}
 	
 	final public void clearAbilities() {
 		abilities.clear();
@@ -48,5 +52,10 @@ public abstract class AbilitiesVector implements Abilities
 	
 	final public int getAbilitiesCount() {
 		return abilities.size();
+	}
+	
+	@Override
+	final public Class<?>[] getSubAbilityTypes() {
+		return sub_types;
 	}
 }
