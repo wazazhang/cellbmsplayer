@@ -28,8 +28,6 @@ public class TUnit extends TemplateNode
 	
 	@Override
 	public Class<?>[] getSubAbilityTypes() {
-		return new Class<?>[]{
-				UnitBattleTeam.class,
-		};
+		return new Class<?>[]{};
 	}
 }

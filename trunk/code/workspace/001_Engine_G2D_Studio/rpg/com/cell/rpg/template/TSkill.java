@@ -8,8 +8,7 @@ public class TSkill extends TemplateNode
 
 	@Override
 	public Class<?>[] getSubAbilityTypes() {
-		// TODO Auto-generated method stub
-		return null;
+		return new Class<?>[] {};
 	}
 	
 }

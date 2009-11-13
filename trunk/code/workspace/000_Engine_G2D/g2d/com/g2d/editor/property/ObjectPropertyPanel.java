@@ -69,7 +69,7 @@ public class ObjectPropertyPanel extends JPanel
 		{
 			Property type_property = object.getClass().getAnnotation(Property.class);
 			if (type_property!=null) {
-				JLabel lbl_name = new JLabel(type_property.value()[0]);
+				JLabel lbl_name = new JLabel(obj.toString());
 				this.add(lbl_name, BorderLayout.NORTH);
 			}
 		}
@@ -122,7 +122,6 @@ public class ObjectPropertyPanel extends JPanel
 				            	   int r = rows_table.getSelectedRow();
 				            	   int c = 3;
 				            	   Field field = (Field)rows.elementAt(r)[c];
-				            	   
 				            	   Property doc = field.getAnnotation(Property.class);
 				            	   if (doc!=null) {
 				            		   anno_text.setText(CUtil.arrayToString(doc.value(), "\n"));

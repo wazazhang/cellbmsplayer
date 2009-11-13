@@ -35,6 +35,9 @@ public class RegionSpawnNPC extends AbstractSceneAbility
 					NPCSpawn.class
 			};
 		}
+		public String toString() {
+			return getAbilitiesCount() + "个单位";
+		}
 	};
 
 	@Override
@@ -62,7 +65,7 @@ public class RegionSpawnNPC extends AbstractSceneAbility
 		
 		/** 产生百分比，即该区域在生成NPC时，生成到该类型的几率 */
 		@Property("产生百分比，即该区域在生成NPC时，生成到该类型的几率")
-		public float 		spawn_percent;
+		public float 		spawn_percent	= 100;
 		
 		/** 对应actor对象名 */
 		@Property("对应actor对象名")
@@ -71,6 +74,11 @@ public class RegionSpawnNPC extends AbstractSceneAbility
 		@Override
 		public boolean isMultiField() {
 			return true;
+		}
+		
+		@Override
+		public String toString() {
+			return super.toString() + " : " + template_unit_id + "(" + ((int)(spawn_percent*100)) + "%)";
 		}
 	}
 }

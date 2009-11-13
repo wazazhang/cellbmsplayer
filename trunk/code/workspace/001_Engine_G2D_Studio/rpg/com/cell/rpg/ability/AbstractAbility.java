@@ -28,7 +28,7 @@ public abstract class AbstractAbility implements Serializable
 	
 
 	
-	public static String getName(Class<? extends AbstractAbility> cls) {
+	public static String getName(Class<?> cls) {
 		Property property = cls.getAnnotation(Property.class);
 		if (property != null) {
 			return property.value()[0];
