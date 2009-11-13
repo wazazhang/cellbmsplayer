@@ -19,7 +19,7 @@ public class CPJSprite extends CPJObject<SpriteSet>
 	
 	public CPJSprite(CPJFile parent, String name, CPJResourceType res_type) {
 		super(parent, name, SpriteSet.class, res_type);
-		System.out.println("read a cpj sprite : " + name);
+//		System.out.println("read a cpj sprite : " + name);
 	}
 	
 	@Override

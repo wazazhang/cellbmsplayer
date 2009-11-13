@@ -107,24 +107,24 @@ public class ObjectManager extends ManagerForm implements ActionListener
 		// ------------ xls template ------------ //
 		{
 			tree_units_view = new ObjectTreeView<XLSUnit, TUnit>("单位模板", XLSUnit.class, TUnit.class, 
-					new File(zip_dir, "tunit.zip"), studio.xls_tunit);
+					new File(zip_dir, "tunit.obj"), studio.xls_tunit);
 			table.addTab("单位", Tools.createIcon(Res.icon_res_2), tree_units_view);
 			table.addChangeListener(tree_units_view);
 		}{
 			tree_items_view = new ObjectTreeView<XLSItem, TItem>("道具模板", XLSItem.class, TItem.class, 
-					new File(zip_dir, "titem.zip"), studio.xls_titem);
+					new File(zip_dir, "titem.obj"), studio.xls_titem);
 			table.addTab("物品", Tools.createIcon(Res.icon_res_4), tree_items_view);
 			table.addChangeListener(tree_items_view);
 		}{
 			tree_skills_view = new ObjectTreeView<XLSSkill, TSkill>("技能模板", XLSSkill.class, TSkill.class, 
-					new File(zip_dir, "tskill.zip"), studio.xls_tskill);
+					new File(zip_dir, "tskill.obj"), studio.xls_tskill);
 			table.addTab("技能", Tools.createIcon(Res.icon_res_3), tree_skills_view);
 			table.addChangeListener(tree_skills_view);
 		}
 		// ------------ dynamic ------------ //
 		{	// DAvatar
 			tree_avatars_view = new ObjectTreeViewDynamic<DAvatar, TAvatar>("AVATAR", DAvatar.class, TAvatar.class, 
-					new File(zip_dir, "tavatar.zip"));
+					new File(zip_dir, "tavatar.obj"));
 			table.addTab("AVATAR", Tools.createIcon(Res.icon_res_4), tree_avatars_view);
 			table.addChangeListener(tree_avatars_view);
 			tree_avatars_view.getTree().addMouseListener(new AvatarRootMouseAdapter());

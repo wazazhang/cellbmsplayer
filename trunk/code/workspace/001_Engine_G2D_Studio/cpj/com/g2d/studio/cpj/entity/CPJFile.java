@@ -59,7 +59,7 @@ public class CPJFile extends G2DTreeNode<CPJObject<?>>
 		} 
 		
 		set_resource = new StudioResource(output_file, name);
-		System.out.println("read a cpj file : " + output_file.getPath());
+//		System.out.println("read a cpj file : " + output_file.getPath());
 		
 		
 	}

@@ -28,7 +28,7 @@ public class IconFile implements G2DListItem
 		this.icon_file_name = name;
 		this.image			= image;
 		this.icon			= Tools.createIcon(image);
-		System.out.println("create a icon file : " + name);
+//		System.out.println("create a icon file : " + name);
 	}
 	
 	@Override

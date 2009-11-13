@@ -53,19 +53,19 @@ public class DisplayObjectEditor<V extends DisplayObject> extends AbstractFrame
 		
 		// info panel
 		{
-			info.setLayout(null);
+//			info.setLayout(null);
+//			
+//			JInternalFrame frame = new JInternalFrame(){
+//				private static final long serialVersionUID = 1L;
+//				public void paint(Graphics g) {
+//					object.render((Graphics2D)g);
+//				}
+//			};
+//			frame.setSize(object.getWidth(), object.getHeight());
+//			frame.setVisible(true);
+//			info.add(frame);
 			
-			JInternalFrame frame = new JInternalFrame(){
-				private static final long serialVersionUID = 1L;
-				public void paint(Graphics g) {
-					object.render((Graphics2D)g);
-				}
-			};
-			frame.setSize(object.getWidth(), object.getHeight());
-			frame.setVisible(true);
-			info.add(frame);
-			
-			table.addTab("Info", info);
+//			table.addTab("Info", info);
 		}
 
 		// append panel

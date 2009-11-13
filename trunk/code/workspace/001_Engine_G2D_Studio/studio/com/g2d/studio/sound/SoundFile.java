@@ -23,7 +23,7 @@ public class SoundFile implements G2DListItem
 	SoundFile(String name) 
 	{
 		this.sound_file_name 	= name;
-		System.out.println("create a sound file : " + name);
+//		System.out.println("create a sound file : " + name);
 	}
 	
 	@Override
