@@ -3,15 +3,10 @@ package com.cell.rpg.scene.ability;
 import com.cell.rpg.ability.AbstractAbility;
 import com.g2d.annotation.Property;
 
-@Property("[单位能力] NPC行动开始点")
-public class NPCPathPoint extends AbstractAbility {
+@Property("[区域能力] 场景出生区域")
+public class RegionPlayerEnter extends AbstractSceneAbility {
 
 	private static final long serialVersionUID = 1L;
-	
-	/** 对应point对象名 */
-	@Property("对应point名字")
-	public	String		point_name;
-	
 	
 	@Override
 	public boolean isMultiField() {
@@ -20,6 +15,6 @@ public class NPCPathPoint extends AbstractAbility {
 	
 	@Override
 	public String toString() {
-		return super.toString() + " : " + point_name;
+		return super.toString();
 	}
 }

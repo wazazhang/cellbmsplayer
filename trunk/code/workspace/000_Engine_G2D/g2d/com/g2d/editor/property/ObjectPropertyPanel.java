@@ -253,8 +253,8 @@ public class ObjectPropertyPanel extends JPanel
 	
 	/**
 	 * 当单月格的值被改变时回调
-	 * @param object
-	 * @param field
+	 * @param object 当前被改变的对象
+	 * @param field 该对象在其所有者中的字段
 	 */
 	protected void onFieldChanged(Object object, Field field){}
 	
@@ -311,8 +311,8 @@ public class ObjectPropertyPanel extends JPanel
 				
 				if (obj != null) {
 					field.set(object, obj);
-					rows.elementAt(editrow)[1] = obj;
-					onFieldChanged(object, field);
+					rows.elementAt(editrow)[1] = obj;	
+					onFieldChanged(object, field);				
 					rows_table.refresh();
 					return obj;
 				}

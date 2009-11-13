@@ -25,8 +25,10 @@ import com.g2d.studio.Version;
 import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.cpj.entity.CPJSprite;
 import com.g2d.studio.gameedit.template.XLSUnit;
+import com.g2d.studio.rpg.AbilityPanel;
+import com.g2d.studio.rpg.RPGObjectPanel;
 import com.g2d.studio.scene.editor.SceneEditor;
-import com.g2d.studio.scene.editor.MenuUnit;
+import com.g2d.studio.scene.editor.SceneUnitMenu;
 
 import com.g2d.util.Drawing;
 
@@ -273,7 +275,15 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 //	-----------------------------------------------------------------------------------------------------------
 	
 	@Override
+	public DisplayObjectEditor<?> createEditorForm() {
+		return new DisplayObjectEditor<SceneActor>(
+				this,
+				new RPGObjectPanel(actor), 
+				new AbilityPanel(actor.getAbilities()));
+	}
+	
+	@Override
 	public Menu getEditMenu() {
-		return new MenuUnit(editor, this);
+		return new SceneUnitMenu(editor, this);
 	}
 }

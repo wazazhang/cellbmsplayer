@@ -21,9 +21,9 @@ import com.g2d.display.ui.Menu.MenuItem;
 import com.g2d.editor.DisplayObjectEditor;
 import com.g2d.game.rpg.Unit;
 import com.g2d.studio.Version;
-import com.g2d.studio.scene.editor.MenuPointLink;
+import com.g2d.studio.scene.editor.PointLinkMenu;
 import com.g2d.studio.scene.editor.SceneEditor;
-import com.g2d.studio.scene.editor.MenuUnit;
+import com.g2d.studio.scene.editor.SceneUnitMenu;
 
 
 @Property("一个点，通常用于路点")
@@ -199,7 +199,7 @@ public class ScenePoint extends com.g2d.game.rpg.Unit implements SceneUnitTag<Po
 
 	public Menu getLinkMenu(final ScenePoint next) 
 	{
-		return new MenuPointLink(this, next);
+		return new PointLinkMenu(this, next);
 	}
 	
 //	--------------------------------------------------------------------------------------------------------
@@ -281,8 +281,17 @@ public class ScenePoint extends com.g2d.game.rpg.Unit implements SceneUnitTag<Po
 	}
 	
 	
+//	@Override
+//	public DisplayObjectEditor<?> createEditorForm() 
+//	{
+//		return new DisplayObjectEditor<ScenePoint>(
+//				this,
+//				new RPGUnitPanel(point),
+//				new AbilityPanel(this, point));
+//	}
+	
 	@Override
 	public Menu getEditMenu() {
-		return new MenuUnit(editor, this);
+		return new SceneUnitMenu(editor, this);
 	}
 }

@@ -4,7 +4,7 @@ import com.g2d.display.ui.Menu;
 import com.g2d.display.ui.Menu.MenuItem;
 import com.g2d.studio.scene.units.ScenePoint;
 
-public class MenuPointLink extends Menu
+public class PointLinkMenu extends Menu
 {
 	final static String item_1 = "单向链接";
 	final static String item_2 = "反向链接";
@@ -16,7 +16,7 @@ public class MenuPointLink extends Menu
 	final ScenePoint unit;
 	final ScenePoint next;
 	
-	public MenuPointLink(ScenePoint point, ScenePoint next) {
+	public PointLinkMenu(ScenePoint point, ScenePoint next) {
 		super(100, new String[]{item_1, item_2, item_3, itemd_1, itemd_2, itemd_3});
 		this.unit = point;
 		this.next = next;
