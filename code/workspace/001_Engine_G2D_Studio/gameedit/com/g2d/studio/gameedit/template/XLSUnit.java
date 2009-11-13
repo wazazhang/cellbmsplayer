@@ -2,6 +2,7 @@ package com.g2d.studio.gameedit.template;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -21,8 +22,10 @@ import com.g2d.studio.cpj.CPJIndex;
 import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.cpj.CPJResourceSelectDialog;
 import com.g2d.studio.cpj.entity.CPJSprite;
+import com.g2d.studio.gameedit.ObjectAbilityAdapters;
 import com.g2d.studio.gameedit.TemplateObjectViewer;
 import com.g2d.studio.res.Res;
+import com.g2d.studio.rpg.AbilityForm;
 
 final public class XLSUnit extends XLSTemplateNode<TUnit>
 {
@@ -73,36 +76,39 @@ final public class XLSUnit extends XLSTemplateNode<TUnit>
 	
 //	-----------------------------------------------------------------------------------------------------------------
 	
-	class NPCObjectViewer extends TemplateObjectViewer<XLSUnit>
+	class NPCObjectViewer extends TemplateObjectViewer<XLSUnit> implements ActionListener
 	{
 		private static final long serialVersionUID = 1L;
 		
-		JButton set_binding = new JButton("绑定资源");
+		JButton set_binding		= new JButton("绑定资源");
 		
 		public NPCObjectViewer() 
 		{
-			super(XLSUnit.this);
+			super(XLSUnit.this, new ObjectAbilityAdapters.UnitBattleTeamNodeAdapter());
 			if (cpj_sprite!=null) {
 				set_binding.setIcon(cpj_sprite.getIcon(false));
 			}
-			set_binding.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					CPJSprite spr = new CPJResourceSelectDialog<CPJSprite>(
-							Studio.getInstance().getObjectManager(),
-							CPJResourceType.ACTOR).showDialog();
-					if (spr != null) {
-						setCPJSprite(spr);
-						XLSUnit.this.getIcon(true);
-						set_binding.setIcon(cpj_sprite.getIcon(false));
-						Studio.getInstance().getObjectManager().repaint();
-					}
-				}
-			});
-			page_properties.add(set_binding, BorderLayout.SOUTH);
-			
+
+			//page_properties.setLayout(new GridLayout(2, 1));
+			set_binding.addActionListener(this);
+			page_properties.add(set_binding);
 		}
 		
-		
+
+		public void actionPerformed(ActionEvent e)
+		{
+			if (set_binding==e.getSource()) {
+				CPJSprite spr = new CPJResourceSelectDialog<CPJSprite>(
+						Studio.getInstance().getObjectManager(),
+						CPJResourceType.ACTOR).showDialog();
+				if (spr != null) {
+					setCPJSprite(spr);
+					XLSUnit.this.getIcon(true);
+					set_binding.setIcon(cpj_sprite.getIcon(false));
+					Studio.getInstance().getObjectManager().repaint();
+				}
+			}
+		}
 		
 	}
 	

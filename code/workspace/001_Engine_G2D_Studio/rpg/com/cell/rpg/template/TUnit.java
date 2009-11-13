@@ -9,8 +9,6 @@ public class TUnit extends TemplateNode
 {
 	UnitNode		display_node;
 	
-	UnitBattleTeam	battle_team		= new UnitBattleTeam();
-	
 	public TUnit(
 			String id, 
 			String name) 
@@ -28,6 +26,8 @@ public class TUnit extends TemplateNode
 	
 	@Override
 	public Class<?>[] getSubAbilityTypes() {
-		return new Class<?>[]{};
+		return new Class<?>[]{
+				UnitBattleTeam.class
+		};
 	}
 }

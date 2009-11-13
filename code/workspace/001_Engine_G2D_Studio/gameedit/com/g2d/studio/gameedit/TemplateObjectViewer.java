@@ -38,6 +38,8 @@ import com.g2d.display.DisplayObject;
 import com.g2d.editor.DisplayObjectViewer;
 import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.template.XLSTemplateNode;
+import com.g2d.studio.rpg.AbilityPanel;
+import com.g2d.studio.rpg.AbilityPanel.AbilityCellEditAdapter;
 import com.g2d.util.AbstractFrame;
 import com.thoughtworks.xstream.XStream;
 
@@ -47,13 +49,14 @@ public class TemplateObjectViewer<T extends XLSTemplateNode> extends JPanel
 	
 	final  T tobject;
 	
-	protected JTabbedPane table = new JTabbedPane();
-	
-	protected JPanel page_properties;
-	protected JTable page_xls_list;
+	protected JTabbedPane 	table = new JTabbedPane();
 	
 	
-	public TemplateObjectViewer(T object) 
+	protected JPanel 		page_properties;
+	protected JTable 		page_xls_list;
+	protected AbilityPanel	page_abilities;
+	
+	public TemplateObjectViewer(T object, AbilityCellEditAdapter<?> ... adapters ) 
 	{
 		this.tobject = object;
 		this.setLayout(new BorderLayout());
@@ -78,7 +81,10 @@ public class TemplateObjectViewer<T extends XLSTemplateNode> extends JPanel
 					new String[]{"字段名","字段值"});
 			table.addTab("XLS数据", new JScrollPane(page_xls_list));
 		}
-		
+		{
+			page_abilities = new AbilityPanel(object.getData(), adapters);
+			table.addTab("能力", page_abilities);
+		}
 		this.add(table);
 		
 	}

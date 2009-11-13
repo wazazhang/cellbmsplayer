@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Event;
 import java.awt.Graphics;
 import java.awt.TextField;
 import java.awt.event.ComponentEvent;
@@ -31,6 +32,7 @@ import javax.swing.JTextPane;
 import javax.swing.event.CellEditorListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 
 import com.cell.CUtil;
@@ -166,6 +168,7 @@ public class ObjectPropertyPanel extends JPanel
 		{
 			super(rowData, columnNames);
 			super.setRowHeight(DEFAULT_ROW_HEIGHT);
+			super.getColumn(columnNames[1]).setCellRenderer(new TableRender());
 		}
 		
 		public void refresh()
@@ -185,13 +188,24 @@ public class ObjectPropertyPanel extends JPanel
 		
 	}
 	
-//	------------------------------------------------------------------------------------------------------
+//	-------------------------------------------------------------------------------------------------------------------------------------
 	
 	/**
 	 * 通知单元格编辑器，已经完成了编辑
 	 */
 	final public void fireEditingStopped(){
 		value_editor.fireEditingStopped();
+	}
+	
+	/**
+	 * 用户自定义该字段显示的内容
+	 * @param object		被编辑的对象
+	 * @param field			被编辑的对象类的字段
+	 * @param field_value	被编辑的对象类的字段当前值
+	 * @return
+	 */
+	protected String getPropertyCellText(Object object, Field field, Object field_value) {
+		return field_value + "";
 	}
 	
 	/**
@@ -261,6 +275,32 @@ public class ObjectPropertyPanel extends JPanel
 //	--------------------------------------------------------------------------------------------------------------------------------------
 	
 
+	class TableRender extends DefaultTableCellRenderer
+	{
+		private static final long serialVersionUID = 1L;
+
+		public TableRender() {}
+		
+		@Override
+		public Component getTableCellRendererComponent(
+				JTable table,
+				Object value,
+				boolean isSelected,
+				boolean hasFocus, 
+				int row,
+				int column) {
+			Component ret = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+			try{
+				Field field = (Field) rows.elementAt(row)[3];
+				String text = getPropertyCellText(object, field, value);
+				setText(text);
+			}catch(Exception err){
+				err.printStackTrace();
+			}
+			return ret;
+		}
+	}
+	
 	/**
 	 * 空编辑器
 	 * @author WAZA
@@ -300,30 +340,21 @@ public class ObjectPropertyPanel extends JPanel
 		
 		public Object getCellEditorValue() 
 		{
-//			System.out.println("set value ");
-			
-			try
-			{
-				Field field = (Field)rows.elementAt(editrow)[3];
-				
+			try {
+				Field field = (Field) rows.elementAt(editrow)[3];
 				Object obj = getPropertyCellEditValue(object, field, current_cell_edit, src_value);
-				
 				if (obj != null) {
 					field.set(object, obj);
-					rows.elementAt(editrow)[1] = obj;	
-					onFieldChanged(object, field);				
+					rows.elementAt(editrow)[1] = obj;
+					onFieldChanged(object, field);
 					rows_table.refresh();
 					return obj;
-				}
-				else{
+				} else {
 					return src_value;
 				}
-			} 
-			catch (Exception e) 
-			{
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
 			return src_value;
 		}
 
@@ -331,25 +362,16 @@ public class ObjectPropertyPanel extends JPanel
 		{
 			src_value 	= value;
 			editrow 	= row;
-			
-			Field field = (Field)rows.elementAt(editrow)[3];
-			
-			try
-			{
+			Field field = (Field) rows.elementAt(editrow)[3];
+			try {
 				PropertyCellEdit<?> edit = getPropertyCellEdit(object, field, value);
 				current_cell_edit = edit;
 				Component ret = edit.getComponent();
 				edit.beginEdit(ObjectPropertyPanel.this);
-//				System.out.println(e.paramString());
-//				fireEditingStopped();
-				
 				return ret;
-			}
-			catch (Exception e) 
-			{
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
 			return null;
 		}
 
