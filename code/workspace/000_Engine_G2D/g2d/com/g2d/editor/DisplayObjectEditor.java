@@ -41,7 +41,7 @@ public class DisplayObjectEditor<V extends DisplayObject> extends AbstractFrame
 		{
 			menu_item_auto_stick.setState(true);
 			menu_window.add(menu_item_auto_stick);
-			menu.add(menu_window);
+//			menu.add(menu_window);
 		}
 		
 		this.setJMenuBar(menu);

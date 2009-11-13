@@ -15,6 +15,6 @@ public class TAvatar extends TemplateNode
 	
 	@Override
 	public Class<?>[] getSubAbilityTypes() {
-		return null;
+		return new Class<?>[] {};
 	}
 }

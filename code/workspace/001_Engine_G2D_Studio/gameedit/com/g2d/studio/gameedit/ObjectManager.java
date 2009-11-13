@@ -133,6 +133,20 @@ public class ObjectManager extends ManagerForm implements ActionListener
 		this.add(table, BorderLayout.CENTER);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public <T extends ObjectNode<?>> Vector<T> getObjects(Class<T> type)
+	{
+		if (type.equals(XLSUnit.class)) {
+			return (Vector<T>)tree_units_view.getAllObject();
+		} else if (type.equals(XLSItem.class)) {
+			return (Vector<T>)tree_items_view.getAllObject();
+		} else if (type.equals(XLSSkill.class)) {
+			return (Vector<T>)tree_skills_view.getAllObject();
+		} else {
+			return null;
+		}
+	}
+	
 	public <T extends ObjectNode<?>> T getObject(Class<T> type, String id)
 	{
 		if (type.equals(XLSUnit.class)) {
