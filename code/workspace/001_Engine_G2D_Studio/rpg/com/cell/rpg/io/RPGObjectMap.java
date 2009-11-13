@@ -20,6 +20,7 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import com.cell.CIO;
+import com.cell.CUtil;
 import com.cell.exception.NotImplementedException;
 import com.cell.rpg.RPGObject;
 import com.cell.rpg.template.TemplateNode;
@@ -40,13 +41,15 @@ public class RPGObjectMap<T extends RPGObject> extends Hashtable<String, T> impl
 	private static final long serialVersionUID = 1L;
 	
 	final public Class<T>	type;
-	final public File		zip_file;
+	final public File		zip_dir;
+	final public File		zip_info;
 	
-	
-	public RPGObjectMap(Class<T> type, File zip_file) 
+	public RPGObjectMap(Class<T> type, File zip_dir) 
 	{
 		this.type 		= type;
-		this.zip_file	= zip_file;
+		this.zip_dir	= zip_dir;
+		this.zip_info	= new File(zip_dir, type.getSimpleName().toLowerCase()+".list");
+		
 		loadAll();
 	}
 	
@@ -80,37 +83,83 @@ public class RPGObjectMap<T extends RPGObject> extends Hashtable<String, T> impl
 //	-----------------------------------------------------------------------------------------------------------------------
 
 	
-	public void loadAll()
+	synchronized public void loadAll()
 	{
-		if (zip_file.exists()) 
+		if (zip_dir.exists()) 
 		{
-			ByteArrayInputStream bais = new ByteArrayInputStream(com.cell.io.File.readData(zip_file));
-			try {
-				for (T t : ZipNodeManager.loadAll(bais, type, this)) {
-					put(t.id, t);
+			String[] entrys = CIO.readAllLine(zip_info.getPath(), "UTF-8");
+			
+			for (String entry : entrys) {
+				File f = new File(zip_dir, entry.trim());
+				if (f.exists()) {
+					T t = readNode(f);
+					if (t!=null) {
+						put(t.id, t);
+					}
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
 		}
 	}
 	
-	public void saveAll()
+	synchronized public void saveAll()
 	{
-		if (!zip_file.exists()) {
-			zip_file.getParentFile().mkdirs();
+		if (!zip_dir.exists()) {
+			zip_dir.mkdirs();
 		}
-		ByteArrayOutputStream baos = new ByteArrayOutputStream(1024*20);
-		try {
-			ZipNodeManager.saveAll(baos, values(), this);
-		} catch (Exception e) {
-			e.printStackTrace();
+		
+		Vector<String> keys = new Vector<String>(keySet());
+		CUtil.sort(keys, CUtil.getStringCompare());
+		StringBuffer info = new StringBuffer();
+		for (String k : keys) {
+			T v = get(k);
+			if (writeNode(v, new File(zip_dir, v.getEntryName()))) {
+				info.append(v.getEntryName()+"\n");
+			}
 		}
-		com.cell.io.File.wirteData(zip_file, baos.toByteArray());
+		
+		com.cell.io.File.writeText(zip_info, info.toString(), "UTF-8");
 	}
 
 
 //	------------------------------------------------------------------------------------------------------------------------------
 
+	private T readNode(File xml_file) {
+		try{
+			if (!xml_file.exists()) {
+				return null;
+			}
+			String xml = com.cell.io.File.readText(xml_file, "UTF-8");
+			StringReader reader = new StringReader(xml);
+			ObjectInputStream ois = new XStream().createObjectInputStream(reader);
+			try{
+				return type.cast(ois.readObject());
+			}finally{
+				ois.close();
+			}
+		} catch(Throwable ex) {
+			ex.printStackTrace();
+		}
+		return null;
+	}
 	
+	private boolean writeNode(T node, File xml_file) {
+		try{
+			if (!xml_file.exists()) {
+				xml_file.getParentFile().mkdirs();
+			}
+			StringWriter writer = new StringWriter(1024);
+			ObjectOutputStream oos = new XStream().createObjectOutputStream(writer);
+			try{
+				oos.writeObject(node);
+			}finally{
+				oos.close();
+			}
+			String xml = writer.toString();
+			com.cell.io.File.writeText(xml_file, xml, "UTF-8");
+			return true;
+		} catch(Throwable ex) {
+			ex.printStackTrace();
+		}
+		return false;
+	}
 }

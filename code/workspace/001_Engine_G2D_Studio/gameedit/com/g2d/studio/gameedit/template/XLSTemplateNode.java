@@ -55,7 +55,7 @@ public abstract class XLSTemplateNode<T extends TemplateNode> extends ObjectNode
 		this.xls_file		= xls_file;
 		this.xls_fullrow	= xls_row;
 		this.template_data	= (data == null) ? newData(xls_file, xls_row) : (T)data;
-		System.out.println("read a xls row : " + xls_file.xls_file + " : " + xls_fullrow.id + " : " + xls_fullrow.desc);
+//		System.out.println("read a xls row : " + xls_file.xls_file + " : " + xls_fullrow.id + " : " + xls_fullrow.desc);
 	}
 	
 	/**
