@@ -53,10 +53,10 @@ public class AbilityPanel extends JPanel
 	JButton 								btn_add_ability 	= new JButton("添加能力");
 	JButton 								btn_del_ability 	= new JButton("删除能力");
 	
-	public AbilityPanel(Abilities abilities, AbilityCellEditAdapter<?> ... adapters)
+	public AbilityPanel(Abilities abilities)
 	{
 		this.abilities 		= abilities;
-		for (AbilityCellEditAdapter<?> ad : adapters) {
+		for (AbilityCellEditAdapter<?> ad : AbilityAdapters.getAbilityAdapters()) {
 			edit_adapters.add(ad);
 		}
 		
@@ -308,6 +308,7 @@ public class AbilityPanel extends JPanel
 				for (AbilityCellEditAdapter<?> ad : edit_adapters) {
 					if (ad.getAbilityType().isInstance(object)) {
 						ad.fieldChanged(ad.getAbilityType().cast(object), field);
+						return;
 					}
 				}
 			}
@@ -335,10 +336,11 @@ public class AbilityPanel extends JPanel
 				return new AbilityForm((Abilities) value);
 			}catch (Exception e) {}
 			
+			// 从适配器里选取
 			if (object instanceof AbstractAbility) {
 				for (AbilityCellEditAdapter<?> ad : edit_adapters) {
 					if (ad.getAbilityType().isInstance(object)) {
-						ad.getAbilityCellEdit(ad.getAbilityType().cast(object), field, value);
+						return ad.getAbilityCellEdit(ad.getAbilityType().cast(object), field, value);
 					}
 				}
 			}

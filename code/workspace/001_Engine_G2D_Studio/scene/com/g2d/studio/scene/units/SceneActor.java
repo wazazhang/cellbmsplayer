@@ -279,7 +279,7 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 		return new DisplayObjectEditor<SceneActor>(
 				this,
 				new RPGObjectPanel(actor), 
-				new AbilityPanel(actor.getAbilities()));
+				new AbilityPanel(actor));
 	}
 	
 	@Override

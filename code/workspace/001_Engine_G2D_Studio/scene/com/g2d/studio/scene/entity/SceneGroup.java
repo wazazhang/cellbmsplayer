@@ -1,6 +1,7 @@
 package com.g2d.studio.scene.entity;
 
 import java.util.Enumeration;
+import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -18,6 +19,7 @@ public class SceneGroup extends DefaultMutableTreeNode
 	public SceneGroup(String name) {
 		super(name);
 		this.name = name;
+		this.children = new Vector();
 	}
 	
 	@Override
