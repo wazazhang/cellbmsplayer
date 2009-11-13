@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * @author WAZA
  * @see AbilityPanel
  */
-public interface Abilities extends Serializable
+public interface Abilities
 {
 	public void clearAbilities();
 	

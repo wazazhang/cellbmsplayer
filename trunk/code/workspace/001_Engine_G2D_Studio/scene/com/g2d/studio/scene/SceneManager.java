@@ -105,6 +105,10 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 		return id_factory.get(Integer.parseInt(id)) != null;
 	}
 	
+	public SceneNode getSceneNode(String id) {
+		return id_factory.get(Integer.parseInt(id));
+	}
+	
 	public void addScene(SceneNode node, SceneGroup root)
 	{
 		if (node!=null) {
@@ -178,9 +182,8 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 		saveScene(scene_dir, node);
 	}
 	
-	public void loadScene(String node_path, SceneGroup root)
+	public void loadScene(String node_path, SceneGroup group)
 	{
-		SceneGroup group = root;
 		String[] path = getPath(node_path.trim());
 		for (int i=0; i<path.length; i++) {
 			String file_name = path[i].trim();
@@ -189,6 +192,7 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 				if (file.exists()) {
 					addScene(loadScene(file), group);
 				}
+				return;
 			} else {
 				SceneGroup g = group.findChild(file_name);
 				if (g == null) {
