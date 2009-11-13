@@ -17,8 +17,9 @@ import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.ui.Menu;
 import com.g2d.editor.DisplayObjectEditor;
 import com.g2d.studio.Version;
+
 import com.g2d.studio.scene.editor.SceneEditor;
-import com.g2d.studio.scene.editor.MenuUnit;
+import com.g2d.studio.scene.editor.SceneUnitMenu;
 
 
 @Property("一个范围，通常用于触发事件")
@@ -195,9 +196,18 @@ public class SceneRegion extends com.g2d.game.rpg.Unit implements SceneUnitTag<R
 		return getID()+"";
 	}
 	
+
+//	@Override
+//	public DisplayObjectEditor<?> createEditorForm() 
+//	{
+//		return new DisplayObjectEditor<SceneRegion>(
+//				this,
+//				new RPGUnitPanel(region),
+//				new AbilityPanel(this, region));
+//	}
 	
 	@Override
 	public Menu getEditMenu() {
-		return new MenuUnit(editor, this);
+		return new SceneUnitMenu(editor, this);
 	}
 }

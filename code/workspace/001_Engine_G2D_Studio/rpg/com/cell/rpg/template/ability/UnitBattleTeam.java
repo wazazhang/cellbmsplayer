@@ -17,7 +17,7 @@ public class UnitBattleTeam extends AbilitiesVector
 	}
 	
 	@Property("[单位能力] 战斗队伍中的一个单位")
-	public static class TeamNode extends AbstractAbility 
+	public static class TeamNode extends AbstractTemplateAbility 
 	{
 		private static final long serialVersionUID = 1L;
 		

@@ -7,7 +7,7 @@ import com.g2d.display.ui.Menu.MenuItem;
 import com.g2d.editor.DisplayObjectEditor;
 import com.g2d.studio.scene.units.SceneUnitTag;
 
-public class MenuUnit extends Menu
+public class SceneUnitMenu extends Menu
 {
 	protected SceneUnitTag<?>	unit;
 	protected SceneEditor		view;
@@ -16,7 +16,7 @@ public class MenuUnit extends Menu
 	MenuItemButton item_properties	= new MenuItemButton("属性");
 	MenuItemButton item_delete		= new MenuItemButton("删除");
 	
-	public MenuUnit(SceneEditor view, SceneUnitTag<?> unit, Object ... objects) 
+	public SceneUnitMenu(SceneEditor view, SceneUnitTag<?> unit, Object ... objects) 
 	{
 		super(100, objects);
 		

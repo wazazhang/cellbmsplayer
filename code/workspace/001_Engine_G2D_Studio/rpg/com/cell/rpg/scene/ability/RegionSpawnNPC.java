@@ -10,7 +10,7 @@ import com.g2d.annotation.Property;
  * @author WAZA
  */
 @Property("[区域能力] NPC产生区域")
-public class NPCSpawnRegion extends AbstractAbility 
+public class RegionSpawnNPC extends AbstractSceneAbility 
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -45,9 +45,9 @@ public class NPCSpawnRegion extends AbstractAbility
 
 	/**
 	 * [区域能力] NPC产生区域单位类型 
-	 * 该对象放置在 {@link NPCSpawnRegion}
+	 * 该对象放置在 {@link RegionSpawnNPC}
 	 * @author WAZA
-	 * @see NPCSpawnRegion
+	 * @see RegionSpawnNPC
 	 */
 	@Property("[区域能力] NPC产生区域单位类型")
 	public static class NPCSpawn extends AbstractAbility 

@@ -1,8 +1,8 @@
 package com.cell.rpg.scene;
 
 
-import com.cell.rpg.scene.ability.NPCSpawnRegion;
-import com.cell.rpg.scene.ability.StartRegion;
+import com.cell.rpg.scene.ability.RegionSpawnNPC;
+import com.cell.rpg.scene.ability.RegionPlayerEnter;
 
 
 
@@ -25,8 +25,8 @@ public class Region extends SceneUnit
 	public Class<?>[] getSubAbilityTypes()
 	{
 		return new Class<?>[]{
-				StartRegion.class,
-				NPCSpawnRegion.class,
+				RegionPlayerEnter.class,
+				RegionSpawnNPC.class,
 			};
 	}
 }

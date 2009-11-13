@@ -10,7 +10,7 @@ import com.g2d.annotation.Property;
  *
  */
 @Property("[单位能力] 场景传送点")
-public class Transport extends AbstractAbility {
+public class ActorTransport extends AbstractSceneAbility {
 
 	private static final long serialVersionUID = 1L;
 	
