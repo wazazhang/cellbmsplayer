@@ -204,8 +204,8 @@ public class ObjectPropertyPanel extends JPanel
 	 * @param field_value	被编辑的对象类的字段当前值
 	 * @return
 	 */
-	protected String getPropertyCellText(Object object, Field field, Object field_value) {
-		return field_value + "";
+	protected Component getPropertyCellText(Component src, Object object, Field field, Object field_value) {
+		return src;
 	}
 	
 	/**
@@ -292,8 +292,8 @@ public class ObjectPropertyPanel extends JPanel
 			Component ret = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 			try{
 				Field field = (Field) rows.elementAt(row)[3];
-				String text = getPropertyCellText(object, field, value);
-				setText(text);
+				Component comp = getPropertyCellText(ret, object, field, value);
+				return comp;
 			}catch(Exception err){
 				err.printStackTrace();
 			}
