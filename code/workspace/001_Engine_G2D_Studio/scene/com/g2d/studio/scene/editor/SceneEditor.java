@@ -17,6 +17,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.util.Hashtable;
 import java.util.Vector;
 
 import javax.swing.ButtonGroup;
@@ -50,11 +51,11 @@ import com.g2d.studio.Studio;
 import com.g2d.studio.StudioResource;
 import com.g2d.studio.cpj.entity.CPJSprite;
 import com.g2d.studio.cpj.entity.CPJWorld;
-import com.g2d.studio.gameedit.SelectUnitTool;
 
 import com.g2d.studio.res.Res;
 import com.g2d.studio.scene.entity.SceneNode;
 import com.g2d.studio.scene.units.SceneActor;
+import com.g2d.studio.scene.units.SceneImmutable;
 import com.g2d.studio.scene.units.ScenePoint;
 import com.g2d.studio.scene.units.SceneRegion;
 import com.g2d.studio.scene.units.SceneUnitTag;
@@ -82,15 +83,15 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 //	--------------------------------------------------------------------------------------------------------------
 //	ui
 	
-	private G2DWindowToolBar			tool_bar;
-	private JToggleButton				tool_selector	= new JToggleButton(Tools.createIcon(Res.icons_bar[0]), true);
-	private JToggleButton				tool_addactor	= new JToggleButton(Tools.createIcon(Res.icons_bar[8]));
+	private G2DWindowToolBar	tool_bar;
+	private JToggleButton		tool_selector	= new JToggleButton(Tools.createIcon(Res.icons_bar[0]), true);
+	private JToggleButton		tool_addactor	= new JToggleButton(Tools.createIcon(Res.icons_bar[8]));
 	
-	private JTabbedPane					unit_page;
-	private SceneUnitList<SceneActor>	page_actors;
-	private SceneUnitList<SceneRegion>	page_regions;
-	private SceneUnitList<ScenePoint>	page_points;
-	
+	private JTabbedPane			unit_page;
+//	private SceneUnitTagAdapter<SceneActor>		page_actors;
+//	private SceneUnitTagAdapter<SceneRegion>	page_regions;
+//	private SceneUnitTagAdapter<ScenePoint>		page_points;
+//	private SceneUnitTagAdapter<SceneImmutable>	page_immutables;
 	
 
 //	--------------------------------------------------------------------------------------------------------------
@@ -120,13 +121,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 			ButtonGroup button_group = new ButtonGroup();
 			button_group.add(tool_selector);
 			button_group.add(tool_addactor);
-			tool_addactor.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					if (isToolAdd() && isPageActor()) {
-						SelectUnitTool.getUnitTool().setVisible(true);
-					}
-				}
-			});
+			tool_addactor.addActionListener(this);
 		}
 		this.add(tool_bar, BorderLayout.NORTH);
 		
@@ -153,12 +148,14 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 			// bottom
 			{
 				unit_page		= new JTabbedPane();
-				page_actors		= new SceneUnitList<SceneActor>(this, SceneActor.class);
-				page_regions	= new SceneUnitList<SceneRegion>(this, SceneRegion.class);
-				page_points		= new SceneUnitList<ScenePoint>(this, ScenePoint.class);
-				unit_page.addTab("单位", page_actors);
-				unit_page.addTab("区域", page_regions);
-				unit_page.addTab("路点", page_points);
+//				page_actors		= new SceneUnitList<SceneActor>(this, SceneActor.class);
+//				page_immutables	= new SceneUnitList<SceneImmutable>(this, SceneImmutable.class);
+//				page_regions	= new SceneUnitList<SceneRegion>(this, SceneRegion.class);
+//				page_points		= new SceneUnitList<ScenePoint>(this, ScenePoint.class);
+				unit_page.addTab("单位",		new SceneActorAdapter());
+				unit_page.addTab("不可破坏", new SceneImmutableAdapter());
+				unit_page.addTab("区域", 	new SceneRegionAdapter());
+				unit_page.addTab("路点", 	new ScenePointAdapter());
 				split_v.setBottomComponent(unit_page);
 			}
 			split_h.setLeftComponent(split_v);
@@ -252,6 +249,11 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 			save();
 			Studio.getInstance().getSceneManager().saveScene(scene_node);
 		}
+		else if (e.getSource() == tool_addactor) {
+			if (isToolAdd() && getSelectedPage().isShowSelectUnitTool()){
+				SelectUnitTool.getUnitTool().setVisible(true);
+			}
+		}
 	}
 
 //	-----------------------------------------------------------------------------------------------------------------------------
@@ -268,14 +270,9 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 	public void selectUnit(SceneUnitTag<?> u, boolean updatelist){
 		v_selected_unit = u;
 		if (updatelist) {
-			if (u instanceof SceneActor) {
-				page_actors.setSelecte((SceneActor)u);
-			} 
-			else if (u instanceof SceneRegion) {
-				page_regions.setSelecte((SceneRegion)u);
-			} 
-			else if (u instanceof ScenePoint) {
-				page_points.setSelecte((ScenePoint)u);
+			for (int p=0; p<unit_page.getTabCount(); p++) {
+				SceneUnitTagAdapter<?> ad = (SceneUnitTagAdapter<?>)unit_page.getComponentAt(p);
+				ad.setSelecte(u.getGameUnit());
 			}
 		}
 	}
@@ -313,25 +310,29 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 
 	public void refreshAll() 
 	{
-		page_actors.repaint(500);
-		page_regions.repaint(500);
-		page_points.repaint(500);
+		for (int p = 0; p < unit_page.getTabCount(); p++) {
+			SceneUnitTagAdapter<?> ad = (SceneUnitTagAdapter<?>)unit_page.getComponentAt(p);
+			ad.repaint(500);
+		}
 		scene_mini_map.repaint(500);
 	}
 	
-	public void refreshActor() {
-		page_actors.repaint(500);
-		scene_mini_map.repaint(500);
-	}
-	public void refreshRegion() {
-		page_regions.repaint(500);
-		scene_mini_map.repaint(500);
-	}
-	public void refreshPoint() {
-		page_points.repaint(500);
-		scene_mini_map.repaint(500);
-	}
-	
+//	public void refreshActor() {
+//		page_actors.repaint(500);
+//		scene_mini_map.repaint(500);
+//	}
+//	public void refreshRegion() {
+//		page_regions.repaint(500);
+//		scene_mini_map.repaint(500);
+//	}
+//	public void refreshPoint() {
+//		page_points.repaint(500);
+//		scene_mini_map.repaint(500);
+//	}
+//	public void refreshImmutable() {
+//		page_immutables.repaint(500);
+//		scene_mini_map.repaint(500);
+//	}
 //	-----------------------------------------------------------------------------------------------------------------------------
 
 //	@SuppressWarnings("unchecked")
@@ -341,6 +342,20 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 //				return CUtil.getStringCompare().compare(a.getGameUnit().getID()+"", b.getGameUnit().getID()+"");
 //			}
 //		});
+//	}
+	
+//	private CellSprite getToolSprite()
+//	{
+//		if (SelectUnitTool.getUnitTool().isVisible()) {
+////			if (isPageActor() && SelectUnitTool.getUnitTool().getSelectedUnit()!=null) {
+////				cspr = SelectUnitTool.getUnitTool().getSelectedUnit().getCPJSprite().getDisplayObject();
+////			} 
+////			if (isPageImmutable() && SelectUnitTool.getUnitTool().getSelectedSpr()!=null) {
+////				cspr = SelectUnitTool.getUnitTool().getSelectedSpr().getDisplayObject();
+////			}
+//			return getSelectedPage().getToolSprite();
+//		}
+//		return null;
 //	}
 	
 //	-----------------------------------------------------------------------------------------------------------------------------
@@ -353,18 +368,41 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		return tool_addactor.isSelected();
 	}
 	
-	public boolean isPageActor(){
-		return unit_page.getSelectedComponent() == page_actors;
+	public SceneUnitTagAdapter<?> getSelectedPage() {
+		return (SceneUnitTagAdapter<?>)unit_page.getSelectedComponent();
 	}
 	
-	public boolean isPageRegion() {
-		return unit_page.getSelectedComponent() == page_regions;
-	}
+//	public boolean isPageActor(){
+//		return unit_page.getSelectedComponent() == page_actors;
+//	}
+//	
+//	public boolean isPageRegion() {
+//		return unit_page.getSelectedComponent() == page_regions;
+//	}
+//	
+//	public boolean isPagePoint() {
+//		return unit_page.getSelectedComponent() == page_points;
+//	}
+//
+//	public boolean isPageImmutable() {
+//		return unit_page.getSelectedComponent() == page_immutables;
+//	}
 	
-	public boolean isPagePoint() {
-		return unit_page.getSelectedComponent() == page_points;
-	}
+	
 
+	 
+//	public SceneUnitTagAdapter<SceneActor>		getActors(){
+//		return page_actors;
+//	}
+//	public SceneUnitTagAdapter<SceneRegion>		getRegions() {
+//		return page_regions;
+//	}
+//	public SceneUnitTagAdapter<ScenePoint>		getPoints() {
+//		return page_points;
+//	}
+//	public SceneUnitTagAdapter<SceneImmutable>	getImmutables() {
+//		return page_immutables;
+//	}
 	
 //	-----------------------------------------------------------------------------------------------------------------------------
 	
@@ -485,39 +523,8 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 			{
 				try
 				{
-					// actor
-					if (isPageActor()) 
-					{
-						selectUnit(getWorld().getChildAtPos(worldx, worldy, SceneActor.class), true);
-					}
-					// region
-					else if (isPageRegion())
-					{
-						selectUnit(getWorld().getChildAtPos(worldx, worldy, SceneRegion.class), true);
-					}
-					// point
-					else if (isPagePoint())
-					{
-						// 选择节点
-						if (getRoot().isMouseDown(com.g2d.display.event.MouseEvent.BUTTON_LEFT)) {
-							selectUnit(getWorld().getChildAtPos(worldx, worldy, ScenePoint.class), true);
-						}
-						// 已选择节点并且右击了另一个
-						else if (getRoot().isMouseDown(com.g2d.display.event.MouseEvent.BUTTON_RIGHT)){
-							ScenePoint next = getWorld().getChildAtPos(worldx, worldy, ScenePoint.class);
-							if (next != null && (next != getSelectedUnit()) && getSelectedUnit() instanceof ScenePoint) {
-								try{
-									Menu menu = ((ScenePoint)getSelectedUnit()).getLinkMenu(next);
-									menu.show(scene_panel, getMouseX(), getMouseY());
-								}catch(Exception err){
-									err.printStackTrace();
-								}
-							}
-						}
-					}
-
+					getSelectedPage().updateSelectUnit(this, catch_mouse, worldx, worldy);
 					scene_mini_map.repaint(500);
-					
 				}catch (Throwable e) {}
 			}
 			// 鼠标右键松开
@@ -549,95 +556,25 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 				}
 			}
 			
-			pre_added_point = null;
-			add_region_sp = null;
+			for (int p=0; p<unit_page.getTabCount(); p++) {
+				SceneUnitTagAdapter<?> ad = (SceneUnitTagAdapter<?>)unit_page.getComponentAt(p);
+				ad.clearAddUnitObject(this);
+			}
+			
 		}
 
 //		-----------------------------------------------------------------------------------------------------------------------------
 //		 添加单位
 		void updateAddUnit(boolean catch_mouse, int worldx, int worldy) 
 		{
-			// 添加单位
-			if (isPageActor() && SelectUnitTool.getUnitTool().isVisible() && SelectUnitTool.getUnitTool().getSelectedUnit()!=null)
-			{
-				CellSprite cspr = SelectUnitTool.getUnitTool().getSelectedUnit().getCPJSprite().getDisplayObject();
-				
-				if (cspr!=null)
-				{
-					if (getRoot().isMouseWheelUP()) {
-						cspr.getSprite().nextAnimate(-1);
-					}
-					if (getRoot().isMouseWheelDown()) {
-						cspr.getSprite().nextAnimate(1);
-					}
-					if (getRoot().isMouseDown(com.g2d.display.event.MouseEvent.BUTTON_LEFT)) 
-					{
-						SceneActor spr = new SceneActor(
-								SceneEditor.this, 
-								SelectUnitTool.getUnitTool().getSelectedUnit(),
-								worldx, 
-								worldy,
-								cspr.getSprite().getCurrentAnimate());
-						getWorld().addChild(spr);
-					}
-				}
-				pre_added_point = null;
-				add_region_sp = null;
-			}
-			// 添加区域
-			else if (isPageRegion())
-			{
-				add_region_dp.x = worldx; 
-				add_region_dp.y = worldy;
-				
-				if (getRoot().isMouseDown(MouseEvent.BUTTON1)) 
-				{
-					add_region_sp = new Point();
-					add_region_sp.x = worldx; 
-					add_region_sp.y = worldy;
-				}
-				else if (getRoot().isMouseUp(MouseEvent.BUTTON1)) 
-				{
-					if (add_region_sp!=null)
-					{
-						int sx = Math.min(add_region_sp.x, add_region_dp.x);
-						int sy = Math.min(add_region_sp.y, add_region_dp.y);
-						int sw = Math.abs(add_region_sp.x- add_region_dp.x);
-						int sh = Math.abs(add_region_sp.y- add_region_dp.y);
-						
-						if (sw>0 && sh>0)
-						{
-							SceneRegion region = new SceneRegion(SceneEditor.this, new Rectangle(0, 0, sw, sh));
-							region.setLocation(sx, sy);
-							addTagUnit(region);
-						}
-					}
-					pre_added_point = null;
-					add_region_sp = null;
+			for (int p=0; p<unit_page.getTabCount(); p++) {
+				SceneUnitTagAdapter<?> ad = (SceneUnitTagAdapter<?>)unit_page.getComponentAt(p);
+				if (ad!=getSelectedPage()) {
+					ad.clearAddUnitObject(this);
+				} else {
+					ad.updateAddUnit(this, catch_mouse, worldx, worldy);
 				}
 			}
-			// 添加点
-			else if (isPagePoint())
-			{
-				if (getRoot().isMouseDown(com.g2d.display.event.MouseEvent.BUTTON_LEFT)) 
-				{
-					ScenePoint spr = new ScenePoint(SceneEditor.this, worldx, worldy);
-					addTagUnit(spr);
-					
-					// 添加新节点并自动链接
-					if (getRoot().isKeyHold(KeyEvent.VK_SHIFT)) {
-						if (pre_added_point!=null){
-							pre_added_point.linkNext(spr);
-							if (getRoot().isKeyHold(KeyEvent.VK_CONTROL)) {
-								spr.linkNext(pre_added_point);
-							}
-						}
-					}
-					pre_added_point = spr;
-				}
-				add_region_sp = null;
-			}
-		
 		}
 		
 //		-----------------------------------------------------------------------------------------------------------------------------
@@ -647,50 +584,52 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		{
 			if (isToolAdd())
 			{
-				// 画Actor信息
-				if (isPageActor() && SelectUnitTool.getUnitTool().isVisible() && SelectUnitTool.getUnitTool().getSelectedUnit()!=null)
-				{
-					CellSprite cspr = SelectUnitTool.getUnitTool().getSelectedUnit().getCPJSprite().getDisplayObject();
-					
-					if (cspr != null)
-					{
-						g.translate(getMouseX(), getMouseY());
-						setAlpha(g, 0.75f);
-						{
-							cspr.render(g);
-							cspr.getSprite().nextCycFrame();
-							g.setColor(Color.WHITE);
-							Drawing.drawStringBorder(g, 
-									cspr.getSprite().getCurrentAnimate() + "/" + cspr.getSprite().getAnimateCount(), 
-									0, cspr.getSprite().getVisibleBotton() + 1, 
-									Drawing.TEXT_ANCHOR_HCENTER | Drawing.TEXT_ANCHOR_TOP
-									);
-						}
-						setAlpha(g, 1f);
-						g.translate(-getMouseX(), -getMouseY());
-					}
-					
-				}
-				// 画Region信息
-				else if (isPageRegion())
-				{
-					if (add_region_sp != null)
-					{
-						g.translate(-getCameraX(), -getCameraY());
-						int sx = Math.min(add_region_sp.x, add_region_dp.x);
-						int sy = Math.min(add_region_sp.y, add_region_dp.y);
-						int sw = Math.abs(add_region_sp.x- add_region_dp.x);
-						int sh = Math.abs(add_region_sp.y- add_region_dp.y);
-						g.setColor(new Color(0x8000ff00,true));
-						g.fillRect(sx, sy, sw, sh);
-					}
-				}
-				// 画Point信息
-				else if (isPagePoint())
-				{
-					g.setColor(Color.WHITE);
-					g.fillRect(getMouseX()-4, getMouseY()-4, 8, 8);
-				}
+//				// 画Actor信息
+//				// 画不可破坏的
+//				if (isPageActor() || isPageImmutable())
+//				{
+//					CellSprite cspr = getToolSprite();
+//					
+//					if (cspr != null)
+//					{
+//						g.translate(getMouseX(), getMouseY());
+//						setAlpha(g, 0.75f);
+//						{
+//							cspr.render(g);
+//							cspr.getSprite().nextCycFrame();
+//							g.setColor(Color.WHITE);
+//							Drawing.drawStringBorder(g, 
+//									cspr.getSprite().getCurrentAnimate() + "/" + cspr.getSprite().getAnimateCount(), 
+//									0, cspr.getSprite().getVisibleBotton() + 1, 
+//									Drawing.TEXT_ANCHOR_HCENTER | Drawing.TEXT_ANCHOR_TOP
+//									);
+//						}
+//						setAlpha(g, 1f);
+//						g.translate(-getMouseX(), -getMouseY());
+//					}
+//				}
+//				// 画Region信息
+//				else if (isPageRegion())
+//				{
+//					if (add_region_sp != null)
+//					{
+//						g.translate(-getCameraX(), -getCameraY());
+//						int sx = Math.min(add_region_sp.x, add_region_dp.x);
+//						int sy = Math.min(add_region_sp.y, add_region_dp.y);
+//						int sw = Math.abs(add_region_sp.x- add_region_dp.x);
+//						int sh = Math.abs(add_region_sp.y- add_region_dp.y);
+//						g.setColor(new Color(0x8000ff00,true));
+//						g.fillRect(sx, sy, sw, sh);
+//					}
+//				}
+//				// 画Point信息
+//				else if (isPagePoint())
+//				{
+//					g.setColor(Color.WHITE);
+//					g.fillRect(getMouseX()-4, getMouseY()-4, 8, 8);
+//				}
+				
+				getSelectedPage().renderAddUnitObject(this, g);
 			}
 		}
 		
@@ -809,10 +748,324 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		
 	}
 	
+	public abstract class SceneUnitTagAdapter<T extends SceneUnitTag<?>> extends SceneUnitList<T>
+	{
+		private static final long serialVersionUID = 1L;
+
+		public SceneUnitTagAdapter(Class<T> unit_type) {
+			super(SceneEditor.this, unit_type);
+		}
+		
+		final public boolean isSelectedType(Class<?> unit_type) {
+			return this.unit_type.equals(unit_type);
+		}
+		
+		final public boolean isSelectedPage() {
+			return unit_page.getSelectedComponent() == this;
+		}
+		
+		final public boolean containsUnit(Unit unit) {
+			if (unit_type.isInstance(unit)) {
+				return scene_container.getWorld().contains(unit);
+			}
+			return false;
+		}
+				
+		public boolean isShowSelectUnitTool(){
+			return false;
+		}
+		
+		public CellSprite getToolSprite() {
+			return null;
+		}
+		
+		public void updateSelectUnit(SceneContainer scene, boolean catch_mouse, int worldx, int worldy){
+			if (scene.getRoot().isMouseDown(com.g2d.display.event.MouseEvent.BUTTON_LEFT)) {
+				selectUnit(scene.getWorld().getChildAtPos(worldx, worldy, unit_type), true);
+			}
+		}
+		
+		public void updateAddUnit(SceneContainer scene, boolean catch_mouse, int worldx, int worldy)
+		{
+			CellSprite cspr = getToolSprite();
+			
+			if (cspr != null)
+			{
+				if (scene.getRoot().isMouseWheelUP()) {
+					cspr.getSprite().nextAnimate(-1);
+				}
+				if (scene.getRoot().isMouseWheelDown()) {
+					cspr.getSprite().nextAnimate(1);
+				}
+			}
+		}
+
+		public void clearAddUnitObject(SceneContainer scene) {}
+		
+		public void renderAddUnitObject(SceneContainer scene, Graphics2D g)
+		{
+			CellSprite cspr = getToolSprite();
+			
+			if (cspr != null)
+			{
+				g.translate(scene.getMouseX(), scene.getMouseY());
+				scene.setAlpha(g, 0.75f);
+				{
+					cspr.render(g);
+					cspr.getSprite().nextCycFrame();
+					g.setColor(Color.WHITE);
+					Drawing.drawStringBorder(g, 
+							cspr.getSprite().getCurrentAnimate() + "/" + cspr.getSprite().getAnimateCount(), 
+							0, cspr.getSprite().getVisibleBotton() + 1, 
+							Drawing.TEXT_ANCHOR_HCENTER | Drawing.TEXT_ANCHOR_TOP
+							);
+				}
+				scene.setAlpha(g, 1f);
+				g.translate(-scene.getMouseX(), -scene.getMouseY());
+			}
+		
+		}
+	}
+	
+
+//	-----------------------------------------------------------------------------------------------------------------------------
+	
+	
+	class SceneActorAdapter extends SceneUnitTagAdapter<SceneActor>
+	{
+		private static final long serialVersionUID = 1L;
+		
+		public SceneActorAdapter() {
+			super(SceneActor.class);
+		}
+		
+		@Override
+		public boolean isShowSelectUnitTool() {
+			return true;
+		}
+
+		@Override
+		public CellSprite getToolSprite() {
+			if (SelectUnitTool.getUnitTool().isVisible()) {
+				if (getSelectedPage() == this && SelectUnitTool.getUnitTool().getSelectedUnit() != null) {
+					return SelectUnitTool.getUnitTool().getSelectedUnit().getCPJSprite().getDisplayObject();
+				}
+			}
+			return null;
+		}
+		
+		@Override
+		public void updateAddUnit(SceneContainer scene, boolean catchMouse, int worldx, int worldy) 
+		{
+			super.updateAddUnit(scene, catchMouse, worldx, worldy);
+			
+			CellSprite cspr = getToolSprite();
+			
+			if (cspr != null)
+			{
+				if (scene.getRoot().isMouseDown(com.g2d.display.event.MouseEvent.BUTTON_LEFT)) 
+				{
+					SceneActor actor = new SceneActor(
+							SceneEditor.this, 
+							SelectUnitTool.getUnitTool().getSelectedUnit(),
+							worldx, 
+							worldy,
+							cspr.getSprite().getCurrentAnimate());
+					scene.getWorld().addChild(actor);
+				}
+			}
+		}
+	}
+
+//	-----------------------------------------------------------------------------------------------------------------------------
+	
+	class SceneImmutableAdapter extends SceneUnitTagAdapter<SceneImmutable>
+	{
+		private static final long serialVersionUID = 1L;
+		
+		public SceneImmutableAdapter() {
+			super(SceneImmutable.class);
+		}
+		
+		@Override
+		public boolean isShowSelectUnitTool() {
+			return true;
+		}
+
+		@Override
+		public CellSprite getToolSprite() {
+			if (SelectUnitTool.getUnitTool().isVisible()) {
+				if (getSelectedPage() == this && SelectUnitTool.getUnitTool().getSelectedSpr() != null) {
+					return SelectUnitTool.getUnitTool().getSelectedSpr().getDisplayObject();
+				}
+			}
+			return null;
+		}
+		
+		@Override
+		public void updateAddUnit(SceneContainer scene, boolean catchMouse, int worldx, int worldy) 
+		{
+			super.updateAddUnit(scene, catchMouse, worldx, worldy);
+			
+			CellSprite cspr = getToolSprite();
+			
+			if (cspr != null)
+			{
+				if (scene.getRoot().isMouseDown(com.g2d.display.event.MouseEvent.BUTTON_LEFT)) 
+				{
+					SceneImmutable spr = new SceneImmutable(
+							SceneEditor.this, 
+							SelectUnitTool.getUnitTool().getSelectedSpr(),
+							worldx, 
+							worldy,
+							cspr.getSprite().getCurrentAnimate());
+					scene.getWorld().addChild(spr);
+				}
+			}
+		}
+		
+	}
+
+//	-----------------------------------------------------------------------------------------------------------------------------
+	
+	class SceneRegionAdapter extends SceneUnitTagAdapter<SceneRegion>
+	{
+		private static final long serialVersionUID = 1L;
+
+		Point			add_region_sp	= null;
+		Point			add_region_dp	= new Point();
+		
+		public SceneRegionAdapter() {
+			super(SceneRegion.class);
+		}
+		
+		@Override
+		public void updateAddUnit(SceneContainer scene, boolean catchMouse, int worldx, int worldy) 
+		{
+			super.updateAddUnit(scene, catchMouse, worldx, worldy);
+			
+			add_region_dp.x = worldx; 
+			add_region_dp.y = worldy;
+			
+			if (scene.getRoot().isMouseDown(MouseEvent.BUTTON1)) 
+			{
+				add_region_sp = new Point();
+				add_region_sp.x = worldx; 
+				add_region_sp.y = worldy;
+			}
+			else if (scene.getRoot().isMouseUp(MouseEvent.BUTTON1)) 
+			{
+				if (add_region_sp!=null)
+				{
+					int sx = Math.min(add_region_sp.x, add_region_dp.x);
+					int sy = Math.min(add_region_sp.y, add_region_dp.y);
+					int sw = Math.abs(add_region_sp.x- add_region_dp.x);
+					int sh = Math.abs(add_region_sp.y- add_region_dp.y);
+					
+					if (sw>0 && sh>0)
+					{
+						SceneRegion region = new SceneRegion(SceneEditor.this, new Rectangle(0, 0, sw, sh));
+						region.setLocation(sx, sy);
+						addTagUnit(region);
+					}
+				}
+				add_region_sp = null;
+			}
+		}
+		
+		@Override
+		public void clearAddUnitObject(SceneContainer scene) {
+			add_region_sp = null;
+		}
+		
+		@Override
+		public void renderAddUnitObject(SceneContainer scene, Graphics2D g)
+		{
+			super.renderAddUnitObject(scene, g);
+			
+			if (add_region_sp != null)
+			{
+				g.translate(-scene.getCameraX(), -scene.getCameraY());
+				int sx = Math.min(add_region_sp.x, add_region_dp.x);
+				int sy = Math.min(add_region_sp.y, add_region_dp.y);
+				int sw = Math.abs(add_region_sp.x- add_region_dp.x);
+				int sh = Math.abs(add_region_sp.y- add_region_dp.y);
+				g.setColor(new Color(0x8000ff00,true));
+				g.fillRect(sx, sy, sw, sh);
+				g.translate(+scene.getCameraX(), +scene.getCameraY());
+			}
+		
+		}
+		
+	}
 	
 	
 	
+
+//	-----------------------------------------------------------------------------------------------------------------------------
+
+	class ScenePointAdapter extends SceneUnitTagAdapter<ScenePoint>
+	{
+		private static final long serialVersionUID = 1L;
+
+		ScenePoint 		pre_added_point;
+		
+		public ScenePointAdapter() {
+			super(ScenePoint.class);
+		}
+		
+		@Override
+		public void updateSelectUnit(SceneContainer scene, boolean catchMouse, int worldx, int worldy) 
+		{
+			super.updateSelectUnit(scene, catchMouse, worldx, worldy);
+			// 已选择节点并且右击了另一个
+			if (scene.getRoot().isMouseDown(com.g2d.display.event.MouseEvent.BUTTON_RIGHT)){
+				ScenePoint next = scene.getWorld().getChildAtPos(worldx, worldy, ScenePoint.class);
+				if (next != null && (next != getSelectedUnit()) && getSelectedUnit() instanceof ScenePoint) {
+					try{
+						Menu menu = ((ScenePoint)getSelectedUnit()).getLinkMenu(next);
+						menu.show(scene_panel, scene.getMouseX(), scene.getMouseY());
+					}catch(Exception err){
+						err.printStackTrace();
+					}
+				}
+			}
+		}
+		
+		@Override
+		public void updateAddUnit(SceneContainer scene, boolean catchMouse, int worldx, int worldy) 
+		{
+			super.updateAddUnit(scene, catchMouse, worldx, worldy);
+			
+			if (scene.getRoot().isMouseDown(com.g2d.display.event.MouseEvent.BUTTON_LEFT)) 
+			{
+				ScenePoint spr = new ScenePoint(SceneEditor.this, worldx, worldy);
+				addTagUnit(spr);
+				
+				// 添加新节点并自动链接
+				if (scene.getRoot().isKeyHold(KeyEvent.VK_SHIFT)) {
+					if (pre_added_point!=null){
+						pre_added_point.linkNext(spr);
+						if (scene.getRoot().isKeyHold(KeyEvent.VK_CONTROL)) {
+							spr.linkNext(pre_added_point);
+						}
+					}
+				}
+				pre_added_point = spr;
+			}
+		}
+
+		@Override
+		public void renderAddUnitObject(SceneContainer scene, Graphics2D g) {
+			super.renderAddUnitObject(scene, g);
+			g.setColor(Color.WHITE);
+			g.fillRect(scene.getMouseX()-4, scene.getMouseY()-4, 8, 8);
+		}
+		
+	}
 	
 	
+//	-----------------------------------------------------------------------------------------------------------------------------
 	
 }
+

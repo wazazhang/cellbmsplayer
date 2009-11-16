@@ -27,7 +27,6 @@ public class Actor extends SceneUnit
 	public Class<?>[] getSubAbilityTypes()
 	{
 		return new Class<?>[]{
-				ActorTransport.class,	
 				ActorPathStart.class,
 			};
 	}

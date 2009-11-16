@@ -27,7 +27,7 @@ import com.g2d.game.rpg.Unit;
 import com.g2d.studio.Version;
 import com.g2d.studio.scene.units.SceneUnitTag;
 
-public class SceneUnitList<T extends Unit> extends JPanel implements CUtil.ICompare<T, T>
+public class SceneUnitList<T extends SceneUnitTag<?>> extends JPanel implements CUtil.ICompare<T, T>
 {
 	private static final long serialVersionUID = Version.VersionGS;
 	
@@ -78,15 +78,17 @@ public class SceneUnitList<T extends Unit> extends JPanel implements CUtil.IComp
 		}
 	}
 	
-	public void setSelecte(T unit) {
-		list.setSelectedValue(unit, true);
-		if (unit != null) {
-			text_unit_name.setText(unit.getID()+"");
+	public void setSelecte(Unit unit) {
+		if (unit_type.isInstance(unit)) {
+			list.setSelectedValue(unit, true);
+			if (unit != null) {
+				text_unit_name.setText(unit.getID()+"");
+			}
 		}
 	}
 
 	public int compare(T a, T b) {
-		return CUtil.getStringCompare().compare(a.getID()+"", b.getID()+"");
+		return CUtil.getStringCompare().compare(a.getGameUnit().getID()+"", b.getGameUnit().getID()+"");
 	}
 	
 	

@@ -4,20 +4,16 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Vector;
 
 import com.cell.game.CSprite;
-import com.cell.rpg.display.UnitNode;
 import com.cell.rpg.scene.Actor;
-import com.g2d.annotation.Property;
+import com.cell.rpg.scene.Immutable;
 import com.g2d.cell.CellSetResource;
 import com.g2d.cell.CellSetResource.SpriteSet;
 import com.g2d.cell.game.SceneSprite;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.ui.Menu;
-import com.g2d.display.ui.Menu.MenuItem;
 import com.g2d.editor.DisplayObjectEditor;
 import com.g2d.game.rpg.Unit;
 import com.g2d.studio.Studio;
@@ -25,28 +21,20 @@ import com.g2d.studio.Version;
 import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.cpj.entity.CPJSprite;
 import com.g2d.studio.gameedit.template.XLSUnit;
-import com.g2d.studio.rpg.AbilityPanel;
-import com.g2d.studio.rpg.RPGObjectPanel;
 import com.g2d.studio.scene.editor.SceneAbilityAdapters;
 import com.g2d.studio.scene.editor.SceneEditor;
 import com.g2d.studio.scene.editor.SceneUnitMenu;
 import com.g2d.studio.scene.editor.SceneUnitTagEditor;
-
 import com.g2d.util.Drawing;
 
-/**
- * @author WAZA
- *
- */
-@Property("一个游戏角色")
-public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
+public class SceneImmutable extends SceneSprite implements SceneUnitTag<Immutable>
 {
 	private static final long serialVersionUID = Version.VersionGS;
 	
 	final public SceneEditor	editor;
-	final Actor					actor;
-	final XLSUnit				xls_unit;
-
+	final Immutable				sprite;
+	final CPJSprite				cpj_spr;
+	
 	Rectangle					snap_shape = new Rectangle(-2, -2, 4, 4);
 	
 //	--------------------------------------------------------------------------------------------------------
@@ -58,17 +46,17 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 	 * @param x
 	 * @param y
 	 */
-	public SceneActor(SceneEditor editor, XLSUnit xls_unit, int x, int y, int anim) 
+	public SceneImmutable(SceneEditor editor, CPJSprite cpj_spr, int x, int y, int anim) 
 	{
 		this.editor = editor;
-		this.xls_unit = xls_unit;
+		this.cpj_spr = cpj_spr;
 		this.cur_anim = anim;		
 		this.setLocation(x, y);
-		this.init(xls_unit.getCPJSprite().getParent().getSetResource(), xls_unit.getCPJSprite().name);
+		this.init(cpj_spr.parent.getSetResource(), cpj_spr.name);
 		if (!editor.getGameScene().getWorld().addChild(this)){
 			throw new IllegalStateException();
 		}
-		this.actor = new Actor(getID()+"", xls_unit.getID());
+		this.sprite = new Immutable(getID()+"", cpj_spr.getParent().getName(), cpj_spr.name);
 	}
 	
 	/**
@@ -76,39 +64,41 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 	 * @param editor
 	 * @param actor
 	 */
-	public SceneActor(SceneEditor editor, Actor actor) 
+	public SceneImmutable(SceneEditor editor, Immutable spr) 
 	{
 		this.editor = editor;
-		this.actor = actor;
+		this.sprite = spr;
 		{
-			this.xls_unit = Studio.getInstance().getObjectManager().getObject(
-					XLSUnit.class, 
-					actor.template_unit_id);
-			this.xls_unit.getCPJSprite().getDisplayObject();
-			this.cur_anim = actor.animate;
+			this.cpj_spr = CPJSprite.class.cast(
+					Studio.getInstance().getCPJResourceManager().getNode(
+						CPJResourceType.ACTOR, 
+						spr.getDisplayNode().cpj_project_name,
+						spr.getDisplayNode().cpj_object_id).getObject()
+						);
+			this.cur_anim = spr.animate;
 			this.setID(
 					editor.getGameScene().getWorld(), 
-					actor.id);
+					sprite.id);
 			this.setLocation(
-					actor.x,
-					actor.y);
+					sprite.x,
+					sprite.y);
 			this.init(
-					xls_unit.getCPJSprite().getParent().getSetResource(), 
-					xls_unit.getCPJSprite().name);
+					cpj_spr.getParent().getSetResource(), 
+					cpj_spr.name);
 		}
 		if (!editor.getGameScene().getWorld().addChild(this)){
 			throw new IllegalStateException();
 		}
 	}
 
-	public Actor onWrite()
+	public Immutable onWrite()
 	{
-		actor.name				= getID() + "";
-		actor.animate			= cur_anim;
-		actor.x					= getX();
-		actor.y					= getY();
-		actor.z					= priority;
-		return actor;
+		sprite.name				= getID() + "";
+		sprite.animate			= cur_anim;
+		sprite.x				= getX();
+		sprite.y				= getY();
+		sprite.z				= priority;
+		return sprite;
 	}
 
 	@Override
@@ -135,8 +125,8 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 //	--------------------------------------------------------------------------------------------------------
 
 	@Override
-	public Actor getUnit() {
-		return actor;
+	public Immutable getUnit() {
+		return sprite;
 	}
 	
 	@Override
@@ -211,8 +201,6 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 			{
 				// 选择了该精灵
 				if (editor.getSelectedUnit() == this) {
-					drawTouchRange(g);
-					drawLookRange(g);
 					g.setColor(Color.WHITE);
 					g.draw(local_bounds);
 					g.setColor(Color.WHITE);
@@ -222,7 +210,6 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 							Drawing.TEXT_ANCHOR_HCENTER | Drawing.TEXT_ANCHOR_TOP);
 				} // 当鼠标放到该精灵上
 				else if (isCatchedMouse()) {
-					drawTouchRange(g);
 					if (editor.isToolSelect()) {
 						g.setColor(Color.GREEN);
 						g.draw(local_bounds);
@@ -235,39 +222,6 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 		}
 	}
 	
-	
-	
-	protected void drawTouchRange(Graphics2D g)
-	{
-		if (actor!=null) {
-			g.setColor(Color.GREEN);
-			g.drawArc(
-					-actor.touch_range, 
-					-actor.touch_range, 
-					actor.touch_range<<1, 
-					actor.touch_range<<1,
-					0, 360);
-		}
-	}
-	protected void drawLookRange(Graphics2D g) 
-	{
-		if (actor!=null) {
-			g.setColor(Color.YELLOW);
-			g.drawArc(
-					-actor.look_range, 
-					-actor.look_range, 
-					actor.look_range<<1, 
-					actor.look_range<<1,
-					0, 360);
-			g.setColor(new Color((int)(Color.YELLOW.getRGB() & 0x7fffffff), true));
-			g.fillArc(
-					-actor.look_range, 
-					-actor.look_range, 
-					actor.look_range<<1, 
-					actor.look_range<<1,
-					0, 360);
-		}
-	}
 		
 	@Override
 	public String toString() {
