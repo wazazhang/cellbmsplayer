@@ -159,7 +159,7 @@ public class SceneRegion extends com.g2d.game.rpg.Unit implements SceneUnitTag<R
 
 		if (editor!=null)
 		{
-			if (editor.isPageRegion()) {
+			if (editor.getSelectedPage().isSelectedType(getClass())) {
 				g.setColor(color);
 				g.fill(local_bounds);
 				// 选择了该精灵

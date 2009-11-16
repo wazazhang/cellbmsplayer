@@ -211,7 +211,7 @@ public class ScenePoint extends com.g2d.game.rpg.Unit implements SceneUnitTag<Po
 		
 		if (editor!=null) 
 		{
-			if (editor.isPagePoint()) 
+			if (editor.getSelectedPage().isSelectedType(getClass())) 
 			{
 				g.setColor(color);
 				float talpha = 0.5f;

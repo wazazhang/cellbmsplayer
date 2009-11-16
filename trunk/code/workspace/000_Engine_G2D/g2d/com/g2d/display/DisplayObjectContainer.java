@@ -467,7 +467,7 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	 * @param c
 	 * @return
 	 */
-	public<T extends DisplayObject> T getChildAtPos(int x, int y, Class<T> c) {
+	public<T> T getChildAtPos(int x, int y, Class<T> c) {
 		for (int i=elements.size()-1; i>=0; --i) {
 			DisplayObject obj = elements.elementAt(i);
 			if (obj.local_bounds.contains(x-obj.x, y-obj.y)) {
@@ -487,7 +487,7 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	 * @param c
 	 * @return
 	 */
-	public<T extends DisplayObject> T getChildAtPosSubClass(int x, int y, Class<T> c) {
+	public<T> T getChildAtPosSubClass(int x, int y, Class<T> c) {
 		for (int i=elements.size()-1; i>=0; --i) {
 			DisplayObject obj = elements.elementAt(i);
 			if (obj.local_bounds.contains(x-obj.x, y-obj.y)) {

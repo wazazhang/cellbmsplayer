@@ -186,7 +186,23 @@ public class CPJResourceManager extends ManagerForm
 		}
 		return null;	
 	}
-
+	
+	public <T extends CPJObject<?>> Vector<T> getNodes(CPJResourceType type, Class<T> clazz)
+	{
+		switch(type)
+		{
+		case ACTOR:
+			return G2DTree.getNodesSubClass(unit_root, clazz);
+		case EFFECT:
+			return G2DTree.getNodesSubClass(effect_root, clazz);
+		case WORLD:
+			return G2DTree.getNodesSubClass(scene_root, clazz);
+		case AVATAR:
+			return G2DTree.getNodesSubClass(avatar_root, clazz);
+		}
+		return null;
+	}
+	
 //	----------------------------------------------------------------------------------------------------------------------------
 	
 	public CPJSpriteViewer getSpriteViewer() {
