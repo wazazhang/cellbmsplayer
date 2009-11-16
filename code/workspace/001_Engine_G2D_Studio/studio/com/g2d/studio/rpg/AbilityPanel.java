@@ -29,6 +29,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.ListCellRenderer;
+import javax.swing.table.DefaultTableCellRenderer;
 
 import com.cell.rpg.ability.*;
 import com.cell.rpg.scene.ability.*;
@@ -314,7 +315,7 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 		}
 		
 		@Override
-		public Component getCellRender(Object editObject, Object fieldValue, Field field, Component src) {
+		public Component getCellRender(Object editObject, Object fieldValue, Field field, DefaultTableCellRenderer src) {
 			return null;
 		}
 		
@@ -349,7 +350,7 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 
 		@Override
 		public Component getCellRender(Object editObject, Object fieldValue,
-				Field field, Component src) {
+				Field field, DefaultTableCellRenderer src) {
 			return null;
 		}
 		

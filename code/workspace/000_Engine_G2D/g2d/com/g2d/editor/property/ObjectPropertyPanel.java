@@ -213,7 +213,7 @@ public class ObjectPropertyPanel extends JPanel
 	 * @param field_value	被编辑的对象类的字段当前值
 	 * @return
 	 */
-	protected Component getPropertyCellRender(Component src, Object object, Field field, Object field_value) {
+	protected Component getPropertyCellRender(DefaultTableCellRenderer src, Object object, Field field, Object field_value) {
 		try {
 			for (CellEditAdapter<?> ad : edit_adapters.values()) {
 				if (ad.getType().isInstance(object)) {
@@ -354,15 +354,15 @@ public class ObjectPropertyPanel extends JPanel
 				boolean hasFocus, 
 				int row,
 				int column) {
-			Component ret = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+			Component src = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 			try{
 				Field field = (Field) rows.elementAt(row)[3];
-				Component comp = getPropertyCellRender(ret, object, field, value);
+				Component comp = getPropertyCellRender(this, object, field, field.get(object));
 				return comp;
 			}catch(Exception err){
 				err.printStackTrace();
 			}
-			return ret;
+			return src;
 		}
 	}
 	
@@ -461,7 +461,7 @@ public class ObjectPropertyPanel extends JPanel
 				Object edit_object,
 				Object field_value, 
 				Field field, 
-				Component src);
+				DefaultTableCellRenderer src);
 		
 		public PropertyCellEdit<?> getCellEdit(
 				Object edit_object,
