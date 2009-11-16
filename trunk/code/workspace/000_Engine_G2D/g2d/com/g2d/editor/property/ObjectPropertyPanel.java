@@ -36,10 +36,12 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 
 import com.cell.CUtil;
+
 import com.g2d.annotation.Property;
 import com.g2d.display.ui.layout.ImageUILayout;
 import com.g2d.display.ui.layout.UILayout;
 import com.g2d.editor.Util;
+import com.g2d.util.AbstractDialog;
 
 
 /**
@@ -55,14 +57,21 @@ public class ObjectPropertyPanel extends JPanel
 	public static int DEFAULT_ROW_HEIGHT = 20;
 	
 	final public Object 	object;
+
+	final Hashtable<Class<?>, CellEditAdapter<?>>	
+							edit_adapters 	= new Hashtable<Class<?>, CellEditAdapter<?>>();
 	
 	final Vector<Object[]> 	rows			= new Vector<Object[]>();
 	final FieldTable		rows_table;
 	final JTextPane			anno_text;
 	final ValueEditor 		value_editor	= new ValueEditor();
 	
-	public ObjectPropertyPanel(Object obj)
+	public ObjectPropertyPanel(Object obj, CellEditAdapter<?> ... adapters)
 	{
+		for (CellEditAdapter<?> ad : adapters) {
+			edit_adapters.put(ad.getClass(), ad);
+		}
+		
 		this.setLayout(new BorderLayout());
 		
 		this.object = obj;
@@ -204,7 +213,19 @@ public class ObjectPropertyPanel extends JPanel
 	 * @param field_value	被编辑的对象类的字段当前值
 	 * @return
 	 */
-	protected Component getPropertyCellText(Component src, Object object, Field field, Object field_value) {
+	protected Component getPropertyCellRender(Component src, Object object, Field field, Object field_value) {
+		try {
+			for (CellEditAdapter<?> ad : edit_adapters.values()) {
+				if (ad.getType().isInstance(object)) {
+					Component ret = ad.getCellRender(object, field_value, field, src);
+					if (ret != null) {
+						return ret;
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return src;
 	}
 	
@@ -216,8 +237,22 @@ public class ObjectPropertyPanel extends JPanel
 	 * @param field_value	被编辑的对象类的字段当前值
 	 * @return
 	 */
-	protected PropertyCellEdit<?> getPropertyCellEdit(Object object, Field field, Object field_value)
+	final protected PropertyCellEdit<?> getPropertyCellEdit(Object object, Field field, Object field_value)
 	{
+		// 从适配器里选取
+		try {
+			for (CellEditAdapter<?> ad : edit_adapters.values()) {
+				if (ad.getType().isInstance(object)) {
+					PropertyCellEdit<?> edit = ad.getCellEdit(object, field_value, field);
+					if (edit != null) {
+						return edit;
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		if (field.getType().isEnum()) 
 		{
 			@SuppressWarnings("unchecked")
@@ -252,8 +287,21 @@ public class ObjectPropertyPanel extends JPanel
 	 * @param src_value		被编辑的对象类的字段原值
 	 * @return
 	 */
-	protected Object getPropertyCellEditValue(Object object, Field field, PropertyCellEdit<?> edit, Object src_value)
+	final protected Object getPropertyCellEditValue(Object object, Field field, PropertyCellEdit<?> edit, Object src_value)
 	{
+		try{
+			for (CellEditAdapter<?> ad : edit_adapters.values()) {
+				if (ad.getType().isInstance(object)) {
+					Object ret = ad.getCellValue(object, edit, field, src_value);
+					if (ret!=null){
+						return ret;
+					}
+				}
+			}
+		}catch(Exception err){
+			err.printStackTrace();
+		}
+		
 		Object obj = null;
 		if (edit instanceof TextCellEdit) {
 			obj = Util.parseObject(((TextCellEdit) edit).getValue(), src_value == null ? field.getType() : src_value.getClass());
@@ -263,14 +311,31 @@ public class ObjectPropertyPanel extends JPanel
 		}
 		return obj;
 	}
-	
+
 	/**
 	 * 当单月格的值被改变时回调
 	 * @param object 当前被改变的对象
 	 * @param field 该对象在其所有者中的字段
 	 */
-	protected void onFieldChanged(Object object, Field field){}
+	final protected void onFieldChanged(Object object, Field field){
+		try{
+			for (CellEditAdapter<?> ad : edit_adapters.values()) {
+				if (ad.getType().isInstance(object)) {
+					if (ad.fieldChanged(
+							object, field.get(object), field)){
+						return;
+					}
+				}
+			}
+		}catch(Exception err){
+			err.printStackTrace();
+		}
+	}
+
+
+//	--------------------------------------------------------------------------------------------------------------------------------------
 	
+
 	
 //	--------------------------------------------------------------------------------------------------------------------------------------
 	
@@ -292,7 +357,7 @@ public class ObjectPropertyPanel extends JPanel
 			Component ret = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 			try{
 				Field field = (Field) rows.elementAt(row)[3];
-				Component comp = getPropertyCellText(ret, object, field, value);
+				Component comp = getPropertyCellRender(ret, object, field, value);
 				return comp;
 			}catch(Exception err){
 				err.printStackTrace();
@@ -300,6 +365,8 @@ public class ObjectPropertyPanel extends JPanel
 			return ret;
 		}
 	}
+	
+//	--------------------------------------------------------------------------------------------------------------------------------------
 	
 	/**
 	 * 空编辑器
@@ -314,7 +381,8 @@ public class ObjectPropertyPanel extends JPanel
 		public Object getCellEditorValue() {return null;}
 		public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column){return null;}
 	}
-	
+//	--------------------------------------------------------------------------------------------------------------------------------------
+
 	/**
 	 * 单元格值编辑器
 	 * @author WAZA
@@ -377,6 +445,39 @@ public class ObjectPropertyPanel extends JPanel
 
 		
 		
+	}
+//	------------------------------------------------------------------------------------------------------------------------------------------
+	
+	/**
+	 * @author WAZA
+	 *
+	 * @param <T> Filed type
+	 */
+	public static interface CellEditAdapter<T>
+	{
+		public abstract Class<T> getType();
+
+		public Component getCellRender(
+				Object edit_object,
+				Object field_value, 
+				Field field, 
+				Component src);
+		
+		public PropertyCellEdit<?> getCellEdit(
+				Object edit_object,
+				Object field_value, 
+				Field field) ;
+
+		public boolean fieldChanged(
+				Object edit_object,
+				Object field_value, 
+				Field field);
+
+		public Object getCellValue(
+				Object edit_object, 
+				PropertyCellEdit<?> field_edit, 
+				Field field, 
+				Object field_src_value);
 	}
 	
 }

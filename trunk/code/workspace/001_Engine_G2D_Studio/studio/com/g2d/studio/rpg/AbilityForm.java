@@ -11,6 +11,7 @@ import javax.swing.JButton;
 import com.cell.rpg.ability.Abilities;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
+import com.g2d.editor.property.ObjectPropertyPanel.CellEditAdapter;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.rpg.AbilityPanel.AbilityCellEditAdapter;
 import com.g2d.util.AbstractDialog;
@@ -30,13 +31,11 @@ public class AbilityForm extends AbstractDialog implements PropertyCellEdit<Abil
 	final AbilityPanel	ability_panel;
 	final Abilities		abilities;
 	
-	public AbilityForm(Window owner, Abilities abilities, Collection<AbilityCellEditAdapter<?>> adapters) 
+	public AbilityForm(Window owner, Abilities abilities, CellEditAdapter<?> ... adapters) 
 	{
 		super(owner);
 		this.abilities 		= abilities;
-		this.ability_panel 	= new AbilityPanel(
-				abilities, 
-				adapters.toArray(new AbilityCellEditAdapter<?>[adapters.size()]));
+		this.ability_panel = new AbilityPanel(abilities, adapters);
 		this.add(ability_panel);
 		this.setTitle(abilities.toString());
 		this.setIconImage(Res.icon_edit);
