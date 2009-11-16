@@ -187,6 +187,9 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 					else if (unit instanceof com.cell.rpg.scene.Point) {
 						unit_tag = new ScenePoint(this, (com.cell.rpg.scene.Point)unit);
 					}
+					else if (unit instanceof com.cell.rpg.scene.Immutable) {
+						unit_tag = new SceneImmutable(this, (com.cell.rpg.scene.Immutable)unit);
+					}
 					if (unit_tag != null) {
 						scene_container.getWorld().addChild(unit_tag.getGameUnit());
 					}
@@ -579,56 +582,9 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		
 //		-----------------------------------------------------------------------------------------------------------------------------
 //		渲染当添加单位时，在鼠标上的单位
-		
-		void renderAddUnitObject(Graphics2D g)
-		{
-			if (isToolAdd())
-			{
-//				// 画Actor信息
-//				// 画不可破坏的
-//				if (isPageActor() || isPageImmutable())
-//				{
-//					CellSprite cspr = getToolSprite();
-//					
-//					if (cspr != null)
-//					{
-//						g.translate(getMouseX(), getMouseY());
-//						setAlpha(g, 0.75f);
-//						{
-//							cspr.render(g);
-//							cspr.getSprite().nextCycFrame();
-//							g.setColor(Color.WHITE);
-//							Drawing.drawStringBorder(g, 
-//									cspr.getSprite().getCurrentAnimate() + "/" + cspr.getSprite().getAnimateCount(), 
-//									0, cspr.getSprite().getVisibleBotton() + 1, 
-//									Drawing.TEXT_ANCHOR_HCENTER | Drawing.TEXT_ANCHOR_TOP
-//									);
-//						}
-//						setAlpha(g, 1f);
-//						g.translate(-getMouseX(), -getMouseY());
-//					}
-//				}
-//				// 画Region信息
-//				else if (isPageRegion())
-//				{
-//					if (add_region_sp != null)
-//					{
-//						g.translate(-getCameraX(), -getCameraY());
-//						int sx = Math.min(add_region_sp.x, add_region_dp.x);
-//						int sy = Math.min(add_region_sp.y, add_region_dp.y);
-//						int sw = Math.abs(add_region_sp.x- add_region_dp.x);
-//						int sh = Math.abs(add_region_sp.y- add_region_dp.y);
-//						g.setColor(new Color(0x8000ff00,true));
-//						g.fillRect(sx, sy, sw, sh);
-//					}
-//				}
-//				// 画Point信息
-//				else if (isPagePoint())
-//				{
-//					g.setColor(Color.WHITE);
-//					g.fillRect(getMouseX()-4, getMouseY()-4, 8, 8);
-//				}
-				
+
+		void renderAddUnitObject(Graphics2D g) {
+			if (isToolAdd()) {
 				getSelectedPage().renderAddUnitObject(this, g);
 			}
 		}
@@ -871,7 +827,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 							worldx, 
 							worldy,
 							cspr.getSprite().getCurrentAnimate());
-					scene.getWorld().addChild(actor);
+					addTagUnit(actor);
 				}
 			}
 		}
@@ -919,7 +875,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 							worldx, 
 							worldy,
 							cspr.getSprite().getCurrentAnimate());
-					scene.getWorld().addChild(spr);
+					addTagUnit(spr);
 				}
 			}
 		}

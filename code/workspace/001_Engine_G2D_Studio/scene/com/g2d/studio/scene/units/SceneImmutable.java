@@ -18,7 +18,9 @@ import com.g2d.editor.DisplayObjectEditor;
 import com.g2d.game.rpg.Unit;
 import com.g2d.studio.Studio;
 import com.g2d.studio.Version;
+import com.g2d.studio.cpj.CPJIndex;
 import com.g2d.studio.cpj.CPJResourceType;
+import com.g2d.studio.cpj.entity.CPJObject;
 import com.g2d.studio.cpj.entity.CPJSprite;
 import com.g2d.studio.gameedit.template.XLSUnit;
 import com.g2d.studio.scene.editor.SceneAbilityAdapters;
@@ -69,12 +71,13 @@ public class SceneImmutable extends SceneSprite implements SceneUnitTag<Immutabl
 		this.editor = editor;
 		this.sprite = spr;
 		{
-			this.cpj_spr = CPJSprite.class.cast(
-					Studio.getInstance().getCPJResourceManager().getNode(
+			CPJIndex<CPJSprite> index = Studio.getInstance().getCPJResourceManager().getNode(
 						CPJResourceType.ACTOR, 
 						spr.getDisplayNode().cpj_project_name,
-						spr.getDisplayNode().cpj_object_id).getObject()
-						);
+						spr.getDisplayNode().cpj_object_id);
+			index.getObject().getDisplayObject();
+
+			this.cpj_spr = CPJSprite.class.cast(index.getObject());
 			this.cur_anim = spr.animate;
 			this.setID(
 					editor.getGameScene().getWorld(), 
