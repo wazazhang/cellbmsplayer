@@ -1,6 +1,10 @@
 package com.g2d.studio.scene.editor;
 
+import java.awt.Color;
+import java.awt.Component;
 import java.lang.reflect.Field;
+
+import javax.swing.table.DefaultTableCellRenderer;
 
 import com.cell.rpg.ability.Abilities;
 import com.cell.rpg.ability.AbstractAbility;
@@ -68,6 +72,26 @@ public class SceneAbilityAdapters
 					SceneNode scene = Studio.getInstance().getSceneManager().getSceneNode(tp.next_scene_id);
 					return new SceneUnitListCellEdit(scene.getSceneEditor(), SceneActor.class);
 				}
+			}
+			return null;
+		}
+		
+		@Override
+		public Component getCellRender(Object editObject, Object fieldValue,
+				Field field, DefaultTableCellRenderer src) {
+			if (field.getName().equals("next_scene_id")){
+				SceneNode node = null;
+				if (fieldValue!=null) {
+					String id = (String)fieldValue;
+					node = Studio.getInstance().getSceneManager().getSceneNode(id);
+				}
+				if (fieldValue != null && node != null) {
+					src.setText(node.getName() + "(" + node.getID() + ")");
+				} else {
+//					src.setForeground(Color.RED);
+					src.setText("null");
+				}
+				
 			}
 			return null;
 		}
