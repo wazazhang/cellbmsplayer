@@ -36,28 +36,34 @@ public class SceneAbilityAdapters
 		}
 		
 		@Override
-		public Class<ActorTransport> getAbilityType() {
+		public Class<ActorTransport> getType() {
 			return ActorTransport.class;
 		}
 		
 		@Override
-		public boolean fieldChanged(Abilities abilities, AbstractAbility ability, Field field) {			
+		public boolean fieldChanged(
+				Object editObject,
+				Object fieldValue,
+				Field field) {
 			// 场景改变了，清除场景单位的值
-			ActorTransport tp = getAbilityType().cast(ability);
+			ActorTransport tp = getType().cast(editObject);
 			if (field.getName().equals("destination_scene_name")){
 				tp.next_scene_object_id = null;
+				return true;
 			}
-			return true;
+			return false;
 		}
 		
 		@Override
-		public PropertyCellEdit<?> getAbilityCellEdit(Abilities abilities, AbstractAbility ability, Field field, Object value) 
-		{
+		public PropertyCellEdit<?> getCellEdit(
+				Object editObject,
+				Object fieldValue, 
+				Field field) {
 			if (field.getName().equals("next_scene_id")){
 				return new SceneListCellEdit();
 			}
 			if (field.getName().equals("next_scene_object_id")){
-				ActorTransport tp = (ActorTransport)ability;
+				ActorTransport tp = (ActorTransport)editObject;
 				if (tp.next_scene_id!=null) {
 					SceneNode scene = Studio.getInstance().getSceneManager().getSceneNode(tp.next_scene_id);
 					return new SceneUnitListCellEdit(scene.getSceneEditor(), SceneActor.class);
@@ -80,17 +86,21 @@ public class SceneAbilityAdapters
 		}
 		
 		@Override
-		public Class<ActorPathStart> getAbilityType() {
+		public Class<ActorPathStart> getType() {
 			return ActorPathStart.class;
 		}
 		
 		@Override
-		public PropertyCellEdit<?> getAbilityCellEdit(Abilities abilities, AbstractAbility ability, Field field, Object value) {
+		public PropertyCellEdit<?> getCellEdit(
+				Object editObject,
+				Object fieldValue,
+				Field field) {
 			if (field.getName().equals("point_name")){
 				return new SceneUnitListCellEdit(editor, ScenePoint.class);
 			}
 			return null;
 		}
+		
 	}
 
 	/**
@@ -100,17 +110,21 @@ public class SceneAbilityAdapters
 	public static class RegionSpawnNPCNodeAdapter extends AbilityCellEditAdapter<NPCSpawn>
 	{
 		@Override
-		public Class<NPCSpawn> getAbilityType() {
+		public Class<NPCSpawn> getType() {
 			return NPCSpawn.class;
 		}
 		
 		@Override
-		public PropertyCellEdit<?> getAbilityCellEdit(Abilities abilities, AbstractAbility ability, Field field, Object value) {
+		public PropertyCellEdit<?> getCellEdit(
+				Object editObject,
+				Object fieldValue, 
+				Field field) {
 			if (field.getName().equals("template_unit_id")){
 				return new ObjectSelectCellEdit<XLSUnit>(XLSUnit.class);
 			}
 			return null;
 		}
+		
 		
 	}
 

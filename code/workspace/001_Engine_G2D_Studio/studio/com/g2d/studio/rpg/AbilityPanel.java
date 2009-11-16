@@ -37,6 +37,7 @@ import com.cell.rpg.template.ability.*;
 import com.cell.rpg.xls.XLSFile;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
+import com.g2d.editor.property.ObjectPropertyPanel.CellEditAdapter;
 import com.g2d.studio.Config;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.scene.editor.SceneAbilityAdapters;
@@ -56,9 +57,7 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 
 	// properties	
 	final Abilities		abilities;
-	
-	final Hashtable<Class<?>, AbilityCellEditAdapter<?>>	
-						edit_adapters 		= new Hashtable<Class<?>, AbilityCellEditAdapter<?>>();
+	CellEditAdapter<?>	adapters[];
 	// ui
 	JList 				list_cur_ability 	= new JList();
 	JButton 			btn_add_ability 	= new JButton("添加能力");
@@ -66,12 +65,12 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 //	JScrollPane			right 				= new JScrollPane();
 	JSplitPane 			split 				= new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 	
-	public AbilityPanel(Abilities abilities, AbilityCellEditAdapter<?> ... adapters)
+	public AbilityPanel(Abilities abilities, CellEditAdapter<?> ... adapters)
 	{
 		this.abilities 		= abilities;
-		for (AbilityCellEditAdapter<?> ad : adapters) {
-			edit_adapters.put(ad.getClass(), ad);
-		}
+		this.adapters		= new CellEditAdapter[adapters.length+1];
+		System.arraycopy(adapters, 0, this.adapters, 0, adapters.length);
+		this.adapters[adapters.length] = new AbilitiesCellEditAdapter();
 		
 		this.setLayout(new BorderLayout());
 		
@@ -127,7 +126,7 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 			if (selected instanceof AbstractAbility) {
 				resetAbility();
 				AbstractAbility ability = (AbstractAbility)selected;
-				AbilityPropertyPanel panel = new AbilityPropertyPanel(ability);
+				ObjectPropertyPanel panel = new ObjectPropertyPanel(ability, adapters);
 //				right.setViewportView(panel);
 				split.setRightComponent(panel);
 				list_cur_ability.setSelectedValue(selected, false);
@@ -238,6 +237,7 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 			combo_abilities.setSelectedIndex(0);
 		}
 		
+		@SuppressWarnings("unchecked")
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() == combo_abilities) {
 				Class<? extends AbstractAbility> ability_cls = (Class<? extends AbstractAbility>)combo_abilities.getSelectedItem();
@@ -254,7 +254,8 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 			}
 		}
 		
-		
+
+		@SuppressWarnings("unchecked")
 		public Component getListCellRendererComponent(JList list,
 				Object value, int index, boolean isSelected,
 				boolean cellHasFocus) {
@@ -266,20 +267,17 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 		public void setAbilityClass(Class<? extends AbstractAbility> cls) 
 		{
 			current_ability = AbstractAbility.createAbility(cls);
-			AbilityPropertyPanel obj_pan = new AbilityPropertyPanel(current_ability);
+			ObjectPropertyPanel obj_pan = new ObjectPropertyPanel(current_ability, adapters);
 			pan_property.removeAll();
 			pan_property.add(obj_pan, BorderLayout.CENTER);
 			pan_property.updateUI();
 			
 			// 如果该 ability 不允许多个实例
-			if (!current_ability.isMultiField() && abilities.getAbility(current_ability.getClass())!=null) 
-			{
+			if (!current_ability.isMultiField() && abilities.getAbility(current_ability.getClass())!=null) {
 				btn_add.setForeground(Color.RED);
 				btn_add.setEnabled(false);
 				btn_add.setText(AbstractAbility.getName(current_ability.getClass())+" (已存在)");
-			}
-			else 
-			{
+			} else {
 				btn_add.setForeground(Color.BLACK);
 				btn_add.setEnabled(true);
 				btn_add.setText("确定");
@@ -287,107 +285,78 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 		}
 		
 	}
-	
-	/**
-	 * @author WAZA
-	 * 能力属性编辑器
-	 */
-	public class AbilityPropertyPanel extends ObjectPropertyPanel
-	{
-		private static final long serialVersionUID = 1L;
-		
-		final public AbstractAbility ability;
-		
-		public AbilityPropertyPanel(AbstractAbility ability)
-		{
-			super(ability);
-			this.ability = ability;
-		}
 
+	
+//	---------------------------------------------------------------------------------------------------------
+
+	class AbilitiesCellEditAdapter implements CellEditAdapter<Object>
+	{
 		@Override
-		protected PropertyCellEdit<?> getPropertyCellEdit(Object object, Field field, Object value) {
-			PropertyCellEdit<?> ret = getAbilityCellEdit(object, field, value);
-			if (ret != null) {
-				return ret;
-			}
-			return super.getPropertyCellEdit(object, field, value);
+		public Class<Object> getType() {
+			return Object.class;
 		}
 		
 		@Override
-		protected void onFieldChanged(Object object, Field field) {
-			try{
-				if (object instanceof AbstractAbility) {
-					for (AbilityCellEditAdapter<?> ad : edit_adapters.values()) {
-						if (ad.getAbilityType().isInstance(object)) {
-							if (ad.fieldChanged(getAbilities(), ad.getAbilityType().cast(object), field)){
-								return;
-							}
-						}
-					}
-				}
-			}catch(Exception err){
-				err.printStackTrace();
-			}
-		}
-		
-//		--------------------------------------------------------------------------------------------------------
-		
-		/**
-		 * 得到Ability相应的编辑器
-		 * @param object
-		 * @param field
-		 * @param value
-		 * @return
-		 */
-		PropertyCellEdit<?> getAbilityCellEdit(Object object, Field field, Object value) 
-		{
+		public PropertyCellEdit<?> getCellEdit(Object editObject, Object fieldValue, Field field) {
 			// 测试是否是集合
 			try {
 				field.getType().asSubclass(Abilities.class);
 				System.out.println("field is Abilities");
-				if (value == null) {
-					value = field.getType().newInstance();
+				if (fieldValue == null) {
+					fieldValue = field.getType().newInstance();
 				}
 				return new AbilityForm(
 						AbstractDialog.getTopWindow(AbilityPanel.this),
-						(Abilities) value,
-						edit_adapters.values());
+						(Abilities) fieldValue,
+						adapters);
 			} catch (Exception e) {}
-
-			// 从适配器里选取
-			try {
-				if (object instanceof AbstractAbility) {
-					for (AbilityCellEditAdapter<?> ad : edit_adapters.values()) {
-						if (ad.getAbilityType().isInstance(object)) {
-							PropertyCellEdit<?> edit = ad.getAbilityCellEdit(getAbilities(), ad.getAbilityType().cast(object), field, value);
-							if (edit!=null) {
-								return edit;
-							}
-						}
-					}
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			
 			return null;
 		}
 		
+		@Override
+		public Component getCellRender(Object editObject, Object fieldValue, Field field, Component src) {
+			return null;
+		}
+		
+		@Override
+		public boolean fieldChanged(Object editObject, Object fieldValue, Field field) {
+			return false;
+		}
+	
+		@Override
+		public Object getCellValue(Object editObject,
+			PropertyCellEdit<?> fieldEdit, Field field, Object fieldSrcValue) {
+			return null;
+		}
 	}
 	
-	
+
 //	---------------------------------------------------------------------------------------------------------
 	
-	public static abstract class AbilityCellEditAdapter<T extends AbstractAbility>
+	public static abstract class AbilityCellEditAdapter<T extends AbstractAbility> implements CellEditAdapter<T>
 	{
-		public abstract Class<T> 	getAbilityType();
-		
-		public PropertyCellEdit<?>	getAbilityCellEdit(Abilities abilities, AbstractAbility ability, Field field, Object value) {
+		@Override
+		public boolean fieldChanged(Object editObject, Object fieldValue,
+				Field field) {
+			return false;
+		}
+
+		@Override
+		public PropertyCellEdit<?> getCellEdit(Object editObject,
+				Object fieldValue, Field field) {
+			return null;
+		}
+
+		@Override
+		public Component getCellRender(Object editObject, Object fieldValue,
+				Field field, Component src) {
 			return null;
 		}
 		
-		public boolean 				fieldChanged(Abilities abilities, AbstractAbility ability, Field field) {
-			return false;
+		@Override
+		public Object getCellValue(Object editObject,
+			PropertyCellEdit<?> fieldEdit, Field field, Object fieldSrcValue) {
+			return null;
 		}
 	}
 	
