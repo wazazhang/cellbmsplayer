@@ -48,6 +48,8 @@ public class IconManager extends ManagerForm
 		icons.setVisibleRowCount(icon_files.size()/5+1);
 		icons.setLayoutOrientation(JList.HORIZONTAL_WRAP);
 		this.add(new JScrollPane(icons));
+		
+		 saveAll();
 	}
 	
 	public Vector<IconFile> getIcons() {
@@ -61,5 +63,17 @@ public class IconManager extends ManagerForm
 			}
 		}
 		return null;
+	}
+	
+	public void saveAll() 
+	{
+		File save_dir = new File(Studio.getInstance().project_save_path.getPath() + File.separatorChar +"icons");
+		save_dir.mkdirs();
+		StringBuffer sb = new StringBuffer();
+		for (IconFile icon : icon_files) {
+			sb.append(icon.getName()+","+icon.image.getWidth()+","+icon.image.getHeight()+"\n");
+		}
+		File save_file = new File(save_dir, "icon.list");
+		com.cell.io.File.writeText(save_file, sb.toString(), "UTF-8");
 	}
 }

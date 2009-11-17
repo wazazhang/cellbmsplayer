@@ -8,7 +8,7 @@ import com.g2d.studio.Studio.ProgressForm;
 import com.g2d.studio.res.Res;
 import com.g2d.util.AbstractFrame;
 
-public class ManagerForm extends JFrame
+public abstract class ManagerForm extends JFrame
 {
 	private static final long serialVersionUID = 1L;
 
@@ -22,4 +22,6 @@ public class ManagerForm extends JFrame
 		super.setTitle(title);
 		this.studio = studio;
 	}
+	
+	abstract public void saveAll() throws Throwable;
 }
