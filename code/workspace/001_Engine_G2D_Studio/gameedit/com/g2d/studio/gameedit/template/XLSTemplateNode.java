@@ -35,7 +35,7 @@ import com.cell.rpg.xls.XLSFullRow;
 import com.cell.rpg.xls.XLSRow;
 import com.g2d.studio.Config;
 import com.g2d.studio.Studio;
-import com.g2d.studio.gameedit.TemplateObjectViewer;
+import com.g2d.studio.gameedit.XLSObjectViewer;
 import com.g2d.studio.gameedit.entity.ObjectNode;
 import com.g2d.studio.swing.G2DTree;
 import com.g2d.studio.swing.G2DTreeNode;
@@ -46,8 +46,6 @@ public abstract class XLSTemplateNode<T extends TemplateNode> extends ObjectNode
 	final protected T	template_data;
 	final XLSFile		xls_file;
 	final XLSFullRow	xls_fullrow;
-	
-	transient TemplateObjectViewer<?> edit_component;;
 	
 	@SuppressWarnings("unchecked")
 	XLSTemplateNode(XLSFile xls_file, XLSFullRow xls_row, TemplateNode data) 
@@ -96,12 +94,12 @@ public abstract class XLSTemplateNode<T extends TemplateNode> extends ObjectNode
 		return Integer.parseInt(getXLSRow().id);
 	}
 	
-	public TemplateObjectViewer<?> getEditComponent(){
-		if (edit_component==null) {
-			edit_component = new TemplateObjectViewer<XLSTemplateNode<?>>(this);
-		}
-		return edit_component;
-	}
+//	public XLSObjectViewer<?> getEditComponent(){
+//		if (edit_component==null) {
+//			edit_component = new XLSObjectViewer<XLSTemplateNode<?>>(this);
+//		}
+//		return edit_component;
+//	}
 
 //	----------------------------------------------------------------------------------------------------------------------
 	

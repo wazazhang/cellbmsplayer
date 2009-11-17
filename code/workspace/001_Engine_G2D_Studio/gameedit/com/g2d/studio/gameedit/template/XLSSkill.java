@@ -15,7 +15,8 @@ import com.cell.rpg.xls.XLSFullRow;
 import com.cell.util.MarkedHashtable;
 import com.g2d.Tools;
 import com.g2d.studio.Studio;
-import com.g2d.studio.gameedit.TemplateObjectViewer;
+import com.g2d.studio.gameedit.ObjectViewer;
+import com.g2d.studio.gameedit.XLSObjectViewer;
 import com.g2d.studio.gameedit.template.XLSItem.ItemObjectViewer;
 import com.g2d.studio.icon.IconFile;
 import com.g2d.studio.icon.IconSelectDialog;
@@ -55,7 +56,7 @@ final public class XLSSkill extends XLSTemplateNode<TSkill>
 		}
 	}
 
-	public TemplateObjectViewer<?> getEditComponent(){
+	public ObjectViewer<?> getEditComponent(){
 		if (edit_component==null) {
 			edit_component = new SkillObjectViewer();
 		}
@@ -66,7 +67,7 @@ final public class XLSSkill extends XLSTemplateNode<TSkill>
 	
 //	-----------------------------------------------------------------------------------------------------------------
 	
-	class SkillObjectViewer extends TemplateObjectViewer<XLSSkill>
+	class SkillObjectViewer extends XLSObjectViewer<XLSSkill>
 	{
 		private static final long serialVersionUID = 1L;
 		

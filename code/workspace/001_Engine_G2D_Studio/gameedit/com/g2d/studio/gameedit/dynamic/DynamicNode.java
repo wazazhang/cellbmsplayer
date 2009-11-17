@@ -8,7 +8,7 @@ import com.cell.rpg.template.TAvatar;
 import com.cell.rpg.xls.XLSFile;
 import com.cell.rpg.xls.XLSFullRow;
 import com.cell.util.MarkedHashtable;
-import com.g2d.studio.gameedit.TemplateObjectViewer;
+import com.g2d.studio.gameedit.XLSObjectViewer;
 import com.g2d.studio.gameedit.entity.ObjectNode;
 
 public abstract class DynamicNode<T extends RPGObject> extends ObjectNode<T>

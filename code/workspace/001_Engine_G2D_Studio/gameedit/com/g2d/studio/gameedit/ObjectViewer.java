@@ -37,61 +37,54 @@ import com.g2d.Tools;
 import com.g2d.display.DisplayObject;
 import com.g2d.editor.DisplayObjectViewer;
 import com.g2d.studio.Studio;
+import com.g2d.studio.gameedit.entity.ObjectNode;
 import com.g2d.studio.gameedit.template.XLSTemplateNode;
 import com.g2d.studio.rpg.AbilityPanel;
+import com.g2d.studio.rpg.RPGObjectPanel;
 import com.g2d.studio.rpg.AbilityPanel.AbilityCellEditAdapter;
 import com.g2d.util.AbstractFrame;
 import com.thoughtworks.xstream.XStream;
 
-public class TemplateObjectViewer<T extends XLSTemplateNode> extends JPanel
+public abstract class ObjectViewer<T extends ObjectNode<?>> extends JPanel
 {
 	private static final long serialVersionUID = 1L;
 	
 	final  T tobject;
 	
 	protected JTabbedPane 	table = new JTabbedPane();
-	
-	
 	protected JPanel 		page_properties;
-	protected JTable 		page_xls_list;
 	protected AbilityPanel	page_abilities;
 	
-	public TemplateObjectViewer(T object, AbilityCellEditAdapter<?> ... adapters ) 
+	public ObjectViewer(T object, AbilityCellEditAdapter<?> ... adapters) 
 	{
 		this.tobject = object;
 		this.setLayout(new BorderLayout());
-		
-		
 		{
 			page_properties = new JPanel();
 			table.addTab("属性", page_properties);
-		}
-		{
-			Vector<String> c0 = new Vector<String>(getRPGObject().getXLSRow().getColumns());
-			String[][] datas = new String[c0.size()][];
-			for (int i=0; i<c0.size(); i++) {
-				String c = c0.get(i);
-				datas[i] = new String[]{
-						object.getXLSRow().getDesc(c),
-						object.getXLSRow().getValue(c),
-						};
-			}
-			page_xls_list = new JTable(
-					datas,
-					new String[]{"字段名","字段值"});
-			table.addTab("XLS数据", new JScrollPane(page_xls_list));
-		}
-		{
+		} {
+			RPGObjectPanel object_panel = new RPGObjectPanel(object.getData());
+			table.addTab("RPG属性", object_panel);
+		} {
 			page_abilities = new AbilityPanel(object.getData(), adapters);
 			table.addTab("能力", page_abilities);
 		}
+		
+		appendPages(table);
+		
 		this.add(table);
 		
 	}
 	
-	public T getRPGObject() {
+	public JTabbedPane getPages() {
+		return table;
+	}
+	
+	final public T getRPGObject() {
 		return tobject;
 	}
+	
+	abstract protected void appendPages(JTabbedPane table) ;
 	
 //	-------------------------------------------------------------------------------------------------------------------------
 

@@ -1,21 +1,32 @@
 package com.g2d.studio.gameedit.dynamic;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JTabbedPane;
 
 import com.cell.rpg.display.Node;
 import com.cell.rpg.display.UnitNode;
 import com.cell.rpg.template.TAvatar;
 import com.cell.util.MarkedHashtable;
 import com.g2d.Tools;
+import com.g2d.studio.Studio;
 import com.g2d.studio.cpj.CPJIndex;
 import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.cpj.entity.CPJSprite;
 import com.g2d.studio.gameedit.AvatarEditor;
+import com.g2d.studio.gameedit.ObjectViewer;
+import com.g2d.studio.gameedit.XLSObjectViewer;
+import com.g2d.studio.gameedit.template.XLSItem;
+import com.g2d.studio.icon.IconFile;
+import com.g2d.studio.icon.IconSelectDialog;
 import com.g2d.studio.res.Res;
 
 
@@ -136,15 +147,28 @@ final public class DAvatar extends DynamicNode<TAvatar>
 //	----------------------------------------------------------------------------------------------------
 	
 	@Override
-	public Component getEditComponent() {
-		editor.setAvatar(this);
-		return editor;
+	public ObjectViewer<?> getEditComponent() {
+		if (edit_component==null) {
+			edit_component = new AvatarViewer();
+		}
+		editor.setAvatar(DAvatar.this, edit_component.getPages());
+		edit_component.getPages().addTab("预览", editor);
+		return edit_component;
 	}
-	
-	
 	
 	
 //	----------------------------------------------------------------------------------------------------------------------
 	
+	public class AvatarViewer extends ObjectViewer<DAvatar>
+	{
+		private static final long serialVersionUID = 1L;
+		
+		public AvatarViewer() {
+			super(DAvatar.this);
+		}
+		
+		@Override
+		protected void appendPages(JTabbedPane table) {}
+	}
 	
 }

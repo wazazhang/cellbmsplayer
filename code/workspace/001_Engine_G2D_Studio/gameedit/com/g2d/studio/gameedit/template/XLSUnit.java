@@ -23,7 +23,8 @@ import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.cpj.CPJResourceSelectDialog;
 import com.g2d.studio.cpj.entity.CPJSprite;
 import com.g2d.studio.gameedit.ObjectAbilityAdapters;
-import com.g2d.studio.gameedit.TemplateObjectViewer;
+import com.g2d.studio.gameedit.ObjectViewer;
+import com.g2d.studio.gameedit.XLSObjectViewer;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.rpg.AbilityForm;
 
@@ -67,7 +68,7 @@ final public class XLSUnit extends XLSTemplateNode<TUnit>
 		}
 	}
 
-	public TemplateObjectViewer<?> getEditComponent(){
+	public ObjectViewer<?> getEditComponent(){
 		if (edit_component==null) {
 			edit_component = new NPCObjectViewer();
 		}
@@ -76,7 +77,7 @@ final public class XLSUnit extends XLSTemplateNode<TUnit>
 	
 //	-----------------------------------------------------------------------------------------------------------------
 	
-	class NPCObjectViewer extends TemplateObjectViewer<XLSUnit> implements ActionListener
+	class NPCObjectViewer extends XLSObjectViewer<XLSUnit> implements ActionListener
 	{
 		private static final long serialVersionUID = 1L;
 		
