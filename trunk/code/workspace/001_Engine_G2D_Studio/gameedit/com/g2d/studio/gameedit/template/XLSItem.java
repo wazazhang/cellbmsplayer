@@ -21,7 +21,8 @@ import com.g2d.studio.cpj.CPJIndex;
 import com.g2d.studio.cpj.CPJResourceSelectDialog;
 import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.cpj.entity.CPJSprite;
-import com.g2d.studio.gameedit.TemplateObjectViewer;
+import com.g2d.studio.gameedit.ObjectViewer;
+import com.g2d.studio.gameedit.XLSObjectViewer;
 import com.g2d.studio.gameedit.template.XLSUnit.NPCObjectViewer;
 import com.g2d.studio.icon.IconFile;
 import com.g2d.studio.icon.IconSelectDialog;
@@ -63,7 +64,7 @@ final public class XLSItem  extends XLSTemplateNode<TItem>
 
 	
 
-	public TemplateObjectViewer<?> getEditComponent(){
+	public ObjectViewer<?> getEditComponent(){
 		if (edit_component==null) {
 			edit_component = new ItemObjectViewer();
 		}
@@ -72,7 +73,7 @@ final public class XLSItem  extends XLSTemplateNode<TItem>
 	
 //	-----------------------------------------------------------------------------------------------------------------
 	
-	class ItemObjectViewer extends TemplateObjectViewer<XLSItem>
+	class ItemObjectViewer extends XLSObjectViewer<XLSItem>
 	{
 		private static final long serialVersionUID = 1L;
 		

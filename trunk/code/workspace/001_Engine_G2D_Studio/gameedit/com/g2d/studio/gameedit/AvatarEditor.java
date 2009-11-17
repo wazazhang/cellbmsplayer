@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 
 import com.cell.CUtil;
@@ -28,6 +29,7 @@ import com.g2d.studio.cpj.CPJResourceSelectDialog;
 import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.cpj.entity.CPJSprite;
 import com.g2d.studio.gameedit.dynamic.DAvatar;
+import com.g2d.studio.gameedit.dynamic.DAvatar.AvatarViewer;
 import com.g2d.util.Drawing;
 
 
@@ -49,6 +51,8 @@ public class AvatarEditor extends JSplitPane implements ActionListener
 	JButton		btn_move_up		= new JButton("上移");
 	JButton		btn_move_down	= new JButton("下移");
 
+	transient JTabbedPane tabbed;
+	
 	public AvatarEditor() 
 	{
 		super(JSplitPane.VERTICAL_SPLIT);
@@ -79,9 +83,14 @@ public class AvatarEditor extends JSplitPane implements ActionListener
 		}
 	}
 
-	public void setAvatar(DAvatar avatar)
+	public void setAvatar(DAvatar avatar, JTabbedPane tb)
 	{
-		synchronized(lock) {
+		if (this.tabbed != null && tabbed != tb) {
+			this.tabbed.remove(this);
+		}
+		synchronized(lock)
+		{
+			this.tabbed = tb;
 			this.current_avatar = avatar;
 			this.avatar_group.clear();
 			this.avatar_group.setBody(avatar.getBody());
@@ -134,7 +143,7 @@ public class AvatarEditor extends JSplitPane implements ActionListener
 					current_avatar.moveAvatarPart(getSelectedPart(), 1);
 				}
 			}
-			setAvatar(current_avatar);
+			setAvatar(current_avatar, this.tabbed);
 		}
 	}
 	
