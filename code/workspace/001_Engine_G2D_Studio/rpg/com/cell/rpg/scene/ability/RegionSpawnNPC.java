@@ -73,7 +73,7 @@ public class RegionSpawnNPC extends AbstractSceneAbility
 		
 		@Override
 		public String toString() {
-			return super.toString() + " : " + template_unit_id + "(" + ((int)(spawn_percent*100)) + "%)";
+			return super.toString() + " : " + template_unit_id + "(" + ((int)(spawn_percent)) + "%)";
 		}
 	}
 }

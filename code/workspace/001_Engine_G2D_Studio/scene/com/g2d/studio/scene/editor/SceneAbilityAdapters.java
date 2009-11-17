@@ -23,6 +23,7 @@ import com.g2d.studio.rpg.AbilityPanel;
 import com.g2d.studio.rpg.AbilityPanel.AbilityCellEditAdapter;
 import com.g2d.studio.scene.entity.SceneNode;
 import com.g2d.studio.scene.units.SceneActor;
+import com.g2d.studio.scene.units.SceneImmutable;
 import com.g2d.studio.scene.units.ScenePoint;
 
 public class SceneAbilityAdapters
@@ -70,7 +71,7 @@ public class SceneAbilityAdapters
 				ActorTransport tp = (ActorTransport)editObject;
 				if (tp.next_scene_id!=null) {
 					SceneNode scene = Studio.getInstance().getSceneManager().getSceneNode(tp.next_scene_id);
-					return new SceneUnitListCellEdit(scene.getSceneEditor(), SceneActor.class);
+					return new SceneUnitListCellEdit(scene.getSceneEditor(), SceneImmutable.class);
 				}
 			}
 			return null;
@@ -149,6 +150,27 @@ public class SceneAbilityAdapters
 			return null;
 		}
 		
+		@Override
+		public Component getCellRender(
+				Object editObject,
+				Object fieldValue,
+				Field field,
+				DefaultTableCellRenderer src) {
+			if (field.getName().equals("template_unit_id")){
+				XLSUnit unit = null;
+				if (fieldValue != null) {
+					String tid = (String)fieldValue;
+					unit = Studio.getInstance().getObjectManager().getObject(XLSUnit.class, tid);
+				}
+				if (fieldValue != null && unit != null) {
+					src.setText(unit.getName()+"(" + unit.getID() + ")");
+				} else {
+//					src.setForeground(Color.RED);
+					src.setText("null");
+				}
+			}
+			return src;
+		}
 		
 	}
 

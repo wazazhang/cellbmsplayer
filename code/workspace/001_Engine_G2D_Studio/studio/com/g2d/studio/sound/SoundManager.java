@@ -74,8 +74,8 @@ public class SoundManager extends ManagerForm implements ActionListener
 			this.add(new JScrollPane(sound_list), BorderLayout.CENTER);
 
 		}
-		
-		
+
+		saveAll();
 	}
 	
 	public Vector<SoundFile> getSounds() {
@@ -101,4 +101,15 @@ public class SoundManager extends ManagerForm implements ActionListener
 		}
 	}
 	
+	public void saveAll() 
+	{
+		File save_dir = new File(Studio.getInstance().project_save_path.getPath() + File.separatorChar +"sounds");
+		save_dir.mkdirs();
+		StringBuffer sb = new StringBuffer();
+		for (SoundFile icon : sound_files) {
+			sb.append(icon.getName()+"\n");
+		}
+		File save_file = new File(save_dir, "sound.list");
+		com.cell.io.File.writeText(save_file, sb.toString(), "UTF-8");
+	}
 }
