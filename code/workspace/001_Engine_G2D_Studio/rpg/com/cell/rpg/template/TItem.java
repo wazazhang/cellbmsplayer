@@ -2,7 +2,7 @@ package com.cell.rpg.template;
 
 public class TItem extends TemplateNode
 {
-	public TItem(String id, String name) {
+	public TItem(int id, String name) {
 		super(id, name);
 	}
 	

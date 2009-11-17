@@ -22,7 +22,7 @@ public class Config extends com.cell.util.Config
 	public static String RES_EFFECT_OUT_SUFFIX		= "output/effect.properties";
 	
 	public static String RES_SCENE_ROOT				= "scene";
-	public static String RES_SCENE_FPJ_PREFIX		= "scene_";
+	public static String RES_SCENE_CPJ_PREFIX		= "scene_";
 	public static String RES_SCENE_OUT_SUFFIX		= "output/scene.properties";
 	
 	public static String XLS_TUNIT					= "xls/tnpc.xls";

@@ -2,7 +2,7 @@ package com.cell.rpg.template;
 
 public class TSkill extends TemplateNode
 {
-	public TSkill(String id, String name) {
+	public TSkill(int id, String name) {
 		super(id, name);
 	}
 

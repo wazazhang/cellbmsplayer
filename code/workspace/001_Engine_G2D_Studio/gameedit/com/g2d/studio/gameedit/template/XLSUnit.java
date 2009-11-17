@@ -46,7 +46,7 @@ final public class XLSUnit extends XLSTemplateNode<TUnit>
 	
 	@Override
 	protected TUnit newData(XLSFile xls_file, XLSFullRow xls_row) {
-		return new TUnit(xls_row.id, xls_row.desc);
+		return new TUnit(getIntID(), xls_row.desc);
 	}
 	
 	public CPJSprite getCPJSprite() {

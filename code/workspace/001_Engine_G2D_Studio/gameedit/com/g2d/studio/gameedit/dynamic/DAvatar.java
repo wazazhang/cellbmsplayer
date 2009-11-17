@@ -47,7 +47,7 @@ final public class DAvatar extends DynamicNode<TAvatar>
 	
 	@Override
 	protected TAvatar newData(IDynamicIDFactory<?> factory, String name) {
-		return new TAvatar(getID(), name);
+		return new TAvatar(getIntID(), name);
 	}
 	
 	@Override

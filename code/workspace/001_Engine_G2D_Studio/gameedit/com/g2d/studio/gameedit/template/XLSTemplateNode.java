@@ -91,7 +91,11 @@ public abstract class XLSTemplateNode<T extends TemplateNode> extends ObjectNode
 	final public String getID() {
 		return getXLSRow().id;
 	}
-
+	
+	final public int getIntID() {
+		return Integer.parseInt(getXLSRow().id);
+	}
+	
 	public TemplateObjectViewer<?> getEditComponent(){
 		if (edit_component==null) {
 			edit_component = new TemplateObjectViewer<XLSTemplateNode<?>>(this);
