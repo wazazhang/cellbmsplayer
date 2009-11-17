@@ -4,13 +4,16 @@ import java.util.Vector;
 
 import com.cell.rpg.RPGObject;
 import com.cell.rpg.display.SceneNode;
+import com.g2d.annotation.Property;
 
 public class Scene extends RPGObject
 {
 	transient private int int_id;
 
-	public String					name;
-	public SceneNode				scene_node;
+	public String		name;
+	
+	public SceneNode	scene_node;
+	
 	final public Vector<SceneUnit> 	scene_units = new Vector<SceneUnit>();
 	
 	public Scene(int id, String name) {
@@ -22,7 +25,9 @@ public class Scene extends RPGObject
 	@Override
 	protected void init_transient() {
 		super.init_transient();
-		this.int_id = Integer.parseInt(id);
+		if (id!=null) {
+			this.int_id = Integer.parseInt(id);
+		}
 	}
 	
 	final public int getIntID() {

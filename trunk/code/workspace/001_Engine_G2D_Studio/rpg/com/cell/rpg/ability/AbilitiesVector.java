@@ -1,9 +1,10 @@
 package com.cell.rpg.ability;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Vector;
 
-public class AbilitiesVector implements Abilities
+public class AbilitiesVector implements Abilities, Serializable
 {
 	private static final long serialVersionUID = 1L;
 	

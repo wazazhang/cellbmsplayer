@@ -19,7 +19,9 @@ public abstract class TemplateNode extends RPGObject
 	@Override
 	protected void init_transient() {
 		super.init_transient();
-		this.int_id = Integer.parseInt(id);
+		if (id!=null) {
+			this.int_id = Integer.parseInt(id);
+		}
 	}
 	
 	final public int getIntID() {
