@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
 import com.cell.gfx.IImages;
+import com.cell.rpg.res.Resource;
 
 
 

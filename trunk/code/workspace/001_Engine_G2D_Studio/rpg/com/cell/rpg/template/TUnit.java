@@ -10,7 +10,7 @@ public class TUnit extends TemplateNode
 	UnitNode		display_node;
 	
 	public TUnit(
-			String id, 
+			int id, 
 			String name) 
 	{
 		super(id, name);

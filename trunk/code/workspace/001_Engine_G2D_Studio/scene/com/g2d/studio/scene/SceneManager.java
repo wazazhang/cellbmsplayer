@@ -32,6 +32,7 @@ import javax.swing.tree.TreePath;
 
 import com.cell.CIO;
 import com.cell.CUtil;
+import com.cell.rpg.io.RPGObjectMap;
 import com.cell.rpg.scene.Scene;
 import com.cell.util.IDFactoryInteger;
 import com.cell.util.Properties;
@@ -392,22 +393,13 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 	
 //	-------------------------------------------------------------------------------------------------------------------------
 //	
-	static SceneNode loadScene(File file)
+	SceneNode loadScene(File file)
 	{
-		if (file.exists())
-		{
-			try{
-				StringReader reader = new StringReader(com.cell.io.File.readText(file, "UTF-8"));
-				ObjectInputStream ois = new XStream().createObjectInputStream(reader);
-				try{
-					Scene data = (Scene)ois.readObject();
-					SceneNode node = new SceneNode(data);
-					return node;
-				}finally{
-					ois.close();
-				}
-			}catch(Throwable ex) {
-				ex.printStackTrace();
+		if (file.exists()) {
+			Scene data = RPGObjectMap.readNode(file.getPath(), Scene.class);
+			if (data!=null) {
+				SceneNode node = new SceneNode(data);
+				return node;
 			}
 		}
 		return null;
@@ -415,23 +407,9 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 	
 	static void saveScene(File root, SceneNode node)
 	{
-		if (!root.exists()) {
-			root.mkdirs();
-		}
-		try{
-			File file = new File(root, node.getID()+".xml");
-			Scene data = node.getData();
-			StringWriter writer = new StringWriter(10240);
-			ObjectOutputStream oos = new XStream().createObjectOutputStream(writer);
-			try{
-				oos.writeObject(data);
-			}finally{
-				oos.close();
-			}
-			com.cell.io.File.writeText(file, writer.toString(), "UTF-8");
-		}catch(Throwable ex) {
-			ex.printStackTrace();
-		}
+		Scene data = node.getData();
+		File file = new File(root, node.getID()+".xml");
+		RPGObjectMap.writeNode(data, file);
 	}
 	
 //	-------------------------------------------------------------------------------------------------------------------------

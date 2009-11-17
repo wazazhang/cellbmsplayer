@@ -1,4 +1,4 @@
-package com.g2d.studio;
+package com.cell.rpg.res;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;

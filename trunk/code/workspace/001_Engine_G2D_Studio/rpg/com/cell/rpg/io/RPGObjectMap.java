@@ -36,7 +36,7 @@ import com.thoughtworks.xstream.XStream;
  * @author WAZA
  * @param <T>
  */
-public class RPGObjectMap<T extends RPGObject> extends Hashtable<String, T> implements ZipStreamFilter
+public class RPGObjectMap<T extends RPGObject> extends Hashtable<String, T> //implements ZipStreamFilter
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -53,32 +53,32 @@ public class RPGObjectMap<T extends RPGObject> extends Hashtable<String, T> impl
 		loadAll();
 	}
 	
-	@Override
-	public ZipNode readNode(ByteArrayInputStream bais, Class<? extends ZipNode> type) throws Exception {
-		XStream xstream = new XStream();
-		String xml = new String(CIO.readBytes(bais), "UTF-8");
-		StringReader reader = new StringReader(xml);
-		ObjectInputStream ois = xstream.createObjectInputStream(reader);
-		try{
-			return type.cast(ois.readObject());
-		}finally{
-			ois.close();
-		}
-	}
-	
-	@Override
-	public void writeNode(ByteArrayOutputStream baos, ZipNode node) throws Exception {
-		XStream xstream = new XStream();
-		StringWriter writer = new StringWriter(1024);
-		ObjectOutputStream oos = xstream.createObjectOutputStream(writer);
-		try{
-			oos.writeObject(node);
-		}finally{
-			oos.close();
-		}
-		String xml = writer.toString();
-		baos.write(xml.getBytes("UTF-8"));
-	}
+//	@Override
+//	public ZipNode readNode(ByteArrayInputStream bais, Class<? extends ZipNode> type) throws Exception {
+//		XStream xstream = new XStream();
+//		String xml = new String(CIO.readBytes(bais), "UTF-8");
+//		StringReader reader = new StringReader(xml);
+//		ObjectInputStream ois = xstream.createObjectInputStream(reader);
+//		try{
+//			return type.cast(ois.readObject());
+//		}finally{
+//			ois.close();
+//		}
+//	}
+//	
+//	@Override
+//	public void writeNode(ByteArrayOutputStream baos, ZipNode node) throws Exception {
+//		XStream xstream = new XStream();
+//		StringWriter writer = new StringWriter(1024);
+//		ObjectOutputStream oos = xstream.createObjectOutputStream(writer);
+//		try{
+//			oos.writeObject(node);
+//		}finally{
+//			oos.close();
+//		}
+//		String xml = writer.toString();
+//		baos.write(xml.getBytes("UTF-8"));
+//	}
 	
 //	-----------------------------------------------------------------------------------------------------------------------
 
@@ -92,7 +92,7 @@ public class RPGObjectMap<T extends RPGObject> extends Hashtable<String, T> impl
 			for (String entry : entrys) {
 				File f = new File(zip_dir, entry.trim());
 				if (f.exists()) {
-					T t = readNode(f);
+					T t = readNode(f.getPath(), type);
 					if (t!=null) {
 						put(t.id, t);
 					}
@@ -123,12 +123,9 @@ public class RPGObjectMap<T extends RPGObject> extends Hashtable<String, T> impl
 
 //	------------------------------------------------------------------------------------------------------------------------------
 
-	private T readNode(File xml_file) {
+	public static<T extends RPGObject> T readNode(String xml_file, Class<T> type) {
 		try{
-			if (!xml_file.exists()) {
-				return null;
-			}
-			String xml = com.cell.io.File.readText(xml_file, "UTF-8");
+			String xml = CIO.readAllText(xml_file, "UTF-8");
 			StringReader reader = new StringReader(xml);
 			ObjectInputStream ois = new XStream().createObjectInputStream(reader);
 			try{
@@ -142,7 +139,7 @@ public class RPGObjectMap<T extends RPGObject> extends Hashtable<String, T> impl
 		return null;
 	}
 	
-	private boolean writeNode(T node, File xml_file) {
+	public static<T extends RPGObject> boolean writeNode(T node, File xml_file) {
 		try{
 			if (!xml_file.exists()) {
 				xml_file.getParentFile().mkdirs();

@@ -11,9 +11,9 @@ import javax.swing.ImageIcon;
 import javax.swing.tree.MutableTreeNode;
 
 import com.cell.game.CSprite;
+import com.cell.rpg.res.Resource;
 import com.g2d.Tools;
 import com.g2d.cell.CellSetResource.WorldSet;
-import com.g2d.studio.Resource;
 import com.g2d.studio.StudioResource;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.swing.G2DTreeNode;
@@ -21,38 +21,41 @@ import com.g2d.studio.cpj.CPJResourceType;
 
 public class CPJFile extends G2DTreeNode<CPJObject<?>>
 {	
-	String			name;
+	final public String res_root;
+	final public String res_prefix;
+	final public String res_suffix;
+	final public String	name;
+	
 	File			output_file;
 	File			cpj_dir;
 	
 	StudioResource 	set_resource;
 
-	String 			root;
-	String 			dir_prefix;
-	String 			output_suffix;
-	
 	HashMap<String, CPJSprite>
 					sprites = new HashMap<String, CPJSprite>();
 	HashMap<String, CPJWorld>
 					worlds = new HashMap<String, CPJWorld>();
 	
 	CPJFile(String name, 
-			String root, 
-			String dir_prefix, 
-			String output_suffix) throws Exception 
+			String root,
+			String res_root, 
+			String res_prefix, 
+			String res_suffix) throws Exception 
 	{
 		this.name			= name;
-		this.root			= root;
-		this.dir_prefix 	= dir_prefix;
-		this.output_suffix	= output_suffix;
+		this.res_root		= res_root;
+		this.res_prefix 	= res_prefix;
+		this.res_suffix		= res_suffix;
 		
 		this.cpj_dir		= new File(
-				root+File.separatorChar+
+				root		+ File.separatorChar +
+				res_root	+ File.separatorChar+
 				name);
-		this.output_file	= new File(
-				root+File.separatorChar+
-				name+File.separatorChar+
-				output_suffix);
+		this.output_file = new File(
+				root		+ File.separatorChar +
+				res_root	+ File.separatorChar + 
+				name 		+ File.separatorChar + 
+				res_suffix);
 		
 		if (!output_file.exists()) {
 			throw new IOException("path not a cpj file : " + output_file.getPath());
@@ -154,15 +157,15 @@ public class CPJFile extends G2DTreeNode<CPJObject<?>>
 	public static String RES_SCENE_OUTPUT			= "output/scene.properties";<br>
 	@see {@link Config}
 	*/
-	public static ArrayList<CPJFile> listFile (String root, String dir_prefix, String output_file)
+	public static ArrayList<CPJFile> listFile (String root, String res_root, String res_prefix, String res_suffix)
 	{
-		dir_prefix = dir_prefix.toLowerCase();
+		res_prefix = res_prefix.toLowerCase();
 		ArrayList<CPJFile> ret = new ArrayList<CPJFile>();
 		try{
-			for (File file : new File(root).listFiles()) {
-				if (file.isDirectory() && file.getName().toLowerCase().startsWith(dir_prefix)) {
+			for (File file : new File(root+"/"+res_root).listFiles()) {
+				if (file.isDirectory() && file.getName().toLowerCase().startsWith(res_prefix)) {
 					try{
-						ret.add(new CPJFile(file.getName(), root, dir_prefix, output_file));
+						ret.add(new CPJFile(file.getName(), root, res_root, res_prefix, res_suffix));
 					} catch(Exception err){}
 				}
 			}

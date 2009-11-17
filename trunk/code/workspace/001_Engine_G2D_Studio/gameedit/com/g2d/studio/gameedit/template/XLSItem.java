@@ -40,7 +40,7 @@ final public class XLSItem  extends XLSTemplateNode<TItem>
 	
 	@Override
 	protected TItem newData(XLSFile xlsFile, XLSFullRow xlsRow) {
-		return new TItem(xlsRow.id, xlsRow.desc);
+		return new TItem(getIntID(), xlsRow.desc);
 	}
 	
 	public IconFile getIconFile() {

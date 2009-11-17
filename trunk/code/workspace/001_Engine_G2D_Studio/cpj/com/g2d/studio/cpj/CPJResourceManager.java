@@ -12,7 +12,9 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -77,8 +79,8 @@ public class CPJResourceManager extends ManagerForm
 		// actors
 		{
 			unit_root = new DefaultMutableTreeNode("单位模板");
-			ArrayList<CPJFile> files = CPJFile.listFile(
-					path + "/" + Config.RES_ACTOR_ROOT, 
+			ArrayList<CPJFile> files = CPJFile.listFile(path,
+					Config.RES_ACTOR_ROOT, 
 					Config.RES_ACTOR_CPJ_PREFIX, 
 					Config.RES_ACTOR_OUT_SUFFIX);
 			for (CPJFile file : files) {
@@ -93,8 +95,8 @@ public class CPJResourceManager extends ManagerForm
 		// avatars
 		{
 			avatar_root = new DefaultMutableTreeNode("AVATAR模板");
-			ArrayList<CPJFile> files = CPJFile.listFile(
-					path + "/" + Config.RES_AVATAR_ROOT, 
+			ArrayList<CPJFile> files = CPJFile.listFile(path,
+					Config.RES_AVATAR_ROOT, 
 					Config.RES_AVATAR_CPJ_PREFIX, 
 					Config.RES_AVATAR_OUT_SUFFIX);
 			for (CPJFile file : files) {
@@ -109,8 +111,8 @@ public class CPJResourceManager extends ManagerForm
 		// effect
 		{
 			effect_root = new DefaultMutableTreeNode("特效模板");
-			ArrayList<CPJFile> files = CPJFile.listFile(
-					path + "/" + Config.RES_EFFECT_ROOT, 
+			ArrayList<CPJFile> files = CPJFile.listFile(path,
+					Config.RES_EFFECT_ROOT, 
 					Config.RES_EFFECT_CPJ_PREFIX, 
 					Config.RES_EFFECT_OUT_SUFFIX);
 			for (CPJFile file : files) {
@@ -125,9 +127,9 @@ public class CPJResourceManager extends ManagerForm
 		// scenes
 		{
 			scene_root = new DefaultMutableTreeNode("场景模板");
-			ArrayList<CPJFile> files = CPJFile.listFile(
-					path + "/" + Config.RES_SCENE_ROOT, 
-					Config.RES_SCENE_FPJ_PREFIX, 
+			ArrayList<CPJFile> files = CPJFile.listFile(path,
+					Config.RES_SCENE_ROOT, 
+					Config.RES_SCENE_CPJ_PREFIX, 
 					Config.RES_SCENE_OUT_SUFFIX);
 			for (CPJFile file : files) {
 				file.loadAllWorld();
@@ -138,8 +140,10 @@ public class CPJResourceManager extends ManagerForm
 			scroll.setVisible(true);
 			table.addTab("场景", Tools.createIcon(Res.icon_res_1), scroll);
 		}
-
+		
 		this.add(table, BorderLayout.CENTER);
+		
+		saveAll();
 	}
 	
 	public <T extends CPJObject<?>> CPJIndex<T> getNodeIndex(T node)
@@ -246,4 +250,35 @@ public class CPJResourceManager extends ManagerForm
 
 //	----------------------------------------------------------------------------------------------------------------------------
 	
+	private String getList(Vector<? extends CPJObject<?>> objs) {
+		StringBuffer list = new StringBuffer();
+		for (CPJObject<?> spr : objs){
+			list.append(
+					spr.parent.res_root + ";" + 
+					spr.parent.res_prefix + ";" + 
+					spr.parent.res_suffix + ";" +
+					spr.parent.getName() + ";" + 
+					spr.getName() + "\n");
+		}
+		return list.toString();
+	}
+	
+	public void saveAll()
+	{
+		File save_dir = new File(Studio.getInstance().project_save_path.getPath() + File.separatorChar +"resources");
+		save_dir.mkdirs();
+		
+		String actor_list = getList(G2DTree.getNodesSubClass(unit_root, CPJSprite.class));
+		com.cell.io.File.writeText(new File(save_dir, "actor_list.list"), actor_list, "UTF-8");
+		
+		String effect_list = getList(G2DTree.getNodesSubClass(effect_root, CPJSprite.class));
+		com.cell.io.File.writeText(new File(save_dir, "effect_list.list"), effect_list, "UTF-8");
+		
+		String avatar_list = getList(G2DTree.getNodesSubClass(avatar_root, CPJSprite.class));
+		com.cell.io.File.writeText(new File(save_dir, "avatar_list.list"), avatar_list, "UTF-8");
+		
+		String scene_list = getList(G2DTree.getNodesSubClass(scene_root, CPJWorld.class));
+		com.cell.io.File.writeText(new File(save_dir, "scene_list.list"), scene_list, "UTF-8");
+
+	}
 }

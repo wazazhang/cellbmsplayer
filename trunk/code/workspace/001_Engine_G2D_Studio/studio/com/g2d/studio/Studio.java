@@ -305,10 +305,17 @@ public class Studio extends AbstractFrame
 	public void saveAll() 
 	{
 		try{
+			frame_cpj_resource_manager.saveAll();
+		}catch(Throwable ex) {
+			ex.printStackTrace();
+		}
+		
+		try{
 			frame_object_manager.saveAll();
 		}catch(Throwable ex) {
 			ex.printStackTrace();
 		}
+		
 		try{
 			scene_manager.saveAll();
 		}catch(Throwable ex) {

@@ -25,6 +25,8 @@ public abstract class ObjectNode<T extends RPGObject> extends G2DTreeNode<Object
 	public abstract String getID();
 	
 	public abstract T getData();
+
+	public abstract int getIntID() ;
 	
 	
 //	----------------------------------------------------------------------------------------

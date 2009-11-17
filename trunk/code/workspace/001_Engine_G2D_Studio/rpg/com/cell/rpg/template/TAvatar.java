@@ -9,7 +9,7 @@ public class TAvatar extends TemplateNode
 {
 	public UnitNode body;
 	
-	public TAvatar(String id, String name) {
+	public TAvatar(int id, String name) {
 		super(id, name);
 	}
 	

@@ -34,7 +34,7 @@ final public class XLSSkill extends XLSTemplateNode<TSkill>
 	
 	@Override
 	protected TSkill newData(XLSFile xlsFile, XLSFullRow xlsRow) {
-		return new TSkill(xlsRow.id, xlsRow.desc);
+		return new TSkill(getIntID(), xlsRow.desc);
 	}
 	
 	public IconFile getIconFile() {

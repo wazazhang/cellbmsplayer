@@ -48,7 +48,7 @@ final public class SceneNode extends DynamicNode<Scene>
 	
 	@Override
 	protected Scene newData(IDynamicIDFactory<?> factory, String name) {
-		return new Scene(getID(), name);
+		return new Scene(getIntID(), name);
 	}
 	
 	@Override
