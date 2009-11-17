@@ -1,5 +1,8 @@
 package com.cell.rpg.res;
 
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -17,10 +20,14 @@ import com.cell.rpg.template.TUnit;
 import com.cell.rpg.template.TemplateNode;
 import com.cell.rpg.xls.XLSTable;
 import com.cell.sql.SQLTableRow;
+import com.g2d.Tools;
 import com.g2d.cell.CellSetResource;
 import com.g2d.cell.CellSetResourceManager;
 import com.g2d.cell.CellSetResource.CellSetObject;
 import com.g2d.cell.CellSetResource.WorldSet;
+import com.g2d.studio.Config;
+import com.g2d.studio.Studio;
+import com.g2d.studio.icon.IconFile;
 
 
 /**
@@ -32,42 +39,60 @@ public class ResourceManager extends CellSetResourceManager
 //	--------------------------------------------------------------------------------------------------------------------
 	
 	final public String res_root;
+	final public String icon_root;
+	final public String sound_root;
 	
 	// res objects
-	final Hashtable<String, SceneSet>	all_scene_set;
-	final Hashtable<String, SpriteSet>	all_actor_set;
-	final Hashtable<String, SpriteSet>	all_avatar_set;
-	final Hashtable<String, SpriteSet>	all_effect_set;
+	protected Hashtable<String, SceneSet>	all_scene_set;
+	protected Hashtable<String, SpriteSet>	all_actor_set;
+	protected Hashtable<String, SpriteSet>	all_avatar_set;
+	protected Hashtable<String, SpriteSet>	all_effect_set;
 
-	// save objects	
-	final Hashtable<Integer, TUnit>		tunits;
-	final Hashtable<Integer, TItem>		titems;
-	final Hashtable<Integer, TAvatar>	tavatars;
-	final Hashtable<Integer, TSkill>	tskills;
-	final Hashtable<Integer, Scene>		scenes;
+	// templates
+	protected Hashtable<Integer, TUnit>		tunits;
+	protected Hashtable<Integer, TItem>		titems;
+	protected Hashtable<Integer, TAvatar>	tavatars;
+	protected Hashtable<Integer, TSkill>	tskills;
 	
+	// scenes
+	protected Hashtable<Integer, Scene>		scenes;
+	
+	// icons
+	protected Vector<BufferedImage> 		icons;
+
 
 //	--------------------------------------------------------------------------------------------------------------------
 	
 	public ResourceManager(
 			String res_root, 
-			String save_path,
-			String icon_root,
-			String sound_root) throws Exception
+			String save_name,
+			String icon_root, 
+			String sound_root, boolean a)  throws Exception
 	{
-		this.res_root = res_root;
+		this.res_root	= res_root;
+		this.icon_root	= icon_root;
+		this.sound_root	= sound_root;
 		//
-		all_scene_set	= readSets(res_root + "/" + save_path + "/resources/scene_list.list",	SceneSet.class);
-		all_actor_set	= readSets(res_root + "/" + save_path + "/resources/actor_list.list",	SpriteSet.class);
-		all_avatar_set	= readSets(res_root + "/" + save_path + "/resources/avatar_list.list",	SpriteSet.class);
-		all_effect_set	= readSets(res_root + "/" + save_path + "/resources/effect_list.list",	SpriteSet.class);
+		all_scene_set	= readSets(res_root + "/" + save_name + "/resources/scene_list.list",	SceneSet.class);
+		all_actor_set	= readSets(res_root + "/" + save_name + "/resources/actor_list.list",	SpriteSet.class);
+		all_avatar_set	= readSets(res_root + "/" + save_name + "/resources/avatar_list.list",	SpriteSet.class);
+		all_effect_set	= readSets(res_root + "/" + save_name + "/resources/effect_list.list",	SpriteSet.class);
+	}
+	
+	public ResourceManager(
+			String res_root, 
+			String save_name) throws Exception
+	{
+		this.res_root	= res_root;
+		this.icon_root	= "";
+		this.sound_root	= "";
 		//
-		tunits			= readTemplates(res_root + "/" + save_path + "/objects/tunit.obj", 		TUnit.class);
-		titems			= readTemplates(res_root + "/" + save_path + "/objects/titem.obj", 		TItem.class);
-		tavatars		= readTemplates(res_root + "/" + save_path + "/objects/tavatar.obj",	TAvatar.class);
-		tskills			= readTemplates(res_root + "/" + save_path + "/objects/tskill.obj",		TSkill.class);
-		scenes			= readRPGScenes(res_root + "/" + save_path + "/scenes");
-		
+		tunits			= readTemplates(res_root + "/" + save_name + "/objects/tunit.obj", 		TUnit.class);
+		titems			= readTemplates(res_root + "/" + save_name + "/objects/titem.obj", 		TItem.class);
+		tavatars		= readTemplates(res_root + "/" + save_name + "/objects/tavatar.obj",	TAvatar.class);
+		tskills			= readTemplates(res_root + "/" + save_name + "/objects/tskill.obj",		TSkill.class);
+		//
+		scenes			= readRPGScenes(res_root + "/" + save_name + "/scenes");
 	}
 
 	protected CellSetResource createSet(String path) throws Exception
@@ -233,21 +258,29 @@ public class ResourceManager extends CellSetResourceManager
 	}
 	
 	
-	
+//	
 //	--------------------------------------------------------------------------------------------------------------------
+	
 
+	public BufferedImage getIcon(int index)
+	{
+		return null;
+	}
+	
 
 	
 	public static void main(String[] args) throws Exception 
 	{
 		try{
-			new ResourceManager(args[0], args[1], args[2], args[3]);
+			new ResourceManager(args[0], args[1], args[2], args[3], 
+					true);
 		} catch (Exception err) {
 			new ResourceManager(
 					"D:/EatWorld/trunk/eatworld/data/edit/resource", 
 					"project.g2d.save", 
 					"icons", 
-					"sound");
+					"sound", 
+					true);
 		}
 		
 	}
