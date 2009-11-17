@@ -67,32 +67,43 @@ public class ResourceManager extends CellSetResourceManager
 			String res_root, 
 			String save_name,
 			String icon_root, 
-			String sound_root, boolean a)  throws Exception
+			String sound_root,
+			boolean init_xml)  throws Exception
 	{
 		this.res_root	= res_root;
 		this.icon_root	= icon_root;
 		this.sound_root	= sound_root;
-		//
+
 		all_scene_set	= readSets(res_root + "/" + save_name + "/resources/scene_list.list",	SceneSet.class);
 		all_actor_set	= readSets(res_root + "/" + save_name + "/resources/actor_list.list",	SpriteSet.class);
 		all_avatar_set	= readSets(res_root + "/" + save_name + "/resources/avatar_list.list",	SpriteSet.class);
 		all_effect_set	= readSets(res_root + "/" + save_name + "/resources/effect_list.list",	SpriteSet.class);
+		
+		if (init_xml) 
+		{
+			tunits		= readTemplates(res_root + "/" + save_name + "/objects/tunit.obj", 		TUnit.class);
+			titems		= readTemplates(res_root + "/" + save_name + "/objects/titem.obj", 		TItem.class);
+			tavatars	= readTemplates(res_root + "/" + save_name + "/objects/tavatar.obj",	TAvatar.class);
+			tskills		= readTemplates(res_root + "/" + save_name + "/objects/tskill.obj",		TSkill.class);
+
+			scenes		= readRPGScenes(res_root + "/" + save_name + "/scenes");
+		}
 	}
 	
-	public ResourceManager(
-			String res_root, 
-			String save_name) throws Exception
+	public ResourceManager(String res_root, String save_name) throws Exception
 	{
 		this.res_root	= res_root;
 		this.icon_root	= "";
 		this.sound_root	= "";
 		//
-		tunits			= readTemplates(res_root + "/" + save_name + "/objects/tunit.obj", 		TUnit.class);
-		titems			= readTemplates(res_root + "/" + save_name + "/objects/titem.obj", 		TItem.class);
-		tavatars		= readTemplates(res_root + "/" + save_name + "/objects/tavatar.obj",	TAvatar.class);
-		tskills			= readTemplates(res_root + "/" + save_name + "/objects/tskill.obj",		TSkill.class);
+		tunits		= readTemplates(res_root + "/" + save_name + "/objects/tunit.obj", 		TUnit.class);
+		titems		= readTemplates(res_root + "/" + save_name + "/objects/titem.obj", 		TItem.class);
+		tavatars	= readTemplates(res_root + "/" + save_name + "/objects/tavatar.obj",	TAvatar.class);
+		tskills		= readTemplates(res_root + "/" + save_name + "/objects/tskill.obj",		TSkill.class);
 		//
-		scenes			= readRPGScenes(res_root + "/" + save_name + "/scenes");
+		scenes		= readRPGScenes(res_root + "/" + save_name + "/scenes");
+	
+		
 	}
 
 	protected CellSetResource createSet(String path) throws Exception
