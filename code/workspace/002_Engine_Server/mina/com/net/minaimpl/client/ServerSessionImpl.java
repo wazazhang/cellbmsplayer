@@ -247,7 +247,11 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 	
 	public String toString() {
 		try{
-			return "" + Session;
+			if (!Session.isClosing()) {
+				return "" + Session;
+			} else {
+				return "closing ... ";
+			}
 		}catch(Exception err){
 			return err.getMessage();
 		}
