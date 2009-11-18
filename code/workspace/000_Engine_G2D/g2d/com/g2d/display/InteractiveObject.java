@@ -226,12 +226,14 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 			if (getParent()!=null) {
 				if (getParent().getFocus() == this) {
 					is_focused = true;
-				} else if (enable_focus && 
-						isCatchedMouse() &&
-						(event instanceof MouseEvent) && 
+				} else if (enable_focus) {
+					if ((event instanceof MouseEvent) && 
 						((MouseEvent)event).type == MouseEvent.EVENT_MOUSE_DOWN) {
-					getParent().focus(this);
-					is_focused = true;
+						if (isCatchedMouse()) {
+							getParent().focus(this);
+							is_focused = true;
+						}
+					}
 				}
 			}
 			
@@ -246,7 +248,11 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 				if (event instanceof MouseWheelEvent) {
 					return processMouseWheelEvent((MouseWheelEvent) event);
 				} else if (event instanceof MouseEvent) {
-					return processMouseEvent((MouseEvent) event);
+					boolean ret = processMouseEvent((MouseEvent) event);
+					if (ret) {
+						System.out.println("f object = " + toString());
+					}
+					return ret;
 				} else if (event instanceof KeyEvent) {
 					return processKeyEvent((KeyEvent) event);
 				}
@@ -332,7 +338,7 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 	
 	boolean processMouseEvent(MouseEvent event)
 	{
-		if (isCatchedMouse())
+		if (isCatchedMouse() && isHitMouse())
 		{
 			event.source = this;
 			switch(event.type)
