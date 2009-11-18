@@ -271,7 +271,8 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 							SceneManager.this,
 							dialog.getSceneName(),
 							Studio.getInstance().getCPJResourceManager().getNodeIndex(world));
-					root.add(node);
+//					root.add(node);
+					addScene(node, root);
 					g2d_tree.reload(root);
 				}
 			}
