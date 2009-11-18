@@ -3,12 +3,10 @@ package com.cell.rpg.scene;
 import com.cell.rpg.display.UnitNode;
 import com.cell.rpg.scene.ability.ActorTransport;
 
-public class Immutable extends SceneUnit 
+public class Immutable extends SceneSprite
 {
 	final UnitNode		display_node;
 	
-	public int			animate;
-
 	public Immutable(String id, String cpj_name, String set_name) 
 	{	
 		super(id);
