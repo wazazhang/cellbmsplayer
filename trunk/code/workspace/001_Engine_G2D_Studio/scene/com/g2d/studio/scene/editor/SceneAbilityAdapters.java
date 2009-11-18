@@ -46,20 +46,6 @@ public class SceneAbilityAdapters
 		}
 		
 		@Override
-		public boolean fieldChanged(
-				Object editObject,
-				Object fieldValue,
-				Field field) {
-			// 场景改变了，清除场景单位的值
-			ActorTransport tp = getType().cast(editObject);
-			if (field.getName().equals("destination_scene_name")){
-				tp.next_scene_object_id = null;
-				return true;
-			}
-			return false;
-		}
-		
-		@Override
 		public PropertyCellEdit<?> getCellEdit(
 				Object editObject,
 				Object fieldValue, 
@@ -67,7 +53,7 @@ public class SceneAbilityAdapters
 			if (field.getName().equals("next_scene_id")){
 				return new SceneListCellEdit();
 			}
-			if (field.getName().equals("next_scene_object_id")){
+			else if (field.getName().equals("next_scene_object_id")){
 				ActorTransport tp = (ActorTransport)editObject;
 				if (tp.next_scene_id!=null) {
 					SceneNode scene = Studio.getInstance().getSceneManager().getSceneNode(tp.next_scene_id);
