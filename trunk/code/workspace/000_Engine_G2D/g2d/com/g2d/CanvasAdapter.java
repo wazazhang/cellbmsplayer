@@ -795,10 +795,10 @@ FocusListener
 	void fixMouse() 
 	{
 		mousex = Math.max(mousex, 0);
-		mousex = Math.min(mousex, stageWidth);
+		mousex = Math.min(mousex, stageWidth-1);
 		
 		mousey = Math.max(mousey, 0);
-		mousey = Math.min(mousey, stageHeight);
+		mousey = Math.min(mousey, stageHeight-1);
 	}
 	
 	
@@ -827,21 +827,25 @@ FocusListener
 	synchronized public void mouseClicked(MouseEvent e) {
 		mousex = (int)(e.getX() * size_rate_x);
 		mousey = (int)(e.getY() * size_rate_y);
+		fixMouse() ;
 		//poolEvent(new com.cell.g2d.display.event.MouseEvent(e));
 	}
 	synchronized public void mouseEntered(MouseEvent e) {
 		mousex = (int)(e.getX() * size_rate_x);
 		mousey = (int)(e.getY() * size_rate_y);
+		fixMouse() ;
 		//poolEvent(new com.cell.g2d.display.event.MouseEvent(e));
 	}
 	synchronized public void mouseExited(MouseEvent e) {
 		mousex = (int)(e.getX() * size_rate_x);
 		mousey = (int)(e.getY() * size_rate_y);
+		fixMouse() ;
 		//poolEvent(new com.cell.g2d.display.event.MouseEvent(e));
 	}
 	synchronized public void mousePressed(MouseEvent e) {
 		mousex = (int)(e.getX() * size_rate_x);
 		mousey = (int)(e.getY() * size_rate_y);		
+		fixMouse() ;
 		mousestate_down.put(e.getButton(), e);
 		mousestate.put(e.getButton(), e);
 		mousestate_prev_down_time.put(e.getButton(), System.currentTimeMillis());
@@ -852,6 +856,7 @@ FocusListener
 	synchronized public void mouseReleased(MouseEvent e) {
 		mousex = (int)(e.getX() * size_rate_x);
 		mousey = (int)(e.getY() * size_rate_y);
+		fixMouse() ;
 		mousestate_up.put(e.getButton(), e);
 		mousestate.remove(e.getButton());
 		poolEvent(new com.g2d.display.event.MouseEvent(e, com.g2d.display.event.MouseEvent.EVENT_MOUSE_UP));
@@ -860,12 +865,14 @@ FocusListener
 	synchronized public void mouseDragged(MouseEvent e) {
 		mousex = (int)(e.getX() * size_rate_x);
 		mousey = (int)(e.getY() * size_rate_y);
+		fixMouse() ;
 		//poolEvent(new com.cell.g2d.display.event.MouseEvent(e, com.cell.g2d.display.event.MouseEvent.EVENT_MOUSE_DRAGGED));
 		//System.out.println(e);
 	}
 	synchronized public void mouseMoved(MouseEvent e) {
 		mousex = (int)(e.getX() * size_rate_x);
 		mousey = (int)(e.getY() * size_rate_y);
+		fixMouse() ;
 		//poolEvent(new com.cell.g2d.display.event.MouseEvent(e, com.cell.g2d.display.event.MouseEvent.EVENT_MOUSE_MOVED));
 		//System.out.println(e);
 	}
