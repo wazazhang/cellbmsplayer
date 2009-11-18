@@ -1,9 +1,11 @@
 package com.g2d.studio.scene.units;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.Stroke;
 import java.util.Vector;
 
 import com.cell.game.CSprite;
@@ -199,32 +201,55 @@ public class SceneImmutable extends SceneSprite implements SceneUnitTag<Immutabl
 		super.renderAfter(g);
 		
 		if (editor != null) 
-		{
-			if (editor.getSelectedPage().isSelectedType(getClass())) 
+		{	
+			pushObject(g.getStroke());
+			try
 			{
-				// 选择了该精灵
-				if (editor.getSelectedUnit() == this) {
-					g.setColor(Color.WHITE);
-					g.draw(local_bounds);
-					g.setColor(Color.WHITE);
-					Drawing.drawStringBorder(g, 
-							getSprite().getCurrentAnimate() + "/" + getSprite().getAnimateCount(),
-							0, getSprite().getVisibleBotton() + 1,
-							Drawing.TEXT_ANCHOR_HCENTER | Drawing.TEXT_ANCHOR_TOP);
-				} // 当鼠标放到该精灵上
-				else if (isCatchedMouse()) {
-					if (editor.isToolSelect()) {
-						g.setColor(Color.GREEN);
+				g.setStroke(new BasicStroke(2));
+				
+				if (editor.getSelectedPage().isSelectedType(getClass())) 
+				{
+					// 选择了该精灵
+					if (editor.getSelectedUnit() == this) {
+						drawTouchRange(g);
+						g.setColor(Color.WHITE);
 						g.draw(local_bounds);
+						g.setColor(Color.WHITE);
+						Drawing.drawStringBorder(g, 
+								getSprite().getCurrentAnimate() + "/" + getSprite().getAnimateCount(),
+								0, getSprite().getVisibleBotton() + 1,
+								Drawing.TEXT_ANCHOR_HCENTER | Drawing.TEXT_ANCHOR_TOP);
+					} // 当鼠标放到该精灵上
+					else if (isCatchedMouse()) {
+						drawTouchRange(g);
+						if (editor.isToolSelect()) {
+							g.setColor(Color.GREEN);
+							g.draw(local_bounds);
+						}
 					}
+					this.enable = editor.isToolSelect();
+				} else {
+					this.enable = false;
 				}
-				this.enable = editor.isToolSelect();
-			} else {
-				this.enable = false;
+			
+			} finally {
+				g.setStroke(popObject(Stroke.class));
 			}
 		}
 	}
 	
+	protected void drawTouchRange(Graphics2D g)
+	{
+		if (sprite!=null) {
+			g.setColor(Color.GREEN);
+			g.drawArc(
+					-sprite.touch_range, 
+					-sprite.touch_range, 
+					sprite.touch_range<<1, 
+					sprite.touch_range<<1,
+					0, 360);
+		}
+	}
 		
 	@Override
 	public String toString() {
