@@ -28,6 +28,6 @@ public class RPGObjectPanel  extends JPanel
 		return "RPG Unit";
 	}
 	
-	
+	// 嵌套RPGObject属性值
 	
 }

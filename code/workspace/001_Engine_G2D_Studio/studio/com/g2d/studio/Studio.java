@@ -379,9 +379,7 @@ public class Studio extends AbstractFrame
 	
 	public class SetResourceManager extends CellSetResourceManager
 	{
-		public SetResourceManager() {
-			instance = this;
-		}
+		public SetResourceManager() {}
 		@Override
 		public StudioResource createSet(String setPath) throws Exception {
 			return new StudioResource(project_path.getPath() + "/" + setPath, setPath);

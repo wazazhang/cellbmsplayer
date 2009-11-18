@@ -25,8 +25,10 @@ import org.slf4j.LoggerFactory;
 import com.cell.CUtil;
 import com.cell.CUtil.ICompare;
 import com.cell.CUtil.StringCompare;
+import com.cell.reflect.Fields;
 import com.cell.sql.anno.SQLField;
 import com.cell.sql.anno.SQLTable;
+import com.cell.sql.util.SQLUtil;
 
 
 /**
@@ -826,7 +828,7 @@ public abstract class SQLTableManager<K, R extends SQLTableRow<K>>
 			Stack<Field> 			fields_stack
 			) throws IllegalArgumentException, IllegalAccessException
 	{
-		ArrayList<Field> fields = getDeclaredAndSuperFields(gclass);
+		ArrayList<Field> fields = Fields.getDeclaredAndSuperFields(gclass);
 		
 		for (Field field : fields)
 		{
@@ -857,24 +859,7 @@ public abstract class SQLTableManager<K, R extends SQLTableRow<K>>
 		}
 	}
 	
-	// 得到所有的field(包括父类) @see Class.getDeclaredFields()
-	private static ArrayList<Field> getDeclaredAndSuperFields(Class<?> gclass)
-	{
-		ArrayList<Field> ret = new ArrayList<Field>();
-		
-		Class<?> super_class = gclass.getSuperclass();
-		if (super_class!=null) {
-			ret.addAll(getDeclaredAndSuperFields(super_class));
-		}
-		
-		Field[] d_fields = gclass.getDeclaredFields();
-		for (Field field : d_fields) {
-			ret.add(field);
-		}
-		
-		return ret;
-	}
-	
+
 //	---------------------------------------------------------------------------------------------------------------------------------
 	
 

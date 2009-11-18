@@ -45,28 +45,28 @@ public class SceneSprite extends MoveableUnit implements CellSetResource.LoadSpr
 	
 //	------------------------------------------------------------------------------------------------------------------------------------
 	
-	@Override
-	protected void init_field() 
-	{
-		super.init_field();
-	}
-
-	@Override
-	protected void init_transient() 
-	{
-		super.init_transient();
-		
-		if (set_resource_name != null && set_sprite_id != null)
-		{
-			CellSetResource set;
-			try {
-				set = CellSetResourceManager.getManager().getSet(set_resource_name);
-				if (set!=null){
-					init(set, set_sprite_id);
-				}
-			} catch (Exception e) {}
-		}
-	}
+//	@Override
+//	protected void init_field() 
+//	{
+//		super.init_field();
+//	}
+//
+//	@Override
+//	protected void init_transient() 
+//	{
+//		super.init_transient();
+//		
+//		if (set_resource_name != null && set_sprite_id != null)
+//		{
+//			CellSetResource set;
+//			try {
+//				set = CellSetResourceManager.getManager().getSet(set_resource_name);
+//				if (set!=null){
+//					init(set, set_sprite_id);
+//				}
+//			} catch (Exception e) {}
+//		}
+//	}
 	
 	public SceneSprite()
 	{

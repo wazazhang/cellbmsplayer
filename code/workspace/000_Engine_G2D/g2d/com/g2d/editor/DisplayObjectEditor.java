@@ -47,12 +47,12 @@ public class DisplayObjectEditor<V extends DisplayObject> extends AbstractFrame
 		this.setJMenuBar(menu);
 		
 		// property panel
-		{
-			table.addTab("Property", new ObjectPropertyPanel(o));
-		}
+//		{
+//			table.addTab("Property", new ObjectPropertyPanel(o));
+//		}
 		
 		// info panel
-		{
+//		{
 //			info.setLayout(null);
 //			
 //			JInternalFrame frame = new JInternalFrame(){
@@ -66,7 +66,7 @@ public class DisplayObjectEditor<V extends DisplayObject> extends AbstractFrame
 //			info.add(frame);
 			
 //			table.addTab("Info", info);
-		}
+//		}
 
 		// append panel
 		for (Component append : append_page)

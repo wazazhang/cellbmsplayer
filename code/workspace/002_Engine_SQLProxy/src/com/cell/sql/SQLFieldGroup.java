@@ -5,6 +5,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.cell.reflect.FieldGroup;
 import com.cell.sql.anno.SQLField;
 
 /**
@@ -13,9 +14,7 @@ import com.cell.sql.anno.SQLField;
  * 整个体系可以被描述成一个树形结构。
  * @author WAZA
  */
-public interface SQLFieldGroup
+public interface SQLFieldGroup extends FieldGroup
 {
-	public void setField(Field field, Object value) throws Exception;
-	
-	public Object getField(Field field) throws Exception;
+
 }
