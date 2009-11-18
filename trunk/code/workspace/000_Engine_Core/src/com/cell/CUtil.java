@@ -36,6 +36,9 @@ public class CUtil extends CObject
 	@SuppressWarnings("unchecked")
 	public static<T> T cloneObject(T src)
 	{
+		if (src == null) {
+			return src;
+		}
 		try {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			ObjectOutputStream os = new ObjectOutputStream(baos);

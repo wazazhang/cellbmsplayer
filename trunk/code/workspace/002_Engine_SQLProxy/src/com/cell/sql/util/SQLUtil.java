@@ -7,9 +7,13 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.cell.CIO;
+import com.cell.CUtil;
 import com.cell.io.TextDeserialize;
 import com.cell.io.TextSerialize;
 import com.cell.reflect.Parser;
@@ -131,9 +135,17 @@ public class SQLUtil
 		}
 	}
 	
+	/**
+	 * 得到该类所有签名的字段
+	 * @param clazz
+	 * @return
+	 */
 	public static SQLColumn[] getSQLColumns(Class<? extends SQLFieldGroup> clazz)
 	{
 		return SQLTableManager.getSQLColumns(clazz);
 	}
+
+	
+	
 	
 }
