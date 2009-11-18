@@ -176,11 +176,7 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 	
 	public void sessionClosed(IoSession session) throws Exception {
 		synchronized(this) {
-			String socket_name = null;
-			try{
-				socket_name = Session.toString();
-			}catch(Exception err){}
-			Listener.disconnected(this, true, "sessionClosed : " + socket_name);
+			Listener.disconnected(this, true, "sessionClosed : " + toString());
 		}
 	}
 	
@@ -250,6 +246,10 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 	}
 	
 	public String toString() {
-		return "" + Session;
+		try{
+			return "" + Session;
+		}catch(Exception err){
+			return err.getMessage();
+		}
 	}
 }
