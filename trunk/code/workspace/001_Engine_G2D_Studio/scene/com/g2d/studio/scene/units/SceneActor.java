@@ -1,9 +1,11 @@
 package com.g2d.studio.scene.units;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.Stroke;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Vector;
@@ -207,30 +209,39 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 		
 		if (editor != null) 
 		{
-			if (editor.getSelectedPage().isSelectedType(getClass())) 
+			pushObject(g.getStroke());
+			try
 			{
-				// 选择了该精灵
-				if (editor.getSelectedUnit() == this) {
-					drawTouchRange(g);
-					drawLookRange(g);
-					g.setColor(Color.WHITE);
-					g.draw(local_bounds);
-					g.setColor(Color.WHITE);
-					Drawing.drawStringBorder(g, 
-							getSprite().getCurrentAnimate() + "/" + getSprite().getAnimateCount(),
-							0, getSprite().getVisibleBotton() + 1,
-							Drawing.TEXT_ANCHOR_HCENTER | Drawing.TEXT_ANCHOR_TOP);
-				} // 当鼠标放到该精灵上
-				else if (isCatchedMouse()) {
-					drawTouchRange(g);
-					if (editor.isToolSelect()) {
-						g.setColor(Color.GREEN);
+				g.setStroke(new BasicStroke(2));
+				
+				if (editor.getSelectedPage().isSelectedType(getClass())) 
+				{
+					// 选择了该精灵
+					if (editor.getSelectedUnit() == this) {
+						drawTouchRange(g);
+						drawLookRange(g);
+						g.setColor(Color.WHITE);
 						g.draw(local_bounds);
+						g.setColor(Color.WHITE);
+						Drawing.drawStringBorder(g, 
+								getSprite().getCurrentAnimate() + "/" + getSprite().getAnimateCount(),
+								0, getSprite().getVisibleBotton() + 1,
+								Drawing.TEXT_ANCHOR_HCENTER | Drawing.TEXT_ANCHOR_TOP);
+					} // 当鼠标放到该精灵上
+					else if (isCatchedMouse()) {
+						drawTouchRange(g);
+						if (editor.isToolSelect()) {
+							g.setColor(Color.GREEN);
+							g.draw(local_bounds);
+						}
 					}
+					this.enable = editor.isToolSelect();
+				} else {
+					this.enable = false;
 				}
-				this.enable = editor.isToolSelect();
-			} else {
-				this.enable = false;
+				
+			} finally {
+				g.setStroke(popObject(Stroke.class));
 			}
 		}
 	}
