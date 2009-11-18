@@ -4,9 +4,11 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.Serializable;
+import java.lang.ref.Reference;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Vector;
+import java.util.concurrent.atomic.AtomicReference;
 
 import com.cell.CIO;
 import com.cell.CUtil;
@@ -19,6 +21,7 @@ import com.cell.rpg.template.TSkill;
 import com.cell.rpg.template.TUnit;
 import com.cell.rpg.template.TemplateNode;
 import com.cell.rpg.xls.XLSTable;
+import com.cell.sound.ISound;
 import com.cell.sql.SQLTableRow;
 import com.g2d.Tools;
 import com.g2d.cell.CellSetResource;
@@ -34,13 +37,11 @@ import com.g2d.studio.icon.IconFile;
  * @author WAZA
  * 第三方程序用来读入G2D Studio对象的类
  */
-public class ResourceManager extends CellSetResourceManager
+public abstract class ResourceManager extends CellSetResourceManager
 {
 //	--------------------------------------------------------------------------------------------------------------------
 	
 	final public String res_root;
-	final public String icon_root;
-	final public String sound_root;
 	
 	// res objects
 	protected Hashtable<String, SceneSet>	all_scene_set;
@@ -48,63 +49,86 @@ public class ResourceManager extends CellSetResourceManager
 	protected Hashtable<String, SpriteSet>	all_avatar_set;
 	protected Hashtable<String, SpriteSet>	all_effect_set;
 
-	// templates
+	// xml templates and scenes
 	protected Hashtable<Integer, TUnit>		tunits;
 	protected Hashtable<Integer, TItem>		titems;
 	protected Hashtable<Integer, TAvatar>	tavatars;
 	protected Hashtable<Integer, TSkill>	tskills;
-	
-	// scenes
 	protected Hashtable<Integer, Scene>		scenes;
 	
-	// icons
-	protected Vector<BufferedImage> 		icons;
-
+	// icons and sounds
+	protected Hashtable<String, AtomicReference<BufferedImage>> 		all_icons;
+	protected Hashtable<String, AtomicReference<ISound>> 				all_sounds;
 
 //	--------------------------------------------------------------------------------------------------------------------
-	
+
+	/**
+	 * 子类自定义初始化什么
+	 * @param res_root
+	 * @param icon_root
+	 * @param sound_root
+	 * @throws Exception
+	 */
+	public ResourceManager(String res_root) throws Exception
+	{
+		this.res_root	= res_root;
+		
+		
+	}
+
 	public ResourceManager(
 			String res_root, 
 			String save_name,
-			String icon_root, 
-			String sound_root,
-			boolean init_xml)  throws Exception
+			boolean init_set,
+			boolean init_xml,
+			boolean init_icon,
+			boolean init_sound)  throws Exception
 	{
 		this.res_root	= res_root;
-		this.icon_root	= icon_root;
-		this.sound_root	= sound_root;
 
+		if (init_set) 
+			initAllSet(save_name);
+		
+		if (init_xml) 
+			initAllXml(save_name);
+		
+		if (init_icon) 
+			initIcons(save_name);
+		
+		if (init_sound) 
+			initSounds(save_name);
+	}
+	
+//	--------------------------------------------------------------------------------------------------------------------
+
+	final protected void initAllSet(String save_name) throws Exception
+	{
 		all_scene_set	= readSets(res_root + "/" + save_name + "/resources/scene_list.list",	SceneSet.class);
 		all_actor_set	= readSets(res_root + "/" + save_name + "/resources/actor_list.list",	SpriteSet.class);
 		all_avatar_set	= readSets(res_root + "/" + save_name + "/resources/avatar_list.list",	SpriteSet.class);
 		all_effect_set	= readSets(res_root + "/" + save_name + "/resources/effect_list.list",	SpriteSet.class);
-		
-		if (init_xml) 
-		{
-			tunits		= readTemplates(res_root + "/" + save_name + "/objects/tunit.obj", 		TUnit.class);
-			titems		= readTemplates(res_root + "/" + save_name + "/objects/titem.obj", 		TItem.class);
-			tavatars	= readTemplates(res_root + "/" + save_name + "/objects/tavatar.obj",	TAvatar.class);
-			tskills		= readTemplates(res_root + "/" + save_name + "/objects/tskill.obj",		TSkill.class);
-
-			scenes		= readRPGScenes(res_root + "/" + save_name + "/scenes");
-		}
 	}
 	
-	public ResourceManager(String res_root, String save_name) throws Exception
+	final protected void initAllXml(String save_name)  throws Exception
 	{
-		this.res_root	= res_root;
-		this.icon_root	= "";
-		this.sound_root	= "";
-		//
 		tunits		= readTemplates(res_root + "/" + save_name + "/objects/tunit.obj", 		TUnit.class);
 		titems		= readTemplates(res_root + "/" + save_name + "/objects/titem.obj", 		TItem.class);
 		tavatars	= readTemplates(res_root + "/" + save_name + "/objects/tavatar.obj",	TAvatar.class);
 		tskills		= readTemplates(res_root + "/" + save_name + "/objects/tskill.obj",		TSkill.class);
-		//
 		scenes		= readRPGScenes(res_root + "/" + save_name + "/scenes");
-	
-		
 	}
+	
+	final protected void initIcons(String save_name)
+	{
+		all_icons	= readIcons(res_root + "/" + save_name + "/icons/icon.list" );
+	}
+	
+	final protected void initSounds(String save_name)
+	{
+		all_sounds	= readSounds(res_root + "/" + save_name + "/sounds/sound.list" );
+	}
+	
+//	--------------------------------------------------------------------------------------------------------------------
 
 	protected CellSetResource createSet(String path) throws Exception
 	{
@@ -155,7 +179,7 @@ public class ResourceManager extends CellSetResourceManager
 		return new Vector<SpriteSet>(all_effect_set.values());
 	}
 
-	protected <T extends ResourceSet<?>> Hashtable<String, T> readSets(String file, Class<T> type) throws Exception
+	final protected <T extends ResourceSet<?>> Hashtable<String, T> readSets(String file, Class<T> type) throws Exception
 	{
 		System.out.println("list resource : " + file);
 		
@@ -204,7 +228,7 @@ public class ResourceManager extends CellSetResourceManager
 		return tskills.get(id);
 	}
 	
-	protected <T extends TemplateNode> Hashtable<Integer, T> readTemplates(String tdir, Class<T> type) throws Exception
+	final protected <T extends TemplateNode> Hashtable<Integer, T> readTemplates(String tdir, Class<T> type) throws Exception
 	{
 		System.out.println("list template : " + tdir);
 
@@ -239,7 +263,7 @@ public class ResourceManager extends CellSetResourceManager
 		return new HashMap<Integer, Scene>(scenes);
 	}
 	
-	protected Hashtable<Integer, Scene> readRPGScenes(String scene_path) throws Exception
+	final protected Hashtable<Integer, Scene> readRPGScenes(String scene_path) throws Exception
 	{
 		String scene_list = scene_path + "/scene.list";
 		
@@ -268,30 +292,83 @@ public class ResourceManager extends CellSetResourceManager
 		return table;
 	}
 	
+//	--------------------------------------------------------------------------------------------------------------------
+//	Icons
+//	--------------------------------------------------------------------------------------------------------------------
 	
-//	
+	final protected Hashtable<String, AtomicReference<BufferedImage>> readIcons(String icon_list)
+	{
+		System.out.println("list icons : " + icon_list);
+
+		Hashtable<String, AtomicReference<BufferedImage>> table = new Hashtable<String, AtomicReference<BufferedImage>>();
+		
+		String[] res_list = CIO.readAllLine(icon_list, "UTF-8");
+		
+		for (int i=0; i<res_list.length; i++)
+		{
+			String[] split 	= CUtil.splitString(res_list[i], ",");
+			String icon_id 	= split[0];
+			String icon_w 	= split[1];
+			String icon_h 	= split[2];
+			table.put(icon_id, new AtomicReference<BufferedImage>(null));
+			System.out.println("\tget icon : " + icon_id + "(" + icon_w + "x" + icon_h + ")");
+		}
+		
+		return table;
+	}
+
+	public BufferedImage getIcon(String index)
+	{
+		return all_icons.get(index).get();
+	}
+	
+//	--------------------------------------------------------------------------------------------------------------------
+//	sounds
 //	--------------------------------------------------------------------------------------------------------------------
 	
 
-	public BufferedImage getIcon(int index)
+	final protected Hashtable<String, AtomicReference<ISound>> readSounds(String sound_list)
 	{
-		return null;
+		System.out.println("list sounds : " + sound_list);
+
+		Hashtable<String, AtomicReference<ISound>> table = new Hashtable<String, AtomicReference<ISound>>();
+		
+		String[] res_list = CIO.readAllLine(sound_list, "UTF-8");
+		
+		for (int i=0; i<res_list.length; i++)
+		{
+			table.put(res_list[i].trim(), new AtomicReference<ISound>(null));
+			System.out.println("\tget sound : " + res_list[i]);
+		}
+		
+		return table;
+	}
+
+	public ISound getSound(String index)
+	{
+		return all_sounds.get(index).get();
 	}
 	
-
+	
+//	--------------------------------------------------------------------------------------------------------------------
+//	
+//	--------------------------------------------------------------------------------------------------------------------
 	
 	public static void main(String[] args) throws Exception 
 	{
-		try{
-			new ResourceManager(args[0], args[1], args[2], args[3], 
-					true);
-		} catch (Exception err) {
+		try
+		{
+			new ResourceManager(
+					args[0], 
+					args[1], 
+					true, true, true, true){};
+		}
+		catch (Exception err) 
+		{
 			new ResourceManager(
 					"D:/EatWorld/trunk/eatworld/data/edit/resource", 
 					"project.g2d.save", 
-					"icons", 
-					"sound", 
-					true);
+					true, true, true, true){};
 		}
 		
 	}
