@@ -79,10 +79,7 @@ public class CPJResourceManager extends ManagerForm
 		// actors
 		{
 			unit_root = new DefaultMutableTreeNode("单位模板");
-			ArrayList<CPJFile> files = CPJFile.listFile(path,
-					Config.RES_ACTOR_ROOT, 
-					Config.RES_ACTOR_CPJ_PREFIX, 
-					Config.RES_ACTOR_OUT_SUFFIX);
+			ArrayList<CPJFile> files = CPJFile.listFile(path, Config.RES_ACTOR_ROOT);
 			for (CPJFile file : files) {
 				file.loadAllSprite(CPJResourceType.ACTOR);
 				unit_root.add(file);
@@ -95,10 +92,7 @@ public class CPJResourceManager extends ManagerForm
 		// avatars
 		{
 			avatar_root = new DefaultMutableTreeNode("AVATAR模板");
-			ArrayList<CPJFile> files = CPJFile.listFile(path,
-					Config.RES_AVATAR_ROOT, 
-					Config.RES_AVATAR_CPJ_PREFIX, 
-					Config.RES_AVATAR_OUT_SUFFIX);
+			ArrayList<CPJFile> files = CPJFile.listFile(path, Config.RES_AVATAR_ROOT);
 			for (CPJFile file : files) {
 				file.loadAllSprite(CPJResourceType.AVATAR);
 				avatar_root.add(file);
@@ -111,10 +105,7 @@ public class CPJResourceManager extends ManagerForm
 		// effect
 		{
 			effect_root = new DefaultMutableTreeNode("特效模板");
-			ArrayList<CPJFile> files = CPJFile.listFile(path,
-					Config.RES_EFFECT_ROOT, 
-					Config.RES_EFFECT_CPJ_PREFIX, 
-					Config.RES_EFFECT_OUT_SUFFIX);
+			ArrayList<CPJFile> files = CPJFile.listFile(path, Config.RES_EFFECT_ROOT);
 			for (CPJFile file : files) {
 				file.loadAllSprite(CPJResourceType.EFFECT);
 				effect_root.add(file);
@@ -127,10 +118,7 @@ public class CPJResourceManager extends ManagerForm
 		// scenes
 		{
 			scene_root = new DefaultMutableTreeNode("场景模板");
-			ArrayList<CPJFile> files = CPJFile.listFile(path,
-					Config.RES_SCENE_ROOT, 
-					Config.RES_SCENE_CPJ_PREFIX, 
-					Config.RES_SCENE_OUT_SUFFIX);
+			ArrayList<CPJFile> files = CPJFile.listFile(path, Config.RES_SCENE_ROOT);
 			for (CPJFile file : files) {
 				file.loadAllWorld();
 				scene_root.add(file);
@@ -254,9 +242,7 @@ public class CPJResourceManager extends ManagerForm
 		StringBuffer list = new StringBuffer();
 		for (CPJObject<?> spr : objs){
 			list.append(
-					spr.parent.res_root + ";" + 
-					spr.parent.res_prefix + ";" + 
-					spr.parent.res_suffix + ";" +
+					spr.parent.getResourcePath() + ";" +
 					spr.parent.getName() + ";" + 
 					spr.getName() + "\n");
 		}

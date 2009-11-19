@@ -63,8 +63,12 @@ final public class SceneNode extends DynamicNode<Scene>
 	
 	@Override
 	protected ImageIcon createIcon() {
-		ImageIcon ico = getWorldDisplay().getIcon(false);
-		return Tools.createIcon(Tools.combianImage(60, 40, ico.getImage()));
+		if (getWorldDisplay()!=null) {
+			ImageIcon ico = getWorldDisplay().getIcon(false);
+			return Tools.createIcon(Tools.combianImage(60, 40, ico.getImage()));
+		} else {
+			return null;
+		}
 	}
 	
 	public CPJWorld getWorldDisplay() {

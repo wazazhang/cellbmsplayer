@@ -15,12 +15,12 @@ public class Builder
 	static String build_scene_bat;
 	static String build_sprite_bat;
 
-	public static void openCellGameEdit(File cpj_file) 
+	public static Process openCellGameEdit(File cpj_file) 
 	{
-		CellGameEditWrap.openCellGameEdit(Config.CELL_GAME_EDIT_CMD, cpj_file);
+		return CellGameEditWrap.openCellGameEdit(Config.CELL_GAME_EDIT_CMD, cpj_file);
 	}
 	
-	public static void buildSprite(File cpj_file_name)
+	public static Process buildSprite(File cpj_file_name)
 	{
 		try {
 			File output_properties = copyScript(cpj_file_name, "output.properties");
@@ -28,12 +28,14 @@ public class Builder
 					output_properties.getPath());
 			process.waitFor();
 			CFile.writeText(new File(cpj_file_name.getParentFile(), "build_sprite.bat"), build_sprite_bat, "UTF-8");
+			return process;
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
+		return null;
 	}
 	
-	public static void buildScene(File cpj_file_name)
+	public static Process buildScene(File cpj_file_name)
 	{
 		try {
 			File output_properties	= copyScript(cpj_file_name,	"output.properties");
@@ -49,9 +51,11 @@ public class Builder
 			process.waitFor();
 			cleanOutput(cpj_file_name);
 			CFile.writeText(new File(cpj_file_name.getParentFile(), "build_scene.bat"), build_scene_bat, "UTF-8");
+			return process;
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
+		return null;
 	}
 	
 	static private void cleanOutput(File cpj_file_name) 

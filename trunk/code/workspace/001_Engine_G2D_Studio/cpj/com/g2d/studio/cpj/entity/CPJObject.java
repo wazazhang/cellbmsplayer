@@ -73,6 +73,6 @@ public abstract class CPJObject <T extends CellSetObject> extends G2DTreeNode<CP
 		return false;
 	}
 	
-
+//	abstract void refreshObjects() ;
 
 }

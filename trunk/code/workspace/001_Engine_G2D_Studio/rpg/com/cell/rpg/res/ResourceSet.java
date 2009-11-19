@@ -15,7 +15,7 @@ public abstract class ResourceSet<T extends CellSetObject> implements Serializab
 	
 	final public String		cpj_name;
 	final public String		set_name;
-	final public String		resource_path;
+	final public String		resource_path; // output/xxx.properties
 	
 	transient private T		set_object;
 
@@ -23,17 +23,12 @@ public abstract class ResourceSet<T extends CellSetObject> implements Serializab
 	
 	ResourceSet(
 			String cpj_name, 
-			String set_name, 
-			String res_root,
-			String res_prefix, 
-			String res_suffix) throws Exception
+			String set_name,
+			String res_path) throws Exception
 	{
-		if (!cpj_name.startsWith(res_prefix)) {
-			throw new Exception("resource not validate, \"" + cpj_name + "\" must prefix in \"" + res_prefix + "\"");
-		}
 		this.cpj_name		= cpj_name;
 		this.set_name		= set_name;
-		this.resource_path	= res_root + "/" + cpj_name + "/" + res_suffix;
+		this.resource_path	= res_path;
 	}
 	
 	final public T getSetObject(ResourceManager manager) throws Exception {
@@ -71,10 +66,8 @@ public abstract class ResourceSet<T extends CellSetObject> implements Serializab
 		SceneSet(
 				String cpj_name, 
 				String set_name, 
-				String res_root,
-				String res_prefix, 
-				String res_suffix) throws Exception {
-			super(cpj_name, set_name, res_root, res_prefix, res_suffix);
+				String res_path) throws Exception {
+			super(cpj_name, set_name, res_path);
 		}
 		
 		@Override
@@ -94,10 +87,8 @@ public abstract class ResourceSet<T extends CellSetObject> implements Serializab
 		SpriteSet(
 				String cpj_name, 
 				String set_name, 
-				String res_root,
-				String res_prefix, 
-				String res_suffix) throws Exception {
-			super(cpj_name, set_name, res_root, res_prefix, res_suffix);
+				String res_path) throws Exception {
+			super(cpj_name, set_name, res_path);
 		}
 		
 		@Override
