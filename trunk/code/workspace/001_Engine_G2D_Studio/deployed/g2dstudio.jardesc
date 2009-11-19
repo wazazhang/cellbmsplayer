@@ -18,6 +18,7 @@
         <javaElement handleIdentifier="=000_Engine_Sound/ogg"/>
         <javaElement handleIdentifier="=001_Engine_G2D_Studio/gameedit"/>
         <javaElement handleIdentifier="=001_Engine_G2D_Studio/studio"/>
+        <javaElement handleIdentifier="=001_Engine_G2D_Studio/scripts"/>
         <javaElement handleIdentifier="=000_Engine_Core/j2se"/>
         <javaElement handleIdentifier="=000_Engine_G2D/g2d"/>
         <javaElement handleIdentifier="=000_Engine_G2D/j2se"/>
