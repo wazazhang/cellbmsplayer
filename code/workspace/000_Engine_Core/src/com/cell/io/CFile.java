@@ -5,7 +5,7 @@ import java.io.FileOutputStream;
 
 import com.cell.CObject;
 
-public class File 
+public class CFile 
 {
 
 	public static String readText(java.io.File file, String encoding)

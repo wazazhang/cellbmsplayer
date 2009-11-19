@@ -86,14 +86,35 @@ public class Studio extends AbstractFrame
 	private SceneManager			scene_manager;
 	
 	private Studio(String g2d_file) throws Throwable
-	{							
+	{
+//		System.out.println(Thread.currentThread().getContextClassLoader().getResource(""));
+//		System.out.println(getClass().getClassLoader().getResource(""));
+//		System.out.println(ClassLoader.getSystemResource(""));
+//		System.out.println(getClass().getResource(""));
+//		System.out.println(getClass().getResource("/"));
+//		System.out.println(new File("").getAbsolutePath());
+//		System.out.println(System.getProperty("user.dir"));
+		
+		instance 			= this;
+		
 		CObject.initSystem(
 			new CStorage("g2d_studio"), 
 			new CAppBridge(
 			this.getClass().getClassLoader(), 
 			this.getClass()));
+
+		project_file 		= new File(g2d_file);
+		project_path 		= new File(project_file.getParent());
+		project_save_path	= new File(project_file.getPath()+".save");
 		
 		Config.load(Config.class, g2d_file);
+		
+		root_icon_path		= getFile(Config.ICON_ROOT);
+		root_sound_path		= getFile(Config.SOUND_ROOT);
+		
+		xls_tunit			= getFile(Config.XLS_TUNIT);
+		xls_titem			= getFile(Config.XLS_TITEM);
+		xls_tskill			= getFile(Config.XLS_TSKILL);
 		
 		try{
 			JComponent.setDefaultLocale(Locale.CHINA);
@@ -103,25 +124,15 @@ public class Studio extends AbstractFrame
 		}
 		try{
 			sound_system = JALSoundManager.getInstance();
+			com.cell.sound.SoundManager.setSoundManager(sound_system);
 		}catch(Throwable tr) {			
 			tr.printStackTrace();
-			sound_system = new NullSoundManager();
+			sound_system = new NullSoundManager();		
+			com.cell.sound.SoundManager.setSoundManager(sound_system);
 		}			
-		com.cell.sound.SoundManager.setSoundManager(sound_system);
-		
-		instance 			= this;
-		
-		project_file 		= new File(g2d_file);
-		project_path 		= new File(project_file.getParent());
-		project_save_path	= new File(project_file.getPath()+".save");
 
-		root_icon_path		= getFile(Config.ICON_ROOT);
-		root_sound_path		= getFile(Config.SOUND_ROOT);
-		
-		xls_tunit			= getFile(Config.XLS_TUNIT);
-		xls_titem			= getFile(Config.XLS_TITEM);
-		xls_tskill			= getFile(Config.XLS_TSKILL);
-
+		System.out.println(System.setProperty("user.dir", project_path.getPath()));
+		System.out.println(System.getProperty("user.dir"));
 		
 		// sysetm init
 		ProgressForm progress_form = new ProgressForm();

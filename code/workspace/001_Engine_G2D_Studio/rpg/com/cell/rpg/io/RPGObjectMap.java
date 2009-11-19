@@ -117,7 +117,7 @@ public class RPGObjectMap<T extends RPGObject> extends Hashtable<String, T> //im
 			}
 		}
 		
-		com.cell.io.File.writeText(zip_info, info.toString(), "UTF-8");
+		com.cell.io.CFile.writeText(zip_info, info.toString(), "UTF-8");
 	}
 
 
@@ -152,7 +152,7 @@ public class RPGObjectMap<T extends RPGObject> extends Hashtable<String, T> //im
 				oos.close();
 			}
 			String xml = writer.toString();
-			com.cell.io.File.writeText(xml_file, xml, "UTF-8");
+			com.cell.io.CFile.writeText(xml_file, xml, "UTF-8");
 			return true;
 		} catch(Throwable ex) {
 			ex.printStackTrace();

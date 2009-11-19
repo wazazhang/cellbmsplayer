@@ -269,16 +269,16 @@ public class CPJResourceManager extends ManagerForm
 		save_dir.mkdirs();
 		
 		String actor_list = getList(G2DTree.getNodesSubClass(unit_root, CPJSprite.class));
-		com.cell.io.File.writeText(new File(save_dir, "actor_list.list"), actor_list, "UTF-8");
+		com.cell.io.CFile.writeText(new File(save_dir, "actor_list.list"), actor_list, "UTF-8");
 		
 		String effect_list = getList(G2DTree.getNodesSubClass(effect_root, CPJSprite.class));
-		com.cell.io.File.writeText(new File(save_dir, "effect_list.list"), effect_list, "UTF-8");
+		com.cell.io.CFile.writeText(new File(save_dir, "effect_list.list"), effect_list, "UTF-8");
 		
 		String avatar_list = getList(G2DTree.getNodesSubClass(avatar_root, CPJSprite.class));
-		com.cell.io.File.writeText(new File(save_dir, "avatar_list.list"), avatar_list, "UTF-8");
+		com.cell.io.CFile.writeText(new File(save_dir, "avatar_list.list"), avatar_list, "UTF-8");
 		
 		String scene_list = getList(G2DTree.getNodesSubClass(scene_root, CPJWorld.class));
-		com.cell.io.File.writeText(new File(save_dir, "scene_list.list"), scene_list, "UTF-8");
+		com.cell.io.CFile.writeText(new File(save_dir, "scene_list.list"), scene_list, "UTF-8");
 
 	}
 }

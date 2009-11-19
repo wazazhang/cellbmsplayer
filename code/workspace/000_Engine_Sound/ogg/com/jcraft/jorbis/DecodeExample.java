@@ -29,7 +29,7 @@ package com.jcraft.jorbis;
 import java.io.ByteArrayOutputStream;
 
 import com.cell.CIO;
-import com.cell.io.File;
+import com.cell.io.CFile;
 import com.jcraft.jogg.*;
 
 // Takes a vorbis bitstream from stdin and writes raw stereo PCM to
@@ -329,6 +329,6 @@ class DecodeExample{
     oy.clear();
     System.err.println("Done.");
     
-    File.wirteData(new java.io.File("./oggbin"), output.toByteArray());
+    CFile.wirteData(new java.io.File("./oggbin"), output.toByteArray());
   }
 }
