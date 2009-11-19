@@ -110,6 +110,6 @@ public class SoundManager extends ManagerForm implements ActionListener
 			sb.append(icon.getName()+"\n");
 		}
 		File save_file = new File(save_dir, "sound.list");
-		com.cell.io.File.writeText(save_file, sb.toString(), "UTF-8");
+		com.cell.io.CFile.writeText(save_file, sb.toString(), "UTF-8");
 	}
 }

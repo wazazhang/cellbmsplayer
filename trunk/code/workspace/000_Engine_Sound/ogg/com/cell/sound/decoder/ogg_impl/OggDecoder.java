@@ -8,7 +8,7 @@ import java.io.OutputStream;
 import java.nio.ByteBuffer;
 
 import com.cell.CIO;
-import com.cell.io.File;
+import com.cell.io.CFile;
 import com.cell.sound.Decoder;
 import com.cell.sound.SoundInfo;
 

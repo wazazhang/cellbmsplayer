@@ -37,4 +37,6 @@ public class Config extends com.cell.util.Config
 	
 	public static Integer DEFAULT_FPS				= 30;
 	
+	// windows
+	public static String CELL_GAME_EDIT_CMD			= "CellGameEdit.exe";
 }

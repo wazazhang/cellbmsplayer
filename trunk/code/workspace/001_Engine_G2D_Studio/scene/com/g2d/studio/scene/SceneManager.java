@@ -162,7 +162,7 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 			for (SceneNode node : getAllScenes()) {
 				all_scene.append(getPathString(node) + "\n");
 			}
-			com.cell.io.File.writeText(scene_list, all_scene.toString(), "UTF-8");
+			com.cell.io.CFile.writeText(scene_list, all_scene.toString(), "UTF-8");
 		}
 		System.out.println("save scene list");
 	}

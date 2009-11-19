@@ -74,6 +74,6 @@ public class IconManager extends ManagerForm
 			sb.append(icon.getName()+","+icon.image.getWidth()+","+icon.image.getHeight()+"\n");
 		}
 		File save_file = new File(save_dir, "icon.list");
-		com.cell.io.File.writeText(save_file, sb.toString(), "UTF-8");
+		com.cell.io.CFile.writeText(save_file, sb.toString(), "UTF-8");
 	}
 }
