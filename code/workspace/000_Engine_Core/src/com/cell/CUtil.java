@@ -2131,6 +2131,11 @@ public class CUtil extends CObject
 		return array[Math.abs(Random.nextInt()%array.length)] ;
 	}
 	
+	public static final long getRandom(long[] array)
+	{
+		return array[Math.abs(Random.nextInt()%array.length)] ;
+	}	
+	
 	public static final<T> T getRandom(T[] array)
 	{
 		if (array==null || array.length==0) return null;
