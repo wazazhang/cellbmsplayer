@@ -190,17 +190,15 @@ public abstract class ResourceManager extends CellSetResourceManager
 		for (int i=0; i<res_list.length; i++)
 		{
 			String[] split = CUtil.splitString(res_list[i], ";");
-			String res_root		= split[0];
-			String res_prefix	= split[1];
-			String res_suffix	= split[2];
-			String cpj_name 	= split[3];
-			String obj_name 	= split[4];
-
+			String res_path		= split[0];
+			String cpj_name 	= split[1];
+			String obj_name 	= split[2];
+			
 			T set = null;
 			if (type.equals(SceneSet.class)) {
-				set = type.cast(new SceneSet(cpj_name, obj_name, res_root, res_prefix, res_suffix));
+				set = type.cast(new SceneSet(cpj_name, obj_name, res_path));
 			} else if (type.equals(SpriteSet.class)) {
-				set = type.cast(new SpriteSet(cpj_name, obj_name, res_root, res_prefix, res_suffix));
+				set = type.cast(new SpriteSet(cpj_name, obj_name, res_path));
 			}
 			
 			System.out.println("\tget " + type.getSimpleName() + " : " + cpj_name + "(" + obj_name + ")");
