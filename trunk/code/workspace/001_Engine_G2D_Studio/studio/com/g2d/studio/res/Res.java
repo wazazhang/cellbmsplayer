@@ -10,6 +10,7 @@ public class Res {
 	static public BufferedImage	icon_edit	= Tools.readImage("/com/g2d/studio/res/icon_edit.png");
 	static public BufferedImage	icon_error	= Tools.readImage("/com/g2d/studio/res/icon_error.png");
 	static public BufferedImage icon_hd		= Tools.readImage("/com/g2d/studio/res/icon_hd.png");
+	static public BufferedImage	icon_grid	= Tools.readImage("/com/g2d/studio/res/icon_grid.png");
 	
 	static public BufferedImage	icon_res_1	= Tools.readImage("/com/g2d/studio/res/icon_res_1.png");
 	static public BufferedImage	icon_res_2	= Tools.readImage("/com/g2d/studio/res/icon_res_2.png");

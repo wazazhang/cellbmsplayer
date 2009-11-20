@@ -562,13 +562,11 @@ public abstract class DisplayObject extends DObject implements Comparable<Displa
 			Shape			clip		= g.getClip();
 			AffineTransform	transfrom	= g.getTransform();
 			Composite		composite	= g.getComposite();
-			{
+			try {
 				g.translate(x, y);
-			
 				if (clip_local_bounds) {
 					g.clip(local_bounds);
 				}
-
 				boolean hit_mouse_clip = g.hitClip(mouse_x, mouse_y, 1, 1);
 				if (hit_mouse && hit_mouse_clip && testCatchMouse(g)) {
 					catched_mouse = true;
@@ -576,22 +574,16 @@ public abstract class DisplayObject extends DObject implements Comparable<Displa
 				} else {
 					catched_mouse = false;
 				}
-				
-//				transfrom.transform(ptSrc, ptDst);
-				
 				this.renderBefore(g);
-
 				this.render(g);
-				
 				this.renderDebug(g);
-				
 				this.renderInteractive(g);
-				
 				this.renderAfter(g);
+			} finally {
+				g.setComposite(composite);
+				g.setTransform(transfrom);
+				g.setClip(clip);
 			}
-			g.setComposite(composite);
-			g.setTransform(transfrom);
-			g.setClip(clip);
 		}
 	}
 	
