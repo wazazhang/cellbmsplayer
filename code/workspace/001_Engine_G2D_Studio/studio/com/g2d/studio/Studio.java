@@ -11,6 +11,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -67,6 +69,8 @@ public class Studio extends AbstractFrame
 	
 	com.cell.sound.SoundManager		sound_system;
 	
+//	final private FileOutputStream	project_lock;
+	
 	final public File 				project_path;
 	final public File 				project_file;
 	final public File				project_save_path;
@@ -108,6 +112,10 @@ public class Studio extends AbstractFrame
 		project_save_path	= new File(project_file.getPath()+".save");
 		
 		Config.load(Config.class, g2d_file);
+
+//		project_lock		= new FileOutputStream(g2d_file, true);
+		
+		Runtime.getRuntime().addShutdownHook(new ShutdownHook());
 		
 		root_icon_path		= getFile(Config.ICON_ROOT);
 		root_sound_path		= getFile(Config.SOUND_ROOT);
@@ -148,7 +156,7 @@ public class Studio extends AbstractFrame
 			this.setLocation(0, 0);
 			this.setLayout(new BorderLayout());
 
-			new SetResourceManager();
+//			new SetResourceManager();
 
 			initToolBar(progress_form);
 			
@@ -333,7 +341,23 @@ public class Studio extends AbstractFrame
 			ex.printStackTrace();
 		}
 	}
+
+//	----------------------------------------------------------------------------------------------------------------
 	
+	class ShutdownHook extends Thread
+	{
+		@Override
+		public void run() {
+//			try {
+//				project_lock.close();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+		}
+		
+	}
+	
+
 //	----------------------------------------------------------------------------------------------------------------
 //	ui action
 	
@@ -388,15 +412,15 @@ public class Studio extends AbstractFrame
 //	----------------------------------------------------------------------------------------------------------------
 //	resource manager
 	
-	public class SetResourceManager extends CellSetResourceManager
-	{
-		public SetResourceManager() {}
-		@Override
-		public StudioResource createSet(String setPath) throws Exception {
-			return new StudioResource(project_path.getPath() + "/" + setPath, setPath);
-		}
-		
-	}
+//	public class SetResourceManager extends CellSetResourceManager
+//	{
+//		public SetResourceManager() {}
+//		@Override
+//		public StudioResource createSet(String setPath) throws Exception {
+//			return new StudioResource(project_path.getPath() + "/" + setPath, setPath);
+//		}
+//		
+//	}
 	
 //	----------------------------------------------------------------------------------------------------------------
 //	main entry

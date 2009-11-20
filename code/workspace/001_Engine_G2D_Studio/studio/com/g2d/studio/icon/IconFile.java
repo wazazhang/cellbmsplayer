@@ -4,13 +4,7 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
 
-import com.cell.util.MarkedHashtable;
 import com.g2d.Tools;
-import com.g2d.studio.Studio;
-import com.g2d.studio.cpj.CPJIndex;
-import com.g2d.studio.cpj.CPJResourceType;
-import com.g2d.studio.cpj.entity.CPJSprite;
-import com.g2d.studio.res.Res;
 import com.g2d.studio.swing.G2DListItem;
 
 public class IconFile implements G2DListItem
