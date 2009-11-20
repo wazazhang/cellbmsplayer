@@ -122,7 +122,18 @@ public class Builder
 	{
 //		build(null);
 		CAppBridge.init();
+		
+		if (args != null && args.length > 1) {
+			String arg_0 = args[0].toLowerCase().trim();
+			String arg_1 = args[1].toLowerCase().trim();
+			if (arg_1.equals("scene")) {
+				buildScene(new File(arg_0));
+			} else {
+				buildSprite(new File(arg_0));
+			}
+		}
+		
 //		openCellGameEdit(new File("D:\\EatWorld\\trunk\\eatworld\\data\\edit\\resource\\scene\\scene_000000\\scene.cpj"));
-		buildScene(new File("D:\\EatWorld\\trunk\\eatworld\\data\\edit\\resource\\scene\\scene_000000\\scene.cpj"));
+//		buildScene(new File("D:\\EatWorld\\trunk\\eatworld\\data\\edit\\resource\\scene\\scene_000000\\scene.cpj"));
 	}
 }
