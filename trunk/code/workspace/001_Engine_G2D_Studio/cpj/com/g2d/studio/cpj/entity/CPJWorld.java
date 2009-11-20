@@ -13,7 +13,7 @@ import com.g2d.studio.cpj.CPJResourceType;
 
 public class CPJWorld extends CPJObject<WorldSet>
 {	
-	Scene scene; 
+//	Scene scene; 
 	
 	public CPJWorld(CPJFile parent, String name) {
 		super(parent, name, WorldSet.class, CPJResourceType.WORLD);
@@ -21,10 +21,11 @@ public class CPJWorld extends CPJObject<WorldSet>
 	
 	@Override
 	public Scene getDisplayObject() {
-		if (scene==null) {
-			scene = new Scene(parent.getSetResource(), name);
-		}
-		return scene;
+//		if (scene==null) {
+//			scene = new Scene(parent.getSetResource(), name);
+//		}
+//		return scene;
+		return null;
 	}
 	
 	@Override

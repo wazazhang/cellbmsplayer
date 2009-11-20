@@ -10,6 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -25,8 +27,10 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -35,6 +39,7 @@ import javax.swing.JToggleButton;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 
 import com.g2d.SimpleCanvasNoInternal;
 import com.g2d.Tools;
@@ -56,13 +61,13 @@ import com.g2d.studio.swing.G2DTreeNode;
 import com.g2d.studio.res.Res;
 import com.g2d.util.AbstractFrame;
 
-public class CPJResourceManager extends ManagerForm
+public class CPJResourceManager extends ManagerForm implements MouseListener
 {
 	private static final long serialVersionUID = 1L;
 
 //	----------------------------------------------------------------------------------------------------------------------------
 
-	CPJSpriteViewer sprite_viewer = new CPJSpriteViewer();
+//	CPJSpriteViewer sprite_viewer = new CPJSpriteViewer();
 	
 	DefaultMutableTreeNode unit_root;
 	DefaultMutableTreeNode avatar_root;
@@ -79,12 +84,12 @@ public class CPJResourceManager extends ManagerForm
 		// actors
 		{
 			unit_root = new DefaultMutableTreeNode("单位模板");
-			ArrayList<CPJFile> files = CPJFile.listFile(path, Config.RES_ACTOR_ROOT);
+			ArrayList<CPJFile> files = CPJFile.listFile(path, Config.RES_ACTOR_ROOT, CPJResourceType.ACTOR);
 			for (CPJFile file : files) {
-				file.loadAllSprite(CPJResourceType.ACTOR);
 				unit_root.add(file);
 			}
 			G2DTree tree = new G2DTree(unit_root);
+			tree.addMouseListener(this);
 			JScrollPane scroll = new JScrollPane(tree);	
 			scroll.setVisible(true);
 			table.addTab("单位", Tools.createIcon(Res.icon_res_2), scroll);
@@ -92,12 +97,12 @@ public class CPJResourceManager extends ManagerForm
 		// avatars
 		{
 			avatar_root = new DefaultMutableTreeNode("AVATAR模板");
-			ArrayList<CPJFile> files = CPJFile.listFile(path, Config.RES_AVATAR_ROOT);
+			ArrayList<CPJFile> files = CPJFile.listFile(path, Config.RES_AVATAR_ROOT, CPJResourceType.AVATAR);
 			for (CPJFile file : files) {
-				file.loadAllSprite(CPJResourceType.AVATAR);
 				avatar_root.add(file);
 			}
 			G2DTree tree = new G2DTree(avatar_root);
+			tree.addMouseListener(this);
 			JScrollPane scroll = new JScrollPane(tree);	
 			scroll.setVisible(true);
 			table.addTab("AVATAR", Tools.createIcon(Res.icon_res_4), scroll);
@@ -105,12 +110,12 @@ public class CPJResourceManager extends ManagerForm
 		// effect
 		{
 			effect_root = new DefaultMutableTreeNode("特效模板");
-			ArrayList<CPJFile> files = CPJFile.listFile(path, Config.RES_EFFECT_ROOT);
+			ArrayList<CPJFile> files = CPJFile.listFile(path, Config.RES_EFFECT_ROOT, CPJResourceType.EFFECT);
 			for (CPJFile file : files) {
-				file.loadAllSprite(CPJResourceType.EFFECT);
 				effect_root.add(file);
 			}
 			G2DTree tree = new G2DTree(effect_root);
+			tree.addMouseListener(this);
 			JScrollPane scroll = new JScrollPane(tree);	
 			scroll.setVisible(true);
 			table.addTab("魔法效果/特效", Tools.createIcon(Res.icon_res_3), scroll);
@@ -118,12 +123,12 @@ public class CPJResourceManager extends ManagerForm
 		// scenes
 		{
 			scene_root = new DefaultMutableTreeNode("场景模板");
-			ArrayList<CPJFile> files = CPJFile.listFile(path, Config.RES_SCENE_ROOT);
+			ArrayList<CPJFile> files = CPJFile.listFile(path, Config.RES_SCENE_ROOT, CPJResourceType.WORLD);
 			for (CPJFile file : files) {
-				file.loadAllWorld();
 				scene_root.add(file);
 			}
 			G2DTree tree = new G2DTree(scene_root);
+			tree.addMouseListener(this);
 			JScrollPane scroll = new JScrollPane(tree);	
 			scroll.setVisible(true);
 			table.addTab("场景", Tools.createIcon(Res.icon_res_1), scroll);
@@ -197,26 +202,50 @@ public class CPJResourceManager extends ManagerForm
 	
 //	----------------------------------------------------------------------------------------------------------------------------
 	
-	public CPJSpriteViewer getSpriteViewer() {
-		return sprite_viewer;
-	}
-	
-	public class CPJSpriteViewer extends JFrame
-	{
-		private static final long serialVersionUID = 1L;
-		
-		DisplayObjectPanel viewer = new DisplayObjectPanel();
-		
-		CPJSpriteViewer() {
-			super.setSize(400, 400);
-			add(viewer);
+//	public CPJSpriteViewer getSpriteViewer() {
+//		return sprite_viewer;
+//	}
+//	
+//	public class CPJSpriteViewer extends JFrame
+//	{
+//		private static final long serialVersionUID = 1L;
+//		
+//		DisplayObjectPanel viewer = new DisplayObjectPanel();
+//		
+//		CPJSpriteViewer() {
+//			super.setSize(400, 400);
+//			add(viewer);
+//		}
+//		
+//		public DisplayObjectPanel getViewer() {
+//			return viewer;
+//		}
+//	}
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		if (e.getButton() == MouseEvent.BUTTON3) {
+			if (e.getSource() instanceof G2DTree) {
+				G2DTree tree = (G2DTree)e.getSource();
+				try{
+					DefaultMutableTreeNode root = (DefaultMutableTreeNode)tree.getModel().getRoot();
+					TreePath path = tree.getPathForLocation(e.getX(), e.getY());
+					if (tree.getSelectedNode() == root &&
+						path.getLastPathComponent() == root) {
+						new RootMenu(tree, root).show(tree, e.getX(), e.getY());
+					}
+				}catch(Exception err){}
+			}
 		}
-		
-		public DisplayObjectPanel getViewer() {
-			return viewer;
-		}
 	}
-	
+	@Override
+	public void mouseEntered(MouseEvent e) {}
+	@Override
+	public void mouseExited(MouseEvent e) {}
+	@Override
+	public void mousePressed(MouseEvent e) {}
+	@Override
+	public void mouseReleased(MouseEvent e) {}
+
 //	----------------------------------------------------------------------------------------------------------------------------
 
 	public CPJResourceList<?> createObjectsPanel(CPJResourceType type)
@@ -267,4 +296,76 @@ public class CPJResourceManager extends ManagerForm
 		com.cell.io.CFile.writeText(new File(save_dir, "scene_list.list"), scene_list, "UTF-8");
 
 	}
+
+//	----------------------------------------------------------------------------------------------------------------------------
+	
+	class RootMenu extends JPopupMenu implements ActionListener
+	{
+		private static final long serialVersionUID = 1L;
+		
+		G2DTree tree;
+		DefaultMutableTreeNode root;
+		
+		JMenuItem	refresh_all		= new JMenuItem("刷新所有");
+		JMenuItem	build_all		= new JMenuItem("编译所有");
+		
+		public RootMenu(G2DTree tree, DefaultMutableTreeNode root) {
+			this.tree = tree;
+			this.root = root;
+			refresh_all.addActionListener(this);
+			build_all.addActionListener(this);
+			this.add(refresh_all);
+			this.add(build_all);
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (e.getSource() == refresh_all) {
+				Enumeration<?> childs = root.children();
+				while (childs.hasMoreElements()) {
+					Object obj = childs.nextElement();
+					if (obj instanceof CPJFile) {
+						CPJFile file = (CPJFile)obj;
+						file.refresh();
+					}
+				}
+				tree.reload(root);
+			}
+			else if (e.getSource() == build_all) {
+				Enumeration<?> childs = root.children();
+				while (childs.hasMoreElements()) {
+					Object obj = childs.nextElement();
+					if (obj instanceof CPJFile) {
+						CPJFile file = (CPJFile)obj;
+						file.rebuild();
+					}
+				}
+			}
+		}
+	}
+	
+	
+
+//	----------------------------------------------------------------------------------------------------------------------------
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
