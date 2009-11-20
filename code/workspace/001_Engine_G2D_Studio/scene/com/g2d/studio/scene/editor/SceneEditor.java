@@ -86,7 +86,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 	private G2DWindowToolBar	tool_bar;
 	private JToggleButton		tool_selector	= new JToggleButton(Tools.createIcon(Res.icons_bar[0]), true);
 	private JToggleButton		tool_addactor	= new JToggleButton(Tools.createIcon(Res.icons_bar[8]));
-	
+	private JToggleButton		tool_show_grid	= new JToggleButton(Tools.createIcon(Res.icon_grid));
 	private JTabbedPane			unit_page;
 //	private SceneUnitTagAdapter<SceneActor>		page_actors;
 //	private SceneUnitTagAdapter<SceneRegion>	page_regions;
@@ -116,12 +116,17 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 			tool_bar = new G2DWindowToolBar(this);
 			tool_selector.setToolTipText("选择");
 			tool_addactor.setToolTipText("添加");
+			tool_addactor.addActionListener(this);
 			tool_bar.add(tool_selector);
 			tool_bar.add(tool_addactor);
 			ButtonGroup button_group = new ButtonGroup();
 			button_group.add(tool_selector);
 			button_group.add(tool_addactor);
-			tool_addactor.addActionListener(this);
+			tool_bar.addSeparator();
+			
+			tool_show_grid.setToolTipText("显示碰撞");
+			tool_show_grid.addActionListener(this);
+			tool_bar.add(tool_show_grid);
 		}
 		this.add(tool_bar, BorderLayout.NORTH);
 		
@@ -256,6 +261,9 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 			if (isToolAdd() && getSelectedPage().isShowSelectUnitTool()){
 				SelectUnitTool.getUnitTool().setVisible(true);
 			}
+		}
+		else if (e.getSource() == tool_show_grid) {
+			scene_container.getWorld().setDebug(tool_show_grid.isSelected());
 		}
 	}
 

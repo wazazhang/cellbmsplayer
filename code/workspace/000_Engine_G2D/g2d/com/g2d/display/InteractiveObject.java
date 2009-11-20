@@ -249,9 +249,9 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 					return processMouseWheelEvent((MouseWheelEvent) event);
 				} else if (event instanceof MouseEvent) {
 					boolean ret = processMouseEvent((MouseEvent) event);
-					if (ret) {
-						System.out.println("f object = " + toString());
-					}
+//					if (ret) {
+//						System.out.println("f object = " + toString());
+//					}
 					return ret;
 				} else if (event instanceof KeyEvent) {
 					return processKeyEvent((KeyEvent) event);
@@ -387,6 +387,7 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 		Shape			clip		= g.getClip();
 		AffineTransform	transfrom	= g.getTransform();
 		Composite		composite	= g.getComposite();
+		try
 		{
 			float tx = stage.mouse_x - (getWidth()>>1)  * stage.drag_drop_scale_x;
 			float ty = stage.mouse_y - (getHeight()>>1) * stage.drag_drop_scale_y;
@@ -402,10 +403,14 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 			this.renderAfter(g);
 			
 			stage.getRoot().setCursor(getCursor());
+		} 
+		finally 
+		{
+			g.setComposite(composite);
+			g.setTransform(transfrom);
+			g.setClip(clip);
 		}
-		g.setComposite(composite);
-		g.setTransform(transfrom);
-		g.setClip(clip);
+
 	}
 	
 //	-----------------------------------------------------------------------------------------------------------------
@@ -549,15 +554,16 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 		{
 			pushObject(g.getClip());
 			pushObject(g.getStroke());
-			{
+			try{
 				Rectangle start_rect = mouse_draged_event.getUserData();			
 				g.setClip(start_rect.x, start_rect.y, start_rect.width+1, start_rect.height+1);
 				g.setColor(Color.WHITE);
 				g.setStroke(new BasicStroke(drag_border_size));
 				g.draw(start_rect);
+			}finally{
+				g.setStroke(popObject(Stroke.class));
+				g.setClip(popObject(Shape.class));
 			}
-			g.setStroke(popObject(Stroke.class));
-			g.setClip(popObject(Shape.class));
 			
 			setDragCursor(mouse_draged_event.user_tag);
 		}

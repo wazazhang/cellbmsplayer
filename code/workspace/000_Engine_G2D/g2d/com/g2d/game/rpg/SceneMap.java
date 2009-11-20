@@ -1,6 +1,7 @@
 package com.g2d.game.rpg;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
@@ -137,7 +138,6 @@ public abstract class SceneMap extends DisplayObjectContainer implements Astar.A
 
 	@Override
 	public void setDebug(boolean d) {
-		super.setDebug(d);
 		showDebugGrid(d);
 	}
 
@@ -279,14 +279,37 @@ public abstract class SceneMap extends DisplayObjectContainer implements Astar.A
 		
 		public void render(Graphics2D g) 
 		{
-			for (int y=world_grid_y_size-1; y>=0; --y){
-				for (int x=world_grid_x_size-1; x>=0; --x){
-					if (grid_matrix[x][y] != 0){
-						g.setColor(new Color(grid_matrix[x][y], true));
-						g.drawRect(x*gridW, y*gridH, gridW, gridH);
-						Drawing.drawString(g, x+","+y, x*gridW, y*gridH);
+			if (owner_scene == null) {
+				return;
+			}
+			Font src_font 	= g.getFont();
+			try
+			{
+				Color font_color = Color.WHITE;
+				Font font = new Font(src_font.getName(), src_font.getStyle(), 10);
+				g.setFont(font);
+				int sx = CMath.cycMod((int)owner_scene.getCameraX(), gridW);
+				int sy = CMath.cycMod((int)owner_scene.getCameraY(), gridH);
+				int dx = sx + owner_scene.getCameraWidth() / gridW + 1;
+				int dy = sy + owner_scene.getCameraHeight()/ gridH + 1;
+				for (int y = sy; y < dy; y++) {
+					for (int x = sx; x < dx; x++) {
+						if (CMath.includeRectPoint2(0, 0, world_grid_x_size, world_grid_y_size, x, y)) {
+							if (grid_matrix[x][y] != 0){
+								int rx = x * gridW;
+								int ry = y * gridH;
+								g.setColor(new Color(grid_matrix[x][y], true));
+								g.drawRect(rx, ry, gridW, gridH);
+								g.setColor(font_color);
+								Drawing.drawString(g, x + "," + y, rx + 2, ry + 2);
+							}
+						}
 					}
 				}
+			}
+			finally
+			{
+				g.setFont(src_font);
 			}
 		}
 	}
