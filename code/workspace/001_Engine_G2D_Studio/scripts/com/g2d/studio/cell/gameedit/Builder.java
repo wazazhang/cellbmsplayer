@@ -120,9 +120,10 @@ public class Builder
 	
 	public static void main(String[] args)
 	{
+		System.err.close();
+		System.out.close();
 //		build(null);
 		CAppBridge.init();
-		
 		if (args != null && args.length > 1) {
 			String arg_0 = args[0].toLowerCase().trim();
 			String arg_1 = args[1].toLowerCase().trim();
