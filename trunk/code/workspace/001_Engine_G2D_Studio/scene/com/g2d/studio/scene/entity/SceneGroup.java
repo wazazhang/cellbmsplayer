@@ -1,68 +1,59 @@
 package com.g2d.studio.scene.entity;
 
-import java.util.Enumeration;
-import java.util.Vector;
+import java.io.File;
 
-import javax.swing.ImageIcon;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.MutableTreeNode;
+import com.cell.rpg.scene.Scene;
+import com.g2d.studio.Studio;
+import com.g2d.studio.gameedit.entity.ObjectGroup;
+import com.g2d.studio.scene.SceneManager;
+import com.g2d.studio.swing.G2DTreeNodeGroup;
 
-import com.g2d.studio.scene.entity.SceneNode;
-import com.g2d.studio.swing.G2DTreeNode;
-
-public class SceneGroup extends DefaultMutableTreeNode
+public class SceneGroup extends G2DTreeNodeGroup<SceneNode>
 {
 	private static final long serialVersionUID = 1L;
 	
-	private String name ;
-	
 	public SceneGroup(String name) {
 		super(name);
-		this.name = name;
-		this.children = new Vector();
 	}
 	
 	@Override
-	public String toString() {
-		return name;
+	protected G2DTreeNodeGroup<?> createGroupNode(String name) {
+		return new SceneGroup(name);
 	}
 	
 	@Override
-	public void add(MutableTreeNode newChild) {
-		if (newChild instanceof SceneGroup) {
-			if (findChild(newChild.toString())!=null) {
-				throw new IllegalStateException("duplicate child ! " + newChild);
+	protected boolean addLeafNode(String name) {
+		if (name.endsWith(".xml")) {
+			SceneManager manager = SceneManager.getInstance();
+			File scene_dir = manager.scene_dir;
+			File file = new File(scene_dir, name);
+			if (file.exists()) {
+				manager.addScene(file, this);
+				return true;
 			}
 		}
-		super.add(newChild);
+		return false;
 	}
 	
-	public boolean setName(String name) {
-		if (getParent()!=null) {
-			Enumeration<?> childs = getParent().children();
-			while (childs.hasMoreElements()) {
-				Object obj = childs.nextElement();
-				if (obj instanceof SceneGroup) {
-					if (obj.toString().equals(name)) {
-						System.err.println("duplicate tree node name !");
-						return false;
-					}
-				}
-			}
-		}
-		this.userObject = name;
-		this.name = name;
-		return true;
-	}
+//	@Override
+//	protected boolean createObjectNode(String key, Scene data) {
+//		SceneManager manager = SceneManager.getInstance();
+//		manager.addScene(file, this);
+//		return false;
+//	}
+//	
+//	@Override
+//	protected boolean addSubNode(String name) {
+//		if (name.endsWith(".xml")) {
+//			SceneManager manager = SceneManager.getInstance();
+//			File scene_dir = manager.scene_dir;
+//			File file = new File(scene_dir, name);
+//			if (file.exists()) {
+//				manager.addScene(file, this);
+//				return true;
+//			}
+//		}
+//		return false;
+//	}
 	
-	public SceneGroup findChild(String name) {
-		for (Object obj : children) {
-			if (obj instanceof SceneGroup) {
-				if (obj.toString().equals(name)) {
-					return (SceneGroup)obj;
-				}
-			}
-		}
-		return null;
-	}
 }

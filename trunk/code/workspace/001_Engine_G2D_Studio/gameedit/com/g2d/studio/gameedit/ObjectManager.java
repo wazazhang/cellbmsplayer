@@ -55,6 +55,9 @@ import com.cell.rpg.template.TAvatar;
 import com.cell.rpg.template.TItem;
 import com.cell.rpg.template.TSkill;
 import com.cell.rpg.template.TUnit;
+import com.cell.rpg.template.TemplateNode;
+import com.cell.rpg.xls.XLSFullRow;
+import com.cell.util.IDFactoryInteger;
 import com.g2d.Tools;
 import com.g2d.studio.Config;
 import com.g2d.studio.ManagerForm;
@@ -66,6 +69,8 @@ import com.g2d.studio.cpj.entity.CPJFile;
 import com.g2d.studio.cpj.entity.CPJObject;
 import com.g2d.studio.cpj.entity.CPJSprite;
 import com.g2d.studio.gameedit.dynamic.DAvatar;
+import com.g2d.studio.gameedit.dynamic.DynamicNode;
+import com.g2d.studio.gameedit.entity.ObjectGroup;
 import com.g2d.studio.gameedit.entity.ObjectNode;
 import com.g2d.studio.gameedit.template.XLSItem;
 import com.g2d.studio.gameedit.template.XLSUnit;
@@ -86,7 +91,7 @@ public class ObjectManager extends ManagerForm implements ActionListener
 
 	G2DWindowToolBar toolbar = new G2DWindowToolBar(this);
 	
-	final public File zip_dir;
+	final public File objects_dir;
 	
 	final ObjectTreeView<XLSUnit, TUnit> 			tree_units_view;
 	final ObjectTreeView<XLSItem, TItem> 			tree_items_view;
@@ -102,32 +107,30 @@ public class ObjectManager extends ManagerForm implements ActionListener
 		this.add(toolbar, BorderLayout.NORTH);
 		
 		JTabbedPane table = new JTabbedPane();
-		zip_dir = new File(Studio.getInstance().project_save_path.getPath() + File.separatorChar +"objects");
+		objects_dir = new File(Studio.getInstance().project_save_path.getPath() + File.separatorChar +"objects");
 		
 		// ------------ xls template ------------ //
 		{
-			tree_units_view = new ObjectTreeView<XLSUnit, TUnit>("单位模板", XLSUnit.class, TUnit.class, 
-					new File(zip_dir, "tunit.obj"), studio.xls_tunit);
+			tree_units_view = new ObjectTreeViewTemplate<XLSUnit, TUnit>("单位模板", XLSUnit.class, TUnit.class, 
+					new File(objects_dir, "tunit.obj/tunit.list"), studio.xls_tunit);
 			table.addTab("单位", Tools.createIcon(Res.icon_res_2), tree_units_view);
 			table.addChangeListener(tree_units_view);
 		}{
-			tree_items_view = new ObjectTreeView<XLSItem, TItem>("道具模板", XLSItem.class, TItem.class, 
-					new File(zip_dir, "titem.obj"), studio.xls_titem);
+			tree_items_view = new ObjectTreeViewTemplate<XLSItem, TItem>("道具模板", XLSItem.class, TItem.class, 
+					new File(objects_dir, "titem.obj/titem.list"), studio.xls_titem);
 			table.addTab("物品", Tools.createIcon(Res.icon_res_4), tree_items_view);
 			table.addChangeListener(tree_items_view);
 		}{
-			tree_skills_view = new ObjectTreeView<XLSSkill, TSkill>("技能模板", XLSSkill.class, TSkill.class, 
-					new File(zip_dir, "tskill.obj"), studio.xls_tskill);
+			tree_skills_view = new ObjectTreeViewTemplate<XLSSkill, TSkill>("技能模板", XLSSkill.class, TSkill.class, 
+					new File(objects_dir, "tskill.obj/tskill.list"), studio.xls_tskill);
 			table.addTab("技能", Tools.createIcon(Res.icon_res_3), tree_skills_view);
 			table.addChangeListener(tree_skills_view);
 		}
 		// ------------ dynamic ------------ //
 		{	// DAvatar
-			tree_avatars_view = new ObjectTreeViewDynamic<DAvatar, TAvatar>("AVATAR", DAvatar.class, TAvatar.class, 
-					new File(zip_dir, "tavatar.obj"));
+			tree_avatars_view = new AvatarTreeView("AVATAR", new File(objects_dir, "tavatar.obj/tavatar.list"));
 			table.addTab("AVATAR", Tools.createIcon(Res.icon_res_4), tree_avatars_view);
 			table.addChangeListener(tree_avatars_view);
-			tree_avatars_view.getTree().addMouseListener(new AvatarRootMouseAdapter());
 		}
 			
 		this.add(table, BorderLayout.CENTER);
@@ -150,11 +153,11 @@ public class ObjectManager extends ManagerForm implements ActionListener
 	public <T extends ObjectNode<?>> T getObject(Class<T> type, String id)
 	{
 		if (type.equals(XLSUnit.class)) {
-			return type.cast(tree_units_view.getObject(id));
+			return type.cast(tree_units_view.getNode(Integer.parseInt(id)));
 		} else if (type.equals(XLSItem.class)) {
-			return type.cast(tree_items_view.getObject(id));
+			return type.cast(tree_items_view.getNode(Integer.parseInt(id)));
 		} else if (type.equals(XLSSkill.class)) {
-			return type.cast(tree_skills_view.getObject(id));
+			return type.cast(tree_skills_view.getNode(Integer.parseInt(id)));
 		} else {
 			return null;
 		}
@@ -189,96 +192,8 @@ public class ObjectManager extends ManagerForm implements ActionListener
 
 	
 //	-------------------------------------------------------------------------------------------------------------------------------
-//	
-	class AvatarRootMouseAdapter extends MouseAdapter
-	{
-		// right click avatar root node
-		public void mouseClicked(MouseEvent e) {
-			if (e.getButton() == MouseEvent.BUTTON3) {
-				TreePath path = tree_avatars_view.getTree().getPathForLocation(e.getX(), e.getY());
-				if (path != null) {
-					Object click_node = path.getLastPathComponent();
-					if (tree_avatars_view.getTreeRoot() == click_node) {
-						AvatarRootMenu menu = new AvatarRootMenu();
-						menu.show(tree_avatars_view.getTree(), e.getX(), e.getY());
-					}
-				}
-			}
-		}
-	}
 	
-	class AvatarRootMenu extends JPopupMenu implements ActionListener
-	{
-		private static final long serialVersionUID = 1L;
-		
-		JMenuItem add_avatar = new JMenuItem("添加AVATAR");
-		
-		public AvatarRootMenu() {
-			add_avatar.addActionListener(this);
-			add(add_avatar);
-		}
-		
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			if (e.getSource() == add_avatar) {
-				AvatarAddDialog dialog = new AvatarAddDialog();
-				CPJSprite spr = dialog.showDialog();
-				if (spr!=null) {
-					DAvatar avatar = new DAvatar(
-							tree_avatars_view, 
-							dialog.getAvatarName(),
-							Studio.getInstance().getCPJResourceManager().getNodeIndex(spr));
-					tree_avatars_view.addNode(avatar);
-				}
-			}
-		}
-	}
-	
-	class AvatarAddDialog extends CPJResourceSelectDialog<CPJSprite>
-	{
-		private static final long serialVersionUID = 1L;
-		
-		TextField text = new TextField();
-		
-		public AvatarAddDialog() {
-			super(ObjectManager.this, CPJResourceType.ACTOR);
-			JPanel panel = new JPanel(new BorderLayout());
-			panel.add(new JLabel(" 输入AVATAR名字 "), BorderLayout.WEST);
-			panel.add(text, BorderLayout.CENTER);
-			super.add(panel, BorderLayout.NORTH);
-		}
-		
-		public String getAvatarName() {
-			return text.getText();
-		}
-		
-		@Override
-		protected boolean checkOK() {
-			if (text.getText().length()==0) {
-				JOptionPane.showMessageDialog(this, "AVATAR名字不能为空！");
-				return false;
-			}
-			if (getSelectedObject()==null) {
-				JOptionPane.showMessageDialog(this, "还未选择AVATAR主角身体！");
-				return false;
-			}
-			return true;
-		}
-	}
 
-
-//	-------------------------------------------------------------------------------------------------------------------------------
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	

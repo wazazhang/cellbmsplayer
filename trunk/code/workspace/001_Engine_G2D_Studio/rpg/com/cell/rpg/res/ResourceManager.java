@@ -238,7 +238,14 @@ public abstract class ResourceManager extends CellSetResourceManager
 		
 		for (int i=0; i<res_list.length; i++)
 		{
-			T set = RPGObjectMap.readNode(tdir + "/" + res_list[i], type);			
+			int last_split = res_list[i].lastIndexOf("/");
+			if (last_split>=0) {
+				res_list[i] = res_list[i].substring(last_split+1);
+			}
+			
+			String xml_file = tdir +"/"+ res_list[i];
+			
+			T set = RPGObjectMap.readNode(xml_file, type);			
 			
 			System.out.println("\tget " + type.getSimpleName() + " : " + set.name + "(" + set.id + ")");
 

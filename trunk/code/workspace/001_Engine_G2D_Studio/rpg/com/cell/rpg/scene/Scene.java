@@ -15,6 +15,15 @@ public class Scene extends RPGObject
 	public SceneNode	scene_node;
 	
 	final public Vector<SceneUnit> 	scene_units = new Vector<SceneUnit>();
+
+//	------------------------------------------------------------------------------------------------------------------
+	
+	@Property("场景背景音乐")
+	public String		bgm_sound_name;
+	
+	
+	
+//	------------------------------------------------------------------------------------------------------------------
 	
 	public Scene(int id, String name) {
 		super(id+"");
