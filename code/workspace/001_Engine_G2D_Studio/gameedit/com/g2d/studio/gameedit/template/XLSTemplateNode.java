@@ -82,7 +82,7 @@ public abstract class XLSTemplateNode<T extends TemplateNode> extends ObjectNode
 	
 	@Override
 	final public String getName() {
-		return getXLSRow().desc;
+		return getXLSRow().desc + "(" + getXLSRow().id + ")";
 	}
 
 	@Override
@@ -103,21 +103,5 @@ public abstract class XLSTemplateNode<T extends TemplateNode> extends ObjectNode
 
 //	----------------------------------------------------------------------------------------------------------------------
 	
-	static public <D extends ObjectNode<?>> ArrayList<D> listXLSRows(File file, Class<D> cls, RPGObjectMap<?> data_map)
-	{
-		ArrayList<D> ret = new ArrayList<D>();
-		for (XLSFullRow row : XLSFullRow.getXLSRows(file, XLSFullRow.class)) 
-		{
-			TemplateNode data = (TemplateNode)data_map.get(row.id);
-			if (cls.equals(XLSUnit.class)) {
-				ret.add(cls.cast(new XLSUnit(row.xls_file, row, data)));
-			} else if (cls.equals(XLSItem.class)) {
-				ret.add(cls.cast(new XLSItem(row.xls_file, row, data)));
-			} else if (cls.equals(XLSSkill.class)) {
-				ret.add(cls.cast(new XLSSkill(row.xls_file, row, data)));
-			}
-		}
-		return ret;
-	}
 	
 }

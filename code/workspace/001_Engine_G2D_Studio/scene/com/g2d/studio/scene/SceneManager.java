@@ -48,27 +48,34 @@ import com.g2d.studio.gameedit.dynamic.IDynamicIDFactory;
 import com.g2d.studio.scene.entity.SceneGroup;
 import com.g2d.studio.scene.entity.SceneNode;
 import com.g2d.studio.swing.G2DTree;
+import com.g2d.studio.swing.G2DTreeNodeGroup.GroupMenu;
 import com.thoughtworks.xstream.XStream;
 
 public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 {
 	private static final long serialVersionUID = 1L;
 
+	private static SceneManager instance;
+	public static SceneManager getInstance() {
+		return instance;
+	}
 //	------------------------------------------------------------------------------------------------------------------------------
 	IDFactoryInteger<SceneNode>		id_factory	= new IDFactoryInteger<SceneNode>();
 	
 //	------------------------------------------------------------------------------------------------------------------------------
 	
-	final ReentrantLock				scene_lock	= new ReentrantLock();
-	final File						scene_dir;
-	final File						scene_list;
-	final G2DTree					g2d_tree;
+	final private ReentrantLock		scene_lock	= new ReentrantLock();
+	
+	final public File				scene_dir;
+	final public File				scene_list;
+	final public G2DTree			g2d_tree;
 
 //	------------------------------------------------------------------------------------------------------------------------------
 	
 	public SceneManager(Studio studio, ProgressForm progress)
 	{
 		super(new BorderLayout());
+		instance = this;
 		this.scene_dir	= new File(studio.project_save_path, "scenes");
 		this.scene_list	= new File(scene_dir, "scene.list");
 		{			
@@ -77,7 +84,8 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 			if (scene_dir.exists() && scene_list.exists()) {
 				String[] all_scene = CIO.readAllLine(scene_list.getPath(), "UTF-8");
 				for (String node_path : all_scene) {
-					loadScene(node_path, tree_root);
+//					loadScene(node_path, tree_root);
+					tree_root.loadPath(node_path);
 				}
 			}
 			this.g2d_tree.reload();
@@ -122,6 +130,11 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 		}
 	}
 	
+	public void addScene(File scene_file, SceneGroup root)
+	{
+		addScene(loadScene(scene_file), root);
+	}
+	
 	public void removeScene(SceneNode node)
 	{
 		SceneNode removed = id_factory.killID(node.getIntID());
@@ -136,31 +149,31 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 	
 //	------------------------------------------------------------------------------------------------------------------------------
 
-	String getPathString(SceneNode node)
-	{
-		String path = node.getID()+".xml";
-		TreeNode p = node.getParent();
-		while (p != null) {
-			if (p.getParent()!=null) {
-				path = p.toString() + "/" + path;
-			}
-			p = p.getParent();
-		}
-		return path;
-	}
-	
-	String[] getPath(String path)
-	{
-		String[] ret = CUtil.splitString(path, "/");
-		return ret;
-	}
+//	String getPathString(SceneNode node)
+//	{
+//		String path = node.getID()+".xml";
+//		TreeNode p = node.getParent();
+//		while (p != null) {
+//			if (p.getParent()!=null) {
+//				path = p.toString() + "/" + path;
+//			}
+//			p = p.getParent();
+//		}
+//		return path;
+//	}
+//	
+//	String[] getPath(String path)
+//	{
+//		String[] ret = CUtil.splitString(path, "/");
+//		return ret;
+//	}
 	
 	public void saveSceneList() 
 	{
 		synchronized (scene_lock) {
 			StringBuffer all_scene = new StringBuffer();
 			for (SceneNode node : getAllScenes()) {
-				all_scene.append(getPathString(node) + "\n");
+				all_scene.append(SceneGroup.toPathString(node, "/") + node.getID() + ".xml" + "\n");
 			}
 			com.cell.io.CFile.writeText(scene_list, all_scene.toString(), "UTF-8");
 		}
@@ -183,27 +196,10 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 		saveScene(scene_dir, node);
 	}
 	
-	public void loadScene(String node_path, SceneGroup group)
-	{
-		String[] path = getPath(node_path.trim());
-		for (int i=0; i<path.length; i++) {
-			String file_name = path[i].trim();
-			if (file_name.endsWith(".xml")) {
-				File file = new File(scene_dir, file_name);
-				if (file.exists()) {
-					addScene(loadScene(file), group);
-				}
-				return;
-			} else {
-				SceneGroup g = group.findChild(file_name);
-				if (g == null) {
-					g = new SceneGroup(file_name);
-					group.add(g);
-				}
-				group = g;
-			}
-		}
-	}
+//	public void loadScene(String node_path, SceneGroup group)
+//	{
+//		group.buildPath(node_path, group);
+//	}
 	
 //	-------------------------------------------------------------------------------------------------------------------------
 
@@ -213,17 +209,19 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 			TreePath path = g2d_tree.getPathForLocation(e.getX(), e.getY());			
 			if (path!=null) {
 				Object click_node = path.getLastPathComponent();
-				if (e.getButton() == MouseEvent.BUTTON3) {
-					if (click_node instanceof SceneGroup) {
-						new RootMenu((SceneGroup)click_node).show(g2d_tree, e.getX(), e.getY());
+				if (click_node == g2d_tree.getSelectedNode()) {
+					if (e.getButton() == MouseEvent.BUTTON3) {
+						if (click_node instanceof SceneGroup) {
+							new RootMenu((SceneGroup)click_node).show(g2d_tree, e.getX(), e.getY());
+						}
+						else if (click_node instanceof SceneNode) {
+							new SceneMenu((SceneNode)click_node).show(g2d_tree, e.getX(), e.getY());
+						}
 					}
-					else if (click_node instanceof SceneNode) {
-						new SceneMenu((SceneNode)click_node).show(g2d_tree, e.getX(), e.getY());
-					}
-				}
-				if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount()==2) {
-					if (click_node instanceof SceneNode) {
-						((SceneNode)click_node).getSceneEditor().setVisible(true);
+					if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount()==2) {
+						if (click_node instanceof SceneNode) {
+							((SceneNode)click_node).getSceneEditor().setVisible(true);
+						}
 					}
 				}
 			}
@@ -233,36 +231,22 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 //	-------------------------------------------------------------------------------------------------------------------------
 //	scene root node
 	
-	class RootMenu extends JPopupMenu implements ActionListener
+	class RootMenu extends GroupMenu
 	{
 		private static final long serialVersionUID = 1L;
-		
-		SceneGroup root;
-		JMenuItem info 		= new JMenuItem();
+
 		JMenuItem add_scene = new JMenuItem("添加场景");
-		JMenuItem add_group = new JMenuItem("添加过滤器");
-		JMenuItem rename 	= new JMenuItem("重命名过滤器");
-		JMenuItem delete 	= new JMenuItem("删除过滤器");
 		
 		public RootMenu(SceneGroup root) {
-			this.root = root;
-			info.setText("过滤器 : " + root.toString());
-			info.setEnabled(false);
+			super(root, SceneManager.this, SceneManager.this.g2d_tree);
 			add_scene.addActionListener(this);
-			add_group.addActionListener(this);
-			rename.addActionListener(this);
-			delete.addActionListener(this);
-			add(info);
 			add(add_scene);
-			add(add_group);
-			add(rename);
-			if (root.getParent()!=null) {
-				add(delete);
-			}
 		}
 		
 		@Override
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(ActionEvent e) 
+		{
+			super.actionPerformed(e);
 			if (e.getSource() == add_scene) {
 				AddSceneDialog dialog = new AddSceneDialog();
 				CPJWorld world = dialog.showDialog();
@@ -271,36 +255,7 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 							SceneManager.this,
 							dialog.getSceneName(),
 							Studio.getInstance().getCPJResourceManager().getNodeIndex(world));
-//					root.add(node);
-					addScene(node, root);
-					g2d_tree.reload(root);
-				}
-			}
-			else if (e.getSource() == add_group) {
-				String group_name = JOptionPane.showInputDialog(SceneManager.this, " 输入过滤器名字！", "未命名过滤器");
-				if (group_name!=null && group_name.length()>0) {
-					if (root.findChild(group_name)==null) {
-						root.add(new SceneGroup(group_name));
-						g2d_tree.reload(root);
-					} else {
-						JOptionPane.showMessageDialog(this, "过滤器 \"" + group_name + "\" 已经存在！");
-					}
-				}
-			}
-			else if (e.getSource() == rename) {
-				String group_name = JOptionPane.showInputDialog(SceneManager.this, " 输入过滤器名字！", root.toString());
-				if (group_name!=null && group_name.length()>0) {
-					if (!root.setName(group_name)) {
-						JOptionPane.showMessageDialog(this, "过滤器 \"" + group_name + "\" 已经存在！");
-					}
-					g2d_tree.repaint();
-				}
-			}
-			else if (e.getSource() == delete) {
-				if (JOptionPane.showConfirmDialog(SceneManager.this, "确实要删除过滤器 \"" + root + "\" ！") == JOptionPane.YES_OPTION) {
-					SceneGroup parent = (SceneGroup)root.getParent();
-					root.removeFromParent();
-					g2d_tree.reload(parent);
+					addScene(node, (SceneGroup)root);
 				}
 			}
 		}

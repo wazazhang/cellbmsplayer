@@ -25,7 +25,7 @@ public abstract class RPGObject extends DObject implements Abilities, ZipNode
 	
 	@Override
 	final public String getEntryName() {
-		return getClass().getSimpleName().toLowerCase() + "/" + id+".xml";
+		return id+".xml";
 	}
 
 	public void clearAbilities() {

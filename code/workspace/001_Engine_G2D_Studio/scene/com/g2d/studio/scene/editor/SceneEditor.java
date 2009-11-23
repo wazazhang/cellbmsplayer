@@ -44,7 +44,9 @@ import com.g2d.display.DisplayObject;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.Stage;
 import com.g2d.display.ui.Menu;
+import com.g2d.editor.DisplayObjectEditor;
 import com.g2d.editor.DisplayObjectPanel;
+import com.g2d.editor.DisplayObjectViewer;
 import com.g2d.game.rpg.Unit;
 import com.g2d.studio.Config;
 import com.g2d.studio.Studio;
@@ -53,6 +55,7 @@ import com.g2d.studio.cpj.entity.CPJSprite;
 import com.g2d.studio.cpj.entity.CPJWorld;
 
 import com.g2d.studio.res.Res;
+import com.g2d.studio.rpg.RPGObjectPanel;
 import com.g2d.studio.scene.entity.SceneNode;
 import com.g2d.studio.scene.units.SceneActor;
 import com.g2d.studio.scene.units.SceneImmutable;
@@ -87,6 +90,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 	private JToggleButton		tool_selector	= new JToggleButton(Tools.createIcon(Res.icons_bar[0]), true);
 	private JToggleButton		tool_addactor	= new JToggleButton(Tools.createIcon(Res.icons_bar[8]));
 	private JToggleButton		tool_show_grid	= new JToggleButton(Tools.createIcon(Res.icon_grid));
+	private JToggleButton		tool_edit_prop	= new JToggleButton(Tools.createIcon(Res.icons_bar[1]));
 	private JTabbedPane			unit_page;
 //	private SceneUnitTagAdapter<SceneActor>		page_actors;
 //	private SceneUnitTagAdapter<SceneRegion>	page_regions;
@@ -127,6 +131,10 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 			tool_show_grid.setToolTipText("显示碰撞");
 			tool_show_grid.addActionListener(this);
 			tool_bar.add(tool_show_grid);
+			
+			tool_edit_prop.setToolTipText("查看场景属性");
+			tool_edit_prop.addActionListener(this);
+			tool_bar.add(tool_edit_prop);
 		}
 		this.add(tool_bar, BorderLayout.NORTH);
 		
@@ -265,6 +273,10 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		else if (e.getSource() == tool_show_grid) {
 			scene_container.getWorld().setDebug(tool_show_grid.isSelected());
 		}
+		else if (e.getSource() == tool_edit_prop) {
+			new DisplayObjectEditor<SceneContainer>(scene_container,
+					new RPGObjectPanel(scene_node.getData())).setVisible(true);
+		}
 	}
 
 //	-----------------------------------------------------------------------------------------------------------------------------
@@ -328,47 +340,8 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		scene_mini_map.repaint(500);
 	}
 	
-//	public void refreshActor() {
-//		page_actors.repaint(500);
-//		scene_mini_map.repaint(500);
-//	}
-//	public void refreshRegion() {
-//		page_regions.repaint(500);
-//		scene_mini_map.repaint(500);
-//	}
-//	public void refreshPoint() {
-//		page_points.repaint(500);
-//		scene_mini_map.repaint(500);
-//	}
-//	public void refreshImmutable() {
-//		page_immutables.repaint(500);
-//		scene_mini_map.repaint(500);
-//	}
 //	-----------------------------------------------------------------------------------------------------------------------------
 
-//	@SuppressWarnings("unchecked")
-//	public void sortName(Vector<SceneUnitTag> tunits) {
-//		CUtil.sort(tunits, new CUtil.ICompare<SceneUnitTag, SceneUnitTag>() {
-//			public int compare(SceneUnitTag a, SceneUnitTag b) {
-//				return CUtil.getStringCompare().compare(a.getGameUnit().getID()+"", b.getGameUnit().getID()+"");
-//			}
-//		});
-//	}
-	
-//	private CellSprite getToolSprite()
-//	{
-//		if (SelectUnitTool.getUnitTool().isVisible()) {
-////			if (isPageActor() && SelectUnitTool.getUnitTool().getSelectedUnit()!=null) {
-////				cspr = SelectUnitTool.getUnitTool().getSelectedUnit().getCPJSprite().getDisplayObject();
-////			} 
-////			if (isPageImmutable() && SelectUnitTool.getUnitTool().getSelectedSpr()!=null) {
-////				cspr = SelectUnitTool.getUnitTool().getSelectedSpr().getDisplayObject();
-////			}
-//			return getSelectedPage().getToolSprite();
-//		}
-//		return null;
-//	}
-	
 //	-----------------------------------------------------------------------------------------------------------------------------
 	
 	public boolean isToolSelect(){
@@ -382,39 +355,8 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 	public SceneUnitTagAdapter<?> getSelectedPage() {
 		return (SceneUnitTagAdapter<?>)unit_page.getSelectedComponent();
 	}
-	
-//	public boolean isPageActor(){
-//		return unit_page.getSelectedComponent() == page_actors;
-//	}
-//	
-//	public boolean isPageRegion() {
-//		return unit_page.getSelectedComponent() == page_regions;
-//	}
-//	
-//	public boolean isPagePoint() {
-//		return unit_page.getSelectedComponent() == page_points;
-//	}
-//
-//	public boolean isPageImmutable() {
-//		return unit_page.getSelectedComponent() == page_immutables;
-//	}
-	
-	
 
-	 
-//	public SceneUnitTagAdapter<SceneActor>		getActors(){
-//		return page_actors;
-//	}
-//	public SceneUnitTagAdapter<SceneRegion>		getRegions() {
-//		return page_regions;
-//	}
-//	public SceneUnitTagAdapter<ScenePoint>		getPoints() {
-//		return page_points;
-//	}
-//	public SceneUnitTagAdapter<SceneImmutable>	getImmutables() {
-//		return page_immutables;
-//	}
-	
+
 //	-----------------------------------------------------------------------------------------------------------------------------
 	
 	class SceneStage extends Stage
@@ -433,7 +375,6 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		}
 		
 	}
-	
 	
 //	-----------------------------------------------------------------------------------------------------------------------------
 

@@ -44,7 +44,7 @@ final public class DAvatar extends DynamicNode<TAvatar>
 		setParts(avatars);
 	}
 	
-	DAvatar(TAvatar avatar) {
+	public DAvatar(TAvatar avatar) {
 		super(avatar, Integer.parseInt(avatar.id), avatar.name);
 		setBody(new CPJIndex<CPJSprite>(CPJResourceType.ACTOR, 
 				avatar.body.cpj_project_name, 

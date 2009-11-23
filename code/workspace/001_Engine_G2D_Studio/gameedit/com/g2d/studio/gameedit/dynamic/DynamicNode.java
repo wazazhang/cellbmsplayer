@@ -3,6 +3,9 @@ package com.g2d.studio.gameedit.dynamic;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import javax.swing.tree.TreeNode;
+
+import com.cell.CUtil;
 import com.cell.rpg.RPGObject;
 import com.cell.rpg.template.TAvatar;
 import com.cell.rpg.xls.XLSFile;
@@ -58,7 +61,7 @@ public abstract class DynamicNode<T extends RPGObject> extends ObjectNode<T>
 	
 	@Override
 	final public String getName() {
-		return name;
+		return name + "(" + id + ")";
 	}
 	
 	public boolean setName(String name) {
@@ -68,23 +71,8 @@ public abstract class DynamicNode<T extends RPGObject> extends ObjectNode<T>
 		}
 		return false;
 	}
-	
+
 //	-------------------------------------------------------------------------------------------------------
-	
-	/**
-	 * 根据数据在此创建已有的节点
-	 * @param <T>
-	 * @param <D>
-	 * @param type
-	 * @param data
-	 * @return
-	 */
-	public static <T extends DynamicNode<?>, D extends RPGObject> T createNode(Class<T> type, D data) 
-	{
-		if (type.equals(DAvatar.class)) {
-			return type.cast(new DAvatar((TAvatar)data));
-		}
-		return null;
-	}
+
 	
 }
