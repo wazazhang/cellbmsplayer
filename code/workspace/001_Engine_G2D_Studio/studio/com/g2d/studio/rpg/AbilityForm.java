@@ -51,11 +51,8 @@ public class AbilityForm extends AbstractDialog implements PropertyCellEdit<Abil
 		});
 	}
 	
-	public void beginEdit(ObjectPropertyPanel panel) {
+	public Component getComponent(ObjectPropertyPanel panel) {	
 		property_panel = panel;
-	}
-	
-	public Component getComponent() {	
 		button.setText(abilities.toString());
 		return button;
 	}

@@ -9,6 +9,7 @@ import java.io.ObjectOutput;
 import java.util.Collection;
 import java.util.Vector;
 
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -46,7 +47,7 @@ public class G2DList<T extends G2DListItem> extends JList
 		return null;
 	}
 	
-	class ListRender extends JToggleButton implements ListCellRenderer
+	class ListRender extends DefaultListCellRenderer implements ListCellRenderer
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -61,38 +62,22 @@ public class G2DList<T extends G2DListItem> extends JList
 				boolean isSelected,
 				boolean cellHasFocus) 
 		{
+			DefaultListCellRenderer render = (DefaultListCellRenderer)super.getListCellRendererComponent(
+					list, value, index, isSelected, cellHasFocus);
+			
 			if (value instanceof G2DListItem) {
 				G2DListItem item = (G2DListItem) value;
-				this.setIcon(item.getIcon(false));
-				this.setText(item.getName());
-			} else {
-				setText(value.toString());
+				Component comp = item.getListComponent(list, value, index, isSelected, cellHasFocus);
+				if (comp != null) {
+					return comp;
+				} else {
+					this.setIcon(item.getListIcon(false));
+					this.setText(item.getListName());
+				}
 			}
 			
-			Color background;
-	         Color foreground;
+			return render;
 
-	         // check if this cell represents the current DnD drop location
-	         JList.DropLocation dropLocation = list.getDropLocation();
-	         if (dropLocation != null && !dropLocation.isInsert() && dropLocation.getIndex() == index) 
-	         {
-	             background = Color.BLUE;
-	             foreground = Color.WHITE;
-	         // check if this cell is selected
-	         } 
-	         else if (isSelected) {
-	             background = Color.RED;
-	             foreground = Color.WHITE;
-	         // unselected, and not the DnD drop location
-	         }
-	         else {
-	             background = Color.WHITE;
-	             foreground = Color.BLACK;
-	         }
-	         setBackground(background);
-	         setForeground(foreground);			
-	         
-	         return this;
 		}
 		 
 

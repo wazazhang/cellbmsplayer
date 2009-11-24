@@ -4,6 +4,8 @@ import java.awt.Component;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.util.Enumeration;
 import java.util.Vector;
@@ -11,6 +13,7 @@ import java.util.Vector;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
+import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
@@ -122,7 +125,10 @@ public abstract class G2DTreeNodeGroup<C extends G2DTreeNode<?>> extends Default
 	abstract protected G2DTreeNodeGroup<?> createGroupNode(String name);
 	
 //	-------------------------------------------------------------------------------------------------------
-
+	
+	public void onClicked(JTree tree, MouseEvent e){}
+	
+	
 //	-------------------------------------------------------------------------------------------------------
 	
 	public static String toPathString(G2DTreeNode<?> node, String split)

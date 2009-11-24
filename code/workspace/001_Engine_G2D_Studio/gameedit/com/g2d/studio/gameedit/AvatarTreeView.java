@@ -11,6 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTree;
 import javax.swing.text.html.ObjectView;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
@@ -37,7 +38,6 @@ public class AvatarTreeView extends ObjectTreeViewDynamic<DAvatar, TAvatar>
 	public AvatarTreeView(String title, File list_file) 
 	{
 		super(title, DAvatar.class, TAvatar.class, list_file);		
-		getTree().addMouseListener(new AvatarRootMouseAdapter());
 	}
 
 	@Override
@@ -75,30 +75,21 @@ public class AvatarTreeView extends ObjectTreeViewDynamic<DAvatar, TAvatar>
 			}
 			return false;
 		}
+		
+		@Override
+		public void onClicked(JTree tree, MouseEvent e) {
+			if (e.getButton() == MouseEvent.BUTTON3) {
+				new AvatarRootMenu(this).show(
+						getTree(),
+						e.getX(),
+						e.getY());
+			}
+		}
 	}
 	
 //	-------------------------------------------------------------------------------------------------------------------------------
 //	
-	class AvatarRootMouseAdapter extends MouseAdapter
-	{
-		// right click avatar root node
-		public void mouseClicked(MouseEvent e) {
-			if (e.getButton() == MouseEvent.BUTTON3) {
-				TreePath path = getTree().getPathForLocation(e.getX(), e.getY());
-				if (path != null) {
-					Object click_node = path.getLastPathComponent();
-					if (click_node == getTree().getSelectedNode()) {
-						if (click_node instanceof AvatarGroup) {
-							new AvatarRootMenu((AvatarGroup)click_node).show(
-									getTree(),
-									e.getX(),
-									e.getY());
-						}
-					}
-				}
-			}
-		}
-	}
+
 
 //	-------------------------------------------------------------------------------------------------------------------------------
 	class AvatarRootMenu extends GroupMenu

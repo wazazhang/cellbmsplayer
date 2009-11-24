@@ -8,13 +8,11 @@ public class TextCellEdit extends JTextField implements PropertyCellEdit<String>
 {
 	private static final long serialVersionUID = 1L;
 	
-	public void beginEdit(ObjectPropertyPanel panel) {}
-
 	public String getValue() {
 		return super.getText();
 	}
 	
-	public Component getComponent() {
+	public Component getComponent(ObjectPropertyPanel panel) {
 		return this;
 	}
 

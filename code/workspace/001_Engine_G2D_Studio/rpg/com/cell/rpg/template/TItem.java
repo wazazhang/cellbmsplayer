@@ -10,4 +10,5 @@ public class TItem extends TemplateNode
 	public Class<?>[] getSubAbilityTypes() {
 		return new Class<?>[] {};
 	}
+	
 }

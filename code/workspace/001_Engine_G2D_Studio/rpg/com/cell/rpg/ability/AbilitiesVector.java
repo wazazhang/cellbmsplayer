@@ -9,11 +9,14 @@ public class AbilitiesVector implements Abilities, Serializable
 	private static final long serialVersionUID = 1L;
 	
 	/**将显示在单位属性的Ability面板*/
-	final private Vector<AbstractAbility> abilities = new Vector<AbstractAbility>();
-	final private Class<?>[] sub_types;
+	private Vector<AbstractAbility> abilities = new Vector<AbstractAbility>();
+	private Class<?>[] sub_types;
 	
-	public AbilitiesVector(Class<?> ... sub_types)
-	{
+	public AbilitiesVector(Class<?> ... sub_types) {
+		setTypes(sub_types);
+	}
+	
+	protected void setTypes(Class<?> ... sub_types) {
 		this.sub_types = sub_types;
 	}
 	
@@ -59,4 +62,17 @@ public class AbilitiesVector implements Abilities, Serializable
 	final public Class<?>[] getSubAbilityTypes() {
 		return sub_types;
 	}
+	
+	@Override
+	public String toString() {
+		StringBuffer buffer = new StringBuffer(getAbilitiesCount() + "个单位 : ");
+		for (AbstractAbility a : abilities) {
+			buffer.append(a.toString() + ";");
+		}
+		return buffer.toString();
+	}
+	
+	
+	
+	
 }

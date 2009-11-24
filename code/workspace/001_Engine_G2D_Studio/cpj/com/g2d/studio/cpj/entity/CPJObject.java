@@ -1,10 +1,12 @@
 package com.g2d.studio.cpj.entity;
 
+import java.awt.Component;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
 
 import javax.swing.ImageIcon;
+import javax.swing.JList;
 
 import com.g2d.Tools;
 import com.g2d.cell.CellSetResource.CellSetObject;
@@ -72,7 +74,17 @@ public abstract class CPJObject <T extends CellSetObject> extends G2DTreeNode<CP
 	public boolean getAllowsChildren() {
 		return false;
 	}
-	
-//	abstract void refreshObjects() ;
+	@Override
+	public Component getListComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+		return null;
+	}
+	@Override
+	public ImageIcon getListIcon(boolean update) {
+		return getIcon(update);
+	}
+	@Override
+	public String getListName() {
+		return getName();
+	}
 
 }

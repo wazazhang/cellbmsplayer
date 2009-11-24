@@ -1,8 +1,10 @@
 package com.g2d.studio.icon;
 
+import java.awt.Component;
 import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
+import javax.swing.JList;
 
 import com.g2d.Tools;
 import com.g2d.studio.swing.G2DListItem;
@@ -26,12 +28,16 @@ public class IconFile implements G2DListItem
 	}
 	
 	@Override
-	public ImageIcon getIcon(boolean update) {
+	public ImageIcon getListIcon(boolean update) {
 		return icon;
 	}
 	
 	@Override
-	public String getName() {
+	public String getListName() {
 		return icon_file_name;
+	}
+	@Override
+	public Component getListComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+		return null;
 	}
 }

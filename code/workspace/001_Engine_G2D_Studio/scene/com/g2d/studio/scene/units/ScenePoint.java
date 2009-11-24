@@ -2,6 +2,7 @@ package com.g2d.studio.scene.units;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Composite;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -11,6 +12,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Vector;
+
+import javax.swing.ImageIcon;
+import javax.swing.JList;
 
 import com.cell.math.MathVector;
 import com.cell.rpg.scene.Point;
@@ -163,15 +167,6 @@ public class ScenePoint extends com.g2d.game.rpg.Unit implements SceneUnitTag<Po
 
 //	--------------------------------------------------------------------------------------------------------
 	
-	public javax.swing.ImageIcon getIcon(boolean update) {
-		return null;
-	}
-	
-	@Override
-	public String getName() {
-		return getID() + "";
-	}
-	
 //	--------------------------------------------------------------------------------------------------------
 	
 //	@Override
@@ -294,4 +289,18 @@ public class ScenePoint extends com.g2d.game.rpg.Unit implements SceneUnitTag<Po
 	public Menu getEditMenu() {
 		return new SceneUnitMenu(editor, this);
 	}
+
+	@Override
+	public Component getListComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+		return null;
+	}	
+	@Override
+	public ImageIcon getListIcon(boolean update) {
+		return null;
+	}
+	@Override
+	public String getListName() {
+		return getID() + "";
+	}
+	
 }

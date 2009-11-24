@@ -158,7 +158,7 @@ public class SceneUnitList<T extends SceneUnitTag<?>> extends JPanel implements 
 		public UnitListMenu(SceneUnitTag<?> unit)
 		{
 			this.unit = unit;
-			info.setText(unit.getClass().getSimpleName() + " : " + unit.getName());
+			info.setText(unit.getClass().getSimpleName() + " : " + unit.getListName());
 			info.setEnabled(false);
 			rename.addActionListener(this);
 			property.addActionListener(this);

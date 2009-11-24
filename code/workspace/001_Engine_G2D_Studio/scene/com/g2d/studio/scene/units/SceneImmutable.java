@@ -2,11 +2,15 @@ package com.g2d.studio.scene.units;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.Stroke;
 import java.util.Vector;
+
+import javax.swing.ImageIcon;
+import javax.swing.JList;
 
 import com.cell.game.CSprite;
 import com.cell.rpg.scene.Actor;
@@ -156,14 +160,6 @@ public class SceneImmutable extends SceneSprite implements SceneUnitTag<Immutabl
 
 //	--------------------------------------------------------------------------------------------------------
 	
-	public javax.swing.ImageIcon getIcon(boolean update) {
-		return null;
-	}
-	
-	@Override
-	public String getName() {
-		return getID() + "";
-	}
 	
 //	--------------------------------------------------------------------------------------------------------
 	
@@ -268,5 +264,18 @@ public class SceneImmutable extends SceneSprite implements SceneUnitTag<Immutabl
 	@Override
 	public Menu getEditMenu() {
 		return new SceneUnitMenu(editor, this);
+	}
+	
+	@Override
+	public Component getListComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+		return null;
+	}	
+	@Override
+	public ImageIcon getListIcon(boolean update) {
+		return null;
+	}
+	@Override
+	public String getListName() {
+		return getID() + "";
 	}
 }

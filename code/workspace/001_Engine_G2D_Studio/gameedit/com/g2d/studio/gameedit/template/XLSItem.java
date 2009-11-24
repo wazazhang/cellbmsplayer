@@ -83,7 +83,7 @@ final public class XLSItem  extends XLSTemplateNode<TItem>
 		{
 			super(XLSItem.this);
 			if (icon_file!=null) {
-				set_binding.setIcon(icon_file.getIcon(false));
+				set_binding.setIcon(icon_file.getListIcon(false));
 			}
 			set_binding.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -91,7 +91,7 @@ final public class XLSItem  extends XLSTemplateNode<TItem>
 					if (icon != null) {
 						XLSItem.this.setIcon(icon);	
 						XLSItem.this.getIcon(true);	
-						set_binding.setIcon(icon_file.getIcon(false));
+						set_binding.setIcon(icon_file.getListIcon(false));
 						Studio.getInstance().getObjectManager().repaint();
 					}
 				}

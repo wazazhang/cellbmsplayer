@@ -6,7 +6,6 @@ public interface PropertyCellEdit<T>
 {
 	public T getValue();
 	
-	public Component getComponent();
+	public Component getComponent(ObjectPropertyPanel panel);
 	
-	public void beginEdit(ObjectPropertyPanel panel);
 }

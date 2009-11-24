@@ -52,6 +52,7 @@ import com.cell.CUtil;
 import com.cell.rpg.RPGObject;
 import com.cell.rpg.io.RPGObjectMap;
 import com.cell.rpg.template.TAvatar;
+import com.cell.rpg.template.TEffect;
 import com.cell.rpg.template.TItem;
 import com.cell.rpg.template.TSkill;
 import com.cell.rpg.template.TUnit;
@@ -69,6 +70,7 @@ import com.g2d.studio.cpj.entity.CPJFile;
 import com.g2d.studio.cpj.entity.CPJObject;
 import com.g2d.studio.cpj.entity.CPJSprite;
 import com.g2d.studio.gameedit.dynamic.DAvatar;
+import com.g2d.studio.gameedit.dynamic.DEffect;
 import com.g2d.studio.gameedit.dynamic.DynamicNode;
 import com.g2d.studio.gameedit.entity.ObjectGroup;
 import com.g2d.studio.gameedit.entity.ObjectNode;
@@ -97,7 +99,7 @@ public class ObjectManager extends ManagerForm implements ActionListener
 	final ObjectTreeView<XLSItem, TItem> 			tree_items_view;
 	final ObjectTreeView<XLSSkill, TSkill>			tree_skills_view;
 	final ObjectTreeViewDynamic<DAvatar, TAvatar>	tree_avatars_view;
-	
+	final ObjectTreeViewDynamic<DEffect, TEffect>	tree_effects_view;
 	
 	
 	public ObjectManager(Studio studio, ProgressForm progress) 
@@ -110,27 +112,36 @@ public class ObjectManager extends ManagerForm implements ActionListener
 		objects_dir = new File(Studio.getInstance().project_save_path.getPath() + File.separatorChar +"objects");
 		
 		// ------------ xls template ------------ //
-		{
+		{	
+			// XLSUnit
 			tree_units_view = new ObjectTreeViewTemplate<XLSUnit, TUnit>("单位模板", XLSUnit.class, TUnit.class, 
 					new File(objects_dir, "tunit.obj/tunit.list"), studio.xls_tunit);
 			table.addTab("单位", Tools.createIcon(Res.icon_res_2), tree_units_view);
 			table.addChangeListener(tree_units_view);
-		}{
+		}{	
+			// XLSItem
 			tree_items_view = new ObjectTreeViewTemplate<XLSItem, TItem>("道具模板", XLSItem.class, TItem.class, 
 					new File(objects_dir, "titem.obj/titem.list"), studio.xls_titem);
 			table.addTab("物品", Tools.createIcon(Res.icon_res_4), tree_items_view);
 			table.addChangeListener(tree_items_view);
-		}{
+		}{	
+			// XLSSkill
 			tree_skills_view = new ObjectTreeViewTemplate<XLSSkill, TSkill>("技能模板", XLSSkill.class, TSkill.class, 
 					new File(objects_dir, "tskill.obj/tskill.list"), studio.xls_tskill);
 			table.addTab("技能", Tools.createIcon(Res.icon_res_3), tree_skills_view);
 			table.addChangeListener(tree_skills_view);
-		}
+		}{
 		// ------------ dynamic ------------ //
-		{	// DAvatar
+		}{	
+			// DAvatar
 			tree_avatars_view = new AvatarTreeView("AVATAR", new File(objects_dir, "tavatar.obj/tavatar.list"));
 			table.addTab("AVATAR", Tools.createIcon(Res.icon_res_4), tree_avatars_view);
 			table.addChangeListener(tree_avatars_view);
+		}{	
+			// DAvatar
+			tree_effects_view = new EffectTreeView("特效", new File(objects_dir, "teffect.obj/teffect.list"));
+			table.addTab("魔法效果/特效", Tools.createIcon(Res.icon_res_3), tree_effects_view);
+			table.addChangeListener(tree_effects_view);
 		}
 			
 		this.add(table, BorderLayout.CENTER);
@@ -180,6 +191,7 @@ public class ObjectManager extends ManagerForm implements ActionListener
 		tree_items_view.saveAll();
 		tree_skills_view.saveAll();
 		tree_avatars_view.saveAll();
+		tree_effects_view.saveAll();
 		System.out.println(getClass().getSimpleName() + " : save all");
 	}
 	
