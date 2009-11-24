@@ -11,15 +11,23 @@ import com.cell.rpg.ability.Abilities;
 import com.cell.rpg.ability.AbstractAbility;
 import com.cell.rpg.scene.ability.RegionSpawnNPC.NPCSpawn;
 import com.cell.rpg.template.ability.UnitBattleTeam;
+import com.cell.rpg.template.ability.UnitDropItem;
 import com.cell.rpg.template.ability.UnitBattleTeam.TeamNode;
+import com.cell.rpg.template.ability.UnitDropItem.DropItemNode;
 import com.g2d.editor.property.PropertyCellEdit;
+import com.g2d.editor.property.ObjectPropertyPanel.CellEditAdapter;
 import com.g2d.studio.Studio;
+import com.g2d.studio.gameedit.template.XLSItem;
 import com.g2d.studio.gameedit.template.XLSUnit;
 import com.g2d.studio.rpg.AbilityPanel.AbilityCellEditAdapter;
 
 public class ObjectAbilityAdapters 
 {
-
+	
+	/**
+	 * 编辑战斗队伍的工具
+	 * @author WAZA
+	 */
 	public static class UnitBattleTeamNodeAdapter extends AbilityCellEditAdapter<UnitBattleTeam.TeamNode>
 	{
 		@Override
@@ -51,7 +59,7 @@ public class ObjectAbilityAdapters
 					unit = Studio.getInstance().getObjectManager().getObject(XLSUnit.class, tid);
 				}
 				if (fieldValue != null && unit != null) {
-					src.setText(unit.getName()+"(" + unit.getID() + ")");
+					src.setText(unit.getName());
 				} else {
 //					src.setForeground(Color.RED);
 					src.setText("null");
@@ -60,5 +68,49 @@ public class ObjectAbilityAdapters
 			return src;
 		}
 	}
-
+	
+	/**
+	 * 编辑掉落道具的工具
+	 * @author WAZA
+	 */
+	public static class UnitDropItemNodeAdapter extends AbilityCellEditAdapter<UnitDropItem>
+	{
+		@Override
+		public Class<UnitDropItem> getType() {
+			return UnitDropItem.class;
+		}
+		
+//		@Override
+//		public Object getCellValue(Object editObject, PropertyCellEdit<?> fieldEdit, Field field, Object fieldSrcValue) {
+//			if (field.getName().equals("drop_types")) {
+//				
+//			}
+//			return null;
+//		}
+		
+		@Override
+		public PropertyCellEdit<?> getCellEdit(
+				Object editObject,
+				Object fieldValue, 
+				Field field) {
+			if (field.getName().equals("drop_types")){
+				DropItemEditor editor = new DropItemEditor((DropItemNode[])fieldValue);
+				editor.setVisible(true);
+				return editor;
+			}
+			return null;
+		}
+		
+		@Override
+		public Component getCellRender(Object editObject, Object fieldValue, Field field, DefaultTableCellRenderer src) {
+			if (field.getName().equals("drop_types")){
+				if (fieldValue!=null) {
+					DropItemEditor editor = new DropItemEditor((DropItemNode[])fieldValue);
+					return editor.getComponent(null);
+				}
+			}
+			return null;
+		}
+	}
+	
 }

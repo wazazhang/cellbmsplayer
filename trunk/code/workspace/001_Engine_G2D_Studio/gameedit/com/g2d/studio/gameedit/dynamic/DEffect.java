@@ -21,7 +21,7 @@ final public class DEffect extends DynamicNode<TEffect>
 		super(factory, name);
 	}
 	
-	DEffect(TEffect effect) {
+	public DEffect(TEffect effect) {
 		super(effect, Integer.parseInt(effect.id), effect.name);
 	}
 	

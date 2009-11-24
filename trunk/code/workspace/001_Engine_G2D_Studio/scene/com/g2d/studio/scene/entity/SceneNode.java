@@ -1,5 +1,6 @@
 package com.g2d.studio.scene.entity;
 
+import java.awt.Component;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import javax.swing.ImageIcon;
+import javax.swing.JList;
 
 import com.cell.rpg.ability.AbstractAbility;
 import com.cell.rpg.scene.Scene;
@@ -84,5 +86,8 @@ final public class SceneNode extends DynamicNode<Scene>
 		}
 		return world_editor;
 	}
-	
+	@Override
+	public Component getListComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+		return null;
+	}
 }

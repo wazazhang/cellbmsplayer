@@ -85,7 +85,9 @@ final public class XLSUnit extends XLSTemplateNode<TUnit>
 		
 		public NPCObjectViewer() 
 		{
-			super(XLSUnit.this, new ObjectAbilityAdapters.UnitBattleTeamNodeAdapter());
+			super(XLSUnit.this,
+					new ObjectAbilityAdapters.UnitBattleTeamNodeAdapter(),
+					new ObjectAbilityAdapters.UnitDropItemNodeAdapter());
 			if (cpj_sprite!=null) {
 				set_binding.setIcon(cpj_sprite.getIcon(false));
 			}

@@ -29,11 +29,8 @@ public class ObjectSelectCellEdit<T extends ObjectNode<?>> extends JComboBox imp
 		});
 	}
 	
-	public void beginEdit(ObjectPropertyPanel panel) {
+	public Component getComponent(ObjectPropertyPanel panel) {		
 		this.panel = panel;
-	}
-	
-	public Component getComponent() {
 		return this;
 	}
 	

@@ -78,7 +78,7 @@ final public class XLSSkill extends XLSTemplateNode<TSkill>
 			super(XLSSkill.this);
 
 			if (icon_file!=null) {
-				set_binding.setIcon(icon_file.getIcon(false));
+				set_binding.setIcon(icon_file.getListIcon(false));
 			}
 			set_binding.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -86,7 +86,7 @@ final public class XLSSkill extends XLSTemplateNode<TSkill>
 					if (icon != null) {
 						XLSSkill.this.setIcon(icon);
 						XLSSkill.this.getIcon(true);
-						set_binding.setIcon(icon_file.getIcon(false));
+						set_binding.setIcon(icon_file.getListIcon(false));
 						Studio.getInstance().getObjectManager().repaint();
 					}
 				}

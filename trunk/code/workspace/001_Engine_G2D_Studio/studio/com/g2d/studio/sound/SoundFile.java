@@ -1,8 +1,10 @@
 package com.g2d.studio.sound;
 
+import java.awt.Component;
 import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
+import javax.swing.JList;
 
 import com.cell.sound.ISound;
 import com.cell.sound.SoundInfo;
@@ -27,12 +29,12 @@ public class SoundFile implements G2DListItem
 	}
 	
 	@Override
-	public ImageIcon getIcon(boolean update) {
+	public ImageIcon getListIcon(boolean update) {
 		return icon;
 	}
 	
 	@Override
-	public String getName() {
+	public String getListName() {
 		return sound_file_name;
 	}
 
@@ -43,5 +45,9 @@ public class SoundFile implements G2DListItem
 //		System.out.println(file);
 		StaticSoundPlayer sound_player = new StaticSoundPlayer(file);
 		return sound_player;
+	}
+	@Override
+	public Component getListComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+		return null;
 	}
 }

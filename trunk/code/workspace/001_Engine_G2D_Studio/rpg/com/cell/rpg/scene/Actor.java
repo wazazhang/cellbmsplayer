@@ -1,6 +1,7 @@
 package com.cell.rpg.scene;
 
 import com.cell.rpg.display.UnitNode;
+import com.cell.rpg.scene.ability.ActorDropItem;
 import com.cell.rpg.scene.ability.ActorPathStart;
 import com.cell.rpg.scene.ability.ActorTransport;
 import com.cell.rpg.struct.TPosition;
@@ -23,6 +24,7 @@ public class Actor extends SceneSprite
 	{
 		return new Class<?>[]{
 				ActorPathStart.class,
+				ActorDropItem.class,
 			};
 	}
 }

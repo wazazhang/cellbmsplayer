@@ -29,11 +29,8 @@ public class SceneListCellEdit extends JComboBox implements PropertyCellEdit<Str
 		});
 	}
 	
-	public void beginEdit(ObjectPropertyPanel panel) {
+	public Component getComponent(ObjectPropertyPanel panel) {		
 		this.panel = panel;
-	}
-	
-	public Component getComponent() {
 		return this;
 	}
 	

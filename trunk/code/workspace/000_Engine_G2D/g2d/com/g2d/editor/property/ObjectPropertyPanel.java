@@ -96,57 +96,26 @@ public class ObjectPropertyPanel extends JPanel
 				Field[]		fields 			= cls.getFields();
 				String[] 	colum_header 	= new String[]{"filed", "value", "type", };
 				
-				for (int r = 0; r < fields.length; r++) 
-				{
-					try 
-					{
+				for (int r = 0; r < fields.length; r++) {
+					try {
 						Field field = fields[r];
-						
-						if (field.getAnnotation(Property.class)!=null) {
-							Object[] row = new Object[]{
+						if (field.getAnnotation(Property.class) != null) {
+							Object[] row = new Object[] { 
 									field.getName(),
 									field.get(object),
 									field.getType().getName(),
-									field
-							};
+									field };
 							rows.add(row);
 						}
-						
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-					
 				}
 				
 				Object[][] rowsdata = rows.toArray(new Object[rows.size()][]);
 				
 				rows_table = new FieldTable(rowsdata, colum_header);
-				rows_table.getColumn("filed").setCellEditor(new NullEditor());
-				rows_table.getColumn("value").setCellEditor(value_editor);
-				rows_table.getColumn("type").setCellEditor(new NullEditor());
 				
-				rows_table.setMinimumSize(new Dimension(100,100));
-				rows_table.getSelectionModel().addListSelectionListener(
-				        new ListSelectionListener() {
-				            public void valueChanged(ListSelectionEvent event) {
-				               try {
-				            	   int r = rows_table.getSelectedRow();
-				            	   int c = 3;
-				            	   Field field = (Field)rows.elementAt(r)[c];
-				            	   Property doc = field.getAnnotation(Property.class);
-				            	   if (doc!=null) {
-				            		   anno_text.setText(CUtil.arrayToString(doc.value(), "\n"));
-				            	   }else{
-				            		   anno_text.setText(field.getName());
-				            	   }
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
-								rows_table.refresh();
-				            }
-				        }
-				);
-	
 				JScrollPane scroll = new JScrollPane(rows_table);
 				scroll.setMinimumSize(new Dimension(100,250));
 				split.setTopComponent(scroll);
@@ -169,7 +138,7 @@ public class ObjectPropertyPanel extends JPanel
 	 * @author WAZA
 	 *
 	 */
-	class FieldTable extends JTable
+	class FieldTable extends JTable implements ListSelectionListener
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -177,7 +146,33 @@ public class ObjectPropertyPanel extends JPanel
 		{
 			super(rowData, columnNames);
 			super.setRowHeight(DEFAULT_ROW_HEIGHT);
+			
 			super.getColumn(columnNames[1]).setCellRenderer(new TableRender());
+
+			super.getColumn("filed").setCellEditor(new NullEditor());
+			super.getColumn("value").setCellEditor(value_editor);
+			super.getColumn("type").setCellEditor(new NullEditor());
+			
+			super.setMinimumSize(new Dimension(100, 100));
+
+			super.getSelectionModel().addListSelectionListener(this);
+		}
+		
+		public void valueChanged(ListSelectionEvent event) {
+			try {
+				int r = rows_table.getSelectedRow();
+				int c = 3;
+				Field field = (Field) rows.elementAt(r)[c];
+				Property doc = field.getAnnotation(Property.class);
+				if (doc != null) {
+					anno_text.setText(CUtil.arrayToString(doc.value(), "\n"));
+				} else {
+					anno_text.setText(field.getName());
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			rows_table.refresh();
 		}
 		
 		public void refresh()
@@ -203,7 +198,9 @@ public class ObjectPropertyPanel extends JPanel
 	 * 通知单元格编辑器，已经完成了编辑
 	 */
 	final public void fireEditingStopped(){
-		value_editor.fireEditingStopped();
+		value_editor.stopCellEditing();
+		value_editor.getCellEditorValue();
+		rows_table.repaint();
 	}
 	
 	/**
@@ -402,20 +399,19 @@ public class ObjectPropertyPanel extends JPanel
 		
 		public ValueEditor(){}
 		
-		public void fireEditingStopped(){
-			super.fireEditingStopped();
-		}
 		
 		public Object getCellEditorValue() 
 		{
 			try {
 				Field field = (Field) rows.elementAt(editrow)[3];
 				Object obj = getPropertyCellEditValue(object, field, current_cell_edit, src_value);
+				System.out.println("getCellEditorValue");
 				if (obj != null) {
 					field.set(object, obj);
 					rows.elementAt(editrow)[1] = obj;
 					onFieldChanged(object, field);
 					rows_table.refresh();
+					rows_table.repaint();
 					return obj;
 				} else {
 					return src_value;
@@ -433,9 +429,9 @@ public class ObjectPropertyPanel extends JPanel
 			Field field = (Field) rows.elementAt(editrow)[3];
 			try {
 				PropertyCellEdit<?> edit = getPropertyCellEdit(object, field, value);
-				current_cell_edit = edit;
-				Component ret = edit.getComponent();
-				edit.beginEdit(ObjectPropertyPanel.this);
+				current_cell_edit = edit;				
+				Component ret = edit.getComponent(ObjectPropertyPanel.this);
+				System.out.println("getTableCellEditorComponent");
 				return ret;
 			} catch (Exception e) {
 				e.printStackTrace();

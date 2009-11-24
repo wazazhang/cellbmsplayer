@@ -12,6 +12,7 @@ public class UnitBattleTeam extends AbstractTemplateAbility
 
 	@Property("绑定的单位")
 	public AbilitiesVector	spawn_types = new AbilitiesVector(TeamNode.class){
+		private static final long serialVersionUID = 1L;
 		public String toString() {
 			return getAbilitiesCount() + "个单位";
 		}

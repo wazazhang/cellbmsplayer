@@ -163,7 +163,16 @@ public class G2DTree extends JTree
 	
 	class TreeMouseListener extends MouseAdapter
 	{
+		@Override
 		public void mousePressed(MouseEvent e)
+		{
+			G2DTree tree = G2DTree.this;
+			TreePath selPath = getPathForLocation(e.getX(), e.getY());
+			tree.setSelectionPath(selPath);
+		}
+		
+		@Override
+		public void mouseClicked(MouseEvent e) 
 		{
 			G2DTree tree = G2DTree.this;
 			int selRow = getRowForLocation(e.getX(), e.getY());
@@ -188,6 +197,11 @@ public class G2DTree extends JTree
 					else if (e.getButton() == MouseEvent.BUTTON3){
 						node.onRightClicked(tree, e);
 					}
+				}
+				else if (obj instanceof G2DTreeNodeGroup<?>)
+				{
+					G2DTreeNodeGroup<?> group = (G2DTreeNodeGroup<?>)obj;
+					group.onClicked(tree, e);
 				}
 			}
 		}

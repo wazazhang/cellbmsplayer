@@ -69,7 +69,7 @@ public class SoundManager extends ManagerForm implements ActionListener
 			}
 			
 			sound_list = new SoundList(getSounds());
-			sound_list.setVisibleRowCount(sound_files.size()/5+1);
+			sound_list.setVisibleRowCount(sound_files.size()/10+1);
 			sound_list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
 			this.add(new JScrollPane(sound_list), BorderLayout.CENTER);
 
@@ -107,7 +107,7 @@ public class SoundManager extends ManagerForm implements ActionListener
 		save_dir.mkdirs();
 		StringBuffer sb = new StringBuffer();
 		for (SoundFile icon : sound_files) {
-			sb.append(icon.getName()+"\n");
+			sb.append(icon.getListName()+"\n");
 		}
 		File save_file = new File(save_dir, "sound.list");
 		com.cell.io.CFile.writeText(save_file, sb.toString(), "UTF-8");
