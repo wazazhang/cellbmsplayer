@@ -30,6 +30,7 @@ import com.g2d.studio.Studio;
 import com.g2d.studio.Version;
 import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.cpj.entity.CPJSprite;
+import com.g2d.studio.gameedit.ObjectAbilityAdapters;
 import com.g2d.studio.gameedit.template.XLSUnit;
 import com.g2d.studio.rpg.AbilityPanel;
 import com.g2d.studio.rpg.RPGObjectPanel;
@@ -286,7 +287,8 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 	public DisplayObjectEditor<?> createEditorForm() {
 		return new SceneUnitTagEditor(this,
 				new SceneAbilityAdapters.ActorPathStartAdapter(editor),
-				new SceneAbilityAdapters.ActorTransportAdapter(editor));
+				new SceneAbilityAdapters.ActorTransportAdapter(editor),
+				new ObjectAbilityAdapters.UnitDropItemNodeAdapter());
 	}
 	
 	@Override
