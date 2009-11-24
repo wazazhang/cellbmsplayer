@@ -39,6 +39,8 @@ import com.g2d.studio.icon.IconFile;
  */
 public abstract class ResourceManager extends CellSetResourceManager
 {
+	public static boolean PRINT_VERBOS = false;
+	
 //	--------------------------------------------------------------------------------------------------------------------
 	
 	final public String res_root;
@@ -200,7 +202,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 			} else if (type.equals(SpriteSet.class)) {
 				set = type.cast(new SpriteSet(cpj_name, obj_name, res_path));
 			}
-			
+			if (PRINT_VERBOS)
 			System.out.println("\tget " + type.getSimpleName() + " : " + cpj_name + "(" + obj_name + ")");
 			
 			table.put(set.getID(), set);
@@ -246,7 +248,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 			String xml_file = tdir +"/"+ res_list[i];
 			
 			T set = RPGObjectMap.readNode(xml_file, type);			
-			
+			if (PRINT_VERBOS)
 			System.out.println("\tget " + type.getSimpleName() + " : " + set.name + "(" + set.id + ")");
 
 			table.put(set.getIntID(), set);
@@ -288,7 +290,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 			String scene_file = scene_path +"/"+ res_list[i];
 			
 			Scene set = RPGObjectMap.readNode(scene_file, Scene.class);			
-			
+			if (PRINT_VERBOS)
 			System.out.println("\tget " + set.getClass().getSimpleName() + " : " + set.name + "(" + set.id + ")");
 
 			table.put(set.getIntID(), set);
@@ -316,6 +318,8 @@ public abstract class ResourceManager extends CellSetResourceManager
 			String icon_w 	= split[1];
 			String icon_h 	= split[2];
 			table.put(icon_id, new AtomicReference<BufferedImage>(null));
+			
+			if (PRINT_VERBOS)
 			System.out.println("\tget icon : " + icon_id + "(" + icon_w + "x" + icon_h + ")");
 		}
 		
@@ -343,6 +347,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 		for (int i=0; i<res_list.length; i++)
 		{
 			table.put(res_list[i].trim(), new AtomicReference<ISound>(null));
+			if (PRINT_VERBOS)
 			System.out.println("\tget sound : " + res_list[i]);
 		}
 		
