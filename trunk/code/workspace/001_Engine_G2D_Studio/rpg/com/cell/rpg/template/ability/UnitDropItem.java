@@ -17,7 +17,7 @@ public class UnitDropItem extends AbstractAbility
 	
 	@Override
 	public boolean isMultiField() {
-		return false;
+		return true;
 	}
 
 	@Property("[单位能力] 掉落物品")
