@@ -19,7 +19,7 @@ public class G2DWindowToolBar extends JToolBar implements Externalizable
 {
 	private static final long serialVersionUID = 1L;
 	
-	final public JButton save = new JButton(Tools.createIcon(Res.save_tool_bar[2]));
+	final public JButton save = new JButton(Tools.createIcon(Res.icons_tool_bar[2]));
 	
 	public G2DWindowToolBar(ActionListener listener) {
 		save.setToolTipText("保存");

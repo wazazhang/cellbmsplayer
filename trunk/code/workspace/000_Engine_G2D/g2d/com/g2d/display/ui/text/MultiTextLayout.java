@@ -176,6 +176,8 @@ public class MultiTextLayout
 	/**是否显示为密码*/
 	private boolean 			is_password 	= false;
 	
+	transient private int		render_timer;
+	
 //	----------------------------------------------------------------------------------------------------------------
 //	交互
 	
@@ -789,7 +791,7 @@ public class MultiTextLayout
 					render_size.width = Math.max(line.width, render_size.width);
 				}
 				if (!is_read_only && is_show_caret) {
-					if (DisplayObject.main_timer/6%2==0 && caret_bounds!=null) {
+					if (render_timer++/6%2==0 && caret_bounds!=null) {
 						g.setColor(Color.WHITE);
 						if (text.length()>0) {
 							g.fillRect(caret_bounds.x, caret_bounds.y, 2, caret_bounds.height);

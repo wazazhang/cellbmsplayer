@@ -147,7 +147,7 @@ public abstract class Stage extends DisplayObjectContainer
 		
 		super.onUpdate(this);
 		
-		DisplayObject.main_timer ++;
+//		DisplayObject.main_timer ++;
 	}
 	
 	@Override
