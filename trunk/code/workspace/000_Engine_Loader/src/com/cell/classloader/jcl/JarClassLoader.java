@@ -46,24 +46,32 @@ public class JarClassLoader extends ClassLoader
 		System.out.println("current native suffix : " + NATIVE_SUFFIX);
 	}
 	
-	final static public void loadClasses(
-			ClassLoader		root_class_loader,
-			Vector<byte[]> 	resources,
-			String 			key,
-			boolean 		is_sign_class)
-	{
-		try {
-			resources = dds(resources, key);
-			if (root_class_loader instanceof sun.plugin2.applet.JNLP2ClassLoader) {
-				sun.plugin2.applet.JNLP2ClassLoader jnl = (sun.plugin2.applet.JNLP2ClassLoader)root_class_loader;
-
-			}
-		} catch (Throwable err) {
-			err.printStackTrace();
-		}
-	}
+//	final static public void loadClasses(
+//			ClassLoader		root_class_loader,
+//			Vector<byte[]> 	resources,
+//			String 			key,
+//			boolean 		is_sign_class)
+//	{
+//		try {
+//			resources = dds(resources, key);
+//			if (root_class_loader instanceof sun.plugin2.applet.JNLP2ClassLoader) {
+//				sun.plugin2.applet.JNLP2ClassLoader jnl = (sun.plugin2.applet.JNLP2ClassLoader)root_class_loader;
+//
+//			}
+//		} catch (Throwable err) {
+//			err.printStackTrace();
+//		}
+//	}
 
 	
+	/**
+	 * 创造一个JarClassLoader
+	 * @param root_class_loader
+	 * @param resources
+	 * @param key
+	 * @param is_sign_class
+	 * @return
+	 */
 	final static public JarClassLoader createJarClassLoader(
 			ClassLoader		root_class_loader,
 			Vector<byte[]> 	resources,
@@ -82,7 +90,14 @@ public class JarClassLoader extends ClassLoader
 		}
 		return null;
 	}
-
+	
+	/**
+	 * 将所有的字节流解码
+	 * @param resources
+	 * @param key
+	 * @return
+	 * @throws Exception
+	 */
 	final static private Vector<byte[]> dds(Vector<byte[]> resources, String key) throws Exception
 	{
 		if (key != null) {
@@ -97,6 +112,12 @@ public class JarClassLoader extends ClassLoader
 		return resources;
 	}
 	
+	/**
+	 * 得到一个字符串的前缀
+	 * @param name
+	 * @param suffix
+	 * @return
+	 */
 	final static private String getPrefix(String name, String suffix) {
 		if (name.endsWith(suffix)) {
 			return name.substring(0, name.length() - suffix.length());
@@ -104,6 +125,12 @@ public class JarClassLoader extends ClassLoader
 		return name;
 	}
 
+	/**
+	 * 完全读入一个jar包的内容
+	 * @param jar
+	 * @return
+	 * @throws IOException
+	 */
 	final static private byte[] getResourceData(JarInputStream jar) throws IOException 
 	{
 		ByteArrayOutputStream data = new ByteArrayOutputStream();
@@ -118,6 +145,12 @@ public class JarClassLoader extends ClassLoader
 		return data.toByteArray();
 	}
 
+	/**
+	 * 调用Class里的静态方法
+	 * @param clz
+	 * @param methodName
+	 * @param args
+	 */
 	final static public void callMethod(Class<?> clz, String methodName, String[] args)
 	{
 		Class<?>[] arg = new Class<?>[1];
@@ -195,7 +228,7 @@ public class JarClassLoader extends ClassLoader
 					byte[] data = getResourceData(jar);
 					this.Classes.put(class_name, data);
 				}
-				// put windows native
+				// put native
 				else if (ex.endsWith(NATIVE_SUFFIX)) 
 				{
 					String native_name = getPrefix(name, NATIVE_SUFFIX);
@@ -217,14 +250,16 @@ public class JarClassLoader extends ClassLoader
 		
 		try 
 		{
+			// 将本地库缓存到jre系统目录或者用户目录
 			String libpath		= System.getProperty("java.library.path");
 			String user_home	= System.getProperty("user.home");
-
 			File native_file_dir = null;
 			StringTokenizer st	= new StringTokenizer(libpath, File.pathSeparator);
 			if (st.hasMoreElements()) {
+				// 首先尝试存入jre系统目录
 				native_file_dir = new File(st.nextToken());
 			} else {
+				// 然后尝试存入用户目录
 				native_file_dir	= new File(user_home+File.separatorChar+"jni_natives_cache");
 				native_file_dir.mkdirs();
 			}
