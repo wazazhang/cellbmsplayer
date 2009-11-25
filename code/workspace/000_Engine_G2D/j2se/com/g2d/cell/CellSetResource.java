@@ -1496,10 +1496,11 @@ public class CellSetResource //implements Serializable
 	 */
 	protected class StreamTiles implements IImages, Runnable
 	{
-		final public ImagesSet				img;
-		final public IImage[]			images;
+		final public ImagesSet		img;
+		final public IImage[]		images;
 
-		private boolean 				loaded			= false;
+		private boolean 			loaded			= false;
+		private int					render_timer;
 		
 		public StreamTiles(ImagesSet img) throws IOException {
 			this.images = new CImage[img.Count];
@@ -1581,7 +1582,7 @@ public class CellSetResource //implements Serializable
 			{
 				Graphics2D cg = ((CGraphics)g).getGraphics();
 				
-				float d = Math.abs((float)Math.sin(DisplayObject.main_timer/20d));
+				float d = Math.abs((float)Math.sin(render_timer++/20d));
 				
 				cg.setColor(new Color(1,1,1,d));
 				cg.drawRect(x, y, w, h);

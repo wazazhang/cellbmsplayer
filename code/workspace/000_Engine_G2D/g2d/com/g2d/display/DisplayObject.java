@@ -45,7 +45,7 @@ public abstract class DisplayObject extends DObject implements Comparable<Displa
 
 //	--------------------------------------------------------------------------------------------------------------------------
 	
-	public static int 		main_timer;
+//	public static int 		main_timer;
 
 	static Stack<Object>	display_stack = new Stack<Object>();
 	

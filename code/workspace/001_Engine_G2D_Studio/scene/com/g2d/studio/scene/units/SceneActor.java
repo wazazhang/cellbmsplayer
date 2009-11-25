@@ -17,6 +17,7 @@ import javax.swing.JList;
 import com.cell.game.CSprite;
 import com.cell.rpg.display.UnitNode;
 import com.cell.rpg.scene.Actor;
+import com.cell.rpg.scene.ability.ActorDropItem;
 import com.g2d.annotation.Property;
 import com.g2d.cell.CellSetResource;
 import com.g2d.cell.CellSetResource.SpriteSet;
@@ -32,12 +33,14 @@ import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.cpj.entity.CPJSprite;
 import com.g2d.studio.gameedit.ObjectAbilityAdapters;
 import com.g2d.studio.gameedit.template.XLSUnit;
+import com.g2d.studio.res.Res;
 import com.g2d.studio.rpg.AbilityPanel;
 import com.g2d.studio.rpg.RPGObjectPanel;
 import com.g2d.studio.scene.editor.SceneAbilityAdapters;
 import com.g2d.studio.scene.editor.SceneEditor;
 import com.g2d.studio.scene.editor.SceneUnitMenu;
 import com.g2d.studio.scene.editor.SceneUnitTagEditor;
+import com.g2d.studio.scene.effect.EditEffectInfo;
 
 import com.g2d.util.Drawing;
 
@@ -55,6 +58,9 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 	final XLSUnit				xls_unit;
 
 	Rectangle					snap_shape = new Rectangle(-2, -2, 4, 4);
+
+	EditEffectInfo				effect_item		= new EditEffectInfo(Res.img_item_info,		0);
+	EditEffectInfo				effect_quest	= new EditEffectInfo(Res.img_quest_info,	Math.PI);
 	
 //	--------------------------------------------------------------------------------------------------------
 	
@@ -196,6 +202,18 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 			}
 		}
 		
+		if (actor.getAbility(ActorDropItem.class)!=null) {
+			if (!this.contains(effect_item)) {
+				this.addChild(effect_item);
+			}
+		} else {
+			if (this.contains(effect_item)) {
+				this.removeChild(effect_item);
+			}
+		}
+		if (!this.contains(effect_quest)) {
+			this.addChild(effect_quest);
+		}
 	}
 	
 	@Override
