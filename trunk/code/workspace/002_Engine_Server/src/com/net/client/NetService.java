@@ -17,7 +17,11 @@ import com.net.MessageHeader;
 public class NetService
 {
 	static Logger log = LoggerFactory.getLogger(NetService.class.getName());
+
+	/**request从1开始*/
+	static private AtomicInteger SendedPacks = new AtomicInteger(1);
 	
+//	-------------------------------------------------------------------------------------------------
 	private class ExitTask extends Thread
 	{
 		public void run() {
@@ -29,7 +33,8 @@ public class NetService
 			}
 		}
 	}
-	
+
+//	-------------------------------------------------------------------------------------------------
 	private class SimpleClientListenerImpl implements ServerSessionListener
 	{
 		SimpleClientListenerImpl() {}
@@ -97,12 +102,10 @@ public class NetService
 		}
 
 	}
-	
-	/**request从1开始*/
-	static private AtomicInteger SendedPacks = new AtomicInteger(1);
-	
+
+//	-------------------------------------------------------------------------------------------------
 	@SuppressWarnings("unchecked")
-	class Request implements Runnable
+	private class Request implements Runnable
 	{
 		final public MessageHeader 		Message;
 		final public WaitingListener[] 	Listener;
@@ -174,18 +177,18 @@ public class NetService
 	
 //	---------------------------------------------------------------------------------------------------------------------------------
 	
-	public long DropRequestTimeOut = 60000;
+	public long 					DropRequestTimeOut 		= 60000;
 
-	final protected ServerSession 	Session;
+	final private ServerSession 	Session;
 	
-	final protected ConcurrentHashMap<Integer, Request> 
-	WaitingListeners = new ConcurrentHashMap<Integer, Request>();
+	final private ConcurrentHashMap<Integer, Request> 
+									WaitingListeners 		= new ConcurrentHashMap<Integer, Request>();
+
+	final private ConcurrentHashMap<Class<?>, ArrayList<NotifyListener<?>>> 
+									NotifyListeners 		= new ConcurrentHashMap<Class<?>, ArrayList<NotifyListener<?>>>();
 	
-	final protected ConcurrentHashMap<Class<?>, ArrayList<NotifyListener<?>>> 
-	NotifyListeners = new ConcurrentHashMap<Class<?>, ArrayList<NotifyListener<?>>>();
-	
-	final protected ConcurrentLinkedQueue<MessageHeader>
-	UnhandledMessages = new ConcurrentLinkedQueue<MessageHeader>();
+	final private ConcurrentLinkedQueue<MessageHeader>
+									UnhandledMessages 		= new ConcurrentLinkedQueue<MessageHeader>();
 	
 	private String					ServerHost;
 	private Integer 				ServerPort;
@@ -215,22 +218,47 @@ public class NetService
 		this(session, null);
 	}
 	
+	/**
+	 * 得到当前的网络链接套接字
+	 * @return
+	 */
 	final public ServerSession getSession() {
 		return Session;
 	}
 	
+	/**
+	 * 得到链接的主机名
+	 * @return
+	 */
 	final public String getHost() {
 		return ServerHost;
 	}
 	
+	/**
+	 * 得到链接的端口
+	 * @return
+	 */
 	final public Integer getPort() {
 		return ServerPort;
 	}
 
+	/**
+	 * 链接到主机
+	 * @param host
+	 * @param port
+	 * @return
+	 */
 	final public boolean connect(String host, Integer port) {
 		return this.connect(host, port, 10000L);
 	}
 	
+	/**
+	 * 链接到主机并制定超时时间
+	 * @param host
+	 * @param port
+	 * @param timeout
+	 * @return
+	 */
 	final public boolean connect(String host, Integer port, Long timeout) {
 		sendlock.lock();
 		try {
@@ -252,6 +280,10 @@ public class NetService
     	return true;
 	}
 
+	/**
+	 * 重新链接到主机
+	 * @return
+	 */
 	final public boolean reconnect() 
 	{
 		sendlock.lock();
@@ -271,6 +303,10 @@ public class NetService
     	return true;
 	}
     
+	/**
+	 * 是否已链接
+	 * @return
+	 */
 	final public boolean isConnected() {
     	if (Session.isConnected()) {
     		return Session.isConnected();
@@ -280,6 +316,10 @@ public class NetService
     	return false;
     }
     
+	/**
+	 * 断开链接
+	 * @param force 是否立即断开
+	 */
 	final public void disconnect(boolean force) {
     	if (Session.isConnected()) {
     		Session.disconnect(force);
@@ -288,11 +328,15 @@ public class NetService
 		}
     }
 
+	/**
+	 * 得到网络交互延迟时间
+	 * @return
+	 */
 	final public int getPing() {
 		return request_response_ping.get();
 	}
 	
-	final public void printNotConnectError() {
+	final private void printNotConnectError() {
 		log.error("session is not connect, please call connect(String host, String port) first !");
 	}
 //	----------------------------------------------------------------------------------------------------------------------------
@@ -315,9 +359,20 @@ public class NetService
 	
 //	----------------------------------------------------------------------------------------------------------------------------
 	
+    /**
+     * 发送并监听返回
+     * @param <T>
+     * @param message
+     * @param timeout
+     * @param listeners
+     * @return
+     */
     @SuppressWarnings("unchecked")
 	final public<T extends MessageHeader> T sendRequest(MessageHeader message, long timeout, WaitingListener ... listeners) {
-    	cleanRequestAndNotify();
+    	if (System.currentTimeMillis() - LastCleanRequestTime > DropRequestTimeOut) {        	
+    		LastCleanRequestTime = System.currentTimeMillis();
+    		cleanRequestAndNotify();
+    	}
 		Request request = new Request(message, timeout, listeners);
 		sendlock.lock();
     	try{
@@ -337,18 +392,26 @@ public class NetService
 		return null;
 	}
     
+    /**
+     * 发送并监听返回
+     * @param message
+     * @param listeners
+     */
     @SuppressWarnings("unchecked")
     final public void sendRequest(MessageHeader message, WaitingListener ... listeners) {
     	sendRequest(message, 0, listeners);
 	}
     
+    /**
+     * 立刻清理所有未响应的请求
+     */
     final public void cleanRequestAndNotify() 
     {
-    	if (System.currentTimeMillis() - LastCleanRequestTime > DropRequestTimeOut) 
-    	{
+//    	System.err.println("waiting listeners : " + WaitingListeners.size());
+    	{        	
     		sendlock.lock();
         	try{
-        		for (Integer pnum : WaitingListeners.keySet()) {
+        		for (Integer pnum : new ArrayList<Integer>(WaitingListeners.keySet())) {
             		Request req = WaitingListeners.get(pnum);
         			if (req != null && req.isDroped()) {
         				WaitingListeners.remove(pnum);
@@ -386,24 +449,77 @@ public class NetService
     			notifylock.unlock();
     		}
         	
-        	LastCleanRequestTime = System.currentTimeMillis();
     	}
     }
     
 //	----------------------------------------------------------------------------------------------------------------------------
 //	notify
     
-	final public void registNotifyListener(Class<?> cls, NotifyListener<?> listener) {
+	/**
+	 * 添加一个用于主动监听服务器端的消息的监听器
+	 * @param message_type
+	 * @param listener
+	 */
+	final public void registNotifyListener(Class<? extends MessageHeader> message_type, NotifyListener<?> listener) {
 		notifylock.lock();
 		try{
-			
-			ArrayList<NotifyListener<?>> listeners = NotifyListeners.get(cls);
+			ArrayList<NotifyListener<?>> listeners = NotifyListeners.get(message_type);
 			if (listeners == null) {
 				listeners = new ArrayList<NotifyListener<?>>();
-				NotifyListeners.put(cls, listeners);
+				NotifyListeners.put(message_type, listeners);
 			}
 			listeners.add(listener);
+			cleanUnhandledMessages();
 			
+//			System.out.println("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL");
+//			for (Class<?> k : NotifyListeners.keySet()) {
+//				ArrayList<NotifyListener<?>> list = NotifyListeners.get(k);
+//				System.out.println(k);
+//				for (NotifyListener<?> l : list) {
+//					System.out.println("\t"+l);
+//				}
+//			}
+//			System.out.println("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
+
+		}finally{
+			notifylock.unlock();
+		}
+	}
+	
+	/**
+	 * 删除一个用于主动监听服务器端的消息的监听器
+	 * @param message_type
+	 * @param listener
+	 */
+	final public void unregistNotifyListener(Class<? extends MessageHeader> message_type, NotifyListener<?> listener) {
+		notifylock.lock();
+		try {
+			ArrayList<NotifyListener<?>> listeners = NotifyListeners.get(message_type);
+			if (listeners != null) {
+				listeners.remove(listener);
+			}
+		} finally {
+			notifylock.unlock();
+		}
+	}
+	
+	/**
+	 * 清理所有用于主动监听服务器端的消息的监听器
+	 * @param message_type
+	 */
+	final public void clearNotifyListener(Class<? extends MessageHeader> message_type) {
+		notifylock.lock();
+		try {
+			NotifyListeners.remove(message_type);
+		} finally {
+			notifylock.unlock();
+		}
+	}
+
+    final public void cleanUnhandledMessages()
+    {	
+    	notifylock.lock();
+		try {
 			if (!UnhandledMessages.isEmpty()) {
 				ArrayList<MessageHeader> removed = null;
 				for (MessageHeader unotify : UnhandledMessages) {
@@ -419,33 +535,12 @@ public class NetService
 					UnhandledMessages.removeAll(removed);
 				}
 			}
-			
-		}finally{
-			notifylock.unlock();
-		}
-	}
-	
-	final public void unregistNotifyListener(Class<?> cls, NotifyListener<?> listener) {
-		notifylock.lock();
-		try {
-			ArrayList<NotifyListener<?>> listeners = NotifyListeners.get(cls);
-			if (listeners != null) {
-				listeners.remove(listener);
-			}
 		} finally {
 			notifylock.unlock();
 		}
-	}
-	
-	final public void clearNotifyListener(Class<?> cls) {
-		notifylock.lock();
-		try {
-			NotifyListeners.remove(cls);
-		} finally {
-			notifylock.unlock();
-		}
-	}
-	
+    }
+    
+//	----------------------------------------------------------------------------------------------------------------------------
 	
 	@SuppressWarnings("unchecked")
 	final protected boolean tryReceivedNotify(MessageHeader message) 
