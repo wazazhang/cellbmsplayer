@@ -7,6 +7,7 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+import com.cell.security.MD5;
 import com.google.appengine.api.datastore.Email;
 
 
@@ -37,7 +38,7 @@ public class Account
 	public Account(String name, String sign, Email email) 
 	{
 		this.name 	= name;
-		this.sign	= sign;
+		this.sign	= MD5.getMD5(sign, "UTF-8");
 		this.email	= email;
 	}
 
@@ -77,7 +78,7 @@ public class Account
 	 * @param sign the sign to set
 	 */
 	public void setSign(String sign) {
-		this.sign = sign;
+		this.sign	= MD5.getMD5(sign, "UTF-8");
 	}
 
 	/**
