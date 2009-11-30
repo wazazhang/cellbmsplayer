@@ -3,7 +3,7 @@ package com.cell.rpg.quest;
 import com.cell.ExtObject;
 import com.cell.util.MarkedHashtable;
 
-public class QuestPurpose extends ExtObject {
+public class QuestCondition extends ExtObject {
 
 	@Override
 	protected void onRead(MarkedHashtable data) {

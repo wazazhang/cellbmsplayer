@@ -23,11 +23,16 @@ public class Quest extends RPGObject
 //	quest
 	
 	/** 任务内容 */
-	public	QuestDiscussion			discussion	= new QuestDiscussion();
+	QuestDiscussion				discussion			= new QuestDiscussion();
+	
+	/** 任务触发条件 */
+	ArrayList<QuestCondition>	trigger_conditions	= new ArrayList<QuestCondition>();
+	
 	/** 任务完成条件 */
-	public	ArrayList<QuestPurpose>	purposes	= new ArrayList<QuestPurpose>();
+	ArrayList<QuestCondition>	complete_conditions	= new ArrayList<QuestCondition>();
+	
 	/** 任务奖励 */
-	public	ArrayList<QuestAward>	awards		= new ArrayList<QuestAward>();
+	ArrayList<QuestAward>		awards				= new ArrayList<QuestAward>();
 	
 //	----------------------------------------------------------------------------------------------------------------
 //	extend
@@ -50,4 +55,22 @@ public class Quest extends RPGObject
 	public Class<?>[] getSubAbilityTypes() {
 		return new Class<?>[]{};
 	}
+//	----------------------------------------------------------------------------------------------------------------
+
+	public QuestDiscussion getDiscussion() {
+		return discussion;
+	}
+	
+	public ArrayList<QuestCondition> getTriggerConditions() {
+		return trigger_conditions;
+	}
+
+	public ArrayList<QuestCondition> getCompleteConditions() {
+		return complete_conditions;
+	}
+
+	public ArrayList<QuestAward> getAwards() {
+		return awards;
+	}
+
 }
