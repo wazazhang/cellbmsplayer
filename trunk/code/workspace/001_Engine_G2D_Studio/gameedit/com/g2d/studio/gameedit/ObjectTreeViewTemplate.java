@@ -2,6 +2,7 @@ package com.g2d.studio.gameedit;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Vector;
 
@@ -18,6 +19,7 @@ import com.cell.rpg.template.TemplateNode;
 import com.cell.rpg.xls.XLSFullRow;
 
 import com.cell.util.IDFactoryInteger;
+import com.g2d.studio.Studio.ProgressForm;
 import com.g2d.studio.gameedit.dynamic.DAvatar;
 import com.g2d.studio.gameedit.dynamic.DynamicNode;
 import com.g2d.studio.gameedit.dynamic.IDynamicIDFactory;
@@ -45,13 +47,18 @@ extends ObjectTreeView<T, D>
 			Class<T>	node_type, 
 			Class<D>	data_type, 
 			File		list_file,
-			File		xls_file) 
+			File		xls_file,
+			ProgressForm progress) 
 	{
 		super(title, node_type, data_type, list_file);
 		this.xls_file = xls_file;
 		this.xls_row_map = new HashMap<String, XLSFullRow>();
-		for (XLSFullRow row : XLSFullRow.getXLSRows(xls_file, XLSFullRow.class)) {
+		int i=0;		
+		Collection<XLSFullRow> list = XLSFullRow.getXLSRows(xls_file, XLSFullRow.class);
+		progress.setMaximum(title, list.size());
+		for (XLSFullRow row : list) {
 			xls_row_map.put(row.id, row);
+			progress.setValue(title, i++);
 		}
 		getTreeRoot().loadList();
 		reload();

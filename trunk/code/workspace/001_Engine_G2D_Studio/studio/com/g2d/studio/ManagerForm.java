@@ -21,6 +21,7 @@ public abstract class ManagerForm extends JFrame
 		super.setIconImage(Res.icon_edit);		
 		super.setTitle(title);
 		this.studio = studio;
+		progress.startReadBlock("初始化" + title + "...");
 	}
 	
 	abstract public void saveAll() throws Throwable;

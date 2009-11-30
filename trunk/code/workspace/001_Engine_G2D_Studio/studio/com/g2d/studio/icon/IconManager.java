@@ -28,8 +28,11 @@ public class IconManager extends ManagerForm
 	{
 		super(studio, progress, "图标管理器");
 		{
-			File icon_dir = Studio.getInstance().root_icon_path;
-			for (File file : icon_dir.listFiles()) {
+			File icon_dir 	= Studio.getInstance().root_icon_path;	
+			File files[]	= icon_dir.listFiles();
+			progress.setMaximum("", files.length);
+			for (int i=0;i<files.length; i++) {
+				File file = files[i];
 				if (file.getName().endsWith(Config.ICON_SUFFIX)) {
 					try{
 						BufferedImage img = Tools.readImage(file.getPath());
@@ -40,7 +43,8 @@ public class IconManager extends ManagerForm
 							icon_files.add(icon);
 						}
 					}catch(Exception err){}
-				}
+				}					
+				progress.setValue("", i);
 			}
 		}
 		

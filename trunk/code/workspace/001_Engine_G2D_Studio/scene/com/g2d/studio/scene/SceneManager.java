@@ -75,6 +75,7 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 	public SceneManager(Studio studio, ProgressForm progress)
 	{
 		super(new BorderLayout());
+		progress.startReadBlock("初始化场景...");
 		instance = this;
 		this.scene_dir	= new File(studio.project_save_path, "scenes");
 		this.scene_list	= new File(scene_dir, "scene.list");
@@ -83,9 +84,11 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 			this.g2d_tree	= new G2DTree(tree_root);
 			if (scene_dir.exists() && scene_list.exists()) {
 				String[] all_scene = CIO.readAllLine(scene_list.getPath(), "UTF-8");
+				progress.setMaximum("", all_scene.length);
+				int i=0;
 				for (String node_path : all_scene) {
-//					loadScene(node_path, tree_root);
 					tree_root.loadPath(node_path);
+					progress.setValue("", i++);
 				}
 			}
 			this.g2d_tree.reload();
