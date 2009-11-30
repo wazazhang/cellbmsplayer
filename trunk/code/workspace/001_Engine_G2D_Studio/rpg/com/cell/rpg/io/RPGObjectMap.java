@@ -129,7 +129,13 @@ public class RPGObjectMap<T extends RPGObject> extends Hashtable<String, T> //im
 			StringReader reader = new StringReader(xml);
 			ObjectInputStream ois = new XStream().createObjectInputStream(reader);
 			try{
-				return type.cast(ois.readObject());
+				T ret = type.cast(ois.readObject());
+				if (ret != null && ret.getRPGSerializationListeners()!=null) {
+					for (RPGSerializationListener l : ret.getRPGSerializationListeners()) {
+						l.onReadComplete(ret, xml_file);
+					}
+				}
+				return ret;
 			}finally{
 				ois.close();
 			}
@@ -147,6 +153,11 @@ public class RPGObjectMap<T extends RPGObject> extends Hashtable<String, T> //im
 			StringWriter writer = new StringWriter(1024);
 			ObjectOutputStream oos = new XStream().createObjectOutputStream(writer);
 			try{
+				if (node.getRPGSerializationListeners()!=null) {
+					for (RPGSerializationListener l : node.getRPGSerializationListeners()) {
+						l.onWriteBefore(node, xml_file.getPath());
+					}
+				}
 				oos.writeObject(node);
 			}finally{
 				oos.close();

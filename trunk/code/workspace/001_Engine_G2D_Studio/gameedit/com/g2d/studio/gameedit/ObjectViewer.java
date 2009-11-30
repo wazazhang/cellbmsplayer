@@ -33,6 +33,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import com.cell.rpg.RPGObject;
+import com.cell.rpg.io.RPGSerializationListener;
 import com.g2d.Tools;
 import com.g2d.display.DisplayObject;
 import com.g2d.editor.DisplayObjectViewer;
@@ -49,11 +50,12 @@ public abstract class ObjectViewer<T extends ObjectNode<?>> extends JPanel
 {
 	private static final long serialVersionUID = 1L;
 	
-	final  T tobject;
+	final protected T tobject;
 	
-	protected JTabbedPane 	table = new JTabbedPane();
-	protected JPanel 		page_properties;
-	protected AbilityPanel	page_abilities;
+	protected JTabbedPane 		table = new JTabbedPane();
+	protected JPanel 			page_properties;
+	protected RPGObjectPanel	page_object_panel;
+	protected AbilityPanel		page_abilities;
 	
 	public ObjectViewer(T object, AbilityCellEditAdapter<?> ... adapters) 
 	{
@@ -63,8 +65,8 @@ public abstract class ObjectViewer<T extends ObjectNode<?>> extends JPanel
 			page_properties = new JPanel();
 			table.addTab("属性", page_properties);
 		} {
-			RPGObjectPanel object_panel = new RPGObjectPanel(object.getData());
-			table.addTab("RPG属性", object_panel);
+			page_object_panel = new RPGObjectPanel(object.getData());
+			table.addTab("RPG属性", page_object_panel);
 		} {
 			page_abilities = new AbilityPanel(object.getData(), adapters);
 			table.addTab("能力", page_abilities);
@@ -76,7 +78,7 @@ public abstract class ObjectViewer<T extends ObjectNode<?>> extends JPanel
 		
 	}
 	
-	public JTabbedPane getPages() {
+	final public JTabbedPane getPages() {
 		return table;
 	}
 	
@@ -86,7 +88,6 @@ public abstract class ObjectViewer<T extends ObjectNode<?>> extends JPanel
 	
 	abstract protected void appendPages(JTabbedPane table) ;
 	
-//	-------------------------------------------------------------------------------------------------------------------------
 
 //	-------------------------------------------------------------------------------------------------------------------------
 	

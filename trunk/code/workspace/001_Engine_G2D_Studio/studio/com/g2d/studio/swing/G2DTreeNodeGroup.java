@@ -6,7 +6,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.Externalizable;
 import java.io.File;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -20,6 +24,8 @@ import javax.swing.tree.TreeNode;
 
 import com.cell.CUtil;
 import com.g2d.studio.Studio;
+import com.g2d.studio.scene.SceneManager;
+import com.g2d.studio.scene.entity.SceneNode;
 import com.g2d.studio.swing.G2DTree;
 
 
@@ -152,7 +158,7 @@ public abstract class G2DTreeNodeGroup<C extends G2DTreeNode<?>> extends Default
 	
 //	-------------------------------------------------------------------------------------------------------
 	
-	public static class GroupMenu extends JPopupMenu implements ActionListener
+	public static class GroupMenu extends JPopupMenu implements ActionListener, Externalizable
 	{
 		private static final long serialVersionUID = 1L;
 		
@@ -217,6 +223,62 @@ public abstract class G2DTreeNodeGroup<C extends G2DTreeNode<?>> extends Default
 				}
 			}
 		}
+		
+		@Override
+		public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {}
+		@Override
+		public void writeExternal(ObjectOutput out) throws IOException {}
+
 	}
 	
+
+//	-------------------------------------------------------------------------------------------------------
+	
+	
+	public static class NodeMenu<T extends G2DTreeNode<?>> extends JPopupMenu implements ActionListener, Externalizable
+	{
+		private static final long serialVersionUID = 1L;
+		
+		final public T	node;
+		protected JMenuItem 		info	= new JMenuItem();
+		protected JMenuItem			open	= new JMenuItem("打开");
+		protected JMenuItem 		rename	= new JMenuItem("重命名");
+		protected JMenuItem 		delete	= new JMenuItem("删除");
+		
+		public NodeMenu(T node)
+		{
+			this.node = node;
+			
+			info.setText(node.getName());
+			info.setEnabled(false);
+			
+			add(info);
+			add(open);
+			add(rename);
+			add(delete);
+			
+			open.addActionListener(this);
+			rename.addActionListener(this);
+			delete.addActionListener(this);
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent e) 
+		{
+			if (e.getSource() == open) {
+				System.out.println(node.getName() + " - open");
+			} 
+			else if (e.getSource() == rename) {
+				System.out.println(node.getName() + " - rename");
+			}
+			else if (e.getSource() == delete) {
+				System.out.println(node.getName() + " - delete");
+			}
+		}
+		
+		@Override
+		public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {}
+		@Override
+		public void writeExternal(ObjectOutput out) throws IOException {}
+	}
 }
