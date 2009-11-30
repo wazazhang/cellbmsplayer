@@ -47,6 +47,7 @@ import com.g2d.studio.StudioResource;
 import com.g2d.studio.cpj.CPJResourceManager;
 import com.g2d.studio.gameedit.ObjectManager;
 import com.g2d.studio.icon.IconManager;
+import com.g2d.studio.quest.QuestManager;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.scene.SceneManager;
 import com.g2d.studio.sound.SoundManager;
@@ -86,7 +87,8 @@ public class Studio extends AbstractFrame
 	private ObjectManager			frame_object_manager;
 	private SoundManager			frame_sound_manager;
 	private IconManager				frame_icon_manager;
-
+	private QuestManager			frame_quest_manager;
+	
 	private SceneManager			scene_manager;
 	
 	private Studio(String g2d_file) throws Throwable
@@ -183,7 +185,6 @@ public class Studio extends AbstractFrame
 	
 		// icon manager
 		{
-			progress.startReadBlock("初始化图标...");
 			frame_icon_manager = new IconManager(this, progress);
 			JButton btn = new JButton();
 			btn.setToolTipText(frame_icon_manager.getTitle());
@@ -197,7 +198,6 @@ public class Studio extends AbstractFrame
 		}
 		// sound manager
 		{
-			progress.startReadBlock("初始化声音...");
 			frame_sound_manager = new SoundManager(this, progress);
 			JButton btn = new JButton();
 			btn.setToolTipText(frame_sound_manager.getTitle());
@@ -211,7 +211,6 @@ public class Studio extends AbstractFrame
 		}
 		// res manager
 		{
-			progress.startReadBlock("初始化资源...");
 			frame_cpj_resource_manager = new CPJResourceManager(this, progress);
 			JButton btn = new JButton();
 			btn.setToolTipText(frame_cpj_resource_manager.getTitle());
@@ -225,7 +224,6 @@ public class Studio extends AbstractFrame
 		}
 		// unit manager
 		{
-			progress.startReadBlock("初始化物体...");
 			frame_object_manager = new ObjectManager(this, progress);
 			JButton btn = new JButton();
 			btn.setToolTipText(frame_object_manager.getTitle());
@@ -237,7 +235,20 @@ public class Studio extends AbstractFrame
 			});
 			tool_bar.add(btn);
 		}
-
+		// quest manager
+		{
+			frame_quest_manager = new QuestManager(this, progress);
+			JButton btn = new JButton();
+			btn.setToolTipText(frame_quest_manager.getTitle());
+			btn.setIcon(Tools.createIcon(Res.icon_quest));
+			btn.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e) {
+					frame_quest_manager.setVisible(true);
+				}
+			});
+			tool_bar.add(btn);
+		}
+		
 		this.add(tool_bar, BorderLayout.NORTH);
 	}
 	
@@ -247,7 +258,7 @@ public class Studio extends AbstractFrame
 		JToolBar state_bar = new JToolBar();
 		
 		progress.startReadBlock("初始化工具...");
-		
+		progress.setMaximum("", 1);
 		// heap state
 		{
 			final JLabel mem_state = new JLabel("  "+Util.getHeapString()+"  ") {
@@ -278,7 +289,7 @@ public class Studio extends AbstractFrame
 		}
 
 		this.add(state_bar, BorderLayout.SOUTH);
-
+		progress.setValue("", 1);
 	}
 	
 	/**
@@ -311,6 +322,10 @@ public class Studio extends AbstractFrame
 	
 	public IconManager getIconManager() {
 		return frame_icon_manager;
+	}
+	
+	public QuestManager getQuestManager() {
+		return frame_quest_manager;
 	}
 	
 	public SceneManager getSceneManager() {
@@ -386,27 +401,34 @@ public class Studio extends AbstractFrame
 	{
 		private static final long serialVersionUID = 1L;
 		private JProgressBar progress = new JProgressBar();
-		
-		private int total = 10000;
-		
+
 		public ProgressForm()
 		{
 			this.setTitle("初始化中...");
-			this.setSize(200, 50);
+			this.setSize(250, 50);
 			this.add(progress);
 			this.setCenter();
-			progress.setStringPainted(true);
-			progress.setMaximum(total);
+			progress.setStringPainted(true);			
 		}
 		
 		public void startReadBlock(String title) {
-			progress.setString(title);
-			progress.setValue(progress.getValue()+2500);
+			this.setTitle(title);
 		}
 		
-		public void increment() {
-			progress.setValue(progress.getValue()+1);
+		public void setMaximum(String prefix, int total) {
+			progress.setMaximum(total);			
+			progress.setValue(0);
+			progress.setString(prefix + " " + (progress.getValue())+"/"+progress.getMaximum());
 		}
+		
+		public void setValue(String prefix, int n) {
+			progress.setValue(n);
+			progress.setString(prefix + " " + (progress.getValue()+1)+"/"+progress.getMaximum());
+		}
+		
+//		public void increment() {
+//			progress.setValue(progress.getValue()+1);
+//		}
 	}
 	
 //	----------------------------------------------------------------------------------------------------------------

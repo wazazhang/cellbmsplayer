@@ -4,6 +4,7 @@
 	<classpathentry kind="src" path="cpj"/>
 	<classpathentry kind="src" path="gameedit"/>
 	<classpathentry excluding="com/g2d/studio/scene/swing/|com/g2d/studio/scene/FormSceneViewer.java" kind="src" path="scene"/>
+	<classpathentry kind="src" path="quest"/>
 	<classpathentry kind="src" path="studio"/>
 	<classpathentry kind="src" path="scripts"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>

@@ -85,8 +85,10 @@ public class CPJResourceManager extends ManagerForm implements MouseListener
 		{
 			unit_root = new DefaultMutableTreeNode("单位模板");
 			ArrayList<CPJFile> files = CPJFile.listFile(path, Config.RES_ACTOR_ROOT, CPJResourceType.ACTOR);
-			for (CPJFile file : files) {
-				unit_root.add(file);
+			progress.setMaximum("", files.size());
+			for (int i=0; i<files.size(); i++) {
+				unit_root.add(files.get(i));
+				progress.setValue("", i);
 			}
 			G2DTree tree = new G2DTree(unit_root);
 			tree.addMouseListener(this);
@@ -98,8 +100,10 @@ public class CPJResourceManager extends ManagerForm implements MouseListener
 		{
 			avatar_root = new DefaultMutableTreeNode("AVATAR模板");
 			ArrayList<CPJFile> files = CPJFile.listFile(path, Config.RES_AVATAR_ROOT, CPJResourceType.AVATAR);
-			for (CPJFile file : files) {
-				avatar_root.add(file);
+			progress.setMaximum("", files.size());
+			for (int i=0; i<files.size(); i++) {
+				avatar_root.add(files.get(i));
+				progress.setValue("", i);
 			}
 			G2DTree tree = new G2DTree(avatar_root);
 			tree.addMouseListener(this);
@@ -111,8 +115,10 @@ public class CPJResourceManager extends ManagerForm implements MouseListener
 		{
 			effect_root = new DefaultMutableTreeNode("特效模板");
 			ArrayList<CPJFile> files = CPJFile.listFile(path, Config.RES_EFFECT_ROOT, CPJResourceType.EFFECT);
-			for (CPJFile file : files) {
-				effect_root.add(file);
+			progress.setMaximum("", files.size());
+			for (int i=0; i<files.size(); i++) {
+				effect_root.add(files.get(i));
+				progress.setValue("", i);
 			}
 			G2DTree tree = new G2DTree(effect_root);
 			tree.addMouseListener(this);
@@ -124,8 +130,10 @@ public class CPJResourceManager extends ManagerForm implements MouseListener
 		{
 			scene_root = new DefaultMutableTreeNode("场景模板");
 			ArrayList<CPJFile> files = CPJFile.listFile(path, Config.RES_SCENE_ROOT, CPJResourceType.WORLD);
-			for (CPJFile file : files) {
-				scene_root.add(file);
+			progress.setMaximum("", files.size());
+			for (int i=0; i<files.size(); i++) {
+				scene_root.add(files.get(i));
+				progress.setValue("", i);
 			}
 			G2DTree tree = new G2DTree(scene_root);
 			tree.addMouseListener(this);

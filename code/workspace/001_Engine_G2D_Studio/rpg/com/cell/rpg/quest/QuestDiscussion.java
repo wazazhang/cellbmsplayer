@@ -1,5 +1,5 @@
 package com.cell.rpg.quest;
 
-public class QuestTrigger {
+public class QuestDiscussion {
 
 }

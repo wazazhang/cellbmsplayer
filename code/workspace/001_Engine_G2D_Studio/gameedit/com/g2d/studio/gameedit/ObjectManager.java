@@ -115,19 +115,19 @@ public class ObjectManager extends ManagerForm implements ActionListener
 		{	
 			// XLSUnit
 			tree_units_view = new ObjectTreeViewTemplate<XLSUnit, TUnit>("单位模板", XLSUnit.class, TUnit.class, 
-					new File(objects_dir, "tunit.obj/tunit.list"), studio.xls_tunit);
+					new File(objects_dir, "tunit.obj/tunit.list"), studio.xls_tunit, progress);
 			table.addTab("单位", Tools.createIcon(Res.icon_res_2), tree_units_view);
 			table.addChangeListener(tree_units_view);
 		}{	
 			// XLSItem
 			tree_items_view = new ObjectTreeViewTemplate<XLSItem, TItem>("道具模板", XLSItem.class, TItem.class, 
-					new File(objects_dir, "titem.obj/titem.list"), studio.xls_titem);
+					new File(objects_dir, "titem.obj/titem.list"), studio.xls_titem, progress);
 			table.addTab("物品", Tools.createIcon(Res.icon_res_4), tree_items_view);
 			table.addChangeListener(tree_items_view);
 		}{	
 			// XLSSkill
 			tree_skills_view = new ObjectTreeViewTemplate<XLSSkill, TSkill>("技能模板", XLSSkill.class, TSkill.class, 
-					new File(objects_dir, "tskill.obj/tskill.list"), studio.xls_tskill);
+					new File(objects_dir, "tskill.obj/tskill.list"), studio.xls_tskill, progress);
 			table.addTab("技能", Tools.createIcon(Res.icon_res_3), tree_skills_view);
 			table.addChangeListener(tree_skills_view);
 		}{

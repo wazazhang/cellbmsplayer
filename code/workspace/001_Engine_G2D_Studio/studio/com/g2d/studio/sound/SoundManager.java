@@ -59,13 +59,17 @@ public class SoundManager extends ManagerForm implements ActionListener
 		}
 
 		{
-			File sound_dir = Studio.getInstance().root_sound_path;
-			for (File file : sound_dir.listFiles()) {
+			File sound_dir	= Studio.getInstance().root_sound_path;
+			File files[]	= sound_dir.listFiles();
+			progress.setMaximum("", files.length);
+			for (int i=0; i<files.length; i++) {
+				File file = files[i];
 				if (file.getName().endsWith(Config.SOUND_SUFFIX)) {
 					SoundFile sound = new SoundFile(
 							file.getName().substring(0, file.getName().length() - Config.SOUND_SUFFIX.length()));
 					sound_files.add(sound);
 				}
+				progress.setValue("", i);
 			}
 			
 			sound_list = new SoundList(getSounds());
