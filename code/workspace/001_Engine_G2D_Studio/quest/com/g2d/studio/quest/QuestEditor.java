@@ -18,6 +18,8 @@ public class QuestEditor extends ObjectViewer<QuestNode> implements RPGSerializa
 	PanelDiscussion	panel_quest_discussion;
 	PanelPurpose	panel_quest_purpose;
 	PanelAward		panel_quest_award;
+
+//	-------------------------------------------------------------------------------------
 	
 	public QuestEditor(QuestNode node) {
 		super(node);
@@ -45,27 +47,35 @@ public class QuestEditor extends ObjectViewer<QuestNode> implements RPGSerializa
 	}
 	@Override
 	public void onWriteBefore(RPGObject object, String xmlFile) {
-		tobject.getData().discussion.text = panel_quest_discussion.getText();
-		System.out.println(tobject.getData().discussion.text);
+		tobject.getData().getDiscussion().text = panel_quest_discussion.getText();
+//		System.out.println(tobject.getData().discussion.text);
 	}
+	
+//	-------------------------------------------------------------------------------------
 	
 	class PanelDiscussion extends TextEditor
 	{		
 		public PanelDiscussion() {
-			setText(tobject.getData().discussion.text);
+			setText(tobject.getData().getDiscussion().text);
 		}
 	}
+
+//	-------------------------------------------------------------------------------------
 	
 	class PanelPurpose extends JPanel
 	{
 
 
 	}
+
+//	-------------------------------------------------------------------------------------
 	
 	class PanelAward extends JPanel
 	{
 
 		
 	}
+
+//	-------------------------------------------------------------------------------------
 	
 }
