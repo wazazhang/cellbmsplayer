@@ -331,7 +331,7 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 				node.getSceneEditor().setVisible(true);
 			} 
 			else if (e.getSource() == rename_scene) {
-				String new_name = JOptionPane.showInputDialog(SceneManager.this, "输入场景名字", node.getName());
+				String new_name = JOptionPane.showInputDialog(SceneManager.this, "输入场景名字", node.getData().name);
 				if (new_name!=null && new_name.length()>0) {
 					node.setName(new_name);
 					saveScene(node);

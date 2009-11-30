@@ -349,7 +349,12 @@ public class Studio extends AbstractFrame
 		}catch(Throwable ex) {
 			ex.printStackTrace();
 		}
-		
+
+		try{
+			frame_quest_manager.saveAll();
+		}catch(Throwable ex) {
+			ex.printStackTrace();
+		}
 		try{
 			scene_manager.saveAll();
 		}catch(Throwable ex) {

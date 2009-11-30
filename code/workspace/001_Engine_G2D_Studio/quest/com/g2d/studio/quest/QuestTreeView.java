@@ -35,75 +35,13 @@ public class QuestTreeView extends ObjectTreeViewDynamic<QuestNode, Quest>
 	
 	@Override
 	protected ObjectGroup<QuestNode, Quest> createTreeRoot(String title) {
-		return new QuestGroup(title);
+		return new QuestNodeGroup(title, this);
 	}
 	
-	
+//	-------------------------------------------------------------------------------------------------------------------------------
 
 //	-------------------------------------------------------------------------------------------------------------------------------
 
-
-	public class QuestGroup extends ObjectGroup<QuestNode, Quest>
-	{
-		private static final long serialVersionUID = 1L;
-
-		public QuestGroup(String name) {
-			super(name, 
-					QuestTreeView.this.list_file,
-					QuestTreeView.this.node_type, 
-					QuestTreeView.this.data_type);
-		}
-		
-		@Override
-		protected G2DTreeNodeGroup<?> createGroupNode(String name) {
-			return new QuestGroup(name);
-		}
-		
-		@Override
-		protected boolean createObjectNode(String key, Quest data) {
-			try{
-				addNode(this, new QuestNode(data));
-				return true;
-			}catch(Exception err){
-				err.printStackTrace();
-			}
-			return false;
-		}
-		
-		@Override
-		public void onClicked(JTree tree, MouseEvent e) {
-			if (e.getButton() == MouseEvent.BUTTON3) {
-				new QuestRootMenu(this).show(
-						getTree(),
-						e.getX(),
-						e.getY());
-			}
-		}
-	}
-	
-
-//	-------------------------------------------------------------------------------------------------------------------------------
-	class QuestRootMenu extends GroupMenu
-	{
-		private static final long serialVersionUID = 1L;
-		
-		QuestGroup root;
-		JMenuItem add_quest = new JMenuItem("添加任务");
-		
-		public QuestRootMenu(QuestGroup root) {
-			super(root, getTree(), getTree());
-			this.root = root;
-			add_quest.addActionListener(this);
-			add(add_quest);
-		}
-		
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			super.actionPerformed(e);
-			if (e.getSource() == add_quest) {
-			}
-		}
-	}
 
 //	-------------------------------------------------------------------------------------------------------------------------------
 
