@@ -51,6 +51,7 @@ import javax.swing.tree.TreePath;
 import com.cell.CUtil;
 import com.cell.rpg.RPGObject;
 import com.cell.rpg.io.RPGObjectMap;
+import com.cell.rpg.quest.QuestItem;
 import com.cell.rpg.template.TAvatar;
 import com.cell.rpg.template.TEffect;
 import com.cell.rpg.template.TItem;
@@ -71,6 +72,7 @@ import com.g2d.studio.cpj.entity.CPJObject;
 import com.g2d.studio.cpj.entity.CPJSprite;
 import com.g2d.studio.gameedit.dynamic.DAvatar;
 import com.g2d.studio.gameedit.dynamic.DEffect;
+import com.g2d.studio.gameedit.dynamic.DQuestItem;
 import com.g2d.studio.gameedit.dynamic.DynamicNode;
 import com.g2d.studio.gameedit.entity.ObjectGroup;
 import com.g2d.studio.gameedit.entity.ObjectNode;
@@ -91,16 +93,19 @@ public class ObjectManager extends ManagerForm implements ActionListener
 {
 	private static final long serialVersionUID = 1L;
 
-	G2DWindowToolBar toolbar = new G2DWindowToolBar(this);
-	
+	G2DWindowToolBar 	toolbar	= new G2DWindowToolBar(this);
+	JTabbedPane 		table	= new JTabbedPane();
+
 	final public File objects_dir;
 	
-	final ObjectTreeView<XLSUnit, TUnit> 			tree_units_view;
-	final ObjectTreeView<XLSItem, TItem> 			tree_items_view;
-	final ObjectTreeView<XLSSkill, TSkill>			tree_skills_view;
-	final ObjectTreeViewDynamic<DAvatar, TAvatar>	tree_avatars_view;
-	final ObjectTreeViewDynamic<DEffect, TEffect>	tree_effects_view;
 	
+	final ObjectTreeView<XLSUnit, TUnit> 				tree_units_view;
+	final ObjectTreeView<XLSItem, TItem> 				tree_items_view;
+	final ObjectTreeView<XLSSkill, TSkill>				tree_skills_view;
+	final ObjectTreeViewDynamic<DAvatar, TAvatar>		tree_avatars_view;
+	final ObjectTreeViewDynamic<DEffect, TEffect>		tree_effects_view;
+	final ObjectTreeViewDynamic<DQuestItem, QuestItem>	tree_quest_items_view;
+
 	
 	public ObjectManager(Studio studio, ProgressForm progress) 
 	{
@@ -108,7 +113,7 @@ public class ObjectManager extends ManagerForm implements ActionListener
 		
 		this.add(toolbar, BorderLayout.NORTH);
 		
-		JTabbedPane table = new JTabbedPane();
+		
 		objects_dir = new File(Studio.getInstance().project_save_path.getPath() + File.separatorChar +"objects");
 		
 		// ------------ xls template ------------ //
@@ -142,38 +147,65 @@ public class ObjectManager extends ManagerForm implements ActionListener
 			tree_effects_view = new EffectTreeView("特效", new File(objects_dir, "teffect.obj/teffect.list"));
 			table.addTab("魔法效果/特效", Tools.createIcon(Res.icon_res_3), tree_effects_view);
 			table.addChangeListener(tree_effects_view);
+		}{
+			// QuestItem
+			tree_quest_items_view = new QuestItemTreeView("任务标志", new File(objects_dir, "questitem.obj/questitem.list"));
+			table.addTab("任务标志", Tools.createIcon(Res.icon_quest), tree_quest_items_view);
+			table.addChangeListener(tree_quest_items_view);
 		}
 			
 		this.add(table, BorderLayout.CENTER);
 	}
-	
+
+	public ObjectTreeView<?,?>[] getPages() {
+		ObjectTreeView<?,?>[] pages = new ObjectTreeView<?, ?>[table.getTabCount()];
+		for (int i=0; i<table.getTabCount(); i++) {
+			ObjectTreeView<?,?> page = (ObjectTreeView<?,?>)table.getComponentAt(i);
+			pages[i] = page;
+		}
+		return pages;
+	}
+
 	@SuppressWarnings("unchecked")
 	public <T extends ObjectNode<?>> Vector<T> getObjects(Class<T> type)
 	{
-		if (type.equals(XLSUnit.class)) {
-			return (Vector<T>)tree_units_view.getAllObject();
-		} else if (type.equals(XLSItem.class)) {
-			return (Vector<T>)tree_items_view.getAllObject();
-		} else if (type.equals(XLSSkill.class)) {
-			return (Vector<T>)tree_skills_view.getAllObject();
-		} else {
-			return null;
+		for (ObjectTreeView<?,?> page : getPages()) {
+			if (page.node_type.equals(type)) {
+				return (Vector<T>)page.getAllObject();
+			}
 		}
+		return null;
 	}
 	
 	public <T extends ObjectNode<?>> T getObject(Class<T> type, String id)
 	{
-		if (type.equals(XLSUnit.class)) {
-			return type.cast(tree_units_view.getNode(Integer.parseInt(id)));
-		} else if (type.equals(XLSItem.class)) {
-			return type.cast(tree_items_view.getNode(Integer.parseInt(id)));
-		} else if (type.equals(XLSSkill.class)) {
-			return type.cast(tree_skills_view.getNode(Integer.parseInt(id)));
-		} else {
-			return null;
+		for (ObjectTreeView<?,?> page : getPages()) {
+			if (page.node_type.equals(type)) {
+				return type.cast(page.getNode(Integer.parseInt(id)));
+			}
 		}
+		return null;
 	}
 	
+	public void saveAll() throws Throwable
+	{
+		for (ObjectTreeView<?,?> page : getPages()) {
+			page.saveAll();
+		}
+		System.out.println(getClass().getSimpleName() + " : save all");
+	}
+	
+
+	
+	
+	
+	
+
+	
+//	-------------------------------------------------------------------------------------------------------------------------------
+	
+
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == toolbar.save) {
@@ -185,28 +217,6 @@ public class ObjectManager extends ManagerForm implements ActionListener
 		}
 	}
 
-	public void saveAll() throws Throwable
-	{
-		tree_units_view.saveAll();
-		tree_items_view.saveAll();
-		tree_skills_view.saveAll();
-		tree_avatars_view.saveAll();
-		tree_effects_view.saveAll();
-		System.out.println(getClass().getSimpleName() + " : save all");
-	}
-	
-
-
-	
-	
-	
-	
-
-	
-//	-------------------------------------------------------------------------------------------------------------------------------
-	
-
-	
 	
 	
 	

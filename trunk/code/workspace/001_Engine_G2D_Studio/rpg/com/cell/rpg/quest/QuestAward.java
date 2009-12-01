@@ -1,19 +1,12 @@
 package com.cell.rpg.quest;
 
+import java.util.ArrayList;
+
 import com.cell.ExtObject;
 import com.cell.util.MarkedHashtable;
 
-public class QuestAward  extends ExtObject {
-
-	@Override
-	protected void onRead(MarkedHashtable data) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	protected void onWrite(MarkedHashtable data) {
-		// TODO Auto-generated method stub
-		
-	}
+public class QuestAward extends QuestCondition 
+{
+	
 	
 }

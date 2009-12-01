@@ -13,7 +13,7 @@ import com.cell.rpg.io.RPGSerializationListener;
 import com.cell.util.MarkedHashtable;
 import com.cell.util.zip.ZipNode;
 
-public abstract class RPGObject extends DObject implements Abilities, ZipNode
+public abstract class RPGObject extends DObject implements Abilities, ZipNode, RPGSerializationListener
 {
 	final public String id;
 	
@@ -21,6 +21,8 @@ public abstract class RPGObject extends DObject implements Abilities, ZipNode
 	final private Vector<AbstractAbility> abilities = new Vector<AbstractAbility>();
 	
 	transient Vector<RPGSerializationListener> seriListeners;
+
+//	------------------------------------------------------------------------------------------------------------------
 	
 	public RPGObject(String id) {
 		this.id = id;
@@ -31,6 +33,8 @@ public abstract class RPGObject extends DObject implements Abilities, ZipNode
 		return id+".xml";
 	}
 
+//	------------------------------------------------------------------------------------------------------------------
+	
 	public void clearAbilities() {
 		abilities.clear();
 	}
@@ -65,6 +69,8 @@ public abstract class RPGObject extends DObject implements Abilities, ZipNode
 		return ret;
 	}
 	
+//	------------------------------------------------------------------------------------------------------------------
+	
 	public int getAbilitiesCount() {
 		return abilities.size();
 	}
@@ -79,4 +85,12 @@ public abstract class RPGObject extends DObject implements Abilities, ZipNode
 	public Vector<RPGSerializationListener> getRPGSerializationListeners() {
 		return seriListeners;
 	}
+	
+	@Override
+	public void onReadComplete(RPGObject object, String xmlFile) {}
+	@Override
+	public void onWriteBefore(RPGObject object, String xmlFile) {}
+
+//	------------------------------------------------------------------------------------------------------------------
+	
 }

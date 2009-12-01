@@ -259,7 +259,7 @@ public class CIO extends CObject
 	{
 		try
 		{
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
 			ObjectOutputStream oos = new ObjectOutputStream(baos);
 			oos.writeObject(src);
 			oos.flush();

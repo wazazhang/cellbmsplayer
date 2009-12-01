@@ -15,9 +15,8 @@ import com.g2d.util.TextEditor;
 
 public class QuestEditor extends ObjectViewer<QuestNode> implements RPGSerializationListener
 {	
-	PanelDiscussion	panel_quest_discussion;
-	PanelPurpose	panel_quest_purpose;
-	PanelAward		panel_quest_award;
+	PanelDiscussion		panel_quest_discussion;
+	PanelTriggerData	panel_quest_data;
 
 //	-------------------------------------------------------------------------------------
 	
@@ -33,12 +32,10 @@ public class QuestEditor extends ObjectViewer<QuestNode> implements RPGSerializa
 	protected void appendPages(JTabbedPane table) 
 	{
 		panel_quest_discussion	= new PanelDiscussion();
-		panel_quest_purpose		= new PanelPurpose();
-		panel_quest_award 		= new PanelAward();
+		panel_quest_data		= new PanelTriggerData();		
 		table.removeAll();
 		table.addTab("任务内容", panel_quest_discussion);
-		table.addTab("任务目标", panel_quest_purpose);
-		table.addTab("任务奖励", panel_quest_award);
+		table.addTab("任务数据", panel_quest_data);
 		table.addTab("附加属性", page_object_panel);
 	}
 
@@ -47,8 +44,7 @@ public class QuestEditor extends ObjectViewer<QuestNode> implements RPGSerializa
 	}
 	@Override
 	public void onWriteBefore(RPGObject object, String xmlFile) {
-		tobject.getData().getDiscussion().text = panel_quest_discussion.getText();
-//		System.out.println(tobject.getData().discussion.text);
+		tobject.getData().setDiscussion(panel_quest_discussion.getText());
 	}
 	
 //	-------------------------------------------------------------------------------------
@@ -56,24 +52,16 @@ public class QuestEditor extends ObjectViewer<QuestNode> implements RPGSerializa
 	class PanelDiscussion extends TextEditor
 	{		
 		public PanelDiscussion() {
-			setText(tobject.getData().getDiscussion().text);
+			setText(tobject.getData().getDiscussion());
 		}
 	}
 
 //	-------------------------------------------------------------------------------------
 	
-	class PanelPurpose extends JPanel
+	class PanelTriggerData extends JPanel
 	{
 
 
-	}
-
-//	-------------------------------------------------------------------------------------
-	
-	class PanelAward extends JPanel
-	{
-
-		
 	}
 
 //	-------------------------------------------------------------------------------------
