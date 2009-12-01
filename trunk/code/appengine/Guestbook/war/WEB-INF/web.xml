@@ -5,8 +5,19 @@ xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 
-
-<!-- Guestbook -->
+    <security-constraint>
+        <web-resource-collection>
+            <url-pattern>/private/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>admin</role-name>
+        </auth-constraint>
+    </security-constraint>
+<!--
+///////////////////////////////////////////////////////////////////////////////////////// 
+guestbook test
+///////////////////////////////////////////////////////////////////////////////////////// 
+-->
 	<servlet>
 		<servlet-name>Guestbook</servlet-name>
 		<servlet-class>guestbook.GuestbookServlet</servlet-class>
@@ -16,7 +27,6 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<url-pattern>/guestbook</url-pattern>
 	</servlet-mapping>
 
-<!-- sign -->
 	<servlet>
 		<servlet-name>sign</servlet-name>
 		<servlet-class>guestbook.SignGuestbookServlet</servlet-class>
@@ -24,6 +34,15 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	<servlet-mapping>
 		<servlet-name>sign</servlet-name>
 		<url-pattern>/sign</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>update</servlet-name>
+		<servlet-class>guestbook.UpdateServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>update</servlet-name>
+		<url-pattern>/private/update</url-pattern>
 	</servlet-mapping>
 	
 <!--

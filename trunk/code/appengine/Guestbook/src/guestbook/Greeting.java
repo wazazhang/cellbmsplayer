@@ -24,6 +24,9 @@ public class Greeting
 	@Persistent
 	private Date date;
 
+	@Persistent
+	private Integer gold;
+	
 	public Greeting(User author, String content, Date date) {
 		this.author = author;
 		this.content = content;
@@ -56,5 +59,16 @@ public class Greeting
 
 	public void setDate(Date date) {
 		this.date = date;
+	}
+
+	public Integer getGold() {
+		if (gold == null) {
+			gold = new Integer(0);
+		}
+		return gold;
+	}
+
+	public void setGold(Integer gold) {
+		this.gold = gold;
 	}
 }
