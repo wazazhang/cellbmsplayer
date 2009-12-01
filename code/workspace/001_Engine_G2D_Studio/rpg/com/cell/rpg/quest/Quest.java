@@ -1,8 +1,12 @@
 package com.cell.rpg.quest;
 
+import java.io.File;
 import java.util.ArrayList;
 
+import com.cell.io.CFile;
 import com.cell.rpg.RPGObject;
+import com.cell.rpg.quest.script.QuestScript;
+import com.cell.util.MarkedHashtable;
 import com.g2d.annotation.Property;
 
 /**
@@ -15,62 +19,73 @@ public class Quest extends RPGObject
 //	base
 	
 	/** 任务id */
-	final private Integer 			int_id;
+	final private Integer 		int_id;
 	/** 任务名字 */
-	public String					name;
+	public String				name;
 	
 //	----------------------------------------------------------------------------------------------------------------
 //	quest
-	
+
 	/** 任务内容 */
-	QuestDiscussion				discussion			= new QuestDiscussion();
+	transient
+	private String				discussion			= QuestScript.createExample();
 	
 	/** 任务触发条件 */
-	ArrayList<QuestCondition>	trigger_conditions	= new ArrayList<QuestCondition>();
+	public QuestCondition		trigger_condition	= new QuestCondition();
 	
 	/** 任务完成条件 */
-	ArrayList<QuestCondition>	complete_conditions	= new ArrayList<QuestCondition>();
+	public QuestCondition		complete_condition	= new QuestCondition();
 	
 	/** 任务奖励 */
-	ArrayList<QuestAward>		awards				= new ArrayList<QuestAward>();
+	public QuestAward			complete_award		= new QuestAward();
 	
 //	----------------------------------------------------------------------------------------------------------------
 //	extend
 
-	/** 任务图标 */ @Property("任务图标")
-	public String					icon_index;
-	
+	/** 任务图标 */ 
+	@Property("任务图标")
+	public String				icon_index;
+
 //	----------------------------------------------------------------------------------------------------------------
 	public Quest(Integer id, String name) {
 		super(id.toString());
 		this.int_id = id;
 		this.name	= name;
 	}
-	
 	public int getIntID() {
 		return int_id;
 	}
-	
 	@Override
 	public Class<?>[] getSubAbilityTypes() {
 		return new Class<?>[]{};
 	}
-//	----------------------------------------------------------------------------------------------------------------
-
-	public QuestDiscussion getDiscussion() {
-		return discussion;
+	
+	@Override
+	public void onReadComplete(RPGObject object, String xmlFile) {
+		File txt_file = new File(xmlFile+".txt");
+		if (txt_file.exists()) {
+			this.discussion = CFile.readText(txt_file, "UTF-8");
+		} else {
+			this.discussion = QuestScript.createExample();
+		}
 	}
 	
-	public ArrayList<QuestCondition> getTriggerConditions() {
-		return trigger_conditions;
+	@Override
+	public void onWriteBefore(RPGObject object, String xmlFile) {
+		File txt_file = new File(xmlFile+".txt");
+		CFile.writeText(txt_file, this.discussion, "UTF-8");
+	}
+	
+//	----------------------------------------------------------------------------------------------------------------
+
+	public void setDiscussion(String text) {
+		this.discussion = text;
+	}
+	
+	public String getDiscussion() {
+		return discussion;
 	}
 
-	public ArrayList<QuestCondition> getCompleteConditions() {
-		return complete_conditions;
-	}
-
-	public ArrayList<QuestAward> getAwards() {
-		return awards;
-	}
+//	----------------------------------------------------------------------------------------------------------------
 
 }

@@ -130,9 +130,13 @@ public class RPGObjectMap<T extends RPGObject> extends Hashtable<String, T> //im
 			ObjectInputStream ois = new XStream().createObjectInputStream(reader);
 			try{
 				T ret = type.cast(ois.readObject());
-				if (ret != null && ret.getRPGSerializationListeners()!=null) {
-					for (RPGSerializationListener l : ret.getRPGSerializationListeners()) {
-						l.onReadComplete(ret, xml_file);
+				if (ret != null) {
+					ret.onReadComplete(ret, xml_file);
+					Vector<RPGSerializationListener> rlisteners = ret.getRPGSerializationListeners();
+					if (rlisteners != null) {
+						for (RPGSerializationListener l : rlisteners) {
+							l.onReadComplete(ret, xml_file);
+						}
 					}
 				}
 				return ret;
@@ -153,11 +157,13 @@ public class RPGObjectMap<T extends RPGObject> extends Hashtable<String, T> //im
 			StringWriter writer = new StringWriter(1024);
 			ObjectOutputStream oos = new XStream().createObjectOutputStream(writer);
 			try{
-				if (node.getRPGSerializationListeners()!=null) {
-					for (RPGSerializationListener l : node.getRPGSerializationListeners()) {
-						l.onWriteBefore(node, xml_file.getPath());
+				Vector<RPGSerializationListener> wlisteners = node.getRPGSerializationListeners();
+				if (wlisteners!=null) {
+					for (int i=wlisteners.size()-1; i>=0; --i) {
+						wlisteners.get(i).onWriteBefore(node, xml_file.getPath());
 					}
 				}
+				node.onWriteBefore(node, xml_file.getPath());
 				oos.writeObject(node);
 			}finally{
 				oos.close();
