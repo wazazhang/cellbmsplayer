@@ -47,7 +47,7 @@ final public class AccountManager
 			}
 		} 
 		catch(Exception err){
-			err.printStackTrace();
+			log.warning(err.getMessage());
 		}
 		finally {
 			pm.close();
@@ -85,7 +85,7 @@ final public class AccountManager
 			}
 		}
 		catch(Exception err){
-			err.printStackTrace();
+			log.warning(err.getMessage());
 		}
 		finally {
 			pm.close();
