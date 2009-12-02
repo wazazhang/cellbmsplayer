@@ -5,7 +5,6 @@ import java.awt.event.KeyEvent;
 
 import com.cell.bms.BMSFile;
 import com.cell.bms.BMSPlayer;
-import com.cell.bms.oal.JALNoteFactory;
 
 import com.g2d.display.Canvas;
 import com.g2d.display.DisplayObjectContainer;

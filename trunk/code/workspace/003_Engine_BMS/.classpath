@@ -1,22 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
+	<classpathentry excluding="com/cell/bms/jmf/|com/cell/bms/oal/" kind="src" path="src"/>
 	<classpathentry kind="src" path="res"/>
 	<classpathentry kind="src" path="edit/skin/output"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/000_Engine_Core"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/000_Engine_G2D"/>
-	<classpathentry kind="lib" path="deployed/joal.jar" sourcepath="D:/Development/JavaOpenAL/joal-1.1.2-src/joal/src">
-		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="003_Engine_BMS/deployed"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="deployed/gluegen-rt.jar">
-		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="003_Engine_BMS/deployed"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="deployed/j-ogg-oggd.jar" sourcepath="/000_Engine_Core/lib/j-ogg/j-ogg.zip"/>
-	<classpathentry kind="lib" path="deployed/j-ogg-vorbisd.jar" sourcepath="/000_Engine_Core/lib/j-ogg/j-ogg.zip"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/000_Engine_Sound"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
