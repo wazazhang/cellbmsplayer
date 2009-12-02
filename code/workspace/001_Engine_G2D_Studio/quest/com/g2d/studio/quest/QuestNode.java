@@ -47,12 +47,16 @@ public class QuestNode extends DynamicNode<Quest>
 	@Override
 	protected ImageIcon createIcon() {
 		icon_file = Studio.getInstance().getIconManager().getIcon(getData().icon_index);
-		return new ImageIcon(Tools.combianImage(20, 20, icon_file.image));
+		if (icon_file!=null) {
+			return new ImageIcon(Tools.combianImage(20, 20, icon_file.image));
+		} else {
+			return new ImageIcon(Tools.combianImage(20, 20, Res.icon_quest));
+		}
 	}
 	
 	@Override
 	public void onRightClicked(JTree tree, MouseEvent e) {
-		new QuestMenu(this).show(tree, e.getX(), e.getY());
+		new QuestMenu(tree, this).show(tree, e.getX(), e.getY());
 	}
 	
 	@Override
@@ -73,10 +77,10 @@ public class QuestNode extends DynamicNode<Quest>
 	}
 	
 //	---------------------------------------------------------------------------------------------------------------
-	
+
 	class QuestMenu extends NodeMenu<QuestNode>
 	{
-		public QuestMenu(QuestNode node) {
+		public QuestMenu(JTree tree, QuestNode node) {
 			super(node);
 			super.remove(open);
 		}
@@ -91,6 +95,9 @@ public class QuestNode extends DynamicNode<Quest>
 				if (name!=null && name.length()>0) {
 					node.setName(name);
 				}
+				if (tree!=null) {
+					tree.reload(node);
+				}
 			}
 			else if (e.getSource() == delete) {
 				System.out.println(node.getName() + " - delete");
@@ -98,7 +105,7 @@ public class QuestNode extends DynamicNode<Quest>
 		}
 	}
 	
-
 //	---------------------------------------------------------------------------------------------------------------
 
+	
 }
