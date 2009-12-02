@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="rpg"/>
 	<classpathentry kind="src" path="cpj"/>
-	<classpathentry kind="src" path="gameedit"/>
+	<classpathentry excluding="com/g2d/studio/gameedit/QuestItemTreeView.java|com/g2d/studio/gameedit/dynamic/DQuestItem.java" kind="src" path="gameedit"/>
 	<classpathentry excluding="com/g2d/studio/scene/swing/|com/g2d/studio/scene/FormSceneViewer.java" kind="src" path="scene"/>
 	<classpathentry kind="src" path="quest"/>
 	<classpathentry kind="src" path="studio"/>

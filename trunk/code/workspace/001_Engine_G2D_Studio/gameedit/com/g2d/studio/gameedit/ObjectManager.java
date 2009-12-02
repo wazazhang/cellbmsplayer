@@ -72,7 +72,7 @@ import com.g2d.studio.cpj.entity.CPJObject;
 import com.g2d.studio.cpj.entity.CPJSprite;
 import com.g2d.studio.gameedit.dynamic.DAvatar;
 import com.g2d.studio.gameedit.dynamic.DEffect;
-import com.g2d.studio.gameedit.dynamic.DQuestItem;
+//import com.g2d.studio.gameedit.dynamic.DQuestItem;
 import com.g2d.studio.gameedit.dynamic.DynamicNode;
 import com.g2d.studio.gameedit.entity.ObjectGroup;
 import com.g2d.studio.gameedit.entity.ObjectNode;
@@ -104,7 +104,7 @@ public class ObjectManager extends ManagerForm implements ActionListener
 	final ObjectTreeView<XLSSkill, TSkill>				tree_skills_view;
 	final ObjectTreeViewDynamic<DAvatar, TAvatar>		tree_avatars_view;
 	final ObjectTreeViewDynamic<DEffect, TEffect>		tree_effects_view;
-	final ObjectTreeViewDynamic<DQuestItem, QuestItem>	tree_quest_items_view;
+//	final ObjectTreeViewDynamic<DQuestItem, QuestItem>	tree_quest_items_view;
 
 	
 	public ObjectManager(Studio studio, ProgressForm progress) 
@@ -148,10 +148,10 @@ public class ObjectManager extends ManagerForm implements ActionListener
 			table.addTab("魔法效果/特效", Tools.createIcon(Res.icon_res_3), tree_effects_view);
 			table.addChangeListener(tree_effects_view);
 		}{
-			// QuestItem
-			tree_quest_items_view = new QuestItemTreeView("任务标志", new File(objects_dir, "questitem.obj/questitem.list"));
-			table.addTab("任务标志", Tools.createIcon(Res.icon_quest), tree_quest_items_view);
-			table.addChangeListener(tree_quest_items_view);
+//			// QuestItem
+//			tree_quest_items_view = new QuestItemTreeView("任务标志", new File(objects_dir, "questitem.obj/questitem.list"));
+//			table.addTab("任务标志", Tools.createIcon(Res.icon_quest), tree_quest_items_view);
+//			table.addChangeListener(tree_quest_items_view);
 		}
 			
 		this.add(table, BorderLayout.CENTER);
@@ -177,14 +177,19 @@ public class ObjectManager extends ManagerForm implements ActionListener
 		return null;
 	}
 	
-	public <T extends ObjectNode<?>> T getObject(Class<T> type, String id)
+	public <T extends ObjectNode<?>> T getObject(Class<T> type, int id)
 	{
 		for (ObjectTreeView<?,?> page : getPages()) {
 			if (page.node_type.equals(type)) {
-				return type.cast(page.getNode(Integer.parseInt(id)));
+				return type.cast(page.getNode(id));
 			}
 		}
 		return null;
+	}
+
+	public <T extends ObjectNode<?>> T getObject(Class<T> type, String id)
+	{
+		return getObject(type, Integer.parseInt(id));
 	}
 	
 	public void saveAll() throws Throwable

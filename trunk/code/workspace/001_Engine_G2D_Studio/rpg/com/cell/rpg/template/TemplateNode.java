@@ -1,6 +1,7 @@
 package com.cell.rpg.template;
 
 import com.cell.rpg.RPGObject;
+import com.g2d.annotation.Property;
 
 public abstract class TemplateNode extends RPGObject
 {
@@ -8,6 +9,8 @@ public abstract class TemplateNode extends RPGObject
 	private int 	int_id;
 	
 	public String	name		= "no name";
+	
+	@Property("图标编号")
 	public String	icon_index;
 	
 	public TemplateNode(int id, String name) {

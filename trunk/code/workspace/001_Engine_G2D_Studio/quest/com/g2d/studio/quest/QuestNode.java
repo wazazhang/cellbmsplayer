@@ -21,7 +21,7 @@ import com.g2d.util.AbstractDialog;
 
 public class QuestNode extends DynamicNode<Quest>
 {
-	transient IconFile icon_file;
+	transient IconFile 	icon_file;
 	
 	public QuestNode(IDynamicIDFactory<QuestNode> factory, String name) {
 		super(factory, name);
@@ -34,29 +34,21 @@ public class QuestNode extends DynamicNode<Quest>
 	
 	public QuestNode(Quest data) {
 		super(data, data.getIntID(), data.name);
-		if (getData().icon_index!=null) {
-			icon_file = Studio.getInstance().getIconManager().getIcon(getData().icon_index);
-		}
-	}
-	
-	public IconFile getIconFile() {
-		return icon_file;	
-	}
-
-	public void setIcon(IconFile icon) {
-		getData().icon_index = icon.icon_file_name;
-		this.icon_file = icon;
 	}
 	
 	@Override
-	public ImageIcon createIcon() {
-		if (icon_file!=null) {
-			return Tools.createIcon(Tools.combianImage(20, 20, icon_file.image));
-		} else {
-			return Tools.createIcon(Tools.combianImage(20, 20, Res.icon_error));
-		}
+	public ImageIcon getIcon(boolean update) {
+		if (icon_file==null || !icon_file.icon_file_name.equals(getData())) {
+			resetIcon();
+		} 
+		return super.getIcon(update);
 	}
 	
+	@Override
+	protected ImageIcon createIcon() {
+		icon_file = Studio.getInstance().getIconManager().getIcon(getData().icon_index);
+		return new ImageIcon(Tools.combianImage(20, 20, icon_file.image));
+	}
 	
 	@Override
 	public void onRightClicked(JTree tree, MouseEvent e) {

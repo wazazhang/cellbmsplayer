@@ -17,10 +17,14 @@ import java.lang.reflect.Field;
 import java.util.EventObject;
 import java.util.Hashtable;
 import java.util.Locale;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.Vector;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.CellEditor;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -58,7 +62,7 @@ public class ObjectPropertyPanel extends JPanel
 	
 	final public Object 	object;
 
-	final Hashtable<Class<?>, CellEditAdapter<?>>	
+	final Map<Class<?>, CellEditAdapter<?>>	
 							edit_adapters 	= new Hashtable<Class<?>, CellEditAdapter<?>>();
 	
 	final Vector<Object[]> 	rows			= new Vector<Object[]>();
@@ -173,6 +177,7 @@ public class ObjectPropertyPanel extends JPanel
 				e.printStackTrace();
 			}
 			rows_table.refresh();
+			repaint();
 		}
 		
 		public void refresh()
@@ -340,8 +345,10 @@ public class ObjectPropertyPanel extends JPanel
 	class TableRender extends DefaultTableCellRenderer
 	{
 		private static final long serialVersionUID = 1L;
-
-		public TableRender() {}
+		Icon old_icon;
+		public TableRender() {
+			old_icon = super.getIcon();
+		}
 		
 		@Override
 		public Component getTableCellRendererComponent(
@@ -350,8 +357,12 @@ public class ObjectPropertyPanel extends JPanel
 				boolean isSelected,
 				boolean hasFocus, 
 				int row,
-				int column) {
+				int column) 
+		{
+			super.setIcon(old_icon);
+			
 			Component src = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+			
 			try{
 				Field field = (Field) rows.elementAt(row)[3];
 				Component comp = getPropertyCellRender(this, object, field, field.get(object));
@@ -405,7 +416,7 @@ public class ObjectPropertyPanel extends JPanel
 			try {
 				Field field = (Field) rows.elementAt(editrow)[3];
 				Object obj = getPropertyCellEditValue(object, field, current_cell_edit, src_value);
-				System.out.println("getCellEditorValue");
+//				System.out.println("getCellEditorValue");
 				if (obj != null) {
 					field.set(object, obj);
 					rows.elementAt(editrow)[1] = obj;
@@ -428,10 +439,9 @@ public class ObjectPropertyPanel extends JPanel
 			editrow 	= row;
 			Field field = (Field) rows.elementAt(editrow)[3];
 			try {
-				PropertyCellEdit<?> edit = getPropertyCellEdit(object, field, value);
-				current_cell_edit = edit;				
-				Component ret = edit.getComponent(ObjectPropertyPanel.this);
-				System.out.println("getTableCellEditorComponent");
+				current_cell_edit = getPropertyCellEdit(object, field, value);
+				Component ret = current_cell_edit.getComponent(ObjectPropertyPanel.this);
+//				System.out.println("getTableCellEditorComponent");
 				return ret;
 			} catch (Exception e) {
 				e.printStackTrace();

@@ -1,9 +1,15 @@
 package com.g2d.studio.gameedit.dynamic;
 
+import javax.swing.ImageIcon;
 import javax.swing.JTabbedPane;
 
 import com.cell.rpg.quest.QuestItem;
+import com.g2d.Tools;
+import com.g2d.studio.gameedit.ObjectAdapters;
 import com.g2d.studio.gameedit.ObjectViewer;
+import com.g2d.studio.gameedit.ObjectAdapters.QuestItemAdapter;
+import com.g2d.studio.icon.IconFile;
+import com.g2d.studio.res.Res;
 
 public class DQuestItem extends DynamicNode<QuestItem>
 {
@@ -35,7 +41,7 @@ public class DQuestItem extends DynamicNode<QuestItem>
 		private static final long serialVersionUID = 1L;
 		
 		public DQuestItemViewer() {
-			super(DQuestItem.this);
+			super(DQuestItem.this, new ObjectAdapters.QuestItemAdapter());
 		}
 		
 		@Override
