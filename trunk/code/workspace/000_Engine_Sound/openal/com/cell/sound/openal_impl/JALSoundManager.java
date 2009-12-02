@@ -58,6 +58,7 @@ public class JALSoundManager extends SoundManager
 	    // Initialize OpenAL and clear the error bit.
 		ALut.alutInit();
 		al = ALFactory.getAL();
+		al.alGetError();
 		alc = ALFactory.getALC();
 		
 		// set device, find device with the maximum source
@@ -108,7 +109,6 @@ public class JALSoundManager extends SoundManager
 	  			break;
 	  		}
 	  	}
-
 	  	System.out.println("Gen OpenAL players : " + players.size());
 	}
 
@@ -146,19 +146,21 @@ public class JALSoundManager extends SoundManager
 	@Override
 	public IPlayer createPlayer() 
 	{
-		for (JALPlayer player : players) {
-			if (!player.isPlaying()) {
+		synchronized (players) {
+			for (JALPlayer player : players) {
+				if (!player.isPlaying()) {
+					return player;
+				}
+			}
+			if (players.size()>0) {
+				Collections.sort(players);
+				JALPlayer player = players.get(0);
+				player.stop();
+				System.err.println("no free source, cut an active source !");
 				return player;
 			}
+			return new NullPlayer();
 		}
-		if (players.size()>0) {
-			Collections.sort(players);
-			JALPlayer player = players.get(0);
-			player.stop();
-			System.err.println("no free source, cut an active source !");
-			return player;
-		}
-		return new NullPlayer();
 	}
 
 
