@@ -6,6 +6,9 @@ import java.awt.event.ComponentEvent;
 import com.cell.CObject;
 import com.cell.j2se.CAppBridge;
 import com.cell.j2se.CStorage;
+import com.cell.sound.SoundManager;
+import com.cell.sound.mute_impl.NullSoundManager;
+import com.cell.sound.openal_impl.JALSoundManager;
 
 import com.g2d.SimpleCanvas;
 import com.g2d.SimpleCanvasNoInternal;
@@ -24,8 +27,6 @@ public class MainApplet  extends com.g2d.SimpleApplet
 				new CAppBridge(
 						getClass().getClassLoader(), 
 						getClass()));
-		
-		System.out.println("System ClassLoader : " + getClass().getClassLoader());
 	}
 	
 	@Override
@@ -36,6 +37,13 @@ public class MainApplet  extends com.g2d.SimpleApplet
 		String config_file = "/game.properties";
 		Config.load(Config.class, config_file);
 	
+		try {
+			SoundManager.setSoundManager(JALSoundManager.getInstance());
+		} catch (Throwable e1) {
+			SoundManager.setSoundManager(new NullSoundManager());
+			e1.printStackTrace();
+		}
+		
 		getCanvas().getComponent().setSize(
 				Config.STAGE_WIDTH, 
 				Config.STAGE_HEIGHT);
@@ -51,7 +59,9 @@ public class MainApplet  extends com.g2d.SimpleApplet
 		resize(Config.STAGE_WIDTH, 
 				Config.STAGE_HEIGHT);
 		
-		getCanvas().changeStage(StageGame.class.getName());
+		getCanvas().setFPS(40);
+		getCanvas().setUnactiveFPS(40);
+		getCanvas().changeStage(StageTitle.class);
 	}
 	
 	

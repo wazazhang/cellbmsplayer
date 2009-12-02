@@ -6,7 +6,6 @@ import java.awt.Graphics2D;
 import com.cell.bms.BMSFile;
 import com.cell.bms.BMSPlayer;
 import com.cell.bms.BMSFile.LoadingListener;
-import com.cell.bms.oal.JALNoteFactory;
 
 import com.g2d.display.Canvas;
 import com.g2d.display.DisplayObjectContainer;
@@ -25,7 +24,6 @@ public class StageLoading extends Stage implements Runnable, LoadingListener
 	public StageLoading() 
 	{
 		setSize(Config.STAGE_WIDTH, Config.STAGE_HEIGHT);	
-		Manager.getNoteFactory();
 	}
 	
 	@Override
@@ -55,7 +53,7 @@ public class StageLoading extends Stage implements Runnable, LoadingListener
 	
 	@Override
 	public void run() {
-		BMSFile bms = new BMSFile(Manager.getNoteFactory(), bms_file, this);
+		BMSFile bms = new BMSFile(bms_file, this);
 		getRoot().changeStage(StageGame.class, bms);
 	}
 	

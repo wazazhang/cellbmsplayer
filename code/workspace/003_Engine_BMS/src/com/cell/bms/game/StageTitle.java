@@ -11,7 +11,6 @@ import com.cell.CObject;
 import com.cell.bms.BMSFile;
 import com.cell.bms.BMSPlayer;
 import com.cell.bms.BMSFile.LoadingListener;
-import com.cell.bms.oal.JALNoteFactory;
 import com.cell.j2se.CStorage;
 
 import com.g2d.display.Canvas;

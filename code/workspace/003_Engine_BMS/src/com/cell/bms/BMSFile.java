@@ -179,25 +179,19 @@ public class BMSFile
 			this.command	= command;
 			this.index		= index;
 			this.value		= value;
-			
-			if (note_factory!=null) {
-				switch(command) {
-				case BMP:
-					value_object = note_factory.defineImage(BMSFile.this, value);
-					break;
-				case WAV:
-					value_object = note_factory.defineSound(BMSFile.this, value);
-					break;
-				case BPM:
-				case STOP:
-				default:
-					value_object = null; 
-				}
-			}
-			else {
+
+			switch(command) {
+			case BMP:
+				value_object = new IDefineImage(BMSFile.this, value);
+				break;
+			case WAV:
+				value_object = new IDefineSound(BMSFile.this, value);
+				break;
+			case BPM:
+			case STOP:
+			default:
 				value_object = null; 
 			}
-			
 		}
 		
 		void dispose() {
@@ -338,8 +332,6 @@ public class BMSFile
 
 	
 //	--------------------------------------------------------------------------------------------------------------
-
-	final public NoteFactory	note_factory;
 	
 	final public String 		bms_file;
 	final public String 		bms_dir;
@@ -362,19 +354,18 @@ public class BMSFile
 	
 //	--------------------------------------------------------------------------------------------------------------
 
-	public BMSFile(NoteFactory factory, String file)
+	public BMSFile(String file)
 	{
-		this(factory, file, 256);
+		this(file, 256);
 	}
 	
-	public BMSFile(NoteFactory factory, String file, LoadingListener ... listener) 
+	public BMSFile(String file, LoadingListener ... listener) 
 	{
-		this(factory, file, 256, listener);
+		this(file, 256, listener);
 	}
 	
-	public BMSFile(NoteFactory factory, String file, double line_div, LoadingListener ... listener)
+	public BMSFile(String file, double line_div, LoadingListener ... listener)
 	{
-		note_factory		= factory;
 		LINE_SPLIT_DIV		= line_div;
 		BEAT_DIV			= line_div / 4;
 		
@@ -390,8 +381,6 @@ public class BMSFile
 				l.beginLoading(this);
 			}
 		}
-		
-		note_factory.initBMS(this);
 		
 		String[] lines = CIO.readAllLine(bms_file);
 		int line_index = 0;
@@ -451,6 +440,10 @@ public class BMSFile
 				l.endLoading(this);
 			}
 		}
+	}
+	
+	public byte[] getResourceData(String res_name) {
+		return CIO.loadData(bms_dir + "/" + res_name);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -572,11 +565,6 @@ public class BMSFile
 		}
 	}
 	
-	public static void main(String[] args)
-	{
-		CAppBridge.init();
-		new BMSFile(null, "/library.bms");
-	}
 	
 	
 }
