@@ -26,9 +26,6 @@ public class Main {
 				Main.class));
 		
 		String config_file = "/game.properties";
-		if (args.length > 0) {
-			config_file = args[0];
-		}
 		Config.load(Config.class, config_file);
 		
 		try {
