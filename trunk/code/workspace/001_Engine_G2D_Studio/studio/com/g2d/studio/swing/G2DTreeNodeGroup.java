@@ -211,6 +211,8 @@ public abstract class G2DTreeNodeGroup<C extends G2DTreeNode<?>> extends Default
 				if (group_name!=null && group_name.length()>0) {
 					if (!root.setName(group_name)) {
 						JOptionPane.showMessageDialog(this, "过滤器 \"" + group_name + "\" 已经存在！");
+					} else {
+						g2d_tree.reload(root);
 					}
 					g2d_tree.repaint();
 				}
@@ -239,12 +241,15 @@ public abstract class G2DTreeNodeGroup<C extends G2DTreeNode<?>> extends Default
 	{
 		private static final long serialVersionUID = 1L;
 		
-		final public T	node;
+		final public T				node;
+		
 		protected JMenuItem 		info	= new JMenuItem();
 		protected JMenuItem			open	= new JMenuItem("打开");
 		protected JMenuItem 		rename	= new JMenuItem("重命名");
 		protected JMenuItem 		delete	= new JMenuItem("删除");
 		
+		protected G2DTree			tree;
+
 		public NodeMenu(T node)
 		{
 			this.node = node;
@@ -274,6 +279,14 @@ public abstract class G2DTreeNodeGroup<C extends G2DTreeNode<?>> extends Default
 			else if (e.getSource() == delete) {
 				System.out.println(node.getName() + " - delete");
 			}
+		}
+		
+		@Override
+		public void show(Component invoker, int x, int y) {
+			if (invoker instanceof G2DTree) {
+				this.tree = (G2DTree)invoker;
+			}
+			super.show(invoker, x, y);
 		}
 		
 		@Override

@@ -95,7 +95,7 @@ public class RPGObjectPanel extends JPanel
 				Object fieldValue, Field field) {
 			if (editObject instanceof TemplateNode ||
 				editObject instanceof Quest) {
-				System.out.println("IconSelectAdapter getCellEdit");
+//				System.out.println("IconSelectAdapter getCellEdit");
 				if (field.getName().equals("icon_index")) {
 					IconSelectCellEdit edit = new IconSelectCellEdit(
 							AbstractDialog.getTopWindow(RPGObjectPanel.this));
@@ -111,7 +111,7 @@ public class RPGObjectPanel extends JPanel
 				Field field, DefaultTableCellRenderer src) {
 			if (editObject instanceof TemplateNode ||
 				editObject instanceof Quest) {
-				System.out.println("IconSelectAdapter getCellRender");
+//				System.out.println("IconSelectAdapter getCellRender");
 				if (field.getName().equals("icon_index") && fieldValue!=null) {
 					String icon_name = fieldValue.toString();
 					if (this.icon == null ||

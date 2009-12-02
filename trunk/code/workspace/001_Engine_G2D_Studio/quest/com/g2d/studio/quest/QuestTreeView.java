@@ -23,6 +23,7 @@ import com.g2d.studio.gameedit.ObjectTreeViewDynamic;
 import com.g2d.studio.gameedit.entity.ObjectGroup;
 import com.g2d.studio.swing.G2DTreeNodeGroup;
 import com.g2d.studio.swing.G2DTreeNodeGroup.GroupMenu;
+import com.g2d.studio.swing.G2DTreeNodeGroup.NodeMenu;
 import com.g2d.util.AbstractDialog;
 
 public class QuestTreeView extends ObjectTreeViewDynamic<QuestNode, Quest>
