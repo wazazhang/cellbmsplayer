@@ -1,5 +1,7 @@
 package com.cell.sound.mute_impl;
 
+import java.io.InputStream;
+
 import com.cell.sound.IPlayer;
 import com.cell.sound.ISound;
 import com.cell.sound.SoundInfo;
@@ -18,7 +20,13 @@ public class NullSoundManager extends SoundManager
 	}
 	
 	@Override
+	public SoundInfo createSoundInfo(String resource, InputStream is) {
+		return new SoundInfo();	
+	}
+	
+	@Override
 	public SoundInfo createSoundInfo(String resource) {
 		return new SoundInfo();
 	}
+	
 }
