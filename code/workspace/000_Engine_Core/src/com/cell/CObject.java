@@ -32,7 +32,7 @@ import com.cell.gfx.IImage;
  */
 public class CObject
 {
-	static class NullStorage implements IFile
+	static class NullStorage implements IStorage
 	{
 		public byte[] load(String name,int id) {
 			throw new NotImplementedException();
@@ -146,7 +146,7 @@ public class CObject
 //	-------------------------------------------------------------------------------------------------------------------------
 
 	
-	static public IFile 		File			= new NullStorage();
+	static public IStorage 		Storage			= new NullStorage();
 	static public IAppBridge	AppBridge		= new NullAppBridge();
 	static public boolean 		IsDebug 		= false;
 	static public Random 		Random 			= new Random();
@@ -162,7 +162,7 @@ public class CObject
 	
 //	-------------------------------------------------------------------------------------------------------------------------
 
-	static public void initSystem(IFile file, IAppBridge appBridge)
+	static public void initSystem(IStorage file, IAppBridge appBridge)
 	{
 		initSystem(file, appBridge, Locale.SIMPLIFIED_CHINESE);
 	}
@@ -172,11 +172,11 @@ public class CObject
 	 * @param file
 	 * @param appBridge
 	 */
-	static public void initSystem(IFile file, IAppBridge appBridge, Locale local)
+	static public void initSystem(IStorage file, IAppBridge appBridge, Locale local)
 	{
-		if (File instanceof NullStorage || AppBridge instanceof NullAppBridge)
+		if (Storage instanceof NullStorage || AppBridge instanceof NullAppBridge)
 		{
-			File 		= file;
+			Storage 		= file;
 			AppBridge	= appBridge;
 			CurLocale	= local;
 			CurDate		= new Date(System.currentTimeMillis());
@@ -195,7 +195,7 @@ public class CObject
 			
 			System.out.println(
 					"CObject : System initialized !\n" + 
-						"\t" + File.getClass().getName() + "\n" + 
+						"\t" + Storage.getClass().getName() + "\n" + 
 						"\t" + AppBridge.getClass().getName() + "\n" +
 						"\t" + CurLocale  + "\n" +
 						"");

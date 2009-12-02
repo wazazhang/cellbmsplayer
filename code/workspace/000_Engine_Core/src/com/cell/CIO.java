@@ -85,7 +85,7 @@ public class CIO extends CObject
 			{
 				for (int i = 0; i < LoadRetryCount; i++)
 				{
-					data = CObject.File.syncReadBytesFromURL(path, LoadingTimeOut);
+					data = CObject.Storage.syncReadBytesFromURL(path, LoadingTimeOut);
 					if (data!=null){
 						break;
 					}
