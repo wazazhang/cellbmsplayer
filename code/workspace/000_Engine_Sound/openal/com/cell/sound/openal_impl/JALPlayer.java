@@ -86,9 +86,9 @@ public class JALPlayer implements IPlayer, Comparable<JALPlayer>
 	}
 	@Override
 	public void play(boolean loop) {
-		if (source!=null && al_sound!=null) {
-			al.alSourcePlay(source[0]);
+		if (source!=null && al_sound!=null) {			
 			al.alSourcei(source[0], AL.AL_LOOPING,	loop?1:0);
+			al.alSourcePlay(source[0]);
 			int error = al.alGetError();
 			if (error != AL.AL_NO_ERROR) {
 				try{
@@ -134,7 +134,7 @@ public class JALPlayer implements IPlayer, Comparable<JALPlayer>
 			al.alGetSourcei(source[0], AL.AL_SOURCE_STATE, state, 0);
 			return state[0] == AL.AL_PLAYING;
 		}
-		return false;
+		return true;
 	}
 	
 	public void dispose() {
