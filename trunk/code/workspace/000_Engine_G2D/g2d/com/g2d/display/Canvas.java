@@ -9,6 +9,8 @@ import java.text.AttributedString;
 
 public interface Canvas
 {
+	public Component getParent();
+	
 	public boolean isExit() ;
 	
 	public void exit();

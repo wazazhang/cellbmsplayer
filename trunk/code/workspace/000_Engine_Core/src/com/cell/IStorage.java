@@ -1,6 +1,6 @@
 package com.cell;
 
-public interface IFile 
+public interface IStorage 
 {
 	final public static String Separator = System.getProperty("file.separator");
 	

@@ -11,9 +11,9 @@ import java.net.URLConnection;
 
 import com.cell.CObject;
 import com.cell.CUtil;
-import com.cell.IFile;
+import com.cell.IStorage;
 
-public class CStorage implements IFile
+public class CStorage implements IStorage
 {
 	
 //	下面是System的参数列表

@@ -165,6 +165,10 @@ FocusListener
 
 	}
 	
+	public Component getParent(){
+		return getComponent();
+	}
+	
 	public Component getComponent() {
 		return component;
 	}
