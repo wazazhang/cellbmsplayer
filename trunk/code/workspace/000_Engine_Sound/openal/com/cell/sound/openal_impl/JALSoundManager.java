@@ -114,19 +114,23 @@ public class JALSoundManager extends SoundManager
 
 
 //	--------------------------------------------------------------------------------------------------
-	
-	public SoundInfo createSoundInfo(String resource) {
+
+	public SoundInfo createSoundInfo(String resource, InputStream is){
 		try {
 			String name = resource.toLowerCase();
 			if (name.endsWith(".wav")) {
-				return initWav(resource, CIO.loadStream(resource));
+				return initWav(resource, is);
 			} else if (name.endsWith(".ogg")) {
-				return initOgg(resource, CIO.loadStream(resource));
+				return initOgg(resource, is);
 			}
 		} catch (Throwable err) {
 			err.printStackTrace();
 		}
 		return null;
+	}
+	
+	public SoundInfo createSoundInfo(String resource) {
+		return createSoundInfo(resource, CIO.loadStream(resource));
 	}
 	
 	@Override
