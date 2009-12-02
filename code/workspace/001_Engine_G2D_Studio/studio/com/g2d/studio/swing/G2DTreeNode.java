@@ -28,10 +28,6 @@ public abstract class G2DTreeNode<C extends G2DTreeNode<?>> extends ExtObject im
 	
 //	----------------------------------------------------------------------------------------------------------------------------------
 
-	public abstract String			getName();
-	
-	protected abstract ImageIcon	createIcon();
-	
 	
 	public void onDoubleClicked(JTree tree, MouseEvent e){
 //		System.out.println("onDoubleClicked : " + getName());
@@ -57,16 +53,26 @@ public abstract class G2DTreeNode<C extends G2DTreeNode<?>> extends ExtObject im
 //	
 //	----------------------------------------------------------------------------------------------------------------------------------
 
-	@Override
-	public String toString() {
-		return getName();
-	}
+	abstract public		String		getName();
 
-	final public ImageIcon getIcon(boolean update){
+	abstract protected	ImageIcon	createIcon();
+	
+	public ImageIcon getIcon(boolean update){
 		if (icon_snapshot==null || update) {
 			icon_snapshot = createIcon();
 		}
 		return icon_snapshot;
+	}
+
+	public void resetIcon() {
+		icon_snapshot = null;
+	}
+
+//	----------------------------------------------------------------------------------------------------------------------------------
+
+	@Override
+	public String toString() {
+		return getName();
 	}
 
 	public Vector<C> getChilds() {

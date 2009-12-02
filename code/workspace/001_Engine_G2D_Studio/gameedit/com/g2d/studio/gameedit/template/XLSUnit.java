@@ -22,7 +22,7 @@ import com.g2d.studio.cpj.CPJIndex;
 import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.cpj.CPJResourceSelectDialog;
 import com.g2d.studio.cpj.entity.CPJSprite;
-import com.g2d.studio.gameedit.ObjectAbilityAdapters;
+import com.g2d.studio.gameedit.ObjectAdapters;
 import com.g2d.studio.gameedit.ObjectViewer;
 import com.g2d.studio.gameedit.XLSObjectViewer;
 import com.g2d.studio.res.Res;
@@ -60,11 +60,19 @@ final public class XLSUnit extends XLSTemplateNode<TUnit>
 	}
 	
 	@Override
+	public ImageIcon getIcon(boolean update) {
+		getData().icon_index = "0";
+		if (icon_file==null) {
+			icon_file = Studio.getInstance().getIconManager().getIcon(getData().icon_index);
+		}
+		return super.getIcon(update);
+	}
+	@Override
 	public ImageIcon createIcon() {
 		if (cpj_sprite!=null) {
 			return Tools.createIcon(Tools.combianImage(20, 20, cpj_sprite.getIcon(true).getImage()));
 		} else {
-			return Tools.createIcon(Tools.combianImage(20, 20, Res.icon_error));
+			return super.createIcon();
 		}
 	}
 
@@ -81,20 +89,23 @@ final public class XLSUnit extends XLSTemplateNode<TUnit>
 	{
 		private static final long serialVersionUID = 1L;
 		
-		JButton set_binding		= new JButton("绑定资源");
-		
+		JPanel	page_properties;
+		JButton	set_binding		= new JButton("绑定资源");
+
 		public NPCObjectViewer() 
 		{
 			super(XLSUnit.this,
-					new ObjectAbilityAdapters.UnitBattleTeamNodeAdapter(),
-					new ObjectAbilityAdapters.UnitDropItemNodeAdapter());
+					new ObjectAdapters.UnitBattleTeamNodeAdapter(),
+					new ObjectAdapters.UnitDropItemNodeAdapter());
 			if (cpj_sprite!=null) {
 				set_binding.setIcon(cpj_sprite.getIcon(false));
 			}
-
-			//page_properties.setLayout(new GridLayout(2, 1));
+			page_properties = new JPanel();
+//			page_properties.setLayout(new GridLayout(2, 1));
 			set_binding.addActionListener(this);
-			page_properties.add(set_binding);
+			page_properties.add(set_binding);			
+			table.insertTab("属性", null, page_properties, null, 0);
+			table.setSelectedIndex(0);
 		}
 		
 
@@ -115,7 +126,7 @@ final public class XLSUnit extends XLSTemplateNode<TUnit>
 		
 	}
 	
-	
+		
 	
 	
 	

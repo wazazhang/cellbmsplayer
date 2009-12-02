@@ -9,6 +9,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import com.cell.rpg.ability.Abilities;
 import com.cell.rpg.ability.AbstractAbility;
+import com.cell.rpg.quest.QuestItem;
 import com.cell.rpg.scene.ability.RegionSpawnNPC.NPCSpawn;
 import com.cell.rpg.template.ability.UnitBattleTeam;
 import com.cell.rpg.template.ability.UnitDropItem;
@@ -20,8 +21,9 @@ import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.template.XLSItem;
 import com.g2d.studio.gameedit.template.XLSUnit;
 import com.g2d.studio.rpg.AbilityPanel.AbilityCellEditAdapter;
+import com.g2d.studio.rpg.RPGObjectPanel.RPGObjectAdapter;
 
-public class ObjectAbilityAdapters 
+public class ObjectAdapters 
 {
 	
 	/**
@@ -108,6 +110,40 @@ public class ObjectAbilityAdapters
 					DropItemEditor editor = new DropItemEditor((DropItemNode[])fieldValue);
 					return editor.getComponent(null);
 				}
+			}
+			return null;
+		}
+	}
+
+	/**
+	 * 编辑任务标志
+	 * @author WAZA
+	 *
+	 */
+	public static class QuestItemAdapter extends RPGObjectAdapter<QuestItem>
+	{
+		@Override
+		public Class<QuestItem> getType() {
+			return QuestItem.class;
+		}
+		
+		@Override
+		public PropertyCellEdit<?> getCellEdit(Object editObject, Object fieldValue, Field field) {
+			if (field.getName().equals("titem_index")) {
+				ObjectSelectCellEditInteger<XLSItem> item_edit = new ObjectSelectCellEditInteger<XLSItem>(XLSItem.class);
+				return item_edit;
+			}
+			return null;
+		}
+		
+		@Override
+		public Component getCellRender(Object editObject, Object fieldValue, Field field, DefaultTableCellRenderer src) {
+			if (field.getName().equals("titem_index")) {
+				try{
+					XLSItem item = Studio.getInstance().getObjectManager().getObject(XLSItem.class, (Integer)fieldValue);
+					src.setText(item.getName());
+					src.setIcon(item.getIcon(false));
+				}catch(Exception err){}
 			}
 			return null;
 		}

@@ -37,6 +37,7 @@ import com.cell.rpg.io.RPGSerializationListener;
 import com.g2d.Tools;
 import com.g2d.display.DisplayObject;
 import com.g2d.editor.DisplayObjectViewer;
+import com.g2d.editor.property.ObjectPropertyPanel.CellEditAdapter;
 import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.entity.ObjectNode;
 import com.g2d.studio.gameedit.template.XLSTemplateNode;
@@ -53,19 +54,18 @@ public abstract class ObjectViewer<T extends ObjectNode<?>> extends JPanel
 	final protected T tobject;
 	
 	protected JTabbedPane 		table = new JTabbedPane();
-	protected JPanel 			page_properties;
 	protected RPGObjectPanel	page_object_panel;
 	protected AbilityPanel		page_abilities;
 	
-	public ObjectViewer(T object, AbilityCellEditAdapter<?> ... adapters) 
+	public ObjectViewer(T object, CellEditAdapter<?> ... adapters) 
 	{
 		this.tobject = object;
 		this.setLayout(new BorderLayout());
 		{
-			page_properties = new JPanel();
-			table.addTab("属性", page_properties);
+//			page_properties = new JPanel();
+//			table.addTab("属性", page_properties);
 		} {
-			page_object_panel = new RPGObjectPanel(object.getData());
+			page_object_panel = new RPGObjectPanel(object.getData(), adapters);
 			table.addTab("RPG属性", page_object_panel);
 		} {
 			page_abilities = new AbilityPanel(object.getData(), adapters);

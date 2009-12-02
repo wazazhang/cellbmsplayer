@@ -112,7 +112,9 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 			deleteSeletedAbility();
 		}
 		else if (e.getSource() == btn_add_ability) {
-			new AddAbilityForm().setVisible(true);
+			if (abilities.getSubAbilityTypes()!=null && abilities.getSubAbilityTypes().length>0){
+				new AddAbilityForm().setVisible(true);
+			}
 		}
 	}
 

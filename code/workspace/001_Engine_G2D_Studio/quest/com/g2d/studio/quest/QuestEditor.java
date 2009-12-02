@@ -10,6 +10,7 @@ import javax.swing.JTextPane;
 import com.cell.rpg.RPGObject;
 import com.cell.rpg.io.RPGSerializationListener;
 import com.g2d.studio.gameedit.ObjectViewer;
+import com.g2d.studio.gameedit.ObjectAdapters.QuestItemAdapter;
 import com.g2d.studio.rpg.RPGObjectPanel;
 import com.g2d.util.TextEditor;
 
@@ -17,7 +18,7 @@ public class QuestEditor extends ObjectViewer<QuestNode> implements RPGSerializa
 {	
 	PanelDiscussion		panel_quest_discussion;
 	PanelTriggerData	panel_quest_data;
-
+	
 //	-------------------------------------------------------------------------------------
 	
 	public QuestEditor(QuestNode node) {

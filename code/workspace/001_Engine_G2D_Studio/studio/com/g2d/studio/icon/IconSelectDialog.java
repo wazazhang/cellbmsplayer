@@ -1,6 +1,7 @@
 package com.g2d.studio.icon;
 
 import java.awt.BorderLayout;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -20,8 +21,12 @@ public class IconSelectDialog extends G2DListSelectDialog<IconFile>
 	
 	public IconSelectDialog()
 	{
-		super(Studio.getInstance().getIconManager(),new IconList());
+		super(Studio.getInstance().getIconManager(), new IconList());
 		super.setTitle("选择一个图标");
 	}
 	
+	public IconSelectDialog(Window owner) {
+		super(owner, new IconList());
+		super.setTitle("选择一个图标");
+	}
 }
