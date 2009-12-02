@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0+" codebase="." href="gamebms.jnlp">
+      
+	<information>
+    	<title>TS2OnlineWeb</title>
+    	<vendor>GameTiler</vendor>
+    	<homepage href="http://my.company.com/home-page.html"/>
+    	<description>Test</description>
+    	<description kind="short">Test: a simple 3D rotating cube demo,using the Java 3D API</description>
+    	<icon href="myicon.gif"/>
+    	<icon kind="splash" href="mysplash.gif"/>
+    	<offline-allowed/>
+	</information>
+  
+    <resources>
+		<j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se" max-heap-size="128m" />
+    	<jar href="joal.jar" />
+		<jar href="gluegen-rt.jar" />
+		<jar href="gamebms.jar" main="true" />
+		<nativelib href = "natives-windows-i586.jar" />
+    </resources>
+   
+	<security>
+		<all-permissions/>
+	</security>
+
+	<applet-desc
+		name="BMSApplet"
+		main-class="com.cell.bms.game.MainApplet"
+		width="640"
+		height="480">
+	</applet-desc>
+	
+</jnlp>
