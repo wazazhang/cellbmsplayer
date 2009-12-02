@@ -19,6 +19,7 @@ import com.g2d.cell.CellSetResource.WorldSet.SpriteObject;
 import com.g2d.display.DisplayObject;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.Sprite;
+import com.g2d.display.Stage;
 
 public class BMSLayer extends Sprite implements BMSPlayerListener
 {
@@ -37,6 +38,7 @@ public class BMSLayer extends Sprite implements BMSPlayerListener
 	public BMSLayer(BMSPlayer player)
 	{
 		this.player = player;
+		this.player.is_auto_play = true;
 		this.player.addListener(this);
 		
 		try 
@@ -64,14 +66,17 @@ public class BMSLayer extends Sprite implements BMSPlayerListener
 	@Override
 	public void added(DisplayObjectContainer parent) {
 		super.added(parent);
-		setSize(parent.getWidth(), parent.getHeight());
-		player.start();
+		if (parent instanceof StageGame) {
+			setSize(parent.getWidth(), parent.getHeight());
+			player.start();
+		} 
 	}
 	
 	@Override
 	public void update()
 	{
 		super.update();
+		player.update();
 	}
 	
 	@Override
@@ -80,7 +85,6 @@ public class BMSLayer extends Sprite implements BMSPlayerListener
 		CGraphics cg = new CGraphics(g);
 		
 		// paint notes
-		player.update();
 		{
 			IDefineImage img_bg = player.getPlayBGImage();
 			if (img_bg != null && img_bg.getImage() != null) {

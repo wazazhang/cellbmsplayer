@@ -27,10 +27,13 @@ public class Main {
 				Config.STAGE_WIDTH, 
 				Config.STAGE_HEIGHT);
 		
+		canvas.getCanvasAdapter().setFPS(40);
+		canvas.getCanvasAdapter().setUnactiveFPS(40);
+
 		final SimpleFrame frame = new SimpleFrame(
 				canvas.getCanvasAdapter(),
-				StageGame.class.getName());
-		
+				StageTitle.class.getName());
+
 		frame.setTitle("BMSPlayer");
 		
 		frame.addComponentListener(new ComponentAdapter(){
