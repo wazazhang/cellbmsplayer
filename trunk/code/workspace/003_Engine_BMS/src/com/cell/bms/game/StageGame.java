@@ -1,63 +1,54 @@
 package com.cell.bms.game;
 
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
 
 import com.cell.bms.BMSFile;
 import com.cell.bms.BMSPlayer;
 import com.cell.bms.oal.JALNoteFactory;
 
+import com.g2d.display.Canvas;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.Stage;
 import com.g2d.display.ui.Form;
 
 public class StageGame extends Stage
 {
-	JALNoteFactory note_factory;
-	
-	SystemForm system_from;
+	BMSFile		bms_file;
+	BMSPlayer	player;
+	BMSLayer	layer;
 	
 	public StageGame() 
 	{
 		setSize(Config.STAGE_WIDTH, Config.STAGE_HEIGHT);
-		
-		try{
-			note_factory = new JALNoteFactory();
-		}catch(Exception err) {
-			err.printStackTrace();
+	}
+	
+	@Override
+	public void inited(Canvas root, Object[] args) {
+		if (args!=null && args.length>0) {
+			bms_file = (BMSFile)args[0];
 		}
-		
-		system_from = new SystemForm(this);
-		this.addChild(system_from);
+		super.inited(root, args);
 	}
 	
 	public void added(DisplayObjectContainer parent) 
 	{
-//		"D:/Projects/CellBMSPlayer/resource/data/song/btm_hama/hama_5.bms"
-//		"D:/Projects/CellBMSPlayer/resource/data/song/btm_mario/mario-5.bms"
-//		"D:/Projects/CellBMSPlayer/resource/data/song/animusic/animusic-7K.bms"
-//		"D:/Projects/CellBMSPlayer/resource/data/song/animusic/animusic-8K.bms"
-		
-		getRoot().setFPS(40);
-		
-		getRoot().setUnactiveFPS(40);
-		
-		start("D:/Projects/CellBMSPlayer/resource/data/song/btm_hama/hama_5.bms");
+		player	= new BMSPlayer(bms_file);
+		layer	= new BMSLayer(player);
+		this.addChild(layer);
 	}
 
-	public void removed(DisplayObjectContainer parent) {}
+	public void removed(DisplayObjectContainer parent) {
+		bms_file.dispose();
+	}
 	
-	public void update() {}
+	public void update() {
+		if (getRoot().isKeyDown(KeyEvent.VK_ESCAPE)) {
+			getRoot().changeStage(StageTitle.class);			
+			player.stop();
+		}
+	}
 	
 	public void render(Graphics2D g) {}
 	
-	
-	void start(String path)
-	{
-		BMSFile file = new BMSFile(note_factory, path);
-
-		BMSPlayer player = new BMSPlayer(file);
-		
-		this.addChild(new BMSLayer(player));
-
-	}
 }

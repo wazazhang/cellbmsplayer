@@ -200,8 +200,15 @@ public class BMSFile
 			
 		}
 		
+		void dispose() {
+			if (value_object!=null) {
+				value_object.dispose();
+			}
+		}
 	}
-	
+
+//	--------------------------------------------------------------------------------------------------------------
+
 	/**
 	 * 在数据区域内的音符数据
 	 * @author WAZA
@@ -319,7 +326,15 @@ public class BMSFile
 		
 	}
 
-	
+
+//	--------------------------------------------------------------------------------------------------------------
+
+	public static interface LoadingListener 
+	{
+		public void beginLoading(BMSFile bms_file);
+		public void endLoading(BMSFile bms_file);
+		public void loadline(BMSFile bms_file, int max, int current, String line_data);
+	}
 
 	
 //	--------------------------------------------------------------------------------------------------------------
@@ -342,7 +357,8 @@ public class BMSFile
 	HashMap<String, NoteDefine>	header_bpm_map	= new HashMap<String, NoteDefine>();
 	HashMap<String, NoteDefine>	header_stp_map	= new HashMap<String, NoteDefine>();
 	
-	HashMap<DataCommand, ArrayList<Note>> data_note_table = new HashMap<DataCommand, ArrayList<Note>>();
+	HashMap<DataCommand, ArrayList<Note>> 
+								data_note_table = new HashMap<DataCommand, ArrayList<Note>>();
 	
 //	--------------------------------------------------------------------------------------------------------------
 
@@ -351,24 +367,34 @@ public class BMSFile
 		this(factory, file, 256);
 	}
 	
-	public BMSFile(NoteFactory factory, String file, double line_div)
+	public BMSFile(NoteFactory factory, String file, LoadingListener ... listener) 
 	{
-		note_factory	= factory;
+		this(factory, file, 256, listener);
+	}
+	
+	public BMSFile(NoteFactory factory, String file, double line_div, LoadingListener ... listener)
+	{
+		note_factory		= factory;
+		LINE_SPLIT_DIV		= line_div;
+		BEAT_DIV			= line_div / 4;
 		
-		LINE_SPLIT_DIV	= line_div;
-		BEAT_DIV		= line_div / 4;
-		
-		bms_file		= file.replace('\\', '/');
-		bms_dir			= file.substring(0, bms_file.lastIndexOf("/"));
+		bms_file			= file.replace('\\', '/');
+		bms_dir				= file.substring(0, bms_file.lastIndexOf("/"));
 		
 		for (DataCommand cmd : DataCommand.values()) {
 			data_note_table.put(cmd, new ArrayList<Note>());
 		}
-
+		
+		if (listener!=null) {
+			for (LoadingListener l : listener) {
+				l.beginLoading(this);
+			}
+		}
+		
 		note_factory.initBMS(this);
 		
 		String[] lines = CIO.readAllLine(bms_file);
-		
+		int line_index = 0;
 		for (String line : lines)
 		{
 			if (line.startsWith("#"))
@@ -412,8 +438,19 @@ public class BMSFile
 					e.printStackTrace();
 				}
 			}
+			
+			if (listener!=null) {
+				for (LoadingListener l : listener) {
+					l.loadline(this, lines.length, line_index++, line);
+				}
+			}
 		}
 		
+		if (listener!=null) {
+			for (LoadingListener l : listener) {
+				l.endLoading(this);
+			}
+		}
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -503,6 +540,37 @@ public class BMSFile
 	}
 	
 	
+	public void dispose()
+	{
+		for (NoteDefine define : header_wav_map.values()) {
+			try{
+				define.dispose();
+			}catch(Exception err){
+				System.err.println(err.getMessage());
+			}
+		}
+		for (NoteDefine define : header_img_map.values()) {
+			try{
+				define.dispose();
+			}catch(Exception err){
+				System.err.println(err.getMessage());
+			}
+		}
+		for (NoteDefine define : header_bpm_map.values()) {
+			try{
+				define.dispose();
+			}catch(Exception err){
+				System.err.println(err.getMessage());
+			}
+		}
+		for (NoteDefine define : header_stp_map.values()) {
+			try{
+				define.dispose();
+			}catch(Exception err){
+				System.err.println(err.getMessage());
+			}
+		}
+	}
 	
 	public static void main(String[] args)
 	{
