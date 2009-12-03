@@ -26,6 +26,7 @@ extends ObjectTreeView<T, D> implements IDynamicIDFactory<T>
 		super(title, node_type, data_type, list_file);
 		getTreeRoot().loadList();
 		reload();
+		getTree().setDragEnabled(true);
 	}
 	
 	@Override

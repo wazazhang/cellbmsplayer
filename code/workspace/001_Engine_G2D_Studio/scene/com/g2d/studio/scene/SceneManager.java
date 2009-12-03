@@ -19,6 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
 
+import javax.swing.DropMode;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -96,6 +97,8 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 		this.g2d_tree.addMouseListener(new TreeMouseAdapter());
 		JScrollPane scroll = new JScrollPane(g2d_tree);
 		add(scroll);
+		
+		g2d_tree.setDragEnabled(true);
 	}
 
 //	------------------------------------------------------------------------------------------------------------------------------

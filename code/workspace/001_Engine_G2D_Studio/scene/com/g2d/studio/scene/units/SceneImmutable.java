@@ -64,7 +64,7 @@ public class SceneImmutable extends SceneSprite implements SceneUnitTag<Immutabl
 		if (!editor.getGameScene().getWorld().addChild(this)){
 			throw new IllegalStateException();
 		}
-		this.sprite = new Immutable(getID()+"", cpj_spr.getParent().getName(), cpj_spr.name);
+		this.sprite = new Immutable(getID()+"", cpj_spr.getCPJFile().getName(), cpj_spr.name);
 	}
 	
 	/**
@@ -92,7 +92,7 @@ public class SceneImmutable extends SceneSprite implements SceneUnitTag<Immutabl
 					sprite.x,
 					sprite.y);
 			this.init(
-					cpj_spr.getParent().getSetResource(), 
+					cpj_spr.getCPJFile().getSetResource(), 
 					cpj_spr.name);
 		}
 		if (!editor.getGameScene().getWorld().addChild(this)){

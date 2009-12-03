@@ -57,11 +57,23 @@ public abstract class G2DTreeNodeGroup<C extends G2DTreeNode<?>> extends Default
 	@Override
 	public void add(MutableTreeNode newChild) {
 		if (newChild instanceof G2DTreeNodeGroup<?>) {
-			if (findChild(newChild.toString())!=null) {
+			G2DTreeNodeGroup<?> subg = findChild(newChild.toString());
+			if (subg!=null && subg!=newChild) {
 				throw new IllegalStateException("duplicate child ! " + newChild);
 			}
 		}
 		super.add(newChild);
+	}
+	
+	@Override
+	public void insert(MutableTreeNode newChild, int childIndex) {
+		if (newChild instanceof G2DTreeNodeGroup<?>) {
+			G2DTreeNodeGroup<?> subg = findChild(newChild.toString());
+			if (subg!=null && subg!=newChild) {
+				throw new IllegalStateException("duplicate child ! " + newChild);
+			}
+		}
+		super.insert(newChild, childIndex);
 	}
 	
 	public boolean setName(String name) {

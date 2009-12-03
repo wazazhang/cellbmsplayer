@@ -1,12 +1,34 @@
 package com.g2d.studio.swing;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Graphics;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.dnd.DragGestureEvent;
+import java.awt.dnd.DragGestureListener;
+import java.awt.dnd.DragSource;
+import java.awt.dnd.DragSourceDragEvent;
+import java.awt.dnd.DragSourceDropEvent;
+import java.awt.dnd.DragSourceEvent;
+import java.awt.dnd.DragSourceListener;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.dnd.DropTargetEvent;
+import java.awt.dnd.DropTargetListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.Vector;
 
+import javax.swing.DropMode;
 import javax.swing.ImageIcon;
 import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
@@ -18,21 +40,41 @@ import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
+import sun.swing.DefaultLookup;
 
-public class G2DTree extends JTree
+
+public class G2DTree extends JTree implements G2DDragDropListener<G2DTree>
 {
 	private static final long serialVersionUID = 1L;
 
-	final protected DefaultTreeModel tree_model;
+	final protected DefaultTreeModel 	tree_model;
+	
+	final protected DropTarget			drop_target;
+
+	ArrayList<G2DDragDropListener<G2DTree>> 
+										drag_drop_listeners = new ArrayList<G2DDragDropListener<G2DTree>>(1);
+	Object 								drag_location_object;
+	
 	
 	public G2DTree(DefaultMutableTreeNode tree_root) 
 	{
 		tree_model = new DefaultTreeModel(tree_root);
 		super.setModel(tree_model);
+		
 		this.setCellRenderer(new TreeRender());
 		this.addMouseListener(new TreeMouseListener());
 		this.addTreeSelectionListener(new TreeSelect());
 		
+		{
+//			drag_source = new DragSource();
+//			drag_source.addDragSourceListener(drag_adapter);
+//			drag_source.createDefaultDragGestureRecognizer(this, 0, drag_adapter);		
+
+			DropTargetAdapter drag_adapter = new DropTargetAdapter();
+			drop_target = new DropTarget(this, drag_adapter);
+			super.setDropTarget(drop_target);
+		}
+		this.addDragDropListener(this);
 	}
 	
 	public DefaultTreeModel getTreeModel(){
@@ -46,17 +88,7 @@ public class G2DTree extends JTree
 	public void reload(TreeNode node) {
 		tree_model.reload(node);
 	}
-	
-//	
-//	public G2DTreeNode<?> getSelectedNode() {
-//		Object value = getLastSelectedPathComponent();
-//		if (value instanceof G2DTreeNode<?>){
-//			G2DTreeNode<?> node = ((G2DTreeNode<?>)value);
-//			return node;
-//		}
-//		return null;
-//	}
-//	
+
 	public MutableTreeNode getSelectedNode() {
 		Object value = getLastSelectedPathComponent();
 		if (value instanceof MutableTreeNode){
@@ -65,9 +97,120 @@ public class G2DTree extends JTree
 		}
 		return null;
 	}
+	
+	public void addDragDropListener(G2DDragDropListener<G2DTree> listener) {
+		drag_drop_listeners.add(listener);
+	}
+	public void removeDragDropListener(G2DDragDropListener<G2DTree> listener) {
+		drag_drop_listeners.remove(listener);
+	}
+	@Override
+	public void onDragDrop(G2DTree comp, Object src, Object dst) {
+		if (checkDrag(drop_target, src, dst)) {
+			Map<TreeNode, TreePath> expan = storeAllExpandState();
+			try{
+				MutableTreeNode src_node = (MutableTreeNode)src;
+				MutableTreeNode dst_node = (MutableTreeNode)dst;
+				MutableTreeNode src_parent = (MutableTreeNode)src_node.getParent();
+				MutableTreeNode dst_parent = (MutableTreeNode)dst_node.getParent();
+				if (false) {}
+				// 添加到根节点
+				else if (dst_node == tree_model.getRoot()) {
+					dst_node.insert(src_node, 0);
+					reload(dst_node);
+					System.out.println("添加到根节点");
+				}
+				// 添加到组节点
+				else if (dst_node instanceof G2DTreeNodeGroup<?>) {
+					G2DTreeNodeGroup<?> dst_group = (G2DTreeNodeGroup<?>)dst_node;
+					dst_group.add(src_node);
+					reload(src_parent);
+					reload(dst_node);
+					System.out.println("添加到组节点");
+				}
+				// 同一层次的移动
+				else if (src_node.getParent() == dst_node.getParent()) {
+					dst_parent.insert(src_node, dst_parent.getIndex(dst_node));
+					reload(dst_parent);
+					System.out.println("同一层次的移动");
+				}
+				// 不同层次的移动
+				else {
+					dst_parent.insert(src_node, dst_parent.getIndex(dst_node));
+					reload(src_parent);
+					reload(dst_parent);
+					System.out.println("不同层次的移动");
+				}
+			}
+			finally{
+				restoreAllExpandState(expan);
+			}
+		}
+	}
+	
+	private boolean checkDrag(Object evt_source, Object src, Object dst) {
+		if (dst == null) {
+			return false;
+		}
+		// 不是本控件的节点
+		if (evt_source != drop_target) {
+			return false;
+		}
+		TreeNode tsrc	= (TreeNode)src;
+		TreeNode tdst	= (TreeNode)dst;
+		// 不能自己放到自己上
+		if (tsrc == tdst) {
+			return false;
+		}
+		// 根节点不能被拖动
+		if (tsrc == tree_model.getRoot()) {
+			return false;
+		}
+		// 父节点不能被拖动到子节点
+		if (containsNode(tsrc, tdst)) {
+			return false;
+		}
+		return true;
+	}
+
 //	----------------------------------------------------------------------------------------------------------------------------
 
-	static public<T extends G2DTreeNode<?>> Vector<T> getNodesSubClass(MutableTreeNode root, Class<T> type)
+	public TreePath createTreePath(TreeNode node) {
+		ArrayList<TreeNode> path = new ArrayList<TreeNode>();
+		while (node != null) {
+			path.add(0, node);
+			node = node.getParent();
+		} 
+		return new TreePath(path.toArray());
+	}
+	
+	public Map<TreeNode, TreePath> storeAllExpandState()
+	{
+		Vector<TreeNode> nodes = getNodesSubClass((TreeNode)tree_model.getRoot(), TreeNode.class);
+		Map<TreeNode, TreePath> states = new HashMap<TreeNode, TreePath>();
+		for (TreeNode node : nodes) {
+			TreePath path = createTreePath(node);
+			if (isExpanded(path)) {
+				states.put(node, path);
+			}
+		}
+		return states;
+	}
+	
+	public void restoreAllExpandState(Map<TreeNode, TreePath> states)
+	{
+		for (TreePath path : states.values()) {
+			try{
+				expandPath(path);
+			}catch(Exception err){
+				err.printStackTrace();
+			}
+		}
+	}
+	
+//	----------------------------------------------------------------------------------------------------------------------------
+
+	static public<T extends TreeNode> Vector<T> getNodesSubClass(TreeNode root, Class<T> type)
 	{
 		Vector<T> ret = new Vector<T>();
 		getNodesSubClass(root, type, ret);
@@ -75,7 +218,7 @@ public class G2DTree extends JTree
 	}
 	
 	@SuppressWarnings("unchecked")
-	static public<T extends G2DTreeNode<?>> void getNodesSubClass(MutableTreeNode root, Class<T> type, Vector<T> list)
+	static public<T extends TreeNode> void getNodesSubClass(TreeNode root, Class<T> type, Vector<T> list)
 	{
 		Enumeration files = root.children();
 		while(files.hasMoreElements()) {
@@ -87,12 +230,12 @@ public class G2DTree extends JTree
 			getNodesSubClass(node, type, list);
 		}
 	}
-	
+
 //	----------------------------------------------------------------------------------------------------------------------------
 	
-	static public G2DTreeNode<?> getNode(MutableTreeNode root, String ... path)
+	static public G2DTreeNode<?> getNode(TreeNode root, String ... path)
 	{
-		MutableTreeNode node = root;
+		TreeNode node = root;
 		for (String name : path) {
 			node = getNode(node, name);
 			if (node == null) {
@@ -103,7 +246,7 @@ public class G2DTree extends JTree
 	}
 	
 	@SuppressWarnings("unchecked")
-	static public G2DTreeNode getNode(MutableTreeNode root, String name) 
+	static public G2DTreeNode getNode(TreeNode root, String name) 
 	{
 		try{
 			Enumeration files = root.children();
@@ -119,12 +262,32 @@ public class G2DTree extends JTree
 		return null;
 	}
 	
+	@SuppressWarnings("unchecked")
+	static public boolean containsNode(TreeNode root, Object node) {
+		Enumeration files = root.children();
+		while(files.hasMoreElements()) {
+			G2DTreeNode c = (G2DTreeNode)files.nextElement();
+			if (containsNode(c, node)) {
+				return true;
+			}
+			if (c == node) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 //	----------------------------------------------------------------------------------------------------------------------------
 	
 	
 	class TreeRender extends DefaultTreeCellRenderer
 	{
 		private static final long serialVersionUID = 1L;
+		
+		Object current_value;
+		
+		Color drag_location_color = new Color(0x80000000, true);
+		
 		@Override
 		public Component getTreeCellRendererComponent(
 				JTree tree, 
@@ -135,6 +298,7 @@ public class G2DTree extends JTree
 				int row,
 				boolean hasFocus) 
 		{
+			current_value = value;
 			Component comp = super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf,row, hasFocus);
 			if (value instanceof G2DTreeNode<?>){
 				G2DTreeNode<?> node = ((G2DTreeNode<?>)value);
@@ -145,7 +309,20 @@ public class G2DTree extends JTree
 				}
 			}
 			return comp;
-		}		
+		}
+		@Override
+		public void paint(Graphics g) {
+			super.paint(g);
+			if (drag_location_object == current_value) {
+				if (current_value instanceof G2DTreeNodeGroup<?>) {
+					g.setColor(drag_location_color); 
+					g.fillRect(0, 0, getWidth(), getHeight());
+				} else {
+					g.setColor(Color.BLACK); 
+					g.fillRect(0, 0, getWidth(), 2);
+				}
+			}
+		}
 	}
 	
 	
@@ -163,6 +340,15 @@ public class G2DTree extends JTree
 	
 	class TreeMouseListener extends MouseAdapter
 	{
+		@Override
+		public void mouseReleased(MouseEvent e) {
+//			drag_location_object = null;
+		}
+		@Override
+		public void mouseExited(MouseEvent e) {
+//			drag_location_object = null;
+		}
+		
 		@Override
 		public void mousePressed(MouseEvent e)
 		{
@@ -209,5 +395,58 @@ public class G2DTree extends JTree
 		
 	}
 	
+	class DropTargetAdapter implements DropTargetListener
+	{
+		@Override
+		final public void dragEnter(DropTargetDragEvent dtde) {
+			drag_location_object = null;
+			G2DTree.this.repaint();
+		}
+		@Override
+		final public void dragExit(DropTargetEvent dte) {
+			drag_location_object = null;
+			G2DTree.this.repaint();
+		}
+		@Override
+		final public void dragOver(DropTargetDragEvent dtde) {
+			drag_location_object = null;
+			TreePath path = G2DTree.this.getPathForLocation(dtde.getLocation().x, dtde.getLocation().y);
+			if (path!=null) {
+				drag_location_object = path.getLastPathComponent();
+				if (checkDrag(dtde.getSource(), getSelectedNode(), drag_location_object)) {
+					dtde.acceptDrag(dtde.getDropAction());
+				} else {
+					drag_location_object = null;
+					dtde.rejectDrag();
+				}
+			}
+			G2DTree.this.repaint();
+		}
+		
+		@Override
+		final public void drop(DropTargetDropEvent dtde) {
+			drag_location_object = null;
+			TreePath path = G2DTree.this.getPathForLocation(dtde.getLocation().x, dtde.getLocation().y);
+			if (path!=null) {
+				if (checkDrag(dtde.getSource(), getSelectedNode(), path.getLastPathComponent())) {
+					TreeNode sender		= G2DTree.this.getSelectedNode();
+					TreeNode reciver	= (TreeNode)path.getLastPathComponent();
+					for (G2DDragDropListener<G2DTree> l : drag_drop_listeners) {
+						l.onDragDrop(G2DTree.this, sender, reciver);
+					}
+				}
+			}
+			G2DTree.this.repaint();
+		}
+		@Override
+		final public void dropActionChanged(DropTargetDragEvent dtde) {
+			drag_location_object = null;
+			G2DTree.this.repaint();
+		}
+		
+	
+	}
+	
+
 	
 }

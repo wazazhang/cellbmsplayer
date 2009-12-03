@@ -77,7 +77,7 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 		this.xls_unit = xls_unit;
 		this.cur_anim = anim;		
 		this.setLocation(x, y);
-		this.init(xls_unit.getCPJSprite().getParent().getSetResource(), xls_unit.getCPJSprite().name);
+		this.init(xls_unit.getCPJSprite().getCPJFile().getSetResource(), xls_unit.getCPJSprite().name);
 		if (!editor.getGameScene().getWorld().addChild(this)){
 			throw new IllegalStateException();
 		}
@@ -106,7 +106,7 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 					actor.x,
 					actor.y);
 			this.init(
-					xls_unit.getCPJSprite().getParent().getSetResource(), 
+					xls_unit.getCPJSprite().getCPJFile().getSetResource(), 
 					xls_unit.getCPJSprite().name);
 		}
 		if (!editor.getGameScene().getWorld().addChild(this)){
