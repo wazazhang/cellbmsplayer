@@ -28,4 +28,5 @@ public class IDefineSound implements IDefineNote
 	public void dispose() {
 		sound.dispose();
 	}
+	
 }
