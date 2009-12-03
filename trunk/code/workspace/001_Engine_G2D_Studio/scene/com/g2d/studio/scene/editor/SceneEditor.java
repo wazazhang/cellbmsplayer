@@ -113,7 +113,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		
 		this.scene_node		= scene;
 		this.scene_world	= scene_node.getWorldDisplay();
-		this.scene_resource	= scene_world.getParent().getSetResource();
+		this.scene_resource	= scene_world.getCPJFile().getSetResource();
 		
 		// tool bar
 		{

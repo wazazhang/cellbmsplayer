@@ -117,7 +117,7 @@ public class CPJFile extends G2DTreeNode<CPJObject<?>>
 					ret = new CPJSprite(this, name, res_type);
 					sprites.put(name, ret);
 				}
-				addChild(ret);
+				add(ret);
 			}catch(Exception err){
 				err.printStackTrace();
 			}
@@ -146,7 +146,7 @@ public class CPJFile extends G2DTreeNode<CPJObject<?>>
 					ret = new CPJWorld(this, name);
 					worlds.put(name, ret);
 				}
-				 addChild(ret);
+				add(ret);
 			}catch(Exception err){
 				err.printStackTrace();
 			}

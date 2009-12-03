@@ -6,6 +6,7 @@ import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.JTree;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
 
 import com.cell.DObject;
@@ -13,18 +14,11 @@ import com.cell.ExtObject;
 import com.cell.util.MarkedHashtable;
 import com.g2d.Tools;
 
-public abstract class G2DTreeNode<C extends G2DTreeNode<?>> extends ExtObject implements MutableTreeNode
+public abstract class G2DTreeNode<C extends G2DTreeNode<?>> extends DefaultMutableTreeNode
 {
-	
-	Vector<C> 				childs = new Vector<C>();
-	MutableTreeNode			parent;
-	
-	protected Object 		user_object	= "node";
 	private ImageIcon 		icon_snapshot;
 	
-	public G2DTreeNode() 
-	{
-	}
+	public G2DTreeNode() {}
 	
 //	----------------------------------------------------------------------------------------------------------------------------------
 
@@ -44,11 +38,6 @@ public abstract class G2DTreeNode<C extends G2DTreeNode<?>> extends ExtObject im
 	public void onSelected(JTree tree){
 //		System.out.println("onSelected : " + getName());
 	}
-	
-	@Override
-	protected void onRead(MarkedHashtable data) {}
-	@Override
-	protected void onWrite(MarkedHashtable data) {}
 	
 //	
 //	----------------------------------------------------------------------------------------------------------------------------------
@@ -75,87 +64,29 @@ public abstract class G2DTreeNode<C extends G2DTreeNode<?>> extends ExtObject im
 		return getName();
 	}
 
-	public Vector<C> getChilds() {
-		return childs;
-	}
-	
-	public Enumeration<C> children() {
-		return childs.elements();
-	}
-	
-	public C getChildAt(int childIndex) {
-		return childs.elementAt(childIndex);
-	}
-	
-	public int getChildCount() {
-		return childs.size();
-	}
-	
-	public int getIndex(javax.swing.tree.TreeNode node) {
-		return childs.indexOf(node);
-	}
-	
-	public MutableTreeNode getParent() {
-		return parent;
-	}
-	
 //	----------------------------------------------------------------------------------------------------------------------------------
 
-	public boolean isLeaf() {
-		return false;
-	}
-	public boolean getAllowsChildren() {
-		return true;
-	}
-	
 //	----------------------------------------------------------------------------------------------------------------------------------
 
-	public void addChild(C child) {
-		if (checkAddChild(child)) {
-			childs.addElement(child);
+	@Override
+	public void add(MutableTreeNode newChild) {
+		if (checkAddChild(newChild)) {
+			super.add(newChild);
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
 	public void insert(MutableTreeNode child, int index) {
-		if (checkAddChild((C)child)) {
-			childs.insertElementAt((C)child, index);
+		if (checkAddChild(child)) {
+			super.insert(child, index);
 		}
 	}
 	
-	protected boolean checkAddChild(C child) {
+	protected boolean checkAddChild(MutableTreeNode child) {
 //		C pre = getChild(child.getName());
 //		if (pre!=null) {
 //			throw new IllegalStateException("duplicate element \"" + child.getName() + "\" !");
 //		}
 		return true;
-	}
-	
-//	----------------------------------------------------------------------------------------------------------------------------------
-
-	public void remove(int index) {
-		childs.remove(index);
-	}
-
-	public void remove(MutableTreeNode node) {
-		childs.remove(node);
-	}
-
-	public void removeFromParent() {
-		if (parent!=null) {
-			parent.remove(this);
-		}
-	}
-
-//	----------------------------------------------------------------------------------------------------------------------------------
-
-	public void setParent(MutableTreeNode newParent) {
-		parent = newParent;
-	}
-	
-	@Override
-	public void setUserObject(Object object) {
-		user_object = object;
 	}
 	
 

@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.Vector;
 
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -40,7 +42,7 @@ extends ObjectTreeView<T, D>
 	
 	final public File xls_file ;
 	
-	HashMap<String, XLSFullRow> xls_row_map;
+	Map<String, XLSFullRow> xls_row_map;
 	
 	public ObjectTreeViewTemplate(
 			String		title, 
@@ -52,7 +54,7 @@ extends ObjectTreeView<T, D>
 	{
 		super(title, node_type, data_type, list_file);
 		this.xls_file = xls_file;
-		this.xls_row_map = new HashMap<String, XLSFullRow>();
+		this.xls_row_map = new TreeMap<String, XLSFullRow>();
 		int i=0;		
 		Collection<XLSFullRow> list = XLSFullRow.getXLSRows(xls_file, XLSFullRow.class);
 		progress.setMaximum(title, list.size());
@@ -61,6 +63,14 @@ extends ObjectTreeView<T, D>
 			progress.setValue(title, i++);
 		}
 		getTreeRoot().loadList();
+		for (XLSFullRow row : xls_row_map.values()) {
+			if (getNode(Integer.parseInt(row.id))==null) {
+				T node = createObjectFromRow(row.id, null);
+				if (node != null) {
+					addNode(getTreeRoot(), node);
+				}
+			}
+		}
 		reload();
 	}
 //	-----------------------------------------------------------------------------------------------------------------------------------
@@ -71,6 +81,28 @@ extends ObjectTreeView<T, D>
 	}
 	
 //	-----------------------------------------------------------------------------------------------------------------------------------
+	
+	private T createObjectFromRow(String row_key, TemplateNode data) 
+	{
+		T node = null;
+		try{
+			XLSFullRow row = xls_row_map.get(row_key);
+			if (row!=null) {
+				if (node_type.equals(XLSUnit.class)) {
+					node = (node_type.cast(new XLSUnit(row.xls_file, row, data)));
+				} else if (node_type.equals(XLSItem.class)) {
+					node = (node_type.cast(new XLSItem(row.xls_file, row, data)));
+				} else if (node_type.equals(XLSSkill.class)) {
+					node = (node_type.cast(new XLSSkill(row.xls_file, row, data)));
+				}
+			} else {
+				System.err.println(getTitle() + " : XML 行不存在 : " + row_key);
+			}
+		} catch (Exception err){
+			err.printStackTrace();
+		}
+		return node;
+	}
 	
 //	-----------------------------------------------------------------------------------------------------------------------------------
 
@@ -86,26 +118,13 @@ extends ObjectTreeView<T, D>
 		}
 		
 		protected boolean createObjectNode(String key, D data) {
-			T node = null;
-			try{
-				XLSFullRow row = xls_row_map.get(key);
-				if (row!=null) {
-					if (node_type.equals(XLSUnit.class)) {
-						node = (node_type.cast(new XLSUnit(row.xls_file, row, data)));
-					} else if (node_type.equals(XLSItem.class)) {
-						node = (node_type.cast(new XLSItem(row.xls_file, row, data)));
-					} else if (node_type.equals(XLSSkill.class)) {
-						node = (node_type.cast(new XLSSkill(row.xls_file, row, data)));
-					}
-					addNode(this, node);	
-				} else {
-					System.err.println(getTitle() + " : XML 行不存在 : " + key);
-				}
+			T node = createObjectFromRow(key, data);
+			if (node!=null) {
+				addNode(this, node);
 				return true;
-			} catch (Exception err){
-				err.printStackTrace();
+			} else {
+				return false;
 			}
-			return false;
 		}
 		
 		@Override
