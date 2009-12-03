@@ -10,6 +10,7 @@ import com.cell.bms.BMSFile.HeadInfo;
 import com.cell.bms.BMSFile.Note;
 import com.cell.bms.BMSFile.NoteDefine;
 import com.cell.math.Vector;
+import com.cell.sound.SoundManager;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.Sprite;
 
@@ -17,37 +18,35 @@ public class BMSPlayer
 {
 //	-------------------------------------------------------------------------------------------------
 	
-	final BMSFile 	bms_file;
+	final private BMSFile 	bms_file;
 	
-	final ArrayList<BMSPlayerListener> 
-					listeners	= new ArrayList<BMSPlayerListener>(1);
+	final private ArrayList<BMSPlayerListener> 
+							listeners	= new ArrayList<BMSPlayerListener>(1);
 	
 //	-------------------------------------------------------------------------------------------------
 //	play refer
 	
 	/** 是否自动演奏 */
-	public boolean	is_auto_play	= false;
+	public boolean			is_auto_play	= false;
 
-	ArrayList<Note>	play_tracks;
-	
-	/** 创建Note单位的检查范围 */
-	double			play_create_length;
+	private ArrayList<Note>	play_tracks;
+	private ArrayList<Note> play_removed;
 	
 	/** 丢弃Note单位的检查范围  */
-	double			play_drop_length;
+	private double			play_drop_length;
 	
 	// dynamic
-	double 			play_bpm;
-	double			play_position;	
-	double			play_stop_time;
-	double			play_pre_beat_position;
-	int				play_beat_count;
-	double 			play_pre_record_time;
+	private double 			play_bpm;
+	private double			play_position;	
+	private double			play_stop_time;
+	private double			play_pre_beat_position;
+	private int				play_beat_count;
+	private double 			play_pre_record_time;
 	
 	
-	IDefineImage			play_bg_image;
-	IDefineImage			play_poor_image;
-	IDefineImage			play_layer_image;
+	private IDefineImage	play_bg_image;
+	private IDefineImage	play_poor_image;
+	private IDefineImage	play_layer_image;
 	
 //	-------------------------------------------------------------------------------------------------
 //	game refer
@@ -84,6 +83,104 @@ public class BMSPlayer
 	
 //	-------------------------------------------------------------------------------------------------
 	
+	synchronized public void start()
+	{
+		try{
+			play_tracks				= bms_file.getAllNoteList();
+			play_bpm				= bms_file.getHeadInfo(HeadInfo.BPM);
+			play_drop_length		= bms_file.LINE_SPLIT_DIV;
+			play_position			= 0;
+			play_pre_beat_position	= 0;
+			play_pre_record_time	= System.currentTimeMillis();
+			play_stop_time			= 0;
+			play_beat_count			= 0;
+			play_removed			= new ArrayList<Note>(play_tracks.size());
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+	}
+
+	synchronized public void stop() 
+	{
+		try{			
+			play_tracks = null;
+			SoundManager.getSoundManager().cleanAllPlayer();
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+	}
+
+	synchronized public void update()
+	{
+		if (play_tracks == null) {
+			return;
+		}
+		
+		try
+		{
+			double	cur_time		= System.currentTimeMillis();
+			double	deta_time		= cur_time - play_pre_record_time; 
+			play_pre_record_time	= cur_time;
+			
+			// 已缓冲的音符
+			{
+				ArrayList<Note> removed = new ArrayList<Note>();
+				
+				for (Note note : play_tracks) 
+				{
+					// 如果该音符过丢弃线
+					if (note.getBeginPosition() <= play_position - play_drop_length) {
+						removed.add(note);
+						for (BMSPlayerListener listener : listeners) {
+							listener.onDropNote(this, note);
+						}
+						continue;
+					}
+					// 如果该音符过线
+					else if (note.getBeginPosition() <= play_position) {
+						if (processSystemNote(note)) {
+							// 如果是系统命令，则立即处理
+							removed.add(note); 
+							continue;
+						}
+						// 如果自动演奏，则提供一个命令
+						else if (is_auto_play && processAutoHit(note)) {
+							// 如果是按键命令，则立即处理
+							removed.add(note); 
+							continue;
+						}
+					}
+					// 未到线的音符
+					else {
+						break;
+					}
+				}
+				
+				play_tracks.removeAll(removed);
+				play_removed.addAll(removed);
+			}
+			
+			if (play_stop_time>0) {
+				play_stop_time	-= bms_file.timeToPosition(deta_time, play_bpm);
+			} else {
+				play_position	+= bms_file.timeToPosition(deta_time, play_bpm);
+				if (play_position > play_pre_beat_position + bms_file.BEAT_DIV) {
+					play_pre_beat_position = play_position;
+					play_beat_count ++;
+					for (BMSPlayerListener listener : listeners) {
+						listener.onBeat(this, play_beat_count);
+					}
+				}
+			}
+			
+		}
+		catch (Throwable e) {
+			e.printStackTrace();
+		}
+	}
+
+//	-------------------------------------------------------------------------------------------------
+
 	private boolean processSystemNote(Note note) 
 	{
 		if (note.track<=9)
@@ -149,104 +246,30 @@ public class BMSPlayer
 		return false;
 	}
 
-//	-------------------------------------------------------------------------------------------------
+//	private void stopNote(Note note) {
+//		switch(note.command) {
+//		case INDEX_WAV_KEY_1P_:
+//		case INDEX_WAV_KEY_2P_:	
+//		case INDEX_WAV_BG:
+//		case INDEX_WAV_LONG_KEY_1P_:
+//		case INDEX_WAV_LONG_KEY_2P_:
+//			IDefineSound sound	= (IDefineSound)note.note_define.value_object;
+//			sound.dispose();
+//		}
+//	}
 	
-	synchronized public void start()
-	{
-		try{
-			play_tracks				= bms_file.getAllNoteList();
-			play_bpm				= bms_file.getHeadInfo(HeadInfo.BPM);
-			play_create_length		= bms_file.LINE_SPLIT_DIV * 10;
-			play_drop_length		= bms_file.LINE_SPLIT_DIV;
-			play_position			= 0;
-			play_pre_beat_position	= 0;
-			play_pre_record_time	= System.currentTimeMillis();
-			play_stop_time			= 0;
-			play_beat_count			= 0;
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
-	}
-	
-	synchronized public void stop() 
-	{
-		
-	}
-
-	synchronized public void update()
-	{
-		try
-		{
-			double	cur_time		= System.currentTimeMillis();
-			double	deta_time		= cur_time - play_pre_record_time; 
-			play_pre_record_time	= cur_time;
-			
-			// 已缓冲的音符
-			{
-				ArrayList<Note> removed = new ArrayList<Note>();
-				
-				for (Note note : play_tracks) 
-				{
-					// 如果该音符过线
-					if (note.getBeginPosition() <= play_position) {
-						if (processSystemNote(note)) {
-							// 如果是系统命令，则立即处理
-							removed.add(note); 
-							continue;
-						}
-						// 如果自动演奏，则提供一个命令
-						else if (is_auto_play && processAutoHit(note)) {
-							// 如果是按键命令，则立即处理
-							removed.add(note); 
-							continue;
-						}
-					}
-					
-					// 处理输入
-					
-					
-					// 如果该音符过丢弃线
-					if (note.getBeginPosition() <= play_position - play_drop_length) {
-						removed.add(note);
-						for (BMSPlayerListener listener : listeners) {
-							listener.onDropNote(this, note);
-						}
-						continue;
-					}
-				}
-				
-				play_tracks.removeAll(removed);
-			}
-			
-			if (play_stop_time>0) {
-				play_stop_time	-= bms_file.timeToPosition(deta_time, play_bpm);
-			} else {
-				play_position	+= bms_file.timeToPosition(deta_time, play_bpm);
-				if (play_position > play_pre_beat_position + bms_file.BEAT_DIV) {
-					play_pre_beat_position = play_position;
-					play_beat_count ++;
-					for (BMSPlayerListener listener : listeners) {
-						listener.onBeat(this, play_beat_count);
-					}
-				}
-			}
-			
-		}
-		catch (Throwable e) {
-			e.printStackTrace();
-		}
-	}
-
 //	-------------------------------------------------------------------------------------------------
 	
 	synchronized public ArrayList<Note> getPlayTracks(double length)
 	{
 		ArrayList<Note> ret = new ArrayList<Note>();
-		for (Note note : play_tracks) {
-			if (note.getBeginPosition() - play_position < length) {
-				ret.add(note);
-			} else {
-				break;
+		if (play_tracks!=null) {
+			for (Note note : play_tracks) {
+				if (note.getBeginPosition() - play_position < length) {
+					ret.add(note);
+				} else {
+					break;
+				}
 			}
 		}
 		return ret;

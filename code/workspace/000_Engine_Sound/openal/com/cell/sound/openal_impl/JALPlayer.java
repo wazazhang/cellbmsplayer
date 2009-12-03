@@ -20,56 +20,56 @@ public class JALPlayer implements IPlayer, Comparable<JALPlayer>
 	JALPlayer(AL al) throws Exception
 	{
 		this.al = al;
-
-		synchronized(al)
+		al.alGetError();
+		JALSoundManager.checkError(al);
 		{
 			int[] source = new int[1];
 			
 			// Bind buffer with a source.
 			al.alGenSources(1, source, 0);
 	
-			if (al.alGetError() != AL.AL_NO_ERROR) {
+			if (JALSoundManager.checkError(al)) {
 				throw new Exception("Error generating OpenAL source !");
 			}
 	
 			this.source = source;
 			
-			// Position of the source sound.
 			float[] sourcePos = { 0.0f, 0.0f, 0.0f };
-			// Velocity of the source sound.
 			float[] sourceVel = { 0.0f, 0.0f, 0.0f };
 			
-			// Note: for some reason the following two calls are producing an
-			// error on one machine with NVidia's OpenAL implementation. This
-			// appears to be harmless, so just continue past the error if one
-			// occurs.
 			al.alSourcefv(source[0], AL.AL_POSITION, sourcePos, 0);
 			al.alSourcefv(source[0], AL.AL_VELOCITY, sourceVel, 0);
 			
 			al.alSourcef(source[0], AL.AL_PITCH,	1.0f);
 			al.alSourcef(source[0], AL.AL_GAIN,		1.0f);
 			al.alSourcei(source[0], AL.AL_LOOPING,	0);
+			
+			JALSoundManager.checkError(al);
 		}
 	}
 	
 	@Override
-	public void setSound(ISound sound)
+	synchronized public void setSound(ISound sound)
 	{
 		if (source!=null) 
 		{
-			synchronized(al) 
 			{
 				if (al_sound!=null && al_sound.buffer!=null) {
-					al.alSourceUnqueueBuffers(source[0], 1, al_sound.buffer, 0);
+					al.alSourcei(source[0], AL.AL_BUFFER, 0);
+//					al.alSourceUnqueueBuffers(source[0], 1, al_sound.buffer, 0);
+					if (JALSoundManager.checkError(al)) {
+						System.err.println("Error : alSourceUnqueueBuffers : " + al_sound);
+						return;
+					}
 				}
 				
 				if (sound instanceof JALSound) {
 					al_sound = (JALSound)sound;
 					if (al_sound.buffer != null) {
-						al.alSourceQueueBuffers(source[0], 1, al_sound.buffer, 0);
-//						al.alSourcei(source[0], AL.AL_BUFFER,	al_sound.buffer[0]);
-						if (al.alGetError() != AL.AL_NO_ERROR) {
-							System.err.println("Error setting up OpenAL source : " + al_sound);
+//						al.alSourceQueueBuffers(source[0], 1, al_sound.buffer, 0);
+						al.alSourcei(source[0], AL.AL_BUFFER, al_sound.buffer[0]);
+						if (JALSoundManager.checkError(al)) {
+							System.err.println("Error : alSourceQueueBuffers : " + al_sound);
 							return;
 						}
 						al_sound.binded_source = this;
@@ -81,68 +81,56 @@ public class JALPlayer implements IPlayer, Comparable<JALPlayer>
 	}
 
 	@Override
-	public ISound getSound() {
+	synchronized public ISound getSound() {
 		return al_sound;
 	}
+	
 	@Override
-	public void play(boolean loop) {
+	synchronized public void play(boolean loop) {
 		if (source!=null && al_sound!=null) {			
 			al.alSourcei(source[0], AL.AL_LOOPING,	loop?1:0);
-			al.alSourcePlay(source[0]);
-			int error = al.alGetError();
-			if (error != AL.AL_NO_ERROR) {
-				try{
-					throw new Exception("error code " + error);
-				}catch(Exception err){
-					err.printStackTrace();
-				}
-			}
-		}
-	}
-	public void pause() {
-		if (source!=null){
-			al.alSourcePause(source[0]);
-			int error = al.alGetError();
-			if (error != AL.AL_NO_ERROR) {
-				try{
-					throw new Exception("error code " + error);
-				}catch(Exception err){
-					err.printStackTrace();
-				}
+			if (JALSoundManager.checkError(al)) {
+			} else {
+				al.alSourcePlay(source[0]);
+				if (JALSoundManager.checkError(al)) {}
 			}
 		}
 	}
 	
-	public void stop() {
+	synchronized public void pause() {
 		if (source!=null){
-			al.alSourceStop(source[0]);				
-			int error = al.alGetError();
-			if (error != AL.AL_NO_ERROR) {
-				try{
-					throw new Exception("error code " + error);
-				}catch(Exception err){
-					err.printStackTrace();
-				}
+			al.alSourcePause(source[0]);
+			if (JALSoundManager.checkError(al)) {
 			}
+		}
+	}
+	
+	synchronized public void stop() {
+		if (source!=null){
+			al.alSourceStop(source[0]);
+			if (JALSoundManager.checkError(al)) {}
 		}
 	}
 
 	@Override
-	public boolean isPlaying() {
+	synchronized public boolean isPlaying() {
 		if (source!=null) {
 			int state[] = new int[1];
 			al.alGetSourcei(source[0], AL.AL_SOURCE_STATE, state, 0);
+			if (JALSoundManager.checkError(al)) {
+				return true;
+			}
 			return state[0] == AL.AL_PLAYING;
 		}
 		return true;
 	}
 	
-	public void dispose() {
+	synchronized public void dispose() {
 		stop();
 	}
 
 	@Override
-	public int compareTo(JALPlayer o) {
+	synchronized public int compareTo(JALPlayer o) {
 		return (int)(this.last_bind_time - o.last_bind_time);
 	}
 	

@@ -115,6 +115,7 @@ public class JALSoundManager extends SoundManager
 
 //	--------------------------------------------------------------------------------------------------
 
+	synchronized 
 	public SoundInfo createSoundInfo(String resource, InputStream is){
 		try {
 			String name = resource.toLowerCase();
@@ -129,11 +130,12 @@ public class JALSoundManager extends SoundManager
 		return null;
 	}
 	
+	synchronized 
 	public SoundInfo createSoundInfo(String resource) {
 		return createSoundInfo(resource, CIO.loadStream(resource));
 	}
 	
-	@Override
+	synchronized 
 	public ISound createSound(SoundInfo info) {
 		try {
 			return new JALSound(this, info);
@@ -143,26 +145,32 @@ public class JALSoundManager extends SoundManager
 		return new NullSound();
 	}
 	
-	@Override
+	synchronized 
 	public IPlayer createPlayer() 
 	{
-		synchronized (players) {
-			for (JALPlayer player : players) {
-				if (!player.isPlaying()) {
-					return player;
-				}
-			}
-			if (players.size()>0) {
-				Collections.sort(players);
-				JALPlayer player = players.get(0);
-				player.stop();
-				System.err.println("no free source, cut an active source !");
+		for (JALPlayer player : players) {
+			if (!player.isPlaying()) {
 				return player;
 			}
-			return new NullPlayer();
+		}
+		if (players.size()>0) {
+			Collections.sort(players);
+			JALPlayer player = players.get(0);
+			player.stop();
+			System.err.println("no free source, cut an active source !");
+			return player;
+		}
+		return new NullPlayer();
+		
+	}
+	
+	synchronized
+	public void cleanAllPlayer() {
+		for (JALPlayer player : players) {
+			player.stop();
+			player.setSound(null);
 		}
 	}
-
 
 //	--------------------------------------------------------------------------------------------------
 	
@@ -223,6 +231,17 @@ public class JALSoundManager extends SoundManager
 		return info;
 	}
 	
-	
+	static boolean checkError(AL al) {
+		int code = al.alGetError();
+		if (code != AL.AL_NO_ERROR) {
+			try{
+				throw new Exception("OpenAL Error code : " + code);
+			}catch(Exception err) {
+				err.printStackTrace();
+			}
+			return true;
+		}
+		return false;
+	}
 	
 }

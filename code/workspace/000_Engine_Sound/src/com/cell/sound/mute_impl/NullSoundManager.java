@@ -29,4 +29,6 @@ public class NullSoundManager extends SoundManager
 		return new SoundInfo();
 	}
 	
+	@Override
+	public void cleanAllPlayer() {}
 }

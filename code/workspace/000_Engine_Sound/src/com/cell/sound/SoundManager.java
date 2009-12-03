@@ -31,4 +31,5 @@ public abstract class SoundManager
 	
 	abstract public IPlayer		createPlayer();
 
+	abstract public void		cleanAllPlayer();
 }
