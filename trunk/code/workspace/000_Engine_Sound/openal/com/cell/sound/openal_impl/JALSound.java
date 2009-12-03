@@ -2,6 +2,8 @@ package com.cell.sound.openal_impl;
 
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 import net.java.games.joal.AL;
 
@@ -17,7 +19,8 @@ public class JALSound implements ISound
 	
 	// Buffers hold sound data.
 	int[] 					buffer;
-	JALPlayer				binded_source;
+	HashSet<JALPlayer>		binded_source = new HashSet<JALPlayer>(1);
+	
 	
 	JALSound(JALSoundManager factory, SoundInfo info) throws Exception
 	{
@@ -72,19 +75,19 @@ public class JALSound implements ISound
 	
 	synchronized public void dispose() 
 	{
-		{
-			if (binded_source!=null && binded_source.al_sound==this) {				
-				binded_source.stop();
-				binded_source.setSound(null);
-				binded_source = null;
-//				System.out.println("source stop ");
+		for (JALPlayer p : binded_source) {
+			if (p.al_sound==this) {				
+				p.stop();
+				p.setSound(null);
 			}
-			if (buffer!=null) {
-//				System.out.println("dispose buffer " + buffer[0]);
-				al.alDeleteBuffers(1, buffer, 0);
-				if (JALSoundManager.checkError(al)) {}
-				buffer = null;
-			}
+		}
+		binded_source.clear();
+		
+		if (buffer!=null) {
+//			System.out.println("dispose buffer " + buffer[0]);
+			al.alDeleteBuffers(1, buffer, 0);
+			if (JALSoundManager.checkError(al)) {}
+			buffer = null;
 		}
 	}
 	

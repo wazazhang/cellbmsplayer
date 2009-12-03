@@ -53,28 +53,21 @@ public class JALPlayer implements IPlayer, Comparable<JALPlayer>
 	{
 		if (source!=null) 
 		{
-			{
-				if (al_sound!=null && al_sound.buffer!=null) {
-					al.alSourcei(source[0], AL.AL_BUFFER, 0);
-//					al.alSourceUnqueueBuffers(source[0], 1, al_sound.buffer, 0);
-					if (JALSoundManager.checkError(al)) {
-						System.err.println("Error : alSourceUnqueueBuffers : " + al_sound);
-						return;
-					}
-				}
-				
-				if (sound instanceof JALSound) {
-					al_sound = (JALSound)sound;
-					if (al_sound.buffer != null) {
-//						al.alSourceQueueBuffers(source[0], 1, al_sound.buffer, 0);
-						al.alSourcei(source[0], AL.AL_BUFFER, al_sound.buffer[0]);
-						if (JALSoundManager.checkError(al)) {
-							System.err.println("Error : alSourceQueueBuffers : " + al_sound);
-							return;
-						}
-						al_sound.binded_source = this;
-						last_bind_time = System.currentTimeMillis();
-					}
+			if (al_sound!=null && al_sound.buffer!=null) {
+				al.alSourcei(source[0], AL.AL_BUFFER, 0);
+//				al.alSourceUnqueueBuffers(source[0], 1, al_sound.buffer, 0);
+				if (JALSoundManager.checkError(al)) {}
+				al_sound.binded_source.remove(this);
+			}
+			
+			if (sound instanceof JALSound) {
+				al_sound = (JALSound)sound;
+				if (al_sound.buffer != null) {
+//					al.alSourceQueueBuffers(source[0], 1, al_sound.buffer, 0);
+					al.alSourcei(source[0], AL.AL_BUFFER, al_sound.buffer[0]);
+					if (JALSoundManager.checkError(al)) {}
+					al_sound.binded_source.add(this);
+					last_bind_time = System.currentTimeMillis();
 				}
 			}
 		}
