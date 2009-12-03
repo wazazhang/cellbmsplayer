@@ -214,7 +214,7 @@ public abstract class G2DTreeNodeGroup<C extends G2DTreeNode<?>> extends Default
 						root.add(root.createGroupNode(group_name));
 						g2d_tree.reload(root);
 					} else {
-						JOptionPane.showMessageDialog(this, "过滤器 \"" + group_name + "\" 已经存在！");
+						JOptionPane.showMessageDialog(window, "过滤器 \"" + group_name + "\" 已经存在！");
 					}
 				}
 			}
@@ -222,7 +222,7 @@ public abstract class G2DTreeNodeGroup<C extends G2DTreeNode<?>> extends Default
 				String group_name = JOptionPane.showInputDialog(window, " 输入过滤器名字！", root.toString());
 				if (group_name!=null && group_name.length()>0) {
 					if (!root.setName(group_name)) {
-						JOptionPane.showMessageDialog(this, "过滤器 \"" + group_name + "\" 已经存在！");
+						JOptionPane.showMessageDialog(window, "过滤器 \"" + group_name + "\" 已经存在！");
 					} else {
 						g2d_tree.reload(root);
 					}
