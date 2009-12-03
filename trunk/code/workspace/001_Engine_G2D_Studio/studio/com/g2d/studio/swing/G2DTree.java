@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.DragGestureEvent;
@@ -54,7 +55,7 @@ public class G2DTree extends JTree implements G2DDragDropListener<G2DTree>
 	ArrayList<G2DDragDropListener<G2DTree>> 
 										drag_drop_listeners = new ArrayList<G2DDragDropListener<G2DTree>>(1);
 	Object 								drag_location_object;
-	
+	int									drag_drop_position	= 0;
 	
 	public G2DTree(DefaultMutableTreeNode tree_root) 
 	{
@@ -118,7 +119,15 @@ public class G2DTree extends JTree implements G2DDragDropListener<G2DTree>
 				else if (dst_node == tree_model.getRoot()) {
 					dst_node.insert(src_node, 0);
 					reload(dst_node);
-					System.out.println("添加到根节点");
+//					System.out.println("添加到根节点");
+				}
+				// 如果是插入
+				else if (drag_drop_position != 0) {
+					src_node.removeFromParent();
+					int insert_offset = drag_drop_position > 0 ? 1 : 0;
+					dst_parent.insert(src_node, dst_parent.getIndex(dst_node) + insert_offset);
+					reload(src_parent);
+					reload(dst_parent);
 				}
 				// 添加到组节点
 				else if (dst_node instanceof G2DTreeNodeGroup<?>) {
@@ -126,20 +135,22 @@ public class G2DTree extends JTree implements G2DDragDropListener<G2DTree>
 					dst_group.add(src_node);
 					reload(src_parent);
 					reload(dst_node);
-					System.out.println("添加到组节点");
+//					System.out.println("添加到组节点");
 				}
 				// 同一层次的移动
-				else if (src_node.getParent() == dst_node.getParent()) {
+				else if (src_node.getParent() == dst_node.getParent()) {				
+					src_node.removeFromParent();
 					dst_parent.insert(src_node, dst_parent.getIndex(dst_node));
 					reload(dst_parent);
-					System.out.println("同一层次的移动");
+//					System.out.println("同一层次的移动");
 				}
 				// 不同层次的移动
 				else {
+					src_node.removeFromParent();
 					dst_parent.insert(src_node, dst_parent.getIndex(dst_node));
 					reload(src_parent);
 					reload(dst_parent);
-					System.out.println("不同层次的移动");
+//					System.out.println("不同层次的移动");
 				}
 			}
 			finally{
@@ -314,12 +325,30 @@ public class G2DTree extends JTree implements G2DDragDropListener<G2DTree>
 		public void paint(Graphics g) {
 			super.paint(g);
 			if (drag_location_object == current_value) {
-				if (current_value instanceof G2DTreeNodeGroup<?>) {
+				if (current_value == tree_model.getRoot()) {
 					g.setColor(drag_location_color); 
 					g.fillRect(0, 0, getWidth(), getHeight());
-				} else {
-					g.setColor(Color.BLACK); 
-					g.fillRect(0, 0, getWidth(), 2);
+				}
+				else if (current_value instanceof G2DTreeNodeGroup<?>) {
+					if (drag_drop_position == 0) {
+						g.setColor(drag_location_color); 
+						g.fillRect(0, 0, getWidth(), getHeight());
+					} else if (drag_drop_position>0) {
+						g.setColor(Color.BLACK); 
+						g.fillRect(0, getHeight()-2, getWidth(), 2);
+					} else if (drag_drop_position<0) {
+						g.setColor(Color.BLACK); 
+						g.fillRect(0, 0, getWidth(), 2);
+					}
+				} 
+				else {
+					if (drag_drop_position>0) {
+						g.setColor(Color.BLACK); 
+						g.fillRect(0, getHeight()-2, getWidth(), 2);
+					} else {
+						g.setColor(Color.BLACK); 
+						g.fillRect(0, 0, getWidth(), 2);
+					}
 				}
 			}
 		}
@@ -415,6 +444,10 @@ public class G2DTree extends JTree implements G2DDragDropListener<G2DTree>
 				drag_location_object = path.getLastPathComponent();
 				if (checkDrag(dtde.getSource(), getSelectedNode(), drag_location_object)) {
 					dtde.acceptDrag(dtde.getDropAction());
+					Rectangle comp = getPathBounds(path);
+					int dy	= dtde.getLocation().y - (comp.y + comp.height/2);
+					int div	= comp.height / 4;
+					drag_drop_position = dy / div;
 				} else {
 					drag_location_object = null;
 					dtde.rejectDrag();
