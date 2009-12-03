@@ -2,13 +2,10 @@
 <jnlp spec="1.0+" codebase="." href="gamebms.jnlp">
       
 	<information>
-    	<title>TS2OnlineWeb</title>
-    	<vendor>GameTiler</vendor>
-    	<homepage href="http://my.company.com/home-page.html"/>
+    	<title>BMSPlayer</title>
+    	<vendor>WAZA</vendor>
+    	<homepage href="http://webgameaccounts.appspot.com"/>
     	<description>Test</description>
-    	<description kind="short">Test: a simple 3D rotating cube demo,using the Java 3D API</description>
-    	<icon href="myicon.gif"/>
-    	<icon kind="splash" href="mysplash.gif"/>
     	<offline-allowed/>
 	</information>
   
