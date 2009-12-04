@@ -85,6 +85,10 @@ public class TextPan extends UIComponent implements Serializable
 		this.text.setText(text);
 	}
 	
+	public void setText(AttributedString atext) {
+		this.text.setText(atext);
+	}
+	
 	public void appendLine(String text) {
 		this.text.appendText(text);
 	}
