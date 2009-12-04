@@ -7,6 +7,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTree;
+import javax.swing.tree.TreeNode;
 
 import com.cell.rpg.quest.Quest;
 import com.g2d.Tools;
@@ -100,9 +101,10 @@ public class QuestNode extends DynamicNode<Quest>
 				}
 			}
 			else if (e.getSource() == delete) {
+				TreeNode parent = node.getParent();
 				this.node.removeFromParent();
 				if (tree!=null) {
-					tree.reload(node);
+					tree.reload(parent);
 				}
 			}
 		}
