@@ -2,37 +2,22 @@ package com.cell.rpg.quest;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.TreeSet;
 
 import com.cell.ExtObject;
 import com.cell.util.MarkedHashtable;
 
-public class QuestCondition extends ExtObject implements Iterable<ArrayList<QuestItem>>
+public class QuestCondition extends ExtObject
 {
-	ArrayList<ArrayList<QuestItem>> groups = new ArrayList<ArrayList<QuestItem>>(1);
+	public TreeSet<String> item_name_list	= new TreeSet<String>();
 	
 	@Override
 	protected void onRead(MarkedHashtable data) {
-		groups = data.getObject("groups", groups);
+		item_name_list = data.getObject("item_name_list", new TreeSet<String>());
 	}
+	
 	@Override
 	protected void onWrite(MarkedHashtable data) {
-		data.put("groups", groups);
-	}
-	
-	public ArrayList<QuestItem> getGroup(int i) {
-		return groups.get(i);
-	}
-	
-	public void setGroup(int i, ArrayList<QuestItem> group) {
-		groups.set(i, group);
-	}
-	
-	public int size() {
-		return groups.size();
-	}
-	
-	@Override
-	public Iterator<ArrayList<QuestItem>> iterator() {
-		return groups.iterator();
+		data.put("item_name_list", item_name_list);
 	}
 }

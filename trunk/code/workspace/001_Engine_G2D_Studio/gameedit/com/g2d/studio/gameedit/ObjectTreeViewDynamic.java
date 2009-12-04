@@ -30,7 +30,7 @@ extends ObjectTreeView<T, D> implements IDynamicIDFactory<T>
 	}
 	
 	@Override
-	public int createID() {
+	public Integer createID() {
 		return node_index.createID();
 	}
 	

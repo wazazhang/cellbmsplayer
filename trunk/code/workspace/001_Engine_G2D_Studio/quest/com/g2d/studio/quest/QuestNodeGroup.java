@@ -28,7 +28,7 @@ public class QuestNodeGroup extends ObjectGroup<QuestNode, Quest>
 	}
 	
 	@Override
-	protected G2DTreeNodeGroup<?> createGroupNode(String name) {
+	protected G2DTreeNodeGroup<?> pathCreateGroupNode(String name) {
 		return new QuestNodeGroup(name, view);
 	}
 	

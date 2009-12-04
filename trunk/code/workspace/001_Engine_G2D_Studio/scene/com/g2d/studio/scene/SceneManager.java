@@ -112,7 +112,7 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 	}
 	
 	@Override
-	public int createID() {
+	public Integer createID() {
 		return id_factory.createID();
 	}
 

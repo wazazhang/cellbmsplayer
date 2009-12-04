@@ -3,6 +3,7 @@ package com.g2d.studio.quest;
 import java.awt.BorderLayout;
 
 import javax.swing.JPanel;
+import javax.swing.JRootPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextPane;
@@ -17,8 +18,8 @@ import com.g2d.util.TextEditor;
 public class QuestEditor extends ObjectViewer<QuestNode> implements RPGSerializationListener
 {	
 	PanelDiscussion		panel_quest_discussion;
-	PanelTriggerData	panel_quest_data;
-	
+	JScrollPane			panel_quest_data;
+	QuestConditionTree	conditions;
 //	-------------------------------------------------------------------------------------
 	
 	public QuestEditor(QuestNode node) {
@@ -30,10 +31,10 @@ public class QuestEditor extends ObjectViewer<QuestNode> implements RPGSerializa
 	}
 	
 	@Override
-	protected void appendPages(JTabbedPane table) 
-	{
+	protected void appendPages(JTabbedPane table) {
+		conditions 				= new QuestConditionTree(tobject.getData());
 		panel_quest_discussion	= new PanelDiscussion();
-		panel_quest_data		= new PanelTriggerData();		
+		panel_quest_data		= new JScrollPane(conditions);		
 		table.removeAll();
 		table.addTab("任务内容", panel_quest_discussion);
 		table.addTab("任务数据", panel_quest_data);
@@ -45,6 +46,7 @@ public class QuestEditor extends ObjectViewer<QuestNode> implements RPGSerializa
 	}
 	@Override
 	public void onWriteBefore(RPGObject object, String xmlFile) {
+		conditions.save();
 		tobject.getData().setDiscussion(panel_quest_discussion.getText());
 	}
 	
@@ -59,12 +61,6 @@ public class QuestEditor extends ObjectViewer<QuestNode> implements RPGSerializa
 
 //	-------------------------------------------------------------------------------------
 	
-	class PanelTriggerData extends JPanel
-	{
-
-
-	}
-
 //	-------------------------------------------------------------------------------------
 	
 }

@@ -23,7 +23,11 @@ public class MarkedHashtable extends Hashtable<String, Object>
 	{
 		try {
 			T t = (T)get(key);
-			return t;
+			if (t != null) {
+				return t;
+			} else {
+				return default_value;
+			}
 		} catch (Throwable e) {}
 		return default_value;
 	}
