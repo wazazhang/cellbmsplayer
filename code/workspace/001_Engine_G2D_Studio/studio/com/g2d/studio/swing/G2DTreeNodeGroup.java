@@ -14,6 +14,7 @@ import java.io.ObjectOutput;
 import java.util.Enumeration;
 import java.util.Vector;
 
+import javax.swing.Icon;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
@@ -47,6 +48,10 @@ public abstract class G2DTreeNodeGroup<C extends G2DTreeNode<?>> extends Default
 //
 	public String getName() {
 		return name;
+	}
+	
+	public Icon getIcon() {
+		return null;
 	}
 	
 	@Override
