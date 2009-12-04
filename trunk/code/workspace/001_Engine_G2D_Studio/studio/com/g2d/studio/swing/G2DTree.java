@@ -30,6 +30,7 @@ import java.util.TreeMap;
 import java.util.Vector;
 
 import javax.swing.DropMode;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
@@ -111,16 +112,16 @@ public class G2DTree extends JTree implements G2DDragDropListener<G2DTree>
 	}
 	@Override
 	public void onDragDrop(G2DTree comp, Object src, Object dst) {
-		if (checkDrag(drop_target, src, dst)) {
+		if (checkDrag(drop_target, src, dst, drag_drop_position)) {
 			Map<TreeNode, TreePath> expan = storeAllExpandState();
 			try{
 				MutableTreeNode src_node = (MutableTreeNode)src;
 				MutableTreeNode dst_node = (MutableTreeNode)dst;
 				MutableTreeNode src_parent = (MutableTreeNode)src_node.getParent();
 				MutableTreeNode dst_parent = (MutableTreeNode)dst_node.getParent();
-				if (false) {}
+				
 				// 添加到根节点
-				else if (dst_node == tree_model.getRoot()) {
+				if (dst_node == tree_model.getRoot()) {
 					dst_node.insert(src_node, 0);
 					reload(dst_node);
 //					System.out.println("添加到根节点");
@@ -163,7 +164,14 @@ public class G2DTree extends JTree implements G2DDragDropListener<G2DTree>
 		}
 	}
 	
-	protected boolean checkDrag(DropTarget evt_source, Object src, Object dst) {
+	/**
+	 * @param evt_source
+	 * @param src
+	 * @param dst
+	 * @param position 等于 0 代表放置，大于0代表向下插入，小于0代表向下插入
+	 * @return
+	 */
+	protected boolean checkDrag(DropTarget evt_source, Object src, Object dst, int position) {
 		if (dst == null) {
 			return false;
 		}
@@ -323,6 +331,21 @@ public class G2DTree extends JTree implements G2DDragDropListener<G2DTree>
 					comp.setSize(aicon.getIconWidth(), aicon.getIconHeight());
 				}
 			}
+			else if (value instanceof G2DTreeNodeGroup<?>) {
+				G2DTreeNodeGroup<?> group = ((G2DTreeNodeGroup<?>)value);
+				Icon aicon = group.getIcon();
+				if (aicon != null) {
+					setIcon(aicon);
+					comp.setSize(aicon.getIconWidth(), aicon.getIconHeight());
+				} else {
+					if (expanded) {
+						aicon = getOpenIcon();
+					} else {
+						aicon = getClosedIcon();
+					}
+					setIcon(aicon);
+				}
+			}
 			return comp;
 		}
 		@Override
@@ -344,7 +367,7 @@ public class G2DTree extends JTree implements G2DDragDropListener<G2DTree>
 						g.setColor(Color.BLACK); 
 						g.fillRect(0, 0, getWidth(), 2);
 					}
-				} 
+				}
 				else {
 					if (drag_drop_position>0) {
 						g.setColor(Color.BLACK); 
@@ -445,13 +468,15 @@ public class G2DTree extends JTree implements G2DDragDropListener<G2DTree>
 			drag_location_object = null;
 			TreePath path = G2DTree.this.getPathForLocation(dtde.getLocation().x, dtde.getLocation().y);
 			if (path!=null) {
-				drag_location_object = path.getLastPathComponent();
-				if (checkDrag((DropTarget)dtde.getSource(), getSelectedNode(), drag_location_object)) {
-					dtde.acceptDrag(dtde.getDropAction());
+				{
 					Rectangle comp = getPathBounds(path);
 					int dy	= dtde.getLocation().y - (comp.y + comp.height/2);
 					int div	= comp.height / 4;
 					drag_drop_position = dy / div;
+				}
+				drag_location_object = path.getLastPathComponent();
+				if (checkDrag((DropTarget)dtde.getSource(), getSelectedNode(), drag_location_object, drag_drop_position)) {
+					dtde.acceptDrag(dtde.getDropAction());
 				} else {
 					drag_location_object = null;
 					dtde.rejectDrag();
@@ -465,7 +490,13 @@ public class G2DTree extends JTree implements G2DDragDropListener<G2DTree>
 			drag_location_object = null;
 			TreePath path = G2DTree.this.getPathForLocation(dtde.getLocation().x, dtde.getLocation().y);
 			if (path!=null) {
-				if (checkDrag((DropTarget)dtde.getSource(), getSelectedNode(), path.getLastPathComponent())) {
+				{
+					Rectangle comp = getPathBounds(path);
+					int dy	= dtde.getLocation().y - (comp.y + comp.height/2);
+					int div	= comp.height / 4;
+					drag_drop_position = dy / div;
+				}
+				if (checkDrag((DropTarget)dtde.getSource(), getSelectedNode(), path.getLastPathComponent(), drag_drop_position)) {
 					TreeNode sender		= G2DTree.this.getSelectedNode();
 					TreeNode reciver	= (TreeNode)path.getLastPathComponent();
 					for (G2DDragDropListener<G2DTree> l : drag_drop_listeners) {

@@ -100,7 +100,10 @@ public class QuestNode extends DynamicNode<Quest>
 				}
 			}
 			else if (e.getSource() == delete) {
-				System.out.println(node.getName() + " - delete");
+				this.node.removeFromParent();
+				if (tree!=null) {
+					tree.reload(node);
+				}
 			}
 		}
 	}

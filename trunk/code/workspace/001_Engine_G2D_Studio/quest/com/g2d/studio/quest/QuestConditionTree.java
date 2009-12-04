@@ -13,6 +13,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 
 import com.cell.CIO;
@@ -64,7 +65,7 @@ public class QuestConditionTree extends G2DTree
 	}
 	
 	void save() {
-		if (this.quest!=null) {
+		if (this.quest != null) {
 			group_trigger_condition.saveList(quest.accept_condition);
 			group_complete_condition.saveList(quest.complete_condition);
 			group_complete_award.saveList(quest.complete_award);
@@ -72,15 +73,19 @@ public class QuestConditionTree extends G2DTree
 	}
 	
 	@Override
-	protected boolean checkDrag(DropTarget evtSource, Object src, Object dst) {
-		if (dst == getModel().getRoot()) {
+	protected boolean checkDrag(DropTarget evtSource, Object src, Object dst, int position) {
+		MutableTreeNode src_node = (MutableTreeNode)src;
+		MutableTreeNode dst_node = (MutableTreeNode)dst;
+		if (dst_node == getRoot()) {
 			return false;
 		}
-		TreeNode dst_node = (TreeNode)dst;
-		if (dst_node.getParent() == getModel().getRoot()) {
+		if (src_node.getParent() == getRoot()) {
 			return false;
 		}
-		return super.checkDrag(evtSource, src, dst);
+		if (dst_node.getParent() == getRoot() && position != 0) {
+			return false;
+		}
+		return super.checkDrag(evtSource, src, dst, position);
 	}
 	
 //	----------------------------------------------------------------------------------------------------------------------------------
