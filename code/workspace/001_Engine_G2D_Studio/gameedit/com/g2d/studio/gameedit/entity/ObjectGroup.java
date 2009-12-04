@@ -54,7 +54,7 @@ public abstract class ObjectGroup<T extends ObjectNode<D>, D extends RPGObject> 
 //	----------------------------------------------------------------------------------------------------------
 	
 	@Override
-	protected boolean addLeafNode(String name) {
+	protected boolean pathAddLeafNode(String name, int index, int length) {
 		if (name.toLowerCase().endsWith(_XML)) {
 			try{
 				String key = CUtil.replaceString(name, _XML, "");

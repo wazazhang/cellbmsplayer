@@ -56,7 +56,7 @@ public class EffectTreeView extends ObjectTreeViewDynamic<DEffect, TEffect>
 		}
 		
 		@Override
-		protected G2DTreeNodeGroup<?> createGroupNode(String name) {
+		protected G2DTreeNodeGroup<?> pathCreateGroupNode(String name) {
 			return new EffectGroup(name);
 		}
 		

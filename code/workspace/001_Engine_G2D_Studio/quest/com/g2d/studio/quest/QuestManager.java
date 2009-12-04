@@ -5,36 +5,48 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
+import com.cell.util.IDFactoryInteger;
 import com.g2d.Tools;
 import com.g2d.studio.ManagerForm;
 import com.g2d.studio.Studio;
 import com.g2d.studio.Studio.ProgressForm;
 import com.g2d.studio.gameedit.AvatarTreeView;
+import com.g2d.studio.gameedit.dynamic.IDynamicIDFactory;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.swing.G2DWindowToolBar;
 
 public class QuestManager extends ManagerForm implements ActionListener
 {
 	private static final long serialVersionUID = 1L;
-
-	G2DWindowToolBar tool_bar = new G2DWindowToolBar(this);
 	
-	QuestTreeView tree_view;
+	G2DWindowToolBar 		tool_bar;
+	
+	QuestTreeView 			tree_view;
 
+	QuestItemManager		quest_items;
+	
 	public QuestManager(Studio studio, ProgressForm progress) 
 	{
 		super(studio, progress, "任务管理器");
 		
+		tool_bar 		= new G2DWindowToolBar(this);
 		this.add(tool_bar, BorderLayout.NORTH);
+
+		quest_items		= new QuestItemManager(studio);
 		
 		File quest_dir	= new File(studio.project_save_path, "quests");
 		File quest_list	= new File(quest_dir, "quest.list");
-		tree_view = new QuestTreeView(quest_list);
+		tree_view 		= new QuestTreeView(quest_list);
 		this.add(tree_view, BorderLayout.CENTER);
+	}
+	
+	public QuestItemManager getQuestItems() {
+		return quest_items;
 	}
 	
 	@Override
 	public void saveAll() throws Throwable {
+		quest_items.saveAll();
 		tree_view.saveAll();
 	}
 	
@@ -48,4 +60,5 @@ public class QuestManager extends ManagerForm implements ActionListener
 			}
 		}
 	}
+	
 }

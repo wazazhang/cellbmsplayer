@@ -30,8 +30,8 @@ public class Quest extends RPGObject
 	transient
 	private String				discussion			= QuestScript.createExample();
 	
-	/** 任务触发条件 */
-	public QuestCondition		trigger_condition	= new QuestCondition();
+	/** 任务接受条件 */
+	public QuestCondition		accept_condition	= new QuestCondition();
 	
 	/** 任务完成条件 */
 	public QuestCondition		complete_condition	= new QuestCondition();

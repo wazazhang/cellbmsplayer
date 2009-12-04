@@ -17,12 +17,12 @@ public class SceneGroup extends G2DTreeNodeGroup<SceneNode>
 	}
 	
 	@Override
-	protected G2DTreeNodeGroup<?> createGroupNode(String name) {
+	protected G2DTreeNodeGroup<?> pathCreateGroupNode(String name) {
 		return new SceneGroup(name);
 	}
 	
 	@Override
-	protected boolean addLeafNode(String name) {
+	protected boolean pathAddLeafNode(String name, int index, int length) {
 		if (name.endsWith(".xml")) {
 			SceneManager manager = SceneManager.getInstance();
 			File scene_dir = manager.scene_dir;

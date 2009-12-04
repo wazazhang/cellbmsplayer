@@ -1,4 +1,4 @@
-package com.g2d.studio.gameedit.dynamic;
+package com.g2d.studio.quest;
 
 import javax.swing.ImageIcon;
 import javax.swing.JTabbedPane;
@@ -8,16 +8,18 @@ import com.g2d.Tools;
 import com.g2d.studio.gameedit.ObjectAdapters;
 import com.g2d.studio.gameedit.ObjectViewer;
 import com.g2d.studio.gameedit.ObjectAdapters.QuestItemAdapter;
+import com.g2d.studio.gameedit.dynamic.DynamicNode;
+import com.g2d.studio.gameedit.dynamic.IDynamicIDFactory;
 import com.g2d.studio.icon.IconFile;
 import com.g2d.studio.res.Res;
 
-public class DQuestItem extends DynamicNode<QuestItem>
+public class QuestItemNode extends DynamicNode<QuestItem>
 {
-	public DQuestItem(IDynamicIDFactory<DQuestItem> factory, String name) {
+	public QuestItemNode(IDynamicIDFactory<QuestItemNode> factory, String name) {
 		super(factory, name);
 	}
 	
-	public DQuestItem(QuestItem item) {
+	public QuestItemNode(QuestItem item) {
 		super(item, item.getType(), item.name);
 	}
 	
@@ -36,12 +38,12 @@ public class DQuestItem extends DynamicNode<QuestItem>
 	
 //	-----------------------------------------------------------------------------------------------------------------
 	
-	public class DQuestItemViewer extends ObjectViewer<DQuestItem>
+	public class DQuestItemViewer extends ObjectViewer<QuestItemNode>
 	{
 		private static final long serialVersionUID = 1L;
 		
 		public DQuestItemViewer() {
-			super(DQuestItem.this, new ObjectAdapters.QuestItemAdapter());
+			super(QuestItemNode.this, new ObjectAdapters.QuestItemAdapter());
 		}
 		
 		@Override

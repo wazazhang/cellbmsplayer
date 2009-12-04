@@ -82,6 +82,10 @@ public class G2DTree extends JTree implements G2DDragDropListener<G2DTree>
 		return tree_model;
 	}
 	
+	public DefaultMutableTreeNode getRoot() {
+		return (DefaultMutableTreeNode)tree_model.getRoot();
+	}
+	
 	public void reload() {
 		tree_model.reload();
 	}
@@ -159,7 +163,7 @@ public class G2DTree extends JTree implements G2DDragDropListener<G2DTree>
 		}
 	}
 	
-	private boolean checkDrag(Object evt_source, Object src, Object dst) {
+	protected boolean checkDrag(DropTarget evt_source, Object src, Object dst) {
 		if (dst == null) {
 			return false;
 		}
@@ -442,7 +446,7 @@ public class G2DTree extends JTree implements G2DDragDropListener<G2DTree>
 			TreePath path = G2DTree.this.getPathForLocation(dtde.getLocation().x, dtde.getLocation().y);
 			if (path!=null) {
 				drag_location_object = path.getLastPathComponent();
-				if (checkDrag(dtde.getSource(), getSelectedNode(), drag_location_object)) {
+				if (checkDrag((DropTarget)dtde.getSource(), getSelectedNode(), drag_location_object)) {
 					dtde.acceptDrag(dtde.getDropAction());
 					Rectangle comp = getPathBounds(path);
 					int dy	= dtde.getLocation().y - (comp.y + comp.height/2);
@@ -461,7 +465,7 @@ public class G2DTree extends JTree implements G2DDragDropListener<G2DTree>
 			drag_location_object = null;
 			TreePath path = G2DTree.this.getPathForLocation(dtde.getLocation().x, dtde.getLocation().y);
 			if (path!=null) {
-				if (checkDrag(dtde.getSource(), getSelectedNode(), path.getLastPathComponent())) {
+				if (checkDrag((DropTarget)dtde.getSource(), getSelectedNode(), path.getLastPathComponent())) {
 					TreeNode sender		= G2DTree.this.getSelectedNode();
 					TreeNode reciver	= (TreeNode)path.getLastPathComponent();
 					for (G2DDragDropListener<G2DTree> l : drag_drop_listeners) {
