@@ -54,16 +54,14 @@ public abstract class ResourceManager extends CellSetResourceManager
 	protected Hashtable<String, SpriteSet>	all_avatar_set;
 	protected Hashtable<String, SpriteSet>	all_effect_set;
 
-	// xml templates and scenes
+	// xml templates dynamic object and scenes
 	protected Hashtable<Integer, TUnit>		tunits;
 	protected Hashtable<Integer, TItem>		titems;
 	protected Hashtable<Integer, TAvatar>	tavatars;
 	protected Hashtable<Integer, TSkill>	tskills;
+	protected Hashtable<Integer, Quest> 	quests;
+	protected Hashtable<Integer, QuestItem> quest_items;
 	protected Hashtable<Integer, Scene>		scenes;
-	
-	// quests
-	protected Hashtable<Integer, Quest> 	all_quests;
-	protected Hashtable<Integer, QuestItem> all_quest_items;
 
 	// icons and sounds
 	protected Hashtable<String, AtomicReference<BufferedImage>> 		all_icons;
@@ -113,19 +111,23 @@ public abstract class ResourceManager extends CellSetResourceManager
 
 	final protected void initAllSet(String save_name) throws Exception
 	{
-		all_scene_set	= readSets(res_root + "/" + save_name + "/resources/scene_list.list",	SceneSet.class);
-		all_actor_set	= readSets(res_root + "/" + save_name + "/resources/actor_list.list",	SpriteSet.class);
-		all_avatar_set	= readSets(res_root + "/" + save_name + "/resources/avatar_list.list",	SpriteSet.class);
-		all_effect_set	= readSets(res_root + "/" + save_name + "/resources/effect_list.list",	SpriteSet.class);
+		String save_dir = res_root + "/" + save_name;
+		all_scene_set	= readSets(save_dir + "/resources/scene_list.list",	SceneSet.class);
+		all_actor_set	= readSets(save_dir + "/resources/actor_list.list",	SpriteSet.class);
+		all_avatar_set	= readSets(save_dir + "/resources/avatar_list.list",	SpriteSet.class);
+		all_effect_set	= readSets(save_dir + "/resources/effect_list.list",	SpriteSet.class);
 	}
 	
 	final protected void initAllXml(String save_name)  throws Exception
 	{
-		tunits		= readTemplates(res_root + "/" + save_name + "/objects/tunit.obj", 		TUnit.class);
-		titems		= readTemplates(res_root + "/" + save_name + "/objects/titem.obj", 		TItem.class);
-		tavatars	= readTemplates(res_root + "/" + save_name + "/objects/tavatar.obj",	TAvatar.class);
-		tskills		= readTemplates(res_root + "/" + save_name + "/objects/tskill.obj",		TSkill.class);
-		scenes		= readRPGScenes(res_root + "/" + save_name + "/scenes");
+		String save_dir = res_root + "/" + save_name;
+		tunits		= readTemplates(save_dir + "/objects/tunit.obj", 	TUnit.class);
+		titems		= readTemplates(save_dir + "/objects/titem.obj", 	TItem.class);
+		tavatars	= readTemplates(save_dir + "/objects/tavatar.obj",	TAvatar.class);
+		tskills		= readTemplates(save_dir + "/objects/tskill.obj",	TSkill.class);
+		quests		= readDynamicList(save_dir + "/quests/quest.list",					Quest.class);
+		quest_items	= readDynamicList(save_dir + "/quests/questitems/questitems.list",	QuestItem.class);
+		scenes		= readRPGScenes(save_dir + "/scenes");
 	}
 	
 	final protected void initIcons(String save_name)
@@ -216,6 +218,8 @@ public abstract class ResourceManager extends CellSetResourceManager
 			table.put(set.getID(), set);
 		}
 		
+		System.out.println("size : " + table.size());
+		
 		return table;
 	}
 	
@@ -262,6 +266,8 @@ public abstract class ResourceManager extends CellSetResourceManager
 			table.put(set.getIntID(), set);
 		}
 		
+		System.out.println("size : " + table.size());
+
 		return table;
 	}
 
@@ -269,30 +275,44 @@ public abstract class ResourceManager extends CellSetResourceManager
 //	Quests
 //	--------------------------------------------------------------------------------------------------------------------
 	
-	final protected <T extends RPGObject> Hashtable<Integer, T> readDynamicList(String list_file, Class<T> type) throws Exception
+	public Quest getQuest(int quest_id)
 	{
-		System.out.println("list rpg object : " + list_file);
+		return quests.get(quest_id);
+	}
+	
+	public QuestItem getQuestItem(int type)
+	{
+		return quest_items.get(type);
+	}
+	
+	final protected <T extends RPGObject> Hashtable<Integer, T> readDynamicList(String list_file, Class<T> type) throws Exception
+	{		
+		String tdir = CIO.getPathDir(list_file);
+		
+		System.out.println("list rpg object : " + tdir);
 
 		Hashtable<Integer, T> table = new Hashtable<Integer, T>();
 		
-//		String[] res_list = CIO.readAllLine(list_file, "UTF-8");
-//		
-//		for (int i=0; i<res_list.length; i++)
-//		{
-//			int last_split = res_list[i].lastIndexOf("/");
-//			if (last_split>=0) {
-//				res_list[i] = res_list[i].substring(last_split+1);
-//			}
-//			
-//			String xml_file = tdir +"/"+ res_list[i];
-//			
-//			T set = RPGObjectMap.readNode(xml_file, type);			
-//			if (PRINT_VERBOS)
-//			System.out.println("\tget " + type.getSimpleName() + " : " + set.name + "(" + set.id + ")");
-//
-//			table.put(set.getIntID(), set);
-//		}
+		String[] res_list = CIO.readAllLine(list_file, "UTF-8");
 		
+		for (int i=0; i<res_list.length; i++)
+		{
+			int last_split = res_list[i].lastIndexOf("/");
+			if (last_split>=0) {
+				res_list[i] = res_list[i].substring(last_split+1);
+			}
+			
+			String xml_file = tdir +"/"+ res_list[i];
+			
+			T set = RPGObjectMap.readNode(xml_file, type);			
+			if (PRINT_VERBOS)
+			System.out.println("\tget " + type.getSimpleName() + " : " + set + "(" + set.id + ")");
+
+			table.put(Integer.parseInt(set.id), set);
+		}
+		
+		System.out.println("size : " + table.size());
+
 		return table;
 	}
 	
@@ -334,6 +354,8 @@ public abstract class ResourceManager extends CellSetResourceManager
 			table.put(set.getIntID(), set);
 		}
 		
+		System.out.println("size : " + table.size());
+		
 		return table;
 	}
 	
@@ -361,6 +383,8 @@ public abstract class ResourceManager extends CellSetResourceManager
 			System.out.println("\tget icon : " + icon_id + "(" + icon_w + "x" + icon_h + ")");
 		}
 		
+		System.out.println("size : " + table.size());
+
 		return table;
 	}
 
@@ -389,6 +413,8 @@ public abstract class ResourceManager extends CellSetResourceManager
 			System.out.println("\tget sound : " + res_list[i]);
 		}
 		
+		System.out.println("list sounds : " + table.size());
+
 		return table;
 	}
 
