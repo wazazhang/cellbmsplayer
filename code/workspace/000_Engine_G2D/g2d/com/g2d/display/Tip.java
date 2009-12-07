@@ -1,5 +1,7 @@
 package com.g2d.display;
 
+import java.awt.Graphics2D;
+
 
 public abstract class Tip extends DisplayObject 
 {	
@@ -25,4 +27,8 @@ public abstract class Tip extends DisplayObject
 		super.setLocation(x, y);
 	}
 	
+	@Override
+	protected boolean testCatchMouse(Graphics2D g) {
+		return false;
+	}
 }
