@@ -32,7 +32,9 @@ public class QuestManager extends ManagerForm implements ActionListener
 		tool_bar 		= new G2DWindowToolBar(this);
 		this.add(tool_bar, BorderLayout.NORTH);
 
-		quest_items		= new QuestItemManager(studio);
+		File items_dir	= new File(studio.project_save_path, "quests/questitems");
+		File items_list	= new File(items_dir, "questitems.list");
+		quest_items		= new QuestItemManager(studio, items_list);
 		
 		File quest_dir	= new File(studio.project_save_path, "quests");
 		File quest_list	= new File(quest_dir, "quest.list");
