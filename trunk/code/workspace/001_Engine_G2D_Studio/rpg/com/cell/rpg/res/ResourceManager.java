@@ -12,7 +12,10 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import com.cell.CIO;
 import com.cell.CUtil;
+import com.cell.rpg.RPGObject;
 import com.cell.rpg.io.RPGObjectMap;
+import com.cell.rpg.quest.Quest;
+import com.cell.rpg.quest.QuestItem;
 import com.cell.rpg.res.ResourceSet.*;
 import com.cell.rpg.scene.Scene;
 import com.cell.rpg.template.TAvatar;
@@ -58,10 +61,15 @@ public abstract class ResourceManager extends CellSetResourceManager
 	protected Hashtable<Integer, TSkill>	tskills;
 	protected Hashtable<Integer, Scene>		scenes;
 	
+	// quests
+	protected Hashtable<Integer, Quest> 	all_quests;
+	protected Hashtable<Integer, QuestItem> all_quest_items;
+
 	// icons and sounds
 	protected Hashtable<String, AtomicReference<BufferedImage>> 		all_icons;
 	protected Hashtable<String, AtomicReference<ISound>> 				all_sounds;
 
+	
 //	--------------------------------------------------------------------------------------------------------------------
 
 	/**
@@ -257,6 +265,36 @@ public abstract class ResourceManager extends CellSetResourceManager
 		return table;
 	}
 
+//	--------------------------------------------------------------------------------------------------------------------
+//	Quests
+//	--------------------------------------------------------------------------------------------------------------------
+	
+	final protected <T extends RPGObject> Hashtable<Integer, T> readDynamicList(String list_file, Class<T> type) throws Exception
+	{
+		System.out.println("list rpg object : " + list_file);
+
+		Hashtable<Integer, T> table = new Hashtable<Integer, T>();
+		
+//		String[] res_list = CIO.readAllLine(list_file, "UTF-8");
+//		
+//		for (int i=0; i<res_list.length; i++)
+//		{
+//			int last_split = res_list[i].lastIndexOf("/");
+//			if (last_split>=0) {
+//				res_list[i] = res_list[i].substring(last_split+1);
+//			}
+//			
+//			String xml_file = tdir +"/"+ res_list[i];
+//			
+//			T set = RPGObjectMap.readNode(xml_file, type);			
+//			if (PRINT_VERBOS)
+//			System.out.println("\tget " + type.getSimpleName() + " : " + set.name + "(" + set.id + ")");
+//
+//			table.put(set.getIntID(), set);
+//		}
+		
+		return table;
+	}
 	
 //	--------------------------------------------------------------------------------------------------------------------
 //	Scenes

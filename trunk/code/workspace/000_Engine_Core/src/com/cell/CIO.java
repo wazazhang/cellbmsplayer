@@ -284,4 +284,19 @@ public class CIO extends CObject
 		return null;
 	}
 	
+	
+	public static String getPathDir(String file_path)
+	{
+		file_path		= file_path.replace('\\', '/');
+		String dir 		= file_path.substring(0, file_path.lastIndexOf("/")+1);
+		return dir;
+	}
+	
+	public static String getPathName(String file_path)
+	{
+		file_path		= file_path.replace('\\', '/');
+		String name		= file_path.substring(file_path.lastIndexOf("/")+1);
+		return name;
+	}
+	
 }
