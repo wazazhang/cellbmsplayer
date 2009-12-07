@@ -5,13 +5,14 @@ import javax.swing.JTabbedPane;
 import com.cell.rpg.RPGObject;
 import com.cell.rpg.io.RPGSerializationListener;
 import com.g2d.studio.gameedit.ObjectViewer;
+import com.g2d.studio.quest.QuestCellEditAdapter;
 
 public class QuestItemEditor extends ObjectViewer<QuestItemNode> implements RPGSerializationListener
 {
 	QuestItemScriptPanel script_panel;
 	
 	public QuestItemEditor(QuestItemNode node) {
-		super(node);
+		super(node, new QuestCellEditAdapter.QuestItemAdapter());
 		if (node.getData().getRPGSerializationListeners() == null ||
 			node.getData().getRPGSerializationListeners().contains(this)==false) {
 			node.getData().addRPGSerializationListener(this);
