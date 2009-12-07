@@ -1,4 +1,4 @@
-package com.g2d.studio.quest;
+package com.g2d.studio.quest.items;
 
 import java.io.File;
 import java.util.Vector;
@@ -13,7 +13,7 @@ import com.g2d.studio.gameedit.dynamic.IDynamicIDFactory;
 import com.g2d.studio.gameedit.entity.ObjectGroup;
 import com.g2d.studio.swing.G2DTree;
 
-class QuestItemManager extends IDFactoryInteger<QuestItemNode> implements IDynamicIDFactory<QuestItemNode>
+public class QuestItemManager extends IDFactoryInteger<QuestItemNode> implements IDynamicIDFactory<QuestItemNode>
 {
 //	File quest_items_dir;
 	File quest_items_list;
