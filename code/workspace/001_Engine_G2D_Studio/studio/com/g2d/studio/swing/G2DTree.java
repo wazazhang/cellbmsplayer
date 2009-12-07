@@ -194,14 +194,10 @@ public class G2DTree extends JTree implements G2DDragDropListener<G2DTree>
 			return false;
 		}
 		// 父节点不能被拖动到子节点
-		if (containsNode(tsrc, tdst)) {
+		if (!containsNode(getRoot(), tsrc)) {
 			return false;
 		}
-		// 父节点不能被拖动到子节点
-		if (containsNode(getRoot(), tsrc)) {
-			return false;
-		}
-		if (containsNode(getRoot(), tdst)) {
+		if (!containsNode(getRoot(), tdst)) {
 			return false;
 		}
 		return true;
@@ -301,7 +297,7 @@ public class G2DTree extends JTree implements G2DDragDropListener<G2DTree>
 		if (root != null) {
 			Enumeration files = root.children();
 			while(files.hasMoreElements()) {
-				G2DTreeNode c = (G2DTreeNode)files.nextElement();
+				TreeNode c = (TreeNode)files.nextElement();
 				if (containsNode(c, node)) {
 					return true;
 				}

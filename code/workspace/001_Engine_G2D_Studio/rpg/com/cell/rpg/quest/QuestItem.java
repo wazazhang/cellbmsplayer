@@ -28,8 +28,8 @@ public class QuestItem extends RPGObject implements Cloneable
 	
 //	--------------------------------------------------------------------------------------
 
-	@Property("[标志] 人物-等级")
-	public int				player_level	= 0;
+//	@Property("[标志] 人物-等级")
+//	public int				player_level	= 0;
 
 	@Property("[标志] 物品-类型")
 	public int				titem_index		= -1;
