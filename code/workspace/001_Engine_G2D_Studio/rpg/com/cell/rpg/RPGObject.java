@@ -48,22 +48,20 @@ public abstract class RPGObject extends DObject implements Abilities, ZipNode, R
 		return abilities.toArray(new AbstractAbility[abilities.size()]);
 	}
 
-	@SuppressWarnings("unchecked")
-	public <T extends AbstractAbility> T getAbility(Class<T> type) {
+	public <T> T getAbility(Class<T> type) {
 		for (AbstractAbility a : abilities) {
 			if (type.isInstance(a)) {
-				return (T) a;
+				return type.cast(a);
 			}
 		}
 		return null;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public <T extends AbstractAbility> ArrayList<T> getAbilities(Class<T> type) {
+	public <T> ArrayList<T> getAbilities(Class<T> type) {
 		ArrayList<T> ret = new ArrayList<T>();
 		for (AbstractAbility a : abilities) {
 			if (type.isInstance(a)) {
-				ret.add((T)a);
+				ret.add(type.cast(a));
 			}
 		}
 		return ret;
