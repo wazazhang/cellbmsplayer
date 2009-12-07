@@ -15,13 +15,12 @@ import com.g2d.studio.swing.G2DTree;
 
 class QuestItemManager extends IDFactoryInteger<QuestItemNode> implements IDynamicIDFactory<QuestItemNode>
 {
-	File quest_items_dir;
+//	File quest_items_dir;
 	File quest_items_list;
 	
-	public QuestItemManager(Studio studio)
+	public QuestItemManager(Studio studio, File quest_items_list)
 	{
-		quest_items_dir		= new File(studio.project_save_path, "questitems");
-		quest_items_list	= new File(quest_items_dir, "questitems.list");
+		this.quest_items_list = quest_items_list;
 		loadList();
 	}
 	
