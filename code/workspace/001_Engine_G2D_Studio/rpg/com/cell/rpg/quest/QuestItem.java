@@ -1,9 +1,12 @@
 package com.cell.rpg.quest;
 
+import java.io.File;
 import java.lang.ref.Reference;
 
 import com.cell.CIO;
+import com.cell.io.CFile;
 import com.cell.rpg.RPGObject;
+import com.cell.rpg.quest.script.QuestScript;
 import com.g2d.annotation.Property;
 
 /**
@@ -30,7 +33,8 @@ public class QuestItem extends RPGObject implements Cloneable
 	@Property("物品数量")
 	public int				titem_count	= 0;
 	
-	
+	transient
+	public String			script;
 	
 //	--------------------------------------------------------------------------------------
 	public QuestItem(Integer type, String name) {
@@ -44,11 +48,23 @@ public class QuestItem extends RPGObject implements Cloneable
 	@Override
 	public Class<?>[] getSubAbilityTypes() {
 		return null;
-	}	
-	public QuestItem clone() {
-		return CIO.cloneObject(this);
 	}
+	
 //	--------------------------------------------------------------------------------------
 	
-
+	@Override
+	public void onReadComplete(RPGObject object, String xmlFile) {
+		File txt_file = new File(xmlFile+".script");
+		if (txt_file.exists()) {
+			this.script = CFile.readText(txt_file, "UTF-8");
+		} else {
+			this.script = "";
+		}
+	}
+	
+	@Override
+	public void onWriteBefore(RPGObject object, String xmlFile) {
+		File txt_file = new File(xmlFile+".script");
+		CFile.writeText(txt_file, this.script, "UTF-8");
+	}
 }
