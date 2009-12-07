@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.TreeSet;
 
+import com.cell.CIO;
 import com.cell.ExtObject;
 import com.cell.util.MarkedHashtable;
 
@@ -19,5 +20,9 @@ public class QuestCondition extends ExtObject
 	@Override
 	protected void onWrite(MarkedHashtable data) {
 		data.put("item_name_list", item_name_list);
+	}
+	
+	public static int getQuestItemID(String list_line) {
+		return Integer.parseInt(CIO.getPathName(list_line));
 	}
 }

@@ -275,6 +275,14 @@ public abstract class ResourceManager extends CellSetResourceManager
 //	Quests
 //	--------------------------------------------------------------------------------------------------------------------
 	
+	public Hashtable<Integer, Quest> getAllQuests(){
+		return new Hashtable<Integer, Quest>(quests);
+	}
+
+	public Hashtable<Integer, QuestItem> getAllQuestItems(){
+		return new Hashtable<Integer, QuestItem>(quest_items);
+	}
+	
 	public Quest getQuest(int quest_id)
 	{
 		return quests.get(quest_id);
