@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.Vector;
 
 import com.cell.util.IDFactoryInteger;
 import com.g2d.Tools;
@@ -41,6 +42,14 @@ public class QuestManager extends ManagerForm implements ActionListener
 		File quest_list	= new File(quest_dir, "quest.list");
 		tree_view 		= new QuestTreeView(quest_list);
 		this.add(tree_view, BorderLayout.CENTER);
+	}
+	
+	Vector<QuestNode> getQuests() {
+		return tree_view.getAllObject();
+	}
+	
+	QuestNode getQuest(int id) {
+		return tree_view.getNode(id);
 	}
 	
 	public QuestItemManager getQuestItems() {

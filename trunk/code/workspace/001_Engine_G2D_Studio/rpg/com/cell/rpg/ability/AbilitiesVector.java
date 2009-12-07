@@ -34,7 +34,7 @@ public class AbilitiesVector implements Abilities, Serializable
 	}
 
 	@SuppressWarnings("unchecked")
-	final public <T extends AbstractAbility> T getAbility(Class<T> type) {
+	final public <T> T getAbility(Class<T> type) {
 		for (AbstractAbility a : abilities) {
 			if (type.isInstance(a)) {
 				return (T) a;
@@ -44,7 +44,7 @@ public class AbilitiesVector implements Abilities, Serializable
 	}
 	
 	@SuppressWarnings("unchecked")
-	final public <T extends AbstractAbility> ArrayList<T> getAbilities(Class<T> type) {
+	final public <T> ArrayList<T> getAbilities(Class<T> type) {
 		ArrayList<T> ret = new ArrayList<T>();
 		for (AbstractAbility a : abilities) {
 			if (type.isInstance(a)) {

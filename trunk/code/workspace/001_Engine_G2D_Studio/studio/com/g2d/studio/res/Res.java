@@ -31,7 +31,8 @@ public class Res
 //	images
 	static public BufferedImage	img_item_info		= Tools.readImage("/com/g2d/studio/res/img_item_info.png");
 	static public BufferedImage	img_quest_info		= Tools.readImage("/com/g2d/studio/res/img_quest_info.png");
-	
+	static public BufferedImage	img_quest_info2		= Tools.readImage("/com/g2d/studio/res/img_quest_info2.png");
+
 	
 	
 	

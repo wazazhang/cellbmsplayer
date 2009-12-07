@@ -7,15 +7,19 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.Stroke;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
+import javax.swing.JDialog;
 import javax.swing.JList;
 
 import com.cell.game.CSprite;
 import com.cell.rpg.display.UnitNode;
+import com.cell.rpg.quest.ability.QuestAccepter;
+import com.cell.rpg.quest.ability.QuestPublisher;
 import com.cell.rpg.scene.Actor;
 import com.cell.rpg.scene.ability.ActorDropItem;
 import com.g2d.annotation.Property;
@@ -33,6 +37,7 @@ import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.cpj.entity.CPJSprite;
 import com.g2d.studio.gameedit.ObjectAdapters;
 import com.g2d.studio.gameedit.template.XLSUnit;
+import com.g2d.studio.quest.QuestCellEditAdapter;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.rpg.AbilityPanel;
 import com.g2d.studio.rpg.RPGObjectPanel;
@@ -40,8 +45,10 @@ import com.g2d.studio.scene.editor.SceneAbilityAdapters;
 import com.g2d.studio.scene.editor.SceneEditor;
 import com.g2d.studio.scene.editor.SceneUnitMenu;
 import com.g2d.studio.scene.editor.SceneUnitTagEditor;
-import com.g2d.studio.scene.effect.EditEffectInfo;
+import com.g2d.studio.scene.effect.AbilityEffectInfo;
+import com.g2d.studio.scene.effect.AbilityEffectInfos;
 
+import com.g2d.util.AbstractDialog;
 import com.g2d.util.Drawing;
 
 /**
@@ -58,10 +65,19 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 	final XLSUnit				xls_unit;
 
 	Rectangle					snap_shape = new Rectangle(-2, -2, 4, 4);
+	AbilityEffectInfos<Actor>	effects = new AbilityEffectInfos<Actor>(
+			new Class<?>[]{
+					ActorDropItem.class, 
+					QuestPublisher.class,
+					QuestAccepter.class,
+					},
+			new  BufferedImage[]{
+					Res.img_item_info,
+					Res.img_quest_info,
+					Res.img_quest_info2,
+			}		
+	);
 
-	EditEffectInfo				effect_item		= new EditEffectInfo(Res.img_item_info,		0);
-	EditEffectInfo				effect_quest	= new EditEffectInfo(Res.img_quest_info,	Math.PI);
-	
 //	--------------------------------------------------------------------------------------------------------
 	
 	/**
@@ -73,9 +89,9 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 	 */
 	public SceneActor(SceneEditor editor, XLSUnit xls_unit, int x, int y, int anim) 
 	{
-		this.editor = editor;
-		this.xls_unit = xls_unit;
-		this.cur_anim = anim;		
+		this.editor		= editor;
+		this.xls_unit	= xls_unit;
+		this.cur_anim	= anim;		
 		this.setLocation(x, y);
 		this.init(xls_unit.getCPJSprite().getCPJFile().getSetResource(), xls_unit.getCPJSprite().name);
 		if (!editor.getGameScene().getWorld().addChild(this)){
@@ -202,18 +218,7 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 			}
 		}
 		
-		if (actor.getAbility(ActorDropItem.class)!=null) {
-			if (!this.contains(effect_item)) {
-				this.addChild(effect_item);
-			}
-		} else {
-			if (this.contains(effect_item)) {
-				this.removeChild(effect_item);
-			}
-		}
-		if (!this.contains(effect_quest)) {
-			this.addChild(effect_quest);
-		}
+		effects.updateActor(this);
 	}
 	
 	@Override
@@ -306,7 +311,10 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 		return new SceneUnitTagEditor(this,
 				new SceneAbilityAdapters.ActorPathStartAdapter(editor),
 				new SceneAbilityAdapters.ActorTransportAdapter(editor),
-				new ObjectAdapters.UnitDropItemNodeAdapter());
+				new ObjectAdapters.UnitDropItemNodeAdapter(),
+				new QuestCellEditAdapter.QuestAccepterAdapter(AbstractDialog.getTopWindow(editor)),
+				new QuestCellEditAdapter.QuestPublisherAdapter(AbstractDialog.getTopWindow(editor))
+				);
 	}
 	
 	@Override

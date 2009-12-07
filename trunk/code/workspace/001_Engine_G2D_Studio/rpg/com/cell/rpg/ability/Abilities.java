@@ -19,9 +19,9 @@ public interface Abilities
 
     public AbstractAbility[] getAbilities();
 	
-	public <T extends AbstractAbility> T getAbility(Class<T> type);
+	public <T> T getAbility(Class<T> type);
 
-	public <T extends AbstractAbility> ArrayList<T> getAbilities(Class<T> type) ;
+	public <T> ArrayList<T> getAbilities(Class<T> type) ;
 	
 	public Class<?>[] getSubAbilityTypes();
 	
