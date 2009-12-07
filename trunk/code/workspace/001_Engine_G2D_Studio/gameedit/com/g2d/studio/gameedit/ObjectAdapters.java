@@ -115,38 +115,5 @@ public class ObjectAdapters
 		}
 	}
 
-	/**
-	 * 编辑任务标志
-	 * @author WAZA
-	 *
-	 */
-	public static class QuestItemAdapter extends RPGObjectAdapter<QuestItem>
-	{
-		@Override
-		public Class<QuestItem> getType() {
-			return QuestItem.class;
-		}
-		
-		@Override
-		public PropertyCellEdit<?> getCellEdit(Object editObject, Object fieldValue, Field field) {
-			if (field.getName().equals("titem_index")) {
-				ObjectSelectCellEditInteger<XLSItem> item_edit = new ObjectSelectCellEditInteger<XLSItem>(XLSItem.class);
-				return item_edit;
-			}
-			return null;
-		}
-		
-		@Override
-		public Component getCellRender(Object editObject, Object fieldValue, Field field, DefaultTableCellRenderer src) {
-			if (field.getName().equals("titem_index")) {
-				try{
-					XLSItem item = Studio.getInstance().getObjectManager().getObject(XLSItem.class, (Integer)fieldValue);
-					src.setText(item.getName());
-					src.setIcon(item.getIcon(false));
-				}catch(Exception err){}
-			}
-			return null;
-		}
-	}
 	
 }

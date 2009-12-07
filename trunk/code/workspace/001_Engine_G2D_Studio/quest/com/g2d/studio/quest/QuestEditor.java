@@ -11,7 +11,6 @@ import javax.swing.JTextPane;
 import com.cell.rpg.RPGObject;
 import com.cell.rpg.io.RPGSerializationListener;
 import com.g2d.studio.gameedit.ObjectViewer;
-import com.g2d.studio.gameedit.ObjectAdapters.QuestItemAdapter;
 import com.g2d.studio.quest.items.QuestItemView;
 import com.g2d.studio.rpg.RPGObjectPanel;
 import com.g2d.util.TextEditor;
