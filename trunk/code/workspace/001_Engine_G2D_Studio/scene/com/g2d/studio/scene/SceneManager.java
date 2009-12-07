@@ -80,7 +80,7 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 		instance = this;
 		this.scene_dir	= new File(studio.project_save_path, "scenes");
 		this.scene_list	= new File(scene_dir, "scene.list");
-		{			
+		{
 			SceneGroup tree_root = new SceneGroup("场景管理器");
 			this.g2d_tree	= new G2DTree(tree_root);
 			if (scene_dir.exists() && scene_list.exists()) {
