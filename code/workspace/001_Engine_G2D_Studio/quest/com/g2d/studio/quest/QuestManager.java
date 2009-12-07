@@ -12,6 +12,7 @@ import com.g2d.studio.Studio;
 import com.g2d.studio.Studio.ProgressForm;
 import com.g2d.studio.gameedit.AvatarTreeView;
 import com.g2d.studio.gameedit.dynamic.IDynamicIDFactory;
+import com.g2d.studio.quest.items.QuestItemManager;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.swing.G2DWindowToolBar;
 

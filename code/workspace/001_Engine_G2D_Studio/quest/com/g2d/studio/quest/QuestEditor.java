@@ -12,14 +12,15 @@ import com.cell.rpg.RPGObject;
 import com.cell.rpg.io.RPGSerializationListener;
 import com.g2d.studio.gameedit.ObjectViewer;
 import com.g2d.studio.gameedit.ObjectAdapters.QuestItemAdapter;
+import com.g2d.studio.quest.items.QuestItemView;
 import com.g2d.studio.rpg.RPGObjectPanel;
 import com.g2d.util.TextEditor;
 
 public class QuestEditor extends ObjectViewer<QuestNode> implements RPGSerializationListener
 {	
-	PanelDiscussion		panel_quest_discussion;
-	JScrollPane			panel_quest_data;
-	QuestConditionTree	conditions;
+	PanelDiscussion		page_quest_discussion;
+	QuestItemView		page_quest_data;
+	
 //	-------------------------------------------------------------------------------------
 	
 	public QuestEditor(QuestNode node) {
@@ -32,12 +33,11 @@ public class QuestEditor extends ObjectViewer<QuestNode> implements RPGSerializa
 	
 	@Override
 	protected void appendPages(JTabbedPane table) {
-		conditions 				= new QuestConditionTree(tobject.getData());
-		panel_quest_discussion	= new PanelDiscussion();
-		panel_quest_data		= new JScrollPane(conditions);		
+		page_quest_discussion	= new PanelDiscussion();
+		page_quest_data			= new QuestItemView(tobject.getData());
 		table.removeAll();
-		table.addTab("任务内容", panel_quest_discussion);
-		table.addTab("任务数据", panel_quest_data);
+		table.addTab("任务内容", page_quest_discussion);
+		table.addTab("任务数据", page_quest_data);
 		table.addTab("附加属性", page_object_panel);
 	}
 
@@ -46,8 +46,8 @@ public class QuestEditor extends ObjectViewer<QuestNode> implements RPGSerializa
 	}
 	@Override
 	public void onWriteBefore(RPGObject object, String xmlFile) {
-		conditions.save();
-		tobject.getData().setDiscussion(panel_quest_discussion.getText());
+		page_quest_data.save();
+		tobject.getData().setDiscussion(page_quest_discussion.getText());
 	}
 	
 //	-------------------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-package com.g2d.studio.quest;
+package com.g2d.studio.quest.items;
 
 import java.awt.dnd.DropTarget;
 import java.awt.event.ActionEvent;
@@ -27,7 +27,7 @@ import com.g2d.studio.swing.G2DTreeNodeGroup;
 import com.g2d.studio.swing.G2DTreeNodeGroup.GroupMenu;
 import com.g2d.util.AbstractDialog;
 
-public class QuestConditionTree extends G2DTree
+public class QuestItemTree extends G2DTree
 {
 	private Quest quest ;
 
@@ -37,7 +37,7 @@ public class QuestConditionTree extends G2DTree
 	
 //	----------------------------------------------------------------------------------------------------------------------------------
 	
-	public QuestConditionTree(Quest quest) 
+	public QuestItemTree()
 	{
 		super(new DefaultMutableTreeNode("任务条件"));
 		super.setDragEnabled(true);
@@ -47,10 +47,9 @@ public class QuestConditionTree extends G2DTree
 		getRoot().add(group_trigger_condition);
 		getRoot().add(group_complete_condition);
 		getRoot().add(group_complete_award);
-		setQuest(quest);
 	}
 	
-	void setQuest(Quest quest) 
+	void setQuest(Quest quest)
 	{
 		this.quest = quest;
 		group_trigger_condition.removeAllChildren();
@@ -64,7 +63,7 @@ public class QuestConditionTree extends G2DTree
 		reload();
 	}
 	
-	void save() {
+	public void save() {
 		if (this.quest != null) {
 			group_trigger_condition.saveList(quest.accept_condition);
 			group_complete_condition.saveList(quest.complete_condition);
@@ -162,7 +161,7 @@ public class QuestConditionTree extends G2DTree
 		protected JMenuItem add_quest_item = new JMenuItem("添加条件");
 		
 		public ConditionGroupMenu(ConditionGroup root) {
-			super(root, AbstractDialog.getTopWindow(QuestConditionTree.this), QuestConditionTree.this);
+			super(root, AbstractDialog.getTopWindow(QuestItemTree.this), QuestItemTree.this);
 			if (root.getParent() == getRoot()) {
 				super.remove(super.delete);
 				super.remove(super.rename);

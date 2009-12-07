@@ -1,24 +1,16 @@
-package com.g2d.studio.quest;
+package com.g2d.studio.quest.items;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 
-import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
-import javax.swing.JTabbedPane;
 import javax.swing.JTree;
 import javax.swing.tree.TreeNode;
 
 import com.cell.rpg.quest.QuestItem;
-import com.g2d.Tools;
-import com.g2d.studio.gameedit.ObjectAdapters;
 import com.g2d.studio.gameedit.ObjectViewer;
-import com.g2d.studio.gameedit.ObjectAdapters.QuestItemAdapter;
 import com.g2d.studio.gameedit.dynamic.DynamicNode;
 import com.g2d.studio.gameedit.dynamic.IDynamicIDFactory;
-import com.g2d.studio.icon.IconFile;
-import com.g2d.studio.quest.QuestNode.QuestMenu;
-import com.g2d.studio.res.Res;
 import com.g2d.studio.swing.G2DTreeNodeGroup.NodeMenu;
 import com.g2d.util.AbstractDialog;
 
@@ -53,7 +45,10 @@ public class QuestItemNode extends DynamicNode<QuestItem>
 	
 	@Override
 	public ObjectViewer<?> getEditComponent() {
-		return null;
+		if (edit_component==null) {
+			edit_component = new QuestItemEditor(this);
+		}
+		return edit_component;
 	}
 	
 //	-----------------------------------------------------------------------------------------------------------------
