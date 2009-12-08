@@ -1,7 +1,9 @@
 package com.g2d.studio.res;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 
+import com.cell.CIO;
 import com.g2d.Tools;
 
 public class Res 
@@ -32,9 +34,12 @@ public class Res
 	static public BufferedImage	img_item_info		= Tools.readImage("/com/g2d/studio/res/img_item_info.png");
 	static public BufferedImage	img_quest_info		= Tools.readImage("/com/g2d/studio/res/img_quest_info.png");
 	static public BufferedImage	img_quest_info2		= Tools.readImage("/com/g2d/studio/res/img_quest_info2.png");
-
+	static public BufferedImage	img_splash			= Tools.readImage("/com/g2d/studio/res/splash.jpg");
+	
+//	---------------------------------------------------------------------------------------------------------------
 	
 	
+	static public ByteArrayInputStream snd_openning	= CIO.loadStream("/com/g2d/studio/res/openning.wav");
 	
 	
 	

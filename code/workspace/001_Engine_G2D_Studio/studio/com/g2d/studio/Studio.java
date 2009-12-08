@@ -20,6 +20,7 @@ import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -28,6 +29,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JToolBar;
+import javax.swing.JWindow;
 import javax.swing.UIManager;
 
 import com.cell.CObject;
@@ -36,9 +38,13 @@ import com.cell.j2se.CAppBridge;
 import com.cell.j2se.CStorage;
 import com.cell.rpg.xls.XLSFile;
 import com.cell.rpg.xls.XLSRow;
+import com.cell.sound.IPlayer;
+import com.cell.sound.ISound;
+import com.cell.sound.SoundInfo;
 import com.cell.sound.mute_impl.NullSound;
 import com.cell.sound.mute_impl.NullSoundManager;
 import com.cell.sound.openal_impl.JALSoundManager;
+import com.cell.sound.util.SoundPlayer;
 import com.cell.util.concurrent.ThreadPool;
 
 import com.g2d.Tools;
@@ -69,7 +75,8 @@ public class Studio extends AbstractFrame
 	final public ThreadPool			thread_pool = new ThreadPool("studio project");
 	
 	com.cell.sound.SoundManager		sound_system;
-	
+	SoundInfo 						sound_info_opening;
+
 //	final private FileOutputStream	project_lock;
 	
 	final public File 				project_path;
@@ -135,7 +142,12 @@ public class Studio extends AbstractFrame
 		try{
 			sound_system = JALSoundManager.getInstance();
 			com.cell.sound.SoundManager.setSoundManager(sound_system);
-		}catch(Throwable tr) {			
+			sound_info_opening = sound_system.createSoundInfo("openning.wav", Res.snd_openning);
+			ISound sound = sound_system.createSound(sound_info_opening);
+			IPlayer player = sound_system.createPlayer();
+			player.setSound(sound);
+			player.play(false);
+		}catch(Throwable tr) {
 			tr.printStackTrace();
 			sound_system = new NullSoundManager();		
 			com.cell.sound.SoundManager.setSoundManager(sound_system);
@@ -402,22 +414,28 @@ public class Studio extends AbstractFrame
 		}
 	}
 	
-	public class ProgressForm extends AbstractFrame
+	public class ProgressForm extends JWindow
 	{
 		private static final long serialVersionUID = 1L;
 		private JProgressBar progress = new JProgressBar();
 
+		JLabel lbl_title 	= new JLabel("初始化中...");
+		JLabel back 		= new JLabel(Tools.createIcon(Res.img_splash));
+		
 		public ProgressForm()
 		{
-			this.setTitle("初始化中...");
-			this.setSize(250, 50);
-			this.add(progress);
-			this.setCenter();
-			progress.setStringPainted(true);			
+			this.setSize(Res.img_splash.getWidth(), Res.img_splash.getHeight()+40);
+			AbstractFrame.setCenter(this);
+			
+			progress.setStringPainted(true);
+			
+			this.add(lbl_title, BorderLayout.NORTH);
+			this.add(back, BorderLayout.CENTER);
+			this.add(progress, BorderLayout.SOUTH);	
 		}
 		
 		public void startReadBlock(String title) {
-			this.setTitle(title);
+			lbl_title.setText(title);
 		}
 		
 		public void setMaximum(String prefix, int total) {
