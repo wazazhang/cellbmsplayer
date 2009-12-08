@@ -2,18 +2,34 @@ package com.g2d.display.ui;
 
 import java.util.Vector;
 
+import com.g2d.display.ui.layout.ContainerLayout;
+
 public abstract class Container extends UIComponent
 {
+	private ContainerLayout container_layout;
+	
 	public Container() {}
+	
+	public void setContainerLayout(ContainerLayout layout) {
+		this.container_layout = layout;
+	}
 	
 	synchronized public boolean addComponent(UIComponent child) {
 		return this.addChild(child);
 	}
-	
 	synchronized public boolean addComponent(UIComponent child, int x, int y) {
 		child.x = x;
 		child.y = y;
 		return this.addChild(child);
+	}
+	synchronized public boolean addComponent(UIComponent child, Object layout_arg) {
+		if(this.addChild(child)) {
+			if (container_layout!=null) {
+				container_layout.addLayoutComponent(child, layout_arg);
+			}
+			return true;
+		}
+		return false;
 	}
 	
 	synchronized public boolean removeComponent(UIComponent child) {
@@ -26,6 +42,14 @@ public abstract class Container extends UIComponent
 	
 	synchronized public<T extends UIComponent> Vector<T> getComonentsSubClass(Class<T> cls) {
 		return super.getChildsSubClass(cls);
+	}
+	
+	@Override
+	public void update() {
+		if (container_layout!=null) {
+			container_layout.layoutContainer(this);
+		}
+		super.update();
 	}
 	
 //	-----------------------------------------------------------------------------------------------------
