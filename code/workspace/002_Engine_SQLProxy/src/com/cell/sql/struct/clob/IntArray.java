@@ -5,6 +5,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Vector;
 
 import com.cell.CUtil;
 import com.cell.io.BigIODeserialize;
@@ -13,32 +19,27 @@ import com.cell.io.TextDeserialize;
 import com.cell.io.TextSerialize;
 import com.cell.sql.SQLStructCLOB;
 
-public class IntArray implements SQLStructCLOB 
+public class IntArray extends Vector<Integer> implements SQLStructCLOB
 {
-	public int[] array;
-	
-	public IntArray() {
-		array = new int[0];
-	}
+	public IntArray() {}
 	
 	public IntArray(int len) {
-		array = new int[len];
+		super(len);
 	}
 	
-	public IntArray(int[] another) {
-		array = another;
-	}
-	
-	public void decode(Reader in) throws IOException {
-		array = TextDeserialize.getInts(in);
+	synchronized public void decode(Reader in) throws IOException {
+		int size = TextDeserialize.getInt(in);
+		super.clear();
+		super.ensureCapacity(size);
+		for (int i=0; i<size; i++) {
+			this.add(TextDeserialize.getInt(in));
+		}
 	}
 
-	public void encode(Writer out) throws IOException {
-		TextSerialize.putInts(out, array);
-	}
-	
-	@Override
-	public String toString() {
-		return array.toString();
+	synchronized public void encode(Writer out) throws IOException {
+		TextSerialize.putInt(out, super.size());
+		for (Integer e : this) {
+			TextSerialize.putInt(out, e);
+		}
 	}
 }
