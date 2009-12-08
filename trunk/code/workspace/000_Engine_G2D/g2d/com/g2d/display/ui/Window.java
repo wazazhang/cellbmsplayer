@@ -70,9 +70,13 @@ public abstract class Window extends Container
 				return;
 			}
 		}
-		screen.addChild(this);
-		if (transition!=null) {
-			transition.startOpen();
+		if (!screen.contains(this)) {
+			screen.addChild(this);
+			if (transition!=null) {
+				transition.startOpen();
+			}
+		} else {
+			screen.focus(this);
 		}
 	}
 	
