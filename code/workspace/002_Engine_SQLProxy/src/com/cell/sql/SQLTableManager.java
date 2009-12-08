@@ -975,21 +975,31 @@ public abstract class SQLTableManager<K, R extends SQLTableRow<K>>
 		{
 			table = getLeafTable(table);
 			Object java_object = table.getField(leaf_field);
-			return SQMTypeManager.getTypeComparer().toSQLObject(
-					anno.type(), 
-					leaf_field.getType(),
-					java_object);
+			try{
+				return SQMTypeManager.getTypeComparer().toSQLObject(
+						anno.type(), 
+						leaf_field.getType(),
+						java_object);
+			} catch (Exception err) {
+				log.error("getObject Column field \"" + leaf_field.getName() + "\" error : " + err.getMessage());
+				throw err;
+			}
 		}
 		
 		public void setObject(SQLFieldGroup table, Object data) throws Exception
 		{
 			if (data != null) {
 				table = getLeafTable(table);
-				table.setField(leaf_field, 
-						SQMTypeManager.getTypeComparer().toJavaObject(
-								anno.type(),
-								leaf_field.getType(),
-								data));
+				try{
+					table.setField(leaf_field, 
+							SQMTypeManager.getTypeComparer().toJavaObject(
+									anno.type(),
+									leaf_field.getType(),
+									data));
+				} catch (Exception err) {
+					log.error("setObject Column field \"" + leaf_field.getName() + "\" error : " + err.getMessage());
+					throw err;
+				}
 			}
 		}
 	}
