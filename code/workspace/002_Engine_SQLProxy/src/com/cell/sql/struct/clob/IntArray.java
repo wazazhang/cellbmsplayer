@@ -27,6 +27,12 @@ public class IntArray extends Vector<Integer> implements SQLStructCLOB
 		super(len);
 	}
 	
+	public IntArray(Collection<Integer> another) {
+		super(another);
+	}
+	
+	
+	
 	synchronized public void decode(Reader in) throws IOException {
 		int size = TextDeserialize.getInt(in);
 		super.clear();
