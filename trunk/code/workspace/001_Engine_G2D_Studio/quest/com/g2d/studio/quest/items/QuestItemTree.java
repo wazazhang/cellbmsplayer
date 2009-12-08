@@ -158,16 +158,22 @@ public class QuestItemTree extends G2DTree
 	
 	class ConditionGroupMenu extends GroupMenu
 	{
-		protected JMenuItem add_quest_item = new JMenuItem("添加条件");
+		protected JMenuItem add_quest_item		= new JMenuItem("添加条件");
+		protected JMenuItem select_quest_item	= new JMenuItem("选择条件");
 		
-		public ConditionGroupMenu(ConditionGroup root) {
+		public ConditionGroupMenu(ConditionGroup root) 
+		{
 			super(root, AbstractDialog.getTopWindow(QuestItemTree.this), QuestItemTree.this);
 			if (root.getParent() == getRoot()) {
 				super.remove(super.delete);
 				super.remove(super.rename);
 			}
+			
 			super.add(add_quest_item);
 			add_quest_item.addActionListener(this);
+			
+//			super.add(select_quest_item);
+//			select_quest_item.addActionListener(this);
 		}
 		
 		@Override
@@ -180,7 +186,18 @@ public class QuestItemTree extends G2DTree
 					root.add(node);
 					g2d_tree.reload(root);
 				}
-			} else {
+			}
+			else if (e.getSource() == select_quest_item) {
+//				QuestItemSelectCellEdit select_item = new QuestItemSelectCellEdit(AbstractDialog.getTopWindow(window));
+//				QuestItemNode other_node = select_item.showDialog();
+//				if (other_node != null) {
+//					QuestItemManager items = Studio.getInstance().getQuestManager().getQuestItems();
+//					QuestItemNode node = items.createQuestItem(other_node);
+//					root.add(node);
+//					g2d_tree.reload(root);
+//				}
+			}
+			else {
 				super.actionPerformed(e);
 			}
 		}

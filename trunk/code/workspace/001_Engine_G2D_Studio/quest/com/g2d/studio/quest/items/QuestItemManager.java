@@ -11,6 +11,7 @@ import com.cell.util.IDFactoryInteger;
 import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.dynamic.IDynamicIDFactory;
 import com.g2d.studio.gameedit.entity.ObjectGroup;
+import com.g2d.studio.swing.G2DList;
 import com.g2d.studio.swing.G2DTree;
 
 public class QuestItemManager extends IDFactoryInteger<QuestItemNode> implements IDynamicIDFactory<QuestItemNode>
@@ -34,12 +35,22 @@ public class QuestItemManager extends IDFactoryInteger<QuestItemNode> implements
 		super.storeID(node.getIntID(), node);
 		return node;
 	}
-	
+
 	public synchronized void saveAll()
 	{
 		saveList();
 	}
 
+	private Vector<QuestItemNode> getAllNodes() {
+		Vector<QuestItemNode> ret = new Vector<QuestItemNode>();
+		synchronized(this) {
+			for (QuestItemNode e : this) {
+				ret.add(e);
+			}
+		}
+		return ret;
+	}
+	
 	private void loadList()
 	{
 		try{
@@ -81,4 +92,10 @@ public class QuestItemManager extends IDFactoryInteger<QuestItemNode> implements
 		com.cell.io.CFile.writeText(quest_items_list, all_objects.toString(), "UTF-8");
 	}
 	
+	public static class QuestItemList extends G2DList<QuestItemNode>
+	{
+		public QuestItemList() {
+			super(Studio.getInstance().getQuestManager().getQuestItems().getAllNodes());
+		}
+	}
 }
