@@ -23,6 +23,8 @@ public abstract class SoundManager
 	
 //	-----------------------------------------------------------------------------------------------------------
 	
+	abstract public void		setVolume(float mute);
+	
 	abstract public SoundInfo	createSoundInfo(String resource, InputStream is);
 	
 	abstract public SoundInfo	createSoundInfo(String resource);
