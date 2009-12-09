@@ -7,42 +7,47 @@ import java.lang.reflect.Field;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import com.cell.rpg.quest.QuestItem;
+import com.cell.rpg.quest.QuestItem.TagItem;
+import com.cell.rpg.quest.QuestItem.TagQuestItem;
+import com.cell.rpg.quest.QuestItem.TagUnitField;
 import com.cell.rpg.quest.ability.QuestAccepter;
 import com.cell.rpg.quest.ability.QuestPublisher;
+import com.cell.rpg.xls.XLSColumns;
+import com.g2d.annotation.Property;
+import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.ObjectSelectCellEditInteger;
+import com.g2d.studio.gameedit.XLSColumnSelectCellEdit;
 import com.g2d.studio.gameedit.template.XLSItem;
+import com.g2d.studio.quest.items.QuestItemNode;
+import com.g2d.studio.quest.items.QuestItemSelectCellEdit;
 import com.g2d.studio.rpg.AbilityPanel.AbilityCellEditAdapter;
 import com.g2d.studio.rpg.RPGObjectPanel.RPGObjectAdapter;
+import com.g2d.util.AbstractDialog;
 
 public class QuestCellEditAdapter {
 
 	public static class QuestAccepterAdapter extends AbilityCellEditAdapter<QuestAccepter>
 	{
-		Window owner;
-		public QuestAccepterAdapter(Window owner) {
-			this.owner = owner;
-		}
-		
 		@Override
 		public Class<QuestAccepter> getType() {
 			return QuestAccepter.class;
 		}
 		
 		@Override
-		public PropertyCellEdit<?> getCellEdit(Object editObject, Object fieldValue, Field field) {
+		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner, Object editObject, Object fieldValue, Field field) {
 			if (field.getName().equals("quest_id")) {
-				QuestSelectCellEdit edit = new QuestSelectCellEdit(owner);
+				QuestSelectCellEdit edit = new QuestSelectCellEdit(AbstractDialog.getTopWindow(owner));
 				edit.showDialog();
 				return edit;
 			}
 			return null;
 		}
-		
+	
 		@Override
-		public Component getCellRender(Object editObject, Object fieldValue,
-				Field field, DefaultTableCellRenderer src) {
+		public Component getCellRender(ObjectPropertyPanel owner, Object editObject,
+				Object fieldValue, Field field, DefaultTableCellRenderer src) {
 			if (field.getName().equals("quest_id") && fieldValue!=null) {
 				Integer quest_id = (Integer)fieldValue;
 				QuestNode node = Studio.getInstance().getQuestManager().getQuest(quest_id);
@@ -58,20 +63,15 @@ public class QuestCellEditAdapter {
 
 	public static class QuestPublisherAdapter extends AbilityCellEditAdapter<QuestPublisher>
 	{
-		Window owner;
-		public QuestPublisherAdapter(Window owner) {
-			this.owner = owner;
-		}
-		
 		@Override
 		public Class<QuestPublisher> getType() {
 			return QuestPublisher.class;
 		}
 		
 		@Override
-		public PropertyCellEdit<?> getCellEdit(Object editObject, Object fieldValue, Field field) {
+		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner, Object editObject, Object fieldValue, Field field) {
 			if (field.getName().equals("quest_id")) {
-				QuestSelectCellEdit edit = new QuestSelectCellEdit(owner);
+				QuestSelectCellEdit edit = new QuestSelectCellEdit(AbstractDialog.getTopWindow(owner));
 				edit.showDialog();
 				return edit;
 			}
@@ -79,8 +79,8 @@ public class QuestCellEditAdapter {
 		}
 		
 		@Override
-		public Component getCellRender(Object editObject, Object fieldValue,
-				Field field, DefaultTableCellRenderer src) {
+		public Component getCellRender(ObjectPropertyPanel owner, Object editObject,
+				Object fieldValue, Field field, DefaultTableCellRenderer src) {
 			if (field.getName().equals("quest_id") && fieldValue!=null) {
 				Integer quest_id = (Integer)fieldValue;
 				QuestNode node = Studio.getInstance().getQuestManager().getQuest(quest_id);
@@ -95,20 +95,23 @@ public class QuestCellEditAdapter {
 	}
 	
 
+	
+//	-------------------------------------------------------------------------------------------------------------------------
+	
 	/**
-	 * 编辑任务标志
+	 * 任务条件，道具
 	 * @author WAZA
-	 *
 	 */
-	public static class QuestItemAdapter extends RPGObjectAdapter<QuestItem>
+	public static class QuestItemTagItem extends AbilityCellEditAdapter<TagItem>
 	{
 		@Override
-		public Class<QuestItem> getType() {
-			return QuestItem.class;
+		public Class<TagItem> getType() {
+			return TagItem.class;
 		}
 		
 		@Override
-		public PropertyCellEdit<?> getCellEdit(Object editObject, Object fieldValue, Field field) {
+		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner,
+			Object editObject, Object fieldValue, Field field) {
 			if (field.getName().equals("titem_index")) {
 				ObjectSelectCellEditInteger<XLSItem> item_edit = new ObjectSelectCellEditInteger<XLSItem>(XLSItem.class);
 				return item_edit;
@@ -117,7 +120,8 @@ public class QuestCellEditAdapter {
 		}
 		
 		@Override
-		public Component getCellRender(Object editObject, Object fieldValue, Field field, DefaultTableCellRenderer src) {
+		public Component getCellRender(ObjectPropertyPanel owner, Object editObject,
+			Object fieldValue, Field field, DefaultTableCellRenderer src) {
 			if (field.getName().equals("titem_index")) {
 				try{
 					XLSItem item = Studio.getInstance().getObjectManager().getObject(XLSItem.class, (Integer)fieldValue);
@@ -127,5 +131,77 @@ public class QuestCellEditAdapter {
 			}
 			return null;
 		}
+	}
+	
+	/**
+	 * 任务条件，依赖的任务条件
+	 * @author WAZA
+	 */
+	public static class QuestItemTagQuestItem extends AbilityCellEditAdapter<TagQuestItem>
+	{	
+		@Override
+		public Class<TagQuestItem> getType() {
+			return TagQuestItem.class;
+		}
+		
+		@Override
+		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner,
+			Object editObject, Object fieldValue, Field field) {
+			if (field.getName().equals("quest_item_index")) {
+				QuestItemSelectCellEdit quest_item_edit = new QuestItemSelectCellEdit(AbstractDialog.getTopWindow(owner));
+				quest_item_edit.showDialog();
+				return quest_item_edit;
+			}
+			return null;
+		}
+		
+		@Override
+		public Component getCellRender(ObjectPropertyPanel owner, Object editObject,
+			Object fieldValue, Field field, DefaultTableCellRenderer src) {
+			if (field.getName().equals("quest_item_index")) {
+				try{
+					QuestItemNode node = Studio.getInstance().getQuestManager().getQuestItems().get((Integer)fieldValue);
+					src.setText(node.getName());
+				}catch(Exception err){}
+			}
+			return null;
+		}
+	}
+	
+	/**
+	 * 任务条件，依赖的角色字段
+	 * @author WAZA
+	 */
+	public static class QuestItemTagUnitField extends AbilityCellEditAdapter<TagUnitField>
+	{
+		XLSColumns columns = Studio.getInstance().getObjectManager().getUnitXLSColumns();
+		
+		@Override
+		public Class<TagUnitField> getType() {
+			return TagUnitField.class;
+		}
+		
+		@Override
+		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner,
+			Object editObject, Object fieldValue, Field field) {
+			if (field.getName().equals("unit_filed_name")) {
+				XLSColumnSelectCellEdit edit = new XLSColumnSelectCellEdit(columns);
+				return edit;
+			}
+			return null;
+		}
+
+		@Override
+		public Component getCellRender(ObjectPropertyPanel owner, Object editObject,
+			Object fieldValue, Field field, DefaultTableCellRenderer src) {
+			if (field.getName().equals("unit_filed_name")) {
+				if (fieldValue!=null) {
+					String desc = columns.getDesc(fieldValue.toString());
+					src.setText(desc + " (" + fieldValue + ")");
+				}
+			}
+			return null;
+		}
+
 	}
 }

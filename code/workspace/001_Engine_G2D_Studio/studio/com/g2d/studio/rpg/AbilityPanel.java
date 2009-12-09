@@ -300,7 +300,7 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 		}
 		
 		@Override
-		public PropertyCellEdit<?> getCellEdit(Object editObject, Object fieldValue, Field field) {
+		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner, Object editObject, Object fieldValue, Field field) {
 			// 测试是否是集合
 			try {
 				field.getType().asSubclass(Abilities.class);
@@ -317,7 +317,7 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 		}
 		
 		@Override
-		public Component getCellRender(Object editObject, Object fieldValue, Field field, DefaultTableCellRenderer src) {
+		public Component getCellRender(ObjectPropertyPanel owner, Object editObject, Object fieldValue, Field field, DefaultTableCellRenderer src) {
 			return null;
 		}
 		
@@ -345,14 +345,14 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 		}
 
 		@Override
-		public PropertyCellEdit<?> getCellEdit(Object editObject,
-				Object fieldValue, Field field) {
+		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner,
+				Object editObject, Object fieldValue, Field field) {
 			return null;
 		}
 
 		@Override
-		public Component getCellRender(Object editObject, Object fieldValue,
-				Field field, DefaultTableCellRenderer src) {
+		public Component getCellRender(ObjectPropertyPanel owner, Object editObject,
+				Object fieldValue, Field field, DefaultTableCellRenderer src) {
 			return null;
 		}
 		

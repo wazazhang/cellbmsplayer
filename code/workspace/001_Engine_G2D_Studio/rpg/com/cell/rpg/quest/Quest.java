@@ -26,7 +26,7 @@ public class Quest extends RPGObject
 //	----------------------------------------------------------------------------------------------------------------
 //	quest
 
-	/** 任务内容 */
+	/** 任务内容, 该字段由文件存储*/
 	transient
 	private String				discussion			= QuestScript.createExample();
 	

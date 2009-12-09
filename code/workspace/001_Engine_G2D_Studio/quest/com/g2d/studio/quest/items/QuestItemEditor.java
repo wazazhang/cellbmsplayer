@@ -5,14 +5,18 @@ import javax.swing.JTabbedPane;
 import com.cell.rpg.RPGObject;
 import com.cell.rpg.io.RPGSerializationListener;
 import com.g2d.studio.gameedit.ObjectViewer;
-import com.g2d.studio.quest.QuestCellEditAdapter;
+import com.g2d.studio.quest.QuestCellEditAdapter.*;
 
 public class QuestItemEditor extends ObjectViewer<QuestItemNode> implements RPGSerializationListener
 {
 	QuestItemScriptPanel script_panel;
 	
 	public QuestItemEditor(QuestItemNode node) {
-		super(node, new QuestCellEditAdapter.QuestItemAdapter());
+		super(node, 
+				new QuestItemTagItem(),
+				new QuestItemTagQuestItem(),
+				new QuestItemTagUnitField()
+		);
 		if (node.getData().getRPGSerializationListeners() == null ||
 			node.getData().getRPGSerializationListeners().contains(this)==false) {
 			node.getData().addRPGSerializationListener(this);
@@ -23,6 +27,7 @@ public class QuestItemEditor extends ObjectViewer<QuestItemNode> implements RPGS
 	protected void appendPages(JTabbedPane table) {
 		script_panel	= new QuestItemScriptPanel(tobject.getData());
 		table.insertTab("脚本", null, script_panel, null, 0);
+		table.setSelectedComponent(page_abilities);
 	}
 	
 	@Override

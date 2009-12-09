@@ -18,6 +18,7 @@ import com.cell.rpg.RPGObject;
 import com.cell.rpg.io.RPGObjectMap;
 import com.cell.rpg.scene.Scene;
 import com.cell.rpg.template.TemplateNode;
+import com.cell.rpg.xls.XLSColumns;
 import com.cell.rpg.xls.XLSFullRow;
 
 import com.cell.util.IDFactoryInteger;
@@ -40,8 +41,8 @@ extends ObjectTreeView<T, D>
 {
 	private static final long serialVersionUID = 1L;
 	
-	final public File xls_file ;
-	
+	final public File 		xls_file ;
+	final public XLSColumns	xls_columns;
 	Map<String, XLSFullRow> xls_row_map;
 	
 	public ObjectTreeViewTemplate(
@@ -56,6 +57,7 @@ extends ObjectTreeView<T, D>
 		this.xls_file = xls_file;
 		this.xls_row_map = new TreeMap<String, XLSFullRow>();
 		int i=0;		
+		xls_columns = XLSColumns.getXLSColumns(xls_file);
 		Collection<XLSFullRow> list = XLSFullRow.getXLSRows(xls_file, XLSFullRow.class);
 		progress.setMaximum(title, list.size());
 		for (XLSFullRow row : list) {

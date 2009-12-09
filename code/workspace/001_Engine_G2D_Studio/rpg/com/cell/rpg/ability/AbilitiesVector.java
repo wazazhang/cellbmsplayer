@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Vector;
 
+@Deprecated()
 public class AbilitiesVector implements Abilities, Serializable
 {
 	private static final long serialVersionUID = 1L;

@@ -219,7 +219,7 @@ public class ObjectPropertyPanel extends JPanel
 		try {
 			for (CellEditAdapter<?> ad : edit_adapters.values()) {
 				if (ad.getType().isInstance(object)) {
-					Component ret = ad.getCellRender(object, field_value, field, src);
+					Component ret = ad.getCellRender(this, object, field_value, field, src);
 					if (ret != null) {
 						return ret;
 					}
@@ -245,7 +245,7 @@ public class ObjectPropertyPanel extends JPanel
 		try {
 			for (CellEditAdapter<?> ad : edit_adapters.values()) {
 				if (ad.getType().isInstance(object)) {
-					PropertyCellEdit<?> edit = ad.getCellEdit(object, field_value, field);
+					PropertyCellEdit<?> edit = ad.getCellEdit(this, object, field_value, field);
 					if (edit != null) {
 						return edit;
 					}
@@ -464,26 +464,29 @@ public class ObjectPropertyPanel extends JPanel
 		public abstract Class<T> getType();
 
 		public Component getCellRender(
-				Object edit_object,
+				ObjectPropertyPanel owner,
+				Object edit_object, 
 				Object field_value, 
 				Field field, 
 				DefaultTableCellRenderer src);
 		
 		public PropertyCellEdit<?> getCellEdit(
-				Object edit_object,
+				ObjectPropertyPanel owner,
+				Object edit_object, 
 				Object field_value, 
 				Field field) ;
-
-		public boolean fieldChanged(
-				Object edit_object,
-				Object field_value, 
-				Field field);
 
 		public Object getCellValue(
 				Object edit_object, 
 				PropertyCellEdit<?> field_edit, 
 				Field field, 
 				Object field_src_value);
+		
+		public boolean fieldChanged(
+				Object edit_object,
+				Object field_value, 
+				Field field);
+
 	}
 	
 }

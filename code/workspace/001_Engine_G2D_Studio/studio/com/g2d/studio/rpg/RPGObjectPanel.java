@@ -64,12 +64,12 @@ public class RPGObjectPanel extends JPanel
 		}
 
 		@Override
-		public PropertyCellEdit<?> getCellEdit(Object editObject, Object fieldValue, Field field) {
+		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner, Object editObject, Object fieldValue, Field field) {
 			return null;
 		}
 
 		@Override
-		public Component getCellRender(Object editObject, Object fieldValue, Field field, DefaultTableCellRenderer src) {
+		public Component getCellRender(ObjectPropertyPanel owner, Object editObject, Object fieldValue, Field field, DefaultTableCellRenderer src) {
 			return null;
 		}
 
@@ -91,8 +91,8 @@ public class RPGObjectPanel extends JPanel
 		}
 		
 		@Override
-		public PropertyCellEdit<?> getCellEdit(Object editObject,
-				Object fieldValue, Field field) {
+		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner,
+				Object editObject, Object fieldValue, Field field) {
 			if (editObject instanceof TemplateNode ||
 				editObject instanceof Quest) {
 //				System.out.println("IconSelectAdapter getCellEdit");
@@ -107,8 +107,8 @@ public class RPGObjectPanel extends JPanel
 		}
 		
 		@Override
-		public Component getCellRender(Object editObject, Object fieldValue,
-				Field field, DefaultTableCellRenderer src) {
+		public Component getCellRender(ObjectPropertyPanel owner, Object editObject,
+				Object fieldValue, Field field, DefaultTableCellRenderer src) {
 			if (editObject instanceof TemplateNode ||
 				editObject instanceof Quest) {
 //				System.out.println("IconSelectAdapter getCellRender");

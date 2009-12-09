@@ -312,8 +312,8 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 				new SceneAbilityAdapters.ActorPathStartAdapter(editor),
 				new SceneAbilityAdapters.ActorTransportAdapter(editor),
 				new ObjectAdapters.UnitDropItemNodeAdapter(),
-				new QuestCellEditAdapter.QuestAccepterAdapter(AbstractDialog.getTopWindow(editor)),
-				new QuestCellEditAdapter.QuestPublisherAdapter(AbstractDialog.getTopWindow(editor))
+				new QuestCellEditAdapter.QuestAccepterAdapter(),
+				new QuestCellEditAdapter.QuestPublisherAdapter()
 				);
 	}
 	

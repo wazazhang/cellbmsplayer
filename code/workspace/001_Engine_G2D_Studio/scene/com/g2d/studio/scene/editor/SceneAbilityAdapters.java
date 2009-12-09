@@ -14,6 +14,7 @@ import com.cell.rpg.scene.ability.ActorTransport;
 import com.cell.rpg.scene.ability.RegionSpawnNPC;
 import com.cell.rpg.scene.ability.RegionSpawnNPC.NPCSpawn;
 import com.cell.rpg.xls.XLSFile;
+import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.Config;
 import com.g2d.studio.Studio;
@@ -47,9 +48,9 @@ public class SceneAbilityAdapters
 		
 		@Override
 		public PropertyCellEdit<?> getCellEdit(
-				Object editObject,
-				Object fieldValue, 
-				Field field) {
+				ObjectPropertyPanel owner,
+				Object editObject, 
+				Object fieldValue, Field field) {
 			if (field.getName().equals("next_scene_id")){
 				return new SceneListCellEdit();
 			}
@@ -64,8 +65,8 @@ public class SceneAbilityAdapters
 		}
 		
 		@Override
-		public Component getCellRender(Object editObject, Object fieldValue,
-				Field field, DefaultTableCellRenderer src) {
+		public Component getCellRender(ObjectPropertyPanel owner, Object editObject,
+				Object fieldValue, Field field, DefaultTableCellRenderer src) {
 			if (field.getName().equals("next_scene_id")){
 				SceneNode node = null;
 				if (fieldValue!=null) {
@@ -103,9 +104,9 @@ public class SceneAbilityAdapters
 		
 		@Override
 		public PropertyCellEdit<?> getCellEdit(
+				ObjectPropertyPanel owner,
 				Object editObject,
-				Object fieldValue,
-				Field field) {
+				Object fieldValue, Field field) {
 			if (field.getName().equals("point_name")){
 				return new SceneUnitListCellEdit(editor, ScenePoint.class);
 			}
@@ -127,9 +128,9 @@ public class SceneAbilityAdapters
 		
 		@Override
 		public PropertyCellEdit<?> getCellEdit(
-				Object editObject,
-				Object fieldValue, 
-				Field field) {
+				ObjectPropertyPanel owner,
+				Object editObject, 
+				Object fieldValue, Field field) {
 			if (field.getName().equals("template_unit_id")){
 				return new ObjectSelectCellEdit<XLSUnit>(XLSUnit.class);
 			}
@@ -138,10 +139,10 @@ public class SceneAbilityAdapters
 		
 		@Override
 		public Component getCellRender(
+				ObjectPropertyPanel owner,
 				Object editObject,
 				Object fieldValue,
-				Field field,
-				DefaultTableCellRenderer src) {
+				Field field, DefaultTableCellRenderer src) {
 			if (field.getName().equals("template_unit_id")){
 				XLSUnit unit = null;
 				if (fieldValue != null) {

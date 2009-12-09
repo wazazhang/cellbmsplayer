@@ -11,6 +11,10 @@ public class XLSFullRow extends XLSRow implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 	
+	/**
+	 * String[0] = value <br>
+	 * String[1] = desc <br>
+	 */
 	LinkedHashMap<String, String[]> full_columns = new LinkedHashMap<String, String[]>();
 	
 	public XLSFullRow(XLSFile file, String id, String desc) {
