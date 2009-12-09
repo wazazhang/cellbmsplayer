@@ -24,7 +24,9 @@ public class Form extends Window
 	
 //	--------------------------------------------------------------------------------------------------------------------------
 
-	protected Button 			btn_close;
+	protected ButtonClose 			btn_close;
+	public int close_border_size 		= 4;
+	
 	
 	@Property("title")
 	public String	title;
@@ -53,6 +55,10 @@ public class Form extends Window
 	public void setCloseEnable(boolean enable) {
 		btn_close.visible = enable;
 		btn_close.enable = enable;
+	}
+	
+	public ButtonClose getCloseButton() {
+		return btn_close;
 	}
 	
 	public boolean getCloseEnable() {
@@ -107,8 +113,8 @@ public class Form extends Window
 		public void update() {
 			super.update();
 			this.setLocation(
-					Form.this.getWidth()-getWidth()-8, 
-					4
+					Form.this.getWidth()-getWidth()-close_border_size, 
+					close_border_size
 					);
 		}
 	}
