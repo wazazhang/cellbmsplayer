@@ -24,6 +24,9 @@ public class Res
 	static public BufferedImage	icon_res_5			= Tools.readImage("/com/g2d/studio/res/icon_res_5.png");
 	static public BufferedImage	icon_res_6			= Tools.readImage("/com/g2d/studio/res/icon_res_6.png");
 	
+	static public BufferedImage	icon_quest_condition= Tools.readImage("/com/g2d/studio/res/icon_quest_condition.png");
+	static public BufferedImage	icon_quest_result	= Tools.readImage("/com/g2d/studio/res/icon_quest_result.png");
+	
 //	---------------------------------------------------------------------------------------------------------------
 //	icons
 	static public BufferedImage icons_bar[]			= clipImage("/com/g2d/studio/res/icons_bar.png", 10, 1);

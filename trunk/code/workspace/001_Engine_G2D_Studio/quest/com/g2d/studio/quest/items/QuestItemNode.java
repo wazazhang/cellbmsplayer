@@ -3,21 +3,27 @@ package com.g2d.studio.quest.items;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.JTree;
 import javax.swing.tree.TreeNode;
 
 import com.cell.rpg.quest.QuestItem;
+import com.g2d.Tools;
 import com.g2d.studio.gameedit.ObjectViewer;
 import com.g2d.studio.gameedit.dynamic.DynamicNode;
 import com.g2d.studio.gameedit.dynamic.IDynamicIDFactory;
+import com.g2d.studio.res.Res;
 import com.g2d.studio.swing.G2DTreeNodeGroup.NodeMenu;
 import com.g2d.util.AbstractDialog;
 
 public class QuestItemNode extends DynamicNode<QuestItem>
 {
-	public QuestItemNode(IDynamicIDFactory<QuestItemNode> factory, String name) {
-		super(factory, name);
+	static ImageIcon icon_condition	= Tools.createIcon(Res.icon_quest_condition);
+	static ImageIcon icon_result	= Tools.createIcon(Res.icon_quest_result);
+	
+	public QuestItemNode(IDynamicIDFactory<QuestItemNode> factory, String name, Boolean is_award) {
+		super(factory, name, is_award);
 	}
 	
 	public QuestItemNode(QuestItem item) {
@@ -25,8 +31,8 @@ public class QuestItemNode extends DynamicNode<QuestItem>
 	}
 	
 	@Override
-	protected QuestItem newData(IDynamicIDFactory<?> factory, String name) {
-		return new QuestItem(this.getIntID(), name);
+	protected QuestItem newData(IDynamicIDFactory<?> factory, String name, Object... args) {
+		return new QuestItem(this.getIntID(), name, (Boolean)args[0]);
 	}
 
 	@Override
@@ -41,6 +47,15 @@ public class QuestItemNode extends DynamicNode<QuestItem>
 	@Override
 	public void onRightClicked(JTree tree, MouseEvent e) {
 		new QuestItemMenu(tree, this).show(tree, e.getX(), e.getY());
+	}
+	
+	@Override
+	public ImageIcon getIcon(boolean update) {
+		if (getData().isResult()) {
+			return icon_result;
+		} else {
+			return icon_condition;
+		}
 	}
 	
 	@Override

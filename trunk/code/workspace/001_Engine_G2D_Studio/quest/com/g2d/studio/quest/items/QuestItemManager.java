@@ -30,8 +30,8 @@ public class QuestItemManager extends IDFactoryInteger<QuestItemNode> implements
 		return super.createID();
 	}
 
-	public synchronized QuestItemNode createQuestItem(String name) {
-		QuestItemNode node = new QuestItemNode(this, name);
+	public synchronized QuestItemNode createQuestItem(String name, boolean is_award) {
+		QuestItemNode node = new QuestItemNode(this, name, is_award);
 		super.storeID(node.getIntID(), node);
 		return node;
 	}
