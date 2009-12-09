@@ -49,7 +49,8 @@ public class QuestItem extends RPGObject implements Cloneable
 		return new Class<?>[]{
 			TagItem.class,
 			TagQuestItem.class,
-			TagUnitField.class,
+			TagPlayerField.class,
+			TagNPCField.class,
 		};
 	}
 	
@@ -106,23 +107,13 @@ public class QuestItem extends RPGObject implements Cloneable
 			return true;
 		}
 	}
-	
-	/**
-	 * [标志] 依赖的角色字段
-	 */
-	@Property("[标志] 依赖的角色字段")
-	public static class TagUnitField extends AbstractAbility
+
+	public static abstract class TagUnitField extends AbstractAbility
 	{
-		@Property("角色字段")
-		public String			player_filed_name;
-		@Property("角色字段值")
-		public String			player_filed_value;
-		
-		@Property("触发单位字段")
-		public String			trigger_unit_filed_name;
-		@Property("触发单位字段值")
-		public String			trigger_unit_filed_value;
-		
+		@Property("单位字段")
+		public String			unit_filed_name;
+		@Property("单位字段值")
+		public String			unit_filed_value;
 		
 		@Override
 		public boolean isMultiField() {
@@ -130,4 +121,20 @@ public class QuestItem extends RPGObject implements Cloneable
 		}
 	}
 	
+	/**
+	 * [标志] 依赖的角色字段
+	 */
+	@Property("[标志] 依赖的主角字段")
+	public static class TagPlayerField extends TagUnitField
+	{
+	}
+	
+	/**
+	 * [标志] 依赖的角色字段
+	 */
+	@Property("[标志] 依赖的被触发单位字段")
+	public static class TagNPCField extends TagUnitField
+	{
+	}
+
 }

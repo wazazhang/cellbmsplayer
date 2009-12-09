@@ -8,7 +8,9 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import com.cell.rpg.quest.QuestItem;
 import com.cell.rpg.quest.QuestItem.TagItem;
+import com.cell.rpg.quest.QuestItem.TagPlayerField;
 import com.cell.rpg.quest.QuestItem.TagQuestItem;
+import com.cell.rpg.quest.QuestItem.TagNPCField;
 import com.cell.rpg.quest.QuestItem.TagUnitField;
 import com.cell.rpg.quest.ability.QuestAccepter;
 import com.cell.rpg.quest.ability.QuestPublisher;
@@ -184,13 +186,15 @@ public class QuestCellEditAdapter {
 		@Override
 		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner,
 			Object editObject, Object fieldValue, Field field) {
-			if (field.getName().equals("player_filed_name")) {
-				XLSColumnSelectCellEdit edit = new XLSColumnSelectCellEdit(player_columns);
-				return edit;
-			}
-			else if (field.getName().equals("trigger_unit_filed_name")) {
-				XLSColumnSelectCellEdit edit = new XLSColumnSelectCellEdit(unit_columns);
-				return edit;
+			if (field.getName().equals("unit_filed_name")) {
+				if (editObject instanceof TagPlayerField) {
+					XLSColumnSelectCellEdit edit = new XLSColumnSelectCellEdit(player_columns);
+					return edit;
+				}
+				else if (editObject instanceof TagNPCField) {
+					XLSColumnSelectCellEdit edit = new XLSColumnSelectCellEdit(unit_columns);
+					return edit;
+				}
 			}
 			return null;
 		}
@@ -198,16 +202,16 @@ public class QuestCellEditAdapter {
 		@Override
 		public Component getCellRender(ObjectPropertyPanel owner, Object editObject,
 			Object fieldValue, Field field, DefaultTableCellRenderer src) {
-			if (field.getName().equals("player_filed_name")) {
+			if (field.getName().equals("unit_filed_name")) {
 				if (fieldValue!=null) {
-					String desc = player_columns.getDesc(fieldValue.toString());
-					src.setText(desc + " (" + fieldValue + ")");
-				}
-			}
-			else if (field.getName().equals("trigger_unit_filed_name")) {
-				if (fieldValue!=null) {
-					String desc = unit_columns.getDesc(fieldValue.toString());
-					src.setText(desc + " (" + fieldValue + ")");
+					if (editObject instanceof TagPlayerField) {
+						String desc = player_columns.getDesc(fieldValue.toString());
+						src.setText(desc + " (" + fieldValue + ")");
+					}
+					else if (editObject instanceof TagNPCField) {
+						String desc = unit_columns.getDesc(fieldValue.toString());
+						src.setText(desc + " (" + fieldValue + ")");
+					}
 				}
 			}
 			return null;
