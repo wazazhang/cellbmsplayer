@@ -87,6 +87,7 @@ public class Studio extends AbstractFrame
 	final public File 				root_sound_path;
 	final public File 				root_icon_path;
 
+	final public File				xls_tplayer;
 	final public File 				xls_tunit;
 	final public File 				xls_titem;
 	final public File 				xls_tskill;
@@ -130,6 +131,7 @@ public class Studio extends AbstractFrame
 		root_icon_path		= getFile(Config.ICON_ROOT);
 		root_sound_path		= getFile(Config.SOUND_ROOT);
 		
+		xls_tplayer			= getFile(Config.XLS_TPLAYER);
 		xls_tunit			= getFile(Config.XLS_TUNIT);
 		xls_titem			= getFile(Config.XLS_TITEM);
 		xls_tskill			= getFile(Config.XLS_TSKILL);

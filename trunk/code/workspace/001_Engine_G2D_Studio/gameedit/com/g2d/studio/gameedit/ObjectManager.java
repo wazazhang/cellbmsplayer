@@ -99,6 +99,7 @@ public class ObjectManager extends ManagerForm implements ActionListener
 
 	final public File objects_dir;
 	
+	XLSColumns player_xls_columns;
 	
 	final ObjectTreeViewTemplate<XLSUnit, TUnit> 		tree_units_view;
 	final ObjectTreeViewTemplate<XLSItem, TItem> 		tree_items_view;
@@ -116,7 +117,9 @@ public class ObjectManager extends ManagerForm implements ActionListener
 		
 		
 		objects_dir = new File(Studio.getInstance().project_save_path.getPath() + File.separatorChar +"objects");
-		
+		{
+			player_xls_columns = XLSColumns.getXLSColumns(studio.xls_tplayer);
+		}
 		// ------------ xls template ------------ //
 		{	
 			// XLSUnit
@@ -158,6 +161,10 @@ public class ObjectManager extends ManagerForm implements ActionListener
 		this.add(table, BorderLayout.CENTER);
 	}
 
+	public XLSColumns getPlayerXLSColumns() {
+		return player_xls_columns;
+	}
+	
 	public XLSColumns getUnitXLSColumns() {
 		return tree_units_view.xls_columns;
 	}
