@@ -75,8 +75,8 @@ public class Studio extends AbstractFrame
 	final public ThreadPool			thread_pool = new ThreadPool("studio project");
 	
 	com.cell.sound.SoundManager		sound_system;
-	SoundInfo 						sound_info_opening;
-
+	ISound 							sound_opening;
+	
 //	final private FileOutputStream	project_lock;
 	
 	final public File 				project_path;
@@ -142,10 +142,10 @@ public class Studio extends AbstractFrame
 		try{
 			sound_system = JALSoundManager.getInstance();
 			com.cell.sound.SoundManager.setSoundManager(sound_system);
-			sound_info_opening = sound_system.createSoundInfo("openning.wav", Res.snd_openning);
-			ISound sound = sound_system.createSound(sound_info_opening);
+			SoundInfo soundinfo = sound_system.createSoundInfo("openning.wav", Res.snd_openning);
+			sound_opening = sound_system.createSound(soundinfo);
 			IPlayer player = sound_system.createPlayer();
-			player.setSound(sound);
+			player.setSound(sound_opening);
 			player.play(false);
 		}catch(Throwable tr) {
 			tr.printStackTrace();
@@ -187,6 +187,7 @@ public class Studio extends AbstractFrame
 		} finally{
 			progress_form.setVisible(false);
 			progress_form.dispose();
+			this.requestFocus();
 		}
 	}
 
@@ -425,6 +426,7 @@ public class Studio extends AbstractFrame
 		public ProgressForm()
 		{
 			this.setSize(Res.img_splash.getWidth(), Res.img_splash.getHeight()+40);
+			this.setAlwaysOnTop(true);
 			AbstractFrame.setCenter(this);
 			
 			progress.setStringPainted(true);
