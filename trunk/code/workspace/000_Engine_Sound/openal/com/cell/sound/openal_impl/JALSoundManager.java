@@ -174,8 +174,8 @@ public class JALSoundManager extends SoundManager
 	}
 	
 	synchronized
-	public void setVolume(float volumn) {
-		al.alListenerf(AL.AL_GAIN, volumn);
+	public void setVolume(float volume) {
+		al.alListenerf(AL.AL_GAIN, volume);
 	}
 
 //	--------------------------------------------------------------------------------------------------
