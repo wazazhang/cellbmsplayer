@@ -71,6 +71,7 @@ public class QuestItem extends RPGObject implements Cloneable
 		} else {
 			return new Class<?>[]{
 					TagItem.class,
+					TagQuest.class,
 					TagQuestItem.class,
 					TagPlayerField.class,
 					TagNPCField.class,
@@ -101,13 +102,17 @@ public class QuestItem extends RPGObject implements Cloneable
 	
 	public static abstract class QuestItemAbility extends AbstractAbility
 	{}
+
+//	--------------------------------------------------------------------------------------
+
+	public static interface Tag{}
 	
 	/**
 	 * [标志] 物品
 	 * @author WAZA
 	 */
 	@Property("[标志] 依赖的物品")
-	public static class TagItem extends QuestItemAbility
+	public static class TagItem extends QuestItemAbility implements Tag
 	{
 		@Property("物品-类型")
 		public int				titem_index			= -1;
@@ -121,11 +126,27 @@ public class QuestItem extends RPGObject implements Cloneable
 	}
 	
 	/**
+	 * [标志] 依赖已完成的任务
+	 * @author WAZA
+	 */
+	@Property("[标志] 依赖已完成的任务")
+	public static class TagQuest extends QuestItemAbility implements Tag
+	{
+		@Property("依赖已完成的任务ID")
+		public int				quest_id	= -1;
+		
+		@Override
+		public boolean isMultiField() {
+			return true;
+		}
+	}
+	
+	/**
 	 * [标志] 依赖的任务条件
 	 * @author WAZA
 	 */
 	@Property("[标志] 依赖的任务条件")
-	public static class TagQuestItem extends QuestItemAbility
+	public static class TagQuestItem extends QuestItemAbility implements Tag
 	{
 		@Property("依赖的任务条件ID")
 		public int				quest_item_index	= -1;
@@ -136,7 +157,7 @@ public class QuestItem extends RPGObject implements Cloneable
 		}
 	}
 
-	public static abstract class TagUnitField extends QuestItemAbility
+	public static abstract class TagUnitField extends QuestItemAbility implements Tag
 	{
 		@Property("单位字段")
 		public String			unit_filed_name;
@@ -153,7 +174,7 @@ public class QuestItem extends RPGObject implements Cloneable
 	 * [标志] 依赖的角色字段
 	 */
 	@Property("[标志] 依赖的主角字段")
-	public static class TagPlayerField extends TagUnitField
+	public static class TagPlayerField extends TagUnitField implements Tag
 	{
 	}
 	
@@ -161,18 +182,20 @@ public class QuestItem extends RPGObject implements Cloneable
 	 * [标志] 依赖的角色字段
 	 */
 	@Property("[标志] 依赖的被触发单位字段")
-	public static class TagNPCField extends TagUnitField
+	public static class TagNPCField extends TagUnitField implements Tag
 	{
 	}
 
 //	--------------------------------------------------------------------------------------
-
+	
+	public static interface Result{}
+	
 	/**
 	 * [奖励] 物品
 	 * @author WAZA
 	 */
 	@Property("[奖励] 奖励的物品")
-	public static class AwardItem extends QuestItemAbility
+	public static class AwardItem extends QuestItemAbility implements Result
 	{
 		@Property("物品-类型")
 		public int				titem_index			= -1;
