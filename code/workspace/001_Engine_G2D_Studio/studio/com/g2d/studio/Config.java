@@ -25,6 +25,7 @@ public class Config extends com.cell.util.Config
 //	public static String RES_SCENE_CPJ_PREFIX		= "scene_";
 //	public static String RES_SCENE_OUT_SUFFIX		= "output/scene.properties";
 	
+	public static String XLS_TPLAYER				= "xls/tplayer.xls";
 	public static String XLS_TUNIT					= "xls/tnpc.xls";
 	public static String XLS_TITEM					= "xls/titem.xls";
 	public static String XLS_TSKILL					= "xls/tskill.xls";

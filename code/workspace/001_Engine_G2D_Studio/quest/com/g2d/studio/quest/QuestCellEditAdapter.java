@@ -174,8 +174,8 @@ public class QuestCellEditAdapter {
 	 */
 	public static class QuestItemTagUnitField extends AbilityCellEditAdapter<TagUnitField>
 	{
-		XLSColumns columns = Studio.getInstance().getObjectManager().getUnitXLSColumns();
-		
+		XLSColumns player_columns = Studio.getInstance().getObjectManager().getPlayerXLSColumns();
+		XLSColumns unit_columns = Studio.getInstance().getObjectManager().getUnitXLSColumns();
 		@Override
 		public Class<TagUnitField> getType() {
 			return TagUnitField.class;
@@ -184,8 +184,12 @@ public class QuestCellEditAdapter {
 		@Override
 		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner,
 			Object editObject, Object fieldValue, Field field) {
-			if (field.getName().equals("unit_filed_name")) {
-				XLSColumnSelectCellEdit edit = new XLSColumnSelectCellEdit(columns);
+			if (field.getName().equals("player_filed_name")) {
+				XLSColumnSelectCellEdit edit = new XLSColumnSelectCellEdit(player_columns);
+				return edit;
+			}
+			else if (field.getName().equals("trigger_unit_filed_name")) {
+				XLSColumnSelectCellEdit edit = new XLSColumnSelectCellEdit(unit_columns);
 				return edit;
 			}
 			return null;
@@ -194,9 +198,15 @@ public class QuestCellEditAdapter {
 		@Override
 		public Component getCellRender(ObjectPropertyPanel owner, Object editObject,
 			Object fieldValue, Field field, DefaultTableCellRenderer src) {
-			if (field.getName().equals("unit_filed_name")) {
+			if (field.getName().equals("player_filed_name")) {
 				if (fieldValue!=null) {
-					String desc = columns.getDesc(fieldValue.toString());
+					String desc = player_columns.getDesc(fieldValue.toString());
+					src.setText(desc + " (" + fieldValue + ")");
+				}
+			}
+			else if (field.getName().equals("trigger_unit_filed_name")) {
+				if (fieldValue!=null) {
+					String desc = unit_columns.getDesc(fieldValue.toString());
 					src.setText(desc + " (" + fieldValue + ")");
 				}
 			}

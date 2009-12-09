@@ -114,11 +114,14 @@ public class QuestItem extends RPGObject implements Cloneable
 	public static class TagUnitField extends AbstractAbility
 	{
 		@Property("角色字段")
-		public String			unit_filed_name;
-		
+		public String			player_filed_name;
 		@Property("角色字段值")
-		public String			unit_filed_value;
+		public String			player_filed_value;
 		
+		@Property("触发单位字段")
+		public String			trigger_unit_filed_name;
+		@Property("触发单位字段值")
+		public String			trigger_unit_filed_value;
 		
 		
 		@Override
