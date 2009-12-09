@@ -70,6 +70,7 @@ public abstract class Window extends Container
 				return;
 			}
 		}
+		this.visible = true;
 		if (!screen.contains(this)) {
 			screen.addChild(this);
 			if (transition!=null) {
@@ -87,8 +88,7 @@ public abstract class Window extends Container
 	public void close(){
 		if (transition!=null) {
 			transition.startClose();
-		}
-		else {
+		} else {
 			removeFromParent();
 		}
 	}
@@ -115,7 +115,7 @@ public abstract class Window extends Container
 				transition.transition(this);
 			}
 			if (transition.isClosed()){
-				visible = false;
+				this.visible = false;
 				removeFromParent();
 			}
 		}
@@ -230,6 +230,7 @@ public abstract class Window extends Container
 			
 			if (time < duration){
 				form.enable = false;
+				form.IsTransitionComplete = false;
 			}else{
 				form.enable = true;
 				form.IsTransitionComplete = true;
