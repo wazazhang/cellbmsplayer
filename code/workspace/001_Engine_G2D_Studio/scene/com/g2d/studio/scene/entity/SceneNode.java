@@ -49,7 +49,7 @@ final public class SceneNode extends DynamicNode<Scene>
 	}
 	
 	@Override
-	protected Scene newData(IDynamicIDFactory<?> factory, String name) {
+	protected Scene newData(IDynamicIDFactory<?> factory, String name, Object... args) {
 		return new Scene(getIntID(), name);
 	}
 	

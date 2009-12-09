@@ -26,7 +26,7 @@ final public class DEffect extends DynamicNode<TEffect>
 	}
 	
 	@Override
-	protected TEffect newData(IDynamicIDFactory<?> factory, String name) {
+	protected TEffect newData(IDynamicIDFactory<?> factory, String name, Object... args) {
 		return null;
 	}
 	

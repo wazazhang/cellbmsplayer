@@ -25,10 +25,10 @@ public abstract class DynamicNode<T extends RPGObject> extends ObjectNode<T>
 	 * @param factory
 	 * @param name
 	 */
-	public DynamicNode(IDynamicIDFactory<?> factory, String name) {
+	public DynamicNode(IDynamicIDFactory<?> factory, String name, Object... args) {
 		this.id 		= factory.createID();
 		this.name 		= name;
-		this.bind_data	= newData(factory, name);
+		this.bind_data	= newData(factory, name, args);
 	}
 	
 	/**
@@ -44,7 +44,7 @@ public abstract class DynamicNode<T extends RPGObject> extends ObjectNode<T>
 	}
 	
 	
-	abstract protected T newData(IDynamicIDFactory<?> factory, String name) ;
+	abstract protected T newData(IDynamicIDFactory<?> factory, String name, Object... args) ;
 
 	public T getData() {
 		return bind_data;

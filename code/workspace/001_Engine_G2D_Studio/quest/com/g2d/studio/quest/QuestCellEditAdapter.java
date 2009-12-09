@@ -7,6 +7,7 @@ import java.lang.reflect.Field;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import com.cell.rpg.quest.QuestItem;
+import com.cell.rpg.quest.QuestItem.QuestItemAbility;
 import com.cell.rpg.quest.QuestItem.TagItem;
 import com.cell.rpg.quest.QuestItem.TagPlayerField;
 import com.cell.rpg.quest.QuestItem.TagQuestItem;
@@ -104,11 +105,11 @@ public class QuestCellEditAdapter {
 	 * 任务条件，道具
 	 * @author WAZA
 	 */
-	public static class QuestItemTagItem extends AbilityCellEditAdapter<TagItem>
+	public static class QuestItemTagItem extends AbilityCellEditAdapter<QuestItemAbility>
 	{
 		@Override
-		public Class<TagItem> getType() {
-			return TagItem.class;
+		public Class<QuestItemAbility> getType() {
+			return QuestItemAbility.class;
 		}
 		
 		@Override

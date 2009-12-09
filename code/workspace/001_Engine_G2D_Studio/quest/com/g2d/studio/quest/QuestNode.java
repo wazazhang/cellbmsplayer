@@ -29,7 +29,7 @@ public class QuestNode extends DynamicNode<Quest>
 	}
 
 	@Override
-	protected Quest newData(IDynamicIDFactory<?> factory, String name) {
+	protected Quest newData(IDynamicIDFactory<?> factory, String name, Object... args) {
 		return new Quest(getIntID(), name);
 	}
 	

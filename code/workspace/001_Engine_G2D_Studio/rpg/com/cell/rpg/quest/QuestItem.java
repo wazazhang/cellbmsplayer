@@ -12,19 +12,23 @@ import com.g2d.annotation.Property;
 
 /**
  * 用于任务的状态存储<br>
+ * 如果 isResult() == true，则代表该标志是一个结果<br>
+ * 如果 isResult() == false，则代表该标志是一个条件<br>
  * 例如：
  * 玩家完成一个任务后或触发一段剧情后，获得若干QuestItem，
  * QuestItem存储到当前玩家的状态，当玩家触发了另一个任务时，
  * 如果该任务的接受条件包含玩家身上的QuestItem，
  * 那么触发的新任务就被激活，激活的任务可能消耗掉玩家身上的道具，
  * 也可能给予玩家另外的QuestItem。<br>
- * QuestItem也可以理解为任务标志或者任务令牌。
+ * QuestItem也可以理解为任务标志或者任务令牌。<br>
  * @author WAZA
  */
 public class QuestItem extends RPGObject implements Cloneable
 {
 	final private Integer	type;
 
+	final private boolean	is_result;
+	
 	public String 			name;
 	
 //	--------------------------------------------------------------------------------------
@@ -34,24 +38,45 @@ public class QuestItem extends RPGObject implements Cloneable
 	
 //	--------------------------------------------------------------------------------------
 	
-	public QuestItem(Integer type, String name) {
+	public QuestItem(Integer type, String name, boolean isresult) {
 		super(type.toString());
 		this.type = type;
+		this.is_result = isresult;
 		this.name = name;
 	}
 	
+	/**
+	 * 可以理解为标志的唯一id
+	 * @return
+	 */
 	public int getType() {
 		return type;
+	}
+
+	/**
+	 * 是否是一个结果，就是QuestAward里的值，
+	 * 否则就是一个条件
+	 * @return
+	 */
+	public boolean isResult() {
+		return is_result;
 	}
 	
 	@Override
 	public Class<?>[] getSubAbilityTypes() {
-		return new Class<?>[]{
-			TagItem.class,
-			TagQuestItem.class,
-			TagPlayerField.class,
-			TagNPCField.class,
-		};
+		if (is_result) {
+			return new Class<?>[]{
+					AwardItem.class,
+				};
+		} else {
+			return new Class<?>[]{
+					TagItem.class,
+					TagQuestItem.class,
+					TagPlayerField.class,
+					TagNPCField.class,
+				};
+		}
+		
 	}
 	
 //	--------------------------------------------------------------------------------------
@@ -74,12 +99,15 @@ public class QuestItem extends RPGObject implements Cloneable
 	
 //	--------------------------------------------------------------------------------------
 	
+	public static abstract class QuestItemAbility extends AbstractAbility
+	{}
+	
 	/**
 	 * [标志] 物品
 	 * @author WAZA
 	 */
-	@Property("[标志] 物品")
-	public static class TagItem extends AbstractAbility
+	@Property("[标志] 依赖的物品")
+	public static class TagItem extends QuestItemAbility
 	{
 		@Property("物品-类型")
 		public int				titem_index			= -1;
@@ -97,7 +125,7 @@ public class QuestItem extends RPGObject implements Cloneable
 	 * @author WAZA
 	 */
 	@Property("[标志] 依赖的任务条件")
-	public static class TagQuestItem extends AbstractAbility
+	public static class TagQuestItem extends QuestItemAbility
 	{
 		@Property("依赖的任务条件ID")
 		public int				quest_item_index	= -1;
@@ -108,7 +136,7 @@ public class QuestItem extends RPGObject implements Cloneable
 		}
 	}
 
-	public static abstract class TagUnitField extends AbstractAbility
+	public static abstract class TagUnitField extends QuestItemAbility
 	{
 		@Property("单位字段")
 		public String			unit_filed_name;
@@ -137,4 +165,24 @@ public class QuestItem extends RPGObject implements Cloneable
 	{
 	}
 
+//	--------------------------------------------------------------------------------------
+
+	/**
+	 * [奖励] 物品
+	 * @author WAZA
+	 */
+	@Property("[奖励] 奖励的物品")
+	public static class AwardItem extends QuestItemAbility
+	{
+		@Property("物品-类型")
+		public int				titem_index			= -1;
+		@Property("物品-数量")
+		public int				titem_count			= 1;
+		
+		@Override
+		public boolean isMultiField() {
+			return true;
+		}
+	}
+	
 }
