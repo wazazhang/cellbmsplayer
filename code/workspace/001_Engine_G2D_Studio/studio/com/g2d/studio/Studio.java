@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.Graphics;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -497,6 +498,9 @@ public class Studio extends AbstractFrame
 			}
 			
 			studio.setVisible(true);
+				
+			studio.setAlwaysOnTop(true);
+			studio.setAlwaysOnTop(false);
 		}
 		catch (Throwable e)
 		{
