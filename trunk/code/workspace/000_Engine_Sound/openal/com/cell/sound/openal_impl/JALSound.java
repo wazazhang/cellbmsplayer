@@ -72,6 +72,10 @@ public class JALSound implements ISound
 		}
 	}
 	
+	@Override
+	public SoundInfo getSoundInfo() {
+		return info;
+	}
 	
 	synchronized public void dispose() 
 	{
