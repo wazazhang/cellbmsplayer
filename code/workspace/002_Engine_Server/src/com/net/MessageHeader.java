@@ -4,7 +4,10 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.io.ObjectStreamException;
 import java.io.Serializable;
+
+import com.cell.util.MarkedHashtable;
 
 public abstract class MessageHeader implements Serializable
 {
@@ -62,4 +65,27 @@ public abstract class MessageHeader implements Serializable
 	transient public long		DynamicReceiveTime;
 
 //----------------------------------------------------------------------------------------------------------------		
+	
+
+	/***
+	 * 当反序列化结束后被调用, 仅普通序列化时被调用<br>
+	 * @param data
+	 */
+	protected void onReadResolve(){}
+
+	/***
+	 * 当序列化开始前被调用, 仅普通序列化时被调用<br>
+	 * @param data
+	 */
+	protected void onWriteReplace(){}
+	
+	private Object writeReplace() throws ObjectStreamException {
+		onWriteReplace();
+		return this;
+	}
+	private Object readResolve() throws ObjectStreamException {
+		onReadResolve();
+		return this;
+	}
+	
 }
