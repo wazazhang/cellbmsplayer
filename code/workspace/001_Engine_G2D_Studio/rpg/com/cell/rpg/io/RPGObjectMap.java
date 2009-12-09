@@ -144,6 +144,7 @@ public class RPGObjectMap<T extends RPGObject> extends Hashtable<String, T> //im
 				ois.close();
 			}
 		} catch(Throwable ex) {
+			System.err.println("read node error : " + type + " : " + xml_file);
 			ex.printStackTrace();
 		}
 		return null;
@@ -172,6 +173,7 @@ public class RPGObjectMap<T extends RPGObject> extends Hashtable<String, T> //im
 			com.cell.io.CFile.writeText(xml_file, xml, "UTF-8");
 			return true;
 		} catch(Throwable ex) {
+			System.err.println("write node error : " + node + " : " + xml_file);
 			ex.printStackTrace();
 		}
 		return false;
