@@ -7,8 +7,7 @@ public class EventListenerMap {
 	ConcurrentHashMap<Class<?>, EventListeners<?>> event_map = new ConcurrentHashMap<Class<?>, EventListeners<?>>();
 	
 	@SuppressWarnings("unchecked")
-	public<T extends EventListener> void putListener(T listener) {
-		Class<T> type = (Class<T>)listener.getClass();
+	public<T extends EventListener> void putListener(Class<T> type, T listener) {
 		synchronized (event_map) {
 			EventListeners<T> listeners = (EventListeners<T>)event_map.get(type);
 			if (listeners == null) {
