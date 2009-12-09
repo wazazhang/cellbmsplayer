@@ -42,8 +42,7 @@ import com.g2d.studio.icon.IconFile;
  */
 public abstract class ResourceManager extends CellSetResourceManager
 {
-	public static boolean PRINT_VERBOS = false;
-	
+	public static boolean	PRINT_VERBOS 	= false;
 //	--------------------------------------------------------------------------------------------------------------------
 	
 	final public String res_root;
@@ -146,7 +145,15 @@ public abstract class ResourceManager extends CellSetResourceManager
 	{
 		return new Resource(path);
 	}
-
+	
+	final public <T extends RPGObject> T readRPGObject(String xml_file, Class<T> type) 
+	{
+		T set = RPGObjectMap.readNode(xml_file, type);			
+		if (PRINT_VERBOS)
+		System.out.println("readRPGObject : " + type.getSimpleName() + " : " + set + "(" + set.id + ")");
+		return set;
+	}
+	
 //	--------------------------------------------------------------------------------------------------------------------
 //	Resources
 //	--------------------------------------------------------------------------------------------------------------------
