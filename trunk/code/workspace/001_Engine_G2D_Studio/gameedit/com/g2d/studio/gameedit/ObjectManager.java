@@ -58,6 +58,7 @@ import com.cell.rpg.template.TItem;
 import com.cell.rpg.template.TSkill;
 import com.cell.rpg.template.TUnit;
 import com.cell.rpg.template.TemplateNode;
+import com.cell.rpg.xls.XLSColumns;
 import com.cell.rpg.xls.XLSFullRow;
 import com.cell.util.IDFactoryInteger;
 import com.g2d.Tools;
@@ -99,9 +100,9 @@ public class ObjectManager extends ManagerForm implements ActionListener
 	final public File objects_dir;
 	
 	
-	final ObjectTreeView<XLSUnit, TUnit> 				tree_units_view;
-	final ObjectTreeView<XLSItem, TItem> 				tree_items_view;
-	final ObjectTreeView<XLSSkill, TSkill>				tree_skills_view;
+	final ObjectTreeViewTemplate<XLSUnit, TUnit> 		tree_units_view;
+	final ObjectTreeViewTemplate<XLSItem, TItem> 		tree_items_view;
+	final ObjectTreeViewTemplate<XLSSkill, TSkill>		tree_skills_view;
 	final ObjectTreeViewDynamic<DAvatar, TAvatar>		tree_avatars_view;
 	final ObjectTreeViewDynamic<DEffect, TEffect>		tree_effects_view;
 //	final ObjectTreeViewDynamic<DQuestItem, QuestItem>	tree_quest_items_view;
@@ -157,6 +158,10 @@ public class ObjectManager extends ManagerForm implements ActionListener
 		this.add(table, BorderLayout.CENTER);
 	}
 
+	public XLSColumns getUnitXLSColumns() {
+		return tree_units_view.xls_columns;
+	}
+	
 	public ObjectTreeView<?,?>[] getPages() {
 		ObjectTreeView<?,?>[] pages = new ObjectTreeView<?, ?>[table.getTabCount()];
 		for (int i=0; i<table.getTabCount(); i++) {

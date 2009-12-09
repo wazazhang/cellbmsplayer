@@ -15,6 +15,7 @@ import com.cell.rpg.template.ability.UnitBattleTeam;
 import com.cell.rpg.template.ability.UnitDropItem;
 import com.cell.rpg.template.ability.UnitBattleTeam.TeamNode;
 import com.cell.rpg.template.ability.UnitDropItem.DropItemNode;
+import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.editor.property.ObjectPropertyPanel.CellEditAdapter;
 import com.g2d.studio.Studio;
@@ -39,9 +40,9 @@ public class ObjectAdapters
 		
 		@Override
 		public PropertyCellEdit<?> getCellEdit(
-				Object editObject,
-				Object fieldValue, 
-				Field field) {
+				ObjectPropertyPanel owner,
+				Object editObject, 
+				Object fieldValue, Field field) {
 			if (field.getName().equals("template_unit_id")){
 				return new ObjectSelectCellEdit<XLSUnit>(XLSUnit.class);
 			}
@@ -50,10 +51,10 @@ public class ObjectAdapters
 		
 		@Override
 		public Component getCellRender(
+				ObjectPropertyPanel owner,
 				Object editObject,
 				Object fieldValue,
-				Field field,
-				DefaultTableCellRenderer src) {
+				Field field, DefaultTableCellRenderer src) {
 			if (field.getName().equals("template_unit_id")){
 				XLSUnit unit = null;
 				if (fieldValue != null) {
@@ -92,9 +93,9 @@ public class ObjectAdapters
 		
 		@Override
 		public PropertyCellEdit<?> getCellEdit(
-				Object editObject,
-				Object fieldValue, 
-				Field field) {
+				ObjectPropertyPanel owner,
+				Object editObject, 
+				Object fieldValue, Field field) {
 			if (field.getName().equals("drop_types")){
 				DropItemEditor editor = new DropItemEditor((DropItemNode[])fieldValue);
 				editor.setVisible(true);
@@ -104,7 +105,7 @@ public class ObjectAdapters
 		}
 		
 		@Override
-		public Component getCellRender(Object editObject, Object fieldValue, Field field, DefaultTableCellRenderer src) {
+		public Component getCellRender(ObjectPropertyPanel owner, Object editObject, Object fieldValue, Field field, DefaultTableCellRenderer src) {
 			if (field.getName().equals("drop_types")){
 				if (fieldValue!=null) {
 					DropItemEditor editor = new DropItemEditor((DropItemNode[])fieldValue);

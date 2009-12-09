@@ -6,6 +6,7 @@ import java.lang.ref.Reference;
 import com.cell.CIO;
 import com.cell.io.CFile;
 import com.cell.rpg.RPGObject;
+import com.cell.rpg.ability.AbstractAbility;
 import com.cell.rpg.quest.script.QuestScript;
 import com.g2d.annotation.Property;
 
@@ -27,30 +28,29 @@ public class QuestItem extends RPGObject implements Cloneable
 	public String 			name;
 	
 //	--------------------------------------------------------------------------------------
-
-//	@Property("[标志] 人物-等级")
-//	public int				player_level	= 0;
-
-	@Property("[标志] 物品-类型")
-	public int				titem_index		= -1;
-	@Property("[标志] 物品-数量")
-	public int				titem_count		= 1;
-	
+	/**该字段由文件存储*/
 	transient
 	public String			script;
 	
 //	--------------------------------------------------------------------------------------
+	
 	public QuestItem(Integer type, String name) {
 		super(type.toString());
 		this.type = type;
 		this.name = name;
 	}
+	
 	public int getType() {
 		return type;
 	}
+	
 	@Override
 	public Class<?>[] getSubAbilityTypes() {
-		return null;
+		return new Class<?>[]{
+			TagItem.class,
+			TagQuestItem.class,
+			TagUnitField.class,
+		};
 	}
 	
 //	--------------------------------------------------------------------------------------
@@ -70,4 +70,61 @@ public class QuestItem extends RPGObject implements Cloneable
 		File txt_file = new File(xmlFile+".script");
 		CFile.writeText(txt_file, this.script, "UTF-8");
 	}
+	
+//	--------------------------------------------------------------------------------------
+	
+	/**
+	 * [标志] 物品
+	 * @author WAZA
+	 */
+	@Property("[标志] 物品")
+	public static class TagItem extends AbstractAbility
+	{
+		@Property("物品-类型")
+		public int				titem_index			= -1;
+		@Property("物品-数量")
+		public int				titem_count			= 1;
+		
+		@Override
+		public boolean isMultiField() {
+			return true;
+		}
+	}
+	
+	/**
+	 * [标志] 依赖的任务条件
+	 * @author WAZA
+	 */
+	@Property("[标志] 依赖的任务条件")
+	public static class TagQuestItem extends AbstractAbility
+	{
+		@Property("依赖的任务条件ID")
+		public int				quest_item_index	= -1;
+		
+		@Override
+		public boolean isMultiField() {
+			return true;
+		}
+	}
+	
+	/**
+	 * [标志] 依赖的角色字段
+	 */
+	@Property("[标志] 依赖的角色字段")
+	public static class TagUnitField extends AbstractAbility
+	{
+		@Property("角色字段")
+		public String			unit_filed_name;
+		
+		@Property("角色字段值")
+		public String			unit_filed_value;
+		
+		
+		
+		@Override
+		public boolean isMultiField() {
+			return true;
+		}
+	}
+	
 }
