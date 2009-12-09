@@ -10,6 +10,11 @@ import com.cell.sound.SoundManager;
 public class NullSoundManager extends SoundManager
 {
 	@Override
+	public void setVolume(float mute) {
+		
+	}
+	
+	@Override
 	public IPlayer createPlayer() {
 		return new NullPlayer();
 	}

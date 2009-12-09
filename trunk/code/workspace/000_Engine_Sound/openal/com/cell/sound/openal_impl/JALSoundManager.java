@@ -38,12 +38,6 @@ public class JALSoundManager extends SoundManager
 	
 	AL	al;
 	ALC alc;
-	// Position of the listener.
-	private float[] listenerPos = { 0.0f, 0.0f, 0.0f };
-	// Velocity of the listener.
-	private float[] listenerVel = { 0.0f, 0.0f, 0.0f };
-	// Orientation of the listener. (first 3 elems are "at", second 3 are "up")
-	private float[] listenerOri = { 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f };
 
 	ArrayList<JALPlayer>	players = new ArrayList<JALPlayer>(255);
 	
@@ -95,10 +89,17 @@ public class JALSoundManager extends SoundManager
 		}
 		
 		// set listeners
-	    {
-	    	al.alListenerfv(AL.AL_POSITION, listenerPos, 0);
-		    al.alListenerfv(AL.AL_VELOCITY, listenerVel, 0);
-		    al.alListenerfv(AL.AL_ORIENTATION, listenerOri, 0);
+	    {	
+	    	// Position of the listener.
+	    	float[] listenerPos = { 0.0f, 0.0f, 0.0f };
+	    	// Velocity of the listener.
+	    	float[] listenerVel = { 0.0f, 0.0f, 0.0f };
+	    	// Orientation of the listener. (first 3 elems are "at", second 3 are "up")
+	    	float[] listenerOri = { 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f };
+
+	    	al.alListenerfv(AL.AL_POSITION, 	listenerPos, 0);
+		    al.alListenerfv(AL.AL_VELOCITY, 	listenerVel, 0);
+		    al.alListenerfv(AL.AL_ORIENTATION, 	listenerOri, 0);
 	    }
 	    
 	    // create players
@@ -170,6 +171,11 @@ public class JALSoundManager extends SoundManager
 			player.stop();
 			player.setSound(null);
 		}
+	}
+	
+	synchronized
+	public void setVolume(float volumn) {
+		al.alListenerf(AL.AL_GAIN, volumn);
 	}
 
 //	--------------------------------------------------------------------------------------------------
