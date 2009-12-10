@@ -1,9 +1,16 @@
 package com.cell.sql;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.lang.reflect.Field;
 import java.sql.Types;
 
 import com.cell.sql.util.SQLUtil;
+import com.thoughtworks.xstream.XStream;
 
 public class SQLTypeComparerMySQL implements SQLTypeComparer 
 {
@@ -20,6 +27,7 @@ public class SQLTypeComparerMySQL implements SQLTypeComparer
 			}
 			break;
 		case TEXT_STRUCT:
+		case XML_STRUCT:
 			switch(mysql_jdbc_type){
 			case Types.VARCHAR: 		return true;
 			case Types.LONGVARCHAR: 	return true;
@@ -43,6 +51,8 @@ public class SQLTypeComparerMySQL implements SQLTypeComparer
 			return SQLUtil.binToBlob((byte[])sqlObject);
 		case TEXT_STRUCT:
 			return SQLUtil.stringToClob((String)sqlObject, type_clazz);
+		case XML_STRUCT:
+			return SQLUtil.stringToXML((String)sqlObject);
 		case BYTE:
 			return ((Number)sqlObject).byteValue();
 		case SHORT:
@@ -60,9 +70,23 @@ public class SQLTypeComparerMySQL implements SQLTypeComparer
 			return SQLUtil.blobToBin((SQLStructBLOB)javaObject);
 		case TEXT_STRUCT:
 			return SQLUtil.clobToString((SQLStructCLOB)javaObject);
+		case XML_STRUCT:
+			return SQLUtil.xmlToString((SQLStructXML)javaObject);
 		default:
 			return javaObject;
 		}
+	}
+	
+	@Override
+	public ObjectInputStream getXMLInputStream(Reader reader) throws IOException {
+		ObjectInputStream ois = new XStream().createObjectInputStream(reader);
+		return ois;
+	}
+	
+	@Override
+	public ObjectOutputStream getXMLOutputStream(Writer writer) throws IOException {
+		ObjectOutputStream oos = new XStream().createObjectOutputStream(writer);
+		return oos;
 	}
 	
 	public String getDirverTypeString(int jdbc_type) 

@@ -20,6 +20,7 @@ public enum SQLType
 	STRING		(Types.VARCHAR),
 	STRUCT		(Types.BLOB),
 	TEXT_STRUCT	(Types.CLOB),
+	XML_STRUCT	(Types.CLOB),
 	TIME		(Types.TIME),
 	TIMESTAMP	(Types.TIMESTAMP),
 	;
