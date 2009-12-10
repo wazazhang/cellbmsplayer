@@ -30,6 +30,15 @@ public class AbstractDialog extends JDialog
 		setCenter();
 	}
 	
+	public AbstractDialog(Component owner)
+	{
+		super(getTopWindow(owner), ModalityType.APPLICATION_MODAL);
+		super.setAlwaysOnTop(true);
+		super.setSize(600, 400);
+		setCenter();
+	}
+	
+	
 	public void setCenter()
 	{
 		setLocation(
@@ -46,6 +55,9 @@ public class AbstractDialog extends JDialog
 
 	public static Window getTopWindow(Component component) 
 	{
+		if (component instanceof Window) {
+			return (Window)component;
+		}
 		Container p = component.getParent();
 		while (p!=null) {
 			if (p instanceof Window) {

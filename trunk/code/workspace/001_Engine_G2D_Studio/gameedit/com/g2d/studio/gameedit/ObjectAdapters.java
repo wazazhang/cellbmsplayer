@@ -97,7 +97,7 @@ public class ObjectAdapters
 				Object editObject, 
 				Object fieldValue, Field field) {
 			if (field.getName().equals("drop_types")){
-				DropItemEditor editor = new DropItemEditor((DropItemNode[])fieldValue);
+				DropItemEditor editor = new DropItemEditor(owner, (DropItemNode[])fieldValue);
 				editor.setVisible(true);
 				return editor;
 			}
@@ -108,7 +108,7 @@ public class ObjectAdapters
 		public Component getCellRender(ObjectPropertyPanel owner, Object editObject, Object fieldValue, Field field, DefaultTableCellRenderer src) {
 			if (field.getName().equals("drop_types")){
 				if (fieldValue!=null) {
-					DropItemEditor editor = new DropItemEditor((DropItemNode[])fieldValue);
+					DropItemEditor editor = new DropItemEditor(owner, (DropItemNode[])fieldValue);
 					return editor.getComponent(null);
 				}
 			}
