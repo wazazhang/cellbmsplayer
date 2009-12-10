@@ -20,7 +20,9 @@ import com.cell.reflect.Parser;
 import com.cell.sql.SQLFieldGroup;
 import com.cell.sql.SQLStructBLOB;
 import com.cell.sql.SQLStructCLOB;
+import com.cell.sql.SQLStructXML;
 import com.cell.sql.SQLTableManager;
+import com.cell.sql.SQMTypeManager;
 import com.cell.sql.SQLTableManager.SQLColumn;
 
 public class SQLUtil
@@ -64,6 +66,8 @@ public class SQLUtil
 	}
 	
 
+//	---------------------------------------------------------------------------------------------------------------------
+	
 	
 	/**
 	 * 将一个struct编码成Blob
@@ -103,7 +107,56 @@ public class SQLUtil
 			reader.close();
 		}
 	}
+
 	
+//	---------------------------------------------------------------------------------------------------------------------
+	
+	/**
+	 * 将一个struct编码成String
+	 * @param struct
+	 * @param conn
+	 * @return
+	 * @throws Exception
+	 */
+	public static String xmlToString(SQLStructXML struct) throws Exception
+	{
+		if (struct == null) {
+			return "";
+		}
+		StringWriter 		sw	= new StringWriter(1024);
+		ObjectOutputStream	oos	= SQMTypeManager.getTypeComparer().getXMLOutputStream(sw);
+		try{
+			oos.writeObject(struct);
+			oos.flush();
+			return sw.toString();
+		}finally{
+			oos.close();
+		}
+	}
+	
+	/**
+	 * 将一个String解码成struct
+	 * @param <T>
+	 * @param blob
+	 * @return
+	 * @throws Exception
+	 */
+	public static SQLStructXML stringToXML(String data) throws Exception
+	{
+		if (data == null || data.length() == 0) {
+			return null;
+		}
+		StringReader		sr	= new StringReader(data);
+		ObjectInputStream	ois	= SQMTypeManager.getTypeComparer().getXMLInputStream(sr);
+		try{
+			SQLStructXML ret = (SQLStructXML)ois.readObject();
+			return ret;
+		}finally{
+			ois.close();
+		}
+	}
+	
+//	---------------------------------------------------------------------------------------------------------------------
 	
 	/**
 	 * 将src所有SQLField字段的值赋给dst

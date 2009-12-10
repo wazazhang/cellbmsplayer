@@ -1,6 +1,14 @@
 package com.cell.sql;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.lang.reflect.Field;
+
+import com.thoughtworks.xstream.XStream;
 
 public interface SQLTypeComparer
 {
@@ -39,5 +47,18 @@ public interface SQLTypeComparer
 	public Object toJavaObject(SQLType type, Class<?> type_clazz, Object sql_object) throws Exception;
 	
 	
+	/**
+	 * 获得XML对象序列化驱动
+	 * @param writer
+	 * @return
+	 */
+	public ObjectOutputStream	getXMLOutputStream(Writer writer) throws IOException;
 	
+	
+	/**
+	 * 获得XML对象序列化驱动
+	 * @param reader
+	 * @return
+	 */
+	public ObjectInputStream	getXMLInputStream(Reader reader) throws IOException;
 }
