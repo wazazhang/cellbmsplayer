@@ -118,7 +118,8 @@ public class QuestItem extends RPGObject implements Cloneable
 		public int				titem_index			= -1;
 		@Property("物品-数量")
 		public int				titem_count			= 1;
-		
+		@Property("物品-是否消耗掉")
+		public boolean			is_expense			= true;
 		@Override
 		public boolean isMultiField() {
 			return true;
