@@ -20,13 +20,18 @@ public class Quest extends RPGObject
 	
 	/** 任务id */
 	final private Integer 		int_id;
+	
 	/** 任务名字 */
 	public String				name;
+	
+	/**任务类型*/
+	@Property("任务类型")
+	public QuestType			quest_type				= null;
 	
 //	----------------------------------------------------------------------------------------------------------------
 //	quest
 
-	/** 任务内容, 该字段由文件存储*/
+	/** 任务内容, 该字段由文件存储，注意反序列化后恢复*/
 	transient
 	private String				discussion			= QuestScript.createExample();
 	
@@ -77,11 +82,13 @@ public class Quest extends RPGObject
 	}
 	
 //	----------------------------------------------------------------------------------------------------------------
-
+	
+	/** 任务内容, 该字段由文件存储，注意反序列化后恢复*/
 	public void setDiscussion(String text) {
 		this.discussion = text;
 	}
 	
+	/** 任务内容, 该字段由文件存储，注意反序列化后恢复*/
 	public String getDiscussion() {
 		return discussion;
 	}

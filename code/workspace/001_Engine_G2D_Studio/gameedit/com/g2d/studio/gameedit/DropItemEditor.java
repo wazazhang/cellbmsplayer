@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
@@ -51,8 +52,9 @@ public class DropItemEditor extends AbstractDialog implements PropertyCellEdit<D
 	JButton 					ok			= new JButton("确定");
 	
 	
-	public DropItemEditor(DropItemNode[] src) 
+	public DropItemEditor(Component owner, DropItemNode[] src) 
 	{
+		super(owner);
 		super.setIconImage(Res.icon_edit);
 		super.setTitle("掉落道具编辑器");
 		super.setSize(260, 400);

@@ -36,12 +36,15 @@ public class RPGObjectPanel extends JPanel
 	{
 		CellEditAdapter<?>[] dadapters;
 		if (adapters!=null && adapters.length>0) {
-			dadapters = new CellEditAdapter<?>[adapters.length+1];
+			dadapters = new CellEditAdapter<?>[adapters.length+2];
 			System.arraycopy(adapters, 0, dadapters, 0, adapters.length);
-			dadapters[adapters.length] = new IconSelectAdapter();
+			dadapters[dadapters.length-1] = new IconSelectAdapter();
+			dadapters[dadapters.length-2] = new AbilityAdapter();
 		} else {
-			dadapters = new CellEditAdapter<?>[1];
-			dadapters[0] = new IconSelectAdapter();
+			dadapters = new CellEditAdapter<?>[]{
+				new IconSelectAdapter(),
+				new AbilityAdapter(),
+			};
 		}
 		this.setLayout(new BorderLayout());
 		this.current_unit = unit;

@@ -137,6 +137,10 @@ public class ObjectPropertyPanel extends JPanel
 		
 	}
 	
+	public CellEditAdapter<?>[] getAdapters() {
+		return edit_adapters.values().toArray(new CellEditAdapter<?>[edit_adapters.size()]);
+	}
+	
 	/**
 	 * 显示字段的表格，第一列为字段名，第二列为字段值，第三列为字段类型
 	 * @author WAZA

@@ -4,6 +4,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import sun.awt.image.ImageWatched.Link;
+
+/**
+ * 该类无法将新的类型加入到老的版本序列化，<br>
+ * 新版本要兼容老版本只能通过反序列化完成后使用setTypes(Class<?> ... sub_types)来达成新类型的加入<br>
+ * @author WAZA
+ */
 @Deprecated()
 public class AbilitiesVector implements Abilities, Serializable
 {
@@ -12,11 +19,11 @@ public class AbilitiesVector implements Abilities, Serializable
 	/**将显示在单位属性的Ability面板*/
 	private Vector<AbstractAbility> abilities = new Vector<AbstractAbility>();
 	private Class<?>[] sub_types;
-	
+	@Deprecated()
 	public AbilitiesVector(Class<?> ... sub_types) {
 		setTypes(sub_types);
 	}
-	
+
 	protected void setTypes(Class<?> ... sub_types) {
 		this.sub_types = sub_types;
 	}

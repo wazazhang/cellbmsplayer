@@ -21,6 +21,8 @@ import com.g2d.annotation.Property;
  * 那么触发的新任务就被激活，激活的任务可能消耗掉玩家身上的道具，
  * 也可能给予玩家另外的QuestItem。<br>
  * QuestItem也可以理解为任务标志或者任务令牌。<br>
+ * 如果QuestItem是一个条件，则一组QuestItem为或的条件<br>
+ * 如果QuestItem是一个奖励，则由玩家选择一项<br>
  * @author WAZA
  */
 public class QuestItem extends RPGObject implements Cloneable
