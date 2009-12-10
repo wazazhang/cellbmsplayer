@@ -26,8 +26,8 @@ public class Quest extends RPGObject
 	
 	/**任务类型*/
 	@Property("任务类型")
-	public QuestType			quest_type				= null;
-	
+	public QuestType			quest_type			= new QuestType();
+
 //	----------------------------------------------------------------------------------------------------------------
 //	quest
 
@@ -57,6 +57,7 @@ public class Quest extends RPGObject
 		this.int_id = id;
 		this.name	= name;
 	}
+
 	public int getIntID() {
 		return int_id;
 	}
