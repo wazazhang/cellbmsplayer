@@ -164,7 +164,7 @@ public class CObject
 
 	static public void initSystem(IStorage file, IAppBridge appBridge)
 	{
-		initSystem(file, appBridge, Locale.SIMPLIFIED_CHINESE);
+		initSystem(file, appBridge, Locale.getDefault());
 	}
 	
 	/**
