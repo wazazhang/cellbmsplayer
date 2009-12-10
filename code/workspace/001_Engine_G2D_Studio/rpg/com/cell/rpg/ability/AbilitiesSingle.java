@@ -1,5 +1,6 @@
 package com.cell.rpg.ability;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -7,7 +8,7 @@ import java.util.ArrayList;
  * @author WAZA
  *
  */
-public abstract class AbilitiesSingle implements Abilities
+public abstract class AbilitiesSingle implements Abilities, Serializable
 {
 	AbstractAbility single;
 
