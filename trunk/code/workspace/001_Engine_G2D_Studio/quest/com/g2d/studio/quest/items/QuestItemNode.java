@@ -10,6 +10,7 @@ import javax.swing.tree.TreeNode;
 
 import com.cell.rpg.quest.QuestItem;
 import com.g2d.Tools;
+import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.ObjectViewer;
 import com.g2d.studio.gameedit.dynamic.DynamicNode;
 import com.g2d.studio.gameedit.dynamic.IDynamicIDFactory;
@@ -57,7 +58,7 @@ public class QuestItemNode extends DynamicNode<QuestItem>
 			return icon_condition;
 		}
 	}
-	
+
 	@Override
 	public ObjectViewer<?> getEditComponent() {
 		if (edit_component==null) {
@@ -93,6 +94,7 @@ public class QuestItemNode extends DynamicNode<QuestItem>
 			else if (e.getSource() == delete) {
 				TreeNode parent = node.getParent();
 				this.node.removeFromParent();
+				Studio.getInstance().getQuestManager().getQuestItems().killID(node.getIntID());
 				if (tree!=null) {
 					tree.reload(parent);
 				}

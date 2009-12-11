@@ -218,9 +218,21 @@ public class QuestItemTree extends G2DTree
 					g2d_tree.reload(root);
 				}
 			}
+			else if (e.getSource() == delete) {
+				if (JOptionPane.showConfirmDialog(window, "确实要删除过滤器 \"" + root + "\" ！") == JOptionPane.YES_OPTION) {
+					G2DTreeNodeGroup<?> parent = (G2DTreeNodeGroup<?>)root.getParent();
+					root.removeFromParent();
+					Vector<QuestItemNode> nodes = G2DTree.getNodesSubClass(root, QuestItemNode.class);
+					for (QuestItemNode node : nodes) {
+						Studio.getInstance().getQuestManager().getQuestItems().killID(node.getIntID());
+					}
+					g2d_tree.reload(parent);
+				}
+			}
 			else {
 				super.actionPerformed(e);
 			}
+			
 		}
 	}
 	
