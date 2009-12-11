@@ -35,9 +35,9 @@ public class QuestItem extends RPGObject implements Cloneable
 	public String 			name;
 	
 //	--------------------------------------------------------------------------------------
-	/**该字段由文件存储*/
-	transient
-	public String			script;
+//	/**该字段由文件存储*/
+//	transient
+//	public String			script;
 	
 //	--------------------------------------------------------------------------------------
 	
@@ -87,18 +87,18 @@ public class QuestItem extends RPGObject implements Cloneable
 	
 	@Override
 	public void onReadComplete(RPGObject object, String xmlFile) {
-		File txt_file = new File(xmlFile+".script");
-		if (txt_file.exists()) {
-			this.script = CFile.readText(txt_file, "UTF-8");
-		} else {
-			this.script = "";
-		}
+//		File txt_file = new File(xmlFile+".script");
+//		if (txt_file.exists()) {
+//			this.script = CFile.readText(txt_file, "UTF-8");
+//		} else {
+//			this.script = "";
+//		}
 	}
 	
 	@Override
 	public void onWriteBefore(RPGObject object, String xmlFile) {
-		File txt_file = new File(xmlFile+".script");
-		CFile.writeText(txt_file, this.script, "UTF-8");
+//		File txt_file = new File(xmlFile+".script");
+//		CFile.writeText(txt_file, this.script, "UTF-8");
 	}
 	
 //	--------------------------------------------------------------------------------------
