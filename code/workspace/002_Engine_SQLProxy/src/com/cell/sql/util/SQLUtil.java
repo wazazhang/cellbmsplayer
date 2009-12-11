@@ -27,6 +27,9 @@ import com.cell.sql.SQLTableManager.SQLColumn;
 
 public class SQLUtil
 {
+	final static private byte[] ZERO_DATA = new byte[0];
+	final static private String ZERO_TEXT = "";
+	
 	/**
 	 * 将一个struct编码成Blob
 	 * @param struct
@@ -36,6 +39,9 @@ public class SQLUtil
 	 */
 	public static byte[] blobToBin(SQLStructBLOB struct) throws Exception
 	{
+		if (struct == null) {
+			return ZERO_DATA;
+		}
 		ByteArrayOutputStream	baos	= new ByteArrayOutputStream(1024);
 		ObjectOutputStream		oos		= new ObjectOutputStream(baos);
 		try{
@@ -78,6 +84,9 @@ public class SQLUtil
 	 */
 	public static String clobToString(SQLStructCLOB struct) throws Exception
 	{
+		if (struct == null) {
+			return ZERO_TEXT;
+		}
 		StringWriter writer = new StringWriter(512);
 		try{
 			struct.encode(writer);
@@ -98,6 +107,9 @@ public class SQLUtil
 	 */
 	public static SQLStructCLOB stringToClob(String data, Class<?> clazz) throws Exception
 	{
+		if (data == null || data.length() == 0) {
+			return null;
+		}
 		StringReader	reader	= new StringReader(data);
 		try{
 			SQLStructCLOB	ret		= (SQLStructCLOB)clazz.newInstance();
@@ -121,7 +133,7 @@ public class SQLUtil
 	public static String xmlToString(SQLStructXML struct) throws Exception
 	{
 		if (struct == null) {
-			return "";
+			return ZERO_TEXT;
 		}
 		StringWriter 		sw	= new StringWriter(1024);
 		ObjectOutputStream	oos	= SQMTypeManager.getTypeComparer().getXMLOutputStream(sw);
