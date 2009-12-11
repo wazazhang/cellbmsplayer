@@ -216,7 +216,7 @@ public class SceneImmutable extends SceneSprite implements SceneUnitTag<Immutabl
 								0, getSprite().getVisibleBotton() + 1,
 								Drawing.TEXT_ANCHOR_HCENTER | Drawing.TEXT_ANCHOR_TOP);
 					} // 当鼠标放到该精灵上
-					else if (isCatchedMouse()) {
+					else if (isPickedMouse()) {
 						drawTouchRange(g);
 						if (editor.isToolSelect()) {
 							g.setColor(Color.GREEN);
