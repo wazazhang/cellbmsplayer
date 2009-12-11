@@ -21,4 +21,49 @@ public enum Comparison
 	public String toString() {
 		return text;
 	}
+	
+	public boolean compare(Object src, Object dst)
+	{
+		if (src == null || dst == null) {
+			switch (this) {
+			case EQUAL:
+				return dst == src;
+			case NOT_EQUAL:
+				return dst != src;
+			default:
+				return false;
+			}
+		}
+		if (src instanceof Number && dst instanceof Number) {
+			Double src_n = ((Number)src).doubleValue();
+			Double dst_n = ((Number)dst).doubleValue();
+			switch (this) {
+			case GREATER_THAN:	
+				return src_n > dst_n;
+			case LESSER_THAN:	
+				return src_n < dst_n;
+			case EQUAL_OR_GREATER_THAN:
+				return src_n >= dst_n;
+			case EQUAL_OR_LESSER_THAN:
+				return src_n <= dst_n;
+			case EQUAL:
+				return src_n == dst_n;
+			case NOT_EQUAL:
+				return src_n != dst_n;
+			default:			
+				return false;
+			}
+		} 
+		else {
+			switch (this) {
+			case EQUAL:		
+				return src.equals(dst);
+			case NOT_EQUAL:
+				return !src.equals(dst);
+			default:
+				return false;
+			}
+		}
+	}
+	
 }

@@ -682,7 +682,7 @@ public abstract class SQLTableManager<K, R extends SQLTableRow<K>>
 		return vresult;
 	}
 	
-	private ValidateResult validateAndAutoFix(Connection conn) throws SQLException
+	ValidateResult validateAndAutoFix(Connection conn) throws SQLException
 	{
 		String sql = "SELECT * FROM " + table_name + " LIMIT 0;";
 
@@ -764,7 +764,7 @@ public abstract class SQLTableManager<K, R extends SQLTableRow<K>>
 	 * -2 : type not equal<br>
 	 * @throws SQLException
 	 */
-	private static int indexOfSQLColumn(ResultSetMetaData metadata, SQLColumn c) throws SQLException
+	static int indexOfSQLColumn(ResultSetMetaData metadata, SQLColumn c) throws SQLException
 	{
 		String	tname	= c.name;
 		SQLType	ttype	= c.anno.type();
@@ -822,7 +822,7 @@ public abstract class SQLTableManager<K, R extends SQLTableRow<K>>
 	 * @throws IllegalArgumentException
 	 * @throws IllegalAccessException
 	 */
-	static private void getSQLColumns(
+	static void getSQLColumns(
 			Class<?>				gclass,
 			ArrayList<SQLColumn> 	full_columns_list, 
 			Stack<Field> 			fields_stack
@@ -918,90 +918,6 @@ public abstract class SQLTableManager<K, R extends SQLTableRow<K>>
 		sql += ");";
 
 		return sql;
-	}
-	
-//	----------------------------------------------------------------------------------------------------------------------------------------------------
-	
-	public static class SQLColumn implements ICompare<SQLColumn, SQLColumn>
-	{
-		/** 在数据库中，该列的描述 */
-		final public SQLField 				anno;
-		
-		/** 该字段在数据库中的名字 */
-		final public String					name;
-		
-		/** 该字段在数据库中的位置 */
-		private int index;
-		
-		final public ArrayList<Field> 		fields;
-		final public Field					leaf_field;
-		
-		
-		public SQLColumn(SQLField anno, Stack<Field> fields_stack)
-		{
-			this.anno		= anno;
-			this.fields 	= new ArrayList<Field>(fields_stack);
-			this.leaf_field	= this.fields.get(fields.size()-1);
-			
-			String name = fields.get(0).getName();
-			for (int i=1; i<fields.size(); i++) {
-				name += "__" + fields.get(i).getName();
-			}
-			this.name		= name;
-		}
-
-		@Override
-		public String toString() {
-			return getClass().getSimpleName() + " : " + name;
-		}
-		
-		public int compare(SQLColumn a, SQLColumn b) {
-			return b.index - a.index;
-		}
-		
-		private void setIndex(int i){
-			index = i;
-		}
-		
-		private SQLFieldGroup getLeafTable(SQLFieldGroup table) throws Exception
-		{
-			for (int i=1; i<fields.size(); i++) {
-				table = (SQLFieldGroup)(table.getField(fields.get(i-1)));
-			}
-			return table;
-		}
-		
-		public Object getObject(SQLFieldGroup table) throws Exception
-		{
-			table = getLeafTable(table);
-			Object java_object = table.getField(leaf_field);
-			try{
-				return SQMTypeManager.getTypeComparer().toSQLObject(
-						anno.type(), 
-						leaf_field.getType(),
-						java_object);
-			} catch (Exception err) {
-				log.error("getObject Column field \"" + leaf_field.getName() + "\" error : " + err.getMessage());
-				throw err;
-			}
-		}
-		
-		public void setObject(SQLFieldGroup table, Object data) throws Exception
-		{
-			if (data != null) {
-				table = getLeafTable(table);
-				try{
-					table.setField(leaf_field, 
-							SQMTypeManager.getTypeComparer().toJavaObject(
-									anno.type(),
-									leaf_field.getType(),
-									data));
-				} catch (Exception err) {
-					log.error("setObject Column field \"" + leaf_field.getName() + "\" error : " + err.getMessage());
-					throw err;
-				}
-			}
-		}
 	}
 
 }

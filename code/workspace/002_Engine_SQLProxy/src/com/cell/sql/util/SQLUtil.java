@@ -17,13 +17,13 @@ import com.cell.CUtil;
 import com.cell.io.TextDeserialize;
 import com.cell.io.TextSerialize;
 import com.cell.reflect.Parser;
+import com.cell.sql.SQLColumn;
 import com.cell.sql.SQLFieldGroup;
 import com.cell.sql.SQLStructBLOB;
 import com.cell.sql.SQLStructCLOB;
 import com.cell.sql.SQLStructXML;
 import com.cell.sql.SQLTableManager;
 import com.cell.sql.SQMTypeManager;
-import com.cell.sql.SQLTableManager.SQLColumn;
 
 public class SQLUtil
 {
@@ -210,7 +210,19 @@ public class SQLUtil
 		return SQLTableManager.getSQLColumns(clazz);
 	}
 
-	
+	public static HashMap<String, SQLColumn> getSQLColumnsMap(Class<? extends SQLFieldGroup> clazz)
+	{
+		SQLColumn[] columns = SQLTableManager.getSQLColumns(clazz);
+		
+		HashMap<String, SQLColumn> ret = new HashMap<String, SQLColumn>(columns.length);
+		
+		for (SQLColumn c : columns) {
+			ret.put(c.name, c);
+		}
+		
+		return ret;
+	}
+
 	
 	
 }
