@@ -29,5 +29,5 @@ public @interface SQLTable
 	SQLType	primary_key_type();
 	
 	/** 数据库表其他约束  */
-	String	constraint();
+	String	constraint() default "";
 }

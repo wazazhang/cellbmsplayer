@@ -28,11 +28,11 @@ public @interface SQLField
 	 * 得到创建数据库时，该字段的约束，比如 NOT NULL
 	 * @return
 	 */
-	String	constraint();
+	String	constraint() default "";
 
 	/**
 	 * 该字段在创建数据库时的默认值
 	 * @return
 	 */
-	String	defaultValue();
+	String	defaultValue() default "";
 }
