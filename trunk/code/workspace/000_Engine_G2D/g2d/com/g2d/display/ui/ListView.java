@@ -2,6 +2,7 @@ package com.g2d.display.ui;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.util.Collection;
 import java.util.Vector;
 
 import com.g2d.Tools;
@@ -210,6 +211,10 @@ public class ListView extends UIComponent
 	public ListView(Item<?> items[]){
 		addItems(items);
 	}
+
+	public ListView(Collection<? extends Item<?>> items){
+		addItems(items);
+	}
 	
 	public void setViewMode(ViewMode mode) 
 	{
@@ -259,6 +264,11 @@ public class ListView extends UIComponent
 		}
 	}	
 	synchronized public void addItems(Item<?>[] items) {
+		for (Item<?> item : items) {
+			addItem(item);
+		}
+	}
+	synchronized public void addItems(Collection<? extends Item<?>> items) {
 		for (Item<?> item : items) {
 			addItem(item);
 		}
