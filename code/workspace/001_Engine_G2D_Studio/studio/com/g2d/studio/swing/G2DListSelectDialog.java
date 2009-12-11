@@ -1,6 +1,7 @@
 package com.g2d.studio.swing;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,7 +22,7 @@ public abstract class G2DListSelectDialog<T extends G2DListItem>  extends Abstra
 	
 	T object;
 	
-	public G2DListSelectDialog(Window owner, G2DList<T> list)
+	public G2DListSelectDialog(Component owner, G2DList<T> list)
 	{
 		super(owner);
 		super.setLayout(new BorderLayout());

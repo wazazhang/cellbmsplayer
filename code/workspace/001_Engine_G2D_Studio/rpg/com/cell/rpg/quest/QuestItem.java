@@ -8,6 +8,7 @@ import com.cell.io.CFile;
 import com.cell.rpg.RPGObject;
 import com.cell.rpg.ability.AbstractAbility;
 import com.cell.rpg.quest.script.QuestScript;
+import com.cell.rpg.struct.Comparison;
 import com.g2d.annotation.Property;
 
 /**
@@ -145,13 +146,13 @@ public class QuestItem extends RPGObject implements Cloneable
 	}
 	
 	/**
-	 * [标志] 依赖的任务条件
+	 * [标志] 依赖的任务奖励
 	 * @author WAZA
 	 */
-	@Property("[标志] 依赖的任务条件")
+	@Property("[标志] 依赖的任务奖励")
 	public static class TagQuestItem extends QuestItemAbility implements Tag
 	{
-		@Property("依赖的任务条件ID")
+		@Property("依赖的任务奖励ID")
 		public int				quest_item_index	= -1;
 		
 		@Override
@@ -166,7 +167,8 @@ public class QuestItem extends RPGObject implements Cloneable
 		public String			unit_filed_name;
 		@Property("单位字段值")
 		public String			unit_filed_value;
-		
+		@Property("比较器")
+		public Comparison		unit_field_comparison	= Comparison.EQUAL;
 		@Override
 		public boolean isMultiField() {
 			return true;

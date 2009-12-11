@@ -13,7 +13,7 @@ public class QuestSelectCellEdit extends G2DListSelectDialog<QuestNode> implemen
 {
 	JLabel cell_edit_component = new JLabel();
 	
-	public QuestSelectCellEdit(Window owner) {
+	public QuestSelectCellEdit(Component owner) {
 		super(owner, new QuestList());
 	}
 	
