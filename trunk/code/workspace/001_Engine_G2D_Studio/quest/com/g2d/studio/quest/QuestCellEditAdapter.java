@@ -10,6 +10,7 @@ import com.cell.rpg.quest.QuestItem;
 import com.cell.rpg.quest.QuestItem.QuestItemAbility;
 import com.cell.rpg.quest.QuestItem.TagItem;
 import com.cell.rpg.quest.QuestItem.TagPlayerField;
+import com.cell.rpg.quest.QuestItem.TagQuest;
 import com.cell.rpg.quest.QuestItem.TagQuestItem;
 import com.cell.rpg.quest.QuestItem.TagNPCField;
 import com.cell.rpg.quest.QuestItem.TagUnitField;
@@ -98,18 +99,62 @@ public class QuestCellEditAdapter {
 	}
 	
 
+
+//	-------------------------------------------------------------------------------------------------------------------------
+	
+	
 	
 //	-------------------------------------------------------------------------------------------------------------------------
+	
+	/**
+	 * 依赖已完成的任务
+	 * @author WAZA
+	 *
+	 */
+	public static class QuestItemTagQuest extends AbilityCellEditAdapter<TagQuest>
+	{
+
+		@Override
+		public Class<TagQuest> getType() {
+			return TagQuest.class;
+		}
+		
+		@Override
+		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner,
+			Object editObject, Object fieldValue, Field field) {
+			if (field.getName().equals("quest_id")) {
+				QuestSelectCellEdit edit = new QuestSelectCellEdit(owner);
+				edit.showDialog();
+				return edit;
+			}
+			return null;
+		}
+		
+		@Override
+		public Component getCellRender(ObjectPropertyPanel owner,
+			Object editObject, Object fieldValue, Field field,
+			DefaultTableCellRenderer src) {
+			if (field.getName().equals("quest_id")) {
+				try{
+					QuestNode node = Studio.getInstance().getQuestManager().getQuest((Integer)fieldValue);
+					src.setText(node.getName());
+					src.setIcon(node.getIcon(false));
+				}catch(Exception err){}
+			}
+			return null;
+		}
+	}
+	
 	
 	/**
 	 * 任务条件，道具
 	 * @author WAZA
 	 */
-	public static class QuestItemTagItem extends AbilityCellEditAdapter<QuestItemAbility>
+	public static class QuestItemTagItem extends AbilityCellEditAdapter<TagItem>
 	{
 		@Override
-		public Class<QuestItemAbility> getType() {
-			return QuestItemAbility.class;
+		public Class<TagItem> getType() {
+			return TagItem.class;
 		}
 		
 		@Override
@@ -165,6 +210,7 @@ public class QuestCellEditAdapter {
 				try{
 					QuestItemNode node = Studio.getInstance().getQuestManager().getQuestItems().get((Integer)fieldValue);
 					src.setText(node.getName());
+					src.setIcon(node.getIcon(false));
 				}catch(Exception err){}
 			}
 			return null;
