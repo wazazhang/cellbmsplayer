@@ -35,13 +35,14 @@ public class Quest extends RPGObject
 	transient
 	private String				discussion			= QuestScript.createExample();
 	
+	
 	/** 任务接受条件 */
 	public QuestCondition		accept_condition	= new QuestCondition();
-	
+	/**任务接受奖励*/
+	public QuestAward			accept_award		= new QuestAward();
 	/** 任务完成条件 */
 	public QuestCondition		complete_condition	= new QuestCondition();
-	
-	/** 任务奖励 */
+	/** 任务完成奖励 */
 	public QuestAward			complete_award		= new QuestAward();
 	
 //	----------------------------------------------------------------------------------------------------------------
@@ -73,6 +74,19 @@ public class Quest extends RPGObject
 			this.discussion = CFile.readText(txt_file, "UTF-8");
 		} else {
 			this.discussion = QuestScript.createExample();
+		}
+
+		if (accept_condition == null) {
+			accept_condition = new QuestCondition();
+		}
+		if (accept_award == null) {
+			accept_award = new QuestAward();
+		}
+		if (complete_condition == null) {
+			complete_condition = new QuestCondition();
+		}
+		if (complete_award == null) {
+			complete_award = new QuestAward();
 		}
 	}
 	

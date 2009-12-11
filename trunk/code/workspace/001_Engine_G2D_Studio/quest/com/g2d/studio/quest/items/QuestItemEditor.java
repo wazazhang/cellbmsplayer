@@ -26,8 +26,8 @@ public class QuestItemEditor extends ObjectViewer<QuestItemNode> implements RPGS
 
 	@Override
 	protected void appendPages(JTabbedPane table) {
-		script_panel	= new QuestItemScriptPanel(tobject.getData());
-		table.insertTab("脚本", null, script_panel, null, 0);
+//		script_panel	= new QuestItemScriptPanel(tobject.getData());
+//		table.insertTab("脚本", null, script_panel, null, 0);
 		table.setSelectedComponent(page_abilities);
 	}
 	
@@ -36,6 +36,6 @@ public class QuestItemEditor extends ObjectViewer<QuestItemNode> implements RPGS
 	
 	@Override
 	public void onWriteBefore(RPGObject object, String xmlFile) {
-		tobject.getData().script = script_panel.getScript();
+//		tobject.getData().script = script_panel.getScript();
 	}
 }

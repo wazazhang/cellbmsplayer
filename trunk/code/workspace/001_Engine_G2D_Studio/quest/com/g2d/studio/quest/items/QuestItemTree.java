@@ -32,6 +32,7 @@ public class QuestItemTree extends G2DTree
 	private Quest quest ;
 
 	final ConditionGroup group_trigger_condition;
+	final ConditionGroup group_trigger_award;
 	final ConditionGroup group_complete_condition;
 	final ConditionGroup group_complete_award;
 	
@@ -42,9 +43,11 @@ public class QuestItemTree extends G2DTree
 		super(new DefaultMutableTreeNode("任务条件"));
 		super.setDragEnabled(true);
 		group_trigger_condition		= new ConditionGroup("接受条件");
+		group_trigger_award			= new ConditionGroup("接受奖励");
 		group_complete_condition	= new ConditionGroup("完成条件");
 		group_complete_award		= new ConditionGroup("完成奖励");
 		getRoot().add(group_trigger_condition);
+		getRoot().add(group_trigger_award);
 		getRoot().add(group_complete_condition);
 		getRoot().add(group_complete_award);
 	}
@@ -52,11 +55,13 @@ public class QuestItemTree extends G2DTree
 	void setQuest(Quest quest)
 	{
 		this.quest = quest;
-		group_trigger_condition.removeAllChildren();
+		group_trigger_condition.removeAllChildren();		
+		group_trigger_award.removeAllChildren();
 		group_complete_condition.removeAllChildren();
 		group_complete_award.removeAllChildren();
 		
 		group_trigger_condition.loadList(quest.accept_condition);
+		group_trigger_award.loadList(quest.accept_award);
 		group_complete_condition.loadList(quest.complete_condition);
 		group_complete_award.loadList(quest.complete_award);
 		
@@ -66,6 +71,7 @@ public class QuestItemTree extends G2DTree
 	public void save() {
 		if (this.quest != null) {
 			group_trigger_condition.saveList(quest.accept_condition);
+			group_trigger_award.saveList(quest.accept_award);
 			group_complete_condition.saveList(quest.complete_condition);
 			group_complete_award.saveList(quest.complete_award);
 		}
@@ -85,19 +91,22 @@ public class QuestItemTree extends G2DTree
 			return false;
 		}
 		// 任务奖励不能作为条件
-		if (G2DTree.containsNode(group_complete_award, src_node)) {
-			if (dst != group_complete_award) {
-				if (!G2DTree.containsNode(group_complete_award, dst_node)) {
-					return false;
-				}
+		if (G2DTree.containsNode(group_trigger_award, src_node) ||
+			G2DTree.containsNode(group_complete_award, src_node)) {
+			if (dst == group_trigger_condition || G2DTree.containsNode(group_trigger_condition, dst_node)) {
+				return false;
+			}
+			if (dst == group_complete_condition || G2DTree.containsNode(group_complete_condition, dst_node)) {
+				return false;
 			}
 		}
 		// 任务条件不能作为奖励
-		if (!G2DTree.containsNode(group_complete_award, src_node)) {
-			if (dst == group_complete_award) {
+		if (G2DTree.containsNode(group_trigger_condition, src_node) ||
+			G2DTree.containsNode(group_complete_condition, src_node)) {
+			if (dst == group_trigger_award || G2DTree.containsNode(group_trigger_award, dst_node)) {
 				return false;
 			}
-			if (G2DTree.containsNode(group_complete_award, dst_node)) {
+			if (dst == group_complete_award || G2DTree.containsNode(group_complete_award, dst_node)) {
 				return false;
 			}
 		}
@@ -187,7 +196,9 @@ public class QuestItemTree extends G2DTree
 				super.remove(super.rename);
 			}
 			
-			is_award 			= group_complete_award == root || G2DTree.containsNode(group_complete_award, root);
+			is_award 			= 
+				group_trigger_award == root || G2DTree.containsNode(group_trigger_award, root) ||
+				group_complete_award == root || G2DTree.containsNode(group_complete_award, root);
 			name_type 			= (is_award?"奖励":"条件");
 
 			add_quest_item		= new JMenuItem("添加" + name_type);
