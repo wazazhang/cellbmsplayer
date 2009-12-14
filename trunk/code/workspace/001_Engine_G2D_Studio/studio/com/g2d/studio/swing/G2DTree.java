@@ -87,6 +87,12 @@ public class G2DTree extends JTree implements G2DDragDropListener<G2DTree>
 		return (DefaultMutableTreeNode)tree_model.getRoot();
 	}
 	
+	public void expandAll() {
+		for (int r=0; r<getRowCount(); r++) {
+			expandRow(r);
+		}
+	}
+	
 	public void reload() {
 		tree_model.reload();
 	}
