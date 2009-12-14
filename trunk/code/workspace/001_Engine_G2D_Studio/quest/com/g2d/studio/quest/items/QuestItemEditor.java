@@ -16,7 +16,9 @@ public class QuestItemEditor extends ObjectViewer<QuestItemNode> implements RPGS
 				new QuestItemTagQuest(),
 				new QuestItemTagItem(),
 				new QuestItemTagQuestItem(),
-				new QuestItemTagUnitField()
+				new QuestItemTagUnitField(),
+				new QuestItemAwardItem(),
+				new QuestItemAwardTeleport()
 		);
 		if (node.getData().getRPGSerializationListeners() == null ||
 			node.getData().getRPGSerializationListeners().contains(this)==false) {
