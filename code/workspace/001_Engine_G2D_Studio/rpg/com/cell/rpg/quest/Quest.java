@@ -35,7 +35,7 @@ public class Quest extends RPGObject
 	/**满足条件时自动提交*/
 	@Property("满足条件时自动提交")
 	public boolean				auto_commit			= false;
-	
+
 //	----------------------------------------------------------------------------------------------------------------
 //	quest
 
