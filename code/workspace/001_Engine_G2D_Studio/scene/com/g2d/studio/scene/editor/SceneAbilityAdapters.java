@@ -52,7 +52,7 @@ public class SceneAbilityAdapters
 				Object editObject, 
 				Object fieldValue, Field field) {
 			if (field.getName().equals("next_scene_id")){
-				return new SceneListCellEdit();
+				return new SceneListCellEdit(fieldValue);
 			}
 			else if (field.getName().equals("next_scene_object_id")){
 				ActorTransport tp = (ActorTransport)editObject;

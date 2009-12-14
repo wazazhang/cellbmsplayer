@@ -19,7 +19,7 @@ public class SceneListCellEdit extends JComboBox implements PropertyCellEdit<Str
 
 	ObjectPropertyPanel panel;
 	
-	public SceneListCellEdit() 
+	public SceneListCellEdit(Object scene_id) 
 	{
 		super(new Vector<SceneNode>(Studio.getInstance().getSceneManager().getAllScenes()));
 		this.addItemListener(new ItemListener() {
@@ -27,6 +27,14 @@ public class SceneListCellEdit extends JComboBox implements PropertyCellEdit<Str
 				panel.fireEditingStopped();
 			}
 		});
+		try{
+			if (scene_id!=null) {
+				SceneNode node = Studio.getInstance().getSceneManager().getSceneNode(scene_id+"");
+				if (node != null) {
+					setSelectedItem(node);
+				}
+			}
+		}catch(Exception err){}
 	}
 	
 	public Component getComponent(ObjectPropertyPanel panel) {		

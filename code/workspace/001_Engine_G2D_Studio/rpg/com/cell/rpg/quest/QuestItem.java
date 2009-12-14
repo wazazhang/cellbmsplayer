@@ -8,6 +8,7 @@ import com.cell.io.CFile;
 import com.cell.rpg.RPGObject;
 import com.cell.rpg.ability.AbstractAbility;
 import com.cell.rpg.quest.script.QuestScript;
+import com.cell.rpg.struct.BooleanCondition;
 import com.cell.rpg.struct.Comparison;
 import com.g2d.annotation.Property;
 
@@ -26,18 +27,13 @@ import com.g2d.annotation.Property;
  * 如果QuestItem是一个奖励，则由玩家选择一项<br>
  * @author WAZA
  */
-public class QuestItem extends RPGObject implements Cloneable
+public class QuestItem extends RPGObject
 {
 	final private Integer	type;
 
 	final private boolean	is_result;
 	
 	public String 			name;
-	
-//	--------------------------------------------------------------------------------------
-//	/**该字段由文件存储*/
-//	transient
-//	public String			script;
 	
 //	--------------------------------------------------------------------------------------
 	
@@ -70,6 +66,7 @@ public class QuestItem extends RPGObject implements Cloneable
 		if (is_result) {
 			return new Class<?>[]{
 					AwardItem.class,
+					AwardTeleport.class,
 				};
 		} else {
 			return new Class<?>[]{
@@ -78,28 +75,14 @@ public class QuestItem extends RPGObject implements Cloneable
 					TagQuestItem.class,
 					TagPlayerField.class,
 					TagNPCField.class,
+					TagPlayerPetField.class,
+					TagPlayerTeamField.class,
 				};
 		}
 		
 	}
 	
 //	--------------------------------------------------------------------------------------
-	
-	@Override
-	public void onReadComplete(RPGObject object, String xmlFile) {
-//		File txt_file = new File(xmlFile+".script");
-//		if (txt_file.exists()) {
-//			this.script = CFile.readText(txt_file, "UTF-8");
-//		} else {
-//			this.script = "";
-//		}
-	}
-	
-	@Override
-	public void onWriteBefore(RPGObject object, String xmlFile) {
-//		File txt_file = new File(xmlFile+".script");
-//		CFile.writeText(txt_file, this.script, "UTF-8");
-	}
 	
 //	--------------------------------------------------------------------------------------
 	
@@ -108,14 +91,23 @@ public class QuestItem extends RPGObject implements Cloneable
 
 //	--------------------------------------------------------------------------------------
 
-	public static interface Tag{}
+	public static abstract class Tag extends QuestItemAbility
+	{
+		@Property("该标志的布尔条件")
+		public BooleanCondition	boolean_comparison = BooleanCondition.TRUE;
+		
+		@Override
+		public boolean isMultiField() {
+			return true;
+		}
+	}
 	
 	/**
 	 * [标志] 物品
 	 * @author WAZA
 	 */
 	@Property("[标志] 依赖的物品")
-	public static class TagItem extends QuestItemAbility implements Tag
+	final public static class TagItem extends Tag
 	{
 		@Property("物品-类型")
 		public int				titem_index			= -1;
@@ -123,10 +115,6 @@ public class QuestItem extends RPGObject implements Cloneable
 		public int				titem_count			= 1;
 		@Property("物品-是否消耗掉")
 		public boolean			is_expense			= true;
-		@Override
-		public boolean isMultiField() {
-			return true;
-		}
 	}
 	
 	/**
@@ -134,15 +122,10 @@ public class QuestItem extends RPGObject implements Cloneable
 	 * @author WAZA
 	 */
 	@Property("[标志] 依赖已完成的任务")
-	public static class TagQuest extends QuestItemAbility implements Tag
+	final public static class TagQuest extends Tag
 	{
-		@Property("依赖已完成的任务ID")
+		@Property("已完成的任务ID")
 		public int				quest_id	= -1;
-		
-		@Override
-		public boolean isMultiField() {
-			return true;
-		}
 	}
 	
 	/**
@@ -150,18 +133,13 @@ public class QuestItem extends RPGObject implements Cloneable
 	 * @author WAZA
 	 */
 	@Property("[标志] 依赖的任务奖励")
-	public static class TagQuestItem extends QuestItemAbility implements Tag
+	final public static class TagQuestItem extends Tag
 	{
 		@Property("依赖的任务奖励ID")
 		public int				quest_item_index	= -1;
-		
-		@Override
-		public boolean isMultiField() {
-			return true;
-		}
 	}
 
-	public static abstract class TagUnitField extends QuestItemAbility implements Tag
+	public static abstract class TagUnitField extends Tag
 	{
 		@Property("单位字段")
 		public String			unit_filed_name;
@@ -169,17 +147,13 @@ public class QuestItem extends RPGObject implements Cloneable
 		public String			unit_filed_value;
 		@Property("比较器")
 		public Comparison		unit_field_comparison	= Comparison.EQUAL;
-		@Override
-		public boolean isMultiField() {
-			return true;
-		}
 	}
 	
 	/**
 	 * [标志] 依赖的角色字段
 	 */
 	@Property("[标志] 依赖的主角字段")
-	public static class TagPlayerField extends TagUnitField implements Tag
+	final public static class TagPlayerField extends TagUnitField
 	{
 	}
 	
@@ -187,30 +161,64 @@ public class QuestItem extends RPGObject implements Cloneable
 	 * [标志] 依赖的角色字段
 	 */
 	@Property("[标志] 依赖的被触发单位字段")
-	public static class TagNPCField extends TagUnitField implements Tag
+	final public static class TagNPCField extends TagUnitField
 	{
 	}
 
-//	--------------------------------------------------------------------------------------
-	
-	public static interface Result{}
+	/**
+	 * [标志] 依赖的宠物字段
+	 */
+	@Property("[标志] 依赖的宠物字段")
+	final public static class TagPlayerPetField extends TagUnitField
+	{
+	}
 	
 	/**
-	 * [奖励] 物品
-	 * @author WAZA
+	 * [标志] 依赖的队伍
 	 */
-	@Property("[奖励] 奖励的物品")
-	public static class AwardItem extends QuestItemAbility implements Result
+	@Property("[标志] 依赖的队伍，每个成员都必须满足")
+	final public static class TagPlayerTeamField extends TagUnitField
 	{
-		@Property("物品-类型")
-		public int				titem_index			= -1;
-		@Property("物品-数量")
-		public int				titem_count			= 1;
-		
+		@Property("队伍人数")
+		public int				player_count	= 1;
+	}
+	
+//	--------------------------------------------------------------------------------------
+	
+	public static abstract class Result extends QuestItemAbility
+	{
 		@Override
 		public boolean isMultiField() {
 			return true;
 		}
 	}
 	
+	/**
+	 * [奖励] 物品
+	 * @author WAZA
+	 */
+	@Property("[奖励] 奖励的物品")
+	final public static class AwardItem extends Result
+	{
+		@Property("物品-类型")
+		public int				titem_index			= -1;
+		@Property("物品-数量")
+		public int				titem_count			= 1;
+		@Property("物品-得到道具后，自动使用掉")
+		public boolean			titem_auto_use		= false;
+	}
+	
+	/**
+	 * [奖励] 传送到某场景
+	 * @author WAZA
+	 */
+	@Property("[奖励] 传送到某场景")
+	final public static class AwardTeleport extends Result
+	{
+		@Property("场景ID")
+		public String			scene_id;
+		
+		@Property("场景内特定单位名字")
+		public String 			scene_object_id;
+	}
 }
