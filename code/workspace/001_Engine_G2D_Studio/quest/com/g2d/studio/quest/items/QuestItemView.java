@@ -64,6 +64,8 @@ public class QuestItemView extends JSplitPane implements TreeSelectionListener
 	void setQuest(Quest quest) 
 	{
 		tree.setQuest(quest);
+		tree.reload();
+		tree.expandAll();
 	}
 	
 	public void save() {

@@ -27,7 +27,15 @@ public class Quest extends RPGObject
 	/**任务类型*/
 	@Property("任务类型")
 	public QuestType			quest_type			= new QuestType();
-
+	
+	/**满足条件时自动接收*/
+	@Property("满足条件时自动接收")
+	public boolean				auto_accept			= false;
+	
+	/**满足条件时自动提交*/
+	@Property("满足条件时自动提交")
+	public boolean				auto_commit			= false;
+	
 //	----------------------------------------------------------------------------------------------------------------
 //	quest
 
