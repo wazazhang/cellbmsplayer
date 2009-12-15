@@ -29,7 +29,9 @@ public class ListEnumEdit<T extends Enum<T>> extends JComboBox implements Proper
 		this.type = cls;
 		this.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
-				panel.fireEditingStopped();
+				if (panel!=null) {
+					panel.fireEditingStopped();
+				}
 			}
 		});
 	}
