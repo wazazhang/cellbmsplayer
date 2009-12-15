@@ -7,6 +7,9 @@ import com.cell.CIO;
 import com.cell.io.CFile;
 import com.cell.rpg.RPGObject;
 import com.cell.rpg.ability.AbstractAbility;
+import com.cell.rpg.formula.AbstractValue;
+import com.cell.rpg.formula.Arithmetic;
+import com.cell.rpg.formula.ObjectProperty;
 import com.cell.rpg.quest.script.QuestScript;
 import com.cell.rpg.struct.BooleanCondition;
 import com.cell.rpg.struct.Comparison;
@@ -93,11 +96,18 @@ public class QuestItem extends RPGObject
 
 	public static abstract class Tag extends QuestItemAbility
 	{
-		@Property("该标志的布尔条件")
+		@Property("该标志的布尔条件(默认true)")
 		public BooleanCondition	boolean_comparison = BooleanCondition.TRUE;
-		
+
 		@Override
 		public boolean isMultiField() {
+			return true;
+		}
+		
+		public boolean getBooleanComparisonValue() {
+			if (boolean_comparison == BooleanCondition.FALSE) {
+				return false;
+			}
 			return true;
 		}
 	}
@@ -141,12 +151,21 @@ public class QuestItem extends RPGObject
 
 	public static abstract class TagUnitField extends Tag
 	{
+//		@Property("单位字段")
+		transient protected String	
+		unit_filed_name;
+//		@Property("单位字段值")
+		transient protected String	
+		unit_filed_value;
+		
 		@Property("单位字段")
-		public String			unit_filed_name;
-		@Property("单位字段值")
-		public String			unit_filed_value;
+		public ObjectProperty	unit_property;
+		
 		@Property("比较器")
 		public Comparison		unit_field_comparison	= Comparison.EQUAL;
+
+		@Property("条件值")
+		public AbstractValue	value;
 	}
 	
 	/**
@@ -168,7 +187,7 @@ public class QuestItem extends RPGObject
 	/**
 	 * [标志] 依赖的宠物字段
 	 */
-	@Property("[标志] 依赖的宠物字段")
+	@Property("[标志] 依赖的宠物字段，任意一个宠物满足即可")
 	final public static class TagPlayerPetField extends TagUnitField
 	{
 	}
