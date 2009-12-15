@@ -8,6 +8,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.TreeMap;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -26,6 +31,7 @@ import javax.swing.event.ListSelectionListener;
 import com.cell.CObject;
 import com.cell.rpg.formula.AbstractValue;
 import com.cell.rpg.formula.Arithmetic;
+import com.cell.rpg.formula.MathMethod;
 import com.cell.rpg.formula.ObjectProperty;
 import com.cell.rpg.formula.Value;
 import com.cell.rpg.formula.Arithmetic.Operator;
@@ -73,6 +79,7 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 						new ValueType(Value.class),
 						new ValueType(Arithmetic.class),
 						new ValueType(ObjectProperty.class),
+						new ValueType(MathMethod.class),
 				}
 		);
 		types.addItemListener(this);
@@ -180,6 +187,9 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 				}
 				else if (getKey().equals(ObjectProperty.class)) {
 					edit_comp = new PanelObjectProperty(value, columns);
+				}
+				else if (getKey().equals(MathMethod.class)) {
+					edit_comp = new PanelMathMethod(value, columns);
 				}
 			}
 			return edit_comp;
@@ -323,7 +333,97 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 	
 //	----------------------------------------------------------------------------------------------------------
 
+	static class PanelMathMethod extends JPanel implements ValueEditor, ItemListener, ActionListener
+	{
+		XLSColumns columns;
+		
+		MathMethodCellEdit methods = new MathMethodCellEdit();
+		
+		JPanel btn_group = new JPanel(new FlowLayout());
+
+		MathMethod mirror = new MathMethod();
+		
+		LinkedHashMap<JButton, AbstractValue> params_map = new LinkedHashMap<JButton, AbstractValue>();
+		
+		
+		public PanelMathMethod(AbstractValue value, XLSColumns columns) {
+			super(new BorderLayout());
+			this.columns = columns;
+			super.add(methods, BorderLayout.NORTH);
+			this.add(btn_group, BorderLayout.CENTER);
+			if (value instanceof MathMethod) {
+				MathMethod mm = (MathMethod)value;
+				methods.setSelectedItem(mm.getMethod());
+				setMethod(mm.getMethod());
+			} else {
+				setMethod(MathMethod.methods.values().iterator().next());
+			}
+			methods.addItemListener(this);
+		}
+		
+		void setMethod(Method method) 
+		{
+			for (JButton btn : params_map.keySet()) {
+				btn_group.remove(btn);
+			}
+			params_map.clear();
+			
+			if (method != null) {
+				mirror.setMethod(method);
+				for (Class<?> p : method.getParameterTypes()) {
+					JButton 		key		= new JButton();
+					AbstractValue 	value	= new Value(1);
+					key.addActionListener(this);
+					btn_group.add(key);
+					params_map.put(key, value);
+					key.setText(value+"");
+				}
+			}
+		}
+		
+		@Override
+		public AbstractValue onEditOK(AbstractValue src_value) {
+			mirror.parameters = params_map.values().toArray(new AbstractValue[params_map.size()]);
+			System.out.println(mirror.method_name);
+			for (AbstractValue v : mirror.parameters) {
+				System.out.println(v);
+			}
+			if (src_value instanceof MathMethod) {
+				((MathMethod) src_value).method_name	= mirror.method_name;
+				((MathMethod) src_value).parameters		= mirror.parameters;
+				return src_value;
+			} else {
+				return mirror;
+			}
+		}
+		
+		@Override
+		public void itemStateChanged(ItemEvent e) {
+			if (e.getSource() == methods) {
+				setMethod(methods.getValue());
+			}
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			Window owner = AbstractDialog.getTopWindow(this);
+			if (params_map.containsKey(e.getSource())) {
+				JButton			key		= (JButton)e.getSource();
+				AbstractValue	value	= params_map.get(key);
+				FormulaEdit		edit	= new FormulaEdit(owner, columns, value);
+				edit.setLocation(owner.getX()+20, owner.getY()+20);
+				edit.showDialog();
+				value = edit.getValue();
+				params_map.put(key, value);
+				key.setText(value+"");
+			}
+		}
+		
+	}
+	
 //	----------------------------------------------------------------------------------------------------------
+	
+	
 	
 }
 
