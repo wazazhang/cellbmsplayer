@@ -6,6 +6,8 @@ import java.lang.reflect.Field;
 
 import javax.swing.table.DefaultTableCellRenderer;
 
+import com.cell.rpg.formula.AbstractValue;
+import com.cell.rpg.formula.ObjectProperty;
 import com.cell.rpg.quest.QuestItem;
 import com.cell.rpg.quest.QuestItem.AwardItem;
 import com.cell.rpg.quest.QuestItem.AwardTeleport;
@@ -30,6 +32,7 @@ import com.g2d.studio.gameedit.XLSColumnSelectCellEdit;
 import com.g2d.studio.gameedit.template.XLSItem;
 import com.g2d.studio.quest.items.QuestItemNode;
 import com.g2d.studio.quest.items.QuestItemSelectCellEdit;
+import com.g2d.studio.rpg.FormulaEdit;
 import com.g2d.studio.rpg.AbilityPanel.AbilityCellEditAdapter;
 import com.g2d.studio.rpg.RPGObjectPanel.RPGObjectAdapter;
 import com.g2d.studio.scene.editor.SceneListCellEdit;
@@ -241,13 +244,18 @@ public class QuestCellEditAdapter {
 		@Override
 		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner,
 			Object editObject, Object fieldValue, Field field) {
-			if (field.getName().equals("unit_filed_name")) {
-				XLSColumns columns = unit_columns;
-				if (editObject instanceof TagPlayerField || 
-					editObject instanceof TagPlayerTeamField ) {
-					columns = player_columns;
-				}
+			XLSColumns columns = unit_columns;
+			if (editObject instanceof TagPlayerField || 
+				editObject instanceof TagPlayerTeamField ) {
+				columns = player_columns;
+			}
+			if (field.getName().equals("unit_property")) {
 				XLSColumnSelectCellEdit edit = new XLSColumnSelectCellEdit(columns);
+				return edit;
+			}
+			else if (field.getName().equals("value")) {
+				FormulaEdit edit = new FormulaEdit(owner, columns, (AbstractValue)fieldValue);
+				edit.showDialog();
 				return edit;
 			}
 			return null;
@@ -256,20 +264,33 @@ public class QuestCellEditAdapter {
 		@Override
 		public Component getCellRender(ObjectPropertyPanel owner, Object editObject,
 			Object fieldValue, Field field, DefaultTableCellRenderer src) {
-			if (field.getName().equals("unit_filed_name")) {
+			if (field.getName().equals("unit_property")) {
 				if (fieldValue!=null) {
 					XLSColumns columns = unit_columns;
 					if (editObject instanceof TagPlayerField || 
 						editObject instanceof TagPlayerTeamField ) {
 						columns = player_columns;
 					}
-					String desc = columns.getDesc(fieldValue.toString());
-					src.setText(desc + " (" + fieldValue + ")");
+					ObjectProperty value = (ObjectProperty)fieldValue;
+					String desc = columns.getDesc(value.filed_name);
+					src.setText(desc + " (" + value.filed_name + ")");
 				}
 			}
 			return null;
 		}
 
+		@Override
+		public Object getCellValue(Object editObject,
+				PropertyCellEdit<?> fieldEdit, Field field, Object fieldSrcValue) {
+			if (field.getName().equals("unit_property")) {
+				try{
+					XLSColumnSelectCellEdit edit = (XLSColumnSelectCellEdit)fieldEdit;
+					String field_name = edit.getValue();
+					return new ObjectProperty(field_name);
+				}catch(Exception err){}
+			}
+			return null;
+		}
 	}
 	
 
