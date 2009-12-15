@@ -224,6 +224,10 @@ public class ListView extends UIComponent
 	
 //	----------------------------------------------------------------------------------------------------------
 //	items
+
+	public ListViewPanel getPanel() {
+		return panel;
+	}
 	
 	public void selectItem(Item<?> item) {
 		selected_item = item;
