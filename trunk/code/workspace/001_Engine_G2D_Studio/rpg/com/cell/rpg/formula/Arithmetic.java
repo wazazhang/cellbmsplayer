@@ -5,7 +5,7 @@ import com.cell.sql.SQLFieldGroup;
 import com.cell.util.Pair;
 import com.g2d.annotation.Property;
 
-@Property("数学运算")
+@Property("数学-运算")
 public class Arithmetic extends AbstractValue
 {
 	@Property("被运算数")
@@ -16,14 +16,14 @@ public class Arithmetic extends AbstractValue
 	public Operator			op		= Operator.ADD;
 	
 	@Override
-	public double getValue() 
+	public Number getValue() 
 	{
 		if (op != null) {
 			switch(op) {
-			case ADD: return left.getValue() + right.getValue();
-			case SUB: return left.getValue() - right.getValue();
-			case MUL: return left.getValue() * right.getValue();
-			case DIV: return left.getValue() / right.getValue();
+			case ADD: return left.getValue().doubleValue() + right.getValue().doubleValue();
+			case SUB: return left.getValue().doubleValue() - right.getValue().doubleValue();
+			case MUL: return left.getValue().doubleValue() * right.getValue().doubleValue();
+			case DIV: return left.getValue().doubleValue() / right.getValue().doubleValue();
 			}
 		}
 		return 0;
@@ -42,6 +42,7 @@ public class Arithmetic extends AbstractValue
 		SUB("-"),
 		MUL("x"),
 		DIV("/"),
+		MOD("%"),
 		;
 
 		final private String text;
