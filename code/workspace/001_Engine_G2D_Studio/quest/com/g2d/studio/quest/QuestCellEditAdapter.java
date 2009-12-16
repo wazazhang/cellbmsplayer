@@ -12,14 +12,15 @@ import com.cell.rpg.quest.QuestItem;
 import com.cell.rpg.quest.QuestItem.AwardItem;
 import com.cell.rpg.quest.QuestItem.AwardTeleport;
 import com.cell.rpg.quest.QuestItem.QuestItemAbility;
+import com.cell.rpg.quest.QuestItem.Tag;
 import com.cell.rpg.quest.QuestItem.TagItem;
-import com.cell.rpg.quest.QuestItem.TagPlayerField;
-import com.cell.rpg.quest.QuestItem.TagPlayerPetField;
-import com.cell.rpg.quest.QuestItem.TagPlayerTeamField;
+//import com.cell.rpg.quest.QuestItem.TagPlayerField;
+//import com.cell.rpg.quest.QuestItem.TagPlayerPetField;
+//import com.cell.rpg.quest.QuestItem.TagPlayerTeamField;
 import com.cell.rpg.quest.QuestItem.TagQuest;
 import com.cell.rpg.quest.QuestItem.TagQuestItem;
-import com.cell.rpg.quest.QuestItem.TagNPCField;
-import com.cell.rpg.quest.QuestItem.TagUnitField;
+//import com.cell.rpg.quest.QuestItem.TagNPCField;
+import com.cell.rpg.quest.QuestItem.TagValueComparison;
 import com.cell.rpg.quest.ability.QuestAccepter;
 import com.cell.rpg.quest.ability.QuestPublisher;
 import com.cell.rpg.xls.XLSColumns;
@@ -232,68 +233,33 @@ public class QuestCellEditAdapter {
 	 * 任务条件，依赖的角色字段
 	 * @author WAZA
 	 */
-	public static class QuestItemTagUnitField extends AbilityCellEditAdapter<TagUnitField>
+	public static class QuestItemAbstractValue extends AbilityCellEditAdapter<Tag>
 	{
-		XLSColumns player_columns	= Studio.getInstance().getObjectManager().getPlayerXLSColumns();
-		XLSColumns unit_columns		= Studio.getInstance().getObjectManager().getUnitXLSColumns();
 		@Override
-		public Class<TagUnitField> getType() {
-			return TagUnitField.class;
+		public Class<Tag> getType() {
+			return Tag.class;
 		}
 		
 		@Override
 		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner,
 			Object editObject, Object fieldValue, Field field) {
-			XLSColumns columns = unit_columns;
-			if (editObject instanceof TagPlayerField || 
-				editObject instanceof TagPlayerTeamField ) {
-				columns = player_columns;
-			}
-			if (field.getName().equals("unit_property")) {
-				XLSColumnSelectCellEdit edit = new XLSColumnSelectCellEdit(columns);
+			if (AbstractValue.class.equals(field.getType())) {
+				FormulaEdit edit = new FormulaEdit(owner, (AbstractValue)fieldValue);
+				edit.showDialog();
 				return edit;
 			}
-			else if (field.getName().equals("value")) {
-				FormulaEdit edit = new FormulaEdit(owner, columns, (AbstractValue)fieldValue);
+			if (AbstractValue.class.isAssignableFrom(field.getType())) {
+				FormulaEdit edit = new FormulaEdit(owner, 
+						new Class<?>[]{field.getType()}, 
+						(AbstractValue)fieldValue);
 				edit.showDialog();
 				return edit;
 			}
 			return null;
 		}
-
-		@Override
-		public Component getCellRender(ObjectPropertyPanel owner, Object editObject,
-			Object fieldValue, Field field, DefaultTableCellRenderer src) {
-			if (field.getName().equals("unit_property")) {
-				if (fieldValue!=null) {
-					XLSColumns columns = unit_columns;
-					if (editObject instanceof TagPlayerField || 
-						editObject instanceof TagPlayerTeamField ) {
-						columns = player_columns;
-					}
-					ObjectProperty value = (ObjectProperty)fieldValue;
-					String desc = columns.getDesc(value.filed_name);
-					src.setText(desc + " (" + value.filed_name + ")");
-				}
-			}
-			return null;
-		}
-
-		@Override
-		public Object getCellValue(Object editObject,
-				PropertyCellEdit<?> fieldEdit, Field field, Object fieldSrcValue) {
-			if (field.getName().equals("unit_property")) {
-				try{
-					XLSColumnSelectCellEdit edit = (XLSColumnSelectCellEdit)fieldEdit;
-					String field_name = edit.getValue();
-					return new ObjectProperty(field_name);
-				}catch(Exception err){}
-			}
-			return null;
-		}
 	}
 	
-
+	
 //	-------------------------------------------------------------------------------------------------------------------------
 	
 	

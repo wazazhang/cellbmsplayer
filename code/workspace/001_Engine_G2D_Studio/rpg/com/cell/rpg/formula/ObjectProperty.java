@@ -9,7 +9,7 @@ import com.cell.sql.util.SQLUtil;
 import com.g2d.annotation.Property;
 
 @Property("单位属性")
-public class ObjectProperty extends AbstractValue
+public abstract class ObjectProperty extends AbstractValue
 {
 	@Property("单位字段")
 	public String						filed_name;
