@@ -8,7 +8,7 @@ import com.cell.sql.SQLTableManager;
 import com.cell.sql.util.SQLUtil;
 import com.g2d.annotation.Property;
 
-@Property("单位属性")
+@Property("单位-属性")
 public abstract class ObjectProperty extends AbstractValue
 {
 	@Property("单位字段")
@@ -23,7 +23,7 @@ public abstract class ObjectProperty extends AbstractValue
 	}
 	
 	@Override
-	public double getValue() {
+	public Number getValue() {
 		try{
 			if (column != null) {
 				Object obj = column.getObject(object);

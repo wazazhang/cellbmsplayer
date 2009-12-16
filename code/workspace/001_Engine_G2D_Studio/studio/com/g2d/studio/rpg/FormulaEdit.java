@@ -12,7 +12,9 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -22,6 +24,7 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
+import javax.swing.SpinnerDateModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -30,23 +33,32 @@ import javax.swing.event.ListSelectionListener;
 
 import com.cell.CIO;
 import com.cell.CObject;
+import com.cell.rpg.formula.AbstractMethod;
 import com.cell.rpg.formula.AbstractValue;
 import com.cell.rpg.formula.Arithmetic;
 import com.cell.rpg.formula.MathMethod;
 import com.cell.rpg.formula.ObjectProperty;
+import com.cell.rpg.formula.SystemMethod;
+import com.cell.rpg.formula.TimeDurationValue;
+import com.cell.rpg.formula.TimeValue;
 import com.cell.rpg.formula.Value;
 import com.cell.rpg.formula.Arithmetic.Operator;
+import com.cell.rpg.quest.QuestStateField;
+import com.cell.rpg.quest.QuestStateProperty;
 import com.cell.rpg.quest.TriggerUnitProperty;
 import com.cell.rpg.quest.TriggerUnitType;
 import com.cell.rpg.xls.XLSColumns;
 import com.cell.util.Pair;
 import com.cell.util.Properties;
 import com.g2d.annotation.Property;
+import com.g2d.display.ui.ComboBox;
 import com.g2d.editor.property.ListEnumEdit;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.XLSColumnSelectCellEdit;
+import com.g2d.studio.quest.QuestSelectCellEdit;
+import com.g2d.studio.quest.QuestSelectCellEditComboBox;
 import com.g2d.util.AbstractDialog;
 
 public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<AbstractValue>, ItemListener, ActionListener
@@ -69,8 +81,12 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 		this(owner, new Class<?>[]{
 				Value.class,
 				TriggerUnitProperty.class,
+				QuestStateProperty.class,
 				Arithmetic.class,
 				MathMethod.class,
+				SystemMethod.class,
+				TimeValue.class,
+				TimeDurationValue.class,
 		}, src);
 	}
 	
@@ -193,14 +209,26 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 				if (getKey().equals(Value.class)) {
 					edit_comp = new PanelValue(value);
 				}
+				else if (getKey().equals(TriggerUnitProperty.class)) {
+					edit_comp = new PanelUnitProperty(value);
+				}
+				else if (getKey().equals(QuestStateProperty.class)) {
+					edit_comp = new PanelQuestState(value);
+				}
 				else if (getKey().equals(Arithmetic.class)) {
 					edit_comp = new PanelArithmetic(value);
 				}
-				else if (getKey().equals(TriggerUnitProperty.class)) {
-					edit_comp = new PanelObjectProperty(value);
-				}
 				else if (getKey().equals(MathMethod.class)) {
-					edit_comp = new PanelMathMethod(value);
+					edit_comp = new PanelAbstractMethod(value, MathMethod.getMethods(), MathMethod.class);
+				}
+				else if (getKey().equals(SystemMethod.class)) {
+					edit_comp = new PanelAbstractMethod(value, SystemMethod.getMethods(), SystemMethod.class);
+				}
+				else if (getKey().equals(TimeValue.class)) {
+					edit_comp = new PanelTimeValue(value);
+				}
+				else if (getKey().equals(TimeDurationValue.class)) {
+					edit_comp = new PanelTimeDurationValue(value);
 				}
 			}
 			return edit_comp;
@@ -315,14 +343,14 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 
 //	----------------------------------------------------------------------------------------------------------
 
-	static class PanelObjectProperty extends JPanel implements ValueEditor, ItemListener
+	static class PanelUnitProperty extends JPanel implements ValueEditor, ItemListener
 	{		
 		ListEnumEdit<TriggerUnitType> combo_unit_type = new ListEnumEdit<TriggerUnitType>(TriggerUnitType.class);
 		
 		XLSColumnSelectCellEdit combo_columns_player;
 		XLSColumnSelectCellEdit combo_columns_unit;
 		
-		public PanelObjectProperty(AbstractValue value) {
+		public PanelUnitProperty(AbstractValue value) {
 			super(new BorderLayout());
 		
 			combo_columns_player	= new XLSColumnSelectCellEdit(Studio.getInstance().getObjectManager().getPlayerXLSColumns());
@@ -390,23 +418,34 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 	
 //	----------------------------------------------------------------------------------------------------------
 
-	static class PanelMathMethod extends JPanel implements ValueEditor, ItemListener, ActionListener
+	//	----------------------------------------------------------------------------------------------------------
+	
+	static class PanelAbstractMethod extends JPanel implements ValueEditor, ItemListener, ActionListener
 	{
-		Method				mirror_method;
-		AbstractValue[]		mirror_parameters;
+		final Class<? extends AbstractMethod> class_type;
+		final Map<String, Method> methods_map;
 		
-		MathMethodCellEdit			combo_methods	= new MathMethodCellEdit();
-
+		Method						mirror_method;
+		AbstractValue[]				mirror_parameters;
+		
+		MathMethodCellEdit			combo_methods;
+	
 		JPanel 						btn_group 		= new JPanel(new FlowLayout());
 		ArrayList<JButton> 			params_key		= new ArrayList<JButton>();
 		ArrayList<AbstractValue> 	params_value	= new ArrayList<AbstractValue>();
 		
-		public PanelMathMethod(AbstractValue value) {
+		public PanelAbstractMethod(
+				AbstractValue value, 
+				Map<String, Method> methods_map,
+				Class<? extends AbstractMethod> type) {
 			super(new BorderLayout());
+			this.methods_map 	= methods_map;
+			this.class_type 	= type;
+			this.combo_methods	= new MathMethodCellEdit(methods_map.values());
 			super.add(combo_methods, BorderLayout.NORTH);
 			this.add(btn_group, BorderLayout.CENTER);
-			if (value instanceof MathMethod) {
-				MathMethod mm = (MathMethod)value;
+			if (value instanceof AbstractMethod) {
+				AbstractMethod mm = (AbstractMethod)value;
 				mirror_method		= mm.getMethod();
 				mirror_parameters	= CIO.cloneObject(mm.parameters);
 			}
@@ -420,7 +459,7 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 			try
 			{
 				if (mt == null) {
-					mirror_method = MathMethod.getMethods().values().iterator().next();
+					mirror_method = methods_map.values().iterator().next();
 				} else {
 					mirror_method = mt;
 				}
@@ -467,15 +506,19 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 			for (AbstractValue v : mirror_parameters) {
 				System.out.println(v);
 			}
-			if (src_value instanceof MathMethod) {
-				((MathMethod) src_value).method_name	= mirror_method.getName();
-				((MathMethod) src_value).parameters		= mirror_parameters;
-				return src_value;
+			AbstractMethod mm = null;
+			if (src_value instanceof AbstractMethod) {
+				mm = (AbstractMethod)src_value;
 			} else {
-				return new MathMethod(
-						mirror_method.getName(),
-						mirror_parameters);
+				try {
+					mm = class_type.newInstance();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
+			mm.method_name	= mirror_method.getName();
+			mm.parameters	= mirror_parameters;
+			return mm;
 		}
 		
 		@Override
@@ -502,9 +545,106 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 		}
 		
 	}
-	
+
 //	----------------------------------------------------------------------------------------------------------
 	
+
+	static class PanelQuestState extends JPanel implements ValueEditor
+	{
+		ListEnumEdit<QuestStateField> field = new ListEnumEdit<QuestStateField>(QuestStateField.class);
+		
+		QuestSelectCellEditComboBox quest = new QuestSelectCellEditComboBox();
+		
+		
+		public PanelQuestState(AbstractValue value)
+		{
+			super.setLayout(new BorderLayout());
+			super.add(quest, BorderLayout.NORTH);
+			super.add(field, BorderLayout.SOUTH);
+			if (value instanceof QuestStateProperty) {
+				field.setSelectedItem(((QuestStateProperty) value).trigger_unit_field);
+				quest.setValue(((QuestStateProperty) value).quest_id);
+			} else {
+				field.setSelectedItem(QuestStateField.ACCEPT_TIME_MS);
+			}
+		}
+		
+		@Override
+		public AbstractValue onEditOK(AbstractValue src_value) {
+			if (src_value instanceof QuestStateProperty) {
+				((QuestStateProperty) src_value).quest_id			= quest.getValue();
+				((QuestStateProperty) src_value).trigger_unit_field = field.getValue();
+				return src_value;
+			} else {
+				QuestStateProperty ret = new QuestStateProperty(
+						quest.getValue(),
+						field.getValue());
+				return ret;
+			}
+		}
+	}
+
+//	----------------------------------------------------------------------------------------------------------
+	static class PanelTimeValue extends JPanel implements ValueEditor
+	{
+		SpinnerDateModel 	model	= new SpinnerDateModel();
+		JSpinner 			spinner	= new JSpinner(model);
+		
+		public PanelTimeValue(AbstractValue value)
+		{
+			super.setLayout(new BorderLayout());
+			super.add(spinner, BorderLayout.NORTH);
+			if (value instanceof TimeValue) {
+				spinner.setValue(((TimeValue) value).getDate());
+			}
+		}
+		
+		@Override
+		public AbstractValue onEditOK(AbstractValue src_value) {
+			if (src_value instanceof TimeValue) {
+				((TimeValue) src_value).setDate(model.getDate());
+				return src_value;
+			} else {
+				return new TimeValue(model.getDate().getTime());
+			}
+		}
+	}
+//	----------------------------------------------------------------------------------------------------------
+
+	static class PanelTimeDurationValue extends JPanel implements ValueEditor
+	{
+		ListEnumEdit<TimeUnit> time_unit = new ListEnumEdit<TimeUnit>(TimeUnit.class);
+		
+		SpinnerNumberModel	model	= new SpinnerNumberModel();
+		JSpinner 			spinner	= new JSpinner(model);
+		
+		public PanelTimeDurationValue(AbstractValue value)
+		{
+			super.setLayout(new BorderLayout());
+			super.add(time_unit, BorderLayout.NORTH);
+			super.add(spinner, BorderLayout.SOUTH);
+			if (value instanceof TimeDurationValue) {
+				time_unit.setSelectedItem(((TimeDurationValue) value).time_unit);
+				model.setValue(((TimeDurationValue) value).duration);
+			} else {
+				time_unit.setSelectedItem(TimeUnit.MINUTES);
+			}
+		}
+		
+		@Override
+		public AbstractValue onEditOK(AbstractValue srcValue) {
+			if (srcValue instanceof TimeDurationValue) {
+				((TimeDurationValue) srcValue).duration = (Integer)model.getValue();
+				((TimeDurationValue) srcValue).time_unit = time_unit.getValue();
+				return srcValue;
+			} else {
+				return new TimeDurationValue(
+						(Integer)model.getValue(),
+						time_unit.getValue()
+				);
+			}
+		}
+	}
 	
 	
 }

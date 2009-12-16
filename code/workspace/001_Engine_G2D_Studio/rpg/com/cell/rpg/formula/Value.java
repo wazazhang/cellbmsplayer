@@ -15,7 +15,7 @@ public class Value extends AbstractValue
 	}
 	
 	@Override
-	public double getValue() {
+	public Number getValue() {
 		return value;
 	}
 }

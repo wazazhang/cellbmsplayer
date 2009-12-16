@@ -230,6 +230,44 @@ public class QuestCellEditAdapter {
 		}
 	}
 	
+//	/**
+//	 * 任务条件，依赖的任务条件
+//	 * @author WAZA
+//	 */
+//	public static class QuestItemTagQuestStateComparison extends AbilityCellEditAdapter<TagQuestStateComparison>
+//	{	
+//		@Override
+//		public Class<TagQuestStateComparison> getType() {
+//			return TagQuestStateComparison.class;
+//		}
+//		
+//		@Override
+//		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner,
+//			Object editObject, Object fieldValue, Field field) {
+//			if (field.getName().equals("quest_id")) {
+//				QuestSelectCellEdit edit = new QuestSelectCellEdit(AbstractDialog.getTopWindow(owner));
+//				edit.showDialog();
+//				return edit;
+//			}
+//			return null;
+//		}
+//		
+//		@Override
+//		public Component getCellRender(ObjectPropertyPanel owner, Object editObject,
+//			Object fieldValue, Field field, DefaultTableCellRenderer src) {
+//			if (field.getName().equals("quest_id") && fieldValue!=null) {
+//				Integer quest_id = (Integer)fieldValue;
+//				QuestNode node = Studio.getInstance().getQuestManager().getQuest(quest_id);
+//				if (node != null) {
+//					src.setText(node.toString());
+//					src.setIcon(node.getIcon(false));
+//					return src;
+//				}
+//			}
+//			return null;
+//		}
+//	}
+	
 //	-------------------------------------------------------------------------------------------------------------------------
 	
 	

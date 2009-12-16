@@ -128,7 +128,7 @@ public class QuestItem extends RPGObject
 		@Property("物品-类型")
 		public int				titem_index			= -1;
 		@Property("物品-数量")
-		public int				titem_count			= 1;
+		public AbstractValue	titem_count			= new Value(1);
 		@Property("物品-是否消耗掉")
 		public boolean			is_expense			= true;
 	}

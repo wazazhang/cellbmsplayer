@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public abstract class AbstractValue implements Serializable
 {
-	abstract public double getValue();
+	abstract public Number getValue();
 	
 	@Override
 	public String toString() {

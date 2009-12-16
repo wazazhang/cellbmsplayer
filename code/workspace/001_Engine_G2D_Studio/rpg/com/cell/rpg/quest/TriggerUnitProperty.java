@@ -3,7 +3,7 @@ package com.cell.rpg.quest;
 import com.cell.rpg.formula.ObjectProperty;
 import com.g2d.annotation.Property;
 
-@Property("单位属性")
+@Property("单位-属性")
 public class TriggerUnitProperty extends ObjectProperty
 {
 	@Property("单位类型")

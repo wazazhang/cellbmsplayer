@@ -3,6 +3,7 @@ package com.g2d.studio.rpg;
 import java.awt.Component;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Collection;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComboBox;
@@ -19,13 +20,13 @@ import com.g2d.editor.property.ObjectPropertyPanel.CellEditAdapter;
 
 public class MathMethodCellEdit extends JComboBox implements PropertyCellEdit<Method>
 {
-	public MathMethodCellEdit() {
-		super(MathMethod.getMethods().values().toArray(new Method[MathMethod.getMethods().size()]));
+	public MathMethodCellEdit(Collection<Method> methods) {
+		super(methods.toArray(new Method[methods.size()]));
 		setRenderer(new CellRender());
 	}
 	
-	public MathMethodCellEdit(String method_name) {
-		this();
+	public MathMethodCellEdit(Collection<Method> methods, String method_name) {
+		this(methods);
 		Method mt = MathMethod.getMethods().get(method_name);
 		if (mt!=null) {
 			this.setSelectedItem(mt);
