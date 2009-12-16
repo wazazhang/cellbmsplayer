@@ -20,13 +20,13 @@ import com.g2d.editor.property.ObjectPropertyPanel.CellEditAdapter;
 public class MathMethodCellEdit extends JComboBox implements PropertyCellEdit<Method>
 {
 	public MathMethodCellEdit() {
-		super(MathMethod.methods.values().toArray(new Method[MathMethod.methods.size()]));
+		super(MathMethod.getMethods().values().toArray(new Method[MathMethod.getMethods().size()]));
 		setRenderer(new CellRender());
 	}
 	
 	public MathMethodCellEdit(String method_name) {
 		this();
-		Method mt = MathMethod.methods.get(method_name);
+		Method mt = MathMethod.getMethods().get(method_name);
 		if (mt!=null) {
 			this.setSelectedItem(mt);
 		}
