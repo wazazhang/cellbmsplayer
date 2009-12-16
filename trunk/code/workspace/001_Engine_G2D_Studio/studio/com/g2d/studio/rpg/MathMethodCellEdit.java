@@ -4,7 +4,10 @@ import java.awt.Component;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComboBox;
+import javax.swing.JList;
+import javax.swing.ListCellRenderer;
 
 import com.cell.rpg.ability.Abilities;
 import com.cell.rpg.formula.AbstractValue;
@@ -18,7 +21,9 @@ public class MathMethodCellEdit extends JComboBox implements PropertyCellEdit<Me
 {
 	public MathMethodCellEdit() {
 		super(MathMethod.methods.values().toArray(new Method[MathMethod.methods.size()]));
+		setRenderer(new CellRender());
 	}
+	
 	public MathMethodCellEdit(String method_name) {
 		this();
 		Method mt = MathMethod.methods.get(method_name);
@@ -41,4 +46,29 @@ public class MathMethodCellEdit extends JComboBox implements PropertyCellEdit<Me
 	public Component getComponent(ObjectPropertyPanel panel) {
 		return this;
 	}
+	
+	static class CellRender extends DefaultListCellRenderer
+	{
+		@Override
+		public Component getListCellRendererComponent(JList list, Object value,
+				int index, boolean isSelected, boolean cellHasFocus) {
+			super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+			Method method = (Method)value;
+			String text = method.getReturnType().getSimpleName() + " " + method.getName() + " ( ";
+			Class<?>[] params = method.getParameterTypes();
+			for (int i=0; i<params.length; i++) {
+				text += params[i].getSimpleName();
+				if (i!=params.length-1) {
+					text += " , ";
+				}
+			}
+			text += " )";
+			super.setText(text);
+			return this;
+		}
+	}
+	
+	
+	
+	
 }

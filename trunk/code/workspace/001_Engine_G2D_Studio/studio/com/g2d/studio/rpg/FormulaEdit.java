@@ -28,6 +28,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import com.cell.CIO;
 import com.cell.CObject;
 import com.cell.rpg.formula.AbstractValue;
 import com.cell.rpg.formula.Arithmetic;
@@ -153,7 +154,7 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 	public void itemStateChanged(ItemEvent e) {
 		ValueType type = (ValueType)types.getSelectedItem();
 		split.setBottomComponent((Component)type.getEditComponent());
-		System.out.println(e);
+//		System.out.println(e);
 	}
 	
 //	----------------------------------------------------------------------------------------------------------
@@ -335,86 +336,114 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 
 	static class PanelMathMethod extends JPanel implements ValueEditor, ItemListener, ActionListener
 	{
-		XLSColumns columns;
+		XLSColumns 			columns;
 		
-		MathMethodCellEdit methods = new MathMethodCellEdit();
+		Method				mirror_method;
+		AbstractValue[]		mirror_parameters;
 		
-		JPanel btn_group = new JPanel(new FlowLayout());
+		MathMethodCellEdit			combo_methods	= new MathMethodCellEdit();
 
-		MathMethod mirror = new MathMethod();
-		
-		LinkedHashMap<JButton, AbstractValue> params_map = new LinkedHashMap<JButton, AbstractValue>();
-		
+		JPanel 						btn_group 		= new JPanel(new FlowLayout());
+		ArrayList<JButton> 			params_key		= new ArrayList<JButton>();
+		ArrayList<AbstractValue> 	params_value	= new ArrayList<AbstractValue>();
 		
 		public PanelMathMethod(AbstractValue value, XLSColumns columns) {
 			super(new BorderLayout());
 			this.columns = columns;
-			super.add(methods, BorderLayout.NORTH);
+			super.add(combo_methods, BorderLayout.NORTH);
 			this.add(btn_group, BorderLayout.CENTER);
 			if (value instanceof MathMethod) {
 				MathMethod mm = (MathMethod)value;
-				methods.setSelectedItem(mm.getMethod());
-				setMethod(mm.getMethod());
-			} else {
-				setMethod(MathMethod.methods.values().iterator().next());
+				mirror_method		= mm.getMethod();
+				mirror_parameters	= CIO.cloneObject(mm.parameters);
 			}
-			methods.addItemListener(this);
+			setMethod(mirror_method);
+			combo_methods.setSelectedItem(mirror_method);
+			combo_methods.addItemListener(this);
 		}
 		
-		void setMethod(Method method) 
+		void setMethod(Method mt) 
 		{
-			for (JButton btn : params_map.keySet()) {
-				btn_group.remove(btn);
-			}
-			params_map.clear();
-			
-			if (method != null) {
-				mirror.setMethod(method);
-				for (Class<?> p : method.getParameterTypes()) {
-					JButton 		key		= new JButton();
-					AbstractValue 	value	= new Value(1);
-					key.addActionListener(this);
-					btn_group.add(key);
-					params_map.put(key, value);
-					key.setText(value+"");
+			try
+			{
+				if (mt == null) {
+					mirror_method = MathMethod.methods.values().iterator().next();
+				} else {
+					mirror_method = mt;
 				}
+				
+				Class<?>[] params_type = mirror_method.getParameterTypes();
+				
+				for (int i=0; i<params_type.length; i++) 
+				{
+					if (i < params_key.size()) {
+						AbstractValue 	value	= params_value.get(i);
+						JButton 		key		= params_key.get(i);
+						key.setText(value.toString());
+					} else {
+						AbstractValue 	value;
+						if (mirror_parameters!=null && mirror_parameters[i] != null) {
+							value = mirror_parameters[i];
+						} else {
+							value = new Value(1);
+						}
+						JButton 		key		= new JButton(value.toString());
+						key.addActionListener(this);
+						params_key.add(key);
+						params_value.add(value);
+						btn_group.add(key);
+					}
+				}
+				while (params_type.length < params_key.size()) {
+					int end = params_key.size() - 1;
+					JButton 		key		= params_key.remove(end);
+					AbstractValue 	value	= params_value.remove(end);
+					btn_group.remove(key);
+				}
+				btn_group.updateUI();
+			}
+			catch (Exception err){
+				err.printStackTrace();
 			}
 		}
 		
 		@Override
 		public AbstractValue onEditOK(AbstractValue src_value) {
-			mirror.parameters = params_map.values().toArray(new AbstractValue[params_map.size()]);
-			System.out.println(mirror.method_name);
-			for (AbstractValue v : mirror.parameters) {
+			mirror_parameters = params_value.toArray(new AbstractValue[params_value.size()]);
+			System.out.println(mirror_method);
+			for (AbstractValue v : mirror_parameters) {
 				System.out.println(v);
 			}
 			if (src_value instanceof MathMethod) {
-				((MathMethod) src_value).method_name	= mirror.method_name;
-				((MathMethod) src_value).parameters		= mirror.parameters;
+				((MathMethod) src_value).method_name	= mirror_method.getName();
+				((MathMethod) src_value).parameters		= mirror_parameters;
 				return src_value;
 			} else {
-				return mirror;
+				return new MathMethod(
+						mirror_method.getName(),
+						mirror_parameters);
 			}
 		}
 		
 		@Override
 		public void itemStateChanged(ItemEvent e) {
-			if (e.getSource() == methods) {
-				setMethod(methods.getValue());
+			if (e.getSource() == combo_methods) {
+				setMethod(combo_methods.getValue());
 			}
 		}
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			Window owner = AbstractDialog.getTopWindow(this);
-			if (params_map.containsKey(e.getSource())) {
+			if (params_key.contains(e.getSource())) {
+				int 			index	= params_key.indexOf(e.getSource());
 				JButton			key		= (JButton)e.getSource();
-				AbstractValue	value	= params_map.get(key);
+				AbstractValue	value	= params_value.get(index);
 				FormulaEdit		edit	= new FormulaEdit(owner, columns, value);
 				edit.setLocation(owner.getX()+20, owner.getY()+20);
 				edit.showDialog();
 				value = edit.getValue();
-				params_map.put(key, value);
+				params_value.set(index, value);
 				key.setText(value+"");
 			}
 		}
