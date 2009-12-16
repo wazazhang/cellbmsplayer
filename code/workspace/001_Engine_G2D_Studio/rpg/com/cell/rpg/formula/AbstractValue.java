@@ -1,8 +1,9 @@
 package com.cell.rpg.formula;
 
-public abstract class AbstractValue 
-{
+import java.io.Serializable;
 
+public abstract class AbstractValue implements Serializable
+{
 	abstract public double getValue();
 	
 	@Override

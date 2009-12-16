@@ -32,6 +32,12 @@ public class MathMethod extends AbstractValue
 	
 	public MathMethod() {}
 	
+	public MathMethod(String method_name, AbstractValue[] parameters) 
+	{
+		this.method_name	= method_name;
+		this.parameters		= parameters;
+	}
+	
 	public void setMethod(Method method) {
 		method_name = method.getName();
 		call_method = method;
