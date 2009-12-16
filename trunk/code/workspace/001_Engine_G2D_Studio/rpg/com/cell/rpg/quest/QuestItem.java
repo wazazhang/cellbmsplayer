@@ -10,6 +10,7 @@ import com.cell.rpg.ability.AbstractAbility;
 import com.cell.rpg.formula.AbstractValue;
 import com.cell.rpg.formula.Arithmetic;
 import com.cell.rpg.formula.ObjectProperty;
+import com.cell.rpg.formula.Value;
 import com.cell.rpg.quest.script.QuestScript;
 import com.cell.rpg.struct.BooleanCondition;
 import com.cell.rpg.struct.Comparison;
@@ -42,9 +43,9 @@ public class QuestItem extends RPGObject
 	
 	public QuestItem(Integer type, String name, boolean isresult) {
 		super(type.toString());
-		this.type = type;
-		this.is_result = isresult;
-		this.name = name;
+		this.type 		= type;
+		this.is_result	= isresult;
+		this.name		= name;
 	}
 	
 	/**
@@ -76,10 +77,10 @@ public class QuestItem extends RPGObject
 					TagItem.class,
 					TagQuest.class,
 					TagQuestItem.class,
-					TagPlayerField.class,
-					TagNPCField.class,
-					TagPlayerPetField.class,
-					TagPlayerTeamField.class,
+					TagValueComparison.class,
+					TagEveryUnitComparison.class,
+					TagOneMoreUnitComparison.class,
+					TagUnitGroupCountComparison.class,
 				};
 		}
 		
@@ -96,9 +97,12 @@ public class QuestItem extends RPGObject
 
 	public static abstract class Tag extends QuestItemAbility
 	{
+//		@Property("该标志的布尔条件(默认true)")
+		transient BooleanCondition	boolean_comparison = BooleanCondition.TRUE;
+		
 		@Property("该标志的布尔条件(默认true)")
-		public BooleanCondition	boolean_comparison = BooleanCondition.TRUE;
-
+		public BooleanCondition boolean_condition = BooleanCondition.TRUE;
+		
 		@Override
 		public boolean isMultiField() {
 			return true;
@@ -113,10 +117,10 @@ public class QuestItem extends RPGObject
 	}
 	
 	/**
-	 * [标志] 物品
+	 * [条件] 物品
 	 * @author WAZA
 	 */
-	@Property("[标志] 依赖的物品")
+	@Property("[条件] 依赖的物品")
 	final public static class TagItem extends Tag
 	{
 		@Property("物品-类型")
@@ -128,10 +132,10 @@ public class QuestItem extends RPGObject
 	}
 	
 	/**
-	 * [标志] 依赖已完成的任务
+	 * [条件] 依赖已完成的任务
 	 * @author WAZA
 	 */
-	@Property("[标志] 依赖已完成的任务")
+	@Property("[条件] 依赖已完成的任务")
 	final public static class TagQuest extends Tag
 	{
 		@Property("已完成的任务ID")
@@ -139,67 +143,70 @@ public class QuestItem extends RPGObject
 	}
 	
 	/**
-	 * [标志] 依赖的任务奖励
+	 * [条件] 依赖的任务奖励
 	 * @author WAZA
 	 */
-	@Property("[标志] 依赖的任务奖励")
+	@Property("[条件] 依赖的任务奖励")
 	final public static class TagQuestItem extends Tag
 	{
 		@Property("依赖的任务奖励ID")
 		public int				quest_item_index	= -1;
 	}
-
-	public static abstract class TagUnitField extends Tag
+	
+	/**
+	 * [条件] 比较条件
+	 * @author WAZA
+	 */
+	@Property("[条件] 比较条件")
+	public static class TagValueComparison extends Tag
 	{
-//		@Property("单位字段")
-		transient protected String	
-		unit_filed_name;
-//		@Property("单位字段值")
-		transient protected String	
-		unit_filed_value;
-		
-		@Property("单位字段")
-		public ObjectProperty	unit_property;
+		@Property("原值")
+		public AbstractValue		src_value;
 		
 		@Property("比较器")
-		public Comparison		unit_field_comparison	= Comparison.EQUAL;
-
-		@Property("条件值")
-		public AbstractValue	value;
+		public Comparison 			comparison	= Comparison.EQUAL;
+		
+		@Property("目标值")
+		public AbstractValue		dst_value;
 	}
 	
-	/**
-	 * [标志] 依赖的角色字段
-	 */
-	@Property("[标志] 依赖的主角字段")
-	final public static class TagPlayerField extends TagUnitField
+	@Property("[条件] 每个单位属性")
+	public static class TagEveryUnitComparison extends Tag
 	{
+		@Property("原单位")
+		public TriggerUnitProperty	src_value;
+		
+		@Property("比较器")
+		public Comparison 			comparison	= Comparison.EQUAL;
+		
+		@Property("目标值")
+		public AbstractValue		dst_value;
 	}
 	
-	/**
-	 * [标志] 依赖的角色字段
-	 */
-	@Property("[标志] 依赖的被触发单位字段")
-	final public static class TagNPCField extends TagUnitField
+	@Property("[条件] 至少一个单位属性")
+	public static class TagOneMoreUnitComparison extends Tag
 	{
-	}
-
-	/**
-	 * [标志] 依赖的宠物字段
-	 */
-	@Property("[标志] 依赖的宠物字段，任意一个宠物满足即可")
-	final public static class TagPlayerPetField extends TagUnitField
-	{
+		@Property("原单位")
+		public TriggerUnitProperty	src_value;
+		
+		@Property("比较器")
+		public Comparison 			comparison	= Comparison.EQUAL;
+		
+		@Property("目标值")
+		public AbstractValue		dst_value;
 	}
 	
-	/**
-	 * [标志] 依赖的队伍
-	 */
-	@Property("[标志] 依赖的队伍，每个成员都必须满足")
-	final public static class TagPlayerTeamField extends TagUnitField
+	@Property("[条件] 单位组数量")
+	public static class TagUnitGroupCountComparison extends Tag
 	{
-		@Property("队伍人数")
-		public int				player_count	= 1;
+		@Property("单位类型")
+		public TriggerUnitType 		group_unit_type;
+		
+		@Property("比较器")
+		public Comparison 			comparison	= Comparison.EQUAL;
+		
+		@Property("目标值")
+		public AbstractValue		dst_value;
 	}
 	
 //	--------------------------------------------------------------------------------------
@@ -216,7 +223,7 @@ public class QuestItem extends RPGObject
 	 * [奖励] 物品
 	 * @author WAZA
 	 */
-	@Property("[奖励] 奖励的物品")
+	@Property("[结果] 奖励的物品")
 	final public static class AwardItem extends Result
 	{
 		@Property("物品-类型")
@@ -231,7 +238,7 @@ public class QuestItem extends RPGObject
 	 * [奖励] 传送到某场景
 	 * @author WAZA
 	 */
-	@Property("[奖励] 传送到某场景")
+	@Property("[结果] 传送到某场景")
 	final public static class AwardTeleport extends Result
 	{
 		@Property("场景ID")

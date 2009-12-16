@@ -36,6 +36,8 @@ import com.cell.rpg.formula.MathMethod;
 import com.cell.rpg.formula.ObjectProperty;
 import com.cell.rpg.formula.Value;
 import com.cell.rpg.formula.Arithmetic.Operator;
+import com.cell.rpg.quest.TriggerUnitProperty;
+import com.cell.rpg.quest.TriggerUnitType;
 import com.cell.rpg.xls.XLSColumns;
 import com.cell.util.Pair;
 import com.cell.util.Properties;
@@ -43,6 +45,7 @@ import com.g2d.annotation.Property;
 import com.g2d.editor.property.ListEnumEdit;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
+import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.XLSColumnSelectCellEdit;
 import com.g2d.util.AbstractDialog;
 
@@ -50,7 +53,7 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 {
 //	-------------------------------------------------------------------------------------------
 
-	XLSColumns		columns;
+	Class<?>[]		accept_types;
 	AbstractValue	value;
 
 	JLabel 			edit_title = new JLabel();
@@ -61,28 +64,31 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 	JButton			btn_cancel	= new JButton("取消");
 	
 //	-------------------------------------------------------------------------------------------
-	
-	public FormulaEdit(Component owner, XLSColumns columns) {
-		this(owner, columns, null);
+
+	public FormulaEdit(Component owner, AbstractValue src) {
+		this(owner, new Class<?>[]{
+				Value.class,
+				TriggerUnitProperty.class,
+				Arithmetic.class,
+				MathMethod.class,
+		}, src);
 	}
 	
-	public FormulaEdit(Component owner, XLSColumns columns, AbstractValue src) 
+	public FormulaEdit(Component owner, Class<?>[] accept_types, AbstractValue src) 
 	{
 		super(owner);
 		super.setTitle("编辑变量");
 		super.setSize(400, 300);
-		this.columns 	= columns;
-		this.value		= src;
+		this.accept_types	= accept_types;
+		this.value			= src;
+		
+		ValueType[] value_types = new ValueType[accept_types.length];
+		for (int i = 0; i < accept_types.length; i++) {
+			value_types[i] = new ValueType(accept_types[i]);
+		}
 		
 		split = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		types = new JComboBox(
-				new ValueType[]{
-						new ValueType(Value.class),
-						new ValueType(Arithmetic.class),
-						new ValueType(ObjectProperty.class),
-						new ValueType(MathMethod.class),
-				}
-		);
+		types = new JComboBox(value_types);
 		types.addItemListener(this);
 		split.setTopComponent(types);
 		this.add(split, BorderLayout.CENTER);
@@ -144,17 +150,21 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 			types.setSelectedItem(type);
 			split.setBottomComponent((Component)type.getEditComponent());
 		} else {
-			this.value = new Value(0);
-			ValueType type = getValueType(Value.class);
-			types.setSelectedItem(type);
-			split.setBottomComponent((Component)type.getEditComponent());
+			try {
+				Class<?> value_type = accept_types[0];
+				this.value = (AbstractValue)(value_type.newInstance());
+				ValueType type = getValueType(value_type);
+				types.setSelectedItem(type);
+				split.setBottomComponent((Component)type.getEditComponent());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
 	public void itemStateChanged(ItemEvent e) {
 		ValueType type = (ValueType)types.getSelectedItem();
 		split.setBottomComponent((Component)type.getEditComponent());
-//		System.out.println(e);
 	}
 	
 //	----------------------------------------------------------------------------------------------------------
@@ -184,13 +194,13 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 					edit_comp = new PanelValue(value);
 				}
 				else if (getKey().equals(Arithmetic.class)) {
-					edit_comp = new PanelArithmetic(value, columns);
+					edit_comp = new PanelArithmetic(value);
 				}
-				else if (getKey().equals(ObjectProperty.class)) {
-					edit_comp = new PanelObjectProperty(value, columns);
+				else if (getKey().equals(TriggerUnitProperty.class)) {
+					edit_comp = new PanelObjectProperty(value);
 				}
 				else if (getKey().equals(MathMethod.class)) {
-					edit_comp = new PanelMathMethod(value, columns);
+					edit_comp = new PanelMathMethod(value);
 				}
 			}
 			return edit_comp;
@@ -233,8 +243,6 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 	
 	static class PanelArithmetic extends JPanel implements ValueEditor, ActionListener
 	{
-		XLSColumns columns;
-		
 		JButton		btn_left	= new JButton();
 		JComboBox	btn_op		= new ListEnumEdit<Operator>(Operator.class);
 		JButton		btn_right	= new JButton();
@@ -243,9 +251,8 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 		Operator		v_op;
 		AbstractValue	v_right;
 		
-		public PanelArithmetic(AbstractValue value, XLSColumns columns) {
+		public PanelArithmetic(AbstractValue value) {
 			super(new FlowLayout());
-			this.columns = columns;
 			btn_left.addActionListener(this);
 			btn_right.addActionListener(this);
 			add(btn_left);
@@ -289,14 +296,14 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 			Window owner = AbstractDialog.getTopWindow(this);
 			
 			if (e.getSource() == btn_left) {
-				FormulaEdit edit = new FormulaEdit(owner, columns, v_left);
+				FormulaEdit edit = new FormulaEdit(owner, v_left);
 				edit.setLocation(owner.getX()+20, owner.getY()+20);
 				edit.showDialog();
 				v_left = edit.getValue();
 				btn_left.setText(v_left+"");
 			}
 			else if (e.getSource() == btn_right) {
-				FormulaEdit edit = new FormulaEdit(owner, columns, v_right);
+				FormulaEdit edit = new FormulaEdit(owner, v_right);
 				edit.setLocation(owner.getX()+20, owner.getY()+20);
 				edit.showDialog();
 				v_right = edit.getValue();
@@ -308,27 +315,76 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 
 //	----------------------------------------------------------------------------------------------------------
 
-	static class PanelObjectProperty extends JPanel implements ValueEditor
-	{
-		XLSColumnSelectCellEdit combo_columns;
+	static class PanelObjectProperty extends JPanel implements ValueEditor, ItemListener
+	{		
+		ListEnumEdit<TriggerUnitType> combo_unit_type = new ListEnumEdit<TriggerUnitType>(TriggerUnitType.class);
 		
-		public PanelObjectProperty(AbstractValue value, XLSColumns columns) {
+		XLSColumnSelectCellEdit combo_columns_player;
+		XLSColumnSelectCellEdit combo_columns_unit;
+		
+		public PanelObjectProperty(AbstractValue value) {
 			super(new BorderLayout());
-			combo_columns = new XLSColumnSelectCellEdit(columns);
-			super.add(combo_columns, BorderLayout.NORTH);
-			if (value instanceof ObjectProperty) {
-				combo_columns.setSelectedItem(((ObjectProperty) value).filed_name);
+		
+			combo_columns_player	= new XLSColumnSelectCellEdit(Studio.getInstance().getObjectManager().getPlayerXLSColumns());
+			combo_columns_unit		= new XLSColumnSelectCellEdit(Studio.getInstance().getObjectManager().getUnitXLSColumns());
+			
+			super.add(combo_unit_type, BorderLayout.NORTH);
+			
+			if (value instanceof TriggerUnitProperty) {
+				TriggerUnitProperty tup = (TriggerUnitProperty)value;
+				combo_columns_player.setSelectedItem(tup.filed_name);
+				combo_columns_unit.setSelectedItem(tup.filed_name);
+				combo_unit_type.setSelectedItem(tup.trigger_unit_type);
+			}
+			if (combo_unit_type.getValue()==null) {
+				combo_unit_type.setSelectedItem(TriggerUnitType.PLAYER);
+			}
+			changeUnitType(combo_unit_type.getValue());
+			combo_unit_type.addItemListener(this);
+		}
+		
+		void changeUnitType(TriggerUnitType type) {
+			this.remove(combo_columns_player);
+			this.remove(combo_columns_unit);
+			switch(type) {
+			case PLAYER:
+			case PLAYER_GROUP:
+				super.add(combo_columns_player, BorderLayout.SOUTH);
+				break;
+			case PET:
+			case TRIGGERING_NPC:
+				super.add(combo_columns_unit, BorderLayout.SOUTH);
+				break;
+			}
+		}
+		
+		@Override
+		public void itemStateChanged(ItemEvent e) {
+			if (e.getSource() == combo_unit_type) {
+				changeUnitType(combo_unit_type.getValue());
 			}
 		}
 		
 		@Override
 		public AbstractValue onEditOK(AbstractValue src_value) {
-			if (src_value instanceof ObjectProperty) {
-				((ObjectProperty) src_value).filed_name = combo_columns.getSelectedItem() + "";
-				return src_value;
+			TriggerUnitProperty tup ;
+			if (src_value instanceof TriggerUnitProperty) {
+				tup = (TriggerUnitProperty)src_value;
 			} else {
-				return new ObjectProperty(combo_columns.getSelectedItem() + "");
+				tup = new TriggerUnitProperty();
 			}
+			tup.trigger_unit_type = combo_unit_type.getValue();
+			switch(tup.trigger_unit_type) {
+			case PLAYER:
+			case PLAYER_GROUP:
+				tup.filed_name = combo_columns_player.getValue();
+				break;
+			case PET:
+			case TRIGGERING_NPC:
+				tup.filed_name = combo_columns_unit.getValue();
+				break;
+			}
+			return tup;
 		}
 	}
 	
@@ -336,8 +392,6 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 
 	static class PanelMathMethod extends JPanel implements ValueEditor, ItemListener, ActionListener
 	{
-		XLSColumns 			columns;
-		
 		Method				mirror_method;
 		AbstractValue[]		mirror_parameters;
 		
@@ -347,9 +401,8 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 		ArrayList<JButton> 			params_key		= new ArrayList<JButton>();
 		ArrayList<AbstractValue> 	params_value	= new ArrayList<AbstractValue>();
 		
-		public PanelMathMethod(AbstractValue value, XLSColumns columns) {
+		public PanelMathMethod(AbstractValue value) {
 			super(new BorderLayout());
-			this.columns = columns;
 			super.add(combo_methods, BorderLayout.NORTH);
 			this.add(btn_group, BorderLayout.CENTER);
 			if (value instanceof MathMethod) {
@@ -439,7 +492,7 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 				int 			index	= params_key.indexOf(e.getSource());
 				JButton			key		= (JButton)e.getSource();
 				AbstractValue	value	= params_value.get(index);
-				FormulaEdit		edit	= new FormulaEdit(owner, columns, value);
+				FormulaEdit		edit	= new FormulaEdit(owner, value);
 				edit.setLocation(owner.getX()+20, owner.getY()+20);
 				edit.showDialog();
 				value = edit.getValue();
