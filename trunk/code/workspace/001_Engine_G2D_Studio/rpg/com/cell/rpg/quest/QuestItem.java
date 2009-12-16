@@ -71,6 +71,8 @@ public class QuestItem extends RPGObject
 			return new Class<?>[]{
 					AwardItem.class,
 					AwardTeleport.class,
+					AwardAddUnitProperty.class,
+					AwardSetUnitProperty.class,
 				};
 		} else {
 			return new Class<?>[]{
@@ -173,7 +175,7 @@ public class QuestItem extends RPGObject
 	@Property("[条件] 每个单位属性")
 	public static class TagEveryUnitComparison extends Tag
 	{
-		@Property("原单位")
+		@Property("原单位属性")
 		public TriggerUnitProperty	src_value;
 		
 		@Property("比较器")
@@ -186,7 +188,7 @@ public class QuestItem extends RPGObject
 	@Property("[条件] 至少一个单位属性")
 	public static class TagOneMoreUnitComparison extends Tag
 	{
-		@Property("原单位")
+		@Property("原单位属性")
 		public TriggerUnitProperty	src_value;
 		
 		@Property("比较器")
@@ -246,5 +248,25 @@ public class QuestItem extends RPGObject
 		
 		@Property("场景内特定单位名字")
 		public String 			scene_object_id;
+	}
+	
+	@Property("[结果] 增加单位属性")
+	final public static class AwardAddUnitProperty extends Result
+	{
+		@Property("原单位属性")
+		public TriggerUnitProperty	src_value;
+
+		@Property("增量")
+		public AbstractValue		increment;
+	}
+	
+	@Property("[结果] 设置单位属性")
+	final public static class AwardSetUnitProperty extends Result
+	{
+		@Property("原单位属性")
+		public TriggerUnitProperty	src_value;
+
+		@Property("目标值")
+		public AbstractValue		dst_value;
 	}
 }
