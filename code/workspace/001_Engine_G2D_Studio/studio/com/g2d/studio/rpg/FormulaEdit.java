@@ -382,7 +382,7 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 						key.setText(value.toString());
 					} else {
 						AbstractValue 	value;
-						if (mirror_parameters!=null && mirror_parameters[i] != null) {
+						if (mirror_parameters!=null && i<mirror_parameters.length && mirror_parameters[i] != null) {
 							value = mirror_parameters[i];
 						} else {
 							value = new Value(1);
