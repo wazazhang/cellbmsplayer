@@ -367,7 +367,7 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 			try
 			{
 				if (mt == null) {
-					mirror_method = MathMethod.methods.values().iterator().next();
+					mirror_method = MathMethod.getMethods().values().iterator().next();
 				} else {
 					mirror_method = mt;
 				}
