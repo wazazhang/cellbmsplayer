@@ -6,6 +6,7 @@ import java.lang.reflect.Field;
 
 import javax.swing.table.DefaultTableCellRenderer;
 
+import com.cell.rpg.ability.AbstractAbility;
 import com.cell.rpg.formula.AbstractValue;
 import com.cell.rpg.formula.ObjectProperty;
 import com.cell.rpg.quest.QuestItem;
@@ -229,37 +230,6 @@ public class QuestCellEditAdapter {
 		}
 	}
 	
-	/**
-	 * 任务条件，依赖的角色字段
-	 * @author WAZA
-	 */
-	public static class QuestItemAbstractValue extends AbilityCellEditAdapter<Tag>
-	{
-		@Override
-		public Class<Tag> getType() {
-			return Tag.class;
-		}
-		
-		@Override
-		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner,
-			Object editObject, Object fieldValue, Field field) {
-			if (AbstractValue.class.equals(field.getType())) {
-				FormulaEdit edit = new FormulaEdit(owner, (AbstractValue)fieldValue);
-				edit.showDialog();
-				return edit;
-			}
-			if (AbstractValue.class.isAssignableFrom(field.getType())) {
-				FormulaEdit edit = new FormulaEdit(owner, 
-						new Class<?>[]{field.getType()}, 
-						(AbstractValue)fieldValue);
-				edit.showDialog();
-				return edit;
-			}
-			return null;
-		}
-	}
-	
-	
 //	-------------------------------------------------------------------------------------------------------------------------
 	
 	
@@ -344,4 +314,32 @@ public class QuestCellEditAdapter {
 		
 	}
 	
+
+//	-------------------------------------------------------------------------------------------------------------------------
+	
+	public static class AbstractValueAdapter extends AbilityCellEditAdapter<AbstractAbility>
+	{
+		@Override
+		public Class<AbstractAbility> getType() {
+			return AbstractAbility.class;
+		}
+		
+		@Override
+		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner,
+			Object editObject, Object fieldValue, Field field) {
+			if (AbstractValue.class.equals(field.getType())) {
+				FormulaEdit edit = new FormulaEdit(owner, (AbstractValue)fieldValue);
+				edit.showDialog();
+				return edit;
+			}
+			if (AbstractValue.class.isAssignableFrom(field.getType())) {
+				FormulaEdit edit = new FormulaEdit(owner, 
+						new Class<?>[]{field.getType()}, 
+						(AbstractValue)fieldValue);
+				edit.showDialog();
+				return edit;
+			}
+			return null;
+		}
+	}
 }
