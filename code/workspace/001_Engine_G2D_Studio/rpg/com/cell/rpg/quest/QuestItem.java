@@ -128,6 +128,8 @@ public class QuestItem extends RPGObject
 	{
 		@Property("物品-类型")
 		public int				titem_index			= -1;
+		@Property("比较器")
+		public Comparison 		comparison			= Comparison.EQUAL_OR_GREATER_THAN;
 		@Property("物品-数量")
 		public AbstractValue	titem_count			= new Value(1);
 		@Property("物品-是否消耗掉")
@@ -170,7 +172,7 @@ public class QuestItem extends RPGObject
 		public Comparison 			comparison	= Comparison.EQUAL;
 		
 		@Property("目标值")
-		public AbstractValue		dst_value;
+		public AbstractValue		dst_value	= new Value(1);
 	}
 	
 	@Property("[条件] 每个单位属性")
@@ -183,7 +185,7 @@ public class QuestItem extends RPGObject
 		public Comparison 			comparison	= Comparison.EQUAL;
 		
 		@Property("目标值")
-		public AbstractValue		dst_value;
+		public AbstractValue		dst_value	= new Value(1);
 	}
 	
 	@Property("[条件] 至少一个单位属性")
@@ -196,7 +198,7 @@ public class QuestItem extends RPGObject
 		public Comparison 			comparison	= Comparison.EQUAL;
 		
 		@Property("目标值")
-		public AbstractValue		dst_value;
+		public AbstractValue		dst_value	= new Value(1);
 	}
 	
 	@Property("[条件] 单位组数量")
@@ -209,7 +211,7 @@ public class QuestItem extends RPGObject
 		public Comparison 			comparison	= Comparison.EQUAL;
 		
 		@Property("目标值")
-		public AbstractValue		dst_value;
+		public AbstractValue		dst_value	= new Value(1);
 	}
 	
 //	--------------------------------------------------------------------------------------
@@ -258,7 +260,7 @@ public class QuestItem extends RPGObject
 		public TriggerUnitProperty	src_value;
 
 		@Property("增量")
-		public AbstractValue		increment;
+		public AbstractValue		increment	= new Value(1);
 	}
 	
 	@Property("[结果] 设置单位属性")
@@ -268,6 +270,6 @@ public class QuestItem extends RPGObject
 		public TriggerUnitProperty	src_value;
 
 		@Property("目标值")
-		public AbstractValue		dst_value;
+		public AbstractValue		dst_value	= new Value(1);
 	}
 }

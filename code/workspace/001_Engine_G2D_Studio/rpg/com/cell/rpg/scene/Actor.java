@@ -5,6 +5,7 @@ import com.cell.rpg.quest.ability.QuestAccepter;
 import com.cell.rpg.quest.ability.QuestPublisher;
 import com.cell.rpg.scene.ability.ActorDropItem;
 import com.cell.rpg.scene.ability.ActorPathStart;
+import com.cell.rpg.scene.ability.ActorSellItem;
 import com.cell.rpg.scene.ability.ActorTransport;
 import com.cell.rpg.struct.TPosition;
 import com.g2d.annotation.Property;
@@ -27,6 +28,7 @@ public class Actor extends SceneSprite
 		return new Class<?>[]{
 				ActorPathStart.class,
 				ActorDropItem.class,
+				ActorSellItem.class,
 				QuestAccepter.class,
 				QuestPublisher.class,
 			};
