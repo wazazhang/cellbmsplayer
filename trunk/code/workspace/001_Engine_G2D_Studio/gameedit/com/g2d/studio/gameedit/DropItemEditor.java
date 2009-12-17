@@ -115,7 +115,12 @@ public class DropItemEditor extends AbstractDialog implements PropertyCellEdit<D
 	
 	@Override
 	public Component getComponent(ObjectPropertyPanel panel) {		
-		edit_label.setText(node_list.size()+"个道具 : ");	
+		StringBuffer sb = new StringBuffer();
+		for (Node node : node_list) {
+			sb.append(node.item.getName()+", ");
+		}
+		edit_label.setText(sb.toString());
+//		edit_label.setText(node_list.size()+"个道具 : ");	
 		if (panel != null) {
 			panel.fireEditingStopped();
 		}
