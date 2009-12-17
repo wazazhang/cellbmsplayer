@@ -234,7 +234,7 @@ public class QuestItem extends RPGObject
 		@Property("物品-类型")
 		public int				titem_index			= -1;
 		@Property("物品-数量")
-		public int				titem_count			= 1;
+		public AbstractValue	titem_count			= new Value(1);
 		@Property("物品-得到道具后，自动使用掉")
 		public boolean			titem_auto_use		= false;
 	}
