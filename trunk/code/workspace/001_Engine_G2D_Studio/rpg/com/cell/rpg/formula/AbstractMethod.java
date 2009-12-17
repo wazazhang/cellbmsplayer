@@ -69,7 +69,7 @@ public abstract class AbstractMethod extends AbstractValue
 		return call_method;
 	}
 	
-	public Object[] getInvokeParams(IFormulaAdapter adapter) {
+	public Object[] getInvokeParams(IFormulaAdapter adapter) throws Throwable {
 		Method method = getMethod();
 		if (method!=null && parameters!=null) {
 			Object[] params = new Object[parameters.length];

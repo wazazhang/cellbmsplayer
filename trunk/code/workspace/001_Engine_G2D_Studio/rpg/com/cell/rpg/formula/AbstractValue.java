@@ -6,7 +6,7 @@ import com.cell.rpg.formula.helper.IFormulaAdapter;
 
 public abstract class AbstractValue implements Serializable
 {
-	final public Number getValue(IFormulaAdapter adapter){
+	final public Number getValue(IFormulaAdapter adapter) throws Throwable {
 		return adapter.getValue(this);
 	}
 

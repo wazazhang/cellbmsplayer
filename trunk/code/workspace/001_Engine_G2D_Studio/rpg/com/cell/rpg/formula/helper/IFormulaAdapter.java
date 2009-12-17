@@ -9,6 +9,6 @@ import com.cell.rpg.formula.AbstractValue;
  */
 public interface IFormulaAdapter 
 {
-	public Number getValue(AbstractValue value);
+	public Number getValue(AbstractValue value) throws Throwable;
 
 }
