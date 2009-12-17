@@ -4,25 +4,33 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.util.Date;
 
+import com.cell.rpg.formula.helper.IFormulaAdapter;
 import com.g2d.annotation.Property;
 
 @Property("时间-特定的瞬间")
 public class TimeValue extends AbstractValue
 {
+//	--------------------------------------------------------------------------------------------
+	
 	@Property("毫秒时间")
 	public long time = 0;
+
+//	--------------------------------------------------------------------------------------------
 	
-	public TimeValue() {}
+	public TimeValue() {
+		
+	}
 	
 	public TimeValue(long time) {
 		this.time = time;
 	}
 	
-	@Override
-	public Number getValue() {
-		return time;
+	public TimeValue(Date date) {
+		this.setDate(date);
 	}
 	
+//	--------------------------------------------------------------------------------------------
+//	visual
 	private transient Date date;
 	
 	public Date getDate() {
@@ -41,4 +49,7 @@ public class TimeValue extends AbstractValue
 	public String toString() {
 		return DateFormat.getDateInstance().format(getDate());
 	}
+
+//	--------------------------------------------------------------------------------------------
+	
 }

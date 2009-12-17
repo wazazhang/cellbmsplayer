@@ -43,10 +43,10 @@ import com.cell.rpg.formula.TimeDurationValue;
 import com.cell.rpg.formula.TimeValue;
 import com.cell.rpg.formula.Value;
 import com.cell.rpg.formula.Arithmetic.Operator;
-import com.cell.rpg.quest.QuestStateField;
-import com.cell.rpg.quest.QuestStateProperty;
-import com.cell.rpg.quest.TriggerUnitProperty;
 import com.cell.rpg.quest.TriggerUnitType;
+import com.cell.rpg.quest.formula.QuestStateProperty;
+import com.cell.rpg.quest.formula.TriggerUnitProperty;
+import com.cell.rpg.quest.formula.QuestStateProperty.QuestStateField;
 import com.cell.rpg.xls.XLSColumns;
 import com.cell.util.Pair;
 import com.cell.util.Properties;
@@ -253,7 +253,7 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 			super.add(lbl, BorderLayout.NORTH);
 			super.add(number, BorderLayout.SOUTH);
 			if (value instanceof Value) {
-				number.setValue(value.getValue());
+				number.setValue(((Value) value).value);
 			}
 		}
 		@Override

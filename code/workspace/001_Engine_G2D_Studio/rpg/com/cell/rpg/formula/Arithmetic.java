@@ -1,6 +1,7 @@
 package com.cell.rpg.formula;
 
 import com.cell.rpg.ability.AbstractAbility;
+import com.cell.rpg.formula.helper.IFormulaAdapter;
 import com.cell.sql.SQLFieldGroup;
 import com.cell.util.Pair;
 import com.g2d.annotation.Property;
@@ -14,20 +15,8 @@ public class Arithmetic extends AbstractValue
 	public AbstractValue	right	= new Value(1);
 	@Property("运算符")
 	public Operator			op		= Operator.ADD;
-	
-	@Override
-	public Number getValue() 
-	{
-		if (op != null) {
-			switch(op) {
-			case ADD: return left.getValue().doubleValue() + right.getValue().doubleValue();
-			case SUB: return left.getValue().doubleValue() - right.getValue().doubleValue();
-			case MUL: return left.getValue().doubleValue() * right.getValue().doubleValue();
-			case DIV: return left.getValue().doubleValue() / right.getValue().doubleValue();
-			}
-		}
-		return 0;
-	}
+
+//	---------------------------------------------------------------------------------------------
 	
 	@Override
 	public String toString() {
@@ -53,8 +42,38 @@ public class Arithmetic extends AbstractValue
 		public String toString() {
 			return text;
 		}
+		
+		public Number calculat(Number src_value, Number dst_value)
+		{
+//			if (left.isReal() || right.isReal()) {
+				switch(this) {
+				case ADD: return src_value.doubleValue() + dst_value.doubleValue();
+				case SUB: return src_value.doubleValue() - dst_value.doubleValue();
+				case MUL: return src_value.doubleValue() * dst_value.doubleValue();
+				case DIV: return src_value.doubleValue() / dst_value.doubleValue();
+				case MOD: return src_value.doubleValue() % dst_value.doubleValue();
+				}
+//			} else {
+//				switch(this) {
+//				case ADD: return src_value.longValue() + dst_value.longValue();
+//				case SUB: return src_value.longValue() - dst_value.longValue();
+//				case MUL: return src_value.longValue() * dst_value.longValue();
+//				case DIV: return src_value.longValue() / dst_value.longValue();
+//				case MOD: return src_value.longValue() % dst_value.longValue();
+//				}
+//			}
+			return 0;
+		}
+		
 	}
 	
 //	---------------------------------------------------------------------------------------------
-
+//	public static void main(String[] args)
+//	{
+//		System.out.println(cc().getClass());
+//	}
+//	
+//	public static Number cc() {
+//		return 1;
+//	}
 }
