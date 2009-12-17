@@ -19,7 +19,7 @@ import com.cell.rpg.formula.SystemMethod.ISystemMethodAdapter;
 public abstract class AFormulaAdapterImpl implements IFormulaAdapter
 {
 	
-	public Number getValue(AbstractValue value)
+	public Number getValue(AbstractValue value) throws Throwable
 	{
 		if (value instanceof Value) {
 			return calculateValue((Value)value);
@@ -42,17 +42,17 @@ public abstract class AFormulaAdapterImpl implements IFormulaAdapter
 		return 0;
 	}
 
-	protected Number calculateValue(Value value)
+	protected Number calculateValue(Value value) throws Throwable
 	{
 		return value.value;
 	}
 	
-	protected Number calculateTimeValue(TimeValue value) 
+	protected Number calculateTimeValue(TimeValue value) throws Throwable
 	{
 		return value.time;
 	}
 	
-	protected Number calculateTimeDurationValue(TimeDurationValue value)
+	protected Number calculateTimeDurationValue(TimeDurationValue value) throws Throwable
 	{
 		if (value.time_unit!=null) {
 			return value.time_unit.toMillis(value.duration);
@@ -60,31 +60,19 @@ public abstract class AFormulaAdapterImpl implements IFormulaAdapter
 		return value.duration;
 	}
 	
-	protected Number calculateAbstractMethod(AbstractMethod value)
+	protected Number calculateAbstractMethod(AbstractMethod value) throws Throwable
 	{
-		try{
-			Method method = value.getMethod();
-			if (method!=null) {
-				Object ret = method.invoke(null, value.getInvokeParams(this));
-				return (Number)ret;
-			}
-		}catch(Exception err){
-			err.printStackTrace();
-		}
-		return 0;
+		Method method = value.getMethod();
+		Object ret = method.invoke(null, value.getInvokeParams(this));
+		return (Number)ret;
 	}
 	
-	protected Number calculateArithmetic(Arithmetic value) 
+	protected Number calculateArithmetic(Arithmetic value) throws Throwable
 	{
-		if (value.op != null) {
-			return value.op.calculat(value.left.getValue(this), value.right.getValue(this));
-		}
-		return 0;
+		return value.op.calculat(value.left.getValue(this), value.right.getValue(this));
 	}
 	
-	abstract protected Number calculateObjectProperty(ObjectProperty value) ;
-	
-	
+	abstract protected Number calculateObjectProperty(ObjectProperty value) throws Throwable;
 	
 	abstract protected ISystemMethodAdapter getSystemMethodAdapter();
 	
