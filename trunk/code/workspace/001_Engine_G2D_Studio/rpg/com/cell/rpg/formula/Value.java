@@ -1,5 +1,6 @@
 package com.cell.rpg.formula;
 
+import com.cell.rpg.formula.helper.IFormulaAdapter;
 import com.g2d.annotation.Property;
 
 @Property("值")
@@ -15,7 +16,9 @@ public class Value extends AbstractValue
 	}
 	
 	@Override
-	public Number getValue() {
-		return value;
+	public String toString() {
+		return value+"";
 	}
+	
+	
 }

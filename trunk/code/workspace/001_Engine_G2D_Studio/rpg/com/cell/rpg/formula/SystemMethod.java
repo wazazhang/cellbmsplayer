@@ -44,14 +44,8 @@ public class SystemMethod extends AbstractMethod
 		return methods;
 	}
 
-	public static void main(String args[])
-	{
-		getMethods() ;
-	}
-
 //	------------------------------------------------------------------------------------------------------------
 
-	
 	public static interface ISystemMethodAdapter
 	{
 		public Long getGameTime();

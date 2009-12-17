@@ -2,12 +2,13 @@ package com.cell.rpg.formula;
 
 import java.io.Serializable;
 
+import com.cell.rpg.formula.helper.IFormulaAdapter;
+
 public abstract class AbstractValue implements Serializable
 {
-	abstract public Number getValue();
-	
-	@Override
-	public String toString() {
-		return getValue() + "";
+	final public Number getValue(IFormulaAdapter adapter){
+		return adapter.getValue(this);
 	}
+
+	abstract public String toString();
 }
