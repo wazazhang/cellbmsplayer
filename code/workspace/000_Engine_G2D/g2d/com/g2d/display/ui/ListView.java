@@ -111,13 +111,34 @@ public class ListView extends UIComponent
 	public class ListViewPanel extends Panel
 	{
 		private static final long serialVersionUID = Version.VersionG2D;
+//		
+//		public void addChild(Item<?> child) {
+//			super.getContainer().addChild(child);
+//		}
+//		public void removeChild(Item<?> child) {
+//			super.getContainer().removeChild(child);
+//		}
+
+		Vector<UIComponent> components = new Vector<UIComponent>();
 		
-		public void addChild(Item<?> child) {
-			super.getContainer().addChild(child);
+		public boolean addItem(Item<?> child) {
+			synchronized (components) {
+				if (child instanceof UIComponent) {
+					components.add((UIComponent) child);
+				}
+			}
+			return super.getContainer().addChild(child);
 		}
-		public void removeChild(Item<?> child) {
-			super.getContainer().removeChild(child);
+		
+		public boolean removeItem(Item<?> child) {
+			synchronized(components) {
+				if (child instanceof UIComponent) {
+					components.remove((UIComponent)child);
+				}
+			}
+			return super.getContainer().removeChild(child);
 		}
+		
 		
 		@Override
 		public UIComponentEditor<?> createEditorForm() {
@@ -131,7 +152,7 @@ public class ListView extends UIComponent
 			case LIST: 
 			case DETAIL: {
 				int h = 0;
-				for (UIComponent item : container.getComonents()) {
+				for (UIComponent item : components) {
 					item.setLocation(0, h);
 					item.setSize(view_port.getWidth(), 20);
 					h += 20;
@@ -143,7 +164,7 @@ public class ListView extends UIComponent
 			case SMALL_ICON: {
 				int h = 0;
 				int w = 0;
-				for (UIComponent item : container.getComonents()) {
+				for (UIComponent item : components) {
 					item.setLocation(w, h);
 					item.setSize(40, 40);
 					w += 40;
@@ -243,7 +264,7 @@ public class ListView extends UIComponent
 	}
 	
 	synchronized public void addItem(Item<?> item) {
-		panel.addChild(item);
+		panel.addItem(item);
 		item.list_view = this;
 		if (selected_item == null) {
 			selectItem(item);
@@ -251,7 +272,7 @@ public class ListView extends UIComponent
 	}
 	
 	synchronized public void removeItem(Item<?> item) {
-		panel.removeChild(item);
+		panel.removeItem(item);
 		item.list_view = null;
 		item.removeFromParent();
 		if (selected_item==item) {
