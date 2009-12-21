@@ -40,7 +40,7 @@ public class QuestItemTree extends G2DTree
 	
 	public QuestItemTree()
 	{
-		super(new DefaultMutableTreeNode("任务条件"));
+		super(new DefaultMutableTreeNode("任务数据"));
 		super.setDragEnabled(true);
 		group_trigger_condition		= new ConditionGroup("接受条件");
 		group_trigger_award			= new ConditionGroup("接受奖励");
