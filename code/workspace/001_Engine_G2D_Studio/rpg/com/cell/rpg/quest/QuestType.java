@@ -1,5 +1,7 @@
 package com.cell.rpg.quest;
 
+import java.util.concurrent.TimeUnit;
+
 import com.cell.rpg.ability.AbilitiesSingle;
 import com.cell.rpg.ability.AbstractAbility;
 import com.g2d.annotation.Property;
@@ -15,6 +17,7 @@ public class QuestType extends AbilitiesSingle
 		return new Class<?>[]{
 				Story.class,
 				Repeatable.class,
+				Scheduled.class,
 		};
 	}
 //	-----------------------------------------------------------------------------------
@@ -29,7 +32,7 @@ public class QuestType extends AbilitiesSingle
 	 * [任务类型] 主线任务，不能重复做
 	 * @author WAZA
 	 */
-	@Property("[任务类型] 主线任务，不能重复做")
+	@Property({"[任务类型] 主线任务", "不能重复做"})
 	public static class Story extends QuestTypeAbility {
 		
 	}
@@ -39,7 +42,7 @@ public class QuestType extends AbilitiesSingle
 	 * [任务类型] 可重复接，即可在完成后，一段时间内重新做
 	 * @author WAZA
 	 */
-	@Property("[任务类型] 可重复接，即可在完成后，一段时间内重新做")
+	@Property({"[任务类型] 可重复接", "即可在完成后，一段时间内重新做"})
 	public static class Repeatable extends QuestTypeAbility 
 	{
 		/** 完成该任务多少时间内刷新为可做(秒) */
@@ -51,7 +54,17 @@ public class QuestType extends AbilitiesSingle
 
 	}
 //	-----------------------------------------------------------------------------------
-
+	
+	@Property({"[任务类型] 日常任务", "每隔一定时间刷新"})
+	public static class Scheduled extends QuestTypeAbility
+	{
+		@Property("每隔多长时间刷新")
+		public long refresh_time	= 1;
+		
+		@Property("时间单位")
+		public TimeUnit time_unit	= TimeUnit.DAYS;
+	}
+	
 //	-----------------------------------------------------------------------------------
 
 }
