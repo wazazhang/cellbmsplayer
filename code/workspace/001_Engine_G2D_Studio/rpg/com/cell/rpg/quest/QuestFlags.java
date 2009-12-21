@@ -11,16 +11,14 @@ import com.g2d.annotation.Property;
 public class QuestFlags extends AbilitiesTypeMap
 {
 	public QuestFlags() {
-		super.addAbility(new System());
+		super.addAbility(new Story());
 	}
 	
 	@Override
 	public Class<?>[] getSubAbilityTypes() {
 		return new Class<?>[]{
-				System.class,
 				Story.class,
 				Repeatable.class,
-				Scheduled.class,
 		};
 	}
 	
@@ -36,15 +34,6 @@ public class QuestFlags extends AbilitiesTypeMap
 	
 
 //	-----------------------------------------------------------------------------------
-	
-	/**
-	 * {"[任务类型] 系统任务", "满足条件后，立即可以做"}
-	 * @author WAZA
-	 */
-	@Property({"[任务类型] 系统任务", "满足条件后，立即可以做"})
-	public static class System extends QuestFlagAbility {
-		
-	}
 
 //	-----------------------------------------------------------------------------------
 	/**
@@ -77,27 +66,6 @@ public class QuestFlags extends AbilitiesTypeMap
 			return refresh_time_unit.toMillis(refresh_time);
 		}
 	}
-	
-//	-----------------------------------------------------------------------------------
-	
-	/**
-	 * {"[任务类型] 定时任务", "每隔一定时间后，可重新做"}
-	 * @author WAZA
-	 */
-	@Property({"[任务类型] 定时任务", "每隔一定时间后，可重新做"})
-	public static class Scheduled extends QuestFlagAbility
-	{
-		@Property("每隔多长时间刷新")
-		public long 		refresh_time	= 1;
-		
-		@Property("时间单位")
-		public TimeUnit 	refresh_time_unit	= TimeUnit.DAYS;
-		
-		public long getRefreshTimeMillis() {
-			return refresh_time_unit.toMillis(refresh_time);
-		}
-	}
-
 	
 //	-----------------------------------------------------------------------------------
 	
