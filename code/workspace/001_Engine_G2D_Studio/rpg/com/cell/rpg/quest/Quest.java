@@ -28,9 +28,6 @@ public class Quest extends RPGObject
 	@Property("任务标志")
 	public QuestFlags			quest_flags			= new QuestFlags();
 
-	/**任务产生事件*/
-	@Property("任务产生事件")
-	public QuestGenerator		quest_generator		= new QuestGenerator();
 	
 	/**满足条件时自动接收*/
 	@Property("满足条件时自动接收")
@@ -47,6 +44,9 @@ public class Quest extends RPGObject
 	transient
 	private String				discussion			= QuestScript.createExample();
 
+	/**任务产生事件*/
+	public QuestGenerator		quest_generator		= new QuestGenerator();
+	
 	/** 任务接受条件 */
 	public QuestCondition		accept_condition	= new QuestCondition();
 	/**任务接受奖励*/

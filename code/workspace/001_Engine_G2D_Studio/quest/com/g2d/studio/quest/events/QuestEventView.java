@@ -1,4 +1,4 @@
-package com.g2d.studio.quest.items;
+package com.g2d.studio.quest.events;
 
 import java.awt.Dimension;
 import java.awt.Event;
@@ -27,38 +27,35 @@ import com.cell.rpg.io.RPGObjectMap;
 import com.cell.rpg.quest.Quest;
 import com.cell.rpg.quest.QuestCondition;
 import com.g2d.studio.Studio;
+import com.g2d.studio.quest.items.QuestItemNode;
 import com.g2d.studio.swing.G2DTree;
 import com.g2d.studio.swing.G2DTreeNode;
 import com.g2d.studio.swing.G2DTreeNodeGroup;
 import com.g2d.studio.swing.G2DTreeNodeGroup.GroupMenu;
 import com.g2d.util.AbstractDialog;
 
-public class QuestItemView extends JSplitPane implements TreeSelectionListener
+public class QuestEventView extends JSplitPane implements TreeSelectionListener
 {
 	private Quest 			quest;
 	
-	private QuestItemTree	tree;
+	private QuestEventTree	tree;
 	
 	private JScrollPane		left;
-	private JScrollPane		right;
 	
 //	----------------------------------------------------------------------------------------------------------------------------------
 	
-	public QuestItemView(Quest quest)
+	public QuestEventView(Quest quest)
 	{
 		super(HORIZONTAL_SPLIT);
 		super.setMinimumSize(new Dimension(200, 200));
 		this.quest	= quest;
-		this.tree	= new QuestItemTree();
+		this.tree	= new QuestEventTree();
 		
 		this.left	= new JScrollPane(tree);
-		this.right	= new JScrollPane();
 		left.setMinimumSize(new Dimension(200, 200));
-		right.setMinimumSize(new Dimension(200, 200));
 		
 		this.setLeftComponent(left);
-		this.setRightComponent(right);
-		
+
 		tree.addTreeSelectionListener(this);
 		
 		setQuest(quest);
@@ -73,17 +70,15 @@ public class QuestItemView extends JSplitPane implements TreeSelectionListener
 		tree.expandAll();
 	}
 	
-	public void save() {
-		tree.save();
-	}
+	public void save() {}
 
 //	----------------------------------------------------------------------------------------------------------------------------------
 	
 	@Override
 	public void valueChanged(TreeSelectionEvent e) {
-		if (e.getPath().getLastPathComponent() instanceof QuestItemNode) {
-			QuestItemNode node = (QuestItemNode)e.getPath().getLastPathComponent();
-			right.setViewportView(node.getEditComponent());
+		if (e.getPath().getLastPathComponent() instanceof QuestEventNode) {
+			QuestEventNode node = (QuestEventNode)e.getPath().getLastPathComponent();
+			this.setRightComponent(node.getEditComponent());
 		}
 	}
 	

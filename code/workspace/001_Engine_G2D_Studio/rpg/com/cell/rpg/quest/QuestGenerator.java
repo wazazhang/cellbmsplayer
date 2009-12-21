@@ -10,7 +10,9 @@ import com.g2d.annotation.Property;
 
 public class QuestGenerator extends AbilitiesTypeMap
 {
-	public QuestGenerator() {}
+	public QuestGenerator() {
+		addAbility(new System());
+	}
 	
 	@Override
 	public Class<?>[] getSubAbilityTypes() {

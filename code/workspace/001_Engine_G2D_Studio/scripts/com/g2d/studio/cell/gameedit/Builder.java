@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.HashMap;
 
 import com.cell.CIO;
+import com.cell.CUtil;
 import com.cell.io.CFile;
 import com.cell.j2se.CAppBridge;
 import com.g2d.cell.CellGameEditWrap;
@@ -27,7 +28,10 @@ public class Builder
 			Process process = CellGameEditWrap.openCellGameEdit(Config.CELL_GAME_EDIT_CMD, cpj_file_name, 
 					output_properties.getPath());
 			process.waitFor();
-			CFile.writeText(new File(cpj_file_name.getParentFile(), "build_sprite.bat"), build_sprite_bat, "UTF-8");
+			CFile.writeText(
+					new File(cpj_file_name.getParentFile(), "build_sprite.bat"), 
+					CUtil.replaceString(build_sprite_bat, "<CPJ>", cpj_file_name.getName()), 
+					"UTF-8");
 			return process;
 		} catch (Throwable e) {
 			e.printStackTrace();
@@ -50,7 +54,9 @@ public class Builder
 					);
 			process.waitFor();
 			cleanOutput(cpj_file_name);
-			CFile.writeText(new File(cpj_file_name.getParentFile(), "build_scene.bat"), build_scene_bat, "UTF-8");
+			CFile.writeText(new File(cpj_file_name.getParentFile(), "build_scene.bat"), 
+					CUtil.replaceString(build_scene_bat, "<CPJ>", cpj_file_name.getName()),
+					"UTF-8");
 			return process;
 		} catch (Throwable e) {
 			e.printStackTrace();

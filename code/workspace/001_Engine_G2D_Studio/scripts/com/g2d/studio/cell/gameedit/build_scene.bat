@@ -1,4 +1,4 @@
-@CellGameEdit.exe scene.cpj ^
+@CellGameEdit.exe <CPJ> ^
 _script\output.properties ^
 _script\scene_graph.script ^
 _script\scene_jpg.script ^
