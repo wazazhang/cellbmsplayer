@@ -71,7 +71,7 @@ public class ObjectPropertyPanel extends JPanel
 	final ValueEditor 		value_editor	= new ValueEditor();
 	
 	public ObjectPropertyPanel(Object obj, CellEditAdapter<?> ... adapters){
-		this(obj, 100, 250, adapters);
+		this(obj, 100, 200, adapters);
 	}
 	
 	public ObjectPropertyPanel(Object obj, int min_w, int min_h, CellEditAdapter<?> ... adapters)

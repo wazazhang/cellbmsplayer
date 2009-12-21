@@ -90,7 +90,10 @@ public class QuestEventTree extends G2DTree implements MouseListener
 			if (selRow != -1) {
 				Object obj = selPath.getLastPathComponent();
 				if (obj == getRoot()) {
-					new ConditionGroupMenu().show(this, e.getX(), e.getY());
+					new RootMenu().show(this, e.getX(), e.getY());
+				} else if (obj instanceof QuestEventNode) {
+					QuestEventNode node = (QuestEventNode) obj;
+					new NodeMenu(node.ability).show(this, e.getX(), e.getY());
 				}
 			}
 		}
@@ -101,11 +104,11 @@ public class QuestEventTree extends G2DTree implements MouseListener
 
 //	----------------------------------------------------------------------------------------------------------------------------------
 	
-	class ConditionGroupMenu extends JPopupMenu implements ActionListener
+	class RootMenu extends JPopupMenu implements ActionListener
 	{
 		HashMap<Object, Class<?>> type_map = new HashMap<Object, Class<?>>();
 		
-		public ConditionGroupMenu() 
+		public RootMenu() 
 		{
 			for (Class<?> type : quest.quest_generator.getSubAbilityTypes()) {
 				JMenuItem item = new JMenuItem("添加 : " + AbstractAbility.getName(type));
@@ -131,6 +134,27 @@ public class QuestEventTree extends G2DTree implements MouseListener
 	}
 	
 //	----------------------------------------------------------------------------------------------------------------------------------
+	
+	class NodeMenu extends JPopupMenu implements ActionListener
+	{
+		JMenuItem del_item = new JMenuItem("删除");
+		AbstractAbility ability;
+		public NodeMenu(AbstractAbility ability) {
+			this.add(del_item);
+			this.del_item.addActionListener(this);
+			this.ability = ability;
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			try{
+				quest.quest_generator.removeAbility(ability);
+				setQuest(quest);
+			}catch(Exception err){
+				err.printStackTrace();
+			}
+		}
+	}
 	
 //	----------------------------------------------------------------------------------------------------------------------------------
 	
