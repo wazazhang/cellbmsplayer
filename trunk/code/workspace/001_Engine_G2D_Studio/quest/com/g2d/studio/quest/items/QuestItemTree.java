@@ -1,5 +1,6 @@
 package com.g2d.studio.quest.items;
 
+import java.awt.Dimension;
 import java.awt.dnd.DropTarget;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
@@ -42,6 +43,7 @@ public class QuestItemTree extends G2DTree
 	{
 		super(new DefaultMutableTreeNode("任务数据"));
 		super.setDragEnabled(true);
+		super.setMinimumSize(new Dimension(200, 200));
 		group_trigger_condition		= new ConditionGroup("接受条件");
 		group_trigger_award			= new ConditionGroup("接受奖励");
 		group_complete_condition	= new ConditionGroup("完成条件");

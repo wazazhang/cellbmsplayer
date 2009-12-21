@@ -70,7 +70,11 @@ public class ObjectPropertyPanel extends JPanel
 	final JTextPane			anno_text;
 	final ValueEditor 		value_editor	= new ValueEditor();
 	
-	public ObjectPropertyPanel(Object obj, CellEditAdapter<?> ... adapters)
+	public ObjectPropertyPanel(Object obj, CellEditAdapter<?> ... adapters){
+		this(obj, 100, 250, adapters);
+	}
+	
+	public ObjectPropertyPanel(Object obj, int min_w, int min_h, CellEditAdapter<?> ... adapters)
 	{
 		for (CellEditAdapter<?> ad : adapters) {
 			edit_adapters.put(ad.getClass(), ad);
@@ -121,7 +125,7 @@ public class ObjectPropertyPanel extends JPanel
 				rows_table = new FieldTable(rowsdata, colum_header);
 				
 				JScrollPane scroll = new JScrollPane(rows_table);
-				scroll.setMinimumSize(new Dimension(100,250));
+				scroll.setMinimumSize(new Dimension(min_w, min_h));
 				split.setTopComponent(scroll);
 			}
 			
