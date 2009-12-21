@@ -26,7 +26,7 @@ public class Quest extends RPGObject
 	
 	/**任务类型*/
 	@Property("任务类型")
-	public QuestType			quest_type			= new QuestType();
+	public QuestFlags			quest_flags			= new QuestFlags();
 	
 	/**满足条件时自动接收*/
 	@Property("满足条件时自动接收")

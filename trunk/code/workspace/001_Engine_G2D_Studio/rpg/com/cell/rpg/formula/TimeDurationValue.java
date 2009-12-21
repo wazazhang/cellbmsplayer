@@ -29,7 +29,11 @@ public class TimeDurationValue extends AbstractValue
 	}
 
 //	----------------------------------------------------------------------------------
-	
+
+	public long toMillis() {
+		return time_unit.toMillis(duration);
+	}
+
 	@Override
 	public String toString() {
 		if (time_unit!=null) {

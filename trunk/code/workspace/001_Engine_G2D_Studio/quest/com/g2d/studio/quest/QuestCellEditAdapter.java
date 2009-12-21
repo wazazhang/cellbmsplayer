@@ -24,6 +24,7 @@ import com.cell.rpg.quest.QuestItem.TagQuestItem;
 import com.cell.rpg.quest.QuestItem.TagValueComparison;
 import com.cell.rpg.quest.ability.QuestAccepter;
 import com.cell.rpg.quest.ability.QuestPublisher;
+import com.cell.rpg.quest.ability.QuestTrigger;
 import com.cell.rpg.xls.XLSColumns;
 import com.g2d.annotation.Property;
 import com.g2d.editor.property.ObjectPropertyPanel;
@@ -45,11 +46,11 @@ import com.g2d.util.AbstractDialog;
 
 public class QuestCellEditAdapter {
 
-	public static class QuestAccepterAdapter extends AbilityCellEditAdapter<QuestAccepter>
+	public static class QuestTriggerAdapter extends AbilityCellEditAdapter<QuestTrigger>
 	{
 		@Override
-		public Class<QuestAccepter> getType() {
-			return QuestAccepter.class;
+		public Class<QuestTrigger> getType() {
+			return QuestTrigger.class;
 		}
 		
 		@Override
@@ -77,41 +78,6 @@ public class QuestCellEditAdapter {
 			return null;
 		}
 	}
-
-	public static class QuestPublisherAdapter extends AbilityCellEditAdapter<QuestPublisher>
-	{
-		@Override
-		public Class<QuestPublisher> getType() {
-			return QuestPublisher.class;
-		}
-		
-		@Override
-		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner, Object editObject, Object fieldValue, Field field) {
-			if (field.getName().equals("quest_id")) {
-				QuestSelectCellEdit edit = new QuestSelectCellEdit(AbstractDialog.getTopWindow(owner));
-				edit.showDialog();
-				return edit;
-			}
-			return null;
-		}
-		
-		@Override
-		public Component getCellRender(ObjectPropertyPanel owner, Object editObject,
-				Object fieldValue, Field field, DefaultTableCellRenderer src) {
-			if (field.getName().equals("quest_id") && fieldValue!=null) {
-				Integer quest_id = (Integer)fieldValue;
-				QuestNode node = Studio.getInstance().getQuestManager().getQuest(quest_id);
-				if (node != null) {
-					src.setText(node.toString());
-					src.setIcon(node.getIcon(false));
-					return src;
-				}
-			}
-			return null;
-		}
-	}
-	
-
 
 //	-------------------------------------------------------------------------------------------------------------------------
 	
