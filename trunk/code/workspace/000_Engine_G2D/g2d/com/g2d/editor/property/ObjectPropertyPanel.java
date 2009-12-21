@@ -84,11 +84,11 @@ public class ObjectPropertyPanel extends JPanel
 		{
 			Property type_property = object.getClass().getAnnotation(Property.class);
 			if (type_property!=null) {
-				JLabel lbl_name = new JLabel(obj.toString());
+				JLabel lbl_name = new JLabel(CUtil.arrayToString(type_property.value(), " - "));
 				this.add(lbl_name, BorderLayout.NORTH);
 			}
 		}
-		
+
 		
 		// center
 		{
