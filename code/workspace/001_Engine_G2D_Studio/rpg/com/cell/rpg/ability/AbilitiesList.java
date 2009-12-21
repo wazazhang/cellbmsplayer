@@ -4,59 +4,49 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Vector;
 
-import sun.awt.image.ImageWatched.Link;
-
 /**
- * 该类无法将新的类型加入到老的版本序列化，<br>
- * 新版本要兼容老版本只能通过反序列化完成后使用setTypes(Class<?> ... sub_types)来达成新类型的加入<br>
+ * 一组能力的集合，如果子类实现该接口，则在
+ * {@link AbilityPanel}里就可以添加集合成员
  * @author WAZA
+ * @see AbilityPanel
  */
-@Deprecated()
-public class AbilitiesVector implements Abilities, Serializable
+public abstract class AbilitiesList implements Abilities, Serializable
 {
-	private static final long serialVersionUID = 1L;
-	
 	/**将显示在单位属性的Ability面板*/
-	private Vector<AbstractAbility> abilities = new Vector<AbstractAbility>();
-	private Class<?>[] sub_types;
-	@Deprecated()
-	public AbilitiesVector(Class<?> ... sub_types) {
-		setTypes(sub_types);
-	}
+	private ArrayList<AbstractAbility> abilities = new ArrayList<AbstractAbility>();
 
-	protected void setTypes(Class<?> ... sub_types) {
-		this.sub_types = sub_types;
-	}
-	
+	public AbilitiesList() {}
+
 	final public void clearAbilities() {
 		abilities.clear();
 	}
+	
 	final public void addAbility(AbstractAbility element) {
 		abilities.add(element);
 	}
+	
 	final public void removeAbility(AbstractAbility element) {
 		abilities.remove(element);
 	}
+	
 	final public AbstractAbility[] getAbilities() {
 		return abilities.toArray(new AbstractAbility[abilities.size()]);
 	}
 
-	@SuppressWarnings("unchecked")
 	final public <T> T getAbility(Class<T> type) {
 		for (AbstractAbility a : abilities) {
 			if (type.isInstance(a)) {
-				return (T) a;
+				return type.cast(a);
 			}
 		}
 		return null;
 	}
 	
-	@SuppressWarnings("unchecked")
 	final public <T> ArrayList<T> getAbilities(Class<T> type) {
 		ArrayList<T> ret = new ArrayList<T>(abilities.size());
 		for (AbstractAbility a : abilities) {
 			if (type.isInstance(a)) {
-				ret.add((T)a);
+				ret.add(type.cast(a));
 			}
 		}
 		return ret;
@@ -66,20 +56,13 @@ public class AbilitiesVector implements Abilities, Serializable
 		return abilities.size();
 	}
 	
-	@Override
-	final public Class<?>[] getSubAbilityTypes() {
-		return sub_types;
-	}
-	
-	@Override
 	public String toString() {
-		StringBuffer buffer = new StringBuffer(getAbilitiesCount() + "个单位 : ");
+		StringBuffer buffer = new StringBuffer();
 		for (AbstractAbility a : abilities) {
 			buffer.append(a.toString() + ";");
 		}
 		return buffer.toString();
 	}
-	
 	
 	
 	
