@@ -36,7 +36,7 @@ public class QuestGenerator extends AbilitiesTypeMap
 	 * {"[任务类型] 系统任务", "满足条件后，立即可以做"}
 	 * @author WAZA
 	 */
-	@Property({"[任务类型] 系统任务", "满足条件后，立即可以做"})
+	@Property({"[任务触发] 系统任务", "满足条件后，立即可以做"})
 	public static class System extends QuestGeneratorAbility {
 		
 	}
@@ -47,7 +47,7 @@ public class QuestGenerator extends AbilitiesTypeMap
 	 * {"[任务类型] 定时任务", "每隔一定时间后，可重新做"}
 	 * @author WAZA
 	 */
-	@Property({"[任务类型] 定时任务", "每隔一定时间后，可重新做"})
+	@Property({"[任务触发] 定时任务", "每隔一定时间后，可重新做"})
 	public static class Scheduled extends QuestGeneratorAbility
 	{
 		@Property("每隔多长时间刷新")
