@@ -14,12 +14,14 @@ import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.Transparency;
+import java.awt.color.ColorSpace;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorConvertOp;
 import java.io.File;
 import java.io.InputStream;
 import java.text.AttributedCharacterIterator;
@@ -142,20 +144,21 @@ public class Tools
 	
 //	--------------------------------------------------------------------------------
 
-	static public BufferedImage createMask(BufferedImage src, float alpha, int rgb)
+	static public BufferedImage toAlpha(BufferedImage src, float alpha, int rgb)
 	{
 		rgb = 0x00ffffff & rgb;
 		
-		for (int x = src.getWidth() - 1; x >= 0; x--) 
-		{
-			for (int y = src.getHeight() - 1; y >= 0; y--)
-			{
-				int a = src.getRGB(x, y) & 0xff000000;
+		int a ;
+		int w = src.getWidth();
+		int h = src.getHeight();
+		
+		for (int x = w - 1; x >= 0; x--) {
+			for (int y = h - 1; y >= 0; y--) {
 				
-				if (a != 0)
-				{
+				a = src.getRGB(x, y) & 0xff000000;
+				if (a != 0) {
 					a = a >>> 24;
-					a = ((int)(a * alpha)) << 24;
+					a = ((int) (a * alpha)) << 24;
 					src.setRGB(x, y, a | rgb);
 				}
 			}
@@ -164,6 +167,45 @@ public class Tools
 		return src;
 	}
 	
+	public static BufferedImage toTurngrey(BufferedImage src)
+	{
+		int rgb;
+		int a, r, g, b;
+		int w = src.getWidth();
+		int h = src.getHeight();
+		
+		for (int x = w - 1; x >= 0; x--) {
+			for (int y = h - 1; y >= 0; y--) {
+				
+				rgb = src.getRGB(x, y);
+				a = (rgb & 0xff000000) >>> 24;
+				if (a != 0) {
+					r = (rgb & 0x00ff0000) >>> 16;
+					g = (rgb & 0x0000ff00) >>> 8;
+					b = (rgb & 0x000000ff);
+					r = g;
+					b = g;
+					rgb = (a << 24) | (r << 16) | (g << 8) | b;
+					src.setRGB(x, y, rgb);
+				}
+			}
+		}
+		
+		return src;
+	}
+
+	static public BufferedImage createAlpha(BufferedImage src, float alpha, int rgb)
+	{
+		BufferedImage dst = combianImage(src.getWidth(), src.getHeight(), src);
+		return toAlpha(dst, alpha, rgb);
+	}
+	
+	static public BufferedImage createTurngrey(BufferedImage src) 
+	{
+		BufferedImage dst = combianImage(src.getWidth(), src.getHeight(), src);
+		return toTurngrey(dst);
+	}
+
 	static public BufferedImage createImage(int width, int height)
 	{
 		try
