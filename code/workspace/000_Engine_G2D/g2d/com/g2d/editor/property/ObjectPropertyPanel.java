@@ -269,6 +269,10 @@ public class ObjectPropertyPanel extends JPanel
 			ListEnumEdit edit = new ListEnumEdit(field.getType());
 			return edit;
 		}
+		else if (field.getType().equals(Boolean.class) || field.getType().equals(boolean.class)) {
+			ComboBooleanEdit edit = new ComboBooleanEdit((Boolean)field_value);
+			return edit;
+		}
 		else if (field.getType().equals(Color.class))
 		{
 			PopupCellEditColor edit_color 		= new PopupCellEditColor();

@@ -166,7 +166,7 @@ public class QuestItem extends RPGObject
 	public static class TagValueComparison extends Tag
 	{
 		@Property("原值")
-		public AbstractValue		src_value;
+		public AbstractValue		src_value	= new Value(1);
 		
 		@Property("比较器")
 		public Comparison 			comparison	= Comparison.EQUAL;
@@ -179,7 +179,7 @@ public class QuestItem extends RPGObject
 	public static class TagEveryUnitComparison extends Tag
 	{
 		@Property("原单位属性")
-		public TriggerUnitProperty	src_value;
+		public TriggerUnitProperty	src_value	= new TriggerUnitProperty();
 		
 		@Property("比较器")
 		public Comparison 			comparison	= Comparison.EQUAL;
@@ -192,7 +192,7 @@ public class QuestItem extends RPGObject
 	public static class TagOneMoreUnitComparison extends Tag
 	{
 		@Property("原单位属性")
-		public TriggerUnitProperty	src_value;
+		public TriggerUnitProperty	src_value	= new TriggerUnitProperty();
 		
 		@Property("比较器")
 		public Comparison 			comparison	= Comparison.EQUAL;
@@ -205,13 +205,13 @@ public class QuestItem extends RPGObject
 	public static class TagUnitGroupCountComparison extends Tag
 	{
 		@Property("单位类型")
-		public TriggerUnitType 		group_unit_type;
+		public TriggerUnitType 		group_unit_type	= TriggerUnitType.PLAYER_GROUP;
 		
 		@Property("比较器")
-		public Comparison 			comparison	= Comparison.EQUAL;
+		public Comparison 			comparison		= Comparison.EQUAL;
 		
 		@Property("目标值")
-		public AbstractValue		dst_value	= new Value(1);
+		public AbstractValue		dst_value		= new Value(1);
 	}
 	
 //	--------------------------------------------------------------------------------------
@@ -231,6 +231,8 @@ public class QuestItem extends RPGObject
 	@Property("[结果] 奖励的物品")
 	final public static class AwardItem extends Result
 	{
+		@Property("单位类型")
+		public TriggerUnitType trigger_unit_type	= TriggerUnitType.PLAYER;
 		@Property("物品-类型")
 		public int				titem_index			= -1;
 		@Property("物品-数量")
@@ -257,7 +259,7 @@ public class QuestItem extends RPGObject
 	final public static class AwardAddUnitProperty extends Result
 	{
 		@Property("原单位属性")
-		public TriggerUnitProperty	src_value;
+		public TriggerUnitProperty	src_value	= new TriggerUnitProperty();
 
 		@Property("增量")
 		public AbstractValue		increment	= new Value(1);
@@ -267,7 +269,7 @@ public class QuestItem extends RPGObject
 	final public static class AwardSetUnitProperty extends Result
 	{
 		@Property("原单位属性")
-		public TriggerUnitProperty	src_value;
+		public TriggerUnitProperty	src_value	= new TriggerUnitProperty();
 
 		@Property("目标值")
 		public AbstractValue		dst_value	= new Value(1);
