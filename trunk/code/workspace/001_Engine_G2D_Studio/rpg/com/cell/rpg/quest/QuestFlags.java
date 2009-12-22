@@ -37,20 +37,20 @@ public class QuestFlags extends AbilitiesTypeMap
 
 //	-----------------------------------------------------------------------------------
 	/**
-	 * [任务类型] 主线任务
+	 * [任务标志] 主线任务
 	 * @author WAZA
 	 */
-	@Property({"[任务类型] 主线任务", "由剧情需要，只能做一次的任务"})
+	@Property({"[任务标志] 主线任务", "由剧情需要，只能做一次的任务"})
 	public static class Story extends QuestFlagAbility {
 		
 	}
 
 //	-----------------------------------------------------------------------------------
 	/**
-	 * {"[任务类型] 重复任务", "即在完成后，一段时间后可重新做"}
+	 * {"[任务标志] 重复任务", "即在完成后，一段时间后可重新做"}
 	 * @author WAZA
 	 */
-	@Property({"[任务类型] 重复任务", "即在完成后，一段时间后可重新做"})
+	@Property({"[任务标志] 重复任务", "即在完成后，一段时间后可重新做"})
 	public static class Repeatable extends QuestFlagAbility 
 	{
 		@Property("可重复的次数，0表示无限制")

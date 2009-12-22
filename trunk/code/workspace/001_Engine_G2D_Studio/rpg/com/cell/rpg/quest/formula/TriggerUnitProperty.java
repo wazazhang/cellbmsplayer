@@ -9,7 +9,7 @@ import com.g2d.annotation.Property;
 public class TriggerUnitProperty extends ObjectProperty
 {
 	@Property("单位类型")
-	public TriggerUnitType trigger_unit_type;
+	public TriggerUnitType trigger_unit_type = TriggerUnitType.PLAYER;
 	
 	@Override
 	public String toString() {
