@@ -231,8 +231,8 @@ public class QuestItem extends RPGObject
 	@Property("[结果] 奖励的物品")
 	final public static class AwardItem extends Result
 	{
-		@Property("单位类型")
-		public TriggerUnitType trigger_unit_type	= TriggerUnitType.PLAYER;
+//		@Property("单位类型")
+//		public TriggerUnitType trigger_unit_type	= TriggerUnitType.PLAYER;
 		@Property("物品-类型")
 		public int				titem_index			= -1;
 		@Property("物品-数量")
