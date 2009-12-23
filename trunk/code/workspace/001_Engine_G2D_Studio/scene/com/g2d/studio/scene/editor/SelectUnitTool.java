@@ -1,8 +1,10 @@
 package com.g2d.studio.scene.editor;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -11,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JToggleButton;
@@ -48,15 +51,17 @@ public class SelectUnitTool extends AbstractFrame implements ActionListener
 	
 	JTabbedPane table = new JTabbedPane();
 
-	JScrollPane	unit_scroll_pan 	= new JScrollPane();
-	JLabel 		unit_label 			= new JLabel("单位:");
-	JButton 	unit_refresh 		= new JButton(" 刷新 ");
-	XLSUnit		selected_xls;
+	JScrollPane		unit_scroll_pan 	= new JScrollPane();
+	JLabel 			unit_label 			= new JLabel("单位:");
+	JButton 		unit_refresh 		= new JButton(" 刷新 ");	
+	JProgressBar	unit_progress		= new JProgressBar();
+	XLSUnit			selected_xls;
 	
-	JScrollPane	res_scroll_pan		= new JScrollPane();
-	JLabel 		res_label 			= new JLabel("资源:");
-	JButton 	res_refresh 		= new JButton(" 刷新 ");
-	CPJSprite	selected_spr;
+	JScrollPane		res_scroll_pan		= new JScrollPane();
+	JLabel 			res_label 			= new JLabel("资源:");
+	JButton 		res_refresh 		= new JButton(" 刷新 ");
+	JProgressBar	res_progress		= new JProgressBar();
+	CPJSprite		selected_spr;
 	
 	private SelectUnitTool() 
 	{
@@ -76,10 +81,11 @@ public class SelectUnitTool extends AbstractFrame implements ActionListener
 			tool_bar.addSeparator();
 			tool_bar.add(unit_refresh);
 			unit_refresh.addActionListener(this);
+			unit_progress.setStringPainted(true);
 			
 			unit_panel.add(tool_bar, BorderLayout.NORTH);
 			unit_panel.add(unit_scroll_pan, BorderLayout.CENTER);
-			
+			unit_panel.add(unit_progress, BorderLayout.SOUTH);
 			table.addTab("单位", unit_panel);
 		}
 		{
@@ -89,9 +95,11 @@ public class SelectUnitTool extends AbstractFrame implements ActionListener
 			tool_bar.addSeparator();
 			tool_bar.add(res_refresh);
 			res_refresh.addActionListener(this);
+			res_progress.setStringPainted(true);
 			
 			res_panel.add(tool_bar, BorderLayout.NORTH);
 			res_panel.add(res_scroll_pan, BorderLayout.CENTER);
+			res_panel.add(res_progress, BorderLayout.SOUTH);
 			table.addTab("不可破坏", res_panel);
 		}
 		
@@ -104,70 +112,143 @@ public class SelectUnitTool extends AbstractFrame implements ActionListener
 	
 	void refreshXLSUnit()
 	{
-		selected_xls = null;
-		unit_map.clear();
-		JPanel 		panel 			= new JPanel(null);
-		ButtonGroup button_group	= new ButtonGroup();
+		unit_refresh.setEnabled(false);
 		
-		Vector<XLSUnit> tunits 		= Studio.getInstance().getObjectManager().getObjects(XLSUnit.class);
-		
-		int w = 32;
-		int h = 32;
-		int wc = 5;
-		
-		int i=0;
-		for (XLSUnit tunit : tunits)
+		new Thread()
 		{
-			JToggleButton btn = new JToggleButton();
-			btn.setToolTipText(tunit.getName());
-			btn.setLocation(i%wc * w, i/wc * h);
-			btn.setSize(w, h);
-			if (tunit.getCPJSprite()!=null) {
-				btn.setIcon(Tools.createIcon(Tools.combianImage(w-4, h-4, tunit.getCPJSprite().getSnapShoot())));
-				btn.addActionListener(this);
-				unit_map.put(btn, tunit);
+			@Override
+			public void run() 
+			{
+				this.setPriority(MIN_PRIORITY);
+				try{
+					HashMap<JToggleButton , XLSUnit> map = new HashMap<JToggleButton, XLSUnit>();
+					JPanel 		panel 			= new JPanel(null);
+					ButtonGroup button_group	= new ButtonGroup();
+		
+					Vector<XLSUnit> tunits 		= Studio.getInstance().getObjectManager().getObjects(
+							XLSUnit.class);
+					
+					unit_progress.setMaximum(tunits.size());
+					
+					int mw = 0;
+					int mh = 0;
+					
+					int w = 32;
+					int h = 32;
+					int wc = 5;
+					
+					int i=0;
+					for (XLSUnit tunit : tunits)
+					{
+						JToggleButton btn = new JToggleButton();
+						btn.setToolTipText(tunit.getName());
+						btn.setLocation(i%wc * w, i/wc * h);
+						btn.setSize(w, h);
+						if (tunit.getCPJSprite()!=null) {
+							btn.setIcon(Tools.createIcon(Tools.combianImage(w-4, h-4, tunit.getCPJSprite().getSnapShoot())));
+							btn.addActionListener(SelectUnitTool.this);
+							map.put(btn, tunit);
+						}
+						button_group.add(btn);
+						panel.add(btn);
+						mw = Math.max(mw, btn.getX() + btn.getWidth());
+						mh = Math.max(mh, btn.getY() + btn.getHeight());
+						i++;
+						unit_progress.setValue(i);
+						unit_progress.setString(tunit.getName() + 
+								"    " + i +"/" + tunits.size());
+					}
+	
+					panel.setSize(mw, mh);
+					panel.setPreferredSize(new Dimension(mw, mh));
+					panel.setMinimumSize(new Dimension(mw, mh));
+					
+	
+					selected_xls = null;
+					unit_map.clear();
+					unit_map.putAll(map);
+					unit_scroll_pan.setViewportView(panel);
+					unit_progress.setString(i +"/" + tunits.size());
+					
+					System.out.println("refresh units");
+				} 
+				finally {
+					unit_refresh.setEnabled(true);
+				}
 			}
-			button_group.add(btn);
-			panel.add(btn);
-			i++;
-		}
+		}.start();
 		
-		unit_scroll_pan.setViewportView(panel);
 		
-		System.out.println("refresh units");
+		
 	}
 	
 	void refreshCPJ()
 	{
-		selected_spr = null;
-		res_map.clear();
-		JPanel 		panel 			= new JPanel(null);
-		ButtonGroup button_group	= new ButtonGroup();
+
+		res_refresh.setEnabled(false);
 		
-		Vector<CPJSprite> actors 	= Studio.getInstance().getCPJResourceManager().getNodes(CPJResourceType.ACTOR, CPJSprite.class);
-		
-		int w = 32;
-		int h = 32;
-		int wc = 5;
-		
-		int i=0;
-		for (CPJSprite actor : actors)
+		new Thread()
 		{
-			JToggleButton btn = new JToggleButton();
-			btn.setToolTipText(actor.getName());
-			btn.setLocation(i%wc * w, i/wc * h);
-			btn.setSize(w, h);
-			btn.setIcon(Tools.createIcon(Tools.combianImage(w-4, h-4, actor.getSnapShoot())));
-			btn.addActionListener(this);
-			res_map.put(btn, actor);
-			button_group.add(btn);
-			panel.add(btn);
-			i++;
-		}
+			@Override
+			public void run() 
+			{				
+				this.setPriority(MIN_PRIORITY);
+				try{
+					Hashtable<JToggleButton , CPJSprite> map = new Hashtable<JToggleButton, CPJSprite>();
+					JPanel 		panel 			= new JPanel(null);
+					ButtonGroup button_group	= new ButtonGroup();
+					
+					Vector<CPJSprite> actors 	= Studio.getInstance().getCPJResourceManager().getNodes(
+							CPJResourceType.ACTOR, 
+							CPJSprite.class);
+	
+					res_progress.setMaximum(actors.size());
+					
+					int mw = 0;
+					int mh = 0;
+					
+					int w = 32;
+					int h = 32;
+					int wc = 5;
+					
+					int i=0;
+					for (CPJSprite actor : actors)
+					{
+						JToggleButton btn = new JToggleButton();
+						btn.setToolTipText(actor.getName());
+						btn.setLocation(i%wc * w, i/wc * h);
+						btn.setSize(w, h);
+						btn.setIcon(Tools.createIcon(Tools.combianImage(w-4, h-4, actor.getSnapShoot())));
+						btn.addActionListener(SelectUnitTool.this);
+						map.put(btn, actor);
+						button_group.add(btn);
+						panel.add(btn);
+						mw = Math.max(mw, btn.getX() + btn.getWidth());
+						mh = Math.max(mh, btn.getY() + btn.getHeight());
+						i++;
+						res_progress.setValue(i);
+						res_progress.setString(actor.getName() + 
+								"    " + i +"/" + actors.size());
+					}
+	
+					panel.setSize(mw, mh);
+					panel.setPreferredSize(new Dimension(mw, mh));
+					panel.setMinimumSize(new Dimension(mw, mh));
+	
+					selected_spr = null;
+					res_map.clear();
+					res_map.putAll(map);
+					res_scroll_pan.setViewportView(panel);
+					res_progress.setString(i +"/" + actors.size());
+
+					System.out.println("refresh resource");
+				}
+				finally{
+					res_refresh.setEnabled(true);
+				}
+			}
+		}.start();
 		
-		res_scroll_pan.setViewportView(panel);
-		
-		System.out.println("refresh resource");
 	}
 	
 	@Override
