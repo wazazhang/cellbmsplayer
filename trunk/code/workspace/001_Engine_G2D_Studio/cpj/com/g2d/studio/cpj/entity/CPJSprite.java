@@ -1,12 +1,15 @@
 package com.g2d.studio.cpj.entity;
 
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
 import javax.swing.ImageIcon;
 
+import com.cell.game.CCD;
 import com.cell.game.CSprite;
+import com.cell.j2se.CGraphics;
 import com.g2d.Tools;
 import com.g2d.cell.CellSprite;
 import com.g2d.cell.CellSetResource.SpriteSet;
@@ -37,21 +40,37 @@ public class CPJSprite extends CPJObject<SpriteSet>
 	public BufferedImage getSnapShoot() {
 		if (snapshoot==null) {
 			try {
-				File file = new File(parent.getCPJDir()+"/icon.png");
+				File file = new File(parent.getCPJDir()+"/icon_" + name + ".png");
+//				File file = new File(parent.getCPJDir()+"/icon.png");
 				if (file.exists()) {
 					snapshoot = Tools.readImage(file.getPath());
-					snapshoot = Tools.combianImage(32, 32, snapshoot);
+					if (snapshoot != null) {
+						snapshoot = Tools.combianImage(32, 32, snapshoot);
+					}
 				}
-				else {
-					synchronized (parent.getSetResource()) {
+				
+				if (snapshoot == null) 
+				{
+					synchronized (parent.getSetResource()) 
+					{
 						boolean unload = !parent.getSetResource().isLoadImages();
+						
 						parent.getSetResource().initAllStreamImages();
-						CSprite spr = parent.getSetResource().getSprite(name);
-						Image img = spr.getFrameImage(0, 0, 0).getSrc();
+						CSprite			spr		= parent.getSetResource().getSprite(name);
+						CCD				bounds	= spr.getFrameBounds(0, 0);
+						BufferedImage 	img		= Tools.createImage(bounds.getWidth(), bounds.getHeight());
+						
+						Graphics2D		g2d		= img.createGraphics();
+						spr.render(new CGraphics(g2d), -bounds.X1, -bounds.Y1, 0, 0);
+						g2d.dispose();
+
 						snapshoot = Tools.combianImage(32, 32, img);
+						Tools.writeImage(file.getPath(), snapshoot);
+						
 						if (unload) {
 							parent.getSetResource().destoryAllStreamImages();
 						}
+						
 					}
 				}
 			} catch (Exception e) {
