@@ -9,6 +9,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import com.cell.rpg.ability.Abilities;
 import com.cell.rpg.ability.AbstractAbility;
 import com.cell.rpg.scene.Actor;
+import com.cell.rpg.scene.Scene;
 import com.cell.rpg.scene.ability.ActorPathStart;
 import com.cell.rpg.scene.ability.ActorTransport;
 import com.cell.rpg.scene.ability.RegionSpawnNPC;
@@ -16,6 +17,7 @@ import com.cell.rpg.scene.ability.RegionSpawnNPC.NPCSpawn;
 import com.cell.rpg.xls.XLSFile;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
+import com.g2d.editor.property.ObjectPropertyPanel.CellEditAdapter;
 import com.g2d.studio.Config;
 import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.ObjectSelectCellEdit;
@@ -26,9 +28,48 @@ import com.g2d.studio.scene.entity.SceneNode;
 import com.g2d.studio.scene.units.SceneActor;
 import com.g2d.studio.scene.units.SceneImmutable;
 import com.g2d.studio.scene.units.ScenePoint;
+import com.g2d.studio.sound.SoundSelectDialog;
 
 public class SceneAbilityAdapters
 {
+	public static class SceneBGMAdapter implements CellEditAdapter<Scene>
+	{
+		@Override
+		public boolean fieldChanged(Object editObject, Object fieldValue,
+				Field field) {
+			return false;
+		}
+		@Override
+		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner,
+				Object editObject, Object fieldValue, Field field) {
+			if (field.getName().equals("bgm_sound_name")) {
+				SoundSelectDialog edit = new SoundSelectDialog(owner, (String)fieldValue);
+				edit.showDialog();
+				return edit;
+			}
+			return null;
+		}
+		
+		@Override
+		public Component getCellRender(ObjectPropertyPanel owner,
+				Object editObject, Object fieldValue, Field field,
+				DefaultTableCellRenderer src) {
+			return null;
+		}
+		
+		@Override
+		public Object getCellValue(Object editObject,
+				PropertyCellEdit<?> fieldEdit, Field field, Object fieldSrcValue) {
+			return null;
+		}
+		
+		@Override
+		public Class<Scene> getType() {
+			return Scene.class;
+		}
+		
+	}
+	
 	/**
 	 * 编辑传送点能力的工具
 	 * @author WAZA

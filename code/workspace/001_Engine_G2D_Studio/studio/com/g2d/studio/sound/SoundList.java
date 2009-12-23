@@ -5,6 +5,7 @@ import java.awt.event.MouseListener;
 import java.util.Vector;
 
 import javax.swing.JList;
+import javax.swing.ListModel;
 
 import com.cell.sound.util.StaticSoundPlayer;
 import com.g2d.studio.Studio;
@@ -26,6 +27,16 @@ public class SoundList extends G2DList<SoundFile> implements MouseListener
 		super.addMouseListener(this);
 	}
 	
+	public SoundFile getSoundFile(String name) {
+		ListModel model = getModel();
+		for (int i=0; i<model.getSize(); i++) {
+			SoundFile sound = (SoundFile)model.getElementAt(i);
+			if (sound.sound_file_name.equals(name)) {
+				return sound;
+			}
+		}
+		return null;
+	}
 
 	public void playSelected() {
 		if (playing_sound!=null) {
