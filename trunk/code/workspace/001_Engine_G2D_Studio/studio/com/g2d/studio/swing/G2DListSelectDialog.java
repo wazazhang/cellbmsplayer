@@ -38,6 +38,10 @@ public abstract class G2DListSelectDialog<T extends G2DListItem>  extends Abstra
 		this.ok.addActionListener(this);
 	}
 	
+	protected G2DList<T> getList(){
+		return this.list;
+	}
+	
 	public T getSelectedObject() {
 		return list.getSelectedItem();
 	}

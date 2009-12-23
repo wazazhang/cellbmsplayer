@@ -21,6 +21,7 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
@@ -32,6 +33,7 @@ import com.cell.game.CSprite;
 import com.cell.rpg.scene.Actor;
 import com.cell.rpg.scene.Region;
 import com.cell.rpg.scene.SceneUnit;
+import com.cell.sound.util.StaticSoundPlayer;
 import com.g2d.Tools;
 import com.g2d.cell.CellSetResource;
 import com.g2d.cell.CellSprite;
@@ -62,6 +64,7 @@ import com.g2d.studio.scene.units.SceneImmutable;
 import com.g2d.studio.scene.units.ScenePoint;
 import com.g2d.studio.scene.units.SceneRegion;
 import com.g2d.studio.scene.units.SceneUnitTag;
+import com.g2d.studio.sound.SoundFile;
 import com.g2d.studio.swing.G2DWindowToolBar;
 import com.g2d.util.AbstractFrame;
 import com.g2d.util.Drawing;
@@ -90,7 +93,8 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 	private JToggleButton		tool_selector	= new JToggleButton(Tools.createIcon(Res.icons_bar[0]), true);
 	private JToggleButton		tool_addactor	= new JToggleButton(Tools.createIcon(Res.icons_bar[8]));
 	private JToggleButton		tool_show_grid	= new JToggleButton(Tools.createIcon(Res.icon_grid));
-	private JToggleButton		tool_edit_prop	= new JToggleButton(Tools.createIcon(Res.icons_bar[1]));
+	private JButton				tool_edit_prop	= new JButton(Tools.createIcon(Res.icons_bar[1]));
+	private JToggleButton		tool_play_bgm	= new JToggleButton(Tools.createIcon(Res.icons_bar[3]));
 	private JTabbedPane			unit_page;
 //	private SceneUnitTagAdapter<SceneActor>		page_actors;
 //	private SceneUnitTagAdapter<SceneRegion>	page_regions;
@@ -100,6 +104,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 
 //	--------------------------------------------------------------------------------------------------------------
 //	transient
+	private StaticSoundPlayer v_bgm_sound_player;
 	private SceneUnitTag<?> v_selected_unit;
 	
 //	--------------------------------------------------------------------------------------------------------------
@@ -117,24 +122,34 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		
 		// tool bar
 		{
-			tool_bar = new G2DWindowToolBar(this);
-			tool_selector.setToolTipText("选择");
-			tool_addactor.setToolTipText("添加");
-			tool_addactor.addActionListener(this);
-			tool_bar.add(tool_selector);
-			tool_bar.add(tool_addactor);
-			ButtonGroup button_group = new ButtonGroup();
-			button_group.add(tool_selector);
-			button_group.add(tool_addactor);
-			tool_bar.addSeparator();
+			{
+				tool_bar = new G2DWindowToolBar(this);
+				tool_selector.setToolTipText("选择");
+				tool_addactor.setToolTipText("添加");
+				tool_addactor.addActionListener(this);
+				tool_bar.add(tool_selector);
+				tool_bar.add(tool_addactor);
+				ButtonGroup button_group = new ButtonGroup();
+				button_group.add(tool_selector);
+				button_group.add(tool_addactor);
+				tool_bar.addSeparator();
+			}
+			{
+				tool_show_grid.setToolTipText("显示碰撞");
+				tool_show_grid.addActionListener(this);
+				tool_bar.add(tool_show_grid);
+				tool_edit_prop.setToolTipText("查看场景属性");
+				tool_edit_prop.addActionListener(this);
+				tool_bar.add(tool_edit_prop);
+				tool_bar.addSeparator();
+			}
+			{
+				tool_play_bgm.setToolTipText("播放BGM");
+				tool_play_bgm.addActionListener(this);
+				tool_bar.add(tool_play_bgm);
+			}
+
 			
-			tool_show_grid.setToolTipText("显示碰撞");
-			tool_show_grid.addActionListener(this);
-			tool_bar.add(tool_show_grid);
-			
-			tool_edit_prop.setToolTipText("查看场景属性");
-			tool_edit_prop.addActionListener(this);
-			tool_bar.add(tool_edit_prop);
 		}
 		this.add(tool_bar, BorderLayout.NORTH);
 		
@@ -274,8 +289,28 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 			scene_container.getWorld().setDebug(tool_show_grid.isSelected());
 		}
 		else if (e.getSource() == tool_edit_prop) {
-			new DisplayObjectEditor<SceneContainer>(scene_container,
-					new RPGObjectPanel(scene_node.getData())).setVisible(true);
+			DisplayObjectEditor<SceneContainer> editor = new DisplayObjectEditor<SceneContainer>(
+					scene_container,
+					new RPGObjectPanel(scene_node.getData(), 
+							new SceneAbilityAdapters.SceneBGMAdapter()));
+			editor.setCenter();
+			editor.setVisible(true);
+		}
+		else if (e.getSource() == tool_play_bgm) {
+			if (v_bgm_sound_player!=null) {
+				v_bgm_sound_player.stop();
+				v_bgm_sound_player.dispose();
+				v_bgm_sound_player = null;
+			}
+			if (tool_play_bgm.isSelected()) {
+				if (scene_node.getData().bgm_sound_name!=null) {
+					SoundFile sound = Studio.getInstance().getSoundManager().getSound(scene_node.getData().bgm_sound_name);
+					if (sound != null) {
+						v_bgm_sound_player = sound.createSoundPlayer();
+						v_bgm_sound_player.play(true);
+					}
+				}
+			}
 		}
 	}
 
