@@ -45,6 +45,8 @@ public class SelectUnitTool extends AbstractFrame implements ActionListener
 	}
 	
 //	--------------------------------------------------------------------------------------------------------------------------------
+	final int icon_size			= 32;
+	final int icon_column_count	= 5;
 	
 	private Hashtable<JToggleButton , XLSUnit> unit_map = new Hashtable<JToggleButton, XLSUnit>();
 	private Hashtable<JToggleButton , CPJSprite> res_map = new Hashtable<JToggleButton, CPJSprite>();
@@ -82,6 +84,7 @@ public class SelectUnitTool extends AbstractFrame implements ActionListener
 			tool_bar.add(unit_refresh);
 			unit_refresh.addActionListener(this);
 			unit_progress.setStringPainted(true);
+			unit_scroll_pan.getVerticalScrollBar().setUnitIncrement(icon_size);
 			
 			unit_panel.add(tool_bar, BorderLayout.NORTH);
 			unit_panel.add(unit_scroll_pan, BorderLayout.CENTER);
@@ -96,6 +99,7 @@ public class SelectUnitTool extends AbstractFrame implements ActionListener
 			tool_bar.add(res_refresh);
 			res_refresh.addActionListener(this);
 			res_progress.setStringPainted(true);
+			res_scroll_pan.getVerticalScrollBar().setUnitIncrement(icon_size);
 			
 			res_panel.add(tool_bar, BorderLayout.NORTH);
 			res_panel.add(res_scroll_pan, BorderLayout.CENTER);
@@ -133,9 +137,9 @@ public class SelectUnitTool extends AbstractFrame implements ActionListener
 					int mw = 0;
 					int mh = 0;
 					
-					int w = 32;
-					int h = 32;
-					int wc = 5;
+					int w = icon_size;
+					int h = icon_size;
+					int wc = icon_column_count;
 					
 					int i=0;
 					for (XLSUnit tunit : tunits)
@@ -207,9 +211,9 @@ public class SelectUnitTool extends AbstractFrame implements ActionListener
 					int mw = 0;
 					int mh = 0;
 					
-					int w = 32;
-					int h = 32;
-					int wc = 5;
+					int w = icon_size;
+					int h = icon_size;
+					int wc = icon_column_count;
 					
 					int i=0;
 					for (CPJSprite actor : actors)
