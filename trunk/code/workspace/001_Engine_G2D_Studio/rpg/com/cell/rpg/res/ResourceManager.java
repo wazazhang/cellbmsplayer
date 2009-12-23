@@ -46,7 +46,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 //	--------------------------------------------------------------------------------------------------------------------
 	
 	final public String res_root;
-	
+	final public String save_dir;
 	// res objects
 	protected Hashtable<String, SceneSet>	all_scene_set;
 	protected Hashtable<String, SpriteSet>	all_actor_set;
@@ -76,10 +76,10 @@ public abstract class ResourceManager extends CellSetResourceManager
 	 * @param sound_root
 	 * @throws Exception
 	 */
-	public ResourceManager(String res_root) throws Exception
+	public ResourceManager(String res_root, String save_name) throws Exception
 	{
 		this.res_root	= res_root;
-		
+		this.save_dir	= res_root + "/" + save_name;
 		
 	}
 
@@ -92,34 +92,33 @@ public abstract class ResourceManager extends CellSetResourceManager
 			boolean init_sound)  throws Exception
 	{
 		this.res_root	= res_root;
-
+		this.save_dir	= res_root + "/" + save_name;
+		
 		if (init_set) 
-			initAllSet(save_name);
+			initAllSet();
 		
 		if (init_xml) 
-			initAllXml(save_name);
+			initAllXml();
 		
 		if (init_icon) 
-			initIcons(save_name);
+			initIcons();
 		
 		if (init_sound) 
-			initSounds(save_name);
+			initSounds();
 	}
 	
 //	--------------------------------------------------------------------------------------------------------------------
 
-	final protected void initAllSet(String save_name) throws Exception
+	final protected void initAllSet() throws Exception
 	{
-		String save_dir = res_root + "/" + save_name;
 		all_scene_set	= readSets(save_dir + "/resources/scene_list.list",	SceneSet.class);
 		all_actor_set	= readSets(save_dir + "/resources/actor_list.list",	SpriteSet.class);
 		all_avatar_set	= readSets(save_dir + "/resources/avatar_list.list",	SpriteSet.class);
 		all_effect_set	= readSets(save_dir + "/resources/effect_list.list",	SpriteSet.class);
 	}
 	
-	final protected void initAllXml(String save_name)  throws Exception
+	final protected void initAllXml()  throws Exception
 	{
-		String save_dir = res_root + "/" + save_name;
 		tunits		= readTemplates(save_dir + "/objects/tunit.obj", 	TUnit.class);
 		titems		= readTemplates(save_dir + "/objects/titem.obj", 	TItem.class);
 		tavatars	= readTemplates(save_dir + "/objects/tavatar.obj",	TAvatar.class);
@@ -129,14 +128,14 @@ public abstract class ResourceManager extends CellSetResourceManager
 		scenes		= readRPGScenes(save_dir + "/scenes");
 	}
 	
-	final protected void initIcons(String save_name)
+	final protected void initIcons()
 	{
-		all_icons	= readIcons(res_root + "/" + save_name + "/icons/icon.list" );
+		all_icons	= readIcons(save_dir + "/icons/icon.list" );
 	}
 	
-	final protected void initSounds(String save_name)
+	final protected void initSounds()
 	{
-		all_sounds	= readSounds(res_root + "/" + save_name + "/sounds/sound.list" );
+		all_sounds	= readSounds(save_dir + "/sounds/sound.list" );
 	}
 	
 //	--------------------------------------------------------------------------------------------------------------------
