@@ -80,12 +80,12 @@ public class Quest extends RPGObject
 	
 	@Override
 	public void onReadComplete(RPGObject object, String xmlFile) {
-		File txt_file = new File(xmlFile+".txt");
-		if (txt_file.exists()) {
-			this.discussion = CFile.readText(txt_file, "UTF-8");
-		} else {
-			this.discussion = QuestScript.createExample();
-		}
+//		File txt_file = new File(xmlFile+".txt");
+//		if (txt_file.exists()) {
+//			this.discussion = CFile.readText(txt_file, "UTF-8");
+//		} else {
+//			this.discussion = QuestScript.createExample();
+//		}
 
 		if (accept_condition == null) {
 			accept_condition = new QuestCondition();
@@ -103,8 +103,8 @@ public class Quest extends RPGObject
 	
 	@Override
 	public void onWriteBefore(RPGObject object, String xmlFile) {
-		File txt_file = new File(xmlFile+".txt");
-		CFile.writeText(txt_file, this.discussion, "UTF-8");
+//		File txt_file = new File(xmlFile+".txt");
+//		CFile.writeText(txt_file, this.discussion, "UTF-8");
 	}
 	
 //	----------------------------------------------------------------------------------------------------------------

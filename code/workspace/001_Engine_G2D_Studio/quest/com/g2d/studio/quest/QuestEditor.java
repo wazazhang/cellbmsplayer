@@ -1,25 +1,45 @@
 package com.g2d.studio.quest;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.io.File;
 
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextPane;
+import javax.swing.JToolBar;
 
+
+import com.cell.io.CFile;
 import com.cell.rpg.RPGObject;
 import com.cell.rpg.io.RPGSerializationListener;
+import com.cell.rpg.quest.script.QuestScript;
+import com.g2d.Tools;
+import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.ObjectViewer;
 import com.g2d.studio.quest.events.QuestEventView;
 import com.g2d.studio.quest.items.QuestItemView;
+import com.g2d.studio.res.Res;
 import com.g2d.studio.rpg.RPGObjectPanel;
+import com.g2d.studio.swing.G2DWindowToolBar;
+import com.g2d.util.AbstractFrame;
 import com.g2d.util.TextEditor;
 
-public class QuestEditor extends ObjectViewer<QuestNode> implements RPGSerializationListener
+public class QuestEditor extends ObjectViewer<QuestNode> implements RPGSerializationListener, ActionListener
 {	
-	PanelDiscussion		page_quest_discussion;
+	JToolBar			toolbar = new JToolBar();
+	JButton				btn_discussion = new JButton(Tools.createIcon(Res.icon_action));
+	
+	
+//	PanelDiscussion		page_quest_discussion;
 	JSplitPane			page_quest_data;
 
 	QuestEventView		data_event;
@@ -29,10 +49,18 @@ public class QuestEditor extends ObjectViewer<QuestNode> implements RPGSerializa
 	
 	public QuestEditor(QuestNode node) {
 		super(node);
+		
 		if (node.getData().getRPGSerializationListeners() == null ||
 			node.getData().getRPGSerializationListeners().contains(this)==false) {
 			node.getData().addRPGSerializationListener(this);
 		}
+		
+		btn_discussion.setToolTipText("任务脚本");
+		btn_discussion.addActionListener(this);
+		toolbar.add(btn_discussion);
+		
+		this.add(toolbar, BorderLayout.NORTH);
+		
 	}
 	
 	@Override
@@ -40,14 +68,14 @@ public class QuestEditor extends ObjectViewer<QuestNode> implements RPGSerializa
 
 		data_event			= new QuestEventView(tobject.getData());
 		data_quest			= new QuestItemView(tobject.getData());
-		page_quest_discussion	= new PanelDiscussion();
+//		page_quest_discussion	= new PanelDiscussion();
 		page_quest_data			= new JSplitPane(
 				JSplitPane.VERTICAL_SPLIT, 
 				data_event, 
 				data_quest);
 		
 		table.removeAll();
-		table.addTab("任务内容", page_quest_discussion);
+//		table.addTab("任务内容", page_quest_discussion);
 		table.addTab("任务数据", page_quest_data);
 		table.addTab("附加属性", page_object_panel);
 	}
@@ -55,21 +83,100 @@ public class QuestEditor extends ObjectViewer<QuestNode> implements RPGSerializa
 	@Override
 	public void onReadComplete(RPGObject object, String xmlFile) {
 	}
+	
 	@Override
 	public void onWriteBefore(RPGObject object, String xmlFile) {
 		data_event.save();
 		data_quest.save();
-		tobject.getData().setDiscussion(page_quest_discussion.getText());
+//		tobject.getData().setDiscussion(page_quest_discussion.getText());
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btn_discussion) {
+			new DiscussionForm(new File(
+					Studio.getInstance().project_save_path, 
+					"quests/" + tobject.getIntID() + ".xml.txt")).setVisible(true);
+		}
 	}
 	
 //	-------------------------------------------------------------------------------------
 	
-	class PanelDiscussion extends TextEditor
+	static class DiscussionForm extends AbstractFrame implements ActionListener, WindowListener
 	{		
-		public PanelDiscussion() {
-			setText(tobject.getData().getDiscussion());
+		final File 			file;
+
+		G2DWindowToolBar	toolbar	= new G2DWindowToolBar(this);
+		TextEditor 			text	= new TextEditor();
+		
+		String				src		;
+		
+		public DiscussionForm(File file) 
+		{
+			super.setSize(800, 600);
+			super.setIconImage(Res.icon_edit);
+			super.setCenter();
+			super.setTitle(file.getName());
+			super.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+			super.addWindowListener(this);
+			
+			this.file = file;
+			
+			add(toolbar, 	BorderLayout.NORTH);
+			add(text, 		BorderLayout.CENTER);
+			
+			if (file.exists()) {
+				this.src = CFile.readText(file, "UTF-8");
+			} else {
+				this.src = QuestScript.createExample();
+			}
+
+			text.setText(src);
 		}
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (e.getSource() == toolbar.save) {
+				CFile.writeText(file, text.getText(), "UTF-8");
+			}
+		}
+		
+		@Override
+		public void windowActivated(WindowEvent e) {}
+		@Override
+		public void windowClosed(WindowEvent e) {}
+		@Override
+		public void windowClosing(WindowEvent e) {
+			String dst = text.getText();
+			if (!dst.equals(src)) {
+				int result = JOptionPane.showConfirmDialog(this, "关闭该任务脚本前是否要保存？", "确认", JOptionPane.YES_NO_CANCEL_OPTION);
+				if (result == JOptionPane.OK_OPTION) {
+					CFile.writeText(file, dst, "UTF-8");
+					this.setVisible(false);
+				} else if (result == JOptionPane.NO_OPTION) {
+					this.setVisible(false);
+				}
+			} else {
+				this.setVisible(false);
+			}
+		}
+		@Override
+		public void windowDeactivated(WindowEvent e) {}
+		@Override
+		public void windowDeiconified(WindowEvent e) {}
+		@Override
+		public void windowIconified(WindowEvent e) {}
+		@Override
+		public void windowOpened(WindowEvent e) {}
+		
 	}
+	
+//	class PanelDiscussion extends TextEditor
+//	{		
+//		public PanelDiscussion() {
+//			setText(tobject.getData().getDiscussion());
+//		}
+//	}
 
 //	-------------------------------------------------------------------------------------
 	
