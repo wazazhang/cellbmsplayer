@@ -41,6 +41,12 @@ public class ListEnumEdit<T extends Enum<T>> extends JComboBox implements Proper
 		return this;
 	}
 	
+	public T setValue(T value) {
+		T old = getValue();
+		this.setSelectedItem(value);
+		return old;
+	}
+	
 	public T getValue() {
 		Object item = getSelectedItem();
 		if (item != null) {
