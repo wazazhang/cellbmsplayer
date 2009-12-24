@@ -1,5 +1,6 @@
 package com.cell.rpg.struct;
 
+import com.cell.util.EnumManager;
 import com.cell.util.EnumManager.ValueEnum;
 
 public class DateUtil
@@ -7,13 +8,13 @@ public class DateUtil
 	
 	public static enum WeekDay implements ValueEnum<Byte>
 	{
-		SUNDAY(6), 
-		MONDAY(0), 
-		TUESDAY(1), 
-		WEDNESDAY(2), 
-		THURSDAY(3), 
-		FRIDAY(4), 
-		SATURDAY(5),
+		SUNDAY(1), 
+		MONDAY(2), 
+		TUESDAY(3), 
+		WEDNESDAY(4), 
+		THURSDAY(5), 
+		FRIDAY(6), 
+		SATURDAY(7),
 		;
 		
 		final Byte value;
@@ -37,6 +38,11 @@ public class DateUtil
 			}
 			return super.toString();
 		}
+		
+		public static WeekDay fromValue(int value) {
+			return EnumManager.toEnum(WeekDay.class, (byte)value);
+		}
+		
 	}
 	
 	public static enum YearMonth implements ValueEnum<Byte> 
@@ -55,8 +61,8 @@ public class DateUtil
 		DECEMBER(12), ;
 
 		final Byte value;
-		private YearMonth(Integer value) {
-			this.value = value.byteValue();
+		private YearMonth(int value) {
+			this.value = (byte)value;
 		}
 		@Override
 		public Byte getValue() {
@@ -79,6 +85,9 @@ public class DateUtil
 			case DECEMBER:	return "十二月";
 			}
 			return super.toString();
+		}
+		public static YearMonth fromValue(int value) {
+			return EnumManager.toEnum(YearMonth.class, (byte)value);
 		}
 	}
 }

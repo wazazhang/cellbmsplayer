@@ -16,6 +16,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -27,6 +28,7 @@ import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import com.cell.reflect.Parser;
 import com.cell.rpg.ability.AbstractAbility;
 import com.cell.rpg.formula.AbstractValue;
 import com.cell.rpg.formula.ObjectProperty;
@@ -403,13 +405,16 @@ public class QuestCellEditAdapter {
 //	-------------------------------------------------------------------------------------------------------------------------
 	
 	
-	static class DialogFestivalDateEdit extends AbstractDialog implements PropertyCellEdit<FestivalDate>
+	static class DialogFestivalDateEdit extends AbstractDialog implements PropertyCellEdit<FestivalDate>, ActionListener
 	{
 		final FestivalDate date;
 		
 		JLabel		edit_label = new JLabel();
 		
 		TimePanel	panel_date;
+		
+		JButton		btn_ok 		= new JButton("确定");
+		JButton		btn_cancel 	= new JButton("取消");
 		
 		public DialogFestivalDateEdit(Component owner, FestivalDate date) 
 		{
@@ -423,7 +428,15 @@ public class QuestCellEditAdapter {
 			
 			this.panel_date = new TimePanel(this.date);
 			this.add(panel_date, BorderLayout.CENTER);
-			this.setSize((int)panel_date.getPreferredSize().getWidth()+40, 120);
+			
+			JPanel btn_pan = new JPanel(new FlowLayout());
+			btn_pan.add(btn_ok);
+			btn_pan.add(btn_cancel);
+			btn_ok.addActionListener(this);
+			btn_cancel.addActionListener(this);
+			this.add(btn_pan, BorderLayout.SOUTH);
+
+			this.setSize((int)panel_date.getPreferredSize().getWidth()+40, 140);
 		}
 		
 		@Override
@@ -435,6 +448,17 @@ public class QuestCellEditAdapter {
 		@Override
 		public FestivalDate getValue() {
 			return date;
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (e.getSource() == btn_ok) {
+				panel_date.setDate(date);
+				setVisible(false);
+			}
+			if (e.getSource() == btn_cancel) {
+				setVisible(false);
+			}
 		}
 		
 		
@@ -505,7 +529,7 @@ public class QuestCellEditAdapter {
 				
 				combo_year			.setModel(new SpinnerNumberModel(1900, 1900, Short.MAX_VALUE, 1));
 				combo_day_of_month	.setModel(new SpinnerNumberModel(1, 1, 31, 1));
-				combo_week_of_year	.setModel(new SpinnerNumberModel(0, 0, 53, 1));
+				combo_week_of_year	.setModel(new SpinnerNumberModel(1, 1, 54, 1));
 				combo_hour			.setModel(new SpinnerNumberModel(0, 0, 23, 1));
 				combo_minute		.setModel(new SpinnerNumberModel(0, 0, 59, 1));
 				combo_second		.setModel(new SpinnerNumberModel(0, 0, 59, 1));
@@ -566,6 +590,29 @@ public class QuestCellEditAdapter {
 				}
 			}
 			
+			private void setDate(FestivalDate date)
+			{
+				date.type = combo_type.getValue();
+				
+				date.year			.setKey(Parser.castNumber(combo_year.getValue(), Short.class));
+				date.month			.setKey(combo_month.getValue().getValue());
+				date.day_of_month	.setKey(Parser.castNumber(combo_day_of_month.getValue(), Byte.class));
+				date.week_of_year	.setKey(Parser.castNumber(combo_week_of_year.getValue(), Byte.class));
+				date.day_of_week	.setKey(combo_day_of_week.getValue().getValue());
+				date.hour			.setKey(Parser.castNumber(combo_hour.getValue(), Byte.class));
+				date.minute			.setKey(Parser.castNumber(combo_minute.getValue(), Byte.class));
+				date.second			.setKey(Parser.castNumber(combo_second.getValue(), Byte.class));
+				
+				date.year			.setValue(every_year.isSelected());
+				date.month			.setValue(every_month.isSelected());
+				date.day_of_month	.setValue(every_day_of_month.isSelected());
+				date.week_of_year	.setValue(every_week_of_year.isSelected());
+				date.day_of_week	.setValue(every_day_of_week.isSelected());
+				date.hour			.setValue(every_hour.isSelected());
+				date.minute			.setValue(every_minute.isSelected());
+				date.second			.setValue(every_second.isSelected());
+				
+			}
 			
 //			-----------------------------------------------------------------
 			
