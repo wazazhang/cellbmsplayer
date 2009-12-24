@@ -15,6 +15,7 @@ import java.lang.reflect.Field;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -52,6 +53,7 @@ import com.cell.rpg.quest.ability.QuestAccepter;
 import com.cell.rpg.quest.ability.QuestPublisher;
 import com.cell.rpg.quest.ability.QuestTrigger;
 import com.cell.rpg.struct.DateUtil;
+import com.cell.rpg.struct.DateUtil.TimeObject;
 import com.cell.rpg.struct.DateUtil.WeekDay;
 import com.cell.rpg.struct.DateUtil.YearMonth;
 import com.cell.rpg.xls.XLSColumns;
@@ -75,6 +77,7 @@ import com.g2d.studio.scene.editor.SceneUnitListCellEdit;
 import com.g2d.studio.scene.entity.SceneNode;
 import com.g2d.studio.scene.units.SceneImmutable;
 import com.g2d.util.AbstractDialog;
+import com.g2d.util.AbstractOptionDialog;
 
 public class QuestCellEditAdapter {
 
@@ -353,6 +356,88 @@ public class QuestCellEditAdapter {
 
 //	-------------------------------------------------------------------------------------------------------------------------
 	
+	public static class TimeObjectAdapter extends AbilityCellEditAdapter<AbstractAbility>
+	{
+		@Override
+		public Class<AbstractAbility> getType() {
+			return AbstractAbility.class;
+		}
+		
+		@Override
+		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner,
+			Object editObject, Object fieldValue, Field field) {
+			if (TimeObject.class.equals(field.getType())) {
+				DialogTimeObjectEdit edit = new DialogTimeObjectEdit((TimeObject)fieldValue);
+				edit.showDialog();
+				return edit;
+			}
+			return null;
+		}
+		
+	}
+	
+	static class DialogTimeObjectEdit extends AbstractOptionDialog<TimeObject> implements PropertyCellEdit<TimeObject>
+	{
+		JLabel edit_label = new JLabel();
+		
+		final TimeObject src;
+		
+		ListEnumEdit<TimeUnit>	combo_time_unit		= new ListEnumEdit<TimeUnit>(TimeUnit.class);
+		JSpinner 				combo_time_value	= new JSpinner(new SpinnerNumberModel(
+				new Long(1), 
+				new Long(Long.MIN_VALUE), 
+				new Long(Long.MAX_VALUE), 
+				new Long(1)));
+		
+		public DialogTimeObjectEdit(TimeObject src)
+		{
+			if (src!=null) {
+				this.src = src;
+			} else {
+				this.src = new TimeObject();
+			}
+			
+			JPanel panel = new JPanel(new BorderLayout());
+			panel.add(combo_time_value, BorderLayout.CENTER);
+			panel.add(combo_time_unit, BorderLayout.EAST);
+			this.add(panel, BorderLayout.CENTER);
+			
+			try{
+				combo_time_unit.setSelectedItem(this.src.time_unit);
+				combo_time_value.setValue(this.src.time_value);
+			}catch(Exception err){
+				err.printStackTrace();
+			}
+			
+			super.setSize(400, 100);
+		}
+		
+		@Override
+		protected boolean checkOK() {
+			return true;
+		}
+		
+		@Override
+		public Component getComponent(ObjectPropertyPanel panel) {
+			edit_label.setText(src+"");
+			return edit_label;
+		}
+		
+		@Override
+		public TimeObject getValue() {
+			return src;
+		}
+		
+		@Override
+		protected TimeObject getUserObject() {
+			src.time_unit = combo_time_unit.getValue();
+			src.time_value = Parser.castNumber(combo_time_value.getValue(), Long.class);
+			return src;
+		}
+	}
+
+//	-------------------------------------------------------------------------------------------------------------------------
+	
 	public static class AbstractValueAdapter extends AbilityCellEditAdapter<AbstractAbility>
 	{
 		@Override
@@ -392,7 +477,7 @@ public class QuestCellEditAdapter {
 		@Override
 		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner,
 			Object editObject, Object fieldValue, Field field) {
-			if (field.getName().equals("date")) {
+			if (field.getName().equals("date_time")) {
 				DialogFestivalDateEdit edit = new DialogFestivalDateEdit(owner, (FestivalDate)fieldValue);
 				edit.setVisible(true);
 				return edit;
@@ -416,14 +501,14 @@ public class QuestCellEditAdapter {
 		JButton		btn_ok 		= new JButton("确定");
 		JButton		btn_cancel 	= new JButton("取消");
 		
-		public DialogFestivalDateEdit(Component owner, FestivalDate date) 
+		public DialogFestivalDateEdit(Component owner, FestivalDate sdate) 
 		{
 			super(owner);
 			
-			if (date == null) {
+			if (sdate == null) {
 				this.date = new FestivalDate();
 			} else {
-				this.date = date;
+				this.date = sdate;
 			}
 			
 			this.panel_date = new TimePanel(this.date);
@@ -436,7 +521,7 @@ public class QuestCellEditAdapter {
 			btn_cancel.addActionListener(this);
 			this.add(btn_pan, BorderLayout.SOUTH);
 
-			this.setSize((int)panel_date.getPreferredSize().getWidth()+40, 140);
+			this.setSize((int)panel_date.getPreferredSize().getWidth()+40, 150);
 		}
 		
 		@Override

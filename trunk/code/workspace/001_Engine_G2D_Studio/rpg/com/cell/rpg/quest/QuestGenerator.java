@@ -12,6 +12,7 @@ import com.cell.rpg.ability.AbilitiesTypeMap;
 import com.cell.rpg.ability.AbstractAbility;
 import com.cell.rpg.quest.QuestFlags.Repeatable;
 import com.cell.rpg.quest.QuestFlags.Story;
+import com.cell.rpg.struct.DateUtil.TimeObject;
 import com.cell.rpg.struct.DateUtil.WeekDay;
 import com.cell.rpg.struct.DateUtil.YearMonth;
 import com.cell.util.Pair;
@@ -60,14 +61,14 @@ public class QuestGenerator extends AbilitiesList
 	@Property({"[任务触发] 定时任务", "每隔一定时间后，可重新做"})
 	public static class Scheduled extends QuestGeneratorAbility
 	{
-		@Property("每隔多长时间刷新")
-		public long 		refresh_time	= 1;
+		@Property("刷新时间")
+		public TimeObject	refresh_time		= new TimeObject(1, TimeUnit.DAYS);
 		
-		@Property("时间单位")
-		public TimeUnit 	refresh_time_unit	= TimeUnit.DAYS;
+		@Property("持续时间")
+		public TimeObject	persist_time		= new TimeObject(1, TimeUnit.DAYS);
 		
 		public long getRefreshTimeMillis() {
-			return refresh_time_unit.toMillis(refresh_time);
+			return refresh_time.time_unit.toMillis(refresh_time.time_value);
 		}
 		@Override
 		public boolean isMultiField() {
@@ -213,7 +214,10 @@ public class QuestGenerator extends AbilitiesList
 		}
 		
 		@Property("日期")
-		public FestivalDate		date		= new FestivalDate();
+		public FestivalDate	date_time		= new FestivalDate();
+
+		@Property("持续时间")
+		public TimeObject	persist_time	= new TimeObject(1, TimeUnit.DAYS);
 		
 		@Override
 		public boolean isMultiField() {
