@@ -1,10 +1,34 @@
 package com.cell.rpg.struct;
 
+import java.io.Serializable;
+import java.util.concurrent.TimeUnit;
+
 import com.cell.util.EnumManager;
 import com.cell.util.EnumManager.ValueEnum;
 
 public class DateUtil
 {
+	public static class TimeObject implements Serializable
+	{
+		public long 		time_value;	
+		public TimeUnit 	time_unit;
+		
+		public TimeObject(long value, TimeUnit unit) {
+			this.time_value	= value;
+			this.time_unit	= unit;
+		}
+		
+		public TimeObject() {
+			this.time_value	= 1;	
+			this.time_unit	= TimeUnit.MICROSECONDS;
+		}
+		
+		@Override
+		public String toString() {
+			return time_value + "(" + time_unit + ")";
+		}
+		
+	}
 	
 	public static enum WeekDay implements ValueEnum<Byte>
 	{

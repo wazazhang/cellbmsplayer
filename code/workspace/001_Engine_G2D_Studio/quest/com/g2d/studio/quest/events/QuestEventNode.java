@@ -48,7 +48,8 @@ public class QuestEventNode extends G2DTreeNode<G2DTreeNode<?>>
 					
 					new AbstractValueAdapter(),
 					
-					new QuestFestivalAdapter()
+					new QuestFestivalAdapter(),
+					new TimeObjectAdapter()
 					);
 		}
 		return edit_panel;
