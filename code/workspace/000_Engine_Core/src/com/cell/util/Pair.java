@@ -1,8 +1,9 @@
 package com.cell.util;
 
 import java.io.Serializable;
+import java.util.Map;
 
-public class Pair<K, V> implements Serializable
+public class Pair<K, V> implements Serializable, Map.Entry<K, V>
 {
 	K key;
 	V value;
@@ -38,8 +39,10 @@ public class Pair<K, V> implements Serializable
 	/**
 	 * @param value the value to set
 	 */
-	public void setValue(V value) {
+	public V setValue(V value) {
+		V old = this.value;
 		this.value = value;
+		return old;
 	}
 	
 	
