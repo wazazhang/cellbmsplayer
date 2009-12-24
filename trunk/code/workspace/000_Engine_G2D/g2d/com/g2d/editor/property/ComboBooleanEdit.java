@@ -36,6 +36,10 @@ public class ComboBooleanEdit extends JComboBox implements PropertyCellEdit<Bool
 		return this;
 	}
 	
+	public void setValue(boolean value) {
+		this.setSelectedItem(value?"true":"false");
+	}
+	
 	@Override
 	public Boolean getValue() {
 		Object obj = getSelectedItem();
