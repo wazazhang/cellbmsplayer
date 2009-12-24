@@ -558,6 +558,7 @@ public class QuestCellEditAdapter {
 			JLabel lbl_month 		= new JLabel("月");
 			JLabel lbl_day_of_month = new JLabel("日");
 			JLabel lbl_week_of_year = new JLabel("周");
+			JLabel lbl_week_of_month= new JLabel("周");
 			JLabel lbl_day_of_week 	= new JLabel("星期");
 			JLabel lbl_hour 		= new JLabel("时");
 			JLabel lbl_minute 		= new JLabel("分");
@@ -567,6 +568,7 @@ public class QuestCellEditAdapter {
 			ListEnumEdit<YearMonth>		combo_month  			= new ListEnumEdit<YearMonth>(YearMonth.class);
 			JSpinner 					combo_day_of_month  	= new JSpinner();
 			JSpinner 					combo_week_of_year  	= new JSpinner();
+			JSpinner					combo_week_of_month		= new JSpinner();
 			ListEnumEdit<WeekDay> 		combo_day_of_week  		= new ListEnumEdit<WeekDay>(WeekDay.class);
 			JSpinner 					combo_hour  			= new JSpinner();
 			JSpinner 					combo_minute  			= new JSpinner();
@@ -576,6 +578,7 @@ public class QuestCellEditAdapter {
 			JCheckBox every_month			= new JCheckBox("每次");
 			JCheckBox every_day_of_month	= new JCheckBox("每次");
 			JCheckBox every_week_of_year	= new JCheckBox("每次");
+			JCheckBox every_week_of_month	= new JCheckBox("每次");
 			JCheckBox every_day_of_week		= new JCheckBox("每次");
 			JCheckBox every_hour			= new JCheckBox("每次");
 			JCheckBox every_minute			= new JCheckBox("每次");
@@ -595,6 +598,7 @@ public class QuestCellEditAdapter {
 				lbl_month			.setSize(80,  sh);
 				lbl_day_of_month	.setSize(60,  sh);
 				lbl_week_of_year	.setSize(60,  sh);
+				lbl_week_of_month	.setSize(60,  sh);
 				lbl_day_of_week		.setSize(80,  sh);
 				lbl_hour			.setSize(60,  sh);
 				lbl_minute			.setSize(60,  sh);
@@ -606,6 +610,7 @@ public class QuestCellEditAdapter {
 				{lbl_month,			 combo_month		,every_month		},	
 				{lbl_day_of_month,	 combo_day_of_month	,every_day_of_month	},	
 				{lbl_week_of_year,	 combo_week_of_year	,every_week_of_year	},	
+				{lbl_week_of_month,	 combo_week_of_month,every_week_of_month},	
 				{lbl_day_of_week,	 combo_day_of_week	,every_day_of_week	},	
 				{lbl_hour,			 combo_hour			,every_hour			},	
 				{lbl_minute,		 combo_minute		,every_minute		},	
@@ -615,6 +620,7 @@ public class QuestCellEditAdapter {
 				combo_year			.setModel(new SpinnerNumberModel(1900, 1900, Short.MAX_VALUE, 1));
 				combo_day_of_month	.setModel(new SpinnerNumberModel(1, 1, 31, 1));
 				combo_week_of_year	.setModel(new SpinnerNumberModel(1, 1, 54, 1));
+				combo_week_of_month	.setModel(new SpinnerNumberModel(1, 1, 4,  1));
 				combo_hour			.setModel(new SpinnerNumberModel(0, 0, 23, 1));
 				combo_minute		.setModel(new SpinnerNumberModel(0, 0, 59, 1));
 				combo_second		.setModel(new SpinnerNumberModel(0, 0, 59, 1));
@@ -631,6 +637,7 @@ public class QuestCellEditAdapter {
 					combo_month			.setValue(EnumManager.toEnum(YearMonth.class, date.month.getKey()));
 					combo_day_of_month	.setValue(date.day_of_month.getKey());
 					combo_week_of_year	.setValue(date.week_of_year.getKey());
+					combo_week_of_month	.setValue(date.week_of_month.getKey());
 					combo_day_of_week	.setValue(EnumManager.toEnum(WeekDay.class, date.day_of_week.getKey()));
 					combo_hour			.setValue(date.hour.getKey());
 					combo_minute		.setValue(date.minute.getKey());
@@ -640,6 +647,7 @@ public class QuestCellEditAdapter {
 					every_month			.setSelected(date.month.getValue());
 					every_day_of_month	.setSelected(date.day_of_month.getValue());
 					every_week_of_year	.setSelected(date.week_of_year.getValue());
+					every_week_of_month	.setSelected(date.week_of_month.getValue());
 					every_day_of_week	.setSelected(date.day_of_week.getValue());
 					every_hour			.setSelected(date.hour.getValue());
 					every_minute		.setSelected(date.minute.getValue());
@@ -683,6 +691,7 @@ public class QuestCellEditAdapter {
 				date.month			.setKey(combo_month.getValue().getValue());
 				date.day_of_month	.setKey(Parser.castNumber(combo_day_of_month.getValue(), Byte.class));
 				date.week_of_year	.setKey(Parser.castNumber(combo_week_of_year.getValue(), Byte.class));
+				date.week_of_month	.setKey(Parser.castNumber(combo_week_of_month.getValue(), Byte.class));
 				date.day_of_week	.setKey(combo_day_of_week.getValue().getValue());
 				date.hour			.setKey(Parser.castNumber(combo_hour.getValue(), Byte.class));
 				date.minute			.setKey(Parser.castNumber(combo_minute.getValue(), Byte.class));
@@ -692,6 +701,7 @@ public class QuestCellEditAdapter {
 				date.month			.setValue(every_month.isSelected());
 				date.day_of_month	.setValue(every_day_of_month.isSelected());
 				date.week_of_year	.setValue(every_week_of_year.isSelected());
+				date.week_of_month	.setValue(every_week_of_month.isSelected());
 				date.day_of_week	.setValue(every_day_of_week.isSelected());
 				date.hour			.setValue(every_hour.isSelected());
 				date.minute			.setValue(every_minute.isSelected());
@@ -714,16 +724,32 @@ public class QuestCellEditAdapter {
 					}
 				}
 				
-				for (int c=0; c<cells.length; c++) {
-					if (combo_type.getValue() == FestivalType.DAY_OF_MONTH) {
-						if (cells[c][0] == lbl_week_of_year || cells[c][0] == lbl_day_of_week) {
+				for (int c=0; c<cells.length; c++)
+				{
+					switch (combo_type.getValue()) {
+					case DAY_OF_MONTH:
+						if (cells[c][0] == lbl_week_of_year ||
+							cells[c][0] == lbl_week_of_month || 
+							cells[c][0] == lbl_day_of_week) {
 							continue;
 						}
-					} else {
-						if (cells[c][0] == lbl_month || cells[c][0] == lbl_day_of_month) {
+						break;
+					case WEEK_OF_YEAR:
+						if (cells[c][0] == lbl_month || 
+							cells[c][0] == lbl_day_of_month ||
+							cells[c][0] == lbl_week_of_month) {
 							continue;
 						}
+						break;
+
+					case WEEK_OF_MONTH:
+						if (cells[c][0] == lbl_day_of_month ||
+							cells[c][0] == lbl_week_of_year) {
+							continue;
+						}
+						break;
 					}
+					
 					cells[c][0].setLocation(sx, 0);
 					cells[c][1].setBounds(
 							cells[c][0].getX(), 

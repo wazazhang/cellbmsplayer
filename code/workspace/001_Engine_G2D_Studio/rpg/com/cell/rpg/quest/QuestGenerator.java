@@ -89,14 +89,17 @@ public class QuestGenerator extends AbilitiesList
 		public static enum FestivalType
 		{
 			DAY_OF_MONTH, 
-			DAY_OF_WEEK,
+			WEEK_OF_YEAR,
+			WEEK_OF_MONTH,
 			;
 			public String toString() {
 				switch(this){
 				case DAY_OF_MONTH:
 					return "日期时间";
-				case DAY_OF_WEEK:
-					return "星期时间";
+				case WEEK_OF_YEAR:
+					return "年的第几周";
+				case WEEK_OF_MONTH:
+					return "月的第几周";
 				}
 				return super.toString();
 			}
@@ -115,12 +118,15 @@ public class QuestGenerator extends AbilitiesList
 			/** the day of the month between 1-31.*/
 			final public Pair<Byte, Boolean> 	day_of_month;
 			
-			
+
 			/** the week between 1-54.*/
 			final public Pair<Byte, Boolean> 	week_of_year;
+
+			/** the week of month between 1-4.*/
+			final public Pair<Byte, Boolean> 	week_of_month;
+
 			/** the day of the week between 1-7. (SUNDAY is 1) */
 			final public Pair<Byte, Boolean> 	day_of_week;
-			
 			
 			/** the hours between 0-23.*/
 			final public Pair<Byte, Boolean> 	hour;
@@ -135,6 +141,7 @@ public class QuestGenerator extends AbilitiesList
 				month 			= new Pair<Byte, Boolean>(YearMonth.JANUARY.getValue(), false);
 				day_of_month 	= new Pair<Byte, Boolean>((byte)1, false);
 				week_of_year 	= new Pair<Byte, Boolean>((byte)1, true);
+				week_of_month	= new Pair<Byte, Boolean>((byte)1, true);
 				day_of_week 	= new Pair<Byte, Boolean>(WeekDay.SUNDAY.getValue(), false);
 				hour 			= new Pair<Byte, Boolean>((byte)0, false);
 				minute 			= new Pair<Byte, Boolean>((byte)0, false);
@@ -153,9 +160,8 @@ public class QuestGenerator extends AbilitiesList
 				}
 				sb.append(" ");
 				
-				
-				if (type == FestivalType.DAY_OF_MONTH) 
-				{
+				switch (type) {
+				case DAY_OF_MONTH:
 					if (month.getValue()) {
 						sb.append("每月");
 					} else {
@@ -169,9 +175,8 @@ public class QuestGenerator extends AbilitiesList
 						sb.append(day_of_month.getKey()+"日");
 					}
 					sb.append(" ");
-				} 
-				else 
-				{
+					break;
+				case WEEK_OF_YEAR:
 					if (week_of_year.getValue()) {
 						sb.append("每周");
 					} else {
@@ -185,8 +190,32 @@ public class QuestGenerator extends AbilitiesList
 						sb.append(WeekDay.fromValue(day_of_week.getKey()));
 					}
 					sb.append(" ");
-					
+					break;
+				case WEEK_OF_MONTH:
+					if (month.getValue()) {
+						sb.append("每月");
+					} else {
+						sb.append(YearMonth.fromValue(month.getKey()));
+					}
+					sb.append(" ");
+					if (week_of_month.getValue()) {
+						sb.append("每周");
+					} else {
+						sb.append("第"+week_of_month.getKey()+"周");
+					}
+					sb.append(" ");
+					if (day_of_week.getValue()) {
+						sb.append("每星期");
+					} else {
+						sb.append(WeekDay.fromValue(day_of_week.getKey()));
+					}
+					sb.append(" ");
+					break;
 				}
+				
+					
+					
+				
 				
 				if (hour.getValue()) {
 					sb.append("每小时");
