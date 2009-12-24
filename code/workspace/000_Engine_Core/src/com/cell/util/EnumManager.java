@@ -43,7 +43,7 @@ public class EnumManager
 			for (Object e : EnumSet.allOf(cls)) {
 				ValueEnum<?> sv = (ValueEnum<?>)e;
 				map.put(sv.getValue(), sv);
-				System.out.println(sv.getValue() + " - " + sv);
+//				System.out.println(sv.getValue() + " - " + sv);
 			}
 		}
 		
