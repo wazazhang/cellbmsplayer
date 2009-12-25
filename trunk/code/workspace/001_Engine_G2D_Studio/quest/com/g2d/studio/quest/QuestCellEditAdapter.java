@@ -774,7 +774,7 @@ public class QuestCellEditAdapter {
 					mw = Math.max(mw, cells[c][0].getX() + cells[c][0].getWidth());
 				}
 				
-				mw += 10;
+				mw += 100;
 				
 				this.setPreferredSize(new Dimension(mw, 50));
 				
