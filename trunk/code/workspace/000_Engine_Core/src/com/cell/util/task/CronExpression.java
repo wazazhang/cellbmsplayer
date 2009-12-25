@@ -9,15 +9,15 @@ public class CronExpression
 	public static enum DateType
 	{
 		DAY_OF_MONTH, 
-		WEEK_OF_YEAR,
+//		WEEK_OF_YEAR,
 		WEEK_OF_MONTH,
 		;
 		public String toString() {
 			switch(this){
 			case DAY_OF_MONTH:
 				return "日期时间";
-			case WEEK_OF_YEAR:
-				return "年的第几周";
+//			case WEEK_OF_YEAR:
+//				return "年的第几周";
 			case WEEK_OF_MONTH:
 				return "月的第几周";
 			}
@@ -37,8 +37,8 @@ public class CronExpression
 	final public Pair<Byte, Boolean> 	day_of_month;
 	
 
-	/** the week between 1-54.*/
-	final public Pair<Byte, Boolean> 	week_of_year;
+//	/** the week between 1-54.*/
+//	final public Pair<Byte, Boolean> 	week_of_year;
 
 	/** the week of month between 1-4.*/
 	final public Pair<Byte, Boolean> 	week_of_month;
@@ -58,7 +58,7 @@ public class CronExpression
 		year			= new Pair<Short, Boolean>((short)2009, true);
 		month 			= new Pair<Byte, Boolean>(MonthOfYear.JANUARY.getValue(), false);
 		day_of_month 	= new Pair<Byte, Boolean>((byte)1, false);
-		week_of_year 	= new Pair<Byte, Boolean>((byte)1, true);
+//		week_of_year 	= new Pair<Byte, Boolean>((byte)1, true);
 		week_of_month	= new Pair<Byte, Boolean>((byte)1, true);
 		day_of_week 	= new Pair<Byte, Boolean>(DayOfWeek.SUNDAY.getValue(), false);
 		hour 			= new Pair<Byte, Boolean>((byte)0, false);
@@ -94,21 +94,21 @@ public class CronExpression
 			}
 			sb.append(" ");
 			break;
-		case WEEK_OF_YEAR:
-			if (week_of_year.getValue()) {
-				sb.append("每周");
-			} else {
-				sb.append("第"+week_of_year.getKey()+"周");
-			}
-			sb.append(" ");
-			
-			if (day_of_week.getValue()) {
-				sb.append("每星期");
-			} else {
-				sb.append(DayOfWeek.fromValue(day_of_week.getKey()));
-			}
-			sb.append(" ");
-			break;
+//		case WEEK_OF_YEAR:
+//			if (week_of_year.getValue()) {
+//				sb.append("每周");
+//			} else {
+//				sb.append("第"+week_of_year.getKey()+"周");
+//			}
+//			sb.append(" ");
+//			
+//			if (day_of_week.getValue()) {
+//				sb.append("每星期");
+//			} else {
+//				sb.append(DayOfWeek.fromValue(day_of_week.getKey()));
+//			}
+//			sb.append(" ");
+//			break;
 		case WEEK_OF_MONTH:
 			if (month.getValue()) {
 				sb.append("每月");
@@ -159,5 +159,56 @@ public class CronExpression
 		return sb.toString();
 	}
 
+	
+
+	public String toCronExpression() 
+	{
+		CronExpression cron = this;
+		
+		StringBuffer sb = new StringBuffer();
+		
+		if (cron.second.getValue())				sb.append("* ");
+		else 									sb.append(cron.second.getKey() + " ");
+		
+		if (cron.minute.getValue())				sb.append("* ");
+		else 									sb.append(cron.minute.getKey() + " ");
+		
+		if (cron.hour.getValue()) 				sb.append("* ");
+		else 									sb.append(cron.hour.getKey() + " ");
+		
+		switch (cron.type) {
+		case DAY_OF_MONTH:
+			if (cron.day_of_month.getValue())	sb.append("* ");
+			else 								sb.append(cron.day_of_month.getKey() + " ");
+			
+			if (cron.month.getValue()) 			sb.append("* ");
+			else 								sb.append(cron.month.getKey() + " ");
+			
+												sb.append("? ");
+			break;
+		case WEEK_OF_MONTH:
+												sb.append("? ");
+												
+			if (cron.month.getValue()) 			sb.append("* ");
+			else 								sb.append(cron.month.getKey() + " ");
+			
+			
+			if (cron.day_of_week.getValue())	sb.append("*");
+			else								sb.append(cron.day_of_week.getKey());
+			if (cron.week_of_month.getValue())	sb.append(" ");
+			else								sb.append("#"+cron.week_of_month.getKey()+" ");
+			
+			
+			break;
+		}
+		
+		if (cron.year.getValue()) {
+			sb.append("* ");
+		} else {
+			sb.append(cron.year.getKey() + " ");
+		}
+
+		return sb.toString();
+	}
 	
 }
