@@ -36,7 +36,6 @@ import com.cell.rpg.formula.ObjectProperty;
 import com.cell.rpg.quest.QuestItem;
 import com.cell.rpg.quest.QuestGenerator.Festival;
 import com.cell.rpg.quest.QuestGenerator.Festival.FestivalDate;
-import com.cell.rpg.quest.QuestGenerator.Festival.FestivalType;
 import com.cell.rpg.quest.QuestItem.AwardItem;
 import com.cell.rpg.quest.QuestItem.AwardTeleport;
 import com.cell.rpg.quest.QuestItem.QuestItemAbility;
@@ -52,12 +51,13 @@ import com.cell.rpg.quest.QuestItem.TagValueComparison;
 import com.cell.rpg.quest.ability.QuestAccepter;
 import com.cell.rpg.quest.ability.QuestPublisher;
 import com.cell.rpg.quest.ability.QuestTrigger;
-import com.cell.rpg.struct.DateUtil;
-import com.cell.rpg.struct.DateUtil.TimeObject;
-import com.cell.rpg.struct.DateUtil.WeekDay;
-import com.cell.rpg.struct.DateUtil.YearMonth;
 import com.cell.rpg.xls.XLSColumns;
 import com.cell.util.EnumManager;
+import com.cell.util.DateUtil.DayOfWeek;
+import com.cell.util.DateUtil.MonthOfYear;
+import com.cell.util.DateUtil.TimeObject;
+import com.cell.util.task.CronExpression;
+import com.cell.util.task.CronExpression.DateType;
 import com.g2d.annotation.Property;
 import com.g2d.editor.property.ComboBooleanEdit;
 import com.g2d.editor.property.ListEnumEdit;
@@ -552,7 +552,7 @@ public class QuestCellEditAdapter {
 		static class TimePanel extends JPanel implements ItemListener, ActionListener
 		{
 			JLabel 						lbl_type	= new JLabel("日期类型");
-			ListEnumEdit<FestivalType>	combo_type	= new ListEnumEdit<FestivalType>(FestivalType.class);
+			ListEnumEdit<DateType>		combo_type	= new ListEnumEdit<DateType>(DateType.class);
 			
 			JLabel lbl_year 		= new JLabel("年");
 			JLabel lbl_month 		= new JLabel("月");
@@ -565,11 +565,11 @@ public class QuestCellEditAdapter {
 			JLabel lbl_second 		= new JLabel("秒");
 
 			JSpinner 					combo_year  			= new JSpinner();
-			ListEnumEdit<YearMonth>		combo_month  			= new ListEnumEdit<YearMonth>(YearMonth.class);
+			ListEnumEdit<MonthOfYear>	combo_month  			= new ListEnumEdit<MonthOfYear>(MonthOfYear.class);
 			JSpinner 					combo_day_of_month  	= new JSpinner();
 			JSpinner 					combo_week_of_year  	= new JSpinner();
 			JSpinner					combo_week_of_month		= new JSpinner();
-			ListEnumEdit<WeekDay> 		combo_day_of_week  		= new ListEnumEdit<WeekDay>(WeekDay.class);
+			ListEnumEdit<DayOfWeek> 	combo_day_of_week  		= new ListEnumEdit<DayOfWeek>(DayOfWeek.class);
 			JSpinner 					combo_hour  			= new JSpinner();
 			JSpinner 					combo_minute  			= new JSpinner();
 			JSpinner 					combo_second  			= new JSpinner();
@@ -634,11 +634,11 @@ public class QuestCellEditAdapter {
 				try
 				{
 					combo_year			.setValue(date.year.getKey());
-					combo_month			.setValue(EnumManager.toEnum(YearMonth.class, date.month.getKey()));
+					combo_month			.setValue(EnumManager.toEnum(MonthOfYear.class, date.month.getKey()));
 					combo_day_of_month	.setValue(date.day_of_month.getKey());
 					combo_week_of_year	.setValue(date.week_of_year.getKey());
 					combo_week_of_month	.setValue(date.week_of_month.getKey());
-					combo_day_of_week	.setValue(EnumManager.toEnum(WeekDay.class, date.day_of_week.getKey()));
+					combo_day_of_week	.setValue(EnumManager.toEnum(DayOfWeek.class, date.day_of_week.getKey()));
 					combo_hour			.setValue(date.hour.getKey());
 					combo_minute		.setValue(date.minute.getKey());
 					combo_second		.setValue(date.second.getKey());
