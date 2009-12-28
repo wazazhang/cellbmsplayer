@@ -42,7 +42,7 @@ public class CronExpression implements Serializable
 //	/** the week between 1-54.*/
 //	final public Pair<Byte, Boolean> 	week_of_year;
 
-	/** the week of month between 1-4.*/
+	/** the week of month between 1-5.*/
 	final public Pair<Byte, Boolean> 	week_of_month;
 
 	/** the day of the week between 1-7. (SUNDAY is 1) */

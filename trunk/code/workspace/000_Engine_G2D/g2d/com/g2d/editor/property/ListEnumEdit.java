@@ -21,23 +21,14 @@ public class ListEnumEdit<T extends Enum<T>> extends JComboBox implements Proper
 	private static final long serialVersionUID = 1L;
 	
 	Class<T> type;
-	ObjectPropertyPanel panel;
 	
 	public ListEnumEdit(Class<T> cls) 
 	{
 		super(new Vector<T>(EnumSet.allOf(cls)));
 		this.type = cls;
-		this.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				if (panel!=null) {
-					panel.fireEditingStopped();
-				}
-			}
-		});
 	}
 	
 	public Component getComponent(ObjectPropertyPanel panel) {
-		this.panel = panel;
 		return this;
 	}
 	
