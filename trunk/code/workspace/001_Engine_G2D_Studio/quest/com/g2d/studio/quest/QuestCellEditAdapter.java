@@ -620,7 +620,7 @@ public class QuestCellEditAdapter {
 				combo_year			.setModel(new SpinnerNumberModel(1900, 1900, Short.MAX_VALUE, 1));
 				combo_day_of_month	.setModel(new SpinnerNumberModel(1, 1, 31, 1));
 //				combo_week_of_year	.setModel(new SpinnerNumberModel(1, 1, 54, 1));
-				combo_week_of_month	.setModel(new SpinnerNumberModel(1, 1, 4,  1));
+				combo_week_of_month	.setModel(new SpinnerNumberModel(1, 1, 5,  1));
 				combo_hour			.setModel(new SpinnerNumberModel(0, 0, 23, 1));
 				combo_minute		.setModel(new SpinnerNumberModel(0, 0, 59, 1));
 				combo_second		.setModel(new SpinnerNumberModel(0, 0, 59, 1));
