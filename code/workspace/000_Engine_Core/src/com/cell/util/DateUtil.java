@@ -28,6 +28,9 @@ public class DateUtil
 			return time_value + "(" + time_unit + ")";
 		}
 		
+		public long toMillis() {
+			return this.time_unit.toMillis(time_value);
+		}
 	}
 	
 	public static enum DayOfWeek implements ValueEnum<Byte>
