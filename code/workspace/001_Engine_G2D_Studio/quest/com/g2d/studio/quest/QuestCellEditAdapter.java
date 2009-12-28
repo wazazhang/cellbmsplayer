@@ -659,6 +659,14 @@ public class QuestCellEditAdapter {
 							cells[c][1].setEnabled(!check.isSelected());
 						}
 					}
+					
+
+					if (every_day_of_week.isSelected()) {
+						every_week_of_month.setVisible(!every_day_of_week.isSelected());
+						combo_week_of_month.setVisible(!every_day_of_week.isSelected());
+						repaint();
+					}
+					
 				} 
 				catch (Exception err) {
 					err.printStackTrace();
@@ -680,6 +688,11 @@ public class QuestCellEditAdapter {
 					JCheckBox check = (JCheckBox)e.getSource();
 					Component value = check_map.get(e.getSource());
 					value.setEnabled(!check.isSelected());
+				}
+				if (e.getSource() == every_day_of_week) {
+					every_week_of_month.setVisible(!every_day_of_week.isSelected());
+					combo_week_of_month.setVisible(!every_day_of_week.isSelected());
+					repaint();
 				}
 			}
 			

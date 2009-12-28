@@ -74,62 +74,42 @@ public class CronExpression implements Serializable
 		StringBuffer sb = new StringBuffer();
 		
 		if (year.getValue()) {
-			sb.append("每年");
+			sb.append("每年 ");
 		} else {
-			sb.append(year.getKey() + "年");
+			sb.append(year.getKey() + "年 ");
 		}
-		sb.append(" ");
 		
 		switch (type) {
 		case DAY_OF_MONTH:
 			if (month.getValue()) {
-				sb.append("每月");
+				sb.append("每月 ");
 			} else {
-				sb.append(MonthOfYear.fromValue(month.getKey()));
+				sb.append(MonthOfYear.fromValue(month.getKey())+" ");
 			}
-			sb.append(" ");
 			
 			if (day_of_month.getValue()) {
-				sb.append("每日");
+				sb.append("每日 ");
 			} else {
-				sb.append(day_of_month.getKey()+"日");
+				sb.append(day_of_month.getKey()+"日 ");
 			}
-			sb.append(" ");
 			break;
-//		case WEEK_OF_YEAR:
-//			if (week_of_year.getValue()) {
-//				sb.append("每周");
-//			} else {
-//				sb.append("第"+week_of_year.getKey()+"周");
-//			}
-//			sb.append(" ");
-//			
-//			if (day_of_week.getValue()) {
-//				sb.append("每星期");
-//			} else {
-//				sb.append(DayOfWeek.fromValue(day_of_week.getKey()));
-//			}
-//			sb.append(" ");
-//			break;
+
 		case WEEK_OF_MONTH:
 			if (month.getValue()) {
-				sb.append("每月");
+				sb.append("每月 ");
 			} else {
-				sb.append(MonthOfYear.fromValue(month.getKey()));
+				sb.append(MonthOfYear.fromValue(month.getKey())+" ");
 			}
-			sb.append(" ");
-			if (week_of_month.getValue()) {
-				sb.append("每周");
-			} else {
-				sb.append("第"+week_of_month.getKey()+"周");
-			}
-			sb.append(" ");
+			
 			if (day_of_week.getValue()) {
-				sb.append("每星期");
+				sb.append("每星期 ");
 			} else {
-				sb.append(DayOfWeek.fromValue(day_of_week.getKey()));
+				if (week_of_month.getValue()) {
+				} else {
+					sb.append("第"+week_of_month.getKey()+"个");
+				}
+				sb.append(DayOfWeek.fromValue(day_of_week.getKey())+" ");
 			}
-			sb.append(" ");
 			break;
 		}
 		
@@ -138,25 +118,22 @@ public class CronExpression implements Serializable
 		
 		
 		if (hour.getValue()) {
-			sb.append("每小时");
+			sb.append("每小时 ");
 		} else {
-			sb.append(hour.getKey()+"时");
+			sb.append(hour.getKey()+"时 ");
 		}
-		sb.append(" ");
 		
 		if (minute.getValue()) {
-			sb.append("每分钟");
+			sb.append("每分钟 ");
 		} else {
-			sb.append(minute.getKey()+"分");
+			sb.append(minute.getKey()+"分 ");
 		}
-		sb.append(" ");
 		
 		if (second.getValue()) {
-			sb.append("每秒");
+			sb.append("每秒 ");
 		} else {
-			sb.append(second.getKey()+"秒");
+			sb.append(second.getKey()+"秒 ");
 		}
-		sb.append(" ");
 		
 		return sb.toString();
 	}
@@ -242,37 +219,65 @@ public class CronExpression implements Serializable
 		
 		StringBuffer sb = new StringBuffer();
 		
-		if (cron.second.getValue())				sb.append("* ");
-		else 									sb.append(cron.second.getKey() + " ");
+		// second
+		if (cron.second.getValue())
+			sb.append("* ");
+		else
+			sb.append(cron.second.getKey() + " ");
 		
-		if (cron.minute.getValue())				sb.append("* ");
-		else 									sb.append(cron.minute.getKey() + " ");
+		// minute
+		if (cron.minute.getValue())
+			sb.append("* ");
+		else
+			sb.append(cron.minute.getKey() + " ");
+
+		// hour
+		if (cron.hour.getValue())
+			sb.append("* ");
+		else
+			sb.append(cron.hour.getKey() + " ");
 		
-		if (cron.hour.getValue()) 				sb.append("* ");
-		else 									sb.append(cron.hour.getKey() + " ");
 		
 		switch (cron.type) {
 		case DAY_OF_MONTH:
-			if (cron.day_of_month.getValue())	sb.append("* ");
-			else 								sb.append(cron.day_of_month.getKey() + " ");
 			
-			if (cron.month.getValue()) 			sb.append("* ");
-			else 								sb.append(cron.month.getKey() + " ");
+			// day_of_month
+			if (cron.day_of_month.getValue())
+				sb.append("* ");
+			else
+				sb.append(cron.day_of_month.getKey() + " ");
 			
-												sb.append("? ");
+			// month
+			if (cron.month.getValue())
+				sb.append("* ");
+			else
+				sb.append(cron.month.getKey() + " ");
+			
+			// ignore week
+			sb.append("? ");
+			
 			break;
 		case WEEK_OF_MONTH:
-												sb.append("? ");
-												
-			if (cron.month.getValue()) 			sb.append("* ");
-			else 								sb.append(cron.month.getKey() + " ");
 			
+			// ignore day_of_month
+			sb.append("? ");
 			
-			if (cron.day_of_week.getValue())	sb.append("*");
-			else								sb.append(cron.day_of_week.getKey());
-			if (cron.week_of_month.getValue())	sb.append(" ");
-			else								sb.append("#"+cron.week_of_month.getKey()+" ");
+			// month
+			if (cron.month.getValue())
+				sb.append("* ");
+			else
+				sb.append(cron.month.getKey() + " ");
 			
+			// day_of_week
+			if (cron.day_of_week.getValue()) {
+				sb.append("* ");
+			} else {
+				sb.append(cron.day_of_week.getKey());
+				if (cron.week_of_month.getValue())
+					sb.append(" ");
+				else
+					sb.append("#" + cron.week_of_month.getKey() + " ");
+			}
 			
 			break;
 		}
