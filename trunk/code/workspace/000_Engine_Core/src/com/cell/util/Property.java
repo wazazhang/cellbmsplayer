@@ -48,6 +48,10 @@ public abstract class  Property<T>
 {
 	public static boolean debug = false;
 	
+	public String comment_text 	= "#";
+	
+	public String append_text 	= "+";
+	
 	Hashtable<String, T> Map = new Hashtable<String, T>();
 
 	public Property(){
@@ -90,12 +94,12 @@ public abstract class  Property<T>
 					}
 					
 					// 如果是注释
-					if (line.startsWith("#")){
+					if (line.startsWith(comment_text)){
 						line = null;
 						continue;
 					}
 					// 如果是尾部出现 +
-					else if (line.endsWith("+") && i < lines.length - 1) 
+					else if (line.endsWith(append_text) && i < lines.length - 1) 
 					{
 						line = line.substring(0, line.length()-1);
 						continue;
