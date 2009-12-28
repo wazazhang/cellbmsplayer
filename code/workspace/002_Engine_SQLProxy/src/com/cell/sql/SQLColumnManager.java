@@ -52,7 +52,7 @@ public abstract class SQLColumnManager<K, R extends SQLTableRow<K>>
 	final public	String			table_name;
 	final public	SQLColumn[]		table_columns;
 	
-	final Map<K, R> 				data_map;
+	final SQLColumnMap<K, R> 		data_map;
 	final ReentrantReadWriteLock	data_lock		= new ReentrantReadWriteLock();
 	
 	protected Lock 					data_readLock 	= data_lock.readLock();
@@ -62,7 +62,7 @@ public abstract class SQLColumnManager<K, R extends SQLTableRow<K>>
 	
 //	---------------------------------------------------------------------------------------------------------------------------------------------------------
 
-	public SQLColumnManager(Class<R> cls, Map<K, R> data_map)
+	public SQLColumnManager(Class<R> cls, SQLColumnMap<K, R> data_map)
 	{
 		this.data_map		= data_map;
 		this.log 			= LoggerFactory.getLogger(SQLColumnManager.class.getSimpleName() + "[" + cls.getName() + "]");
@@ -115,6 +115,10 @@ public abstract class SQLColumnManager<K, R extends SQLTableRow<K>>
 		// 读入表数据
 		try
 		{
+			if (data_map.getDataSize() > 0) {
+				throw new Exception("already loaded [" + table_name + "] data  !");
+			}
+			
 			long starttime = System.currentTimeMillis();
 			log.info("loading [" + table_name + "] ...");
 			
@@ -122,24 +126,15 @@ public abstract class SQLColumnManager<K, R extends SQLTableRow<K>>
 			
 			if (vresult == ValidateResult.OK)
 			{
-//				for (SQLColumn c : table_columns)
-//				{
-//					System.out.println("\t" + c.name + " " + c.anno.type() + " index = " + c.index);
-//				}
-//				
 				data_writeLock.lock();
 				try {
-					HashMap<K, R> map = new HashMap<K, R>();
 					ArrayList<R> rows = selectAll(conn);
 					for (R row : rows) {
-						map.put(row.getPrimaryKey(), row);
+						data_map.put(row.getPrimaryKey(), row);
 					}
-					data_map.clear();
-					data_map.putAll(map);
 				} finally {
 					data_writeLock.unlock();
-				}	
-
+				}
 				log.info("loaded  [" + table_name + "] " + size() + " rows use " + (System.currentTimeMillis() - starttime) + "ms");
 			}
 			else
@@ -367,10 +362,10 @@ public abstract class SQLColumnManager<K, R extends SQLTableRow<K>>
 	 * 返回数据库行的数量
 	 * @return
 	 */
-	public int size(){
+	public long size(){
 		data_readLock.lock();
 		try {
-			return data_map.size();
+			return data_map.getDataSize();
 		} finally {
 			data_readLock.unlock();
 		}

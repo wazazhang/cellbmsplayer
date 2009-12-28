@@ -43,12 +43,23 @@ public abstract class SQLTableManager<K, R extends SQLTableRow<K>> extends SQLCo
 {
 	public SQLTableManager(Class<R> cls)
 	{
-		super(cls, new ConcurrentHashMap<K, R>(1024));
+		super(cls, new ConcurrentSQLColumnMap<K, R>(1024));
 	}
 	
 	public SQLTableManager(Class<R> cls, int base_size)
 	{
-		super(cls, new ConcurrentHashMap<K, R>(base_size));
+		super(cls, new ConcurrentSQLColumnMap<K, R>(base_size));
 	}
 	
+	static class ConcurrentSQLColumnMap<K, R> extends ConcurrentHashMap<K, R> implements SQLColumnMap<K, R>
+	{
+		public ConcurrentSQLColumnMap(int base_size) {
+			super(base_size);
+		}
+		
+		@Override
+		public long getDataSize() {
+			return super.size();
+		}
+	}
 }
