@@ -1,10 +1,12 @@
 package com.cell.util.task;
 
+import java.io.Serializable;
+
 import com.cell.util.Pair;
 import com.cell.util.DateUtil.DayOfWeek;
 import com.cell.util.DateUtil.MonthOfYear;
 
-public class CronExpression 
+public class CronExpression implements Serializable
 {
 	public static enum DateType
 	{
