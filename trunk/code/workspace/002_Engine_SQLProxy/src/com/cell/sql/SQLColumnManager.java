@@ -77,6 +77,10 @@ public abstract class SQLColumnManager<K, R extends SQLTableRow<K>>
 		return table_class.newInstance();
 	}
 
+	protected SQLColumnMap<K, R> getDataMap() {
+		return data_map;
+	}
+	
 //	---------------------------------------------------------------------------------------------------------------------------------------------------------
 	
 	public SQLColumn[] getColumns(String ... columns_name)
@@ -115,7 +119,7 @@ public abstract class SQLColumnManager<K, R extends SQLTableRow<K>>
 		// 读入表数据
 		try
 		{
-			if (data_map.getDataSize() > 0) {
+			if (data_map.size() > 0) {
 				throw new Exception("already loaded [" + table_name + "] data  !");
 			}
 			
@@ -362,10 +366,10 @@ public abstract class SQLColumnManager<K, R extends SQLTableRow<K>>
 	 * 返回数据库行的数量
 	 * @return
 	 */
-	public long size(){
+	public int size(){
 		data_readLock.lock();
 		try {
-			return data_map.getDataSize();
+			return data_map.size();
 		} finally {
 			data_readLock.unlock();
 		}

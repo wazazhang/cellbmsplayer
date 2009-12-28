@@ -15,5 +15,5 @@ public interface SQLColumnMap<K, V>
 
 	public V 				remove(Object key);
 
-	public long 			getDataSize();
+	public int	 			size();
 }

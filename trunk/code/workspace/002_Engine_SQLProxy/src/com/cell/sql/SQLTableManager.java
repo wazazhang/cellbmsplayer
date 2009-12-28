@@ -56,10 +56,5 @@ public abstract class SQLTableManager<K, R extends SQLTableRow<K>> extends SQLCo
 		public ConcurrentSQLColumnMap(int base_size) {
 			super(base_size);
 		}
-		
-		@Override
-		public long getDataSize() {
-			return super.size();
-		}
 	}
 }
