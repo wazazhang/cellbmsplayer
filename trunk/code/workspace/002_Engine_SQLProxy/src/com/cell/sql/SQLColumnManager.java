@@ -39,7 +39,7 @@ import com.cell.sql.util.SQLUtil;
  * @param <K> PrimaryKey 类型
  * @param <R> Row 类型
  */
-public abstract class SQLColumnsManager<K, R extends SQLTableRow<K>>
+public abstract class SQLColumnManager<K, R extends SQLTableRow<K>>
 {
 //	---------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -62,10 +62,10 @@ public abstract class SQLColumnsManager<K, R extends SQLTableRow<K>>
 	
 //	---------------------------------------------------------------------------------------------------------------------------------------------------------
 
-	public SQLColumnsManager(Class<R> cls, Map<K, R> data_map)
+	public SQLColumnManager(Class<R> cls, Map<K, R> data_map)
 	{
 		this.data_map		= data_map;
-		this.log 			= LoggerFactory.getLogger(SQLColumnsManager.class.getSimpleName() + "[" + cls.getName() + "]");
+		this.log 			= LoggerFactory.getLogger(SQLColumnManager.class.getSimpleName() + "[" + cls.getName() + "]");
 		this.table_class	= cls;
 		this.table_type		= cls.getAnnotation(SQLTable.class);
 		this.table_name		= table_type.name();
@@ -876,12 +876,12 @@ public abstract class SQLColumnsManager<K, R extends SQLTableRow<K>>
 	 * @return
 	 * @throws SQLException
 	 */
-	public static String getCreateTableSQL(SQLColumnsManager<?, ?> table)
+	public static String getCreateTableSQL(SQLColumnManager<?, ?> table)
 	{
 		return getCreateTableSQL(table, true);
 	}
 	
-	public static String getCreateTableSQL(final SQLColumnsManager<?, ?> table, final boolean sort)
+	public static String getCreateTableSQL(final SQLColumnManager<?, ?> table, final boolean sort)
 	{
 		SQLColumn[] columnss = new SQLColumn[table.table_columns.length];
 		System.arraycopy(table.table_columns, 0, columnss, 0, columnss.length);

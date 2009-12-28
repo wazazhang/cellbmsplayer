@@ -39,7 +39,7 @@ import com.cell.sql.util.SQLUtil;
  * @param <K> PrimaryKey 类型
  * @param <R> Row 类型
  */
-public abstract class SQLTableManager<K, R extends SQLTableRow<K>> extends SQLColumnsManager<K, R>
+public abstract class SQLTableManager<K, R extends SQLTableRow<K>> extends SQLColumnManager<K, R>
 {
 	public SQLTableManager(Class<R> cls)
 	{
