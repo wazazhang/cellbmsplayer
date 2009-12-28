@@ -5,6 +5,12 @@ package com.cell.sql;
 
 import java.util.Collection;
 
+/**
+ * 抽象了对数据库表读写的原子操作
+ * @author WAZA
+ * @param <K>
+ * @param <V>
+ */
 public interface SQLColumnMap<K, V>
 {
 	public Collection<V>	values();
