@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import com.cell.rpg.RPGConfig;
+
 /**
  * 一组能力的集合，如果子类实现该接口，则在
  * {@link AbilityPanel}里就可以添加集合成员
@@ -13,8 +15,10 @@ import java.util.Vector;
 public abstract class AbilitiesList implements Abilities, Serializable
 {
 	/**将显示在单位属性的Ability面板*/
-	private ArrayList<AbstractAbility> abilities = new ArrayList<AbstractAbility>();
+	private ArrayList<AbstractAbility>	abilities = new ArrayList<AbstractAbility>();
 
+	transient AbstractAbility[]			static_abilities;
+	
 	public AbilitiesList() {}
 
 	final public void clearAbilities() {
@@ -30,6 +34,12 @@ public abstract class AbilitiesList implements Abilities, Serializable
 	}
 	
 	final public AbstractAbility[] getAbilities() {
+		if (!RPGConfig.IS_EDIT_MODE) {
+			if (static_abilities == null) {
+				static_abilities = abilities.toArray(new AbstractAbility[abilities.size()]);
+			}
+			return static_abilities;
+		}
 		return abilities.toArray(new AbstractAbility[abilities.size()]);
 	}
 

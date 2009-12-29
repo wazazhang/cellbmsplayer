@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+import com.cell.rpg.RPGConfig;
+
 /**
  * 适用于，每类Ability对应一个实体
  * @author WAZA
@@ -16,7 +18,9 @@ import java.util.LinkedHashMap;
  */
 public abstract class AbilitiesTypeMap implements Abilities, Serializable
 {
-	LinkedHashMap<Class<?>, AbstractAbility> type_map = new LinkedHashMap<Class<?>, AbstractAbility>();
+	LinkedHashMap<Class<?>, AbstractAbility> 	type_map = new LinkedHashMap<Class<?>, AbstractAbility>();
+
+	transient AbstractAbility[]					static_abilities;
 	
 	@Override
 	public void addAbility(AbstractAbility element) {
@@ -35,6 +39,12 @@ public abstract class AbilitiesTypeMap implements Abilities, Serializable
 
 	@Override
 	public AbstractAbility[] getAbilities() {
+		if (!RPGConfig.IS_EDIT_MODE) {
+			if (static_abilities == null) {
+				static_abilities = type_map.values().toArray(new AbstractAbility[type_map.size()]);
+			}
+			return static_abilities;
+		}
 		return type_map.values().toArray(new AbstractAbility[type_map.size()]);
 	}
 

@@ -15,13 +15,17 @@ import com.cell.util.zip.ZipNode;
 
 public abstract class RPGObject extends DObject implements Abilities, ZipNode, RPGSerializationListener
 {
+//	------------------------------------------------------------------------------------------------------------------
+	
 	final public String id;
 	
 	/**将显示在单位属性的Ability面板*/
-	final private Vector<AbstractAbility> abilities = new Vector<AbstractAbility>();
-	
-	transient Vector<RPGSerializationListener> seriListeners;
+	final private Vector<AbstractAbility> 		abilities 			= new Vector<AbstractAbility>();
 
+	transient AbstractAbility[]					static_abilities;
+	
+	transient Vector<RPGSerializationListener> 	seriListeners;
+	
 //	------------------------------------------------------------------------------------------------------------------
 	
 	public RPGObject(String id) {
@@ -45,6 +49,12 @@ public abstract class RPGObject extends DObject implements Abilities, ZipNode, R
 		abilities.remove(element);
 	}
 	public AbstractAbility[] getAbilities() {
+		if (!RPGConfig.IS_EDIT_MODE) {
+			if (static_abilities == null) {
+				static_abilities = abilities.toArray(new AbstractAbility[abilities.size()]);
+			}
+			return static_abilities;
+		}
 		return abilities.toArray(new AbstractAbility[abilities.size()]);
 	}
 

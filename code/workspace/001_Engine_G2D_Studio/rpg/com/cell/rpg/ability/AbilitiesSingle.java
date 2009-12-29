@@ -3,6 +3,8 @@ package com.cell.rpg.ability;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import com.cell.rpg.RPGConfig;
+
 /**
  * 适用于，从多种Ability类型中选择一个的组合
  * @author WAZA
@@ -10,8 +12,9 @@ import java.util.ArrayList;
  */
 public abstract class AbilitiesSingle implements Abilities, Serializable
 {
-	AbstractAbility single;
-
+	AbstractAbility 					single;
+	transient AbstractAbility[]			static_abilities;
+	
 	public AbstractAbility getSingle() {
 		return single;
 	}
@@ -35,6 +38,16 @@ public abstract class AbilitiesSingle implements Abilities, Serializable
 
 	@Override
 	public AbstractAbility[] getAbilities() {
+		if (!RPGConfig.IS_EDIT_MODE) {
+			if (static_abilities == null) {
+				if (single!=null) {
+					static_abilities = new AbstractAbility[]{single};
+				} else {
+					static_abilities = new AbstractAbility[0];
+				}
+			}
+			return static_abilities;
+		}
 		if (single!=null) {
 			return new AbstractAbility[]{single};
 		} else {

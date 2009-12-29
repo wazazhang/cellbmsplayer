@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import com.cell.rpg.RPGConfig;
+
 import sun.awt.image.ImageWatched.Link;
 
 /**
@@ -18,7 +20,13 @@ public class AbilitiesVector implements Abilities, Serializable
 	
 	/**将显示在单位属性的Ability面板*/
 	private Vector<AbstractAbility> abilities = new Vector<AbstractAbility>();
-	private Class<?>[] sub_types;
+	
+	transient AbstractAbility[]		static_abilities;
+
+	private Class<?>[] 				sub_types;
+
+	
+	
 	@Deprecated()
 	public AbilitiesVector(Class<?> ... sub_types) {
 		setTypes(sub_types);
@@ -38,6 +46,12 @@ public class AbilitiesVector implements Abilities, Serializable
 		abilities.remove(element);
 	}
 	final public AbstractAbility[] getAbilities() {
+		if (!RPGConfig.IS_EDIT_MODE) {
+			if (static_abilities == null) {
+				static_abilities = abilities.toArray(new AbstractAbility[abilities.size()]);
+			}
+			return static_abilities;
+		}
 		return abilities.toArray(new AbstractAbility[abilities.size()]);
 	}
 
