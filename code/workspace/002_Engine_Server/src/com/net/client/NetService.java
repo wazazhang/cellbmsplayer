@@ -16,8 +16,6 @@ import com.net.MessageHeader;
 
 public class NetService
 {
-	static Logger log = LoggerFactory.getLogger(NetService.class.getName());
-
 	/**request从1开始*/
 	static private AtomicInteger SendedPacks = new AtomicInteger(1);
 	
@@ -201,13 +199,16 @@ public class NetService
 	private ReentrantLock 			notifylock				= new ReentrantLock();
 	
 	private AtomicInteger			request_response_ping	= new AtomicInteger();
-	
+
+	final protected Logger 			log;
+
 //	---------------------------------------------------------------------------------------------------------------------------------
 
 	public NetService(
 			ServerSession session, 
 			ServerSessionListener client_listener) 
 	{
+		this.log				= LoggerFactory.getLogger(getClass().getName());
 		this.Session 			= session;
 		this.client_listener	= client_listener;
 		Runtime.getRuntime().addShutdownHook(new ExitTask());
