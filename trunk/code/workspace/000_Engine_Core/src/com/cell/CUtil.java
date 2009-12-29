@@ -1031,18 +1031,24 @@ public class CUtil extends CObject
 	 * @param d
 	 * @return
 	 */
-	static public String replaceString(String text, String s, String d)
+	static public String replaceString(String text, String s, String d, int limit)
 	{
+		int count = 0;
 		StringBuffer sb = new StringBuffer();
 		
 		for (int i = 0; i < text.length(); i++)
 		{
-			int dst = text.indexOf(s, i);
-			
-			if(dst>=0){
-				sb.append(text.substring(i,dst)+d);
-				i = dst + s.length() - 1;
-			}else{
+			if (count < limit) {
+				int dst = text.indexOf(s, i);
+				if (dst >= 0) {
+					sb.append(text.substring(i, dst) + d);
+					i = dst + s.length() - 1;
+					count++;
+				} else {
+					sb.append(text.substring(i));
+					break;
+				}
+			} else {
 				sb.append(text.substring(i));
 				break;
 			}
@@ -1051,6 +1057,16 @@ public class CUtil extends CObject
 		return sb.toString();
 	}
 	
+	/**
+	 * @param text
+	 * @param s
+	 * @param d
+	 * @return
+	 */
+	static public String replaceString(String text, String s, String d)
+	{
+		return replaceString(text, s, d, Integer.MAX_VALUE);
+	}
 	
 	/**
 	 * @author 
