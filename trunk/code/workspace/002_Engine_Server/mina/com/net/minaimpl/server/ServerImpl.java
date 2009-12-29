@@ -30,8 +30,6 @@ import com.net.server.ServerListener;
 
 public class ServerImpl extends IoHandlerAdapter implements Server
 {
-	private static final Logger _log = LoggerFactory.getLogger(ServerImpl.class.getName());
-	
 	/** 处理线程的数目 */
 	final private int 			IoProcessCount;
 	
@@ -45,6 +43,8 @@ public class ServerImpl extends IoHandlerAdapter implements Server
 
 	final ChannelManager		channel_manager;
 	final ReentrantLock			session_lock	= new ReentrantLock();
+
+	private final Logger _log = LoggerFactory.getLogger(getClass().getName());
 	
 //	----------------------------------------------------------------------------------------------------------------------
 	
