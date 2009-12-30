@@ -47,10 +47,10 @@ public enum Comparison
 			case EQUAL_OR_LESSER_THAN:
 				return src_n <= dst_n;
 			case EQUAL:
-				return src_n == dst_n;
+				return src_n.equals(dst_n);
 			case NOT_EQUAL:
-				return src_n != dst_n;
-			default:			
+				return !src_n.equals(dst_n);
+			default:
 				return false;
 			}
 		} 
