@@ -35,8 +35,8 @@ public enum Comparison
 			}
 		}
 		if (src instanceof Number && dst instanceof Number) {
-			Double src_n = ((Number)src).doubleValue();
-			Double dst_n = ((Number)dst).doubleValue();
+			double src_n = ((Number)src).doubleValue();
+			double dst_n = ((Number)dst).doubleValue();
 			switch (this) {
 			case GREATER_THAN:	
 				return src_n > dst_n;
@@ -47,9 +47,9 @@ public enum Comparison
 			case EQUAL_OR_LESSER_THAN:
 				return src_n <= dst_n;
 			case EQUAL:
-				return src_n.equals(dst_n);
+				return src_n == dst_n;
 			case NOT_EQUAL:
-				return !src_n.equals(dst_n);
+				return src_n != dst_n;
 			default:
 				return false;
 			}
