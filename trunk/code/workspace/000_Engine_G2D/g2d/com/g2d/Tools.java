@@ -33,6 +33,8 @@ import java.util.Random;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
+import sun.awt.image.ImageWatched.Link;
+
 import com.cell.CIO;
 import com.cell.math.MathVector;
 import com.cell.math.TVector;
@@ -48,25 +50,39 @@ public class Tools
 	static GraphicsEnvironment		ge		= GraphicsEnvironment.getLocalGraphicsEnvironment();
 	static GraphicsDevice			gd		= ge.getDefaultScreenDevice();
 	static GraphicsConfiguration	gc		= gd.getDefaultConfiguration();
-	static Font default_font = ge.getAllFonts()[0];
 	
-	static AlphaComposite[] all_composite = new AlphaComposite[] {
-			AlphaComposite.Clear, 
-			AlphaComposite.Src,
-			AlphaComposite.Dst,
-			AlphaComposite.SrcOver,
-			AlphaComposite.DstOver,
-			AlphaComposite.SrcIn, 
-			AlphaComposite.DstIn, 
-			AlphaComposite.SrcOut,
-			AlphaComposite.DstOut,
-			AlphaComposite.SrcAtop,
-			AlphaComposite.DstAtop, 
-			AlphaComposite.Xor,
-			};
+	static Font 					default_font;
+	static AlphaComposite[] 		all_composite;
+	
+	static
+	{
+		Graphics2D g2d = (Graphics2D)gc.createCompatibleImage(1, 1, 0).createGraphics();
+		
+		default_font = g2d.getFont();
+		
+		all_composite = new AlphaComposite[] {
+				AlphaComposite.Clear, 
+				AlphaComposite.Src,
+				AlphaComposite.Dst,
+				AlphaComposite.SrcOver,
+				AlphaComposite.DstOver,
+				AlphaComposite.SrcIn, 
+				AlphaComposite.DstIn, 
+				AlphaComposite.SrcOut,
+				AlphaComposite.DstOut,
+				AlphaComposite.SrcAtop,
+				AlphaComposite.DstAtop, 
+				AlphaComposite.Xor,
+				};
+	}
+	
 //	--------------------------------------------------------------------------------
 
-	public static void setDefaultFont(Font font)
+	/**
+	 * {@link CanvasAdapter}.setDefaultFont(Font font)
+	 * @param font
+	 */
+	static void setDefaultFont(Font font)
 	{
 		default_font = font;
 	}

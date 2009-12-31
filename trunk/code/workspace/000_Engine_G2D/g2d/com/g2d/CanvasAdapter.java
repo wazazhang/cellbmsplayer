@@ -220,6 +220,7 @@ FocusListener
 	 */
 	public void setDefaultFont(Font font) {
 		defaultFont = font;
+		Tools.setDefaultFont(font);
 	}
 
 	public Font getDefaultFont() {
