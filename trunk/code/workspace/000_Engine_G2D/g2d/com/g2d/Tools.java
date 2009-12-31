@@ -47,16 +47,20 @@ public class Tools
 
 //	--------------------------------------------------------------------------------
 
-	static GraphicsEnvironment		ge		= GraphicsEnvironment.getLocalGraphicsEnvironment();
-	static GraphicsDevice			gd		= ge.getDefaultScreenDevice();
-	static GraphicsConfiguration	gc		= gd.getDefaultConfiguration();
+	static GraphicsEnvironment		ge;
+	static GraphicsDevice			gd;
+	static GraphicsConfiguration	gc;
 	
 	static Font 					default_font;
 	static AlphaComposite[] 		all_composite;
 	
 	static
 	{
-		Graphics2D g2d = (Graphics2D)gc.createCompatibleImage(1, 1, 0).createGraphics();
+		ge		= GraphicsEnvironment.getLocalGraphicsEnvironment();
+		gd		= ge.getDefaultScreenDevice();
+		gc		= gd.getDefaultConfiguration();
+		
+		Graphics2D g2d = gc.createCompatibleImage(1, 1, Transparency.TRANSLUCENT).createGraphics();
 		
 		default_font = g2d.getFont();
 		
