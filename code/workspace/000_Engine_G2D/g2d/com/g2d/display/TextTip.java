@@ -82,8 +82,8 @@ public class TextTip extends Tip
 		if (layout!=null){
 			bw = layout.BorderSize;
 		}
+		buffer_g.setFont(getStage().getRoot().getDefaultFont());
 		text.setWidth(text_width - (bw<<1));
-		
 		if (enable_antialiasing) {
 			buffer_g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		} else {

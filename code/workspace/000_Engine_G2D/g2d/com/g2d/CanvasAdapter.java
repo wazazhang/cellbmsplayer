@@ -222,6 +222,10 @@ FocusListener
 		defaultFont = font;
 	}
 
+	public Font getDefaultFont() {
+		return defaultFont;
+	}
+	
 	public void setCursor(Cursor cursor) {
 		nextCursor = new AnimateCursor(cursor);
 	}

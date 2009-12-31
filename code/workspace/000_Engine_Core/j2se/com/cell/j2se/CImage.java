@@ -148,7 +148,7 @@ public class CImage implements IImage
 			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
 			g.drawImage(m_image, 0, 0, newWidth, newHeight, null);
-		
+			g.dispose();
 			return new CImage(buf);
 		}
 		catch(Exception err)

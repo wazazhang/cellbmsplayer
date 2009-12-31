@@ -133,6 +133,8 @@ public class PaintTask extends Thread
 				paint(g);
 
 				dg.drawImage(buffer, 0, 0, null);
+				
+				g.dispose();
 			}
 			else
 			{

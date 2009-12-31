@@ -43,7 +43,8 @@ public interface Canvas
 	 */
 	public void setDefaultFont(Font font) ;
 
-
+	public Font getDefaultFont();
+	
 	/**
 	 * 设置鼠标悬停
 	 * @param text
