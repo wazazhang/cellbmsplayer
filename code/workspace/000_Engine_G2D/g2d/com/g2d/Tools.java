@@ -60,10 +60,6 @@ public class Tools
 		gd		= ge.getDefaultScreenDevice();
 		gc		= gd.getDefaultConfiguration();
 		
-		Graphics2D g2d = gc.createCompatibleImage(1, 1, Transparency.TRANSLUCENT).createGraphics();
-		
-		default_font = g2d.getFont();
-		
 		all_composite = new AlphaComposite[] {
 				AlphaComposite.Clear, 
 				AlphaComposite.Src,
@@ -78,6 +74,14 @@ public class Tools
 				AlphaComposite.DstAtop, 
 				AlphaComposite.Xor,
 				};
+		
+		try{
+			Graphics2D g2d = gc.createCompatibleImage(1, 1, Transparency.TRANSLUCENT).createGraphics();
+			default_font = g2d.getFont();
+			g2d.dispose();
+		}catch(Exception err){
+			err.printStackTrace();
+		}
 	}
 	
 //	--------------------------------------------------------------------------------
