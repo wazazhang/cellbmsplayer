@@ -2,6 +2,7 @@ package com.g2d.display.ui.text;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
@@ -13,6 +14,7 @@ import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
 import java.text.CharacterIterator;
 import java.text.AttributedCharacterIterator.Attribute;
+import java.util.Map;
 import java.util.Vector;
 
 import com.cell.CMath;
@@ -851,6 +853,28 @@ public class MultiTextLayout
 		
 		if (text.length()>0)
 		{
+			{
+				AttributedCharacterIterator it = atext.getIterator();
+				attr_text = new AttributedString(text);
+				int i=0, e=1;
+				for (char c = it.first(); c != CharacterIterator.DONE; c = it.next()) 
+				{
+					Map<Attribute,Object> map = it.getAttributes();
+					Number 	size = (Number)map.get(TextAttribute.SIZE);
+					Font 	font = (Font)map.get(TextAttribute.FONT);
+					if (font == null) {
+						font = g.getFont();
+					}
+					if (size != null && size.intValue() != font.getSize()) {
+						font = new Font(font.getName(), 0, size.intValue());
+					}
+					
+					attr_text.addAttribute(TextAttribute.FONT, font, i, e);
+					attr_text.addAttributes(map, i, e);
+					i++;
+					e++;
+				}
+			}
 			// lines
 			if (!is_single_line)
 			{

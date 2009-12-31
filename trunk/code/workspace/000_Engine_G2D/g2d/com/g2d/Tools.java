@@ -4,6 +4,7 @@ import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
@@ -44,9 +45,10 @@ public class Tools
 
 //	--------------------------------------------------------------------------------
 
-	static GraphicsEnvironment		ge	= GraphicsEnvironment.getLocalGraphicsEnvironment();
-	static GraphicsDevice			gd	= ge.getDefaultScreenDevice();
-	static GraphicsConfiguration	gc	= gd.getDefaultConfiguration();
+	static GraphicsEnvironment		ge		= GraphicsEnvironment.getLocalGraphicsEnvironment();
+	static GraphicsDevice			gd		= ge.getDefaultScreenDevice();
+	static GraphicsConfiguration	gc		= gd.getDefaultConfiguration();
+	static Font default_font = ge.getAllFonts()[0];
 	
 	static AlphaComposite[] all_composite = new AlphaComposite[] {
 			AlphaComposite.Clear, 
@@ -64,12 +66,22 @@ public class Tools
 			};
 //	--------------------------------------------------------------------------------
 
+	public static void setDefaultFont(Font font)
+	{
+		default_font = font;
+	}
+
+	public static Font getDefaultFont()
+	{
+		return default_font;
+	}
+	
 	public static Cursor createCustomCursor(Image cursor, Point hotSpot, String name)
 	{
 		Dimension bestCursorSize = Toolkit.getDefaultToolkit().getBestCursorSize(
 				cursor.getWidth(null), 
 				cursor.getHeight(null));
-		
+
 //		Dimension bestCursorSize = new Dimension(
 //				cursor.getWidth(null),
 //				cursor.getHeight(null));
