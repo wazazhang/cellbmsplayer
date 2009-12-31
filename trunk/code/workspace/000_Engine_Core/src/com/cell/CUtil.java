@@ -1075,42 +1075,39 @@ public class CUtil extends CObject
 	 * @param separator
 	 * @return
 	 */
-	static public String[] splitString(String text, String separator)
-	{
-		try
-		{
-			Vector lines = new Vector();
-			
-			for(int i=0;i<text.length();i++)
-			{
-				int dst = text.indexOf(separator, i);
-				
-				if(dst>=0)
-				{
-					lines.addElement(text.substring(i, dst));
-					i = dst + separator.length() - 1;
-				}
-				else
-				{
-					lines.addElement(text.substring(i,text.length()));
+	static public String[] splitString(String text, String separator, int limit) {
+		int count = 0;
+		try {
+			Vector<String> lines = new Vector<String>();
+			for (int i = 0; i < text.length(); i++) {
+				if (count < limit) {
+					int dst = text.indexOf(separator, i);
+					if (dst >= 0) {
+						lines.addElement(text.substring(i, dst));
+						i = dst + separator.length() - 1;
+						count ++;
+					} else {
+						lines.addElement(text.substring(i, text.length()));
+						break;
+					}
+				} else {
+					lines.addElement(text.substring(i, text.length()));
 					break;
 				}
 			}
-			
 			String[] texts = new String[lines.size()];
 			lines.copyInto(texts);
 			lines = null;
-	
 			return texts;
-		}
-		catch(Exception err)
-		{
+		} catch (Exception err) {
 			err.printStackTrace();
-			return new String[]{"(Error !)"};
+			return new String[] { "(Error !)" };
 		}
-		
 	}
 	
+	static public String[] splitString(String text, String separator) {
+		return splitString(text, separator, Integer.MAX_VALUE);
+	}
 	
 	/**
 	 * Left close
