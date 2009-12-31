@@ -527,9 +527,10 @@ FocusListener
 			synchronized (this)
 			{
 				Graphics2D g2d = vm_buffer_g2d;
-				
+
+				Tools.setDefaultFont(defaultFont);
 				g2d.setFont(defaultFont);
-				
+			
 				paint_stage(g2d);
 				
 				if (internal_frame!=null) {
