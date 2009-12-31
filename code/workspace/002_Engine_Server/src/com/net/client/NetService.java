@@ -35,24 +35,26 @@ public class NetService
 //	-------------------------------------------------------------------------------------------------
 	private class SimpleClientListenerImpl implements ServerSessionListener
 	{
-		SimpleClientListenerImpl() {}
-		
-		public void connected(ServerSession session) 
-		{
+		public void connected(ServerSession session) {
 			log.info("reconnected : " + session);
-			if (client_listener!=null){
-				client_listener.connected(session);
-			}
+			onConnected(session);
 		}
 		
-	    public void disconnected(ServerSession session, boolean graceful, String reason) 
-	    {
+	    public void disconnected(ServerSession session, boolean graceful, String reason) {
 	    	log.info("disconnected : " + graceful + " : " + reason);
-	    	if (client_listener!=null){
-				client_listener.disconnected(session, graceful, reason);
-			}
+			onDisconnected(session, graceful, reason);
+	    }
+	    
+	    public void joinedChannel(ServerSession session, ClientChannel channel) {
+	    	log.info("joined channel : \"" + channel.getID() + "\"");
+			onJoinedChannel(session, channel);
 	    }
 
+	    public void leftChannel(ClientChannel channel) {
+	    	log.info("left channel : \""  + channel.getID() + "\"");
+	        onLeftChannel(channel);	
+	    }
+	    
 	    public void receivedMessage(ServerSession session, MessageHeader message)
 	    {
 			if (message != null) {
@@ -66,24 +68,6 @@ public class NetService
 			} else {
 				log.error("handle null message !");
 			}
-	    }
-	    
-
-	    public void joinedChannel(ServerSession session, ClientChannel channel) 
-	    {
-	    	log.info("joined channel : \"" + channel.getID() + "\"");
-	    	if (client_listener!=null){
-				client_listener.joinedChannel(session, channel);
-			}
-	    }
-	    
-	    
-	    public void leftChannel(ClientChannel channel) 
-	    {
-	    	log.info("left channel : \""  + channel.getID() + "\"");
-	        if (client_listener!=null){
-	        	client_listener.leftChannel(channel);
-	    	}
 	    }
 	    
 	    public void receivedChannelMessage(ClientChannel channel, MessageHeader message)
@@ -191,7 +175,7 @@ public class NetService
 	private String					ServerHost;
 	private Integer 				ServerPort;
 	
-	private ServerSessionListener 	client_listener;
+//	private ServerSessionListener 	client_listener;
 	
 	private long					LastCleanRequestTime 	= System.currentTimeMillis();
 
@@ -204,19 +188,12 @@ public class NetService
 
 //	---------------------------------------------------------------------------------------------------------------------------------
 
-	public NetService(
-			ServerSession session, 
-			ServerSessionListener client_listener) 
+	public NetService(ServerSession session) 
 	{
 		this.log				= LoggerFactory.getLogger(getClass().getName());
 		this.Session 			= session;
-		this.client_listener	= client_listener;
+//		this.client_listener	= client_listener;
 		Runtime.getRuntime().addShutdownHook(new ExitTask());
-	}
-
-	public NetService(ServerSession session) 
-	{
-		this(session, null);
 	}
 	
 	/**
@@ -585,8 +562,18 @@ public class NetService
 		}
     	return false;
 	}
+	
 //	----------------------------------------------------------------------------------------------------------------------------
 	
+	protected void onConnected(ServerSession session) {}
+	
+	protected void onDisconnected(ServerSession session, boolean graceful, String reason) {}
+
+	protected void onJoinedChannel(ServerSession session, ClientChannel channel) {}
+    
+	protected void onLeftChannel(ClientChannel channel) {}
+  
+
 
 	
 	
