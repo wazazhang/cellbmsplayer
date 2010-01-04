@@ -850,12 +850,12 @@ public class MultiTextLayout
 		this.width		= width;
 		this.height		= space;
 		this.textlines.clear();
-		
+
 		if (text.length()>0)
 		{
 			{
 				AttributedCharacterIterator it = atext.getIterator();
-				attr_text = new AttributedString(text);
+				attr_text = new AttributedString(encodeChars(text));
 				int i=0, e=1;
 				for (char c = it.first(); c != CharacterIterator.DONE; c = it.next()) 
 				{
