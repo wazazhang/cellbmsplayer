@@ -54,6 +54,7 @@ import com.g2d.studio.StudioResource;
 import com.g2d.studio.cpj.CPJResourceManager;
 import com.g2d.studio.gameedit.ObjectManager;
 import com.g2d.studio.icon.IconManager;
+import com.g2d.studio.item.ItemManager;
 import com.g2d.studio.quest.QuestManager;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.scene.SceneManager;
@@ -92,7 +93,10 @@ public class Studio extends AbstractFrame
 	final public File 				xls_titem;
 	final public File 				xls_tskill;
 	
+	final public File				plugins_dir;
+	
 	private CPJResourceManager		frame_cpj_resource_manager;
+	private ItemManager				frame_item_manager;
 	private ObjectManager			frame_object_manager;
 	private SoundManager			frame_sound_manager;
 	private IconManager				frame_icon_manager;
@@ -136,8 +140,10 @@ public class Studio extends AbstractFrame
 		xls_titem			= getFile(Config.XLS_TITEM);
 		xls_tskill			= getFile(Config.XLS_TSKILL);
 		
+		plugins_dir			= getFile(Config.PLUGINS_ROOT);
+		
 		try{
-			JComponent.setDefaultLocale(Locale.CHINA);
+//			JComponent.setDefaultLocale(Locale.CHINA);
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
 		}catch(Exception err){
 			err.printStackTrace();
@@ -238,6 +244,19 @@ public class Studio extends AbstractFrame
 			});
 			tool_bar.add(btn);
 		}
+		// item manager
+		{
+			frame_item_manager = new ItemManager(this, progress);
+			JButton btn = new JButton();
+			btn.setToolTipText(frame_item_manager.getTitle());
+			btn.setIcon(Tools.createIcon(Res.icon_res_4));
+			btn.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e) {
+					frame_item_manager.setVisible(true);
+				}
+			});
+			tool_bar.add(btn);
+		}
 		// unit manager
 		{
 			frame_object_manager = new ObjectManager(this, progress);
@@ -264,7 +283,7 @@ public class Studio extends AbstractFrame
 			});
 			tool_bar.add(btn);
 		}
-		
+	
 		this.add(tool_bar, BorderLayout.NORTH);
 	}
 	
@@ -342,6 +361,10 @@ public class Studio extends AbstractFrame
 	
 	public QuestManager getQuestManager() {
 		return frame_quest_manager;
+	}
+
+	public ItemManager getItemManager() {
+		return frame_item_manager;
 	}
 	
 	public SceneManager getSceneManager() {

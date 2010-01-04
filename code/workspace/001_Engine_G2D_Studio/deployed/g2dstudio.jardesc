@@ -25,7 +25,8 @@
         <javaElement handleIdentifier="=002_Engine_SQLProxy/test"/>
         <javaElement handleIdentifier="=001_Engine_G2D_Studio/quest"/>
         <javaElement handleIdentifier="=000_Engine_Sound/openal"/>
-        <javaElement handleIdentifier="=001_Engine_G2D_Studio/cpj"/>
         <javaElement handleIdentifier="=000_Engine_Core/src"/>
+        <javaElement handleIdentifier="=001_Engine_G2D_Studio/cpj"/>
+        <javaElement handleIdentifier="=001_Engine_G2D_Studio/item"/>
     </selectedElements>
 </jardesc>
