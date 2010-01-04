@@ -1,6 +1,6 @@
 package com.net;
 
-import java.util.HashMap;
+import java.util.Map;
 
 import com.net.anno.ExternalizableMessageType;
 
@@ -9,14 +9,18 @@ import com.net.anno.ExternalizableMessageType;
  */
 public abstract class ExternalizableFactory 
 {
-	HashMap<Integer, Class<? extends MessageHeader>> type_map = new HashMap<Integer, Class<? extends MessageHeader>>();
+	final Map<Integer, Class<? extends MessageHeader>> type_map;
 	
-	public int getType(MessageHeader message){
+	public ExternalizableFactory() {
+		this.type_map = createMap();
+	}
+	
+	final public int getType(MessageHeader message){
 		ExternalizableMessageType ext_type = message.getClass().getAnnotation(ExternalizableMessageType.class);
 		return ext_type.value();
 	}
 	
-	public MessageHeader getMessage(int type) throws InstantiationException, IllegalAccessException   {
+	final public MessageHeader getMessage(int type) throws InstantiationException, IllegalAccessException   {
 		Class<? extends MessageHeader> ext_type = type_map.get(type);
 		return ext_type.newInstance();
 	}
@@ -29,4 +33,6 @@ public abstract class ExternalizableFactory
 		ExternalizableMessageType ext_type = clazz.getAnnotation(ExternalizableMessageType.class);
 		type_map.put(ext_type.value(), clazz);
 	}
+	
+	abstract protected Map<Integer, Class<? extends MessageHeader>> createMap();
 }
