@@ -11,7 +11,8 @@ public class ItemProperties extends RPGObject
 	
 	public ItemProperties(int tid, String name) {
 		super(tid+"");
-		this.tid = tid;
+		this.tid	= tid;
+		this.name	= name;
 	}
 	
 	public int getIntID() {

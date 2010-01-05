@@ -23,7 +23,9 @@ public class JavaCompiler extends ClassLoader
 	 */
 	public static Class<?> compileAndLoadClass(String name, File javaFile) throws Throwable
 	{
-		return instance_compiler.loadClass(name, javaFile, false, null);
+		ArrayList<Class<?>> ret = new ArrayList<Class<?>>();
+		Class<?> simple_clazz = instance_compiler.loadClass(name, javaFile, ret);
+		return simple_clazz;
 	}
 	
 	/**
@@ -36,7 +38,7 @@ public class JavaCompiler extends ClassLoader
 	public static ArrayList<Class<?>> compileAndLoadAllClass(String name, File javaFile) throws Throwable
 	{
 		ArrayList<Class<?>> ret = new ArrayList<Class<?>>();
-		instance_compiler.loadClass(name, javaFile, false, ret);
+		instance_compiler.loadClass(name, javaFile, ret);
 		return ret;
 	}
 	
@@ -84,6 +86,10 @@ public class JavaCompiler extends ClassLoader
 
 	static JavaCompiler instance_compiler = new JavaCompiler();
 
+	final static public JavaCompiler getInstance() {
+		return instance_compiler;
+	}
+	
 //	--------------------------------------------------------------------------------------------------------------------------
 
 	private byte[] getBytes(File file) throws IOException 
@@ -101,7 +107,7 @@ public class JavaCompiler extends ClassLoader
 		}
 	}
 
-	synchronized private Class<?> loadClass(String name, File javaFile, boolean resolve, Collection<Class<?>> inner_class) throws Throwable 
+	synchronized private Class<?> loadClass(String name, File javaFile, Collection<Class<?>> inner_class) throws Throwable 
 	{
 		Class<?> ret_class = null;
 		
@@ -120,9 +126,7 @@ public class JavaCompiler extends ClassLoader
 					byte raw[] = getBytes(simple_file);
 					ret_class = defineClass(name, raw, 0, raw.length);
 //					System.out.println("define main class : " + ret_class.getName());
-					if (resolve) {
-						resolveClass(ret_class);
-					}
+					resolveClass(ret_class);
 					if (inner_class != null) {
 						inner_class.add(ret_class);
 					}
@@ -148,9 +152,7 @@ public class JavaCompiler extends ClassLoader
 								Class<?> clazz = defineClass(class_name, raw, 0, raw.length);
 								if (clazz != null) {
 //									System.out.println("\tdefine class : " + clazz.getName());
-									if (resolve) {
-										resolveClass(clazz);
-									}
+									resolveClass(clazz);
 									if (inner_class != null) {
 										inner_class.add(clazz);
 									}

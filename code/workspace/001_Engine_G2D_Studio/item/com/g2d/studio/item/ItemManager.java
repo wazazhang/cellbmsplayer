@@ -114,7 +114,7 @@ public class ItemManager extends ManagerForm implements ActionListener
 			e.printStackTrace();
 		}
 		
-		File item_properties_list_file = new File("");
+		File item_properties_list_file = new File(studio.project_save_path, "item_properties/item_properties.list");
 		this.tree_view = new ItemPropertiesTreeView(item_properties_list_file);
 		this.add(tree_view, BorderLayout.CENTER);
 	}
