@@ -50,11 +50,11 @@ public class JavaCompiler extends ClassLoader
 	 */
 	public static File compile(String javaFile) throws Throwable
 	{
-		System.out.println("Compiling java file : \"" + javaFile + "\" ...");
 //		com.sun.tools.javac.Main.compile(new String[]{"-help"});
 //		com.sun.tools.javac.Main.compile(new String[]{javaFile});
 		Class<?> cls = Class.forName("com.sun.tools.javac.Main");
-		callMethod(cls, "compile", new String[]{javaFile});
+		System.out.println("Compiling java file : \"" + javaFile + "\" : " + 
+				callMethod(cls, "compile", new String[]{"-encoding", "UTF-8", javaFile}));
 		File classFile = new File(javaFile.substring(0, javaFile.lastIndexOf(".java"))+".class");
 		if (!classFile.exists()) {
 			throw new ClassNotFoundException("build java class not found : " + classFile.getPath());
@@ -68,7 +68,7 @@ public class JavaCompiler extends ClassLoader
 	 * @param methodName
 	 * @param args
 	 */
-	final static public void callMethod(Class<?> clz, String methodName, String[] args)
+	final static public Object callMethod(Class<?> clz, String methodName, String[] args)
 	{
 		Class<?>[] arg = new Class<?>[1];
 		arg[0] = args.getClass();
@@ -76,9 +76,10 @@ public class JavaCompiler extends ClassLoader
 			Method method = clz.getMethod(methodName, arg);
 			Object[] inArg = new Object[1];
 			inArg[0] = args;
-			method.invoke(clz, inArg);
+			return method.invoke(clz, inArg);
 		} catch (Exception e) {
 			e.printStackTrace();
+			return e;
 		}
 	}
 	
