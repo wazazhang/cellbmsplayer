@@ -41,7 +41,7 @@ public class ItemPropertiesEditor extends ObjectViewer<ItemPropertiesNode> imple
 //	-------------------------------------------------------------------------------------
 	
 	public ItemPropertiesEditor(ItemPropertiesNode node) {
-		super(node);
+		super(node, new ItemPropertiesAdapter.ValueRangeAdapter());
 		this.add(toolbar, BorderLayout.NORTH);
 	}
 	
