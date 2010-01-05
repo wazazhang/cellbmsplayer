@@ -1,5 +1,7 @@
 package com.cell.rpg.item;
 
+import java.io.Serializable;
+
 import com.cell.rpg.ability.AbstractAbility;
 import com.cell.rpg.item.anno.ItemType;
 
@@ -11,6 +13,24 @@ import com.cell.rpg.item.anno.ItemType;
  */
 public abstract class ItemProperty extends AbstractAbility
 {
+	public static class ValueRange implements Serializable
+	{
+		public Double min;
+		
+		public Double max;
+		
+		public ValueRange(Number dmin, Number dmax) {
+			this.min = dmin.doubleValue();
+			this.max = dmax.doubleValue();
+		}
+		
+		@Override
+		public String toString() {
+			return min + " - " + max;
+		}
+	}
+	
+	
 	@Override
 	public boolean isMultiField() {
 		return false;
