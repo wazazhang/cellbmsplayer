@@ -113,7 +113,7 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 		}
 		else if (e.getSource() == btn_add_ability) {
 			if (abilities.getSubAbilityTypes()!=null && abilities.getSubAbilityTypes().length>0){
-				new AddAbilityForm().setVisible(true);
+				new AddAbilityForm(this).setVisible(true);
 			}
 		}
 	}
@@ -217,8 +217,9 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 		JPanel			pan_property	= new JPanel();
 		AbstractAbility	current_ability;
 		
-		public AddAbilityForm()
+		public AddAbilityForm(Component owner)
 		{
+			super(owner);
 			super.setTitle("添加能力到 : " + abilities);
 			super.setLayout(new BorderLayout());
 			this.setIconImage(Res.icon_edit);

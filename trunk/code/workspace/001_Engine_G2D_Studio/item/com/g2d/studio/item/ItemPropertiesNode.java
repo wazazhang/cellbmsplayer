@@ -31,7 +31,9 @@ public class ItemPropertiesNode extends DynamicNode<ItemProperties>
 	}
 	
 	@Override
-	public void onRightClicked(JTree tree, MouseEvent e) {}
+	public void onRightClicked(JTree tree, MouseEvent e) {
+		new ItemPropertiesMenu(tree, this).show(tree, e.getX(), e.getY());
+	}
 	
 	@Override
 	public boolean setName(String name) {
@@ -45,6 +47,7 @@ public class ItemPropertiesNode extends DynamicNode<ItemProperties>
 	@Override
 	public ObjectViewer<?> getEditComponent() {
 		if (edit_component == null) {
+			edit_component = new ItemPropertiesEditor(this);
 		}
 		return edit_component;
 	}

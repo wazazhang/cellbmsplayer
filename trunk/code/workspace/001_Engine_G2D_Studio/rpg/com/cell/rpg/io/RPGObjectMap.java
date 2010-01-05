@@ -1,35 +1,25 @@
 package com.cell.rpg.io;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
 
 import com.cell.CIO;
 import com.cell.CUtil;
-import com.cell.exception.NotImplementedException;
+import com.cell.classloader.jcl.JavaCompiler;
 import com.cell.rpg.RPGObject;
-import com.cell.rpg.template.TemplateNode;
-import com.cell.util.zip.ZipExtNode;
-import com.cell.util.zip.ZipNode;
-import com.cell.util.zip.ZipNodeManager;
-import com.cell.util.zip.ZipStreamFilter;
-
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.ConverterRegistry;
+import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
+import com.thoughtworks.xstream.core.DefaultConverterLookup;
+import com.thoughtworks.xstream.core.util.ClassLoaderReference;
+import com.thoughtworks.xstream.core.util.CompositeClassLoader;
+import com.thoughtworks.xstream.io.xml.XppDriver;
+import com.thoughtworks.xstream.mapper.Mapper;
 
 /**
  * 在构造时将所有对象读入，运行时动态你的添加删除对象，最后调用saveAll方法将所有对象存储到文件
@@ -43,42 +33,15 @@ public class RPGObjectMap<T extends RPGObject> extends Hashtable<String, T> //im
 	final public Class<T>	type;
 	final public File		zip_dir;
 	final public File		zip_info;
-	
+
 	public RPGObjectMap(Class<T> type, File zip_dir) 
 	{
 		this.type 		= type;
 		this.zip_dir	= zip_dir;
 		this.zip_info	= new File(zip_dir, type.getSimpleName().toLowerCase()+".list");
-		
+
 		loadAll();
 	}
-	
-//	@Override
-//	public ZipNode readNode(ByteArrayInputStream bais, Class<? extends ZipNode> type) throws Exception {
-//		XStream xstream = new XStream();
-//		String xml = new String(CIO.readBytes(bais), "UTF-8");
-//		StringReader reader = new StringReader(xml);
-//		ObjectInputStream ois = xstream.createObjectInputStream(reader);
-//		try{
-//			return type.cast(ois.readObject());
-//		}finally{
-//			ois.close();
-//		}
-//	}
-//	
-//	@Override
-//	public void writeNode(ByteArrayOutputStream baos, ZipNode node) throws Exception {
-//		XStream xstream = new XStream();
-//		StringWriter writer = new StringWriter(1024);
-//		ObjectOutputStream oos = xstream.createObjectOutputStream(writer);
-//		try{
-//			oos.writeObject(node);
-//		}finally{
-//			oos.close();
-//		}
-//		String xml = writer.toString();
-//		baos.write(xml.getBytes("UTF-8"));
-//	}
 	
 //	-----------------------------------------------------------------------------------------------------------------------
 
@@ -123,11 +86,26 @@ public class RPGObjectMap<T extends RPGObject> extends Hashtable<String, T> //im
 
 //	------------------------------------------------------------------------------------------------------------------------------
 
+	private static XStream createXStream(Class<?> type)
+	{
+		CompositeClassLoader composite_class_loader = new CompositeClassLoader();
+		composite_class_loader.add(JavaCompiler.getInstance());
+//		System.out.println(type.getClassLoader() + " : createXStream : " + type.getName());
+		XStream xstream = new XStream(
+		        	(ReflectionProvider)null, 
+		        	new XppDriver(), 
+		        	new ClassLoaderReference(composite_class_loader), 
+		        	(Mapper)null, 
+		        	new DefaultConverterLookup(), 
+		        	(ConverterRegistry)null);
+		return xstream;
+	}
+	
 	public static<T extends RPGObject> T readNode(String xml_file, Class<T> type) {
 		try{
-			String xml = CIO.readAllText(xml_file, "UTF-8");
-			StringReader reader = new StringReader(xml);
-			ObjectInputStream ois = new XStream().createObjectInputStream(reader);
+			String 				xml 	= CIO.readAllText(xml_file, "UTF-8");
+			StringReader 		reader 	= new StringReader(xml);
+			ObjectInputStream 	ois 	= createXStream(type).createObjectInputStream(reader);
 			try{
 				T ret = type.cast(ois.readObject());
 				if (ret != null) {
@@ -155,8 +133,8 @@ public class RPGObjectMap<T extends RPGObject> extends Hashtable<String, T> //im
 			if (!xml_file.exists()) {
 				xml_file.getParentFile().mkdirs();
 			}
-			StringWriter writer = new StringWriter(1024);
-			ObjectOutputStream oos = new XStream().createObjectOutputStream(writer);
+			StringWriter 		writer 	= new StringWriter(1024);
+			ObjectOutputStream 	oos 	= createXStream(node.getClass()).createObjectOutputStream(writer);
 			try{
 				Vector<RPGSerializationListener> wlisteners = node.getRPGSerializationListeners();
 				if (wlisteners!=null) {
