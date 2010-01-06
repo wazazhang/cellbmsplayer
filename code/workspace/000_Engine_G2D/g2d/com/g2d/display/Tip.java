@@ -3,7 +3,7 @@ package com.g2d.display;
 import java.awt.Graphics2D;
 
 
-public abstract class Tip extends DisplayObject 
+public abstract class Tip extends DisplayObjectContainer
 {	
 	public static int tip_offset_x 		= 20;
 	public static int tip_offset_y 		= 20;
