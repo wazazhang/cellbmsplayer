@@ -161,7 +161,7 @@ public class QuestItem extends RPGObject
 	 * [条件] 依赖的任务状态
 	 * @author WAZA
 	 */
-	@Property("[条件] 依赖当前的任务状态(杀死敌人数)")
+	@Property({"[条件] 依赖当前的任务状态(杀死敌人数)", "(不能用作接受条件)"})
 	final public static class TagQuestStateKillMonsterComparison extends Tag
 	{
 		transient private int					quest_id		= -1;
