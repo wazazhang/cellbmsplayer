@@ -84,7 +84,7 @@ FocusListener
 	
 //	graphics and updating system
 	transient private VolatileImage		vm_buffer;
-	transient private Graphics2D		vm_buffer_g2d;
+//	transient private Graphics2D		vm_buffer_g2d;
 	transient private long 				prewUpdateTime			= 0;
 	private int 						framedelay				= 30;
 	private int							framedelay_unactive 	= 1000;
@@ -483,15 +483,15 @@ FocusListener
 			vm_buffer.flush();
 			vm_buffer = null;
 		}
-		if (vm_buffer_g2d!=null) {
-			vm_buffer_g2d.dispose();
-			vm_buffer_g2d = null;
-		}
+//		if (vm_buffer_g2d!=null) {
+//			vm_buffer_g2d.dispose();
+//			vm_buffer_g2d = null;
+//		}
 	}
 	
 	void create_vm_buffer(GraphicsConfiguration gc) {
 		vm_buffer 		= gc.createCompatibleVolatileImage(stageWidth, stageHeight, Transparency.OPAQUE);
-		vm_buffer_g2d 	= (Graphics2D)vm_buffer.getGraphics();
+//		vm_buffer_g2d 	= (Graphics2D)vm_buffer.getGraphics();
 	}
 	
 	public void repaint_game() {
@@ -526,21 +526,24 @@ FocusListener
 			
 			synchronized (this)
 			{
-				Graphics2D g2d = vm_buffer_g2d;
-
-				Tools.setDefaultFont(defaultFont);
-				g2d.setFont(defaultFont);
-			
-				paint_stage(g2d);
+				Graphics2D g2d = vm_buffer.createGraphics();
 				
-				if (internal_frame!=null) {
-					g2d.scale(size_rate_x, size_rate_y);
-					g2d.clip(internal_frame.getBounds());
-					parent.superPaint(g2d);
+				try{
+					Tools.setDefaultFont(defaultFont);
+					g2d.setFont(defaultFont);
+				
+					paint_stage(g2d);
+					
+					if (internal_frame!=null) {
+						g2d.scale(size_rate_x, size_rate_y);
+						g2d.clip(internal_frame.getBounds());
+						parent.superPaint(g2d);
+					}
+				} finally {
+					g2d.dispose();
 				}
 
 				g.drawImage(vm_buffer, 0, 0, getWidth(), getHeight(), null);
-				
 			}
 		
 			
