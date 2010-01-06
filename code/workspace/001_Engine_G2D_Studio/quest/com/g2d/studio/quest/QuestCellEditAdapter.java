@@ -41,6 +41,7 @@ import com.cell.rpg.quest.QuestItem.AwardTeleport;
 import com.cell.rpg.quest.QuestItem.QuestItemAbility;
 import com.cell.rpg.quest.QuestItem.Tag;
 import com.cell.rpg.quest.QuestItem.TagItem;
+import com.cell.rpg.quest.QuestItem.TagQuestStateKillMonsterComparison;
 //import com.cell.rpg.quest.QuestItem.TagPlayerField;
 //import com.cell.rpg.quest.QuestItem.TagPlayerPetField;
 //import com.cell.rpg.quest.QuestItem.TagPlayerTeamField;
@@ -64,9 +65,11 @@ import com.g2d.editor.property.ListEnumEdit;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.Studio;
+import com.g2d.studio.gameedit.ObjectSelectCellEdit;
 import com.g2d.studio.gameedit.ObjectSelectCellEditInteger;
 import com.g2d.studio.gameedit.XLSColumnSelectCellEdit;
 import com.g2d.studio.gameedit.template.XLSItem;
+import com.g2d.studio.gameedit.template.XLSUnit;
 import com.g2d.studio.quest.items.QuestItemNode;
 import com.g2d.studio.quest.items.QuestItemSelectCellEdit;
 import com.g2d.studio.rpg.FormulaEdit;
@@ -153,6 +156,54 @@ public class QuestCellEditAdapter {
 					QuestNode node = Studio.getInstance().getQuestManager().getQuest((Integer)fieldValue);
 					src.setText(node.getName());
 					src.setIcon(node.getIcon(false));
+				}catch(Exception err){}
+			}
+			return null;
+		}
+	}
+
+	/**
+	 * 依赖已完成的任务
+	 * @author WAZA
+	 *
+	 */
+	public static class QuestItemTagQuestStateKillMonsterComparison extends AbilityCellEditAdapter<TagQuestStateKillMonsterComparison>
+	{
+
+		@Override
+		public Class<TagQuestStateKillMonsterComparison> getType() {
+			return TagQuestStateKillMonsterComparison.class;
+		}
+		
+		@Override
+		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner, Object editObject, Object fieldValue, Field field) {
+			if (field.getName().equals("quest_id")) {
+				QuestSelectCellEdit edit = new QuestSelectCellEdit(owner);
+				edit.showDialog();
+				return edit;
+			}
+			else if (field.getName().equals("kill_unit_id")) {
+				ObjectSelectCellEditInteger<XLSUnit> edit = new ObjectSelectCellEditInteger<XLSUnit>(XLSUnit.class);
+				return edit;
+			}
+			return null;
+		}
+		
+		@Override
+		public Component getCellRender(ObjectPropertyPanel owner, Object editObject, Object fieldValue, Field field,
+			DefaultTableCellRenderer src) {
+			if (field.getName().equals("quest_id")) {
+				try{
+					QuestNode node = Studio.getInstance().getQuestManager().getQuest((Integer)fieldValue);
+					src.setText(node.getName());
+					src.setIcon(node.getIcon(false));
+				}catch(Exception err){}
+			}
+			else if (field.getName().equals("kill_unit_id")) {
+				try{
+					XLSUnit unit = Studio.getInstance().getObjectManager().getObject(XLSUnit.class, (Integer)fieldValue);
+					src.setText(unit.getName());
+					src.setIcon(unit.getIcon(false));
 				}catch(Exception err){}
 			}
 			return null;
