@@ -63,8 +63,10 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 	JList 				list_cur_ability 	= new JList();
 	JButton 			btn_add_ability 	= new JButton("添加能力");
 	JButton 			btn_del_ability 	= new JButton("删除能力");
-//	JScrollPane			right 				= new JScrollPane();
+	
 	JSplitPane 			split 				= new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+	JPanel 				left 				= new JPanel(new BorderLayout());
+	JPanel				right 				= new JPanel();
 	
 	public AbilityPanel(Abilities abilities, CellEditAdapter<?> ... adapters)
 	{
@@ -77,7 +79,6 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 		
 		// left
 		{
-			JPanel left = new JPanel(new BorderLayout());
 			// left center
 			{
 				this.list_cur_ability.setListData(abilities.getAbilities());
@@ -98,7 +99,7 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 		}
 		// right
 		{
-//			split.setRightComponent(right);
+			split.setRightComponent(right);
 		}
 		
 		this.add(split, BorderLayout.CENTER);
@@ -121,19 +122,16 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (e.getSource() == list_cur_ability) {
-//	        if (e.getClickCount() == 2) {
-//	            AbstractAbility data = (AbstractAbility)list_cur_ability.getSelectedValue();
-//	            new AbilityPropertyForm(data).setVisible(true);
-//	        }
 			Object selected = list_cur_ability.getSelectedValue();
 			if (selected instanceof AbstractAbility) {
 				resetAbility();
 				AbstractAbility ability = (AbstractAbility)selected;
 				ObjectPropertyPanel panel = new ObjectPropertyPanel(ability, adapters);
-//				right.setViewportView(panel);
 				split.setRightComponent(panel);
 				list_cur_ability.setSelectedValue(selected, false);
 			}
+		} else {
+			split.setRightComponent(right);
 		}
 	}
 
