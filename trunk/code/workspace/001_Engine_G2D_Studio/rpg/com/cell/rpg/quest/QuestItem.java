@@ -80,6 +80,7 @@ public class QuestItem extends RPGObject
 					TagItem.class,
 					TagQuest.class,
 					TagQuestItem.class,
+					TagQuestStateKillMonsterComparison.class,
 					TagValueComparison.class,
 					TagEveryUnitComparison.class,
 					TagOneMoreUnitComparison.class,
@@ -100,9 +101,6 @@ public class QuestItem extends RPGObject
 
 	public static abstract class Tag extends QuestItemAbility
 	{
-//		@Property("该标志的布尔条件(默认true)")
-		transient BooleanCondition	boolean_comparison = BooleanCondition.TRUE;
-		
 		@Property("该标志的布尔条件(默认true)")
 		public BooleanCondition boolean_condition = BooleanCondition.TRUE;
 		
@@ -111,8 +109,8 @@ public class QuestItem extends RPGObject
 			return true;
 		}
 		
-		public boolean getBooleanComparisonValue() {
-			if (boolean_comparison == BooleanCondition.FALSE) {
+		public boolean getBooleanConditionValue() {
+			if (boolean_condition == BooleanCondition.FALSE) {
 				return false;
 			}
 			return true;
@@ -158,6 +156,26 @@ public class QuestItem extends RPGObject
 		public int				quest_item_index	= -1;
 	}
 	
+	/**
+	 * [条件] 依赖的任务状态
+	 * @author WAZA
+	 */
+	@Property("[条件] 依赖的任务状态(杀死敌人数)")
+	final public static class TagQuestStateKillMonsterComparison extends Tag
+	{
+		@Property("依赖的任务ID")
+		public int					quest_id		= -1;
+
+		@Property("比较器")
+		public Comparison 			comparison		= Comparison.EQUAL;
+		
+		@Property("杀死的单位模板ID")
+		public Integer				kill_unit_id	= -1;
+		
+		@Property("杀死的单位数量")
+		public AbstractValue		kill_count		= new Value(1);
+	}
+
 	/**
 	 * [条件] 比较条件
 	 * @author WAZA

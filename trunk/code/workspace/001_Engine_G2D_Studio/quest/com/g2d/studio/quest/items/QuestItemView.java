@@ -1,5 +1,6 @@
 package com.g2d.studio.quest.items;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Event;
 import java.awt.dnd.DropTarget;
@@ -13,6 +14,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTree;
@@ -40,7 +42,7 @@ public class QuestItemView extends JSplitPane implements TreeSelectionListener
 	private QuestItemTree	tree;
 	
 	private JScrollPane		left;
-	private JScrollPane		right;
+	private JPanel			right;
 	
 //	----------------------------------------------------------------------------------------------------------------------------------
 	
@@ -52,7 +54,7 @@ public class QuestItemView extends JSplitPane implements TreeSelectionListener
 		this.tree	= new QuestItemTree();
 		
 		this.left	= new JScrollPane(tree);
-		this.right	= new JScrollPane();
+		this.right	= new JPanel(new BorderLayout());
 		left.setMinimumSize(new Dimension(200, 200));
 		right.setMinimumSize(new Dimension(200, 200));
 		
@@ -83,7 +85,9 @@ public class QuestItemView extends JSplitPane implements TreeSelectionListener
 	public void valueChanged(TreeSelectionEvent e) {
 		if (e.getPath().getLastPathComponent() instanceof QuestItemNode) {
 			QuestItemNode node = (QuestItemNode)e.getPath().getLastPathComponent();
-			right.setViewportView(node.getEditComponent());
+			this.setRightComponent(node.getEditComponent());
+		} else {
+			this.setRightComponent(right);
 		}
 	}
 	

@@ -51,7 +51,8 @@ extends JSplitPane implements TreeSelectionListener, ChangeListener
 
 	// ui
 	final private G2DTree 					g2d_tree;
-	final private JScrollPane				left = new JScrollPane();
+	final private JScrollPane				left 		= new JScrollPane();
+	final private JPanel					right		= new JPanel();
 	transient private Component				old_right;
 
 	protected IDFactoryInteger<T>			node_index	= new IDFactoryInteger<T>();
@@ -67,14 +68,17 @@ extends JSplitPane implements TreeSelectionListener, ChangeListener
 		this.node_type		= node_type;
 		this.data_type		= data_type;		
 		this.tree_root		= createTreeRoot(title);
+		
 		this.g2d_tree 		= new G2DTree(tree_root);
-
 		this.g2d_tree.addTreeSelectionListener(this);
 		this.g2d_tree.setMinimumSize(new Dimension(200, 200));
+		
+		this.left.setMinimumSize(new Dimension(200, 200));
 		this.left.setViewportView(g2d_tree);
+		
 		this.setOrientation(HORIZONTAL_SPLIT);
 		this.setLeftComponent(left);
-		this.setRightComponent(new JPanel());		
+		this.setRightComponent(right);
 		
 	}
 	
@@ -139,6 +143,9 @@ extends JSplitPane implements TreeSelectionListener, ChangeListener
 			if (old_right != null && old_right != node.getEditComponent()) {
 				old_right.setVisible(false);
 			}
+		} else {
+			right.setVisible(true);
+			this.setRightComponent(right);
 		}
 	}
 	

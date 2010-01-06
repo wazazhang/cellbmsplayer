@@ -13,6 +13,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTree;
@@ -41,21 +42,24 @@ public class QuestEventView extends JSplitPane implements TreeSelectionListener
 	private QuestEventTree	tree;
 	
 	private JScrollPane		left;
+	private JPanel			right;
 	
 //	----------------------------------------------------------------------------------------------------------------------------------
 	
 	public QuestEventView(Quest quest)
 	{
 		super(HORIZONTAL_SPLIT);
-		super.setMinimumSize(new Dimension(200, 200));
+		super.setMinimumSize(new Dimension(200, 180));
 		this.quest	= quest;
 		this.tree	= new QuestEventTree();
 		
 		this.left	= new JScrollPane(tree);
-		left.setMinimumSize(new Dimension(200, 200));
-		
+		this.right	= new JPanel();
+		left.setMinimumSize(new Dimension(200, 180));
+		right.setMinimumSize(new Dimension(200, 180));
 		this.setLeftComponent(left);
-
+		this.setRightComponent(right);
+		
 		tree.addTreeSelectionListener(this);
 		
 		setQuest(quest);
@@ -79,6 +83,8 @@ public class QuestEventView extends JSplitPane implements TreeSelectionListener
 		if (e.getPath().getLastPathComponent() instanceof QuestEventNode) {
 			QuestEventNode node = (QuestEventNode)e.getPath().getLastPathComponent();
 			this.setRightComponent(node.getEditComponent());
+		} else {
+			this.setRightComponent(right);
 		}
 	}
 	
