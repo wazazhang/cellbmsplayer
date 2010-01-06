@@ -72,6 +72,7 @@ public class QuestItem extends RPGObject
 			return new Class<?>[]{
 					AwardItem.class,
 					AwardTeleport.class,
+					AwardBattle.class,
 					AwardAddUnitProperty.class,
 					AwardSetUnitProperty.class,
 				};
@@ -160,17 +161,16 @@ public class QuestItem extends RPGObject
 	 * [条件] 依赖的任务状态
 	 * @author WAZA
 	 */
-	@Property("[条件] 依赖的任务状态(杀死敌人数)")
+	@Property("[条件] 依赖当前的任务状态(杀死敌人数)")
 	final public static class TagQuestStateKillMonsterComparison extends Tag
 	{
-		@Property("依赖的任务ID")
-		public int					quest_id		= -1;
+		transient private int					quest_id		= -1;
+
+		@Property("杀死的单位模板ID")
+		public Integer				kill_unit_id	= -1;
 
 		@Property("比较器")
 		public Comparison 			comparison		= Comparison.EQUAL;
-		
-		@Property("杀死的单位模板ID")
-		public Integer				kill_unit_id	= -1;
 		
 		@Property("杀死的单位数量")
 		public AbstractValue		kill_count		= new Value(1);
@@ -272,6 +272,18 @@ public class QuestItem extends RPGObject
 		@Property("场景内特定单位名字")
 		public String 			scene_object_id;
 	}
+	
+	/**
+	 * [奖励] 开始战斗
+	 * @author WAZA
+	 */
+	@Property("[结果] 开始战斗")
+	final public static class AwardBattle extends Result
+	{
+		@Property("和指定单位类型战斗")
+		public Integer			unit_id			= -1;
+	}
+	
 	
 	@Property("[结果] 增加单位属性")
 	final public static class AwardAddUnitProperty extends Result

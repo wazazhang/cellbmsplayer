@@ -36,6 +36,7 @@ import com.cell.rpg.formula.ObjectProperty;
 import com.cell.rpg.quest.QuestItem;
 import com.cell.rpg.quest.QuestGenerator.Festival;
 import com.cell.rpg.quest.QuestGenerator.Festival.FestivalDate;
+import com.cell.rpg.quest.QuestItem.AwardBattle;
 import com.cell.rpg.quest.QuestItem.AwardItem;
 import com.cell.rpg.quest.QuestItem.AwardTeleport;
 import com.cell.rpg.quest.QuestItem.QuestItemAbility;
@@ -177,12 +178,7 @@ public class QuestCellEditAdapter {
 		
 		@Override
 		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner, Object editObject, Object fieldValue, Field field) {
-			if (field.getName().equals("quest_id")) {
-				QuestSelectCellEdit edit = new QuestSelectCellEdit(owner);
-				edit.showDialog();
-				return edit;
-			}
-			else if (field.getName().equals("kill_unit_id")) {
+			if (field.getName().equals("kill_unit_id")) {
 				ObjectSelectCellEditInteger<XLSUnit> edit = new ObjectSelectCellEditInteger<XLSUnit>(XLSUnit.class);
 				return edit;
 			}
@@ -192,14 +188,7 @@ public class QuestCellEditAdapter {
 		@Override
 		public Component getCellRender(ObjectPropertyPanel owner, Object editObject, Object fieldValue, Field field,
 			DefaultTableCellRenderer src) {
-			if (field.getName().equals("quest_id")) {
-				try{
-					QuestNode node = Studio.getInstance().getQuestManager().getQuest((Integer)fieldValue);
-					src.setText(node.getName());
-					src.setIcon(node.getIcon(false));
-				}catch(Exception err){}
-			}
-			else if (field.getName().equals("kill_unit_id")) {
+			if (field.getName().equals("kill_unit_id")) {
 				try{
 					XLSUnit unit = Studio.getInstance().getObjectManager().getObject(XLSUnit.class, (Integer)fieldValue);
 					src.setText(unit.getName());
@@ -404,7 +393,42 @@ public class QuestCellEditAdapter {
 		
 	}
 	
-
+	/**
+	 * 任务奖励，传送
+	 * @author WAZA
+	 */
+	public static class QuestItemAwardBattle extends AbilityCellEditAdapter<AwardBattle>
+	{
+		@Override
+		public Class<AwardBattle> getType() {
+			return AwardBattle.class;
+		}
+		
+		@Override
+		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner,
+			Object editObject, Object fieldValue, Field field) {
+			if (field.getName().equals("unit_id")) {
+				ObjectSelectCellEditInteger<XLSUnit> edit = new ObjectSelectCellEditInteger<XLSUnit>(XLSUnit.class);
+				return edit;
+			}
+			return null;
+		}
+		
+		@Override
+		public Component getCellRender(ObjectPropertyPanel owner, Object editObject,
+			Object fieldValue, Field field, DefaultTableCellRenderer src) {
+			if (field.getName().equals("unit_id")) {
+				try{
+					XLSUnit unit = Studio.getInstance().getObjectManager().getObject(XLSUnit.class, (Integer)fieldValue);
+					src.setText(unit.getName());
+					src.setIcon(unit.getIcon(false));
+				}catch(Exception err){}
+			}
+			return null;
+		}
+		
+	}
+	
 //	-------------------------------------------------------------------------------------------------------------------------
 	
 	public static class TimeObjectAdapter extends AbilityCellEditAdapter<AbstractAbility>
