@@ -63,6 +63,14 @@ public class Astar
 			X = (short)x;
 			Y = (short)y;
 		}
+		
+		public void putG(int bG, MapNode father, MapNode target)
+		{
+			this.sFather 	= father ;
+			this.sG 		= bG;
+			this.sH 		= (Math.abs(X - target.X) + Math.abs(Y - target.Y));
+			this.sF 		= (sG + sH) ;
+		}
 	}
 	
 	AstarMap Map ;
@@ -104,20 +112,22 @@ public class Astar
 		if(Map.getFlag(dx, dy)!=0) return head;
 		
 		MapNode srcNode = AllNode[sy][sx];
-		srcNode.sG = 0;
-		srcNode.sH = (Math.abs(srcNode.X - dx) + Math.abs(srcNode.Y - dy));
-		srcNode.sF = (srcNode.sG + srcNode.sH) ;
-		srcNode.sFather = srcNode;
+		MapNode dstNode = AllNode[dy][dx];
+		
+		srcNode.putG(0, srcNode, dstNode);
+		
+//		srcNode.sG = 0;
+//		srcNode.sH = (Math.abs(srcNode.X - dx) + Math.abs(srcNode.Y - dy));
+//		srcNode.sF = (srcNode.sG + srcNode.sH) ;
+//		srcNode.sFather = srcNode;
 		srcOpenList.add(srcNode);
 
 		// near 8 blocks
-		
+		int ndx = 0;
+		int ndy = 0;
 		do{
 			try {
 				// -----------------------------------------------------------------------------------------------
-//				
-				// src to dst
-				
 				// search min F
 				MapNode curSrcNode = getMinF(srcOpenList);
 				
@@ -126,52 +136,59 @@ public class Astar
 				srcCloseList.add(curSrcNode);
 				
 				// find near 8 blocks
-				for(int i=0;i<near.length;i++){
-					if( curSrcNode.Y+near[i][1] < 0 || curSrcNode.Y+near[i][1] > Map.getYCount()-1 || //
-						curSrcNode.X+near[i][0] < 0 || curSrcNode.X+near[i][0] > Map.getXCount()-1 ){ //
-						continue;
-					}
-					MapNode block = AllNode[curSrcNode.Y+near[i][1]][curSrcNode.X+near[i][0]];
+				for(int i=0;i<near.length;i++)
+				{
+					ndx = near[i][0];
+					ndy = near[i][1];
 					
-					// ignore what if the block can not across or already in close table
-					if( srcCloseList.contains(block)){
+					if( curSrcNode.Y+ndy < 0 || curSrcNode.Y+ndy > Map.getYCount()-1 || //
+						curSrcNode.X+ndx < 0 || curSrcNode.X+ndx > Map.getXCount()-1 ){ //
 						continue;
 					}
-					if( Map.getFlag(block.X,block.Y)!=0 ){
+					MapNode block = AllNode[curSrcNode.Y + ndy][curSrcNode.X + ndx];
+					
+					// target is block
+					if (Map.getFlag(block.X, block.Y) != 0) {
 						continue;
 					}
-					if( near[i][0]!=0 && near[i][1]!=0 ){//
+					// compute the F = G + H + cur.G
+					int bG = curSrcNode.sG;
+					if( ndx!=0 && ndy!=0 ){//
+						bG += 14;
 						try{
-							if( Map.getFlag(curSrcNode.X, curSrcNode.Y+near[i][1])!=0 || //
-								Map.getFlag(curSrcNode.X+near[i][0], curSrcNode.Y)!=0 ){ //
+							// target is block
+							if( Map.getFlag(curSrcNode.X, curSrcNode.Y+ndy)!=0 || //
+								Map.getFlag(curSrcNode.X+ndx, curSrcNode.Y)!=0 ){ //
 								continue;
 							}
 						}catch(Exception err){
 							continue;
 						}
-					}
-					
-					// compute the F = G + H + cur.G
-					int bG = curSrcNode.sG;
-					if(near[i][0]!=0 && near[i][1]!=0){
-						bG += 14;
 					}else{
 						bG += 10;
 					}
+
+					// ignore what if the block can not across or already in close table
+					if( srcCloseList.contains(block)){
+						continue;
+					}
+					
 					// push and if is not in open table
 					if(!srcOpenList.contains(block)){
 						srcOpenList.add(block);
-						block.sFather = curSrcNode ;
-						block.sG = bG;
-						block.sH = (Math.abs(block.X - dx) + Math.abs(block.Y - dy));
-						block.sF = (block.sG + block.sH) ;
+						block.putG(bG, curSrcNode, dstNode);
+//						block.sFather = curSrcNode ;
+//						block.sG = bG;
+//						block.sH = (Math.abs(block.X - dx) + Math.abs(block.Y - dy));
+//						block.sF = (block.sG + block.sH) ;
 					}
 					// check it better with org G if is in open table
 					else if(bG<curSrcNode.sG){
-						block.sFather = curSrcNode ;
-						block.sG = bG;
-						block.sH = (Math.abs(block.X - dx) + Math.abs(block.Y - dy));
-						block.sF = (block.sG + block.sH) ;
+						block.putG(bG, curSrcNode, dstNode);
+//						block.sFather = curSrcNode ;
+//						block.sG = bG;
+//						block.sH = (Math.abs(block.X - dx) + Math.abs(block.Y - dy));
+//						block.sF = (block.sG + block.sH) ;
 					}	
 				}
 				
