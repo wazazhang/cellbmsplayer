@@ -14,8 +14,7 @@ import com.cell.CMath;
 import com.cell.game.CCD;
 import com.cell.game.CSprite;
 import com.cell.game.CWayPoint;
-import com.cell.game.ai.Astar;
-import com.cell.game.ai.Astar.WayPoint;
+import com.cell.game.ai.pathfind.AstarManhattanMap;
 import com.cell.j2se.CGraphics;
 import com.g2d.Tools;
 import com.g2d.Version;
@@ -49,23 +48,28 @@ public class Scene extends com.g2d.game.rpg.Scene
 	
 //	-----------------------------------------------------------------------------------------------------------
 
-	public class WorldMap extends com.g2d.game.rpg.SceneMap implements Astar.AstarMap
+	public class WorldMap extends com.g2d.game.rpg.SceneMap implements AstarManhattanMap
 	{
 		final protected CellSetResource			set_resource;
 		final protected CellSetResource.WorldSet	set_world;
 
 		public WorldMap(CellSetResource resource, CellSetResource.WorldSet set_world) 
 		{
-			super(Scene.this, set_world.GridW, set_world.GridH, set_world.GridXCount, set_world.GridYCount);
+			super(Scene.this, 
+					set_world.GridW, 
+					set_world.GridH, 
+					set_world.GridXCount, 
+					set_world.GridYCount, 
+					set_world.Terrian);
 
 			this.set_resource 	= resource;
 			this.set_world		= set_world;
 			
-			for (int x = set_world.GridXCount - 1; x >= 0; --x) {
-				for (int y = set_world.GridYCount - 1; y >= 0; --y) {
-					this.grid_matrix[x][y] = set_world.Terrian[x][y];
-				}
-			}
+//			for (int x = set_world.GridXCount - 1; x >= 0; --x) {
+//				for (int y = set_world.GridYCount - 1; y >= 0; --y) {
+//					this.grid_matrix[x][y] = set_world.Terrian[x][y];
+//				}
+//			}
 			
 			for (int i=set_world.Sprs.size()-1; i>=0; --i){
 				WorldSet.SpriteObject wspr = set_world.Sprs.elementAt(i);

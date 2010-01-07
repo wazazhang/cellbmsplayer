@@ -12,7 +12,7 @@ import com.cell.game.CCD;
 import com.cell.game.CMap;
 import com.cell.game.CSprite;
 import com.cell.game.CWayPoint;
-import com.cell.game.ai.Astar.WayPoint;
+import com.cell.game.ai.pathfind.AstarManhattan.WayPoint;
 import com.cell.gfx.CImages;
 import com.cell.gfx.IImage;
 import com.cell.gfx.IImages;

@@ -4,8 +4,8 @@ import java.awt.Color;
 import java.awt.geom.Line2D;
 
 import com.cell.CMath;
-import com.cell.game.ai.Astar;
-import com.cell.game.ai.Astar.WayPoint;
+import com.cell.game.ai.pathfind.AstarManhattan;
+import com.cell.game.ai.pathfind.AstarManhattan.WayPoint;
 
 import com.g2d.Version;
 import com.g2d.annotation.Property;
@@ -63,7 +63,7 @@ public abstract class MoveableUnit extends Unit
 		move_target_y = targetY;
 	}
 
-	public Astar.WayPoint beginMove(double targetX, double targetY) 
+	public AstarManhattan.WayPoint beginMove(double targetX, double targetY) 
 	{
 		move_target_x = targetX;
 		move_target_y = targetY;

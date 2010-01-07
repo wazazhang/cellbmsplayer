@@ -8,8 +8,8 @@ import java.awt.image.BufferedImage;
 
 import com.cell.CMath;
 import com.cell.game.CSprite;
-import com.cell.game.ai.Astar;
-import com.cell.game.ai.Astar.WayPoint;
+import com.cell.game.ai.pathfind.AstarManhattan;
+import com.cell.game.ai.pathfind.AstarManhattan.WayPoint;
 import com.cell.gfx.IImage;
 import com.cell.j2se.CGraphics;
 import com.g2d.Tools;
