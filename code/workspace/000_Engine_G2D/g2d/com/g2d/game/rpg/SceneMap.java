@@ -32,14 +32,14 @@ public abstract class SceneMap extends DisplayObjectContainer implements AstarMa
 	final protected int 	world_grid_y_size;
 	final protected int[][] grid_matrix;
 
-	final protected AstarManhattan	astar_path_finder;
-	
 	final TerrainViewer		grid_viewer;
-	
-	public boolean			runtime_sort		= true;
 	
 //	---------------------------------------------------------------------------------------------------------------------------
 
+	protected AstarManhattan	astar_path_finder;
+	
+	public boolean				runtime_sort		= true;
+	
 	
 	private Map<Object, Unit>	units_name		= new HashMap<Object, Unit>(100);
 	private AtomicInteger		units_index		= new AtomicInteger(1);
@@ -73,12 +73,9 @@ public abstract class SceneMap extends DisplayObjectContainer implements AstarMa
 			}
 		}
 		
-		
 		grid_viewer 		= new TerrainViewer();
 		
-		
-		
-		astar_path_finder = new AstarManhattan(this);
+		astar_path_finder	= new AstarManhattan(this, true, false);
 	}
 
 	@Override
