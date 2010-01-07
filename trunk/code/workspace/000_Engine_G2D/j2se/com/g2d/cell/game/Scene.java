@@ -48,7 +48,7 @@ public class Scene extends com.g2d.game.rpg.Scene
 	
 //	-----------------------------------------------------------------------------------------------------------
 
-	public class WorldMap extends com.g2d.game.rpg.SceneMap implements AstarManhattanMap
+	public class WorldMap extends com.g2d.game.rpg.SceneMap
 	{
 		final protected CellSetResource			set_resource;
 		final protected CellSetResource.WorldSet	set_world;

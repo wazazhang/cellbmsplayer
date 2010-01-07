@@ -49,22 +49,29 @@ public class AstarManhattan extends AbstractAstar
 		};
 	
 	static class MMap implements AbstractAstarMap<MMapNode>
-	{
+	{ 
 		final AstarManhattanMap	map;
 		final int		xcount;
 		final int		ycount;
 		
+		final boolean 	is_static;
+		final boolean	is_edge;
+		
+		
 		final ArrayList<MMapNode> 
+		
 						all_nodes;
 
 		final MMapNode
 						all_nodes_map[][];
 		
-		public MMap(AstarManhattanMap map) 
+		public MMap(AstarManhattanMap map, boolean is_static, boolean is_edge) 
 		{
-			this.map	= map;
-			this.xcount	= map.getXCount();
-			this.ycount	= map.getYCount();
+			this.map		= map;
+			this.xcount		= map.getXCount();
+			this.ycount		= map.getYCount();
+			this.is_static	= is_static;
+			this.is_edge	= is_edge;
 			
 			this.all_nodes 		= new ArrayList<MMapNode>(xcount*ycount);
 			this.all_nodes_map 	= new MMapNode[ycount][xcount];
@@ -84,16 +91,18 @@ public class AstarManhattan extends AbstractAstar
 							int ndx = np[0];
 							int ndy = np[1];
 							MMapNode near = all_nodes_map[y+ndy][x+ndx];
-//							if (map.getFlag(x, y) != 0) {
-//								continue;
-//							}
-//							if (ndx!=0 && ndy!=0) {
-//								ManhattanMapNode ta	= all_nodes_map[y][x+ndx];
-//								ManhattanMapNode tb = all_nodes_map[y+ndy][x];
-//								if (ta.flag!=0 || tb.flag!=0 ) {
-//									continue;
-//								}
-//							}
+							if (is_static) {
+								if (near.static_flag != 0) {
+									continue;
+								}
+								if (is_edge && ndx!=0 && ndy!=0) {
+									MMapNode ta	= all_nodes_map[y][x+ndx];
+									MMapNode tb = all_nodes_map[y+ndy][x];
+									if (ta.static_flag!=0 || tb.static_flag!=0 ) {
+										continue;
+									}
+								}
+							}
 							node.nexts.add(near);
 						}catch(Exception err){}
 					}
@@ -129,14 +138,16 @@ public class AstarManhattan extends AbstractAstar
 		MMap 	mmap;
 		short 	X;
 		short 	Y;
+		int		static_flag;
 		
 		transient ArrayList<AbstractAstarMapNode> nexts = new ArrayList<AbstractAstarMapNode>(8);
 		
 		public MMapNode(MMap map, int x, int y)
 		{
-			this.mmap	= map;
-			this.X 		= (short)x;
-			this.Y 		= (short)y;
+			this.mmap			= map;
+			this.X 				= (short)x;
+			this.Y 				= (short)y;
+			this.static_flag	= mmap.map.getFlag(X, Y);
 		}
 		
 		@Override
@@ -146,29 +157,61 @@ public class AstarManhattan extends AbstractAstar
 		
 		@Override
 		public boolean testCross(AbstractAstarMapNode father) {
-			return mmap.map.getFlag(X, Y) == 0;
+			if (mmap.is_static) {
+				return static_flag == 0;
+			} else {
+				if (mmap.map.getFlag(X, Y) != 0) {
+					return false;
+				}
+				if (mmap.is_edge) {
+					MMapNode t = (MMapNode)father;
+					int ndx = X - t.X;
+					int ndy = Y - t.Y;
+					if (ndx!=0 && ndy!=0) {
+						MMapNode ta	= mmap.all_nodes_map[Y][t.X];
+						MMapNode tb = mmap.all_nodes_map[t.Y][X];
+						if (ta.static_flag!=0 || tb.static_flag!=0 ) {
+							return false;
+						}
+					}
+				}
+				return true;
+			}
 		}
 		
 		@Override
 		public int getDistance(AbstractAstarMapNode target) {
 			MMapNode t = (MMapNode)target;
-			return (Math.abs(X - t.X) + Math.abs(Y - t.Y));
+			int ndx = X - t.X;
+			int ndy = Y - t.Y;
+			return (Math.abs(ndx) + Math.abs(ndy));
 		}
 		
 		@Override
 		public int getPriority(AbstractAstarMapNode target) {
-			MMapNode t = (MMapNode)target;
-			return (Math.abs(X - t.X) + Math.abs(Y - t.Y));
+			MMapNode t = (MMapNode) target;
+			if (X != t.X && Y != t.Y) {
+				return 14;
+			}
+			return 10;
 		}
 	}
 
 //	----------------------------------------------------------------------------------------------------
-	TempMapNode[][] 	node_map;
-	MMap 		mmap ;
 	
-	public AstarManhattan(AstarManhattanMap map)
+	TempMapNode[][] 	node_map;
+	
+	MMap 				mmap ;
+	
+	/**
+	 * 创建一个以曼哈顿算法的A*寻路算法
+	 * @param map		地图适配器
+	 * @param is_static	是否是静态地图，即在运行过程中不会改变的
+	 * @param is_edge	是否要检测斜边可以移动
+	 */
+	public AstarManhattan(AstarManhattanMap map, boolean is_static, boolean is_edge)
 	{
-		super(new MMap(map));
+		super(new MMap(map, is_static, is_edge));
 		
 		this.mmap = (MMap)getMap();
 		
@@ -198,7 +241,7 @@ public class AstarManhattan extends AbstractAstar
 		WayPoint path = null;
 		while (wp != null) {
 			MMapNode mnpde = (MMapNode)wp.map_node;
-			System.out.println(mnpde.X+","+mnpde.Y);
+//			System.out.println(mnpde.X+","+mnpde.Y);
 			if (path != null) {
 				path.Next = new WayPoint(mnpde.X, mnpde.Y, mmap.map.getCellW(), mmap.map.getCellH());
 				path = path.Next;
