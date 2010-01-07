@@ -15,14 +15,15 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.cell.CMath;
-import com.cell.game.ai.Astar;
-import com.cell.game.ai.Astar.WayPoint;
+import com.cell.game.ai.pathfind.AstarManhattan;
+import com.cell.game.ai.pathfind.AstarManhattanMap;
+import com.cell.game.ai.pathfind.AstarManhattan.WayPoint;
 
 import com.g2d.display.DisplayObject;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.util.Drawing;
 
-public abstract class SceneMap extends DisplayObjectContainer implements Astar.AstarMap
+public abstract class SceneMap extends DisplayObjectContainer implements AstarManhattanMap
 {
 	final public Scene		owner_scene;
 	
@@ -30,13 +31,13 @@ public abstract class SceneMap extends DisplayObjectContainer implements Astar.A
 	final protected int 	world_grid_x_size;
 	final protected int 	world_grid_y_size;
 	final protected int[][] grid_matrix;
-	final protected Astar	astar_path_finder;
+
+	final protected AstarManhattan	astar_path_finder;
+	
 	final TerrainViewer		grid_viewer;
 	
 	public boolean			runtime_sort		= true;
 	
-	
-
 //	---------------------------------------------------------------------------------------------------------------------------
 
 	
@@ -51,7 +52,8 @@ public abstract class SceneMap extends DisplayObjectContainer implements Astar.A
 			int grid_w, 
 			int grid_h, 
 			int grid_x_count,
-			int grid_y_count) 
+			int grid_y_count,
+			int matrix[][]) 
 	{
 		owner_scene			= scene;
 
@@ -64,9 +66,19 @@ public abstract class SceneMap extends DisplayObjectContainer implements Astar.A
 		world_grid_x_size	= grid_x_count;
 		world_grid_y_size	= grid_y_count;
 		grid_matrix			= new int[grid_x_count][grid_y_count];
+
+		for (int x = grid_x_count - 1; x >= 0; --x) {
+			for (int y = grid_y_count - 1; y >= 0; --y) {
+				this.grid_matrix[x][y] = matrix[x][y];
+			}
+		}
+		
+		
 		grid_viewer 		= new TerrainViewer();
 		
-		astar_path_finder = new Astar(this);
+		
+		
+		astar_path_finder = new AstarManhattan(this);
 	}
 
 	@Override
@@ -131,7 +143,7 @@ public abstract class SceneMap extends DisplayObjectContainer implements Astar.A
 	
 //	---------------------------------------------------------------------------------------------------------------------------
 
-	final public Astar.WayPoint findPath(int sx, int sy, int dx, int dy) {
+	final public AstarManhattan.WayPoint findPath(int sx, int sy, int dx, int dy) {
 		return astar_path_finder.findPath(sx, sy, dx, dy);
 	}
 	

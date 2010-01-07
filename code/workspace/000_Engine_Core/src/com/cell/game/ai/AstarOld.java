@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Vector;
 
-public class Astar
+public class AstarOld
 {
 	public static interface AstarMap
 	{
@@ -86,7 +86,7 @@ public class Astar
 			{-1, 1}, { 0, 1}, { 1, 1}
 		};
 	
-	public Astar(AstarMap map)
+	public AstarOld(AstarMap map)
 	{
 		Map = map;
 		
