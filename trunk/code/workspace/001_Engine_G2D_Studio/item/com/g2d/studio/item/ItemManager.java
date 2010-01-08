@@ -102,7 +102,7 @@ public class ItemManager extends ManagerForm implements ActionListener
 	
 	public ItemManager(Studio studio, ProgressForm progress) 
 	{
-		super(studio, progress, "道具属性管理器");
+		super(studio, progress, "道具属性管理器", Res.icon_res_4);
 		
 		this.add(toolbar, BorderLayout.NORTH);
 		

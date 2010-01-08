@@ -46,7 +46,7 @@ public class SoundManager extends ManagerForm implements ActionListener
 	
 	public SoundManager(Studio studio, ProgressForm progress) 
 	{
-		super(studio, progress, "声音编辑器");
+		super(studio, progress, "声音编辑器", Res.icons_bar[3]);
 
 		{
 			JToolBar play_bar = new JToolBar();

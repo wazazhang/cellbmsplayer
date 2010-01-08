@@ -111,7 +111,7 @@ public class ObjectManager extends ManagerForm implements ActionListener
 	
 	public ObjectManager(Studio studio, ProgressForm progress) 
 	{
-		super(studio, progress, "物体编辑器");
+		super(studio, progress, "物体编辑器", Res.icons_bar[4]);
 		
 		this.add(toolbar, BorderLayout.NORTH);
 		

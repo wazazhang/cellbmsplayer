@@ -30,6 +30,8 @@ public class Res
 	
 	static public BufferedImage	icon_action			= Tools.readImage("/com/g2d/studio/res/icon_action.png");
 	
+	static public BufferedImage	icon_scene_graph	= Tools.readImage("/com/g2d/studio/res/icon_scene_graph.png");
+
 //	---------------------------------------------------------------------------------------------------------------
 //	icons
 	static public BufferedImage icons_bar[]			= clipImage("/com/g2d/studio/res/icons_bar.png", 10, 1);

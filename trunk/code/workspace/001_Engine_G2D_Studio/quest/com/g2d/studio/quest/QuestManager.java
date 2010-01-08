@@ -29,7 +29,7 @@ public class QuestManager extends ManagerForm implements ActionListener
 	
 	public QuestManager(Studio studio, ProgressForm progress) 
 	{
-		super(studio, progress, "任务管理器");
+		super(studio, progress, "任务管理器", Res.icon_quest);
 		
 		tool_bar 		= new G2DWindowToolBar(this);
 		this.add(tool_bar, BorderLayout.NORTH);
