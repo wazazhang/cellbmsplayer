@@ -14,6 +14,7 @@ import java.io.ObjectOutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -36,6 +37,7 @@ import com.cell.CIO;
 import com.cell.CUtil;
 import com.cell.rpg.io.RPGObjectMap;
 import com.cell.rpg.scene.Scene;
+import com.cell.rpg.scene.graph.SceneGraph;
 import com.cell.util.IDFactoryInteger;
 import com.cell.util.Properties;
 import com.g2d.Tools;
@@ -122,11 +124,21 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 			saveAll();
 		}
 		else if (e.getSource() == tool_scene_graph) {
-			SceneGraphViewer sg = new SceneGraphViewer();
+			SceneGraphViewer sg = new SceneGraphViewer(this);
 			sg.setVisible(true);
 		}
 	}
 
+	public SceneGraph createSceneGraph()
+	{
+		Vector<SceneNode> 	nodes 	= getAllScenes();
+		ArrayList<Scene> 	scenes 	= new ArrayList<Scene>(nodes.size());
+		for (SceneNode node : nodes) {
+			scenes.add(node.getData());
+		}
+		return new SceneGraph(scenes);
+	}
+	
 //	------------------------------------------------------------------------------------------------------------------------------
 
 	public Vector<SceneNode> getAllScenes() {
@@ -145,6 +157,9 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 	
 	public SceneNode getSceneNode(String id) {
 		return id_factory.get(Integer.parseInt(id));
+	}
+	public SceneNode getSceneNode(int id) {
+		return id_factory.get(id);
 	}
 	
 	public void addScene(SceneNode node, SceneGroup root)

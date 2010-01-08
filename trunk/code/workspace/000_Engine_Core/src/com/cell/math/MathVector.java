@@ -72,8 +72,8 @@ public class MathVector
 	
 	
 	public static double getDistance(double x1, double y1, double x2, double y2){
-		double r1 = Math.abs(x1-x2);
-		double r2 = Math.abs(y1-y2);
+		double r1 = x1-x2;
+		double r2 = y1-y2;
 		return Math.sqrt(r1*r1+r2*r2);
 	}
 	
