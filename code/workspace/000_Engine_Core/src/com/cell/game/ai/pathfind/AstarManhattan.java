@@ -268,7 +268,7 @@ public class AstarManhattan extends AbstractAstar
 	}
 
 	@Override
-	public com.cell.game.ai.pathfind.AbstractAstar.WayPoint findPath(AbstractAstarMapNode srcNode, AbstractAstarMapNode dstNode) {
+	protected com.cell.game.ai.pathfind.AbstractAstar.WayPoint findPath(AbstractAstarMapNode srcNode, AbstractAstarMapNode dstNode) {
 		try{
 			MMapNode ss = (MMapNode)srcNode;
 			MMapNode ds = (MMapNode)dstNode;

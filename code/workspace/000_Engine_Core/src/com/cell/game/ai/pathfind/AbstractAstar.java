@@ -60,7 +60,7 @@ public abstract class AbstractAstar
 		return this.map;
 	}
 
-	abstract public WayPoint findPath(AbstractAstarMapNode src_node, AbstractAstarMapNode dst_node);
+	abstract protected WayPoint findPath(AbstractAstarMapNode src_node, AbstractAstarMapNode dst_node);
 	
 //	-----------------------------------------------------------------------------------------------------------------
 	
@@ -229,7 +229,7 @@ public abstract class AbstractAstar
 	
 //	-----------------------------------------------------------------------------------------------------------------
 	
-	final public static class WayPoint implements Serializable
+	final protected static class WayPoint implements Serializable
 	{
 		final public	AbstractAstarMapNode	map_node;
 		
