@@ -210,7 +210,7 @@ public class Studio extends AbstractFrame
 			frame_icon_manager = new IconManager(this, progress);
 			JButton btn = new JButton();
 			btn.setToolTipText(frame_icon_manager.getTitle());
-			btn.setIcon(Tools.createIcon(Res.icon_hd));
+			btn.setIcon(Tools.createIcon(frame_icon_manager.getIconImage()));
 			btn.addActionListener(new ActionListener(){
 				public void actionPerformed(ActionEvent e) {
 					frame_icon_manager.setVisible(true);
@@ -223,7 +223,7 @@ public class Studio extends AbstractFrame
 			frame_sound_manager = new SoundManager(this, progress);
 			JButton btn = new JButton();
 			btn.setToolTipText(frame_sound_manager.getTitle());
-			btn.setIcon(Tools.createIcon(Res.icons_bar[3]));
+			btn.setIcon(Tools.createIcon(frame_sound_manager.getIconImage()));
 			btn.addActionListener(new ActionListener(){
 				public void actionPerformed(ActionEvent e) {
 					frame_sound_manager.setVisible(true);
@@ -236,7 +236,7 @@ public class Studio extends AbstractFrame
 			frame_cpj_resource_manager = new CPJResourceManager(this, progress);
 			JButton btn = new JButton();
 			btn.setToolTipText(frame_cpj_resource_manager.getTitle());
-			btn.setIcon(Tools.createIcon(Res.icons_bar[7]));
+			btn.setIcon(Tools.createIcon(frame_cpj_resource_manager.getIconImage()));
 			btn.addActionListener(new ActionListener(){
 				public void actionPerformed(ActionEvent e) {
 					frame_cpj_resource_manager.setVisible(true);
@@ -249,7 +249,7 @@ public class Studio extends AbstractFrame
 			frame_item_manager = new ItemManager(this, progress);
 			JButton btn = new JButton();
 			btn.setToolTipText(frame_item_manager.getTitle());
-			btn.setIcon(Tools.createIcon(Res.icon_res_4));
+			btn.setIcon(Tools.createIcon(frame_item_manager.getIconImage()));
 			btn.addActionListener(new ActionListener(){
 				public void actionPerformed(ActionEvent e) {
 					frame_item_manager.setVisible(true);
@@ -262,7 +262,7 @@ public class Studio extends AbstractFrame
 			frame_object_manager = new ObjectManager(this, progress);
 			JButton btn = new JButton();
 			btn.setToolTipText(frame_object_manager.getTitle());
-			btn.setIcon(Tools.createIcon(Res.icons_bar[4]));
+			btn.setIcon(Tools.createIcon(frame_object_manager.getIconImage()));
 			btn.addActionListener(new ActionListener(){
 				public void actionPerformed(ActionEvent e) {
 					frame_object_manager.setVisible(true);
@@ -275,7 +275,7 @@ public class Studio extends AbstractFrame
 			frame_quest_manager = new QuestManager(this, progress);
 			JButton btn = new JButton();
 			btn.setToolTipText(frame_quest_manager.getTitle());
-			btn.setIcon(Tools.createIcon(Res.icon_quest));
+			btn.setIcon(Tools.createIcon(frame_quest_manager.getIconImage()));
 			btn.addActionListener(new ActionListener(){
 				public void actionPerformed(ActionEvent e) {
 					frame_quest_manager.setVisible(true);

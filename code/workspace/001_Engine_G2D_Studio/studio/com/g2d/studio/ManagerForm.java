@@ -1,11 +1,10 @@
 package com.g2d.studio;
 
-import java.awt.image.BufferedImage;
+import java.awt.Image;
 
 import javax.swing.JFrame;
 
 import com.g2d.studio.Studio.ProgressForm;
-import com.g2d.studio.res.Res;
 import com.g2d.util.AbstractFrame;
 
 public abstract class ManagerForm extends JFrame
@@ -14,11 +13,11 @@ public abstract class ManagerForm extends JFrame
 
 	final public Studio studio;
 	
-	public ManagerForm(Studio studio, ProgressForm progress, String title) 
+	public ManagerForm(Studio studio, ProgressForm progress, String title, Image icon) 
 	{
 		super.setSize(AbstractFrame.getScreenWidth()-Studio.getInstance().getWidth(), Studio.getInstance().getHeight());
 		super.setLocation(Studio.getInstance().getX()+Studio.getInstance().getWidth(), Studio.getInstance().getY());
-		super.setIconImage(Res.icon_edit);		
+		super.setIconImage(icon);		
 		super.setTitle(title);
 		this.studio = studio;
 		progress.startReadBlock("初始化" + title + "...");

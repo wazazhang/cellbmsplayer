@@ -76,7 +76,7 @@ public class CPJResourceManager extends ManagerForm implements MouseListener
 	
 	public CPJResourceManager(Studio studio, ProgressForm progress) 
 	{
-		super(studio, progress, "资源管理器");
+		super(studio, progress, "资源管理器", Res.icons_bar[7]);
 		
 		String path = Studio.getInstance().project_path.getPath();
 		

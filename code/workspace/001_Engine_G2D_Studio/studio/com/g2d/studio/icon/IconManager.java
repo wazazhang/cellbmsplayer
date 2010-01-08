@@ -26,7 +26,7 @@ public class IconManager extends ManagerForm
 	
 	public IconManager(Studio studio, ProgressForm progress) 
 	{
-		super(studio, progress, "图标管理器");
+		super(studio, progress, "图标管理器", Res.icon_hd);
 		{
 			File icon_dir 	= Studio.getInstance().root_icon_path;	
 			File files[]	= icon_dir.listFiles();

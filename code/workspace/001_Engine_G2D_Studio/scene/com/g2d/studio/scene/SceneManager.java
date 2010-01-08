@@ -20,6 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.DropMode;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
@@ -37,6 +38,7 @@ import com.cell.rpg.io.RPGObjectMap;
 import com.cell.rpg.scene.Scene;
 import com.cell.util.IDFactoryInteger;
 import com.cell.util.Properties;
+import com.g2d.Tools;
 import com.g2d.display.event.MouseListener;
 import com.g2d.studio.Studio;
 import com.g2d.studio.Studio.ProgressForm;
@@ -46,13 +48,15 @@ import com.g2d.studio.cpj.entity.CPJSprite;
 import com.g2d.studio.cpj.entity.CPJWorld;
 import com.g2d.studio.gameedit.dynamic.DAvatar;
 import com.g2d.studio.gameedit.dynamic.IDynamicIDFactory;
+import com.g2d.studio.res.Res;
 import com.g2d.studio.scene.entity.SceneGroup;
 import com.g2d.studio.scene.entity.SceneNode;
 import com.g2d.studio.swing.G2DTree;
+import com.g2d.studio.swing.G2DWindowToolBar;
 import com.g2d.studio.swing.G2DTreeNodeGroup.GroupMenu;
 import com.thoughtworks.xstream.XStream;
 
-public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
+public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>, ActionListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -61,16 +65,19 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 		return instance;
 	}
 //	------------------------------------------------------------------------------------------------------------------------------
-	IDFactoryInteger<SceneNode>		id_factory	= new IDFactoryInteger<SceneNode>();
+	IDFactoryInteger<SceneNode>		id_factory			= new IDFactoryInteger<SceneNode>();
 	
 //	------------------------------------------------------------------------------------------------------------------------------
 	
-	final private ReentrantLock		scene_lock	= new ReentrantLock();
+	final private ReentrantLock		scene_lock			= new ReentrantLock();
 	
 	final public File				scene_dir;
 	final public File				scene_list;
 	final public G2DTree			g2d_tree;
-
+	
+	final private G2DWindowToolBar	tool_bar			= new G2DWindowToolBar(this);
+	final private JButton			tool_scene_graph 	= new JButton(Tools.createIcon(Res.icon_scene_graph));
+	
 //	------------------------------------------------------------------------------------------------------------------------------
 	
 	public SceneManager(Studio studio, ProgressForm progress)
@@ -96,13 +103,29 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 		}
 		this.g2d_tree.addMouseListener(new TreeMouseAdapter());
 		JScrollPane scroll = new JScrollPane(g2d_tree);
-		add(scroll);
+		this.add(scroll, BorderLayout.CENTER);
+		
+		tool_scene_graph.setToolTipText("打开场景图");
+		tool_scene_graph.addActionListener(this);
+		tool_bar.add(tool_scene_graph);
+		
+		this.tool_bar.setFloatable(false);
+		this.add(tool_bar, BorderLayout.NORTH);
 		
 		g2d_tree.setDragEnabled(true);
 	}
 
 //	------------------------------------------------------------------------------------------------------------------------------
-
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == tool_bar.save) {
+			saveAll();
+		}
+		else if (e.getSource() == tool_scene_graph) {
+			SceneGraphViewer sg = new SceneGraphViewer();
+			sg.setVisible(true);
+		}
+	}
 
 //	------------------------------------------------------------------------------------------------------------------------------
 
