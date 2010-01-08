@@ -2,8 +2,11 @@ package com.cell.rpg.scene.graph;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.HashMap;
 
 import com.cell.game.ai.pathfind.AbstractAstarMap;
+import com.cell.rpg.scene.Scene;
+import com.cell.rpg.scene.graph.SceneGraphNode.LinkInfo;
 
 
 /**
@@ -11,28 +14,39 @@ import com.cell.game.ai.pathfind.AbstractAstarMap;
  * @author WAZA
  *
  */
-public class SceneGraph implements AbstractAstarMap<SceneGraphNode>, Serializable
+public class SceneGraph implements AbstractAstarMap<SceneGraphNode>
 {
+	final HashMap<Integer, SceneGraphNode> scene_map;
 	
-	public SceneGraph() {
-		// TODO Auto-generated constructor stub
+	public SceneGraph(Collection<Scene> scenes) 
+	{
+		scene_map = new HashMap<Integer, SceneGraphNode>(scenes.size());
+		
+		for (Scene scene : scenes) {
+			SceneGraphNode node = new SceneGraphNode(scene);
+			scene_map.put(scene.getIntID(), node);
+		}
+		
+		for (SceneGraphNode node : scene_map.values()) {
+			for (LinkInfo info : node.next_links.values()) {
+				SceneGraphNode next = scene_map.get(info.next_scene_id);
+				node.nexts.add(next);
+			}
+		}
 	}
 	
 	@Override
 	public boolean containsNode(SceneGraphNode node) {
-		// TODO Auto-generated method stub
-		return false;
+		return scene_map.containsKey(node.scene_id);
 	}
 	
 	@Override
 	public Collection<SceneGraphNode> getAllNodes() {
-		// TODO Auto-generated method stub
-		return null;
+		return scene_map.values();
 	}
 	
 	@Override
 	public int getNodeCount() {
-		// TODO Auto-generated method stub
-		return 0;
+		return scene_map.size();
 	}
 }
