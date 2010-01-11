@@ -22,7 +22,12 @@ public class SceneGraphNode implements AbstractAstarMapNode
 	final public String		scene_name;
 	final public float		x;
 	final public float		y;
+	final public float		width;
+	final public float		height;
 	
+	/** 
+	 * key is next scene id, <br>
+	 * value is next link info*/
 	final public LinkedHashMap<Integer, LinkInfo>
 							next_links 		= new LinkedHashMap<Integer, LinkInfo>(1);
 	
@@ -37,11 +42,13 @@ public class SceneGraphNode implements AbstractAstarMapNode
 		this.scene_name	= scene.name;
 		this.x			= scene.scene_node.x;
 		this.y			= scene.scene_node.y;
-		
+		this.width		= scene.scene_node.width;
+		this.height		= scene.scene_node.height;
 		for (SceneUnit unit : scene.scene_units) {
 			ActorTransport tp = unit.getAbility(ActorTransport.class);
 			if (tp != null) {
 				LinkInfo next = new LinkInfo(
+						unit.id,
 						Integer.parseInt(tp.next_scene_id), 
 						tp.next_scene_object_id); 
 				next_links.put(next.next_scene_id, next);
@@ -75,12 +82,14 @@ public class SceneGraphNode implements AbstractAstarMapNode
 	
 	public class LinkInfo
 	{
+		final public String		this_scene_obj_name;
 		final public Integer	next_scene_id;
 		final public String		next_scene_obj_name;
 		
-		public LinkInfo(int next_scene_id, String next_scene_obj) {
-			this.next_scene_id		= next_scene_id;
-			this.next_scene_obj_name= next_scene_obj;
+		public LinkInfo(String this_scene_obj, int next_scene_id, String next_scene_obj) {
+			this.this_scene_obj_name	= this_scene_obj;
+			this.next_scene_id			= next_scene_id;
+			this.next_scene_obj_name	= next_scene_obj;
 		}
 	}
 }

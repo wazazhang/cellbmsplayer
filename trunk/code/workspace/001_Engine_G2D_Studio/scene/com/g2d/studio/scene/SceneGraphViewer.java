@@ -14,6 +14,7 @@ import java.awt.event.ContainerListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Point2D;
+import java.awt.geom.Point2D.Double;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -24,15 +25,22 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import com.cell.CUtil;
+import com.cell.math.MathVector;
+import com.cell.math.TVector;
+import com.cell.rpg.scene.SceneUnit;
+import com.cell.rpg.scene.ability.ActorTransport;
 import com.cell.rpg.scene.graph.SceneGraph;
 import com.cell.rpg.scene.graph.SceneGraphNode;
 import com.cell.rpg.scene.graph.SceneGraphNode.LinkInfo;
+import com.cell.util.Pair;
 import com.g2d.SimpleCanvasNoInternal;
 import com.g2d.display.DisplayObject;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.InteractiveObject;
 import com.g2d.display.Sprite;
 import com.g2d.display.Stage;
+import com.g2d.display.ui.Container;
+import com.g2d.display.ui.Panel;
 import com.g2d.display.ui.Window;
 import com.g2d.editor.DisplayObjectPanel;
 import com.g2d.studio.Config;
@@ -76,100 +84,133 @@ public class SceneGraphViewer extends AbstractDialog
 	}
 //	-------------------------------------------------------------------------------------------------------------
 	
-
 	static class SceneGraphStage extends Stage
 	{
-		HashMap<Integer, SceneFrame> all_nodes = new HashMap<Integer, SceneFrame>();
-		
 		public SceneGraphStage(SceneGraph sg) {
-			for (SceneGraphNode node : sg.getAllNodes()) {
-				SceneFrame scene_frame = new SceneFrame(node);
-				all_nodes.put(node.scene_id, scene_frame);
-				this.addChild(scene_frame);
-			}
-			for (SceneFrame sf : all_nodes.values()) {
-				for (Integer next_id : sf.node.next_links.keySet()) {
-					sf.nexts.add(all_nodes.get(next_id));
-				}
-			}
+			addChild(new SceneGraphPanel(sg));
 		}
-
 		public void added(com.g2d.display.DisplayObjectContainer parent) {
 			getRoot().setFPS(Config.DEFAULT_FPS);
 		}
-
-		public void removed(DisplayObjectContainer parent){}
-
-		public void update()
-		{
-		}
-		
-		public void render(Graphics2D g) 
-		{
+		public void removed(DisplayObjectContainer parent) {}
+		public void render(Graphics2D g) {
 			g.setColor(Color.BLACK);
 			g.fill(local_bounds);
 			g.setColor(Color.WHITE);
 			Drawing.drawString(g, "fps="+getRoot().getFPS(), 1, 1);
 		}
+		public void update() {}
+	}
+	
+	static class SceneGraphPanel extends Panel
+	{
+		HashMap<Integer, SceneFrame> all_nodes = new HashMap<Integer, SceneFrame>();
+		
+		public SceneGraphPanel(SceneGraph sg) {
+			for (SceneGraphNode node : sg.getAllNodes()) {
+				SceneFrame scene_frame = new SceneFrame(node);
+				all_nodes.put(node.scene_id, scene_frame);
+				this.getContainer().addChild(scene_frame);
+			}
+			for (SceneFrame sf : all_nodes.values()) {
+				for (LinkInfo link : sf.node.next_links.values()) {
+					sf.addNext(all_nodes.get(link.next_scene_id), link);
+				}
+			}
+		}
+
+		private void refreshSize() {
+			int mx = 0;
+			int my = 0;
+			for (SceneFrame sf : all_nodes.values()) {
+				mx = (int)Math.max(mx, sf.x + sf.getWidth() + 1);
+				my = (int)Math.max(my, sf.y + sf.getHeight() + 1);
+			}
+			getContainer().setSize(mx, my);
+		}
+		
+		public void render(Graphics2D g) 
+		{
+			super.setSize(getParent().getWidth(), getParent().getHeight());
+//			g.setColor(Color.BLUE);
+//			g.drawLine(-100, 0, 100, 0);
+//			g.drawLine(0, -100, 0, 100);
+//			Drawing.drawString(g, "(0,0)", 1, 1);
+
+			refreshSize();
+		}
 		
 //		-------------------------------------------------------------------------------------------------------------
 		class SceneFrame extends Sprite
 		{
-			Point2D.Double	pre_right_root_pos;		
-			Point2D.Double	pre_right_camera_pos;
+//			Point2D.Double	pre_right_root_pos;		
+//			Point2D.Double	pre_right_camera_pos;
 
 			SceneGraphNode	node ;
 			
 			SceneNode 		snode;
 			Image			snapshot;
 			
-			ArrayList<SceneFrame> 
+			HashMap<String, LinkTP>
+							tp_map;
+			
+			ArrayList<Pair<LinkTP, Pair<SceneFrame, LinkTP>>> 
 							nexts;
+
+			double			scalex, scaley;
 			
 			public SceneFrame(SceneGraphNode node) 
 			{
 				this.node 			= node;
 				
 				this.snode 			= Studio.getInstance().getSceneManager().getSceneNode(node.scene_id);
-				this.snapshot		= snode.getIcon(false).getImage();
 				
-				this.nexts 			= new ArrayList<SceneFrame>(node.getNexts().size());
+				this.snapshot		= snode.getIcon(false).getImage();
 				
 				this.setLocation(node.x, node.y);
 				this.setSize(
 						snapshot.getWidth(this) + 4, 
 						snapshot.getHeight(this) + 24);
 
-				this.local_bounds.x = -this.local_bounds.width / 2;
-				this.local_bounds.y = -this.local_bounds.height / 2;
-				
+				this.scalex			= snapshot.getWidth(this) / node.width;
+				this.scaley			= snapshot.getHeight(this) / node.height;
+
 				this.enable 		= true;
 				this.enable_input	= true;
 				this.enable_focus	= true;
 				this.enable_drag	= true;
+
+				
+				this.tp_map			= new HashMap<String, LinkTP>(node.getNexts().size());
+				
+				for (SceneUnit unit : snode.getData().scene_units) {
+					ActorTransport tp = unit.getAbility(ActorTransport.class);
+					if (tp!=null) {
+						LinkTP v = new LinkTP(unit, tp);
+						tp_map.put(unit.id, v);
+						this.addChild(v);
+					}
+				}
+
+				this.nexts 			= new ArrayList<Pair<LinkTP, Pair<SceneFrame, LinkTP>>>(node.getNexts().size());
+				
+				
 			}
 
+			private void addNext(SceneFrame next_sf, LinkInfo link) 
+			{
+				nexts.add(new Pair<LinkTP, Pair<SceneFrame, LinkTP>>(
+						tp_map.get(link.this_scene_obj_name), 
+						new Pair<SceneFrame, LinkTP>(
+								next_sf, 
+								next_sf.tp_map.get(link.next_scene_obj_name))));
+			}
+			
 			@Override
 			public void update() 
 			{
-				double mx = getRoot().getMouseX();
-				double my = getRoot().getMouseY();
-				
-				if (getRoot().isMouseDown(com.g2d.display.event.MouseEvent.BUTTON_RIGHT)) {
-					pre_right_root_pos 		= new Point2D.Double(mx, my);
-					pre_right_camera_pos 	= new Point2D.Double(x, y);
-				}
-				else if (getRoot().isMouseHold(com.g2d.display.event.MouseEvent.BUTTON_RIGHT)) {
-					if (pre_right_root_pos != null) {
-						double dx = pre_right_root_pos.x - mx;
-						double dy = pre_right_root_pos.y - my;
-						x = pre_right_camera_pos.x-dx;
-						y = pre_right_camera_pos.y-dy;
-					}
-				}
-				else if (getRoot().isMouseUp(com.g2d.display.event.MouseEvent.BUTTON_RIGHT)) {
-					pre_right_root_pos = null;
-				}
+				if (this.x < 0)this.x = 0;
+				if (this.y < 0)this.y = 0;
 				
 				snode.getData().scene_node.x = (float)x;
 				snode.getData().scene_node.y = (float)y;
@@ -180,34 +221,66 @@ public class SceneGraphViewer extends AbstractDialog
 			@Override
 			public void render(Graphics2D g) 
 			{
-				if (isPickedMouse()) {
-					g.setColor(Color.WHITE);
-				} else {
-					g.setColor(Color.RED);
-				}
-				for (SceneFrame next : nexts) {
-					int dx = (int)(next.x - x);
-					int dy = (int)(next.y - y);
-					g.drawLine(0, 0, dx, dy);
-				}
-
 				g.setColor(Color.BLACK);
 				g.fill(local_bounds);
-				
 				g.drawImage(snapshot, 
 						local_bounds.x + 2, 
 						local_bounds.y + 2, 
 						null);
 				
-				if (isPickedMouse()) {
-					g.setColor(Color.WHITE);
-				} else {
-					g.setColor(Color.RED);
+				// color refer
+				{
+					if (isPickedMouse()) {
+						getStage().setTip(node.scene_name + "(" + node.scene_id + ")");
+						g.setColor(Color.WHITE);
+					} else {
+						g.setColor(Color.RED);
+					}
+					for (Pair<LinkTP, Pair<SceneFrame, LinkTP>> next : nexts) {
+						int sx = (int)next.getKey().getVectorX();
+						int sy = (int)next.getKey().getVectorY();
+						int dx = (int)((next.getValue().getKey().x - x) + next.getValue().getValue().getVectorX());
+						int dy = (int)((next.getValue().getKey().y - y) + next.getValue().getValue().getVectorY());
+						g.drawLine(sx, sy, dx, dy);
+					}
+					g.draw(local_bounds);
+					
+					Drawing.drawString(g, "场景(" + node.scene_id + ")", 
+							local_bounds.x + 2, 
+							local_bounds.y + local_bounds.height-18);
 				}
-				g.draw(local_bounds);
-				Drawing.drawString(g, "场景(" + node.scene_id + ")", 
-						local_bounds.x + 2, 
-						local_bounds.y + local_bounds.height-18);
+			}
+			
+//			-------------------------------------------------------------------------------------------------------------
+			
+			class LinkTP extends Sprite
+			{
+				ActorTransport 	tp;
+				SceneUnit 		unit;
+				
+				public LinkTP(SceneUnit unit, ActorTransport tp) {
+					this.unit 			= unit;
+					this.tp				= tp;
+					this.setVectorX(2 + unit.x * scalex);
+					this.setVectorY(2 + unit.y * scaley);
+					this.setSize(5, 5);	
+					this.local_bounds.x = -3;
+					this.local_bounds.y = -3;
+					this.enable 		= true;
+					this.enable_input	= true;
+					this.enable_focus	= true;
+				}
+				
+				@Override
+				public void render(Graphics2D g) {
+					if (isPickedMouse()) {
+						getStage().setTip(unit.id + " -> " + tp.next_scene_id + ":" + tp.next_scene_object_id);
+						g.setColor(Color.WHITE);
+					} else {
+						g.setColor(Color.RED);
+					}
+					g.draw(local_bounds);
+				}
 			}
 		}
 	}

@@ -8,11 +8,11 @@ import com.g2d.annotation.Property;
 
 public class Scene extends RPGObject
 {
-	transient private int int_id;
+	transient private int 			int_id;
 
-	public String		name;
+	public String					name;
 	
-	public SceneNode	scene_node;
+	public SceneNode				scene_node;
 	
 	final public Vector<SceneUnit> 	scene_units = new Vector<SceneUnit>();
 

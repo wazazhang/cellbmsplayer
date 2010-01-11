@@ -1,6 +1,7 @@
 package com.g2d.studio.scene.entity;
 
 import java.awt.Component;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.util.ArrayList;
@@ -16,7 +17,9 @@ import com.cell.rpg.scene.Scene;
 import com.g2d.Tools;
 import com.g2d.studio.Studio;
 import com.g2d.studio.cpj.CPJIndex;
+import com.g2d.studio.cpj.CPJResourceManager;
 import com.g2d.studio.cpj.CPJResourceType;
+import com.g2d.studio.cpj.entity.CPJMap;
 import com.g2d.studio.cpj.entity.CPJWorld;
 import com.g2d.studio.gameedit.dynamic.DynamicNode;
 import com.g2d.studio.gameedit.dynamic.IDynamicIDFactory;
@@ -37,6 +40,8 @@ final public class SceneNode extends DynamicNode<Scene>
 		this.bind_data.scene_node = new com.cell.rpg.display.SceneNode(
 				world_index.cpj_file_name,
 				world_index.set_object_name);
+		this.bind_data.scene_node.width		= world_index.getObject().set_object.Width;
+		this.bind_data.scene_node.height	= world_index.getObject().set_object.Height;
 	}
 
 	public SceneNode(Scene scene) {
@@ -45,6 +50,9 @@ final public class SceneNode extends DynamicNode<Scene>
 				CPJResourceType.WORLD, 
 				scene.scene_node.cpj_project_name, 
 				scene.scene_node.cpj_object_id);
+		CPJWorld res_world = Studio.getInstance().getCPJResourceManager().getNode(world_index);
+		this.bind_data.scene_node.width		= res_world.set_object.Width;
+		this.bind_data.scene_node.height	= res_world.set_object.Height;
 		System.out.println("load a scene : " + scene.name + "   (" + scene.id + ")");
 	}
 	
@@ -80,12 +88,21 @@ final public class SceneNode extends DynamicNode<Scene>
 		return world_display;
 	}
 
+	public void saveSnapshot(BufferedImage image)
+	{
+		if (getWorldDisplay()!=null) {
+			getWorldDisplay().saveSnapshot(image);
+			getIcon(true);
+		}
+	}
+	
 	public SceneEditor getSceneEditor() {
 		if (world_editor==null) {
 			world_editor = new SceneEditor(this);
 		}
 		return world_editor;
 	}
+	
 	@Override
 	public Component getListComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 		return null;
