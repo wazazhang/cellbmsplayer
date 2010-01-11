@@ -19,6 +19,11 @@ public class Menu extends Window implements MouseListener
 	int border_size	= 1;
 
 //	-------------------------------------------------------------------------------------------------------------
+
+	public Menu() 
+	{
+		this(200, new Object[0]);
+	}
 	
 	public Menu(Object[] objects) 
 	{

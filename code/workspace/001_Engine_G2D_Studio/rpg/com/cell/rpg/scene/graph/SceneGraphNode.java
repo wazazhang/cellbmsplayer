@@ -79,6 +79,17 @@ public class SceneGraphNode implements AbstractAstarMapNode
 	}
 
 //	--------------------------------------------------------------------------------------------
+
+	public LinkInfo getLinkTransport(SceneGraphNode next) {
+		for (LinkInfo info : next_links.values()) {
+			if (info.next_scene_id.equals(next.scene_id)) {
+				return info;
+			}
+		}
+		return null;
+	}
+	
+//	--------------------------------------------------------------------------------------------
 	
 	public class LinkInfo
 	{
