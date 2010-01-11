@@ -39,8 +39,10 @@ import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.InteractiveObject;
 import com.g2d.display.Sprite;
 import com.g2d.display.Stage;
+import com.g2d.display.event.MouseMoveEvent;
 import com.g2d.display.ui.Container;
 import com.g2d.display.ui.Panel;
+import com.g2d.display.ui.UIComponent;
 import com.g2d.display.ui.Window;
 import com.g2d.editor.DisplayObjectPanel;
 import com.g2d.studio.Config;
@@ -104,9 +106,13 @@ public class SceneGraphViewer extends AbstractDialog
 	
 	static class SceneGraphPanel extends Panel
 	{
+		Point2D.Double	pre_right_pos;
+		Point2D.Double	pre_right_camera_pos;
+		
 		HashMap<Integer, SceneFrame> all_nodes = new HashMap<Integer, SceneFrame>();
 		
 		public SceneGraphPanel(SceneGraph sg) {
+			super.setContainer(new ScenePanelContainer());
 			for (SceneGraphNode node : sg.getAllNodes()) {
 				SceneFrame scene_frame = new SceneFrame(node);
 				all_nodes.put(node.scene_id, scene_frame);
@@ -118,34 +124,65 @@ public class SceneGraphViewer extends AbstractDialog
 				}
 			}
 		}
-
-		private void refreshSize() {
-			int mx = 0;
-			int my = 0;
-			for (SceneFrame sf : all_nodes.values()) {
-				mx = (int)Math.max(mx, sf.x + sf.getWidth() + 1);
-				my = (int)Math.max(my, sf.y + sf.getHeight() + 1);
+		
+		@Override
+		protected void updateChilds()
+		{
+			if (getRoot().isMouseDown(com.g2d.display.event.MouseEvent.BUTTON_RIGHT)) {
+				pre_right_pos 			= new Point2D.Double(getMouseX(), getMouseY());
+				pre_right_camera_pos 	= new Point2D.Double(getHScrollBar().getValue(), getVScrollBar().getValue());
 			}
-			getContainer().setSize(mx, my);
+			else if (getRoot().isMouseHold(com.g2d.display.event.MouseEvent.BUTTON_RIGHT)) 
+			{
+				if (pre_right_pos != null) 
+				{
+					double dx = pre_right_camera_pos.x + pre_right_pos.x - getMouseX();
+					double dy = pre_right_camera_pos.y + pre_right_pos.y - getMouseY();
+					
+					double ox = dx + getHScrollBar().getValueLength() - getHScrollBar().getMax();
+					double oy = dy + getVScrollBar().getValueLength() - getVScrollBar().getMax();
+					
+					if (ox > 0) {
+						getContainer().local_bounds.width += ox;
+						getHScrollBar().setMax(getContainer().local_bounds.width);
+					}
+					if (oy > 0) {
+						getContainer().local_bounds.height += oy;
+						getVScrollBar().setMax(getContainer().local_bounds.height);
+					}
+					
+					getHScrollBar().setValue(dx);
+					getVScrollBar().setValue(dy);
+				}
+			}
+			else if (getRoot().isMouseUp(com.g2d.display.event.MouseEvent.BUTTON_RIGHT)) {
+				pre_right_pos = null;
+			}
+			super.updateChilds();
 		}
 		
-		public void render(Graphics2D g) 
-		{
+		public void render(Graphics2D g) {
 			super.setSize(getParent().getWidth(), getParent().getHeight());
-//			g.setColor(Color.BLUE);
-//			g.drawLine(-100, 0, 100, 0);
-//			g.drawLine(0, -100, 0, 100);
-//			Drawing.drawString(g, "(0,0)", 1, 1);
-
-			refreshSize();
+		}
+		
+		class ScenePanelContainer extends PanelContainer
+		{
+			public void update() {
+				int mx = getWidth();
+				int my = getHeight();
+				for (SceneFrame sf : all_nodes.values()) {
+					mx = (int)Math.max(mx, sf.x + sf.getWidth() + 50);
+					my = (int)Math.max(my, sf.y + sf.getHeight() + 50);
+				}
+				setSize(mx, my);
+			}
+			
+			
 		}
 		
 //		-------------------------------------------------------------------------------------------------------------
 		class SceneFrame extends Sprite
 		{
-//			Point2D.Double	pre_right_root_pos;		
-//			Point2D.Double	pre_right_camera_pos;
-
 			SceneGraphNode	node ;
 			
 			SceneNode 		snode;
@@ -263,9 +300,9 @@ public class SceneGraphViewer extends AbstractDialog
 					this.tp				= tp;
 					this.setVectorX(2 + unit.x * scalex);
 					this.setVectorY(2 + unit.y * scaley);
-					this.setSize(5, 5);	
-					this.local_bounds.x = -3;
-					this.local_bounds.y = -3;
+					this.setSize(6, 6);	
+					this.local_bounds.x = -local_bounds.width / 2;
+					this.local_bounds.y = -local_bounds.height / 2;
 					this.enable 		= true;
 					this.enable_input	= true;
 					this.enable_focus	= true;
@@ -277,9 +314,9 @@ public class SceneGraphViewer extends AbstractDialog
 						getStage().setTip(unit.id + " -> " + tp.next_scene_id + ":" + tp.next_scene_object_id);
 						g.setColor(Color.WHITE);
 					} else {
-						g.setColor(Color.RED);
+						g.setColor(Color.GREEN);
 					}
-					g.draw(local_bounds);
+					g.drawRect(this.local_bounds.x, this.local_bounds.y, this.local_bounds.width-1, this.local_bounds.height-1);
 				}
 			}
 		}
