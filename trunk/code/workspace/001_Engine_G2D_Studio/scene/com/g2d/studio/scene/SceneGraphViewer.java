@@ -25,11 +25,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import com.cell.CUtil;
+import com.cell.game.ai.pathfind.AbstractAstar.WayPoint;
 import com.cell.math.MathVector;
 import com.cell.math.TVector;
 import com.cell.rpg.scene.SceneUnit;
 import com.cell.rpg.scene.ability.ActorTransport;
 import com.cell.rpg.scene.graph.SceneGraph;
+import com.cell.rpg.scene.graph.SceneGraphAstar;
 import com.cell.rpg.scene.graph.SceneGraphNode;
 import com.cell.rpg.scene.graph.SceneGraphNode.LinkInfo;
 import com.cell.util.Pair;
@@ -41,6 +43,7 @@ import com.g2d.display.Sprite;
 import com.g2d.display.Stage;
 import com.g2d.display.event.MouseMoveEvent;
 import com.g2d.display.ui.Container;
+import com.g2d.display.ui.Menu;
 import com.g2d.display.ui.Panel;
 import com.g2d.display.ui.UIComponent;
 import com.g2d.display.ui.Window;
@@ -106,6 +109,9 @@ public class SceneGraphViewer extends AbstractDialog
 	
 	static class SceneGraphPanel extends Panel
 	{
+		SceneGraphNode 				path_start;
+		SceneGraphAstar				path_finder;
+		
 		Point2D.Double	pre_right_pos;
 		Point2D.Double	pre_right_camera_pos;
 		
@@ -123,6 +129,7 @@ public class SceneGraphViewer extends AbstractDialog
 					sf.addNext(all_nodes.get(link.next_scene_id), link);
 				}
 			}
+			path_finder		= new SceneGraphAstar(sg);
 		}
 		
 		@Override
@@ -165,6 +172,37 @@ public class SceneGraphViewer extends AbstractDialog
 			super.setSize(getParent().getWidth(), getParent().getHeight());
 		}
 		
+		void clearAStar()
+		{
+			for (SceneFrame sf : all_nodes.values()) {
+				sf.finded = null;
+			}
+		}
+		
+		void findPath(SceneGraphNode path_start, SceneGraphNode end)
+		{
+			clearAStar();
+			
+			try{
+				for (WayPoint p : path_finder.findPath(path_start, end)) 
+				{
+					SceneGraphNode	node	= (SceneGraphNode)p.map_node;
+					SceneFrame		dnode	= all_nodes.get(node.scene_id);
+					
+					if (p.getNext()!=null) {
+						SceneGraphNode		next_node 	= (SceneGraphNode)(p.getNext().map_node);
+						LinkInfo 			link_tp 	= node.getLinkTransport(next_node);
+						SceneFrame.LinkTP 	link 		= dnode.tp_map.get(link_tp.this_scene_obj_name);
+						dnode.finded = new Pair<WayPoint, SceneFrame.LinkTP>(p, link);
+					} else {
+						dnode.finded = new Pair<WayPoint, SceneFrame.LinkTP>(p, null);
+					}
+				}
+			}catch(Exception err){
+				err.printStackTrace();
+			}
+		}
+		
 		class ScenePanelContainer extends PanelContainer
 		{
 			public void update() {
@@ -195,6 +233,9 @@ public class SceneGraphViewer extends AbstractDialog
 							nexts;
 
 			double			scalex, scaley;
+			
+			Pair<WayPoint, LinkTP>		
+							finded;
 			
 			public SceneFrame(SceneGraphNode node) 
 			{
@@ -258,33 +299,63 @@ public class SceneGraphViewer extends AbstractDialog
 			@Override
 			public void render(Graphics2D g) 
 			{
-				g.setColor(Color.BLACK);
-				g.fill(local_bounds);
-				g.drawImage(snapshot, 
-						local_bounds.x + 2, 
-						local_bounds.y + 2, 
-						null);
+				float d = (float)Math.abs(Math.sin(timer/10f));
 				
-				// color refer
+				Color high_color = new Color(d, d, d);
+				Color base_color = Color.RED;
+				if (isPickedMouse()) {
+					getStage().setTip(node.scene_name + "(" + node.scene_id + ")");
+					base_color = Color.WHITE;
+				}
+				boolean is_path = path_start == this.node || finded!=null;
+				
+				// draw back
+				if (is_path) {
+					g.setColor(high_color);
+					g.fill(local_bounds);
+					g.drawRect(local_bounds.x-1, local_bounds.y-1, local_bounds.width+2, local_bounds.height+2);
+				} else {
+					g.setColor(Color.BLACK);
+					g.fill(local_bounds);
+				}
+				
+				// draw image
 				{
-					if (isPickedMouse()) {
-						getStage().setTip(node.scene_name + "(" + node.scene_id + ")");
-						g.setColor(Color.WHITE);
-					} else {
-						g.setColor(Color.RED);
-					}
+					g.drawImage(snapshot, 
+							local_bounds.x + 2, 
+							local_bounds.y + 2, 
+							null);
+				}
+				// draw next link
+				{
 					for (Pair<LinkTP, Pair<SceneFrame, LinkTP>> next : nexts) {
 						int sx = (int)next.getKey().getVectorX();
 						int sy = (int)next.getKey().getVectorY();
 						int dx = (int)((next.getValue().getKey().x - x) + next.getValue().getValue().getVectorX());
 						int dy = (int)((next.getValue().getKey().y - y) + next.getValue().getValue().getVectorY());
+						if (finded != null && next.getKey().equals(finded.getValue())) {
+							g.setColor(high_color);
+						} else {
+							g.setColor(base_color);
+						}
 						g.drawLine(sx, sy, dx, dy);
 					}
+				}
+				
+				// draw info
+				{
+					g.setColor(base_color);
 					g.draw(local_bounds);
-					
 					Drawing.drawString(g, "场景(" + node.scene_id + ")", 
 							local_bounds.x + 2, 
 							local_bounds.y + local_bounds.height-18);
+				}
+			}
+			
+			@Override
+			protected void onMouseClick(com.g2d.display.event.MouseEvent event) {
+				if (event.mouseButton == MouseEvent.BUTTON3) {
+					new SceneMenu().show(getParent(), (int)x+getMouseX(), (int)y+getMouseY());
 				}
 			}
 			
@@ -319,7 +390,37 @@ public class SceneGraphViewer extends AbstractDialog
 					g.drawRect(this.local_bounds.x, this.local_bounds.y, this.local_bounds.width-1, this.local_bounds.height-1);
 				}
 			}
+
+//			-------------------------------------------------------------------------------------------------------------
+			
+			class SceneMenu extends Menu
+			{
+				final MenuItem START	= new MenuItemButton("设置为开始点");
+				final MenuItem END		= new MenuItemButton("设置为结束点");
+				
+				public SceneMenu() {
+					super.addMenuItem(START);
+					super.addMenuItem(END);
+				}
+				
+				@Override
+				protected void onClickMenuItem(MenuItem item) {
+					if (item == START) {
+						path_start = SceneFrame.this.node;
+						clearAStar();
+					} else if (item == END) {
+						if (path_start!=null) {
+							findPath(path_start, SceneFrame.this.node);
+						}
+					}
+				}
+			}
+
+//			-------------------------------------------------------------------------------------------------------------
+			
 		}
+
+		
 	}
 	
 

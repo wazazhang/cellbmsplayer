@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * 抽象的A*寻路算法，子类可以自定义实现如何寻路。
@@ -18,9 +19,12 @@ public abstract class AbstractAstar
 	
 	final private AbstractAstarMap<?>	map;
 	
-	final private TempMapNode[]			all_node;
+	final protected TempMapNode[]		all_node;
 	final private TempMapNodeList		src_open_list;
 	final private TempMapNodeList		src_close_list;
+
+	final protected HashMap<AbstractAstarMapNode, TempMapNode> 
+										node_map;
 	
 //	-----------------------------------------------------------------------------------------------------------------
 	
@@ -31,36 +35,41 @@ public abstract class AbstractAstar
 		this.all_node		= new TempMapNode[map.getNodeCount()];
 		this.src_open_list	= new TempMapNodeList(all_node.length);
 		this.src_close_list	= new TempMapNodeList(all_node.length);
-		
-		
-		HashMap<AbstractAstarMapNode, TempMapNode> tmap = new HashMap<AbstractAstarMapNode, TempMapNode>(all_node.length);
+		this.node_map 		= new HashMap<AbstractAstarMapNode, TempMapNode>(all_node.length);
 		
 		int i = 0;
 		for (AbstractAstarMapNode node : map.getAllNodes()) {
 			all_node[i] = new TempMapNode(i, node);
-			tmap.put(node, all_node[i]);
+			node_map.put(node, all_node[i]);
 			i++;
 		}
 		
 		for (TempMapNode tnode : all_node) {
 			int j = 0;
 			for (AbstractAstarMapNode next : tnode.data.getNexts()) {
-				TempMapNode tnext = tmap.get(next);
+				TempMapNode tnext = node_map.get(next);
 				tnode.nexts[j] = tnext;
 				j++;
 			}
 		}
 	}
 
-	protected TempMapNode[] getAllNode() {
-		return this.all_node;
-	}
-
 	public AbstractAstarMap<?> getMap() {
 		return this.map;
 	}
 
-	abstract protected WayPoint findPath(AbstractAstarMapNode src_node, AbstractAstarMapNode dst_node);
+	public WayPoint findPath(AbstractAstarMapNode src_node, AbstractAstarMapNode dst_node) throws Exception {
+		return findPath(getTempMapNode(src_node), getTempMapNode(dst_node));
+	}
+	
+	/**
+	 * 该方法可以被重构用来快速找到指定的TempMapNode
+	 * @param node
+	 * @return
+	 */
+	protected TempMapNode getTempMapNode(AbstractAstarMapNode node) {
+		return node_map.get(node);
+	}
 	
 //	-----------------------------------------------------------------------------------------------------------------
 	
@@ -111,7 +120,7 @@ public abstract class AbstractAstar
 				if (cur_node.data.equals(dst_node.data))
 				{
 					// finded the path
-					WayPoint end = new WayPoint(cur_node.data);
+					WayPoint end = null;
 					
 					for (int i = all_node.length - 1; i >= 0; i--) {
 						// linked to head
@@ -229,18 +238,51 @@ public abstract class AbstractAstar
 	
 //	-----------------------------------------------------------------------------------------------------------------
 	
-	final protected static class WayPoint implements Serializable
+	final public static class WayPoint implements Iterable<WayPoint>, Serializable
 	{
-		final public	AbstractAstarMapNode	map_node;
+		final public AbstractAstarMapNode map_node;
+
+		private WayPoint next;
 		
-		public			WayPoint		next;
-		
-		public WayPoint(AbstractAstarMapNode	map_node) {
+		protected WayPoint(AbstractAstarMapNode map_node) {
 			this.map_node = map_node;
 		}
 		
+		@Override
+		public Iterator<WayPoint> iterator() {
+			return new WayPointIterator(this);
+		}
+		
+		public WayPoint getNext() {
+			return next;
+		}
 	}
-
+	
+	static class WayPointIterator implements Iterator<WayPoint>
+	{
+		WayPoint wp ;
+		
+		public WayPointIterator(WayPoint wp) {
+			this.wp = wp;
+		}
+		
+		@Override
+		public boolean hasNext() {
+			return wp != null;
+		}
+		
+		@Override
+		public WayPoint next() {
+			WayPoint ret = wp;
+			wp = wp.next;
+			return ret;
+		}
+		
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException("remove()");
+		}
+	}
 }
 
 

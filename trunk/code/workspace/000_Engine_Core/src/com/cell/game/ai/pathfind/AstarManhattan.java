@@ -217,29 +217,23 @@ public class AstarManhattan extends AbstractAstar
 		
 		this.node_map = new TempMapNode[mmap.ycount][mmap.xcount];
 		
-		for (int y = 0; y < mmap.ycount; y++) {
-			for (int x = 0; x < mmap.xcount; x++) {
-				getTNode(x, y);
-			}
-		}
-	}
-	
-	private TempMapNode getTNode(int x, int y) {
-		for (TempMapNode tnode : super.getAllNode()) {
+		for (TempMapNode tnode : all_node) {
 			MMapNode mnode = (MMapNode)tnode.data;
-			if (mnode.X == x && mnode.Y == y) {
-				node_map[y][x] = tnode;
-				return tnode;
-			}
+			node_map[mnode.Y][mnode.X] = tnode;
 		}
-		return null;
+	}
+
+	@Override
+	protected TempMapNode getTempMapNode(AbstractAstarMapNode node) {
+		MMapNode mnode = (MMapNode)node;
+		return node_map[mnode.Y][mnode.X];
 	}
 	
-	private WayPoint toWP(com.cell.game.ai.pathfind.AbstractAstar.WayPoint wp)
+	private WayPoint toWP(com.cell.game.ai.pathfind.AbstractAstar.WayPoint start)
 	{
 		WayPoint ret = null;
 		WayPoint path = null;
-		while (wp != null) {
+		for (com.cell.game.ai.pathfind.AbstractAstar.WayPoint wp : start) {
 			MMapNode mnpde = (MMapNode)wp.map_node;
 //			System.out.println(mnpde.X+","+mnpde.Y);
 			if (path != null) {
@@ -249,11 +243,10 @@ public class AstarManhattan extends AbstractAstar
 				path = new WayPoint(mnpde.X, mnpde.Y, mmap.map.getCellW(), mmap.map.getCellH());
 				ret = path;
 			}
-			wp = wp.next;
 		}
 		return ret;
 	}
-	
+
 	public WayPoint findPath(int sx, int sy, int dx, int dy) 
 	{
 		try{
@@ -267,20 +260,20 @@ public class AstarManhattan extends AbstractAstar
 		return null;
 	}
 
-	@Override
-	protected com.cell.game.ai.pathfind.AbstractAstar.WayPoint findPath(AbstractAstarMapNode srcNode, AbstractAstarMapNode dstNode) {
-		try{
-			MMapNode ss = (MMapNode)srcNode;
-			MMapNode ds = (MMapNode)dstNode;
-			com.cell.game.ai.pathfind.AbstractAstar.WayPoint wp = super.findPath(
-					node_map[ss.Y][ss.X], 
-					node_map[ds.Y][ds.X]);
-			return wp;
-		}catch(Throwable err) {
-			err.printStackTrace();
-		}
-		return null;
-	}
+//	@Override
+//	protected com.cell.game.ai.pathfind.AbstractAstar.WayPoint findPath(MMapNode srcNode, MMapNode dstNode) {
+//		try{
+//			MMapNode ss = (MMapNode)srcNode;
+//			MMapNode ds = (MMapNode)dstNode;
+//			com.cell.game.ai.pathfind.AbstractAstar.WayPoint wp = super.findPath(
+//					node_map[ss.Y][ss.X], 
+//					node_map[ds.Y][ds.X]);
+//			return wp;
+//		}catch(Throwable err) {
+//			err.printStackTrace();
+//		}
+//		return null;
+//	}
 }
 
 
