@@ -18,6 +18,7 @@ import com.cell.rpg.quest.Quest;
 import com.cell.rpg.quest.QuestItem;
 import com.cell.rpg.res.ResourceSet.*;
 import com.cell.rpg.scene.Scene;
+import com.cell.rpg.scene.graph.SceneGraph;
 import com.cell.rpg.template.TAvatar;
 import com.cell.rpg.template.TItem;
 import com.cell.rpg.template.TSkill;
@@ -371,6 +372,10 @@ public abstract class ResourceManager extends CellSetResourceManager
 		System.out.println("size : " + table.size());
 		
 		return table;
+	}
+	
+	public SceneGraph createSceneGraph() {
+		return new SceneGraph(scenes.values());
 	}
 	
 //	--------------------------------------------------------------------------------------------------------------------
