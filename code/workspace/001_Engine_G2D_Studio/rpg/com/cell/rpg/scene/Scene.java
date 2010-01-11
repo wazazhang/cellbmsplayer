@@ -21,6 +21,8 @@ public class Scene extends RPGObject
 	@Property("场景背景音乐")
 	public String		bgm_sound_name;
 	
+	@Property("场景编组号码")
+	public Integer		group;
 	
 	
 //	------------------------------------------------------------------------------------------------------------------
@@ -34,8 +36,11 @@ public class Scene extends RPGObject
 	@Override
 	protected void init_transient() {
 		super.init_transient();
-		if (id!=null) {
+		if (id != null) {
 			this.int_id = Integer.parseInt(id);
+		}
+		if (group == null) {
+			this.group = 0;
 		}
 	}
 	
