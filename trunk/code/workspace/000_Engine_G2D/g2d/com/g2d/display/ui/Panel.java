@@ -59,6 +59,12 @@ public class Panel extends UIComponent
 		return container;
 	}
 	
+	public void setContainer(PanelContainer container) {
+		view_port.removeChild(this.container);
+		this.container = container;
+		view_port.addChild(this.container);
+	}
+	
 //	------------------------------------------------------------------------------------------------------------------------------
 	
 	
