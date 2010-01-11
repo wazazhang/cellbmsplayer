@@ -254,6 +254,18 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 				err.printStackTrace();
 			}
 		}
+		
+		try{
+			if (scene_node.getWorldDisplay()!=null && 
+				scene_node.getWorldDisplay().scene_snapshoot == null) {
+				BufferedImage icon = scene_container.getWorld().createMiniMap(
+						scene_container.getWorld().getWidth(), 
+						scene_container.getWorld().getHeight());
+				scene_node.saveSnapshot(icon);
+			}
+		}catch(Throwable ex) {
+			ex.printStackTrace();
+		}
 	}
 	
 //	-----------------------------------------------------------------------------------------------------------------------------

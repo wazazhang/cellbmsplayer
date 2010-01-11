@@ -1,6 +1,7 @@
 package com.g2d.studio.cpj.entity;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 
 import javax.swing.ImageIcon;
 
@@ -14,6 +15,8 @@ import com.g2d.studio.cpj.CPJResourceType;
 public class CPJWorld extends CPJObject<WorldSet>
 {	
 //	Scene scene; 
+	
+	public BufferedImage scene_snapshoot;
 	
 	public CPJWorld(CPJFile parent, String name) {
 		super(parent, name, WorldSet.class, CPJResourceType.WORLD);
@@ -31,11 +34,40 @@ public class CPJWorld extends CPJObject<WorldSet>
 	@Override
 	public BufferedImage getSnapShoot() {
 		if (snapshoot==null) {
-			snapshoot = Tools.readImage(parent.getCPJDir()+"/jpg.jpg");
-			float rate = 80f / (float)snapshoot.getWidth();
-			snapshoot = Tools.combianImage(80, (int)(snapshoot.getHeight()*rate), snapshoot);
+			try{
+				File snap_file = new File(parent.getCPJDir(), name + ".png");
+				if (snap_file.exists()) {
+					snapshoot = Tools.readImage(snap_file.getPath());
+					float rate = 80f / (float)snapshoot.getWidth();
+					snapshoot = Tools.combianImage(80, (int)(snapshoot.getHeight()*rate), snapshoot);
+					scene_snapshoot = snapshoot;
+				}  
+			}catch(Exception err){
+				System.err.println(err.getMessage());
+			}
+		}
+		if (snapshoot==null) {
+			try{
+				snapshoot = Tools.readImage(parent.getCPJDir()+"/jpg.jpg");
+				float rate = 80f / (float)snapshoot.getWidth();
+				snapshoot = Tools.combianImage(80, (int)(snapshoot.getHeight()*rate), snapshoot);
+			}catch(Exception err){
+				System.err.println(err.getMessage());
+			}
 		}
 		return snapshoot;
+	}
+
+	public void saveSnapshot(BufferedImage image) {
+		if (scene_snapshoot == null) {
+			File snap_file = new File(parent.getCPJDir(), name + ".png");
+			scene_snapshoot = image;
+			float rate = 80f / (float)scene_snapshoot.getWidth();
+			scene_snapshoot = Tools.combianImage(80, (int)(scene_snapshoot.getHeight()*rate), scene_snapshoot);
+			Tools.writeImage(snap_file.getPath(), scene_snapshoot);
+			snapshoot = scene_snapshoot;
+			getIcon(true);
+		}
 	}
 	
 //	@Override
