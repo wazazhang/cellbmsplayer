@@ -20,6 +20,7 @@ public class SceneGraphNode implements AbstractAstarMapNode
 
 	final public int		scene_id;
 	final public String		scene_name;
+	final public int		scene_group;
 	final public float		x;
 	final public float		y;
 	final public float		width;
@@ -40,6 +41,7 @@ public class SceneGraphNode implements AbstractAstarMapNode
 	{
 		this.scene_id	= scene.getIntID();
 		this.scene_name	= scene.name;
+		this.scene_group= scene.group;
 		this.x			= scene.scene_node.x;
 		this.y			= scene.scene_node.y;
 		this.width		= scene.scene_node.width;

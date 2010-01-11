@@ -1,5 +1,6 @@
 package com.g2d.studio.scene;
 
+import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -7,6 +8,7 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.Stroke;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.ContainerEvent;
@@ -247,7 +249,7 @@ public class SceneGraphViewer extends AbstractDialog
 				
 				this.setLocation(node.x, node.y);
 				this.setSize(
-						snapshot.getWidth(this) + 4, 
+						snapshot.getWidth(this) + 24, 
 						snapshot.getHeight(this) + 24);
 
 				this.scalex			= snapshot.getWidth(this) / node.width;
@@ -304,7 +306,7 @@ public class SceneGraphViewer extends AbstractDialog
 				Color high_color = new Color(d, d, d);
 				Color base_color = Color.RED;
 				if (isPickedMouse()) {
-					getStage().setTip(node.scene_name + "(" + node.scene_id + ")");
+					getStage().setTip(node.scene_name + "(" + node.scene_id + ") \nGroup="+node.scene_group);
 					base_color = Color.WHITE;
 				}
 				boolean is_path = path_start == this.node || finded!=null;
@@ -328,6 +330,24 @@ public class SceneGraphViewer extends AbstractDialog
 				}
 				// draw next link
 				{
+					drawNextLink(g, high_color, base_color);
+				}
+				
+				// draw info
+				{
+					g.setColor(base_color);
+					g.draw(local_bounds);
+					Drawing.drawString(g, "S" + node.scene_id + " G"+node.scene_group, 
+							local_bounds.x + 2, 
+							local_bounds.y + local_bounds.height-18);
+				}
+			}
+			
+			private void drawNextLink(Graphics2D g, Color high_color, Color base_color)
+			{
+				Stroke stroke = g.getStroke();
+				try{
+					BasicStroke bs = new BasicStroke(3);
 					for (Pair<LinkTP, Pair<SceneFrame, LinkTP>> next : nexts) {
 						int sx = (int)next.getKey().getVectorX();
 						int sy = (int)next.getKey().getVectorY();
@@ -335,22 +355,18 @@ public class SceneGraphViewer extends AbstractDialog
 						int dy = (int)((next.getValue().getKey().y - y) + next.getValue().getValue().getVectorY());
 						if (finded != null && next.getKey().equals(finded.getValue())) {
 							g.setColor(high_color);
+							g.setStroke(bs);
 						} else {
 							g.setColor(base_color);
+							g.setStroke(stroke);
 						}
 						g.drawLine(sx, sy, dx, dy);
 					}
-				}
-				
-				// draw info
-				{
-					g.setColor(base_color);
-					g.draw(local_bounds);
-					Drawing.drawString(g, "场景(" + node.scene_id + ")", 
-							local_bounds.x + 2, 
-							local_bounds.y + local_bounds.height-18);
+				}finally{
+					g.setStroke(stroke);
 				}
 			}
+			
 			
 			@Override
 			protected void onMouseClick(com.g2d.display.event.MouseEvent event) {
