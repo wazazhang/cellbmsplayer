@@ -49,4 +49,8 @@ public class SceneGraph implements AbstractAstarMap<SceneGraphNode>
 	public int getNodeCount() {
 		return scene_map.size();
 	}
+	
+	public SceneGraphNode getSceneGraphNode(Integer scene_id) {
+		return scene_map.get(scene_id);
+	}
 }

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import com.cell.game.ai.pathfind.AbstractAstarMapNode;
+import com.cell.game.ai.pathfind.AbstractAstar.WayPoint;
 import com.cell.math.MathVector;
 import com.cell.math.Vector;
 import com.cell.rpg.scene.Scene;
@@ -50,6 +51,7 @@ public class SceneGraphNode implements AbstractAstarMapNode
 			ActorTransport tp = unit.getAbility(ActorTransport.class);
 			if (tp != null) {
 				LinkInfo next = new LinkInfo(
+						this.scene_id,
 						unit.id,
 						Integer.parseInt(tp.next_scene_id), 
 						tp.next_scene_object_id); 
@@ -83,23 +85,38 @@ public class SceneGraphNode implements AbstractAstarMapNode
 //	--------------------------------------------------------------------------------------------
 
 	public LinkInfo getLinkTransport(SceneGraphNode next) {
-		for (LinkInfo info : next_links.values()) {
-			if (info.next_scene_id.equals(next.scene_id)) {
-				return info;
+		if (next != null) {
+			for (LinkInfo info : next_links.values()) {
+				if (info.next_scene_id.equals(next.scene_id)) {
+					return info;
+				}
 			}
 		}
 		return null;
 	}
+	public LinkInfo getLinkTransport(WayPoint next) {
+		if (next != null) {
+			return getLinkTransport((SceneGraphNode)next.map_node);
+		}
+		return null;
+	}
+	
 	
 //	--------------------------------------------------------------------------------------------
 	
-	public class LinkInfo
+	public static class LinkInfo
 	{
+		final public Integer	this_scene_id;
 		final public String		this_scene_obj_name;
 		final public Integer	next_scene_id;
 		final public String		next_scene_obj_name;
 		
-		public LinkInfo(String this_scene_obj, int next_scene_id, String next_scene_obj) {
+		public LinkInfo(
+				int this_scene_id,
+				String this_scene_obj, 
+				int next_scene_id, 
+				String next_scene_obj) {
+			this.this_scene_id			= this_scene_id;
 			this.this_scene_obj_name	= this_scene_obj;
 			this.next_scene_id			= next_scene_id;
 			this.next_scene_obj_name	= next_scene_obj;
