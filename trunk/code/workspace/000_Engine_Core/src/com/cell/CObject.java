@@ -73,7 +73,7 @@ public class CObject
 		}
 
 		public ClassLoader getClassLoader() {
-			return this.getClassLoader();
+			return getClass().getClassLoader();
 		}
 		
 		//
