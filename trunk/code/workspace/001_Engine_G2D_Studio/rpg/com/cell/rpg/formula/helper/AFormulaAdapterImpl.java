@@ -2,9 +2,10 @@ package com.cell.rpg.formula.helper;
 
 import java.lang.reflect.Method;
 
-import com.cell.rpg.formula.AbstractMethod;
+import com.cell.rpg.formula.StaticMethod;
 import com.cell.rpg.formula.AbstractValue;
 import com.cell.rpg.formula.Arithmetic;
+import com.cell.rpg.formula.ObjectMethod;
 import com.cell.rpg.formula.ObjectProperty;
 import com.cell.rpg.formula.TimeDurationValue;
 import com.cell.rpg.formula.TimeValue;
@@ -30,14 +31,17 @@ public abstract class AFormulaAdapterImpl implements IFormulaAdapter
 		if (value instanceof TimeDurationValue) {
 			return calculateTimeDurationValue((TimeDurationValue)value);
 		}
-		if (value instanceof AbstractMethod) {
-			return calculateAbstractMethod((AbstractMethod)value);
+		if (value instanceof StaticMethod) {
+			return calculateStaticMethod((StaticMethod)value);
 		}
 		if (value instanceof Arithmetic) {
 			return calculateArithmetic((Arithmetic)value);
 		}
 		if (value instanceof ObjectProperty) {
 			return calculateObjectProperty((ObjectProperty)value);
+		}
+		if (value instanceof ObjectMethod) {
+			return calculateObjectMethod((ObjectMethod)value);
 		}
 		return 0;
 	}
@@ -60,7 +64,7 @@ public abstract class AFormulaAdapterImpl implements IFormulaAdapter
 		return value.duration;
 	}
 	
-	protected Number calculateAbstractMethod(AbstractMethod value) throws Throwable
+	protected Number calculateStaticMethod(StaticMethod value) throws Throwable
 	{
 		Method method = value.getMethod();
 		Object ret = method.invoke(null, value.getInvokeParams(this));
@@ -73,9 +77,11 @@ public abstract class AFormulaAdapterImpl implements IFormulaAdapter
 	}
 	
 	abstract protected Number calculateObjectProperty(ObjectProperty value) throws Throwable;
+
+	abstract protected Number calculateObjectMethod(ObjectMethod value) throws Throwable;
+	
 	
 	abstract protected ISystemMethodAdapter getSystemMethodAdapter();
-	
 	
 	
 }

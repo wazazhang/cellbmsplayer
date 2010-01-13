@@ -846,7 +846,7 @@ public class CUtil extends CObject
 	 * @param list
 	 * @param compare
 	 */
-	static public <T> void sort(T list[], ICompare<T,T> compare){
+	static public <T> T[] sort(T list[], ICompare<T,T> compare){
 		T temp;
 		boolean tag = true;
 		for (int i = list.length - 1; i >= 0; i--) {
@@ -860,6 +860,7 @@ public class CUtil extends CObject
 			}
 			if(tag==false)break;
 		}
+		return list;
 	}
 
 	
@@ -868,22 +869,23 @@ public class CUtil extends CObject
 	 * @param list
 	 * @param compare
 	 */
-	static public<T> void sort(Vector<T> list, ICompare<T,T> compare){
+	static public<T> List<T> sort(List<T> list, ICompare<T,T> compare){
 		T temp2;
 		T temp1;
 		boolean tag = true;
 		for (int i = list.size() - 1; i >= 0; i--) {
 			for (int j = 0; j < i; j++) {
-				if(compare.compare(list.elementAt(j),list.elementAt(j + 1))<0){
-					temp1 = list.elementAt(j);
-					temp2 = list.elementAt(j + 1);
-					list.setElementAt(temp2, j);
-					list.setElementAt(temp1, j + 1);
+				if(compare.compare(list.get(j),list.get(j + 1))<0){
+					temp1 = list.get(j);
+					temp2 = list.get(j + 1);
+					list.set(j, temp2);
+					list.set(j + 1, temp1);
 					tag = true;
 				}
 			}
 			if(tag==false)break;
 		}
+		return list;
 	}
 	//-------------------------------------------------------------------------------------------------------------
 	

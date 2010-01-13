@@ -4,30 +4,33 @@ import java.awt.Component;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.Map;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComboBox;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
+import com.cell.CUtil;
 import com.cell.rpg.ability.Abilities;
 import com.cell.rpg.formula.AbstractValue;
-import com.cell.rpg.formula.MathMethod;
+import com.cell.rpg.formula.anno.ObjectMethod;
+
 import com.cell.rpg.xls.XLSColumns;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.editor.property.ObjectPropertyPanel.CellEditAdapter;
 
-public class MathMethodCellEdit extends JComboBox implements PropertyCellEdit<Method>
+public class MethodListCellEdit extends JComboBox implements PropertyCellEdit<Method>
 {
-	public MathMethodCellEdit(Collection<Method> methods) {
-		super(methods.toArray(new Method[methods.size()]));
+	public MethodListCellEdit(Collection<Method> methods) {
+		super(CUtil.sort(methods.toArray(new Method[methods.size()]), new Sorter()));
 		setRenderer(new CellRender());
 	}
 	
-	public MathMethodCellEdit(Collection<Method> methods, String method_name) {
-		this(methods);
-		Method mt = MathMethod.getMethods().get(method_name);
+	public MethodListCellEdit(Map<String, Method> methods, String method_name) {
+		this(methods.values());
+		Method mt = methods.get(method_name);
 		if (mt!=null) {
 			this.setSelectedItem(mt);
 		}
@@ -48,6 +51,14 @@ public class MathMethodCellEdit extends JComboBox implements PropertyCellEdit<Me
 		return this;
 	}
 	
+	static class Sorter implements CUtil.ICompare<Method, Method>
+	{
+		@Override
+		public int compare(Method a, Method b) {
+			return CUtil.getStringCompare().compare(a.getName(), b.getName());
+		}
+	}
+	
 	static class CellRender extends DefaultListCellRenderer
 	{
 		@Override
@@ -64,6 +75,10 @@ public class MathMethodCellEdit extends JComboBox implements PropertyCellEdit<Me
 				}
 			}
 			text += " )";
+			ObjectMethod comment = method.getAnnotation(ObjectMethod.class);
+			if (comment != null) {
+				text += " - " + comment.value();
+			}
 			super.setText(text);
 			return this;
 		}
