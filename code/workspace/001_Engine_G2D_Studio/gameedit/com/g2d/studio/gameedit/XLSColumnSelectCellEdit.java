@@ -1,11 +1,13 @@
 package com.g2d.studio.gameedit;
 
 import java.awt.Component;
+import java.lang.reflect.Method;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComboBox;
 import javax.swing.JList;
 
+import com.cell.CUtil;
 import com.cell.rpg.xls.XLSColumns;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
@@ -15,7 +17,7 @@ public class XLSColumnSelectCellEdit extends JComboBox implements PropertyCellEd
 	XLSColumns columns;
 	
 	public XLSColumnSelectCellEdit(XLSColumns columns) {
-		super(columns.getColumns().toArray(new String[columns.size()]));
+		super(CUtil.sort(columns.getColumns().toArray(new String[columns.size()]), CUtil.getStringCompare()));
 		super.setRenderer(new CellRender());
 		this.columns = columns;
 	}
@@ -34,17 +36,22 @@ public class XLSColumnSelectCellEdit extends JComboBox implements PropertyCellEd
 			return ret.toString();
 		}
 	}
-	
+
 	class CellRender extends DefaultListCellRenderer
 	{
 		@Override
 		public Component getListCellRendererComponent(JList list, Object value,
-				int index, boolean isSelected, boolean cellHasFocus) {
+				int index, boolean isSelected, boolean cellHasFocus)
+		{
 			super.getListCellRendererComponent(list, value, index, isSelected,
 					cellHasFocus);
+			
 			String column = (String)value;
-			String desc = columns.getDesc(column);
-			this.setText(desc + " (" + column + ")");
+			
+			String desc = column + " - " + columns.getDesc(column);
+	
+			this.setText(desc);
+			
 			return this;
 		}
 	}

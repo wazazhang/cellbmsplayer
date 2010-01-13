@@ -3,35 +3,35 @@ package com.cell.reflect;
 public class Parser 
 {
 	@SuppressWarnings("unchecked")
-	public static <T> T stringToObject(String str, Class<T> cls) {
+	public static <T> T stringToObject(String str, Class<T> return_type) {
 		try {
 			// 基础类型
-			if (cls.equals(Byte.class) || cls.equals(byte.class)) {
+			if (return_type.equals(Byte.class) || return_type.equals(byte.class)) {
 				return (T)(new Byte(str));
 			} 
-			if (cls.equals(Boolean.class) || cls.equals(boolean.class)) {
+			if (return_type.equals(Boolean.class) || return_type.equals(boolean.class)) {
 				return (T)(new Boolean(str));
 			} 
-			if (cls.equals(Short.class) || cls.equals(short.class)) {
+			if (return_type.equals(Short.class) || return_type.equals(short.class)) {
 				return (T)(new Short(str));
 			} 
-			if (cls.equals(Character.class) || cls.equals(char.class)) {
+			if (return_type.equals(Character.class) || return_type.equals(char.class)) {
 				return (T)(new Character(str.charAt(0)));
 			} 
-			if (cls.equals(Integer.class) || cls.equals(int.class)) {
+			if (return_type.equals(Integer.class) || return_type.equals(int.class)) {
 				return (T)(new Integer(str));
 			} 
-			if (cls.equals(Long.class) || cls.equals(long.class)) {
+			if (return_type.equals(Long.class) || return_type.equals(long.class)) {
 				return (T)(new Long(str));
 			} 
-			if (cls.equals(Float.class) || cls.equals(float.class)) {
+			if (return_type.equals(Float.class) || return_type.equals(float.class)) {
 				return (T)(new Float(str));
 			} 
-			if (cls.equals(Double.class) || cls.equals(double.class)) {
+			if (return_type.equals(Double.class) || return_type.equals(double.class)) {
 				return (T)(new Double(str));
 			}
 			// 字符
-			else if (cls.equals(String.class)) {
+			else if (return_type.equals(String.class)) {
 				return (T)(str);
 			}
 		} catch (Exception e) {
@@ -45,30 +45,57 @@ public class Parser
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T> T castNumber(Object obj, Class<T> cls)
+	public static <T> T castNumber(Object obj, Class<T> return_type)
 	{
 		// 基础类型
 		if (obj instanceof Number) {
 			Number num = (Number)obj;
-			if (cls.equals(Byte.class) || cls.equals(byte.class)) {
+			if (return_type.equals(Byte.class) || return_type.equals(byte.class)) {
 				return (T)(new Byte(num.byteValue()));
 			} 
-			if (cls.equals(Short.class) || cls.equals(short.class)) {
+			if (return_type.equals(Short.class) || return_type.equals(short.class)) {
 				return (T)(new Short(num.shortValue()));
 			} 
-			if (cls.equals(Integer.class) || cls.equals(int.class)) {
+			if (return_type.equals(Integer.class) || return_type.equals(int.class)) {
 				return (T)(new Integer(num.intValue()));
 			} 
-			if (cls.equals(Long.class) || cls.equals(long.class)) {
+			if (return_type.equals(Long.class) || return_type.equals(long.class)) {
 				return (T)(new Long(num.longValue()));
 			} 
-			if (cls.equals(Float.class) || cls.equals(float.class)) {
+			if (return_type.equals(Float.class) || return_type.equals(float.class)) {
 				return (T)(new Float(num.floatValue()));
 			} 
-			if (cls.equals(Double.class) || cls.equals(double.class)) {
+			if (return_type.equals(Double.class) || return_type.equals(double.class)) {
 				return (T)(new Double(num.doubleValue()));
 			}
 		}
 		return null;
+	}
+	
+	public static boolean isNumber(Class<?> cls)
+	{
+		// 基础类型
+		if (Number.class.isAssignableFrom(cls)) {
+			return true;
+		}
+		if (cls.equals(byte.class)) {
+			return true;
+		} 
+		if (cls.equals(short.class)) {
+			return true;
+		} 
+		if (cls.equals(int.class)) {
+			return true;
+		} 
+		if (cls.equals(long.class)) {
+			return true;
+		} 
+		if (cls.equals(float.class)) {
+			return true;
+		} 
+		if (cls.equals(double.class)) {
+			return true;
+		}
+		return false;
 	}
 }

@@ -2,20 +2,15 @@ package com.cell.rpg.formula;
 
 import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import com.cell.reflect.Parser;
 import com.cell.rpg.formula.helper.IFormulaAdapter;
 import com.g2d.annotation.Property;
 
-/**
- * 将静态函数包装成变量
- * @author WAZA
- *
- */
-public abstract class AbstractMethod extends AbstractValue
+public abstract class AbstractMethod extends AbstractValue 
 {
 //	------------------------------------------------------------------------------------------------------------------------------
-	
 	
 	@Property("方法名")
 	public String				method_name;
@@ -47,29 +42,35 @@ public abstract class AbstractMethod extends AbstractValue
 		return ret + ")";
 	}
 
+	/**
+	 * Get Edit Methods
+	 * @return
+	 */
+	abstract protected Map<String, Method> getMethods();
+	
 //	------------------------------------------------------------------------------------------------------------------------------
 
-	transient private Method	call_method;
+	transient Method	call_method;
 	
-	transient private Class<?>	call_params_type[];
+	transient Class<?>	call_params_type[];
 	
-	public abstract LinkedHashMap<String, Method> getStaticMethods();
-	
-	public void setMethod(Method method) {
-		method_name = method.getName();
-		call_method = method;
-		call_params_type = method.getParameterTypes();
+	final public void setMethod(Method method) {
+		method_name 		= method.getName();
+		call_method 		= method;
+		call_params_type 	= method.getParameterTypes();
 	}
 	
-	public Method getMethod() {
+	final public Method getMethod() {
 		if (call_method == null) {
-			call_method = getStaticMethods().get(method_name);
-			call_params_type = call_method.getParameterTypes();
+			call_method 			= getMethods().get(method_name);
+			if (call_method != null) {
+				call_params_type	= call_method.getParameterTypes();
+			}
 		}
 		return call_method;
 	}
 	
-	public Object[] getInvokeParams(IFormulaAdapter adapter) throws Throwable {
+	final public Object[] getInvokeParams(IFormulaAdapter adapter) throws Throwable {
 		Method method = getMethod();
 		if (method!=null && parameters!=null) {
 			Object[] params = new Object[parameters.length];
@@ -83,5 +84,18 @@ public abstract class AbstractMethod extends AbstractValue
 			return new Object[0];
 		}
 	}
-	
+
+//	------------------------------------------------------------------------------------------------------------------------------
+
+	static public boolean validateMethod(Method method) {
+		if (!Parser.isNumber(method.getReturnType())) {
+			return false;
+		}
+		for (Class<?> parm : method.getParameterTypes()) {
+			if (!Parser.isNumber(parm)) {
+				return false;
+			}
+		}
+		return true;
+	}
 }

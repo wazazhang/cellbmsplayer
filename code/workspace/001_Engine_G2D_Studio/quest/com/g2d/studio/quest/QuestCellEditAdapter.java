@@ -752,9 +752,11 @@ public class QuestCellEditAdapter {
 			
 			@Override
 			public void itemStateChanged(ItemEvent e) {
-				if (e.getSource() == combo_type) {
-					layoutChilds();
-				}
+					if (e.getSource() == combo_type) {
+						layoutChilds();
+					}
+				
+				
 			}
 			
 			@Override

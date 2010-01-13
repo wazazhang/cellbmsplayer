@@ -4,39 +4,35 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.LinkedHashMap;
 
+import com.cell.reflect.Parser;
 import com.g2d.annotation.Property;
 
 @Property("系统-函数")
-public class SystemMethod extends AbstractMethod
+public class SystemMethod extends StaticMethod
 {
 	public SystemMethod() {}
 	
 	public SystemMethod(String method_name, AbstractValue[] parameters) {
 		super(method_name, parameters);
 	}
-	
-	@Override
-	public LinkedHashMap<String, Method> getStaticMethods() {
-		return getMethods();
-	}
-	
-//	------------------------------------------------------------------------------------------------------------
 
+	public LinkedHashMap<String, Method> getMethods() {
+		return getStaticMethods();
+	}
+
+//	------------------------------------------------------------------------------------------------------------
+//	Edit Mode
 	static private LinkedHashMap<String, Method> methods;
 	
-	static public LinkedHashMap<String, Method> getMethods() 
+	static public LinkedHashMap<String, Method> getStaticMethods() 
 	{
 		if (methods == null) {
 			methods = new LinkedHashMap<String, Method>();
 			for (Method method : SystemMethod.class.getMethods()) {
 				if ((method.getModifiers() & Modifier.STATIC) != 0) {
-					if (method.getReturnType().equals(Double.class) || 
-						method.getReturnType().equals(double.class) ||
-						method.getReturnType().equals(Long.class) ||
-						method.getReturnType().equals(Integer.class)
-						) {
+					if (validateMethod(method)) {
 						methods.put(method.getName(), method);
-						System.out.println(method);
+						System.out.println("SystemMethod - " + method);
 					}
 				}
 			}
@@ -45,12 +41,21 @@ public class SystemMethod extends AbstractMethod
 	}
 
 //	------------------------------------------------------------------------------------------------------------
-
+//	System Method Adapter
+	
 	public static interface ISystemMethodAdapter
 	{
-		public Long getGameTime();
+		/**
+		 * 得到当前时间
+		 * @return
+		 */
+		public Long		getGameTime();
 		
-		public Integer getTotalPlayer();
+		/**
+		 * 得到活动玩家数
+		 * @return
+		 */
+		public Integer	getTotalPlayer();
 	}
 	
 	private static ISystemMethodAdapter system_method_adapter;
@@ -64,10 +69,8 @@ public class SystemMethod extends AbstractMethod
 	}
 	
 //	------------------------------------------------------------------------------------------------------------
-
+//	Static System Method
 	
-	
-
 	public static Long getGameTime()
 	{
 		return system_method_adapter.getGameTime();

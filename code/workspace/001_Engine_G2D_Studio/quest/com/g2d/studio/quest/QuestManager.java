@@ -4,10 +4,14 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.lang.reflect.Method;
+import java.util.LinkedHashMap;
 import java.util.Vector;
 
+import com.cell.rpg.quest.formula.TriggerUnitMethod;
 import com.cell.util.IDFactoryInteger;
 import com.g2d.Tools;
+import com.g2d.studio.Config;
 import com.g2d.studio.ManagerForm;
 import com.g2d.studio.Studio;
 import com.g2d.studio.Studio.ProgressForm;
@@ -42,6 +46,34 @@ public class QuestManager extends ManagerForm implements ActionListener
 		File quest_list	= new File(quest_dir, "quest.list");
 		tree_view 		= new QuestTreeView(quest_list);
 		this.add(tree_view, BorderLayout.CENTER);
+		
+		initDynamicClasses();
+	}
+	
+	private void initDynamicClasses()
+	{
+		Class<?> player_class 	= null;
+		Class<?> pet_class 		= null;
+		Class<?> npc_class 		= null;
+		try {
+			player_class 	= Class.forName(Config.DYNAMIC_QUEST_PLAYER_CLASS);
+		} catch (Exception err) {
+			System.err.println("错误：未定义玩家类型");
+		}
+		try {
+			pet_class 		= Class.forName(Config.DYNAMIC_QUEST_PET_CLASS);
+		} catch (Exception err) {
+			System.err.println("错误：未定义宠物类型");
+		}
+		try {
+			npc_class 		= Class.forName(Config.DYNAMIC_QUEST_NPC_CLASS);
+		} catch (Exception err) {
+			System.err.println("错误：未定义NPC类型");
+		}
+		TriggerUnitMethod.setTriggerUnitClass(
+				player_class, 
+				pet_class, 
+				npc_class);
 	}
 	
 	Vector<QuestNode> getQuests() {
