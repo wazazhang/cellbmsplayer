@@ -23,6 +23,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JSplitPane;
@@ -147,8 +148,10 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 		if (e.getSource() == btn_ok) {
 			if (split.getBottomComponent() instanceof ValueEditor) {
 				ValueEditor editor = (ValueEditor)split.getBottomComponent();
-				value = editor.onEditOK(value);
-				this.setVisible(false);
+				if (editor.validateOK()) {
+					value = editor.onEditOK(value);
+					this.setVisible(false);
+				}
 			}
 		} else if (e.getSource() == btn_cancel) {
 			this.setVisible(false);
@@ -253,6 +256,8 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 	interface ValueEditor 
 	{
 		AbstractValue onEditOK(AbstractValue src_value) ;
+		
+		boolean validateOK();
 	}
 	
 //	----------------------------------------------------------------------------------------------------------
@@ -283,6 +288,10 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 				return new Value((Double)number.getValue());
 			}
 		}
+		
+		@Override
+		public boolean validateOK(){return true;}
+
 	}
 
 //	----------------------------------------------------------------------------------------------------------
@@ -343,7 +352,8 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 				method_panel.setMethod(combo_methods.getValue());
 			}
 		}
-		
+		@Override
+		public boolean validateOK(){return true;}
 		
 		protected Map<MethodInfo, Method> getMethods() {
 			if (value_type.equals(SystemMethod.class)) {
@@ -428,6 +438,9 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 				btn_right.setText(v_right+"");
 			}
 		}
+		
+		@Override
+		public boolean validateOK(){return true;}
 	}
 	
 
@@ -506,6 +519,9 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 			}
 			return tup;
 		}
+		
+		@Override
+		public boolean validateOK(){return true;}
 	}
 	
 //	----------------------------------------------------------------------------------------------------------
@@ -604,6 +620,15 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 			tum.trigger_unit_type = combo_unit_type.getValue();
 			return method_panel.getMethod(tum);
 		}
+		
+		@Override
+		public boolean validateOK(){
+			if (!method_panel.validateReturnObject()) {
+				JOptionPane.showMessageDialog(this, "没有设置复合类型的方法");
+				return false;
+			}
+			return true;
+		}
 	}
 	
 //	----------------------------------------------------------------------------------------------------------
@@ -642,6 +667,9 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 				return ret;
 			}
 		}
+		
+		@Override
+		public boolean validateOK(){return true;}
 	}
 
 //	----------------------------------------------------------------------------------------------------------
@@ -668,6 +696,9 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 				return new TimeValue(model.getDate().getTime());
 			}
 		}
+		
+		@Override
+		public boolean validateOK(){return true;}
 	}
 //	----------------------------------------------------------------------------------------------------------
 
@@ -704,6 +735,9 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 				);
 			}
 		}
+		
+		@Override
+		public boolean validateOK(){return true;}
 	}
 
 //	----------------------------------------------------------------------------------------------------------
@@ -724,6 +758,7 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 			super(owner);
 			super.setLocation(owner.getX()+20, owner.getY()+20);
 			super.setSize(300, 400);
+			super.setTitle("复合类型 : " + decaring_class.getName());
 			
 			method_list		= new MethodListCellEdit(AbstractMethod.getValidateMethods(decaring_class));
 		
@@ -756,6 +791,10 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 		
 		@Override
 		protected boolean checkOK() {
+			if (!method_panel.validateReturnObject()) {
+				JOptionPane.showMessageDialog(this, "没有设置复合类型的方法");
+				return false;
+			}
 			return true;
 		}
 		
@@ -894,6 +933,13 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 				mm.return_object_method		= null;
 			}
 			return mm;
+		}
+		
+		public boolean validateReturnObject() {
+			if (mirror_method.getReturnSynthetic()!=null) {
+				return mirror_next_method!=null;
+			}
+			return true;
 		}
 	}
 	
