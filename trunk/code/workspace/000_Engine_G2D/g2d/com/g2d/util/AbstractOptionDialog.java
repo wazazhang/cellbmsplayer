@@ -30,7 +30,7 @@ public abstract class AbstractOptionDialog<T> extends AbstractDialog implements 
 		init();
 	}
 	
-	public AbstractOptionDialog(Window owner) {
+	public AbstractOptionDialog(Component owner) {
 		super(owner);
 		init();
 	}

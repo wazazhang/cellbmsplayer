@@ -66,20 +66,22 @@ public class MethodListCellEdit extends JComboBox implements PropertyCellEdit<Me
 				int index, boolean isSelected, boolean cellHasFocus) {
 			super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 			Method method = (Method)value;
-			String text = method.getReturnType().getSimpleName() + " " + method.getName() + " ( ";
-			Class<?>[] params = method.getParameterTypes();
-			for (int i=0; i<params.length; i++) {
-				text += params[i].getSimpleName();
-				if (i!=params.length-1) {
-					text += " , ";
+			if (method != null) {
+				String text = method.getReturnType().getSimpleName() + " " + method.getName() + " ( ";
+				Class<?>[] params = method.getParameterTypes();
+				for (int i=0; i<params.length; i++) {
+					text += params[i].getSimpleName();
+					if (i!=params.length-1) {
+						text += " , ";
+					}
 				}
+				text += " )";
+				ObjectMethod comment = method.getAnnotation(ObjectMethod.class);
+				if (comment != null) {
+					text += " - " + comment.value();
+				}
+				super.setText(text);
 			}
-			text += " )";
-			ObjectMethod comment = method.getAnnotation(ObjectMethod.class);
-			if (comment != null) {
-				text += " - " + comment.value();
-			}
-			super.setText(text);
 			return this;
 		}
 	}

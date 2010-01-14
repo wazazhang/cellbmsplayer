@@ -177,9 +177,11 @@ public class ObjectPropertyPanel extends JPanel
 				Field field = (Field) rows.elementAt(r)[c];
 				Property doc = field.getAnnotation(Property.class);
 				if (doc != null) {
-					anno_text.setText(CUtil.arrayToString(doc.value(), "\n"));
+					anno_text.setText(CUtil.arrayToString(doc.value(), "\n") + 
+							"--------------------\n" + field.get(object));
 				} else {
-					anno_text.setText(field.getName());
+					anno_text.setText(field.getName() + "\n" +
+							"--------------------\n" + field.get(object));
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -343,6 +345,10 @@ public class ObjectPropertyPanel extends JPanel
 			}
 		}catch(Exception err){
 			err.printStackTrace();
+		}finally{
+			try{
+				rows_table.valueChanged(null);
+			}catch(Exception err){}
 		}
 	}
 

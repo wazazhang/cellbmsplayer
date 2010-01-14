@@ -12,32 +12,41 @@ public class SystemMethod extends StaticMethod
 {
 	public SystemMethod() {}
 	
-	public SystemMethod(String method_name, AbstractValue[] parameters) {
-		super(method_name, parameters);
-	}
-
-	public LinkedHashMap<String, Method> getMethods() {
-		return getStaticMethods();
+	public SystemMethod(Method method, AbstractValue[] parameters) {
+		super(method, parameters);
 	}
 
 //	------------------------------------------------------------------------------------------------------------
 //	Edit Mode
-	static private LinkedHashMap<String, Method> methods;
+	static private LinkedHashMap<MethodInfo, Method> methods;
 	
-	static public LinkedHashMap<String, Method> getStaticMethods() 
+	static public LinkedHashMap<MethodInfo, Method> getStaticMethods() 
 	{
 		if (methods == null) {
-			methods = new LinkedHashMap<String, Method>();
+			methods = new LinkedHashMap<MethodInfo, Method>();
 			for (Method method : SystemMethod.class.getMethods()) {
 				if ((method.getModifiers() & Modifier.STATIC) != 0) {
 					if (validateMethod(method)) {
-						methods.put(method.getName(), method);
+						methods.put(new MethodInfo(method), method);
 						System.out.println("SystemMethod - " + method);
 					}
 				}
 			}
 		}
 		return methods;
+	}
+	
+//	------------------------------------------------------------------------------------------------------------
+//	Static System Method
+	
+	public static Long getGameTime()
+	{
+		return system_method_adapter.getGameTime();
+	}
+	
+	public static Integer getTotalPlayer()
+	{
+		return system_method_adapter.getTotalPlayer();
 	}
 
 //	------------------------------------------------------------------------------------------------------------
@@ -66,19 +75,6 @@ public class SystemMethod extends StaticMethod
 	
 	public static void setSystemMethodAdapter(ISystemMethodAdapter systemMethodAdapter) {
 		system_method_adapter = systemMethodAdapter;
-	}
-	
-//	------------------------------------------------------------------------------------------------------------
-//	Static System Method
-	
-	public static Long getGameTime()
-	{
-		return system_method_adapter.getGameTime();
-	}
-	
-	public static Integer getTotalPlayer()
-	{
-		return system_method_adapter.getTotalPlayer();
 	}
 	
 }

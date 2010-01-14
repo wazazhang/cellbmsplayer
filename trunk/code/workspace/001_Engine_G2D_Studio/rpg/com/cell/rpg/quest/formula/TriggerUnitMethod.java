@@ -23,22 +23,22 @@ public class TriggerUnitMethod extends ObjectMethod
 	public String toString() {
 		return trigger_unit_type+"."+super.toString();
 	}
-	
-	@Override
-	protected Map<String, Method> getMethods() {
-		switch (trigger_unit_type) {
-		case PLAYER:
-		case PLAYER_GROUP:
-			return player_methods;
-		case PET:
-			return pet_methods;
-		case TRIGGERING_NPC:
-			return npc_methods;
-		}
-		return null;
-	}
-	
-	
+//	
+//	@Override
+//	protected Map<String, Method> getMethods() {
+//		switch (trigger_unit_type) {
+//		case PLAYER:
+//		case PLAYER_GROUP:
+//			return player_methods;
+//		case PET:
+//			return pet_methods;
+//		case TRIGGERING_NPC:
+//			return npc_methods;
+//		}
+//		return null;
+//	}
+//	
+//	
 //	-----------------------------------------------------------------------------------------------------
 //	Edit Mode
 	
@@ -53,31 +53,25 @@ public class TriggerUnitMethod extends ObjectMethod
 	{
 		if (player_class!=null) {
 			for (Method method : player_class.getMethods()) {
-				if ((method.getModifiers() & Modifier.PUBLIC) != 0) {
-					if (validateMethod(method)) {
-						player_methods.put(method.getName(), method);
-						System.out.println("PLAYER Method - " + method);
-					}
+				if (validateMethod(method)) {
+					player_methods.put(method.getName(), method);
+					System.out.println("PLAYER Method - " + method);
 				}
 			}
 		} 
 		if (pet_class!=null) {
 			for (Method method : pet_class.getMethods()) {
-				if ((method.getModifiers() & Modifier.PUBLIC) != 0) {
-					if (validateMethod(method)) {
-						pet_methods.put(method.getName(), method);
-						System.out.println("PET Method - " + method);
-					}
+				if (validateMethod(method)) {
+					pet_methods.put(method.getName(), method);
+					System.out.println("PET Method - " + method);
 				}
 			}
 		} 
 		if (npc_class!=null) {
 			for (Method method : npc_class.getMethods()) {
-				if ((method.getModifiers() & Modifier.PUBLIC) != 0) {
-					if (validateMethod(method)) {
-						npc_methods.put(method.getName(), method);
-						System.out.println("NPC Method - " + method);
-					}
+				if (validateMethod(method)) {
+					npc_methods.put(method.getName(), method);
+					System.out.println("NPC Method - " + method);
 				}
 			}
 		} 

@@ -19,9 +19,9 @@ public abstract class StaticMethod extends AbstractMethod
 	
 	public StaticMethod() {}
 
-	public StaticMethod(String method_name, AbstractValue[] parameters) 
+	public StaticMethod(Method method, AbstractValue[] parameters) 
 	{
-		super(method_name, parameters);
+		super(method, parameters);
 	}
 	
 }
