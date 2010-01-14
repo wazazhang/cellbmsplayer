@@ -14,6 +14,7 @@ import javax.swing.ListCellRenderer;
 import com.cell.CUtil;
 import com.cell.rpg.ability.Abilities;
 import com.cell.rpg.formula.AbstractValue;
+import com.cell.rpg.formula.anno.MethodSynthetic;
 import com.cell.rpg.formula.anno.ObjectMethod;
 
 import com.cell.rpg.xls.XLSColumns;
@@ -67,15 +68,20 @@ public class MethodListCellEdit extends JComboBox implements PropertyCellEdit<Me
 			super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 			Method method = (Method)value;
 			if (method != null) {
-				String text = method.getReturnType().getSimpleName() + " " + method.getName() + " ( ";
+				MethodSynthetic synthetic = method.getAnnotation(MethodSynthetic.class);
+				String text = "";
+				if (synthetic != null) {
+					text += "[复合]";
+				}
+				text += method.getReturnType().getSimpleName() + " " + method.getName() + "(";
 				Class<?>[] params = method.getParameterTypes();
 				for (int i=0; i<params.length; i++) {
 					text += params[i].getSimpleName();
 					if (i!=params.length-1) {
-						text += " , ";
+						text += ",";
 					}
 				}
-				text += " )";
+				text += ")";
 				ObjectMethod comment = method.getAnnotation(ObjectMethod.class);
 				if (comment != null) {
 					text += " - " + comment.value();
