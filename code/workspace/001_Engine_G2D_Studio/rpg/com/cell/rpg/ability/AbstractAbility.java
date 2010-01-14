@@ -1,7 +1,9 @@
 package com.cell.rpg.ability;
 
+import java.io.ObjectStreamException;
 import java.io.Serializable;
 
+import com.cell.util.MarkedHashtable;
 import com.g2d.annotation.Property;
 
 /**
@@ -26,7 +28,16 @@ public abstract class AbstractAbility implements Serializable
 	
 //	----------------------------------------------------------------------------------------------------------------
 	
+	protected Object writeReplace() throws ObjectStreamException {
+		return this;
+	}
+	
+	protected Object readResolve() throws ObjectStreamException {
+		return this;
+	}
 
+//	----------------------------------------------------------------------------------------------------------------
+	
 	
 	public static String getName(Class<?> cls) {
 		Property property = cls.getAnnotation(Property.class);

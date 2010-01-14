@@ -257,6 +257,9 @@ public class CIO extends CObject
 	@SuppressWarnings("unchecked")
 	public static<T> T cloneObject(T src)
 	{
+		if (src == null) {
+			return src;
+		}
 		try
 		{
 			ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);

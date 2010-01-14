@@ -46,6 +46,8 @@ import com.cell.rpg.formula.SystemMethod;
 import com.cell.rpg.formula.TimeDurationValue;
 import com.cell.rpg.formula.TimeValue;
 import com.cell.rpg.formula.Value;
+import com.cell.rpg.formula.AbstractMethod.MethodInfo;
+import com.cell.rpg.formula.AbstractMethod.SyntheticMethod;
 import com.cell.rpg.formula.Arithmetic.Operator;
 
 import com.cell.rpg.quest.TriggerUnitType;
@@ -66,6 +68,7 @@ import com.g2d.studio.gameedit.XLSColumnSelectCellEdit;
 import com.g2d.studio.quest.QuestSelectCellEdit;
 import com.g2d.studio.quest.QuestSelectCellEditComboBox;
 import com.g2d.util.AbstractDialog;
+import com.g2d.util.AbstractOptionDialog;
 
 public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<AbstractValue>, ItemListener, ActionListener
 {
@@ -311,10 +314,7 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 				}
 			}
 			
-			method_panel = new MethodPanel(
-					mm.getMethod(), 
-					mm.parameters, 
-					getMethods().values().iterator().next());
+			method_panel = new MethodPanel(mm, getMethods().values().iterator().next());
 			
 			this.add(method_panel, BorderLayout.CENTER);
 			
@@ -345,7 +345,7 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 		}
 		
 		
-		protected Map<String, Method> getMethods() {
+		protected Map<MethodInfo, Method> getMethods() {
 			if (value_type.equals(SystemMethod.class)) {
 				return SystemMethod.getStaticMethods();
 			}
@@ -540,10 +540,7 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 			} else {
 				tum = new TriggerUnitMethod();
 			}
-			method_panel = new MethodPanel(
-					tum.getMethod(), 
-					tum.parameters, 
-					player_methods.getValue());
+			method_panel = new MethodPanel(tum, player_methods.getValue());
 			method_pan.setBottomComponent(method_panel);
 			
 			if (combo_unit_type.getValue()==null) {
@@ -710,24 +707,92 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 	}
 
 //	----------------------------------------------------------------------------------------------------------
+	
+	static class SyntheticMethodEdit extends AbstractOptionDialog<SyntheticMethod> implements ItemListener
+	{
+		MethodListCellEdit		method_list;
 
+		MethodPanel 			method_panel;
+		
+		JButton					ok = new JButton();
+		
+		public SyntheticMethodEdit(
+				Component owner, 
+				Class<?> decaring_class, 
+				SyntheticMethod value)
+		{
+			super(owner);
+			super.setLocation(owner.getX()+20, owner.getY()+20);
+			super.setSize(300, 400);
+			
+			method_list		= new MethodListCellEdit(AbstractMethod.getValidateMethods(decaring_class));
+		
+			if (value != null) {
+				if (value.method_info.type.equals(decaring_class)){
+					method_list.setSelectedItem(value.getMethod());
+				} else {
+					value = new SyntheticMethod(method_list.getValue(), value.parameters);
+				}
+			} else {
+				value = new SyntheticMethod(method_list.getValue(), null);
+			}
+			
+			method_panel = new MethodPanel(value, method_list.getValue());
 
+			super.add(method_list, BorderLayout.NORTH);
+			super.add(method_panel, BorderLayout.CENTER);
+			
+			method_list.addItemListener(this);
+		}
+		
+		@Override
+		public void itemStateChanged(ItemEvent e) {
+			if (e.getStateChange() == ItemEvent.SELECTED) {
+				if (e.getSource() == method_list) {
+					method_panel.setMethod(method_list.getValue());
+				}
+			}
+		}
+		
+		@Override
+		protected boolean checkOK() {
+			return true;
+		}
+		
+		@Override
+		protected SyntheticMethod getUserObject() {
+			SyntheticMethod srcValue = new SyntheticMethod();
+			return (SyntheticMethod)method_panel.getMethod(srcValue);
+		}
+		
+	}
+
+//	----------------------------------------------------------------------------------------------------------
 	static class MethodPanel extends JPanel implements ActionListener
 	{
 		Method						default_method;
 		
-		Method						mirror_method;
+		MethodInfo					mirror_method;
 		AbstractValue[]				mirror_parameters;
+		SyntheticMethod				mirror_next_method;
 		
 		ArrayList<JButton> 			params_key		= new ArrayList<JButton>();
 		ArrayList<AbstractValue> 	params_value	= new ArrayList<AbstractValue>();
 		
-		public MethodPanel(Method method, AbstractValue[] params, Method default_method) {
+		JButton						next_method_btn		= new JButton();
+	
+		public MethodPanel(
+				AbstractMethod method,
+				Method default_method) 
+		{
 			super(new FlowLayout());
 			this.default_method		= default_method;
-			this.mirror_method 		= method;
-			this.mirror_parameters 	= CIO.cloneObject(params);
-			setMethod(this.mirror_method);
+			this.mirror_parameters 	= CIO.cloneObject(method.parameters);
+			this.mirror_next_method = CIO.cloneObject(method.return_object_method);
+			
+			next_method_btn.addActionListener(this);
+			
+			setMethod(method.getMethod());
 		}
 		
 		@Override
@@ -744,6 +809,15 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 				params_value.set(index, value);
 				key.setText(value+"");
 			}
+			else if (e.getSource() == next_method_btn) {
+				SyntheticMethodEdit next_edit = new SyntheticMethodEdit(
+						owner, 
+						mirror_method.method.getReturnType(), 
+						mirror_next_method);
+				mirror_next_method = next_edit.showDialog();
+				next_method_btn.setText(mirror_next_method+"");
+				this.updateUI();
+			}
 		}
 
 		public void setMethod(Method mt) 
@@ -751,12 +825,14 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 			try
 			{
 				if (mt == null) {
-					mirror_method = default_method;
+					mirror_method = new MethodInfo(default_method);
 				} else {
-					mirror_method = mt;
+					mirror_method = new MethodInfo(mt);
 				}
+
+				this.remove(next_method_btn);
 				
-				Class<?>[] params_type = mirror_method.getParameterTypes();
+				Class<?>[] params_type = mirror_method.parameter_types;
 				
 				for (int i=0; i<params_type.length; i++) 
 				{
@@ -778,6 +854,7 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 						this.add(key);
 					}
 				}
+				
 				while (params_type.length < params_key.size()) {
 					int end = params_key.size() - 1;
 					JButton 		key		= params_key.remove(end);
@@ -785,14 +862,23 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 					this.remove(key);
 					value.toString();
 				}
+				
+				if (mirror_method.getReturnSynthetic() != null) {
+					if (mirror_next_method != null) {
+						next_method_btn.setText(mirror_next_method+"");
+					} else {
+						next_method_btn.setText("...");
+					}
+					this.add(next_method_btn);
+				}
+				
 				this.updateUI();
 			}
 			catch (Exception err){
 				err.printStackTrace();
 			}
-			
 		}
-		
+	
 		public AbstractMethod getMethod(AbstractMethod mm)
 		{
 			mirror_parameters = params_value.toArray(new AbstractValue[params_value.size()]);
@@ -800,8 +886,13 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 			for (AbstractValue v : mirror_parameters) {
 				System.out.println(v);
 			}
-			mm.method_name	= mirror_method.getName();
-			mm.parameters	= mirror_parameters;
+			mm.method_info				= mirror_method;
+			mm.parameters				= mirror_parameters;
+			if (mirror_method.getReturnSynthetic()!=null) {
+				mm.return_object_method		= mirror_next_method;
+			} else {
+				mm.return_object_method		= null;
+			}
 			return mm;
 		}
 	}

@@ -16,27 +16,24 @@ public class MathMethod extends StaticMethod
 	
 	public MathMethod() {}
 	
-	public MathMethod(String method_name, AbstractValue[] parameters) {
-		super(method_name, parameters);
+	public MathMethod(Method method, AbstractValue[] parameters) {
+		super(method, parameters);
 	}
 
-	public LinkedHashMap<String, Method> getMethods() {
-		return getStaticMethods();
-	}
-	
 //	------------------------------------------------------------------------------------------------
 //	Edit Mode
-	static private LinkedHashMap<String, Method> methods;
+	
+	static private LinkedHashMap<MethodInfo, Method> methods;
 
-	public static LinkedHashMap<String, Method> getStaticMethods() {
+	public static LinkedHashMap<MethodInfo, Method> getStaticMethods() {
 		if (methods == null) {
-			methods = new LinkedHashMap<String, Method>();
+			methods = new LinkedHashMap<MethodInfo, Method>();
 			for (Method method : Math.class.getMethods()) {
 				if ((method.getModifiers() & Modifier.STATIC) != 0) {
 					if (method.getReturnType().equals(Double.class) || 
 						method.getReturnType().equals(double.class)) {
 						if (validateMethod(method)) {
-							methods.put(method.getName(), method);
+							methods.put(new MethodInfo(method), method);
 							System.out.println("MathMethod - " + method);
 						}
 					}
