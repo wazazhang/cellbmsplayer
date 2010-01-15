@@ -98,4 +98,37 @@ public class Parser
 		}
 		return false;
 	}
+	
+	public static Class<?> classForName(String name) throws ClassNotFoundException {
+		return classForName(name, null);
+	}
+	
+	public static Class<?> classForName(String name, ClassLoader loader) throws ClassNotFoundException {
+		if (boolean.class.getName().equals(name)) {
+			return boolean.class;
+		}
+		if (byte.class.getName().equals(name)) {
+			return byte.class;
+		} 
+		if (short.class.getName().equals(name)) {
+			return short.class;
+		} 
+		if (int.class.getName().equals(name)) {
+			return int.class;
+		} 
+		if (long.class.getName().equals(name)) {
+			return long.class;
+		} 
+		if (float.class.getName().equals(name)) {
+			return float.class;
+		} 
+		if (double.class.getName().equals(name)) {
+			return double.class;
+		}
+		if (loader!=null) {
+			return Class.forName(name, true, loader);
+		} else {
+			return Class.forName(name);
+		}
+	}
 }
