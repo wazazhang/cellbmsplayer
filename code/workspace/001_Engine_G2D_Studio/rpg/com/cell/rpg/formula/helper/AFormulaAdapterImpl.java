@@ -82,13 +82,12 @@ public abstract class AFormulaAdapterImpl implements IFormulaAdapter
 			Object ret		= method.invoke(object, value.getInvokeParams(this));
 			// 将得到的复合类型带入下次运算
 			return calculateSyntheticMethod(ret, value.return_object_method);
-		} else if (value instanceof SyntheticMethod) {
+		} else {
 			// 没有下一个子函数的根函数
 			Method method = value.getMethod();
 			Object ret = method.invoke(object, value.getInvokeParams(this));
 			return (Number)ret;
 		}
-		return 0;
 	}
 	
 	protected Number calculateStaticMethod(StaticMethod value) throws Throwable {
