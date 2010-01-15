@@ -11,6 +11,8 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.cell.CObject;
+import com.cell.util.concurrent.ThreadPool;
 import com.net.MessageHeader;
 
 
@@ -31,6 +33,8 @@ public class NetService
 			}
 		}
 	}
+
+//	-------------------------------------------------------------------------------------------------
 
 //	-------------------------------------------------------------------------------------------------
 	private class SimpleClientListenerImpl implements ServerSessionListener
@@ -58,12 +62,10 @@ public class NetService
 	    public void receivedMessage(ServerSession session, MessageHeader message)
 	    {
 			if (message != null) {
-				if (tryReceivedNotify(message)) {
-					return;
-				} else if (tryReceivedResponse(message)) {
-					return;
-				} else if (!tryPushUnhandledNotify(message)) {
-					log.error("handle no listener message : " + message);
+				if (thread_pool!=null) {
+					thread_pool.executeTask(new ReceiveTask(message));
+				} else {
+					processReceiveSessionMessage(message);
 				}
 			} else {
 				log.error("handle null message !");
@@ -73,16 +75,53 @@ public class NetService
 	    public void receivedChannelMessage(ClientChannel channel, MessageHeader message)
 	    {
 			if (message != null) {
-				if (tryReceivedNotify(message)) {
-					return;
-				} else if (!tryPushUnhandledNotify(message)) {
-					log.error("handle no listener channel message : " + message);
+				if (thread_pool!=null) {
+					thread_pool.executeTask(new ReceiveChannelTask(message));
+				} else {
+					processReceiveChannelMessage(message);
 				}
 			} else {
 				log.error("handle null channel message !");
 			}
 		}
+	    
+		private class ReceiveTask implements Runnable
+		{
+			final MessageHeader message;
+			
+			public ReceiveTask(MessageHeader message) {
+				this.message = message;
+			}
+			
+			@Override
+			public void run() {
+				try {
+					processReceiveSessionMessage(message);
+				} catch (Throwable err) {
+					err.printStackTrace();
+				}
+			}
+		}
+		
+		private class ReceiveChannelTask implements Runnable
+		{
+			final MessageHeader message;
 
+			public ReceiveChannelTask(MessageHeader message) {
+				this.message = message;
+			}
+			
+			@Override
+			public void run() {
+				try {
+					processReceiveChannelMessage(message);
+				} catch (Throwable err) {
+					err.printStackTrace();
+				}
+			}
+		}
+
+	    
 	}
 
 //	-------------------------------------------------------------------------------------------------
@@ -184,16 +223,23 @@ public class NetService
 	
 	private AtomicInteger			request_response_ping	= new AtomicInteger();
 
+	final private ThreadPool		thread_pool;
+	
 	final protected Logger 			log;
 
 //	---------------------------------------------------------------------------------------------------------------------------------
 
-	public NetService(ServerSession session) 
+	public NetService(ServerSession session, ThreadPool thread_pool) 
 	{
 		this.log				= LoggerFactory.getLogger(getClass().getName());
 		this.Session 			= session;
-//		this.client_listener	= client_listener;
+		this.thread_pool		= thread_pool;
+		
 		Runtime.getRuntime().addShutdownHook(new ExitTask());
+	}
+	
+	public NetService(ServerSession session) {
+		this(session, null);
 	}
 	
 	/**
@@ -519,7 +565,27 @@ public class NetService
     }
     
 //	----------------------------------------------------------------------------------------------------------------------------
+
+	final private void processReceiveSessionMessage(MessageHeader message) {
+		if (tryReceivedNotify(message)) {
+			return;
+		} else if (tryReceivedResponse(message)) {
+			return;
+		} else if (!tryPushUnhandledNotify(message)) {
+			log.error("handle no listener message : " + message);
+		}
+	}
 	
+	final private void processReceiveChannelMessage(MessageHeader message) {
+		if (tryReceivedNotify(message)) {
+			return;
+		} else if (!tryPushUnhandledNotify(message)) {
+			log.error("handle no listener channel message : " + message);
+		}
+	}
+
+//	----------------------------------------------------------------------------------------------------------------------------
+
 	@SuppressWarnings("unchecked")
 	final protected boolean tryReceivedNotify(MessageHeader message) 
 	{
