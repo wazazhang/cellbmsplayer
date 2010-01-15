@@ -13,7 +13,7 @@ public class ObjectIDValue extends AbstractValue
 	public ObjectType	object_type	= ObjectType.TUNIT_ID;
 	
 	@Property("ID")
-	public int			object_id	= 0;
+	public Integer		object_id	= 0;
 
 	public ObjectIDValue() {}
 	
