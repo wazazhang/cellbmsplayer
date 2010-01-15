@@ -41,6 +41,7 @@ import com.cell.rpg.formula.AbstractMethod;
 import com.cell.rpg.formula.AbstractValue;
 import com.cell.rpg.formula.Arithmetic;
 import com.cell.rpg.formula.MathMethod;
+import com.cell.rpg.formula.ObjectIDValue;
 import com.cell.rpg.formula.ObjectProperty;
 import com.cell.rpg.formula.StaticMethod;
 import com.cell.rpg.formula.SystemMethod;
@@ -50,6 +51,7 @@ import com.cell.rpg.formula.Value;
 import com.cell.rpg.formula.AbstractMethod.MethodInfo;
 import com.cell.rpg.formula.AbstractMethod.SyntheticMethod;
 import com.cell.rpg.formula.Arithmetic.Operator;
+import com.cell.rpg.formula.ObjectIDValue.ObjectType;
 
 import com.cell.rpg.quest.TriggerUnitType;
 import com.cell.rpg.quest.formula.QuestStateProperty;
@@ -65,9 +67,20 @@ import com.g2d.editor.property.ListEnumEdit;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.Studio;
+import com.g2d.studio.gameedit.ObjectSelectCellEditInteger;
 import com.g2d.studio.gameedit.XLSColumnSelectCellEdit;
+import com.g2d.studio.gameedit.dynamic.DAvatar;
+import com.g2d.studio.gameedit.dynamic.DEffect;
+import com.g2d.studio.gameedit.template.XLSItem;
+import com.g2d.studio.gameedit.template.XLSSkill;
+import com.g2d.studio.gameedit.template.XLSUnit;
 import com.g2d.studio.quest.QuestSelectCellEdit;
 import com.g2d.studio.quest.QuestSelectCellEditComboBox;
+import com.g2d.studio.quest.items.QuestItemManager;
+import com.g2d.studio.quest.items.QuestItemSelectCellEditComboBox;
+import com.g2d.studio.scene.editor.SceneListCellEdit;
+import com.g2d.studio.scene.editor.SceneListCellEditInteger;
+import com.g2d.studio.scene.editor.SceneUnitListCellEdit;
 import com.g2d.util.AbstractDialog;
 import com.g2d.util.AbstractOptionDialog;
 
@@ -90,6 +103,7 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 	public FormulaEdit(Component owner, AbstractValue src) {
 		this(owner, new Class<?>[]{
 				Value.class,
+				ObjectIDValue.class,
 				TriggerUnitProperty.class,
 				TriggerUnitMethod.class,
 				QuestStateProperty.class,
@@ -224,6 +238,9 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 				if (getKey().equals(Value.class)) {
 					edit_comp = new PanelValue(value);
 				}
+				if (getKey().equals(ObjectIDValue.class)) {
+					edit_comp = new PanelObjectIDValue(value);
+				}
 				else if (getKey().equals(TriggerUnitProperty.class)) {
 					edit_comp = new PanelUnitProperty(value);
 				}
@@ -293,7 +310,89 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 		public boolean validateOK(){return true;}
 
 	}
-
+//	----------------------------------------------------------------------------------------------------------
+	
+	static class PanelObjectIDValue extends JPanel implements ValueEditor, ItemListener
+	{
+		ListEnumEdit<ObjectType> combo_obj_type = new ListEnumEdit<ObjectType>(ObjectType.class);
+		
+		ObjectSelectCellEditInteger<XLSUnit>	combo_unit		= new ObjectSelectCellEditInteger<XLSUnit>(XLSUnit.class);
+		ObjectSelectCellEditInteger<XLSItem>	combo_titem		= new ObjectSelectCellEditInteger<XLSItem>(XLSItem.class);
+		ObjectSelectCellEditInteger<XLSSkill>	combo_skill		= new ObjectSelectCellEditInteger<XLSSkill>(XLSSkill.class);
+		ObjectSelectCellEditInteger<DAvatar>	combo_avatar	= new ObjectSelectCellEditInteger<DAvatar>(DAvatar.class);
+		ObjectSelectCellEditInteger<DEffect>	combo_effect	= new ObjectSelectCellEditInteger<DEffect>(DEffect.class);
+		QuestSelectCellEditComboBox				combo_quest		= new QuestSelectCellEditComboBox();
+		QuestItemSelectCellEditComboBox			combo_quest_item= new QuestItemSelectCellEditComboBox();
+		SceneListCellEditInteger				combo_scene		= new SceneListCellEditInteger();
+		
+		PropertyCellEdit<Integer>				id_value;
+		
+		public PanelObjectIDValue(AbstractValue value) {
+			super(new BorderLayout());
+			super.add(combo_obj_type, BorderLayout.NORTH);
+			
+			if (value instanceof ObjectIDValue) {
+				ObjectIDValue v = (ObjectIDValue)value;
+				combo_obj_type.setValue(v.object_type);
+			}
+			
+			setType(combo_obj_type.getValue());
+			combo_obj_type.addItemListener(this);
+		}
+		
+		private void setType(ObjectType type)
+		{
+			this.remove(combo_unit);
+			this.remove(combo_titem);
+			this.remove(combo_skill);
+			this.remove(combo_avatar);
+			this.remove(combo_effect);
+			this.remove(combo_quest);
+			this.remove(combo_quest_item);
+			this.remove(combo_scene);
+			
+			switch(type) {
+			case TUNIT_ID:			id_value = combo_unit;		break;
+			case TTEMPLATE_ITEM_ID:	id_value = combo_titem;		break;
+			case TSKILL_ID:			id_value = combo_skill;		break;
+			case TAVATAR_ID:		id_value = combo_avatar;	break;
+			case TEFFECT_ID:		id_value = combo_effect;	break;
+			case QUEST_ID:			id_value = combo_quest;		break;
+			case QUEST_ITEM_ID:		id_value = combo_quest_item;break;
+			case SCENE_ID:			id_value = combo_scene;		break;
+			}
+			
+			super.add((Component)id_value, BorderLayout.SOUTH);
+		}
+		
+		@Override
+		public void itemStateChanged(ItemEvent e) {
+			if (e.getStateChange() == ItemEvent.SELECTED) {
+				if (e.getSource() == combo_obj_type) {
+					setType(combo_obj_type.getValue());
+				}        			
+			}
+		}
+		
+		@Override
+		public AbstractValue onEditOK(AbstractValue srcValue) {
+			ObjectIDValue ov = null;
+			if (srcValue instanceof ObjectIDValue) {
+				ov = (ObjectIDValue)srcValue;
+			} else {
+				ov = new ObjectIDValue();
+			}
+			ov.object_type	= combo_obj_type.getValue();
+			ov.object_id	= id_value.getValue();
+			return ov;
+		}
+		
+		@Override
+		public boolean validateOK() {return true;}
+		
+	}
+	
+	
 //	----------------------------------------------------------------------------------------------------------
 	
 	static class PanelStaticMethod<T extends StaticMethod> extends JPanel implements ValueEditor, ItemListener

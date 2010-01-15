@@ -41,7 +41,7 @@ public class QuestItemManager extends IDFactoryInteger<QuestItemNode> implements
 		saveList();
 	}
 
-	private Vector<QuestItemNode> getAllNodes() {
+	public Vector<QuestItemNode> getAllNodes() {
 		Vector<QuestItemNode> ret = new Vector<QuestItemNode>();
 		synchronized(this) {
 			for (QuestItemNode e : this) {

@@ -1,4 +1,4 @@
-package com.g2d.studio.gameedit;
+package com.g2d.studio.scene.editor;
 
 import java.awt.Component;
 import java.awt.event.ItemEvent;
@@ -9,19 +9,19 @@ import javax.swing.JComboBox;
 
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
+
 import com.g2d.studio.Studio;
-import com.g2d.studio.gameedit.entity.ObjectNode;
+import com.g2d.studio.scene.entity.SceneNode;
 
-
-public class ObjectSelectCellEditInteger<T extends ObjectNode<?>> extends JComboBox implements PropertyCellEdit<Integer>
+public class SceneListCellEditInteger extends JComboBox implements PropertyCellEdit<Integer>
 {
 	private static final long serialVersionUID = 1L;
 
 	ObjectPropertyPanel panel;
 	
-	public ObjectSelectCellEditInteger(Class<T> object_type) 
+	public SceneListCellEditInteger() 
 	{
-		super(Studio.getInstance().getObjectManager().getObjects(object_type));
+		super(new Vector<SceneNode>(Studio.getInstance().getSceneManager().getAllScenes()));
 		this.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (panel != null) {
@@ -38,8 +38,8 @@ public class ObjectSelectCellEditInteger<T extends ObjectNode<?>> extends JCombo
 	
 	public Integer getValue() {
 		Object item = getSelectedItem();
-		if (item instanceof ObjectNode<?>) {
-			return ((ObjectNode<?>) item).getIntID();
+		if (item instanceof SceneNode) {
+			return ((SceneNode) item).getIntID();
 		}
 		return null;
 	}
