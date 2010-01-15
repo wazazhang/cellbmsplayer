@@ -55,7 +55,7 @@ public class TriggerUnitMethod extends ObjectMethod
 			for (Method method : player_class.getMethods()) {
 				if (validateMethod(method)) {
 					player_methods.put(method.getName(), method);
-					System.out.println("PLAYER Method - " + method);
+//					System.out.println("PLAYER Method - " + method);
 				}
 			}
 		} 
@@ -63,7 +63,7 @@ public class TriggerUnitMethod extends ObjectMethod
 			for (Method method : pet_class.getMethods()) {
 				if (validateMethod(method)) {
 					pet_methods.put(method.getName(), method);
-					System.out.println("PET Method - " + method);
+//					System.out.println("PET Method - " + method);
 				}
 			}
 		} 
@@ -71,7 +71,7 @@ public class TriggerUnitMethod extends ObjectMethod
 			for (Method method : npc_class.getMethods()) {
 				if (validateMethod(method)) {
 					npc_methods.put(method.getName(), method);
-					System.out.println("NPC Method - " + method);
+//					System.out.println("NPC Method - " + method);
 				}
 			}
 		} 

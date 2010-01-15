@@ -160,7 +160,7 @@ public abstract class AbstractMethod extends AbstractValue
 				this.type	= Class.forName(in.readUTF());
 				this.parameter_types = new Class<?>[in.readInt()];
 				for (int i=0; i<parameter_types.length; i++) {
-					parameter_types[i] = Class.forName(in.readUTF());
+					parameter_types[i] = Parser.classForName(in.readUTF());
 				}
 				this.method	= type.getMethod(in.readUTF(), parameter_types);
 				this.return_synthetic	= method.getAnnotation(MethodSynthetic.class);
@@ -179,7 +179,7 @@ public abstract class AbstractMethod extends AbstractValue
 				out.writeUTF(type.getName());
 				out.writeInt(parameter_types.length);
 				for (int i=0; i<parameter_types.length; i++) {
-					out.writeUTF(parameter_types[i].getName());
+				out.writeUTF(parameter_types[i].getName());
 				}
 				out.writeUTF(method.getName());
 			}catch(Exception err){

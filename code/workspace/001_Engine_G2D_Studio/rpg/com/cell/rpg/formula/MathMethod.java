@@ -34,7 +34,7 @@ public class MathMethod extends StaticMethod
 						method.getReturnType().equals(double.class)) {
 						if (validateMethod(method)) {
 							methods.put(new MethodInfo(method), method);
-							System.out.println("MathMethod - " + method);
+//							System.out.println("MathMethod - " + method);
 						}
 					}
 				}

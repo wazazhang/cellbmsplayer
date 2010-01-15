@@ -28,7 +28,7 @@ public class SystemMethod extends StaticMethod
 				if ((method.getModifiers() & Modifier.STATIC) != 0) {
 					if (validateMethod(method)) {
 						methods.put(new MethodInfo(method), method);
-						System.out.println("SystemMethod - " + method);
+//						System.out.println("SystemMethod - " + method);
 					}
 				}
 			}
