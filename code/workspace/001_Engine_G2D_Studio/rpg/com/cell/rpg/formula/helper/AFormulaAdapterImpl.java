@@ -3,6 +3,7 @@ package com.cell.rpg.formula.helper;
 import java.lang.reflect.Method;
 
 import com.cell.rpg.formula.AbstractMethod;
+import com.cell.rpg.formula.ObjectIDValue;
 import com.cell.rpg.formula.StaticMethod;
 import com.cell.rpg.formula.AbstractValue;
 import com.cell.rpg.formula.Arithmetic;
@@ -26,6 +27,9 @@ public abstract class AFormulaAdapterImpl implements IFormulaAdapter
 	{
 		if (value instanceof Value) {
 			return calculateValue((Value)value);
+		}
+		if (value instanceof ObjectIDValue) {
+			return calculateObjectIDValue((ObjectIDValue)value);
 		}
 		if (value instanceof TimeValue) {
 			return calculateTimeValue((TimeValue)value);
@@ -51,6 +55,11 @@ public abstract class AFormulaAdapterImpl implements IFormulaAdapter
 	protected Number calculateValue(Value value) throws Throwable
 	{
 		return value.value;
+	}
+	
+	protected Number calculateObjectIDValue(ObjectIDValue value) throws Throwable
+	{
+		return value.object_id;
 	}
 	
 	protected Number calculateTimeValue(TimeValue value) throws Throwable
