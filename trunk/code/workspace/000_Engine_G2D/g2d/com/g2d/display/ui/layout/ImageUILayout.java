@@ -25,18 +25,18 @@ public class ImageUILayout extends UILayout
 		setImages(image, clip_style, clip_border);
 	}
 	
-	@Override
-	protected void onRead(MarkedHashtable data) {
-		super.onRead(data);
-		image = Tools.readImage(UILayoutManager.getInstance().save_path + "/" + image_name);
-		setImages(image, clip_style, clip_border);
-	}
-	
-	@Override
-	protected void onWrite(MarkedHashtable data) {
-		super.onWrite(data);
-		Tools.writeImage(UILayoutManager.getInstance().save_path + "/" + image_name, image);
-	}
+//	@Override
+//	protected void onRead(MarkedHashtable data) {
+//		super.onRead(data);
+//		image = Tools.readImage(UILayoutManager.getInstance().save_path + "/" + image_name);
+//		setImages(image, clip_style, clip_border);
+//	}
+//	
+//	@Override
+//	protected void onWrite(MarkedHashtable data) {
+//		super.onWrite(data);
+//		Tools.writeImage(UILayoutManager.getInstance().save_path + "/" + image_name, image);
+//	}
 	
 
 	

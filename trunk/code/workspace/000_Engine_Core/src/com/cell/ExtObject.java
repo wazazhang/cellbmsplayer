@@ -6,8 +6,10 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.io.ObjectStreamException;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import com.cell.util.MarkedHashtable;
+import com.cell.util.Pair;
 
 /**
  * @author WAZA
@@ -30,14 +32,37 @@ public abstract class ExtObject implements Externalizable
 //	--------------------------------------------------------------------------------------------------------
 	@Override
 	final public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-		MarkedHashtable	data_group = (MarkedHashtable)in.readObject();
-		onRead(data_group);
+		Object data = in.readObject();
+		// old version
+		if (data instanceof MarkedHashtable) {
+			MarkedHashtable	data_group = (MarkedHashtable)data;
+			onRead(data_group);
+			return;
+		}
+		// new version
+		else if (data instanceof ArrayList<?>) {
+			ArrayList<Pair<String, Object>> stream_data = (ArrayList)data;
+			MarkedHashtable	data_group = new MarkedHashtable(stream_data.size());
+			for (Pair<String, Object> kv : stream_data) {
+				data_group.put(kv.getKey(), kv.getValue());
+			}
+			onRead(data_group);
+			return;
+		}
 	}
+	
 	@Override
-	final public void writeExternal(ObjectOutput out) throws IOException {
+	final public void writeExternal(ObjectOutput out) throws IOException 
+	{
 		MarkedHashtable	data_group = new MarkedHashtable();
 		onWrite(data_group);
-		out.writeObject(data_group);
+		
+		ArrayList<Pair<String, Object>> stream_data = new ArrayList<Pair<String,Object>>(data_group.size());
+		for (String key : data_group.keySet()) {
+			Object value = data_group.get(key);
+			stream_data.add(new Pair<String, Object>(key, value));
+		}
+		out.writeObject(stream_data);
 	}
 	
 }

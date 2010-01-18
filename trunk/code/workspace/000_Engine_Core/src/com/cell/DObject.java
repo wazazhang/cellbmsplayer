@@ -13,7 +13,7 @@ public abstract class DObject implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 	
-	MarkedHashtable	data_group;
+	transient private MarkedHashtable	data_group;
 	
 	protected DObject(){
 		init_field();
@@ -32,44 +32,48 @@ public abstract class DObject implements Serializable
 	 */
 	protected void init_transient(){}
 	
-	/***
-	 * 当反序列化结束后被调用<br>
-	 * <font color="#ff0000">可以读出为保持兼容性而临时添加的字段</font>
-	 * @param data
-	 */
-	protected void onRead(MarkedHashtable data){}
-
-	/***
-	 * 当序列化开始前被调用<br>
-	 * <font color="#ff0000">可以写入为保持兼容性而临时添加的字段</font>
-	 * @param data
-	 */
-	protected void onWrite(MarkedHashtable data){}
+//	/***
+//	 * 当反序列化结束后被调用<br>
+//	 * <font color="#ff0000">可以读出为保持兼容性而临时添加的字段</font>
+//	 * @param data
+//	 */
+//	protected void onRead(MarkedHashtable data){}
+//
+//	/***
+//	 * 当序列化开始前被调用<br>
+//	 * <font color="#ff0000">可以写入为保持兼容性而临时添加的字段</font>
+//	 * @param data
+//	 */
+//	protected void onWrite(MarkedHashtable data){}
 	
 //	private void writeObject(java.io.ObjectOutputStream out) throws IOException {   }   
 //	private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {   }
 //	final public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {}
 //	final public void writeExternal(ObjectOutput out) throws IOException {}
-
-	final protected Object writeReplace() throws ObjectStreamException {
-		try{
-			data_group = new MarkedHashtable();
-			onWrite(data_group);
-		}catch (Throwable e) {
-			e.printStackTrace();
-		}
-		return this;
-	}
-	
-	final protected Object readResolve() throws ObjectStreamException {
-		try{
-			onRead(data_group);
-			init_transient();
-		}catch (Throwable e) {
-			e.printStackTrace();
-		}
-		return this;
-	}
+//
+//	final protected Object writeReplace() throws ObjectStreamException {
+//		try{
+//			data_group = new MarkedHashtable();
+//			onWrite(data_group);
+//			System.out.println("write data group size " + data_group.size());
+//		}catch (Throwable e) {
+//			e.printStackTrace();
+//		}
+//		return this;
+//	}
+//	
+//	final protected Object readResolve() throws ObjectStreamException {
+//		try{
+//			if (data_group!=null) {
+//				System.out.println("read data group size " + data_group.size());
+//			}
+//			onRead(data_group);
+//			init_transient();
+//		}catch (Throwable e) {
+//			e.printStackTrace();
+//		}
+//		return this;
+//	}
 	
 //  ==Serializable==
 //	writeReplace invoked 

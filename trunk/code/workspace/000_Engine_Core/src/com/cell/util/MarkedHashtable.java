@@ -6,6 +6,18 @@ public class MarkedHashtable extends Hashtable<String, Object>
 {
 	private static final long serialVersionUID = 1L;
 
+//	------------------------------------------------------------------------------------
+
+	public MarkedHashtable() {
+		super();
+	}
+	
+	public MarkedHashtable(int size) {
+		super(size);
+	}
+	
+//	------------------------------------------------------------------------------------
+	
 	@SuppressWarnings("unchecked")
 	public <T> T getObject(String key)
 	{
