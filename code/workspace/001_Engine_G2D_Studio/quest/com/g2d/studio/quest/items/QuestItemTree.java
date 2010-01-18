@@ -155,9 +155,10 @@ public class QuestItemTree extends G2DTree
 			DefaultMutableTreeNode parent = (DefaultMutableTreeNode)getParent();
 			removeFromParent();
 			try{
-				condition.item_name_list.clear();
+				condition.clearQuestItem();
 				for (QuestItemNode item : G2DTree.getNodesSubClass(this, QuestItemNode.class)) {
-					condition.item_name_list.add(toPathString(item, "/") + item.getID());
+					condition.getNameList().add(toPathString(item, "/") + item.getID());
+					condition.addQuestItem(item.getData());
 				}
 			} finally {
 				parent.add(this);
@@ -169,7 +170,7 @@ public class QuestItemTree extends G2DTree
 			DefaultMutableTreeNode parent = (DefaultMutableTreeNode)getParent();
 			removeFromParent();
 			try{
-				for (String line : condition.item_name_list) {
+				for (String line : condition.getNameList()) {
 					try{
 						loadPath(line);
 					}catch(Exception e){

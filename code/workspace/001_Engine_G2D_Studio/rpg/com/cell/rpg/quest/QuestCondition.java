@@ -16,7 +16,7 @@ import com.g2d.studio.quest.items.QuestItemNode;
 
 public class QuestCondition extends ExtObject
 {
-	public TreeSet<String> item_name_list	= new TreeSet<String>();
+	private TreeSet<String> item_name_list	= new TreeSet<String>();
 	
 	private LinkedHashMap<Integer, QuestItem> items = new LinkedHashMap<Integer, QuestItem>(0);
 	
@@ -51,10 +51,20 @@ public class QuestCondition extends ExtObject
 			}
 		}
 	}
+
+	public void clearQuestItem() {
+		item_name_list.clear();
+		items.clear();
+	}
 	
 //	public LinkedHashMap<Integer, QuestItem> getItems() {
 //		return items;
 //	}
+	
+	public TreeSet<String> getNameList() {
+		return item_name_list;
+	}
+	
 	
 	public int addQuestItem(QuestItem item) {
 		items.put(item.getType(), item);
