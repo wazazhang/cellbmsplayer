@@ -151,6 +151,10 @@ public class QuestNode extends DynamicNode<Quest>
 				QuestItemNode node = new QuestItemNode(QuestNode.this, item);
 				if(!super.storeID(node.getIntID(), node)){}
 			}
+			for (QuestItem item : data.discard_action.getItems()) {
+				QuestItemNode node = new QuestItemNode(QuestNode.this, item);
+				if(!super.storeID(node.getIntID(), node)){}
+			}
 		}
 		
 		@Override

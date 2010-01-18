@@ -47,16 +47,24 @@ public class Quest extends RPGObject
 	/**任务产生事件*/
 	public QuestGenerator		quest_generator		= new QuestGenerator();
 	
+//	-----------------------------------------------------------------------------------
 	/** 任务接受条件 */
 	public QuestCondition		accept_condition	= new QuestCondition();
 	/**任务接受奖励*/
 	public QuestAward			accept_award		= new QuestAward();
+
+//	-----------------------------------------------------------------------------------
 	/** 任务完成条件 */
 	public QuestCondition		complete_condition	= new QuestCondition();
 	/** 任务完成奖励 */
 	public QuestAward			complete_award		= new QuestAward();
-	/** 任务放弃奖励 */
-	public QuestAward			discard_award		= new QuestAward();
+
+//	-----------------------------------------------------------------------------------
+	/** 任务放弃动作，仅一个 */
+	public QuestActionSingle	discard_action		= new QuestActionSingle();
+	
+//	/** 任务放弃奖励 */
+	transient private QuestAward discard_award;
 	
 //	----------------------------------------------------------------------------------------------------------------
 //	extend
@@ -95,8 +103,8 @@ public class Quest extends RPGObject
 		if (complete_award == null) {
 			complete_award = new QuestAward();
 		}
-		if (discard_award == null) {
-			discard_award = new QuestAward();
+		if (discard_action == null) {
+			discard_action = new QuestActionSingle();
 		}
 	}
 	

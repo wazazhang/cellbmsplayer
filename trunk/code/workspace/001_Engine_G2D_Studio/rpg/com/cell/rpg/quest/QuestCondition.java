@@ -16,9 +16,9 @@ import com.g2d.studio.quest.items.QuestItemNode;
 
 public class QuestCondition extends ExtObject
 {
-	private TreeSet<String> item_name_list	= new TreeSet<String>();
+	TreeSet<String> 					item_name_list	= new TreeSet<String>();
 	
-	private LinkedHashMap<Integer, QuestItem> items = new LinkedHashMap<Integer, QuestItem>(0);
+	LinkedHashMap<Integer, QuestItem> 	items 			= new LinkedHashMap<Integer, QuestItem>(0);
 	
 	@Override
 	protected void onRead(MarkedHashtable data) 
