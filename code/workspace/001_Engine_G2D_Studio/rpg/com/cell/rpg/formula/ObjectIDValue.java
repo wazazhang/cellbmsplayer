@@ -32,7 +32,7 @@ public class ObjectIDValue extends AbstractValue
 		TEFFECT_ID			("效果ID"),
 		
 		QUEST_ID			("任务ID"),
-		QUEST_ITEM_ID		("任务条件/奖励ID"),
+//		QUEST_ITEM_ID		("任务条件/奖励ID"),
 		
 		SCENE_ID			("场景ID"),
 		;

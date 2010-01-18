@@ -64,10 +64,10 @@ public class QuestEditor extends ObjectViewer<QuestNode> implements RPGSerializa
 	}
 	
 	@Override
-	protected void appendPages(JTabbedPane table) {
-
+	protected void appendPages(JTabbedPane table) 
+	{
 		data_event			= new QuestEventView(tobject.getData());
-		data_quest			= new QuestItemView(tobject.getData());
+		data_quest			= new QuestItemView(tobject);
 //		page_quest_discussion	= new PanelDiscussion();
 		page_quest_data			= new JSplitPane(
 				JSplitPane.VERTICAL_SPLIT, 

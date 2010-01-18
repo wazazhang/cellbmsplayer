@@ -10,39 +10,25 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JSplitPane;
-import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 import com.cell.CIO;
-import com.cell.CObject;
 import com.cell.rpg.formula.AbstractMethod;
 import com.cell.rpg.formula.AbstractValue;
 import com.cell.rpg.formula.Arithmetic;
 import com.cell.rpg.formula.MathMethod;
 import com.cell.rpg.formula.ObjectIDValue;
-import com.cell.rpg.formula.ObjectProperty;
 import com.cell.rpg.formula.StaticMethod;
 import com.cell.rpg.formula.SystemMethod;
 import com.cell.rpg.formula.TimeDurationValue;
@@ -52,17 +38,13 @@ import com.cell.rpg.formula.AbstractMethod.MethodInfo;
 import com.cell.rpg.formula.AbstractMethod.SyntheticMethod;
 import com.cell.rpg.formula.Arithmetic.Operator;
 import com.cell.rpg.formula.ObjectIDValue.ObjectType;
-
 import com.cell.rpg.quest.TriggerUnitType;
 import com.cell.rpg.quest.formula.QuestStateProperty;
 import com.cell.rpg.quest.formula.TriggerUnitMethod;
 import com.cell.rpg.quest.formula.TriggerUnitProperty;
 import com.cell.rpg.quest.formula.QuestStateProperty.QuestStateField;
-import com.cell.rpg.xls.XLSColumns;
 import com.cell.util.Pair;
-import com.cell.util.Properties;
 import com.g2d.annotation.Property;
-import com.g2d.display.ui.ComboBox;
 import com.g2d.editor.property.ListEnumEdit;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
@@ -74,13 +56,8 @@ import com.g2d.studio.gameedit.dynamic.DEffect;
 import com.g2d.studio.gameedit.template.XLSItem;
 import com.g2d.studio.gameedit.template.XLSSkill;
 import com.g2d.studio.gameedit.template.XLSUnit;
-import com.g2d.studio.quest.QuestSelectCellEdit;
 import com.g2d.studio.quest.QuestSelectCellEditComboBox;
-import com.g2d.studio.quest.items.QuestItemManager;
-import com.g2d.studio.quest.items.QuestItemSelectCellEditComboBox;
-import com.g2d.studio.scene.editor.SceneListCellEdit;
 import com.g2d.studio.scene.editor.SceneListCellEditInteger;
-import com.g2d.studio.scene.editor.SceneUnitListCellEdit;
 import com.g2d.util.AbstractDialog;
 import com.g2d.util.AbstractOptionDialog;
 
@@ -322,7 +299,7 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 		ObjectSelectCellEditInteger<DAvatar>	combo_avatar	= new ObjectSelectCellEditInteger<DAvatar>(DAvatar.class);
 		ObjectSelectCellEditInteger<DEffect>	combo_effect	= new ObjectSelectCellEditInteger<DEffect>(DEffect.class);
 		QuestSelectCellEditComboBox				combo_quest		= new QuestSelectCellEditComboBox();
-		QuestItemSelectCellEditComboBox			combo_quest_item= new QuestItemSelectCellEditComboBox();
+//		QuestItemSelectCellEditComboBox			combo_quest_item= new QuestItemSelectCellEditComboBox();
 		SceneListCellEditInteger				combo_scene		= new SceneListCellEditInteger();
 		
 		PropertyCellEdit<Integer>				id_value;
@@ -348,7 +325,7 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 			this.remove(combo_avatar);
 			this.remove(combo_effect);
 			this.remove(combo_quest);
-			this.remove(combo_quest_item);
+//			this.remove(combo_quest_item);
 			this.remove(combo_scene);
 			
 			switch(type) {
@@ -358,7 +335,7 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 			case TAVATAR_ID:		id_value = combo_avatar;	break;
 			case TEFFECT_ID:		id_value = combo_effect;	break;
 			case QUEST_ID:			id_value = combo_quest;		break;
-			case QUEST_ITEM_ID:		id_value = combo_quest_item;break;
+//			case QUEST_ITEM_ID:		id_value = combo_quest_item;break;
 			case SCENE_ID:			id_value = combo_scene;		break;
 			}
 			

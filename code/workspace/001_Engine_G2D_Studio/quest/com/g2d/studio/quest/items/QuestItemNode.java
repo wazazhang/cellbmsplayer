@@ -14,6 +14,7 @@ import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.ObjectViewer;
 import com.g2d.studio.gameedit.dynamic.DynamicNode;
 import com.g2d.studio.gameedit.dynamic.IDynamicIDFactory;
+import com.g2d.studio.quest.QuestNode;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.swing.G2DTreeNodeGroup.NodeMenu;
 import com.g2d.util.AbstractDialog;
@@ -23,12 +24,16 @@ public class QuestItemNode extends DynamicNode<QuestItem>
 	static ImageIcon icon_condition	= Tools.createIcon(Res.icon_quest_condition);
 	static ImageIcon icon_result	= Tools.createIcon(Res.icon_quest_result);
 	
-	public QuestItemNode(IDynamicIDFactory<QuestItemNode> factory, String name, Boolean is_award) {
-		super(factory, name, is_award);
+	final QuestNode quest_node;
+	
+	public QuestItemNode(QuestNode quest, String name, Boolean is_award) {
+		super(quest.getQuestItemManager(), name, is_award);
+		this.quest_node = quest;
 	}
 	
-	public QuestItemNode(QuestItem item) {
+	public QuestItemNode(QuestNode quest, QuestItem item) {
 		super(item, item.getType(), item.name);
+		this.quest_node = quest;
 	}
 	
 	@Override
@@ -94,7 +99,7 @@ public class QuestItemNode extends DynamicNode<QuestItem>
 			else if (e.getSource() == delete) {
 				TreeNode parent = node.getParent();
 				this.node.removeFromParent();
-				Studio.getInstance().getQuestManager().getQuestItems().killID(node.getIntID());
+				quest_node.getQuestItemManager().killID(node.getIntID());
 				if (tree!=null) {
 					tree.reload(parent);
 				}

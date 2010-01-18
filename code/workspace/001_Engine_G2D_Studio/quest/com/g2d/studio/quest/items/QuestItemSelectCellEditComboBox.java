@@ -18,8 +18,8 @@ public class QuestItemSelectCellEditComboBox extends JComboBox implements Proper
 {
 	JLabel cell_edit_component = new JLabel();
 	
-	public QuestItemSelectCellEditComboBox() {
-		super(Studio.getInstance().getQuestManager().getQuestItems().getAllNodes());
+	public QuestItemSelectCellEditComboBox(int quest_id) {
+		super(Studio.getInstance().getQuestManager().getQuest(quest_id).getQuestItemManager().getAllNodes());
 		super.setRenderer(new CellRender());
 	}
 	

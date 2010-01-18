@@ -60,7 +60,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 	protected Hashtable<Integer, TAvatar>	tavatars;
 	protected Hashtable<Integer, TSkill>	tskills;
 	protected Hashtable<Integer, Quest> 	quests;
-	protected Hashtable<Integer, QuestItem> quest_items;
+//	protected Hashtable<Integer, QuestItem> quest_items;
 	protected Hashtable<Integer, Scene>		scenes;
 
 	// icons and sounds
@@ -125,7 +125,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 		tavatars	= readTemplates(save_dir + "/objects/tavatar.obj",	TAvatar.class);
 		tskills		= readTemplates(save_dir + "/objects/tskill.obj",	TSkill.class);
 		quests		= readDynamicList(save_dir + "/quests/quest.list",					Quest.class);
-		quest_items	= readDynamicList(save_dir + "/quests/questitems/questitems.list",	QuestItem.class);
+//		quest_items	= readDynamicList(save_dir + "/quests/questitems/questitems.list",	QuestItem.class);
 		scenes		= readRPGScenes(save_dir + "/scenes");
 	}
 	
@@ -286,19 +286,19 @@ public abstract class ResourceManager extends CellSetResourceManager
 		return new Hashtable<Integer, Quest>(quests);
 	}
 
-	public Hashtable<Integer, QuestItem> getAllQuestItems(){
-		return new Hashtable<Integer, QuestItem>(quest_items);
-	}
+//	public Hashtable<Integer, QuestItem> getAllQuestItems(){
+//		return new Hashtable<Integer, QuestItem>(quest_items);
+//	}
 	
 	public Quest getQuest(int quest_id)
 	{
 		return quests.get(quest_id);
 	}
 	
-	public QuestItem getQuestItem(int type)
-	{
-		return quest_items.get(type);
-	}
+//	public QuestItem getQuestItem(int type)
+//	{
+//		return quest_items.get(type);
+//	}
 	
 	final protected <T extends RPGObject> Hashtable<Integer, T> readDynamicList(String list_file, Class<T> type) throws Exception
 	{		

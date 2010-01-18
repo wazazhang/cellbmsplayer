@@ -55,6 +55,8 @@ public class Quest extends RPGObject
 	public QuestCondition		complete_condition	= new QuestCondition();
 	/** 任务完成奖励 */
 	public QuestAward			complete_award		= new QuestAward();
+	/** 任务放弃奖励 */
+	public QuestAward			discard_award		= new QuestAward();
 	
 //	----------------------------------------------------------------------------------------------------------------
 //	extend
@@ -79,14 +81,8 @@ public class Quest extends RPGObject
 	}
 	
 	@Override
-	public void onReadComplete(RPGObject object, String xmlFile) {
-//		File txt_file = new File(xmlFile+".txt");
-//		if (txt_file.exists()) {
-//			this.discussion = CFile.readText(txt_file, "UTF-8");
-//		} else {
-//			this.discussion = QuestScript.createExample();
-//		}
-
+	public void onReadComplete(RPGObject object, String xmlFile) 
+	{
 		if (accept_condition == null) {
 			accept_condition = new QuestCondition();
 		}
@@ -99,13 +95,13 @@ public class Quest extends RPGObject
 		if (complete_award == null) {
 			complete_award = new QuestAward();
 		}
+		if (discard_award == null) {
+			discard_award = new QuestAward();
+		}
 	}
 	
 	@Override
-	public void onWriteBefore(RPGObject object, String xmlFile) {
-//		File txt_file = new File(xmlFile+".txt");
-//		CFile.writeText(txt_file, this.discussion, "UTF-8");
-	}
+	public void onWriteBefore(RPGObject object, String xmlFile) {}
 	
 //	----------------------------------------------------------------------------------------------------------------
 	

@@ -33,7 +33,9 @@ import com.g2d.annotation.Property;
  * @author WAZA
  */
 public class QuestItem extends RPGObject
-{
+{	
+//	--------------------------------------------------------------------------------------
+	
 	final private Integer	type;
 
 	final private boolean	is_result;
@@ -75,6 +77,7 @@ public class QuestItem extends RPGObject
 					AwardBattle.class,
 					AwardAddUnitProperty.class,
 					AwardSetUnitProperty.class,
+					DropItem.class,
 				};
 		} else {
 			return new Class<?>[]{
@@ -153,6 +156,9 @@ public class QuestItem extends RPGObject
 	@Property("[条件] 依赖的任务奖励")
 	final public static class TagQuestItem extends Tag
 	{
+		@Property("任务ID")
+		public int				quest_id			= -1;
+		
 		@Property("依赖的任务奖励ID")
 		public int				quest_item_index	= -1;
 	}
@@ -246,7 +252,7 @@ public class QuestItem extends RPGObject
 	 * [奖励] 物品
 	 * @author WAZA
 	 */
-	@Property("[结果] 奖励的物品")
+	@Property("[结果] 奖励物品")
 	final public static class AwardItem extends Result
 	{
 //		@Property("单位类型")
@@ -303,5 +309,14 @@ public class QuestItem extends RPGObject
 
 		@Property("目标值")
 		public AbstractValue		dst_value	= new Value(1);
+	}
+	
+	@Property("[结果] 强制丢弃物品")
+	final public static class DropItem extends Result
+	{
+		@Property("物品-类型")
+		public int				titem_index			= -1;
+		@Property("物品-数量")
+		public AbstractValue	titem_count			= new Value(1);
 	}
 }
