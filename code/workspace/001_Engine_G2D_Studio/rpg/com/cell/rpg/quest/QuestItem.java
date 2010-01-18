@@ -153,10 +153,10 @@ public class QuestItem extends RPGObject
 	 * [条件] 依赖的任务奖励
 	 * @author WAZA
 	 */
-	@Property("[条件] 依赖的任务奖励")
+	@Property("[条件] 依赖已完成的任务奖励")
 	final public static class TagQuestItem extends Tag
 	{
-		@Property("任务ID")
+		@Property("已完成的任务ID")
 		public int				quest_id			= -1;
 		
 		@Property("依赖的任务奖励ID")
