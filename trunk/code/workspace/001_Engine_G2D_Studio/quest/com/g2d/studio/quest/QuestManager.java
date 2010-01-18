@@ -84,32 +84,6 @@ public class QuestManager extends ManagerForm implements ActionListener
 	
 	@Override
 	public void saveAll() throws Throwable {
-//		quest_items.saveAll();
-//
-//		
-//		for (QuestNode q : getQuests()) 
-//		{
-//			Quest info = q.getData();
-//			
-//			for (String item_line : info.accept_condition.item_name_list) {
-//				QuestItem item = quest_items.get(QuestCondition.getQuestItemID(item_line)).getData();
-//				info.accept_condition.addQuestItem(item);
-//			}
-//			for (String item_line : info.accept_award.item_name_list) {
-//				QuestItem item = quest_items.get(QuestCondition.getQuestItemID(item_line)).getData();
-//				info.accept_award.addQuestItem(item);
-//			}
-//			for (String item_line : info.complete_condition.item_name_list) {
-//				QuestItem item = quest_items.get(QuestCondition.getQuestItemID(item_line)).getData();
-//				info.complete_condition.addQuestItem(item);
-//			}
-//			for (String item_line : info.complete_award.item_name_list) {
-//				QuestItem item = quest_items.get(QuestCondition.getQuestItemID(item_line)).getData();
-//				info.complete_award.addQuestItem(item);
-//			}
-//		}
-		
-		
 		tree_view.saveAll();
 	}
 	
