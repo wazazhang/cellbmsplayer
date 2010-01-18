@@ -249,10 +249,21 @@ public class QuestCellEditAdapter {
 		@Override
 		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner,
 			Object editObject, Object fieldValue, Field field) {
-			if (field.getName().equals("quest_item_index")) {
-				QuestItemSelectCellEdit quest_item_edit = new QuestItemSelectCellEdit(AbstractDialog.getTopWindow(owner));
-				quest_item_edit.showDialog();
-				return quest_item_edit;
+			if (field.getName().equals("quest_id")) {
+				QuestSelectCellEdit edit = new QuestSelectCellEdit(owner);
+				edit.showDialog();
+				return edit;
+			}
+			else if (field.getName().equals("quest_item_index")) {
+				try{
+					TagQuestItem tag = (TagQuestItem)editObject;
+					QuestItemSelectCellEdit quest_item_edit = new QuestItemSelectCellEdit(
+							AbstractDialog.getTopWindow(owner),
+							tag.quest_id
+							);
+					quest_item_edit.showDialog();
+					return quest_item_edit;
+				}catch(Exception err){}
 			}
 			return null;
 		}
@@ -260,9 +271,18 @@ public class QuestCellEditAdapter {
 		@Override
 		public Component getCellRender(ObjectPropertyPanel owner, Object editObject,
 			Object fieldValue, Field field, DefaultTableCellRenderer src) {
-			if (field.getName().equals("quest_item_index")) {
+			if (field.getName().equals("quest_id")) {
 				try{
-					QuestItemNode node = Studio.getInstance().getQuestManager().getQuestItems().get((Integer)fieldValue);
+					QuestNode node = Studio.getInstance().getQuestManager().getQuest((Integer)fieldValue);
+					src.setText(node.getName());
+					src.setIcon(node.getIcon(false));
+				}catch(Exception err){}
+			}
+			else if (field.getName().equals("quest_item_index")) {
+				try{
+					TagQuestItem 	tag 	= (TagQuestItem)editObject;
+					QuestNode 		qnode 	= Studio.getInstance().getQuestManager().getQuest(tag.quest_id);
+					QuestItemNode 	node 	= qnode.getQuestItemManager().get((Integer)fieldValue);
 					src.setText(node.getName());
 					src.setIcon(node.getIcon(false));
 				}catch(Exception err){}

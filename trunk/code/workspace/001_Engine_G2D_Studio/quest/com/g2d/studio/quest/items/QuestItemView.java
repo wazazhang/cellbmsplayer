@@ -29,6 +29,7 @@ import com.cell.rpg.io.RPGObjectMap;
 import com.cell.rpg.quest.Quest;
 import com.cell.rpg.quest.QuestCondition;
 import com.g2d.studio.Studio;
+import com.g2d.studio.quest.QuestNode;
 import com.g2d.studio.swing.G2DTree;
 import com.g2d.studio.swing.G2DTreeNode;
 import com.g2d.studio.swing.G2DTreeNodeGroup;
@@ -37,7 +38,7 @@ import com.g2d.util.AbstractDialog;
 
 public class QuestItemView extends JSplitPane implements TreeSelectionListener
 {
-	private Quest 			quest;
+	private QuestNode		quest;
 	
 	private QuestItemTree	tree;
 	
@@ -46,12 +47,12 @@ public class QuestItemView extends JSplitPane implements TreeSelectionListener
 	
 //	----------------------------------------------------------------------------------------------------------------------------------
 	
-	public QuestItemView(Quest quest)
+	public QuestItemView(QuestNode quest)
 	{
 		super(HORIZONTAL_SPLIT);
 		super.setMinimumSize(new Dimension(200, 200));
 		this.quest	= quest;
-		this.tree	= new QuestItemTree();
+		this.tree	= new QuestItemTree(quest);
 		
 		this.left	= new JScrollPane(tree);
 		this.right	= new JPanel(new BorderLayout());
@@ -63,17 +64,13 @@ public class QuestItemView extends JSplitPane implements TreeSelectionListener
 		
 		tree.addTreeSelectionListener(this);
 		
-		setQuest(quest);
-		
-
 	}
 	
-	void setQuest(Quest quest) 
-	{
-		tree.setQuest(quest);
-		tree.reload();
-		tree.expandAll();
-	}
+//	void setQuest(Quest quest) 
+//	{
+//		tree.reload();
+//		tree.expandAll();
+//	}
 	
 	public void save() {
 		tree.save();

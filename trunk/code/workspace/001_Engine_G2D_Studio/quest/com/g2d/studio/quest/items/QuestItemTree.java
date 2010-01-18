@@ -22,6 +22,8 @@ import com.cell.rpg.io.RPGObjectMap;
 import com.cell.rpg.quest.Quest;
 import com.cell.rpg.quest.QuestCondition;
 import com.g2d.studio.Studio;
+import com.g2d.studio.quest.QuestNode;
+import com.g2d.studio.quest.QuestNode.QuestItemManager;
 import com.g2d.studio.swing.G2DTree;
 import com.g2d.studio.swing.G2DTreeNode;
 import com.g2d.studio.swing.G2DTreeNodeGroup;
@@ -30,7 +32,7 @@ import com.g2d.util.AbstractDialog;
 
 public class QuestItemTree extends G2DTree
 {
-	private Quest quest ;
+	final private QuestNode quest_node ;
 
 	final ConditionGroup group_trigger_condition;
 	final ConditionGroup group_trigger_award;
@@ -39,44 +41,42 @@ public class QuestItemTree extends G2DTree
 	
 //	----------------------------------------------------------------------------------------------------------------------------------
 	
-	public QuestItemTree()
+	public QuestItemTree(QuestNode quest)
 	{
 		super(new DefaultMutableTreeNode("任务数据"));
 		super.setDragEnabled(true);
 		super.setMinimumSize(new Dimension(200, 200));
+		
+		this.quest_node = quest;
+		
 		group_trigger_condition		= new ConditionGroup("接受条件");
 		group_trigger_award			= new ConditionGroup("接受奖励");
 		group_complete_condition	= new ConditionGroup("完成条件");
 		group_complete_award		= new ConditionGroup("完成奖励");
+		
 		getRoot().add(group_trigger_condition);
 		getRoot().add(group_trigger_award);
 		getRoot().add(group_complete_condition);
 		getRoot().add(group_complete_award);
-	}
-	
-	void setQuest(Quest quest)
-	{
-		this.quest = quest;
-		group_trigger_condition.removeAllChildren();		
-		group_trigger_award.removeAllChildren();
-		group_complete_condition.removeAllChildren();
-		group_complete_award.removeAllChildren();
 		
-		group_trigger_condition.loadList(quest.accept_condition);
-		group_trigger_award.loadList(quest.accept_award);
-		group_complete_condition.loadList(quest.complete_condition);
-		group_complete_award.loadList(quest.complete_award);
+		group_trigger_condition	.removeAllChildren();		
+		group_trigger_award		.removeAllChildren();
+		group_complete_condition.removeAllChildren();
+		group_complete_award	.removeAllChildren();
+		
+		group_trigger_condition	.loadList(quest_node.getData().accept_condition);
+		group_trigger_award		.loadList(quest_node.getData().accept_award);
+		group_complete_condition.loadList(quest_node.getData().complete_condition);
+		group_complete_award	.loadList(quest_node.getData().complete_award);
 		
 		reload();
 	}
 	
 	public void save() {
-		if (this.quest != null) {
-			group_trigger_condition.saveList(quest.accept_condition);
-			group_trigger_award.saveList(quest.accept_award);
-			group_complete_condition.saveList(quest.complete_condition);
-			group_complete_award.saveList(quest.complete_award);
-		}
+		group_trigger_condition	.saveList(quest_node.getData().accept_condition);
+		group_trigger_award		.saveList(quest_node.getData().accept_award);
+		group_complete_condition.saveList(quest_node.getData().complete_condition);
+		group_complete_award	.saveList(quest_node.getData().complete_award);	
 	}
 	
 	@Override
@@ -125,7 +125,7 @@ public class QuestItemTree extends G2DTree
 		
 		@Override
 		protected boolean pathAddLeafNode(String name, int index, int length) {
-			QuestItemManager items = Studio.getInstance().getQuestManager().getQuestItems();
+			QuestItemManager items = quest_node.getQuestItemManager();
 			try{
 				if (index == length - 1) {
 					QuestItemNode node = items.get(Integer.parseInt(name));
@@ -214,8 +214,7 @@ public class QuestItemTree extends G2DTree
 			if (e.getSource() == add_quest_item) {
 				String name = JOptionPane.showInputDialog(window, "输入" + name_type + "名字！", "未命名"+name_type);
 				if (name!=null && name.length()>0) {
-					QuestItemManager items = Studio.getInstance().getQuestManager().getQuestItems();
-					QuestItemNode node = items.createQuestItem(name, is_award);
+					QuestItemNode node = quest_node.getQuestItemManager().createQuestItem(name, is_award);
 					root.add(node);
 					g2d_tree.reload(root);
 				}
@@ -226,7 +225,7 @@ public class QuestItemTree extends G2DTree
 					root.removeFromParent();
 					Vector<QuestItemNode> nodes = G2DTree.getNodesSubClass(root, QuestItemNode.class);
 					for (QuestItemNode node : nodes) {
-						Studio.getInstance().getQuestManager().getQuestItems().killID(node.getIntID());
+						quest_node.getQuestItemManager().killID(node.getIntID());
 					}
 					g2d_tree.reload(parent);
 				}

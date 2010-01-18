@@ -26,7 +26,7 @@ public class ItemPropertyTypes
 				} else {
 					if (ItemProperty.class.isAssignableFrom(type)) {
 						item_property_types_map.put(itype.value(), type);
-						System.out.println("add item property : " + type + " : " + type.getClassLoader());
+//						System.out.println("add item property : " + type + " : " + type.getClassLoader());
 					}
 				}
 			}

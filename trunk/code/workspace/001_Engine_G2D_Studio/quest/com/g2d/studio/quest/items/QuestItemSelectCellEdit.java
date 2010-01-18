@@ -7,14 +7,15 @@ import javax.swing.JLabel;
 
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
+import com.g2d.studio.quest.QuestNode;
 import com.g2d.studio.swing.G2DListSelectDialog;
 
 public class QuestItemSelectCellEdit extends G2DListSelectDialog<QuestItemNode> implements PropertyCellEdit<Integer>
 {
 	JLabel cell_edit_component = new JLabel();
 	
-	public QuestItemSelectCellEdit(Window owner) {
-		super(owner, new QuestItemManager.QuestItemList());
+	public QuestItemSelectCellEdit(Window owner, int quest_id) {
+		super(owner, new QuestNode.QuestItemList(quest_id));
 	}
 	
 	@Override
