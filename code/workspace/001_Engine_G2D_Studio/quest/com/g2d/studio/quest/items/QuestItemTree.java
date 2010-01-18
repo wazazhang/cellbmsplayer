@@ -34,10 +34,11 @@ public class QuestItemTree extends G2DTree
 {
 	final private QuestNode quest_node ;
 
-	final ConditionGroup group_trigger_condition;
-	final ConditionGroup group_trigger_award;
-	final ConditionGroup group_complete_condition;
-	final ConditionGroup group_complete_award;
+	final private ConditionGroup group_trigger_condition;
+	final private ConditionGroup group_trigger_award;
+	final private ConditionGroup group_complete_condition;
+	final private ConditionGroup group_complete_award;
+	final private ConditionGroup group_discard_award;
 	
 //	----------------------------------------------------------------------------------------------------------------------------------
 	
@@ -53,22 +54,25 @@ public class QuestItemTree extends G2DTree
 		group_trigger_award			= new ConditionGroup("接受奖励");
 		group_complete_condition	= new ConditionGroup("完成条件");
 		group_complete_award		= new ConditionGroup("完成奖励");
+		group_discard_award			= new ConditionGroup("放弃奖励");
 		
 		getRoot().add(group_trigger_condition);
 		getRoot().add(group_trigger_award);
 		getRoot().add(group_complete_condition);
 		getRoot().add(group_complete_award);
+		getRoot().add(group_discard_award);
 		
 		group_trigger_condition	.removeAllChildren();		
 		group_trigger_award		.removeAllChildren();
 		group_complete_condition.removeAllChildren();
 		group_complete_award	.removeAllChildren();
+		group_discard_award		.removeAllChildren();
 		
 		group_trigger_condition	.loadList(quest_node.getData().accept_condition);
 		group_trigger_award		.loadList(quest_node.getData().accept_award);
 		group_complete_condition.loadList(quest_node.getData().complete_condition);
 		group_complete_award	.loadList(quest_node.getData().complete_award);
-		
+		group_discard_award		.loadList(quest_node.getData().discard_award);
 		reload();
 	}
 	
@@ -77,6 +81,7 @@ public class QuestItemTree extends G2DTree
 		group_trigger_award		.saveList(quest_node.getData().accept_award);
 		group_complete_condition.saveList(quest_node.getData().complete_condition);
 		group_complete_award	.saveList(quest_node.getData().complete_award);	
+		group_discard_award		.saveList(quest_node.getData().discard_award);	
 	}
 	
 	@Override
@@ -94,7 +99,8 @@ public class QuestItemTree extends G2DTree
 		}
 		// 任务奖励不能作为条件
 		if (G2DTree.containsNode(group_trigger_award, src_node) ||
-			G2DTree.containsNode(group_complete_award, src_node)) {
+			G2DTree.containsNode(group_complete_award, src_node) ||
+			G2DTree.containsNode(group_discard_award, src_node)) {
 			if (dst == group_trigger_condition || G2DTree.containsNode(group_trigger_condition, dst_node)) {
 				return false;
 			}
@@ -109,6 +115,9 @@ public class QuestItemTree extends G2DTree
 				return false;
 			}
 			if (dst == group_complete_award || G2DTree.containsNode(group_complete_award, dst_node)) {
+				return false;
+			}
+			if (dst == group_discard_award || G2DTree.containsNode(group_discard_award, dst_node)) {
 				return false;
 			}
 		}
@@ -201,7 +210,9 @@ public class QuestItemTree extends G2DTree
 			
 			is_award 			= 
 				group_trigger_award == root || G2DTree.containsNode(group_trigger_award, root) ||
-				group_complete_award == root || G2DTree.containsNode(group_complete_award, root);
+				group_complete_award == root || G2DTree.containsNode(group_complete_award, root) ||
+				group_discard_award == root || G2DTree.containsNode(group_discard_award, root);
+			
 			name_type 			= (is_award?"奖励":"条件");
 
 			add_quest_item		= new JMenuItem("添加" + name_type);
