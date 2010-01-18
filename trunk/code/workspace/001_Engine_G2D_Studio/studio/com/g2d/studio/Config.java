@@ -30,14 +30,16 @@ public class Config extends com.cell.util.Config
 	
 	
 	// 动态编译的Java文件目录
-	public static String PLUGINS_ROOT				= "plugins";
-	public static String PLUGIN_ITEM_TYPES;			//动态编译的道具属性类型
+//	public static String PLUGINS_ROOT				= "plugins";
+//	public static String PLUGIN_ITEM_TYPES;			//动态编译的道具属性类型
 
 
 	// 动态加载的类
-	public static String DYNAMIC_QUEST_PLAYER_CLASS;//与TriggerUnitMethod映射的类型PLAYER
-	public static String DYNAMIC_QUEST_PET_CLASS;	//与TriggerUnitMethod映射的类型PET
-	public static String DYNAMIC_QUEST_NPC_CLASS;	//与TriggerUnitMethod映射的类型NPC
+	public static String DYNAMIC_ITEM_PROPERTIES_CLASS;	//所有道具属性
+	public static String DYNAMIC_QUEST_PLAYER_CLASS;	//与TriggerUnitMethod映射的类型PLAYER
+	public static String DYNAMIC_QUEST_PET_CLASS;		//与TriggerUnitMethod映射的类型PET
+	public static String DYNAMIC_QUEST_NPC_CLASS;		//与TriggerUnitMethod映射的类型NPC
+	
 	
 	// 资源编辑器
 	public static String CELL_GAME_EDIT_CMD			= "CellGameEdit.exe";

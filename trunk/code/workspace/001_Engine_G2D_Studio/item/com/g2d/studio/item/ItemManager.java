@@ -106,14 +106,21 @@ public class ItemManager extends ManagerForm implements ActionListener
 		
 		this.add(toolbar, BorderLayout.NORTH);
 		
-		File javaFile = new File(studio.plugins_dir, Config.PLUGIN_ITEM_TYPES.replace(".", "/")+".java");
+//		File javaFile = new File(studio.plugins_dir, Config.PLUGIN_ITEM_TYPES.replace(".", "/")+".java");
+//		try {
+//			ArrayList<Class<?>> all_class = JavaCompiler.compileAndLoadAllClass(Config.PLUGIN_ITEM_TYPES, javaFile);
+//			ItemPropertyTypes.setItemPropertyTypes(all_class);
+//		} catch (Throwable e) {
+//			e.printStackTrace();
+//		}
+		
 		try {
-			ArrayList<Class<?>> all_class = JavaCompiler.compileAndLoadAllClass(Config.PLUGIN_ITEM_TYPES, javaFile);
-			ItemPropertyTypes.setItemPropertyTypes(all_class);
+			Class<?> properties_type = Class.forName(Config.DYNAMIC_ITEM_PROPERTIES_CLASS);
+			ItemPropertyTypes.setItemPropertyTypes(properties_type.getClasses());
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
-		
+	
 		File item_properties_list_file = new File(studio.project_save_path, "item_properties/item_properties.list");
 		this.tree_view = new ItemPropertiesTreeView(item_properties_list_file);
 		this.add(tree_view, BorderLayout.CENTER);

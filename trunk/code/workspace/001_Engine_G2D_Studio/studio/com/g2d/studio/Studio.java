@@ -93,7 +93,7 @@ public class Studio extends AbstractFrame
 	final public File 				xls_titem;
 	final public File 				xls_tskill;
 	
-	final public File				plugins_dir;
+//	final public File				plugins_dir;
 	
 	private CPJResourceManager		frame_cpj_resource_manager;
 	private ItemManager				frame_item_manager;
@@ -140,7 +140,7 @@ public class Studio extends AbstractFrame
 		xls_titem			= getFile(Config.XLS_TITEM);
 		xls_tskill			= getFile(Config.XLS_TSKILL);
 		
-		plugins_dir			= getFile(Config.PLUGINS_ROOT);
+//		plugins_dir			= getFile(Config.PLUGINS_ROOT);
 		
 		try{
 //			JComponent.setDefaultLocale(Locale.CHINA);
