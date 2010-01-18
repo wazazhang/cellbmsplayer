@@ -41,15 +41,16 @@ public class QuestEventNode extends G2DTreeNode<G2DTreeNode<?>>
 					new QuestItemTagQuest(),
 					new QuestItemTagItem(),
 					new QuestItemTagQuestItem(),
-//					new QuestItemTagQuestStateComparison(),
 					
 					new QuestItemAwardItem(),
 					new QuestItemAwardTeleport(),
+					new QuestItemDropItem(),
 					
+					//
 					new AbstractValueAdapter(),
-					
 					new QuestFestivalAdapter(),
 					new TimeObjectAdapter()
+					
 					);
 		}
 		return edit_panel;

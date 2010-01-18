@@ -39,6 +39,7 @@ import com.cell.rpg.quest.QuestGenerator.Festival.FestivalDate;
 import com.cell.rpg.quest.QuestItem.AwardBattle;
 import com.cell.rpg.quest.QuestItem.AwardItem;
 import com.cell.rpg.quest.QuestItem.AwardTeleport;
+import com.cell.rpg.quest.QuestItem.DropItem;
 import com.cell.rpg.quest.QuestItem.QuestItemAbility;
 import com.cell.rpg.quest.QuestItem.Tag;
 import com.cell.rpg.quest.QuestItem.TagItem;
@@ -342,6 +343,41 @@ public class QuestCellEditAdapter {
 		@Override
 		public Class<AwardItem> getType() {
 			return AwardItem.class;
+		}
+		
+		@Override
+		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner,
+			Object editObject, Object fieldValue, Field field) {
+			if (field.getName().equals("titem_index")) {
+				ObjectSelectCellEditInteger<XLSItem> item_edit = new ObjectSelectCellEditInteger<XLSItem>(XLSItem.class);
+				return item_edit;
+			}
+			return null;
+		}
+		
+		@Override
+		public Component getCellRender(ObjectPropertyPanel owner, Object editObject,
+			Object fieldValue, Field field, DefaultTableCellRenderer src) {
+			if (field.getName().equals("titem_index")) {
+				try{
+					XLSItem item = Studio.getInstance().getObjectManager().getObject(XLSItem.class, (Integer)fieldValue);
+					src.setText(item.getName());
+					src.setIcon(item.getIcon(false));
+				}catch(Exception err){}
+			}
+			return null;
+		}
+	}
+
+	/**
+	 * 任务奖励，道具
+	 * @author WAZA
+	 */
+	public static class QuestItemDropItem extends AbilityCellEditAdapter<DropItem>
+	{
+		@Override
+		public Class<DropItem> getType() {
+			return DropItem.class;
 		}
 		
 		@Override
