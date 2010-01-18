@@ -75,6 +75,10 @@ public class QuestCondition extends ExtObject
 		return items.remove(item.getType());
 	}
 	
+	public QuestItem getQuestItem(int id) {
+		return items.get(id);
+	}
+	
 	public Collection<QuestItem> getItems() {
 		return items.values();
 	}
