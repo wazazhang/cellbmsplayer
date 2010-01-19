@@ -48,4 +48,14 @@ public class IntArray extends Vector<Integer> implements SQLStructCLOB
 			TextSerialize.putInt(out, e);
 		}
 	}
+	
+	synchronized public int[] toIntArray() {
+		int[] ret = new int[size()];
+		int i=0;
+		for (Integer d : this) {
+			ret[i] = d;
+			i++;
+		}
+		return ret;
+	}
 }

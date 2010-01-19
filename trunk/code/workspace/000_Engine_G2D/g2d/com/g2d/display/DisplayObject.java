@@ -668,4 +668,27 @@ public abstract class DisplayObject extends DObject implements Comparable<Displa
 	public <T> T popObject(Class<T> type){
 		return type.cast(display_stack.pop());
 	}
+	
+//	---------------------------------------------------------------------------------------------------------------------------------------
+	
+	/**
+	 * 测试同一父节点的2个单位是否碰撞
+	 * @param src
+	 * @param dst
+	 * @return
+	 */
+	public static boolean touch(DisplayObject src, DisplayObject dst)
+	{
+		return CMath.intersectRect2(
+				src.x+src.local_bounds.x, 
+				src.y+src.local_bounds.y, 
+				src.local_bounds.width, 
+				src.local_bounds.height, 
+				
+				dst.x+dst.local_bounds.x, 
+				dst.y+dst.local_bounds.y, 
+				dst.local_bounds.width, 
+				dst.local_bounds.height
+				);
+	}
 }
