@@ -691,4 +691,22 @@ public abstract class DisplayObject extends DObject implements Comparable<Displa
 				dst.local_bounds.height
 				);
 	}
+	
+	/**
+	 * 测试同一父节点的2个单位是否碰撞
+	 * @param src 包含者
+	 * @param dst 被包含着
+	 * @return
+	 */
+	public static boolean include(DisplayObject src, DisplayObject dst)
+	{
+		return CMath.includeRectPoint2(
+				src.x+src.local_bounds.x, 
+				src.y+src.local_bounds.y, 
+				src.local_bounds.width, 
+				src.local_bounds.height, 
+				dst.x,
+				dst.y
+				);
+	}
 }
