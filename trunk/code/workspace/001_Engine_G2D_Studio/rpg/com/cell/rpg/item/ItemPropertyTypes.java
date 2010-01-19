@@ -24,7 +24,7 @@ public class ItemPropertyTypes
 				if (item_property_types_map.containsKey(itype.value())) {
 					throw new RuntimeException(type.getName() + " is already exist !");
 				} else {
-					if (ItemProperty.class.isAssignableFrom(type)) {
+					if (ItemPropertyTemplate.class.isAssignableFrom(type)) {
 						item_property_types_map.put(itype.value(), type);
 //						System.out.println("add item property : " + type + " : " + type.getClassLoader());
 					}

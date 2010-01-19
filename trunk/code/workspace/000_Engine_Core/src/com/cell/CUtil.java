@@ -2057,7 +2057,7 @@ public class CUtil extends CObject
 
 
 //---------------------------------------------------------------------------------------------
-	
+
 	/** 
 	 *  <summary> save a value to data with Variable Length Queue (0xaa,0xbb,0xcc,0xdd = 0xaabbccdd)
 	 *  @param	  data[]     
@@ -2120,7 +2120,31 @@ public class CUtil extends CObject
 		return ret;
 	}	
 
+//	--------------------------------------------------------------------------------------------------------------------------
+//	Random
+//	--------------------------------------------------------------------------------------------------------------------------
+	private static void RANDOM_START(){}
 
+	public static final double getRandom(java.util.Random random, double min, double max)
+	{
+		if (max == min) {
+			return min;
+		} 
+		if (min > max) {
+			double temp = min;
+			min = max;
+			max = temp;
+		}
+		double delta = max - min;
+
+		if (delta<1) {
+			return min + Math.abs(random.nextDouble() % delta);
+		} else {
+			return min + Math.abs(random.nextLong() % (long)delta) + Math.abs(random.nextDouble() % delta);
+		}
+	}
+	
+	
 	/** Get a random number in the specified range
 	 * @param min The minimun number
 	 * @param max The maximum number
@@ -2140,7 +2164,6 @@ public class CUtil extends CObject
 	{
 		return (max-min)==0?max:(Math.abs(Random.nextInt() % (max-min)) + min);
 	}
-	
 	
 	public static final byte getRandom(byte[] array)
 	{
@@ -2185,4 +2208,9 @@ public class CUtil extends CObject
 	{
 		return (E)getRandom(EnumSet.allOf(enums));
 	}
+	private static void RANDOM_END(){}
+//	--------------------------------------------------------------------------------------------------------------------------
+//	
+//	--------------------------------------------------------------------------------------------------------------------------
+
 }
