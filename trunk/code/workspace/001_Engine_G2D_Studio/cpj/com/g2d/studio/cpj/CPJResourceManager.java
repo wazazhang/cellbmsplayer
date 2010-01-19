@@ -149,7 +149,7 @@ public class CPJResourceManager extends ManagerForm implements MouseListener
 	
 	public <T extends CPJObject<?>> CPJIndex<T> getNodeIndex(T node)
 	{
-		return new CPJIndex<T>(node.res_type, node.parent.getName(), node.getName());
+		return getNode(node.res_type, node.parent.getName(), node.getName());
 	}
 	
 	public <T extends CPJObject<?>> CPJIndex<T> getNode(CPJResourceType type, String cpj, String set)
