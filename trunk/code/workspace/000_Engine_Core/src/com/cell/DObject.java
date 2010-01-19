@@ -32,6 +32,14 @@ public abstract class DObject implements Serializable
 	 */
 	protected void init_transient(){}
 	
+	final private Object writeReplace() throws ObjectStreamException {
+		return this;
+	}
+	final private Object readResolve() throws ObjectStreamException {
+		init_transient();
+		return this;
+	}
+	
 //	/***
 //	 * 当反序列化结束后被调用<br>
 //	 * <font color="#ff0000">可以读出为保持兼容性而临时添加的字段</font>
