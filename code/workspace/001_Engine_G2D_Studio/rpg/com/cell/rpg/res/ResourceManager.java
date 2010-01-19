@@ -112,8 +112,8 @@ public abstract class ResourceManager extends CellSetResourceManager
 
 	final protected void initAllSet() throws Exception
 	{
-		all_scene_set	= readSets(save_dir + "/resources/scene_list.list",	SceneSet.class);
-		all_actor_set	= readSets(save_dir + "/resources/actor_list.list",	SpriteSet.class);
+		all_scene_set	= readSets(save_dir + "/resources/scene_list.list",		SceneSet.class);
+		all_actor_set	= readSets(save_dir + "/resources/actor_list.list",		SpriteSet.class);
 		all_avatar_set	= readSets(save_dir + "/resources/avatar_list.list",	SpriteSet.class);
 		all_effect_set	= readSets(save_dir + "/resources/effect_list.list",	SpriteSet.class);
 	}
@@ -124,8 +124,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 		titems		= readTemplates(save_dir + "/objects/titem.obj", 	TItem.class);
 		tavatars	= readTemplates(save_dir + "/objects/tavatar.obj",	TAvatar.class);
 		tskills		= readTemplates(save_dir + "/objects/tskill.obj",	TSkill.class);
-		quests		= readDynamicList(save_dir + "/quests/quest.list",					Quest.class);
-//		quest_items	= readDynamicList(save_dir + "/quests/questitems/questitems.list",	QuestItem.class);
+		quests		= readDynamicList(save_dir + "/quests/quest.list",	Quest.class);
 		scenes		= readRPGScenes(save_dir + "/scenes");
 	}
 	
