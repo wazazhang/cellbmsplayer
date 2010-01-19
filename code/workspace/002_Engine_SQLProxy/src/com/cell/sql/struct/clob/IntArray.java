@@ -31,6 +31,12 @@ public class IntArray extends Vector<Integer> implements SQLStructCLOB
 		super(another);
 	}
 	
+	public IntArray(int[] another) {
+		super(another.length);
+		for (int d : another) {
+			super.add(d);
+		}
+	}
 	
 	
 	synchronized public void decode(Reader in) throws IOException {
