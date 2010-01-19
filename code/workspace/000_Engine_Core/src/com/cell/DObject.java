@@ -32,10 +32,10 @@ public abstract class DObject implements Serializable
 	 */
 	protected void init_transient(){}
 	
-	final private Object writeReplace() throws ObjectStreamException {
+	final protected Object writeReplace() throws ObjectStreamException {
 		return this;
 	}
-	final private Object readResolve() throws ObjectStreamException {
+	final protected Object readResolve() throws ObjectStreamException {
 		init_transient();
 		return this;
 	}
