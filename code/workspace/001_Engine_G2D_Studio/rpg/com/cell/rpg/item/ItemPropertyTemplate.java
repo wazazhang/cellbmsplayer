@@ -138,25 +138,21 @@ public abstract class ItemPropertyTemplate extends AbstractAbility
 	
 		@Override
 		public String toString() {
-			return arg_create_min + " - " + arg_create_max;
+			return arg_create_min + " - " + arg_create_max + " ("+value_type.getSimpleName()+")";
 		}
 		
-		public boolean fromString(String text) {
-			try{
-				String[] lr = CUtil.splitString(text, "-");
-				T tmin = Parser.stringToObject(lr[0].trim(), value_type);
-				T tmax = Parser.stringToObject(lr[1].trim(), value_type);
-				if (tmin.doubleValue() <= tmax.doubleValue()) {
-					this.arg_create_min = tmin;
-					this.arg_create_max = tmax;
-				} else {
-					this.arg_create_min = tmax;
-					this.arg_create_max = tmin;
-				}
-				return true;
-			}catch(Exception err){
-				return false;
+		public boolean fromString(String text) throws Exception {
+			String[] lr = CUtil.splitString(text, "-");
+			T tmin = Parser.stringToObject(lr[0].trim(), value_type);
+			T tmax = Parser.stringToObject(lr[1].trim(), value_type);
+			if (tmin.doubleValue() <= tmax.doubleValue()) {
+				this.arg_create_min = tmin;
+				this.arg_create_max = tmax;
+			} else {
+				this.arg_create_min = tmax;
+				this.arg_create_max = tmin;
 			}
+			return true;
 		}
 	}
 	
@@ -173,19 +169,19 @@ public abstract class ItemPropertyTemplate extends AbstractAbility
 	
 //	-----------------------------------------------------------------------------------
 	
-	public static void main(String[] args)
-	{
-		ArgTemplate<Integer> var = new ArgTemplate<Integer>(1, 1);
-		
-		var.fromString("0 - 1");
-		
-		System.out.println(var);
-		
-		for (int i=0; i<100; i++) {
-			double random = CUtil.getRandom(RANDOM, 10.0, 10.1);
-			System.out.println(random);
-		}
-	}
+//	public static void main(String[] args)
+//	{
+//		ArgTemplate<Integer> var = new ArgTemplate<Integer>(1, 1);
+//		
+//		var.fromString("0 - 1");
+//		
+//		System.out.println(var);
+//		
+//		for (int i=0; i<100; i++) {
+//			double random = CUtil.getRandom(RANDOM, 10.0, 10.1);
+//			System.out.println(random);
+//		}
+//	}
 
 }
 

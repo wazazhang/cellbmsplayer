@@ -20,6 +20,14 @@ public class ItemProperties extends RPGObject
 		this.name	= name;
 	}
 	
+	@Override
+	protected void init_transient() {
+		super.init_transient();
+		if (properties_range==null) {
+			properties_range = new ArgTemplate<Integer>(1);
+		}
+	}
+	
 	public int getIntID() {
 		return tid;
 	}
