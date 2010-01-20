@@ -146,8 +146,13 @@ public abstract class ItemPropertyTemplate extends AbstractAbility
 				String[] lr = CUtil.splitString(text, "-");
 				T tmin = Parser.stringToObject(lr[0].trim(), value_type);
 				T tmax = Parser.stringToObject(lr[1].trim(), value_type);
-				this.arg_create_min = tmin;
-				this.arg_create_max = tmax;
+				if (tmin.doubleValue() <= tmax.doubleValue()) {
+					this.arg_create_min = tmin;
+					this.arg_create_max = tmax;
+				} else {
+					this.arg_create_min = tmax;
+					this.arg_create_max = tmin;
+				}
 				return true;
 			}catch(Exception err){
 				return false;
