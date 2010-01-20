@@ -126,6 +126,14 @@ public class ItemManager extends ManagerForm implements ActionListener
 		this.add(tree_view, BorderLayout.CENTER);
 	}
 
+	public ItemPropertiesNode getNode(int id) {
+		return tree_view.getNode(id);
+	}
+	
+	public Vector<ItemPropertiesNode> getAllNodes() {
+		return tree_view.getAllObject();
+	}
+	
 	public void saveAll() throws Throwable
 	{
 		System.out.println(getClass().getSimpleName() + " : save all");
