@@ -2125,7 +2125,7 @@ public class CUtil extends CObject
 //	--------------------------------------------------------------------------------------------------------------------------
 	private static void RANDOM_START(){}
 
-	public static final double getRandom(java.util.Random random, double min, double max)
+	public static final double 	getRandom(java.util.Random random, double min, double max)
 	{
 		if (max == min) {
 			return min;
@@ -2143,8 +2143,53 @@ public class CUtil extends CObject
 			return min + Math.abs(random.nextLong() % (long)delta) + Math.abs(random.nextDouble() % delta);
 		}
 	}
-	
-	
+	public static final float 	getRandom(java.util.Random random, float min, float max)
+	{
+		if (max == min) {
+			return min;
+		} 
+		if (min > max) {
+			float temp = min;
+			min = max;
+			max = temp;
+		}
+		float delta = max - min;
+
+		if (delta<1) {
+			return min + Math.abs(random.nextFloat() % delta);
+		} else {
+			return min + Math.abs(random.nextInt() % (float)delta) + Math.abs(random.nextFloat() % delta);
+		}
+	}
+	public static final int 	getRandom(java.util.Random random, int min, int max)
+	{
+		if (max == min) {
+			return min;
+		} 
+		if (min > max) {
+			int temp = min;
+			min = max;
+			max = temp;
+		}
+		int delta = max - min;
+		return min + Math.abs(random.nextInt() % delta);
+	}
+	public static final long 	getRandom(java.util.Random random, long min, long max)
+	{
+		if (max == min) {
+			return min;
+		} 
+		if (min > max) {
+			long temp = min;
+			min = max;
+			max = temp;
+		}
+		long delta = max - min;
+		return min + Math.abs(random.nextLong() % delta);
+	}
+
+//	--------------------------------------------------------------------------------------------------------------------------
+
 	/** Get a random number in the specified range
 	 * @param min The minimun number
 	 * @param max The maximum number
