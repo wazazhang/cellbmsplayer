@@ -75,21 +75,21 @@ public abstract class ItemPropertyTemplate extends AbstractAbility
 		return data;
 	}
 	
-	/**
-	 * 子类实现道具计算公式及能力，可以用做攻击时，装备时，使用时等。
-	 * @param data 输入任意参数
-	 * @param args 输出任意参数
-	 * @return
-	 */
-	public abstract Object[] caculate(ItemPropertyData data, Object[] args);
-	
-	/**
-	 * 子类实现道具描述文本。
-	 * @param data
-	 * @param args
-	 * @return
-	 */
-	public abstract String toDescription(ItemPropertyData data, Object[] args);
+//	/**
+//	 * 子类实现道具计算公式及能力，可以用做攻击时，装备时，使用时等。
+//	 * @param data 输入任意参数
+//	 * @param args 输出任意参数
+//	 * @return
+//	 */
+//	public abstract Object[] caculate(ItemPropertyData data, Object[] args);
+//	
+//	/**
+//	 * 子类实现道具描述文本。
+//	 * @param data
+//	 * @param args
+//	 * @return
+//	 */
+//	public abstract String toDescription(ItemPropertyData data, Object[] args);
 	
 //	-----------------------------------------------------------------------------------
 	

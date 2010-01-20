@@ -42,7 +42,7 @@ public class ItemPropertyTypes
 		return item_property_types_map.get(type);
 	}
 	
-	static Class<?>[] getItemPropertyTypes() {
+	public static Class<?>[] getItemPropertyTypes() {
 		return item_property_types;
 	}
 	
