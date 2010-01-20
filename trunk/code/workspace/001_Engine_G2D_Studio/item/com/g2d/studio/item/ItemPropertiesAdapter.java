@@ -12,32 +12,44 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import com.cell.CUtil;
+import com.cell.rpg.ability.AbstractAbility;
 import com.cell.rpg.item.ItemPropertyTemplate;
 import com.cell.rpg.item.ItemPropertyTemplate.ArgTemplate;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.editor.property.TextCellEdit;
+import com.g2d.editor.property.ObjectPropertyPanel.CellEditAdapter;
 import com.g2d.studio.rpg.AbilityPanel.AbilityCellEditAdapter;
 
 public class ItemPropertiesAdapter
 {
-	public static class ValueRangeAdapter extends AbilityCellEditAdapter<ItemPropertyTemplate>
+	public static class ValueRangeAdapter implements CellEditAdapter<Object>
 	{
 		@Override
-		public Class<ItemPropertyTemplate> getType() {
-			return ItemPropertyTemplate.class;
+		public Class<Object> getType() {
+			return Object.class;
 		}
-		
+
+		@Override
+		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner, Object editObject, Object fieldValue, Field field) {
+			if (ArgTemplate.class.isAssignableFrom(field.getType())) {
+				try{
+					ArgTemplate<?> range = (ArgTemplate<?>)fieldValue;
+					TextCellEdit edit = new TextCellEdit();
+					edit.setText(range.getArgCreateMin() + " - " + range.getArgCreateMax());
+					return edit;
+				}catch(Exception err){}
+			}
+			return null;
+		}
 		@Override
 		public Object getCellValue(Object editObject, PropertyCellEdit<?> fieldEdit, Field field, Object fieldSrcValue) {
 			if (ArgTemplate.class.isAssignableFrom(field.getType())) {
 				if (fieldEdit instanceof TextCellEdit) {
 					TextCellEdit edit = ((TextCellEdit)fieldEdit);
 					try{
-						String[] lr = CUtil.splitString(edit.getValue(), "-");
-						ArgTemplate range = fieldSrcValue==null ? (ArgTemplate)fieldSrcValue : new ArgTemplate(
-								Double.parseDouble(lr[0].trim()), 
-								Double.parseDouble(lr[1].trim()));
+						ArgTemplate<?> range = (ArgTemplate<?>)fieldSrcValue;
+						range.fromString(edit.getValue());
 						return range;
 					}catch(Exception err){
 						JOptionPane.showMessageDialog(edit, 
@@ -49,8 +61,18 @@ public class ItemPropertiesAdapter
 					}
 				}
 			}
-			return super.getCellValue(editObject, fieldEdit, field, fieldSrcValue);
+			return null;
 		}
+
+		@Override
+		public boolean fieldChanged(Object editObject, Object fieldValue, Field field) {
+			return false;
+		}
+		@Override
+		public Component getCellRender(ObjectPropertyPanel owner, Object editObject, Object fieldValue, Field field, DefaultTableCellRenderer src) {
+			return null;
+		}
+
 	}
 
 }
