@@ -7,10 +7,14 @@ import java.lang.reflect.Field;
 import javax.swing.JLabel;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import com.cell.rpg.RPGObject;
 import com.cell.rpg.ability.Abilities;
 import com.cell.rpg.ability.AbstractAbility;
+import com.cell.rpg.quest.Quest;
 import com.cell.rpg.quest.QuestItem;
 import com.cell.rpg.scene.ability.RegionSpawnNPC.NPCSpawn;
+import com.cell.rpg.template.TItem;
+import com.cell.rpg.template.TemplateNode;
 import com.cell.rpg.template.ability.UnitBattleTeam;
 import com.cell.rpg.template.ability.UnitDropItem;
 import com.cell.rpg.template.ability.UnitBattleTeam.TeamNode;
@@ -21,8 +25,14 @@ import com.g2d.editor.property.ObjectPropertyPanel.CellEditAdapter;
 import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.template.XLSItem;
 import com.g2d.studio.gameedit.template.XLSUnit;
+import com.g2d.studio.icon.IconFile;
+import com.g2d.studio.icon.IconSelectCellEdit;
+import com.g2d.studio.item.ItemPropertiesNode;
+import com.g2d.studio.item.ItemPropertiesSelectCellEdit;
+import com.g2d.studio.rpg.RPGObjectPanel;
 import com.g2d.studio.rpg.AbilityPanel.AbilityCellEditAdapter;
 import com.g2d.studio.rpg.RPGObjectPanel.RPGObjectAdapter;
+import com.g2d.util.AbstractDialog;
 
 public class ObjectAdapters 
 {
@@ -116,5 +126,44 @@ public class ObjectAdapters
 		}
 	}
 
+
+	public static class ItemPropertiesSelectAdapter extends RPGObjectAdapter<TItem>
+	{
+		@Override
+		public Class<TItem> getType() {
+			return TItem.class;
+		}
+		
+		@Override
+		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner, Object editObject, Object fieldValue, Field field) {
+			if (editObject instanceof TItem) {
+				if (field.getName().equals("item_properties_id")) {
+					ItemPropertiesSelectCellEdit edit = new ItemPropertiesSelectCellEdit(owner);
+					edit.setValue((Integer)fieldValue);
+					edit.showDialog();
+					return edit;
+				}
+			}
+			return null;
+		}
+		
+		@Override
+		public Component getCellRender(ObjectPropertyPanel owner, Object editObject,
+				Object fieldValue, Field field, DefaultTableCellRenderer src) {
+			if (editObject instanceof TItem) {
+				if (field.getName().equals("item_properties_id") && fieldValue!=null) {
+					ItemPropertiesNode node = Studio.getInstance().getItemManager().getNode((Integer)fieldValue);
+					if (node != null) {
+						src.setText(node.toString());
+						src.setIcon(node.getIcon(false));
+					}
+					return src;
+				}
+			}
+			return null;
+		}
+		
+	}
 	
+
 }

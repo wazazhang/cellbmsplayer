@@ -36,6 +36,7 @@ import com.cell.rpg.RPGObject;
 import com.g2d.Tools;
 import com.g2d.display.DisplayObject;
 import com.g2d.editor.DisplayObjectViewer;
+import com.g2d.editor.property.ObjectPropertyPanel.CellEditAdapter;
 import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.template.XLSTemplateNode;
 import com.g2d.studio.rpg.AbilityPanel;
@@ -49,7 +50,7 @@ public class XLSObjectViewer<T extends XLSTemplateNode<?>> extends ObjectViewer<
 	
 	protected JTable 		page_xls_list;
 
-	public XLSObjectViewer(T object, AbilityCellEditAdapter<?> ... adapters ) 
+	public XLSObjectViewer(T object, CellEditAdapter<?> ... adapters ) 
 	{
 		super(object, adapters);
 	}

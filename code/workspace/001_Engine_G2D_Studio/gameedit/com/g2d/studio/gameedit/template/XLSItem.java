@@ -21,6 +21,7 @@ import com.g2d.studio.cpj.CPJIndex;
 import com.g2d.studio.cpj.CPJResourceSelectDialog;
 import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.cpj.entity.CPJSprite;
+import com.g2d.studio.gameedit.ObjectAdapters;
 import com.g2d.studio.gameedit.ObjectViewer;
 import com.g2d.studio.gameedit.XLSObjectViewer;
 import com.g2d.studio.gameedit.template.XLSUnit.NPCObjectViewer;
@@ -41,7 +42,8 @@ final public class XLSItem  extends XLSTemplateNode<TItem>
 	
 	public ObjectViewer<?> getEditComponent(){
 		if (edit_component==null) {
-			edit_component = new XLSObjectViewer<XLSItem>(this);
+			edit_component = new XLSObjectViewer<XLSItem>(this, 
+					new ObjectAdapters.ItemPropertiesSelectAdapter());
 		}
 		return edit_component;
 	}

@@ -1,7 +1,12 @@
 package com.cell.rpg.template;
 
+import com.g2d.annotation.Property;
+
 public class TItem extends TemplateNode
 {
+	@Property("道具属性组")
+	public int item_properties_id;
+	
 	public TItem(int id, String name) {
 		super(id, name);
 	}
