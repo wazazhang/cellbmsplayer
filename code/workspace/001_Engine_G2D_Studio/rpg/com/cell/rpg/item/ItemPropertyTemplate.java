@@ -177,7 +177,7 @@ public abstract class ItemPropertyTemplate extends AbstractAbility
 		System.out.println(var);
 		
 		for (int i=0; i<100; i++) {
-			double random = CUtil.getRandom(RANDOM, 10.0, 10.9);
+			double random = CUtil.getRandom(RANDOM, 10.0, 10.1);
 			System.out.println(random);
 		}
 	}
