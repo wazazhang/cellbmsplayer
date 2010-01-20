@@ -184,6 +184,7 @@ public class JarClassLoader extends ClassLoader
 	// 
 	private boolean		is_set_ProtectionDomain	= true;
 	
+	private ClassLoader	root_class_loader;
 	
 	//资源缓存
 	private HashMap<String, byte[]> Resources	= new HashMap<String, byte[]>();
@@ -201,14 +202,13 @@ public class JarClassLoader extends ClassLoader
 			String 			key,
 			boolean 		is_sign_class) throws Throwable
 	{
-//		super(new URL[0], null);
-//		super(class_loader);
 		resources = dds(resources, key);
 
 		HashMap<String, byte[]> natives		= new HashMap<String, byte[]>();
 		
 		this.is_set_ProtectionDomain	= is_sign_class;
-		
+		this.root_class_loader 			= class_loader;
+
 		for (byte[] resource : resources)
 		{
 			// 将byte[]转为JarInputStream
@@ -299,6 +299,10 @@ public class JarClassLoader extends ClassLoader
 				}else{
 					clazz = defineClass(className, bytes, 0, bytes.length);
 				}
+			}
+			if (null == clazz) {
+				clazz = Class.forName(className, true, root_class_loader);
+				this.resolveClass(clazz);
 			}
 			return clazz;
 		}
