@@ -1,14 +1,19 @@
 package com.cell.rpg.item;
 
 import com.cell.rpg.RPGObject;
+import com.cell.rpg.item.ItemPropertyTemplate.ArgTemplate;
+import com.g2d.annotation.Property;
 
 public class ItemProperties extends RPGObject
 {
 	final private int	tid;
 	
 	/** */
-	public String		name;
+	public String				name;
 	
+	@Property({"获得的属性范围"})
+	public ArgTemplate<Integer>	properties_range = new ArgTemplate<Integer>(1);
+
 	public ItemProperties(int tid, String name) {
 		super(tid+"");
 		this.tid	= tid;
