@@ -21,10 +21,10 @@ public class ItemPropertyTypes
 		for (Class<?> type : types) {						
 			ItemType itype = type.getAnnotation(ItemType.class);
 			if (itype!=null) {
-				if (item_property_types_map.containsKey(itype.value())) {
-					throw new RuntimeException(type.getName() + " is already exist !");
-				} else {
-					if (ItemPropertyTemplate.class.isAssignableFrom(type)) {
+				if (ItemPropertyTemplate.class.isAssignableFrom(type)) {
+					if (item_property_types_map.containsKey(itype.value())) {
+//						System.err.println(type.getName() + " is already exist !");
+					} else {
 						item_property_types_map.put(itype.value(), type);
 //						System.out.println("add item property : " + type + " : " + type.getClassLoader());
 					}
