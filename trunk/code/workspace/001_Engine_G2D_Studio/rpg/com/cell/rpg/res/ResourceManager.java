@@ -14,6 +14,7 @@ import com.cell.CIO;
 import com.cell.CUtil;
 import com.cell.rpg.RPGObject;
 import com.cell.rpg.io.RPGObjectMap;
+import com.cell.rpg.item.ItemProperties;
 import com.cell.rpg.quest.Quest;
 import com.cell.rpg.quest.QuestItem;
 import com.cell.rpg.res.ResourceSet.*;
@@ -55,12 +56,12 @@ public abstract class ResourceManager extends CellSetResourceManager
 	protected Hashtable<String, SpriteSet>	all_effect_set;
 
 	// xml templates dynamic object and scenes
+	protected Hashtable<Integer, ItemProperties> item_properties;
 	protected Hashtable<Integer, TUnit>		tunits;
 	protected Hashtable<Integer, TItem>		titems;
 	protected Hashtable<Integer, TAvatar>	tavatars;
 	protected Hashtable<Integer, TSkill>	tskills;
 	protected Hashtable<Integer, Quest> 	quests;
-//	protected Hashtable<Integer, QuestItem> quest_items;
 	protected Hashtable<Integer, Scene>		scenes;
 
 	// icons and sounds
@@ -120,12 +121,13 @@ public abstract class ResourceManager extends CellSetResourceManager
 	
 	final protected void initAllXml()  throws Exception
 	{
-		tunits		= readTemplates(save_dir + "/objects/tunit.obj", 	TUnit.class);
-		titems		= readTemplates(save_dir + "/objects/titem.obj", 	TItem.class);
-		tavatars	= readTemplates(save_dir + "/objects/tavatar.obj",	TAvatar.class);
-		tskills		= readTemplates(save_dir + "/objects/tskill.obj",	TSkill.class);
-		quests		= readDynamicList(save_dir + "/quests/quest.list",	Quest.class);
-		scenes		= readRPGScenes(save_dir + "/scenes");
+		item_properties = readDynamicList(save_dir + "/item_properties/item_properties.list", ItemProperties.class);
+		tunits			= readTemplates(save_dir + "/objects/tunit.obj", 	TUnit.class);
+		titems			= readTemplates(save_dir + "/objects/titem.obj", 	TItem.class);
+		tavatars		= readTemplates(save_dir + "/objects/tavatar.obj",	TAvatar.class);
+		tskills			= readTemplates(save_dir + "/objects/tskill.obj",	TSkill.class);
+		quests			= readDynamicList(save_dir + "/quests/quest.list",	Quest.class);
+		scenes			= readRPGScenes(save_dir + "/scenes");
 	}
 	
 	final protected void initIcons()
@@ -276,7 +278,21 @@ public abstract class ResourceManager extends CellSetResourceManager
 
 		return table;
 	}
+	
 
+//	--------------------------------------------------------------------------------------------------------------------
+//	ItemProperties
+//	--------------------------------------------------------------------------------------------------------------------
+	
+	public Hashtable<Integer, ItemProperties> getAllItemProperties(){
+		return new Hashtable<Integer, ItemProperties>(item_properties);
+	}
+
+	public ItemProperties getItemProperties(int id)
+	{
+		return item_properties.get(id);
+	}
+	
 //	--------------------------------------------------------------------------------------------------------------------
 //	Quests
 //	--------------------------------------------------------------------------------------------------------------------
@@ -285,19 +301,14 @@ public abstract class ResourceManager extends CellSetResourceManager
 		return new Hashtable<Integer, Quest>(quests);
 	}
 
-//	public Hashtable<Integer, QuestItem> getAllQuestItems(){
-//		return new Hashtable<Integer, QuestItem>(quest_items);
-//	}
-	
 	public Quest getQuest(int quest_id)
 	{
 		return quests.get(quest_id);
 	}
 	
-//	public QuestItem getQuestItem(int type)
-//	{
-//		return quest_items.get(type);
-//	}
+//	--------------------------------------------------------------------------------------------------------------------
+//	--------------------------------------------------------------------------------------------------------------------
+//	--------------------------------------------------------------------------------------------------------------------
 	
 	final protected <T extends RPGObject> Hashtable<Integer, T> readDynamicList(String list_file, Class<T> type) throws Exception
 	{		
