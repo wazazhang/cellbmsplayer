@@ -1,8 +1,6 @@
 package com.g2d.studio.quest.items;
 
 import java.awt.Component;
-import java.awt.Window;
-import java.lang.reflect.Method;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComboBox;
@@ -12,7 +10,6 @@ import javax.swing.JList;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.Studio;
-import com.g2d.studio.swing.G2DListSelectDialog;
 
 public class QuestItemSelectCellEditComboBox extends JComboBox implements PropertyCellEdit<Integer>
 {

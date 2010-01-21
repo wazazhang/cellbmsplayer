@@ -1,10 +1,8 @@
 package com.cell.rpg.formula;
 
-import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.util.Date;
 
-import com.cell.rpg.formula.helper.IFormulaAdapter;
 import com.g2d.annotation.Property;
 
 @Property("时间-特定的瞬间")

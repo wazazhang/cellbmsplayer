@@ -1,13 +1,10 @@
 package com.cell.rpg.scene;
 
-import com.cell.rpg.display.UnitNode;
 import com.cell.rpg.quest.ability.QuestAccepter;
 import com.cell.rpg.quest.ability.QuestPublisher;
 import com.cell.rpg.scene.ability.ActorDropItem;
 import com.cell.rpg.scene.ability.ActorPathStart;
 import com.cell.rpg.scene.ability.ActorSellItem;
-import com.cell.rpg.scene.ability.ActorTransport;
-import com.cell.rpg.struct.TPosition;
 import com.g2d.annotation.Property;
 
 public class Actor extends SceneSprite

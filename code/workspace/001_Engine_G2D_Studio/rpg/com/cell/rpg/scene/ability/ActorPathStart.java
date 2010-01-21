@@ -1,6 +1,5 @@
 package com.cell.rpg.scene.ability;
 
-import com.cell.rpg.ability.AbstractAbility;
 import com.g2d.annotation.Property;
 
 @Property("[单位能力] NPC行动开始点")

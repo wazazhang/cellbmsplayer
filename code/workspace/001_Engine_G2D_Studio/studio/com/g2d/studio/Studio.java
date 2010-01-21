@@ -2,55 +2,35 @@ package com.g2d.studio;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.Graphics;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.Locale;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JToolBar;
 import javax.swing.JWindow;
 import javax.swing.UIManager;
 
 import com.cell.CObject;
-import com.cell.gfx.IImages;
 import com.cell.j2se.CAppBridge;
 import com.cell.j2se.CStorage;
-import com.cell.rpg.xls.XLSFile;
-import com.cell.rpg.xls.XLSRow;
+import com.cell.rpg.io.RPGObjectMap;
 import com.cell.sound.IPlayer;
 import com.cell.sound.ISound;
 import com.cell.sound.SoundInfo;
-import com.cell.sound.mute_impl.NullSound;
 import com.cell.sound.mute_impl.NullSoundManager;
 import com.cell.sound.openal_impl.JALSoundManager;
-import com.cell.sound.util.SoundPlayer;
+import com.cell.sql.SQMTypeManager;
 import com.cell.util.concurrent.ThreadPool;
-
 import com.g2d.Tools;
-import com.g2d.cell.CellSetResourceManager;
-import com.g2d.studio.StudioResource;
 import com.g2d.studio.cpj.CPJResourceManager;
 import com.g2d.studio.gameedit.ObjectManager;
 import com.g2d.studio.icon.IconManager;
@@ -128,6 +108,8 @@ public class Studio extends AbstractFrame
 		
 		Config.load(Config.class, g2d_file);
 
+		RPGObjectMap.setPersistanceManagerDriver(Config.PERSISTANCE_MANAGER);
+		SQMTypeManager.setTypeComparer(Config.PERSISTANCE_SQL_TYPE);
 //		project_lock		= new FileOutputStream(g2d_file, true);
 		
 		Runtime.getRuntime().addShutdownHook(new ShutdownHook());

@@ -1,7 +1,6 @@
 package com.g2d.studio.gameedit;
 
 import java.awt.Component;
-import java.lang.reflect.Method;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComboBox;

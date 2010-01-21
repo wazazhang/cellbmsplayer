@@ -1,9 +1,5 @@
 package com.cell.rpg.formula;
 
-import com.cell.rpg.ability.AbstractAbility;
-import com.cell.rpg.formula.helper.IFormulaAdapter;
-import com.cell.sql.SQLFieldGroup;
-import com.cell.util.Pair;
 import com.g2d.annotation.Property;
 
 @Property("数学-运算")

@@ -10,7 +10,6 @@ import java.util.Vector;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
@@ -19,15 +18,12 @@ import javax.swing.JTabbedPane;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 
-import com.cell.rpg.io.RPGObjectMap;
 import com.g2d.Tools;
 import com.g2d.studio.Studio;
 import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.cpj.entity.CPJSprite;
-import com.g2d.studio.gameedit.template.XLSTemplateNode;
 import com.g2d.studio.gameedit.template.XLSUnit;
 import com.g2d.studio.res.Res;
-import com.g2d.studio.swing.G2DList;
 import com.g2d.util.AbstractFrame;
 
 public class SelectUnitTool extends AbstractFrame implements ActionListener

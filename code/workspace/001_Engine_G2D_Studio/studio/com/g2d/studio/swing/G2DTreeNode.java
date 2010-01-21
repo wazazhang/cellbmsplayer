@@ -1,18 +1,11 @@
 package com.g2d.studio.swing;
 
 import java.awt.event.MouseEvent;
-import java.util.Enumeration;
-import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
-
-import com.cell.DObject;
-import com.cell.ExtObject;
-import com.cell.util.MarkedHashtable;
-import com.g2d.Tools;
 
 public abstract class G2DTreeNode<C extends G2DTreeNode<?>> extends DefaultMutableTreeNode
 {

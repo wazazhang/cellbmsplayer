@@ -1,12 +1,5 @@
 package com.cell.rpg.formula;
 
-import java.util.Map;
-
-import com.cell.rpg.formula.helper.IFormulaAdapter;
-import com.cell.sql.SQLColumn;
-import com.cell.sql.SQLFieldGroup;
-import com.cell.sql.SQLTableManager;
-import com.cell.sql.util.SQLUtil;
 import com.g2d.annotation.Property;
 
 @Property("单位-属性")

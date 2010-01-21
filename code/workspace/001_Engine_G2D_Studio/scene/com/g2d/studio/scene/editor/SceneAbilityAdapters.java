@@ -1,31 +1,22 @@
 package com.g2d.studio.scene.editor;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.lang.reflect.Field;
 
 import javax.swing.table.DefaultTableCellRenderer;
 
-import com.cell.rpg.ability.Abilities;
-import com.cell.rpg.ability.AbstractAbility;
-import com.cell.rpg.scene.Actor;
 import com.cell.rpg.scene.Scene;
 import com.cell.rpg.scene.ability.ActorPathStart;
 import com.cell.rpg.scene.ability.ActorTransport;
-import com.cell.rpg.scene.ability.RegionSpawnNPC;
 import com.cell.rpg.scene.ability.RegionSpawnNPC.NPCSpawn;
-import com.cell.rpg.xls.XLSFile;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.editor.property.ObjectPropertyPanel.CellEditAdapter;
-import com.g2d.studio.Config;
 import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.ObjectSelectCellEdit;
 import com.g2d.studio.gameedit.template.XLSUnit;
-import com.g2d.studio.rpg.AbilityPanel;
 import com.g2d.studio.rpg.AbilityPanel.AbilityCellEditAdapter;
 import com.g2d.studio.scene.entity.SceneNode;
-import com.g2d.studio.scene.units.SceneActor;
 import com.g2d.studio.scene.units.SceneImmutable;
 import com.g2d.studio.scene.units.ScenePoint;
 import com.g2d.studio.sound.SoundSelectDialog;

@@ -1,7 +1,6 @@
 package com.cell.rpg.quest.formula;
 
 import com.cell.rpg.formula.ObjectProperty;
-import com.cell.rpg.formula.helper.IFormulaAdapter;
 import com.cell.rpg.quest.TriggerUnitType;
 import com.g2d.annotation.Property;
 

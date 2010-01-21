@@ -1,17 +1,6 @@
 package com.g2d.studio.gameedit.dynamic;
 
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-
-import javax.swing.tree.TreeNode;
-
-import com.cell.CUtil;
 import com.cell.rpg.RPGObject;
-import com.cell.rpg.template.TAvatar;
-import com.cell.rpg.xls.XLSFile;
-import com.cell.rpg.xls.XLSFullRow;
-import com.cell.util.MarkedHashtable;
-import com.g2d.studio.gameedit.XLSObjectViewer;
 import com.g2d.studio.gameedit.entity.ObjectNode;
 
 public abstract class DynamicNode<T extends RPGObject> extends ObjectNode<T>

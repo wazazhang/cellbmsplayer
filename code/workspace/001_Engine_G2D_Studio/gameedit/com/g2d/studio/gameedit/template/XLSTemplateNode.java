@@ -1,49 +1,15 @@
 package com.g2d.studio.gameedit.template;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Reader;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipOutputStream;
-
 import javax.swing.ImageIcon;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.tree.DefaultMutableTreeNode;
 
-import com.cell.CIO;
-import com.cell.rpg.io.RPGObjectMap;
-import com.cell.rpg.template.TUnit;
 import com.cell.rpg.template.TemplateNode;
 import com.cell.rpg.xls.XLSFile;
 import com.cell.rpg.xls.XLSFullRow;
-import com.cell.rpg.xls.XLSRow;
 import com.g2d.Tools;
-import com.g2d.studio.Config;
 import com.g2d.studio.Studio;
-import com.g2d.studio.gameedit.XLSObjectViewer;
 import com.g2d.studio.gameedit.entity.ObjectNode;
 import com.g2d.studio.icon.IconFile;
 import com.g2d.studio.res.Res;
-import com.g2d.studio.swing.G2DTree;
-import com.g2d.studio.swing.G2DTreeNode;
-import com.thoughtworks.xstream.XStream;
 
 public abstract class XLSTemplateNode<T extends TemplateNode> extends ObjectNode<T>
 {

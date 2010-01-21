@@ -2,11 +2,8 @@ package com.cell.rpg.item;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.Random;
-
-import javax.swing.JOptionPane;
 
 import com.cell.CUtil;
 import com.cell.reflect.Parser;

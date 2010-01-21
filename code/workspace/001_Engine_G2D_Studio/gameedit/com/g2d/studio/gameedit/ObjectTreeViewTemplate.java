@@ -1,40 +1,19 @@
 package com.g2d.studio.gameedit;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.Vector;
 
-import javax.swing.tree.DefaultMutableTreeNode;
-
-
-import com.cell.CIO;
-import com.cell.CUtil;
-import com.cell.exception.NotImplementedException;
-import com.cell.rpg.RPGObject;
-import com.cell.rpg.io.RPGObjectMap;
-import com.cell.rpg.scene.Scene;
 import com.cell.rpg.template.TemplateNode;
 import com.cell.rpg.xls.XLSColumns;
 import com.cell.rpg.xls.XLSFullRow;
-
-import com.cell.util.IDFactoryInteger;
 import com.g2d.studio.Studio.ProgressForm;
-import com.g2d.studio.gameedit.dynamic.DAvatar;
-import com.g2d.studio.gameedit.dynamic.DynamicNode;
-import com.g2d.studio.gameedit.dynamic.IDynamicIDFactory;
 import com.g2d.studio.gameedit.entity.ObjectGroup;
-import com.g2d.studio.gameedit.entity.ObjectNode;
 import com.g2d.studio.gameedit.template.XLSItem;
 import com.g2d.studio.gameedit.template.XLSSkill;
 import com.g2d.studio.gameedit.template.XLSTemplateNode;
 import com.g2d.studio.gameedit.template.XLSUnit;
-import com.g2d.studio.scene.entity.SceneNode;
-import com.g2d.studio.swing.G2DTree;
-import com.g2d.studio.swing.G2DTreeNodeGroup;
 
 public class ObjectTreeViewTemplate<T extends XLSTemplateNode<D>, D extends TemplateNode> 
 extends ObjectTreeView<T, D>

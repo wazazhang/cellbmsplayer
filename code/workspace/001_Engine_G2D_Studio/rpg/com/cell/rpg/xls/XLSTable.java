@@ -10,8 +10,8 @@ import jxl.Workbook;
 import com.cell.CIO;
 import com.cell.reflect.Parser;
 import com.cell.sql.SQLColumn;
-import com.cell.sql.SQLTableRow;
 import com.cell.sql.SQLTableManager;
+import com.cell.sql.SQLTableRow;
 
 public class XLSTable<V extends SQLTableRow<?>>
 {	

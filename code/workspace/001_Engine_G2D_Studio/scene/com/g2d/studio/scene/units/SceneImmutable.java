@@ -13,7 +13,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JList;
 
 import com.cell.game.CSprite;
-import com.cell.rpg.scene.Actor;
 import com.cell.rpg.scene.Immutable;
 import com.g2d.cell.CellSetResource;
 import com.g2d.cell.CellSetResource.SpriteSet;
@@ -26,9 +25,7 @@ import com.g2d.studio.Studio;
 import com.g2d.studio.Version;
 import com.g2d.studio.cpj.CPJIndex;
 import com.g2d.studio.cpj.CPJResourceType;
-import com.g2d.studio.cpj.entity.CPJObject;
 import com.g2d.studio.cpj.entity.CPJSprite;
-import com.g2d.studio.gameedit.template.XLSUnit;
 import com.g2d.studio.scene.editor.SceneAbilityAdapters;
 import com.g2d.studio.scene.editor.SceneEditor;
 import com.g2d.studio.scene.editor.SceneUnitMenu;

@@ -4,13 +4,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Vector;
 
-import com.cell.rpg.ability.AbstractAbility;
-import com.cell.rpg.quest.ability.QuestAccepter;
-import com.cell.rpg.quest.ability.QuestPublisher;
-import com.cell.rpg.scene.Actor;
 import com.cell.rpg.scene.SceneUnit;
-import com.cell.rpg.scene.ability.ActorDropItem;
-import com.g2d.studio.res.Res;
 import com.g2d.studio.scene.units.SceneUnitTag;
 
 public class AbilityEffectInfos<T extends SceneUnit> {

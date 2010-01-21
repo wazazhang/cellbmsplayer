@@ -1,7 +1,6 @@
 package com.g2d.studio.rpg;
 
 import java.awt.Component;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Map;
@@ -9,18 +8,12 @@ import java.util.Map;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComboBox;
 import javax.swing.JList;
-import javax.swing.ListCellRenderer;
 
 import com.cell.CUtil;
-import com.cell.rpg.ability.Abilities;
-import com.cell.rpg.formula.AbstractValue;
 import com.cell.rpg.formula.anno.MethodSynthetic;
 import com.cell.rpg.formula.anno.ObjectMethod;
-
-import com.cell.rpg.xls.XLSColumns;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
-import com.g2d.editor.property.ObjectPropertyPanel.CellEditAdapter;
 
 public class MethodListCellEdit extends JComboBox implements PropertyCellEdit<Method>
 {

@@ -1,6 +1,5 @@
 package com.cell.rpg.scene.ability;
 
-import com.cell.rpg.ability.AbstractAbility;
 import com.g2d.annotation.Property;
 
 @Property("[区域能力] 场景出生区域")

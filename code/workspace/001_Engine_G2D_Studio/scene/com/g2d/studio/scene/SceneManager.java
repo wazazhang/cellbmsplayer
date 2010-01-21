@@ -6,49 +6,31 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Vector;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
 
-import javax.swing.DropMode;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import com.cell.CIO;
-import com.cell.CUtil;
 import com.cell.rpg.io.RPGObjectMap;
 import com.cell.rpg.scene.Scene;
 import com.cell.rpg.scene.graph.SceneGraph;
 import com.cell.util.IDFactoryInteger;
-import com.cell.util.Properties;
 import com.g2d.Tools;
-import com.g2d.display.event.MouseListener;
 import com.g2d.studio.Studio;
 import com.g2d.studio.Studio.ProgressForm;
 import com.g2d.studio.cpj.CPJResourceSelectDialog;
 import com.g2d.studio.cpj.CPJResourceType;
-import com.g2d.studio.cpj.entity.CPJSprite;
 import com.g2d.studio.cpj.entity.CPJWorld;
-import com.g2d.studio.gameedit.dynamic.DAvatar;
 import com.g2d.studio.gameedit.dynamic.IDynamicIDFactory;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.scene.entity.SceneGroup;
@@ -56,7 +38,6 @@ import com.g2d.studio.scene.entity.SceneNode;
 import com.g2d.studio.swing.G2DTree;
 import com.g2d.studio.swing.G2DWindowToolBar;
 import com.g2d.studio.swing.G2DTreeNodeGroup.GroupMenu;
-import com.thoughtworks.xstream.XStream;
 
 public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>, ActionListener
 {

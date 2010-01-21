@@ -1,6 +1,6 @@
 package com.cell.rpg.formula.anno;
 
-import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.ElementType.METHOD;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;

@@ -10,16 +10,10 @@ import java.util.Vector;
 
 import com.cell.CIO;
 import com.cell.CUtil;
-import com.cell.classloader.jcl.JavaCompiler;
+import com.cell.persistance.PersistanceManager;
 import com.cell.rpg.RPGObject;
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.converters.ConverterRegistry;
-import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
-import com.thoughtworks.xstream.core.DefaultConverterLookup;
-import com.thoughtworks.xstream.core.util.ClassLoaderReference;
-import com.thoughtworks.xstream.core.util.CompositeClassLoader;
-import com.thoughtworks.xstream.io.xml.XppDriver;
-import com.thoughtworks.xstream.mapper.Mapper;
+
+
 
 /**
  * 在构造时将所有对象读入，运行时动态你的添加删除对象，最后调用saveAll方法将所有对象存储到文件
@@ -86,26 +80,20 @@ public class RPGObjectMap<T extends RPGObject> extends Hashtable<String, T> //im
 
 //	------------------------------------------------------------------------------------------------------------------------------
 
-	private static XStream createXStream(Class<?> type)
-	{
-		CompositeClassLoader composite_class_loader = new CompositeClassLoader();
-		composite_class_loader.add(JavaCompiler.getInstance());
-//		System.out.println(type.getClassLoader() + " : createXStream : " + type.getName());
-		XStream xstream = new XStream(
-		        	(ReflectionProvider)null, 
-		        	new XppDriver(), 
-		        	new ClassLoaderReference(composite_class_loader), 
-		        	(Mapper)null, 
-		        	new DefaultConverterLookup(), 
-		        	(ConverterRegistry)null);
-		return xstream;
-	}
+	private static PersistanceManager	persistance_manager;
 	
+	public static void setPersistanceManagerDriver(String driver_name) throws Exception {
+		Class<?> cls = Class.forName(driver_name);
+		persistance_manager = (PersistanceManager)cls.newInstance();
+	}
+
+//	------------------------------------------------------------------------------------------------------------------------------
+
 	public static<T extends RPGObject> T readNode(String xml_file, Class<T> type) {
 		try{
 			String 				xml 	= CIO.readAllText(xml_file, "UTF-8");
 			StringReader 		reader 	= new StringReader(xml);
-			ObjectInputStream 	ois 	= createXStream(type).createObjectInputStream(reader);
+			ObjectInputStream 	ois 	= persistance_manager.createReadStream(reader);
 			try{
 				T ret = type.cast(ois.readObject());
 				if (ret != null) {
@@ -134,7 +122,7 @@ public class RPGObjectMap<T extends RPGObject> extends Hashtable<String, T> //im
 				xml_file.getParentFile().mkdirs();
 			}
 			StringWriter 		writer 	= new StringWriter(1024);
-			ObjectOutputStream 	oos 	= createXStream(node.getClass()).createObjectOutputStream(writer);
+			ObjectOutputStream 	oos 	= persistance_manager.createWriteStream(writer);
 			try{
 				Vector<RPGSerializationListener> wlisteners = node.getRPGSerializationListeners();
 				if (wlisteners!=null) {

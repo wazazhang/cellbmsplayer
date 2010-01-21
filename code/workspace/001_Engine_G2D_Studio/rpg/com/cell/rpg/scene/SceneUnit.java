@@ -1,7 +1,6 @@
 package com.cell.rpg.scene;
 
 import com.cell.rpg.RPGObject;
-import com.cell.rpg.struct.TPosition;
 
 public abstract class SceneUnit extends RPGObject
 {

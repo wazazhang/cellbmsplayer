@@ -1,15 +1,9 @@
 package com.cell.rpg.quest.formula;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.LinkedHashMap;
-import java.util.Map;
 
-import com.cell.reflect.Parser;
 import com.cell.rpg.formula.ObjectMethod;
-import com.cell.rpg.formula.ObjectProperty;
-import com.cell.rpg.formula.SystemMethod;
-import com.cell.rpg.formula.helper.IFormulaAdapter;
 import com.cell.rpg.quest.TriggerUnitType;
 import com.g2d.annotation.Property;
 

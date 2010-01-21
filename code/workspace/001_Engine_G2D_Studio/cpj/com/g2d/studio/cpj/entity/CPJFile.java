@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -19,10 +18,10 @@ import com.cell.game.CSprite;
 import com.g2d.Tools;
 import com.g2d.cell.CellSetResource.WorldSet;
 import com.g2d.studio.StudioResource;
-import com.g2d.studio.res.Res;
-import com.g2d.studio.swing.G2DTreeNode;
 import com.g2d.studio.cell.gameedit.Builder;
 import com.g2d.studio.cpj.CPJResourceType;
+import com.g2d.studio.res.Res;
+import com.g2d.studio.swing.G2DTreeNode;
 
 public class CPJFile extends G2DTreeNode<CPJObject<?>>
 {	

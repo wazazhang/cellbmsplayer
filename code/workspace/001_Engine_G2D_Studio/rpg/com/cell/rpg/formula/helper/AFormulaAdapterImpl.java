@@ -3,16 +3,15 @@ package com.cell.rpg.formula.helper;
 import java.lang.reflect.Method;
 
 import com.cell.rpg.formula.AbstractMethod;
-import com.cell.rpg.formula.ObjectIDValue;
-import com.cell.rpg.formula.StaticMethod;
 import com.cell.rpg.formula.AbstractValue;
 import com.cell.rpg.formula.Arithmetic;
+import com.cell.rpg.formula.ObjectIDValue;
 import com.cell.rpg.formula.ObjectMethod;
 import com.cell.rpg.formula.ObjectProperty;
+import com.cell.rpg.formula.StaticMethod;
 import com.cell.rpg.formula.TimeDurationValue;
 import com.cell.rpg.formula.TimeValue;
 import com.cell.rpg.formula.Value;
-import com.cell.rpg.formula.AbstractMethod.SyntheticMethod;
 import com.cell.rpg.formula.SystemMethod.ISystemMethodAdapter;
 
 /**

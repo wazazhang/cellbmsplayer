@@ -1,7 +1,5 @@
 package com.g2d.studio.swing;
 
-import java.awt.Component;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Externalizable;
 import java.io.IOException;

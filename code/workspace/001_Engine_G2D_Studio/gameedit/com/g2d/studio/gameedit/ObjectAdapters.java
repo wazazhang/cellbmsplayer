@@ -1,38 +1,22 @@
 package com.g2d.studio.gameedit;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.lang.reflect.Field;
 
-import javax.swing.JLabel;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import com.cell.rpg.RPGObject;
-import com.cell.rpg.ability.Abilities;
-import com.cell.rpg.ability.AbstractAbility;
-import com.cell.rpg.quest.Quest;
-import com.cell.rpg.quest.QuestItem;
-import com.cell.rpg.scene.ability.RegionSpawnNPC.NPCSpawn;
 import com.cell.rpg.template.TItem;
-import com.cell.rpg.template.TemplateNode;
 import com.cell.rpg.template.ability.UnitBattleTeam;
 import com.cell.rpg.template.ability.UnitDropItem;
-import com.cell.rpg.template.ability.UnitBattleTeam.TeamNode;
 import com.cell.rpg.template.ability.UnitDropItem.DropItemNode;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
-import com.g2d.editor.property.ObjectPropertyPanel.CellEditAdapter;
 import com.g2d.studio.Studio;
-import com.g2d.studio.gameedit.template.XLSItem;
 import com.g2d.studio.gameedit.template.XLSUnit;
-import com.g2d.studio.icon.IconFile;
-import com.g2d.studio.icon.IconSelectCellEdit;
 import com.g2d.studio.item.ItemPropertiesNode;
 import com.g2d.studio.item.ItemPropertiesSelectCellEdit;
-import com.g2d.studio.rpg.RPGObjectPanel;
 import com.g2d.studio.rpg.AbilityPanel.AbilityCellEditAdapter;
 import com.g2d.studio.rpg.RPGObjectPanel.RPGObjectAdapter;
-import com.g2d.util.AbstractDialog;
 
 public class ObjectAdapters 
 {

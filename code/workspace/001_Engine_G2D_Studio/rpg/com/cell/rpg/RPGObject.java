@@ -1,16 +1,12 @@
 package com.cell.rpg;
 
-import java.io.ObjectStreamException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Vector;
 
 import com.cell.DObject;
 import com.cell.rpg.ability.Abilities;
-import com.cell.rpg.ability.AbilitiesVector;
 import com.cell.rpg.ability.AbstractAbility;
 import com.cell.rpg.io.RPGSerializationListener;
-import com.cell.util.MarkedHashtable;
 import com.cell.util.zip.ZipNode;
 
 public abstract class RPGObject extends DObject implements Abilities, ZipNode, RPGSerializationListener

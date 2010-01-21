@@ -1,11 +1,8 @@
 package com.g2d.studio.gameedit;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.FlowLayout;
-import java.awt.Graphics;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
@@ -18,8 +15,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
-import javax.swing.JSplitPane;
-import javax.swing.ListModel;
 import javax.swing.SpinnerNumberModel;
 
 import com.cell.CUtil;
@@ -32,7 +27,6 @@ import com.g2d.studio.res.Res;
 import com.g2d.studio.swing.G2DList;
 import com.g2d.studio.swing.G2DListItem;
 import com.g2d.util.AbstractDialog;
-import com.g2d.util.AbstractFrame;
 import com.g2d.util.AbstractOptionDialog;
 
 public class DropItemEditor extends AbstractDialog implements PropertyCellEdit<DropItemNode[]> , ActionListener

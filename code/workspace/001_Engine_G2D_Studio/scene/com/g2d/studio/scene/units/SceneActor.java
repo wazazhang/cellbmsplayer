@@ -8,16 +8,12 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
-import javax.swing.JDialog;
 import javax.swing.JList;
 
 import com.cell.game.CSprite;
-import com.cell.rpg.display.UnitNode;
 import com.cell.rpg.quest.ability.QuestAccepter;
 import com.cell.rpg.quest.ability.QuestPublisher;
 import com.cell.rpg.scene.Actor;
@@ -28,27 +24,19 @@ import com.g2d.cell.CellSetResource.SpriteSet;
 import com.g2d.cell.game.SceneSprite;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.ui.Menu;
-import com.g2d.display.ui.Menu.MenuItem;
 import com.g2d.editor.DisplayObjectEditor;
 import com.g2d.game.rpg.Unit;
 import com.g2d.studio.Studio;
 import com.g2d.studio.Version;
-import com.g2d.studio.cpj.CPJResourceType;
-import com.g2d.studio.cpj.entity.CPJSprite;
 import com.g2d.studio.gameedit.ObjectAdapters;
 import com.g2d.studio.gameedit.template.XLSUnit;
 import com.g2d.studio.quest.QuestCellEditAdapter;
 import com.g2d.studio.res.Res;
-import com.g2d.studio.rpg.AbilityPanel;
-import com.g2d.studio.rpg.RPGObjectPanel;
 import com.g2d.studio.scene.editor.SceneAbilityAdapters;
 import com.g2d.studio.scene.editor.SceneEditor;
 import com.g2d.studio.scene.editor.SceneUnitMenu;
 import com.g2d.studio.scene.editor.SceneUnitTagEditor;
-import com.g2d.studio.scene.effect.AbilityEffectInfo;
 import com.g2d.studio.scene.effect.AbilityEffectInfos;
-
-import com.g2d.util.AbstractDialog;
 import com.g2d.util.Drawing;
 
 /**

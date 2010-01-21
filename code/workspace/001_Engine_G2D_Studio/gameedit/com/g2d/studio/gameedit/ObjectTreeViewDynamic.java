@@ -2,15 +2,9 @@ package com.g2d.studio.gameedit;
 
 import java.io.File;
 
-
-import com.cell.CIO;
-import com.cell.exception.NotImplementedException;
 import com.cell.rpg.RPGObject;
-
-import com.cell.util.IDFactoryInteger;
 import com.g2d.studio.gameedit.dynamic.DynamicNode;
 import com.g2d.studio.gameedit.dynamic.IDynamicIDFactory;
-import com.g2d.studio.gameedit.entity.ObjectGroup;
 
 public abstract class ObjectTreeViewDynamic<T extends DynamicNode<D>, D extends RPGObject> 
 extends ObjectTreeView<T, D> implements IDynamicIDFactory<T>

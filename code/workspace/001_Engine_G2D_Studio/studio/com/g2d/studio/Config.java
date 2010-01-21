@@ -40,8 +40,12 @@ public class Config extends com.cell.util.Config
 	public static String DYNAMIC_QUEST_PET_CLASS;		//与TriggerUnitMethod映射的类型PET
 	public static String DYNAMIC_QUEST_NPC_CLASS;		//与TriggerUnitMethod映射的类型NPC
 	
+	// 持久化工具
+	public static String PERSISTANCE_MANAGER		= "com.cell.xstream.XStreamAdapter";
+	public static String PERSISTANCE_SQL_TYPE		= "com.cell.mysql.SQLTypeComparerMySQL";
 	
 	// 资源编辑器
 	public static String CELL_GAME_EDIT_CMD			= "CellGameEdit.exe";
 	
+	// 
 }

@@ -1,32 +1,13 @@
 package com.g2d.studio.gameedit.entity;
 
-import java.awt.Component;
-import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.Enumeration;
 import java.util.Vector;
-
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.MutableTreeNode;
-import javax.swing.tree.TreeNode;
 
 import com.cell.CIO;
 import com.cell.CUtil;
 import com.cell.rpg.RPGObject;
 import com.cell.rpg.io.RPGObjectMap;
-import com.cell.rpg.xls.XLSFullRow;
-import com.g2d.studio.Studio;
-import com.g2d.studio.cpj.entity.CPJWorld;
-import com.g2d.studio.gameedit.dynamic.DynamicNode;
-import com.g2d.studio.scene.entity.SceneGroup;
-import com.g2d.studio.scene.entity.SceneNode;
 import com.g2d.studio.swing.G2DTree;
-import com.g2d.studio.swing.G2DTreeNode;
 import com.g2d.studio.swing.G2DTreeNodeGroup;
 
 

@@ -2,17 +2,13 @@ package com.g2d.studio.quest;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
-import java.io.File;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
-import javax.swing.JTabbedPane;
 import javax.swing.JTree;
 import javax.swing.tree.TreeNode;
 
-import com.cell.CIO;
-import com.cell.rpg.io.RPGObjectMap;
 import com.cell.rpg.quest.Quest;
 import com.cell.rpg.quest.QuestItem;
 import com.cell.util.IDFactoryInteger;
@@ -21,7 +17,6 @@ import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.ObjectViewer;
 import com.g2d.studio.gameedit.dynamic.DynamicNode;
 import com.g2d.studio.gameedit.dynamic.IDynamicIDFactory;
-import com.g2d.studio.gameedit.entity.ObjectGroup;
 import com.g2d.studio.icon.IconFile;
 import com.g2d.studio.quest.items.QuestItemNode;
 import com.g2d.studio.res.Res;

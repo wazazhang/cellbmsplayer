@@ -6,8 +6,6 @@ import java.util.Vector;
 
 import com.cell.rpg.RPGConfig;
 
-import sun.awt.image.ImageWatched.Link;
-
 /**
  * 该类无法将新的类型加入到老的版本序列化，<br>
  * 新版本要兼容老版本只能通过反序列化完成后使用setTypes(Class<?> ... sub_types)来达成新类型的加入<br>

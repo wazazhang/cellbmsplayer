@@ -1,11 +1,8 @@
 package com.g2d.studio.cpj.entity;
 
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
-
-import javax.swing.ImageIcon;
 
 import com.cell.game.CCD;
 import com.cell.game.CSprite;

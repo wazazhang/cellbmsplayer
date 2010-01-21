@@ -1,6 +1,5 @@
 package com.cell.rpg.formula;
 
-import java.lang.reflect.Method;
 
 public abstract class ObjectMethod extends AbstractMethod
 {

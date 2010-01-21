@@ -1,11 +1,7 @@
 package com.cell.rpg.formula;
 
-import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-import com.cell.rpg.formula.helper.IFormulaAdapter;
 import com.g2d.annotation.Property;
 
 @Property("时间-时间长度")

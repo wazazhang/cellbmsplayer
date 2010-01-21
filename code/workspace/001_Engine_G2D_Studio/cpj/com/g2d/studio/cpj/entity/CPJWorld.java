@@ -3,11 +3,7 @@ package com.g2d.studio.cpj.entity;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
-import javax.swing.ImageIcon;
-
-import com.cell.game.CSprite;
 import com.g2d.Tools;
-import com.g2d.cell.CellSprite;
 import com.g2d.cell.CellSetResource.WorldSet;
 import com.g2d.cell.game.Scene;
 import com.g2d.studio.cpj.CPJResourceType;

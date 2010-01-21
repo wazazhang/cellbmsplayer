@@ -1,10 +1,8 @@
 package com.g2d.studio.rpg;
 
 import java.awt.Component;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Collection;
 
 import javax.swing.JButton;
 
@@ -13,7 +11,6 @@ import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.editor.property.ObjectPropertyPanel.CellEditAdapter;
 import com.g2d.studio.res.Res;
-import com.g2d.studio.rpg.AbilityPanel.AbilityCellEditAdapter;
 import com.g2d.util.AbstractDialog;
 
 

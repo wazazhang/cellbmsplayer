@@ -1,9 +1,7 @@
 package com.g2d.studio.cpj.entity;
 
 import java.awt.Component;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.Serializable;
 
 import javax.swing.ImageIcon;
 import javax.swing.JList;

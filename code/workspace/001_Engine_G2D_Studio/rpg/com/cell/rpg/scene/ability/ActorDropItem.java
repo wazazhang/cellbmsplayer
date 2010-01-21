@@ -1,6 +1,5 @@
 package com.cell.rpg.scene.ability;
 
-import com.cell.rpg.scene.ability.RegionSpawnNPC.UnitTrig;
 import com.cell.rpg.template.ability.UnitDropItem;
 import com.g2d.annotation.Property;
 

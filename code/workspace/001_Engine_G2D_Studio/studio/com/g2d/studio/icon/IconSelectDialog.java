@@ -1,19 +1,9 @@
 package com.g2d.studio.icon;
 
-import java.awt.BorderLayout;
 import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
-import javax.swing.JList;
-import javax.swing.JScrollPane;
 
 import com.g2d.studio.Studio;
-import com.g2d.studio.cpj.CPJResourceList;
-import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.swing.G2DListSelectDialog;
-import com.g2d.util.AbstractDialog;
 
 public class IconSelectDialog extends G2DListSelectDialog<IconFile>
 {

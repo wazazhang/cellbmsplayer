@@ -2,30 +2,19 @@ package com.g2d.studio.scene.entity;
 
 import java.awt.Component;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Vector;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 import javax.swing.ImageIcon;
 import javax.swing.JList;
 
-import com.cell.rpg.ability.AbstractAbility;
 import com.cell.rpg.scene.Scene;
 import com.g2d.Tools;
 import com.g2d.studio.Studio;
 import com.g2d.studio.cpj.CPJIndex;
-import com.g2d.studio.cpj.CPJResourceManager;
 import com.g2d.studio.cpj.CPJResourceType;
-import com.g2d.studio.cpj.entity.CPJMap;
 import com.g2d.studio.cpj.entity.CPJWorld;
 import com.g2d.studio.gameedit.dynamic.DynamicNode;
 import com.g2d.studio.gameedit.dynamic.IDynamicIDFactory;
-import com.g2d.studio.gameedit.entity.ObjectNode;
 import com.g2d.studio.scene.editor.SceneEditor;
-import com.g2d.studio.swing.G2DTreeNode;
 
 final public class SceneNode extends DynamicNode<Scene>
 {

@@ -1,14 +1,10 @@
 package com.g2d.studio.sound;
 
 import java.awt.Component;
-import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
 import javax.swing.JList;
 
-import com.cell.sound.ISound;
-import com.cell.sound.SoundInfo;
-import com.cell.sound.util.SoundPlayer;
 import com.cell.sound.util.StaticSoundPlayer;
 import com.g2d.Tools;
 import com.g2d.studio.Config;

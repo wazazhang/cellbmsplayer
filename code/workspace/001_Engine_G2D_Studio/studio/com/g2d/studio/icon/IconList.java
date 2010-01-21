@@ -2,8 +2,6 @@ package com.g2d.studio.icon;
 
 import java.util.Vector;
 
-import javax.swing.JList;
-
 import com.g2d.studio.Studio;
 import com.g2d.studio.swing.G2DList;
 
