@@ -11,6 +11,7 @@ import com.cell.rpg.formula.AbstractValue;
 import com.cell.rpg.formula.Arithmetic;
 import com.cell.rpg.formula.ObjectProperty;
 import com.cell.rpg.formula.Value;
+import com.cell.rpg.quest.formula.TriggerUnitMethod;
 import com.cell.rpg.quest.formula.TriggerUnitProperty;
 import com.cell.rpg.quest.script.QuestScript;
 import com.cell.rpg.struct.BooleanCondition;
@@ -87,7 +88,9 @@ public class QuestItem extends RPGObject
 					TagQuestStateKillMonsterComparison.class,
 					TagValueComparison.class,
 					TagEveryUnitComparison.class,
+					TagEveryUnitMethodComparison.class,
 					TagOneMoreUnitComparison.class,
+					TagOneMoreUnitMethodComparison.class,
 					TagUnitGroupCountComparison.class,
 				};
 		}
@@ -198,6 +201,9 @@ public class QuestItem extends RPGObject
 		@Property("目标值")
 		public AbstractValue		dst_value	= new Value(1);
 	}
+
+//	--------------------------------------------------------------------------------------
+//	unit group 
 	
 	@Property("[条件] 每个单位属性")
 	public static class TagEveryUnitComparison extends Tag
@@ -211,12 +217,37 @@ public class QuestItem extends RPGObject
 		@Property("目标值")
 		public AbstractValue		dst_value	= new Value(1);
 	}
+	@Property("[条件] 每个单位函数")
+	public static class TagEveryUnitMethodComparison extends Tag
+	{
+		@Property("原单位函数")
+		public TriggerUnitMethod	src_value	= new TriggerUnitMethod();
+		
+		@Property("比较器")
+		public Comparison 			comparison	= Comparison.EQUAL;
+		
+		@Property("目标值")
+		public AbstractValue		dst_value	= new Value(1);
+	}
 	
 	@Property("[条件] 至少一个单位属性")
 	public static class TagOneMoreUnitComparison extends Tag
 	{
 		@Property("原单位属性")
 		public TriggerUnitProperty	src_value	= new TriggerUnitProperty();
+		
+		@Property("比较器")
+		public Comparison 			comparison	= Comparison.EQUAL;
+		
+		@Property("目标值")
+		public AbstractValue		dst_value	= new Value(1);
+	}
+	
+	@Property("[条件] 至少一个单位函数")
+	public static class TagOneMoreUnitMethodComparison extends Tag
+	{
+		@Property("原单位函数")
+		public TriggerUnitMethod	src_value	= new TriggerUnitMethod();
 		
 		@Property("比较器")
 		public Comparison 			comparison	= Comparison.EQUAL;
