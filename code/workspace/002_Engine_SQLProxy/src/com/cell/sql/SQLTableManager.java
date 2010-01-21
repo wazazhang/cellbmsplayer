@@ -34,8 +34,8 @@ import com.cell.sql.util.SQLUtil;
 
 /**
  * loadAll 读入所有数据，在运行时，只写入数据，所有Table的PrimaryKey由该类管理。
+ * 相当于在内存里保存了所有行数据，写入和读取都很快。
  * @author WAZA
- *
  * @param <K> PrimaryKey 类型
  * @param <R> Row 类型
  */
