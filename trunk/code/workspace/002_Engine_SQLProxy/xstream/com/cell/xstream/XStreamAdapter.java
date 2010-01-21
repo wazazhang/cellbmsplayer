@@ -81,8 +81,24 @@ public class XStreamAdapter extends PersistanceManager
 		}
 		
 		public boolean shouldSerializeMember(Class definedIn, String fieldName) {
-			return definedIn != Object.class ? super.shouldSerializeMember(definedIn, fieldName) : false;
+			if(definedIn != Object.class){
+				return super.shouldSerializeMember(definedIn, fieldName);
+			} else {
+				System.err.println("ignore member : " + definedIn + " - \"" + fieldName + "\"");
+				return false;
+			}
 		}
+		
+		@Override
+		public Class realClass(String elementName) {
+			try{
+				return super.realClass(elementName);
+			}catch(Exception err){
+				System.err.println("ignore class : " + elementName);
+				return null;
+			}
+		}
+		
 	}
 	
 	class XStreamImpl extends XStream
