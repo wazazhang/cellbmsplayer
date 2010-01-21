@@ -41,6 +41,9 @@ public class MethodListCellEdit extends JComboBox implements PropertyCellEdit<Me
 	public Method getValue() {
 		try{
 			Method method = (Method)getSelectedItem();
+			if (method==null) {
+				method = (Method)getModel().getElementAt(0);
+			}
 			return method;
 		} catch (Exception err){
 			return null;
