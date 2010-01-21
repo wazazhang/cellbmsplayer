@@ -8,7 +8,6 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -16,21 +15,15 @@ import javax.swing.JList;
 
 import com.cell.rpg.quest.ability.QuestAccepter;
 import com.cell.rpg.quest.ability.QuestPublisher;
-import com.cell.rpg.scene.Actor;
 import com.cell.rpg.scene.Region;
-import com.cell.rpg.scene.ability.ActorDropItem;
 import com.g2d.annotation.Property;
-import com.g2d.game.rpg.MoveableUnit;
-import com.g2d.game.rpg.Unit;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.ui.Menu;
 import com.g2d.editor.DisplayObjectEditor;
+import com.g2d.game.rpg.Unit;
 import com.g2d.studio.Version;
-
 import com.g2d.studio.quest.QuestCellEditAdapter;
 import com.g2d.studio.res.Res;
-import com.g2d.studio.rpg.AbilityPanel;
-import com.g2d.studio.rpg.RPGObjectPanel;
 import com.g2d.studio.scene.editor.SceneAbilityAdapters;
 import com.g2d.studio.scene.editor.SceneEditor;
 import com.g2d.studio.scene.editor.SceneUnitMenu;

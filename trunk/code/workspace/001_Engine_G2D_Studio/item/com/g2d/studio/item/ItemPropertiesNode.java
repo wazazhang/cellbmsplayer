@@ -8,7 +8,6 @@ import javax.swing.JTree;
 import javax.swing.tree.TreeNode;
 
 import com.cell.rpg.item.ItemProperties;
-
 import com.g2d.studio.gameedit.ObjectViewer;
 import com.g2d.studio.gameedit.dynamic.DynamicNode;
 import com.g2d.studio.gameedit.dynamic.IDynamicIDFactory;

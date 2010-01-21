@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import com.g2d.cell.CellSetResource;
 import com.g2d.cell.CellSetResource.CellSetObject;
-import com.g2d.cell.CellSetResource.WorldSet;
 
 
 public abstract class ResourceSet<T extends CellSetObject> implements Serializable

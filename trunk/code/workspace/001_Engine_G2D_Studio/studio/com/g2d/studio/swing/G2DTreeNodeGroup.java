@@ -1,13 +1,10 @@
 package com.g2d.studio.swing;
 
 import java.awt.Component;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.Externalizable;
-import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
@@ -24,10 +21,6 @@ import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 
 import com.cell.CUtil;
-import com.g2d.studio.Studio;
-import com.g2d.studio.scene.SceneManager;
-import com.g2d.studio.scene.entity.SceneNode;
-import com.g2d.studio.swing.G2DTree;
 
 
 

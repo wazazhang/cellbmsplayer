@@ -2,11 +2,7 @@ package com.g2d.studio.gameedit;
 
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Vector;
 
 import javax.swing.JPanel;
@@ -17,23 +13,11 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.MutableTreeNode;
 
-import com.cell.CUtil;
 import com.cell.rpg.RPGObject;
-import com.cell.rpg.io.RPGObjectMap;
-import com.cell.rpg.template.TUnit;
-import com.cell.rpg.xls.XLSFullRow;
 import com.cell.util.IDFactoryInteger;
-import com.g2d.studio.gameedit.ObjectTreeViewTemplate.XLSGroup;
 import com.g2d.studio.gameedit.entity.ObjectGroup;
 import com.g2d.studio.gameedit.entity.ObjectNode;
-import com.g2d.studio.gameedit.template.XLSItem;
-import com.g2d.studio.gameedit.template.XLSSkill;
-import com.g2d.studio.gameedit.template.XLSTemplateNode;
-import com.g2d.studio.gameedit.template.XLSUnit;
-import com.g2d.studio.scene.entity.SceneNode;
 import com.g2d.studio.swing.G2DTree;
 
 public abstract class ObjectTreeView<T extends ObjectNode<D>, D extends RPGObject> 

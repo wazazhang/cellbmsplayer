@@ -2,11 +2,8 @@ package com.cell.rpg.formula;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-import com.cell.CUtil;
-import com.cell.reflect.Parser;
 import com.g2d.annotation.Property;
 
 @Property("数学-函数")

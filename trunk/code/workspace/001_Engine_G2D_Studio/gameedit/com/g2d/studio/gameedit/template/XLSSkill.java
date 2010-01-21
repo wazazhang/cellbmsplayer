@@ -1,25 +1,11 @@
 package com.g2d.studio.gameedit.template;
 
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-
 import com.cell.rpg.template.TSkill;
 import com.cell.rpg.template.TemplateNode;
 import com.cell.rpg.xls.XLSFile;
 import com.cell.rpg.xls.XLSFullRow;
-import com.cell.util.MarkedHashtable;
-import com.g2d.Tools;
-import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.ObjectViewer;
 import com.g2d.studio.gameedit.XLSObjectViewer;
-import com.g2d.studio.icon.IconFile;
-import com.g2d.studio.icon.IconSelectDialog;
-import com.g2d.studio.res.Res;
 
 final public class XLSSkill extends XLSTemplateNode<TSkill>
 {

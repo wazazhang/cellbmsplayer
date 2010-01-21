@@ -1,6 +1,5 @@
 package com.cell.rpg.formula;
 
-import com.cell.rpg.formula.helper.IFormulaAdapter;
 import com.g2d.annotation.Property;
 
 @Property("值")

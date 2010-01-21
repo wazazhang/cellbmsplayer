@@ -29,7 +29,6 @@ import com.g2d.studio.cpj.CPJResourceSelectDialog;
 import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.cpj.entity.CPJSprite;
 import com.g2d.studio.gameedit.dynamic.DAvatar;
-import com.g2d.studio.gameedit.dynamic.DAvatar.AvatarViewer;
 import com.g2d.util.Drawing;
 
 

@@ -1,9 +1,7 @@
 package com.cell.rpg.scene.ability;
 
-import com.cell.CUtil;
 import com.cell.rpg.ability.AbilitiesVector;
 import com.cell.rpg.ability.AbstractAbility;
-import com.cell.rpg.template.ability.UnitBattleTeam;
 import com.g2d.annotation.Property;
 
 /**

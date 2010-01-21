@@ -1,8 +1,6 @@
 package com.cell.rpg.template.ability;
 
-import com.cell.rpg.ability.AbilitiesVector;
 import com.cell.rpg.ability.AbstractAbility;
-import com.cell.rpg.scene.ability.RegionSpawnNPC.NPCSpawn;
 import com.g2d.annotation.Property;
 
 @Property("[单位能力] 掉落物品")

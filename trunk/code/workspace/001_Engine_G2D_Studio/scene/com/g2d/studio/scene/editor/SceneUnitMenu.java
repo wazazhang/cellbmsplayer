@@ -3,7 +3,6 @@ package com.g2d.studio.scene.editor;
 import javax.swing.JOptionPane;
 
 import com.g2d.display.ui.Menu;
-import com.g2d.display.ui.Menu.MenuItem;
 import com.g2d.editor.DisplayObjectEditor;
 import com.g2d.studio.scene.units.SceneUnitTag;
 

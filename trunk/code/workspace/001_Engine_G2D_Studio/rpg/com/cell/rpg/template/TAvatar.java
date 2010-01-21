@@ -1,7 +1,5 @@
 package com.cell.rpg.template;
 
-import java.util.ArrayList;
-
 import com.cell.rpg.display.UnitNode;
 
 

@@ -1,7 +1,5 @@
 package com.cell.rpg.io;
 
-import java.io.File;
-
 import com.cell.rpg.RPGObject;
 
 

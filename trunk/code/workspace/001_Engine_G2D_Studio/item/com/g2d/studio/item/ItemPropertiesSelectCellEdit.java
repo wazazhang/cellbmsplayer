@@ -1,7 +1,6 @@
 package com.g2d.studio.item;
 
 import java.awt.Component;
-import java.awt.Window;
 
 import javax.swing.JLabel;
 

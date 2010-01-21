@@ -1,19 +1,11 @@
 package com.g2d.studio.swing;
 
-import java.awt.Color;
 import java.awt.Component;
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
 import java.util.Collection;
 import java.util.Vector;
 
 import javax.swing.DefaultListCellRenderer;
-import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JToggleButton;
 import javax.swing.ListCellRenderer;
 
 public class G2DList<T extends G2DListItem> extends JList

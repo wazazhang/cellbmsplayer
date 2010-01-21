@@ -10,7 +10,6 @@ import javax.swing.JTree;
 import com.cell.rpg.item.ItemProperties;
 import com.g2d.studio.gameedit.entity.ObjectGroup;
 import com.g2d.studio.swing.G2DTreeNodeGroup;
-import com.g2d.studio.swing.G2DTreeNodeGroup.GroupMenu;
 import com.g2d.util.AbstractDialog;
 
 public class ItemPropertiesGroup extends ObjectGroup<ItemPropertiesNode, ItemProperties>

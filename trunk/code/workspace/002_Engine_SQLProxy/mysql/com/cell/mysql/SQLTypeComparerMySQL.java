@@ -1,20 +1,23 @@
-package com.cell.sql;
+package com.cell.mysql;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Reader;
-import java.io.StringWriter;
 import java.io.Writer;
-import java.lang.reflect.Field;
 import java.sql.Types;
 
+import com.cell.sql.SQLStructBLOB;
+import com.cell.sql.SQLStructCLOB;
+import com.cell.sql.SQLStructXML;
+import com.cell.sql.SQLType;
+import com.cell.sql.SQLTypeComparer;
+import com.cell.sql.SQMTypeManager;
 import com.cell.sql.util.SQLUtil;
-import com.thoughtworks.xstream.XStream;
+import com.cell.xstream.XStreamAdapter;
 
 public class SQLTypeComparerMySQL implements SQLTypeComparer 
 {
-
 	public boolean typeEquals(SQLType type, int mysql_jdbc_type) 
 	{
 		switch(type)
@@ -79,13 +82,13 @@ public class SQLTypeComparerMySQL implements SQLTypeComparer
 	
 	@Override
 	public ObjectInputStream getXMLInputStream(Reader reader) throws IOException {
-		ObjectInputStream ois = new XStream().createObjectInputStream(reader);
+		ObjectInputStream ois = XStreamAdapter.getInstance().createReadStream(reader);
 		return ois;
 	}
 	
 	@Override
 	public ObjectOutputStream getXMLOutputStream(Writer writer) throws IOException {
-		ObjectOutputStream oos = new XStream().createObjectOutputStream(writer);
+		ObjectOutputStream oos = XStreamAdapter.getInstance().createWriteStream(writer);
 		return oos;
 	}
 	

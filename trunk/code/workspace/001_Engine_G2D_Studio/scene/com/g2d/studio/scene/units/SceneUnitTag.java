@@ -2,7 +2,6 @@ package com.g2d.studio.scene.units;
 
 import java.awt.Color;
 import java.awt.Shape;
-import java.util.ArrayList;
 import java.util.Vector;
 
 import com.cell.rpg.scene.SceneUnit;

@@ -3,20 +3,11 @@ package com.g2d.studio.rpg;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.lang.reflect.Field;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Vector;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
@@ -26,25 +17,16 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.ListCellRenderer;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import com.cell.rpg.ability.*;
-import com.cell.rpg.scene.ability.*;
-import com.cell.rpg.template.ability.*;
-
-import com.cell.rpg.xls.XLSFile;
+import com.cell.rpg.ability.Abilities;
+import com.cell.rpg.ability.AbstractAbility;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.editor.property.ObjectPropertyPanel.CellEditAdapter;
-import com.g2d.studio.Config;
 import com.g2d.studio.res.Res;
-import com.g2d.studio.scene.editor.SceneAbilityAdapters;
-import com.g2d.studio.scene.editor.SceneListCellEdit;
-import com.g2d.studio.scene.editor.SceneUnitListCellEdit;
-import com.g2d.studio.swing.G2DListItem;
 import com.g2d.util.AbstractDialog;
 
 

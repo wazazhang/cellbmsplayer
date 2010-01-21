@@ -1,25 +1,16 @@
 package com.g2d.studio.item;
 
 import java.awt.Component;
-import java.awt.FlowLayout;
 import java.lang.reflect.Field;
 
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import com.cell.CUtil;
-import com.cell.rpg.ability.AbstractAbility;
-import com.cell.rpg.item.ItemPropertyTemplate;
 import com.cell.rpg.item.ItemPropertyTemplate.ArgTemplate;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.editor.property.TextCellEdit;
 import com.g2d.editor.property.ObjectPropertyPanel.CellEditAdapter;
-import com.g2d.studio.rpg.AbilityPanel.AbilityCellEditAdapter;
 
 public class ItemPropertiesAdapter
 {

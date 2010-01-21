@@ -1,19 +1,11 @@
 package com.cell.rpg.quest;
 
-import java.io.File;
-import java.lang.ref.Reference;
-
-import com.cell.CIO;
-import com.cell.io.CFile;
 import com.cell.rpg.RPGObject;
 import com.cell.rpg.ability.AbstractAbility;
 import com.cell.rpg.formula.AbstractValue;
-import com.cell.rpg.formula.Arithmetic;
-import com.cell.rpg.formula.ObjectProperty;
 import com.cell.rpg.formula.Value;
 import com.cell.rpg.quest.formula.TriggerUnitMethod;
 import com.cell.rpg.quest.formula.TriggerUnitProperty;
-import com.cell.rpg.quest.script.QuestScript;
 import com.cell.rpg.struct.BooleanCondition;
 import com.cell.rpg.struct.Comparison;
 import com.g2d.annotation.Property;

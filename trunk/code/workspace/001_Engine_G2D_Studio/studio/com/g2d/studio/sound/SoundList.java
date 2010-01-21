@@ -4,7 +4,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Vector;
 
-import javax.swing.JList;
 import javax.swing.ListModel;
 
 import com.cell.sound.util.StaticSoundPlayer;

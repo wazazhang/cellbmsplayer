@@ -1,8 +1,6 @@
 package com.cell.rpg.quest.formula;
 
 import com.cell.rpg.formula.AbstractValue;
-import com.cell.rpg.formula.ObjectProperty;
-import com.cell.rpg.formula.helper.IFormulaAdapter;
 import com.g2d.annotation.Property;
 
 @Property("任务-状态")

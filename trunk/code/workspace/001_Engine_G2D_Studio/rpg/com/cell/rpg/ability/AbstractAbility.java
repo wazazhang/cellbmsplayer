@@ -3,7 +3,6 @@ package com.cell.rpg.ability;
 import java.io.ObjectStreamException;
 import java.io.Serializable;
 
-import com.cell.util.MarkedHashtable;
 import com.g2d.annotation.Property;
 
 /**

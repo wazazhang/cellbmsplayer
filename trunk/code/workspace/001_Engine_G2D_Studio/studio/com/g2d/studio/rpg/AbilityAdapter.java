@@ -5,13 +5,10 @@ import java.lang.reflect.Field;
 
 import javax.swing.table.DefaultTableCellRenderer;
 
-import com.cell.rpg.RPGObject;
 import com.cell.rpg.ability.Abilities;
-import com.cell.rpg.ability.AbstractAbility;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.editor.property.ObjectPropertyPanel.CellEditAdapter;
-import com.g2d.util.AbstractDialog;
 
 public class AbilityAdapter implements CellEditAdapter<Abilities>
 {

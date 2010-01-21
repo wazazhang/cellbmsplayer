@@ -1,12 +1,7 @@
 package com.cell.rpg.quest;
 
-import java.io.File;
-import java.util.ArrayList;
-
-import com.cell.io.CFile;
 import com.cell.rpg.RPGObject;
 import com.cell.rpg.quest.script.QuestScript;
-import com.cell.util.MarkedHashtable;
 import com.g2d.annotation.Property;
 
 /**

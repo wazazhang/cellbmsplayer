@@ -1,7 +1,5 @@
 package com.cell.rpg.scene.ability;
 
-import com.cell.CUtil;
-import com.cell.rpg.ability.AbstractAbility;
 import com.g2d.annotation.Property;
 
 /**

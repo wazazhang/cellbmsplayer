@@ -1,6 +1,5 @@
 package com.cell.rpg.scene.graph;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 

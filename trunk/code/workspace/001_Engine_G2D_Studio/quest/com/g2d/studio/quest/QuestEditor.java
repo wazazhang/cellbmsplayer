@@ -9,14 +9,9 @@ import java.io.File;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JRootPane;
-import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextPane;
 import javax.swing.JToolBar;
-
 
 import com.cell.io.CFile;
 import com.cell.rpg.RPGObject;
@@ -28,7 +23,6 @@ import com.g2d.studio.gameedit.ObjectViewer;
 import com.g2d.studio.quest.events.QuestEventView;
 import com.g2d.studio.quest.items.QuestItemView;
 import com.g2d.studio.res.Res;
-import com.g2d.studio.rpg.RPGObjectPanel;
 import com.g2d.studio.swing.G2DWindowToolBar;
 import com.g2d.util.AbstractFrame;
 import com.g2d.util.TextEditor;

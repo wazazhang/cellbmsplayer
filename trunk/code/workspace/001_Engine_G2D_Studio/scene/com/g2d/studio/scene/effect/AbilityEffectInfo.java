@@ -3,12 +3,8 @@ package com.g2d.studio.scene.effect;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
-import com.cell.rpg.ability.AbstractAbility;
-import com.cell.rpg.scene.ability.ActorDropItem;
 import com.g2d.cell.game.SceneSprite;
-import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.Sprite;
-import com.g2d.studio.scene.units.SceneActor;
 import com.g2d.studio.scene.units.SceneUnitTag;
 
 public class AbilityEffectInfo extends Sprite

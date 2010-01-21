@@ -2,8 +2,6 @@ package com.cell.rpg.quest;
 
 import java.util.concurrent.TimeUnit;
 
-import com.cell.rpg.ability.AbilitiesList;
-import com.cell.rpg.ability.AbilitiesSingle;
 import com.cell.rpg.ability.AbilitiesTypeMap;
 import com.cell.rpg.ability.AbstractAbility;
 import com.g2d.annotation.Property;

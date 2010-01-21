@@ -1,6 +1,6 @@
 package com.cell.rpg.item.anno;
 
-import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.ElementType.FIELD;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;

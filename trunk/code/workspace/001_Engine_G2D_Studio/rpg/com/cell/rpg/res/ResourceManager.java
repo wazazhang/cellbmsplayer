@@ -1,10 +1,6 @@
 package com.cell.rpg.res;
 
-import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.Serializable;
-import java.lang.ref.Reference;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -16,8 +12,8 @@ import com.cell.rpg.RPGObject;
 import com.cell.rpg.io.RPGObjectMap;
 import com.cell.rpg.item.ItemProperties;
 import com.cell.rpg.quest.Quest;
-import com.cell.rpg.quest.QuestItem;
-import com.cell.rpg.res.ResourceSet.*;
+import com.cell.rpg.res.ResourceSet.SceneSet;
+import com.cell.rpg.res.ResourceSet.SpriteSet;
 import com.cell.rpg.scene.Scene;
 import com.cell.rpg.scene.graph.SceneGraph;
 import com.cell.rpg.template.TAvatar;
@@ -25,17 +21,9 @@ import com.cell.rpg.template.TItem;
 import com.cell.rpg.template.TSkill;
 import com.cell.rpg.template.TUnit;
 import com.cell.rpg.template.TemplateNode;
-import com.cell.rpg.xls.XLSTable;
 import com.cell.sound.ISound;
-import com.cell.sql.SQLTableRow;
-import com.g2d.Tools;
 import com.g2d.cell.CellSetResource;
 import com.g2d.cell.CellSetResourceManager;
-import com.g2d.cell.CellSetResource.CellSetObject;
-import com.g2d.cell.CellSetResource.WorldSet;
-import com.g2d.studio.Config;
-import com.g2d.studio.Studio;
-import com.g2d.studio.icon.IconFile;
 
 
 /**
@@ -78,14 +66,16 @@ public abstract class ResourceManager extends CellSetResourceManager
 	 * @param sound_root
 	 * @throws Exception
 	 */
-	public ResourceManager(String res_root, String save_name) throws Exception
+	public ResourceManager(
+			String res_root, 
+			String save_name) throws Exception
 	{
 		this.res_root	= res_root;
 		this.save_dir	= res_root + "/" + save_name;
-		
 	}
 
 	public ResourceManager(
+			String persistance_manager, 
 			String res_root, 
 			String save_name,
 			boolean init_set,
@@ -100,7 +90,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 			initAllSet();
 		
 		if (init_xml) 
-			initAllXml();
+			initAllXml(persistance_manager);
 		
 		if (init_icon) 
 			initIcons();
@@ -119,8 +109,10 @@ public abstract class ResourceManager extends CellSetResourceManager
 		all_effect_set	= readSets(save_dir + "/resources/effect_list.list",	SpriteSet.class);
 	}
 	
-	final protected void initAllXml()  throws Exception
+	final protected void initAllXml(String persistance_manager)  throws Exception
 	{
+		RPGObjectMap.setPersistanceManagerDriver(persistance_manager);
+	
 		item_properties = readDynamicList(save_dir + "/item_properties/item_properties.list", ItemProperties.class);
 		tunits			= readTemplates(save_dir + "/objects/tunit.obj", 	TUnit.class);
 		titems			= readTemplates(save_dir + "/objects/titem.obj", 	TItem.class);
@@ -459,20 +451,20 @@ public abstract class ResourceManager extends CellSetResourceManager
 	
 	public static void main(String[] args) throws Exception 
 	{
-		try
-		{
-			new ResourceManager(
-					args[0], 
-					args[1], 
-					true, true, true, true){};
-		}
-		catch (Exception err) 
-		{
-			new ResourceManager(
-					"D:/EatWorld/trunk/eatworld/data/edit/resource", 
-					"project.g2d.save", 
-					true, true, true, true){};
-		}
+//		try
+//		{
+//			new ResourceManager(
+//					args[0], 
+//					args[1], 
+//					true, true, true, true){};
+//		}
+//		catch (Exception err) 
+//		{
+//			new ResourceManager(
+//					"D:/EatWorld/trunk/eatworld/data/edit/resource", 
+//					"project.g2d.save", 
+//					true, true, true, true){};
+//		}
 		
 	}
 }

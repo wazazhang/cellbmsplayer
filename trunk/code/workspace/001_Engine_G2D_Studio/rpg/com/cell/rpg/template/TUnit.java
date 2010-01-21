@@ -3,7 +3,6 @@ package com.cell.rpg.template;
 import com.cell.rpg.display.UnitNode;
 import com.cell.rpg.template.ability.UnitBattleTeam;
 import com.cell.rpg.template.ability.UnitDropItem;
-import com.g2d.annotation.Property;
 
 
 

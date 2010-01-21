@@ -1,18 +1,12 @@
 package com.cell.rpg.quest;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.TreeSet;
 
 import com.cell.CIO;
 import com.cell.ExtObject;
-import com.cell.util.IDFactoryInteger;
 import com.cell.util.MarkedHashtable;
-import com.g2d.studio.gameedit.dynamic.IDynamicIDFactory;
-import com.g2d.studio.quest.items.QuestItemNode;
 
 public class QuestCondition extends ExtObject
 {

@@ -8,16 +8,12 @@ import javax.swing.JPanel;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import com.cell.rpg.RPGObject;
-import com.cell.rpg.display.UnitNode;
 import com.cell.rpg.quest.Quest;
-import com.cell.rpg.template.TUnit;
 import com.cell.rpg.template.TemplateNode;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.editor.property.ObjectPropertyPanel.CellEditAdapter;
 import com.g2d.studio.Studio;
-import com.g2d.studio.cpj.CPJIndex;
-import com.g2d.studio.cpj.CPJResourceSelectCellEdit;
 import com.g2d.studio.icon.IconFile;
 import com.g2d.studio.icon.IconSelectCellEdit;
 import com.g2d.util.AbstractDialog;

@@ -1,7 +1,6 @@
 package com.g2d.studio.scene.editor;
 
 import com.g2d.display.ui.Menu;
-import com.g2d.display.ui.Menu.MenuItem;
 import com.g2d.studio.scene.units.ScenePoint;
 
 public class PointLinkMenu extends Menu

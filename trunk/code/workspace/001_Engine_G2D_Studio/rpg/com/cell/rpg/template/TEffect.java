@@ -1,6 +1,5 @@
 package com.cell.rpg.template;
 
-import com.cell.rpg.display.UnitNode;
 
 public class TEffect extends TemplateNode
 {	

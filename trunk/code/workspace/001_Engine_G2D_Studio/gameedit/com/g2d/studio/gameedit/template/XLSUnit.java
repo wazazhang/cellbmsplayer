@@ -1,8 +1,5 @@
 package com.g2d.studio.gameedit.template;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -14,19 +11,15 @@ import com.cell.rpg.template.TUnit;
 import com.cell.rpg.template.TemplateNode;
 import com.cell.rpg.xls.XLSFile;
 import com.cell.rpg.xls.XLSFullRow;
-import com.cell.util.MarkedHashtable;
 import com.g2d.Tools;
-import com.g2d.editor.DisplayObjectPanel;
 import com.g2d.studio.Studio;
 import com.g2d.studio.cpj.CPJIndex;
-import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.cpj.CPJResourceSelectDialog;
+import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.cpj.entity.CPJSprite;
 import com.g2d.studio.gameedit.ObjectAdapters;
 import com.g2d.studio.gameedit.ObjectViewer;
 import com.g2d.studio.gameedit.XLSObjectViewer;
-import com.g2d.studio.res.Res;
-import com.g2d.studio.rpg.AbilityForm;
 
 final public class XLSUnit extends XLSTemplateNode<TUnit>
 {

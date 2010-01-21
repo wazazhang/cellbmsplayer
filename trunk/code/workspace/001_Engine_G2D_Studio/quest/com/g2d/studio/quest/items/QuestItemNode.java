@@ -10,7 +10,6 @@ import javax.swing.tree.TreeNode;
 
 import com.cell.rpg.quest.QuestItem;
 import com.g2d.Tools;
-import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.ObjectViewer;
 import com.g2d.studio.gameedit.dynamic.DynamicNode;
 import com.g2d.studio.gameedit.dynamic.IDynamicIDFactory;

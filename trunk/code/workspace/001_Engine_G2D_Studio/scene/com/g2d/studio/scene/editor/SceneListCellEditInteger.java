@@ -9,7 +9,6 @@ import javax.swing.JComboBox;
 
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
-
 import com.g2d.studio.Studio;
 import com.g2d.studio.scene.entity.SceneNode;
 

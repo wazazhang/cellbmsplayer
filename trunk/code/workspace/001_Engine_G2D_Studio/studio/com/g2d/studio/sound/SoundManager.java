@@ -3,33 +3,19 @@ package com.g2d.studio.sound;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JList;
-import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 
-import com.cell.sound.ISound;
-import com.cell.sound.SoundInfo;
-import com.cell.sound.openal_impl.JALSoundManager;
-import com.cell.sound.util.SoundPlayer;
-import com.cell.sound.util.StaticSoundPlayer;
-import com.g2d.Tools;
-import com.g2d.display.ui.UIComponent;
 import com.g2d.studio.Config;
 import com.g2d.studio.ManagerForm;
 import com.g2d.studio.Studio;
 import com.g2d.studio.Studio.ProgressForm;
-import com.g2d.studio.icon.IconFile;
-import com.g2d.studio.icon.IconList;
 import com.g2d.studio.res.Res;
-import com.g2d.util.AbstractFrame;
 
 public class SoundManager extends ManagerForm implements ActionListener
 {

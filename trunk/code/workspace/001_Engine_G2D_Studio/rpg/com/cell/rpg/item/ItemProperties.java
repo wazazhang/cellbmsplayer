@@ -3,7 +3,6 @@ package com.cell.rpg.item;
 import java.util.ArrayList;
 import java.util.Random;
 
-import com.cell.CUtil;
 import com.cell.rpg.RPGObject;
 import com.cell.rpg.item.ItemPropertyTemplate.ArgTemplate;
 import com.g2d.annotation.Property;

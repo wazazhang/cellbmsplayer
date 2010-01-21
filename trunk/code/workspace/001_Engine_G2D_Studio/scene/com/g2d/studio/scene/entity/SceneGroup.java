@@ -2,9 +2,6 @@ package com.g2d.studio.scene.entity;
 
 import java.io.File;
 
-import com.cell.rpg.scene.Scene;
-import com.g2d.studio.Studio;
-import com.g2d.studio.gameedit.entity.ObjectGroup;
 import com.g2d.studio.scene.SceneManager;
 import com.g2d.studio.swing.G2DTreeNodeGroup;
 
