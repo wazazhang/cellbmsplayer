@@ -1,5 +1,6 @@
 package com.cell.rpg.ability;
 
+import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Vector;
@@ -23,7 +24,17 @@ public class AbilitiesVector implements Abilities, Serializable
 
 	private Class<?>[] 				sub_types;
 
-	
+	final protected Object writeReplace() throws ObjectStreamException {
+		return this;
+	}
+	final protected Object readResolve() throws ObjectStreamException {
+		for (int i = abilities.size() - 1; i >= 0; --i) {
+			if (abilities.get(i)==null) {
+				abilities.remove(i);
+			}
+		}
+		return this;
+	}
 	
 	@Deprecated()
 	public AbilitiesVector(Class<?> ... sub_types) {

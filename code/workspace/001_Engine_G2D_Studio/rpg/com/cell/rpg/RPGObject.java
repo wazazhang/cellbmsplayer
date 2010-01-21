@@ -29,6 +29,16 @@ public abstract class RPGObject extends DObject implements Abilities, ZipNode, R
 	}
 	
 	@Override
+	protected void init_transient() {
+		super.init_transient();
+		for (int i = abilities.size() - 1; i >= 0; --i) {
+			if (abilities.get(i)==null) {
+				abilities.remove(i);
+			}
+		}
+	}
+	
+	@Override
 	final public String getEntryName() {
 		return id+".xml";
 	}

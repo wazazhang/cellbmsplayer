@@ -1,5 +1,6 @@
 package com.cell.rpg.ability;
 
+import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -21,6 +22,18 @@ public abstract class AbilitiesList implements Abilities, Serializable
 	
 	public AbilitiesList() {}
 
+	final protected Object writeReplace() throws ObjectStreamException {
+		return this;
+	}
+	final protected Object readResolve() throws ObjectStreamException {
+		for (int i = abilities.size() - 1; i >= 0; --i) {
+			if (abilities.get(i)==null) {
+				abilities.remove(i);
+			}
+		}
+		return this;
+	}
+	
 	final public void clearAbilities() {
 		abilities.clear();
 	}
