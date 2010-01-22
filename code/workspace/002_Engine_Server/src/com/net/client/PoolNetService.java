@@ -52,7 +52,7 @@ public class PoolNetService extends BasicNetService
 						return sessions[i];
 					}
 				} else {
-					sessions[i] = adapter.createServerSession();
+					sessions[i] = adapter.createServerSession(this, getSessionListener());
 				}
 			}
 		}finally{
