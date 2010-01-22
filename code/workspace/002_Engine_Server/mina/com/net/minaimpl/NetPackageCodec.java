@@ -265,10 +265,10 @@ public class NetPackageCodec implements ProtocolCodecFactory
     {
     	this.class_loader	= cl;
     	this.ext_factory	= ext_factory;
-    	System.out.print("NetPackageCodec\n" +
-    			"\tClassLoader : " + cl.getClass().getName() + "\n" + 
-    			"\tExternalizableFactory : " + (ext_factory != null ? ext_factory.getClass().getName() : ext_factory) + "\n" + 
-    			"");
+//    	System.out.print("NetPackageCodec\n" +
+//    			"\tClassLoader : " + cl.getClass().getName() + "\n" + 
+//    			"\tExternalizableFactory : " + (ext_factory != null ? ext_factory.getClass().getName() : ext_factory) + "\n" + 
+//    			"");
     }
 
     public ProtocolEncoder getEncoder(IoSession ioSession) throws Exception {
