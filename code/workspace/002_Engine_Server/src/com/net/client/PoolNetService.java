@@ -3,6 +3,7 @@ package com.net.client;
 import java.io.IOException;
 import java.util.concurrent.locks.ReentrantLock;
 
+import com.cell.CUtil;
 import com.cell.util.concurrent.ThreadPool;
 import com.net.MessageHeader;
 
@@ -46,13 +47,15 @@ public class PoolNetService extends BasicNetService
 	private ServerSession getSession() {
 		session_lock.lock();
 		try{
+			int start = Math.abs(CUtil.Random.nextInt() % sessions.length);
 			for (int i=0; i<sessions.length; i++) {
-				if (sessions[i] != null) {
-					if (sessions[i].isConnected()) {
-						return sessions[i];
+				int id = (start + i ) % sessions.length;
+				if (sessions[id] != null) {
+					if (sessions[id].isConnected()) {
+						return sessions[id];
 					}
 				} else {
-					sessions[i] = adapter.createServerSession(this, getSessionListener());
+					sessions[id] = adapter.createServerSession(this, getSessionListener());
 				}
 			}
 		}finally{
