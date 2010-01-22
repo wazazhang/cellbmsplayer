@@ -3,6 +3,7 @@ package com.net;
 import java.util.Map;
 
 import com.net.anno.ExternalizableMessageType;
+import com.sun.xml.internal.txw2.IllegalAnnotationException;
 
 /**
  * 类型和 integer 的映射关系，用于 TransmissionType = TRANSMISSION_TYPE_EXTERNALIZABLE 类型的消息。
@@ -31,7 +32,12 @@ public abstract class ExternalizableFactory
 	 */
 	final public void registClass(Class<? extends MessageHeader> clazz) {
 		ExternalizableMessageType ext_type = clazz.getAnnotation(ExternalizableMessageType.class);
-		type_map.put(ext_type.value(), clazz);
+		if (!type_map.containsKey(ext_type.value())) {
+			type_map.put(ext_type.value(), clazz);
+		} else {
+			new IllegalAnnotationException(
+					"duplicate ExternalizableMessageType : " + clazz + "(" + ext_type.value() + ")");
+		}
 	}
 	
 	abstract protected Map<Integer, Class<? extends MessageHeader>> createMap();
