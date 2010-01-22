@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.Hashtable;
+import java.util.Set;
 
 import org.apache.mina.core.future.ConnectFuture;
 import org.apache.mina.core.service.IoConnector;
@@ -102,7 +103,7 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 		return false;
 	}
 	
-	synchronized public boolean send(MessageHeader message) throws IOException {
+	synchronized public boolean send(MessageHeader message) {
 		if (isConnected()) {
 			if (Session != null) {
 				message.Protocol = MessageHeader.PROTOCOL_SESSION_MESSAGE;
@@ -240,9 +241,42 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 		}
 	}
 	
-	public IoSession getIoSession()
-	{
+	public IoSession getIoSession() {
 		return Session;
+	}
+
+	@Override
+	public SocketAddress getAddress() {
+		return Session.getRemoteAddress();
+	}
+
+	@Override
+	public boolean containsAttribute(Object key) {
+		return Session.containsAttribute(key);
+	}
+
+	@Override
+	public Object getAttribute(Object key) {
+		return Session.getAttribute(key);
+	}
+	@Override
+	public Set<Object> getAttributeKeys() {
+		return Session.getAttributeKeys();
+	}
+	
+	@Override
+	public long getID() {
+		return Session.getId();
+	}
+	
+	@Override
+	public Object removeAttribute(Object key) {
+		return Session.removeAttribute(key);
+	}
+	
+	@Override
+	public Object setAttribute(Object key, Object value) {
+		return Session.setAttribute(key, value);
 	}
 	
 	public String toString() {

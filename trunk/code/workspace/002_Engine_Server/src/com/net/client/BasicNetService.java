@@ -16,6 +16,10 @@ import com.cell.util.concurrent.ThreadPool;
 import com.net.MessageHeader;
 
 
+/**
+ * 客户端链接到服务器的服务，该类可以方便监听(请求/回馈/通知)
+ * @author WAZA
+ */
 public abstract class BasicNetService
 {
 	/**request从1开始*/
@@ -236,12 +240,6 @@ public abstract class BasicNetService
 
 //	----------------------------------------------------------------------------------------------------------------------------
 
-	/**
-	 * 得到当前的网络链接套接字
-	 * @return
-	 */
-	abstract public ServerSession getSession();
-	
 	/**
 	 * 断开链接
 	 * @param force 是否立即断开
