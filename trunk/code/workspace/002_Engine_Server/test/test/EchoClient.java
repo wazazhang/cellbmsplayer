@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 
 import com.cell.util.concurrent.ThreadPool;
 import com.net.MessageHeader;
+import com.net.client.BasicNetService;
 import com.net.client.NetService;
 import com.net.client.WaitingListener;
 import com.net.minaimpl.client.ServerSessionImpl;
@@ -93,8 +94,8 @@ public class EchoClient
 					try {
 						EchoMessage msg = new EchoMessage();
 						client.sendRequest(msg, 1, new WaitingListener<MessageHeader, MessageHeader>() {
-							public void response(NetService service, MessageHeader request, MessageHeader response) {}
-							public void timeout(NetService service, MessageHeader request, long time) {}
+							public void response(BasicNetService service, MessageHeader request, MessageHeader response) {}
+							public void timeout(BasicNetService service, MessageHeader request, long time) {}
 						});
 					} catch (Exception e) {
 						e.printStackTrace();

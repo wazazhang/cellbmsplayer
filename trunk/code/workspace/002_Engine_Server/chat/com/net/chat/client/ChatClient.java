@@ -38,6 +38,7 @@ import com.net.chat.ChatMessages.ChatRequestC2S;
 import com.net.chat.ChatMessages.ChatResponseS2C;
 import com.net.chat.ChatMessages.LoginRequestC2S;
 import com.net.chat.ChatMessages.LoginResponseS2C;
+import com.net.client.BasicNetService;
 import com.net.client.NetService;
 import com.net.client.NotifyListener;
 import com.net.client.WaitingListener;
@@ -204,7 +205,7 @@ ItemListener
 	
 	
 	
-	public void notify(NetService service, MessageHeader notify)
+	public void notify(BasicNetService service, MessageHeader notify)
 	{
 		appendReaderLine("notify : " + notify);
 		
@@ -255,7 +256,7 @@ ItemListener
 	}
 	
 	
-	public void response(NetService service, MessageHeader request, MessageHeader response)
+	public void response(BasicNetService service, MessageHeader request, MessageHeader response)
 	{
 		appendReaderLine("response : " + request + " : " + response);
 		
@@ -309,7 +310,7 @@ ItemListener
 	}
 	
 	
-	public void timeout(NetService service, MessageHeader request, long time) {
+	public void timeout(BasicNetService service, MessageHeader request, long time) {
 		appendReaderLine("timeout : " + request + " : " + time);
 	}
 	
@@ -513,13 +514,13 @@ ItemListener
 			}
 		}
 		
-		public void notify(NetService service, MessageHeader notify) {
+		public void notify(BasicNetService service, MessageHeader notify) {
 			
 		}
-		public void response(NetService service, MessageHeader request, MessageHeader response) {
+		public void response(BasicNetService service, MessageHeader request, MessageHeader response) {
 			
 		}
-		public void timeout(NetService service, MessageHeader request, long time) {
+		public void timeout(BasicNetService service, MessageHeader request, long time) {
 			
 		}
 		
