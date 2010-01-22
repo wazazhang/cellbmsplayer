@@ -56,9 +56,10 @@ public class ClientSessionImpl implements ClientSession
 		return false;
 	}
 	
-	synchronized public void disconnect(boolean force) 
+	synchronized public boolean disconnect(boolean force) 
 	{
 		Session.close(force);
+		return true;
 	}
 	
 	synchronized public String getName()
@@ -97,10 +98,12 @@ public class ClientSessionImpl implements ClientSession
 		return Listener;
 	}
 	
-	public void send(MessageHeader message) {
+	public boolean send(MessageHeader message) {
 		message.Protocol 		= MessageHeader.PROTOCOL_SESSION_MESSAGE;
 		write(message);
+		return true;
 	}
+	
 	
 	public void send(MessageHeader request, MessageHeader response){
 		response.PacketNumber	= request.PacketNumber;
@@ -139,6 +142,24 @@ public class ClientSessionImpl implements ClientSession
 			heartbeat_future.cancel(false);
 		}
 	}
+	
+	@Override
+	public long getReceivedBytes() {
+		return Session.getReadBytes();
+	}
+	@Override
+	public long getReceivedMessageCount() {
+		return Session.getReadMessages();
+	}
+	@Override
+	public long getSentBytes() {
+		return Session.getWrittenBytes();
+	}
+	@Override
+	public long getSentMessageCount() {
+		return Session.getWrittenMessages();
+	}
+	
 	
 	synchronized public void startHeartBeat(ThreadPool pool, final long heartbeat_timeout)
 	{

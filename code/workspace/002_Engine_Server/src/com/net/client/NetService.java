@@ -158,11 +158,9 @@ public class NetService extends BasicNetService
 	 */
 	final public void send(MessageHeader message) {
     	if (Session.isConnected()) {
-    		try {
-    			Session.send(message);
-    		} catch (IOException e) {
-    			e.printStackTrace();
-    		}
+    		
+    		Session.send(message);
+    		
 		}else{
 			printNotConnectError();
 		}
