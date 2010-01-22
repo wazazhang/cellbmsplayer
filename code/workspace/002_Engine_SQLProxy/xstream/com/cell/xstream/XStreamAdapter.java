@@ -44,7 +44,6 @@ public class XStreamAdapter extends PersistanceManager
 
 	private CompositeClassLoader		composite_class_loader	= new CompositeClassLoader();
 	private XppDriver					xpp_dirver				= new XppDriver();
-	private DefaultConverterLookup		converter_lookup		= new DefaultConverterLookup();
 //	----------------------------------------------------------------------------------------------------------
 
 	public XStreamAdapter() {
@@ -108,7 +107,7 @@ public class XStreamAdapter extends PersistanceManager
 					xpp_dirver, 
 					composite_class_loader, 
 					null, 
-					converter_lookup, 
+					new DefaultConverterLookup(), 
 					null);
 		}
 		
