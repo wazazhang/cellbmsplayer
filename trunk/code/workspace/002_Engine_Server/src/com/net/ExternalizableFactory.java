@@ -2,6 +2,7 @@ package com.net;
 
 import java.util.Map;
 
+import com.cell.exception.NotImplementedException;
 import com.net.anno.ExternalizableMessageType;
 import com.sun.xml.internal.txw2.IllegalAnnotationException;
 
@@ -32,10 +33,13 @@ public abstract class ExternalizableFactory
 	 */
 	final public void registClass(Class<? extends MessageHeader> clazz) {
 		ExternalizableMessageType ext_type = clazz.getAnnotation(ExternalizableMessageType.class);
-		if (!type_map.containsKey(ext_type.value())) {
+		if (ext_type == null) {
+			throw new NotImplementedException(
+					"not ExternalizableMessageType : " + clazz);
+		} else if (!type_map.containsKey(ext_type.value())) {
 			type_map.put(ext_type.value(), clazz);
 		} else {
-			new IllegalAnnotationException(
+			throw new IllegalAnnotationException(
 					"duplicate ExternalizableMessageType : " + clazz + "(" + ext_type.value() + ")");
 		}
 	}
