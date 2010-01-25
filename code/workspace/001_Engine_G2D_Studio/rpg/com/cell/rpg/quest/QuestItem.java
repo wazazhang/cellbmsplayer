@@ -86,7 +86,7 @@ public class QuestItem extends RPGObject
 					AwardBattle.class,
 					AwardAddUnitProperty.class,
 					AwardSetUnitProperty.class,
-					AwardTriggerNPC.class,
+
 					AwardSummonNPC.class,
 					DropQuestNPC.class,
 				};
@@ -351,15 +351,12 @@ public class QuestItem extends RPGObject
 //	----------------------------------------------------------------------------
 //	Quest PET
 	
-	@Property({"[结果] 获得触发的NPC", "即当前场景中的NPC被带走"})
-	final public static class AwardTriggerNPC extends Result
-	{
-		@Property("NPC-类型")
-		@PropertyAdapter(PropertyAdapters.UNIT_ID)
-		public int				tunit_index			= -1;
-	}
+//	@Property({"[结果] 获得触发的NPC", "即当前场景中的NPC被带走"})
+//	final public static class AwardTriggerNPC extends Result
+//	{
+//	}
 	
-	@Property({"[结果] 获得召唤的NPC", "召唤一个NPC并带走"})
+	@Property({"[结果] 加入NPC到队伍", "产生一个NPC并带走"})
 	final public static class AwardSummonNPC extends Result
 	{
 		@Property("NPC-类型")
@@ -367,7 +364,7 @@ public class QuestItem extends RPGObject
 		public int				tunit_index			= -1;
 	}
 	
-	@Property({"[结果] 强制丢弃任务NPC", "用于完成任务时，丢弃掉任务获得的NPC"})
+	@Property({"[结果] 踢出NPC从队伍", "用于完成任务时，丢弃掉任务获得的NPC"})
 	final public static class DropQuestNPC extends Result
 	{
 		@Property("NPC-类型")
