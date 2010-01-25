@@ -9,6 +9,8 @@ import com.cell.rpg.quest.formula.TriggerUnitProperty;
 import com.cell.rpg.struct.BooleanCondition;
 import com.cell.rpg.struct.Comparison;
 import com.g2d.annotation.Property;
+import com.g2d.studio.anno.PropertyAdapter;
+import com.g2d.studio.rpg.PropertyAdapters;
 
 /**
  * 用于任务的状态存储<br>
@@ -63,16 +65,7 @@ public class QuestItem extends RPGObject
 	
 	@Override
 	public Class<?>[] getSubAbilityTypes() {
-		if (is_result) {
-			return new Class<?>[]{
-					AwardItem.class,
-					AwardTeleport.class,
-					AwardBattle.class,
-					AwardAddUnitProperty.class,
-					AwardSetUnitProperty.class,
-					DropItem.class,
-				};
-		} else {
+		if (!is_result) {
 			return new Class<?>[]{
 					TagItem.class,
 					TagQuest.class,
@@ -85,8 +78,19 @@ public class QuestItem extends RPGObject
 					TagOneMoreUnitMethodComparison.class,
 					TagUnitGroupCountComparison.class,
 				};
+		} else {
+			return new Class<?>[]{
+					AwardItem.class,
+					DropItem.class,
+					AwardTeleport.class,
+					AwardBattle.class,
+					AwardAddUnitProperty.class,
+					AwardSetUnitProperty.class,
+					AwardTriggerNPC.class,
+					AwardSummonNPC.class,
+					DropQuestNPC.class,
+				};
 		}
-		
 	}
 	
 //	--------------------------------------------------------------------------------------
@@ -165,8 +169,6 @@ public class QuestItem extends RPGObject
 	@Property({"[条件] 依赖当前的任务状态(杀死敌人数)", "(不能用作接受条件)"})
 	final public static class TagQuestStateKillMonsterComparison extends Tag
 	{
-		transient private int					quest_id		= -1;
-
 		@Property("杀死的单位模板ID")
 		public Integer				kill_unit_id	= -1;
 
@@ -270,7 +272,8 @@ public class QuestItem extends RPGObject
 			return true;
 		}
 	}
-	
+//	----------------------------------------------------------------------------
+
 	/**
 	 * [奖励] 物品
 	 * @author WAZA
@@ -287,7 +290,17 @@ public class QuestItem extends RPGObject
 		@Property("物品-得到道具后，自动使用掉")
 		public boolean			titem_auto_use		= false;
 	}
-	
+
+	@Property("[结果] 强制丢弃物品")
+	final public static class DropItem extends Result
+	{
+		@Property("物品-类型")
+		public int				titem_index			= -1;
+		@Property("物品-数量")
+		public AbstractValue	titem_count			= new Value(1);
+	}
+//	----------------------------------------------------------------------------
+
 	/**
 	 * [奖励] 传送到某场景
 	 * @author WAZA
@@ -313,7 +326,8 @@ public class QuestItem extends RPGObject
 		public Integer			unit_id			= -1;
 	}
 	
-	
+//	----------------------------------------------------------------------------
+
 	@Property("[结果] 增加单位属性")
 	final public static class AwardAddUnitProperty extends Result
 	{
@@ -334,12 +348,33 @@ public class QuestItem extends RPGObject
 		public AbstractValue		dst_value	= new Value(1);
 	}
 	
-	@Property("[结果] 强制丢弃物品")
-	final public static class DropItem extends Result
+//	----------------------------------------------------------------------------
+//	Quest PET
+	
+	@Property({"[结果] 获得触发的NPC", "即当前场景中的NPC被带走"})
+	final public static class AwardTriggerNPC extends Result
 	{
-		@Property("物品-类型")
-		public int				titem_index			= -1;
-		@Property("物品-数量")
-		public AbstractValue	titem_count			= new Value(1);
+		@Property("NPC-类型")
+		@PropertyAdapter(PropertyAdapters.UNIT_ID)
+		public int				tunit_index			= -1;
 	}
+	
+	@Property({"[结果] 获得召唤的NPC", "召唤一个NPC并带走"})
+	final public static class AwardSummonNPC extends Result
+	{
+		@Property("NPC-类型")
+		@PropertyAdapter(PropertyAdapters.UNIT_ID)
+		public int				tunit_index			= -1;
+	}
+	
+	@Property({"[结果] 强制丢弃任务NPC", "用于完成任务时，丢弃掉任务获得的NPC"})
+	final public static class DropQuestNPC extends Result
+	{
+		@Property("NPC-类型")
+		@PropertyAdapter(PropertyAdapters.UNIT_ID)
+		public int				tunit_index			= -1;
+	}
+
+//	----------------------------------------------------------------------------
+	
 }
