@@ -67,7 +67,10 @@ public class Quest extends RPGObject
 	/** 任务图标 */ 
 	@Property("任务图标")
 	public String				icon_index;
-
+	
+	@Property("任务等级")
+	public Integer				quest_level;
+	
 //	----------------------------------------------------------------------------------------------------------------
 	public Quest(Integer id, String name) {
 		super(id.toString());
