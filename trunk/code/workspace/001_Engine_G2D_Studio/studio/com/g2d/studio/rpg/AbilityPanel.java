@@ -53,9 +53,10 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 	public AbilityPanel(Abilities abilities, CellEditAdapter<?> ... adapters)
 	{
 		this.abilities 		= abilities;
-		this.adapters		= new CellEditAdapter[adapters.length+1];
+		this.adapters		= new CellEditAdapter[adapters.length+2];
 		System.arraycopy(adapters, 0, this.adapters, 0, adapters.length);
-		this.adapters[adapters.length] = new AbilitiesCellEditAdapter();
+		this.adapters[adapters.length+0] = new AbilitiesCellEditAdapter();
+		this.adapters[adapters.length+1] = new PropertyAdapters.UnitTypeAdapter();
 		
 		this.setLayout(new BorderLayout());
 		

@@ -59,6 +59,10 @@ import com.g2d.util.AbstractOptionDialog;
 
 public class QuestCellEditAdapter {
 
+//	-------------------------------------------------------------------------------------------------------------------------
+	
+	
+	
 	public static class QuestTriggerAdapter extends AbilityCellEditAdapter<QuestTrigger>
 	{
 		@Override
