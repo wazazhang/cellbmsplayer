@@ -64,49 +64,6 @@ public class CUtil extends CObject
 		return null;
 	}
 	
-	
-	public static String getHexDump(byte[] data)
-	{
-		String dump = "";
-		for (int i=0; i<data.length; i++){
-			if (i%16==0) dump += "\n";
-			String hex = Integer.toString(data[i], 16);
-			if (hex.length()<2){
-				hex = "0"+hex;
-			}
-			dump += hex + " ";
-		}
-		return dump;
-	}
-	
-	
-	public static String toHex(byte[] data)
-	{
-		String dump = "";
-		for (int i=0; i<data.length; i++){
-			String hex = Integer.toString(0x00ff & data[i], 16);
-			if (hex.length()<2){
-				hex = "0"+hex;
-			}
-			dump += hex;
-		}
-		return dump;
-	}
-	
-	public static byte[] fromHex(String text)
-	{
-		int size = text.length() / 2;
-		byte[] data = new byte[size];
-		for (int i=0; i<size; i++) {
-			int v = Integer.parseInt(text.substring(i*2, i*2+2), 16);
-			data[i] = (byte)v;
-		}
-		return data;
-	}
-	
-	
-	
-	
 	public static void printError(String message) {
 		try{
 			throw new Exception(message);
@@ -114,31 +71,11 @@ public class CUtil extends CObject
 			e.printStackTrace();
 		}
 	}
-	
-	public static String getBytesSizeString(long bytes)
-	{
-		long b  = bytes;
-		long kb = b>>10;
-		long mb = kb>>10;
-		long gb = mb>>10;
-		long tb = gb>>10;
-		
-		if ( tb > 10) {
-			return tb + "." + gb%1024 + "t";
-		}
-		if ( gb > 10) {
-			return gb + "." + mb%1024 + "g";
-		}
-		if ( mb > 10) {
-			return mb + "." + kb%1024 + "m";
-		}
-		if ( kb > 10) {
-			return kb + "." + b%1024 + "k";
-		}
-		
-		return b + "b";
 
-	}
+//	--------------------------------------------------------------------------------------------------------------------------
+//	Array
+//	--------------------------------------------------------------------------------------------------------------------------
+	private static void ARRAY_START(){}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -476,6 +413,21 @@ public class CUtil extends CObject
 		return dst;
 	}
 	
+	public static final int[] toIntArray(Integer[] array) {
+		int[] ints = new int[array.length];
+		for (int qi=0; qi<array.length; qi++) {
+			ints[qi] = array[qi];
+		}
+		return ints;
+	}
+	public static final Integer[] toIntArray(int[] array) {
+		Integer[] ints = new Integer[array.length];
+		for (int qi=0; qi<array.length; qi++) {
+			ints[qi] = array[qi];
+		}
+		return ints;
+	}
+	
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	public static int[] arrayAddElement(int[] array, int e, boolean isDuplicate){
@@ -562,7 +514,7 @@ public class CUtil extends CObject
 		return false;
 	}	
 
-
+	private static void ARRAY_END(){}
 	
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -698,6 +650,71 @@ public class CUtil extends CObject
 		return text;
 	}
 	
+	
+	public static String getHexDump(byte[] data)
+	{
+		String dump = "";
+		for (int i=0; i<data.length; i++){
+			if (i%16==0) dump += "\n";
+			String hex = Integer.toString(data[i], 16);
+			if (hex.length()<2){
+				hex = "0"+hex;
+			}
+			dump += hex + " ";
+		}
+		return dump;
+	}
+	
+	
+	public static String toHex(byte[] data)
+	{
+		String dump = "";
+		for (int i=0; i<data.length; i++){
+			String hex = Integer.toString(0x00ff & data[i], 16);
+			if (hex.length()<2){
+				hex = "0"+hex;
+			}
+			dump += hex;
+		}
+		return dump;
+	}
+	
+	public static byte[] fromHex(String text)
+	{
+		int size = text.length() / 2;
+		byte[] data = new byte[size];
+		for (int i=0; i<size; i++) {
+			int v = Integer.parseInt(text.substring(i*2, i*2+2), 16);
+			data[i] = (byte)v;
+		}
+		return data;
+	}
+	
+
+	public static String getBytesSizeString(long bytes)
+	{
+		long b  = bytes;
+		long kb = b>>10;
+		long mb = kb>>10;
+		long gb = mb>>10;
+		long tb = gb>>10;
+		
+		if ( tb > 10) {
+			return tb + "." + gb%1024 + "t";
+		}
+		if ( gb > 10) {
+			return gb + "." + mb%1024 + "g";
+		}
+		if ( mb > 10) {
+			return mb + "." + kb%1024 + "m";
+		}
+		if ( kb > 10) {
+			return kb + "." + b%1024 + "k";
+		}
+		
+		return b + "b";
+
+	}
 	static private String trimAttributeString(String text, Collection<IGraphics.StringAttribute> attrs)
 	{
 		if (text == null) return text;
