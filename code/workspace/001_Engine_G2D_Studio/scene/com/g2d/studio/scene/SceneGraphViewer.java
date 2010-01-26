@@ -324,18 +324,26 @@ public class SceneGraphViewer extends AbstractDialog
 				try{
 					BasicStroke bs = new BasicStroke(3);
 					for (Pair<LinkTP, Pair<SceneFrame, LinkTP>> next : nexts) {
-						int sx = (int)next.getKey().getVectorX();
-						int sy = (int)next.getKey().getVectorY();
-						int dx = (int)((next.getValue().getKey().x - x) + next.getValue().getValue().getVectorX());
-						int dy = (int)((next.getValue().getKey().y - y) + next.getValue().getValue().getVectorY());
-						if (finded != null && next.getKey().equals(finded.getValue())) {
-							g.setColor(high_color);
-							g.setStroke(bs);
-						} else {
+						try{
+							int sx = (int)next.getKey().getVectorX();
+							int sy = (int)next.getKey().getVectorY();
+							int dx = (int)((next.getValue().getKey().x - x) + next.getValue().getValue().getVectorX());
+							int dy = (int)((next.getValue().getKey().y - y) + next.getValue().getValue().getVectorY());
+							if (finded != null && next.getKey().equals(finded.getValue())) {
+								g.setColor(high_color);
+								g.setStroke(bs);
+							} else {
+								g.setColor(base_color);
+								g.setStroke(stroke);
+							}
+							g.drawLine(sx, sy, dx, dy);
+						} catch (Exception err) {
 							g.setColor(base_color);
-							g.setStroke(stroke);
+							g.draw(local_bounds);
+							Drawing.drawString(g, "NextLink Error ! " + next.getKey().tp, 
+									local_bounds.x + 2, 
+									local_bounds.y + local_bounds.height);
 						}
-						g.drawLine(sx, sy, dx, dy);
 					}
 				}finally{
 					g.setStroke(stroke);
