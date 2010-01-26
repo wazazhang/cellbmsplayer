@@ -16,7 +16,7 @@ public abstract class RPGObject extends DObject implements Abilities, ZipNode, R
 	final public String id;
 	
 	/**将显示在单位属性的Ability面板*/
-	final private Vector<AbstractAbility> 		abilities 			= new Vector<AbstractAbility>();
+	private Vector<AbstractAbility> 			abilities;
 
 	transient AbstractAbility[]					static_abilities;
 	
@@ -31,6 +31,9 @@ public abstract class RPGObject extends DObject implements Abilities, ZipNode, R
 	@Override
 	protected void init_transient() {
 		super.init_transient();
+		if (abilities == null) {
+			this.abilities = new Vector<AbstractAbility>();
+		}
 		for (int i = abilities.size() - 1; i >= 0; --i) {
 			if (abilities.get(i)==null) {
 				abilities.remove(i);
