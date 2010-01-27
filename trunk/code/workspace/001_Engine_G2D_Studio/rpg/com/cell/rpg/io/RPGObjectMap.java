@@ -22,60 +22,58 @@ import com.cell.rpg.RPGObject;
  */
 public class RPGObjectMap<T extends RPGObject> extends Hashtable<String, T> //implements ZipStreamFilter
 {
-	private static final long serialVersionUID = 1L;
-	
-	final public Class<T>	type;
-	final public File		zip_dir;
-	final public File		zip_info;
-
-	public RPGObjectMap(Class<T> type, File zip_dir) 
-	{
-		this.type 		= type;
-		this.zip_dir	= zip_dir;
-		this.zip_info	= new File(zip_dir, type.getSimpleName().toLowerCase()+".list");
-
-		loadAll();
-	}
-	
-//	-----------------------------------------------------------------------------------------------------------------------
-
-	
-	synchronized public void loadAll()
-	{
-		if (zip_dir.exists()) 
-		{
-			String[] entrys = CIO.readAllLine(zip_info.getPath(), "UTF-8");
-			
-			for (String entry : entrys) {
-				File f = new File(zip_dir, entry.trim());
-				if (f.exists()) {
-					T t = readNode(f.getPath(), type);
-					if (t!=null) {
-						put(t.id, t);
-					}
-				}
-			}
-		}
-	}
-	
-	synchronized public void saveAll()
-	{
-		if (!zip_dir.exists()) {
-			zip_dir.mkdirs();
-		}
-		
-		Vector<String> keys = new Vector<String>(keySet());
-		CUtil.sort(keys, CUtil.getStringCompare());
-		StringBuffer info = new StringBuffer();
-		for (String k : keys) {
-			T v = get(k);
-			if (writeNode(v, new File(zip_dir, v.getEntryName()))) {
-				info.append(v.getEntryName()+"\n");
-			}
-		}
-		
-		com.cell.io.CFile.writeText(zip_info, info.toString(), "UTF-8");
-	}
+//	final public Class<T>	type;
+//	final public File		zip_dir;
+//	final public File		zip_info;
+//
+//	public RPGObjectMap(Class<T> type, File zip_dir) 
+//	{
+//		this.type 		= type;
+//		this.zip_dir	= zip_dir;
+//		this.zip_info	= new File(zip_dir, type.getSimpleName().toLowerCase()+".list");
+//
+//		loadAll();
+//	}
+//	
+////	-----------------------------------------------------------------------------------------------------------------------
+//
+//	
+//	synchronized public void loadAll()
+//	{
+//		if (zip_dir.exists()) 
+//		{
+//			String[] entrys = CIO.readAllLine(zip_info.getPath(), "UTF-8");
+//			
+//			for (String entry : entrys) {
+//				File f = new File(zip_dir, entry.trim());
+//				if (f.exists()) {
+//					T t = readNode(f.getPath(), type);
+//					if (t!=null) {
+//						put(t.id, t);
+//					}
+//				}
+//			}
+//		}
+//	}
+//	
+//	synchronized public void saveAll()
+//	{
+//		if (!zip_dir.exists()) {
+//			zip_dir.mkdirs();
+//		}
+//		
+//		Vector<String> keys = new Vector<String>(keySet());
+//		CUtil.sort(keys, CUtil.getStringCompare());
+//		StringBuffer info = new StringBuffer();
+//		for (String k : keys) {
+//			T v = get(k);
+//			if (writeNode(v, new File(zip_dir, v.getEntryName()))) {
+//				info.append(v.getEntryName()+"\n");
+//			}
+//		}
+//		
+//		com.cell.io.CFile.writeText(zip_info, info.toString(), "UTF-8");
+//	}
 
 
 //	------------------------------------------------------------------------------------------------------------------------------

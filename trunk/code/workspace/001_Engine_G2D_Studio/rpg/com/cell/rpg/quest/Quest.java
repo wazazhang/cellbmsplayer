@@ -1,5 +1,6 @@
 package com.cell.rpg.quest;
 
+import com.cell.rpg.NamedObject;
 import com.cell.rpg.RPGObject;
 import com.cell.rpg.quest.script.QuestScript;
 import com.g2d.annotation.Property;
@@ -8,7 +9,7 @@ import com.g2d.annotation.Property;
  * 一个任务的全部描述
  * @author WAZA
  */
-public class Quest extends RPGObject
+public class Quest extends RPGObject implements NamedObject
 {
 //	----------------------------------------------------------------------------------------------------------------
 //	base
@@ -81,6 +82,12 @@ public class Quest extends RPGObject
 	public int getIntID() {
 		return int_id;
 	}
+	
+	@Override
+	public String getName() {
+		return name;
+	}
+	
 	@Override
 	public Class<?>[] getSubAbilityTypes() {
 		return new Class<?>[]{};

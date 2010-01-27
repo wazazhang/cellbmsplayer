@@ -1,5 +1,6 @@
 package com.cell.rpg.quest;
 
+import com.cell.rpg.NamedObject;
 import com.cell.rpg.RPGObject;
 import com.cell.rpg.ability.AbstractAbility;
 import com.cell.rpg.formula.AbstractValue;
@@ -27,7 +28,7 @@ import com.g2d.studio.rpg.PropertyAdapters;
  * 如果QuestItem是一个奖励，则由玩家选择一项<br>
  * @author WAZA
  */
-public class QuestItem extends RPGObject
+public class QuestItem extends RPGObject implements NamedObject
 {	
 //	--------------------------------------------------------------------------------------
 	
@@ -53,7 +54,12 @@ public class QuestItem extends RPGObject
 	public int getType() {
 		return type;
 	}
-
+	
+	@Override
+	public String getName() {
+		return name;
+	}
+	
 	/**
 	 * 是否是一个结果，就是QuestAward里的值，
 	 * 否则就是一个条件
