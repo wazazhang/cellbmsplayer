@@ -148,7 +148,7 @@ public class NetService extends BasicNetService
     }
 	
 	@Override
-	public void close(boolean force) {
+	final public void close(boolean force) {
 		this.disconnect(force);
 	}
 	
