@@ -66,7 +66,7 @@ public abstract class ObjectGroup<T extends ObjectNode<D>, D extends RPGObject> 
 					all_objects.append(toPathString(node, "/") + node.getID() + _XML + "\n");
 				}
 				if (node.getData() instanceof NamedObject) {
-					all_names.append("("+node.getData().id+")"+((NamedObject)node.getData()).getName());
+					all_names.append("("+node.getData().id+")"+((NamedObject)node.getData()).getName()+"\n");
 				}
 			}catch(Exception err){}
 		}
