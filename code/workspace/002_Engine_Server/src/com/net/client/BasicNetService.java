@@ -287,6 +287,9 @@ public abstract class BasicNetService
     	}finally {
     		sendlock.unlock();
     	}
+    	for (WaitingListener l : listeners) {
+    		onListeningRequest(message, l);
+    	}
 		request.run();
 		
 		if (request.Response != null) {
@@ -517,6 +520,8 @@ public abstract class BasicNetService
 	}
 	
 //	----------------------------------------------------------------------------------------------------------------------------
+	
+	protected void onListeningRequest(MessageHeader request, WaitingListener<?,?> listeners){}
 	
 	protected void onConnected(ServerSession session) {}
 	
