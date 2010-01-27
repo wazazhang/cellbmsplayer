@@ -3,11 +3,12 @@ package com.cell.rpg.item;
 import java.util.ArrayList;
 import java.util.Random;
 
+import com.cell.rpg.NamedObject;
 import com.cell.rpg.RPGObject;
 import com.cell.rpg.item.ItemPropertyTemplate.ArgTemplate;
 import com.g2d.annotation.Property;
 
-public class ItemProperties extends RPGObject
+public class ItemProperties extends RPGObject implements NamedObject
 {
 	final private int	tid;
 	
@@ -21,6 +22,11 @@ public class ItemProperties extends RPGObject
 		super(tid+"");
 		this.tid	= tid;
 		this.name	= name;
+	}
+	
+	@Override
+	public String getName() {
+		return name;
 	}
 	
 	@Override

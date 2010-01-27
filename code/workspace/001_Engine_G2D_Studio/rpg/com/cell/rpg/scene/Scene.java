@@ -2,11 +2,12 @@ package com.cell.rpg.scene;
 
 import java.util.Vector;
 
+import com.cell.rpg.NamedObject;
 import com.cell.rpg.RPGObject;
 import com.cell.rpg.display.SceneNode;
 import com.g2d.annotation.Property;
 
-public class Scene extends RPGObject
+public class Scene extends RPGObject implements NamedObject
 {
 	transient private int 			int_id;
 
@@ -46,6 +47,11 @@ public class Scene extends RPGObject
 	
 	final public int getIntID() {
 		return int_id;
+	}
+	
+	@Override
+	public String getName() {
+		return name;
 	}
 	
 	@Override

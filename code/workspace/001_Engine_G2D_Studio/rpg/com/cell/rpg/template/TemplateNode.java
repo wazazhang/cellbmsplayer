@@ -1,9 +1,10 @@
 package com.cell.rpg.template;
 
+import com.cell.rpg.NamedObject;
 import com.cell.rpg.RPGObject;
 import com.g2d.annotation.Property;
 
-public abstract class TemplateNode extends RPGObject
+public abstract class TemplateNode extends RPGObject implements NamedObject
 {
 	transient
 	private int 	int_id;
@@ -31,5 +32,8 @@ public abstract class TemplateNode extends RPGObject
 		return int_id;
 	}
 	
-	
+	@Override
+	public String getName() {
+		return name;
+	}
 }
