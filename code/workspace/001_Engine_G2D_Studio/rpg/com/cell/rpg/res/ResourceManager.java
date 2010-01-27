@@ -113,13 +113,15 @@ public abstract class ResourceManager extends CellSetResourceManager
 	{
 		RPGObjectMap.setPersistanceManagerDriver(persistance_manager);
 	
-		item_properties = readDynamicList(save_dir + "/item_properties/item_properties.list", ItemProperties.class);
-		tunits			= readTemplates(save_dir + "/objects/tunit.obj", 	TUnit.class);
-		titems			= readTemplates(save_dir + "/objects/titem.obj", 	TItem.class);
-		tavatars		= readTemplates(save_dir + "/objects/tavatar.obj",	TAvatar.class);
-		tskills			= readTemplates(save_dir + "/objects/tskill.obj",	TSkill.class);
-		quests			= readDynamicList(save_dir + "/quests/quest.list",	Quest.class);
-		scenes			= readRPGScenes(save_dir + "/scenes");
+		item_properties = readRPGObjects(save_dir + "/item_properties/item_properties.list", ItemProperties.class);
+		
+		tunits			= readRPGObjects(save_dir + "/objects/tunit.obj/tunit.list", 		TUnit.class);
+		titems			= readRPGObjects(save_dir + "/objects/titem.obj/titem.list", 		TItem.class);
+		tavatars		= readRPGObjects(save_dir + "/objects/tavatar.obj/tavatar.list",	TAvatar.class);
+		tskills			= readRPGObjects(save_dir + "/objects/tskill.obj/tskill.list",		TSkill.class);
+		
+		quests			= readRPGObjects(save_dir + "/quests/quest.list",		Quest.class);
+		scenes			= readRPGObjects(save_dir + "/scenes/scene.list", 		Scene.class);
 	}
 	
 	final protected void initIcons()
@@ -139,6 +141,116 @@ public abstract class ResourceManager extends CellSetResourceManager
 		return new Resource(path);
 	}
 	
+	final protected <T extends ResourceSet<?>> Hashtable<String, T> readSets(String file, Class<T> type) throws Exception
+	{
+		System.out.println("list resource : " + file);
+		
+		Hashtable<String, T> table = new Hashtable<String, T>();
+		
+		String[] res_list = CIO.readAllLine(file, "UTF-8");
+		
+		for (int i=0; i<res_list.length; i++)
+		{
+			String[] split = CUtil.splitString(res_list[i], ";");
+			String res_path		= split[0];
+			String cpj_name 	= split[1];
+			String obj_name 	= split[2];
+			
+			T set = null;
+			if (type.equals(SceneSet.class)) {
+				set = type.cast(new SceneSet(cpj_name, obj_name, res_path));
+			} else if (type.equals(SpriteSet.class)) {
+				set = type.cast(new SpriteSet(cpj_name, obj_name, res_path));
+			}
+			if (PRINT_VERBOS)
+			System.out.println("\tget " + type.getSimpleName() + " : " + cpj_name + "(" + obj_name + ")");
+			
+			table.put(set.getID(), set);
+		}
+		
+		System.out.println("size : " + table.size());
+		
+		return table;
+	}
+
+	final protected Hashtable<String, AtomicReference<BufferedImage>> readIcons(String icon_list)
+	{
+		System.out.println("list icons : " + icon_list);
+
+		Hashtable<String, AtomicReference<BufferedImage>> table = new Hashtable<String, AtomicReference<BufferedImage>>();
+		
+		String[] res_list = CIO.readAllLine(icon_list, "UTF-8");
+		
+		for (int i=0; i<res_list.length; i++)
+		{
+			String[] split 	= CUtil.splitString(res_list[i], ",");
+			String icon_id 	= split[0];
+			String icon_w 	= split[1];
+			String icon_h 	= split[2];
+			table.put(icon_id, new AtomicReference<BufferedImage>(null));
+			
+			if (PRINT_VERBOS)
+			System.out.println("\tget icon : " + icon_id + "(" + icon_w + "x" + icon_h + ")");
+		}
+		
+		System.out.println("size : " + table.size());
+
+		return table;
+	}
+
+
+	final protected Hashtable<String, AtomicReference<ISound>> readSounds(String sound_list)
+	{
+		System.out.println("list sounds : " + sound_list);
+
+		Hashtable<String, AtomicReference<ISound>> table = new Hashtable<String, AtomicReference<ISound>>();
+		
+		String[] res_list = CIO.readAllLine(sound_list, "UTF-8");
+		
+		for (int i=0; i<res_list.length; i++)
+		{
+			table.put(res_list[i].trim(), new AtomicReference<ISound>(null));
+			if (PRINT_VERBOS)
+			System.out.println("\tget sound : " + res_list[i]);
+		}
+		
+		System.out.println("list sounds : " + table.size());
+
+		return table;
+	}
+
+	final protected <T extends RPGObject> Hashtable<Integer, T> readRPGObjects(String list_file, Class<T> type) throws Exception
+	{		
+		String tdir = CIO.getPathDir(list_file);
+		
+		System.out.println("list rpg objects : " + tdir);
+
+		Hashtable<Integer, T> table = new Hashtable<Integer, T>();
+		
+		String[] res_list = CIO.readAllLine(list_file, "UTF-8");
+		
+		for (int i=0; i<res_list.length; i++)
+		{
+			int last_split = res_list[i].lastIndexOf("/");
+			if (last_split>=0) {
+				res_list[i] = res_list[i].substring(last_split+1);
+			}
+			
+			String xml_file = tdir +"/"+ res_list[i];
+			
+			T set = RPGObjectMap.readNode(xml_file, type);			
+			if (PRINT_VERBOS)
+			System.out.println("\tget " + type.getSimpleName() + " : " + set + "(" + set.id + ")");
+
+			table.put(Integer.parseInt(set.id), set);
+		}
+		
+		System.out.println("size : " + table.size());
+
+		return table;
+	}
+
+	
 	final public <T extends RPGObject> T readRPGObject(String xml_file, Class<T> type) 
 	{
 		T set = RPGObjectMap.readNode(xml_file, type);			
@@ -146,7 +258,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 		System.out.println("readRPGObject : " + type.getSimpleName() + " : " + set + "(" + set.id + ")");
 		return set;
 	}
-	
+
 //	--------------------------------------------------------------------------------------------------------------------
 //	Resources
 //	--------------------------------------------------------------------------------------------------------------------
@@ -191,38 +303,6 @@ public abstract class ResourceManager extends CellSetResourceManager
 		return new Vector<SpriteSet>(all_effect_set.values());
 	}
 
-	final protected <T extends ResourceSet<?>> Hashtable<String, T> readSets(String file, Class<T> type) throws Exception
-	{
-		System.out.println("list resource : " + file);
-		
-		Hashtable<String, T> table = new Hashtable<String, T>();
-		
-		String[] res_list = CIO.readAllLine(file, "UTF-8");
-		
-		for (int i=0; i<res_list.length; i++)
-		{
-			String[] split = CUtil.splitString(res_list[i], ";");
-			String res_path		= split[0];
-			String cpj_name 	= split[1];
-			String obj_name 	= split[2];
-			
-			T set = null;
-			if (type.equals(SceneSet.class)) {
-				set = type.cast(new SceneSet(cpj_name, obj_name, res_path));
-			} else if (type.equals(SpriteSet.class)) {
-				set = type.cast(new SpriteSet(cpj_name, obj_name, res_path));
-			}
-			if (PRINT_VERBOS)
-			System.out.println("\tget " + type.getSimpleName() + " : " + cpj_name + "(" + obj_name + ")");
-			
-			table.put(set.getID(), set);
-		}
-		
-		System.out.println("size : " + table.size());
-		
-		return table;
-	}
-	
 //	--------------------------------------------------------------------------------------------------------------------
 //	Templates
 //	--------------------------------------------------------------------------------------------------------------------
@@ -238,37 +318,6 @@ public abstract class ResourceManager extends CellSetResourceManager
 	}
 	public TSkill getTSkill(int id) {
 		return tskills.get(id);
-	}
-	
-	final protected <T extends TemplateNode> Hashtable<Integer, T> readTemplates(String tdir, Class<T> type) throws Exception
-	{
-		System.out.println("list template : " + tdir);
-
-		String tinfo = tdir + "/" + type.getSimpleName().toLowerCase()+".list";
-		
-		Hashtable<Integer, T> table = new Hashtable<Integer, T>();
-		
-		String[] res_list = CIO.readAllLine(tinfo, "UTF-8");
-		
-		for (int i=0; i<res_list.length; i++)
-		{
-			int last_split = res_list[i].lastIndexOf("/");
-			if (last_split>=0) {
-				res_list[i] = res_list[i].substring(last_split+1);
-			}
-			
-			String xml_file = tdir +"/"+ res_list[i];
-			
-			T set = RPGObjectMap.readNode(xml_file, type);			
-			if (PRINT_VERBOS)
-			System.out.println("\tget " + type.getSimpleName() + " : " + set.name + "(" + set.id + ")");
-
-			table.put(set.getIntID(), set);
-		}
-		
-		System.out.println("size : " + table.size());
-
-		return table;
 	}
 	
 
@@ -302,37 +351,6 @@ public abstract class ResourceManager extends CellSetResourceManager
 //	--------------------------------------------------------------------------------------------------------------------
 //	--------------------------------------------------------------------------------------------------------------------
 	
-	final protected <T extends RPGObject> Hashtable<Integer, T> readDynamicList(String list_file, Class<T> type) throws Exception
-	{		
-		String tdir = CIO.getPathDir(list_file);
-		
-		System.out.println("list rpg object : " + tdir);
-
-		Hashtable<Integer, T> table = new Hashtable<Integer, T>();
-		
-		String[] res_list = CIO.readAllLine(list_file, "UTF-8");
-		
-		for (int i=0; i<res_list.length; i++)
-		{
-			int last_split = res_list[i].lastIndexOf("/");
-			if (last_split>=0) {
-				res_list[i] = res_list[i].substring(last_split+1);
-			}
-			
-			String xml_file = tdir +"/"+ res_list[i];
-			
-			T set = RPGObjectMap.readNode(xml_file, type);			
-			if (PRINT_VERBOS)
-			System.out.println("\tget " + type.getSimpleName() + " : " + set + "(" + set.id + ")");
-
-			table.put(Integer.parseInt(set.id), set);
-		}
-		
-		System.out.println("size : " + table.size());
-
-		return table;
-	}
-	
 //	--------------------------------------------------------------------------------------------------------------------
 //	Scenes
 //	--------------------------------------------------------------------------------------------------------------------
@@ -345,37 +363,6 @@ public abstract class ResourceManager extends CellSetResourceManager
 		return new HashMap<Integer, Scene>(scenes);
 	}
 	
-	final protected Hashtable<Integer, Scene> readRPGScenes(String scene_path) throws Exception
-	{
-		String scene_list = scene_path + "/scene.list";
-		
-		System.out.println("list scenes : " + scene_list);
-
-		Hashtable<Integer, Scene> table = new Hashtable<Integer, Scene>();
-		
-		String[] res_list = CIO.readAllLine(scene_list, "UTF-8");
-		
-		for (int i=0; i<res_list.length; i++)
-		{
-			int last_split = res_list[i].lastIndexOf("/");
-			if (last_split>=0) {
-				res_list[i] = res_list[i].substring(last_split+1);
-			}
-			
-			String scene_file = scene_path +"/"+ res_list[i];
-			
-			Scene set = RPGObjectMap.readNode(scene_file, Scene.class);			
-			if (PRINT_VERBOS)
-			System.out.println("\tget " + set.getClass().getSimpleName() + " : " + set.name + "(" + set.id + ")");
-
-			table.put(set.getIntID(), set);
-		}
-		
-		System.out.println("size : " + table.size());
-		
-		return table;
-	}
-	
 	public SceneGraph createSceneGraph() {
 		return new SceneGraph(scenes.values());
 	}
@@ -384,31 +371,6 @@ public abstract class ResourceManager extends CellSetResourceManager
 //	Icons
 //	--------------------------------------------------------------------------------------------------------------------
 	
-	final protected Hashtable<String, AtomicReference<BufferedImage>> readIcons(String icon_list)
-	{
-		System.out.println("list icons : " + icon_list);
-
-		Hashtable<String, AtomicReference<BufferedImage>> table = new Hashtable<String, AtomicReference<BufferedImage>>();
-		
-		String[] res_list = CIO.readAllLine(icon_list, "UTF-8");
-		
-		for (int i=0; i<res_list.length; i++)
-		{
-			String[] split 	= CUtil.splitString(res_list[i], ",");
-			String icon_id 	= split[0];
-			String icon_w 	= split[1];
-			String icon_h 	= split[2];
-			table.put(icon_id, new AtomicReference<BufferedImage>(null));
-			
-			if (PRINT_VERBOS)
-			System.out.println("\tget icon : " + icon_id + "(" + icon_w + "x" + icon_h + ")");
-		}
-		
-		System.out.println("size : " + table.size());
-
-		return table;
-	}
-
 	public BufferedImage getIcon(String index)
 	{
 		return all_icons.get(index).get();
@@ -418,27 +380,6 @@ public abstract class ResourceManager extends CellSetResourceManager
 //	sounds
 //	--------------------------------------------------------------------------------------------------------------------
 	
-
-	final protected Hashtable<String, AtomicReference<ISound>> readSounds(String sound_list)
-	{
-		System.out.println("list sounds : " + sound_list);
-
-		Hashtable<String, AtomicReference<ISound>> table = new Hashtable<String, AtomicReference<ISound>>();
-		
-		String[] res_list = CIO.readAllLine(sound_list, "UTF-8");
-		
-		for (int i=0; i<res_list.length; i++)
-		{
-			table.put(res_list[i].trim(), new AtomicReference<ISound>(null));
-			if (PRINT_VERBOS)
-			System.out.println("\tget sound : " + res_list[i]);
-		}
-		
-		System.out.println("list sounds : " + table.size());
-
-		return table;
-	}
-
 	public ISound getSound(String index)
 	{
 		return all_sounds.get(index).get();
