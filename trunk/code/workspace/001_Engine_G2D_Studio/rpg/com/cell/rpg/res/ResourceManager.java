@@ -136,15 +136,15 @@ public abstract class ResourceManager extends CellSetResourceManager
 	
 	final protected void initAllXmlNames()  throws Exception
 	{
-		names_item_properties	= readRPGObjectNames(save_dir + "/item_properties/names_item_properties.list");
+		names_item_properties	= readRPGObjectNames(save_dir + "/item_properties/name_item_properties.list");
 		
-		names_tunits			= readRPGObjectNames(save_dir + "/objects/tunit.obj/names_tunit.list");
-		names_titems			= readRPGObjectNames(save_dir + "/objects/titem.obj/names_titem.list");
-		names_tavatars			= readRPGObjectNames(save_dir + "/objects/tavatar.obj/names_tavatar.list");
-		names_tskills			= readRPGObjectNames(save_dir + "/objects/tskill.obj/names_tskill.list");
+		names_tunits			= readRPGObjectNames(save_dir + "/objects/tunit.obj/name_tunit.list");
+		names_titems			= readRPGObjectNames(save_dir + "/objects/titem.obj/name_titem.list");
+		names_tavatars			= readRPGObjectNames(save_dir + "/objects/tavatar.obj/name_tavatar.list");
+		names_tskills			= readRPGObjectNames(save_dir + "/objects/tskill.obj/name_tskill.list");
 		
-		names_quests			= readRPGObjectNames(save_dir + "/quests/names_quest.list");
-		names_scenes			= readRPGObjectNames(save_dir + "/scenes/names_scene.list");
+		names_quests			= readRPGObjectNames(save_dir + "/quests/name_quest.list");
+		names_scenes			= readRPGObjectNames(save_dir + "/scenes/name_scene.list");
 	}
 	
 	final protected void initIcons()
@@ -251,9 +251,14 @@ public abstract class ResourceManager extends CellSetResourceManager
 		String[] res_list = CIO.readAllLine(list_file, "UTF-8");
 		
 		for (String line : res_list) {
-			String[] kv = CUtil.splitString(line, ")", 2);
-			kv[0] = kv[0].substring(1);
-			table.put(Integer.parseInt(kv[0]), kv[1]);
+			int bl = line.indexOf("(");
+			int br = line.indexOf(")");
+			String id = line.substring(bl+1, br);
+			if (br < line.length()) {
+				table.put(Integer.parseInt(id), line.substring(br+1));
+			} else {
+				table.put(Integer.parseInt(id), "");
+			}
 		}
 		
 		return table;
