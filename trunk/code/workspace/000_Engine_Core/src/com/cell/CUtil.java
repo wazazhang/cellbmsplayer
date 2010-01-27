@@ -413,6 +413,10 @@ public class CUtil extends CObject
 		return dst;
 	}
 	
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	public static final int[] toIntArray(Collection<Integer> array) {
+		return toIntArray(array.toArray(new Integer[array.size()]));
+	}
 	public static final int[] toIntArray(Integer[] array) {
 		int[] ints = new int[array.length];
 		for (int qi=0; qi<array.length; qi++) {
@@ -427,7 +431,6 @@ public class CUtil extends CObject
 		}
 		return ints;
 	}
-	
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	public static int[] arrayAddElement(int[] array, int e, boolean isDuplicate){
