@@ -8,6 +8,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import com.cell.CIO;
 import com.cell.CUtil;
+import com.cell.rpg.NamedObject;
 import com.cell.rpg.RPGObject;
 import com.cell.rpg.io.RPGObjectMap;
 import com.cell.rpg.item.ItemProperties;
@@ -52,6 +53,15 @@ public abstract class ResourceManager extends CellSetResourceManager
 	protected Hashtable<Integer, Quest> 	quests;
 	protected Hashtable<Integer, Scene>		scenes;
 
+	protected Hashtable<Integer, String> 	names_item_properties;
+	protected Hashtable<Integer, String>	names_tunits;
+	protected Hashtable<Integer, String>	names_titems;
+	protected Hashtable<Integer, String>	names_tavatars;
+	protected Hashtable<Integer, String>	names_tskills;
+	protected Hashtable<Integer, String> 	names_quests;
+	protected Hashtable<Integer, String>	names_scenes;
+	
+	
 	// icons and sounds
 	protected Hashtable<String, AtomicReference<BufferedImage>> 		all_icons;
 	protected Hashtable<String, AtomicReference<ISound>> 				all_sounds;
@@ -122,6 +132,19 @@ public abstract class ResourceManager extends CellSetResourceManager
 		
 		quests			= readRPGObjects(save_dir + "/quests/quest.list",		Quest.class);
 		scenes			= readRPGObjects(save_dir + "/scenes/scene.list", 		Scene.class);
+	}
+	
+	final protected void initAllXmlNames()  throws Exception
+	{
+		names_item_properties	= readRPGObjectNames(save_dir + "/item_properties/names_item_properties.list");
+		
+		names_tunits			= readRPGObjectNames(save_dir + "/objects/tunit.obj/names_tunit.list");
+		names_titems			= readRPGObjectNames(save_dir + "/objects/titem.obj/names_titem.list");
+		names_tavatars			= readRPGObjectNames(save_dir + "/objects/tavatar.obj/names_tavatar.list");
+		names_tskills			= readRPGObjectNames(save_dir + "/objects/tskill.obj/names_tskill.list");
+		
+		names_quests			= readRPGObjectNames(save_dir + "/quests/names_quest.list");
+		names_scenes			= readRPGObjectNames(save_dir + "/scenes/names_scene.list");
 	}
 	
 	final protected void initIcons()
@@ -219,11 +242,28 @@ public abstract class ResourceManager extends CellSetResourceManager
 		return table;
 	}
 
+	final protected Hashtable<Integer, String> readRPGObjectNames(String list_file) throws Exception
+	{
+		System.out.println("list rpg object names : " + list_file);
+
+		Hashtable<Integer, String> table = new Hashtable<Integer, String>();
+		
+		String[] res_list = CIO.readAllLine(list_file, "UTF-8");
+		
+		for (String line : res_list) {
+			String[] kv = CUtil.splitString(line, ")", 2);
+			kv[0] = kv[0].substring(1);
+			table.put(Integer.parseInt(kv[0]), kv[1]);
+		}
+		
+		return table;
+	}
+	
 	final protected <T extends RPGObject> Hashtable<Integer, T> readRPGObjects(String list_file, Class<T> type) throws Exception
 	{		
-		String tdir = CIO.getPathDir(list_file);
+		System.out.println("list rpg objects : " + list_file);
 		
-		System.out.println("list rpg objects : " + tdir);
+		String tdir = CIO.getPathDir(list_file);
 
 		Hashtable<Integer, T> table = new Hashtable<Integer, T>();
 		
@@ -246,7 +286,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 		}
 		
 		System.out.println("size : " + table.size());
-
+		
 		return table;
 	}
 
@@ -320,7 +360,6 @@ public abstract class ResourceManager extends CellSetResourceManager
 		return tskills.get(id);
 	}
 	
-
 //	--------------------------------------------------------------------------------------------------------------------
 //	ItemProperties
 //	--------------------------------------------------------------------------------------------------------------------
@@ -346,10 +385,6 @@ public abstract class ResourceManager extends CellSetResourceManager
 	{
 		return quests.get(quest_id);
 	}
-	
-//	--------------------------------------------------------------------------------------------------------------------
-//	--------------------------------------------------------------------------------------------------------------------
-//	--------------------------------------------------------------------------------------------------------------------
 	
 //	--------------------------------------------------------------------------------------------------------------------
 //	Scenes
@@ -390,22 +425,26 @@ public abstract class ResourceManager extends CellSetResourceManager
 //	
 //	--------------------------------------------------------------------------------------------------------------------
 	
-	public static void main(String[] args) throws Exception 
-	{
-//		try
-//		{
-//			new ResourceManager(
-//					args[0], 
-//					args[1], 
-//					true, true, true, true){};
-//		}
-//		catch (Exception err) 
-//		{
-//			new ResourceManager(
-//					"D:/EatWorld/trunk/eatworld/data/edit/resource", 
-//					"project.g2d.save", 
-//					true, true, true, true){};
-//		}
-		
+	public String getItemPropertiesName(int id) {
+		return names_item_properties.get(id);
 	}
+	public String getTUnitName(int id) {
+		return names_tunits.get(id);
+	}
+	public String getTItemName(int id) {
+		return names_titems.get(id);
+	}
+	public String getTAvatarName(int id) {
+		return names_tavatars.get(id);
+	}
+	public String getTSkillName(int id) {
+		return names_tskills.get(id);
+	}
+	public String getQuestName(int id) {
+		return names_quests.get(id);
+	}
+	public String getRPGSceneName(int id) {
+		return names_scenes.get(id);
+	}
+
 }
