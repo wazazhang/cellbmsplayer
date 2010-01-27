@@ -415,9 +415,15 @@ public class CUtil extends CObject
 	
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	public static final int[] toIntArray(Collection<Integer> array) {
+		if (array == null) {
+			return null;
+		}
 		return toIntArray(array.toArray(new Integer[array.size()]));
 	}
 	public static final int[] toIntArray(Integer[] array) {
+		if (array == null) {
+			return null;
+		}
 		int[] ints = new int[array.length];
 		for (int qi=0; qi<array.length; qi++) {
 			ints[qi] = array[qi];
@@ -425,6 +431,9 @@ public class CUtil extends CObject
 		return ints;
 	}
 	public static final Integer[] toIntArray(int[] array) {
+		if (array == null) {
+			return null;
+		}
 		Integer[] ints = new Integer[array.length];
 		for (int qi=0; qi<array.length; qi++) {
 			ints[qi] = array[qi];
