@@ -21,6 +21,7 @@ import javax.swing.JScrollPane;
 import javax.swing.tree.TreePath;
 
 import com.cell.CIO;
+import com.cell.rpg.NamedObject;
 import com.cell.rpg.io.RPGObjectMap;
 import com.cell.rpg.scene.Scene;
 import com.cell.rpg.scene.graph.SceneGraph;
@@ -197,10 +198,14 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 	{
 		synchronized (scene_lock) {
 			StringBuffer all_scene = new StringBuffer();
+			File name_list_file = new File(scene_list.getParentFile(), "name_" + scene_list.getName());
+			StringBuffer all_names = new StringBuffer();
 			for (SceneNode node : getAllScenes()) {
 				all_scene.append(SceneGroup.toPathString(node, "/") + node.getID() + ".xml" + "\n");
+				all_names.append("("+node.getData().id+")"+((NamedObject)node.getData()).getName()+"\n");
 			}
 			com.cell.io.CFile.writeText(scene_list, all_scene.toString(), "UTF-8");
+			com.cell.io.CFile.writeText(name_list_file, all_names.toString(), "UTF-8");
 		}
 		System.out.println("save scene list");
 	}
