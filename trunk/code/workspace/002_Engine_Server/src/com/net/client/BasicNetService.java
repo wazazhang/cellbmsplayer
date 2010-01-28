@@ -2,6 +2,7 @@ package com.net.client;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -22,9 +23,6 @@ import com.net.MessageHeader;
  */
 public abstract class BasicNetService
 {
-	/**request从1开始*/
-	private AtomicInteger SendedPacks = new AtomicInteger(1);
-	
 //	-------------------------------------------------------------------------------------------------
 	private class ExitTask extends Thread
 	{
@@ -132,13 +130,12 @@ public abstract class BasicNetService
 	@SuppressWarnings("unchecked")
 	private class Request implements Runnable
 	{
-		final public MessageHeader 		Message;
-		final public WaitingListener[] 	Listener;
-		final public long 				SendTimeOut;
+		final MessageHeader 				Message;
+		final ArrayList<WaitingListener> 	Listener;
+		final long 							SendTimeOut;
+		MessageHeader						Response;
 		
-		MessageHeader					Response;
-		
-		public Request(MessageHeader msg,  long timeout, WaitingListener ... listener)
+		private Request(MessageHeader msg, long timeout, WaitingListener ... listeners)
 		{
 			if (SendedPacks.get() == 0) {
 				SendedPacks.incrementAndGet();
@@ -146,8 +143,11 @@ public abstract class BasicNetService
 			msg.PacketNumber 	= SendedPacks.getAndIncrement();
 	    	
 			this.Message 		= msg;
-			this.Listener 		= listener;
 			this.SendTimeOut 	= timeout > 0 ? timeout : 0;
+			this.Listener 		= new ArrayList<WaitingListener>(listeners.length);
+			for (WaitingListener l : listeners) {
+				this.Listener.add(l);
+			}
 		}
 		
 		public void run () 
@@ -167,7 +167,7 @@ public abstract class BasicNetService
 			}
 		}
 		
-		public void messageResponsed(MessageHeader response) 
+		private void messageResponsed(MessageHeader response) 
 		{
 //			System.out.println("response " + this);
 			Response = response;
@@ -178,15 +178,30 @@ public abstract class BasicNetService
 					notify();
 				}
 			}
-
-			for (WaitingListener wait : Listener) {
-				wait.response(BasicNetService.this, Message, response);
+			synchronized (this){
+				for (WaitingListener wait : Listener) {
+					wait.response(BasicNetService.this, Message, response);
+				}
 			}
 		}
 		
-		public void timeout() {
-			for (WaitingListener wait : Listener) {
-				wait.timeout(BasicNetService.this, Message, Message.DynamicSendTime);
+		private void timeout() {
+			synchronized (this){
+				for (WaitingListener wait : Listener) {
+					wait.timeout(BasicNetService.this, Message, Message.DynamicSendTime);
+				}
+			}
+		}
+		
+		private void removeWaitingListener(Class<?> type) {
+			synchronized (this){
+				for (int i=Listener.size()-1; i>=0; --i) {
+					WaitingListener l = Listener.get(i);
+					if (type.isInstance(l)) {
+						Listener.remove(i);
+						log.info("removeWaitingListener : " + l);
+					}
+				}
 			}
 		}
 		
@@ -202,6 +217,9 @@ public abstract class BasicNetService
 	
 //	---------------------------------------------------------------------------------------------------------------------------------
 
+	/**request从1开始*/
+	final private AtomicInteger 	SendedPacks 			= new AtomicInteger(1);
+	
 	final private SimpleClientListenerImpl
 									session_listener 		= new SimpleClientListenerImpl();
 	
@@ -237,6 +255,9 @@ public abstract class BasicNetService
 		Runtime.getRuntime().addShutdownHook(new ExitTask());
 	}
 
+	final protected ServerSessionListener getSessionListener() {
+		return session_listener;
+	}
 
 //	----------------------------------------------------------------------------------------------------------------------------
 
@@ -311,6 +332,22 @@ public abstract class BasicNetService
     final public void sendRequest(MessageHeader message, WaitingListener ... listeners) {
     	sendRequest(message, 0, listeners);
 	}
+    
+    /**
+     * 强制移除所有等待中的请求
+     * @param type
+     */
+    final public void removeRequestByType(Class<?> type){
+    	sendlock.lock();
+    	try{
+    		for (Integer pnum : WaitingListeners.keySet()) {
+    			Request request = WaitingListeners.get(pnum);
+    			request.removeWaitingListener(type);
+    		}
+    	}finally {
+    		sendlock.unlock();
+    	}
+    }
     
     /**
      * 立刻清理所有未响应的请求
@@ -472,12 +509,8 @@ public abstract class BasicNetService
 
 //	----------------------------------------------------------------------------------------------------------------------------
 
-	final protected ServerSessionListener getSessionListener() {
-		return session_listener;
-	}
-	
 	@SuppressWarnings("unchecked")
-	final protected boolean tryReceivedNotify(MessageHeader message) 
+	final private boolean tryReceivedNotify(MessageHeader message) 
 	{
 		notifylock.lock();
 		try{
@@ -494,9 +527,15 @@ public abstract class BasicNetService
     	return false;
 	}
 	
-	final protected boolean tryReceivedResponse(MessageHeader message)
+	final private boolean tryReceivedResponse(MessageHeader message)
 	{
-		Request request = WaitingListeners.remove(message.PacketNumber);
+		Request request = null;
+		sendlock.lock();
+    	try{
+    		request = WaitingListeners.remove(message.PacketNumber);
+    	}finally {
+    		sendlock.unlock();
+    	}
     	if (request != null) {
     		request.messageResponsed(message);
     		return true;
@@ -504,7 +543,7 @@ public abstract class BasicNetService
     	return false;
 	}
 	
-	final protected boolean tryPushUnhandledNotify(MessageHeader message)
+	final private boolean tryPushUnhandledNotify(MessageHeader message)
 	{
 		notifylock.lock();
 		try{
