@@ -46,7 +46,6 @@ public class Resource extends CellSetResource
 	@Override
 	protected IImages getStreamImage(ImagesSet img) throws IOException {
 		StreamTypeTiles tiles = new StreamTypeTiles(img);
-		loading_service.execute(tiles);
 		return tiles;
 	}
 	

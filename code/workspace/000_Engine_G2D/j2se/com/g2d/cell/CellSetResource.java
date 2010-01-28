@@ -61,11 +61,11 @@ public class CellSetResource //implements Serializable
 
 	transient public Hashtable<String, ImagesSet>		ImgTable;
 	transient public Hashtable<String, SpriteSet>		SprTable;
-	transient public Hashtable<String, MapSet>		MapTable;
-	transient public Hashtable<String, WorldSet>	WorldTable;
+	transient public Hashtable<String, MapSet>			MapTable;
+	transient public Hashtable<String, WorldSet>		WorldTable;
 
-	transient protected Map<String, Object> 	ResourceManager;
-	transient protected ThreadPoolExecutor 		loading_service;
+	transient protected	Map<String, Object> 			ResourceManager;
+	transient private	ThreadPoolExecutor				loading_service;
 //	-------------------------------------------------------------------------------------
 	
 	public CellSetResource(String file) throws Exception
@@ -212,6 +212,29 @@ public class CellSetResource //implements Serializable
 
 	}
 	
+	public void dispose() {
+		try{
+			loading_service.shutdownNow();
+		}catch(Throwable err){
+			err.printStackTrace();
+		}
+		try{
+			ImgTable.clear();
+			SprTable.clear();
+			MapTable.clear();
+			WorldTable.clear();
+			ResourceManager.clear();
+		}catch(Throwable err){
+			err.printStackTrace();
+		}
+	}
+	
+	@Override
+	protected void finalize() throws Throwable {
+		super.finalize();
+		dispose();
+	}
+	
 	protected Object writeReplace() throws ObjectStreamException {
 		return this;
 	}
@@ -246,6 +269,7 @@ public class CellSetResource //implements Serializable
 			try {
 				if (is_stream_image) {
 					stuff = getStreamImage(img);
+					loading_service.execute((Runnable)stuff);
 				} else {
 					stuff = getLocalImage(img);
 				}
@@ -290,7 +314,6 @@ public class CellSetResource //implements Serializable
 	protected IImages getStreamImage(ImagesSet img) throws IOException
 	{
 		StreamTiles tiles = new StreamTiles(img);
-		loading_service.execute(tiles);
 		return tiles;
 	}
 	
