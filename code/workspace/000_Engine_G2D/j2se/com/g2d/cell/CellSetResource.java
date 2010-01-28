@@ -214,6 +214,7 @@ public class CellSetResource //implements Serializable
 	
 	public void dispose() {
 		try{
+			loading_service.purge();
 			loading_service.shutdownNow();
 		}catch(Throwable err){
 			err.printStackTrace();
@@ -269,6 +270,7 @@ public class CellSetResource //implements Serializable
 			try {
 				if (is_stream_image) {
 					stuff = getStreamImage(img);
+					loading_service.purge();
 					loading_service.execute((Runnable)stuff);
 				} else {
 					stuff = getLocalImage(img);
