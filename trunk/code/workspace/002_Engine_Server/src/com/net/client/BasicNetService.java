@@ -166,7 +166,7 @@ public abstract class BasicNetService
 					notify();
 				}
 			}
-			synchronized (this){
+			synchronized (Listener){
 				for (WaitingListener wait : Listener) {
 					wait.response(BasicNetService.this, Message, response);
 				}
@@ -174,7 +174,7 @@ public abstract class BasicNetService
 		}
 		
 		private void timeout() {
-			synchronized (this){
+			synchronized (Listener){
 				for (WaitingListener wait : Listener) {
 					wait.timeout(BasicNetService.this, Message, Message.DynamicSendTime);
 				}
@@ -182,7 +182,7 @@ public abstract class BasicNetService
 		}
 		
 		private void removeWaitingListener(Class<?> type) {
-			synchronized (this){
+			synchronized (Listener){
 				for (int i=Listener.size()-1; i>=0; --i) {
 					WaitingListener l = Listener.get(i);
 					if (type.isInstance(l)) {
