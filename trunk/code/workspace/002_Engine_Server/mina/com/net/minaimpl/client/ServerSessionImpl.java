@@ -23,6 +23,19 @@ import com.net.minaimpl.NetPackageCodec;
 
 public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession 
 {
+	private class ExitTask extends Thread
+	{
+		public void run() {
+			System.out.println("Clear ServerSession connection !");
+			try {
+				disconnect(false);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	private Thread									shutdown_hook		= new ExitTask();
+	
 	private ServerSessionListener 					Listener;
 	private Hashtable<Integer, ClientChannelImpl> 	Channels			= new Hashtable<Integer, ClientChannelImpl>();
 	private IoSession 								Session;
@@ -43,6 +56,13 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 		Connector 	= new NioSocketConnector();
 		Connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(Codec));
 		Connector.setHandler(this);
+		Runtime.getRuntime().addShutdownHook(shutdown_hook);
+	}
+	
+	@Override
+	protected void finalize() throws Throwable {
+		Runtime.getRuntime().removeShutdownHook(shutdown_hook);
+		super.finalize();
 	}
 	
 	public boolean connect(String host, int port, ServerSessionListener listener) throws IOException {

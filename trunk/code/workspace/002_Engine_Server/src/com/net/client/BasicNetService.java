@@ -23,18 +23,6 @@ import com.net.MessageHeader;
  */
 public abstract class BasicNetService
 {
-//	-------------------------------------------------------------------------------------------------
-	private class ExitTask extends Thread
-	{
-		public void run() {
-			log.info("clear connection !");
-			try {
-				close(false);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
 
 //	-------------------------------------------------------------------------------------------------
 
@@ -251,8 +239,6 @@ public abstract class BasicNetService
 	{
 		this.log				= LoggerFactory.getLogger(getClass().getName());
 		this.thread_pool		= thread_pool;
-		
-		Runtime.getRuntime().addShutdownHook(new ExitTask());
 	}
 
 	final protected ServerSessionListener getSessionListener() {
