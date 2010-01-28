@@ -233,10 +233,13 @@ public abstract class DisplayObject extends DObject implements Comparable<Displa
 	 * @return
 	 */
 	public boolean removeFromParent() {
-		if( parent != null) {
-			parent.removeChild(this);
+		try{
+			if( parent != null) {
+				parent.removeChild(this);
+				return true;
+			}
+		}finally{
 			parent = null;
-			return true;
 		}
 		return false;
 	}
