@@ -56,8 +56,8 @@ public class CellSetResource //implements Serializable
 	final public String				PathName;
 	
 	final public String				Name;
-	
-	protected boolean 				is_stream_image = false;
+	final
+	protected boolean 				is_stream_image;
 
 	transient public Hashtable<String, ImagesSet>		ImgTable;
 	transient public Hashtable<String, SpriteSet>		SprTable;
@@ -75,7 +75,7 @@ public class CellSetResource //implements Serializable
 		PathName		= file.substring(file.lastIndexOf("/")+1);
 		
 		Name 			= Path;
-		
+		is_stream_image = false;
 		init();
 	}
 	
@@ -86,10 +86,10 @@ public class CellSetResource //implements Serializable
 		PathName		= file.substring(file.lastIndexOf("/")+1);
 		
 		Name 			= Path;
+		is_stream_image = stream_image;
 		
 		init();
 		
-		is_stream_image = stream_image;
 	}
 	
 	public CellSetResource(String file, String name, boolean stream_image) throws Exception
@@ -99,10 +99,10 @@ public class CellSetResource //implements Serializable
 		PathName		= file.substring(file.lastIndexOf("/")+1);
 		
 		Name 			= name;
+		is_stream_image = stream_image;
 		
 		init();
 		
-		is_stream_image = stream_image;
 	}
 	
 	public CellSetResource(File file, String name, boolean stream_image) throws Exception
@@ -112,10 +112,10 @@ public class CellSetResource //implements Serializable
 		PathName		= Path.substring(Path.lastIndexOf("/")+1);
 		
 		Name 			= name;
+		is_stream_image = stream_image;
 		
 		init();
 		
-		is_stream_image = stream_image;
 	}
 	
 	protected void init() throws Exception
@@ -208,8 +208,10 @@ public class CellSetResource //implements Serializable
 		}
 		
 		ResourceManager = new ConcurrentHashMap<String, Object>();
-		loading_service = new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
-
+		
+		if (is_stream_image) {
+			loading_service = new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
+		}
 	}
 	
 	public void dispose() {
