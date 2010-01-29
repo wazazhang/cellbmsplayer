@@ -292,7 +292,7 @@ public class ServerImpl extends IoHandlerAdapter implements Server
 	}
 	
 	public void sessionIdle(IoSession session, IdleStatus status) throws Exception {
-		_log.info("sessionIdle : " + session);
+		_log.info("sessionIdle : " + session + " : " + status);
 		unbindSession(session);
 	}
 	
