@@ -54,7 +54,7 @@ public class ServerImpl extends IoHandlerAdapter implements Server
 		this(Thread.currentThread().getContextClassLoader(), 
 				null,
 				Runtime.getRuntime().availableProcessors() + 1, 
-				100, 100);
+				Integer.MAX_VALUE, Integer.MAX_VALUE);
 	}
 
 	/**
@@ -159,51 +159,55 @@ public class ServerImpl extends IoHandlerAdapter implements Server
 	
 	private void unbindSession(IoSession session)
 	{
-		ClientSessionImpl client = getBindSession(session);
-		
-		session.removeAttribute(SessionAttributeKey.CLIENT_SESSION);
-		
-		if (client != null)		
-		{
-			try{
-				client.stopHeartBeat();
-			}catch (Throwable e) {
-				_log.error(e.getMessage(), e);
-			}
+		session_lock.lock();
+		try {
 			
-			try{
-				Iterator<Channel> channels = channel_manager.getChannels();
-				while (channels.hasNext()) {
-					channels.next().leave(client);
+			ClientSessionImpl client = getBindSession(session);
+
+			session.removeAttribute(SessionAttributeKey.CLIENT_SESSION);
+
+			if (client != null) {
+				try {
+					Iterator<Channel> channels = channel_manager.getChannels();
+					while (channels.hasNext()) {
+						channels.next().leave(client);
+					}
+				} catch (Throwable e) {
+					_log.error(e.getMessage(), e);
 				}
-			}catch (Throwable e) {
-				_log.error(e.getMessage(), e);
-			}
-			
-			try{
-				if (session.isConnected()) {
-					session.close(false);
+
+				try {
+					if (session.isConnected()) {
+						session.close(false);
+					}
+				} catch (Throwable e) {
+					_log.error(e.getMessage(), e);
 				}
-			}catch (Throwable e) {
-				_log.error(e.getMessage(), e);
-			}
-			
-			try {
-				if (client.Listener != null) {
-					client.Listener.disconnected(client);
+
+				try {
+					if (client.Listener != null) {
+						client.Listener.disconnected(client);
+					}
+				} catch (Throwable e) {
+					_log.error(e.getMessage(), e);
 				}
-			} catch (Throwable e) {
-				_log.error(e.getMessage(), e);
 			}
+		} finally {
+			session_lock.unlock();
 		}
 	}
 	
 	private void bindSession(IoSession session)
 	{
-		ClientSessionImpl client = new ClientSessionImpl(session, this);
-		session.setAttribute(SessionAttributeKey.CLIENT_SESSION, client);
-		client.LastHartBeatTime = System.currentTimeMillis();
-		client.setListener(SrvListener.connected(client));
+		session_lock.lock();
+		try{
+			ClientSessionImpl client = new ClientSessionImpl(session, this);
+			session.setAttribute(SessionAttributeKey.CLIENT_SESSION, client);
+			client.LastHartBeatTime = System.currentTimeMillis();
+			client.setListener(SrvListener.connected(client));
+		} finally {
+			session_lock.unlock();
+		}
 	}
 	
 	private void removeAllSession()

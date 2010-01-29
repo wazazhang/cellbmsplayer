@@ -28,7 +28,7 @@ public class ClientSessionImpl implements ClientSession
 	
 	long LastHartBeatTime;
 
-	private Future<?> heartbeat_future;
+//	private Future<?> heartbeat_future;
 	
 	
 	public ClientSessionImpl(IoSession session, Server server){
@@ -137,11 +137,11 @@ public class ClientSessionImpl implements ClientSession
 		return  System.currentTimeMillis() - LastHartBeatTime;
 	}
 	
-	synchronized public void stopHeartBeat() {
-		if (heartbeat_future!=null) {
-			heartbeat_future.cancel(false);
-		}
-	}
+//	synchronized public void stopHeartBeat() {
+//		if (heartbeat_future!=null) {
+//			heartbeat_future.cancel(false);
+//		}
+//	}
 	
 	@Override
 	public long getReceivedBytes() {
@@ -161,26 +161,26 @@ public class ClientSessionImpl implements ClientSession
 	}
 	
 	
-	synchronized public void startHeartBeat(ThreadPool pool, final long heartbeat_timeout)
-	{
-		if (heartbeat_future == null || 
-			heartbeat_future.isDone() || 
-			heartbeat_future.isCancelled())
-		{
-			// 在heartbeat_timeout ms秒后检查是否在这段时间内没有消息发送过来
-			heartbeat_future = pool.scheduleAtFixedRate(new Runnable(){
-				public void run() {
-					ClientSessionImpl iosession = ClientSessionImpl.this;
-					if (iosession.getIdleDuration() >= heartbeat_timeout) {
-						log.error("long time no message (" + iosession.getIdleDuration() + "), kick " + iosession);
-						iosession.disconnect(false);
-					}
-				}
-			}, 
-			heartbeat_timeout + 1, 
-			heartbeat_timeout);
-		}
-	}
+//	synchronized public void startHeartBeat(ThreadPool pool, final long heartbeat_timeout)
+//	{
+//		if (heartbeat_future == null || 
+//			heartbeat_future.isDone() || 
+//			heartbeat_future.isCancelled())
+//		{
+//			// 在heartbeat_timeout ms秒后检查是否在这段时间内没有消息发送过来
+//			heartbeat_future = pool.scheduleAtFixedRate(new Runnable(){
+//				public void run() {
+//					ClientSessionImpl iosession = ClientSessionImpl.this;
+//					if (iosession.getIdleDuration() >= heartbeat_timeout) {
+//						log.error("long time no message (" + iosession.getIdleDuration() + "), kick " + iosession);
+//						iosession.disconnect(false);
+//					}
+//				}
+//			}, 
+//			heartbeat_timeout + 1, 
+//			heartbeat_timeout);
+//		}
+//	}
 	
 	
 }

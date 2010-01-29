@@ -15,8 +15,8 @@ public interface ClientSession extends AbstractSession
 	
 	public ClientSessionListener	getListener();
 
-	public void 					startHeartBeat(ThreadPool pool, final long heartbeat_timeout);
-	
-	public void 					stopHeartBeat() ;
+//	public void 					startHeartBeat(ThreadPool pool, final long heartbeat_timeout);
+//	
+//	public void 					stopHeartBeat() ;
 	
 }
