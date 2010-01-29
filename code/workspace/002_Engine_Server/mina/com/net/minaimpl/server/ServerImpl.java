@@ -150,64 +150,17 @@ public class ServerImpl extends IoHandlerAdapter implements Server
 	
 	private ClientSessionImpl getBindSession(IoSession session)
 	{
-		Object obj = session.getAttribute(SessionAttributeKey.CLIENT_SESSION);
-		if (obj instanceof ClientSessionImpl){
-			return (ClientSessionImpl)obj;
-		}
-		return null;
-	}
-	
-	private void unbindSession(IoSession session)
-	{
 		session_lock.lock();
 		try {
-			
-			ClientSessionImpl client = getBindSession(session);
-
-			session.removeAttribute(SessionAttributeKey.CLIENT_SESSION);
-
-			if (client != null) {
-				try {
-					Iterator<Channel> channels = channel_manager.getChannels();
-					while (channels.hasNext()) {
-						channels.next().leave(client);
-					}
-				} catch (Throwable e) {
-					_log.error(e.getMessage(), e);
-				}
-
-				try {
-					if (session.isConnected()) {
-						session.close(false);
-					}
-				} catch (Throwable e) {
-					_log.error(e.getMessage(), e);
-				}
-
-				try {
-					if (client.Listener != null) {
-						client.Listener.disconnected(client);
-					}
-				} catch (Throwable e) {
-					_log.error(e.getMessage(), e);
-				}
+			Object obj = session
+					.getAttribute(SessionAttributeKey.CLIENT_SESSION);
+			if (obj instanceof ClientSessionImpl) {
+				return (ClientSessionImpl) obj;
 			}
 		} finally {
 			session_lock.unlock();
 		}
-	}
-	
-	private void bindSession(IoSession session)
-	{
-		session_lock.lock();
-		try{
-			ClientSessionImpl client = new ClientSessionImpl(session, this);
-			session.setAttribute(SessionAttributeKey.CLIENT_SESSION, client);
-			client.LastHartBeatTime = System.currentTimeMillis();
-			client.setListener(SrvListener.connected(client));
-		} finally {
-			session_lock.unlock();
-		}
+		return null;
 	}
 	
 	private void removeAllSession()
@@ -215,10 +168,7 @@ public class ServerImpl extends IoHandlerAdapter implements Server
 		session_lock.lock();
 		try{
 			for (IoSession session : Acceptor.getManagedSessions().values()){
-				ClientSessionImpl client = getBindSession(session);
-				if (client!=null){
-					unbindSession(((ClientSessionImpl)client).Session);
-				}
+				session.close(false);
 			}
 		} finally {
 			session_lock.unlock();
@@ -317,22 +267,56 @@ public class ServerImpl extends IoHandlerAdapter implements Server
 	
 	public void exceptionCaught(IoSession session, Throwable cause) throws Exception {
 		_log.error(cause.getMessage() + "\n" + session, cause);
-		unbindSession(session);
+		session.close(false);
 	}
 	
 	public void sessionIdle(IoSession session, IdleStatus status) throws Exception {
 		_log.info("sessionIdle : " + session + " : " + status);
-		unbindSession(session);
+		session.close(false);
 	}
 	
 	public void sessionOpened(IoSession session) throws Exception {
 		_log.info("sessionOpened : " + session);
-		bindSession(session);
+		session_lock.lock();
+		try{
+			ClientSessionImpl client = new ClientSessionImpl(session, this);
+			session.setAttribute(SessionAttributeKey.CLIENT_SESSION, client);
+			client.LastHartBeatTime = System.currentTimeMillis();
+			client.setListener(SrvListener.connected(client));
+		} finally {
+			session_lock.unlock();
+		}
 	}
 	
 	public void sessionClosed(IoSession session) throws Exception {
 		_log.info("sessionClosed : " + session);
-		unbindSession(session);
+		session_lock.lock();
+		try {
+			ClientSessionImpl client = getBindSession(session);
+
+			session.removeAttribute(SessionAttributeKey.CLIENT_SESSION);
+
+			if (client != null) {
+				try {
+					Iterator<Channel> channels = channel_manager.getChannels();
+					while (channels.hasNext()) {
+						channels.next().leave(client);
+					}
+				} catch (Throwable e) {
+					_log.error(e.getMessage(), e);
+				}
+
+				try {
+					if (client.Listener != null) {
+						client.Listener.disconnected(client);
+					}
+				} catch (Throwable e) {
+					_log.error(e.getMessage(), e);
+				}
+			}
+		} finally {
+			session_lock.unlock();
+		}
 	}
 	
 	public void messageReceived(final IoSession session, final Object message) throws Exception 
