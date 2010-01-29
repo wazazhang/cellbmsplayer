@@ -371,8 +371,11 @@ public class CellSetResource //implements Serializable
 				return;
 			}
 		}
-		
-		loading_service.execute(new LoadSpriteTask(spr, listener));
+		if (is_stream_image) {
+			loading_service.execute(new LoadSpriteTask(spr, listener));
+		} else {
+			new Thread(new LoadSpriteTask(spr, listener), "get-sprite-" + key).start();
+		}
 	}
 
 	
