@@ -64,14 +64,16 @@ public class ThreadPool
 					scheduled_corePoolSize, 
 					new PriorityThreadFactory(name + " Scheduled ThreadPool", Thread.NORM_PRIORITY));
 		}
-
-		gameThreadPool = new ThreadPoolExecutor(
-				threadpool_corePoolSize, 
-				threadpool_maximumPoolSize,
-		        5L, 
-		        TimeUnit.SECONDS,
-		        new LinkedBlockingQueue<Runnable>(),
-		        new PriorityThreadFactory(name + " ThreadPool", Thread.NORM_PRIORITY));
+		
+		if (threadpool_corePoolSize>0) {
+			gameThreadPool = new ThreadPoolExecutor(
+					threadpool_corePoolSize, 
+					threadpool_maximumPoolSize,
+			        5L, 
+			        TimeUnit.SECONDS,
+			        new LinkedBlockingQueue<Runnable>(),
+			        new PriorityThreadFactory(name + " ThreadPool", Thread.NORM_PRIORITY));
+		}
 
 		Runtime.getRuntime().addShutdownHook(new Thread(){
 			public void run() {
@@ -191,21 +193,51 @@ public class ThreadPool
 					gameScheduledThreadPool.awaitTermination(1, TimeUnit.SECONDS);
 					gameScheduledThreadPool.shutdown();
 				}
-			} catch (InterruptedException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 	
 			try {
-				gameThreadPool.awaitTermination(1, TimeUnit.SECONDS);
-				gameThreadPool.shutdown();
-			} catch (InterruptedException e) {
+				if (gameThreadPool!=null) {
+					gameThreadPool.awaitTermination(1, TimeUnit.SECONDS);
+					gameThreadPool.shutdown();
+				}
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 	
 			System.out.println("ThreadPool \"" + name+ "\" : All Threads are now stoped");
 		}
 	}
-
+	
+	public void shutdownNow()
+	{
+		if (!shutdown) 
+		{
+			shutdown = true;
+			
+			try {
+				if (gameScheduledThreadPool!=null) {
+					gameScheduledThreadPool.awaitTermination(1, TimeUnit.SECONDS);
+					gameScheduledThreadPool.shutdownNow();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+	
+			try {
+				if (gameThreadPool!=null) {
+					gameThreadPool.awaitTermination(1, TimeUnit.SECONDS);
+					gameThreadPool.shutdownNow();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+	
+			System.out.println("ThreadPool \"" + name+ "\" : All Threads are now stoped");
+		}
+	}
+	
 	public boolean isShutdown()
 	{
 		return shutdown;
