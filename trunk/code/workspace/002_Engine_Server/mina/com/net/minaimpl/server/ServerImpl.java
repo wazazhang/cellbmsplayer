@@ -38,8 +38,9 @@ public class ServerImpl extends IoHandlerAdapter implements Server
 	private IoAcceptor 			Acceptor;
 	private NetPackageCodec 	Codec;
 
-	public int					SessionIdleTimeSeconds = 100;
-	public long 				StartTime;
+	final private int			SessionReadIdleTimeSeconds;
+	final private int			SessionWriteIdleTimeSeconds;
+	private long 				StartTime;
 
 	final ChannelManager		channel_manager;
 	final ReentrantLock			session_lock	= new ReentrantLock();
@@ -50,33 +51,56 @@ public class ServerImpl extends IoHandlerAdapter implements Server
 	
 	public ServerImpl() 
 	{
-		this(Thread.currentThread().getContextClassLoader(), null,
+		this(Thread.currentThread().getContextClassLoader(), 
+				null,
 				Runtime.getRuntime().availableProcessors() + 1, 
-				100);
+				100, 100);
 	}
 
+	/**
+	 * @param ioProcessCount IO处理线程数
+	 * @param sessionWriteIdleTimeSeconds	多长时间内没有发送数据，断掉链接
+	 * @param sessionReadIdleTimeSeconds	多长时间内没有接受数据，断掉链接
+	 */
 	public ServerImpl(
 			int ioProcessCount, 
-			int sessionIdleTimeSeconds) 
+			int sessionWriteIdleTimeSeconds,
+			int sessionReadIdleTimeSeconds) 
 	{
-		this(Thread.currentThread().getContextClassLoader(), null,
-				ioProcessCount, sessionIdleTimeSeconds);
+		this(Thread.currentThread().getContextClassLoader(), 
+				null,
+				ioProcessCount, 
+				sessionWriteIdleTimeSeconds, 
+				sessionReadIdleTimeSeconds);
 	}
 	
+	/**
+	 * @param cl ClassLoader
+	 * @param ef ExternalizableFactory
+	 * @param ioProcessCount IO处理线程数
+	 * @param sessionWriteIdleTimeSeconds	多长时间内没有发送数据，断掉链接
+	 * @param sessionReadIdleTimeSeconds	多长时间内没有接受数据，断掉链接
+	 */
 	public ServerImpl(
 			ClassLoader cl,
 			ExternalizableFactory ef,
 			int ioProcessCount, 
-			int sessionIdleTimeSeconds) 
+			int sessionWriteIdleTimeSeconds,
+			int sessionReadIdleTimeSeconds) 
 	{
-		channel_manager			= new ChannelManagerImpl(this);
-		IoProcessCount			= ioProcessCount;
-		SessionIdleTimeSeconds	= sessionIdleTimeSeconds;
-		Codec					= new NetPackageCodec(cl, ef);
-	}
+		this.channel_manager				= new ChannelManagerImpl(this);
+		this.IoProcessCount					= ioProcessCount;
+		this.SessionWriteIdleTimeSeconds	= sessionWriteIdleTimeSeconds;
+		this.SessionReadIdleTimeSeconds		= sessionReadIdleTimeSeconds;
+		this.Codec							= new NetPackageCodec(cl, ef);
+	}	
 	
 //	----------------------------------------------------------------------------------------------------------------------
 
+	public long getStartTime() {
+		return StartTime;
+	}
+	
 	synchronized public void open(int port, ServerListener listener) throws IOException 
 	{
 		if (Acceptor==null)
@@ -87,8 +111,9 @@ public class ServerImpl extends IoHandlerAdapter implements Server
 			SrvListener	= listener;
 			Acceptor	= new NioSocketAcceptor(IoProcessCount);
 			
-			Acceptor.getSessionConfig().setBothIdleTime(SessionIdleTimeSeconds);
-			Acceptor.setCloseOnDeactivation(true);
+			Acceptor.getSessionConfig().setReaderIdleTime(SessionReadIdleTimeSeconds);
+			Acceptor.getSessionConfig().setWriterIdleTime(SessionWriteIdleTimeSeconds);
+//			Acceptor.setCloseOnDeactivation(true);
 			Acceptor.setHandler(this);
 			Acceptor.getFilterChain().addLast("codec", new ProtocolCodecFilter(Codec));
 			
@@ -142,7 +167,7 @@ public class ServerImpl extends IoHandlerAdapter implements Server
 		{
 			try{
 				client.stopHeartBeat();
-			}catch (Exception e) {
+			}catch (Throwable e) {
 				_log.error(e.getMessage(), e);
 			}
 			
@@ -151,7 +176,7 @@ public class ServerImpl extends IoHandlerAdapter implements Server
 				while (channels.hasNext()) {
 					channels.next().leave(client);
 				}
-			}catch (Exception e) {
+			}catch (Throwable e) {
 				_log.error(e.getMessage(), e);
 			}
 			
@@ -159,7 +184,7 @@ public class ServerImpl extends IoHandlerAdapter implements Server
 				if (session.isConnected()) {
 					session.close(false);
 				}
-			}catch (Exception e) {
+			}catch (Throwable e) {
 				_log.error(e.getMessage(), e);
 			}
 			
@@ -167,7 +192,7 @@ public class ServerImpl extends IoHandlerAdapter implements Server
 				if (client.Listener != null) {
 					client.Listener.disconnected(client);
 				}
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				_log.error(e.getMessage(), e);
 			}
 		}

@@ -55,7 +55,7 @@ public class ChatServer extends ServerImpl
 	}
     
     public ChatServer() {
-    	super(16, 1000000);
+    	super(16, 1000000, 1000000);
 	}
     
     public void open(int port) throws Exception
