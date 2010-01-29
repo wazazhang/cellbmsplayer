@@ -243,11 +243,36 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	}
 	
 	// focus
+	/**
+	 * 找到当前控件聚焦的子控件
+	 * @return
+	 */
 	final public DisplayObject getFocus() {
 		if (!elements.isEmpty()) {
 			return elements.lastElement();
 		}
 		return null;
+	}
+	
+	/**
+	 * 找到当前控件聚焦的最上层节点，该节点可能是子节点的子节点...
+	 * @return
+	 */
+	final public DisplayObject getFocusLeaf() {
+		return getFocusLeaf(this);
+	}
+	
+	private static DisplayObject getFocusLeaf(DisplayObject obj) {
+		if (obj instanceof DisplayObjectContainer) {
+			DisplayObjectContainer c = (DisplayObjectContainer)obj;
+			if (c.elements.isEmpty()) {
+				return c;
+			} else {
+				return getFocusLeaf(c.getFocus());
+			}
+		} else {
+			return obj;
+		}
 	}
 	
 	final public void focus(DisplayObject child){
