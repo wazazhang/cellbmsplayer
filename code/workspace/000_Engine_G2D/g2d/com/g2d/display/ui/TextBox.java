@@ -20,6 +20,7 @@ import com.g2d.display.AnimateCursor;
 import com.g2d.display.DisplayObject;
 import com.g2d.display.event.EventListener;
 import com.g2d.display.event.KeyEvent;
+import com.g2d.display.event.KeyInputer;
 import com.g2d.display.event.MouseEvent;
 import com.g2d.display.event.MouseMoveEvent;
 import com.g2d.display.event.MouseWheelEvent;
@@ -29,7 +30,7 @@ import com.g2d.display.ui.text.MultiTextLayout.AttributedSegment;
 
 
 
-public class TextBox extends UIComponent implements Serializable
+public class TextBox extends UIComponent implements Serializable, KeyInputer
 {
 	private static final long serialVersionUID = Version.VersionG2D;
 
@@ -123,6 +124,11 @@ public class TextBox extends UIComponent implements Serializable
 	@Deprecated
 	public boolean removeChild(DisplayObject child) {
 		throw new IllegalStateException("can not remove a custom child component in " + getClass().getName() + " !");
+	}
+	
+	@Override
+	public boolean isInput() {
+		return !is_readonly;
 	}
 	
 	public void setText(String text) {

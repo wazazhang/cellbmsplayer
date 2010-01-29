@@ -39,6 +39,7 @@ import com.cell.exception.NotImplementedException;
 import com.g2d.display.AnimateCursor;
 import com.g2d.display.Stage;
 import com.g2d.display.event.Event;
+import com.g2d.display.event.KeyInputer;
 import com.g2d.editor.DisplayObjectEditor;
 
 public class CanvasAdapter implements 
@@ -635,6 +636,14 @@ FocusListener
 //	--------------------------------------------------------------------------------
 //	control and input
 	
+	private boolean isPickedKeyInputer() {
+		if (getStage()!=null && getStage().getMousePickedObject() instanceof KeyInputer) {
+			KeyInputer inputer = (KeyInputer)getStage().getMousePickedObject();
+			return !inputer.isInput();
+		}
+		return false;
+	}
+	
 	synchronized private void queryKey() 
 	{
 		// 用收集到的按键替换查询的按键,并清理收集到的按键,重新监测下一帧的情况
@@ -666,6 +675,9 @@ FocusListener
 	 */
 	synchronized public boolean isKeyHold(int ... keycode) 
 	{
+		if (isPickedKeyInputer()){
+			return false;
+		}
 		for (int k : keycode) 
 			if (keystate.get(k)!=null) 
 				return true;
@@ -678,7 +690,10 @@ FocusListener
 	 * @return
 	 */
 	synchronized public boolean isKeyDown(int ... keycode)
-	{
+	{		
+		if (isPickedKeyInputer()){
+			return false;
+		}
 		for (int k : keycode) 
 			if (keystate_query_down.get(k)!=null) 
 				return true;
@@ -692,6 +707,9 @@ FocusListener
 	 */
 	synchronized public boolean isKeyUp(int ... keycode)
 	{
+		if (isPickedKeyInputer()){
+			return false;
+		}
 		for (int k : keycode) 
 			if (keystate_query_up.get(k)!=null) 
 				return true;
