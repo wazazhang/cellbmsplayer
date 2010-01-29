@@ -11,12 +11,13 @@ import com.g2d.Version;
 import com.g2d.annotation.Property;
 import com.g2d.display.AnimateCursor;
 import com.g2d.display.event.KeyEvent;
+import com.g2d.display.event.KeyInputer;
 import com.g2d.display.event.MouseEvent;
 import com.g2d.display.event.MouseMoveEvent;
 import com.g2d.display.ui.text.MultiTextLayout;
 import com.g2d.util.Drawing;
 
-public class TextBoxSingle extends UIComponent implements Serializable
+public class TextBoxSingle extends UIComponent implements Serializable, KeyInputer
 {
 	private static final long serialVersionUID = Version.VersionG2D;
 	
@@ -82,6 +83,11 @@ public class TextBoxSingle extends UIComponent implements Serializable
 		this.setSize(width, height);
 	}
 	
+
+	@Override
+	public boolean isInput() {
+		return text.is_show_caret;
+	}
 	
 	
 	public void setText(String text) {

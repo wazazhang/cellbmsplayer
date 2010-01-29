@@ -128,7 +128,7 @@ public class TextBox extends UIComponent implements Serializable, KeyInputer
 	
 	@Override
 	public boolean isInput() {
-		return !is_readonly;
+		return text.is_show_caret;
 	}
 	
 	public void setText(String text) {
