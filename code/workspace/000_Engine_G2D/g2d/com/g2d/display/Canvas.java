@@ -18,6 +18,12 @@ public interface Canvas
 	public boolean isFocusOwner();
 	
 	/**
+	 * 是否在进行文本输入
+	 * @return
+	 */
+	public boolean isOnTextInput();
+	
+	/**
 	 * 是否由Applet进入游戏的
 	 * @return
 	 */

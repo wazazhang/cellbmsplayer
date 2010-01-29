@@ -11,13 +11,13 @@ import com.g2d.Version;
 import com.g2d.annotation.Property;
 import com.g2d.display.AnimateCursor;
 import com.g2d.display.event.KeyEvent;
-import com.g2d.display.event.KeyInputer;
+import com.g2d.display.event.TextInputer;
 import com.g2d.display.event.MouseEvent;
 import com.g2d.display.event.MouseMoveEvent;
 import com.g2d.display.ui.text.MultiTextLayout;
 import com.g2d.util.Drawing;
 
-public class TextBoxSingle extends UIComponent implements Serializable, KeyInputer
+public class TextBoxSingle extends UIComponent implements Serializable, TextInputer
 {
 	private static final long serialVersionUID = Version.VersionG2D;
 	

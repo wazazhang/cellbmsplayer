@@ -20,7 +20,7 @@ import com.g2d.display.AnimateCursor;
 import com.g2d.display.DisplayObject;
 import com.g2d.display.event.EventListener;
 import com.g2d.display.event.KeyEvent;
-import com.g2d.display.event.KeyInputer;
+import com.g2d.display.event.TextInputer;
 import com.g2d.display.event.MouseEvent;
 import com.g2d.display.event.MouseMoveEvent;
 import com.g2d.display.event.MouseWheelEvent;
@@ -30,7 +30,7 @@ import com.g2d.display.ui.text.MultiTextLayout.AttributedSegment;
 
 
 
-public class TextBox extends UIComponent implements Serializable, KeyInputer
+public class TextBox extends UIComponent implements Serializable, TextInputer
 {
 	private static final long serialVersionUID = Version.VersionG2D;
 
