@@ -6,7 +6,7 @@ package com.g2d.display.event;
  * 则Root.isKeyDown等方法都返回false
  * @return
  */
-public interface KeyInputer {
+public interface TextInputer {
 
 	/**
 	 * 是否拥有获得所有键盘鼠标事件的焦点，
