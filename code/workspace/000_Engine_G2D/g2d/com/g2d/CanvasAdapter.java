@@ -639,7 +639,7 @@ FocusListener
 	private boolean isPickedKeyInputer() {
 		if (getStage()!=null && getStage().getMousePickedObject() instanceof KeyInputer) {
 			KeyInputer inputer = (KeyInputer)getStage().getMousePickedObject();
-			return !inputer.isInput();
+			return inputer.isInput();
 		}
 		return false;
 	}
