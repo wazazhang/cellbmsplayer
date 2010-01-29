@@ -39,7 +39,7 @@ import com.cell.exception.NotImplementedException;
 import com.g2d.display.AnimateCursor;
 import com.g2d.display.Stage;
 import com.g2d.display.event.Event;
-import com.g2d.display.event.KeyInputer;
+import com.g2d.display.event.TextInputer;
 import com.g2d.editor.DisplayObjectEditor;
 
 public class CanvasAdapter implements 
@@ -637,8 +637,8 @@ FocusListener
 //	control and input
 	
 	private boolean isPickedKeyInputer() {
-		if (getStage()!=null && getStage().getMousePickedObject() instanceof KeyInputer) {
-			KeyInputer inputer = (KeyInputer)getStage().getMousePickedObject();
+		if (getStage()!=null && getStage().getMousePickedObject() instanceof TextInputer) {
+			TextInputer inputer = (TextInputer)getStage().getMousePickedObject();
 			return inputer.isInput();
 		}
 		return false;
@@ -666,6 +666,16 @@ FocusListener
 		mousestate_down.clear();
 		mousestate_up.clear();
 		mousewheel.clear();
+	}
+	
+	@Override
+	public boolean isOnTextInput() {
+		if (getStage()!=null) {
+			if (getStage().getFocusLeaf() instanceof TextInputer) {
+				return ((TextInputer)getStage().getFocusLeaf()).isInput();
+			}
+		}
+		return false;
 	}
 	
 	/**
