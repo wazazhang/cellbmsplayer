@@ -43,7 +43,7 @@ public class SystemMessages
 		public ServerStatusResponseS2C(ServerImpl server) 
 		{
 			
-			ServerStartTime			= server.StartTime;
+			ServerStartTime			= server.getStartTime();
 			
 			SessionCount			= server.getSessionCount();
 			
