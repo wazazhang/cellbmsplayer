@@ -39,7 +39,6 @@ import com.cell.CIO;
 import com.cell.math.MathVector;
 import com.cell.math.TVector;
 import com.cell.math.Vector;
-import com.cell.util.concurrent.ThreadPool;
 
 
 public class Tools
@@ -494,15 +493,15 @@ public class Tools
 
 //	--------------------------------------------------------------------------------
 	
-	private static ThreadPool g2d_thread_pool;
-	
-	synchronized public static ThreadPool getThreadPool() 
-	{
-		if (g2d_thread_pool == null) {
-			g2d_thread_pool = new ThreadPool("G2D");
-		}
-		return g2d_thread_pool;
-	}
+//	private static ThreadPool g2d_thread_pool;
+//	
+//	synchronized public static ThreadPool getThreadPool() 
+//	{
+//		if (g2d_thread_pool == null) {
+//			g2d_thread_pool = new ThreadPool("G2D");
+//		}
+//		return g2d_thread_pool;
+//	}
 	
 //	--------------------------------------------------------------------------------
 
