@@ -530,7 +530,11 @@ public class CellSetResource //implements Serializable
 
 	
 	public boolean isStreamingResource() {
-		return (loading_service.getActiveCount()!=0);
+		if (loading_service!=null) {
+			return (loading_service.getActiveCount()!=0);
+		} else {
+			return false;
+		}
 	}
 	
 
