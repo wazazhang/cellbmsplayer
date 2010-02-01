@@ -21,6 +21,7 @@ import javax.swing.JScrollPane;
 import javax.swing.tree.TreePath;
 
 import com.cell.CIO;
+import com.cell.CUtil;
 import com.cell.rpg.NamedObject;
 import com.cell.rpg.io.RPGObjectMap;
 import com.cell.rpg.scene.Scene;
@@ -57,7 +58,7 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 	
 	final public File				scene_dir;
 	final public File				scene_list;
-	final public G2DTree			g2d_tree;
+	final public SceneTree			g2d_tree;
 	
 	final private G2DWindowToolBar	tool_bar			= new G2DWindowToolBar(this);
 	final private JButton			tool_scene_graph 	= new JButton(Tools.createIcon(Res.icon_scene_graph));
@@ -73,7 +74,7 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 		this.scene_list	= new File(scene_dir, "scene.list");
 		{
 			SceneGroup tree_root = new SceneGroup("场景管理器");
-			this.g2d_tree	= new G2DTree(tree_root);
+			this.g2d_tree	= new SceneTree(tree_root);
 			if (scene_dir.exists() && scene_list.exists()) {
 				String[] all_scene = CIO.readAllLine(scene_list.getPath(), "UTF-8");
 				progress.setMaximum("", all_scene.length);
@@ -233,6 +234,29 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 	
 //	-------------------------------------------------------------------------------------------------------------------------
 
+	class SceneTree extends G2DTree
+	{
+		public SceneTree(SceneGroup root) {
+			super(root);
+		}
+	
+		@Override
+		public String convertValueToText(Object value, boolean selected,
+				boolean expanded, boolean leaf, int row, boolean hasFocus) {
+			if (value instanceof SceneNode) {
+				SceneNode node = (SceneNode)value;
+				StringBuffer sb = new StringBuffer();
+				sb.append("<html><body>");
+				sb.append("<p>" + node.getName() + "</p>");
+				sb.append("<p>" + "资源(" + node.getResourceName()+")" + "</p>");
+				sb.append("<body></html>");
+				return sb.toString();
+			}
+			return super.convertValueToText(value, selected, expanded, leaf, row, hasFocus);
+		}
+		
+	}
+	
 	class TreeMouseAdapter extends MouseAdapter
 	{
 		public void mouseClicked(MouseEvent e) {
