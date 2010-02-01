@@ -248,7 +248,7 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 				StringBuffer sb = new StringBuffer();
 				sb.append("<html><body>");
 				sb.append("<p>" + node.getName() + "</p>");
-				sb.append("<p>" + "资源(" + node.getResourceName()+")" + "</p>");
+				sb.append("<p style=\"color:#808080\">" + "资源(" + node.getResourceName()+")" + "</p>");
 				sb.append("<body></html>");
 				return sb.toString();
 			}
