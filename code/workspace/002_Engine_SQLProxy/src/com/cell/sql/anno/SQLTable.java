@@ -30,4 +30,8 @@ public @interface SQLTable
 	
 	/** 数据库表其他约束  */
 	String	constraint() default "";
+	
+	/** 不同数据库驱动需要的表属性<br>
+	 * 比如MYSQL : ENGINE=MyISAM DEFAULT CHARSET=utf8 */
+	String	properties() default ""; //
 }
