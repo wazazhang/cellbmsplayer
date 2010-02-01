@@ -915,7 +915,7 @@ public abstract class SQLColumnManager<K, R extends SQLTableRow<K>>
 			sql += "\n";
 		}
 		
-		sql += ");";
+		sql += ")" + table.table_type.properties() + ";";
 
 		return sql;
 	}
