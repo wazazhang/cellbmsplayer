@@ -303,7 +303,7 @@ public class G2DTree extends JTree implements G2DDragDropListener<G2DTree>
 //	----------------------------------------------------------------------------------------------------------------------------
 	
 	
-	class TreeRender extends DefaultTreeCellRenderer
+	protected class TreeRender extends DefaultTreeCellRenderer
 	{
 		private static final long serialVersionUID = 1L;
 		
@@ -382,7 +382,7 @@ public class G2DTree extends JTree implements G2DDragDropListener<G2DTree>
 	}
 	
 	
-	class TreeSelect implements TreeSelectionListener
+	protected class TreeSelect implements TreeSelectionListener
 	{
 		public void valueChanged(TreeSelectionEvent e) {
 			G2DTree tree = G2DTree.this;
@@ -394,7 +394,7 @@ public class G2DTree extends JTree implements G2DDragDropListener<G2DTree>
 		}
 	}
 	
-	class TreeMouseListener extends MouseAdapter
+	protected class TreeMouseListener extends MouseAdapter
 	{
 		@Override
 		public void mouseReleased(MouseEvent e) {
@@ -451,7 +451,7 @@ public class G2DTree extends JTree implements G2DDragDropListener<G2DTree>
 		
 	}
 	
-	class DropTargetAdapter implements DropTargetListener
+	protected class DropTargetAdapter implements DropTargetListener
 	{
 		@Override
 		final public void dragEnter(DropTargetDragEvent dtde) {

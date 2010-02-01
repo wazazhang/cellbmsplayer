@@ -50,6 +50,10 @@ final public class SceneNode extends DynamicNode<Scene>
 		return new Scene(getIntID(), name);
 	}
 	
+	public String getResourceName() {
+		return world_index.set_object_name;
+	}
+	
 	@Override
 	public boolean setName(String name) {
 		if(super.setName(name)){
