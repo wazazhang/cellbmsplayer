@@ -248,10 +248,12 @@ public class ThreadPool
 	 */
 	public void purge()
 	{
-		if (gameScheduledThreadPool!=null) {
+		if (gameScheduledThreadPool != null) {
 			gameScheduledThreadPool.purge();
 		}
-		gameThreadPool.purge();
+		if (gameThreadPool != null) {
+			gameThreadPool.purge();
+		}
 	}
 	
 	
