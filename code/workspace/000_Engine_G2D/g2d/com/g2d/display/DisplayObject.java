@@ -200,7 +200,10 @@ public abstract class DisplayObject extends DObject implements Comparable<Displa
 	 * @return
 	 */
 	public Stage getStage() {
-		return root.getStage();
+		if (root != null) {
+			return root.getStage();
+		}
+		return null;
 	}
 	
 	/**
