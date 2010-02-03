@@ -3,9 +3,11 @@ package com.cell.rpg.quest;
 public enum TriggerUnitType {
 
 	PLAYER			("玩家"),
-	PLAYER_GROUP	("玩家组"),
-	PET				("宠物"),
+	PET				("携带的宠物"),
 	TRIGGERING_NPC	("触发的NPC"),
+	
+	PLAYER_GROUP	("玩家组"),
+	PET_GROUP		("宠物组"),
 	;	
 	
 	final private String text;
