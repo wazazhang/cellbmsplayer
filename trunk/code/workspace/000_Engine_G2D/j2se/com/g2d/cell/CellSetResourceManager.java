@@ -24,7 +24,7 @@ public abstract class CellSetResourceManager
 	
 	protected abstract CellSetResource createSet(String path) throws Exception;
 	
-	public void clear() {
+	public void dispose() {
 		synchronized (set_resources) {
 			for (CellSetResource res : set_resources.values()) {
 				res.dispose();
