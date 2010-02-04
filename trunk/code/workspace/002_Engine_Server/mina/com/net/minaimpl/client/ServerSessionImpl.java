@@ -23,18 +23,8 @@ import com.net.minaimpl.NetPackageCodec;
 
 public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession 
 {
-	private class ExitTask extends Thread
-	{
-		public void run() {
-			System.out.println("Clear ServerSession connection !");
-			try {
-				disconnect(false);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	private Thread									shutdown_hook		= new ExitTask();
+
+	final private Thread							shutdown_hook		= new ExitTask();
 	
 	private ServerSessionListener 					Listener;
 	private Hashtable<Integer, ClientChannelImpl> 	Channels			= new Hashtable<Integer, ClientChannelImpl>();
@@ -56,13 +46,6 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 		Connector 	= new NioSocketConnector();
 		Connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(Codec));
 		Connector.setHandler(this);
-		Runtime.getRuntime().addShutdownHook(shutdown_hook);
-	}
-	
-	@Override
-	protected void finalize() throws Throwable {
-		Runtime.getRuntime().removeShutdownHook(shutdown_hook);
-		super.finalize();
 	}
 	
 	public boolean connect(String host, int port, ServerSessionListener listener) throws IOException {
@@ -71,34 +54,38 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 	
 	public boolean connect(String host, int port, long timeout, ServerSessionListener listener) throws IOException 
 	{
-		if (!isConnected()) 
-		{
-			SocketAddress address = new InetSocketAddress(host, port);
-
-			Listener 	= listener;
-			
-			synchronized(this) 
+		
+			if (!isConnected()) 
 			{
-	            ConnectFuture future1 = Connector.connect(address); 
-				future1.awaitUninterruptibly(timeout);
-				
-	            if (!future1.isConnected()) {
-	                return false;
-	            }
-	            Session = future1.getSession();
-			}
+				SocketAddress address = new InetSocketAddress(host, port);
 
-			if (Session != null && Session.isConnected()) {
-//				System.out.println("connected " + Session);
-				return true;
-			}else{
-				System.err.println("not connect : " + address.toString());
+				Listener 	= listener;
+				
+				synchronized(this) 
+				{
+		            ConnectFuture future1 = Connector.connect(address); 
+					future1.awaitUninterruptibly(timeout);
+					
+		            if (!future1.isConnected()) {
+		                return false;
+		            }
+		            Session = future1.getSession();
+				}
+
+				if (Session != null && Session.isConnected()) {
+//					System.out.println("connected " + Session);
+					return true;
+				}else{
+					System.err.println("not connect : " + address.toString());
+				}
 			}
-		}
-		else
-		{
-			System.err.println("Already connected !");
-		}
+			else
+			{
+				System.err.println("Already connected !");
+			}
+		
+		
+		
 		return false;
 	}
 	
@@ -193,11 +180,17 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 	public void sessionOpened(IoSession session) throws Exception {
 		LastHartBeatTime = System.currentTimeMillis();
 		Listener.connected(this);
+		synchronized (shutdown_hook) {
+			Runtime.getRuntime().addShutdownHook(shutdown_hook);
+		}
 	}
 	
 	public void sessionClosed(IoSession session) throws Exception {
 		synchronized(this) {
 			Listener.disconnected(this, true, "sessionClosed : " + toString());
+		}
+		synchronized (shutdown_hook) {
+			Runtime.getRuntime().removeShutdownHook(shutdown_hook);
 		}
 	}
 	
@@ -308,6 +301,19 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 			}
 		}catch(Exception err){
 			return err.getMessage();
+		}
+	}
+	
+	
+	private class ExitTask extends Thread
+	{
+		public void run() {
+			System.out.println("Clear ServerSession connection !");
+			try {
+				disconnect(false);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

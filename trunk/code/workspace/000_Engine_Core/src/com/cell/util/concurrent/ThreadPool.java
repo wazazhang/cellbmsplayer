@@ -13,44 +13,18 @@ import java.util.logging.Logger;
 
 public class ThreadPool
 {
-    private class PriorityThreadFactory implements ThreadFactory
-    {
-    	private int 				_prio;
-		private String 				_name;
-		private AtomicInteger 		_threadNumber = new AtomicInteger(1);
-		private ThreadGroup 		_group;
-
-		public PriorityThreadFactory(String name, int prio)
-    	{
-    		_prio = prio;
-    		_name = name;
-    		_group = new ThreadGroup(_name);
-    	}
-
-		public Thread newThread(Runnable r)
-		{
-			Thread t = new Thread(_group,r);
-			t.setName(_name+"-"+_threadNumber.getAndIncrement());
-			t.setPriority(_prio);
-			return t;
-		}
-
-		public ThreadGroup getGroup()
-		{
-			return _group;
-		}
-    }
-    
     /** temp workaround for VM issue */
-    private static final long 				MAX_DELAY	= Long.MAX_VALUE/1000000/2;
+    private static final long 				MAX_DELAY		= Long.MAX_VALUE/1000000/2;
     
     final public String						name;
     
 	private ThreadPoolExecutor 				gameThreadPool;
 	private ScheduledThreadPoolExecutor 	gameScheduledThreadPool;
-	
-	private boolean 						shutdown;
 
+    private ShutDownHook					shutdown_hook	= new ShutDownHook();
+	private boolean 						shutdown		= false;
+
+	
 	public ThreadPool(
 			String pool_name,
 			int scheduled_corePoolSize, 
@@ -75,13 +49,7 @@ public class ThreadPool
 			        new PriorityThreadFactory(name + " ThreadPool", Thread.NORM_PRIORITY));
 		}
 
-		Runtime.getRuntime().addShutdownHook(new Thread(){
-			public void run() {
-				System.out.println("ThreadPool \"" + name + "\" : ShutdownHook running...");
-				purge();
-				shutdown();
-			}
-		});
+		Runtime.getRuntime().addShutdownHook(shutdown_hook);
 	}
     
 	public ThreadPool(String pool_name)
@@ -184,57 +152,68 @@ public class ThreadPool
 	 */
 	public void shutdown()
 	{
-		if (!shutdown) 
+		synchronized (shutdown_hook)
 		{
-			shutdown = true;
-			
-			try {
-				if (gameScheduledThreadPool!=null) {
-					gameScheduledThreadPool.awaitTermination(1, TimeUnit.SECONDS);
-					gameScheduledThreadPool.shutdown();
+			if (!shutdown)
+			{
+				Runtime.getRuntime().removeShutdownHook(shutdown_hook);
+				
+				shutdown = true;
+				
+				try {
+					if (gameScheduledThreadPool!=null) {
+						gameScheduledThreadPool.awaitTermination(1, TimeUnit.SECONDS);
+						gameScheduledThreadPool.shutdown();
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-	
-			try {
-				if (gameThreadPool!=null) {
-					gameThreadPool.awaitTermination(1, TimeUnit.SECONDS);
-					gameThreadPool.shutdown();
+		
+				try {
+					if (gameThreadPool!=null) {
+						gameThreadPool.awaitTermination(1, TimeUnit.SECONDS);
+						gameThreadPool.shutdown();
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
+		
+				System.out.println("ThreadPool \"" + name+ "\" : All Threads are now stoped");
+				
 			}
-	
-			System.out.println("ThreadPool \"" + name+ "\" : All Threads are now stoped");
 		}
 	}
 	
 	public void shutdownNow()
 	{
-		if (!shutdown) 
+		synchronized (shutdown_hook)
 		{
-			shutdown = true;
-			
-			try {
-				if (gameScheduledThreadPool!=null) {
-					gameScheduledThreadPool.awaitTermination(1, TimeUnit.SECONDS);
-					gameScheduledThreadPool.shutdownNow();
+			if (!shutdown) 
+			{
+				Runtime.getRuntime().removeShutdownHook(shutdown_hook);
+				
+				shutdown = true;
+				
+				try {
+					if (gameScheduledThreadPool!=null) {
+						gameScheduledThreadPool.awaitTermination(1, TimeUnit.SECONDS);
+						gameScheduledThreadPool.shutdownNow();
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-	
-			try {
-				if (gameThreadPool!=null) {
-					gameThreadPool.awaitTermination(1, TimeUnit.SECONDS);
-					gameThreadPool.shutdownNow();
+		
+				try {
+					if (gameThreadPool!=null) {
+						gameThreadPool.awaitTermination(1, TimeUnit.SECONDS);
+						gameThreadPool.shutdownNow();
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
+		
+				System.out.println("ThreadPool \"" + name+ "\" : All Threads are now stoped");
 			}
-	
-			System.out.println("ThreadPool \"" + name+ "\" : All Threads are now stoped");
 		}
 	}
 	
@@ -286,6 +265,43 @@ public class ThreadPool
 //		
 //	}
 	
-	
+
+    private class PriorityThreadFactory implements ThreadFactory
+    {
+    	private int 				_prio;
+		private String 				_name;
+		private AtomicInteger 		_threadNumber = new AtomicInteger(1);
+		private ThreadGroup 		_group;
+
+		public PriorityThreadFactory(String name, int prio)
+    	{
+    		_prio = prio;
+    		_name = name;
+    		_group = new ThreadGroup(_name);
+    	}
+
+		public Thread newThread(Runnable r)
+		{
+			Thread t = new Thread(_group,r);
+			t.setName(_name+"-"+_threadNumber.getAndIncrement());
+			t.setPriority(_prio);
+			return t;
+		}
+
+		public ThreadGroup getGroup()
+		{
+			return _group;
+		}
+    }
+    
+    private class ShutDownHook extends Thread
+    {
+		public void run() {
+			System.out.println("ThreadPool \"" + name + "\" : ShutdownHook running...");
+			purge();
+			shutdown();
+		}
+    }
+
 
 }
