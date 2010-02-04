@@ -45,81 +45,54 @@ import com.g2d.cell.CellSetResource.WorldSet.WaypointObject;
 import com.g2d.display.DisplayObject;
 import com.g2d.util.Drawing;
 
-public class CellSetResource //implements Serializable
+public class CellSetResource
 {
-	//private static final long serialVersionUID = Version.VersionG2D;
-	
 //	-------------------------------------------------------------------------------------
 	
 	final public String				Path;
 	final public String				PathDir;
 	final public String				PathName;
-	
 	final public String				Name;
-	final
-	protected boolean 				is_stream_image;
 
 	transient public Hashtable<String, ImagesSet>		ImgTable;
 	transient public Hashtable<String, SpriteSet>		SprTable;
 	transient public Hashtable<String, MapSet>			MapTable;
 	transient public Hashtable<String, WorldSet>		WorldTable;
-
+	
+	final
 	transient protected	Map<String, Object> 			ResourceManager;
+	final 
 	transient private	ThreadPoolExecutor				loading_service;
+	
 //	-------------------------------------------------------------------------------------
 	
 	public CellSetResource(String file) throws Exception
 	{
-		Path			= file;
-		PathDir 		= file.substring(0, file.lastIndexOf("/")+1);
-		PathName		= file.substring(file.lastIndexOf("/")+1);
-		
-		Name 			= Path;
-		is_stream_image = false;
-		init();
+		this(file, file, null);
 	}
 	
-	public CellSetResource(String file, boolean stream_image) throws Exception
+	public CellSetResource(String file, ThreadPoolExecutor loading_service) throws Exception
 	{
-		Path			= file;
-		PathDir 		= file.substring(0, file.lastIndexOf("/")+1);
-		PathName		= file.substring(file.lastIndexOf("/")+1);
-		
-		Name 			= Path;
-		is_stream_image = stream_image;
-		
-		init();
-		
+		this(file, file, loading_service);
+	}
+
+	public CellSetResource(File file, String name, ThreadPoolExecutor loading_service) throws Exception
+	{
+		this(file.getPath().replace('\\', '/'), file.getPath().replace('\\', '/'), loading_service);
 	}
 	
-	public CellSetResource(String file, String name, boolean stream_image) throws Exception
+	public CellSetResource(String file, String name, ThreadPoolExecutor loading_service) throws Exception
 	{
-		Path			= file;
-		PathDir 		= file.substring(0, file.lastIndexOf("/")+1);
-		PathName		= file.substring(file.lastIndexOf("/")+1);
+		this.Path				= file;
+		this.PathDir 			= file.substring(0, file.lastIndexOf("/")+1);
+		this.PathName			= file.substring(file.lastIndexOf("/")+1);
 		
-		Name 			= name;
-		is_stream_image = stream_image;
+		this.Name 				= name;
 		
-		init();
+		this.ResourceManager	= new ConcurrentHashMap<String, Object>();
 		
-	}
-	
-	public CellSetResource(File file, String name, boolean stream_image) throws Exception
-	{
-		Path			= file.getPath().replace('\\', '/');
-		PathDir 		= Path.substring(0, Path.lastIndexOf("/")+1);
-		PathName		= Path.substring(Path.lastIndexOf("/")+1);
+		this.loading_service	= loading_service;
 		
-		Name 			= name;
-		is_stream_image = stream_image;
-		
-		init();
-		
-	}
-	
-	protected void init() throws Exception
-	{
 //		System.out.println("read set : " + Path);
 		
 		// 读入基础属性
@@ -206,21 +179,9 @@ public class CellSetResource //implements Serializable
 				e.printStackTrace();
 			}
 		}
-		
-		ResourceManager = new ConcurrentHashMap<String, Object>();
-		
-		if (is_stream_image) {
-			loading_service = new ThreadPoolExecutor(1, 1, 0L, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
-		}
 	}
 	
 	public void dispose() {
-		try{
-			loading_service.purge();
-			loading_service.shutdownNow();
-		}catch(Throwable err){
-			err.printStackTrace();
-		}
 		try{
 			ImgTable.clear();
 			SprTable.clear();
@@ -230,29 +191,6 @@ public class CellSetResource //implements Serializable
 		}catch(Throwable err){
 			err.printStackTrace();
 		}
-	}
-	
-	@Override
-	protected void finalize() throws Throwable {
-		super.finalize();
-		dispose();
-	}
-	
-	protected Object writeReplace() throws ObjectStreamException {
-		return this;
-	}
-	
-	protected Object readResolve() throws ObjectStreamException
-	{
-		try {
-			init();
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new ObjectStreamException(e.getMessage()){
-				private static final long serialVersionUID = Version.VersionG2D;
-			};
-		}
-		return this;
 	}
 	
 //	-------------------------------------------------------------------------------------------------------------------------------
@@ -270,7 +208,7 @@ public class CellSetResource //implements Serializable
 
 		if (stuff == null) {
 			try {
-				if (is_stream_image) {
+				if (loading_service != null) {
 					stuff = getStreamImage(img);
 					loading_service.purge();
 					loading_service.execute((Runnable)stuff);
@@ -371,7 +309,7 @@ public class CellSetResource //implements Serializable
 				return;
 			}
 		}
-		if (is_stream_image) {
+		if (loading_service != null) {
 			loading_service.execute(new LoadSpriteTask(spr, listener));
 		} else {
 			new Thread(new LoadSpriteTask(spr, listener), "get-sprite-" + key).start();
