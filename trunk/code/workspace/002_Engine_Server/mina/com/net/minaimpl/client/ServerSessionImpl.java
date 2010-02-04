@@ -5,6 +5,7 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.Hashtable;
 import java.util.Set;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.mina.core.future.ConnectFuture;
 import org.apache.mina.core.service.IoConnector;
@@ -24,8 +25,6 @@ import com.net.minaimpl.NetPackageCodec;
 public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession 
 {
 
-	final private Thread							shutdown_hook		= new ExitTask();
-	
 	private ServerSessionListener 					Listener;
 	private Hashtable<Integer, ClientChannelImpl> 	Channels			= new Hashtable<Integer, ClientChannelImpl>();
 	private IoSession 								Session;
@@ -35,6 +34,9 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 	
 	long											LastHartBeatTime	= 0;
 
+//	private ReentrantLock							shutdown_lock = new ReentrantLock();
+//	private	ExitTask								shutdown_hook;
+	
 	public ServerSessionImpl()
 	{
 		this(Thread.currentThread().getContextClassLoader(), null);
@@ -180,18 +182,24 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 	public void sessionOpened(IoSession session) throws Exception {
 		LastHartBeatTime = System.currentTimeMillis();
 		Listener.connected(this);
-		synchronized (shutdown_hook) {
-			Runtime.getRuntime().addShutdownHook(shutdown_hook);
-		}
+//		synchronized (shutdown_lock) {
+//			if (shutdown_hook == null) {
+//				shutdown_hook = new ExitTask();
+//				Runtime.getRuntime().addShutdownHook(shutdown_hook);
+//			}
+//		}
 	}
 	
 	public void sessionClosed(IoSession session) throws Exception {
 		synchronized(this) {
 			Listener.disconnected(this, true, "sessionClosed : " + toString());
 		}
-		synchronized (shutdown_hook) {
-			Runtime.getRuntime().removeShutdownHook(shutdown_hook);
-		}
+//		synchronized (shutdown_lock) {
+//			if (shutdown_hook != null) {
+//				Runtime.getRuntime().removeShutdownHook(shutdown_hook);
+//				shutdown_hook = null;
+//			}
+//		}
 	}
 	
 	public void messageReceived(final IoSession iosession, final Object message) throws Exception 
@@ -305,15 +313,21 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 	}
 	
 	
-	private class ExitTask extends Thread
-	{
-		public void run() {
-			System.out.println("Clear ServerSession connection !");
-			try {
-				disconnect(false);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
+//	private class ExitTask extends Thread
+//	{
+//		public ExitTask() {
+//			super("server-session-cleaner");
+//		}
+//		public void run() {
+//			System.out.println("Clear ServerSession connection !");
+//			try {
+//				synchronized(shutdown_lock) {
+//					shutdown_hook = null;
+//					disconnect(false);
+//				}
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//		}
+//	}
 }
