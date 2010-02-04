@@ -206,14 +206,18 @@ public class CellSetResource
 			try {
 				if (loading_service != null) {
 					stuff = getStreamImage(img);
-					loading_service.purge();
-					loading_service.execute(stuff);
 				} else {
 					stuff = getLocalImage(img);
-					stuff.run();
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
+			}
+		}
+		if (stuff!=null && !stuff.loaded) {
+			if (loading_service != null) {
+				loading_service.execute(stuff);
+			} else {
+				stuff.run();
 			}
 		}
 
@@ -1456,11 +1460,11 @@ public class CellSetResource
 	 */
 	protected class StreamTiles implements IImages, Runnable
 	{
-		final public ImagesSet		img;
-		final public IImage[]		images;
-
-		private boolean 			loaded			= false;
-		private int					render_timer;
+		final protected ImagesSet	img;
+		final protected IImage[]	images;
+		
+		private boolean	loaded = false;
+		private int		render_timer;
 		
 		public StreamTiles(ImagesSet img) throws IOException {
 			this.images = new CImage[img.Count];
