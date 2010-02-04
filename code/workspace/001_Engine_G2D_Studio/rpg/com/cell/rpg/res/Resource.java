@@ -34,14 +34,14 @@ public class Resource extends CellSetResource
 	}
 
 	@Override
-	protected IImages getLocalImage(ImagesSet img) throws IOException {
+	protected StreamTiles getLocalImage(ImagesSet img) throws IOException {
 		StreamTypeTiles tiles = new StreamTypeTiles(img);
 		tiles.run();
 		return tiles;
 	}
 	
 	@Override
-	protected IImages getStreamImage(ImagesSet img) throws IOException {
+	protected StreamTiles getStreamImage(ImagesSet img) throws IOException {
 		StreamTypeTiles tiles = new StreamTypeTiles(img);
 		return tiles;
 	}

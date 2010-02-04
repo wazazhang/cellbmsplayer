@@ -24,7 +24,7 @@ public class StudioResource extends CellSetResource
 	}
 	
 	@Override
-	protected IImages getLocalImage(ImagesSet img) throws IOException {
+	protected StreamTiles getLocalImage(ImagesSet img) throws IOException {
 		StreamTypeTiles tiles = new StreamTypeTiles(img);
 		return tiles;
 	}
