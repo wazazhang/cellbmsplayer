@@ -296,10 +296,31 @@ public class ThreadPool
     
     private class ShutDownHook extends Thread
     {
-		public void run() {
+		public void run() 
+		{
 			System.out.println("ThreadPool \"" + name + "\" : ShutdownHook running...");
+			
 			purge();
-			shutdown();
+			
+			try {
+				if (gameScheduledThreadPool!=null) {
+					gameScheduledThreadPool.awaitTermination(1, TimeUnit.SECONDS);
+					gameScheduledThreadPool.shutdownNow();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+	
+			try {
+				if (gameThreadPool!=null) {
+					gameThreadPool.awaitTermination(1, TimeUnit.SECONDS);
+					gameThreadPool.shutdownNow();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			System.out.println("ThreadPool \"" + name+ "\" : All Threads are now stoped");
 		}
     }
 
