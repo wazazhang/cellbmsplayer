@@ -955,15 +955,29 @@ public class CSprite extends CUnit {
 	public int getVisibleRight(){
 		return animates.w_right;
 	}
+
+//	------------------------------------------------------------------------------------------
+
+	public CCD getFrameBounds(){
+		return getFrameBounds(CurAnimate, CurFrame);
+	}
 	
-	public CCD getFrameBounds(int anim, int frame){
-		
+	public CCD getFrameBounds(int anim, int frame) {
 		CCD bounds = CCD.createCDRect(CCD.CD_TYPE_RECT, 0,0,0,0);
 		bounds.X1 = Short.MAX_VALUE;
 		bounds.Y1 = Short.MAX_VALUE; 
 		bounds.X2 = Short.MIN_VALUE;
 		bounds.Y2 = Short.MIN_VALUE;
-		
+		return getFrameBounds(anim, frame, bounds);
+	}
+	
+	public CCD getFrameBounds(CCD out_bounds){
+		return getFrameBounds(CurAnimate, CurFrame, out_bounds);
+	}
+
+	public CCD getFrameBounds(int anim, int frame, CCD out_bounds)
+	{
+		CCD bounds = out_bounds;
 		
 		int frameid = FrameAnimate[anim][frame];
 		int count = animates.getComboFrameCount(frameid);
@@ -975,9 +989,6 @@ public class CSprite extends CUnit {
 		}
 		
 		return bounds;
-	}
-	public CCD getFrameBounds(){
-		return getFrameBounds(CurAnimate, CurFrame);
 	}
 	
 //	------------------------------------------------------------------------------------------
