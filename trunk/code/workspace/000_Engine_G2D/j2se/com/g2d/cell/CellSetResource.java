@@ -182,14 +182,10 @@ public class CellSetResource
 	}
 	
 	public void dispose() {
-		try{
-			ImgTable.clear();
-			SprTable.clear();
-			MapTable.clear();
-			WorldTable.clear();
-			ResourceManager.clear();
-		}catch(Throwable err){
-			err.printStackTrace();
+		for (Object obj : ResourceManager.values()) {
+			if (obj instanceof StreamTiles) {
+				((StreamTiles) obj).unloadAllImages();
+			}
 		}
 	}
 	
@@ -197,12 +193,12 @@ public class CellSetResource
 	
 	public IImages getImages(ImagesSet img) 
 	{
-		IImages stuff = null;
+		StreamTiles stuff = null;
 
 		if (ResourceManager != null) {
 			Object obj = ResourceManager.get("IMG_" + img.Index);
-			if (obj instanceof IImages) {
-				stuff = (IImages) obj;
+			if (obj instanceof StreamTiles) {
+				stuff = (StreamTiles) obj;
 			}
 		}
 
@@ -211,9 +207,10 @@ public class CellSetResource
 				if (loading_service != null) {
 					stuff = getStreamImage(img);
 					loading_service.purge();
-					loading_service.execute((Runnable)stuff);
+					loading_service.execute(stuff);
 				} else {
 					stuff = getLocalImage(img);
+					stuff.run();
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -241,9 +238,8 @@ public class CellSetResource
 	 * @return
 	 * @throws IOException
 	 */
-	protected IImages getLocalImage(ImagesSet img) throws IOException {
+	protected StreamTiles getLocalImage(ImagesSet img) throws IOException {
 		StreamTiles tiles = new StreamTiles(img);
-		tiles.run();
 		return tiles;
 	}
 	
@@ -253,8 +249,7 @@ public class CellSetResource
 	 * @return
 	 * @throws IOException
 	 */
-	protected IImages getStreamImage(ImagesSet img) throws IOException
-	{
+	protected StreamTiles getStreamImage(ImagesSet img) throws IOException {
 		StreamTiles tiles = new StreamTiles(img);
 		return tiles;
 	}
@@ -459,13 +454,6 @@ public class CellSetResource
 			}
 		}
 	}
-	
-	public void destoryAllResource(){
-		if (ResourceManager!=null) {
-			ResourceManager.clear();
-		}
-	}
-
 	
 	public boolean isStreamingResource() {
 		if (loading_service!=null) {
@@ -1490,45 +1478,42 @@ public class CellSetResource
 			}
 		}
 		
-		public void run() 
+		final public void run() 
 		{
-			try 
-			{
-				synchronized (this) 
-				{
-					if(!loaded)
-					{
+			try {
+				synchronized (this) {
+					if (!loaded) {
 						initImages();
 						loaded = true;
 					}
 				}
-				
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
 		}
 		
-		public void unloadAllImages() {
-			for (int i=0; i<images.length; i++){
-				images[i] = null;
+		final public void unloadAllImages() {
+			synchronized (this) {
+				for (int i=0; i<images.length; i++){
+					images[i] = null;
+				}
+				loaded = false;
 			}
-			loaded = false;
-			System.gc();
 		}
 		
-		public IImage getImage(int index){
+		final public IImage getImage(int index){
 			return images[index];
 		}
 		
-		public int getWidth(int Index) {
+		final public int getWidth(int Index) {
 			return img.ClipsW[Index];
 		}
 
-		public int getHeight(int Index) {
+		final public int getHeight(int Index) {
 			return img.ClipsH[Index];
 		}
 
-		public int getCount(){
+		final public int getCount(){
 			return images.length;
 		}
 		
