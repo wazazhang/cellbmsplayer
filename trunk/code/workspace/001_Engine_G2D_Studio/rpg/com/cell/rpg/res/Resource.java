@@ -3,9 +3,11 @@ package com.cell.rpg.res;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import com.cell.gfx.IImages;
 import com.cell.j2se.CImage;
+import com.cell.util.concurrent.ThreadPool;
 import com.g2d.cell.CellSetResource;
 
 
@@ -16,22 +18,17 @@ public class Resource extends CellSetResource
 	 * @param async true 代表是异步获得图片
 	 * @throws Exception
 	 */
-	public Resource(String file, boolean async) throws Exception
+	public Resource(String file, ThreadPoolExecutor async) throws Exception
 	{
 		super(file, async);
 	}
 	
-	public Resource(String file) throws Exception
-	{
-		super(file, true);
-	}
-	
-	public Resource(String file, String name, boolean stream_image) throws Exception
+	public Resource(String file, String name, ThreadPoolExecutor stream_image) throws Exception
 	{
 		super(file, name, stream_image);
 	}
 	
-	public Resource(File file, String name, boolean stream_image) throws Exception
+	public Resource(File file, String name, ThreadPoolExecutor stream_image) throws Exception
 	{
 		super(file, name, stream_image);
 	}

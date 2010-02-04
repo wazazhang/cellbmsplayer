@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Vector;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.cell.CIO;
@@ -111,6 +112,8 @@ public abstract class ResourceManager extends CellSetResourceManager
 	
 //	--------------------------------------------------------------------------------------------------------------------
 
+	abstract protected ThreadPoolExecutor getLoadingService() ;
+	
 	final protected void initAllSet() throws Exception
 	{
 		all_scene_set	= readSets(save_dir + "/resources/scene_list.list",		SceneSet.class);
@@ -161,7 +164,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 
 	protected CellSetResource createSet(String path) throws Exception
 	{
-		return new Resource(path);
+		return new Resource(path, getLoadingService());
 	}
 	
 	final protected <T extends ResourceSet<?>> Hashtable<String, T> readSets(String file, Class<T> type) throws Exception
