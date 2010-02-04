@@ -28,7 +28,6 @@ public abstract class CellSetResourceManager
 		synchronized (set_resources) {
 			for (CellSetResource res : set_resources.values()) {
 				res.dispose();
-				res.destoryAllResource();
 			}
 			set_resources.clear();
 		}
