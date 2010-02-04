@@ -112,7 +112,7 @@ public class Studio extends AbstractFrame
 		SQMTypeManager.setTypeComparer(Config.PERSISTANCE_SQL_TYPE);
 //		project_lock		= new FileOutputStream(g2d_file, true);
 		
-		Runtime.getRuntime().addShutdownHook(new ShutdownHook());
+//		Runtime.getRuntime().addShutdownHook(new ShutdownHook());
 		
 		root_icon_path		= getFile(Config.ICON_ROOT);
 		root_sound_path		= getFile(Config.SOUND_ROOT);
@@ -376,18 +376,18 @@ public class Studio extends AbstractFrame
 
 //	----------------------------------------------------------------------------------------------------------------
 	
-	class ShutdownHook extends Thread
-	{
-		@Override
-		public void run() {
-//			try {
-//				project_lock.close();
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-		}
-		
-	}
+//	class ShutdownHook extends Thread
+//	{
+//		@Override
+//		public void run() {
+////			try {
+////				project_lock.close();
+////			} catch (IOException e) {
+////				e.printStackTrace();
+////			}
+//		}
+//		
+//	}
 	
 
 //	----------------------------------------------------------------------------------------------------------------

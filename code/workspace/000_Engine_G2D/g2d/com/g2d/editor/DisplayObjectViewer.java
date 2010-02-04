@@ -59,7 +59,7 @@ public abstract class DisplayObjectViewer<D extends DisplayObject> extends Abstr
 	{
 		view_object = object;
 		
-		Runtime.getRuntime().addShutdownHook(new Thread(){public void run() {close();}});
+//		Runtime.getRuntime().addShutdownHook(new Thread(){public void run() {close();}});
 		
 	}
 	
