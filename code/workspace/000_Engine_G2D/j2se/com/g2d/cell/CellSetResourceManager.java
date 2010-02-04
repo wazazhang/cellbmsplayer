@@ -29,7 +29,6 @@ public abstract class CellSetResourceManager
 			for (CellSetResource res : set_resources.values()) {
 				res.dispose();
 			}
-			set_resources.clear();
 		}
 	}
 }
