@@ -16,6 +16,7 @@ import javax.swing.tree.DefaultTreeModel;
 
 import com.cell.game.CSprite;
 import com.g2d.Tools;
+import com.g2d.cell.CellSetResource.SpriteSet;
 import com.g2d.cell.CellSetResource.WorldSet;
 import com.g2d.studio.StudioResource;
 import com.g2d.studio.cell.gameedit.Builder;
@@ -111,8 +112,8 @@ public class CPJFile extends G2DTreeNode<CPJObject<?>>
 		CPJSprite ret = sprites.get(name);
 		if (ret == null) {
 			try{
-				CSprite csprite = set_resource.getSprite(name);
-				if (csprite!=null) {
+				SpriteSet set = set_resource.getSetSprite(name);
+				if (set!=null) {
 					ret = new CPJSprite(this, name, res_type);
 					sprites.put(name, ret);
 				}

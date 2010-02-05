@@ -17,6 +17,17 @@ public class MarkedHashtable extends Hashtable<String, Object>
 	}
 	
 //	------------------------------------------------------------------------------------
+
+//	------------------------------------------------------------------------------------
+	
+	public <T> T get(String key, Class<T> type)
+	{
+		Object t = super.get(key);
+		if (type.isInstance(t)) {
+			return type.cast(t);
+		}
+		return null;
+	}
 	
 	@SuppressWarnings("unchecked")
 	public <T> T getObject(String key)
