@@ -68,6 +68,7 @@ public class CPJSprite extends CPJObject<SpriteSet>
 							parent.getSetResource().destoryAllStreamImages();
 						}
 						
+						System.out.println("create a sprite icon file : " + name);
 					}
 				}
 			} catch (Exception e) {

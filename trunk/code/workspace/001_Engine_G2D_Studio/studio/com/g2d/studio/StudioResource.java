@@ -15,9 +15,9 @@ public class StudioResource extends CellSetResource
 {
 	boolean is_load_resource = false;
 	
-	public StudioResource(String setPath, String name)  throws Exception{
-		super(setPath, name, null);
-	}
+//	public StudioResource(String setPath, String name)  throws Exception{
+//		super(setPath, name, null);
+//	}
 	
 	public StudioResource(File file, String name) throws Exception {
 		super(file, name, null);
@@ -25,6 +25,12 @@ public class StudioResource extends CellSetResource
 	
 	@Override
 	protected StreamTiles getLocalImage(ImagesSet img) throws IOException {
+		StreamTypeTiles tiles = new StreamTypeTiles(img);
+		return tiles;
+	}
+	
+	@Override
+	protected StreamTiles getStreamImage(ImagesSet img) throws IOException {
 		StreamTypeTiles tiles = new StreamTypeTiles(img);
 		return tiles;
 	}
@@ -52,8 +58,8 @@ public class StudioResource extends CellSetResource
 	synchronized public void destoryAllStreamImages(){
 		if (is_load_resource) {
 			is_load_resource = false;
-			if (ResourceManager!=null) {
-				for (Object obj : ResourceManager.values()) {
+			if (resource_manager!=null) {
+				for (Object obj : resource_manager.values()) {
 					if (obj instanceof StreamTiles){
 						StreamTiles stiles = (StreamTiles)obj;
 						stiles.unloadAllImages();
@@ -101,7 +107,6 @@ public class StudioResource extends CellSetResource
 			}
 			catch (Exception e) {
 				e.printStackTrace();
-				super.initImages();
 			}
 		}
 		

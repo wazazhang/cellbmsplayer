@@ -36,6 +36,7 @@ import com.cell.gfx.IImages;
 import com.cell.io.TextDeserialize;
 import com.cell.j2se.CGraphics;
 import com.cell.j2se.CImage;
+import com.cell.util.MarkedHashtable;
 import com.cell.util.PropertyGroup;
 import com.g2d.Version;
 
@@ -59,10 +60,8 @@ public class CellSetResource
 	transient public Hashtable<String, MapSet>			MapTable;
 	transient public Hashtable<String, WorldSet>		WorldTable;
 	
-	final
-	transient protected	Map<String, Object> 			ResourceManager;
-	final 
-	transient private	ThreadPoolExecutor				loading_service;
+	final transient protected	MarkedHashtable 		resource_manager;
+	final transient private		ThreadPoolExecutor		loading_service;
 	
 //	-------------------------------------------------------------------------------------
 	
@@ -89,7 +88,7 @@ public class CellSetResource
 		
 		this.Name 				= name;
 		
-		this.ResourceManager	= new ConcurrentHashMap<String, Object>();
+		this.resource_manager	= new MarkedHashtable();
 		
 		this.loading_service	= loading_service;
 		
@@ -182,7 +181,7 @@ public class CellSetResource
 	}
 	
 	public void dispose() {
-		for (Object obj : ResourceManager.values()) {
+		for (Object obj : resource_manager.values()) {
 			if (obj instanceof StreamTiles) {
 				((StreamTiles) obj).unloadAllImages();
 			}
@@ -190,52 +189,9 @@ public class CellSetResource
 	}
 	
 //	-------------------------------------------------------------------------------------------------------------------------------
-	
-	public IImages getImages(ImagesSet img) 
-	{
-		StreamTiles stuff = null;
+//	Resources
+//	-------------------------------------------------------------------------------------------------------------------------------
 
-		if (ResourceManager != null) {
-			Object obj = ResourceManager.get("IMG_" + img.Index);
-			if (obj instanceof StreamTiles) {
-				stuff = (StreamTiles) obj;
-			}
-		}
-
-		if (stuff == null) {
-			try {
-				if (loading_service != null) {
-					stuff = getStreamImage(img);
-				} else {
-					stuff = getLocalImage(img);
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		if (stuff!=null && !stuff.loaded) {
-			if (loading_service != null) {
-				loading_service.execute(stuff);
-			} else {
-				stuff.run();
-			}
-		}
-
-		if (ResourceManager != null) {
-			ResourceManager.put("IMG_" + img.Index, stuff);
-		}
-
-		return stuff;
-	}
-	
-	
-	
-	public IImages getImages(String key){
-		ImagesSet img = ImgTable.get(key);
-		return getImages(img);
-			
-	}
-	
 	/**
 	 * 如果有特殊需要，可以重载此方法
 	 * @param img
@@ -258,60 +214,96 @@ public class CellSetResource
 		return tiles;
 	}
 	
+
+	synchronized
+	public IImages getImages(ImagesSet img) 
+	{
+		StreamTiles stuff = resource_manager.get("IMG_" + img.Index, StreamTiles.class);
+		if (stuff != null) {
+			if (!stuff.loaded) {
+				if (loading_service != null) {
+					loading_service.execute(stuff);
+				} else {
+					stuff.run();
+				}
+			}
+			return stuff;
+		}
+
+		try {
+			if (loading_service != null) {
+				stuff = getStreamImage(img);
+				loading_service.execute(stuff);
+			} else {
+				stuff = getLocalImage(img);
+				stuff.run();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		resource_manager.put("IMG_" + img.Index, stuff);
+		
+		return stuff;
+	}
 	
+	
+	synchronized
+	public IImages getImages(String key){
+		ImagesSet img = ImgTable.get(key);
+		return getImages(img);
+			
+	}
+	
+//	-------------------------------------------------------------------------------------------------------------------------------
+	
+	synchronized
 	public CSprite getSprite(SpriteSet spr){
 		IImages tiles = getImages(spr.ImagesName);
 		return getSprite(spr, tiles);
 	}
 	
+	synchronized
 	public CSprite getSprite(SpriteSet spr, IImages tiles)
 	{
-		CSprite cspr = null;
-		
-		if (ResourceManager!=null) {
-			Object obj = ResourceManager.get("SPR_"+spr.Index);
-			if (obj instanceof CSprite) {
-				cspr = (CSprite)obj;
-			}
+		CSprite cspr = resource_manager.get("SPR_"+spr.Index, CSprite.class);
+		if (cspr != null) {
+			return cspr;
 		}
-		
-		if (cspr==null){
-			cspr = createSpriteFromSet(spr, tiles);
-//			LoadedFileCount ++;
-		}
-		
-		if (ResourceManager!=null) {
-			ResourceManager.put("SPR_"+spr.Index, cspr);
-		}
-		
-		return new CSprite(cspr);
+		cspr = createSpriteFromSet(spr, tiles);
+		resource_manager.put("SPR_"+spr.Index, cspr);
+		return cspr;
 	}
 	
+	synchronized
 	public CSprite getSprite(String key){
 		SpriteSet spr = SprTable.get(key);
 		return getSprite(spr);
 	}
-
+	
+	synchronized
 	public CSprite getSprite(String key, IImages images){
 		SpriteSet spr = SprTable.get(key);
 		return getSprite(spr, images);
 	}
 
+	synchronized
 	public void getSpriteAsync(String key, LoadSpriteListener listener)
 	{
 		SpriteSet spr = SprTable.get(key);
-		
-		if (ResourceManager!=null) {
-			Object obj = ResourceManager.get("SPR_"+key);
-			if (obj instanceof CSprite) {
+		if (spr != null) {
+			CSprite obj = resource_manager.get("SPR_"+key, CSprite.class);
+			if (obj != null) {
 				listener.loaded(this, (CSprite)obj, spr);
 				return;
 			}
-		}
-		if (loading_service != null) {
-			loading_service.execute(new LoadSpriteTask(spr, listener));
+			if (loading_service != null) {
+				loading_service.execute(new LoadSpriteTask(spr, listener));
+			} else {
+				new Thread(new LoadSpriteTask(spr, listener), "get-sprite-" + key).start();
+			}
 		} else {
-			new Thread(new LoadSpriteTask(spr, listener), "get-sprite-" + key).start();
+			throw new NullPointerException("sprite not found : " + key);
 		}
 	}
 
@@ -319,55 +311,35 @@ public class CellSetResource
 //	--------------------------------------------------------------------------------------------------------------------------------------------------
 
 	//
+	synchronized
 	public CWayPoint[] getWorldWayPoints(String key)
 	{
+		CWayPoint[] points = resource_manager.get("WPS_"+key, CWayPoint[].class);
+		if (points != null) {
+			return points;
+		}
 		WorldSet world = WorldTable.get(key);
-		
-		CWayPoint[] points = null;
-		
-		if (ResourceManager!=null) {
-			Object obj = ResourceManager.get("WPS_"+key);
-			if (obj instanceof CWayPoint[]) {
-				points = (CWayPoint[])obj;
-			}
-		}
-		
-		if (points==null) {
-			points = createWayPointsFromSet(world.WayPoints);
-		}
-		
-		if (ResourceManager!=null) {
-			ResourceManager.put("WPS_"+key, points);
-		}
-		
+		points = createWayPointsFromSet(world.WayPoints);
+		resource_manager.put("WPS_"+key, points);
 		return points;
 	}
 	
+	synchronized
 	public CCD[] getWorldRegions(String key)
 	{
+		CCD[] regions = resource_manager.get("WRS_"+key, CCD[].class);
+		if (regions != null) {
+			return regions;
+		}
 		WorldSet world = WorldTable.get(key);
-		
-		CCD[] regions = null;
-		
-		if (ResourceManager!=null) {
-			Object obj = ResourceManager.get("WRS_"+key);
-			if (obj instanceof CCD[]) {
-				regions = (CCD[])obj;
-			}
-		}
-		
-		if (regions==null) {
-			regions = createRegionsFromSet(world.Regions);
-		}
-		
-		if (ResourceManager!=null) {
-			ResourceManager.put("WRS_"+key, regions);
-		}
-		
+		regions = createRegionsFromSet(world.Regions);
+		resource_manager.put("WRS_"+key, regions);
 		return regions;
 	}
 
-//	--------------------------------------------------------------------------------------------------------------------------------------------------
+//	-------------------------------------------------------------------------------------------------------------------------------
+//	Set Object in <setfile>.properties
+//	-------------------------------------------------------------------------------------------------------------------------------
 
 	
 	public WorldSet getSetWorld(String key) {
@@ -407,6 +379,8 @@ public class CellSetResource
 		return null;
 	}
 	
+//	--------------------------------------------------------------------------------------------------------------------------------------------------
+//	utils
 //	--------------------------------------------------------------------------------------------------------------------------------------------------
 
 	public void initAllResource(SetLoading progress)
