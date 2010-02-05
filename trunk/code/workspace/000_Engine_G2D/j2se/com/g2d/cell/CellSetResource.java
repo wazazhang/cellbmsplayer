@@ -216,7 +216,7 @@ public class CellSetResource
 	
 
 	synchronized
-	public IImages getImages(ImagesSet img) 
+	final public IImages getImages(ImagesSet img) 
 	{
 		StreamTiles stuff = resource_manager.get("IMG_" + img.Index, StreamTiles.class);
 		if (stuff != null) {
@@ -249,7 +249,7 @@ public class CellSetResource
 	
 	
 	synchronized
-	public IImages getImages(String key){
+	final public IImages getImages(String key){
 		ImagesSet img = ImgTable.get(key);
 		return getImages(img);
 			
@@ -258,43 +258,43 @@ public class CellSetResource
 //	-------------------------------------------------------------------------------------------------------------------------------
 	
 	synchronized
-	public CSprite getSprite(SpriteSet spr){
+	final public CSprite getSprite(SpriteSet spr){
 		IImages tiles = getImages(spr.ImagesName);
 		return getSprite(spr, tiles);
 	}
 	
 	synchronized
-	public CSprite getSprite(SpriteSet spr, IImages tiles)
+	final public CSprite getSprite(SpriteSet spr, IImages tiles)
 	{
 		CSprite cspr = resource_manager.get("SPR_"+spr.Index, CSprite.class);
 		if (cspr != null) {
-			return cspr;
+			return new CSprite(cspr);
 		}
 		cspr = createSpriteFromSet(spr, tiles);
 		resource_manager.put("SPR_"+spr.Index, cspr);
-		return cspr;
+		return new CSprite(cspr);
 	}
 	
 	synchronized
-	public CSprite getSprite(String key){
+	final public CSprite getSprite(String key){
 		SpriteSet spr = SprTable.get(key);
 		return getSprite(spr);
 	}
 	
 	synchronized
-	public CSprite getSprite(String key, IImages images){
+	final public CSprite getSprite(String key, IImages images){
 		SpriteSet spr = SprTable.get(key);
 		return getSprite(spr, images);
 	}
 
 	synchronized
-	public void getSpriteAsync(String key, LoadSpriteListener listener)
+	final public void getSpriteAsync(String key, LoadSpriteListener listener)
 	{
 		SpriteSet spr = SprTable.get(key);
 		if (spr != null) {
 			CSprite obj = resource_manager.get("SPR_"+key, CSprite.class);
 			if (obj != null) {
-				listener.loaded(this, (CSprite)obj, spr);
+				listener.loaded(this, new CSprite(obj), spr);
 				return;
 			}
 			if (loading_service != null) {
@@ -312,7 +312,7 @@ public class CellSetResource
 
 	//
 	synchronized
-	public CWayPoint[] getWorldWayPoints(String key)
+	final public CWayPoint[] getWorldWayPoints(String key)
 	{
 		CWayPoint[] points = resource_manager.get("WPS_"+key, CWayPoint[].class);
 		if (points != null) {
@@ -325,7 +325,7 @@ public class CellSetResource
 	}
 	
 	synchronized
-	public CCD[] getWorldRegions(String key)
+	final public CCD[] getWorldRegions(String key)
 	{
 		CCD[] regions = resource_manager.get("WRS_"+key, CCD[].class);
 		if (regions != null) {
@@ -342,23 +342,23 @@ public class CellSetResource
 //	-------------------------------------------------------------------------------------------------------------------------------
 
 	
-	public WorldSet getSetWorld(String key) {
+	final public WorldSet getSetWorld(String key) {
 		return WorldTable.get(key);
 	}
 
-	public SpriteSet getSetSprite(String key) {
+	final public SpriteSet getSetSprite(String key) {
 		return SprTable.get(key);
 	}
 
-	public MapSet getSetMap(String key) {
+	final public MapSet getSetMap(String key) {
 		return MapTable.get(key);
 	}
 
-	public ImagesSet getSetImages(String key) {
+	final public ImagesSet getSetImages(String key) {
 		return ImgTable.get(key);
 	}
 	
-	public<T extends CellSetObject> T getSetObject(Class<T> cls, String key)
+	final public<T extends CellSetObject> T getSetObject(Class<T> cls, String key)
 	{
 		CellSetObject ret = null;
 		if (ImagesSet.class.isAssignableFrom(cls)) {
@@ -383,7 +383,7 @@ public class CellSetResource
 //	utils
 //	--------------------------------------------------------------------------------------------------------------------------------------------------
 
-	public void initAllResource(SetLoading progress)
+	final public void initAllResource(SetLoading progress)
 	{
 		// images 
 		{
@@ -433,7 +433,7 @@ public class CellSetResource
 		}
 	}
 	
-	public boolean isStreamingResource() {
+	final public boolean isStreamingResource() {
 		if (loading_service!=null) {
 			return (loading_service.getActiveCount()!=0);
 		} else {
@@ -442,7 +442,7 @@ public class CellSetResource
 	}
 	
 
-	protected byte[] loadRes(String path)
+	final protected byte[] loadRes(String path)
 	{
 		byte[] data = CIO.loadData(PathDir+path);
 		if (data == null) {
