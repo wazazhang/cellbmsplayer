@@ -25,6 +25,8 @@ public class Scene extends RPGObject implements NamedObject
 	@Property("场景编组号码")
 	public Integer		group;
 	
+	@Property("场景事件冷冻时间(毫秒)")
+	public Integer		event_freezing_time_ms	= 5000;
 	
 //	------------------------------------------------------------------------------------------------------------------
 	
