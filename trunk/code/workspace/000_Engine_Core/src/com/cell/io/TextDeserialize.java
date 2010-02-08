@@ -40,7 +40,7 @@ public class TextDeserialize extends IInput
 	public static String getBytesString(Reader in) throws IOException {
 		String next = getNext(in);
 		if (next.endsWith("byte")) {
-			next.replace("byte", "");
+			next = next.replace("byte", "");
 		}
 		int stringLen = Integer.parseInt(next);
 		String ret = "";
