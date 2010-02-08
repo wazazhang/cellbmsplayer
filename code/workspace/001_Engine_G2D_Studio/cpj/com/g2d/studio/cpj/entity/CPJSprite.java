@@ -11,6 +11,7 @@ import com.g2d.Tools;
 import com.g2d.cell.CellSprite;
 import com.g2d.cell.CellSetResource.SpriteSet;
 import com.g2d.studio.cpj.CPJResourceType;
+import com.g2d.studio.res.Res;
 
 
 public class CPJSprite extends CPJObject<SpriteSet>
@@ -66,6 +67,7 @@ public class CPJSprite extends CPJObject<SpriteSet>
 							System.err.println("create a sprite icon file : " + name);
 						} catch (Throwable ex) {
 							System.err.println("create a sprite icon file error : " + name);
+							snapshoot = Res.icon_error;
 						} finally {
 							if (unload) {
 								parent.getSetResource().destoryAllStreamImages();
