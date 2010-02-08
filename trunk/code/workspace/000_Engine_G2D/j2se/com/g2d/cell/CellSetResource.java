@@ -123,60 +123,48 @@ public class CellSetResource
 		}
 
 		for (int i = 0; i < SpriteCount; i++) {
-			try{
-				SpriteSet spr = new SpriteSet(
-						Config.getString("Sprite_" + i),
-						Config.getString("Sprite_" + i + "_parts"),
-						Config.getString("Sprite_" + i + "_frames"),
-						Config.getString("Sprite_" + i + "_cds"),
-						Config.getString("Sprite_" + i + "_cd_frames"),
-						Config.getString("Sprite_" + i + "_frame_counts"),
-						Config.getString("Sprite_" + i + "_frame_name"),
-						Config.getString("Sprite_" + i + "_frame_animate"),
-						Config.getString("Sprite_" + i + "_frame_cd_map"),
-						Config.getString("Sprite_" + i + "_frame_cd_atk"),
-						Config.getString("Sprite_" + i + "_frame_cd_def"),
-						Config.getString("Sprite_" + i + "_frame_cd_ext")
-				);
-				SprTable.put(spr.Name, spr);
-			}catch (Exception e) {
-				e.printStackTrace();
-			}
+			SpriteSet spr = new SpriteSet(
+					Config.getString("Sprite_" + i),
+					Config.getString("Sprite_" + i + "_parts"),
+					Config.getString("Sprite_" + i + "_frames"),
+					Config.getString("Sprite_" + i + "_cds"),
+					Config.getString("Sprite_" + i + "_cd_frames"),
+					Config.getString("Sprite_" + i + "_frame_counts"),
+					Config.getString("Sprite_" + i + "_frame_name"),
+					Config.getString("Sprite_" + i + "_frame_animate"),
+					Config.getString("Sprite_" + i + "_frame_cd_map"),
+					Config.getString("Sprite_" + i + "_frame_cd_atk"),
+					Config.getString("Sprite_" + i + "_frame_cd_def"),
+					Config.getString("Sprite_" + i + "_frame_cd_ext")
+			);
+			SprTable.put(spr.Name, spr);
 		}
 		
 		
 		for (int i = 0; i < MapCount; i++) {
-			try{
-				MapSet map = new MapSet(
-						Config.getString("Map_" + i),
-						Config.getString("Map_" + i + "_parts"),
-						Config.getString("Map_" + i + "_frames"),
-						Config.getString("Map_" + i + "_cds"),
-						Config.getString("Map_" + i + "_tile_matrix"),
-						Config.getString("Map_" + i + "_cd_matrix")
-				);
-				MapTable.put(map.Name, map);
-			}catch (Exception e) {
-				e.printStackTrace();
-			}
+			MapSet map = new MapSet(
+					Config.getString("Map_" + i),
+					Config.getString("Map_" + i + "_parts"),
+					Config.getString("Map_" + i + "_frames"),
+					Config.getString("Map_" + i + "_cds"),
+					Config.getString("Map_" + i + "_tile_matrix"),
+					Config.getString("Map_" + i + "_cd_matrix")
+			);
+			MapTable.put(map.Name, map);
 		}
 		
 		for (int i = 0; i < WorldCount; i++) {
-			try{
-				WorldSet world = new WorldSet(
-						Config.getString("World_" + i),
-						Config.getString("World_" + i + "_maps"),
-						Config.getString("World_" + i + "_sprs"),
-						Config.getString("World_" + i + "_waypoints"),
-						Config.getString("World_" + i + "_waypoint_link"),
-						Config.getString("World_" + i + "_regions"),
-						Config.getString("World_" + i + "_data"),
-						Config.getString("World_" + i + "_terrain")
-				);
-				WorldTable.put(world.Name, world);
-			}catch (Exception e) {
-				e.printStackTrace();
-			}
+			WorldSet world = new WorldSet(
+					Config.getString("World_" + i),
+					Config.getString("World_" + i + "_maps"),
+					Config.getString("World_" + i + "_sprs"),
+					Config.getString("World_" + i + "_waypoints"),
+					Config.getString("World_" + i + "_waypoint_link"),
+					Config.getString("World_" + i + "_regions"),
+					Config.getString("World_" + i + "_data"),
+					Config.getString("World_" + i + "_terrain")
+			);
+			WorldTable.put(world.Name, world);
 		}
 	}
 	

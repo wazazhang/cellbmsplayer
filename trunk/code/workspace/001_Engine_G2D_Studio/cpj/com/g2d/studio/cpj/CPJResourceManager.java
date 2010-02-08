@@ -43,7 +43,7 @@ public class CPJResourceManager extends ManagerForm implements MouseListener
 	DefaultMutableTreeNode effect_root;
 	DefaultMutableTreeNode scene_root;
 	
-	public CPJResourceManager(Studio studio, ProgressForm progress) 
+	public CPJResourceManager(Studio studio, ProgressForm progress)
 	{
 		super(studio, progress, "资源管理器", Res.icons_bar[7]);
 		
@@ -303,7 +303,11 @@ public class CPJResourceManager extends ManagerForm implements MouseListener
 					Object obj = childs.nextElement();
 					if (obj instanceof CPJFile) {
 						CPJFile file = (CPJFile)obj;
-						file.refresh();
+						try {
+							file.refresh();
+						} catch (Throwable e1) {
+							e1.printStackTrace();
+						}
 					}
 				}
 				tree.reload(root);

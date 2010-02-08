@@ -51,24 +51,26 @@ public class CPJSprite extends CPJObject<SpriteSet>
 					synchronized (parent.getSetResource()) 
 					{
 						boolean unload = !parent.getSetResource().isLoadImages();
-						
-						parent.getSetResource().initAllStreamImages();
-						CSprite			spr		= parent.getSetResource().getSprite(name);
-						CCD				bounds	= spr.getFrameBounds(0, 0);
-						BufferedImage 	img		= Tools.createImage(bounds.getWidth(), bounds.getHeight());
-						
-						Graphics2D		g2d		= img.createGraphics();
-						spr.render(new CGraphics(g2d), -bounds.X1, -bounds.Y1, 0, 0);
-						g2d.dispose();
+						try{
+							parent.getSetResource().initAllStreamImages();
+							CSprite			spr		= parent.getSetResource().getSprite(name);
+							CCD				bounds	= spr.getFrameBounds(0, 0);
+							BufferedImage 	img		= Tools.createImage(bounds.getWidth(), bounds.getHeight());
+							
+							Graphics2D		g2d		= img.createGraphics();
+							spr.render(new CGraphics(g2d), -bounds.X1, -bounds.Y1, 0, 0);
+							g2d.dispose();
 
-						snapshoot = Tools.combianImage(32, 32, img);
-						Tools.writeImage(file.getPath(), snapshoot);
-						
-						if (unload) {
-							parent.getSetResource().destoryAllStreamImages();
+							snapshoot = Tools.combianImage(32, 32, img);
+							Tools.writeImage(file.getPath(), snapshoot);
+							System.err.println("create a sprite icon file : " + name);
+						} catch (Throwable ex) {
+							System.err.println("create a sprite icon file error : " + name);
+						} finally {
+							if (unload) {
+								parent.getSetResource().destoryAllStreamImages();
+							}
 						}
-						
-						System.out.println("create a sprite icon file : " + name);
 					}
 				}
 			} catch (Exception e) {
