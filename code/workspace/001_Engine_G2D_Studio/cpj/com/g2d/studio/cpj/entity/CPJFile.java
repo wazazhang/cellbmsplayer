@@ -40,7 +40,7 @@ public class CPJFile extends G2DTreeNode<CPJObject<?>>
 	private HashMap<String, CPJSprite>	sprites			= new HashMap<String, CPJSprite>();
 	private HashMap<String, CPJWorld>	worlds			= new HashMap<String, CPJWorld>();
 	
-	CPJFile(File cpj_file, CPJResourceType res_type) throws Exception 
+	CPJFile(File cpj_file, CPJResourceType res_type) throws Throwable 
 	{
 		this.cpj_file		= cpj_file;
 		this.name			= cpj_file.getParentFile().getName();		
@@ -184,7 +184,7 @@ public class CPJFile extends G2DTreeNode<CPJObject<?>>
 
 //	------------------------------------------------------------------------------------------------------------------------------
 
-	public void refresh()
+	public void refresh() throws Throwable
 	{
 		File output_file	= getOutputFile(cpj_file);
 
@@ -203,7 +203,8 @@ public class CPJFile extends G2DTreeNode<CPJObject<?>>
 					break;
 				}
 			} catch (Throwable e) {
-				e.printStackTrace();
+//				e.printStackTrace();
+				throw e;
 			}
 		}
 	}
@@ -254,7 +255,11 @@ public class CPJFile extends G2DTreeNode<CPJObject<?>>
 				openEdit();
 			} else if (e.getSource() == item_rebuild_objects) {
 				rebuild();
-				refresh();
+				try {
+					refresh();
+				} catch (Throwable e1) {
+					e1.printStackTrace();
+				}
 				try{
 					DefaultTreeModel tm = (DefaultTreeModel)tree.getModel();
 					tm.reload(CPJFile.this);
@@ -283,7 +288,8 @@ public class CPJFile extends G2DTreeNode<CPJObject<?>>
 				if (cpj != null) {
 					try{
 						ret.add(new CPJFile(cpj, res_type));
-					} catch(Exception err){
+					} catch(Throwable err){
+						System.err.println("init cpj file error : " + cpj.getPath());
 						err.printStackTrace();
 					}
 				}
