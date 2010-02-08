@@ -338,6 +338,9 @@ public abstract class DisplayObjectContainer extends DisplayObject
 		synchronized(elements_lock){
 			if (child.parent == this) {
 				child.parent = null;
+				if (always_top_element == child) {
+					always_top_element = null;
+				}
 				events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_DELETE, child));
 				if (update_thread==null) {
 					processEvent();
