@@ -5,6 +5,7 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JTree;
 
 import com.cell.rpg.template.TEffect;
@@ -75,7 +76,7 @@ public class EffectTreeView extends ObjectTreeViewDynamic<DEffect, TEffect>
 		private static final long serialVersionUID = 1L;
 		
 		EffectGroup root;
-		JMenuItem add_effect = new JMenuItem("添加EFFECT");
+		JMenuItem add_effect = new JMenuItem("添加Effect");
 		
 		public EffectRootMenu(EffectGroup root) {
 			super(root, getTree(), getTree());
@@ -86,7 +87,17 @@ public class EffectTreeView extends ObjectTreeViewDynamic<DEffect, TEffect>
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			super.actionPerformed(e);
+			if (e.getSource() == add_effect) {
+				String name = JOptionPane.showInputDialog(getTree(), "输入Effect名字");
+				if (name.length()>0) {
+					DEffect effect = new DEffect(EffectTreeView.this, name);
+					addNode(root, effect);
+				} else {
+					JOptionPane.showMessageDialog(getTree(), "名字不能为空");
+				}
+			} else {
+				super.actionPerformed(e);
+			}
 		}
 	}
 

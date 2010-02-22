@@ -1,7 +1,15 @@
 package com.g2d.studio.gameedit.dynamic;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+
+import javax.swing.JOptionPane;
+import javax.swing.JTree;
+
 import com.cell.rpg.RPGObject;
+import com.g2d.studio.gameedit.entity.ObjectGroup;
 import com.g2d.studio.gameedit.entity.ObjectNode;
+import com.g2d.studio.swing.G2DTreeNodeGroup.NodeMenu;
 
 public abstract class DynamicNode<T extends RPGObject> extends ObjectNode<T>
 {
@@ -61,7 +69,30 @@ public abstract class DynamicNode<T extends RPGObject> extends ObjectNode<T>
 		return false;
 	}
 
+	@Override
+	public void onRightClicked(JTree tree, MouseEvent e) {
+		new DynamicNodeMenu(this).show(tree, e.getX(), e.getY());
+	}
 //	-------------------------------------------------------------------------------------------------------
 
-	
+	protected class DynamicNodeMenu extends NodeMenu<DynamicNode<?>>
+	{
+		public DynamicNodeMenu(DynamicNode<?> node) {
+			super(node);
+
+			remove(open);
+			remove(rename);
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (e.getSource() == delete) {
+				int result = JOptionPane.showConfirmDialog(tree, "确定要删除 : " + node);
+				if (result == JOptionPane.YES_OPTION) {
+					DynamicNode.this.removeFromParent();
+					tree.reload();
+				}
+			}
+		}
+	}
 }
