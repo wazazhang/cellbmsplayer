@@ -1,5 +1,7 @@
 package com.cell.math;
 
+import java.awt.geom.AffineTransform;
+
 public class MathVector
 {
 
@@ -58,6 +60,47 @@ public class MathVector
 			return false;
 		}
 	}
+	
+	/**
+	 * 向量缩放
+	 * @param v
+	 * @param scale
+	 */
+	public static void scale(Vector v, double scale){
+		v.setVectorX(v.getVectorX() * scale);
+		v.setVectorY(v.getVectorY() * scale);
+	}
+	
+
+	/**
+	 * 向量按照{0,0}点旋转
+	 * @param v
+	 * @param degree 弧度
+	 */
+	public static void rotate(Vector v, double degree){
+		double x = v.getVectorX() * Math.cos(degree) - v.getVectorY() * Math.sin(degree);
+		double y = v.getVectorY() * Math.cos(degree) + v.getVectorX() * Math.sin(degree);
+        v.setVectorX(x);
+        v.setVectorY(y);
+	}
+	
+	/**
+	 * 向量按照p0点旋转
+	 * @param v
+	 * @param p0
+	 * @param degree 弧度
+	 */
+	public static void rotate(Vector v, Vector p0, double degree) {
+		double x = p0.getVectorX() + (v.getVectorX() - p0.getVectorX())
+				* Math.cos(degree) - (v.getVectorY() - p0.getVectorY())
+				* Math.sin(degree);
+		double y = p0.getVectorY() + (v.getVectorY() - p0.getVectorY())
+				* Math.cos(degree) + (v.getVectorX() - p0.getVectorX())
+				* Math.sin(degree); 
+		v.setVectorX(x);
+		v.setVectorY(y);
+	}
+	
 	
 	/**
 	 * 得到速度和时间产生的距离
@@ -167,8 +210,6 @@ public class MathVector
 		v.setVectorY(a.getVectorY() * scale);
 		return v;
 	}
-	
-	
 	
 	
 	
