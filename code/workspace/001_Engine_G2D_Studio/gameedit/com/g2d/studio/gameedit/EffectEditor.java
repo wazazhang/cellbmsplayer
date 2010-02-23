@@ -33,8 +33,6 @@ import com.g2d.studio.particles.ParticleViewer;
 
 public class EffectEditor extends JSplitPane implements ActionListener, ListSelectionListener
 {
-	final static ParticleViewer viewer = new ParticleViewer();
-	
 	final TEffect effect;
 	
 	Vector<LayerEdit> layer_list = new Vector<LayerEdit>();
@@ -122,6 +120,7 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 		}
 		else if (e.getSource() == show)
 		{
+			ParticleViewer viewer = new ParticleViewer();
 			viewer.setParticleData(this);
 			viewer.setVisible(true);
 		}
