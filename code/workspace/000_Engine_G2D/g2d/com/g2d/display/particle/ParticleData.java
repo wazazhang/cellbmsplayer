@@ -1,14 +1,17 @@
-package com.cell.rpg.particle;
+package com.g2d.display.particle;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class ParticleSystem implements Iterable<Layer>, Serializable
+public class ParticleData implements Iterable<Layer>, Serializable
 {
-	final private ArrayList<Layer> layers = new ArrayList<Layer>();
+	/** 持续释放粒子 */
+	public boolean	particles_continued		= true;
 	
-	public ParticleSystem() {
+	final private ArrayList<Layer> layers = new ArrayList<Layer>();
+
+	public ParticleData() {
 		layers.add(new Layer());
 	}
 	
@@ -23,5 +26,9 @@ public class ParticleSystem implements Iterable<Layer>, Serializable
 	@Override
 	public Iterator<Layer> iterator() {
 		return layers.iterator();
+	}
+	
+	public int size() {
+		return layers.size();
 	}
 }

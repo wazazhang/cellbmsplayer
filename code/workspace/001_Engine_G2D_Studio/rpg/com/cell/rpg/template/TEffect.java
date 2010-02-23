@@ -1,11 +1,11 @@
 package com.cell.rpg.template;
 
-import com.cell.rpg.particle.ParticleSystem;
+import com.g2d.display.particle.ParticleData;
 
 
 public class TEffect extends TemplateNode
 {	
-	final public ParticleSystem particles = new ParticleSystem();
+	final public ParticleData particles = new ParticleData();
 	
 	public TEffect(int id, String name) {
 		super(id, name);

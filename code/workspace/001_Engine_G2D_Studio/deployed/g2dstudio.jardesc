@@ -29,5 +29,6 @@
         <javaElement handleIdentifier="=000_Engine_Core/src"/>
         <javaElement handleIdentifier="=001_Engine_G2D_Studio/cpj"/>
         <javaElement handleIdentifier="=001_Engine_G2D_Studio/item"/>
+        <javaElement handleIdentifier="=001_Engine_G2D_Studio/particles"/>
     </selectedElements>
 </jardesc>

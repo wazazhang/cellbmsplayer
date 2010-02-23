@@ -1,4 +1,4 @@
-package com.cell.rpg.particle;
+package com.g2d.display.particle;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -36,54 +36,53 @@ public class Layer implements Serializable
 //	------------------------------------------------------------------------------------------------------------------
 	
 	
-	/** 粒子生命周期时间范围(秒)*/
-	public float	particle_min_age_sec, particle_max_age_sec;
+	/** 粒子生命周期时间范围(帧)*/
+	public int		particle_min_age = 30, particle_max_age = 60;
 	
-	/** 每秒释放多少个粒子 */
-	public float	particles_per_sec;
+	/** 每帧释放多少个粒子 */
+	public int		particles_per_frame 	= 10;
 	
 	/** 粒子容量 */
-	public int 		particles_capacity;
-	
-	
+	public int 		particles_capacity 		= 300;
 	
 //	------------------------------------------------------------------------------------------------------------------
 //	Origin
 //	------------------------------------------------------------------------------------------------------------------
 	
 	/** 发射基地位置 */
-	public float 	origin_x, origin_y;
+	public float 		origin_x = 0, origin_y = 0;
 	
-	/** 发射基地变换角度 */
-	public float 	origin_rotation;
+	/** 发射基地变换角度 (弧度)*/
+	public float 		origin_rotation_angle = 0;
 	
 	/** 发射基地拉伸 */
-	public float 	origin_scale_x, origin_scale_y;
+	public float 		origin_scale_x = 1, origin_scale_y = 1;
 	
 	/** 发射基地几何造型 */
-	public Shape	origin_shape;
+	public OriginShape	origin_shape = new OriginShape.Ring();
 	
 //	------------------------------------------------------------------------------------------------------------------
-//	Emission
+//	Spawn
 //	------------------------------------------------------------------------------------------------------------------
 
-	/** 发射角度 */
-	public float emission_angle;
+	/** 发射角度(弧度) */
+	public float spawn_angle			= (float)(-Math.PI / 2);
 	
-	/** 发射角度随机范围 */
-	public float emission_angle_range;
+	/** 发射角度随机范围(弧度) */
+	public float spawn_angle_range		= (float)(-Math.PI / 8);
 	
 	/** 发射速度 */
-	public float emission_velocity;
+	public float spawn_velocity			= 4.0f;
 	
 	/** 发射速度随机范围 */
-	public float emission_velocity_range;
+	public float spawn_velocity_range	= 1.0f;
 	
 	
 //	------------------------------------------------------------------------------------------------------------------
 //	TimeLine
 //	------------------------------------------------------------------------------------------------------------------
 
+	final public TimeLine timeline = new TimeLine();
 	
 	public static class TimeLine implements Iterable<TimeNode> , Serializable
 	{
@@ -109,7 +108,7 @@ public class Layer implements Serializable
 	
 	public static class TimeNode implements Comparable<TimeNode>, Serializable
 	{
-		final public float position;
+		public float 	position;
 		
 		public int		color		= 0xffffff;
 		
