@@ -7,7 +7,11 @@ import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -48,8 +52,11 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 	Vector<LayerEdit> layer_list = new Vector<LayerEdit>();
 	
 	JList 	layers 		= new JList();
+	
 	JButton layer_add	= new JButton("添加层");
 	JButton layer_del	= new JButton("删除层");
+	
+	JButton refresh		= new JButton("刷新");
 	JButton show		= new JButton("查看");
 	
 	public EffectEditor(TEffect e) 
@@ -63,12 +70,18 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 		// init left
 		{
 			JToolBar bar = new JToolBar();
+			
 			bar.add(layer_add);
 			bar.add(layer_del);
+			bar.addSeparator();
+			bar.add(refresh);
 			bar.add(show);
+			
 			layer_add.addActionListener(this);
 			layer_del.addActionListener(this);
+			refresh.addActionListener(this);
 			show.addActionListener(this);
+			
 			layers.addListSelectionListener(this);
 			layers.setPreferredSize(new Dimension(400, 400));
 			left.add(bar, BorderLayout.NORTH);
@@ -135,7 +148,9 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 			viewer.setParticleData(this);
 			viewer.setVisible(true);
 		}
+		
 		layers.repaint();
+		
 	}
 		
 
@@ -288,7 +303,6 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 					
 					particles_cointinued_v	.setBounds(sx, sy, 200, 24); sy += 25;
 					super.add(particles_cointinued_v);
-					
 				}
 			}
 			
