@@ -73,7 +73,7 @@ public class StudioResource extends CellSetResource
 	 * 根据图片组名字确定读入jpg或png
 	 * @author WAZA
 	 */
-	protected class StreamTypeTiles extends StreamTiles
+	public class StreamTypeTiles extends StreamTiles
 	{
 		public StreamTypeTiles(ImagesSet img) throws IOException {
 			super(img);
@@ -90,7 +90,6 @@ public class StudioResource extends CellSetResource
 						if (img.ClipsW[i]>0 && img.ClipsH[i]>0){
 							byte[] idata = loadRes("set/"+img.Name+"/"+i+"."+img.Name);
 							images[i] = new CImage(new ByteArrayInputStream(idata));
-							//Thread.sleep(1000);
 						}
 					}
 				}

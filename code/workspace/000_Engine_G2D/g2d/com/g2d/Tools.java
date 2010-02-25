@@ -36,6 +36,9 @@ import javax.swing.ImageIcon;
 import sun.awt.image.ImageWatched.Link;
 
 import com.cell.CIO;
+import com.cell.gfx.IGraphics;
+import com.cell.gfx.IImage;
+import com.cell.j2se.CGraphics;
 import com.cell.math.MathVector;
 import com.cell.math.TVector;
 import com.cell.math.Vector;
@@ -247,6 +250,24 @@ public class Tools
 		{
 			BufferedImage buf = gc.createCompatibleImage(width, height, Transparency.TRANSLUCENT);
 
+			return buf;
+		}
+		catch(Exception err)
+		{
+			err.printStackTrace();
+		}
+		return null;
+	}
+	
+	static public BufferedImage createImage(IImage image)
+	{
+		try
+		{
+			BufferedImage buf = gc.createCompatibleImage(image.getWidth(), image.getHeight(), Transparency.TRANSLUCENT);
+			Graphics2D g = (Graphics2D)buf.createGraphics();
+			IGraphics ig = new CGraphics(g);
+			ig.drawImage(image, 0, 0, 0);
+			g.dispose();
 			return buf;
 		}
 		catch(Exception err)
