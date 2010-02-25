@@ -2165,12 +2165,9 @@ public class CUtil extends CObject
 			max = temp;
 		}
 		double delta = max - min;
-
-		if (delta<1) {
-			return min + Math.abs(random.nextDouble() % delta);
-		} else {
-			return min + Math.abs(random.nextLong() % (long)delta) + Math.abs(random.nextDouble() % delta);
-		}
+		
+		return min + Math.abs(random.nextDouble() * delta);
+		
 	}
 	public static final float 	getRandom(java.util.Random random, float min, float max)
 	{
@@ -2184,11 +2181,8 @@ public class CUtil extends CObject
 		}
 		float delta = max - min;
 
-		if (delta<1) {
-			return min + Math.abs(random.nextFloat() % delta);
-		} else {
-			return min + Math.abs(random.nextInt() % (float)delta) + Math.abs(random.nextFloat() % delta);
-		}
+		return min + Math.abs(random.nextFloat() * delta);
+		
 	}
 	public static final int 	getRandom(java.util.Random random, int min, int max)
 	{
@@ -2201,6 +2195,7 @@ public class CUtil extends CObject
 			max = temp;
 		}
 		int delta = max - min;
+		
 		return min + Math.abs(random.nextInt() % delta);
 	}
 	public static final long 	getRandom(java.util.Random random, long min, long max)
@@ -2214,9 +2209,19 @@ public class CUtil extends CObject
 			max = temp;
 		}
 		long delta = max - min;
+		
 		return min + Math.abs(random.nextLong() % delta);
 	}
 
+//	public static void main(String args[]) 
+//	{
+//		java.util.Random random = new java.util.Random();
+//		for (int i=0; i<10; i++) {
+////			System.out.println(random.nextDouble());
+//			System.out.println(getRandom(random, -2.0d, 2d));
+//		}
+//	}
+	
 //	--------------------------------------------------------------------------------------------------------------------------
 
 	/** Get a random number in the specified range
