@@ -11,6 +11,7 @@ import com.cell.CUtil;
 import com.cell.math.MathVector;
 import com.cell.math.TVector;
 import com.cell.math.Vector;
+import com.g2d.display.DisplayObject;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.Sprite;
 
@@ -47,7 +48,7 @@ public class ParticleObject extends com.g2d.display.particle.ParticleSystem
 	/**
 	 * Layer Display Object
 	 */
-	class LayerObject
+	private class LayerObject
 	{
 		Queue<SingleObject> idle_nodes = new LinkedList<SingleObject>();
 		
@@ -116,31 +117,39 @@ public class ParticleObject extends com.g2d.display.particle.ParticleSystem
 	/**
 	 * Single Particle
 	 */
-	class SingleObject extends Sprite
+	private class SingleObject extends DisplayObject implements Vector
 	{
 		final LayerObject layer;
 		
 		int particle_age;
 		
 		float speed_x, speed_y;
-		
+		float acc_x, acc_y;
 		
 		public SingleObject(LayerObject layer) {
 			this.layer = layer;
 		}
 		
+		public double getVectorX(){return this.x;}
+		public double getVectorY(){return this.y;}
+		public void setVectorX(double x){this.x = x;}
+		public void setVectorY(double y){this.y = y;}
+		public void addVectorX(double dx){this.x+=dx;}
+		public void addVectorY(double dy){this.y+=dy;}
+		
 		@Override
 		public void removed(DisplayObjectContainer parent) {
-			super.removed(parent);
 			layer.idle_nodes.add(this);
 		}
+		@Override
+		public void added(DisplayObjectContainer parent) {}
 		
 		@Override
 		public void update() {
 			if (timer >= particle_age) {
 				this.removeFromParent();
 			}
-			this.move(speed_x, speed_y);
+			MathVector.move(this, speed_x, speed_y);
 		}
 		
 		@Override
