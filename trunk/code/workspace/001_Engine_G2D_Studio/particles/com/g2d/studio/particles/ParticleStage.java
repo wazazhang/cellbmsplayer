@@ -36,9 +36,11 @@ public class ParticleStage extends Stage
 		cur_edit.getData();
 		if (getRoot().isMouseHold(MouseEvent.BUTTON1)) {
 			particle.setLocation(getMouseX(), getMouseY());
-			if (particle.data.particles_continued) {
-				particle.spawn();
-			}
+			particle.spawn();
+		}
+		if (getRoot().isMouseDown(MouseEvent.BUTTON3)) {
+			particle.setLocation(getMouseX(), getMouseY());
+			particle.spawn();
 		}
 	}
 

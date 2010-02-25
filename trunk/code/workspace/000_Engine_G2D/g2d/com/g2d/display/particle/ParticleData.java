@@ -6,9 +6,6 @@ import java.util.Iterator;
 
 public class ParticleData implements Iterable<Layer>, Serializable
 {
-	/** 持续释放粒子 */
-	public boolean	particles_continued		= true;
-	
 	final private ArrayList<Layer> layers = new ArrayList<Layer>();
 
 	public ParticleData() {

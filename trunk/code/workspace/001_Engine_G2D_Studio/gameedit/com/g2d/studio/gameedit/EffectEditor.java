@@ -1,23 +1,29 @@
 package com.g2d.studio.gameedit;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
+import javax.swing.JTextPane;
 import javax.swing.JToolBar;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
@@ -26,8 +32,12 @@ import javax.swing.event.ListSelectionListener;
 
 import com.cell.reflect.Parser;
 import com.cell.rpg.template.TEffect;
+import com.g2d.Tools;
 import com.g2d.display.particle.Layer;
 import com.g2d.display.particle.OriginShape;
+import com.g2d.studio.cpj.CPJEffectImageSelectDialog;
+import com.g2d.studio.cpj.CPJEffectImageSelectDialog.TileImage;
+import com.g2d.studio.cpj.entity.CPJImages;
 import com.g2d.studio.particles.ParticleViewer;
 
 
@@ -93,6 +103,7 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 		} else {
 			setRightComponent(new JPanel());
 		}
+		layers.repaint();
 	}
 		
 	@Override
@@ -124,7 +135,7 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 			viewer.setParticleData(this);
 			viewer.setVisible(true);
 		}
-		
+		layers.repaint();
 	}
 		
 
@@ -142,21 +153,25 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 		
 		public LayerEdit(Layer layer) {
 			this.layer = layer;
-			addTab("外观", page_appearance);
 			addTab("场景", page_scene);
+			addTab("外观", page_appearance);
 			addTab("发射", page_origin);
 			addTab("影响", page_influences);
 			setData(layer);
 		}
 		
 		void setData(Layer layer) {
-			page_scene.setData(layer);
-			page_origin.setData(layer);
+			page_scene			.setData(layer);
+			page_appearance		.setData(layer);
+			page_origin			.setData(layer);
+			page_influences		.setData(layer);
 		}
 		
 		void getData() {
-			page_scene.getData(layer);
-			page_origin.getData(layer);
+			page_scene			.getData(layer);
+			page_appearance		.getData(layer);
+			page_origin			.getData(layer);
+			page_influences		.getData(layer);
 		}
 		
 		@Override
@@ -176,16 +191,66 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 			abstract void getData(Layer layer);
 		}
 		
-		class PageAppearance extends PropertyPage
+		class PageAppearance extends PropertyPage implements ActionListener
 		{
+			TileImage 		tile_image;
+			BufferedImage 	tile_snap;
+			
+			JButton		image_brwoser_btn		= new JButton("浏览图片");
+			JLabel 		image_view				= new JLabel();
+			
+			public PageAppearance() 
+			{
+				super.setLayout(new BorderLayout());
+				
+				super.add(image_brwoser_btn, BorderLayout.NORTH);
+				super.add(image_view, BorderLayout.CENTER);
+				
+				image_brwoser_btn.addActionListener(this);
+			}
+			
 			@Override
-			void getData(Layer layer) {}
+			public void actionPerformed(ActionEvent e) {
+				TileImage ret = new CPJEffectImageSelectDialog(this).showDialog();
+				if (ret != null) {
+					tile_image	= ret;
+					tile_snap	= tile_image.getEffectImage();
+					if (tile_snap!=null) {
+						image_view.setIcon(Tools.createIcon(tile_snap));
+					}
+				} else {
+//					JOptionPane.showMessageDialog(this, "图片未选择。");
+				}
+			}
+			
 			@Override
-			void setData(Layer layer) {}
+			void getData(Layer layer) {
+				if (tile_image!=null) {
+					layer.cpj_project_name	= tile_image.parent_name;
+					layer.cpj_images_name	= tile_image.images_name;
+					layer.cpj_image_id		= tile_image.index;
+					layer.image				= tile_snap;
+				}
+			}
+			@Override
+			void setData(Layer layer) {
+				tile_image = new TileImage(
+						layer.cpj_project_name, 
+						layer.cpj_images_name, 
+						layer.cpj_image_id
+						);
+				tile_snap	= tile_image.getEffectImage();
+				if (tile_snap!=null) {
+					image_view.setIcon(Tools.createIcon(tile_snap));
+				}
+			}
 		}
 	
 		class PageScene extends PropertyPage
 		{
+			JLabel		name					= new JLabel("名字");
+			JTextField	name_v 					= new JTextField();
+			
 			JLabel		particles_capacity		= new JLabel("粒子容量");
 			JSpinner	particles_capacity_v 	= new JSpinner(new SpinnerNumberModel(300, 0, Integer.MAX_VALUE, 1));
 			JLabel		particle_age			= new JLabel("粒子生命周期时间范围(帧)");
@@ -193,19 +258,25 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 						particle_max_age_v		= new JSpinner(new SpinnerNumberModel(60, 1, Integer.MAX_VALUE, 1));
 			JLabel		particles_per_frame		= new JLabel("粒子每帧释放多少个");
 			JSpinner	particles_per_frame_v 	= new JSpinner(new SpinnerNumberModel(10, 0, Integer.MAX_VALUE, 1));
+			JCheckBox	particles_cointinued_v 	= new JCheckBox("粒子持续释放");
 			
 			public PageScene() 
 			{
 				int sx = 20, sy = 20;
 				{
+					name					.setBounds(sx, sy, 200, 24); sy += 25;
+					name_v					.setBounds(sx, sy, 200, 24); sy += 25;
+					super.add(name);
+					super.add(name_v);
+					
 					particles_capacity		.setBounds(sx, sy, 200, 24); sy += 25;
 					particles_capacity_v	.setBounds(sx, sy, 200, 24); sy += 25;
 					super.add(particles_capacity);
 					super.add(particles_capacity_v);
 					
-					particle_age		.setBounds(sx + 0,   sy, 200, 24); sy += 25;
-					particle_min_age_v	.setBounds(sx + 0,   sy, 99,  24);
-					particle_max_age_v	.setBounds(sx + 101, sy, 99,  24); sy += 25;
+					particle_age			.setBounds(sx + 0,   sy, 200, 24); sy += 25;
+					particle_min_age_v		.setBounds(sx + 0,   sy, 99,  24);
+					particle_max_age_v		.setBounds(sx + 101, sy, 99,  24); sy += 25;
 					super.add(particle_age);
 					super.add(particle_min_age_v);
 					super.add(particle_max_age_v);
@@ -214,21 +285,30 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 					particles_per_frame_v	.setBounds(sx, sy, 200, 24); sy += 25;
 					super.add(particles_per_frame);
 					super.add(particles_per_frame_v);
+					
+					particles_cointinued_v	.setBounds(sx, sy, 200, 24); sy += 25;
+					super.add(particles_cointinued_v);
+					
 				}
 			}
 			
 			void setData(Layer layer) {
+				name_v					.setText(layer.toString());
 				particles_capacity_v	.setValue(layer.particles_capacity);
 				particle_min_age_v		.setValue(layer.particle_min_age);
 				particle_max_age_v		.setValue(layer.particle_max_age);
 				particles_per_frame_v	.setValue(layer.particles_per_frame);
+				particles_cointinued_v	.setSelected(layer.particles_continued);
+
 			}
 			
 			void getData(Layer layer) {
+				layer.alias					= name_v.getText();
 				layer.particles_capacity	= Parser.castNumber(particles_capacity_v.getValue(), Integer.class);
 				layer.particle_min_age		= Parser.castNumber(particle_min_age_v.getValue(), Integer.class);
 				layer.particle_max_age		= Parser.castNumber(particle_max_age_v.getValue(), Integer.class);
 				layer.particles_per_frame	= Parser.castNumber(particles_per_frame_v.getValue(), Integer.class);
+				layer.particles_continued	= particles_cointinued_v.isSelected();
 			}
 		}
 		
@@ -252,6 +332,7 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 			});
 			JScrollPane	orgin_shape_pane		= new JScrollPane(new JPanel());
 			
+			JCheckBox	spawn_orgin_angle		= new JCheckBox("以原点发射");
 			JLabel		spawn_angle				= new JLabel("发射角度");
 			JSpinner	spawn_angle_v			= new JSpinner(new SpinnerNumberModel(-90f, -360d, 360d, 1f));
 			JLabel		spawn_angle_range		= new JLabel("发射角度随机±范围");
@@ -261,13 +342,6 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 			JLabel		spawn_velocity_range	= new JLabel("发射速度随机±范围");
 			JSpinner	spawn_velocity_range_v	= new JSpinner(new SpinnerNumberModel(2.0f, -Float.MAX_VALUE, Float.MAX_VALUE, 0.1f));
 
-			@Override
-			public void update(Graphics g) {
-				// TODO Auto-generated method stub
-				super.update(g);
-				System.out.println("update");
-			}
-			
 			public PageOrigin() 
 			{
 				int sx = 20, sy = 20;
@@ -304,15 +378,19 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 				
 				sy = 20; sx += 250;
 				{
+					spawn_orgin_angle		.setBounds(sx + 0,   sy, 200, 24); sy += 25;
 					spawn_angle				.setBounds(sx + 0,   sy, 200, 24); sy += 25;
 					spawn_angle_v			.setBounds(sx + 0,   sy, 200, 24); sy += 25;
 					spawn_angle_range		.setBounds(sx + 0,   sy, 200, 24); sy += 25;
 					spawn_angle_range_v		.setBounds(sx + 0,   sy, 200, 24); sy += 25;
+					super.add(spawn_orgin_angle);
 					super.add(spawn_angle);
 					super.add(spawn_angle_v);
 					super.add(spawn_angle_range);
 					super.add(spawn_angle_range_v);
-				
+					
+					spawn_orgin_angle.addActionListener(this);
+					
 					spawn_velocity			.setBounds(sx + 0,   sy, 200, 24); sy += 25;
 					spawn_velocity_v		.setBounds(sx + 0,   sy, 200, 24); sy += 25;
 					spawn_velocity_range	.setBounds(sx + 0,   sy, 200, 24); sy += 25;
@@ -321,6 +399,8 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 					super.add(spawn_velocity_v);
 					super.add(spawn_velocity_range);
 					super.add(spawn_velocity_range_v);
+					
+					
 				}
 			}
 			
@@ -341,10 +421,14 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 					origin_shape_list.setSelectedItem(origin_shape_ring);
 				}
 				
+				spawn_orgin_angle		.setSelected(layer.spawn_orgin_angle);
 				spawn_angle_v			.setValue(Math.toDegrees(layer.spawn_angle));
 				spawn_angle_range_v		.setValue(Math.toDegrees(layer.spawn_angle_range));
 				spawn_velocity_v		.setValue(layer.spawn_velocity);
 				spawn_velocity_range_v	.setValue(layer.spawn_velocity_range);
+				
+				spawn_angle_v			.setEnabled(!spawn_orgin_angle.isSelected());
+				spawn_angle_range_v		.setEnabled(!spawn_orgin_angle.isSelected());
 				
 			}
 			
@@ -361,10 +445,14 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 					layer.origin_shape		= type.getShape();
 				}
 				
+				layer.spawn_orgin_angle		= spawn_orgin_angle.isSelected();
 				layer.spawn_angle			= (float)Math.toRadians((Double)(spawn_angle_v.getValue()));
 				layer.spawn_angle_range		= (float)Math.toRadians((Double)(spawn_angle_range_v.getValue()));
 				layer.spawn_velocity		= Parser.castNumber(spawn_velocity_v.getValue(), Float.class);
 				layer.spawn_velocity_range	= Parser.castNumber(spawn_velocity_range_v.getValue(), Float.class);
+				
+				spawn_angle_v			.setEnabled(!spawn_orgin_angle.isSelected());
+				spawn_angle_range_v		.setEnabled(!spawn_orgin_angle.isSelected());
 			}
 			
 			@Override
@@ -375,6 +463,8 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 						orgin_shape_pane.setViewportView((OriginShapeType)obj);
 					}
 				}
+				spawn_angle_v			.setEnabled(!spawn_orgin_angle.isSelected());
+				spawn_angle_range_v		.setEnabled(!spawn_orgin_angle.isSelected());
 			}
 			
 			

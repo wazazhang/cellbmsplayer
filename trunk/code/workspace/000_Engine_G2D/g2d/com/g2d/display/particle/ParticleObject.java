@@ -19,7 +19,6 @@ public class ParticleObject extends com.g2d.display.particle.ParticleSystem
 {
 	public static Random 			random = new Random();
 	
-	
 	final public ParticleData 		data;
 	
 	final ArrayList<LayerObject> 	layers;
@@ -34,14 +33,14 @@ public class ParticleObject extends com.g2d.display.particle.ParticleSystem
 	
 	public void spawn() {
 		for (LayerObject layer : layers) {
-			layer.update();
+			layer.spawn();
 		}
 	}
-	
+
 	@Override
 	public void update() {
-		if (data.particles_continued) {
-			spawn();
+		for (LayerObject layer : layers) {
+			layer.update();
 		}
 	}
 	
@@ -62,17 +61,30 @@ public class ParticleObject extends com.g2d.display.particle.ParticleSystem
 			}
 		}
 		
-		public void update() {
+		public void spawn() {
 			for (int i = 0; i < layer.particles_per_frame; i++) {
 				SingleObject node = idle_nodes.poll();
 				if (node != null) {
 					// spawn origin
-					Vector pos			= layer.origin_shape.getPosition(random, layer);
+					Vector pos			= layer.origin_shape.getPosition(random);
+					MathVector.move(pos, layer.origin_x, layer.origin_y);
+					MathVector.rotate(pos, layer.origin_rotation_angle);
+					pos.setVectorX(pos.getVectorX() * layer.origin_scale_x);
+					pos.setVectorY(pos.getVectorY() * layer.origin_scale_y);
+					
 					// spawn speed direction
 					Vector spawn		= new TVector();
-					MathVector.movePolar(spawn, 
-							layer.spawn_angle    + CUtil.getRandom(random, -layer.spawn_angle_range,    layer.spawn_angle_range), 
-							layer.spawn_velocity + CUtil.getRandom(random, -layer.spawn_velocity_range, layer.spawn_velocity_range));
+					if (!layer.spawn_orgin_angle) {
+						MathVector.movePolar(spawn, 
+								layer.spawn_angle    + CUtil.getRandom(random, -layer.spawn_angle_range,    layer.spawn_angle_range), 
+								layer.spawn_velocity + CUtil.getRandom(random, -layer.spawn_velocity_range, layer.spawn_velocity_range));
+					} else {
+						double degree = MathVector.getDegree(pos.getVectorX(), pos.getVectorY());
+						MathVector.movePolar(spawn, 
+								degree, 
+								layer.spawn_velocity + CUtil.getRandom(random, -layer.spawn_velocity_range, layer.spawn_velocity_range));
+					}
+					
 					// node
 					node.particle_age	= CUtil.getRandom(random, layer.particle_min_age, layer.particle_max_age);
 					node.timer			= 0;
@@ -86,6 +98,12 @@ public class ParticleObject extends com.g2d.display.particle.ParticleSystem
 				} else {
 					break;
 				}
+			}
+		}
+		
+		public void update() {
+			if (layer.particles_continued) {
+				spawn();
 			}
 		}
 		
@@ -128,8 +146,15 @@ public class ParticleObject extends com.g2d.display.particle.ParticleSystem
 		@Override
 		public void render(Graphics2D g) 
 		{
-			g.setColor(Color.WHITE);
-			g.drawArc(-2, -2, 4, 4, 0, 360);
+			if (layer.layer.image!=null) {
+				g.drawImage(layer.layer.image, 
+						-layer.layer.image.getWidth()>>1, 
+						-layer.layer.image.getHeight()>>1, 
+						this);
+			} else {
+				g.setColor(Color.WHITE);
+				g.drawArc(-2, -2, 4, 4, 0, 360);
+			}
 		}
 		
 	}

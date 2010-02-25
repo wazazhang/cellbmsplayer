@@ -1,5 +1,6 @@
 package com.g2d.display.particle;
 
+import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,8 +22,11 @@ public class Layer implements Serializable
 	public String	cpj_images_name;
 	
 	/** CPJ图片组图片编号*/
-	public String	cpj_image_id;
+	public int		cpj_image_id;
 
+	transient 
+	public BufferedImage image;
+	
 	@Override
 	public String toString() {
 		if (alias!=null) {
@@ -34,8 +38,7 @@ public class Layer implements Serializable
 //	------------------------------------------------------------------------------------------------------------------
 //	Scene
 //	------------------------------------------------------------------------------------------------------------------
-	
-	
+
 	/** 粒子生命周期时间范围(帧)*/
 	public int		particle_min_age = 30, particle_max_age = 60;
 	
@@ -44,6 +47,9 @@ public class Layer implements Serializable
 	
 	/** 粒子容量 */
 	public int 		particles_capacity 		= 300;
+
+	/** 持续释放粒子 */
+	public boolean	particles_continued		= true;
 	
 //	------------------------------------------------------------------------------------------------------------------
 //	Origin
@@ -64,7 +70,10 @@ public class Layer implements Serializable
 //	------------------------------------------------------------------------------------------------------------------
 //	Spawn
 //	------------------------------------------------------------------------------------------------------------------
-
+	
+	/** 以原点发射，选用该项后，发射角度为以原点为基础的偏角，spawn_angle和 spawn_angle_range无效*/
+	public boolean spawn_orgin_angle	= false;
+	
 	/** 发射角度(弧度) */
 	public float spawn_angle			= (float)(-Math.PI / 2);
 	

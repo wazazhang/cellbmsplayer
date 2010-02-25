@@ -17,7 +17,7 @@ public interface OriginShape extends Serializable
 	 * @param random
 	 * @return {x, y}
 	 */
-	public Vector getPosition(Random random, Layer layer);
+	public Vector getPosition(Random random);
 	
 	
 	/** 矩形  */
@@ -26,13 +26,10 @@ public interface OriginShape extends Serializable
 		public float x = -100, y = -100, w = 200, h = 200;
 		
 		@Override
-		public Vector getPosition(Random random, Layer layer) {
+		public Vector getPosition(Random random) {
 			TVector vector = new TVector(
-					layer.origin_x + CUtil.getRandom(random, x, x+w), 
-					layer.origin_y + CUtil.getRandom(random, y, y+h));
-			vector.setVectorX(vector.getVectorX() * layer.origin_scale_x);
-			vector.setVectorY(vector.getVectorY() * layer.origin_scale_y);
-			MathVector.rotate(vector, Math.toRadians(layer.origin_rotation_angle));
+					CUtil.getRandom(random, x, x+w), 
+					CUtil.getRandom(random, y, y+h));
 			return vector;
 		}
 	}
@@ -49,7 +46,7 @@ public interface OriginShape extends Serializable
 		public float radius2 = 100;
 		
 		@Override
-		public Vector getPosition(Random random, Layer layer) {
+		public Vector getPosition(Random random) {
 			TVector vector = new TVector(0, 0);
 			MathVector.movePolar(vector, 
 					CUtil.getRandom(random, 0, (float)(Math.PI*2)), 
