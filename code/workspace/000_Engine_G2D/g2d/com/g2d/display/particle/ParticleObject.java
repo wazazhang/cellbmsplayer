@@ -1,7 +1,9 @@
 package com.g2d.display.particle;
 
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -14,6 +16,7 @@ import com.cell.math.Vector;
 import com.g2d.display.DisplayObject;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.Sprite;
+import com.g2d.display.particle.Layer.TimeNode;
 
 
 public class ParticleObject extends com.g2d.display.particle.ParticleSystem
@@ -73,26 +76,29 @@ public class ParticleObject extends com.g2d.display.particle.ParticleSystem
 					pos.setVectorX(pos.getVectorX() * layer.origin_scale_x);
 					pos.setVectorY(pos.getVectorY() * layer.origin_scale_y);
 					
-					// spawn speed direction
-					Vector spawn		= new TVector();
+					// spawn speed direction acc
+					Vector speed		= new TVector();
 					if (!layer.spawn_orgin_angle) {
-						MathVector.movePolar(spawn, 
+						MathVector.movePolar(speed, 
 								layer.spawn_angle    + CUtil.getRandom(random, -layer.spawn_angle_range,    layer.spawn_angle_range), 
 								layer.spawn_velocity + CUtil.getRandom(random, -layer.spawn_velocity_range, layer.spawn_velocity_range));
 					} else {
 						double degree = MathVector.getDegree(pos.getVectorX(), pos.getVectorY());
-						MathVector.movePolar(spawn, 
+						MathVector.movePolar(speed, 
 								degree, 
 								layer.spawn_velocity + CUtil.getRandom(random, -layer.spawn_velocity_range, layer.spawn_velocity_range));
 					}
 					
 					// node
-					node.particle_age	= CUtil.getRandom(random, layer.particle_min_age, layer.particle_max_age);
+					node.age_time		= CUtil.getRandom(random, layer.particle_min_age, layer.particle_max_age);
 					node.timer			= 0;
+					
 					node.x				= ParticleObject.this.x + (float)pos.getVectorX();
 					node.y				= ParticleObject.this.y + (float)pos.getVectorY();
-					node.speed_x		= (float)spawn.getVectorX();
-					node.speed_y		= (float)spawn.getVectorY();
+					node.speed			.setVectorX(speed.getVectorX());
+					node.speed			.setVectorY(speed.getVectorY());
+					node.acceleration	= layer.spawn_acc + CUtil.getRandom(random, -layer.spawn_acc_range, layer.spawn_acc_range);
+					
 					if (ParticleObject.this.getParent() != null) {
 						ParticleObject.this.getParent().addChild(node);
 					}
@@ -117,14 +123,21 @@ public class ParticleObject extends com.g2d.display.particle.ParticleSystem
 	/**
 	 * Single Particle
 	 */
-	private class SingleObject extends DisplayObject implements Vector
+	static private class SingleObject extends DisplayObject implements Vector
 	{
 		final LayerObject layer;
 		
-		int particle_age;
+		/** 生命周期 */
+		double			age_time;		
+
+		// time line
+		Color	tl_color		= Color.WHITE;
+		float	tl_size			= 1;
+		float	tl_alpha		= 1;
+		float	tl_spin			= 0;
 		
-		float speed_x, speed_y;
-		float acc_x, acc_y;
+		Vector	speed 			= new TVector(0, 0);
+		double	acceleration	= 0d;
 		
 		public SingleObject(LayerObject layer) {
 			this.layer = layer;
@@ -145,25 +158,89 @@ public class ParticleObject extends com.g2d.display.particle.ParticleSystem
 		public void added(DisplayObjectContainer parent) {}
 		
 		@Override
-		public void update() {
-			if (timer >= particle_age) {
+		public void update() 
+		{
+			if (timer >= age_time) {
 				this.removeFromParent();
 			}
-			MathVector.move(this, speed_x, speed_y);
+
+			MathVector.move(this, 
+					speed.getVectorX(), 
+					speed.getVectorY());
+			MathVector.scale(speed, acceleration);
+			
+			updateTimeLine();
 		}
 		
 		@Override
 		public void render(Graphics2D g) 
 		{
+			g.scale(tl_size, tl_size);
+			g.rotate(tl_spin);
+			setAlpha(g, tl_alpha);
 			if (layer.layer.image!=null) {
 				g.drawImage(layer.layer.image, 
 						-layer.layer.image.getWidth()>>1, 
 						-layer.layer.image.getHeight()>>1, 
 						this);
 			} else {
-				g.setColor(Color.WHITE);
+				g.setColor(tl_color);
 				g.drawArc(-2, -2, 4, 4, 0, 360);
 			}
+		}
+		
+		private void updateTimeLine()
+		{
+			float timeline_position = (float)(timer / age_time);
+			
+			TimeNode start = null;
+			for (TimeNode tn : layer.layer.timeline) {
+				if (tn.enable_size) {
+					if (timeline_position >= tn.getPosition()) {
+						start = tn;
+						tl_size = start.size;
+					} else if (start != null) {
+						float tnpos = timeline_position - start.getPosition();
+						float tnlen = tn.getPosition() - start.getPosition();
+						float tnval = tnpos / tnlen;
+						tl_size	+= (tn.size - start.size) * tnval;
+						break;
+					}
+				}
+			}
+			
+			start = null;
+			for (TimeNode tn : layer.layer.timeline) {
+				if (tn.enable_spin) {
+					if (timeline_position >= tn.getPosition()) {
+						start = tn;
+						tl_spin = start.spin;
+					} else if (start != null) {
+						float tnpos = timeline_position - start.getPosition();
+						float tnlen = tn.getPosition() - start.getPosition();
+						float tnval = tnpos / tnlen;
+						tl_spin += (tn.spin - start.spin) * tnval;
+						break;
+					}
+				}
+			}
+			
+			start = null;
+			for (TimeNode tn : layer.layer.timeline) {
+				if (tn.enable_alpha) {
+					if (timeline_position >= tn.getPosition()) {
+						start = tn;
+						tl_alpha = start.alpha;
+					} else if (start != null) {
+						float tnpos = timeline_position - start.getPosition();
+						float tnlen = tn.getPosition() - start.getPosition();
+						float tnval = tnpos / tnlen;
+						tl_alpha += (tn.alpha - start.alpha) * tnval;
+						break;
+					}
+				}
+			}
+
 		}
 		
 	}

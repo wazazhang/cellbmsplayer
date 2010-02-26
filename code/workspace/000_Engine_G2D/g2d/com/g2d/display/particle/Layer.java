@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.TreeSet;
 
 /**
  * 包含多个例子的视图
@@ -76,16 +77,18 @@ public class Layer implements Serializable
 	
 	/** 发射角度(弧度) */
 	public float spawn_angle			= (float)(-Math.PI / 2);
-	
 	/** 发射角度随机范围(弧度) */
 	public float spawn_angle_range		= (float)(-Math.PI / 8);
 	
 	/** 发射速度 */
 	public float spawn_velocity			= 4.0f;
-	
 	/** 发射速度随机范围 */
 	public float spawn_velocity_range	= 1.0f;
 	
+	/** 发射加速度 */
+	public float spawn_acc				= 1.0f;
+	/** 发射加速度随机范围 */
+	public float spawn_acc_range		= 0.0f;
 	
 //	------------------------------------------------------------------------------------------------------------------
 //	TimeLine
@@ -95,40 +98,94 @@ public class Layer implements Serializable
 	
 	public static class TimeLine implements Iterable<TimeNode> , Serializable
 	{
-		final public TimeNode start	= new TimeNode(0);
+		final private TimeNode start	= new TimeNode(0);
 		
-		final public TimeNode end	= new TimeNode(1);
+		final private TimeNode end		= new TimeNode(1);
 		
 		final private ArrayList<TimeNode> nodes = new ArrayList<TimeNode>();
 		
-		public ArrayList<TimeNode> getTimeNodes() {
-			ArrayList<TimeNode> ret = new ArrayList<TimeNode>(nodes);
-			ret.add(start);
-			ret.add(end);
-			Collections.sort(ret);
-			return ret;
+		public TimeLine() {
+			nodes.add(start);
+			nodes.add(end);
+			
+			TimeNode c = new TimeNode(0.5f);
+			addTimeNode(c);
+
+			end.size = 0;
+			start.size = 0;
+			c.size = 2;
+		}
+		
+		synchronized
+		public void addTimeNode(TimeNode node) {
+			if (!nodes.contains(node)) {
+				if (node != start && node != end) {
+					if (node.position >= 0 && node.position <= 1) {
+						nodes.add(node);
+						Collections.sort(nodes);
+					}
+				}
+			}
+		}
+		
+		synchronized
+		public void removeTimeNode(TimeNode node) {
+			if (nodes.contains(node)) {
+				if (node != start && node != end) {
+					nodes.remove(node);
+				}
+			}
+		}
+		
+		public TimeNode getStart() {
+			return start;
+		}
+		
+		public TimeNode getEnd() {
+			return end;
 		}
 		
 		@Override
 		public Iterator<TimeNode> iterator() {
-			return getTimeNodes().iterator();
+			return nodes.iterator();
+		}
+		
+		public int size() {
+			return nodes.size();
 		}
 	}
 	
+	/**
+	 * 在整个粒子的生存周期内的变化，只对单个粒子有效。
+	 */
 	public static class TimeNode implements Comparable<TimeNode>, Serializable
 	{
+		/** 播放位置 */
 		public float 	position;
 		
-		public int		color		= 0xffffff;
+		/** 颜色变化 */
+		public int		color			= 0xffffffff;
+		public boolean	enable_color	= true;
 		
-		public float	size		= 1;
+		/** 尺寸变化 */
+		public float	size			= 1;
+		public boolean	enable_size		= true;
 		
-		public float	alpha		= 1;
+		/** Alpha变化 */
+		public float	alpha			= 1;
+		public boolean	enable_alpha	= true;
 		
-		public float	spin		= 0;
+		/** 旋转变化 */
+		public float	spin			= 0;
+		public boolean	enable_spin		= true;
 		
 		public TimeNode(float pos) {
 			this.position = pos;
+		}
+		
+		/** 播放位置(0f~1.0f) */
+		public float getPosition() {
+			return position;
 		}
 		
 		@Override
