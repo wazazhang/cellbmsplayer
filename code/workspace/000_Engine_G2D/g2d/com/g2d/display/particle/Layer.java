@@ -14,7 +14,7 @@ import java.util.TreeSet;
 public class Layer implements Serializable
 {
 	/** 设置别名 */
-	public String	alias;
+	public String	alias	= "Layer";
 	
 	/** CPJ工程名 */
 	public String	cpj_project_name;
@@ -27,7 +27,7 @@ public class Layer implements Serializable
 
 	transient 
 	public BufferedImage image;
-	
+
 	@Override
 	public String toString() {
 		if (alias!=null) {
@@ -107,13 +107,6 @@ public class Layer implements Serializable
 		public TimeLine() {
 			nodes.add(start);
 			nodes.add(end);
-			
-			TimeNode c = new TimeNode(0.5f);
-			addTimeNode(c);
-
-			end.size = 0;
-			start.size = 0;
-			c.size = 2;
 		}
 		
 		synchronized
@@ -167,7 +160,7 @@ public class Layer implements Serializable
 		public int		color			= 0xffffffff;
 		public boolean	enable_color	= true;
 		
-		/** 尺寸变化 */
+		/** 缩放变化 */
 		public float	size			= 1;
 		public boolean	enable_size		= true;
 		
