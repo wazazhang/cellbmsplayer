@@ -110,24 +110,28 @@ public class Layer implements Serializable
 		}
 		
 		synchronized
-		public void addTimeNode(TimeNode node) {
+		public boolean addTimeNode(TimeNode node) {
 			if (!nodes.contains(node)) {
 				if (node != start && node != end) {
 					if (node.position >= 0 && node.position <= 1) {
 						nodes.add(node);
 						Collections.sort(nodes);
+						return true;
 					}
 				}
 			}
+			return false;
 		}
 		
 		synchronized
-		public void removeTimeNode(TimeNode node) {
+		public boolean removeTimeNode(TimeNode node) {
 			if (nodes.contains(node)) {
 				if (node != start && node != end) {
 					nodes.remove(node);
+					return true;
 				}
 			}
+			return false;
 		}
 		
 		public TimeNode getStart() {

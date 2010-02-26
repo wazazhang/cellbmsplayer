@@ -15,6 +15,7 @@ import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -652,6 +653,7 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 			
 			JScrollPane 	bottom		= new JScrollPane();
 
+			JButton			line_ref	= new JButton("刷新");
 			JButton			line_add	= new JButton("添加");
 			JButton			line_del	= new JButton("删除");
 			
@@ -666,11 +668,14 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 					top.setMinimumSize(new Dimension(200, 200));
 					toppan.add(top, BorderLayout.CENTER);
 					JToolBar bar = new JToolBar();
+					bar.add(line_ref);
+					bar.addSeparator();
 					bar.add(line_add);
 					bar.add(line_del);
 					toppan.add(bar, BorderLayout.NORTH);
 					split.setTopComponent(toppan);
 					
+					line_ref.addActionListener(this);
 					line_add.addActionListener(this);
 					line_del.addActionListener(this);
 				}
@@ -684,6 +689,27 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				if (e.getSource() == line_ref) {
+					Collections.sort(timeline_data);
+					timeline.setListData(timeline_data);
+				}
+				else if (e.getSource() == line_add) {
+					TimeNode node = new TimeNode(0.5f);
+					if (layer.timeline.addTimeNode(node)) {
+						LineEdit edit = new LineEdit(node, timeline);
+						timeline_data.add(edit);
+						Collections.sort(timeline_data);
+						timeline.setListData(timeline_data);
+					}
+				} 
+				else if (e.getSource() == line_del) {
+					LineEdit item = timeline.getSelectedItem();
+					if (layer.timeline.removeTimeNode(item.time_node)) {
+						timeline_data.remove(item);
+						Collections.sort(timeline_data);
+						timeline.setListData(timeline_data);
+					}
+				}
 				validateItem();
 			}
 			
@@ -716,6 +742,7 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 					}
 				}
 				if (change) {
+					Collections.sort(timeline_data);
 					timeline.setListData(timeline_data);
 					timeline.repaint();
 				}
@@ -765,7 +792,7 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 	
 //	--------------------------------------------------------------------------------------------------------------------
 
-	static class LineEdit extends JPanel implements G2DListItem, ActionListener
+	static class LineEdit extends JPanel implements G2DListItem, ActionListener, Comparable<LineEdit>
 	{
 		final TimeNode 				time_node;
 		final G2DList<LineEdit>		list;
@@ -831,6 +858,11 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 			getData();
 			
 			list.repaint();
+		}
+		
+		@Override
+		public int compareTo(LineEdit o) {
+			return time_node.compareTo(o.time_node);
 		}
 		
 		void setData()
