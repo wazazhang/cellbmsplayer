@@ -9,6 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -142,6 +144,10 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 				layers.setListData(layer_list);
 			}
 		}
+		else if (e.getSource() == refresh) 
+		{
+			layers.setListData(layer_list);
+		}
 		else if (e.getSource() == show)
 		{
 			ParticleViewer viewer = new ParticleViewer();
@@ -261,7 +267,7 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 			}
 		}
 	
-		class PageScene extends PropertyPage
+		class PageScene extends PropertyPage implements KeyListener
 		{
 			JLabel		name					= new JLabel("名字");
 			JTextField	name_v 					= new JTextField();
@@ -303,7 +309,20 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 					
 					particles_cointinued_v	.setBounds(sx, sy, 200, 24); sy += 25;
 					super.add(particles_cointinued_v);
+					
+					name_v.addKeyListener(this);
 				}
+			}
+			@Override
+			public void keyPressed(KeyEvent e) {
+				layer.alias = name_v.getText();
+			}
+			@Override
+			public void keyReleased(KeyEvent e) {
+				layer.alias = name_v.getText();
+			}
+			public void keyTyped(KeyEvent e) {
+				layer.alias = name_v.getText();
 			}
 			
 			void setData(Layer layer) {
