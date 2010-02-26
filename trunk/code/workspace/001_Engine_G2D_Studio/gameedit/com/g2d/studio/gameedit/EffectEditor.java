@@ -170,14 +170,16 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 		PageAppearance	page_appearance	= new PageAppearance();
 		PageScene		page_scene		= new PageScene();
 		PageOrigin 		page_origin		= new PageOrigin();
+		PageTimeLine	page_timeline	= new PageTimeLine();
 		PageInfluences	page_influences	= new PageInfluences();
 		
 		public LayerEdit(Layer layer) {
 			this.layer = layer;
-			addTab("场景", page_scene);
-			addTab("外观", page_appearance);
-			addTab("发射", page_origin);
-			addTab("影响", page_influences);
+			addTab("场景", 	page_scene);
+			addTab("外观", 	page_appearance);
+			addTab("发射", 	page_origin);
+			addTab("时间线", page_timeline);
+			addTab("影响", 	page_influences);
 			setData(layer);
 		}
 		
@@ -185,6 +187,7 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 			page_scene			.setData(layer);
 			page_appearance		.setData(layer);
 			page_origin			.setData(layer);
+			page_timeline		.setData(layer);
 			page_influences		.setData(layer);
 		}
 		
@@ -192,6 +195,7 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 			page_scene			.getData(layer);
 			page_appearance		.getData(layer);
 			page_origin			.getData(layer);
+			page_timeline		.getData(layer);
 			page_influences		.getData(layer);
 		}
 		
@@ -212,6 +216,8 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 			abstract void getData(Layer layer);
 		}
 		
+//		-------------------------------------------------------------------------------------------------------------------------------
+
 		class PageAppearance extends PropertyPage implements ActionListener
 		{
 			TileImage 		tile_image;
@@ -266,7 +272,8 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 				}
 			}
 		}
-	
+//		-------------------------------------------------------------------------------------------------------------------------------
+
 		class PageScene extends PropertyPage implements KeyListener
 		{
 			JLabel		name					= new JLabel("名字");
@@ -344,7 +351,8 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 				layer.particles_continued	= particles_cointinued_v.isSelected();
 			}
 		}
-		
+//		-------------------------------------------------------------------------------------------------------------------------------
+
 		class PageOrigin extends PropertyPage implements ActionListener
 		{
 			JLabel		origin_pos				= new JLabel("发射基地位置");
@@ -374,6 +382,10 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 			JSpinner	spawn_velocity_v		= new JSpinner(new SpinnerNumberModel(4.0f, -Float.MAX_VALUE, Float.MAX_VALUE, 0.1f));
 			JLabel		spawn_velocity_range	= new JLabel("发射速度随机±范围");
 			JSpinner	spawn_velocity_range_v	= new JSpinner(new SpinnerNumberModel(2.0f, -Float.MAX_VALUE, Float.MAX_VALUE, 0.1f));
+			JLabel		spawn_acc				= new JLabel("发射加速度");
+			JSpinner	spawn_acc_v				= new JSpinner(new SpinnerNumberModel(1.0f, 0f, Float.MAX_VALUE, 0.01f));
+			JLabel		spawn_acc_range			= new JLabel("发射加速度随机±范围");
+			JSpinner	spawn_acc_range_v		= new JSpinner(new SpinnerNumberModel(0.0f, -Float.MAX_VALUE, Float.MAX_VALUE, 0.01f));
 
 			public PageOrigin() 
 			{
@@ -433,7 +445,14 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 					super.add(spawn_velocity_range);
 					super.add(spawn_velocity_range_v);
 					
-					
+					spawn_acc				.setBounds(sx + 0,   sy, 200, 24); sy += 25;
+					spawn_acc_v				.setBounds(sx + 0,   sy, 200, 24); sy += 25;
+					spawn_acc_range			.setBounds(sx + 0,   sy, 200, 24); sy += 25;
+					spawn_acc_range_v		.setBounds(sx + 0,   sy, 200, 24); sy += 25;
+					super.add(spawn_acc);
+					super.add(spawn_acc_v);
+					super.add(spawn_acc_range);
+					super.add(spawn_acc_range_v);
 				}
 			}
 			
@@ -459,6 +478,8 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 				spawn_angle_range_v		.setValue(Math.toDegrees(layer.spawn_angle_range));
 				spawn_velocity_v		.setValue(layer.spawn_velocity);
 				spawn_velocity_range_v	.setValue(layer.spawn_velocity_range);
+				spawn_acc_v				.setValue(layer.spawn_acc);
+				spawn_acc_range_v		.setValue(layer.spawn_acc_range);
 				
 				spawn_angle_v			.setEnabled(!spawn_orgin_angle.isSelected());
 				spawn_angle_range_v		.setEnabled(!spawn_orgin_angle.isSelected());
@@ -483,6 +504,8 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 				layer.spawn_angle_range		= (float)Math.toRadians((Double)(spawn_angle_range_v.getValue()));
 				layer.spawn_velocity		= Parser.castNumber(spawn_velocity_v.getValue(), Float.class);
 				layer.spawn_velocity_range	= Parser.castNumber(spawn_velocity_range_v.getValue(), Float.class);
+				layer.spawn_acc				= Parser.castNumber(spawn_acc_v.getValue(), Float.class);
+				layer.spawn_acc_range		= Parser.castNumber(spawn_acc_range_v.getValue(), Float.class);
 				
 				spawn_angle_v			.setEnabled(!spawn_orgin_angle.isSelected());
 				spawn_angle_range_v		.setEnabled(!spawn_orgin_angle.isSelected());
@@ -613,7 +636,24 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 			}
 			
 		}
+//		-------------------------------------------------------------------------------------------------------------------------------
+
+		class PageTimeLine extends PropertyPage
+		{
+			JList timelines;
+			
+			
+			@Override
+			void getData(Layer layer) {}
+			
+			@Override
+			void setData(Layer layer) {}
+			
+			
+		}
 		
+//		-------------------------------------------------------------------------------------------------------------------------------
+
 		class PageInfluences extends PropertyPage
 		{
 			@Override
