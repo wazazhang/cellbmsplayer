@@ -17,6 +17,7 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -41,10 +42,14 @@ import com.cell.rpg.template.TEffect;
 import com.g2d.Tools;
 import com.g2d.display.particle.Layer;
 import com.g2d.display.particle.OriginShape;
+import com.g2d.display.particle.Layer.TimeNode;
 import com.g2d.studio.cpj.CPJEffectImageSelectDialog;
 import com.g2d.studio.cpj.CPJEffectImageSelectDialog.TileImage;
 import com.g2d.studio.cpj.entity.CPJImages;
 import com.g2d.studio.particles.ParticleViewer;
+import com.g2d.studio.res.Res;
+import com.g2d.studio.swing.G2DList;
+import com.g2d.studio.swing.G2DListItem;
 
 
 public class EffectEditor extends JSplitPane implements ActionListener, ListSelectionListener
@@ -175,11 +180,11 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 		
 		public LayerEdit(Layer layer) {
 			this.layer = layer;
-			addTab("场景", 	page_scene);
-			addTab("外观", 	page_appearance);
-			addTab("发射", 	page_origin);
-			addTab("时间线", page_timeline);
-			addTab("影响", 	page_influences);
+			addTab("场景", 		page_scene);
+			addTab("粒子外观", 	page_appearance);
+			addTab("发射", 		page_origin);
+			addTab("粒子变化",	page_timeline);
+			addTab("影响", 		page_influences);
 			setData(layer);
 		}
 		
@@ -638,20 +643,112 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 		}
 //		-------------------------------------------------------------------------------------------------------------------------------
 
-		class PageTimeLine extends PropertyPage
+		class PageTimeLine extends PropertyPage implements ActionListener, ListSelectionListener
 		{
-			JList timelines;
+			JSplitPane 		split		= new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 			
+			G2DList<LineEdit>
+							timeline	= new G2DList<LineEdit>();
+			
+			JScrollPane 	bottom		= new JScrollPane();
+
+			JButton			line_add	= new JButton("添加");
+			JButton			line_del	= new JButton("删除");
+			
+			Vector<LineEdit> timeline_data = new Vector<LineEdit>();
+			
+			public PageTimeLine()
+			{
+				super.setLayout(new BorderLayout());
+				{
+					JPanel toppan = new JPanel(new BorderLayout());
+					JScrollPane top = new JScrollPane(timeline);
+					top.setMinimumSize(new Dimension(200, 200));
+					toppan.add(top, BorderLayout.CENTER);
+					JToolBar bar = new JToolBar();
+					bar.add(line_add);
+					bar.add(line_del);
+					toppan.add(bar, BorderLayout.NORTH);
+					split.setTopComponent(toppan);
+					
+					line_add.addActionListener(this);
+					line_del.addActionListener(this);
+				}
+				
+				split.setBottomComponent(bottom);
+				
+				this.add(split, BorderLayout.CENTER);
+				
+				timeline.addListSelectionListener(this);
+			}
 			
 			@Override
-			void getData(Layer layer) {}
+			public void actionPerformed(ActionEvent e) {
+				validateItem();
+			}
 			
 			@Override
-			void setData(Layer layer) {}
+			public void valueChanged(ListSelectionEvent e) {
+				if (e.getSource() == timeline) {
+					LineEdit item = timeline.getSelectedItem();
+					bottom.setViewportView(item);
+				}
+				validateItem();
+			}
 			
+			@Override
+			void getData(Layer layer) {
+				for (LineEdit e : timeline_data) {
+					e.getData();
+				}
+			}
 			
+			@Override
+			void setData(Layer layer) 
+			{
+				boolean change = false;
+				for (TimeNode node : layer.timeline) {
+					LineEdit edit = getTimeNodeEdit(node);
+					if (edit == null) {
+						edit = new LineEdit(node, timeline);
+						timeline_data.add(edit);
+						change = true;
+					}
+				}
+				if (change) {
+					timeline.setListData(timeline_data);
+					timeline.repaint();
+				}
+
+				validateItem();
+			}
+			
+			private void validateItem() {
+				if (timeline.getSelectedItem()!= null) {
+					if (timeline.getSelectedItem().time_node == layer.timeline.getStart() ||
+						timeline.getSelectedItem().time_node == layer.timeline.getEnd()) {
+						line_del.setVisible(false);
+					} else {
+						line_del.setVisible(true);
+					}
+				} else {
+					line_del.setVisible(false);
+				}
+				for (LineEdit e : timeline_data) {
+					e.getData();
+				}
+			}
+			
+			private LineEdit getTimeNodeEdit(TimeNode node) {
+				for (LineEdit e : timeline_data) {
+					if (e.time_node == node) {
+						return e;
+					}
+				}
+				return null;
+			}
 		}
-		
+
 //		-------------------------------------------------------------------------------------------------------------------------------
 
 		class PageInfluences extends PropertyPage
@@ -668,5 +765,136 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 	
 //	--------------------------------------------------------------------------------------------------------------------
 
+	static class LineEdit extends JPanel implements G2DListItem, ActionListener
+	{
+		final TimeNode 				time_node;
+		final G2DList<LineEdit>		list;
+		
+		JLabel 		position		= new JLabel("播放位置");
+		JSpinner 	position_v		= new JSpinner(new SpinnerNumberModel(0d, 0d, 100d, 1f));
+		
+//		JCheckBox 	enable_color	= new JCheckBox("颜色变化");
+//		JSpinner 	color_v			= new JSpinner(new SpinnerNumberModel(0d, 0d, 100d, 1f));
+
+		JCheckBox 	enable_size		= new JCheckBox("缩放变化");
+		JSpinner 	size_v			= new JSpinner(new SpinnerNumberModel(1d, -Float.MAX_VALUE, Float.MAX_VALUE, 0.1f));
+		
+		JCheckBox 	enable_spin		= new JCheckBox("旋转变化");
+		JSpinner 	spin_v			= new JSpinner(new SpinnerNumberModel(0, -Float.MAX_VALUE, Float.MAX_VALUE, 1d));
+
+		JCheckBox 	enable_alpha	= new JCheckBox("Alpha变化");
+		JSpinner 	alpha_v			= new JSpinner(new SpinnerNumberModel(1d, 0d, 1d, 0.1d));
+		
+		public LineEdit(TimeNode time_node, G2DList<LineEdit> list) 
+		{
+			super(null);
+			this.list		= list;
+			this.time_node	= time_node;
+			
+			int sx = 20, sy = 20;
+			{
+				position		.setBounds(sx + 0,   sy, 200, 24); sy += 25;
+				position_v		.setBounds(sx + 0,   sy, 200, 24); sy += 25;
+				super.add(position);
+				super.add(position_v);
+			
+				enable_size		.setBounds(sx + 0,   sy, 200, 24); sy += 25;
+				size_v			.setBounds(sx + 0,   sy, 200, 24); sy += 25;
+				super.add(enable_size);
+				super.add(size_v);
+			
+				enable_spin		.setBounds(sx + 0,   sy, 200, 24); sy += 25;
+				spin_v			.setBounds(sx + 0,   sy, 200, 24); sy += 25;
+				super.add(enable_spin);
+				super.add(spin_v);
+				
+				enable_alpha	.setBounds(sx + 0,   sy, 200, 24); sy += 25;
+				alpha_v			.setBounds(sx + 0,   sy, 200, 24); sy += 25;
+				super.add(enable_alpha);
+				super.add(alpha_v);
+			}
+			
+			enable_size.addActionListener(this);
+			enable_spin.addActionListener(this);
+			enable_alpha.addActionListener(this);
+			
+			setData();
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) 
+		{
+			size_v		.setEnabled(enable_size.isSelected());
+			spin_v		.setEnabled(enable_spin.isSelected());
+			alpha_v		.setEnabled(enable_alpha.isSelected());
+			
+			getData();
+			
+			list.repaint();
+		}
+		
+		void setData()
+		{
+			position_v	.setValue(time_node.position * 100);
+			size_v		.setValue(time_node.size);
+			spin_v		.setValue(Math.toDegrees(time_node.spin));
+			alpha_v		.setValue(time_node.alpha);
+			
+			enable_size.setSelected(time_node.enable_size);
+			enable_spin.setSelected(time_node.enable_spin);
+			enable_alpha.setSelected(time_node.enable_alpha);
+		}
+		
+		void getData()
+		{
+			time_node.position	= Parser.castNumber(position_v.getValue(), Float.class) / 100;
+			time_node.size		= Parser.castNumber(size_v.getValue(), Float.class);
+			time_node.spin		= (float)Math.toRadians((Double)spin_v.getValue());
+			time_node.alpha		= Parser.castNumber(alpha_v.getValue(), Float.class);
+
+			time_node.enable_size	= enable_size.isSelected();
+			time_node.enable_spin	= enable_spin.isSelected();
+			time_node.enable_alpha	= enable_alpha.isSelected();
+			
+			size_v		.setEnabled(enable_size.isSelected());
+			spin_v		.setEnabled(enable_spin.isSelected());
+			alpha_v		.setEnabled(enable_alpha.isSelected());
+		}
+		
+		@Override
+		public Component getListComponent(JList list, Object value,
+				int index, boolean isSelected, boolean cellHasFocus) {
+			return null;
+		}
+		@Override
+		public ImageIcon getListIcon(boolean update) {
+			return new ImageIcon(Res.icon_camera);
+		}
+		@Override
+		public String getListName()
+		{
+			String ret = "[位置=" + (time_node.position * 100) + "%" + "]";
+			
+			if (time_node.enable_size) {
+				ret += "[缩放=" + time_node.size + "]";
+			}
+			if (time_node.enable_spin) {
+				ret += "[旋转=" + time_node.spin + "]";
+			}
+			if (time_node.enable_alpha) {
+				ret += "[透明度=" + time_node.alpha + "]";
+			}
+			System.out.println("reset list name " + ret);
+			return ret;
+		}
+		
+		@Override
+		public boolean equals(Object obj) {
+			if (obj instanceof LineEdit) {
+				return ((LineEdit) obj).time_node == this.time_node;
+			}
+			return false;
+		}
+	}
 }
 
