@@ -1,5 +1,6 @@
 package com.g2d.display.particle;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Graphics2D;
@@ -21,7 +22,9 @@ import com.g2d.display.particle.Layer.TimeNode;
 
 public class ParticleDisplay extends com.g2d.display.particle.ParticleSystem
 {
-	public static Random 			random = new Random();
+	public static Random 			random 			= new Random();
+
+	public static int				composite_rule	= AlphaComposite.SRC_OVER;
 	
 	final public ParticleData 		data;
 	
@@ -188,7 +191,7 @@ public class ParticleDisplay extends com.g2d.display.particle.ParticleSystem
 		{
 			g.scale(tl_size, tl_size);
 			g.rotate(tl_spin);
-			setAlpha(g, tl_alpha);
+			g.setComposite(AlphaComposite.getInstance(composite_rule, tl_alpha));
 			if (layer.layer.image!=null) {
 				g.drawImage(layer.layer.image, 
 						-layer.layer.image.getWidth()>>1, 
