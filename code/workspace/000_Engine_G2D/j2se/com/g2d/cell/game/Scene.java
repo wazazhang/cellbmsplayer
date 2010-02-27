@@ -118,6 +118,23 @@ public class Scene extends com.g2d.game.rpg.Scene
 			}
 		}
 		
+		public BufferedImage createScreenshot(int x, int y, double width, double height)
+		{
+			if (set_resource.isStreamingResource()) {
+				return null;
+			} else {
+				BufferedImage buffer = Tools.createImage((int) width, (int) height);
+				Graphics2D g2d = (Graphics2D) buffer.getGraphics();
+				CGraphics cg = new CGraphics(g2d);
+				for (int i = set_world.Sprs.size() - 1; i >= 0; --i) {
+					WorldSet.SpriteObject wspr = set_world.Sprs.elementAt(i);
+					CSprite csprite = set_resource.getSprite(wspr.SprID);
+					csprite.render(cg, x+wspr.X, y+wspr.Y, wspr.Anim, wspr.Frame);
+				}
+				g2d.dispose();
+				return buffer;
+			}
+		}
 	}
 	
 

@@ -275,6 +275,7 @@ public abstract class SceneMap extends DisplayObjectContainer implements AstarMa
 
 	abstract public BufferedImage createMiniMap(double width, double height);
 
+	abstract public BufferedImage createScreenshot(int x, int y, double width, double height);
 //	---------------------------------------------------------------------------------------------------------------------------
 
 	public class TerrainViewer extends DisplayObjectContainer
