@@ -7,20 +7,20 @@ import com.g2d.display.Canvas;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.Stage;
 import com.g2d.display.particle.ParticleData;
-import com.g2d.display.particle.ParticleObject;
+import com.g2d.display.particle.ParticleDisplay;
 import com.g2d.studio.gameedit.EffectEditor;
 
 public class ParticleStage extends Stage
 {
 	EffectEditor 	cur_edit;
-	ParticleObject	particle;
+	ParticleDisplay	particle;
 	
 	@Override
 	public void inited(Canvas root, Object[] args) {
 		if (args!=null && args.length>0 && args[0] instanceof EffectEditor) {
 			cur_edit = (EffectEditor)args[0];
 		}
-		particle = new ParticleObject(cur_edit.getData().particles);
+		particle = new ParticleDisplay(cur_edit.getData().particles);
 		this.addChild(particle);
 	}
 	
