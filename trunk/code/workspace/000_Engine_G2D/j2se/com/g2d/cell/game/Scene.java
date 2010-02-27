@@ -120,7 +120,7 @@ public class Scene extends com.g2d.game.rpg.Scene
 		
 		public BufferedImage createScreenshot(int x, int y, double width, double height)
 		{
-			if (set_resource.isStreamingResource()) {
+			if (isStreamingImages()) {
 				return null;
 			} else {
 				BufferedImage buffer = Tools.createImage((int) width, (int) height);
