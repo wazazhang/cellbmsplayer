@@ -370,7 +370,7 @@ public class CellSetResource
 //	--------------------------------------------------------------------------------------------------------------------------------------------------
 //	utils
 //	--------------------------------------------------------------------------------------------------------------------------------------------------
-
+	synchronized
 	final public void initAllResource(SetLoading progress)
 	{
 		// images 
@@ -421,12 +421,16 @@ public class CellSetResource
 		}
 	}
 	
-	final public boolean isStreamingResource() {
-		if (loading_service!=null) {
-			return (loading_service.getActiveCount()!=0);
-		} else {
-			return false;
+	synchronized
+	final public boolean isStreamingImages(String images_name) {
+		ImagesSet img = ImgTable.get(images_name);
+		if (img!=null) {
+			StreamTiles tiles = resource_manager.get("IMG_" + img.Index, StreamTiles.class);
+			if (tiles!=null) {
+				return !tiles.loaded;
+			}
 		}
+		return false;
 	}
 	
 

@@ -86,9 +86,20 @@ public class Scene extends com.g2d.game.rpg.Scene
 			return set_world;
 		}
 
+		public boolean isStreamingImages()
+		{
+			for (int i=set_world.Sprs.size()-1; i>=0; --i){
+				WorldSet.SpriteObject wspr = set_world.Sprs.elementAt(i);
+				if (!set_resource.isStreamingImages(wspr.ImagesID)){
+					return false;
+				}
+			}
+			return true;
+		}
+		
 		public BufferedImage createMiniMap(double width, double height) 
 		{
-			if (set_resource.isStreamingResource()) {
+			if (isStreamingImages()) {
 				return null;
 			} else {
 				BufferedImage buffer = Tools.createImage((int) width, (int) height);

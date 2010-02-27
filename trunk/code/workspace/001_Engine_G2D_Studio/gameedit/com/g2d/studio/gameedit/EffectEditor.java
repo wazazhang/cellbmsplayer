@@ -43,7 +43,9 @@ import com.cell.rpg.template.TEffect;
 import com.g2d.Tools;
 import com.g2d.display.particle.Layer;
 import com.g2d.display.particle.OriginShape;
+import com.g2d.display.particle.ParticleAffect;
 import com.g2d.display.particle.Layer.TimeNode;
+import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.studio.cpj.CPJEffectImageSelectDialog;
 import com.g2d.studio.cpj.CPJEffectImageSelectDialog.TileImage;
 import com.g2d.studio.cpj.entity.CPJImages;
@@ -57,9 +59,9 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 {
 	final TEffect effect;
 	
-	Vector<LayerEdit> layer_list = new Vector<LayerEdit>();
+	Vector<LayerEdit>	layer_list	= new Vector<LayerEdit>();
 	
-	JList 	layers 		= new JList();
+	G2DList<LayerEdit> 	layers		= new G2DList<LayerEdit>();
 	
 	JButton layer_add	= new JButton("添加层");
 	JButton layer_del	= new JButton("删除层");
@@ -169,7 +171,7 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 
 //	--------------------------------------------------------------------------------------------------------------------
 
-	static class LayerEdit extends JTabbedPane
+	static class LayerEdit extends JTabbedPane implements G2DListItem
 	{
 		final Layer layer;
 		
@@ -205,6 +207,19 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 			page_influences		.getData(layer);
 		}
 		
+		@Override
+		public Component getListComponent(JList list, Object value, int index,
+			boolean isSelected, boolean cellHasFocus) {
+			return null;
+		}
+		@Override
+		public ImageIcon getListIcon(boolean update) {
+			return new ImageIcon(Res.icon_layer);
+		}
+		@Override
+		public String getListName() {
+			return toString();
+		}
 		@Override
 		public String toString() {
 			return layer + "";
@@ -780,6 +795,19 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 
 		class PageInfluences extends PropertyPage
 		{
+			JSplitPane 		split		= new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+			
+			G2DList<LineEdit>
+							affects		= new G2DList<LineEdit>();
+			
+			JScrollPane 	bottom		= new JScrollPane();
+
+			JButton			btn_ref	= new JButton("刷新");
+			JButton			btn_add	= new JButton("添加");
+			JButton			btn_del	= new JButton("删除");
+			
+			Vector<LineEdit> affects_data = new Vector<LineEdit>();
+			
 			@Override
 			void getData(Layer layer) {}
 			
@@ -911,7 +939,7 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 				ret += "[缩放=" + time_node.size + "]";
 			}
 			if (time_node.enable_spin) {
-				ret += "[旋转=" + time_node.spin + "]";
+				ret += "[旋转=" + Math.toDegrees(time_node.spin) + "]";
 			}
 			if (time_node.enable_alpha) {
 				ret += "[透明度=" + time_node.alpha + "]";
@@ -926,6 +954,36 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 				return ((LineEdit) obj).time_node == this.time_node;
 			}
 			return false;
+		}
+	}
+
+//	--------------------------------------------------------------------------------------------------------------------
+
+	static class AffectEdit extends ObjectPropertyPanel implements G2DListItem
+	{
+		final ParticleAffect affect;
+		
+		public AffectEdit(ParticleAffect affect) {
+			super(affect);
+			this.affect = affect;
+		}
+		
+		
+		
+		
+		
+		@Override
+		public Component getListComponent(JList list, Object value, int index,
+				boolean isSelected, boolean cellHasFocus) {
+			return null;
+		}
+		@Override
+		public ImageIcon getListIcon(boolean update) {
+			return new ImageIcon(Res.icon_affect);
+		}
+		@Override
+		public String getListName() {
+			return affect + "";
 		}
 	}
 }
