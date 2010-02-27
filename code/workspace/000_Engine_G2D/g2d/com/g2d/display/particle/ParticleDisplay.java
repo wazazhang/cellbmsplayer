@@ -19,7 +19,7 @@ import com.g2d.display.Sprite;
 import com.g2d.display.particle.Layer.TimeNode;
 
 
-public class ParticleObject extends com.g2d.display.particle.ParticleSystem
+public class ParticleDisplay extends com.g2d.display.particle.ParticleSystem
 {
 	public static Random 			random = new Random();
 	
@@ -27,7 +27,7 @@ public class ParticleObject extends com.g2d.display.particle.ParticleSystem
 	
 	final ArrayList<LayerObject> 	layers;
 	
-	public ParticleObject(ParticleData data) {
+	public ParticleDisplay(ParticleData data) {
 		this.data = data;
 		this.layers = new ArrayList<LayerObject>(data.size());
 		for (Layer layer : data) {
@@ -93,14 +93,14 @@ public class ParticleObject extends com.g2d.display.particle.ParticleSystem
 					node.age_time		= CUtil.getRandom(random, layer.particle_min_age, layer.particle_max_age);
 					node.timer			= 0;
 					
-					node.x				= ParticleObject.this.x + (float)pos.getVectorX();
-					node.y				= ParticleObject.this.y + (float)pos.getVectorY();
+					node.x				= ParticleDisplay.this.x + (float)pos.getVectorX();
+					node.y				= ParticleDisplay.this.y + (float)pos.getVectorY();
 					node.speed			.setVectorX(speed.getVectorX());
 					node.speed			.setVectorY(speed.getVectorY());
 					node.acceleration	= layer.spawn_acc + CUtil.getRandom(random, -layer.spawn_acc_range, layer.spawn_acc_range);
 					
-					if (ParticleObject.this.getParent() != null) {
-						ParticleObject.this.getParent().addChild(node);
+					if (ParticleDisplay.this.getParent() != null) {
+						ParticleDisplay.this.getParent().addChild(node);
 					}
 				} else {
 					break;
@@ -123,7 +123,7 @@ public class ParticleObject extends com.g2d.display.particle.ParticleSystem
 	/**
 	 * Single Particle
 	 */
-	static private class SingleObject extends DisplayObject implements Vector
+	static private class SingleObject extends DisplayObject implements ParticleAffectNode
 	{
 		final LayerObject layer;
 		
@@ -137,18 +137,25 @@ public class ParticleObject extends com.g2d.display.particle.ParticleSystem
 		float	tl_spin			= 0;
 		
 		Vector	speed 			= new TVector(0, 0);
-		double	acceleration	= 0d;
+		float	acceleration	= 0f;
 		
 		public SingleObject(LayerObject layer) {
 			this.layer = layer;
 		}
 		
-		public double getVectorX(){return this.x;}
-		public double getVectorY(){return this.y;}
-		public void setVectorX(double x){this.x = x;}
-		public void setVectorY(double y){this.y = y;}
-		public void addVectorX(double dx){this.x+=dx;}
-		public void addVectorY(double dy){this.y+=dy;}
+		public double 	getVectorX() {return this.x;}
+		public double 	getVectorY() {return this.y;}
+		public void 	setVectorX(double x) {this.x = x;}
+		public void 	setVectorY(double y) {this.y = y;}
+		public void 	addVectorX(double dx) {this.x+=dx;}
+		public void 	addVectorY(double dy) {this.y+=dy;}
+		public float 	getAlpha() {return this.tl_alpha;}
+		public float 	getSize() {return this.tl_size;}
+		public float 	getSpin() {return this.tl_spin;}
+		public Vector 	getSpeed() {return this.speed;}
+		public float 	getAcceleration() {return acceleration;}
+		public void 	setAcceleration(float acc) {this.acceleration=acc;}
+	
 		
 		@Override
 		public void removed(DisplayObjectContainer parent) {
@@ -168,8 +175,12 @@ public class ParticleObject extends com.g2d.display.particle.ParticleSystem
 					speed.getVectorX(), 
 					speed.getVectorY());
 			MathVector.scale(speed, acceleration);
+
+			float timeline_position = (float)(timer / age_time);
 			
-			updateTimeLine();
+			updateTimeLine(timeline_position);
+			
+			updateAffects(timeline_position);
 		}
 		
 		@Override
@@ -189,10 +200,8 @@ public class ParticleObject extends com.g2d.display.particle.ParticleSystem
 			}
 		}
 		
-		private void updateTimeLine()
+		private void updateTimeLine(float timeline_position)
 		{
-			float timeline_position = (float)(timer / age_time);
-			
 			TimeNode start = null;
 			for (TimeNode tn : layer.layer.timeline) {
 				if (tn.enable_size) {
@@ -241,6 +250,13 @@ public class ParticleObject extends com.g2d.display.particle.ParticleSystem
 				}
 			}
 
+		}
+		
+		private void updateAffects(float timeline_position)
+		{
+			for (ParticleAffect affect : layer.layer.affects) {
+				affect.update(timeline_position, this);
+			}
 		}
 		
 	}
