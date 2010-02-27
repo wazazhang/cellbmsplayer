@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.TreeSet;
 
+import com.g2d.display.particle.affects.Vortex;
+
 /**
  * 包含多个例子的视图
  * @author WAZA
@@ -91,10 +93,19 @@ public class Layer implements Serializable
 	public float spawn_acc_range		= 0.0f;
 	
 //	------------------------------------------------------------------------------------------------------------------
-//	TimeLine
+//	TimeLine And Affect
 //	------------------------------------------------------------------------------------------------------------------
 
 	final public TimeLine timeline = new TimeLine();
+	
+	
+	final public ArrayList<ParticleAffect> affects = new ArrayList<ParticleAffect>();
+	{
+		Vortex v = new Vortex();
+		affects.add(v);
+	}
+	
+//	------------------------------------------------------------------------------------------------------------------
 	
 	public static class TimeLine implements Iterable<TimeNode> , Serializable
 	{
