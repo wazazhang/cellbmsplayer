@@ -16,7 +16,7 @@ public class Gravity implements ParticleAffect
 	@Override
 	public void update(float timelinePosition, ParticleAffectNode particle) {
 		particle.getSpeed().addVectorX(x);
-		particle.getSpeed().addVectorX(y);
+		particle.getSpeed().addVectorY(y);
 	}
 	@Override
 	public String toString() {
