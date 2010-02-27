@@ -113,6 +113,9 @@ public class MathVector
 		return speed * rate;
 	}
 	
+	public static double getDistance(Vector v) {
+		return getDistance(0, 0, v.getVectorX(), v.getVectorY());
+	}
 	
 	public static double getDistance(double x1, double y1, double x2, double y2){
 		double r1 = x1-x2;

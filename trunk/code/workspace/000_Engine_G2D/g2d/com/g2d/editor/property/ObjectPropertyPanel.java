@@ -40,6 +40,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 
 import com.cell.CUtil;
+import com.cell.reflect.Parser;
 
 import com.g2d.annotation.Property;
 import com.g2d.display.ui.layout.ImageUILayout;
@@ -58,7 +59,7 @@ public class ObjectPropertyPanel extends JPanel
 {
 	private static final long serialVersionUID = 1L;
 	
-	public static int DEFAULT_ROW_HEIGHT = 20;
+	public static int DEFAULT_ROW_HEIGHT = 24;
 	
 	final public Object 	object;
 
@@ -287,6 +288,11 @@ public class ObjectPropertyPanel extends JPanel
 			edit_ui_layout.setValue(field_value!=null ? (UILayout)field_value : null, ObjectPropertyPanel.this);
 			return edit_ui_layout;
 		}
+		else if (Parser.isNumber(field.getType())) 
+		{
+			NumberCellEdit numedit = new NumberCellEdit(field.getType(), field_value);
+			return numedit;
+		}
 		else {
 			TextCellEdit text_edit = new TextCellEdit();
 			text_edit.setText(Util.fromObject(field_value));
@@ -319,7 +325,10 @@ public class ObjectPropertyPanel extends JPanel
 		}
 		
 		Object obj = null;
-		if (edit instanceof TextCellEdit) {
+		if (edit instanceof NumberCellEdit) {
+			obj = ((NumberCellEdit)edit).getValue();
+		}
+		else if (edit instanceof TextCellEdit) {
 			obj = Util.parseObject(((TextCellEdit) edit).getValue(), src_value == null ? field.getType() : src_value.getClass());
 		}
 		else {
