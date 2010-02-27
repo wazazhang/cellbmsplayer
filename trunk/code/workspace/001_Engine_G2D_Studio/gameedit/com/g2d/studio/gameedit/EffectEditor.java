@@ -1141,6 +1141,7 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 	{
 		public DialogAddAffect(Component owner) {
 			super(owner, new G2DList<AffectType>(AffectType.getTypes()));
+			super.getList().setLayoutOrientation(G2DList.VERTICAL_WRAP);
 		}
 	}
 }
