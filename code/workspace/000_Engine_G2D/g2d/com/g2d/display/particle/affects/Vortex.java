@@ -20,5 +20,9 @@ public class Vortex implements ParticleAffect {
 		double degree = MathVector.getDegree(particle.getSpeed());
 		MathVector.movePolar(particle.getSpeed(), degree + Math.toRadians(angle), force);
 	}
-
+	
+	@Override
+	public String toString() {
+		return "[漩涡][角度="+angle+"][力量="+force+"]";
+	}
 }

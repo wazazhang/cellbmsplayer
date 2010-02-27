@@ -100,10 +100,6 @@ public class Layer implements Serializable
 	
 	
 	final public ArrayList<ParticleAffect> affects = new ArrayList<ParticleAffect>();
-	{
-		Vortex v = new Vortex();
-		affects.add(v);
-	}
 	
 //	------------------------------------------------------------------------------------------------------------------
 	

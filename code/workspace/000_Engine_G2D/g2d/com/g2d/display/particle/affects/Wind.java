@@ -4,8 +4,8 @@ import com.g2d.annotation.Property;
 import com.g2d.display.particle.ParticleAffect;
 import com.g2d.display.particle.ParticleAffectNode;
 
-@Property("引力")
-public class Gravity implements ParticleAffect 
+@Property("风")
+public class Wind implements ParticleAffect 
 {
 	@Property("X方向")
 	public float x = 0;
@@ -15,11 +15,11 @@ public class Gravity implements ParticleAffect
 	
 	@Override
 	public void update(float timelinePosition, ParticleAffectNode particle) {
-		particle.getSpeed().addVectorX(x);
-		particle.getSpeed().addVectorX(y);
+		particle.addVectorX(x);
+		particle.addVectorY(y);
 	}
 	@Override
 	public String toString() {
-		return "[引力][x="+x+"][y="+y+"]";
+		return "[风][x="+x+"][y="+y+"]";
 	}
 }

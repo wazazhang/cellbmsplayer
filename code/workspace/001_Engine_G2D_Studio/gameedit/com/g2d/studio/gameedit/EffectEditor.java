@@ -38,13 +38,19 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import com.cell.CUtil;
 import com.cell.reflect.Parser;
 import com.cell.rpg.template.TEffect;
 import com.g2d.Tools;
+import com.g2d.annotation.Property;
 import com.g2d.display.particle.Layer;
 import com.g2d.display.particle.OriginShape;
 import com.g2d.display.particle.ParticleAffect;
 import com.g2d.display.particle.Layer.TimeNode;
+import com.g2d.display.particle.affects.Gravity;
+import com.g2d.display.particle.affects.Vortex;
+import com.g2d.display.particle.affects.Wander;
+import com.g2d.display.particle.affects.Wind;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.studio.cpj.CPJEffectImageSelectDialog;
 import com.g2d.studio.cpj.CPJEffectImageSelectDialog.TileImage;
@@ -53,6 +59,7 @@ import com.g2d.studio.particles.ParticleViewer;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.swing.G2DList;
 import com.g2d.studio.swing.G2DListItem;
+import com.g2d.studio.swing.G2DListSelectDialog;
 
 
 public class EffectEditor extends JSplitPane implements ActionListener, ListSelectionListener
@@ -715,6 +722,7 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 						timeline_data.add(edit);
 						Collections.sort(timeline_data);
 						timeline.setListData(timeline_data);
+						timeline.setSelectedValue(edit, true);
 					}
 				} 
 				else if (e.getSource() == line_del) {
@@ -793,28 +801,121 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 
 //		-------------------------------------------------------------------------------------------------------------------------------
 
-		class PageInfluences extends PropertyPage
+		class PageInfluences extends PropertyPage implements ActionListener, ListSelectionListener
 		{
 			JSplitPane 		split		= new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 			
-			G2DList<LineEdit>
-							affects		= new G2DList<LineEdit>();
+			G2DList<AffectEdit>	affects			= new G2DList<AffectEdit>();
+			Vector<AffectEdit>	affects_data	= new Vector<AffectEdit>();
 			
-			JScrollPane 	bottom		= new JScrollPane();
+			JScrollPane 	right		= new JScrollPane();
 
-			JButton			btn_ref	= new JButton("刷新");
-			JButton			btn_add	= new JButton("添加");
-			JButton			btn_del	= new JButton("删除");
+			JButton			btn_ref		= new JButton("刷新");
+			JButton			btn_add		= new JButton("添加");
+			JButton			btn_del		= new JButton("删除");
 			
-			Vector<LineEdit> affects_data = new Vector<LineEdit>();
+			public PageInfluences()
+			{
+				super.setLayout(new BorderLayout());
+				{
+					JPanel toppan = new JPanel(new BorderLayout());
+					JScrollPane top = new JScrollPane(affects);
+					top.setMinimumSize(new Dimension(200, 200));
+					toppan.add(top, BorderLayout.CENTER);
+					JToolBar bar = new JToolBar();
+					bar.add(btn_ref);
+					bar.addSeparator();
+					bar.add(btn_add);
+					bar.add(btn_del);
+					toppan.add(bar, BorderLayout.NORTH);
+					split.setLeftComponent(toppan);
+					
+					btn_ref.addActionListener(this);
+					btn_add.addActionListener(this);
+					btn_del.addActionListener(this);
+				}
+				
+				split.setRightComponent(right);
+				
+				this.add(split, BorderLayout.CENTER);
+				
+				affects.addListSelectionListener(this);
+			}
+			
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (e.getSource() == btn_ref) {
+					affects.setListData(affects_data);
+					affects.repaint();
+				}
+				else if (e.getSource() == btn_add) {
+					DialogAddAffect dialog = new DialogAddAffect(this);
+					AffectType type = dialog.showDialog();
+					if (type != null) {
+						try{
+							ParticleAffect af = (ParticleAffect)type.type.newInstance();
+							AffectEdit edit = new AffectEdit(af);
+							layer.affects.add(af);
+							affects_data.add(edit);
+							affects.setListData(affects_data);
+							affects.setSelectedValue(edit, true);
+						}catch(Exception er){
+							er.printStackTrace();
+						}
+					}
+				} 
+				else if (e.getSource() == btn_del) {
+					AffectEdit edit = affects.getSelectedItem();
+					if (edit != null) {
+						layer.affects.remove(edit.affect);
+						affects_data.remove(edit);
+						affects.setListData(affects_data);
+					}
+				}
+			}
 			
 			@Override
-			void getData(Layer layer) {}
+			public void valueChanged(ListSelectionEvent e) {
+				if (e.getSource() == affects) {
+					AffectEdit item = affects.getSelectedItem();
+					right.setViewportView(item);
+				}
+			}
 			
 			@Override
-			void setData(Layer layer) {}
+			void getData(Layer layer) {
+				for (AffectEdit e : affects_data) {
+					e.getData();
+				}
+			}
 			
+			@Override
+			void setData(Layer layer) 
+			{
+				boolean change = false;
+				for (ParticleAffect node : layer.affects) {
+					AffectEdit edit = getNodeEdit(node);
+					if (edit == null) {
+						edit = new AffectEdit(node);
+						affects_data.add(edit);
+						change = true;
+					}
+				}
+				if (change) {
+					affects.setListData(affects_data);
+					affects.repaint();
+				}
+			}
 			
+			AffectEdit getNodeEdit(ParticleAffect affect) {
+				for (AffectEdit e : affects_data) {
+					if (e.affect == affect) {
+						return e;
+					}
+				}
+				return null;
+			}
 		}
 	}
 	
@@ -944,7 +1045,7 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 			if (time_node.enable_alpha) {
 				ret += "[透明度=" + time_node.alpha + "]";
 			}
-			System.out.println("reset list name " + ret);
+
 			return ret;
 		}
 		
@@ -969,7 +1070,11 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 		}
 		
 		
-		
+		void setData() {
+		}
+
+		void getData() {
+		}
 		
 		
 		@Override
@@ -984,6 +1089,58 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 		@Override
 		public String getListName() {
 			return affect + "";
+		}
+	}
+
+//	--------------------------------------------------------------------------------------------------------------------
+	
+	static class AffectType implements G2DListItem
+	{
+		final Class<?> type;
+		
+		public AffectType(Class<?> type) {
+			this.type = type;
+		}
+		
+		@Override
+		public Component getListComponent(JList list, Object value,
+				int index, boolean isSelected, boolean cellHasFocus) {
+			return null;
+		}
+		public ImageIcon getListIcon(boolean update) {
+			return new ImageIcon(Res.icon_affect);
+		}
+		public String getListName() {
+			Property property = type.getAnnotation(Property.class);
+			if (property!=null) {
+				return CUtil.arrayToString(property.value(), "");
+			} else {
+				return type.getName();
+			}
+		}
+		
+		static ArrayList<AffectType> getTypes()
+		{
+			ArrayList<Class<?>> affect_types = new ArrayList<Class<?>>();
+			affect_types.add(Wind.class);
+			affect_types.add(Gravity.class);
+			affect_types.add(Vortex.class);
+			affect_types.add(Wander.class);
+			
+			// add others
+			
+			ArrayList<AffectType> ret = new ArrayList<AffectType>(affect_types.size());
+			for (Class<?> type : affect_types) {
+				ret.add(new AffectType(type));
+			}
+			return ret;
+		}
+	}
+	
+	static class DialogAddAffect extends G2DListSelectDialog<AffectType>
+	{
+		public DialogAddAffect(Component owner) {
+			super(owner, new G2DList<AffectType>(AffectType.getTypes()));
 		}
 	}
 }

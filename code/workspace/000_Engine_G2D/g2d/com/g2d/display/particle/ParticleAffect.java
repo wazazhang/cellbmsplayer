@@ -1,6 +1,8 @@
 package com.g2d.display.particle;
 
-public interface ParticleAffect 
+import java.io.Serializable;
+
+public interface ParticleAffect extends Serializable
 {
 	public void update(float timeline_position, ParticleAffectNode particle);
 }
