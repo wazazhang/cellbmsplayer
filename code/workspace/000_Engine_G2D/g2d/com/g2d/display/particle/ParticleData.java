@@ -2,6 +2,7 @@ package com.g2d.display.particle;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 
 public class ParticleData implements Iterable<Layer>, Serializable
@@ -18,6 +19,10 @@ public class ParticleData implements Iterable<Layer>, Serializable
 	
 	public void removeLayer(Layer layer) {
 		layers.remove(layer);
+	}
+	
+	public void clear() {
+		layers.clear();
 	}
 	
 	@Override

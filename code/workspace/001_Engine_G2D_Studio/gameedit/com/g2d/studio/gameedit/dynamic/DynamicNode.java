@@ -3,10 +3,12 @@ package com.g2d.studio.gameedit.dynamic;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JTree;
 
 import com.cell.rpg.RPGObject;
+import com.g2d.studio.gameedit.EffectTreeView;
 import com.g2d.studio.gameedit.entity.ObjectGroup;
 import com.g2d.studio.gameedit.entity.ObjectNode;
 import com.g2d.studio.swing.G2DTreeNodeGroup.NodeMenu;
@@ -79,9 +81,7 @@ public abstract class DynamicNode<T extends RPGObject> extends ObjectNode<T>
 	{
 		public DynamicNodeMenu(DynamicNode<?> node) {
 			super(node);
-
 			remove(open);
-			remove(rename);
 		}
 		
 		@Override
@@ -91,6 +91,12 @@ public abstract class DynamicNode<T extends RPGObject> extends ObjectNode<T>
 				if (result == JOptionPane.YES_OPTION) {
 					DynamicNode.this.removeFromParent();
 					tree.reload();
+				}
+			}
+			else if (e.getSource() == rename) {
+				String text = JOptionPane.showInputDialog("输入新的名字");
+				if (text != null && !text.isEmpty()) {
+					node.setName(text);
 				}
 			}
 		}
