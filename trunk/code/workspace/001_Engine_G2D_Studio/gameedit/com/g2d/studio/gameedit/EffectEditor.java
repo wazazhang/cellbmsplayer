@@ -38,6 +38,7 @@ import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import com.cell.CIO;
 import com.cell.CUtil;
 import com.cell.reflect.Parser;
 import com.cell.rpg.template.TEffect;
@@ -71,6 +72,7 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 	G2DList<LayerEdit> 	layers		= new G2DList<LayerEdit>();
 	
 	JButton layer_add	= new JButton("添加层");
+	JButton layer_copy	= new JButton("复制层");
 	JButton layer_del	= new JButton("删除层");
 	
 	JButton refresh		= new JButton("刷新");
@@ -89,12 +91,14 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 			JToolBar bar = new JToolBar();
 			
 			bar.add(layer_add);
+			bar.add(layer_copy);
 			bar.add(layer_del);
 			bar.addSeparator();
 			bar.add(refresh);
 			bar.add(show);
 			
 			layer_add.addActionListener(this);
+			layer_copy.addActionListener(this);
 			layer_del.addActionListener(this);
 			refresh.addActionListener(this);
 			show.addActionListener(this);
@@ -147,6 +151,20 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 			layer_list.add(edit);
 			layers.setListData(layer_list);
 			layers.setSelectedValue(edit, true);
+		}
+		else if (e.getSource() == layer_copy)
+		{
+			Object obj = layers.getSelectedValue();
+			if (obj instanceof LayerEdit) {
+				LayerEdit right = (LayerEdit)obj;
+				Layer layer = CIO.cloneObject(right.layer);
+				layer.alias = layer + " Copy";
+				effect.particles.addLayer(layer);
+				LayerEdit edit = new LayerEdit(layer);
+				layer_list.add(edit);
+				layers.setListData(layer_list);
+				layers.setSelectedValue(edit, true);
+			}
 		}
 		else if (e.getSource() == layer_del) 
 		{

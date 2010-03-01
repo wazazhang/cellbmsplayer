@@ -15,4 +15,5 @@ public class TEffect extends TemplateNode
 	public Class<?>[] getSubAbilityTypes() {
 		return new Class<?>[] {};
 	}
+	
 }

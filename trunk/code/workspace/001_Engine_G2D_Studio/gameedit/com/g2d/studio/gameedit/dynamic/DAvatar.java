@@ -54,7 +54,15 @@ final public class DAvatar extends DynamicNode<TAvatar>
 	}
 	
 //	----------------------------------------------------------------------------------------------------
-	
+	@Override
+	public boolean setName(String name) {
+		if(super.setName(name)){
+			getData().name = name;
+			return true;
+		} else {
+			return false;
+		}
+	}
 	
 	public CPJIndex<CPJSprite> getBody() {
 		return body;

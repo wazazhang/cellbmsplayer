@@ -49,7 +49,7 @@ public class EffectTreeView extends ObjectTreeViewDynamic<DEffect, TEffect>
 		@Override
 		protected boolean createObjectNode(String key, TEffect data) {
 			try{
-				addNode(this, new DEffect(data));
+				addNode(this, new DEffect(EffectTreeView.this, data));
 				return true;
 			}catch(Exception err){
 				err.printStackTrace();
