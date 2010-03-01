@@ -190,24 +190,18 @@ public class ParticleDisplay extends com.g2d.display.particle.ParticleSystem
 		@Override
 		public void render(Graphics2D g) 
 		{
-			try{
-				g.scale(tl_size, tl_size);
-				g.rotate(tl_spin);
-				g.setComposite(AlphaComposite.getInstance(composite_rule, tl_alpha));
-				if (layer.layer.image!=null) {
-					g.drawImage(layer.layer.image, 
-							-layer.layer.image.getWidth()>>1, 
-							-layer.layer.image.getHeight()>>1, 
-							this);
-				} else {
-					g.setColor(tl_color);
-					g.drawArc(-2, -2, 4, 4, 0, 360);
-				}
-			}finally{
-				g.rotate(-tl_spin);
-				g.scale(-tl_size, -tl_size);
+			g.scale(tl_size, tl_size);
+			g.rotate(tl_spin);
+			g.setComposite(AlphaComposite.getInstance(composite_rule, tl_alpha));
+			if (layer.layer.image!=null) {
+				g.drawImage(layer.layer.image, 
+						-layer.layer.image.getWidth()>>1, 
+						-layer.layer.image.getHeight()>>1, 
+						this);
+			} else {
+				g.setColor(tl_color);
+				g.drawArc(-2, -2, 4, 4, 0, 360);
 			}
-			
 		}
 		
 		private void updateTimeLine(float timeline_position)
