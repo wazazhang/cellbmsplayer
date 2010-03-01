@@ -25,7 +25,7 @@ public class ParticleDisplay extends com.g2d.display.particle.ParticleSystem
 {
 	public static Random 			random 			= new Random();
 
-	public static int				composite_rule	= AlphaComposite.SRC_OVER;
+//	public static int				composite_rule	= AlphaComposite.SRC_OVER;
 	
 	final public ParticleData 		data;
 	
@@ -192,7 +192,8 @@ public class ParticleDisplay extends com.g2d.display.particle.ParticleSystem
 		{
 			g.scale(tl_size, tl_size);
 			g.rotate(tl_spin);
-			g.setComposite(AlphaComposite.getInstance(composite_rule, tl_alpha));
+			setAlpha(g, tl_alpha);
+//			g.setComposite(AlphaComposite.getInstance(composite_rule, tl_alpha));
 			if (layer.layer.image!=null) {
 				g.drawImage(layer.layer.image, 
 						-layer.layer.image.getWidth()>>1, 
@@ -202,6 +203,11 @@ public class ParticleDisplay extends com.g2d.display.particle.ParticleSystem
 				g.setColor(tl_color);
 				g.drawArc(-2, -2, 4, 4, 0, 360);
 			}
+			
+//			if (g instanceof sun.java2d.SunGraphics2D) {
+//				sun.java2d.SunGraphics2D java2d = (sun.java2d.SunGraphics2D)g;
+//				java2d.alphafill.getCompositeType().
+//			}
 		}
 		
 		private void updateTimeLine(float timeline_position)
