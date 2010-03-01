@@ -663,7 +663,12 @@ public abstract class DisplayObject extends DObject implements Comparable<Displa
 	
 	public void setAlpha(Graphics2D g, float alpha)
 	{
-		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+		if (g.getComposite() instanceof AlphaComposite) {
+			AlphaComposite ac = (AlphaComposite)g.getComposite();
+			g.setComposite(ac.derive(alpha));
+		} else {
+			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+		}
 	}
 
 
