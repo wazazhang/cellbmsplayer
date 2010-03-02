@@ -204,7 +204,7 @@ public class CellSetResource
 	
 
 	synchronized
-	final public IImages getImages(ImagesSet img) 
+	final public StreamTiles getImages(ImagesSet img) 
 	{
 		StreamTiles stuff = resource_manager.get("IMG_" + img.Index, StreamTiles.class);
 		if (stuff != null) {
@@ -237,7 +237,7 @@ public class CellSetResource
 	
 	
 	synchronized
-	final public IImages getImages(String key){
+	final public StreamTiles getImages(String key){
 		ImagesSet img = ImgTable.get(key);
 		return getImages(img);
 			
@@ -1424,7 +1424,7 @@ public class CellSetResource
 	 * @author WAZA
 	 * 支持网络缓冲的图片组
 	 */
-	protected class StreamTiles implements IImages, Runnable
+	public class StreamTiles implements IImages, Runnable
 	{
 		final protected ImagesSet	img;
 		final protected IImage[]	images;
@@ -1446,6 +1446,10 @@ public class CellSetResource
 					images[i] = src.subImage(img.ClipsX[i], img.ClipsY[i], img.ClipsW[i], img.ClipsH[i]);
 				}
 			}
+		}
+		
+		final public boolean isLoaded() {
+			return loaded;
 		}
 		
 		final public void run() 

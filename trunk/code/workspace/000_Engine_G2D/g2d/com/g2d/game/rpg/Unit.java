@@ -35,7 +35,7 @@ public abstract class Unit extends Sprite
 	}
 	
 	public int compareTo(DisplayObject o) {
-		return (getY()+priority) - (o.getY()+o.priority);
+		return (int)((y+priority) - (o.y+o.priority));
 	}
 
 	public boolean isInCamera()

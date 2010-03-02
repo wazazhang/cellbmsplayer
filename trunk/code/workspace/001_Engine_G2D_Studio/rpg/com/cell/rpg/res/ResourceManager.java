@@ -44,12 +44,15 @@ public abstract class ResourceManager extends CellSetResourceManager
 	
 	final public String res_root;
 	final public String save_dir;
+	
+	
 	// res objects
 	protected Hashtable<String, SceneSet>	all_scene_set;
 	protected Hashtable<String, SpriteSet>	all_actor_set;
 	protected Hashtable<String, SpriteSet>	all_avatar_set;
 	protected Hashtable<String, SpriteSet>	all_effect_set;
 
+	
 	// xml templates dynamic object and scenes
 	protected Hashtable<Integer, ItemProperties> item_properties;
 	protected Hashtable<Integer, TUnit>		tunits;
@@ -57,20 +60,18 @@ public abstract class ResourceManager extends CellSetResourceManager
 	protected Hashtable<Integer, TAvatar>	tavatars;
 	protected Hashtable<Integer, TSkill>	tskills;
 	protected Hashtable<Integer, TEffect>	teffects;
-	
 	protected Hashtable<Integer, Quest> 	quests;
 	protected Hashtable<Integer, Scene>		scenes;
 
-	// xml templateds dynamic object and scene snap names
 	protected Hashtable<Integer, String> 	names_item_properties;
 	protected Hashtable<Integer, String>	names_tunits;
 	protected Hashtable<Integer, String>	names_titems;
 	protected Hashtable<Integer, String>	names_tavatars;
 	protected Hashtable<Integer, String>	names_tskills;
 	protected Hashtable<Integer, String>	names_teffects;
-	
 	protected Hashtable<Integer, String> 	names_quests;
 	protected Hashtable<Integer, String>	names_scenes;
+	
 	
 	// icons and sounds
 	protected Hashtable<String, AtomicReference<BufferedImage>> 		all_icons;
@@ -486,31 +487,30 @@ public abstract class ResourceManager extends CellSetResourceManager
 //		return null;
 //	}
 	
-	public BufferedImage getEffectImage(Layer layer)
+	public CellSetResource.StreamTiles getEffectImages(String cpj_project_name, String cpj_sprite_name) {
+		try
+		{
+			SpriteSet					effect_set	= getEffectSet(cpj_project_name, cpj_sprite_name);
+			CellSetResource				resource 	= effect_set.getSetResource(this);
+			CellSetResource.SpriteSet 	spr_set 	= effect_set.getSetObject(this);
+			CellSetResource.StreamTiles	images		= resource.getImages(spr_set.ImagesName);
+			return images;
+		} catch (Exception err) {
+			err.printStackTrace();
+		}
+		return null;
+	}
+	
+	public BufferedImage getEffectImage(String cpj_project_name, String cpj_sprite_name, int index)
 	{
 		try
 		{
-			SpriteSet effect_set = getEffectSet(layer.cpj_project_name, layer.cpj_sprite_name);
-			CellSetResource				resource 	= effect_set.getSetResource(this);
-			CellSetResource.SpriteSet 	spr_set 	= effect_set.getSetObject(this);
-			IImages						images		= resource.getImages(spr_set.ImagesName);
-			IImage						image		= images.getImage(layer.cpj_image_id);
-
-			if (PRINT_VERBOS) {
-				System.out.println("\t" +
-						"get effect image : " + 
-						layer.cpj_project_name + "/" + 
-						layer.cpj_sprite_name + "(" + layer.cpj_image_id + ")");
-			}
-			
-			layer.image = Tools.createImage(image);
-			
-			return layer.image;
-		}
-		catch (Exception err) {
+			CellSetResource.StreamTiles	images		= getEffectImages(cpj_project_name, cpj_sprite_name);
+			IImage						image		= images.getImage(index);
+			return Tools.createImage(image);
+		} catch (Exception err) {
 			err.printStackTrace();
 		}
-		
 		return null;
 	}
 	

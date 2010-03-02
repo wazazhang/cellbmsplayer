@@ -176,7 +176,7 @@ public abstract class DisplayObject extends DObject implements Comparable<Displa
 //	--------------------------------------------------------------------------------------------------------------------------------------------
 
 	public int compareTo(DisplayObject o) {
-		return (int)(z+priority) - (int)(o.z+o.priority);
+		return (int)((z+priority) - (o.z+o.priority));
 	}
 	
 	/**
