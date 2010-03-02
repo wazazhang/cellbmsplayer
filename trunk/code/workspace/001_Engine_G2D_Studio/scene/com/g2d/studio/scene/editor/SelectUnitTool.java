@@ -2,6 +2,8 @@ package com.g2d.studio.scene.editor;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
@@ -22,11 +24,14 @@ import com.g2d.Tools;
 import com.g2d.studio.Studio;
 import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.cpj.entity.CPJSprite;
+import com.g2d.studio.gameedit.dynamic.DEffect;
+import com.g2d.studio.gameedit.entity.ObjectNode;
 import com.g2d.studio.gameedit.template.XLSUnit;
 import com.g2d.studio.res.Res;
+import com.g2d.studio.swing.G2DTreeNode;
 import com.g2d.util.AbstractFrame;
 
-public class SelectUnitTool extends AbstractFrame implements ActionListener
+public class SelectUnitTool extends AbstractFrame// implements ActionListener
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -41,25 +46,12 @@ public class SelectUnitTool extends AbstractFrame implements ActionListener
 	}
 	
 //	--------------------------------------------------------------------------------------------------------------------------------
-	final int icon_size			= 32;
-	final int icon_column_count	= 5;
-	
-	private Hashtable<JToggleButton , XLSUnit> unit_map = new Hashtable<JToggleButton, XLSUnit>();
-	private Hashtable<JToggleButton , CPJSprite> res_map = new Hashtable<JToggleButton, CPJSprite>();
-	
+
 	JTabbedPane table = new JTabbedPane();
 
-	JScrollPane		unit_scroll_pan 	= new JScrollPane();
-	JLabel 			unit_label 			= new JLabel("单位:");
-	JButton 		unit_refresh 		= new JButton(" 刷新 ");	
-	JProgressBar	unit_progress		= new JProgressBar();
-	XLSUnit			selected_xls;
-	
-	JScrollPane		res_scroll_pan		= new JScrollPane();
-	JLabel 			res_label 			= new JLabel("资源:");
-	JButton 		res_refresh 		= new JButton(" 刷新 ");
-	JProgressBar	res_progress		= new JProgressBar();
-	CPJSprite		selected_spr;
+	XLSUnitPanel	page_xls_unit_panel;
+	CPJSpritePanel	page_cpj_sprite_panel;
+	DEffectPanel	page_deffect_panel;
 	
 	private SelectUnitTool() 
 	{
@@ -71,226 +63,39 @@ public class SelectUnitTool extends AbstractFrame implements ActionListener
 				Studio.getInstance().getX() + Studio.getInstance().getWidth(), 
 				Studio.getInstance().getY()
 				);
+
+		this.page_xls_unit_panel		= new XLSUnitPanel();
+		this.table.addTab("单位", page_xls_unit_panel);
+		this.page_xls_unit_panel.onRefresh();
 		
-		{
-			JPanel unit_panel = new JPanel(new BorderLayout());
-			JToolBar tool_bar = new JToolBar();
-			tool_bar.add(unit_label);
-			tool_bar.addSeparator();
-			tool_bar.add(unit_refresh);
-			unit_refresh.addActionListener(this);
-			unit_progress.setStringPainted(true);
-			unit_scroll_pan.getVerticalScrollBar().setUnitIncrement(icon_size);
-			
-			unit_panel.add(tool_bar, BorderLayout.NORTH);
-			unit_panel.add(unit_scroll_pan, BorderLayout.CENTER);
-			unit_panel.add(unit_progress, BorderLayout.SOUTH);
-			table.addTab("单位", unit_panel);
-		}
-		{
-			JPanel res_panel = new JPanel(new BorderLayout());
-			JToolBar tool_bar = new JToolBar();
-			tool_bar.add(res_label);
-			tool_bar.addSeparator();
-			tool_bar.add(res_refresh);
-			res_refresh.addActionListener(this);
-			res_progress.setStringPainted(true);
-			res_scroll_pan.getVerticalScrollBar().setUnitIncrement(icon_size);
-			
-			res_panel.add(tool_bar, BorderLayout.NORTH);
-			res_panel.add(res_scroll_pan, BorderLayout.CENTER);
-			res_panel.add(res_progress, BorderLayout.SOUTH);
-			table.addTab("不可破坏", res_panel);
-		}
+		this.page_cpj_sprite_panel	= new CPJSpritePanel();
+		this.table.addTab("不可破坏", page_cpj_sprite_panel);
+		this.page_cpj_sprite_panel.onRefresh();
+		
+		this.page_deffect_panel	= new DEffectPanel();
+		this.table.addTab("特效", page_deffect_panel);
+		this.page_deffect_panel.onRefresh();
 		
 		this.add(table, BorderLayout.CENTER);
-		
-		refreshXLSUnit();
-		
-		refreshCPJ();
-	}
-	
-	void refreshXLSUnit()
-	{
-		unit_refresh.setEnabled(false);
-		
-		new Thread()
-		{
-			@Override
-			public void run() 
-			{
-				this.setPriority(MIN_PRIORITY);
-				try{
-					HashMap<JToggleButton , XLSUnit> map = new HashMap<JToggleButton, XLSUnit>();
-					JPanel 		panel 			= new JPanel(null);
-					ButtonGroup button_group	= new ButtonGroup();
-		
-					Vector<XLSUnit> tunits 		= Studio.getInstance().getObjectManager().getObjects(
-							XLSUnit.class);
-					
-					unit_progress.setMaximum(tunits.size());
-					
-					int mw = 0;
-					int mh = 0;
-					
-					int w = icon_size;
-					int h = icon_size;
-					int wc = icon_column_count;
-					
-					int i=0;
-					for (XLSUnit tunit : tunits)
-					{
-						JToggleButton btn = new JToggleButton();
-						btn.setToolTipText(tunit.getName());
-						btn.setLocation(i%wc * w, i/wc * h);
-						btn.setSize(w, h);
-						if (tunit.getCPJSprite()!=null) {
-							btn.setIcon(Tools.createIcon(Tools.combianImage(w-4, h-4, tunit.getCPJSprite().getSnapShoot())));
-							btn.addActionListener(SelectUnitTool.this);
-							map.put(btn, tunit);
-						}
-						button_group.add(btn);
-						panel.add(btn);
-						mw = Math.max(mw, btn.getX() + btn.getWidth());
-						mh = Math.max(mh, btn.getY() + btn.getHeight());
-						i++;
-						unit_progress.setValue(i);
-						unit_progress.setString(tunit.getName() + 
-								"    " + i +"/" + tunits.size());
-					}
-	
-					panel.setSize(mw, mh);
-					panel.setPreferredSize(new Dimension(mw, mh));
-					panel.setMinimumSize(new Dimension(mw, mh));
-					
-	
-					selected_xls = null;
-					unit_map.clear();
-					unit_map.putAll(map);
-					unit_scroll_pan.setViewportView(panel);
-					unit_progress.setString(i +"/" + tunits.size());
-					
-					System.out.println("refresh units");
-				} 
-				finally {
-					unit_refresh.setEnabled(true);
-				}
-			}
-		}.start();
-		
-		
-		
-	}
-	
-	void refreshCPJ()
-	{
-
-		res_refresh.setEnabled(false);
-		
-		new Thread()
-		{
-			@Override
-			public void run() 
-			{				
-				this.setPriority(MIN_PRIORITY);
-				try{
-					Hashtable<JToggleButton , CPJSprite> map = new Hashtable<JToggleButton, CPJSprite>();
-					JPanel 		panel 			= new JPanel(null);
-					ButtonGroup button_group	= new ButtonGroup();
-					
-					Vector<CPJSprite> actors 	= Studio.getInstance().getCPJResourceManager().getNodes(
-							CPJResourceType.ACTOR, 
-							CPJSprite.class);
-	
-					res_progress.setMaximum(actors.size());
-					
-					int mw = 0;
-					int mh = 0;
-					
-					int w = icon_size;
-					int h = icon_size;
-					int wc = icon_column_count;
-					
-					int i=0;
-					for (CPJSprite actor : actors)
-					{
-						JToggleButton btn = new JToggleButton();
-						btn.setToolTipText(actor.getName());
-						btn.setLocation(i%wc * w, i/wc * h);
-						btn.setSize(w, h);
-						btn.setIcon(Tools.createIcon(Tools.combianImage(w-4, h-4, actor.getSnapShoot())));
-						btn.addActionListener(SelectUnitTool.this);
-						map.put(btn, actor);
-						button_group.add(btn);
-						panel.add(btn);
-						mw = Math.max(mw, btn.getX() + btn.getWidth());
-						mh = Math.max(mh, btn.getY() + btn.getHeight());
-						i++;
-						res_progress.setValue(i);
-						res_progress.setString(actor.getName() + 
-								"    " + i +"/" + actors.size());
-					}
-	
-					panel.setSize(mw, mh);
-					panel.setPreferredSize(new Dimension(mw, mh));
-					panel.setMinimumSize(new Dimension(mw, mh));
-	
-					selected_spr = null;
-					res_map.clear();
-					res_map.putAll(map);
-					res_scroll_pan.setViewportView(panel);
-					res_progress.setString(i +"/" + actors.size());
-
-					System.out.println("refresh resource");
-				}
-				finally{
-					res_refresh.setEnabled(true);
-				}
-			}
-		}.start();
-		
-	}
-	
-	@Override
-	public void actionPerformed(ActionEvent e) 
-	{
-		if (e.getSource() == unit_refresh) {
-			this.refreshXLSUnit();
-		} 
-		else if (e.getSource() == res_refresh) {
-			this.refreshCPJ();
-		}
-		else if (unit_map.containsKey(e.getSource())) {
-			XLSUnit unit = unit_map.get(e.getSource());
-			if (unit != null) {
-				unit_label.setText("单位:" + unit.getName());
-				selected_xls = unit;
-				selected_xls.getCPJSprite();
-				selected_xls.getCPJSprite().getDisplayObject();
-				this.repaint(100);
-			}
-		}
-		else if (res_map.containsKey(e.getSource())) {
-			CPJSprite spr = res_map.get(e.getSource());
-			if (spr != null) {
-				res_label.setText("单位:" + spr.getName());
-				selected_spr = spr;
-				selected_spr.getDisplayObject();
-				this.repaint(100);
-			}
-		}
 	}
 	
 	public XLSUnit getSelectedUnit() {
 		if (table.getSelectedIndex() == 0) {
-			return selected_xls;
+			return this.page_xls_unit_panel.getSelected();
 		}
 		return null;
 	}
 	
 	public CPJSprite getSelectedSpr() {
 		if (table.getSelectedIndex() == 1) {
-			return selected_spr;
+			return this.page_cpj_sprite_panel.getSelected();
+		}
+		return null;
+	}
+
+	public DEffect getSelectedEffect() {
+		if (table.getSelectedIndex() == 2) {
+			return this.page_deffect_panel.getSelected();
 		}
 		return null;
 	}
@@ -298,8 +103,307 @@ public class SelectUnitTool extends AbstractFrame implements ActionListener
 	@Override
 	public void setVisible(boolean b) {
 		super.setVisible(b);		
-		refreshXLSUnit();
-		refreshCPJ();
+		this.page_xls_unit_panel.onRefresh();
+		this.page_cpj_sprite_panel.onRefresh();
+		this.page_deffect_panel.onRefresh();
 	}
 	
+//	----------------------------------------------------------------------------------------------------------------
+
+	class XLSUnitPanel extends ObjectPanel<XLSUnit>
+	{
+		public XLSUnitPanel() {
+			super(XLSUnit.class, "单位");
+		}
+		
+		@Override
+		protected void onRefresh() 
+		{
+			refresh.setEnabled(false);
+			
+			new Thread()
+			{
+				@Override
+				public void run() 
+				{
+					this.setPriority(MIN_PRIORITY);
+					try{
+						HashMap<JToggleButton , XLSUnit> map = new HashMap<JToggleButton, XLSUnit>();
+						JPanel 		panel 			= new JPanel(null);
+						ButtonGroup button_group	= new ButtonGroup();
+			
+						Vector<XLSUnit> tunits 		= Studio.getInstance().getObjectManager().getObjects(
+								XLSUnit.class);
+						
+						progress.setMaximum(tunits.size());
+						
+						int mw = 0;
+						int mh = 0;
+						
+						int w = icon_size;
+						int h = icon_size;
+						int wc = icon_column_count;
+						
+						int i=0;
+						for (XLSUnit tunit : tunits)
+						{
+							JToggleButton btn = new JToggleButton();
+							btn.setToolTipText(tunit.getName());
+							btn.setLocation(i%wc * w, i/wc * h);
+							btn.setSize(w, h);
+							if (tunit.getCPJSprite()!=null) {
+								btn.setIcon(Tools.createIcon(Tools.combianImage(w-4, h-4, tunit.getCPJSprite().getSnapShoot())));
+								btn.addActionListener(XLSUnitPanel.this);
+								map.put(btn, tunit);
+							}
+							button_group.add(btn);
+							panel.add(btn);
+							mw = Math.max(mw, btn.getX() + btn.getWidth());
+							mh = Math.max(mh, btn.getY() + btn.getHeight());
+							i++;
+							progress.setValue(i);
+							progress.setString(tunit.getName() + 
+									"    " + i +"/" + tunits.size());
+						}
+		
+						panel.setSize(mw, mh);
+						panel.setPreferredSize(new Dimension(mw, mh));
+						panel.setMinimumSize(new Dimension(mw, mh));
+						
+						selected_object = null;
+						res_map.clear();
+						res_map.putAll(map);
+						scroll_pan.setViewportView(panel);
+						progress.setString(i +"/" + tunits.size());
+						
+						System.out.println("refresh units");
+					} 
+					finally {
+						refresh.setEnabled(true);
+					}
+				}
+			}.start();
+		}
+		
+		@Override
+		protected void onSelected(XLSUnit spr) {
+			spr.getCPJSprite();
+			spr.getCPJSprite().getDisplayObject();
+		}
+	}
+	
+	class CPJSpritePanel extends ObjectPanel<CPJSprite>
+	{
+		public CPJSpritePanel() {
+			super(CPJSprite.class, "精灵");
+		}
+		
+		
+		@Override
+		protected void onRefresh() 
+		{
+			refresh.setEnabled(false);
+			
+			new Thread()
+			{
+				@Override
+				public void run() 
+				{				
+					this.setPriority(MIN_PRIORITY);
+					try{
+						Hashtable<JToggleButton , CPJSprite> map = new Hashtable<JToggleButton, CPJSprite>();
+						JPanel 		panel 			= new JPanel(null);
+						ButtonGroup button_group	= new ButtonGroup();
+						
+						Vector<CPJSprite> actors 	= Studio.getInstance().getCPJResourceManager().getNodes(
+								CPJResourceType.ACTOR, 
+								CPJSprite.class);
+		
+						progress.setMaximum(actors.size());
+						
+						int mw = 0;
+						int mh = 0;
+						
+						int w = icon_size;
+						int h = icon_size;
+						int wc = icon_column_count;
+						
+						int i=0;
+						for (CPJSprite actor : actors)
+						{
+							JToggleButton btn = new JToggleButton();
+							btn.setToolTipText(actor.getName());
+							btn.setLocation(i%wc * w, i/wc * h);
+							btn.setSize(w, h);
+							try{
+								btn.setIcon(Tools.createIcon(Tools.combianImage(w-4, h-4, actor.getSnapShoot())));
+							} catch (Exception er){
+								er.printStackTrace();
+							}
+							btn.addActionListener(CPJSpritePanel.this);
+							map.put(btn, actor);
+							button_group.add(btn);
+							panel.add(btn);
+							mw = Math.max(mw, btn.getX() + btn.getWidth());
+							mh = Math.max(mh, btn.getY() + btn.getHeight());
+							i++;
+							progress.setValue(i);
+							progress.setString(actor.getName() + 
+									"    " + i +"/" + actors.size());
+						}
+		
+						panel.setSize(mw, mh);
+						panel.setPreferredSize(new Dimension(mw, mh));
+						panel.setMinimumSize(new Dimension(mw, mh));
+		
+						selected_object = null;
+						res_map.clear();
+						res_map.putAll(map);
+						scroll_pan.setViewportView(panel);
+						progress.setString(i +"/" + actors.size());
+
+						System.out.println("refresh resource");
+					}
+					finally{
+						refresh.setEnabled(true);
+					}
+				}
+			}.start();
+			
+		
+		}
+		
+		@Override
+		protected void onSelected(CPJSprite spr) {
+			spr.getDisplayObject();
+		}
+	}
+	
+	class DEffectPanel extends ObjectPanel<DEffect>
+	{
+		public DEffectPanel() {
+			super(DEffect.class, "特效");
+		}
+		
+		@Override
+		protected void onRefresh() {
+
+			refresh.setEnabled(false);
+			
+			new Thread()
+			{
+				@Override
+				public void run() 
+				{
+					this.setPriority(MIN_PRIORITY);
+					try{
+						HashMap<JToggleButton , DEffect> map = new HashMap<JToggleButton, DEffect>();
+						JPanel 		panel 			= new JPanel(new GridLayout(0, 1));
+						ButtonGroup button_group	= new ButtonGroup();
+						Vector<DEffect> effects 	= Studio.getInstance().getObjectManager().getObjects(DEffect.class);
+						
+						progress.setMaximum(effects.size());
+						
+						int i=0;
+						for (DEffect effect : effects)
+						{
+							JToggleButton btn = new JToggleButton(effect.getName());
+							btn.setToolTipText(effect.getName());
+							btn.setIcon(effect.getIcon(false));
+							btn.addActionListener(DEffectPanel.this);
+							map.put(btn, effect);
+							
+							button_group.add(btn);
+							panel.add(btn);
+							
+							i++;
+							progress.setValue(i);
+							progress.setString(effect.getName() + 
+									"    " + i +"/" + effects.size());
+						}
+
+						selected_object = null;
+						res_map.clear();
+						res_map.putAll(map);
+						scroll_pan.setViewportView(panel);
+						progress.setString(i +"/" + effects.size());
+						
+						System.out.println("refresh effects");
+					} 
+					finally {
+						refresh.setEnabled(true);
+					}
+				}
+			}.start();
+		
+		}
+		
+		@Override
+		protected void onSelected(DEffect spr) {
+			
+		}
+	}
+	
+	
+//	----------------------------------------------------------------------------------------------------------------
+	
+	abstract static class ObjectPanel<T extends G2DTreeNode<?>> extends JPanel implements ActionListener
+	{	
+		final static int icon_size			= 32;
+		final static int icon_column_count	= 5;
+	
+		String			title			;
+		
+		JScrollPane		scroll_pan 		= new JScrollPane();
+		JLabel 			label 			= new JLabel("单位:");
+		JButton 		refresh 		= new JButton(" 刷新 ");	
+		JProgressBar	progress		= new JProgressBar();
+		
+		Hashtable<JToggleButton , T> res_map = new Hashtable<JToggleButton, T>();
+		T selected_object;
+		
+		ObjectPanel(Class<T> type, String title)
+		{
+			super(new BorderLayout());
+			
+			this.title = title;
+			
+			label.setText(title+":");
+			
+			JToolBar tool_bar = new JToolBar();
+			tool_bar.add(label);
+			tool_bar.addSeparator();
+			tool_bar.add(refresh);
+			refresh.addActionListener(this);
+			progress.setStringPainted(true);
+			scroll_pan.getVerticalScrollBar().setUnitIncrement(icon_size);
+			
+			this.add(tool_bar, BorderLayout.NORTH);
+			this.add(scroll_pan, BorderLayout.CENTER);
+			this.add(progress, BorderLayout.SOUTH);		
+		}
+		
+		public T getSelected() {
+			return selected_object;
+		}
+		
+		@Override
+		final public void actionPerformed(ActionEvent e) {
+			if (e.getSource() == refresh) {
+				onRefresh();
+			} 
+			else if (res_map.containsKey(e.getSource())) {
+				selected_object = res_map.get(e.getSource());
+				if (selected_object != null) {
+					label.setText(title + ":" + selected_object.getName());
+					onSelected(selected_object);
+					this.repaint(100);
+				}
+			}
+		}
+		
+		abstract protected void onRefresh() ;
+		
+		abstract protected void onSelected(T spr);
+	}
 }

@@ -65,6 +65,7 @@ public class ParticleViewer extends JFrame implements ActionListener
 	
 	public void setParticleData(EffectEditor data) {
 		this.cur_edit = data;
+		this.setTitle("粒子查看器" + ": " + data.getData().getName());
 		ParticleStage stage = new ParticleStage();
 		display_object_panel.getCanvas().changeStage(stage, data);
 	}

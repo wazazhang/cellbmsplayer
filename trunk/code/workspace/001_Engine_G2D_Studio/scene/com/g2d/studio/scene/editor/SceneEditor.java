@@ -39,8 +39,10 @@ import com.g2d.cell.CellSprite;
 import com.g2d.cell.CellSetResource.WorldSet.SpriteObject;
 import com.g2d.cell.game.Scene;
 import com.g2d.cell.game.ui.ScenePanel;
+import com.g2d.display.DisplayObject;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.Stage;
+import com.g2d.display.particle.ParticleDisplay;
 import com.g2d.display.ui.Menu;
 import com.g2d.editor.DisplayObjectEditor;
 import com.g2d.editor.DisplayObjectPanel;
@@ -49,10 +51,12 @@ import com.g2d.studio.Config;
 import com.g2d.studio.Studio;
 import com.g2d.studio.StudioResource;
 import com.g2d.studio.cpj.entity.CPJWorld;
+import com.g2d.studio.gameedit.dynamic.DEffect;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.rpg.RPGObjectPanel;
 import com.g2d.studio.scene.entity.SceneNode;
 import com.g2d.studio.scene.units.SceneActor;
+import com.g2d.studio.scene.units.SceneEffect;
 import com.g2d.studio.scene.units.SceneImmutable;
 import com.g2d.studio.scene.units.ScenePoint;
 import com.g2d.studio.scene.units.SceneRegion;
@@ -169,12 +173,9 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 			// bottom
 			{
 				unit_page		= new JTabbedPane();
-//				page_actors		= new SceneUnitList<SceneActor>(this, SceneActor.class);
-//				page_immutables	= new SceneUnitList<SceneImmutable>(this, SceneImmutable.class);
-//				page_regions	= new SceneUnitList<SceneRegion>(this, SceneRegion.class);
-//				page_points		= new SceneUnitList<ScenePoint>(this, ScenePoint.class);
 				unit_page.addTab("单位",		new SceneActorAdapter());
 				unit_page.addTab("不可破坏", new SceneImmutableAdapter());
+				unit_page.addTab("特效", 	new SceneEffectAdapter());
 				unit_page.addTab("区域", 	new SceneRegionAdapter());
 				unit_page.addTab("路点", 	new ScenePointAdapter());
 				split_v.setBottomComponent(unit_page);
@@ -210,6 +211,9 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 					}
 					else if (unit instanceof com.cell.rpg.scene.Immutable) {
 						unit_tag = new SceneImmutable(this, (com.cell.rpg.scene.Immutable)unit);
+					}
+					else if (unit instanceof com.cell.rpg.scene.Effect) {
+						unit_tag = new SceneEffect(this, (com.cell.rpg.scene.Effect)unit);
 					}
 					if (unit_tag != null) {
 						scene_container.getWorld().addChild(unit_tag.getGameUnit());
@@ -334,7 +338,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		v_selected_unit = u;
 		if (updatelist) {
 			for (int p=0; p<unit_page.getTabCount(); p++) {
-				SceneUnitTagAdapter<?> ad = (SceneUnitTagAdapter<?>)unit_page.getComponentAt(p);
+				SceneUnitTagAdapter<?,?> ad = (SceneUnitTagAdapter<?,?>)unit_page.getComponentAt(p);
 				ad.setSelecte(u.getGameUnit());
 			}
 		}
@@ -374,7 +378,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 	public void refreshAll() 
 	{
 		for (int p = 0; p < unit_page.getTabCount(); p++) {
-			SceneUnitTagAdapter<?> ad = (SceneUnitTagAdapter<?>)unit_page.getComponentAt(p);
+			SceneUnitTagAdapter<?,?> ad = (SceneUnitTagAdapter<?,?>)unit_page.getComponentAt(p);
 			ad.repaint(500);
 		}
 		scene_mini_map.repaint(500);
@@ -392,8 +396,8 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		return tool_addactor.isSelected();
 	}
 	
-	public SceneUnitTagAdapter<?> getSelectedPage() {
-		return (SceneUnitTagAdapter<?>)unit_page.getSelectedComponent();
+	public SceneUnitTagAdapter<?,?> getSelectedPage() {
+		return (SceneUnitTagAdapter<?,?>)unit_page.getSelectedComponent();
 	}
 
 
@@ -425,8 +429,6 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		
 		Point2D.Double	pre_right_pos;
 		Point2D.Double	pre_right_camera_pos;
-		
-//		DisplayObject	selected_unit		= null;
 
 		ScenePoint 		pre_added_point;
 		
@@ -549,7 +551,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 			}
 			
 			for (int p=0; p<unit_page.getTabCount(); p++) {
-				SceneUnitTagAdapter<?> ad = (SceneUnitTagAdapter<?>)unit_page.getComponentAt(p);
+				SceneUnitTagAdapter<?,?> ad = (SceneUnitTagAdapter<?,?>)unit_page.getComponentAt(p);
 				ad.clearAddUnitObject(this);
 			}
 			
@@ -560,7 +562,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		void updateAddUnit(boolean catch_mouse, int worldx, int worldy) 
 		{
 			for (int p=0; p<unit_page.getTabCount(); p++) {
-				SceneUnitTagAdapter<?> ad = (SceneUnitTagAdapter<?>)unit_page.getComponentAt(p);
+				SceneUnitTagAdapter<?,?> ad = (SceneUnitTagAdapter<?,?>)unit_page.getComponentAt(p);
 				if (ad!=getSelectedPage()) {
 					ad.clearAddUnitObject(this);
 				} else {
@@ -693,7 +695,9 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		
 	}
 	
-	public abstract class SceneUnitTagAdapter<T extends SceneUnitTag<?>> extends SceneUnitList<T>
+//	-----------------------------------------------------------------------------------------------------------------------------------
+	
+	public abstract class SceneUnitTagAdapter<T extends SceneUnitTag<?>, V extends DisplayObject> extends SceneUnitList<T>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -701,14 +705,28 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 			super(SceneEditor.this, unit_type);
 		}
 		
+		/**
+		 * 指定类型是否符合当前编辑器
+		 * @param unit_type
+		 * @return
+		 */
 		final public boolean isSelectedType(Class<?> unit_type) {
 			return this.unit_type.equals(unit_type);
 		}
 		
+		/**
+		 * 是否已经选择当前页
+		 * @return
+		 */
 		final public boolean isSelectedPage() {
 			return unit_page.getSelectedComponent() == this;
 		}
 		
+		/**
+		 * 指定的类型是否存在
+		 * @param unit
+		 * @return
+		 */
 		final public boolean containsUnit(Unit unit) {
 			if (unit_type.isInstance(unit)) {
 				return scene_container.getWorld().contains(unit);
@@ -716,22 +734,81 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 			return false;
 		}
 				
+		/**
+		 * 当按下添加单位工具条时，是否显示单位(资源)选择工具。
+		 * @return
+		 */
 		public boolean isShowSelectUnitTool(){
 			return false;
 		}
 		
-		public CellSprite getToolSprite() {
-			return null;
-		}
-		
+		/**
+		 * 测试某单位被选中时的更新。
+		 * @param scene
+		 * @param catch_mouse
+		 * @param worldx
+		 * @param worldy
+		 */
 		public void updateSelectUnit(SceneContainer scene, boolean catch_mouse, int worldx, int worldy){
 			if (scene.getRoot().isMouseDown(com.g2d.display.event.MouseEvent.BUTTON_LEFT)) {
 				selectUnit(scene.getWorld().getChildAtPos(worldx, worldy, unit_type), true);
 			}
 		}
+
+		/**
+		 * 当添加单位时，场景的更新
+		 * @param scene
+		 * @param catch_mouse
+		 * @param worldx
+		 * @param worldy
+		 */
+		abstract public void updateAddUnit(SceneContainer scene, boolean catch_mouse, int worldx, int worldy);
+
+		/**
+		 * 当添加单位时，场景的最上层渲染
+		 * @param scene
+		 * @param g
+		 */
+		abstract public void renderAddUnitObject(SceneContainer scene, Graphics2D g);
 		
-		public void updateAddUnit(SceneContainer scene, boolean catch_mouse, int worldx, int worldy)
+		/**
+		 * 一般用来清理添加单位时的数据
+		 * @param scene
+		 */
+		abstract public void clearAddUnitObject(SceneContainer scene);
+		
+	}
+	
+
+//	-----------------------------------------------------------------------------------------------------------------------------
+	
+	
+	class SceneActorAdapter extends SceneUnitTagAdapter<SceneActor, CellSprite>
+	{
+		private static final long serialVersionUID = 1L;
+		
+		public SceneActorAdapter() {
+			super(SceneActor.class);
+		}
+		
+		@Override
+		public boolean isShowSelectUnitTool() {
+			return true;
+		}
+
+		public CellSprite getToolSprite() {
+			if (SelectUnitTool.getUnitTool().isVisible()) {
+				if (getSelectedPage() == this && SelectUnitTool.getUnitTool().getSelectedUnit() != null) {
+					return SelectUnitTool.getUnitTool().getSelectedUnit().getCPJSprite().getDisplayObject();
+				}
+			}
+			return null;
+		}
+		
+		@Override
+		public void updateAddUnit(SceneContainer scene, boolean catchMouse, int worldx, int worldy) 
 		{
+
 			CellSprite cspr = getToolSprite();
 			
 			if (cspr != null)
@@ -742,11 +819,23 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 				if (scene.getRoot().isMouseWheelDown()) {
 					cspr.getSprite().nextAnimate(1);
 				}
+
+				if (scene.getRoot().isMouseDown(com.g2d.display.event.MouseEvent.BUTTON_LEFT)) 
+				{
+					SceneActor actor = new SceneActor(
+							SceneEditor.this, 
+							SelectUnitTool.getUnitTool().getSelectedUnit(),
+							worldx, 
+							worldy,
+							cspr.getSprite().getCurrentAnimate());
+					addTagUnit(actor);
+				}
 			}
 		}
-
-		public void clearAddUnitObject(SceneContainer scene) {}
-		
+		@Override
+		public void clearAddUnitObject(SceneContainer scene) {
+			
+		}
 		public void renderAddUnitObject(SceneContainer scene, Graphics2D g)
 		{
 			CellSprite cspr = getToolSprite();
@@ -771,60 +860,10 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		
 		}
 	}
-	
 
 //	-----------------------------------------------------------------------------------------------------------------------------
 	
-	
-	class SceneActorAdapter extends SceneUnitTagAdapter<SceneActor>
-	{
-		private static final long serialVersionUID = 1L;
-		
-		public SceneActorAdapter() {
-			super(SceneActor.class);
-		}
-		
-		@Override
-		public boolean isShowSelectUnitTool() {
-			return true;
-		}
-
-		@Override
-		public CellSprite getToolSprite() {
-			if (SelectUnitTool.getUnitTool().isVisible()) {
-				if (getSelectedPage() == this && SelectUnitTool.getUnitTool().getSelectedUnit() != null) {
-					return SelectUnitTool.getUnitTool().getSelectedUnit().getCPJSprite().getDisplayObject();
-				}
-			}
-			return null;
-		}
-		
-		@Override
-		public void updateAddUnit(SceneContainer scene, boolean catchMouse, int worldx, int worldy) 
-		{
-			super.updateAddUnit(scene, catchMouse, worldx, worldy);
-			
-			CellSprite cspr = getToolSprite();
-			
-			if (cspr != null)
-			{
-				if (scene.getRoot().isMouseDown(com.g2d.display.event.MouseEvent.BUTTON_LEFT)) 
-				{
-					SceneActor actor = new SceneActor(
-							SceneEditor.this, 
-							SelectUnitTool.getUnitTool().getSelectedUnit(),
-							worldx, 
-							worldy,
-							cspr.getSprite().getCurrentAnimate());
-					addTagUnit(actor);
-				}
-			}
-		}
-	}
-
-//	-----------------------------------------------------------------------------------------------------------------------------
-	
-	class SceneImmutableAdapter extends SceneUnitTagAdapter<SceneImmutable>
+	class SceneImmutableAdapter extends SceneUnitTagAdapter<SceneImmutable, CellSprite>
 	{
 		private static final long serialVersionUID = 1L;
 		
@@ -837,7 +876,6 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 			return true;
 		}
 
-		@Override
 		public CellSprite getToolSprite() {
 			if (SelectUnitTool.getUnitTool().isVisible()) {
 				if (getSelectedPage() == this && SelectUnitTool.getUnitTool().getSelectedSpr() != null) {
@@ -850,12 +888,17 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		@Override
 		public void updateAddUnit(SceneContainer scene, boolean catchMouse, int worldx, int worldy) 
 		{
-			super.updateAddUnit(scene, catchMouse, worldx, worldy);
-			
 			CellSprite cspr = getToolSprite();
 			
 			if (cspr != null)
 			{
+				if (scene.getRoot().isMouseWheelUP()) {
+					cspr.getSprite().nextAnimate(-1);
+				}
+				if (scene.getRoot().isMouseWheelDown()) {
+					cspr.getSprite().nextAnimate(1);
+				}
+			
 				if (scene.getRoot().isMouseDown(com.g2d.display.event.MouseEvent.BUTTON_LEFT)) 
 				{
 					SceneImmutable spr = new SceneImmutable(
@@ -868,12 +911,39 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 				}
 			}
 		}
+		@Override
+		public void clearAddUnitObject(SceneContainer scene) {
+			
+		}
+		public void renderAddUnitObject(SceneContainer scene, Graphics2D g)
+		{
+			CellSprite cspr = getToolSprite();
+			
+			if (cspr != null)
+			{
+				g.translate(scene.getMouseX(), scene.getMouseY());
+				scene.setAlpha(g, 0.75f);
+				{
+					cspr.render(g);
+					cspr.getSprite().nextCycFrame();
+					g.setColor(Color.WHITE);
+					Drawing.drawStringBorder(g, 
+							cspr.getSprite().getCurrentAnimate() + "/" + cspr.getSprite().getAnimateCount(), 
+							0, cspr.getSprite().getVisibleBotton() + 1, 
+							Drawing.TEXT_ANCHOR_HCENTER | Drawing.TEXT_ANCHOR_TOP
+							);
+				}
+				scene.setAlpha(g, 1f);
+				g.translate(-scene.getMouseX(), -scene.getMouseY());
+			}
+		
+		}
 		
 	}
 
 //	-----------------------------------------------------------------------------------------------------------------------------
 	
-	class SceneRegionAdapter extends SceneUnitTagAdapter<SceneRegion>
+	class SceneRegionAdapter extends SceneUnitTagAdapter<SceneRegion, DisplayObject>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -883,12 +953,10 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		public SceneRegionAdapter() {
 			super(SceneRegion.class);
 		}
-		
+
 		@Override
 		public void updateAddUnit(SceneContainer scene, boolean catchMouse, int worldx, int worldy) 
 		{
-			super.updateAddUnit(scene, catchMouse, worldx, worldy);
-			
 			add_region_dp.x = worldx; 
 			add_region_dp.y = worldy;
 			
@@ -926,8 +994,6 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		@Override
 		public void renderAddUnitObject(SceneContainer scene, Graphics2D g)
 		{
-			super.renderAddUnitObject(scene, g);
-			
 			if (add_region_sp != null)
 			{
 				g.translate(-scene.getCameraX(), -scene.getCameraY());
@@ -939,7 +1005,6 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 				g.fillRect(sx, sy, sw, sh);
 				g.translate(+scene.getCameraX(), +scene.getCameraY());
 			}
-		
 		}
 		
 	}
@@ -949,7 +1014,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 
 //	-----------------------------------------------------------------------------------------------------------------------------
 
-	class ScenePointAdapter extends SceneUnitTagAdapter<ScenePoint>
+	class ScenePointAdapter extends SceneUnitTagAdapter<ScenePoint, DisplayObject>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -957,6 +1022,9 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		
 		public ScenePointAdapter() {
 			super(ScenePoint.class);
+		}
+		@Override
+		public void clearAddUnitObject(SceneContainer scene) {
 		}
 		
 		@Override
@@ -976,12 +1044,9 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 				}
 			}
 		}
-		
 		@Override
 		public void updateAddUnit(SceneContainer scene, boolean catchMouse, int worldx, int worldy) 
 		{
-			super.updateAddUnit(scene, catchMouse, worldx, worldy);
-			
 			if (scene.getRoot().isMouseDown(com.g2d.display.event.MouseEvent.BUTTON_LEFT)) 
 			{
 				ScenePoint spr = new ScenePoint(SceneEditor.this, worldx, worldy);
@@ -1002,13 +1067,62 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 
 		@Override
 		public void renderAddUnitObject(SceneContainer scene, Graphics2D g) {
-			super.renderAddUnitObject(scene, g);
 			g.setColor(Color.WHITE);
 			g.fillRect(scene.getMouseX()-4, scene.getMouseY()-4, 8, 8);
 		}
 		
 	}
+
+//	-----------------------------------------------------------------------------------------------------------------------------
 	
+	class SceneEffectAdapter extends SceneUnitTagAdapter<SceneEffect, DisplayObject>
+	{
+		public SceneEffectAdapter() {
+			super(SceneEffect.class);
+		}
+		
+		@Override
+		public boolean isShowSelectUnitTool() {
+			return true;
+		}
+
+		@Override
+		public void clearAddUnitObject(SceneContainer scene) {
+		}
+		
+		public DEffect getToolEffect() {
+			if (SelectUnitTool.getUnitTool().isVisible()) {
+				DEffect de = SelectUnitTool.getUnitTool().getSelectedEffect();
+				if (getSelectedPage() == this && de != null) {
+					return de;
+				}
+			}
+			return null;
+		}
+
+		@Override
+		public void updateAddUnit(SceneContainer scene, boolean catchMouse, int worldx, int worldy)
+		{
+			if (scene.getRoot().isMouseDown(com.g2d.display.event.MouseEvent.BUTTON_LEFT)) {
+				DEffect de = getToolEffect();
+				if (de != null) {
+					SceneEffect effect = new SceneEffect(
+							SceneEditor.this, 
+							worldx, 
+							worldy,
+							de);
+					addTagUnit(effect);
+				}
+			}
+		}
+		
+		@Override
+		public void renderAddUnitObject(SceneContainer scene, Graphics2D g) {
+			g.setColor(Color.WHITE);
+			g.fillRect(scene.getMouseX()-16, scene.getMouseY()-16, 32, 32);
+		}
+	}
+
 	
 //	-----------------------------------------------------------------------------------------------------------------------------
 	

@@ -4,6 +4,7 @@ import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Graphics2D;
+import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -51,7 +52,48 @@ public class ParticleDisplay extends com.g2d.display.particle.ParticleSystem
 			layer.update();
 		}
 	}
+
+//	------------------------------------------------------------------------------------------------------------------------
 	
+	public static Shape getOriginShape(Layer layer)
+	{
+		// spawn shape
+		Shape shape = layer.origin_shape.getShape();
+		AffineTransform tx = new AffineTransform();
+		tx.translate(layer.origin_x, layer.origin_y);
+		tx.rotate(layer.origin_rotation_angle);
+		tx.scale(layer.origin_scale_x, layer.origin_scale_y);
+		return shape;
+	}
+	
+	public static Vector getOriginPosition(Layer layer)
+	{
+		// spawn origin
+		Vector pos = layer.origin_shape.getPosition(random);
+		MathVector.move(pos, layer.origin_x, layer.origin_y);
+		MathVector.rotate(pos, layer.origin_rotation_angle);
+		pos.setVectorX(pos.getVectorX() * layer.origin_scale_x);
+		pos.setVectorY(pos.getVectorY() * layer.origin_scale_y);
+		return pos;
+	}
+	
+	public static Vector getSpawnSpeed(Layer layer, Vector origin_pos)
+	{
+		Vector speed	= new TVector();
+		if (!layer.spawn_orgin_angle) {
+			MathVector.movePolar(speed, 
+					layer.spawn_angle    + CUtil.getRandom(random, -layer.spawn_angle_range,    layer.spawn_angle_range), 
+					layer.spawn_velocity + CUtil.getRandom(random, -layer.spawn_velocity_range, layer.spawn_velocity_range));
+		} else {
+			double degree = MathVector.getDegree(origin_pos.getVectorX(), origin_pos.getVectorY());
+			MathVector.movePolar(speed, 
+					degree, 
+					layer.spawn_velocity + CUtil.getRandom(random, -layer.spawn_velocity_range, layer.spawn_velocity_range));
+		}
+		return speed;
+	}
+	
+//	------------------------------------------------------------------------------------------------------------------------
 	/**
 	 * Layer Display Object
 	 */
@@ -74,33 +116,17 @@ public class ParticleDisplay extends com.g2d.display.particle.ParticleSystem
 				SingleObject node = idle_nodes.poll();
 				if (node != null) {
 					// spawn origin
-					Vector pos			= layer.origin_shape.getPosition(random);
-					MathVector.move(pos, layer.origin_x, layer.origin_y);
-					MathVector.rotate(pos, layer.origin_rotation_angle);
-					pos.setVectorX(pos.getVectorX() * layer.origin_scale_x);
-					pos.setVectorY(pos.getVectorY() * layer.origin_scale_y);
-					
+					Vector origin_pos	= getOriginPosition(layer);
 					// spawn speed direction acc
-					Vector speed		= new TVector();
-					if (!layer.spawn_orgin_angle) {
-						MathVector.movePolar(speed, 
-								layer.spawn_angle    + CUtil.getRandom(random, -layer.spawn_angle_range,    layer.spawn_angle_range), 
-								layer.spawn_velocity + CUtil.getRandom(random, -layer.spawn_velocity_range, layer.spawn_velocity_range));
-					} else {
-						double degree = MathVector.getDegree(pos.getVectorX(), pos.getVectorY());
-						MathVector.movePolar(speed, 
-								degree, 
-								layer.spawn_velocity + CUtil.getRandom(random, -layer.spawn_velocity_range, layer.spawn_velocity_range));
-					}
+					Vector spawn_speed	= getSpawnSpeed(layer, origin_pos);
 					
 					// node
 					node.age_time		= CUtil.getRandom(random, layer.particle_min_age, layer.particle_max_age);
 					node.timer			= 0;
-					
-					node.x				= ParticleDisplay.this.x + (float)pos.getVectorX();
-					node.y				= ParticleDisplay.this.y + (float)pos.getVectorY();
-					node.speed			.setVectorX(speed.getVectorX());
-					node.speed			.setVectorY(speed.getVectorY());
+					node.x				= ParticleDisplay.this.x + (float)origin_pos.getVectorX();
+					node.y				= ParticleDisplay.this.y + (float)origin_pos.getVectorY();
+					node.speed			.setVectorX(spawn_speed.getVectorX());
+					node.speed			.setVectorY(spawn_speed.getVectorY());
 					node.acceleration	= layer.spawn_acc + CUtil.getRandom(random, -layer.spawn_acc_range, layer.spawn_acc_range);
 					
 					if (ParticleDisplay.this.getParent() != null) {
