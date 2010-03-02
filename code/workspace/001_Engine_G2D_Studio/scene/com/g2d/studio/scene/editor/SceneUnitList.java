@@ -149,17 +149,22 @@ public class SceneUnitList<T extends SceneUnitTag<?>> extends JPanel implements 
 		JMenuItem info 		= new JMenuItem();
 		JMenuItem rename 	= new JMenuItem("重命名");
 		JMenuItem property	= new JMenuItem("属性");
+		JMenuItem delete	= new JMenuItem("删除");
 		
 		public UnitListMenu(SceneUnitTag<?> unit)
 		{
 			this.unit = unit;
 			info.setText(unit.getClass().getSimpleName() + " : " + unit.getListName());
 			info.setEnabled(false);
+			
 			rename.addActionListener(this);
 			property.addActionListener(this);
+			delete.addActionListener(this);
+			
 			this.add(info);
 			this.add(rename);
 			this.add(property);
+			this.add(delete);
 		}
 		
 		public void actionPerformed(ActionEvent e) 
@@ -178,6 +183,10 @@ public class SceneUnitList<T extends SceneUnitTag<?>> extends JPanel implements 
 				editor.setCenter();
 				editor.setAlwaysOnTop(true);
 				editor.setVisible(true);
+			}
+			else if (e.getSource() == delete) {
+				viewer.removeUnit(unit);
+				viewer.refreshAll();
 			}
 		}
 	}

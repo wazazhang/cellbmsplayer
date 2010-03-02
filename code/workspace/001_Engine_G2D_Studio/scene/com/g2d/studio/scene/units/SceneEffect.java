@@ -20,6 +20,7 @@ import com.cell.rpg.scene.Region;
 import com.g2d.Tools;
 import com.g2d.annotation.Property;
 import com.g2d.display.DisplayObjectContainer;
+import com.g2d.display.Sprite;
 import com.g2d.display.particle.Layer;
 import com.g2d.display.particle.ParticleDisplay;
 import com.g2d.display.ui.Menu;
@@ -90,13 +91,12 @@ public class SceneEffect extends com.g2d.game.rpg.Unit implements SceneUnitTag<E
 	
 	@Override
 	public void added(DisplayObjectContainer parent) {
-		enable				= true;
-		enable_drag			= true;
-		enable_input		= true;
-		enable_focus 		= true;
-		enable_input 		= true;
+		this.enable			= true;
+		this.enable_focus 	= true;
+		this.enable_drag	= true;
+		this.enable_input	= true;
+		this.priority 		= Integer.MAX_VALUE / 2;
 		super.added(parent);
-		
 	}
 
 //	--------------------------------------------------------------------------------------------------------
@@ -149,7 +149,9 @@ public class SceneEffect extends com.g2d.game.rpg.Unit implements SceneUnitTag<E
 					}
 				}
 				this.particles = new ParticleDisplay(deffect.getData().particles);
-				this.addChild(this.particles);
+				Sprite layers = new Sprite();
+				layers.addChild(this.particles);
+				this.addChild(layers);
 			} catch (Exception err) {
 				err.printStackTrace();
 			}

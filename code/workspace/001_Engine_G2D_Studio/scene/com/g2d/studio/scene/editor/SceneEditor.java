@@ -1118,8 +1118,11 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		
 		@Override
 		public void renderAddUnitObject(SceneContainer scene, Graphics2D g) {
+			int sx = scene.getMouseX();
+			int sy = scene.getMouseY();
 			g.setColor(Color.WHITE);
-			g.fillRect(scene.getMouseX()-16, scene.getMouseY()-16, 32, 32);
+			g.drawLine(sx-16, sy, sx+16, sy);
+			g.drawLine(sx, sy-16, sx, sy+16);
 		}
 	}
 
