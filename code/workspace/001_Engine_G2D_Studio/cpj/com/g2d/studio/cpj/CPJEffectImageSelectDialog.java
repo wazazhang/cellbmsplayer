@@ -18,6 +18,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -31,9 +32,11 @@ import com.g2d.Tools;
 import com.g2d.cell.CellSetResource.ImagesSet;
 import com.g2d.studio.Config;
 import com.g2d.studio.Studio;
+import com.g2d.studio.StudioResource;
 import com.g2d.studio.StudioResource.StreamTypeTiles;
 import com.g2d.studio.cpj.entity.CPJFile;
 import com.g2d.studio.cpj.entity.CPJImages;
+import com.g2d.studio.cpj.entity.CPJSprite;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.swing.G2DList;
 import com.g2d.studio.swing.G2DListItem;
@@ -42,17 +45,16 @@ import com.g2d.util.AbstractDialog;
 
 public class CPJEffectImageSelectDialog extends AbstractDialog implements ActionListener, ListSelectionListener
 {
-	JSplitPane	split	= new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+	JSplitPane			split	= new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 	
-	JList		list	= new JList();
+	G2DList<CPJSprite>	list	= new G2DList<CPJSprite>();
+	Vector<CPJSprite>	list_data;
 
-	ImageList	childs;
+	ImageList			childs;
 	
-	JButton 	ok		= new JButton("确定");
+	JButton 			ok		= new JButton("确定");
 	
-	Vector<CPJImages> list_data = new Vector<CPJImages>();
-	
-	TileImage	reslut_data;
+	TileImage			reslut_data;
 	
 	public CPJEffectImageSelectDialog(Component owner) 
 	{
@@ -65,25 +67,16 @@ public class CPJEffectImageSelectDialog extends AbstractDialog implements Action
 		this.add(ok, BorderLayout.SOUTH);
 		this.ok.addActionListener(this);
 
-		{
-			ArrayList<CPJFile> files = CPJFile.listFile(
-					Studio.getInstance().project_path.getPath(), 
-					Config.RES_EFFECT_ROOT, 
-					CPJResourceType.EFFECT);
-			for (int i=0; i<files.size(); i++) {
-				CPJFile file = files.get(i);
-				for (ImagesSet imgset : file.getSetResource().ImgTable.values()) {
-					CPJImages images = new CPJImages(file, imgset.Name);
-					list_data.add(images);
-				}
-			}
-		}
+		this.list_data = Studio.getInstance().getCPJResourceManager().getNodes(CPJResourceType.EFFECT, CPJSprite.class);
 		this.list.setListData(list_data);
 		this.list.addListSelectionListener(this);
+		this.list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+		this.list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+		this.list.setVisibleRowCount(-1);
 		
 		JScrollPane top = new JScrollPane(list);
-		top.setPreferredSize(new Dimension(400, 200));
-		top.setMinimumSize(new Dimension(400, 200));
+		top.setPreferredSize(new Dimension(400, 100));
+		top.setMinimumSize(new Dimension(400, 100));
 		
 		split.setTopComponent(top);
 		split.setBottomComponent(new JPanel());
@@ -91,19 +84,21 @@ public class CPJEffectImageSelectDialog extends AbstractDialog implements Action
 	
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
-		if (list.getSelectedValue() instanceof CPJImages) {
-			CPJImages images = (CPJImages)list.getSelectedValue();
-			childs = new ImageList(images);
+		if (list.getSelectedValue() instanceof CPJSprite) {
+			CPJSprite sprite = (CPJSprite)list.getSelectedValue();
+			childs = new ImageList(sprite);
 			split.setBottomComponent(new JScrollPane(childs));
 		}
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		CPJImages object = (CPJImages)list.getSelectedValue();
-		if (object!=null && childs!=null) {
+		CPJSprite object = (CPJSprite)list.getSelectedValue();
+		if (object!=null && object.parent!=null && childs!=null) {
 			SubImage index = (SubImage)childs.getSelectedValue();
-			this.reslut_data = new TileImage(object.parent.name, object.images_name, index.index);
+			if (childs!=null) {
+				this.reslut_data = new TileImage(object.parent.name, object.name, index.index);
+			}
 		}
 		this.setVisible(false);
 	}
@@ -118,51 +113,48 @@ public class CPJEffectImageSelectDialog extends AbstractDialog implements Action
 	public static class TileImage
 	{
 		final public String 		parent_name;
-		final public String 		images_name;
+		final public String 		sprite_name;
 		final public int			index;
 		
-		public TileImage(String parent_name, String images_name, int index) 
+		public TileImage(String parent_name, String sprite_name, int index) 
 		{
 			this.parent_name	= parent_name;
-			this.images_name	= images_name;
+			this.sprite_name	= sprite_name;
 			this.index			= index;
 		}
 		
 		@Override
 		public String toString() {
-			return this.parent_name + "/" + this.images_name + "[" + index + "]";
+			return this.parent_name + "/" + this.sprite_name + "[" + index + "]";
 		}
 		
-		public BufferedImage getEffectImage() {
-			for (CPJFile file : CPJFile.listFile(
-					Studio.getInstance().project_path.getPath(), 
-					Config.RES_EFFECT_ROOT, 
-					CPJResourceType.EFFECT)) {
-				if (file.name.equals(this.parent_name)) {
-					for (ImagesSet imgset : file.getSetResource().ImgTable.values()) {
-						if (imgset.Name.equals(this.images_name)) {
-							CPJImages images = new CPJImages(file, imgset.Name);
-							synchronized (images.parent.getSetResource()) {
-								boolean unload = !images.parent.getSetResource().isLoadImages();
-								try{
-									images.parent.getSetResource().initAllStreamImages();
-									IImages tiles = images.parent.getSetResource().getImages(images.images_name);
-									for (int s=0; s<tiles.getCount(); s++) {
-										IImage tile = tiles.getImage(s);
-										if (tile!=null && s == this.index) {
-											return Tools.createImage(tile);
-										}
-									}
-								} finally {
-									if (unload) {
-										images.parent.getSetResource().destoryAllStreamImages();
-									}
-								}
+		public BufferedImage getEffectImage() 
+		{
+			try {
+				CPJIndex<CPJSprite> index = Studio.getInstance().getCPJResourceManager().getNode(
+						 CPJResourceType.EFFECT, 
+						 parent_name, 
+						 sprite_name);
+				if (index != null) {
+					CPJFile parent = index.getObject().parent;
+					synchronized (parent.getSetResource()) {
+						boolean unload = !parent.getSetResource().isLoadImages();
+						try{
+							parent.getSetResource().initAllStreamImages();
+							IImages	tiles	= parent.getSetResource().getImages(index.getObject().getSetObject().ImagesName);
+							IImage	tile	= tiles.getImage(this.index);
+							if (tile!=null) {
+								return Tools.createImage(tile);
 							}
-							
+						} finally {
+							if (unload) {
+								parent.getSetResource().destoryAllStreamImages();
+							}
 						}
 					}
 				}
+			} catch(Exception err) {
+				err.printStackTrace();
 			}
 			return null;
 		}
@@ -204,15 +196,18 @@ public class CPJEffectImageSelectDialog extends AbstractDialog implements Action
 	
 	class ImageList extends G2DList<SubImage>
 	{
-		public ImageList(CPJImages images) 
+		public ImageList(CPJSprite sprite) 
 		{
+			super.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+			super.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+			super.setVisibleRowCount(-1);
+
 			Vector<SubImage> items = new Vector<SubImage>();
-			synchronized (images.parent.getSetResource()) 
-			{
-				boolean unload = !images.parent.getSetResource().isLoadImages();
+			synchronized (sprite.parent.getSetResource()) {
+				boolean unload = !sprite.parent.getSetResource().isLoadImages();
 				try{
-					images.parent.getSetResource().initAllStreamImages();
-					IImages tiles = images.parent.getSetResource().getImages(images.images_name);
+					sprite.parent.getSetResource().initAllStreamImages();
+					IImages tiles = sprite.parent.getSetResource().getImages(sprite.getSetObject().ImagesName);
 					for (int i=0; i<tiles.getCount(); i++) {
 						IImage tile = tiles.getImage(i);
 						if (tile != null) {
@@ -221,7 +216,7 @@ public class CPJEffectImageSelectDialog extends AbstractDialog implements Action
 					}
 				} finally {
 					if (unload) {
-						images.parent.getSetResource().destoryAllStreamImages();
+						sprite.parent.getSetResource().destoryAllStreamImages();
 					}
 				}
 			}

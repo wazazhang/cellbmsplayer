@@ -300,7 +300,7 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 			void getData(Layer layer) {
 				if (tile_image!=null) {
 					layer.cpj_project_name	= tile_image.parent_name;
-					layer.cpj_images_name	= tile_image.images_name;
+					layer.cpj_sprite_name	= tile_image.sprite_name;
 					layer.cpj_image_id		= tile_image.index;
 					layer.image				= tile_snap;
 				}
@@ -309,7 +309,7 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 			void setData(Layer layer) {
 				tile_image = new TileImage(
 						layer.cpj_project_name, 
-						layer.cpj_images_name, 
+						layer.cpj_sprite_name, 
 						layer.cpj_image_id
 						);
 				tile_snap	= tile_image.getEffectImage();

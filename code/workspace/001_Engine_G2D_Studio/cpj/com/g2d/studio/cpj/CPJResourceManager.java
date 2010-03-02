@@ -250,7 +250,8 @@ public class CPJResourceManager extends ManagerForm implements MouseListener
 			list.append(
 					spr.parent.getResourcePath() + ";" +
 					spr.parent.getName() + ";" + 
-					spr.getName() + "\n");
+					spr.getName() + ";" + 
+					"\n");
 		}
 		return list.toString();
 	}
