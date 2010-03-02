@@ -289,6 +289,7 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 					tile_image	= ret;
 					tile_snap	= tile_image.getEffectImage();
 					if (tile_snap!=null) {
+						layer.image = tile_snap;
 						image_view.setIcon(Tools.createIcon(tile_snap));
 					}
 				} else {

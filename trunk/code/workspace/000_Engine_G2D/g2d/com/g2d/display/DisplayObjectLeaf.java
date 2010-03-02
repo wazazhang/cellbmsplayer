@@ -4,8 +4,11 @@ import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
 /**
- * 用于快速渲染的根节点
- * 该节点不会恢复Clip,Composite
+ * 用于快速渲染的根节点<br>
+ * 该节点只恢复AffineTransform<br>
+ * 该节点不会恢复Clip,Composite<br>
+ * 注意：该节点可能会影响父节点的
+ * renderInteractive(Graphics2D g), renderAfter(Graphics2D g)
  */
 public abstract class DisplayObjectLeaf extends DisplayObject
 {
