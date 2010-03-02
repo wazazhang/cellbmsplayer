@@ -1,6 +1,9 @@
 package com.g2d.display.particle;
 
+import java.awt.Shape;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 import java.util.Random;
 
@@ -19,6 +22,9 @@ public interface OriginShape extends Serializable
 	 */
 	public Vector getPosition(Random random);
 	
+	public Shape getShape();
+	
+//	---------------------------------------------------------------------------------------------------------------------------------
 	
 	/** 矩形  */
 	public static class Rectangle implements OriginShape
@@ -31,6 +37,11 @@ public interface OriginShape extends Serializable
 					CUtil.getRandom(random, x, x+w), 
 					CUtil.getRandom(random, y, y+h));
 			return vector;
+		}
+		
+		@Override
+		public Shape getShape() {
+			return new Rectangle2D.Float(x, y, w, h);
 		}
 	}
 	
@@ -52,6 +63,12 @@ public interface OriginShape extends Serializable
 					CUtil.getRandom(random, 0, (float)(Math.PI*2)), 
 					CUtil.getRandom(random, radius1, radius2));
 			return vector;
+		}
+		
+		@Override
+		public Shape getShape() {
+			float r = Math.max(radius1, radius2);
+			return new Ellipse2D.Float(-r, -r, r * 2, r * 2);
 		}
 	}
 }

@@ -3,6 +3,7 @@ package com.g2d.studio.gameedit.dynamic;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 
+import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
@@ -10,12 +11,14 @@ import javax.swing.JTree;
 
 import com.cell.CIO;
 import com.cell.rpg.template.TEffect;
+import com.g2d.Tools;
 import com.g2d.display.particle.Layer;
 import com.g2d.studio.gameedit.EffectEditor;
 import com.g2d.studio.gameedit.EffectTreeView;
 import com.g2d.studio.gameedit.ObjectViewer;
 import com.g2d.studio.gameedit.EffectTreeView.EffectGroup;
 import com.g2d.studio.gameedit.dynamic.DynamicNode.DynamicNodeMenu;
+import com.g2d.studio.res.Res;
 
 final public class DEffect extends DynamicNode<TEffect>
 {
@@ -47,10 +50,13 @@ final public class DEffect extends DynamicNode<TEffect>
 	}
 	
 	@Override
+	public ImageIcon getIcon(boolean update) {
+		return Tools.createIcon(Res.icon_res_3);
+	}
+	
+	@Override
 	public void onRightClicked(JTree tree, MouseEvent e) {
-		
 		new EffectMenu().show(tree, e.getX(), e.getY());
-
 	}
 	
 	@Override
