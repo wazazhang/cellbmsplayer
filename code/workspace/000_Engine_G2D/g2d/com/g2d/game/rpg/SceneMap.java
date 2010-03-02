@@ -265,14 +265,17 @@ public abstract class SceneMap extends DisplayObjectContainer implements AstarMa
 
 	public void added(DisplayObjectContainer parent) {}
 	public void removed(DisplayObjectContainer parent) {}
-	public void update() {
+	public void update() {}
+	public void render(Graphics2D g) {}
+
+	@Override
+	protected void renderAfter(Graphics2D g) {
+		super.renderAfter(g);
 		if (runtime_sort) {
 			super.sort();
 		}
 	}
-
-	public void render(Graphics2D g) {}
-
+	
 	abstract public BufferedImage createMiniMap(double width, double height);
 
 	abstract public BufferedImage createScreenshot(int x, int y, double width, double height);
