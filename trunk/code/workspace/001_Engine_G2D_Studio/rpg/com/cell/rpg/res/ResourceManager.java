@@ -9,6 +9,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import com.cell.CIO;
 import com.cell.CUtil;
+import com.cell.gfx.IImage;
+import com.cell.gfx.IImages;
 import com.cell.rpg.NamedObject;
 import com.cell.rpg.RPGObject;
 import com.cell.rpg.io.RPGObjectMap;
@@ -19,13 +21,16 @@ import com.cell.rpg.res.ResourceSet.SpriteSet;
 import com.cell.rpg.scene.Scene;
 import com.cell.rpg.scene.graph.SceneGraph;
 import com.cell.rpg.template.TAvatar;
+import com.cell.rpg.template.TEffect;
 import com.cell.rpg.template.TItem;
 import com.cell.rpg.template.TSkill;
 import com.cell.rpg.template.TUnit;
 import com.cell.rpg.template.TemplateNode;
 import com.cell.sound.ISound;
+import com.g2d.Tools;
 import com.g2d.cell.CellSetResource;
 import com.g2d.cell.CellSetResourceManager;
+import com.g2d.display.particle.Layer;
 
 
 /**
@@ -51,17 +56,21 @@ public abstract class ResourceManager extends CellSetResourceManager
 	protected Hashtable<Integer, TItem>		titems;
 	protected Hashtable<Integer, TAvatar>	tavatars;
 	protected Hashtable<Integer, TSkill>	tskills;
+	protected Hashtable<Integer, TEffect>	teffects;
+	
 	protected Hashtable<Integer, Quest> 	quests;
 	protected Hashtable<Integer, Scene>		scenes;
 
+	// xml templateds dynamic object and scene snap names
 	protected Hashtable<Integer, String> 	names_item_properties;
 	protected Hashtable<Integer, String>	names_tunits;
 	protected Hashtable<Integer, String>	names_titems;
 	protected Hashtable<Integer, String>	names_tavatars;
 	protected Hashtable<Integer, String>	names_tskills;
+	protected Hashtable<Integer, String>	names_teffects;
+	
 	protected Hashtable<Integer, String> 	names_quests;
 	protected Hashtable<Integer, String>	names_scenes;
-	
 	
 	// icons and sounds
 	protected Hashtable<String, AtomicReference<BufferedImage>> 		all_icons;
@@ -132,6 +141,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 		titems			= readRPGObjects(save_dir + "/objects/titem.obj/titem.list", 		TItem.class);
 		tavatars		= readRPGObjects(save_dir + "/objects/tavatar.obj/tavatar.list",	TAvatar.class);
 		tskills			= readRPGObjects(save_dir + "/objects/tskill.obj/tskill.list",		TSkill.class);
+		teffects		= readRPGObjects(save_dir + "/objects/teffect.obj/teffect.list",	TEffect.class);
 		
 		quests			= readRPGObjects(save_dir + "/quests/quest.list",		Quest.class);
 		scenes			= readRPGObjects(save_dir + "/scenes/scene.list", 		Scene.class);
@@ -145,6 +155,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 		names_titems			= readRPGObjectNames(save_dir + "/objects/titem.obj/name_titem.list");
 		names_tavatars			= readRPGObjectNames(save_dir + "/objects/tavatar.obj/name_tavatar.list");
 		names_tskills			= readRPGObjectNames(save_dir + "/objects/tskill.obj/name_tskill.list");
+		names_teffects			= readRPGObjectNames(save_dir + "/objects/teffect.obj/name_teffect.list");
 		
 		names_quests			= readRPGObjectNames(save_dir + "/quests/name_quest.list");
 		names_scenes			= readRPGObjectNames(save_dir + "/scenes/name_scene.list");
@@ -367,6 +378,10 @@ public abstract class ResourceManager extends CellSetResourceManager
 	public TSkill getTSkill(int id) {
 		return tskills.get(id);
 	}
+	public TEffect getTEffect(int id) {
+		return teffects.get(id);
+	}
+	
 	
 //	--------------------------------------------------------------------------------------------------------------------
 //	ItemProperties
@@ -427,10 +442,9 @@ public abstract class ResourceManager extends CellSetResourceManager
 	{
 		return all_sounds.get(index).get();
 	}
-	
-	
+
 //	--------------------------------------------------------------------------------------------------------------------
-//	
+//	Name List
 //	--------------------------------------------------------------------------------------------------------------------
 	
 	public String getItemPropertiesName(int id) {
@@ -448,6 +462,9 @@ public abstract class ResourceManager extends CellSetResourceManager
 	public String getTSkillName(int id) {
 		return names_tskills.get(id);
 	}
+	public String getTEffectName(int id) {
+		return names_teffects.get(id);
+	}
 	public String getQuestName(int id) {
 		return names_quests.get(id);
 	}
@@ -455,4 +472,46 @@ public abstract class ResourceManager extends CellSetResourceManager
 		return names_scenes.get(id);
 	}
 
+//	--------------------------------------------------------------------------------------------------------------------
+//	Name List
+//	--------------------------------------------------------------------------------------------------------------------
+	
+//	public Resource getEffectResource(String cpj_project_name) {
+//		try {
+//			Resource resource = getSet(res_root + "/" + "" + cpj_project_name);
+//			return resource;
+//		} catch (Throwable e) {
+//			e.printStackTrace();
+//		}
+//		return null;
+//	}
+	
+	public BufferedImage getEffectImage(Layer layer)
+	{
+		try
+		{
+			SpriteSet effect_set = getEffectSet(layer.cpj_project_name, layer.cpj_sprite_name);
+			CellSetResource				resource 	= effect_set.getSetResource(this);
+			CellSetResource.SpriteSet 	spr_set 	= effect_set.getSetObject(this);
+			IImages						images		= resource.getImages(spr_set.ImagesName);
+			IImage						image		= images.getImage(layer.cpj_image_id);
+
+			if (PRINT_VERBOS) {
+				System.out.println("\t" +
+						"get effect image : " + 
+						layer.cpj_project_name + "/" + 
+						layer.cpj_sprite_name + "(" + layer.cpj_image_id + ")");
+			}
+			
+			layer.image = Tools.createImage(image);
+			
+			return layer.image;
+		}
+		catch (Exception err) {
+			err.printStackTrace();
+		}
+		
+		return null;
+	}
+	
 }

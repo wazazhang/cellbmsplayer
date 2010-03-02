@@ -22,7 +22,7 @@ public class Layer implements Serializable
 	public String	cpj_project_name;
 	
 	/** CPJ图片组名*/
-	public String	cpj_images_name;
+	public String	cpj_sprite_name;
 	
 	/** CPJ图片组图片编号*/
 	public int		cpj_image_id;

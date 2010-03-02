@@ -142,7 +142,7 @@ public class SceneEffect extends com.g2d.game.rpg.Unit implements SceneUnitTag<E
 					if (layer.image == null) {
 						TileImage tile_image = new TileImage(
 								layer.cpj_project_name, 
-								layer.cpj_images_name, 
+								layer.cpj_sprite_name, 
 								layer.cpj_image_id
 								);
 						layer.image	= tile_image.getEffectImage();
