@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 
 import com.cell.rpg.scene.Scene;
 import com.g2d.Tools;
@@ -39,10 +40,14 @@ final public class SceneNode extends DynamicNode<Scene>
 				CPJResourceType.WORLD, 
 				scene.scene_node.cpj_project_name, 
 				scene.scene_node.cpj_object_id);
-		CPJWorld res_world = Studio.getInstance().getCPJResourceManager().getNode(world_index);
-		this.bind_data.scene_node.width		= res_world.set_object.Width;
-		this.bind_data.scene_node.height	= res_world.set_object.Height;
-		System.out.println("load a scene : " + scene.name + "   (" + scene.id + ")");
+		try {
+			CPJWorld res_world = Studio.getInstance().getCPJResourceManager().getNode(world_index);
+			this.bind_data.scene_node.width		= res_world.set_object.Width;
+			this.bind_data.scene_node.height	= res_world.set_object.Height;
+			System.out.println("load a scene : " + scene.name + "   (" + scene.id + ")");
+		} catch(Exception err) {
+			throw new RuntimeException("场景\""+scene.name+"\"读取错误！", err);
+		}
 	}
 	
 	@Override
