@@ -6,9 +6,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.EnumSet;
 
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 
 import com.cell.util.EnumManager.ValueEnum;
@@ -24,52 +26,64 @@ import com.g2d.studio.res.Res;
 
 public class ParticleViewer extends JFrame implements ActionListener
 {
+	final private EffectEditor cur_edit;
+
 	DisplayObjectPanel	display_object_panel	= new DisplayObjectPanel();
-	
+	JToolBar 			tools 					= new JToolBar();
 	JComboBox			composite_list			= new JComboBox(CompositeRule.getEnumNames());
 	
-	private EffectEditor cur_edit;
+	JCheckBox			toggle_show_debug		= new JCheckBox("显示坐标系");
+	JCheckBox			toggle_show_origin		= new JCheckBox("显示产生范围");
 	
-	public ParticleViewer() {
-		super.setTitle("粒子查看器");
-//		super.setIconImage(Res.icon_scene_graph);
-//		super.setLocation(Studio.getInstance().getIconManager().getLocation());
-//		super.setSize(Studio.getInstance().getIconManager().getSize());
+	ParticleStage		stage;
+	
+	public ParticleViewer(EffectEditor data) 
+	{
+		super.setTitle("粒子查看器 : " + data.getData().getName());
 		super.setSize(800, 600);
 		super.setAlwaysOnTop(true);
-
-		super.add(display_object_panel, BorderLayout.CENTER);
 		
-		JToolBar tools = new JToolBar();
-		tools.add(new JLabel("混合模式"));
-		tools.add(composite_list);
-		composite_list.addActionListener(this);
-//		super.add(tools, BorderLayout.SOUTH);
+		this.cur_edit = data;
+		{
+//			tools.add(new JLabel("混合模式"));
+//			tools.add(composite_list);
+//			composite_list.addActionListener(this);
+//			composite_list.setSelectedItem(CompositeRule.SRC_OVER.name());
+			
+			tools.add(toggle_show_debug);
+			toggle_show_debug.addActionListener(this);
+			
+			tools.add(toggle_show_origin);
+			toggle_show_origin.addActionListener(this);
+		}
+		add(display_object_panel, BorderLayout.CENTER);
+		add(tools, BorderLayout.SOUTH);
 		
+		stage = new ParticleStage();
 		display_object_panel.getCanvas().setFPS(Config.DEFAULT_FPS);
-		
-		composite_list.setSelectedItem(CompositeRule.SRC_OVER.name());
+		display_object_panel.getCanvas().changeStage(stage, data);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		try{
-			String name = composite_list.getSelectedItem().toString();
-			CompositeRule rule = CompositeRule.forName(name);
-//			ParticleDisplay.composite_rule = rule.rule;
-			System.out.println("Change composite rule : " + rule);
-		}catch(Exception err){
-			err.printStackTrace();
+		if (e.getSource() == composite_list) {
+			try{
+				String name = composite_list.getSelectedItem().toString();
+				CompositeRule rule = CompositeRule.forName(name);
+//				ParticleDisplay.composite_rule = rule.rule;
+				System.out.println("Change composite rule : " + rule);
+			}catch(Exception err){
+				err.printStackTrace();
+			}
+		} 
+		else if (e.getSource() == toggle_show_debug) {
+			stage.is_show_cross = toggle_show_debug.isSelected();
+		}
+		else if (e.getSource() == toggle_show_origin) {
+			stage.is_show_spawn_region = toggle_show_origin.isSelected();
 		}
 	}
 	
-	public void setParticleData(EffectEditor data) {
-		this.cur_edit = data;
-		this.setTitle("粒子查看器" + ": " + data.getData().getName());
-		ParticleStage stage = new ParticleStage();
-		display_object_panel.getCanvas().changeStage(stage, data);
-	}
-
 	@Override
 	public void setVisible(boolean b) {
 		if (b) {
@@ -80,18 +94,4 @@ public class ParticleViewer extends JFrame implements ActionListener
 		super.setVisible(b);
 	}
 	
-//	-------------------------------------------------------------------------------------------------------------------------
-
-	public static void main(String[] args) {
-		ParticleViewer view = new ParticleViewer(){
-			@Override
-			public void setVisible(boolean b) {
-				super.setVisible(b);
-				if (!b) {
-					System.exit(0);
-				}
-			}
-		};
-		view.setVisible(true);
-	}
 }

@@ -1,11 +1,13 @@
 package com.g2d.studio.particles;
 
 import java.awt.Color;
+import java.awt.Shape;
 import java.awt.event.MouseEvent;
 
 import com.g2d.display.Canvas;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.Stage;
+import com.g2d.display.particle.Layer;
 import com.g2d.display.particle.ParticleData;
 import com.g2d.display.particle.ParticleDisplay;
 import com.g2d.studio.gameedit.EffectEditor;
@@ -14,6 +16,9 @@ public class ParticleStage extends Stage
 {
 	EffectEditor 	cur_edit;
 	ParticleDisplay	particle;
+	
+	boolean			is_show_cross 			= false;
+	boolean			is_show_spawn_region	= false;
 	
 	@Override
 	public void inited(Canvas root, Object[] args) {
@@ -44,9 +49,32 @@ public class ParticleStage extends Stage
 		}
 	}
 
-	public void render(java.awt.Graphics2D g) {
+	public void render(java.awt.Graphics2D g) 
+	{
 		g.setColor(Color.BLACK);
 		g.fill(local_bounds);
+		
+		if (is_show_cross) {
+			g.setColor(Color.GRAY);
+			g.drawLine(0, particle.getY(), getWidth(), particle.getY());
+			g.drawLine(particle.getX(), 0, particle.getX(), getHeight());
+		}
+		
+		if (is_show_spawn_region) {
+			g.setColor(Color.WHITE);
+			for (Layer layer : particle.data) {
+				Shape shape = ParticleDisplay.getOriginShape(layer);
+				double tx = particle.x;
+				double ty = particle.y;
+				try{
+					g.translate(tx, ty);
+					g.draw(shape);
+				}finally{
+					g.translate(-tx, -ty);
+				}
+			}
+		}
+		
 	}
 	
 }
