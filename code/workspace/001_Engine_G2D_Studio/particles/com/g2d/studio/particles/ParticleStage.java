@@ -8,6 +8,7 @@ import java.awt.event.MouseEvent;
 
 import com.g2d.display.Canvas;
 import com.g2d.display.DisplayObjectContainer;
+import com.g2d.display.Sprite;
 import com.g2d.display.Stage;
 import com.g2d.display.particle.Layer;
 import com.g2d.display.particle.ParticleData;
@@ -62,11 +63,7 @@ public class ParticleStage extends Stage
 			g.drawLine(0, particle.getY(), getWidth(), particle.getY());
 			g.drawLine(particle.getX(), 0, particle.getX(), getHeight());
 		}
-	}
-	
-	@Override
-	protected void renderAfter(Graphics2D g)
-	{
+
 		if (is_show_spawn_region) {
 			g.setColor(Color.WHITE);
 			for (Layer layer : particle.data) {
@@ -94,6 +91,11 @@ public class ParticleStage extends Stage
 				g.translate(-tx, -ty);
 			}
 		}
+	
+		
 	}
+	
+	
+	
 	
 }
