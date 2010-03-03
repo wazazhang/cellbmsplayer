@@ -20,6 +20,7 @@ import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.DisplayObjectLeaf;
 import com.g2d.display.Sprite;
 import com.g2d.display.particle.Layer.TimeNode;
+import com.g2d.display.particle.OriginShape.Rectangle;
 
 
 public class ParticleDisplay extends com.g2d.display.particle.ParticleSystem
@@ -38,6 +39,7 @@ public class ParticleDisplay extends com.g2d.display.particle.ParticleSystem
 		for (Layer layer : data) {
 			layers.add(new LayerObject(layer));
 		}
+		this.local_bounds.setBounds(getOriginBounds(data));
 	}
 	
 	public void spawn() {
@@ -55,14 +57,30 @@ public class ParticleDisplay extends com.g2d.display.particle.ParticleSystem
 
 //	------------------------------------------------------------------------------------------------------------------------
 	
+	public static java.awt.Rectangle getOriginBounds(ParticleData data) {
+		int x1=0, y1=0, x2=0, y2=0;
+		for (Layer layer : data) {
+			java.awt.Rectangle shape = getOriginShape(layer).getBounds();
+			x1 = Math.min(x1, shape.x);
+			y1 = Math.min(y1, shape.y);
+			x2 = Math.max(x2, shape.x+shape.width);
+			y2 = Math.max(y2, shape.y+shape.height);
+		}
+		return new java.awt.Rectangle(x1, y1, x2-x1, y2-y1);
+	}
+	
 	public static Shape getOriginShape(Layer layer)
 	{
 		// spawn shape
 		Shape shape = layer.origin_shape.getShape();
-		AffineTransform tx = new AffineTransform();
-		tx.translate(layer.origin_x, layer.origin_y);
-		tx.rotate(layer.origin_rotation_angle);
-		tx.scale(layer.origin_scale_x, layer.origin_scale_y);
+				
+		shape = AffineTransform.getScaleInstance(layer.origin_scale_x, layer.origin_scale_y)
+				.createTransformedShape(shape);
+		shape = AffineTransform.getRotateInstance(layer.origin_rotation_angle)
+				.createTransformedShape(shape);
+		shape = AffineTransform.getTranslateInstance(layer.origin_x, layer.origin_y)
+				.createTransformedShape(shape);
+		
 		return shape;
 	}
 	
@@ -70,10 +88,9 @@ public class ParticleDisplay extends com.g2d.display.particle.ParticleSystem
 	{
 		// spawn origin
 		Vector pos = layer.origin_shape.getPosition(random);
-		MathVector.move(pos, layer.origin_x, layer.origin_y);
+		MathVector.scale(pos, layer.origin_scale_x, layer.origin_scale_y);
 		MathVector.rotate(pos, layer.origin_rotation_angle);
-		pos.setVectorX(pos.getVectorX() * layer.origin_scale_x);
-		pos.setVectorY(pos.getVectorY() * layer.origin_scale_y);
+		MathVector.move(pos, layer.origin_x, layer.origin_y);
 		return pos;
 	}
 	

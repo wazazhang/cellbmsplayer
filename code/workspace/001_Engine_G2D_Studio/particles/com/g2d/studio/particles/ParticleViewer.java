@@ -33,7 +33,8 @@ public class ParticleViewer extends JFrame implements ActionListener
 	JComboBox			composite_list			= new JComboBox(CompositeRule.getEnumNames());
 	
 	JCheckBox			toggle_show_debug		= new JCheckBox("显示坐标系");
-	JCheckBox			toggle_show_origin		= new JCheckBox("显示产生范围");
+	JCheckBox			toggle_show_origin		= new JCheckBox("显示产生区域");
+	JCheckBox			toggle_show_bounds		= new JCheckBox("显示产生范围");
 	
 	ParticleStage		stage;
 	
@@ -55,6 +56,10 @@ public class ParticleViewer extends JFrame implements ActionListener
 			
 			tools.add(toggle_show_origin);
 			toggle_show_origin.addActionListener(this);
+		
+			tools.add(toggle_show_bounds);
+			toggle_show_bounds.addActionListener(this);
+			
 		}
 		add(display_object_panel, BorderLayout.CENTER);
 		add(tools, BorderLayout.SOUTH);
@@ -81,6 +86,9 @@ public class ParticleViewer extends JFrame implements ActionListener
 		}
 		else if (e.getSource() == toggle_show_origin) {
 			stage.is_show_spawn_region = toggle_show_origin.isSelected();
+		}
+		else if (e.getSource() == toggle_show_bounds) {
+			stage.is_show_spawn_bounds = toggle_show_bounds.isSelected();
 		}
 	}
 	

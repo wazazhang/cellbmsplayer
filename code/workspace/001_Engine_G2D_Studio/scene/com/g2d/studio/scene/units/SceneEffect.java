@@ -6,6 +6,7 @@ import java.awt.Composite;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Vector;
@@ -50,9 +51,11 @@ public class SceneEffect extends com.g2d.game.rpg.Unit implements SceneUnitTag<E
 
 	ParticleDisplay			particles;
 	
+	public int 				high;
+	
 //	--------------------------------------------------------------------------------------------------------
 	
-	public SceneEffect(SceneEditor editor, int x, int y, DEffect deffect) 
+	public SceneEffect(SceneEditor editor, int x, int y, int hight, DEffect deffect) 
 	{
 		this.editor 		= editor;
 		this.setLocation(x, y);
@@ -61,6 +64,7 @@ public class SceneEffect extends com.g2d.game.rpg.Unit implements SceneUnitTag<E
 			throw new IllegalStateException();
 		}
 		this.effect = new Effect(getID() + "", deffect.getData().getIntID());
+		this.high = hight;
 	}
 	
 	public SceneEffect(SceneEditor editor, Effect in) throws IOException
@@ -74,6 +78,7 @@ public class SceneEffect extends com.g2d.game.rpg.Unit implements SceneUnitTag<E
 			this.setLocation(
 					effect.x,
 					effect.y);
+			this.high = (int)effect.z;
 			this.setLocalBounds(-16, -16, 32, 32);
 		}
 		if (!editor.getGameScene().getWorld().addChild(this)){
@@ -86,6 +91,7 @@ public class SceneEffect extends com.g2d.game.rpg.Unit implements SceneUnitTag<E
 		effect.name			= getID() + "";
 		effect.x			= getX();
 		effect.y			= getY();
+		effect.z			= high;
 		return effect;
 	}
 	
@@ -149,13 +155,39 @@ public class SceneEffect extends com.g2d.game.rpg.Unit implements SceneUnitTag<E
 					}
 				}
 				this.particles = new ParticleDisplay(deffect.getData().particles);
+				this.particles.setLocation(0, -high);
 				Sprite layers = new Sprite();
 				layers.addChild(this.particles);
 				this.addChild(layers);
 			} catch (Exception err) {
 				err.printStackTrace();
 			}
+		} else {
+			particles.setLocation(0, -high);
 		}
+		
+		if (editor.isToolSelect())
+		{
+			if (editor.getSelectedUnit() == this)
+			{
+				if (getRoot().isKeyHold(KeyEvent.VK_SHIFT)) {
+					if (getRoot().isMouseWheelUP()) {
+						high += 10;
+					}
+					if (getRoot().isMouseWheelDown()) {
+						high -= 10;
+					}
+				} else {
+					if (getRoot().isMouseWheelUP()) {
+						high ++;
+					}
+					if (getRoot().isMouseWheelDown()) {
+						high --;
+					}
+				}
+			}
+		}
+		
 	}
 	
 	@Override
@@ -165,18 +197,46 @@ public class SceneEffect extends com.g2d.game.rpg.Unit implements SceneUnitTag<E
 
 		if (editor!=null)
 		{
-			if (editor.getSelectedPage().isSelectedType(getClass())) {
+			if (editor.getSelectedPage().isSelectedType(getClass())) 
+			{
 				g.setColor(Color.YELLOW);
 				g.draw(local_bounds);
+				{
+					int sx = 0, sy = 0;
+					g.setColor(Color.GREEN);
+					g.drawLine(sx, sy, sx, sy-high);
+					
+					sy -= high;
+					g.drawLine(sx-16, sy-16, sx+16, sy+16);
+					g.drawLine(sx+16, sy-16, sx-16, sy+16);
+				}
+				
+				
 				// 选择了该精灵
 				if (editor.getSelectedUnit() == this) {
 					g.setColor(Color.WHITE);
 					g.draw(local_bounds);
+					if (particles!=null) {
+						try{
+							g.translate(particles.x, particles.y);
+							g.draw(particles.local_bounds);
+						} finally {
+							g.translate(-particles.x, -particles.y);
+						}
+					}
 				}
 				// 当鼠标放到该精灵上
 				else if (isCatchedMouse() && editor.isToolSelect()) {
 					g.setColor(Color.GREEN);
 					g.draw(local_bounds);
+					if (particles!=null) {
+						try{
+							g.translate(particles.x, particles.y);
+							g.draw(particles.local_bounds);
+						} finally {
+							g.translate(-particles.x, -particles.y);
+						}
+					}
 				}
 				this.enable = editor.isToolSelect();
 			} else {
