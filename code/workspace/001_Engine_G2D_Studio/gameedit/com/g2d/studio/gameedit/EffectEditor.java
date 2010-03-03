@@ -183,8 +183,7 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 		}
 		else if (e.getSource() == show)
 		{
-			ParticleViewer viewer = new ParticleViewer();
-			viewer.setParticleData(this);
+			ParticleViewer viewer = new ParticleViewer(this);
 			viewer.setVisible(true);
 		}
 		
