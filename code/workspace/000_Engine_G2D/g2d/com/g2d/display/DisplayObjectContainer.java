@@ -329,8 +329,9 @@ public abstract class DisplayObjectContainer extends DisplayObject
 					events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_MOVE_TOP, always_top_element));
 				}
 				return true;
+			} else {
+				throw new IllegalArgumentException("child already have parent !");
 			}
-			return false;
 		}
 	}
 	
