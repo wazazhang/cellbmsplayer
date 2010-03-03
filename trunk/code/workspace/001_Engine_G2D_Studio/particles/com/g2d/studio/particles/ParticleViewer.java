@@ -2,11 +2,14 @@ package com.g2d.studio.particles;
 
 import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.EnumSet;
 
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -35,6 +38,7 @@ public class ParticleViewer extends JFrame implements ActionListener
 	JCheckBox			toggle_show_debug		= new JCheckBox("显示坐标系");
 	JCheckBox			toggle_show_origin		= new JCheckBox("显示产生区域");
 	JCheckBox			toggle_show_bounds		= new JCheckBox("显示产生范围");
+	JButton				btn_change_color		= new JButton("改变背景色");
 	
 	ParticleStage		stage;
 	
@@ -60,6 +64,9 @@ public class ParticleViewer extends JFrame implements ActionListener
 			tools.add(toggle_show_bounds);
 			toggle_show_bounds.addActionListener(this);
 			
+			tools.add(btn_change_color);
+			btn_change_color.setBackground(Color.BLACK);
+			btn_change_color.addActionListener(this);
 		}
 		add(display_object_panel, BorderLayout.CENTER);
 		add(tools, BorderLayout.SOUTH);
@@ -80,7 +87,14 @@ public class ParticleViewer extends JFrame implements ActionListener
 			}catch(Exception err){
 				err.printStackTrace();
 			}
-		} 
+		}
+		else if (e.getSource() == btn_change_color) {
+			Color color = JColorChooser.showDialog(this, "选择背景色", btn_change_color.getBackground());
+			if (color != null) {
+				btn_change_color.setBackground(color);
+				stage.back_color = color;
+			}
+		}
 		else if (e.getSource() == toggle_show_debug) {
 			stage.is_show_cross = toggle_show_debug.isSelected();
 		}

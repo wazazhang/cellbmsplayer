@@ -19,6 +19,7 @@ public class ParticleStage extends Stage
 	EffectEditor 	cur_edit;
 	ParticleDisplay	particle;
 	
+	Color			back_color				= Color.BLACK;
 	boolean			is_show_cross 			= false;
 	boolean			is_show_spawn_region	= false;
 	boolean			is_show_spawn_bounds	= false;
@@ -54,7 +55,7 @@ public class ParticleStage extends Stage
 
 	public void render(java.awt.Graphics2D g) 
 	{
-		g.setColor(Color.BLACK);
+		g.setColor(back_color);
 		g.fill(local_bounds);
 		
 		if (is_show_cross) {
