@@ -1,14 +1,12 @@
 package com.g2d.display;
 
+import java.awt.Composite;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 
 /**
- * 用于快速渲染的根节点<br>
- * 该节点只恢复AffineTransform<br>
- * 该节点不会恢复Clip,Composite<br>
- * 注意：该节点可能会影响父节点的
- * renderInteractive(Graphics2D g), renderAfter(Graphics2D g)
+ * 用于快速渲染的根节点，
+ * 该节点不会Clip任何区域，该节点也不处理任何触碰事件。
  */
 public abstract class DisplayObjectLeaf extends DisplayObject
 {
@@ -30,11 +28,13 @@ public abstract class DisplayObjectLeaf extends DisplayObject
 	{
 		if (visible) 
 		{
-			AffineTransform	transfrom = g.getTransform();
+			AffineTransform	transfrom	= g.getTransform();
+			Composite		composite	= g.getComposite();
 			try {
 				g.translate(x, y);
 				this.render(g);
 			} finally {
+				g.setComposite(composite);
 				g.setTransform(transfrom);
 			}
 		}
