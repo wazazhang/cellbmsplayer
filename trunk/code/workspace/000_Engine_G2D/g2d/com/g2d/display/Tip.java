@@ -10,7 +10,7 @@ public abstract class Tip extends DisplayObjectContainer
 	public static int tip_opposite_x 	= -4;
 	public static int tip_opposite_y 	= -4;
 	
-	final public void setLocation(DisplayObjectContainer parent, int x, int y) {
+	public void setLocation(DisplayObjectContainer parent, int x, int y) {
 		
 		if ((x + getWidth() + tip_offset_x) > parent.getWidth()) {
 			x = x - getWidth() + tip_opposite_x;
@@ -30,5 +30,13 @@ public abstract class Tip extends DisplayObjectContainer
 	@Override
 	protected boolean testCatchMouse(Graphics2D g) {
 		return false;
+	}
+	
+	@Override
+	final public void added(DisplayObjectContainer parent) {
+	}
+	
+	@Override
+	final public void removed(DisplayObjectContainer parent) {
 	}
 }

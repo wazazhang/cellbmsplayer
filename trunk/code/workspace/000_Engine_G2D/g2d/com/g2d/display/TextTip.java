@@ -118,10 +118,6 @@ public class TextTip extends Tip
 		}
 	}
 
-	public void added(DisplayObjectContainer parent) {}
-
-	public void removed(DisplayObjectContainer parent) {}
-
 //	-------------------------------------------------------------------------------------------------------------------------
 
 	
