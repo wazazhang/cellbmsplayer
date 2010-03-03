@@ -1077,6 +1077,8 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 	
 	class SceneEffectAdapter extends SceneUnitTagAdapter<SceneEffect, DisplayObject>
 	{
+		int high = 0;
+		
 		public SceneEffectAdapter() {
 			super(SceneEffect.class);
 		}
@@ -1103,6 +1105,23 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		@Override
 		public void updateAddUnit(SceneContainer scene, boolean catchMouse, int worldx, int worldy)
 		{
+			if (scene.getRoot().isKeyHold(KeyEvent.VK_SHIFT)) {
+				if (scene.getRoot().isMouseWheelUP()) {
+					high += 10;
+				}
+				if (scene.getRoot().isMouseWheelDown()) {
+					high -= 10;
+				}
+			} else {
+				if (scene.getRoot().isMouseWheelUP()) {
+					high += 1;
+				}
+				if (scene.getRoot().isMouseWheelDown()) {
+					high -= 1;
+				}
+			}
+			
+			
 			if (scene.getRoot().isMouseDown(com.g2d.display.event.MouseEvent.BUTTON_LEFT)) {
 				DEffect de = getToolEffect();
 				if (de != null) {
@@ -1110,6 +1129,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 							SceneEditor.this, 
 							worldx, 
 							worldy,
+							high,
 							de);
 					addTagUnit(effect);
 				}
@@ -1117,12 +1137,23 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		}
 		
 		@Override
-		public void renderAddUnitObject(SceneContainer scene, Graphics2D g) {
+		public void renderAddUnitObject(SceneContainer scene, Graphics2D g) 
+		{
 			int sx = scene.getMouseX();
 			int sy = scene.getMouseY();
+			
 			g.setColor(Color.WHITE);
-			g.drawLine(sx-16, sy, sx+16, sy);
-			g.drawLine(sx, sy-16, sx, sy+16);
+			g.drawRect(sx-20, sy-20, 40, 40);
+			Drawing.drawStringBorder(g, "高度="+high, sx + 42, sy, 0);
+			Drawing.drawStringBorder(g, "鼠标滚轮调整高度", sx + 42, sy+20, 0);
+			
+			g.setColor(Color.GREEN);
+			g.drawLine(sx, sy, sx, sy-high);
+			
+			sy -= high;
+			g.drawLine(sx-16, sy-16, sx+16, sy+16);
+			g.drawLine(sx+16, sy-16, sx-16, sy+16);
+			
 		}
 	}
 

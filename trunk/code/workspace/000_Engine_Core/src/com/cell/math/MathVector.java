@@ -71,6 +71,15 @@ public class MathVector
 		v.setVectorY(v.getVectorY() * scale);
 	}
 	
+	/**
+	 * 向量缩放
+	 * @param v
+	 * @param scale
+	 */
+	public static void scale(Vector v, double scale_x, double scale_y){
+		v.setVectorX(v.getVectorX() * scale_x);
+		v.setVectorY(v.getVectorY() * scale_y);
+	}
 
 	/**
 	 * 向量按照{0,0}点旋转
@@ -78,10 +87,14 @@ public class MathVector
 	 * @param degree 弧度
 	 */
 	public static void rotate(Vector v, double degree){
-		double x = v.getVectorX() * Math.cos(degree) - v.getVectorY() * Math.sin(degree);
-		double y = v.getVectorY() * Math.cos(degree) + v.getVectorX() * Math.sin(degree);
-        v.setVectorX(x);
-        v.setVectorY(y);
+		double x = (v.getVectorX())
+				* Math.cos(degree) - (v.getVectorY())
+				* Math.sin(degree);
+		double y = (v.getVectorY())
+				* Math.cos(degree) + (v.getVectorX())
+				* Math.sin(degree); 
+		v.setVectorX(x);
+		v.setVectorY(y);
 	}
 	
 	/**

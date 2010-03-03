@@ -1,6 +1,8 @@
 package com.g2d.studio.particles;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.event.MouseEvent;
 
@@ -19,6 +21,7 @@ public class ParticleStage extends Stage
 	
 	boolean			is_show_cross 			= false;
 	boolean			is_show_spawn_region	= false;
+	boolean			is_show_spawn_bounds	= false;
 	
 	@Override
 	public void inited(Canvas root, Object[] args) {
@@ -59,7 +62,11 @@ public class ParticleStage extends Stage
 			g.drawLine(0, particle.getY(), getWidth(), particle.getY());
 			g.drawLine(particle.getX(), 0, particle.getX(), getHeight());
 		}
-		
+	}
+	
+	@Override
+	protected void renderAfter(Graphics2D g)
+	{
 		if (is_show_spawn_region) {
 			g.setColor(Color.WHITE);
 			for (Layer layer : particle.data) {
@@ -75,6 +82,18 @@ public class ParticleStage extends Stage
 			}
 		}
 		
+		if (is_show_spawn_bounds) {
+			g.setColor(Color.YELLOW);
+			Rectangle rect = ParticleDisplay.getOriginBounds(particle.data);
+			double tx = particle.x;
+			double ty = particle.y;
+			try{
+				g.translate(tx, ty);
+				g.draw(rect);
+			}finally{
+				g.translate(-tx, -ty);
+			}
+		}
 	}
 	
 }
