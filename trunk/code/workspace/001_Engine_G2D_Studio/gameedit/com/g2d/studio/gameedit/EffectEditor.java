@@ -71,12 +71,15 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 	
 	G2DList<LayerEdit> 	layers		= new G2DList<LayerEdit>();
 	
+	LayerEdit			last_layer;
+	
 	JButton layer_add	= new JButton("添加层");
 	JButton layer_copy	= new JButton("复制层");
 	JButton layer_del	= new JButton("删除层");
 	
 	JButton refresh		= new JButton("刷新");
 	JButton show		= new JButton("查看");
+	
 	
 	public EffectEditor(TEffect e) 
 	{
@@ -104,6 +107,7 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 			show.addActionListener(this);
 			
 			layers.addListSelectionListener(this);
+			layers.setMinimumSize(new Dimension(400, 400));
 			layers.setPreferredSize(new Dimension(400, 400));
 			left.add(bar, BorderLayout.NORTH);
 			left.add(new JScrollPane(layers), BorderLayout.CENTER);
@@ -133,6 +137,10 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 		Object obj = layers.getSelectedValue();
 		if (obj instanceof LayerEdit) {
 			LayerEdit right = (LayerEdit)obj;
+			if (last_layer != null) {
+				right.setSelectedIndex(last_layer.getSelectedIndex());
+			}
+			last_layer = right;
 			setRightComponent(right);
 		} else {
 			setRightComponent(new JPanel());
