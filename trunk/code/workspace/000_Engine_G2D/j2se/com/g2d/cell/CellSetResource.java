@@ -1449,7 +1449,9 @@ public class CellSetResource
 		}
 		
 		final public boolean isLoaded() {
-			return loaded;
+			synchronized (this) {
+				return loaded;
+			}
 		}
 		
 		final public void run() 
