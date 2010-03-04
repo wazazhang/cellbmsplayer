@@ -260,7 +260,7 @@ public class QuestItem extends RPGObject implements NamedObject
 	public static class TagUnitGroupCountComparison extends Tag
 	{
 		@Property("单位类型")
-		public TriggerUnitType 		group_unit_type	= TriggerUnitType.PLAYER_GROUP;
+		public TriggerUnitType 		group_unit_type	= TriggerUnitType.PET_GROUP;
 		
 		@Property("比较器")
 		public Comparison 			comparison		= Comparison.EQUAL;

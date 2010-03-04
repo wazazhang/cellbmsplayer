@@ -555,7 +555,6 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 			this.remove(combo_columns_unit);
 			switch(type) {
 			case PLAYER:
-			case PLAYER_GROUP:
 				super.add(combo_columns_player, BorderLayout.SOUTH);
 				break;
 			case PET:
@@ -586,7 +585,6 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 			tup.trigger_unit_type = combo_unit_type.getValue();
 			switch(tup.trigger_unit_type) {
 			case PLAYER:
-			case PLAYER_GROUP:
 				tup.filed_name = combo_columns_player.getValue();
 				break;
 			case PET:
@@ -652,7 +650,6 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 		{
 			switch(type) {
 			case PLAYER:
-			case PLAYER_GROUP:
 				method_pan.setTopComponent(player_methods);
 				method_panel.setMethod(player_methods.getValue());
 				break;
