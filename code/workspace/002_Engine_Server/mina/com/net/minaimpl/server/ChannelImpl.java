@@ -21,8 +21,8 @@ public class ChannelImpl implements Channel
 	
 	final Server 			server;
 	
-	final ConcurrentSkipListSet<ClientSession>
-							sessions = new ConcurrentSkipListSet<ClientSession>();
+	final ConcurrentHashMap<ClientSession, ClientSession>
+							sessions = new ConcurrentHashMap<ClientSession, ClientSession>();
 	
 	ChannelImpl(ChannelListener listener, int id, Server server) {
 		this.Listener	= listener;
@@ -35,7 +35,7 @@ public class ChannelImpl implements Channel
 	}
 	
 	public Iterator<ClientSession> getSessions() {
-		return sessions.iterator();
+		return sessions.values().iterator();
 	}
 	
 	public int getSessionCount(){
@@ -51,7 +51,8 @@ public class ChannelImpl implements Channel
 	}
 	
 	public boolean join(ClientSession session) {
-		if (sessions.add(session)) {
+		ClientSession old = sessions.putIfAbsent(session, session);
+		if (old == null) {
 			MessageHeader message = new SystemMessages.SystemMessageS2C();
 			message.Protocol = MessageHeader.PROTOCOL_CHANNEL_JOIN_S2C;
 			message.ChannelID = getID();
@@ -63,7 +64,8 @@ public class ChannelImpl implements Channel
 	}
 	
 	public boolean leave(ClientSession session) {
-		if (sessions.remove(session)){
+		ClientSession old = sessions.remove(session);
+		if (old != null) {
 			MessageHeader message = new SystemMessages.SystemMessageS2C();
 			message.Protocol = MessageHeader.PROTOCOL_CHANNEL_LEAVE_S2C;
 			message.ChannelID = getID();
@@ -76,7 +78,7 @@ public class ChannelImpl implements Channel
 	
 	public int leaveAll() {
 		int count = 0;
-		for (Iterator<ClientSession> it = sessions.iterator(); it.hasNext(); ) {
+		for (Iterator<ClientSession> it = sessions.values().iterator(); it.hasNext(); ) {
 			ClientSession session = it.next();
 			if (leave(session)) {
 				count ++;
@@ -92,7 +94,7 @@ public class ChannelImpl implements Channel
 			message.ChannelSesseionID = sender.getID();
 		}
 		int count = 0;
-		for (Iterator<ClientSession> it = sessions.iterator(); it.hasNext(); ) {
+		for (Iterator<ClientSession> it = sessions.values().iterator(); it.hasNext(); ) {
 			ClientSession session = it.next();
 			((ClientSessionImpl)session).write(message);
 		}
