@@ -26,16 +26,13 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 {
 
 	private ServerSessionListener 					Listener;
-	private Hashtable<Integer, ClientChannelImpl> 	Channels			= new Hashtable<Integer, ClientChannelImpl>();
+	private Hashtable<Integer, ClientChannelImpl> 	channels			= new Hashtable<Integer, ClientChannelImpl>();
 	private IoSession 								Session;
 	
 	IoConnector										Connector;
 	NetPackageCodec									Codec;
 	
 	long											LastHartBeatTime	= 0;
-
-//	private ReentrantLock							shutdown_lock = new ReentrantLock();
-//	private	ExitTask								shutdown_hook;
 	
 	public ServerSessionImpl()
 	{
@@ -112,7 +109,7 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 		return false;
 	}
 	
-	synchronized public boolean send(MessageHeader message) {
+	public boolean send(MessageHeader message) {
 		if (isConnected()) {
 			if (Session != null) {
 				message.Protocol = MessageHeader.PROTOCOL_SESSION_MESSAGE;
@@ -127,21 +124,7 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 		return false;
 	}
 	
-//	public boolean send(NetPackageProtocol protocol) throws IOException {
-//		if (isConnected()) {
-//			if (Session != null) {
-//				Session.write(protocol);
-//				return true;
-//			}else{
-//				System.err.println("session is null !");
-//			}
-//		}else{
-//			System.err.println("server not connected !");
-//		}
-//		return false;
-//	}
-	
-	synchronized protected void sendChannel(MessageHeader message, ClientChannelImpl channel) {
+	protected void sendChannel(MessageHeader message, ClientChannelImpl channel) {
 		if (Session != null) {
 			message.Protocol	= MessageHeader.PROTOCOL_CHANNEL_MESSAGE;
 			message.ChannelID	= channel.getID();
@@ -182,24 +165,12 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 	public void sessionOpened(IoSession session) throws Exception {
 		LastHartBeatTime = System.currentTimeMillis();
 		Listener.connected(this);
-//		synchronized (shutdown_lock) {
-//			if (shutdown_hook == null) {
-//				shutdown_hook = new ExitTask();
-//				Runtime.getRuntime().addShutdownHook(shutdown_hook);
-//			}
-//		}
 	}
 	
 	public void sessionClosed(IoSession session) throws Exception {
 		synchronized(this) {
 			Listener.disconnected(this, true, "sessionClosed : " + toString());
 		}
-//		synchronized (shutdown_lock) {
-//			if (shutdown_hook != null) {
-//				Runtime.getRuntime().removeShutdownHook(shutdown_hook);
-//				shutdown_hook = null;
-//			}
-//		}
 	}
 	
 	public void messageReceived(final IoSession iosession, final Object message) throws Exception 
@@ -217,12 +188,12 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 					case MessageHeader.PROTOCOL_CHANNEL_JOIN_S2C:
 					{
 						ClientChannelImpl channel = new ClientChannelImpl(this, header.ChannelID);
-						Channels.put(header.ChannelID, channel);
+						channels.put(header.ChannelID, channel);
 						break;
 					}
 					case MessageHeader.PROTOCOL_CHANNEL_LEAVE_S2C:
 					{
-						ClientChannelImpl channel = Channels.remove(header.ChannelID);
+						ClientChannelImpl channel = channels.remove(header.ChannelID);
 						if (channel!=null) {
 							Listener.leftChannel(channel);
 						}
@@ -230,7 +201,7 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 					}
 					case MessageHeader.PROTOCOL_CHANNEL_MESSAGE:
 					{
-						ClientChannelImpl channel = Channels.get(header.ChannelID);
+						ClientChannelImpl channel = channels.get(header.ChannelID);
 						if (channel!=null) {
 							Listener.receivedChannelMessage(channel, header);
 						}
