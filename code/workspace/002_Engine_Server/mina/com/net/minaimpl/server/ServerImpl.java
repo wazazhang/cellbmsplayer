@@ -2,6 +2,7 @@ package com.net.minaimpl.server;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.concurrent.locks.ReentrantLock;
@@ -165,13 +166,8 @@ public class ServerImpl extends IoHandlerAdapter implements Server
 	
 	private void removeAllSession()
 	{
-		session_rw_lock.writeLock().lock();
-		try{
-			for (IoSession session : Acceptor.getManagedSessions().values()){
-				session.close(false);
-			}
-		} finally {
-			session_rw_lock.writeLock().unlock();
+		for (IoSession session : Acceptor.getManagedSessions().values()){
+			session.close(false);
 		}
 	}
 	
@@ -179,14 +175,14 @@ public class ServerImpl extends IoHandlerAdapter implements Server
 	public Iterator<ClientSession> getSessions() {
 		session_rw_lock.readLock().lock();
 		try{
-			HashMap<Long, ClientSession> sessions = new HashMap<Long, ClientSession>(Acceptor.getManagedSessionCount());
+			ArrayList<ClientSession> sessions = new ArrayList<ClientSession>(Acceptor.getManagedSessionCount());
 			for (IoSession session : Acceptor.getManagedSessions().values()){
 				ClientSessionImpl client = getBindSession(session);
 				if (client!=null){
-					sessions.put(client.getID(), client);
+					sessions.add(client);
 				}
 			}
-			return sessions.values().iterator();
+			return sessions.iterator();
 		} finally {
 			session_rw_lock.readLock().unlock();
 		}
@@ -290,32 +286,24 @@ public class ServerImpl extends IoHandlerAdapter implements Server
 	
 	public void sessionClosed(IoSession session) throws Exception {
 		log.info("sessionClosed : " + session);
-		session_rw_lock.writeLock().lock();
-		try {
-			ClientSessionImpl client = getBindSession(session);
-
-			session.removeAttribute(SessionAttributeKey.CLIENT_SESSION);
-
-			if (client != null) {
-				try {
-					Iterator<Channel> channels = channel_manager.getChannels();
-					while (channels.hasNext()) {
-						channels.next().leave(client);
-					}
-				} catch (Throwable e) {
-					log.error(e.getMessage(), e);
+		ClientSessionImpl client = getBindSession(session);
+		session.removeAttribute(SessionAttributeKey.CLIENT_SESSION);
+		if (client != null) {
+			try {
+				Iterator<Channel> channels = channel_manager.getChannels();
+				while (channels.hasNext()) {
+					channels.next().leave(client);
 				}
-
-				try {
-					if (client.Listener != null) {
-						client.Listener.disconnected(client);
-					}
-				} catch (Throwable e) {
-					log.error(e.getMessage(), e);
-				}
+			} catch (Throwable e) {
+				log.error(e.getMessage(), e);
 			}
-		} finally {
-			session_rw_lock.writeLock().unlock();
+			try {
+				if (client.Listener != null) {
+					client.Listener.disconnected(client);
+				}
+			} catch (Throwable e) {
+				log.error(e.getMessage(), e);
+			}
 		}
 	}
 	
