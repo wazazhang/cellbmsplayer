@@ -18,22 +18,25 @@ public class ChannelManagerImpl implements ChannelManager
 		this.server = server;
 	}
 	
-	synchronized public Channel createChannel(int id, ChannelListener listener) {
+	public Channel createChannel(int id, ChannelListener listener) {
 		ChannelImpl channel = new ChannelImpl(listener, id, server);
-		Channels.put(id, channel);
+		Channel ret = Channels.putIfAbsent(id, channel);
+		if (ret == null) {
+			return channel;
+		}
+		return null;
+	}
+	
+	public Channel getChannel(int id) {
 		return Channels.get(id);
 	}
 	
-	synchronized public Channel getChannel(int id) {
-		return Channels.get(id);
-	}
-	
-	synchronized public Iterator<Channel> getChannels() {
+	public Iterator<Channel> getChannels() {
 		return Channels.values().iterator();
 	}
 	
 	@Override
-	synchronized public Channel removeChannel(int id) {
+	public Channel removeChannel(int id) {
 		return Channels.remove(id);
 	}
 }

@@ -19,11 +19,11 @@ public interface Channel
 	
 	public boolean join(ClientSession session);
 	
-	public int join(Set<ClientSession> sessions);
+//	public int join(Set<ClientSession> sessions);
 	
 	public boolean leave(ClientSession session);
 	
-	public int leave(Set<ClientSession> sessions);
+//	public int leave(Set<ClientSession> sessions);
 	
 	public int leaveAll();
 	

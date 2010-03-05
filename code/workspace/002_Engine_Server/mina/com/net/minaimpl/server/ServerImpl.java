@@ -5,6 +5,7 @@ import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.apache.mina.core.service.IoAcceptor;
 import org.apache.mina.core.service.IoHandlerAdapter;
@@ -32,20 +33,20 @@ public class ServerImpl extends IoHandlerAdapter implements Server
 {
 	/** 处理线程的数目 */
 	final private int 			IoProcessCount;
-	
+	final private int			SessionReadIdleTimeSeconds;
+	final private int			SessionWriteIdleTimeSeconds;
+
 	// 
 	private ServerListener 		SrvListener;
 	private IoAcceptor 			Acceptor;
-	private NetPackageCodec 	Codec;
-
-	final private int			SessionReadIdleTimeSeconds;
-	final private int			SessionWriteIdleTimeSeconds;
+	private NetPackageCodec 	Codec;	
 	private long 				StartTime;
 
-	final ChannelManager		channel_manager;
-	final ReentrantLock			session_lock	= new ReentrantLock();
+	
+	final private ChannelManager	channel_manager;
+	final private Logger 			log 			= LoggerFactory.getLogger(getClass().getName());
+	final ReentrantReadWriteLock	session_rw_lock	= new ReentrantReadWriteLock();
 
-	private final Logger _log = LoggerFactory.getLogger(getClass().getName());
 	
 //	----------------------------------------------------------------------------------------------------------------------
 	
@@ -105,7 +106,7 @@ public class ServerImpl extends IoHandlerAdapter implements Server
 	{
 		if (Acceptor==null)
 		{
-			_log.info("starting server at port : " + port);
+			log.info("starting server at port : " + port);
 			
 			StartTime 	= System.currentTimeMillis();
 			SrvListener	= listener;
@@ -119,10 +120,10 @@ public class ServerImpl extends IoHandlerAdapter implements Server
 			
 			Acceptor.bind(new InetSocketAddress(port));
 			
-			_log.info("server started !");
+			log.info("server started !");
 		}
 		else {
-			_log.info("Server already open !");
+			log.info("Server already open !");
 		}
 	}
 	
@@ -130,15 +131,15 @@ public class ServerImpl extends IoHandlerAdapter implements Server
 	{
 		if (Acceptor!=null) 
 		{
-			_log.info("server closing...");
+			log.info("server closing...");
 			Acceptor.unbind();
 			removeAllSession();
 			Acceptor.dispose();
 			Acceptor = null;
-			_log.info("server closed !");
+			log.info("server closed !");
 		}
 		else{
-			_log.info("Server is not open !");
+			log.info("Server is not open !");
 		}
 	}
 
@@ -150,34 +151,33 @@ public class ServerImpl extends IoHandlerAdapter implements Server
 	
 	private ClientSessionImpl getBindSession(IoSession session)
 	{
-		session_lock.lock();
+		session_rw_lock.readLock().lock();
 		try {
-			Object obj = session
-					.getAttribute(SessionAttributeKey.CLIENT_SESSION);
+			Object obj = session.getAttribute(SessionAttributeKey.CLIENT_SESSION);
 			if (obj instanceof ClientSessionImpl) {
 				return (ClientSessionImpl) obj;
 			}
 		} finally {
-			session_lock.unlock();
+			session_rw_lock.readLock().unlock();
 		}
 		return null;
 	}
 	
 	private void removeAllSession()
 	{
-		session_lock.lock();
+		session_rw_lock.writeLock().lock();
 		try{
 			for (IoSession session : Acceptor.getManagedSessions().values()){
 				session.close(false);
 			}
 		} finally {
-			session_lock.unlock();
+			session_rw_lock.writeLock().unlock();
 		}
 	}
 	
 	
 	public Iterator<ClientSession> getSessions() {
-		session_lock.lock();
+		session_rw_lock.readLock().lock();
 		try{
 			HashMap<Long, ClientSession> sessions = new HashMap<Long, ClientSession>(Acceptor.getManagedSessionCount());
 			for (IoSession session : Acceptor.getManagedSessions().values()){
@@ -188,12 +188,12 @@ public class ServerImpl extends IoHandlerAdapter implements Server
 			}
 			return sessions.values().iterator();
 		} finally {
-			session_lock.unlock();
+			session_rw_lock.readLock().unlock();
 		}
 	}
 	
 	public ClientSession getSession(long sessionID) {
-		session_lock.lock();
+		session_rw_lock.readLock().lock();
 		try{
 			IoSession session = Acceptor.getManagedSessions().get(sessionID);
 			ClientSessionImpl client = getBindSession(session);
@@ -202,12 +202,12 @@ public class ServerImpl extends IoHandlerAdapter implements Server
 			}
 			return null;
 		} finally {
-			session_lock.unlock();
+			session_rw_lock.readLock().unlock();
 		}
 	}
 	
 	public ClientSession getSession(Object object){
-		session_lock.lock();
+		session_rw_lock.readLock().lock();
 		try{
 			for (IoSession session : Acceptor.getManagedSessions().values()){
 				ClientSessionImpl client = getBindSession(session);
@@ -217,25 +217,25 @@ public class ServerImpl extends IoHandlerAdapter implements Server
 			}
 			return null;
 		} finally {
-			session_lock.unlock();
+			session_rw_lock.readLock().unlock();
 		}
 	}
 	
 	public boolean hasSession(ClientSession session) {
-		session_lock.lock();
+		session_rw_lock.readLock().lock();
 		try{
 			return Acceptor.getManagedSessions().containsKey(session.getID());
 		} finally {
-			session_lock.unlock();
+			session_rw_lock.readLock().unlock();
 		}
 	}
 	
 	public int getSessionCount() {
-		session_lock.lock();
+		session_rw_lock.readLock().lock();
 		try{
 			return Acceptor.getManagedSessionCount();
 		} finally {
-			session_lock.unlock();
+			session_rw_lock.readLock().unlock();
 		}
 	}
 	
@@ -266,31 +266,31 @@ public class ServerImpl extends IoHandlerAdapter implements Server
 
 	
 	public void exceptionCaught(IoSession session, Throwable cause) throws Exception {
-		_log.error(cause.getMessage() + "\n" + session, cause);
+		log.error(cause.getMessage() + "\n" + session, cause);
 		session.close(false);
 	}
 	
 	public void sessionIdle(IoSession session, IdleStatus status) throws Exception {
-		_log.info("sessionIdle : " + session + " : " + status);
+		log.info("sessionIdle : " + session + " : " + status);
 		session.close(false);
 	}
 	
 	public void sessionOpened(IoSession session) throws Exception {
-		_log.info("sessionOpened : " + session);
-		session_lock.lock();
+		log.info("sessionOpened : " + session);
+		session_rw_lock.writeLock().lock();
 		try{
 			ClientSessionImpl client = new ClientSessionImpl(session, this);
 			session.setAttribute(SessionAttributeKey.CLIENT_SESSION, client);
 			client.LastHartBeatTime = System.currentTimeMillis();
 			client.setListener(SrvListener.connected(client));
 		} finally {
-			session_lock.unlock();
+			session_rw_lock.writeLock().unlock();
 		}
 	}
 	
 	public void sessionClosed(IoSession session) throws Exception {
-		_log.info("sessionClosed : " + session);
-		session_lock.lock();
+		log.info("sessionClosed : " + session);
+		session_rw_lock.writeLock().lock();
 		try {
 			ClientSessionImpl client = getBindSession(session);
 
@@ -303,7 +303,7 @@ public class ServerImpl extends IoHandlerAdapter implements Server
 						channels.next().leave(client);
 					}
 				} catch (Throwable e) {
-					_log.error(e.getMessage(), e);
+					log.error(e.getMessage(), e);
 				}
 
 				try {
@@ -311,11 +311,11 @@ public class ServerImpl extends IoHandlerAdapter implements Server
 						client.Listener.disconnected(client);
 					}
 				} catch (Throwable e) {
-					_log.error(e.getMessage(), e);
+					log.error(e.getMessage(), e);
 				}
 			}
 		} finally {
-			session_lock.unlock();
+			session_rw_lock.writeLock().unlock();
 		}
 	}
 	
@@ -323,7 +323,7 @@ public class ServerImpl extends IoHandlerAdapter implements Server
 	{
 		ClientSessionImpl client = getBindSession(session);
 		if (client == null) {
-			_log.error("client is expire !");
+			log.error("client is expire !");
 			return;
 		}
 		
@@ -354,13 +354,13 @@ public class ServerImpl extends IoHandlerAdapter implements Server
 					break;
 					
 				default:
-					_log.error("unknow message : " + message);
+					log.error("unknow message : " + message);
 				}
 			}
 		}
 		else
 		{
-			_log.error("bad message type : " + message);
+			log.error("bad message type : " + message);
 		}
 		
 	}

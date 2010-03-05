@@ -56,33 +56,33 @@ public class ClientSessionImpl implements ClientSession
 		return false;
 	}
 	
-	synchronized public boolean disconnect(boolean force) 
+	public boolean disconnect(boolean force) 
 	{
 		Session.close(force);
 		return true;
 	}
 	
-	synchronized public String getName()
+	public String getName()
 	{
 		return Session.getRemoteAddress().toString();
 	}
 	
-	synchronized public long getID()
+	public long getID()
 	{
 		return Session.getId();
 	}
 	
-	synchronized public SocketAddress getAddress()
+	public SocketAddress getAddress()
 	{
 		return Session.getRemoteAddress();
 	}
 
-	synchronized public boolean isConnected() 
+	public boolean isConnected() 
 	{
 		return Session.isConnected();
 	}
 
-	synchronized void write(MessageHeader message){
+	void write(MessageHeader message){
 		if (Session.isConnected()) {
 			message.SesseionID = getID();
 			Session.write(message);
