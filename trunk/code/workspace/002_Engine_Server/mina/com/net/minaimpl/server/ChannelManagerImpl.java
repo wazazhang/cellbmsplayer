@@ -32,5 +32,8 @@ public class ChannelManagerImpl implements ChannelManager
 		return Channels.values().iterator();
 	}
 	
-	
+	@Override
+	synchronized public Channel removeChannel(int id) {
+		return Channels.remove(id);
+	}
 }
