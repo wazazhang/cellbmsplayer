@@ -51,11 +51,4 @@ public class EventListeners<T extends EventListener> implements Iterable<T>
 		return list.isEmpty();
 	}
 	
-	public void lock() {
-		lock.lock();
-	}
-	
-	public void unlock() {
-		lock.unlock();
-	}
 }
