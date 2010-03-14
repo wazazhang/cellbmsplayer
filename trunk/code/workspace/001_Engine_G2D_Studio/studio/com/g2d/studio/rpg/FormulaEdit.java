@@ -557,7 +557,6 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 			case PLAYER:
 				super.add(combo_columns_player, BorderLayout.SOUTH);
 				break;
-			case PET:
 			case PET_GROUP:
 			case TRIGGERING_NPC:
 				super.add(combo_columns_unit, BorderLayout.SOUTH);
@@ -587,7 +586,6 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 			case PLAYER:
 				tup.filed_name = combo_columns_player.getValue();
 				break;
-			case PET:
 			case PET_GROUP:
 			case TRIGGERING_NPC:
 				tup.filed_name = combo_columns_unit.getValue();
@@ -653,7 +651,6 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 				method_pan.setTopComponent(player_methods);
 				method_panel.setMethod(player_methods.getValue());
 				break;
-			case PET:
 			case PET_GROUP:
 				method_pan.setTopComponent(pet_methods);
 				method_panel.setMethod(pet_methods.getValue());
