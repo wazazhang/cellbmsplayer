@@ -53,38 +53,30 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 	
 	public boolean connect(String host, int port, long timeout, ServerSessionListener listener) throws IOException 
 	{
-		
-			if (!isConnected()) 
-			{
-				SocketAddress address = new InetSocketAddress(host, port);
+		if (!isConnected()) {
+			SocketAddress address = new InetSocketAddress(host, port);
 
-				Listener 	= listener;
-				
-				synchronized(this) 
-				{
-		            ConnectFuture future1 = Connector.connect(address); 
-					future1.awaitUninterruptibly(timeout);
-					
-		            if (!future1.isConnected()) {
-		                return false;
-		            }
-		            Session = future1.getSession();
-				}
+			Listener = listener;
 
-				if (Session != null && Session.isConnected()) {
-//					System.out.println("connected " + Session);
-					return true;
-				}else{
-					System.err.println("not connect : " + address.toString());
+			synchronized (this) {
+				ConnectFuture future1 = Connector.connect(address);
+				future1.awaitUninterruptibly(timeout);
+
+				if (!future1.isConnected()) {
+					return false;
 				}
+				Session = future1.getSession();
 			}
-			else
-			{
-				System.err.println("Already connected !");
+
+			if (Session != null && Session.isConnected()) {
+				Runtime.getRuntime().addShutdownHook(new CleanTask(Session));
+				return true;
+			} else {
+				System.err.println("not connect : " + address.toString());
 			}
-		
-		
-		
+		} else {
+			System.err.println("Already connected !");
+		}
 		return false;
 	}
 	
@@ -284,21 +276,25 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 	}
 	
 	
-//	private class ExitTask extends Thread
-//	{
-//		public ExitTask() {
-//			super("server-session-cleaner");
-//		}
-//		public void run() {
-//			System.out.println("Clear ServerSession connection !");
-//			try {
-//				synchronized(shutdown_lock) {
-//					shutdown_hook = null;
-//					disconnect(false);
-//				}
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//		}
-//	}
+	private static class CleanTask extends Thread
+	{
+		final IoSession session;
+		public CleanTask(IoSession session) {
+			this.session = session;
+		}
+		public void run() {
+			String info; 
+			try {
+				info = session.toString();
+			} catch (Exception err){
+				info = session.getRemoteAddress() + "";
+			}
+			System.out.println("Clear session : " + info);
+			try {
+				session.close(false);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }
