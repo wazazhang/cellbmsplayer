@@ -17,7 +17,7 @@ public class XLSTable<V extends SQLTableRow<?>>
 {	
 	ArrayList<V> values = new ArrayList<V>();
 	
-	public XLSTable(String file, Class<V> cls) throws Exception
+	public XLSTable(String file, Class<V> cls, TableFactory<V> factory) throws Exception
 	{
 		InputStream is = CIO.loadStream(file);
 		
@@ -55,7 +55,7 @@ public class XLSTable<V extends SQLTableRow<?>>
 							row.put(k, v);
 						}
 						
-						V instance = cls.newInstance();
+						V instance = factory.createInstance();
 						for (SQLColumn sql_column : sql_columns) 
 						{
 							if (row.containsKey(sql_column.name)) 
@@ -87,11 +87,46 @@ public class XLSTable<V extends SQLTableRow<?>>
 		}
 	}
 	
+
+	public XLSTable(String file, Class<V> cls) throws Exception
+	{
+		this(file, cls, new ObjectClassFactory<V>(cls));
+	}
+	
+	
 	public ArrayList<V> getValues() 
 	{
 		return values;
 	}
+	
+	
+	
+	
+	public static interface TableFactory<V extends SQLTableRow<?>> {
+		public V createInstance();
+	}
+	
+	public static class ObjectClassFactory<V extends SQLTableRow<?>> implements TableFactory<V> 
+	{
+		final public Class<V> type;
 		
+		public ObjectClassFactory(Class<V> type) {
+			this.type = type;
+		}
+		
+		@Override
+		public V createInstance() {
+			try {
+				return type.newInstance();
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+	}
+
 }
 
 
