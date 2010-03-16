@@ -95,6 +95,7 @@ public class QuestItem extends RPGObject implements NamedObject
 
 					AwardSummonNPC.class,
 					DropQuestNPC.class,
+					DropQuestServant.class,
 				};
 		}
 	}
@@ -377,6 +378,14 @@ public class QuestItem extends RPGObject implements NamedObject
 		@PropertyAdapter(PropertyAdapters.UNIT_ID)
 		public int				tunit_index			= -1;
 	}
+	
+	@Property({"[结果] 踢出指定类型战魂", "用于完成任务时，丢弃掉任务获得的战魂"})
+	final public static class DropQuestServant extends Result
+	{
+		@Property("战魂-类型")
+		@PropertyAdapter(PropertyAdapters.UNIT_ID)
+		public Integer			unit_id				= -1;
+	}	
 
 //	----------------------------------------------------------------------------
 	
