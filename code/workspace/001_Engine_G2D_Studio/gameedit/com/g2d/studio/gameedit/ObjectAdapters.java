@@ -6,6 +6,7 @@ import java.lang.reflect.Field;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import com.cell.rpg.template.TItem;
+import com.cell.rpg.template.ability.ItemListID;
 import com.cell.rpg.template.ability.UnitBattleTeam;
 import com.cell.rpg.template.ability.UnitDropItem;
 import com.cell.rpg.template.ability.UnitDropItem.DropItemNode;
@@ -13,6 +14,7 @@ import com.cell.rpg.template.ability.UnitDropItem.DropItems;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.Studio;
+import com.g2d.studio.gameedit.dynamic.DItemList;
 import com.g2d.studio.gameedit.template.XLSItem;
 import com.g2d.studio.gameedit.template.XLSUnit;
 import com.g2d.studio.item.ItemPropertiesNode;
@@ -124,7 +126,50 @@ public class ObjectAdapters
 			return null;
 		}
 	}
-
+	
+	public static class ItemListIDSelectAdapter extends AbilityCellEditAdapter<ItemListID>
+	{
+		@Override
+		public Class<ItemListID> getType() {
+			return ItemListID.class;
+		}
+		
+		@Override
+		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner, Object editObject, Object fieldValue, Field field) {
+			if (field.getName().equals("item_list_id")) {
+				ObjectSelectCellEditInteger<DItemList> item_list = 
+					new ObjectSelectCellEditInteger<DItemList>(DItemList.class);
+				item_list.setSelectedItem(fieldValue);
+				return item_list;
+			}
+			return null;
+		}
+		
+		@Override
+		public Component getCellRender(ObjectPropertyPanel owner, Object editObject,
+				Object fieldValue, Field field, DefaultTableCellRenderer src) {
+			if (field.getName().equals("item_list_id")) {
+				DItemList item_list = Studio.getInstance().getObjectManager().getObject(
+						DItemList.class,
+						(Integer)fieldValue);
+				src.setText(item_list.getData().name);
+				return src;
+			}
+			return null;
+		}
+		
+		@Override
+		public String getCellText(Object editObject, Field field, Object fieldSrcValue) {
+			if (field.getName().equals("item_list_id")) {
+				DItemList item_list = Studio.getInstance().getObjectManager().getObject(
+						DItemList.class,
+						(Integer)fieldSrcValue);
+				return item_list.getData().name;
+			}
+			return null;
+		}
+	}
+	
 
 	public static class ItemPropertiesSelectAdapter extends RPGObjectAdapter<TItem>
 	{
@@ -165,4 +210,6 @@ public class ObjectAdapters
 	}
 	
 
+	
+	
 }

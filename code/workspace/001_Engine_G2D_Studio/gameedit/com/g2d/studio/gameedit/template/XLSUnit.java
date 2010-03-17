@@ -89,7 +89,7 @@ final public class XLSUnit extends XLSTemplateNode<TUnit>
 		{
 			super(XLSUnit.this,
 					new ObjectAdapters.UnitBattleTeamNodeAdapter(),
-					new ObjectAdapters.UnitDropItemNodeAdapter());
+					new ObjectAdapters.ItemListIDSelectAdapter());
 			if (cpj_sprite!=null) {
 				set_binding.setIcon(cpj_sprite.getIcon(false));
 			}

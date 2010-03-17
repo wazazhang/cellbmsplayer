@@ -1,11 +1,12 @@
 package com.cell.rpg.template.ability;
 
 import com.cell.rpg.ability.AbilitiesVector;
+import com.cell.rpg.ability.AbstractAbility;
 import com.g2d.annotation.Property;
 
 
 @Property("[单位能力] 战斗队伍")
-public class UnitBattleTeam extends AbstractTemplateAbility
+public class UnitBattleTeam extends AbstractAbility
 {
 	private static final long serialVersionUID = 1L;
 
@@ -23,7 +24,7 @@ public class UnitBattleTeam extends AbstractTemplateAbility
 	}
 
 	@Property("[单位能力] 战斗队伍中的一个单位")
-	public static class TeamNode extends AbstractTemplateAbility 
+	public static class TeamNode extends AbstractAbility 
 	{
 		private static final long serialVersionUID = 1L;
 		
