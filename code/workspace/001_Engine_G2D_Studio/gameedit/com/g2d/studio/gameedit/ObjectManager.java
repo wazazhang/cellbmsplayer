@@ -11,6 +11,7 @@ import javax.swing.JTabbedPane;
 import com.cell.rpg.template.TAvatar;
 import com.cell.rpg.template.TEffect;
 import com.cell.rpg.template.TItem;
+import com.cell.rpg.template.TItemList;
 import com.cell.rpg.template.TSkill;
 import com.cell.rpg.template.TUnit;
 import com.cell.rpg.xls.XLSColumns;
@@ -20,6 +21,7 @@ import com.g2d.studio.Studio;
 import com.g2d.studio.Studio.ProgressForm;
 import com.g2d.studio.gameedit.dynamic.DAvatar;
 import com.g2d.studio.gameedit.dynamic.DEffect;
+import com.g2d.studio.gameedit.dynamic.DItemList;
 import com.g2d.studio.gameedit.entity.ObjectNode;
 import com.g2d.studio.gameedit.template.XLSItem;
 import com.g2d.studio.gameedit.template.XLSSkill;
@@ -43,6 +45,8 @@ public class ObjectManager extends ManagerForm implements ActionListener
 	final ObjectTreeViewTemplate<XLSSkill, TSkill>		tree_skills_view;
 	final ObjectTreeViewDynamic<DAvatar, TAvatar>		tree_avatars_view;
 	final ObjectTreeViewDynamic<DEffect, TEffect>		tree_effects_view;
+	final ObjectTreeViewDynamic<DItemList, TItemList>	tree_item_list_view;
+	
 //	final ObjectTreeViewDynamic<DQuestItem, QuestItem>	tree_quest_items_view;
 
 	
@@ -89,10 +93,10 @@ public class ObjectManager extends ManagerForm implements ActionListener
 			table.addTab("魔法效果/特效", Tools.createIcon(Res.icon_res_3), tree_effects_view);
 			table.addChangeListener(tree_effects_view);
 		}{
-//			// QuestItem
-//			tree_quest_items_view = new QuestItemTreeView("任务标志", new File(objects_dir, "questitem.obj/questitem.list"));
-//			table.addTab("任务标志", Tools.createIcon(Res.icon_quest), tree_quest_items_view);
-//			table.addChangeListener(tree_quest_items_view);
+			// DItemList
+			tree_item_list_view = new ItemListTreeView("掉落/商店道具列表", new File(objects_dir, "titemlist.obj/titemlist.list"));
+			table.addTab("道具列表", Tools.createIcon(Res.icon_res_4), tree_item_list_view);
+			table.addChangeListener(tree_item_list_view);
 		}
 			
 		this.add(table, BorderLayout.CENTER);

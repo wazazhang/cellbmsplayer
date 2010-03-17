@@ -53,5 +53,8 @@ public class AbilityAdapter implements CellEditAdapter<Abilities>
 			Field field) {
 		return false;
 	}
-	
+	@Override
+	public String getCellText(Object editObject, Field field, Object fieldSrcValue) {
+		return null;
+	}
 }

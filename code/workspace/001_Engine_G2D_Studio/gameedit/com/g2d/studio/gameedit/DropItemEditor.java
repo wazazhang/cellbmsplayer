@@ -19,6 +19,7 @@ import javax.swing.SpinnerNumberModel;
 
 import com.cell.CUtil;
 import com.cell.rpg.template.ability.UnitDropItem.DropItemNode;
+import com.cell.rpg.template.ability.UnitDropItem.DropItems;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.Studio;
@@ -29,7 +30,7 @@ import com.g2d.studio.swing.G2DListItem;
 import com.g2d.util.AbstractDialog;
 import com.g2d.util.AbstractOptionDialog;
 
-public class DropItemEditor extends AbstractDialog implements PropertyCellEdit<DropItemNode[]> , ActionListener
+public class DropItemEditor extends AbstractDialog implements PropertyCellEdit<DropItems> , ActionListener
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -46,7 +47,7 @@ public class DropItemEditor extends AbstractDialog implements PropertyCellEdit<D
 	JButton 					ok			= new JButton("确定");
 	
 	
-	public DropItemEditor(Component owner, DropItemNode[] src) 
+	public DropItemEditor(Component owner, DropItems src) 
 	{
 		super(owner);
 		super.setIconImage(Res.icon_edit);
@@ -122,12 +123,14 @@ public class DropItemEditor extends AbstractDialog implements PropertyCellEdit<D
 	}
 	
 	@Override
-	public DropItemNode[] getValue() {
+	public DropItems getValue() {
 		Vector<DropItemNode> values = new Vector<DropItemNode>(node_list.size());		
 		for (Node e : node_list) {
 			values.add(e.value);
 		}
-		return values.toArray(new DropItemNode[values.size()]);
+		DropItems ret = new DropItems();
+		ret.addAll(values);
+		return ret;
 	}
 	
 	@Override

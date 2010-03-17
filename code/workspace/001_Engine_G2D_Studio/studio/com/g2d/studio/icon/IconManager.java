@@ -30,15 +30,10 @@ public class IconManager extends ManagerForm
 			for (int i=0;i<files.length; i++) {
 				File file = files[i];
 				if (file.getName().endsWith(Config.ICON_SUFFIX)) {
-					try{
-						BufferedImage img = Tools.readImage(file.getPath());
-						if (img!=null) {
-							IconFile icon = new IconFile(
-									file.getName().substring(0, file.getName().length() - Config.ICON_SUFFIX.length()), 
-									img);
-							icon_files.add(icon);
-						}
-					}catch(Exception err){}
+					IconFile icon = new IconFile(
+							file.getName().substring(0, file.getName().length() - Config.ICON_SUFFIX.length()), 
+							file);
+					icon_files.add(icon);
 				}					
 				progress.setValue("", i);
 			}
@@ -49,7 +44,11 @@ public class IconManager extends ManagerForm
 		icons.setLayoutOrientation(JList.HORIZONTAL_WRAP);
 		this.add(new JScrollPane(icons));
 		
-		 saveAll();
+		new Thread(){
+			public void run() {
+				saveAll();
+			}
+		}.start();
 	}
 	
 	public Vector<IconFile> getIcons() {
@@ -67,13 +66,15 @@ public class IconManager extends ManagerForm
 	
 	public void saveAll() 
 	{
-		File save_dir = new File(Studio.getInstance().project_save_path.getPath() + File.separatorChar +"icons");
-		save_dir.mkdirs();
-		StringBuffer sb = new StringBuffer();
-		for (IconFile icon : icon_files) {
-			sb.append(icon.getListName()+","+icon.image.getWidth()+","+icon.image.getHeight()+"\n");
+		synchronized (icon_files) {
+			File save_dir = new File(Studio.getInstance().project_save_path.getPath() + File.separatorChar +"icons");
+			save_dir.mkdirs();
+			StringBuffer sb = new StringBuffer();
+			for (IconFile icon : icon_files) {
+				sb.append(icon.getListName()+","+icon.getImage().getWidth()+","+icon.getImage().getHeight()+"\n");
+			}
+			File save_file = new File(save_dir, "icon.list");
+			com.cell.io.CFile.writeText(save_file, sb.toString(), "UTF-8");
 		}
-		File save_file = new File(save_dir, "icon.list");
-		com.cell.io.CFile.writeText(save_file, sb.toString(), "UTF-8");
 	}
 }

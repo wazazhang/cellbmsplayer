@@ -17,7 +17,7 @@ import com.cell.game.CSprite;
 import com.cell.rpg.quest.ability.QuestAccepter;
 import com.cell.rpg.quest.ability.QuestPublisher;
 import com.cell.rpg.scene.Actor;
-import com.cell.rpg.scene.ability.ActorDropItem;
+import com.cell.rpg.template.ability.UnitDropItem;
 import com.g2d.annotation.Property;
 import com.g2d.cell.CellSetResource;
 import com.g2d.cell.CellSetResource.SpriteSet;
@@ -55,7 +55,7 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 	Rectangle					snap_shape = new Rectangle(-2, -2, 4, 4);
 	AbilityEffectInfos<Actor>	effects = new AbilityEffectInfos<Actor>(
 			new Class<?>[]{
-					ActorDropItem.class, 
+					UnitDropItem.class, 
 					QuestPublisher.class,
 					QuestAccepter.class,
 					},

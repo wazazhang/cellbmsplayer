@@ -9,9 +9,11 @@ import com.cell.rpg.template.TItem;
 import com.cell.rpg.template.ability.UnitBattleTeam;
 import com.cell.rpg.template.ability.UnitDropItem;
 import com.cell.rpg.template.ability.UnitDropItem.DropItemNode;
+import com.cell.rpg.template.ability.UnitDropItem.DropItems;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.Studio;
+import com.g2d.studio.gameedit.template.XLSItem;
 import com.g2d.studio.gameedit.template.XLSUnit;
 import com.g2d.studio.item.ItemPropertiesNode;
 import com.g2d.studio.item.ItemPropertiesSelectCellEdit;
@@ -77,21 +79,13 @@ public class ObjectAdapters
 			return UnitDropItem.class;
 		}
 		
-//		@Override
-//		public Object getCellValue(Object editObject, PropertyCellEdit<?> fieldEdit, Field field, Object fieldSrcValue) {
-//			if (field.getName().equals("drop_types")) {
-//				
-//			}
-//			return null;
-//		}
-		
 		@Override
 		public PropertyCellEdit<?> getCellEdit(
 				ObjectPropertyPanel owner,
 				Object editObject, 
 				Object fieldValue, Field field) {
-			if (field.getName().equals("drop_types")){
-				DropItemEditor editor = new DropItemEditor(owner, (DropItemNode[])fieldValue);
+			if (field.getName().equals("item_types")){
+				DropItemEditor editor = new DropItemEditor(owner, (DropItems)fieldValue);
 				editor.setVisible(true);
 				return editor;
 			}
@@ -100,10 +94,31 @@ public class ObjectAdapters
 		
 		@Override
 		public Component getCellRender(ObjectPropertyPanel owner, Object editObject, Object fieldValue, Field field, DefaultTableCellRenderer src) {
-			if (field.getName().equals("drop_types")){
+			if (field.getName().equals("item_types")){
 				if (fieldValue!=null) {
-					DropItemEditor editor = new DropItemEditor(owner, (DropItemNode[])fieldValue);
+					DropItemEditor editor = new DropItemEditor(owner, (DropItems)fieldValue);
 					return editor.getComponent(null);
+				}
+			}
+			return null;
+		}
+		
+		@Override
+		public String getCellText(Object editObject, Field field, Object fieldSrcValue) {
+			if (field.getName().equals("item_types")){
+				DropItems types = (DropItems)fieldSrcValue;
+				if (types != null) {
+					StringBuffer sb = new StringBuffer();
+					for (DropItemNode n : types) {
+						XLSItem item = Studio.getInstance().getObjectManager().getObject(XLSItem.class, n.titem_id);
+						if (item != null) {
+							sb.append("[" + item.getData().getName() + "(" + n.drop_rate_percent + "%)" + "]");
+						} else {
+							sb.append("[" + n.titem_id               + "(" + n.drop_rate_percent + "%)" + "]");
+						}
+						sb.append("  ·  ");
+					}
+					return sb.toString();
 				}
 			}
 			return null;

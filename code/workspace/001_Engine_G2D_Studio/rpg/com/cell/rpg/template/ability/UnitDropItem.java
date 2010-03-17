@@ -1,15 +1,17 @@
 package com.cell.rpg.template.ability;
 
+import java.util.ArrayList;
+
 import com.cell.rpg.ability.AbstractAbility;
 import com.g2d.annotation.Property;
 
-@Property("[单位能力] 掉落物品")
+@Property("[单位能力] 掉落/售卖物品")
 public class UnitDropItem extends AbstractAbility
 {
 	private static final long serialVersionUID = 1L;
 
 	@Property("产生的单位")
-	public DropItemNode[] drop_types;
+	public DropItems	item_types = new DropItems();
 	
 	public UnitDropItem() {}
 	
@@ -18,7 +20,12 @@ public class UnitDropItem extends AbstractAbility
 		return true;
 	}
 
-	@Property("[单位能力] 掉落物品")
+	public static class DropItems extends ArrayList<DropItemNode>
+	{
+		private static final long serialVersionUID = 1L;
+	}
+	
+	@Property("[单位能力] 掉落/售卖物品")
 	public static class DropItemNode extends AbstractAbility
 	{
 		private static final long serialVersionUID = 1L;

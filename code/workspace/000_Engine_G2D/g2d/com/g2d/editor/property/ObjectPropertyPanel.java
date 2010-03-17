@@ -174,15 +174,24 @@ public class ObjectPropertyPanel extends JPanel
 		public void valueChanged(ListSelectionEvent event) {
 			try {
 				int r = rows_table.getSelectedRow();
-				int c = 3;
-				Field field = (Field) rows.elementAt(r)[c];
-				Property doc = field.getAnnotation(Property.class);
-				if (doc != null) {
-					anno_text.setText(CUtil.arrayToString(doc.value(), "\n") + 
-							"--------------------\n" + field.get(object));
-				} else {
-					anno_text.setText(field.getName() + "\n" +
-							"--------------------\n" + field.get(object));
+				if (r>=0 && r<rows.size()) {
+					int c = 3;
+					Field	field 		= (Field) rows.elementAt(r)[c];
+					Object	field_value	= field.get(object);
+					String	field_text	= getPropertyCellText(object, field, field_value);
+
+					Property doc = field.getAnnotation(Property.class);
+					if (doc != null) {
+						anno_text.setText(
+								CUtil.arrayToString(doc.value(), "\n") + 
+								"--------------------------\n" + 
+								field_text);
+					} else {
+						anno_text.setText(
+								field.getName() + "\n" +
+								"--------------------------\n" + 
+								field_text);
+					}
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -226,7 +235,7 @@ public class ObjectPropertyPanel extends JPanel
 	 * @param field_value	被编辑的对象类的字段当前值
 	 * @return
 	 */
-	protected Component getPropertyCellRender(DefaultTableCellRenderer src, Object object, Field field, Object field_value) {
+	final protected Component getPropertyCellRender(DefaultTableCellRenderer src, Object object, Field field, Object field_value) {
 		try {
 			for (CellEditAdapter<?> ad : edit_adapters.values()) {
 				if (ad.getType().isInstance(object)) {
@@ -240,6 +249,29 @@ public class ObjectPropertyPanel extends JPanel
 			e.printStackTrace();
 		}
 		return src;
+	}
+	
+	/**
+	 * 用户自定义该字段显示的内容(下面的信息栏里)
+	 * @param object		被编辑的对象
+	 * @param field			被编辑的对象类的字段
+	 * @param field_value	被编辑的对象类的字段当前值
+	 * @return
+	 */
+	final protected String getPropertyCellText(Object object, Field field, Object field_value) {
+		try {
+			for (CellEditAdapter<?> ad : edit_adapters.values()) {
+				if (ad.getType().isInstance(object)) {
+					String ret = ad.getCellText(object, field, field_value);
+					if (ret != null) {
+						return ret;
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return field_value + "";
 	}
 	
 	/**
@@ -513,6 +545,11 @@ public class ObjectPropertyPanel extends JPanel
 				Object edit_object,
 				Object field_value, 
 				Field field);
+		
+		public String getCellText(
+				Object edit_object, 
+				Field field, 
+				Object field_src_value);
 
 	}
 	

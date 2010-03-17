@@ -76,6 +76,10 @@ public class RPGObjectPanel extends JPanel
 		public Object getCellValue(Object editObject, PropertyCellEdit<?> fieldEdit, Field field, Object fieldSrcValue) {
 			return null;
 		}
+		@Override
+		public String getCellText(Object editObject, Field field, Object fieldSrcValue) {
+			return null;
+		}
 	}
 
 //	-----------------------------------------------------------------------------------------------------------------------------
