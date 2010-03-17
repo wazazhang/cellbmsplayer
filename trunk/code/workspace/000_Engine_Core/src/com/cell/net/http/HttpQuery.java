@@ -36,6 +36,13 @@ public class HttpQuery implements Runnable
 		this.timeout = timeout;
 		this.listener = null;
 	}
+
+	public HttpQuery(String url, int timeout, String charset) {
+		this.url = url;
+		this.timeout = timeout;
+		this.listener = null;
+	}
+	
 	
 	public void run() 
 	{
@@ -81,6 +88,14 @@ public class HttpQuery implements Runnable
 		return query.result;
 	}
 	
+	public static String blockQuery(String url, int timeout, String charset)
+	{
+		HttpQuery query = new HttpQuery(url, timeout, charset);
+		query.run();
+		return query.result;
+	}
+	
+	
 	public static void query(String url, HttpQueryListener listener)
 	{
 		query(url, 20000, listener);
@@ -89,7 +104,11 @@ public class HttpQuery implements Runnable
 	public static void query(String url, int timeout, HttpQueryListener listener)
 	{
 		new Thread(new HttpQuery(url, timeout, listener)).start();
-      
+	}
+
+	public static void query(String url, int timeout, HttpQueryListener listener, String charset)
+	{
+		new Thread(new HttpQuery(url, timeout, listener, charset)).start();
 	}
 	
 	public static void main(String[] args) 
