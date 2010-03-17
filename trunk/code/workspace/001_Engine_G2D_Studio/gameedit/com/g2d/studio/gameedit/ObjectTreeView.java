@@ -118,11 +118,20 @@ extends JSplitPane implements TreeSelectionListener, ChangeListener
 	@Override
 	public void valueChanged(TreeSelectionEvent e) {
 		if (node_type.isInstance(e.getPath().getLastPathComponent())) {
+			int tb_index = 0;
 			old_right = getRightComponent();
+			if (old_right instanceof ObjectViewer<?>) {
+				ObjectViewer<?> old_viewer = (ObjectViewer<?>)old_right;
+				tb_index = old_viewer.table.getSelectedIndex();
+			}
 			T node = node_type.cast(e.getPath().getLastPathComponent());
 			if (node.getEditComponent()!=null) {
 				node.getEditComponent().setVisible(true);
 				this.setRightComponent(node.getEditComponent());
+				if (node.getEditComponent() instanceof ObjectViewer<?>) {
+					ObjectViewer<?> new_viewer = (ObjectViewer<?>)node.getEditComponent();
+					new_viewer.table.setSelectedIndex(tb_index);
+				}
 			}
 			if (old_right != null && old_right != node.getEditComponent()) {
 				old_right.setVisible(false);
