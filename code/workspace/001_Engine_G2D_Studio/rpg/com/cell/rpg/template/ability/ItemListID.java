@@ -5,7 +5,7 @@ import com.g2d.annotation.Property;
 
 
 @Property("道具列表ID")
-public class ItemListID extends AbstractAbility
+public abstract class ItemListID extends AbstractAbility
 {
 	private static final long serialVersionUID = 1L;
 	
