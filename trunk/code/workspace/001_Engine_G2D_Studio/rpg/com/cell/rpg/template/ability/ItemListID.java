@@ -14,7 +14,7 @@ public abstract class ItemListID extends AbstractAbility
 	public int item_list_id = -1;
 	
 	@Override
-	public boolean isMultiField() {
-		return true;
+	final public boolean isMultiField() {
+		return false;
 	}
 }
