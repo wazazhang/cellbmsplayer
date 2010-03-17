@@ -152,7 +152,9 @@ public class ObjectAdapters
 				DItemList item_list = Studio.getInstance().getObjectManager().getObject(
 						DItemList.class,
 						(Integer)fieldValue);
-				src.setText(item_list.getData().name);
+				if (src != null) {
+					src.setText(item_list.getData().name);
+				}
 				return src;
 			}
 			return null;
