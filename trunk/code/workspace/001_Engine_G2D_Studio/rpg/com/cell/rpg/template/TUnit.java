@@ -1,6 +1,7 @@
 package com.cell.rpg.template;
 
 import com.cell.rpg.display.UnitNode;
+import com.cell.rpg.template.ability.ItemListID;
 import com.cell.rpg.template.ability.UnitBattleTeam;
 
 
@@ -28,7 +29,7 @@ public class TUnit extends TemplateNode
 	public Class<?>[] getSubAbilityTypes() {
 		return new Class<?>[]{
 				UnitBattleTeam.class,
-//				UnitDropItem.class,
+				ItemListID.class,
 		};
 	}
 }

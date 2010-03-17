@@ -1,5 +1,6 @@
 package com.cell.rpg.scene.ability;
 
+import com.cell.rpg.ability.AbstractAbility;
 import com.g2d.annotation.Property;
 
 /**
@@ -8,7 +9,7 @@ import com.g2d.annotation.Property;
  *
  */
 @Property("[单位能力] 场景传送点")
-public class ActorTransport extends AbstractSceneAbility {
+public class ActorTransport extends AbstractAbility {
 
 	private static final long serialVersionUID = 1L;
 	

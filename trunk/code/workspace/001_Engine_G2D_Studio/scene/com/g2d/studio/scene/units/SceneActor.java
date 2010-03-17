@@ -299,7 +299,7 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 		return new SceneUnitTagEditor(this,
 				new SceneAbilityAdapters.ActorPathStartAdapter(editor),
 				new SceneAbilityAdapters.ActorTransportAdapter(editor),
-				new ObjectAdapters.UnitDropItemNodeAdapter(),
+				new ObjectAdapters.ItemListIDSelectAdapter(),
 				new QuestCellEditAdapter.QuestTriggerAdapter()
 				);
 	}
