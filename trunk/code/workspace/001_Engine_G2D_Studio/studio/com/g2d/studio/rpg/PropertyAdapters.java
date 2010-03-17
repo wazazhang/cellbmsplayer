@@ -73,7 +73,10 @@ public enum PropertyAdapters
 				PropertyCellEdit<?> fieldEdit, Field field, Object fieldSrcValue) {
 			return null;
 		}
-		
+		@Override
+		public String getCellText(Object editObject, Field field, Object fieldSrcValue) {
+			return null;
+		}
 	}
 	
 }

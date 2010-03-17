@@ -63,7 +63,10 @@ public class ItemPropertiesAdapter
 		public Component getCellRender(ObjectPropertyPanel owner, Object editObject, Object fieldValue, Field field, DefaultTableCellRenderer src) {
 			return null;
 		}
-
+		@Override
+		public String getCellText(Object editObject, Field field, Object fieldSrcValue) {
+			return null;
+		}
 	}
 
 }

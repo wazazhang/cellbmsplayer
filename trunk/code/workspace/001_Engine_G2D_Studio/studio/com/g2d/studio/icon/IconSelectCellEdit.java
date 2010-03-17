@@ -21,7 +21,7 @@ public class IconSelectCellEdit extends IconSelectDialog implements PropertyCell
 		IconFile icon = getSelectedObject();
 		if (icon!=null) {
 			edit_label.setText(icon.icon_file_name);	
-			edit_label.setIcon(icon.icon);
+			edit_label.setIcon(icon.getListIcon(false));
 		} else {
 			edit_label.setText("");	
 			edit_label.setIcon(null);
@@ -31,7 +31,7 @@ public class IconSelectCellEdit extends IconSelectDialog implements PropertyCell
 		}
 		return edit_label;
 	}
-	
+
 	@Override
 	public String getValue() {
 		IconFile icon = getSelectedObject();

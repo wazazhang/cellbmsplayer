@@ -313,6 +313,10 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 			PropertyCellEdit<?> fieldEdit, Field field, Object fieldSrcValue) {
 			return null;
 		}
+		@Override
+		public String getCellText(Object editObject, Field field, Object fieldSrcValue) {
+			return null;
+		}
 	}
 	
 
@@ -341,6 +345,10 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 		@Override
 		public Object getCellValue(Object editObject,
 			PropertyCellEdit<?> fieldEdit, Field field, Object fieldSrcValue) {
+			return null;
+		}
+		@Override
+		public String getCellText(Object editObject, Field field, Object fieldSrcValue) {
 			return null;
 		}
 	}

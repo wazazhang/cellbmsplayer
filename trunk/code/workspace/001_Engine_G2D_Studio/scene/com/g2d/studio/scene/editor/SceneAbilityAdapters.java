@@ -58,7 +58,10 @@ public class SceneAbilityAdapters
 		public Class<Scene> getType() {
 			return Scene.class;
 		}
-		
+		@Override
+		public String getCellText(Object editObject, Field field, Object fieldSrcValue) {
+			return null;
+		}
 	}
 	
 	/**

@@ -2,6 +2,7 @@ package com.g2d.studio.icon;
 
 import java.awt.Component;
 import java.awt.image.BufferedImage;
+import java.io.File;
 
 import javax.swing.ImageIcon;
 import javax.swing.JList;
@@ -12,23 +13,30 @@ import com.g2d.studio.swing.G2DListItem;
 public class IconFile implements G2DListItem
 {
 	final public String 		icon_file_name;
-	
-	transient 
-	final public BufferedImage	image;
-	
-	transient 
-	final protected ImageIcon 	icon;	
+	final public File			image_file;
 	
 	
-	IconFile(String name, BufferedImage	image) {
+	transient private BufferedImage	image;
+	transient private ImageIcon 	icon;	
+	
+	
+	IconFile(String name, File image_file) {
 		this.icon_file_name = name;
-		this.image			= image;
-		this.icon			= Tools.createIcon(image);
-//		System.out.println("create a icon file : " + name);
+		this.image_file		= image_file;
+	}
+	
+	public BufferedImage getImage() {
+		if (image == null) {
+			image = Tools.readImage(image_file.getPath());
+		}
+		return image;
 	}
 	
 	@Override
 	public ImageIcon getListIcon(boolean update) {
+		if (icon == null) {
+			icon = new ImageIcon(getImage());
+		}
 		return icon;
 	}
 	
@@ -36,6 +44,7 @@ public class IconFile implements G2DListItem
 	public String getListName() {
 		return icon_file_name;
 	}
+	
 	@Override
 	public Component getListComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 		return null;

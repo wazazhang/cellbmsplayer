@@ -57,7 +57,7 @@ public class QuestNode extends DynamicNode<Quest>
 	protected ImageIcon createIcon() {
 		icon_file = Studio.getInstance().getIconManager().getIcon(getData().icon_index);
 		if (icon_file!=null) {
-			return new ImageIcon(Tools.combianImage(20, 20, icon_file.image));
+			return new ImageIcon(Tools.combianImage(20, 20, icon_file.getImage()));
 		} else {
 			return new ImageIcon(Tools.combianImage(20, 20, Res.icon_quest));
 		}
