@@ -73,7 +73,7 @@ public class QuestCellEditAdapter {
 		@Override
 		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner, Object editObject, Object fieldValue, Field field) {
 			if (field.getName().equals("quest_id")) {
-				QuestSelectCellEdit edit = new QuestSelectCellEdit(AbstractDialog.getTopWindow(owner));
+				QuestSelectCellEdit edit = new QuestSelectCellEdit(AbstractDialog.getTopWindow(owner), false);
 				edit.showDialog();
 				return edit;
 			}
@@ -119,7 +119,7 @@ public class QuestCellEditAdapter {
 		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner,
 			Object editObject, Object fieldValue, Field field) {
 			if (field.getName().equals("quest_id")) {
-				QuestSelectCellEdit edit = new QuestSelectCellEdit(owner);
+				QuestSelectCellEdit edit = new QuestSelectCellEdit(owner, true);
 				edit.showDialog();
 				return edit;
 			}
@@ -228,7 +228,7 @@ public class QuestCellEditAdapter {
 		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner,
 			Object editObject, Object fieldValue, Field field) {
 			if (field.getName().equals("quest_id")) {
-				QuestSelectCellEdit edit = new QuestSelectCellEdit(owner);
+				QuestSelectCellEdit edit = new QuestSelectCellEdit(owner, true);
 				edit.showDialog();
 				return edit;
 			}

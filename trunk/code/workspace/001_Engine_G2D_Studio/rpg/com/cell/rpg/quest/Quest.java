@@ -81,6 +81,10 @@ public class Quest extends RPGObject implements NamedObject
 	@Property({"单人任务", "接了某些任务后战魂就不能出战"})
 	public boolean				is_single_quest		= false;
 	
+	/** "临时任务","任务做完后删除状态，该类型任务不能作为任务前置条件" */ 
+	@Property({"临时任务","任务做完后删除状态，该类型任务不能作为任务前置条件"})
+	public boolean				is_transient_quest	= false;
+	
 //	----------------------------------------------------------------------------------------------------------------
 	public Quest(Integer id, String name) {
 		super(id.toString());

@@ -255,7 +255,8 @@ public class SceneImmutable extends SceneSprite implements SceneUnitTag<Immutabl
 	public DisplayObjectEditor<?> createEditorForm() {
 		return new SceneUnitTagEditor(this,
 				new SceneAbilityAdapters.ActorPathStartAdapter(editor),
-				new SceneAbilityAdapters.ActorTransportAdapter(editor));
+				new SceneAbilityAdapters.ActorTransportAdapter(editor)
+				);
 	}
 	
 	@Override

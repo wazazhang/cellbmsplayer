@@ -42,10 +42,18 @@ public class Res
 
 //	---------------------------------------------------------------------------------------------------------------
 //	images
+	static public BufferedImage	img_splash			= Tools.readImage("/com/g2d/studio/res/splash.jpg");
+	
 	static public BufferedImage	img_item_info		= Tools.readImage("/com/g2d/studio/res/img_item_info.png");
 	static public BufferedImage	img_quest_info		= Tools.readImage("/com/g2d/studio/res/img_quest_info.png");
 	static public BufferedImage	img_quest_info2		= Tools.readImage("/com/g2d/studio/res/img_quest_info2.png");
-	static public BufferedImage	img_splash			= Tools.readImage("/com/g2d/studio/res/splash.jpg");
+	static public BufferedImage	img_npc_bank		= Tools.readImage("/com/g2d/studio/res/img_npc_bank.png");
+	static public BufferedImage	img_skill_trainer	= Tools.readImage("/com/g2d/studio/res/img_skill_trainer.png");
+	static public BufferedImage	img_sell_item		= Tools.readImage("/com/g2d/studio/res/img_sell_item.png");
+	static public BufferedImage	img_transport		= Tools.readImage("/com/g2d/studio/res/img_transport.png");
+	static public BufferedImage	img_job_trainer		= Tools.readImage("/com/g2d/studio/res/img_job_trainer.png");
+	static public BufferedImage	img_talk			= Tools.readImage("/com/g2d/studio/res/img_talk.png");
+	
 	
 //	---------------------------------------------------------------------------------------------------------------
 	
