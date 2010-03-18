@@ -24,7 +24,6 @@ public class Quest extends RPGObject implements NamedObject
 	@Property("任务标志")
 	public QuestFlags			quest_flags			= new QuestFlags();
 
-	
 	/**满足条件时自动接收*/
 	@Property("满足条件时自动接收")
 	public boolean				auto_accept			= false;
@@ -44,24 +43,21 @@ public class Quest extends RPGObject implements NamedObject
 	public QuestGenerator		quest_generator		= new QuestGenerator();
 	
 //	-----------------------------------------------------------------------------------
+//	quest tag
+	
 	/** 任务接受条件 */
 	public QuestCondition		accept_condition	= new QuestCondition();
 	/**任务接受奖励*/
 	public QuestAward			accept_award		= new QuestAward();
 
-//	-----------------------------------------------------------------------------------
 	/** 任务完成条件 */
 	public QuestCondition		complete_condition	= new QuestCondition();
 	/** 任务完成奖励 */
 	public QuestAward			complete_award		= new QuestAward();
 
-//	-----------------------------------------------------------------------------------
 	/** 任务放弃动作，仅一个 */
 	public QuestActionSingle	discard_action		= new QuestActionSingle();
-	
-//	/** 任务放弃奖励 */
-	transient private QuestAward discard_award;
-	
+
 //	----------------------------------------------------------------------------------------------------------------
 //	extend
 
@@ -69,8 +65,21 @@ public class Quest extends RPGObject implements NamedObject
 	@Property("任务图标")
 	public String				icon_index;
 	
+	/** 任务等级 */ 
 	@Property("任务等级")
 	public Integer				quest_level;
+	
+	/** "组队任务", "可以主动共享给其他玩家" */ 
+	@Property({"组队任务", "可以主动共享给其他玩家"})
+	public boolean				is_team_quest		= false;
+	
+	/** "玩家任务", "接了某些任务后就不能够结成组队战斗关系"*/ 
+	@Property({"玩家任务", "接了某些任务后就不能够结成组队战斗关系"})
+	public boolean				is_player_quest		= false;
+	
+	/** "单人任务", "接了某些任务后战魂就不能出战" */ 
+	@Property({"单人任务", "接了某些任务后战魂就不能出战"})
+	public boolean				is_single_quest		= false;
 	
 //	----------------------------------------------------------------------------------------------------------------
 	public Quest(Integer id, String name) {
