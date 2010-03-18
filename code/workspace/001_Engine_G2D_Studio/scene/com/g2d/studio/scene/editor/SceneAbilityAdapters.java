@@ -38,6 +38,8 @@ import com.g2d.studio.scene.units.ScenePoint;
 import com.g2d.studio.sound.SoundSelectDialog;
 import com.g2d.studio.swing.G2DList;
 import com.g2d.studio.swing.G2DListItem;
+import com.g2d.studio.talks.TalkFile;
+import com.g2d.studio.talks.TalkSelectDialog;
 import com.g2d.util.AbstractDialog;
 import com.g2d.util.AbstractOptionDialog;
 
@@ -354,12 +356,45 @@ public class SceneAbilityAdapters
 				Object editObject, Object fieldValue, Field field) {
 			if (field.getName().equals("npc_talk")){
 				if (editObject instanceof IActorAbility) {
-					// TODO 选择一个NPCTALK
+					NpcTalkSelecDialog talk = new NpcTalkSelecDialog(owner);
+					talk.showDialog();
+					return talk;
 				}
 			}
 			return null;
 		}
 		
+		static class NpcTalkSelecDialog extends TalkSelectDialog implements PropertyCellEdit<String>
+		{
+			private static final long serialVersionUID = 1L;
+			
+			JLabel talk_name = new JLabel();
+			
+			public NpcTalkSelecDialog(Component owner) {
+				super(owner);
+			}
+			@Override
+			public Component getComponent(ObjectPropertyPanel panel) {
+				TalkFile file = getSelectedObject();
+				if (file != null) {
+					talk_name.setText(file.getListName());
+					talk_name.setIcon(file.getListIcon(false));
+				} else {
+					talk_name.setText("");
+					talk_name.setIcon(null1);
+				}
+				return talk_name;
+			}
+			@Override
+			public String getValue() {
+				TalkFile file = getSelectedObject();
+				if (file != null) {
+					return file.talk_file_name;
+				}
+				return null;
+			}
+			
+		}
 	}
 	
 //	if (object instanceof AbilitySceneNPCSpawn)
