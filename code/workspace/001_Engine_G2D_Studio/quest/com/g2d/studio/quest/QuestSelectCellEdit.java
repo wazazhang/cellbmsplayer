@@ -12,8 +12,11 @@ public class QuestSelectCellEdit extends G2DListSelectDialog<QuestNode> implemen
 {
 	JLabel cell_edit_component = new JLabel();
 	
-	public QuestSelectCellEdit(Component owner) {
-		super(owner, new QuestList());
+	/**
+	 * @param not_transient 是否排除所有临时任务
+	 */
+	public QuestSelectCellEdit(Component owner, boolean not_transient) {
+		super(owner, new QuestList(not_transient));
 	}
 	
 	@Override

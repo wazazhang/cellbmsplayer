@@ -70,6 +70,16 @@ public class QuestManager extends ManagerForm implements ActionListener
 				npc_class);
 	}
 	
+	public Vector<QuestNode> getDependedQuests() {
+		Vector<QuestNode> ret = new Vector<QuestNode>();
+		for (QuestNode n : tree_view.getAllObject()) {
+			if (!n.getData().is_transient_quest) {
+				ret.add(n);
+			}
+		}
+		return ret;
+	}
+	
 	public Vector<QuestNode> getQuests() {
 		return tree_view.getAllObject();
 	}

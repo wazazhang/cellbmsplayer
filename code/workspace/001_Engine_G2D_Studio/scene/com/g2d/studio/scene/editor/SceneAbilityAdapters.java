@@ -1,25 +1,45 @@
 package com.g2d.studio.scene.editor;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.event.ActionEvent;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Vector;
 
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import com.cell.rpg.ability.AbstractAbility;
 import com.cell.rpg.scene.Scene;
+import com.cell.rpg.scene.ability.ActorJobTrainer;
 import com.cell.rpg.scene.ability.ActorPathStart;
+import com.cell.rpg.scene.ability.ActorSkillTrainer;
 import com.cell.rpg.scene.ability.ActorTransport;
+import com.cell.rpg.scene.ability.IActorAbility;
 import com.cell.rpg.scene.ability.RegionSpawnNPC.NPCSpawn;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.editor.property.ObjectPropertyPanel.CellEditAdapter;
 import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.ObjectSelectCellEdit;
+import com.g2d.studio.gameedit.ObjectSelectDialog;
+import com.g2d.studio.gameedit.template.XLSSkill;
 import com.g2d.studio.gameedit.template.XLSUnit;
 import com.g2d.studio.rpg.AbilityPanel.AbilityCellEditAdapter;
 import com.g2d.studio.scene.entity.SceneNode;
 import com.g2d.studio.scene.units.SceneImmutable;
 import com.g2d.studio.scene.units.ScenePoint;
 import com.g2d.studio.sound.SoundSelectDialog;
+import com.g2d.studio.swing.G2DList;
+import com.g2d.studio.swing.G2DListItem;
+import com.g2d.util.AbstractDialog;
+import com.g2d.util.AbstractOptionDialog;
 
 public class SceneAbilityAdapters
 {
@@ -195,8 +215,152 @@ public class SceneAbilityAdapters
 		}
 		
 	}
-
 	
+	public static class ActorSkillTrainerAdapter extends AbilityCellEditAdapter<ActorSkillTrainer>
+	{
+		@Override
+		public Class<ActorSkillTrainer> getType() {
+			return ActorSkillTrainer.class;
+		}
+		
+		@Override
+		@SuppressWarnings("unchecked")
+		public PropertyCellEdit<?> getCellEdit(
+				ObjectPropertyPanel owner,
+				Object editObject,
+				Object fieldValue, Field field) {
+			if (field.getName().equals("skills_id")){
+				SkillListDialog dialog = new SkillListDialog((ArrayList<Integer>)fieldValue);
+				dialog.setSize(260, 400);
+				dialog.showDialog();
+				return dialog;
+			}
+			return null;
+		}
+		
+		@Override
+		@SuppressWarnings("unchecked")
+		public String getCellText(Object editObject, Field field, Object fieldSrcValue) {
+			if (field.getName().equals("skills_id")){
+				ArrayList<Integer> list = (ArrayList<Integer>)fieldSrcValue;
+				if (list != null) {
+					StringBuffer sb = new StringBuffer();
+					for (Integer skill_id : list) {
+						XLSSkill skill = Studio.getInstance().getObjectManager().getObject(XLSSkill.class, skill_id);
+						if (skill != null) {
+							sb.append(skill.getName());
+						}
+					}
+					return sb.toString();
+				}
+			}
+			return null;
+		}
+		
+		static class SkillListDialog extends AbstractOptionDialog<ArrayList<Integer>> implements PropertyCellEdit<ArrayList<Integer>>
+		{
+			private static final long serialVersionUID = 1L;
+
+			Vector<XLSSkill> 	list_data 	= new Vector<XLSSkill>();
+			G2DList<XLSSkill> 	list 		= new G2DList<XLSSkill>();
+			
+			JButton btn_add_skill = new JButton("添加");
+			JButton btn_del_skill = new JButton("删除");
+
+			JLabel cell_edit_component = new JLabel();
+			
+			public SkillListDialog(ArrayList<Integer> init) 
+			{
+				btn_add_skill.addActionListener(this);
+				btn_del_skill.addActionListener(this);
+				south.add(btn_add_skill);
+				south.add(btn_del_skill);
+				
+				if (init != null) {
+					for (Integer skill_id : init) {
+						XLSSkill skill = Studio.getInstance().getObjectManager().getObject(XLSSkill.class, skill_id);
+						if (skill != null) {
+							list_data.add(skill);
+						}
+					}
+				}
+				list.setListData(list_data);
+				
+				super.add(new JScrollPane(list), BorderLayout.CENTER);
+			}
+			
+			@Override
+			protected ArrayList<Integer> getUserObject() {
+				return getValue();
+			}
+
+			@Override
+			public ArrayList<Integer> getValue() {
+				ArrayList<Integer> ret = new ArrayList<Integer>(list_data.size());
+				for (XLSSkill data : list_data) {
+					ret.add(data.getIntID());
+				}
+				return ret;
+			}
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (e.getSource() == btn_add_skill) {
+					ObjectSelectDialog<XLSSkill> dialog = new ObjectSelectDialog<XLSSkill>(this, XLSSkill.class, 10);
+					dialog.setSize(200, 400);
+					dialog.setLocation(getX()+getWidth(), getY());
+					XLSSkill skill = dialog.showDialog();
+					if (skill != null) {
+						list_data.add(skill);
+						list.setListData(list_data);
+						list.repaint();
+					}
+				} else if (e.getSource() == btn_del_skill) {
+					XLSSkill item = list.getSelectedItem();
+					if (item != null) {
+						list_data.remove(item);
+						list.setListData(list_data);
+						list.repaint();
+					}
+				} else {
+					super.actionPerformed(e);
+				}
+			}
+			
+			@Override
+			public Component getComponent(ObjectPropertyPanel panel) {
+				cell_edit_component.setText(getValue() + "");
+				return cell_edit_component;
+			}
+			
+			@Override
+			protected boolean checkOK() {
+				return true;
+			}
+			
+		}
+		
+	}
+	
+	public static class ActorTalkAdapter extends AbilityCellEditAdapter<AbstractAbility>
+	{
+		@Override
+		public Class<AbstractAbility> getType() {
+			return AbstractAbility.class;
+		}
+		
+		@Override
+		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner,
+				Object editObject, Object fieldValue, Field field) {
+			if (field.getName().equals("npc_talk")){
+				if (editObject instanceof IActorAbility) {
+					// TODO 选择一个NPCTALK
+				}
+			}
+			return null;
+		}
+		
+	}
 	
 //	if (object instanceof AbilitySceneNPCSpawn)
 //	{
