@@ -73,10 +73,10 @@ public abstract class ResourceManager extends CellSetResourceManager
 	protected Hashtable<Integer, String>	names_scenes;
 	
 	
-	// icons and sounds
+	// icons , sounds, talks
 	protected Hashtable<String, AtomicReference<BufferedImage>> 		all_icons;
 	protected Hashtable<String, AtomicReference<ISound>> 				all_sounds;
-
+	protected Hashtable<String, AtomicReference<String>> 				all_npc_talks;
 	
 //	--------------------------------------------------------------------------------------------------------------------
 
@@ -172,6 +172,11 @@ public abstract class ResourceManager extends CellSetResourceManager
 		all_sounds	= readSounds(save_dir + "/sounds/sound.list" );
 	}
 	
+	final protected void initNpcTalks() 
+	{
+		all_npc_talks = readNpcTalks(save_dir + "/talks/talks.list" );
+	}
+	
 //	--------------------------------------------------------------------------------------------------------------------
 
 	protected CellSetResource createSet(String path) throws Exception
@@ -253,6 +258,26 @@ public abstract class ResourceManager extends CellSetResourceManager
 		}
 		
 		System.out.println("list sounds : " + table.size());
+
+		return table;
+	}
+	
+	final protected Hashtable<String, AtomicReference<String>> readNpcTalks(String talklist)
+	{
+		System.out.println("list npc talks : " + talklist);
+
+		Hashtable<String, AtomicReference<String>> table = new Hashtable<String, AtomicReference<String>>();
+		
+		String[] res_list = CIO.readAllLine(talklist, "UTF-8");
+		
+		for (int i=0; i<res_list.length; i++)
+		{
+			table.put(res_list[i].trim(), new AtomicReference<String>(null));
+			if (PRINT_VERBOS)
+			System.out.println("\tget npc talk : " + res_list[i]);
+		}
+		
+		System.out.println("list npc talks : " + table.size());
 
 		return table;
 	}
@@ -442,6 +467,15 @@ public abstract class ResourceManager extends CellSetResourceManager
 	public ISound getSound(String index)
 	{
 		return all_sounds.get(index).get();
+	}
+	
+//	--------------------------------------------------------------------------------------------------------------------
+//	npc talks
+//	--------------------------------------------------------------------------------------------------------------------
+	
+	public String getNpcTalk(String index)
+	{
+		return all_npc_talks.get(index).get();
 	}
 
 //	--------------------------------------------------------------------------------------------------------------------

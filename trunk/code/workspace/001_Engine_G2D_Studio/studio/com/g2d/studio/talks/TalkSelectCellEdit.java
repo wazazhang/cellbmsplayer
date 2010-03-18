@@ -1,0 +1,47 @@
+package com.g2d.studio.talks;
+
+import java.awt.Component;
+import java.awt.Window;
+
+import javax.swing.JLabel;
+
+import com.g2d.editor.property.ObjectPropertyPanel;
+import com.g2d.editor.property.PropertyCellEdit;
+
+public class TalkSelectCellEdit extends TalkSelectDialog implements PropertyCellEdit<String>
+{
+	private static final long serialVersionUID = 1L;
+	
+	JLabel	edit_label 	= new JLabel();
+	
+	public TalkSelectCellEdit(Window owner) {
+		super(owner);
+	}
+	
+	@Override
+	public Component getComponent(ObjectPropertyPanel panel) {
+		TalkFile talk = getSelectedObject();
+		if (talk!=null) {
+			edit_label.setText(talk.talk_file_name);	
+			edit_label.setIcon(talk.getListIcon(false));
+		} else {
+			edit_label.setText("");	
+			edit_label.setIcon(null);
+		}
+		if (panel != null) {
+			panel.fireEditingStopped();
+		}
+		return edit_label;
+	}
+
+	@Override
+	public String getValue() {
+		TalkFile talk = getSelectedObject();
+		if (talk!=null) {
+			return talk.talk_file_name;
+		}
+		return null;
+	}
+	
+	
+}
