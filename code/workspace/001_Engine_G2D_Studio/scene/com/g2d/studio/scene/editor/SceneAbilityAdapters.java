@@ -381,7 +381,7 @@ public class SceneAbilityAdapters
 					talk_name.setIcon(file.getListIcon(false));
 				} else {
 					talk_name.setText("");
-					talk_name.setIcon(null1);
+					talk_name.setIcon(null);
 				}
 				return talk_name;
 			}
