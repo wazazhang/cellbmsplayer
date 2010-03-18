@@ -21,7 +21,7 @@ public class ActorTalk extends AbstractAbility  implements IActorAbility
 	
 	@Override
 	public boolean isMultiField() {
-		return false;
+		return true;
 	}
 }
 
