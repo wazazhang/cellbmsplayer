@@ -39,6 +39,7 @@ import com.g2d.studio.quest.QuestManager;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.scene.SceneManager;
 import com.g2d.studio.sound.SoundManager;
+import com.g2d.studio.talks.TalkManager;
 import com.g2d.util.AbstractFrame;
 import com.g2d.util.Util;
 
@@ -67,7 +68,8 @@ public class Studio extends AbstractFrame
 
 	final public File 				root_sound_path;
 	final public File 				root_icon_path;
-
+	final public File 				root_talk_path;
+	
 	final public File				xls_tplayer;
 	final public File 				xls_tunit;
 	final public File 				xls_titem;
@@ -80,6 +82,7 @@ public class Studio extends AbstractFrame
 	private ObjectManager			frame_object_manager;
 	private SoundManager			frame_sound_manager;
 	private IconManager				frame_icon_manager;
+	private TalkManager				frame_talk_manager;
 	private QuestManager			frame_quest_manager;
 	
 	private SceneManager			scene_manager;
@@ -116,6 +119,7 @@ public class Studio extends AbstractFrame
 		
 		root_icon_path		= getFile(Config.ICON_ROOT);
 		root_sound_path		= getFile(Config.SOUND_ROOT);
+		root_talk_path		= getFile(Config.TALK_ROOT);
 		
 		xls_tplayer			= getFile(Config.XLS_TPLAYER);
 		xls_tunit			= getFile(Config.XLS_TUNIT);
@@ -209,6 +213,19 @@ public class Studio extends AbstractFrame
 			btn.addActionListener(new ActionListener(){
 				public void actionPerformed(ActionEvent e) {
 					frame_sound_manager.setVisible(true);
+				}
+			});
+			tool_bar.add(btn);
+		}
+		// talk manager
+		{
+			frame_talk_manager = new TalkManager(this, progress);
+			JButton btn = new JButton();
+			btn.setToolTipText(frame_talk_manager.getTitle());
+			btn.setIcon(Tools.createIcon(frame_talk_manager.getIconImage()));
+			btn.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e) {
+					frame_talk_manager.setVisible(true);
 				}
 			});
 			tool_bar.add(btn);
@@ -339,6 +356,10 @@ public class Studio extends AbstractFrame
 	
 	public IconManager getIconManager() {
 		return frame_icon_manager;
+	}
+	
+	public TalkManager getTalkManager() {
+		return frame_talk_manager;
 	}
 	
 	public QuestManager getQuestManager() {

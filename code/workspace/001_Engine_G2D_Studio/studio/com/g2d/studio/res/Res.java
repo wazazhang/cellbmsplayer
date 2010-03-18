@@ -32,6 +32,7 @@ public class Res
 	static public BufferedImage	icon_camera			= Tools.readImage("/com/g2d/studio/res/icon_camera.png");
 	static public BufferedImage	icon_layer			= Tools.readImage("/com/g2d/studio/res/icon_layer.png");
 	static public BufferedImage	icon_affect			= Tools.readImage("/com/g2d/studio/res/icon_affect.png");
+	static public BufferedImage	icon_talk			= Tools.readImage("/com/g2d/studio/res/icon_talk.png");
 	
 	static public BufferedImage	icon_scene_graph	= Tools.readImage("/com/g2d/studio/res/icon_scene_graph.png");
 	
@@ -53,7 +54,6 @@ public class Res
 	static public BufferedImage	img_transport		= Tools.readImage("/com/g2d/studio/res/img_transport.png");
 	static public BufferedImage	img_job_trainer		= Tools.readImage("/com/g2d/studio/res/img_job_trainer.png");
 	static public BufferedImage	img_talk			= Tools.readImage("/com/g2d/studio/res/img_talk.png");
-	
 	
 //	---------------------------------------------------------------------------------------------------------------
 	
