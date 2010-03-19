@@ -28,21 +28,19 @@ public class Actor extends SceneSprite
 	public Class<?>[] getSubAbilityTypes()
 	{
 		return new Class<?>[]{
+				// flags
 				ActorTalk.class,
-				
 				ActorDropItem.class,
 				ActorSellItem.class,
 				ActorBank.class,
-				
 				ActorJobTrainer.class,
 				ActorSkillTrainer.class,
-				
-				ActorPathStart.class,
 				ActorTransport.class,
-				
 				QuestAccepter.class,
 				QuestPublisher.class,
-				
+
+				// path
+				ActorPathStart.class,
 			};
 	}
 }
