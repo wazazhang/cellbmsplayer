@@ -3,6 +3,8 @@ package com.cell.rpg.scene.graph;
 import java.util.Collection;
 import java.util.HashMap;
 
+import javax.swing.JOptionPane;
+
 import com.cell.game.ai.pathfind.AbstractAstarMap;
 import com.cell.rpg.scene.Scene;
 import com.cell.rpg.scene.graph.SceneGraphNode.LinkInfo;
