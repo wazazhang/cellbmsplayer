@@ -47,12 +47,18 @@ public class SceneGraphNode implements AbstractAstarMapNode
 		for (SceneUnit unit : scene.scene_units) {
 			ActorTransport tp = unit.getAbility(ActorTransport.class);
 			if (tp != null) {
-				LinkInfo next = new LinkInfo(
-						this.scene_id,
-						unit.id,
-						Integer.parseInt(tp.next_scene_id), 
-						tp.next_scene_object_id); 
-				next_links.put(next.next_scene_id, next);
+				try{
+					LinkInfo next = new LinkInfo(
+							this.scene_id,
+							unit.id,
+							Integer.parseInt(tp.next_scene_id), 
+							tp.next_scene_object_id); 
+					next_links.put(next.next_scene_id, next);
+				}catch(Exception err) {
+					System.err.println(
+							"scene ["+scene_name+"("+scene_id+")] link error at ["+ unit.name+"("+ unit.id +")]");
+					err.printStackTrace();
+				}
 			}
 		}
 		nexts.ensureCapacity(next_links.size());
