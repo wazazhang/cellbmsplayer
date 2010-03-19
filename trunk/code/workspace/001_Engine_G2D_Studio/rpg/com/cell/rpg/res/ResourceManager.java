@@ -23,6 +23,7 @@ import com.cell.rpg.scene.graph.SceneGraph;
 import com.cell.rpg.template.TAvatar;
 import com.cell.rpg.template.TEffect;
 import com.cell.rpg.template.TItem;
+import com.cell.rpg.template.TItemList;
 import com.cell.rpg.template.TSkill;
 import com.cell.rpg.template.TUnit;
 import com.cell.rpg.template.TemplateNode;
@@ -60,6 +61,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 	protected Hashtable<Integer, TAvatar>	tavatars;
 	protected Hashtable<Integer, TSkill>	tskills;
 	protected Hashtable<Integer, TEffect>	teffects;
+	protected Hashtable<Integer, TItemList>	titemlists;
 	protected Hashtable<Integer, Quest> 	quests;
 	protected Hashtable<Integer, Scene>		scenes;
 
@@ -69,6 +71,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 	protected Hashtable<Integer, String>	names_tavatars;
 	protected Hashtable<Integer, String>	names_tskills;
 	protected Hashtable<Integer, String>	names_teffects;
+	protected Hashtable<Integer, String>	names_titemlists;
 	protected Hashtable<Integer, String> 	names_quests;
 	protected Hashtable<Integer, String>	names_scenes;
 	
@@ -143,7 +146,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 		tavatars		= readRPGObjects(save_dir + "/objects/tavatar.obj/tavatar.list",	TAvatar.class);
 		tskills			= readRPGObjects(save_dir + "/objects/tskill.obj/tskill.list",		TSkill.class);
 		teffects		= readRPGObjects(save_dir + "/objects/teffect.obj/teffect.list",	TEffect.class);
-		
+		titemlists		= readRPGObjects(save_dir + "/objects/titemlist.obj/titemlist.list",TItemList.class);
 		quests			= readRPGObjects(save_dir + "/quests/quest.list",		Quest.class);
 		scenes			= readRPGObjects(save_dir + "/scenes/scene.list", 		Scene.class);
 	}
@@ -157,7 +160,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 		names_tavatars			= readRPGObjectNames(save_dir + "/objects/tavatar.obj/name_tavatar.list");
 		names_tskills			= readRPGObjectNames(save_dir + "/objects/tskill.obj/name_tskill.list");
 		names_teffects			= readRPGObjectNames(save_dir + "/objects/teffect.obj/name_teffect.list");
-		
+		names_titemlists		= readRPGObjectNames(save_dir + "/objects/titemlist.obj/name_titemlist.list");
 		names_quests			= readRPGObjectNames(save_dir + "/quests/name_quest.list");
 		names_scenes			= readRPGObjectNames(save_dir + "/scenes/name_scene.list");
 	}
@@ -407,7 +410,13 @@ public abstract class ResourceManager extends CellSetResourceManager
 	public TEffect getTEffect(int id) {
 		return teffects.get(id);
 	}
+	public TItemList getItemList(int id) {
+		return titemlists.get(id);
+	}
 	
+	public Vector<TItemList> getAllItemList() {
+		return new Vector<TItemList>(titemlists.values());
+	}
 	
 //	--------------------------------------------------------------------------------------------------------------------
 //	ItemProperties
@@ -500,13 +509,15 @@ public abstract class ResourceManager extends CellSetResourceManager
 	public String getTEffectName(int id) {
 		return names_teffects.get(id);
 	}
+	public String getTItemListName(int id) {
+		return names_titemlists.get(id);
+	}
 	public String getQuestName(int id) {
 		return names_quests.get(id);
 	}
 	public String getRPGSceneName(int id) {
 		return names_scenes.get(id);
 	}
-
 //	--------------------------------------------------------------------------------------------------------------------
 //	Name List
 //	--------------------------------------------------------------------------------------------------------------------
