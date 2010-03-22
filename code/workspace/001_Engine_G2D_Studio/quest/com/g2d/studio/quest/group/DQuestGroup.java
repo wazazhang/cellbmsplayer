@@ -5,6 +5,7 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTree;
 
@@ -67,6 +68,8 @@ final public class DQuestGroup extends DynamicNode<QuestGroup>
 		return edit_component;
 	}
 	
+	
+	
 //	----------------------------------------------------------------------------------------------------------------------
 	public class QuestGroupMenu extends DynamicNodeMenu
 	{
@@ -90,7 +93,7 @@ final public class DQuestGroup extends DynamicNode<QuestGroup>
 					DQuestGroup		group	= new DQuestGroup(factory, src.name+" Copy");
 					factory.addNode(root, group);
 				}
-			} 
+			}
 			else {
 				super.actionPerformed(e);
 			}
@@ -104,11 +107,11 @@ final public class DQuestGroup extends DynamicNode<QuestGroup>
 		
 		public QuestGroupViewer() {
 			super(DQuestGroup.this);
-//			table.remove(page_object_panel);
-//			table.remove(page_abilities);
+			table.insertTab("编组数据", null, new QuestGroupEditor(getData()), "", 0);
 		}
 		
 		@Override
 		protected void appendPages(JTabbedPane table) {}
+		
 	}
 }
