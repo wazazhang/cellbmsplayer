@@ -28,6 +28,9 @@ public class Actor extends SceneSprite
 	public Class<?>[] getSubAbilityTypes()
 	{
 		return new Class<?>[]{
+				// quests
+				QuestAccepter.class,
+				QuestPublisher.class,
 				// flags
 				ActorTalk.class,
 				ActorDropItem.class,
@@ -36,8 +39,6 @@ public class Actor extends SceneSprite
 				ActorJobTrainer.class,
 				ActorSkillTrainer.class,
 				ActorTransport.class,
-				QuestAccepter.class,
-				QuestPublisher.class,
 
 				// path
 				ActorPathStart.class,
