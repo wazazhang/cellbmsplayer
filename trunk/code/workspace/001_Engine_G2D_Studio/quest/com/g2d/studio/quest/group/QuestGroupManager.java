@@ -34,8 +34,8 @@ public class QuestGroupManager extends ManagerForm implements ActionListener
 		tool_bar 			= new G2DWindowToolBar(this);
 		this.add(tool_bar, BorderLayout.NORTH);
 		
-		quest_group_dir		= new File(studio.project_save_path, "questgroup");
-		quest_group_list	= new File(quest_group_dir, "questgroup.list");
+		quest_group_dir		= new File(studio.project_save_path, "questgroups");
+		quest_group_list	= new File(quest_group_dir, "questgroups.list");
 		quest_group_view	= new QuestGroupTreeView("任务编组管理器", quest_group_list);
 		this.add(quest_group_view, BorderLayout.CENTER);
 		
