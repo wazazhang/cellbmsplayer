@@ -51,9 +51,10 @@ extends JSplitPane implements TreeSelectionListener, ChangeListener
 		this.list_file		= list_file;
 		this.node_type		= node_type;
 		this.data_type		= data_type;		
-		this.tree_root		= createTreeRoot(title);
 		
-		this.g2d_tree 		= new G2DTree(tree_root);
+		this.tree_root		= createTreeRoot(title);
+		this.g2d_tree 		= createTree(tree_root);
+		
 		this.g2d_tree.addTreeSelectionListener(this);
 		this.g2d_tree.setMinimumSize(new Dimension(200, 200));
 		
@@ -70,6 +71,10 @@ extends JSplitPane implements TreeSelectionListener, ChangeListener
 	
 	abstract protected ObjectGroup<T, D> createTreeRoot(String title);
 
+	public G2DTree createTree(ObjectGroup<T, D> tree_root) {
+		return new G2DTree(tree_root);
+	}
+	
 	public ObjectGroup<T, D> getTreeRoot() {
 		return tree_root;
 	}
