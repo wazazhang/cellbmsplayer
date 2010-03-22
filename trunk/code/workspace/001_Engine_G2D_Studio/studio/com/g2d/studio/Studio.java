@@ -271,19 +271,6 @@ public class Studio extends AbstractFrame
 			});
 			tool_bar.add(btn);
 		}
-		// quest manager
-		{
-			frame_quest_manager = new QuestManager(this, progress);
-			JButton btn = new JButton();
-			btn.setToolTipText(frame_quest_manager.getTitle());
-			btn.setIcon(Tools.createIcon(frame_quest_manager.getIconImage()));
-			btn.addActionListener(new ActionListener(){
-				public void actionPerformed(ActionEvent e) {
-					frame_quest_manager.setVisible(true);
-				}
-			});
-			tool_bar.add(btn);
-		}
 		// quest group manager
 		{
 			frame_quest_group_manager = new QuestGroupManager(this, progress);
@@ -296,6 +283,19 @@ public class Studio extends AbstractFrame
 				}
 			});
 //			tool_bar.add(btn);
+		}
+		// quest manager
+		{
+			frame_quest_manager = new QuestManager(this, progress);
+			JButton btn = new JButton();
+			btn.setToolTipText(frame_quest_manager.getTitle());
+			btn.setIcon(Tools.createIcon(frame_quest_manager.getIconImage()));
+			btn.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e) {
+					frame_quest_manager.setVisible(true);
+				}
+			});
+			tool_bar.add(btn);
 		}
 	
 		this.add(tool_bar, BorderLayout.NORTH);
