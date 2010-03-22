@@ -29,14 +29,8 @@ public class Config extends com.cell.util.Config
 	
 	// 低级界面默认的FPS
 	public static Integer DEFAULT_FPS				= 30;
-	
-	
-	// 动态编译的Java文件目录
-//	public static String PLUGINS_ROOT				= "plugins";
-//	public static String PLUGIN_ITEM_TYPES;			//动态编译的道具属性类型
 
-
-	// 动态加载的类
+	// 动态加载的类(插件类)
 	public static String DYNAMIC_ITEM_PROPERTIES_CLASS;	//所有道具属性
 	public static String DYNAMIC_QUEST_PLAYER_CLASS;	//与TriggerUnitMethod映射的类型PLAYER
 	public static String DYNAMIC_QUEST_PET_CLASS;		//与TriggerUnitMethod映射的类型PET

@@ -16,6 +16,7 @@ import com.cell.rpg.RPGObject;
 import com.cell.rpg.io.RPGObjectMap;
 import com.cell.rpg.item.ItemProperties;
 import com.cell.rpg.quest.Quest;
+import com.cell.rpg.quest.QuestGroup;
 import com.cell.rpg.res.ResourceSet.SceneSet;
 import com.cell.rpg.res.ResourceSet.SpriteSet;
 import com.cell.rpg.scene.Scene;
@@ -36,7 +37,9 @@ import com.g2d.display.particle.Layer;
 
 /**
  * @author WAZA
- * 第三方程序用来读入G2D Studio对象的类
+ * 第三方程序用来读入G2D Studio对象的类。
+ * 该类的初始化方法只能在构造中调用。
+ * 该类不需要同步，因为运行过程中只读，不能改动其内容。
  */
 public abstract class ResourceManager extends CellSetResourceManager
 {
@@ -56,14 +59,15 @@ public abstract class ResourceManager extends CellSetResourceManager
 	
 	// xml templates dynamic object and scenes
 	protected Hashtable<Integer, ItemProperties> item_properties;
-	protected Hashtable<Integer, TUnit>		tunits;
-	protected Hashtable<Integer, TItem>		titems;
-	protected Hashtable<Integer, TAvatar>	tavatars;
-	protected Hashtable<Integer, TSkill>	tskills;
-	protected Hashtable<Integer, TEffect>	teffects;
-	protected Hashtable<Integer, TItemList>	titemlists;
-	protected Hashtable<Integer, Quest> 	quests;
-	protected Hashtable<Integer, Scene>		scenes;
+	protected Hashtable<Integer, TUnit>			tunits;
+	protected Hashtable<Integer, TItem>			titems;
+	protected Hashtable<Integer, TAvatar>		tavatars;
+	protected Hashtable<Integer, TSkill>		tskills;
+	protected Hashtable<Integer, TEffect>		teffects;
+	protected Hashtable<Integer, TItemList>		titemlists;
+	protected Hashtable<Integer, Quest> 		quests;
+	protected Hashtable<Integer, QuestGroup> 	questgroups;
+	protected Hashtable<Integer, Scene>			scenes;
 
 	protected Hashtable<Integer, String> 	names_item_properties;
 	protected Hashtable<Integer, String>	names_tunits;
@@ -73,6 +77,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 	protected Hashtable<Integer, String>	names_teffects;
 	protected Hashtable<Integer, String>	names_titemlists;
 	protected Hashtable<Integer, String> 	names_quests;
+	protected Hashtable<Integer, String> 	names_questgroups;
 	protected Hashtable<Integer, String>	names_scenes;
 	
 	
@@ -139,16 +144,19 @@ public abstract class ResourceManager extends CellSetResourceManager
 	{
 		RPGObjectMap.setPersistanceManagerDriver(persistance_manager);
 	
-		item_properties = readRPGObjects(save_dir + "/item_properties/item_properties.list", ItemProperties.class);
+		item_properties = readRPGObjects(save_dir + "/item_properties/item_properties.list",	ItemProperties.class);
 		
-		tunits			= readRPGObjects(save_dir + "/objects/tunit.obj/tunit.list", 		TUnit.class);
-		titems			= readRPGObjects(save_dir + "/objects/titem.obj/titem.list", 		TItem.class);
-		tavatars		= readRPGObjects(save_dir + "/objects/tavatar.obj/tavatar.list",	TAvatar.class);
-		tskills			= readRPGObjects(save_dir + "/objects/tskill.obj/tskill.list",		TSkill.class);
-		teffects		= readRPGObjects(save_dir + "/objects/teffect.obj/teffect.list",	TEffect.class);
-		titemlists		= readRPGObjects(save_dir + "/objects/titemlist.obj/titemlist.list",TItemList.class);
-		quests			= readRPGObjects(save_dir + "/quests/quest.list",		Quest.class);
-		scenes			= readRPGObjects(save_dir + "/scenes/scene.list", 		Scene.class);
+		tunits			= readRPGObjects(save_dir + "/objects/tunit.obj/tunit.list", 			TUnit.class);
+		titems			= readRPGObjects(save_dir + "/objects/titem.obj/titem.list", 			TItem.class);
+		tavatars		= readRPGObjects(save_dir + "/objects/tavatar.obj/tavatar.list",		TAvatar.class);
+		tskills			= readRPGObjects(save_dir + "/objects/tskill.obj/tskill.list",			TSkill.class);
+		teffects		= readRPGObjects(save_dir + "/objects/teffect.obj/teffect.list",		TEffect.class);
+		titemlists		= readRPGObjects(save_dir + "/objects/titemlist.obj/titemlist.list",	TItemList.class);
+		
+		quests			= readRPGObjects(save_dir + "/quests/quest.list",						Quest.class);
+		questgroups		= readRPGObjects(save_dir + "/questgroup/questgroup.list",				QuestGroup.class);
+		
+		scenes			= readRPGObjects(save_dir + "/scenes/scene.list", 						Scene.class);
 	}
 	
 	final protected void initAllXmlNames()  throws Exception
@@ -162,6 +170,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 		names_teffects			= readRPGObjectNames(save_dir + "/objects/teffect.obj/name_teffect.list");
 		names_titemlists		= readRPGObjectNames(save_dir + "/objects/titemlist.obj/name_titemlist.list");
 		names_quests			= readRPGObjectNames(save_dir + "/quests/name_quest.list");
+		names_questgroups		= readRPGObjectNames(save_dir + "/questgroups/name_questgroups.list");
 		names_scenes			= readRPGObjectNames(save_dir + "/scenes/name_scene.list");
 	}
 	
@@ -439,9 +448,16 @@ public abstract class ResourceManager extends CellSetResourceManager
 		return new Hashtable<Integer, Quest>(quests);
 	}
 
-	public Quest getQuest(int quest_id)
-	{
+	public Quest getQuest(int quest_id) {
 		return quests.get(quest_id);
+	}
+	
+	public Hashtable<Integer, QuestGroup> getAllQuestGroups() {
+		return new Hashtable<Integer, QuestGroup>(questgroups);
+	}
+	
+	public QuestGroup getQuestGroup(int quest_group_id) {
+		return questgroups.get(quest_group_id);
 	}
 	
 //	--------------------------------------------------------------------------------------------------------------------
@@ -452,8 +468,8 @@ public abstract class ResourceManager extends CellSetResourceManager
 		return scenes.get(id);
 	}
 	
-	public HashMap<Integer, Scene> getAllRPGScenes() {
-		return new HashMap<Integer, Scene>(scenes);
+	public Hashtable<Integer, Scene> getAllRPGScenes() {
+		return new Hashtable<Integer, Scene>(scenes);
 	}
 	
 	public SceneGraph createSceneGraph() {
@@ -514,6 +530,9 @@ public abstract class ResourceManager extends CellSetResourceManager
 	}
 	public String getQuestName(int id) {
 		return names_quests.get(id);
+	}
+	public String getQuestGroupName(int id) {
+		return names_questgroups.get(id);
 	}
 	public String getRPGSceneName(int id) {
 		return names_scenes.get(id);

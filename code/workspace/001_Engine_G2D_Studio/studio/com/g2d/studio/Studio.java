@@ -36,6 +36,7 @@ import com.g2d.studio.gameedit.ObjectManager;
 import com.g2d.studio.icon.IconManager;
 import com.g2d.studio.item.ItemManager;
 import com.g2d.studio.quest.QuestManager;
+import com.g2d.studio.quest.group.QuestGroupManager;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.scene.SceneManager;
 import com.g2d.studio.sound.SoundManager;
@@ -84,6 +85,7 @@ public class Studio extends AbstractFrame
 	private IconManager				frame_icon_manager;
 	private TalkManager				frame_talk_manager;
 	private QuestManager			frame_quest_manager;
+	private QuestGroupManager		frame_quest_group_manager;
 	
 	private SceneManager			scene_manager;
 	
@@ -282,6 +284,19 @@ public class Studio extends AbstractFrame
 			});
 			tool_bar.add(btn);
 		}
+		// quest group manager
+		{
+			frame_quest_group_manager = new QuestGroupManager(this, progress);
+			JButton btn = new JButton();
+			btn.setToolTipText(frame_quest_group_manager.getTitle());
+			btn.setIcon(Tools.createIcon(frame_quest_group_manager.getIconImage()));
+			btn.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e) {
+					frame_quest_group_manager.setVisible(true);
+				}
+			});
+//			tool_bar.add(btn);
+		}
 	
 		this.add(tool_bar, BorderLayout.NORTH);
 	}
@@ -365,7 +380,11 @@ public class Studio extends AbstractFrame
 	public QuestManager getQuestManager() {
 		return frame_quest_manager;
 	}
-
+	
+	public QuestGroupManager getQuestGroupManager() {
+		return frame_quest_group_manager;
+	}
+	
 	public ItemManager getItemManager() {
 		return frame_item_manager;
 	}
@@ -380,19 +399,26 @@ public class Studio extends AbstractFrame
 	
 	public void saveAll() 
 	{		
-		frame_sound_manager.saveAll();
-		frame_icon_manager.saveAll();
-		frame_cpj_resource_manager.saveAll();
+		try {
+			frame_sound_manager.saveAll();
+			frame_icon_manager.saveAll();
+			frame_cpj_resource_manager.saveAll();
+			frame_talk_manager.saveAll();
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 		
 		try {
 			frame_item_manager.saveAll();	
 			frame_object_manager.saveAll();
 			frame_quest_manager.saveAll();
+			frame_quest_group_manager.saveAll();
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
 		
 		scene_manager.saveAll();
+	
 	}
 
 //	----------------------------------------------------------------------------------------------------------------

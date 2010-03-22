@@ -6,11 +6,15 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.Vector;
 
+import javax.swing.JButton;
+
 import com.cell.rpg.quest.formula.TriggerUnitMethod;
+import com.g2d.Tools;
 import com.g2d.studio.Config;
 import com.g2d.studio.ManagerForm;
 import com.g2d.studio.Studio;
 import com.g2d.studio.Studio.ProgressForm;
+import com.g2d.studio.gameedit.EffectTreeView;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.swing.G2DWindowToolBar;
 
@@ -22,6 +26,8 @@ public class QuestManager extends ManagerForm implements ActionListener
 	
 	QuestTreeView 			tree_view;
 
+	JButton					btn_quest_group = new JButton();
+	
 //	QuestItemManager		quest_items;
 	
 	public QuestManager(Studio studio, ProgressForm progress) 
@@ -33,6 +39,11 @@ public class QuestManager extends ManagerForm implements ActionListener
 		tool_bar 		= new G2DWindowToolBar(this);
 		this.add(tool_bar, BorderLayout.NORTH);
 
+		btn_quest_group.setText("任务编组");
+		btn_quest_group.setIcon(Tools.createIcon(Res.icon_quest_group));
+		btn_quest_group.addActionListener(this);
+		tool_bar.add(btn_quest_group);
+		
 //		File items_dir	= new File(studio.project_save_path, "quests/questitems");
 //		File items_list	= new File(items_dir, "questitems.list");
 //		quest_items		= new QuestItemManager(studio, items_list);
@@ -105,6 +116,9 @@ public class QuestManager extends ManagerForm implements ActionListener
 			} catch (Throwable e1) {
 				e1.printStackTrace();
 			}
+		}
+		else if (e.getSource() == btn_quest_group) {
+			Studio.getInstance().getQuestGroupManager().setVisible(true);
 		}
 	}
 	
