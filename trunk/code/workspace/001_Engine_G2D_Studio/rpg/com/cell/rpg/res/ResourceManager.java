@@ -154,7 +154,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 		titemlists		= readRPGObjects(save_dir + "/objects/titemlist.obj/titemlist.list",	TItemList.class);
 		
 		quests			= readRPGObjects(save_dir + "/quests/quest.list",						Quest.class);
-		questgroups		= readRPGObjects(save_dir + "/questgroup/questgroup.list",				QuestGroup.class);
+		questgroups		= readRPGObjects(save_dir + "/questgroups/questgroups.list",			QuestGroup.class);
 		
 		scenes			= readRPGObjects(save_dir + "/scenes/scene.list", 						Scene.class);
 	}
