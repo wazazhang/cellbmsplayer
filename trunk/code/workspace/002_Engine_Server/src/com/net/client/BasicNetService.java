@@ -37,6 +37,7 @@ public abstract class BasicNetService
 	    public void disconnected(ServerSession session, boolean graceful, String reason) {
 	    	log.info("disconnected : " + graceful + " : " + reason);
 			onDisconnected(session, graceful, reason);
+			cleanRequestAndNotify();
 	    }
 	    
 	    public void joinedChannel(ServerSession session, ClientChannel channel) {
@@ -60,6 +61,7 @@ public abstract class BasicNetService
 			} else {
 				log.error("handle null message !");
 			}
+			cleanRequestAndNotify();
 	    }
 	    
 	    public void receivedChannelMessage(ClientChannel channel, MessageHeader message)
@@ -73,6 +75,7 @@ public abstract class BasicNetService
 			} else {
 				log.error("handle null channel message !");
 			}
+			cleanRequestAndNotify();
 		}
 	    
 		private class ReceiveTask implements Runnable
