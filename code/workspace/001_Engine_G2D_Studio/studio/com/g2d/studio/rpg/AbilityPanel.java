@@ -3,6 +3,7 @@ package com.g2d.studio.rpg;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -195,6 +196,7 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 		
 		JComboBox		combo_abilities;
 		JButton			btn_add			= new JButton("确定");
+		JButton			btn_cancel		= new JButton("取消");
 		JPanel			pan_property	= new JPanel();
 		AbstractAbility	current_ability;
 		
@@ -215,9 +217,17 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 				this.add(pan_property, BorderLayout.CENTER);
 			}
 			{
+				JPanel south = new JPanel(new FlowLayout());
+				
 				btn_add.setActionCommand("btn_add");
 				btn_add.addActionListener(this);
-				this.add(btn_add, BorderLayout.SOUTH);
+				south.add(btn_add);
+
+				btn_cancel.setActionCommand("btn_cancel");
+				btn_cancel.addActionListener(this);
+				south.add(btn_cancel);
+				
+				this.add(south, BorderLayout.SOUTH);
 			}
 			combo_abilities.setSelectedIndex(0);
 		}
@@ -231,6 +241,14 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 			else if (e.getSource() == btn_add) {
 				try{
 					AbilityPanel.this.addAbility(current_ability);
+					AddAbilityForm.this.setVisible(false);
+					AddAbilityForm.this.dispose();
+				}catch (Exception err) {
+					err.printStackTrace();
+				}
+			}
+			else if (e.getSource() == btn_cancel) {
+				try{
 					AddAbilityForm.this.setVisible(false);
 					AddAbilityForm.this.dispose();
 				}catch (Exception err) {
