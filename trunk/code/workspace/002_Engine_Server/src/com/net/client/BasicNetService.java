@@ -37,7 +37,9 @@ public abstract class BasicNetService
 	    public void disconnected(ServerSession session, boolean graceful, String reason) {
 	    	log.info("disconnected : " + graceful + " : " + reason);
 			onDisconnected(session, graceful, reason);
-			cleanRequestAndNotify();
+			if (thread_pool != null) {
+				thread_pool.executeTask(new CleanTask());
+			}
 	    }
 	    
 	    public void joinedChannel(ServerSession session, ClientChannel channel) {
@@ -61,7 +63,9 @@ public abstract class BasicNetService
 			} else {
 				log.error("handle null message !");
 			}
-			cleanRequestAndNotify();
+			if (thread_pool != null) {
+				thread_pool.executeTask(new CleanTask());
+			}
 	    }
 	    
 	    public void receivedChannelMessage(ClientChannel channel, MessageHeader message)
@@ -75,7 +79,9 @@ public abstract class BasicNetService
 			} else {
 				log.error("handle null channel message !");
 			}
-			cleanRequestAndNotify();
+			if (thread_pool != null) {
+				thread_pool.executeTask(new CleanTask());
+			}
 		}
 	    
 		private class ReceiveTask implements Runnable
@@ -114,7 +120,13 @@ public abstract class BasicNetService
 			}
 		}
 
-	    
+	    private class CleanTask implements Runnable
+	    {
+	    	@Override
+	    	public void run() {
+	    		cleanRequestAndNotify();
+	    	}
+	    }
 	}
 
 //	-------------------------------------------------------------------------------------------------
