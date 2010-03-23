@@ -140,7 +140,7 @@ public class QuestGroupEditor extends JPanel implements ActionListener
 			QuestNode node = list.getSelectedItem();
 			if (node != null) {
 				int index = list_data.indexOf(node);
-				if (index < list_data.size()-2) {
+				if (index < list_data.size()-1) {
 					list_data.remove(index);
 					list_data.insertElementAt(node, index+1);
 					list.setListData(list_data);
