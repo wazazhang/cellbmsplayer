@@ -21,6 +21,7 @@ import com.cell.rpg.scene.ability.ActorJobTrainer;
 import com.cell.rpg.scene.ability.ActorPathStart;
 import com.cell.rpg.scene.ability.ActorSkillTrainer;
 import com.cell.rpg.scene.ability.ActorTransport;
+import com.cell.rpg.scene.ability.ActorTransportCraft;
 import com.cell.rpg.scene.ability.IActorAbility;
 import com.cell.rpg.scene.ability.RegionSpawnNPC.NPCSpawn;
 import com.g2d.editor.property.ObjectPropertyPanel;
@@ -33,8 +34,12 @@ import com.g2d.studio.gameedit.template.XLSSkill;
 import com.g2d.studio.gameedit.template.XLSUnit;
 import com.g2d.studio.rpg.AbilityPanel.AbilityCellEditAdapter;
 import com.g2d.studio.scene.entity.SceneNode;
+import com.g2d.studio.scene.units.SceneActor;
+import com.g2d.studio.scene.units.SceneEffect;
 import com.g2d.studio.scene.units.SceneImmutable;
 import com.g2d.studio.scene.units.ScenePoint;
+import com.g2d.studio.scene.units.SceneRegion;
+import com.g2d.studio.scene.units.SceneUnitTag;
 import com.g2d.studio.sound.SoundSelectDialog;
 import com.g2d.studio.swing.G2DList;
 import com.g2d.studio.swing.G2DListItem;
@@ -114,8 +119,29 @@ public class SceneAbilityAdapters
 			else if (field.getName().equals("next_scene_object_id")){
 				ActorTransport tp = (ActorTransport)editObject;
 				if (tp.next_scene_id!=null) {
+					Class<? extends SceneUnitTag<?>> type = SceneImmutable.class;
+					if (editObject instanceof ActorTransportCraft) {
+						ActorTransportCraft tpc = (ActorTransportCraft)editObject;
+						switch(tpc.target_type) {
+						case ACTOR:
+							type = SceneActor.class;
+							break;
+						case IMMUTABLE:
+							type = SceneImmutable.class;
+							break;
+						case EFFECT:
+							type = SceneEffect.class;
+							break;
+						case POINT:
+							type = ScenePoint.class;
+							break;
+						case REGION:
+							type = SceneRegion.class;
+							break;
+						}
+					}
 					SceneNode scene = Studio.getInstance().getSceneManager().getSceneNode(tp.next_scene_id);
-					return new SceneUnitListCellEdit(scene.getSceneEditor(), SceneImmutable.class);
+					return new SceneUnitListCellEdit(scene.getSceneEditor(), type);
 				}
 			}
 			return null;
