@@ -10,6 +10,7 @@ import com.cell.rpg.scene.ability.ActorSellItem;
 import com.cell.rpg.scene.ability.ActorSkillTrainer;
 import com.cell.rpg.scene.ability.ActorTalk;
 import com.cell.rpg.scene.ability.ActorTransport;
+import com.cell.rpg.scene.ability.ActorTransportCraft;
 import com.g2d.annotation.Property;
 
 public class Actor extends SceneSprite
@@ -27,20 +28,19 @@ public class Actor extends SceneSprite
 
 	public Class<?>[] getSubAbilityTypes()
 	{
-		return new Class<?>[]{
+		return new Class<?>[] {
 				// quests
 				QuestAccepter.class,
 				QuestPublisher.class,
 				// flags
 				ActorTalk.class,
-				ActorDropItem.class,
 				ActorSellItem.class,
 				ActorBank.class,
 				ActorJobTrainer.class,
 				ActorSkillTrainer.class,
-				ActorTransport.class,
-
+				ActorTransportCraft.class,
 				// path
+				ActorDropItem.class,
 				ActorPathStart.class,
 			};
 	}

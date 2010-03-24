@@ -6,7 +6,7 @@ import com.cell.rpg.template.ability.UnitDropItem;
 import com.g2d.annotation.Property;
 
 
-@Property("[单位能力] 覆盖掉落物品")
+@Property("[单位数据] 覆盖掉落物品")
 public class ActorDropItem extends ItemListID implements IActorAbility
 {
 	private static final long serialVersionUID = 1L;

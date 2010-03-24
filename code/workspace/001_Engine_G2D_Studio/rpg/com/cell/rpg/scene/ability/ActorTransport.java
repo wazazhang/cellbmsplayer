@@ -8,8 +8,8 @@ import com.g2d.annotation.Property;
  * @author WAZA
  *
  */
-@Property("[单位能力] 场景传送点")
-public class ActorTransport extends AbstractAbility  implements IActorAbility
+@Property("[不可破坏能力] 场景传送点")
+public class ActorTransport extends AbstractAbility
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -19,16 +19,6 @@ public class ActorTransport extends AbstractAbility  implements IActorAbility
 	@Property("传送到目标场景的特定单位名字")
 	public String next_scene_object_id;
 	
-	
-	
-	/** NPC闲话  */
-	@Property("NPC闲话")
-	public	String		npc_talk;
-	
-	@Override
-	public String getTalk() {
-		return npc_talk;
-	}
 	@Override
 	public boolean isMultiField() {
 		return false;

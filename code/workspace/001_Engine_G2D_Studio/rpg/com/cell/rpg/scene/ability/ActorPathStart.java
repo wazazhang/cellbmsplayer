@@ -3,7 +3,7 @@ package com.cell.rpg.scene.ability;
 import com.cell.rpg.ability.AbstractAbility;
 import com.g2d.annotation.Property;
 
-@Property("[单位能力] NPC行动开始点")
+@Property("[单位数据] NPC行动开始点")
 public class ActorPathStart extends AbstractAbility
 {
 	private static final long serialVersionUID = 1L;
