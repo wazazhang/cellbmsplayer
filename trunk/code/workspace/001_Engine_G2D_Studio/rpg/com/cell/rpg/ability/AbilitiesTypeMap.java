@@ -13,6 +13,11 @@ import com.cell.rpg.RPGConfig;
  */
 public abstract class AbilitiesTypeMap implements Abilities, Serializable
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	LinkedHashMap<Class<?>, AbstractAbility> 	type_map = new LinkedHashMap<Class<?>, AbstractAbility>();
 
 	transient AbstractAbility[]					static_abilities;

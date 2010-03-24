@@ -8,6 +8,7 @@ import java.io.Serializable;
  */
 public class ItemPropertyData implements Serializable
 {
+	private static final long serialVersionUID = 1L;
 	public int 		property_type;
 	public Object[] args;
 	
