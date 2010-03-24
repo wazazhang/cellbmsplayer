@@ -38,7 +38,7 @@ public class SceneImmutable extends SceneSprite implements SceneUnitTag<Immutabl
 	
 	final public SceneEditor	editor;
 	final Immutable				sprite;
-	final CPJSprite				cpj_spr;
+	final public CPJSprite		cpj_spr;
 	
 	Rectangle					snap_shape = new Rectangle(-2, -2, 4, 4);
 	

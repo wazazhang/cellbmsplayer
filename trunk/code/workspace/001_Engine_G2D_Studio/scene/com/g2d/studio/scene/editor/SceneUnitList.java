@@ -45,8 +45,8 @@ public class SceneUnitList<T extends SceneUnitTag<?>> extends JPanel implements 
 		this.scene 		= viewer.getGameScene();
 		this.unit_type	= cls;
 		
-		this.list 	= new JList();
-		this.scroll = new JScrollPane(list);
+		this.list 		= createList();
+		this.scroll 	= new JScrollPane(list);
 		
 		this.add(scroll, BorderLayout.CENTER);
 		
@@ -57,6 +57,10 @@ public class SceneUnitList<T extends SceneUnitTag<?>> extends JPanel implements 
 		list.addMouseListener(new ListMouseListener());
 	}
 
+	protected JList createList() {
+		return new JList();
+	}
+	
 	@Override
 	public void repaint(long tm, int x, int y, int width, int height) {
 		refreshList();

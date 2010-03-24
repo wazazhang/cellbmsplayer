@@ -2,6 +2,7 @@ package com.g2d.studio.scene.editor;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -20,11 +21,14 @@ import java.awt.image.BufferedImage;
 import java.util.Vector;
 
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JToggleButton;
+import javax.swing.ListCellRenderer;
 
 import com.cell.CObject;
 import com.cell.CUtil;
@@ -790,6 +794,31 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		public SceneActorAdapter() {
 			super(SceneActor.class);
 		}
+
+		@Override
+		protected JList createList() 
+		{
+			JList list = new JList();
+			list.setCellRenderer(new DefaultListCellRenderer() {
+				private static final long serialVersionUID = 1L;
+				@Override
+				public Component getListCellRendererComponent(JList list, Object value,
+						int index, boolean isSelected, boolean cellHasFocus) {
+					Component ret = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+					SceneActor actor = (SceneActor)value;
+					StringBuffer sb = new StringBuffer();
+					sb.append("<html><body>");
+					sb.append("<p>");
+					sb.append(actor.getListName());
+					sb.append("<font color=808080> - " + actor.xls_unit.getName() + "</font>");
+					sb.append("</p>");
+					sb.append("</body></html>");
+					this.setText(sb.toString());
+					return ret;
+				}
+			});
+			return list;
+		}
 		
 		@Override
 		public boolean isShowSelectUnitTool() {
@@ -869,6 +898,31 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		
 		public SceneImmutableAdapter() {
 			super(SceneImmutable.class);
+		}
+		
+		@Override
+		protected JList createList() 
+		{
+			JList list = new JList();
+			list.setCellRenderer(new DefaultListCellRenderer() {
+				private static final long serialVersionUID = 1L;
+				@Override
+				public Component getListCellRendererComponent(JList list, Object value,
+						int index, boolean isSelected, boolean cellHasFocus) {
+					Component ret = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+					SceneImmutable actor = (SceneImmutable)value;
+					StringBuffer sb = new StringBuffer();
+					sb.append("<html><body>");
+					sb.append("<p>");
+					sb.append(actor.getListName());
+					sb.append("<font color=808080> - " + actor.cpj_spr.getName() + "</font>");
+					sb.append("</p>");
+					sb.append("</body></html>");
+					this.setText(sb.toString());
+					return ret;
+				}
+			});
+			return list;
 		}
 		
 		@Override

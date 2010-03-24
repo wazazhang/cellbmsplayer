@@ -56,7 +56,7 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 	
 	final public SceneEditor	editor;
 	final Actor					actor;
-	final XLSUnit				xls_unit;
+	final public XLSUnit		xls_unit;
 
 	Rectangle					snap_shape = new Rectangle(-2, -2, 4, 4);
 	AbilityEffectInfos<Actor>	effects = new AbilityEffectInfos<Actor>(
