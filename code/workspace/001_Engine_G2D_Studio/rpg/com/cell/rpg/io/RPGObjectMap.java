@@ -78,6 +78,7 @@ public class RPGObjectMap<T extends RPGObject> extends Hashtable<String, T> //im
 
 //	------------------------------------------------------------------------------------------------------------------------------
 
+	private static final long serialVersionUID = 1L;
 	private static PersistanceManager	persistance_manager;
 	
 	public static void setPersistanceManagerDriver(String driver_name) throws Exception {

@@ -97,6 +97,8 @@ public abstract class ItemPropertyTemplate extends AbstractAbility
 	 */
 	public static class ArgTemplate<T extends Number> implements Serializable
 	{
+		private static final long serialVersionUID = 1L;
+
 		/**参数类型*/
 		final private Class<T> value_type;
 		
