@@ -117,7 +117,7 @@ public class ChannelImpl implements Channel
 		return write(sender, response);
 	}
 	
-	protected ChannelListener getChannelListener() {
+	public ChannelListener getChannelListener() {
 		return Listener;
 	}
 	
