@@ -34,4 +34,7 @@ public interface Channel
 	public int send(ClientSession sender, MessageHeader request, MessageHeader response);
 	
 	public Server	getServer();
+	
+	public ChannelListener getChannelListener();
+	
 }
