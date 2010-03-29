@@ -8,6 +8,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * 标记道具属性里的某字段可被持久化
  * @author WAZA
  */
 @Documented
