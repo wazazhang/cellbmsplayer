@@ -8,6 +8,7 @@ import java.util.Random;
 import com.cell.CUtil;
 import com.cell.reflect.Parser;
 import com.cell.rpg.ability.AbstractAbility;
+import com.cell.rpg.item.anno.ItemPersistenceField;
 import com.cell.rpg.item.anno.ItemType;
 import com.g2d.annotation.Property;
 
@@ -29,26 +30,36 @@ public abstract class ItemPropertyTemplate extends AbstractAbility
 	final public boolean isMultiField() {
 		return false;
 	}
-
-	final public ItemPropertyData createData() throws Exception 
-	{
+	
+	final public Integer getSaveType() {
 		if (save_type == null) {
 			save_type = getType(getClass());
 		}
+		return save_type;
+	}
+	
+	final public Field[] getSaveFields() {
 		if (save_fields == null) {
 			ArrayList<Field> fields = new ArrayList<Field>();
 			for (Field field : getClass().getDeclaredFields()) {
-				Property pro = field.getAnnotation(Property.class);
+				ItemPersistenceField pro = field.getAnnotation(ItemPersistenceField.class);
 				if (pro != null) {
 					fields.add(field);
 				}
 			}
 			save_fields = fields.toArray(new Field[fields.size()]);
 		}
-
+		return save_fields;
+	}
+	
+	final public ItemPropertyData createData() throws Exception 
+	{
 		ItemPropertyData data = new ItemPropertyData();
 		
-		data.property_type	= save_type;
+		data.property_type	= getSaveType();
+
+		Field[]	save_fields = getSaveFields();
+
 		data.args			= new Object[save_fields.length];
 		
 		for (int i=save_fields.length-1; i>=0; --i) {
