@@ -63,13 +63,13 @@ public class EchoClient
 			{
 				String		host				= host_port[1].trim();
 				Integer		port				= Integer.parseInt(host_port[2].trim());
-				client.connect(host, port);
+				client.connect(host, port, 1000L);
 				return;
 			}
 		}
 		else if (cmd.startsWith("disconnect"))
 		{
-			client.disconnect(true);
+			client.close(true);
 			return;
 		}
 		else if (cmd.startsWith("exit"))
