@@ -43,35 +43,35 @@ public class NetService extends BasicNetService
 	 * 得到当前的网络链接套接字
 	 * @return
 	 */
-	final public ServerSession getSession() {
+	public ServerSession getSession() {
 		return Session;
 	}
 	
-	/**
-	 * 得到链接的主机名
-	 * @return
-	 */
-	final public String getHost() {
-		return ServerHost;
-	}
-	
-	/**
-	 * 得到链接的端口
-	 * @return
-	 */
-	final public Integer getPort() {
-		return ServerPort;
-	}
-
-	/**
-	 * 链接到主机
-	 * @param host
-	 * @param port
-	 * @return
-	 */
-	final public boolean connect(String host, Integer port) {
-		return this.connect(host, port, 10000L);
-	}
+//	/**
+//	 * 得到链接的主机名
+//	 * @return
+//	 */
+//	public String getHost() {
+//		return ServerHost;
+//	}
+//	
+//	/**
+//	 * 得到链接的端口
+//	 * @return
+//	 */
+//	public Integer getPort() {
+//		return ServerPort;
+//	}
+//
+//	/**
+//	 * 链接到主机
+//	 * @param host
+//	 * @param port
+//	 * @return
+//	 */
+//	public boolean connect(String host, Integer port) {
+//		return this.connect(host, port, 10000L);
+//	}
 	
 	/**
 	 * 链接到主机并制定超时时间
@@ -80,7 +80,7 @@ public class NetService extends BasicNetService
 	 * @param timeout
 	 * @return
 	 */
-	final public boolean connect(String host, Integer port, Long timeout) {
+	public boolean connect(String host, Integer port, Long timeout) {
 		sendlock.lock();
 		try {
 			if (!Session.isConnected()) {
@@ -105,7 +105,7 @@ public class NetService extends BasicNetService
 	 * 重新链接到主机
 	 * @return
 	 */
-	final public boolean reconnect() 
+	public boolean reconnect() 
 	{
 		sendlock.lock();
 		try {
@@ -128,7 +128,7 @@ public class NetService extends BasicNetService
 	 * 是否已链接
 	 * @return
 	 */
-	final public boolean isConnected() {
+	public boolean isConnected() {
     	if (Session.isConnected()) {
     		return Session.isConnected();
 		}else{
@@ -141,28 +141,22 @@ public class NetService extends BasicNetService
 	 * 断开链接
 	 * @param force 是否立即断开
 	 */
-	final public void disconnect(boolean force) {
-    	if (Session.isConnected()) {
+	@Override
+	public void close(boolean force) {
+		if (Session.isConnected()) {
     		Session.disconnect(force);
 		}else{
 			printNotConnectError();
 		}
-    }
-	
-	@Override
-	final public void close(boolean force) {
-		this.disconnect(force);
 	}
 	
 	/**
 	 * 直接发送，没有监听器
 	 * @param message
 	 */
-	final public void send(MessageHeader message) {
+	public void send(MessageHeader message) {
     	if (Session.isConnected()) {
-    		
     		Session.send(message);
-    		
 		}else{
 			printNotConnectError();
 		}
