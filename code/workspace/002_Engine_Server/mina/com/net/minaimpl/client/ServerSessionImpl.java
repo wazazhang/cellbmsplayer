@@ -286,7 +286,7 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 			String info; 
 			try {
 				info = session.toString();
-			} catch (Exception err){
+			} catch (Throwable err){
 				info = session.getRemoteAddress() + "";
 			}
 			System.out.println("Clear session : " + info);
