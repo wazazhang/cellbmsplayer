@@ -15,9 +15,12 @@ public class ItemProperties extends RPGObject implements NamedObject
 	/** */
 	public String				name;
 	
-	@Property({"获得的属性范围"})
-	public ArgTemplate<Integer>	properties_range = new ArgTemplate<Integer>(1);
+//	@Property({"获得的属性范围"})
+//	public ArgTemplate<Integer>	properties_range = new ArgTemplate<Integer>(1);
 
+	transient
+	private ItemPropertyTemplate[] properties;
+	
 	public ItemProperties(int tid, String name) {
 		super(tid+"");
 		this.tid	= tid;
@@ -29,13 +32,13 @@ public class ItemProperties extends RPGObject implements NamedObject
 		return name;
 	}
 	
-	@Override
-	protected void init_transient() {
-		super.init_transient();
-		if (properties_range==null) {
-			properties_range = new ArgTemplate<Integer>(1);
-		}
-	}
+//	@Override
+//	protected void init_transient() {
+//		super.init_transient();
+//		if (properties_range==null) {
+//			properties_range = new ArgTemplate<Integer>(1);
+//		}
+//	}
 	
 	public int getIntID() {
 		return tid;
@@ -51,26 +54,26 @@ public class ItemProperties extends RPGObject implements NamedObject
 	 * 生成该道具时，产生一组模板内的道具属性
 	 * @return
 	 */
-	public ItemPropertyData[] createItemPropertiesData(Random random) throws Exception {
+	synchronized public ItemPropertyData[] createItemPropertiesData(Random random) throws Exception {
 		
-		ArrayList<ItemPropertyTemplate> properties = getAbilities(ItemPropertyTemplate.class);
-		
-		int count = properties_range.getValue();
-		if (count > properties.size()) {
-			count = properties.size();
-		}
-		if (count < 0) {
-			count = 0;
+		if (properties == null) {
+			ArrayList<ItemPropertyTemplate> list = getAbilities(ItemPropertyTemplate.class);
+			properties = list.toArray(new ItemPropertyTemplate[list.size()]);
 		}
 		
-		ItemPropertyData[] ret = new ItemPropertyData[count];
+//		int count = properties_range.getValue();
+//		if (count > properties.size()) {
+//			count = properties.size();
+//		}
+//		if (count < 0) {
+//			count = 0;
+//		}
 		
-		for (int i = 0; i < count; i++) {
-			int pi = Math.abs(random.nextInt() % properties.size());
-			ItemPropertyTemplate t = properties.remove(pi);
+		ItemPropertyData[] ret = new ItemPropertyData[properties.length];
+		for (int i = 0; i < ret.length; i++) {
+			ItemPropertyTemplate t = properties[i];
 			ret[i] = t.createData();
 		}
-		
 		return ret;
 	}
 //	-----------------------------------------------------------------------------------------------------------------------
