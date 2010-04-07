@@ -18,6 +18,7 @@ import com.cell.rpg.RPGObject;
 import com.cell.rpg.io.RPGSerializationListener;
 import com.cell.rpg.quest.script.QuestScript;
 import com.g2d.Tools;
+import com.g2d.studio.Config;
 import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.ObjectViewer;
 import com.g2d.studio.quest.events.QuestEventView;
@@ -90,7 +91,7 @@ public class QuestEditor extends ObjectViewer<QuestNode> implements RPGSerializa
 		if (e.getSource() == btn_discussion) {
 			new DiscussionForm(new File(
 					Studio.getInstance().project_save_path, 
-					"quests/" + tobject.getIntID() + ".xml.txt")).setVisible(true);
+					"quests/" + tobject.getIntID() + ".xml" + Config.TALK_SUFFIX)).setVisible(true);
 		}
 	}
 	

@@ -25,7 +25,7 @@ public class Config extends com.cell.util.Config
 	public static String ICON_ROOT					= "icons";
 	public static String ICON_SUFFIX				= ".png";
 	public static String TALK_ROOT					= "npctalk";
-	public static String TALK_SUFFIX				= ".txt";
+	public static String TALK_SUFFIX				= ".js";
 	
 	// 低级界面默认的FPS
 	public static Integer DEFAULT_FPS				= 30;
