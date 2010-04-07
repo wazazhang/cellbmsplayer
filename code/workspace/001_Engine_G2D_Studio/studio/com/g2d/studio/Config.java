@@ -27,6 +27,9 @@ public class Config extends com.cell.util.Config
 	public static String TALK_ROOT					= "npctalk";
 	public static String TALK_SUFFIX				= ".js";
 	
+	// Talk Example
+	public static String TALK_EXAMPLE				= null;
+	
 	// 低级界面默认的FPS
 	public static Integer DEFAULT_FPS				= 30;
 
