@@ -16,7 +16,6 @@ import javax.swing.JToolBar;
 import com.cell.io.CFile;
 import com.cell.rpg.RPGObject;
 import com.cell.rpg.io.RPGSerializationListener;
-import com.cell.rpg.quest.script.QuestScript;
 import com.g2d.Tools;
 import com.g2d.studio.Config;
 import com.g2d.studio.Studio;
@@ -123,7 +122,7 @@ public class QuestEditor extends ObjectViewer<QuestNode> implements RPGSerializa
 			if (file.exists()) {
 				this.src = CFile.readText(file, "UTF-8");
 			} else {
-				this.src = QuestScript.createExample();
+				this.src = Studio.getInstance().talk_example;
 			}
 
 			text.setText(src);

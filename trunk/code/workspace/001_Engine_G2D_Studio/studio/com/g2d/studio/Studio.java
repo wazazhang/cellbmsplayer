@@ -20,6 +20,7 @@ import javax.swing.JWindow;
 import javax.swing.UIManager;
 
 import com.cell.CObject;
+import com.cell.io.CFile;
 import com.cell.j2se.CAppBridge;
 import com.cell.j2se.CStorage;
 import com.cell.rpg.io.RPGObjectMap;
@@ -76,6 +77,7 @@ public class Studio extends AbstractFrame
 	final public File 				xls_titem;
 	final public File 				xls_tskill;
 	
+	final public String				talk_example;
 //	final public File				plugins_dir;
 	
 	private CPJResourceManager		frame_cpj_resource_manager;
@@ -128,6 +130,12 @@ public class Studio extends AbstractFrame
 		xls_titem			= getFile(Config.XLS_TITEM);
 		xls_tskill			= getFile(Config.XLS_TSKILL);
 		
+		File talk_example_file = getFile(Config.TALK_EXAMPLE);
+		if (talk_example_file.exists()) {
+			talk_example = CFile.readText(talk_example_file, "UTF-8");
+		} else {
+			talk_example = "// talk example";
+		}
 //		plugins_dir			= getFile(Config.PLUGINS_ROOT);
 		
 		try{

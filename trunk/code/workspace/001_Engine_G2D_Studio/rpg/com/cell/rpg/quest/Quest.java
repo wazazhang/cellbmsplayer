@@ -2,7 +2,6 @@ package com.cell.rpg.quest;
 
 import com.cell.rpg.NamedObject;
 import com.cell.rpg.RPGObject;
-import com.cell.rpg.quest.script.QuestScript;
 import com.g2d.annotation.Property;
 
 /**
@@ -37,7 +36,7 @@ public class Quest extends RPGObject implements NamedObject
 
 	/** 任务内容, 该字段由文件存储，注意反序列化后恢复*/
 	transient
-	private String				discussion			= QuestScript.createExample();
+	private String				discussion			= "";
 
 	/**任务产生事件*/
 	public QuestGenerator		quest_generator		= new QuestGenerator();
