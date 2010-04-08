@@ -15,13 +15,13 @@ public class ItemPropertyTypes
 	
 	private static Class<?>[]	item_property_types;
 	
-	public static void setItemPropertyTypes(Class<?>[] types) {
+	public static void setItemPropertyTypes(Class<?>[] types) throws Exception {
 		for (Class<?> type : types) {						
 			ItemType itype = type.getAnnotation(ItemType.class);
 			if (itype!=null) {
 				if (ItemPropertyTemplate.class.isAssignableFrom(type)) {
 					if (item_property_types_map.containsKey(itype.value())) {
-//						System.err.println(type.getName() + " is already exist !");
+						throw new Exception(type.getName() + " [" + itype.value() + "] is already exist !");
 					} else {
 						item_property_types_map.put(itype.value(), type);
 //						System.out.println("add item property : " + type + " : " + type.getClassLoader());
@@ -32,7 +32,7 @@ public class ItemPropertyTypes
 		item_property_types = item_property_types_map.values().toArray(new Class<?>[item_property_types_map.size()]);
 	}
 	
-	public static void setItemPropertyTypes(Collection<Class<?>> types) {
+	public static void setItemPropertyTypes(Collection<Class<?>> types) throws Exception {
 		setItemPropertyTypes(types.toArray(new Class<?>[types.size()]));
 	}
 
