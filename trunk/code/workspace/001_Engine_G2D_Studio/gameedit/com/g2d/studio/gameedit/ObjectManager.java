@@ -76,7 +76,7 @@ public class ObjectManager extends ManagerForm implements ActionListener
 			table.addChangeListener(tree_items_view);
 		}{	
 			// XLSSkill
-			tree_skills_view = new ObjectTreeViewTemplate<XLSSkill, TSkill>("技能模板", XLSSkill.class, TSkill.class, 
+			tree_skills_view = new SkillTreeView("技能模板",
 					new File(objects_dir, "tskill.obj/tskill.list"), studio.xls_tskill, progress);
 			table.addTab("技能", Tools.createIcon(Res.icon_res_3), tree_skills_view);
 			table.addChangeListener(tree_skills_view);
@@ -102,6 +102,16 @@ public class ObjectManager extends ManagerForm implements ActionListener
 		this.add(table, BorderLayout.CENTER);
 	}
 
+	
+	public <T extends ObjectNode<?>> void refresh(Class<T> type)
+	{
+		for (ObjectTreeView<?,?> page : getPages()) {
+			if (page.node_type.equals(type)) {
+				page.reload();
+			}
+		}
+	}
+	
 	public XLSColumns getPlayerXLSColumns() {
 		return player_xls_columns;
 	}
