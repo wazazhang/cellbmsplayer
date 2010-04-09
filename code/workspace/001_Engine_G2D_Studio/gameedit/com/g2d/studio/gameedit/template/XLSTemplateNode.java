@@ -56,7 +56,7 @@ public abstract class XLSTemplateNode<T extends TemplateNode> extends ObjectNode
 	}
 	
 	@Override
-	final public String getName() {
+	public String getName() {
 		return getXLSRow().desc + "(" + getXLSRow().id + ")";
 	}
 

@@ -5,6 +5,7 @@ import com.cell.rpg.template.TemplateNode;
 import com.cell.rpg.xls.XLSFile;
 import com.cell.rpg.xls.XLSFullRow;
 import com.g2d.studio.gameedit.ObjectViewer;
+import com.g2d.studio.gameedit.SkillViewer;
 import com.g2d.studio.gameedit.XLSObjectViewer;
 
 final public class XLSSkill extends XLSTemplateNode<TSkill>
@@ -21,7 +22,7 @@ final public class XLSSkill extends XLSTemplateNode<TSkill>
 	public ObjectViewer<?> getEditComponent(){
 		if (edit_component==null) {
 //			edit_component = new SkillObjectViewer();
-			edit_component = new XLSObjectViewer<XLSSkill>(this);
+			edit_component = new SkillViewer(this);
 		}
 		return edit_component;
 	}
