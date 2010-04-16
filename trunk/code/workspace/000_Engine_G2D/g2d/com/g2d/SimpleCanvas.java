@@ -79,12 +79,28 @@ final public class SimpleCanvas extends Panel implements CanvasContainer
 		return canvas_adapter;
 	}
 	
-	synchronized public void update(Graphics dg) 
+	
+	public void update(Graphics dg) 
 	{
-		canvas_adapter.update((Graphics2D)dg);
+		Graphics2D g = (Graphics2D)dg;
+		
+		canvas_adapter.update(g.getDeviceConfiguration());
+
+		Image vm_buffer = canvas_adapter.getVMBuffer();
+		
+		if (vm_buffer != null) {
+			g.drawImage(vm_buffer, 0, 0, getWidth(), getHeight(), this);
+		}
 	}
 	
-	synchronized public void paint(Graphics dg){}
+	public void paint(Graphics dg)
+	{
+		Graphics2D g = (Graphics2D)dg;
+		Image vm_buffer = canvas_adapter.getVMBuffer();
+		if (vm_buffer != null) {
+			g.drawImage(vm_buffer, 0, 0, getWidth(), getHeight(), this);
+		}
+	}
 
 //	--------------------------------------------------------------------------------
 	

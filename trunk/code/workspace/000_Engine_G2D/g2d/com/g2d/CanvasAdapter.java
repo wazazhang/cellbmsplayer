@@ -198,6 +198,10 @@ FocusListener
 		return is_root_applet;
 	}
 	
+	public Image getVMBuffer() {
+		return vm_buffer;
+	}
+	
 	/**
 	 * 设置默认鼠标指针图形
 	 * @param cursor
@@ -499,9 +503,9 @@ FocusListener
 		component.repaint(0, 0, 0, getWidth(), getHeight());
 	}
 	
-	public void update(Graphics2D g) 
+	public void update(GraphicsConfiguration gc) 
 	{
-		GraphicsConfiguration gc = ((Graphics2D)g).getDeviceConfiguration();
+//		GraphicsConfiguration gc = ((Graphics2D)g).getDeviceConfiguration();
 		
 		try 
 		{
@@ -544,7 +548,7 @@ FocusListener
 					g2d.dispose();
 				}
 
-				g.drawImage(vm_buffer, 0, 0, getWidth(), getHeight(), null);
+//				g.drawImage(vm_buffer, 0, 0, getWidth(), getHeight(), null);
 			}
 		
 			

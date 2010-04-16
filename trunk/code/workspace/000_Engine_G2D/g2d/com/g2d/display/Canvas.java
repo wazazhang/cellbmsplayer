@@ -3,6 +3,7 @@ package com.g2d.display;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.Window;
 import java.text.AttributedString;
 
@@ -28,6 +29,12 @@ public interface Canvas
 	 * @return
 	 */
 	public boolean isRootApplet() ;
+	
+	/**
+	 * 获得当前场景的后背缓冲图像
+	 * @return
+	 */
+	public Image getVMBuffer();
 	
 	/**
 	 * 设置默认鼠标指针图形
