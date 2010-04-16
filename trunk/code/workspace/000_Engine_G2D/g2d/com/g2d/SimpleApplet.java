@@ -25,6 +25,7 @@ public class SimpleApplet extends JApplet implements Runnable
 		
 		this.canvas = canvas;//new SimpleCanvas(width, height);
 		this.canvas.is_root_applet = true;
+		this.canvas.owner_applet = this;
 		
 		this.add(canvas.component);
 		
