@@ -1,5 +1,6 @@
 package com.g2d.display;
 
+import java.applet.Applet;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Font;
@@ -29,6 +30,12 @@ public interface Canvas
 	 * @return
 	 */
 	public boolean isRootApplet() ;
+	
+	/**
+	 * 获取当前的APPLET，如果以网页形式运行
+	 * @return
+	 */
+	public Applet getApplet();
 	
 	/**
 	 * 获得当前场景的后背缓冲图像

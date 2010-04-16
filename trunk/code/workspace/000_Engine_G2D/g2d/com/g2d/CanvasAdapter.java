@@ -1,5 +1,6 @@
 package com.g2d;
 
+import java.applet.Applet;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
@@ -64,6 +65,8 @@ FocusListener
 	final CanvasContainer				parent;
 	final Component 					component;
 
+	Applet								owner_applet;
+	
 	private boolean 					game_exit		= false;
 	
 //	java swing/awt refre
@@ -197,7 +200,11 @@ FocusListener
 	public boolean isRootApplet() {
 		return is_root_applet;
 	}
-	
+
+	public Applet getApplet() {
+		return owner_applet;
+	}
+
 	public Image getVMBuffer() {
 		return vm_buffer;
 	}
