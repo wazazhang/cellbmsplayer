@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
@@ -42,7 +43,9 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 
 	// properties	
 	final Abilities		abilities;
-	CellEditAdapter<?>	adapters[];
+	final ArrayList<CellEditAdapter<?>> 
+						adapters = new ArrayList<CellEditAdapter<?>>();
+	
 	// ui
 	JList 				list_cur_ability 	= new JList();
 	JButton 			btn_add_ability 	= new JButton("添加能力");
@@ -55,10 +58,11 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 	public AbilityPanel(Abilities abilities, CellEditAdapter<?> ... adapters)
 	{
 		this.abilities 		= abilities;
-		this.adapters		= new CellEditAdapter[adapters.length+2];
-		System.arraycopy(adapters, 0, this.adapters, 0, adapters.length);
-		this.adapters[adapters.length+0] = new AbilitiesCellEditAdapter();
-		this.adapters[adapters.length+1] = new PropertyAdapters.UnitTypeAdapter();
+		for (CellEditAdapter<?> a : adapters) {
+			this.adapters.add(a);
+		}
+		this.adapters.add(new AbilitiesCellEditAdapter());
+		this.adapters.add(new PropertyAdapters.UnitTypeAdapter());
 		
 		this.setLayout(new BorderLayout());
 		
@@ -111,7 +115,9 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 			if (selected instanceof AbstractAbility) {
 				resetAbility();
 				AbstractAbility ability = (AbstractAbility)selected;
-				ObjectPropertyPanel panel = new ObjectPropertyPanel(ability, adapters);
+				ObjectPropertyPanel panel = new ObjectPropertyPanel(
+						ability, 
+						adapters.toArray(new CellEditAdapter<?>[adapters.size()]));
 				split.setRightComponent(panel);
 				list_cur_ability.setSelectedValue(selected, false);
 			}
@@ -271,7 +277,7 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 		public void setAbilityClass(Class<? extends AbstractAbility> cls) 
 		{
 			current_ability = AbstractAbility.createAbility(cls);
-			ObjectPropertyPanel obj_pan = new ObjectPropertyPanel(current_ability, adapters);
+			ObjectPropertyPanel obj_pan = new ObjectPropertyPanel(current_ability, adapters.toArray(new CellEditAdapter<?>[adapters.size()]));
 			pan_property.removeAll();
 			pan_property.add(obj_pan, BorderLayout.CENTER);
 			pan_property.updateUI();
@@ -310,9 +316,9 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 					fieldValue = field.getType().newInstance();
 				}
 				return new AbilityForm(
-						AbstractDialog.getTopWindow(AbilityPanel.this),
+						owner,
 						(Abilities) fieldValue,
-						adapters);
+						adapters.toArray(new CellEditAdapter<?>[adapters.size()]));
 			} catch (Exception e) {}
 			return null;
 		}

@@ -29,9 +29,8 @@ public class AbilityAdapter implements CellEditAdapter<Abilities>
 				fieldValue = field.getType().newInstance();
 			}
 			return new AbilityForm(
-					owner.getComponent(),
-					(Abilities) fieldValue,
-					owner.getAdapters());
+					owner,
+					(Abilities) fieldValue);
 		} catch (Exception e) {}
 		return null;
 	}
