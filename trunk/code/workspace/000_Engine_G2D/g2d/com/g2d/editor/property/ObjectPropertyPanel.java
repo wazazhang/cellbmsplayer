@@ -15,6 +15,7 @@ import java.lang.annotation.Annotation;
 import java.lang.annotation.Documented;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.EventObject;
 import java.util.Hashtable;
 import java.util.Locale;
@@ -142,9 +143,9 @@ public class ObjectPropertyPanel extends JPanel implements ObjectPropertyEdit
 		}
 		
 	}
-	
-	public CellEditAdapter<?>[] getAdapters() {
-		return edit_adapters.values().toArray(new CellEditAdapter<?>[edit_adapters.size()]);
+
+	public Collection<CellEditAdapter<?>> getAdapters() {
+		return edit_adapters.values();
 	}
 	
 	@Override
