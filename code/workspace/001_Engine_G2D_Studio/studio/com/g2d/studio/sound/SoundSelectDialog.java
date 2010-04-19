@@ -4,6 +4,7 @@ import java.awt.Component;
 
 import javax.swing.JLabel;
 
+import com.g2d.editor.property.ObjectPropertyEdit;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.swing.G2DListSelectDialog;
@@ -23,7 +24,7 @@ public class SoundSelectDialog extends G2DListSelectDialog<SoundFile> implements
 	}
 	
 	@Override
-	public Component getComponent(ObjectPropertyPanel panel) {
+	public Component getComponent(ObjectPropertyEdit panel) {
 		if (getSelectedObject()!=null) {
 			label.setIcon(getSelectedObject().getListIcon(false));
 			label.setText(getSelectedObject().getListName());

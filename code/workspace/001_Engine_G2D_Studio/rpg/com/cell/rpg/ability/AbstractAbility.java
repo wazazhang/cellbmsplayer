@@ -2,8 +2,10 @@ package com.cell.rpg.ability;
 
 import java.io.ObjectStreamException;
 import java.io.Serializable;
+import java.lang.reflect.Field;
 
 import com.g2d.annotation.Property;
+import com.g2d.editor.property.ObjectPropertyPanel;
 
 /**
  * 子类必须有默认构造函数，该对象将要放到ObjectPropertyPanel里编辑
@@ -22,7 +24,7 @@ public abstract class AbstractAbility implements Serializable
 	
 	@Override
 	public String toString() {
-		return getName(getClass());
+		return getEditName(getClass());
 	}
 	
 //	----------------------------------------------------------------------------------------------------------------
@@ -37,14 +39,12 @@ public abstract class AbstractAbility implements Serializable
 
 //	----------------------------------------------------------------------------------------------------------------
 	
+	public static Field[] getEditFields(Class<?> cls) {
+		return ObjectPropertyPanel.getEditFields(cls);
+	}
 	
-	public static String getName(Class<?> cls) {
-		Property property = cls.getAnnotation(Property.class);
-		if (property != null) {
-			return property.value()[0];
-		} else {
-			return cls.getSimpleName();
-		}
+	public static String getEditName(Class<?> cls) {
+		return ObjectPropertyPanel.getEditName(cls);
 	}
 	
 	public static <T extends AbstractAbility> T createAbility(Class<T> cls) {

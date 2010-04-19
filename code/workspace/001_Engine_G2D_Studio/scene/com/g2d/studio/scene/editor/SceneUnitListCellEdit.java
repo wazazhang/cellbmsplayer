@@ -6,6 +6,7 @@ import java.awt.event.ItemListener;
 
 import javax.swing.JComboBox;
 
+import com.g2d.editor.property.ObjectPropertyEdit;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.scene.units.SceneUnitTag;
@@ -14,7 +15,7 @@ public class SceneUnitListCellEdit extends JComboBox implements PropertyCellEdit
 {
 	private static final long serialVersionUID = 1L;
 
-	ObjectPropertyPanel panel;
+	ObjectPropertyEdit panel;
 	
 	public SceneUnitListCellEdit(SceneEditor scene_viewer, Class<? extends SceneUnitTag<?>> cls) 
 	{
@@ -28,7 +29,7 @@ public class SceneUnitListCellEdit extends JComboBox implements PropertyCellEdit
 		});
 	}
 	
-	public Component getComponent(ObjectPropertyPanel panel) {
+	public Component getComponent(ObjectPropertyEdit panel) {
 		this.panel = panel;
 		return this;
 	}

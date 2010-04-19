@@ -6,9 +6,10 @@ import java.lang.reflect.Field;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import com.cell.rpg.ability.Abilities;
+import com.g2d.editor.property.CellEditAdapter;
+import com.g2d.editor.property.ObjectPropertyEdit;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
-import com.g2d.editor.property.ObjectPropertyPanel.CellEditAdapter;
 
 public class AbilityAdapter implements CellEditAdapter<Abilities>
 {
@@ -18,7 +19,7 @@ public class AbilityAdapter implements CellEditAdapter<Abilities>
 	}
 	
 	@Override
-	public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner,
+	public PropertyCellEdit<?> getCellEdit(ObjectPropertyEdit owner,
 			Object editObject, Object fieldValue, Field field) {
 		// 测试是否是集合
 		try {
@@ -28,7 +29,7 @@ public class AbilityAdapter implements CellEditAdapter<Abilities>
 				fieldValue = field.getType().newInstance();
 			}
 			return new AbilityForm(
-					owner,
+					owner.getComponent(),
 					(Abilities) fieldValue,
 					owner.getAdapters());
 		} catch (Exception e) {}
@@ -36,7 +37,7 @@ public class AbilityAdapter implements CellEditAdapter<Abilities>
 	}
 	
 	@Override
-	public Component getCellRender(ObjectPropertyPanel owner,
+	public Component getCellRender(ObjectPropertyEdit owner,
 			Object editObject, Object fieldValue, Field field,
 			DefaultTableCellRenderer src) {
 		return null;

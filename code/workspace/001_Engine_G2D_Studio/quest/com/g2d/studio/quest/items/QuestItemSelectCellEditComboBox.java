@@ -7,6 +7,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
 
+import com.g2d.editor.property.ObjectPropertyEdit;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.Studio;
@@ -21,7 +22,7 @@ public class QuestItemSelectCellEditComboBox extends JComboBox implements Proper
 	}
 	
 	@Override
-	public Component getComponent(ObjectPropertyPanel panel) {
+	public Component getComponent(ObjectPropertyEdit panel) {
 		QuestItemNode node = (QuestItemNode)getSelectedItem();
 		cell_edit_component.setText(node+"");
 		return cell_edit_component;

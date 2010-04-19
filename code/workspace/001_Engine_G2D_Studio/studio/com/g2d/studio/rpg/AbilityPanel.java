@@ -24,9 +24,10 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import com.cell.rpg.ability.Abilities;
 import com.cell.rpg.ability.AbstractAbility;
+import com.g2d.editor.property.CellEditAdapter;
+import com.g2d.editor.property.ObjectPropertyEdit;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
-import com.g2d.editor.property.ObjectPropertyPanel.CellEditAdapter;
 import com.g2d.studio.res.Res;
 import com.g2d.util.AbstractDialog;
 
@@ -177,7 +178,7 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 			Component ret = super.getListCellRendererComponent(list, value,
 					index, isSelected, cellHasFocus);
 			if (value instanceof AbstractAbility) {
-				this.setText(AbstractAbility.getName(value.getClass()));
+				this.setText(AbstractAbility.getEditName(value.getClass()));
 			}
 			return ret;
 		}
@@ -263,7 +264,7 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 				Object value, int index, boolean isSelected,
 				boolean cellHasFocus) {
 			Class<? extends AbstractAbility> ability_cls = (Class<? extends AbstractAbility>)value;
-			return new JLabel(AbstractAbility.getName(ability_cls));
+			return new JLabel(AbstractAbility.getEditName(ability_cls));
 		}
 		
 		
@@ -279,7 +280,7 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 			if (!current_ability.isMultiField() && abilities.getAbility(current_ability.getClass())!=null) {
 				btn_add.setForeground(Color.RED);
 				btn_add.setEnabled(false);
-				btn_add.setText(AbstractAbility.getName(current_ability.getClass())+" (已存在)");
+				btn_add.setText(AbstractAbility.getEditName(current_ability.getClass())+" (已存在)");
 			} else {
 				btn_add.setForeground(Color.BLACK);
 				btn_add.setEnabled(true);
@@ -300,7 +301,7 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 		}
 		
 		@Override
-		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner, Object editObject, Object fieldValue, Field field) {
+		public PropertyCellEdit<?> getCellEdit(ObjectPropertyEdit owner, Object editObject, Object fieldValue, Field field) {
 			// 测试是否是集合
 			try {
 				field.getType().asSubclass(Abilities.class);
@@ -317,7 +318,7 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 		}
 		
 		@Override
-		public Component getCellRender(ObjectPropertyPanel owner, Object editObject, Object fieldValue, Field field, DefaultTableCellRenderer src) {
+		public Component getCellRender(ObjectPropertyEdit owner, Object editObject, Object fieldValue, Field field, DefaultTableCellRenderer src) {
 			return null;
 		}
 		
@@ -349,13 +350,13 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 		}
 
 		@Override
-		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner,
+		public PropertyCellEdit<?> getCellEdit(ObjectPropertyEdit owner,
 				Object editObject, Object fieldValue, Field field) {
 			return null;
 		}
 
 		@Override
-		public Component getCellRender(ObjectPropertyPanel owner, Object editObject,
+		public Component getCellRender(ObjectPropertyEdit owner, Object editObject,
 				Object fieldValue, Field field, DefaultTableCellRenderer src) {
 			return null;
 		}

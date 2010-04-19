@@ -5,7 +5,7 @@ import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
-import com.g2d.editor.property.ObjectPropertyPanel.CellEditAdapter;
+import com.g2d.editor.property.CellEditAdapter;
 import com.g2d.studio.gameedit.entity.ObjectNode;
 import com.g2d.studio.rpg.AbilityPanel;
 import com.g2d.studio.rpg.RPGObjectPanel;

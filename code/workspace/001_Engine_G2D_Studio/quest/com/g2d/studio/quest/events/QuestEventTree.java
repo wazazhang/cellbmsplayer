@@ -89,7 +89,7 @@ public class QuestEventTree extends G2DTree implements MouseListener
 		public RootMenu() 
 		{
 			for (Class<?> type : quest.quest_generator.getSubAbilityTypes()) {
-				JMenuItem item = new JMenuItem("添加 : " + AbstractAbility.getName(type));
+				JMenuItem item = new JMenuItem("添加 : " + AbstractAbility.getEditName(type));
 				this.add(item);
 				type_map.put(item, type);
 				item.addActionListener(this);

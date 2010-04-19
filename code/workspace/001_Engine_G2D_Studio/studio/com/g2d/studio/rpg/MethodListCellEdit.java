@@ -12,6 +12,7 @@ import javax.swing.JList;
 import com.cell.CUtil;
 import com.cell.rpg.formula.anno.MethodSynthetic;
 import com.cell.rpg.formula.anno.ObjectMethod;
+import com.g2d.editor.property.ObjectPropertyEdit;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 
@@ -44,7 +45,7 @@ public class MethodListCellEdit extends JComboBox implements PropertyCellEdit<Me
 	}
 	
 	@Override
-	public Component getComponent(ObjectPropertyPanel panel) {
+	public Component getComponent(ObjectPropertyEdit panel) {
 		return this;
 	}
 	

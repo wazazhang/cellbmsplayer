@@ -11,6 +11,7 @@ import com.cell.rpg.template.ability.UnitBattleTeam;
 import com.cell.rpg.template.ability.UnitDropItem;
 import com.cell.rpg.template.ability.UnitDropItem.DropItemNode;
 import com.cell.rpg.template.ability.UnitDropItem.DropItems;
+import com.g2d.editor.property.ObjectPropertyEdit;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.Studio;
@@ -38,7 +39,7 @@ public class ObjectAdapters
 		
 		@Override
 		public PropertyCellEdit<?> getCellEdit(
-				ObjectPropertyPanel owner,
+				ObjectPropertyEdit owner,
 				Object editObject, 
 				Object fieldValue, Field field) {
 			if (field.getName().equals("template_unit_id")){
@@ -49,10 +50,11 @@ public class ObjectAdapters
 		
 		@Override
 		public Component getCellRender(
-				ObjectPropertyPanel owner,
+				ObjectPropertyEdit owner,
 				Object editObject,
 				Object fieldValue,
-				Field field, DefaultTableCellRenderer src) {
+				Field field, 
+				DefaultTableCellRenderer src) {
 			if (field.getName().equals("template_unit_id")){
 				XLSUnit unit = null;
 				if (fieldValue != null) {
@@ -83,11 +85,11 @@ public class ObjectAdapters
 		
 		@Override
 		public PropertyCellEdit<?> getCellEdit(
-				ObjectPropertyPanel owner,
+				ObjectPropertyEdit owner,
 				Object editObject, 
 				Object fieldValue, Field field) {
 			if (field.getName().equals("item_types")){
-				DropItemEditor editor = new DropItemEditor(owner, (DropItems)fieldValue);
+				DropItemEditor editor = new DropItemEditor(owner.getComponent(), (DropItems)fieldValue);
 				editor.setVisible(true);
 				return editor;
 			}
@@ -95,10 +97,10 @@ public class ObjectAdapters
 		}
 		
 		@Override
-		public Component getCellRender(ObjectPropertyPanel owner, Object editObject, Object fieldValue, Field field, DefaultTableCellRenderer src) {
+		public Component getCellRender(ObjectPropertyEdit owner, Object editObject, Object fieldValue, Field field, DefaultTableCellRenderer src) {
 			if (field.getName().equals("item_types")){
 				if (fieldValue!=null) {
-					DropItemEditor editor = new DropItemEditor(owner, (DropItems)fieldValue);
+					DropItemEditor editor = new DropItemEditor(owner.getComponent(), (DropItems)fieldValue);
 					return editor.getComponent(null);
 				}
 			}
@@ -135,7 +137,7 @@ public class ObjectAdapters
 		}
 		
 		@Override
-		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner, Object editObject, Object fieldValue, Field field) {
+		public PropertyCellEdit<?> getCellEdit(ObjectPropertyEdit owner, Object editObject, Object fieldValue, Field field) {
 			if (field.getName().equals("item_list_id")) {
 				ObjectSelectCellEditInteger<DItemList> item_list = 
 					new ObjectSelectCellEditInteger<DItemList>(DItemList.class);
@@ -146,7 +148,7 @@ public class ObjectAdapters
 		}
 		
 		@Override
-		public Component getCellRender(ObjectPropertyPanel owner, Object editObject,
+		public Component getCellRender(ObjectPropertyEdit owner, Object editObject,
 				Object fieldValue, Field field, DefaultTableCellRenderer src) {
 			if (field.getName().equals("item_list_id")) {
 				DItemList item_list = Studio.getInstance().getObjectManager().getObject(
@@ -181,10 +183,10 @@ public class ObjectAdapters
 		}
 		
 		@Override
-		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner, Object editObject, Object fieldValue, Field field) {
+		public PropertyCellEdit<?> getCellEdit(ObjectPropertyEdit owner, Object editObject, Object fieldValue, Field field) {
 			if (editObject instanceof TItem) {
 				if (field.getName().equals("item_properties_id")) {
-					ItemPropertiesSelectCellEdit edit = new ItemPropertiesSelectCellEdit(owner);
+					ItemPropertiesSelectCellEdit edit = new ItemPropertiesSelectCellEdit(owner.getComponent());
 					edit.setValue((Integer)fieldValue);
 					edit.showDialog();
 					return edit;
@@ -194,7 +196,7 @@ public class ObjectAdapters
 		}
 		
 		@Override
-		public Component getCellRender(ObjectPropertyPanel owner, Object editObject,
+		public Component getCellRender(ObjectPropertyEdit owner, Object editObject,
 				Object fieldValue, Field field, DefaultTableCellRenderer src) {
 			if (editObject instanceof TItem) {
 				if (field.getName().equals("item_properties_id") && fieldValue!=null) {

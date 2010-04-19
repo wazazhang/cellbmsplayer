@@ -20,6 +20,7 @@ import javax.swing.SpinnerNumberModel;
 import com.cell.CUtil;
 import com.cell.rpg.template.ability.UnitDropItem.DropItemNode;
 import com.cell.rpg.template.ability.UnitDropItem.DropItems;
+import com.g2d.editor.property.ObjectPropertyEdit;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.Studio;
@@ -109,7 +110,7 @@ public class DropItemEditor extends AbstractDialog implements PropertyCellEdit<D
 	}
 	
 	@Override
-	public Component getComponent(ObjectPropertyPanel panel) {		
+	public Component getComponent(ObjectPropertyEdit panel) {		
 		StringBuffer sb = new StringBuffer();
 		for (Node node : node_list) {
 			sb.append(node.item.getName()+", ");

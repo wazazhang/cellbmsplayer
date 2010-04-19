@@ -9,6 +9,7 @@ import javax.swing.JList;
 
 import com.cell.rpg.item.ItemPropertyTemplate;
 import com.cell.rpg.item.ItemPropertyTypes;
+import com.g2d.editor.property.ObjectPropertyEdit;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.Studio;
@@ -26,7 +27,7 @@ public class ItemPropertySelectDialog extends G2DListSelectDialog<ItemPropertyNo
 	}
 	
 	@Override
-	public Component getComponent(ObjectPropertyPanel panel) {
+	public Component getComponent(ObjectPropertyEdit panel) {
 		ItemPropertyNode node = getSelectedObject();
 		if (node != null) {
 			cell_edit_component.setText(node.getListName());

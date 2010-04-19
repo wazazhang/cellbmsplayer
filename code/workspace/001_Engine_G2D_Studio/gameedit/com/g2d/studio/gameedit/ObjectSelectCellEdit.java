@@ -6,6 +6,7 @@ import java.awt.event.ItemListener;
 
 import javax.swing.JComboBox;
 
+import com.g2d.editor.property.ObjectPropertyEdit;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.Studio;
@@ -16,7 +17,7 @@ public class ObjectSelectCellEdit<T extends ObjectNode<?>> extends JComboBox imp
 {
 	private static final long serialVersionUID = 1L;
 
-	ObjectPropertyPanel panel;
+	ObjectPropertyEdit panel;
 	
 	public ObjectSelectCellEdit(Class<T> object_type) 
 	{
@@ -28,7 +29,7 @@ public class ObjectSelectCellEdit<T extends ObjectNode<?>> extends JComboBox imp
 		});
 	}
 	
-	public Component getComponent(ObjectPropertyPanel panel) {		
+	public Component getComponent(ObjectPropertyEdit panel) {		
 		this.panel = panel;
 		return this;
 	}

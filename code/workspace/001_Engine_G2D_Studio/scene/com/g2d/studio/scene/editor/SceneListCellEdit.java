@@ -7,6 +7,7 @@ import java.util.Vector;
 
 import javax.swing.JComboBox;
 
+import com.g2d.editor.property.ObjectPropertyEdit;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.Studio;
@@ -16,7 +17,7 @@ public class SceneListCellEdit extends JComboBox implements PropertyCellEdit<Str
 {
 	private static final long serialVersionUID = 1L;
 
-	ObjectPropertyPanel panel;
+	ObjectPropertyEdit panel;
 	
 	public SceneListCellEdit(Object scene_id) 
 	{
@@ -36,7 +37,7 @@ public class SceneListCellEdit extends JComboBox implements PropertyCellEdit<Str
 		}catch(Exception err){}
 	}
 	
-	public Component getComponent(ObjectPropertyPanel panel) {		
+	public Component getComponent(ObjectPropertyEdit panel) {		
 		this.panel = panel;
 		return this;
 	}

@@ -7,8 +7,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.g2d.editor.property.PropertyCellEdit;
-import com.g2d.editor.property.ObjectPropertyPanel.CellEditAdapter;
 import com.g2d.studio.rpg.PropertyAdapters;
 
 

@@ -5,9 +5,10 @@ import java.lang.reflect.Field;
 
 import javax.swing.table.DefaultTableCellRenderer;
 
+import com.g2d.editor.property.CellEditAdapter;
+import com.g2d.editor.property.ObjectPropertyEdit;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
-import com.g2d.editor.property.ObjectPropertyPanel.CellEditAdapter;
 import com.g2d.studio.Studio;
 import com.g2d.studio.anno.PropertyAdapter;
 import com.g2d.studio.gameedit.ObjectSelectCellEditInteger;
@@ -34,7 +35,7 @@ public enum PropertyAdapters
 		}
 		
 		@Override
-		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner,
+		public PropertyCellEdit<?> getCellEdit(ObjectPropertyEdit owner,
 				Object editObject, Object fieldValue, Field field) {
 			PropertyAdapter adapter = field.getAnnotation(PropertyAdapter.class);
 			if (adapter != null && adapter.value().equals(UNIT_ID)) {
@@ -50,7 +51,7 @@ public enum PropertyAdapters
 		}
 		
 		@Override
-		public Component getCellRender(ObjectPropertyPanel owner,
+		public Component getCellRender(ObjectPropertyEdit owner,
 				Object editObject, Object fieldValue, Field field,
 				DefaultTableCellRenderer src) {
 			PropertyAdapter adapter = field.getAnnotation(PropertyAdapter.class);
