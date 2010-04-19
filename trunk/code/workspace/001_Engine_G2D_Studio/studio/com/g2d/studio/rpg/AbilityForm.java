@@ -29,9 +29,9 @@ public class AbilityForm extends AbstractDialog implements PropertyCellEdit<Abil
 	final AbilityPanel	ability_panel;
 	final Abilities		abilities;
 	
-	public AbilityForm(Component owner, Abilities abilities, CellEditAdapter<?> ... adapters) 
+	public AbilityForm(ObjectPropertyEdit owner, Abilities abilities, CellEditAdapter<?> ... adapters) 
 	{
-		super(owner);
+		super(owner.getComponent());
 		this.abilities 		= abilities;
 		this.ability_panel = new AbilityPanel(abilities, adapters);
 		this.add(ability_panel);
