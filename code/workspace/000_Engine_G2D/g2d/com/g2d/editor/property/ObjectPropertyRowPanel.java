@@ -224,7 +224,7 @@ public class ObjectPropertyRowPanel<T> extends BaseObjectPropertyPanel
 				for (ColumnFiller f : column_filler) {
 					String command = f.getCommand(field);
 					if (command != null) {
-						ColumnHeaderMenu menu = new ColumnHeaderMenu(field, f, x, y);
+						ColumnHeaderMenu menu = new ColumnHeaderMenu(command, field, f, x, y);
 						menu.show(table.getTableHeader(), x, y);
 						return;
 					}
@@ -242,7 +242,7 @@ public class ObjectPropertyRowPanel<T> extends BaseObjectPropertyPanel
 		final int start;
 		final int count;
 		
-		public ColumnHeaderMenu(Field field, ColumnFiller filler, int x, int y) 
+		public ColumnHeaderMenu(String command, Field field, ColumnFiller filler, int x, int y) 
 		{
 			this.field		= field;
 			this.filler		= filler;
@@ -254,7 +254,7 @@ public class ObjectPropertyRowPanel<T> extends BaseObjectPropertyPanel
 				this.filling_rows.add(getRow(i+start));
 			}
 			
-			this.cmd 		= new JMenuItem();
+			this.cmd 		= new JMenuItem(command);
 			this.cmd.addActionListener(this);
 			this.add(cmd);
 		}

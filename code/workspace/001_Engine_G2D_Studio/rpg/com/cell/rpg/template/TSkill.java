@@ -136,6 +136,21 @@ public class TSkill extends TemplateNode
 	}
 	
 	/**
+	 * 得到该列所有等级的属性能力
+	 * @param column
+	 * @return
+	 */
+	public ArrayList<ItemPropertyTemplate> getColumnProperties(int column) {
+		ArrayList<ItemPropertyTemplate> ret = new ArrayList<ItemPropertyTemplate>(getMaxLevel());
+		if (column>=0 && column<getMaxColumn()) {
+			for (ArrayList<ItemPropertyTemplate> level : level_properties) {
+				ret.add(level.get(column));
+			}
+		}
+		return ret;
+	}
+	
+	/**
 	 * 设置最大等级
 	 * @param max_level
 	 */

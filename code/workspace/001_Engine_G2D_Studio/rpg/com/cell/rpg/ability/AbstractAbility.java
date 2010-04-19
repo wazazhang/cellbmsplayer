@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 
 import com.g2d.annotation.Property;
-import com.g2d.editor.property.ObjectPropertyPanel;
+import com.g2d.editor.property.Util;
 
 /**
  * 子类必须有默认构造函数，该对象将要放到ObjectPropertyPanel里编辑
@@ -40,11 +40,11 @@ public abstract class AbstractAbility implements Serializable
 //	----------------------------------------------------------------------------------------------------------------
 	
 	public static Field[] getEditFields(Class<?> cls) {
-		return ObjectPropertyPanel.getEditFields(cls);
+		return Util.getEditFields(cls);
 	}
 	
 	public static String getEditName(Class<?> cls) {
-		return ObjectPropertyPanel.getEditName(cls);
+		return Util.getEditName(cls);
 	}
 	
 	public static <T extends AbstractAbility> T createAbility(Class<T> cls) {
