@@ -35,7 +35,7 @@ public class PopupCellEditColor extends PopupCellEdit<Color>
 		colorChooser.setColor(current_value);
 		
 		JDialog dialog = JColorChooser.createDialog(
-				sender, 
+				sender.getComponent(), 
 				"Pick a Color",
 				true, // modal
 				colorChooser, 
@@ -44,7 +44,7 @@ public class PopupCellEditColor extends PopupCellEdit<Color>
 						// TODO Auto-generated method stub
 						current_value = colorChooser.getColor();
 						setBackground(current_value);
-						sender.rows_table.editingStopped(null);
+						sender.fireEditingStopped();
 						completeEdit();
 					}
 				}, // OK button handler

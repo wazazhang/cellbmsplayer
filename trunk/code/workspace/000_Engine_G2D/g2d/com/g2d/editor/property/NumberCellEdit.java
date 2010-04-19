@@ -32,7 +32,7 @@ public class NumberCellEdit extends JSpinner implements PropertyCellEdit<Object>
 		return 0;
 	}
 
-	public Component getComponent(ObjectPropertyPanel panel) {
+	public Component getComponent(ObjectPropertyEdit panel) {
 		return this;
 	}
 }

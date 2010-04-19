@@ -17,7 +17,7 @@ public class TextCellEdit extends JTextField implements PropertyCellEdit<String>
 		return super.getText();
 	}
 	
-	public Component getComponent(ObjectPropertyPanel panel) {
+	public Component getComponent(ObjectPropertyEdit panel) {
 		return this;
 	}
 
