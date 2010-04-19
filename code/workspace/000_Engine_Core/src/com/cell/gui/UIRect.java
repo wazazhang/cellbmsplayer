@@ -190,7 +190,7 @@ public class UIRect extends CObject
 					x+BorderTL.getWidth(), 
 					y, 
 					W-BorderTL.getWidth()-BorderTR.getWidth(),
-					BorderB.getHeight(),
+					BorderT.getHeight(),  //////////BorderB.getHeight() ---> BorderT.getHeight()
 					0);
 			g.drawRoundImage(BorderB, 
 					x+BorderBL.getWidth(), 
