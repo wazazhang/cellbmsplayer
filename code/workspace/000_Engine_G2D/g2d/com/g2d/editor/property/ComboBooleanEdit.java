@@ -32,7 +32,7 @@ public class ComboBooleanEdit extends JComboBox implements PropertyCellEdit<Bool
 		this(false);
 	}
 	
-	public Component getComponent(ObjectPropertyPanel panel) {
+	public Component getComponent(ObjectPropertyEdit panel) {
 		return this;
 	}
 	

@@ -14,6 +14,7 @@ import java.awt.event.FocusListener;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Documented;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.Hashtable;
 import java.util.Locale;
@@ -55,7 +56,7 @@ import com.g2d.util.AbstractDialog;
  * @author WAZA
  *
  */
-public class ObjectPropertyPanel extends JPanel 
+public class ObjectPropertyPanel extends JPanel implements ObjectPropertyEdit
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -144,6 +145,11 @@ public class ObjectPropertyPanel extends JPanel
 	
 	public CellEditAdapter<?>[] getAdapters() {
 		return edit_adapters.values().toArray(new CellEditAdapter<?>[edit_adapters.size()]);
+	}
+	
+	@Override
+	public Component getComponent() {
+		return this;
 	}
 	
 	/**
@@ -513,44 +519,58 @@ public class ObjectPropertyPanel extends JPanel
 	}
 //	------------------------------------------------------------------------------------------------------------------------------------------
 	
+
+//	------------------------------------------------------------------------------------------------------------------------------------------
+
 	/**
-	 * @author WAZA
-	 *
-	 * @param <T> Filed type
+	 * 得到该类在编辑器里的名字
+	 * @param cls
+	 * @see Property
+	 * @return
 	 */
-	public static interface CellEditAdapter<T>
-	{
-		public abstract Class<T> getType();
-
-		public Component getCellRender(
-				ObjectPropertyPanel owner,
-				Object edit_object, 
-				Object field_value, 
-				Field field, 
-				DefaultTableCellRenderer src);
+	public static String getEditName(Class<?> cls) {
+		Property property = cls.getAnnotation(Property.class);
+		if (property != null) {
+			return property.value()[0];
+		} else {
+			return cls.getSimpleName();
+		}
+	}
+	
+	/**
+	 * 得到所有标注为{@link Property}的字段
+	 * cls.getDeclaredFields()
+	 * @see Property
+	 * @return
+	 */
+	public static Field[] getEditFields(Class<?> cls) {
+		Field[] edit_fields = null;
+			ArrayList<Field> fields = new ArrayList<Field>();
+			for (Field field : cls.getDeclaredFields()) {
+				Property pro = field.getAnnotation(Property.class);
+				if (pro != null) {
+					fields.add(field);
+				}
+			}
+			edit_fields = fields.toArray(new Field[fields.size()]);
 		
-		public PropertyCellEdit<?> getCellEdit(
-				ObjectPropertyPanel owner,
-				Object edit_object, 
-				Object field_value, 
-				Field field) ;
-
-		public Object getCellValue(
-				Object edit_object, 
-				PropertyCellEdit<?> field_edit, 
-				Field field, 
-				Object field_src_value);
-		
-		public boolean fieldChanged(
-				Object edit_object,
-				Object field_value, 
-				Field field);
-		
-		public String getCellText(
-				Object edit_object, 
-				Field field, 
-				Object field_src_value);
-
+		return edit_fields;
+	}
+	
+	
+	/**
+	 * 得到字段标注为{@link Property}名字
+	 * @param field
+	 * @see Property
+	 * @return
+	 */
+	public static String getEditFieldName(Field field) {
+		Property property = field.getAnnotation(Property.class);
+		if (property != null) {
+			return property.value()[0];
+		} else {
+			return field.getName();
+		}
 	}
 	
 }

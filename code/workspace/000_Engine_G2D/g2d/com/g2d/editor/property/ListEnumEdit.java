@@ -28,7 +28,7 @@ public class ListEnumEdit<T extends Enum<T>> extends JComboBox implements Proper
 		this.type = cls;
 	}
 	
-	public Component getComponent(ObjectPropertyPanel panel) {
+	public Component getComponent(ObjectPropertyEdit panel) {
 		return this;
 	}
 	
