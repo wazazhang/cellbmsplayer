@@ -28,7 +28,7 @@ public class ItemPropertyNode implements G2DListItem
 	
 	@Override
 	public String getListName() {
-		return AbstractAbility.getName(type);
+		return AbstractAbility.getEditName(type);
 	}
 	
 	public ItemPropertyTemplate getItemPropertyTemplate() {

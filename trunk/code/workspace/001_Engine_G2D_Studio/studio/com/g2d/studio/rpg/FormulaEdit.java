@@ -46,6 +46,7 @@ import com.cell.rpg.quest.formula.QuestStateProperty.QuestStateField;
 import com.cell.util.Pair;
 import com.g2d.annotation.Property;
 import com.g2d.editor.property.ListEnumEdit;
+import com.g2d.editor.property.ObjectPropertyEdit;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.Studio;
@@ -121,7 +122,7 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 	}
 
 	@Override
-	public Component getComponent(ObjectPropertyPanel panel) {
+	public Component getComponent(ObjectPropertyEdit panel) {
 		if (value!=null) {
 			edit_title.setText(value + "");
 		} else {

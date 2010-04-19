@@ -70,7 +70,7 @@ public class TSkill extends TemplateNode
 	public ItemPropertyTemplate getColumnProperty(int column, int level) {
 		if (column>=0 && column<getMaxColumn()) {
 			if (level>=0 && level<getMaxLevel()) {
-				level_properties.get(level).get(column);
+				return level_properties.get(level).get(column);
 			}
 		}
 		return null;

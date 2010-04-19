@@ -16,6 +16,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
 
 import com.g2d.Tools;
+import com.g2d.editor.property.ObjectPropertyEdit;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.Studio;
@@ -58,7 +59,7 @@ public class ObjectSelectDialog<T extends ObjectNode<?>> extends AbstractOptionD
 	}
 	
 	@Override
-	public Component getComponent(ObjectPropertyPanel panel) {
+	public Component getComponent(ObjectPropertyEdit panel) {
 		cell_edit_component.setText(getUserObject()+"");
 		return cell_edit_component;
 	}

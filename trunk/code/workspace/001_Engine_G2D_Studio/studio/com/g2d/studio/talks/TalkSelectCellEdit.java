@@ -5,6 +5,7 @@ import java.awt.Window;
 
 import javax.swing.JLabel;
 
+import com.g2d.editor.property.ObjectPropertyEdit;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 
@@ -19,7 +20,7 @@ public class TalkSelectCellEdit extends TalkSelectDialog implements PropertyCell
 	}
 	
 	@Override
-	public Component getComponent(ObjectPropertyPanel panel) {
+	public Component getComponent(ObjectPropertyEdit panel) {
 		TalkFile talk = getSelectedObject();
 		if (talk!=null) {
 			edit_label.setText(talk.talk_file_name);	

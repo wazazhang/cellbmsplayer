@@ -4,6 +4,7 @@ import java.awt.Component;
 
 import javax.swing.JLabel;
 
+import com.g2d.editor.property.ObjectPropertyEdit;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.Studio;
@@ -19,7 +20,7 @@ public class ItemPropertiesSelectCellEdit extends G2DListSelectDialog<ItemProper
 	}
 	
 	@Override
-	public Component getComponent(ObjectPropertyPanel panel) {
+	public Component getComponent(ObjectPropertyEdit panel) {
 		ItemPropertiesNode node = getSelectedObject();
 		cell_edit_component.setText(node+"");
 		return cell_edit_component;

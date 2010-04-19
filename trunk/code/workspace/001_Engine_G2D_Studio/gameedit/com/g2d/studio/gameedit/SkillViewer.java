@@ -9,7 +9,7 @@ public class SkillViewer extends XLSObjectViewer<XLSSkill>
 
 	public SkillViewer(XLSSkill skill) {
 		super(skill);
-		table.insertTab("技能属性", null, new JScrollPane(new SkillPropertiesEditor(skill)), "", 1);
+		table.insertTab("每等级属性", null, new JScrollPane(new SkillPropertiesEditor(skill)), "", 1);
 	}
 	
 }

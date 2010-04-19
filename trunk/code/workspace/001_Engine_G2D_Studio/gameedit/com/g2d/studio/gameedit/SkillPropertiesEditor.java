@@ -6,8 +6,11 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.Field;
+import java.util.EventObject;
 import java.util.Vector;
 
+import javax.swing.AbstractCellEditor;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JList;
@@ -19,11 +22,15 @@ import javax.swing.JTable;
 import javax.swing.JToolBar;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableColumn;
 
 import com.cell.CUtil;
 import com.cell.rpg.ability.AbstractAbility;
 import com.cell.rpg.item.ItemPropertyTemplate;
 import com.g2d.annotation.Property;
+import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.template.XLSSkill;
 import com.g2d.studio.item.property.ItemPropertyNode;
@@ -127,6 +134,7 @@ public class SkillPropertiesEditor extends JPanel implements ActionListener
 				list_data.add(new ColumnItem(column));
 			}
 			this.setListData(list_data);
+			this.addListSelectionListener(this);
 			split_right.setViewportView(new JPanel());
 		}
 		
@@ -148,11 +156,13 @@ public class SkillPropertiesEditor extends JPanel implements ActionListener
 		final private int 			column;
 		final private Class<? extends ItemPropertyTemplate> 
 									column_type;
+		final private Field[]		column_fields;
 		final private FieldTable 	levels;
 		
 		public ColumnItem(int column) {
 			this.column 		= column;
 			this.column_type	= skill.getData().getColumnType(column);
+			this.column_fields	= ItemPropertyTemplate.getEditFields(column_type);
 			this.levels 		= new FieldTable();
 		}
 		
@@ -168,18 +178,69 @@ public class SkillPropertiesEditor extends JPanel implements ActionListener
 		
 		@Override
 		public String getListName() {
-			return AbstractAbility.getName(column_type);
+			return AbstractAbility.getEditName(column_type);
 		}
 
 //		------------------------------------------------------------------------------------------------------------------
-
+		
+		final String COLUMN_LEVEL = "等级";
+		
+		private Vector<String> toTableHeadData() {
+			Vector<String> header = new Vector<String>(2);
+			header.add(COLUMN_LEVEL);
+			for (Field field : column_fields) {
+				header.add(ObjectPropertyPanel.getEditFieldName(field));
+			}
+			return header;
+		}
+		
+		private Vector<Vector<Object>> toTableRowData() {
+			Vector<Vector<Object>> ret = new Vector<Vector<Object>>();
+			for (int level = 0; level < skill.getData().getMaxLevel(); level++) {
+				Vector<Object> row = new Vector<Object>(column_fields.length + 1);
+				row.add(level);
+				ItemPropertyTemplate row_data = skill.getData().getColumnProperty(column, level);
+				for (Field field : column_fields) {
+					try {
+						Object cdata = field.get(row_data);
+						row.add(cdata);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+				ret.add(row);
+			}
+			ret.trimToSize();
+			return ret;
+		}
+		
 		class FieldTable extends JTable
 		{
-			public FieldTable() 
+			public FieldTable()
 			{
-				
+				super(toTableRowData(), toTableHeadData());
+				super.getColumn(COLUMN_LEVEL).setCellEditor(new NullEditor());
 			}
+			
+			
+		
+			
 		}
+
+//		------------------------------------------------------------------------------------------------------------------
+		
+		class TableRender extends DefaultTableCellRenderer
+		{
+		}
+		
+		class NullEditor extends AbstractCellEditor implements TableCellEditor
+		{
+			@Override
+			public boolean isCellEditable(EventObject e) {return false;}
+			public Object getCellEditorValue() {return null;}
+			public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column){return null;}
+		}
+		
 	}
 	
 	

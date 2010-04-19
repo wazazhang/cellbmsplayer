@@ -7,10 +7,11 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import com.cell.rpg.item.ItemPropertyTemplate.ArgTemplate;
+import com.g2d.editor.property.CellEditAdapter;
+import com.g2d.editor.property.ObjectPropertyEdit;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.editor.property.TextCellEdit;
-import com.g2d.editor.property.ObjectPropertyPanel.CellEditAdapter;
 
 public class ItemPropertiesAdapter
 {
@@ -22,7 +23,7 @@ public class ItemPropertiesAdapter
 		}
 
 		@Override
-		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner, Object editObject, Object fieldValue, Field field) {
+		public PropertyCellEdit<?> getCellEdit(ObjectPropertyEdit owner, Object editObject, Object fieldValue, Field field) {
 			if (ArgTemplate.class.isAssignableFrom(field.getType())) {
 				try{
 					ArgTemplate<?> range = (ArgTemplate<?>)fieldValue;
@@ -60,7 +61,7 @@ public class ItemPropertiesAdapter
 			return false;
 		}
 		@Override
-		public Component getCellRender(ObjectPropertyPanel owner, Object editObject, Object fieldValue, Field field, DefaultTableCellRenderer src) {
+		public Component getCellRender(ObjectPropertyEdit owner, Object editObject, Object fieldValue, Field field, DefaultTableCellRenderer src) {
 			return null;
 		}
 		@Override

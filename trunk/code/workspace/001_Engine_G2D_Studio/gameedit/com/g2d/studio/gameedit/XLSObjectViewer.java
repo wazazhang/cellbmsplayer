@@ -6,7 +6,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 
-import com.g2d.editor.property.ObjectPropertyPanel.CellEditAdapter;
+import com.g2d.editor.property.CellEditAdapter;
 import com.g2d.studio.gameedit.template.XLSTemplateNode;
 
 public class XLSObjectViewer<T extends XLSTemplateNode<?>> extends ObjectViewer<T>

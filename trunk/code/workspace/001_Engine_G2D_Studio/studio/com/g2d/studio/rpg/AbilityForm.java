@@ -7,9 +7,10 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 
 import com.cell.rpg.ability.Abilities;
+import com.g2d.editor.property.CellEditAdapter;
+import com.g2d.editor.property.ObjectPropertyEdit;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
-import com.g2d.editor.property.ObjectPropertyPanel.CellEditAdapter;
 import com.g2d.studio.res.Res;
 import com.g2d.util.AbstractDialog;
 
@@ -22,7 +23,7 @@ public class AbilityForm extends AbstractDialog implements PropertyCellEdit<Abil
 {
 	private static final long serialVersionUID = 1L;
 	
-	ObjectPropertyPanel property_panel;
+	ObjectPropertyEdit	property_panel;
 	JButton				button;
 	
 	final AbilityPanel	ability_panel;
@@ -48,7 +49,7 @@ public class AbilityForm extends AbstractDialog implements PropertyCellEdit<Abil
 		});
 	}
 	
-	public Component getComponent(ObjectPropertyPanel panel) {	
+	public Component getComponent(ObjectPropertyEdit panel) {	
 		property_panel = panel;
 		button.setText(abilities.toString());
 		return button;

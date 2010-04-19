@@ -40,6 +40,7 @@ import com.cell.util.DateUtil.MonthOfYear;
 import com.cell.util.DateUtil.TimeObject;
 import com.cell.util.task.CronExpression.DateType;
 import com.g2d.editor.property.ListEnumEdit;
+import com.g2d.editor.property.ObjectPropertyEdit;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.Studio;
@@ -71,9 +72,9 @@ public class QuestCellEditAdapter {
 		}
 		
 		@Override
-		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner, Object editObject, Object fieldValue, Field field) {
+		public PropertyCellEdit<?> getCellEdit(ObjectPropertyEdit owner, Object editObject, Object fieldValue, Field field) {
 			if (field.getName().equals("quest_id")) {
-				QuestSelectCellEdit edit = new QuestSelectCellEdit(AbstractDialog.getTopWindow(owner), false);
+				QuestSelectCellEdit edit = new QuestSelectCellEdit(AbstractDialog.getTopWindow(owner.getComponent()), false);
 				edit.showDialog();
 				return edit;
 			}
@@ -81,7 +82,7 @@ public class QuestCellEditAdapter {
 		}
 	
 		@Override
-		public Component getCellRender(ObjectPropertyPanel owner, Object editObject,
+		public Component getCellRender(ObjectPropertyEdit owner, Object editObject,
 				Object fieldValue, Field field, DefaultTableCellRenderer src) {
 			if (field.getName().equals("quest_id") && fieldValue!=null) {
 				Integer quest_id = (Integer)fieldValue;
@@ -116,10 +117,10 @@ public class QuestCellEditAdapter {
 		}
 		
 		@Override
-		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner,
+		public PropertyCellEdit<?> getCellEdit(ObjectPropertyEdit owner,
 			Object editObject, Object fieldValue, Field field) {
 			if (field.getName().equals("quest_id")) {
-				QuestSelectCellEdit edit = new QuestSelectCellEdit(owner, true);
+				QuestSelectCellEdit edit = new QuestSelectCellEdit(owner.getComponent(), true);
 				edit.showDialog();
 				return edit;
 			}
@@ -127,7 +128,7 @@ public class QuestCellEditAdapter {
 		}
 		
 		@Override
-		public Component getCellRender(ObjectPropertyPanel owner,
+		public Component getCellRender(ObjectPropertyEdit owner,
 			Object editObject, Object fieldValue, Field field,
 			DefaultTableCellRenderer src) {
 			if (field.getName().equals("quest_id")) {
@@ -155,7 +156,7 @@ public class QuestCellEditAdapter {
 		}
 		
 		@Override
-		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner, Object editObject, Object fieldValue, Field field) {
+		public PropertyCellEdit<?> getCellEdit(ObjectPropertyEdit owner, Object editObject, Object fieldValue, Field field) {
 			if (field.getName().equals("kill_unit_id")) {
 				ObjectSelectCellEditInteger<XLSUnit> edit = new ObjectSelectCellEditInteger<XLSUnit>(XLSUnit.class);
 				return edit;
@@ -164,7 +165,7 @@ public class QuestCellEditAdapter {
 		}
 		
 		@Override
-		public Component getCellRender(ObjectPropertyPanel owner, Object editObject, Object fieldValue, Field field,
+		public Component getCellRender(ObjectPropertyEdit owner, Object editObject, Object fieldValue, Field field,
 			DefaultTableCellRenderer src) {
 			if (field.getName().equals("kill_unit_id")) {
 				try{
@@ -190,7 +191,7 @@ public class QuestCellEditAdapter {
 		}
 		
 		@Override
-		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner,
+		public PropertyCellEdit<?> getCellEdit(ObjectPropertyEdit owner,
 			Object editObject, Object fieldValue, Field field) {
 			if (field.getName().equals("titem_index")) {
 				ObjectSelectCellEditInteger<XLSItem> item_edit = new ObjectSelectCellEditInteger<XLSItem>(XLSItem.class);
@@ -200,7 +201,7 @@ public class QuestCellEditAdapter {
 		}
 		
 		@Override
-		public Component getCellRender(ObjectPropertyPanel owner, Object editObject,
+		public Component getCellRender(ObjectPropertyEdit owner, Object editObject,
 			Object fieldValue, Field field, DefaultTableCellRenderer src) {
 			if (field.getName().equals("titem_index")) {
 				try{
@@ -225,10 +226,10 @@ public class QuestCellEditAdapter {
 		}
 		
 		@Override
-		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner,
+		public PropertyCellEdit<?> getCellEdit(ObjectPropertyEdit owner,
 			Object editObject, Object fieldValue, Field field) {
 			if (field.getName().equals("quest_id")) {
-				QuestSelectCellEdit edit = new QuestSelectCellEdit(owner, true);
+				QuestSelectCellEdit edit = new QuestSelectCellEdit(owner.getComponent(), true);
 				edit.showDialog();
 				return edit;
 			}
@@ -236,7 +237,7 @@ public class QuestCellEditAdapter {
 				try{
 					TagQuestItem tag = (TagQuestItem)editObject;
 					QuestItemSelectCellEdit quest_item_edit = new QuestItemSelectCellEdit(
-							AbstractDialog.getTopWindow(owner),
+							AbstractDialog.getTopWindow(owner.getComponent()),
 							tag.quest_id
 							);
 					quest_item_edit.showDialog();
@@ -247,7 +248,7 @@ public class QuestCellEditAdapter {
 		}
 		
 		@Override
-		public Component getCellRender(ObjectPropertyPanel owner, Object editObject,
+		public Component getCellRender(ObjectPropertyEdit owner, Object editObject,
 			Object fieldValue, Field field, DefaultTableCellRenderer src) {
 			if (field.getName().equals("quest_id")) {
 				try{
@@ -281,7 +282,7 @@ public class QuestCellEditAdapter {
 //		}
 //		
 //		@Override
-//		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner,
+//		public PropertyCellEdit<?> getCellEdit(ObjectPropertyEdit owner,
 //			Object editObject, Object fieldValue, Field field) {
 //			if (field.getName().equals("quest_id")) {
 //				QuestSelectCellEdit edit = new QuestSelectCellEdit(AbstractDialog.getTopWindow(owner));
@@ -292,7 +293,7 @@ public class QuestCellEditAdapter {
 //		}
 //		
 //		@Override
-//		public Component getCellRender(ObjectPropertyPanel owner, Object editObject,
+//		public Component getCellRender(ObjectPropertyEdit owner, Object editObject,
 //			Object fieldValue, Field field, DefaultTableCellRenderer src) {
 //			if (field.getName().equals("quest_id") && fieldValue!=null) {
 //				Integer quest_id = (Integer)fieldValue;
@@ -323,7 +324,7 @@ public class QuestCellEditAdapter {
 		}
 		
 		@Override
-		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner,
+		public PropertyCellEdit<?> getCellEdit(ObjectPropertyEdit owner,
 			Object editObject, Object fieldValue, Field field) {
 			if (field.getName().equals("titem_index")) {
 				ObjectSelectCellEditInteger<XLSItem> item_edit = new ObjectSelectCellEditInteger<XLSItem>(XLSItem.class);
@@ -333,7 +334,7 @@ public class QuestCellEditAdapter {
 		}
 		
 		@Override
-		public Component getCellRender(ObjectPropertyPanel owner, Object editObject,
+		public Component getCellRender(ObjectPropertyEdit owner, Object editObject,
 			Object fieldValue, Field field, DefaultTableCellRenderer src) {
 			if (field.getName().equals("titem_index")) {
 				try{
@@ -358,7 +359,7 @@ public class QuestCellEditAdapter {
 		}
 		
 		@Override
-		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner,
+		public PropertyCellEdit<?> getCellEdit(ObjectPropertyEdit owner,
 			Object editObject, Object fieldValue, Field field) {
 			if (field.getName().equals("titem_index")) {
 				ObjectSelectCellEditInteger<XLSItem> item_edit = new ObjectSelectCellEditInteger<XLSItem>(XLSItem.class);
@@ -368,7 +369,7 @@ public class QuestCellEditAdapter {
 		}
 		
 		@Override
-		public Component getCellRender(ObjectPropertyPanel owner, Object editObject,
+		public Component getCellRender(ObjectPropertyEdit owner, Object editObject,
 			Object fieldValue, Field field, DefaultTableCellRenderer src) {
 			if (field.getName().equals("titem_index")) {
 				try{
@@ -393,7 +394,7 @@ public class QuestCellEditAdapter {
 		}
 		
 		@Override
-		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner,
+		public PropertyCellEdit<?> getCellEdit(ObjectPropertyEdit owner,
 			Object editObject, Object fieldValue, Field field) {
 			if (field.getName().equals("scene_id")){
 				return new SceneListCellEdit(fieldValue);
@@ -409,7 +410,7 @@ public class QuestCellEditAdapter {
 		}
 		
 		@Override
-		public Component getCellRender(ObjectPropertyPanel owner, Object editObject,
+		public Component getCellRender(ObjectPropertyEdit owner, Object editObject,
 			Object fieldValue, Field field, DefaultTableCellRenderer src) {
 			if (field.getName().equals("scene_id")){
 				try{
@@ -438,7 +439,7 @@ public class QuestCellEditAdapter {
 		}
 		
 		@Override
-		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner,
+		public PropertyCellEdit<?> getCellEdit(ObjectPropertyEdit owner,
 			Object editObject, Object fieldValue, Field field) {
 			if (field.getName().equals("unit_id")) {
 				ObjectSelectCellEditInteger<XLSUnit> edit = new ObjectSelectCellEditInteger<XLSUnit>(XLSUnit.class);
@@ -448,7 +449,7 @@ public class QuestCellEditAdapter {
 		}
 		
 		@Override
-		public Component getCellRender(ObjectPropertyPanel owner, Object editObject,
+		public Component getCellRender(ObjectPropertyEdit owner, Object editObject,
 			Object fieldValue, Field field, DefaultTableCellRenderer src) {
 			if (field.getName().equals("unit_id")) {
 				try{
@@ -472,7 +473,7 @@ public class QuestCellEditAdapter {
 		}
 		
 		@Override
-		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner,
+		public PropertyCellEdit<?> getCellEdit(ObjectPropertyEdit owner,
 			Object editObject, Object fieldValue, Field field) {
 			if (TimeObject.class.equals(field.getType())) {
 				DialogTimeObjectEdit edit = new DialogTimeObjectEdit((TimeObject)fieldValue);
@@ -526,7 +527,7 @@ public class QuestCellEditAdapter {
 		}
 		
 		@Override
-		public Component getComponent(ObjectPropertyPanel panel) {
+		public Component getComponent(ObjectPropertyEdit panel) {
 			edit_label.setText(src+"");
 			return edit_label;
 		}
@@ -554,15 +555,18 @@ public class QuestCellEditAdapter {
 		}
 		
 		@Override
-		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner,
+		public PropertyCellEdit<?> getCellEdit(ObjectPropertyEdit owner,
 			Object editObject, Object fieldValue, Field field) {
 			if (AbstractValue.class.equals(field.getType())) {
-				FormulaEdit edit = new FormulaEdit(owner, (AbstractValue)fieldValue);
+				FormulaEdit edit = new FormulaEdit(
+						owner.getComponent(), 
+						(AbstractValue)fieldValue);
 				edit.showDialog();
 				return edit;
 			}
 			if (AbstractValue.class.isAssignableFrom(field.getType())) {
-				FormulaEdit edit = new FormulaEdit(owner, 
+				FormulaEdit edit = new FormulaEdit(
+						owner.getComponent(), 
 						new Class<?>[]{field.getType()}, 
 						(AbstractValue)fieldValue);
 				edit.showDialog();
@@ -583,10 +587,10 @@ public class QuestCellEditAdapter {
 		}
 		
 		@Override
-		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner,
+		public PropertyCellEdit<?> getCellEdit(ObjectPropertyEdit owner,
 			Object editObject, Object fieldValue, Field field) {
 			if (field.getName().equals("date_time")) {
-				DialogFestivalDateEdit edit = new DialogFestivalDateEdit(owner, (FestivalDate)fieldValue);
+				DialogFestivalDateEdit edit = new DialogFestivalDateEdit(owner.getComponent(), (FestivalDate)fieldValue);
 				edit.setVisible(true);
 				return edit;
 			}
@@ -633,7 +637,7 @@ public class QuestCellEditAdapter {
 		}
 		
 		@Override
-		public Component getComponent(ObjectPropertyPanel panel) {
+		public Component getComponent(ObjectPropertyEdit panel) {
 			edit_label.setText(date+"");
 			return edit_label;
 		}

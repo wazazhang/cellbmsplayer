@@ -24,9 +24,10 @@ import com.cell.rpg.scene.ability.ActorTransport;
 import com.cell.rpg.scene.ability.ActorTransportCraft;
 import com.cell.rpg.scene.ability.IActorAbility;
 import com.cell.rpg.scene.ability.RegionSpawnNPC.NPCSpawn;
+import com.g2d.editor.property.CellEditAdapter;
+import com.g2d.editor.property.ObjectPropertyEdit;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
-import com.g2d.editor.property.ObjectPropertyPanel.CellEditAdapter;
 import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.ObjectSelectCellEdit;
 import com.g2d.studio.gameedit.ObjectSelectDialog;
@@ -58,10 +59,10 @@ public class SceneAbilityAdapters
 			return false;
 		}
 		@Override
-		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner,
+		public PropertyCellEdit<?> getCellEdit(ObjectPropertyEdit owner,
 				Object editObject, Object fieldValue, Field field) {
 			if (field.getName().equals("bgm_sound_name")) {
-				SoundSelectDialog edit = new SoundSelectDialog(owner, (String)fieldValue);
+				SoundSelectDialog edit = new SoundSelectDialog(owner.getComponent(), (String)fieldValue);
 				edit.showDialog();
 				return edit;
 			}
@@ -69,7 +70,7 @@ public class SceneAbilityAdapters
 		}
 		
 		@Override
-		public Component getCellRender(ObjectPropertyPanel owner,
+		public Component getCellRender(ObjectPropertyEdit owner,
 				Object editObject, Object fieldValue, Field field,
 				DefaultTableCellRenderer src) {
 			return null;
@@ -110,7 +111,7 @@ public class SceneAbilityAdapters
 		
 		@Override
 		public PropertyCellEdit<?> getCellEdit(
-				ObjectPropertyPanel owner,
+				ObjectPropertyEdit owner,
 				Object editObject, 
 				Object fieldValue, Field field) {
 			if (field.getName().equals("next_scene_id")){
@@ -148,7 +149,7 @@ public class SceneAbilityAdapters
 		}
 		
 		@Override
-		public Component getCellRender(ObjectPropertyPanel owner, Object editObject,
+		public Component getCellRender(ObjectPropertyEdit owner, Object editObject,
 				Object fieldValue, Field field, DefaultTableCellRenderer src) {
 			if (field.getName().equals("next_scene_id")){
 				SceneNode node = null;
@@ -187,7 +188,7 @@ public class SceneAbilityAdapters
 		
 		@Override
 		public PropertyCellEdit<?> getCellEdit(
-				ObjectPropertyPanel owner,
+				ObjectPropertyEdit owner,
 				Object editObject,
 				Object fieldValue, Field field) {
 			if (field.getName().equals("point_name")){
@@ -211,7 +212,7 @@ public class SceneAbilityAdapters
 		
 		@Override
 		public PropertyCellEdit<?> getCellEdit(
-				ObjectPropertyPanel owner,
+				ObjectPropertyEdit owner,
 				Object editObject, 
 				Object fieldValue, Field field) {
 			if (field.getName().equals("template_unit_id")){
@@ -222,7 +223,7 @@ public class SceneAbilityAdapters
 		
 		@Override
 		public Component getCellRender(
-				ObjectPropertyPanel owner,
+				ObjectPropertyEdit owner,
 				Object editObject,
 				Object fieldValue,
 				Field field, DefaultTableCellRenderer src) {
@@ -254,7 +255,7 @@ public class SceneAbilityAdapters
 		@Override
 		@SuppressWarnings("unchecked")
 		public PropertyCellEdit<?> getCellEdit(
-				ObjectPropertyPanel owner,
+				ObjectPropertyEdit owner,
 				Object editObject,
 				Object fieldValue, Field field) {
 			if (field.getName().equals("skills_id")){
@@ -356,7 +357,7 @@ public class SceneAbilityAdapters
 			}
 			
 			@Override
-			public Component getComponent(ObjectPropertyPanel panel) {
+			public Component getComponent(ObjectPropertyEdit panel) {
 				cell_edit_component.setText(getValue() + "");
 				return cell_edit_component;
 			}
@@ -378,11 +379,11 @@ public class SceneAbilityAdapters
 		}
 		
 		@Override
-		public PropertyCellEdit<?> getCellEdit(ObjectPropertyPanel owner,
+		public PropertyCellEdit<?> getCellEdit(ObjectPropertyEdit owner,
 				Object editObject, Object fieldValue, Field field) {
 			if (field.getName().equals("npc_talk")){
 				if (editObject instanceof IActorAbility) {
-					NpcTalkSelecDialog talk = new NpcTalkSelecDialog(owner);
+					NpcTalkSelecDialog talk = new NpcTalkSelecDialog(owner.getComponent());
 					talk.showDialog();
 					return talk;
 				}
@@ -400,7 +401,7 @@ public class SceneAbilityAdapters
 				super(owner);
 			}
 			@Override
-			public Component getComponent(ObjectPropertyPanel panel) {
+			public Component getComponent(ObjectPropertyEdit panel) {
 				TalkFile file = getSelectedObject();
 				if (file != null) {
 					talk_name.setText(file.getListName());
