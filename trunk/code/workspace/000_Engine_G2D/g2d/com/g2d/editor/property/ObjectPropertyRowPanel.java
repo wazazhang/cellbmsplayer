@@ -55,7 +55,7 @@ public class ObjectPropertyRowPanel<T> extends BaseObjectPropertyPanel
 	private FieldTable				table;
 	
 	Hashtable<TableColumn, Field>	column_map		= new Hashtable<TableColumn, Field>();
-	HashMap<Field, ColumnFiller>	column_filler 	= new HashMap<Field, ColumnFiller>();
+	ArrayList<ColumnFiller>			column_filler	= new ArrayList<ColumnFiller>();
 
 	/**
 	 * @param data_type		数据类型
@@ -105,12 +105,25 @@ public class ObjectPropertyRowPanel<T> extends BaseObjectPropertyPanel
 	}
 
 	/**
+	 * 得到指定行
+	 * @param row
+	 * @return
+	 */
+	final public T getRow(int row) {
+		try{
+			return datas.get(row);
+		}catch(Exception err){
+			return null;
+		}
+	}
+	
+	/**
 	 * 设置指定列的填充器
 	 * @param column
 	 * @param filler
 	 */
-	public ColumnFiller setColumnFiller(Field column, ColumnFiller filler) {
-		return column_filler.put(column, filler);
+	public void addColumnFiller(ColumnFiller filler) {
+		column_filler.add(filler);
 	}
 	
 	final public JTable getTable() {
@@ -182,8 +195,8 @@ public class ObjectPropertyRowPanel<T> extends BaseObjectPropertyPanel
 		
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			if (e.getButton() == e.BUTTON3) {
-				new ColumnHeaderMenu(
+			if (e.getButton() == MouseEvent.BUTTON3) {
+				showColumnHeaderMenu(
 						super.getTableHeader().columnAtPoint(e.getPoint()),
 						e.getX(),
 						e.getY());
@@ -201,45 +214,54 @@ public class ObjectPropertyRowPanel<T> extends BaseObjectPropertyPanel
 	}
 
 //	--------------------------------------------------------------------------------------------------------------------------------------
-	class ColumnHeaderMenu extends JPopupMenu implements ActionListener
-	{	
-		Field				field;
-		ColumnFiller		filler;
-		JMenuItem 			cmd;
-		
-		ArrayList<T>		filling_rows;
-		
-		public ColumnHeaderMenu(int column, int x, int y) 
-		{
-			String cn = table.getColumnName(column);
-			
-			if (cn != null) 
-			{
-				TableColumn tc = table.getColumn(cn);
-				
-				if (tc != null) 
-				{
-					field	= column_map.get(tc);
-					filler	= column_filler.get(field);
-					
-					if (filler != null)
-					{
-						cmd = new JMenuItem(filler.getCommand());
-						cmd.addActionListener(this);
-						this.add(cmd);
-						this.show(table.getTableHeader(), x, y);
+	void showColumnHeaderMenu(int column, int x, int y)
+	{
+		String cn = table.getColumnName(column);
+		if (cn != null) {
+			TableColumn tc = table.getColumn(cn);
+			if (tc != null) {
+				Field field	= column_map.get(tc);
+				for (ColumnFiller f : column_filler) {
+					String command = f.getCommand(field);
+					if (command != null) {
+						ColumnHeaderMenu menu = new ColumnHeaderMenu(field, f, x, y);
+						menu.show(table.getTableHeader(), x, y);
+						return;
 					}
 				}
 			}
 		}
+	}
+	
+	class ColumnHeaderMenu extends JPopupMenu implements ActionListener
+	{	
+		final Field				field;
+		final ColumnFiller		filler;
+		final JMenuItem 		cmd;
+		final ArrayList<T>		filling_rows;
+		final int start;
+		final int count;
+		
+		public ColumnHeaderMenu(Field field, ColumnFiller filler, int x, int y) 
+		{
+			this.field		= field;
+			this.filler		= filler;
+		
+			this.start = Math.max(table.getSelectedRow(), 0);
+			this.count = table.getRowCount() - start;
+			this.filling_rows = new ArrayList<T>(count);
+			for (int i = 0; i < count; i++) {
+				this.filling_rows.add(getRow(i+start));
+			}
+			
+			this.cmd 		= new JMenuItem();
+			this.cmd.addActionListener(this);
+			this.add(cmd);
+		}
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			new ColumnFillerDialog(
-					filler, 
-					field, 
-					table.getSelectedRow(),
-					filling_rows).setVisible(true);
+			new ColumnFillerDialog(filler, field, start, filling_rows).setVisible(true);
 		}
 	}
 
@@ -362,8 +384,13 @@ public class ObjectPropertyRowPanel<T> extends BaseObjectPropertyPanel
 		{
 			super(ObjectPropertyRowPanel.this);
 			this.filler = filler;
-//			super.add(filler.startFill(), 
-//					BorderLayout.CENTER);
+			super.add(filler.startFill(
+					ObjectPropertyRowPanel.this,
+					column_field, 
+					start_row,
+					row_datas,
+					data), 
+					BorderLayout.CENTER);
 		}
 		
 		@Override
@@ -388,8 +415,17 @@ public class ObjectPropertyRowPanel<T> extends BaseObjectPropertyPanel
 		 * 列标题弹出菜单的标题
 		 * @return
 		 */
-		public String		getCommand();
+		public String		getCommand(Field column_type);
 		
+		/**
+		 * 开始填充一段数据
+		 * @param panel				编辑器
+		 * @param column_type		该列的类型
+		 * @param start_row			开始编辑的行号
+		 * @param row_datas			被编辑的行
+		 * @param row_column_datas	被编辑的行对应列的数据(由用户向里面填充数据)
+		 * @return
+		 */
 		public Component	startFill(
 				ObjectPropertyRowPanel<?> panel, 
 				Field 				column_type,
