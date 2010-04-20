@@ -16,6 +16,7 @@ import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import com.cell.rpg.ability.AbstractAbility;
+import com.cell.rpg.scene.Actor;
 import com.cell.rpg.scene.Scene;
 import com.cell.rpg.scene.ability.ActorJobTrainer;
 import com.cell.rpg.scene.ability.ActorPathStart;
@@ -370,6 +371,47 @@ public class SceneAbilityAdapters
 		}
 		
 	}
+	public static class NPCTalkAdapter implements CellEditAdapter<Actor>
+	{
+		@Override
+		public Class<Actor> getType() {
+			return Actor.class;
+		}
+		
+		@Override
+		public PropertyCellEdit<?> getCellEdit(ObjectPropertyEdit owner,
+				Object editObject, Object fieldValue, Field field) {
+			if (field.getName().equals("npc_talk")){
+				NpcTalkSelecDialog talk = new NpcTalkSelecDialog(owner.getComponent());
+				talk.showDialog();
+				return talk;
+			}
+			return null;
+		}
+		
+		@Override
+		public boolean fieldChanged(Object editObject, Object fieldValue,
+				Field field) {
+			return false;
+		}
+		@Override
+		public Component getCellRender(ObjectPropertyEdit owner,
+				Object editObject, Object fieldValue, Field field,
+				DefaultTableCellRenderer src) {
+			return null;
+		}
+		@Override
+		public String getCellText(Object editObject, Field field,
+				Object fieldSrcValue) {
+			return null;
+		}
+		@Override
+		public Object getCellValue(Object editObject,
+				PropertyCellEdit<?> fieldEdit, Field field, Object fieldSrcValue) {
+			return null;
+		}
+		
+	}
 	
 	public static class ActorTalkAdapter extends AbilityCellEditAdapter<AbstractAbility>
 	{
@@ -390,40 +432,39 @@ public class SceneAbilityAdapters
 			}
 			return null;
 		}
-		
-		static class NpcTalkSelecDialog extends TalkSelectDialog implements PropertyCellEdit<String>
-		{
-			private static final long serialVersionUID = 1L;
-			
-			JLabel talk_name = new JLabel();
-			
-			public NpcTalkSelecDialog(Component owner) {
-				super(owner);
-			}
-			@Override
-			public Component getComponent(ObjectPropertyEdit panel) {
-				TalkFile file = getSelectedObject();
-				if (file != null) {
-					talk_name.setText(file.getListName());
-					talk_name.setIcon(file.getListIcon(false));
-				} else {
-					talk_name.setText("");
-					talk_name.setIcon(null);
-				}
-				return talk_name;
-			}
-			@Override
-			public String getValue() {
-				TalkFile file = getSelectedObject();
-				if (file != null) {
-					return file.talk_file_name;
-				}
-				return null;
-			}
-			
-		}
 	}
 	
+	static class NpcTalkSelecDialog extends TalkSelectDialog implements PropertyCellEdit<String>
+	{
+		private static final long serialVersionUID = 1L;
+		
+		JLabel talk_name = new JLabel();
+		
+		public NpcTalkSelecDialog(Component owner) {
+			super(owner);
+		}
+		@Override
+		public Component getComponent(ObjectPropertyEdit panel) {
+			TalkFile file = getSelectedObject();
+			if (file != null) {
+				talk_name.setText(file.getListName());
+				talk_name.setIcon(file.getListIcon(false));
+			} else {
+				talk_name.setText("");
+				talk_name.setIcon(null);
+			}
+			return talk_name;
+		}
+		@Override
+		public String getValue() {
+			TalkFile file = getSelectedObject();
+			if (file != null) {
+				return file.talk_file_name;
+			}
+			return null;
+		}
+		
+	}
 //	if (object instanceof AbilitySceneNPCSpawn)
 //	{
 //		if (field.getName().equals("cpj_actor_name")){
