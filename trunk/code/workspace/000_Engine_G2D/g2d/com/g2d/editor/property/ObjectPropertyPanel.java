@@ -261,12 +261,11 @@ public class ObjectPropertyPanel extends BaseObjectPropertyPanel
 				if (copy_field_data != null) {
 					if (Parser.isNumber(column.getType())) {
 						copy_field_data = Parser.castNumber(copy_field_data, column.getType());
-						column.set(object, copy_field_data);
-						setValueAt(copy_field_data, getSelectedRow(), 1);
-					} else if (column.getType().isInstance(copy_field_data)) {
-						column.set(object, copy_field_data);
-						setValueAt(copy_field_data, getSelectedRow(), 1);
 					}
+					try {
+						column.set(object, copy_field_data);
+						setValueAt(copy_field_data, getSelectedRow(), 1);
+					} catch (Exception err) {}
 					this.repaint();
 				}
 			} catch (Exception err) {

@@ -2,7 +2,6 @@ package com.cell.reflect;
 
 public class Parser 
 {
-	@SuppressWarnings("unchecked")
 	public static <T> T stringToObject(String str, Class<T> return_type) {
 		try {
 			// 基础类型
@@ -44,7 +43,6 @@ public class Parser
 		return obj.toString();
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static <T> T castNumber(Object obj, Class<T> return_type)
 	{
 		// 基础类型
@@ -71,7 +69,7 @@ public class Parser
 		}
 		return null;
 	}
-	
+
 	public static boolean isNumber(Class<?> cls)
 	{
 		// 基础类型

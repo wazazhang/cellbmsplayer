@@ -34,6 +34,7 @@ import javax.swing.table.TableColumn;
 
 import com.cell.CIO;
 import com.cell.reflect.Parser;
+import com.cell.util.Pair;
 import com.g2d.util.AbstractDialog;
 import com.g2d.util.AbstractOptionDialog;
 
@@ -93,7 +94,9 @@ public class ObjectPropertyRowPanel<T> extends BaseObjectPropertyPanel
 		
 		this.add(new JScrollPane(table), BorderLayout.CENTER);
 		
-		this.addColumnFiller(new ColumnFillerNumber());
+		this.addColumnFiller(new ColumnFillerAdapters.ColumnFillerBoolean());
+		this.addColumnFiller(new ColumnFillerAdapters.ColumnFillerString());
+		this.addColumnFiller(new ColumnFillerAdapters.ColumnFillerNumber());
 	}
 	
 	/**
@@ -277,73 +280,49 @@ public class ObjectPropertyRowPanel<T> extends BaseObjectPropertyPanel
 				if (row != null && column != null && copy_field_data != null) {
 					if (Parser.isNumber(column.getType())) {
 						copy_field_data = Parser.castNumber(copy_field_data, column.getType());
+					} 
+					try {
 						column.set(row, copy_field_data);
 						setValueAt(copy_field_data, getSelectedRow(), getSelectedColumn());
-					} else if (column.getType().isInstance(copy_field_data)) {
-						column.set(row, copy_field_data);
-						setValueAt(copy_field_data, getSelectedRow(), getSelectedColumn());
-					}
+					} catch (Exception err) {}
 					this.repaint();
 				}
 			} catch (Exception err) {
 				err.printStackTrace();
 			}
 		}
-//		----------------------------------------------------------
 	}
 
 //	--------------------------------------------------------------------------------------------------------------------------------------
 	void showColumnHeaderMenu(int column, int row, int x, int y)
 	{
+		T row_data = getRow(row);
 		String cn = table.getColumnName(column);
-		if (cn != null) {
+		if (cn != null && row_data != null) {
 			TableColumn tc = table.getColumn(cn);
 			if (tc != null) {
 				Field field	= column_map.get(tc);
-				for (ColumnFiller f : column_filler) {
-					if (f.validateFill(field)) {
-						ColumnHeaderMenu menu = new ColumnHeaderMenu(
-								field, f, row, x, y);
-						menu.show(table.getTableHeader(), x, y);
-						return;
+				if (field != null) {
+					if (!column_filler.isEmpty()) {
+						ArrayList<Pair<JMenuItem, ColumnFiller>> fillers = new ArrayList<Pair<JMenuItem,ColumnFiller>>();
+						for (ColumnFiller f : column_filler) {
+							String command = f.getCommand(row_data, field);
+							if (command != null) {
+								JMenuItem cmd = new JMenuItem(command);
+								fillers.add(new Pair<JMenuItem, ColumnFiller>(cmd, f));
+							}
+						}
+						if (!fillers.isEmpty()) {
+							ColumnHeaderMenu menu = new ColumnHeaderMenu(
+									field, fillers, row, column, x, y);
+							menu.show(table.getTableHeader(), x, y);
+						}
 					}
 				}
 			}
 		}
 	}
 	
-	class ColumnHeaderMenu extends JPopupMenu implements ActionListener
-	{	
-		final Field				field;
-		final ColumnFiller		filler;
-		final JMenuItem 		cmd;
-		final ArrayList<T>		filling_rows;
-		final int 				start;
-		final int 				count;
-		
-		public ColumnHeaderMenu(Field field, ColumnFiller filler, int row, int x, int y) 
-		{
-			this.field		= field;
-			this.filler		= filler;
-		
-			this.start = row;
-			this.count = table.getRowCount() - start;
-			this.filling_rows = new ArrayList<T>(count);
-			for (int i = 0; i < count; i++) {
-				this.filling_rows.add(getRow(i+start));
-			}
-			
-			this.cmd 		= new JMenuItem(DEFAULT_COLUMN_FILLER_TITLE);
-			this.cmd.addActionListener(this);
-			this.add(cmd);
-		}
-		
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			new ColumnFillerDialog(filler, field, start, filling_rows).setVisible(true);
-		}
-	}
-
 	class TableRender extends DefaultTableCellRenderer
 	{
 		final int			column;
@@ -449,27 +428,91 @@ public class ObjectPropertyRowPanel<T> extends BaseObjectPropertyPanel
 	}
 //	------------------------------------------------------------------------------------------------------------------------------------------
 
-	public class ColumnFillerDialog extends AbstractOptionDialog<ArrayList<Object>>
-	{
-		ColumnFiller	filler;
+	class ColumnHeaderMenu extends JPopupMenu implements ActionListener
+	{	
+		final Field				field;
+		final ArrayList<T>		filling_rows;
+		final int				column_index;
+		final int 				start;
+		final int 				count;
+
+		final HashMap<JMenuItem, ColumnFiller> commands = new HashMap<JMenuItem, ColumnFiller>();
 		
-		ArrayList<Object> data = new ArrayList<Object>();
+		public ColumnHeaderMenu(Field field, 
+				Collection<Pair<JMenuItem, ColumnFiller>> fillers, 
+				int row,
+				int column,
+				int x,
+				int y) 
+		{
+			this.field			= field;
+			this.column_index	= column;
+			this.start			= row;
+			this.count			= table.getRowCount() - start;
+			this.filling_rows = new ArrayList<T>(count);
+			for (int i = 0; i < count; i++) {
+				this.filling_rows.add(getRow(i+start));
+			}
+			
+			for (Pair<JMenuItem, ColumnFiller> cmd : fillers) {
+				commands.put(cmd.getKey(), cmd.getValue());
+				cmd.getKey().addActionListener(this);
+				add(cmd.getKey());
+			}
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (e.getSource() instanceof JMenuItem) {
+				JMenuItem item = (JMenuItem)e.getSource();
+				ColumnFiller filler = commands.get(item);
+				if (filler != null) {
+					new ColumnFillerDialog(
+							item.getText(), 
+							filler, 
+							field, 
+							column_index, 
+							start, 
+							filling_rows).showDialog();
+				}
+			}
+		}
+	}
+
+	class ColumnFillerDialog extends AbstractOptionDialog<ArrayList<Object>>
+	{
+		final int 				start_row;
+		final int				column_index;
+		final Field				column_field;
+		final ArrayList<T>		row_datas;
+		final ColumnFiller 		filler;
 		
 		public ColumnFillerDialog(
+				String			filler_command,
 				ColumnFiller	filler, 
 				Field			column_field,
+				int				column_index,
 				int 			start_row, 
 				ArrayList<T>	row_datas) 
 		{
 			super(ObjectPropertyRowPanel.this);
-			super.setTitle(DEFAULT_COLUMN_FILLER_TITLE+" ("+Util.getEditFieldName(column_field)+")");
-			this.filler = filler;
+			super.setTitle(
+					DEFAULT_COLUMN_FILLER_TITLE + 
+					" - field[" + Util.getEditFieldName(column_field) + "] " + 
+					" - range[" + start_row + "-" + (start_row + row_datas.size()-1) + "]" + 
+					" - filler[" + filler_command + "]" + 
+					"");
+			
+			this.start_row		= start_row;
+			this.column_field	= column_field;
+			this.column_index	= column_index;
+			this.row_datas		= row_datas;
+			this.filler 		= filler;
+			
 			this.add(filler.startFill(
 					ObjectPropertyRowPanel.this,
 					column_field, 
-					start_row,
-					row_datas,
-					data), 
+					row_datas), 
 					BorderLayout.CENTER);
 		}
 		
@@ -480,7 +523,38 @@ public class ObjectPropertyRowPanel<T> extends BaseObjectPropertyPanel
 		
 		@Override
 		protected ArrayList<Object> getUserObject() {
-			return data;
+			return filler.getValues(
+					ObjectPropertyRowPanel.this,
+					column_field, 
+					row_datas);
+		}
+		
+		@Override
+		public ArrayList<Object> showDialog() {
+			try{
+				ArrayList<Object> datas = super.showDialog();
+				if (datas != null) {
+					for (int r = 0; r < row_datas.size(); r ++) {
+						T		row_data	= row_datas.get(r);
+						Object	field_data	= datas.get(r);
+						int 	row_index	= start_row + r;
+						if (Parser.isNumber(column_field.getType())) {
+							field_data = Parser.castNumber(field_data, column_field.getType());
+						}
+						try {
+							column_field.set(row_data, field_data);
+							table.setValueAt(field_data, row_index, column_index);
+						} catch (Exception err) {
+							err.printStackTrace();
+						}
+					}
+				}
+				table.repaint();
+				return datas;
+			} catch(Exception err){
+				err.printStackTrace();
+			}
+			return null;
 		}
 	}
 	
@@ -493,26 +567,34 @@ public class ObjectPropertyRowPanel<T> extends BaseObjectPropertyPanel
 	{
 		/**
 		 * 列标题弹出菜单的标题
-		 * @return
+		 * @param row_data TODO
+		 * @return 如果返回空，则代表该填充器不能对其字段类型填充
 		 */
-		public boolean		validateFill(Field column_field);
+		public String		getCommand(Object row_data, Field column_field);
 		
 		/**
 		 * 开始填充一段数据
 		 * @param panel				编辑器
 		 * @param column_type		该列的类型
-		 * @param start_row			开始编辑的行号
 		 * @param row_datas			被编辑的行
-		 * @param row_column_datas	被编辑的行对应列的数据(由用户向里面填充数据)
 		 * @return
 		 */
 		public Component	startFill(
 				ObjectPropertyRowPanel<?> panel, 
 				Field 				column_type,
-				int 				start_row, 
-				ArrayList<?>		row_datas, 
-				ArrayList<Object>	row_column_datas
-				);
+				ArrayList<?>		row_datas);
+		
+		/**
+		 * 返回所有行对应列的数据(由用户向里面填充数据)
+		 * @param panel			编辑器
+		 * @param columnType	该列的类型
+		 * @param rowDatas		被编辑的行
+		 * @return 返回所有行对应列的数据(由用户向里面填充数据)
+		 */
+		public ArrayList<Object> getValues(
+				ObjectPropertyRowPanel<?> panel,
+				Field 				columnType,
+				ArrayList<?>		rowDatas) ;
 	}
 	
 }
