@@ -44,8 +44,6 @@ public class PopupCellEditColor extends PopupCellEdit<Color>
 						// TODO Auto-generated method stub
 						current_value = colorChooser.getColor();
 						setBackground(current_value);
-						sender.fireEditingStopped();
-						completeEdit();
 					}
 				}, // OK button handler
 				null); // no CANCEL button handler

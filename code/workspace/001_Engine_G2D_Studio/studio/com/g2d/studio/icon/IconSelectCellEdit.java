@@ -27,9 +27,6 @@ public class IconSelectCellEdit extends IconSelectDialog implements PropertyCell
 			edit_label.setText("");	
 			edit_label.setIcon(null);
 		}
-		if (panel != null) {
-			panel.fireEditingStopped();
-		}
 		return edit_label;
 	}
 

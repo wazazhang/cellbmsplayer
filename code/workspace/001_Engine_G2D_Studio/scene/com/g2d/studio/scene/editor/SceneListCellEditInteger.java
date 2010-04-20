@@ -22,13 +22,6 @@ public class SceneListCellEditInteger extends JComboBox implements PropertyCellE
 	public SceneListCellEditInteger() 
 	{
 		super(new Vector<SceneNode>(Studio.getInstance().getSceneManager().getAllScenes()));
-		this.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				if (panel != null) {
-					panel.fireEditingStopped();
-				}
-			}
-		});
 	}
 	
 	public Component getComponent(ObjectPropertyEdit panel) {		

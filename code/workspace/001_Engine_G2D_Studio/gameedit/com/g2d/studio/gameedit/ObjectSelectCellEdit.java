@@ -22,11 +22,6 @@ public class ObjectSelectCellEdit<T extends ObjectNode<?>> extends JComboBox imp
 	public ObjectSelectCellEdit(Class<T> object_type) 
 	{
 		super(Studio.getInstance().getObjectManager().getObjects(object_type));
-		this.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				panel.fireEditingStopped();
-			}
-		});
 	}
 	
 	public Component getComponent(ObjectPropertyEdit panel) {		

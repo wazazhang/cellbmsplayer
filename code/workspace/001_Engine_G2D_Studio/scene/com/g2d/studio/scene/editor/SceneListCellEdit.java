@@ -22,11 +22,6 @@ public class SceneListCellEdit extends JComboBox implements PropertyCellEdit<Str
 	public SceneListCellEdit(Object scene_id) 
 	{
 		super(new Vector<SceneNode>(Studio.getInstance().getSceneManager().getAllScenes()));
-		this.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				panel.fireEditingStopped();
-			}
-		});
 		try{
 			if (scene_id!=null) {
 				SceneNode node = Studio.getInstance().getSceneManager().getSceneNode(scene_id+"");

@@ -375,7 +375,6 @@ public class PopupCellEditUILayout extends PopupCellEdit<UILayout>
 				@Override
 				public void close() {
 					current_value = getUILayout();
-					completeEdit();
 					super.close();
 				}
 			};

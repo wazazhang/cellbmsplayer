@@ -117,9 +117,6 @@ public class DropItemEditor extends AbstractDialog implements PropertyCellEdit<D
 		}
 		edit_label.setText(sb.toString());
 //		edit_label.setText(node_list.size()+"个道具 : ");	
-		if (panel != null) {
-			panel.fireEditingStopped();
-		}
 		return edit_label;
 	}
 	
