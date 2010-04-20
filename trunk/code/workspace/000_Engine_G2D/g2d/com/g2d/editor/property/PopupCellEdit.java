@@ -73,11 +73,7 @@ public abstract class PopupCellEdit<T> extends JButton implements ActionListener
 	public T getValue() {
 		return current_value;
 	}
-	
-	public void completeEdit(){
-		sender.fireEditingStopped();
-	}
-	
+
 	public void setValue(T value, ObjectPropertyEdit comp) {
 		current_value = value;
 		sender = comp;

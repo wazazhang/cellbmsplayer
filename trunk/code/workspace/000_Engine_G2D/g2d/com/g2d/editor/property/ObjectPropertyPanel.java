@@ -11,6 +11,8 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Documented;
 import java.lang.reflect.Field;
@@ -41,6 +43,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 
+import com.cell.CIO;
 import com.cell.CUtil;
 import com.cell.reflect.Parser;
 
@@ -62,7 +65,10 @@ public class ObjectPropertyPanel extends BaseObjectPropertyPanel
 	private static final long serialVersionUID = 1L;
 	
 	public static int DEFAULT_ROW_HEIGHT = 24;
-	
+
+	/** 剪贴板共享数据 */
+	private static transient Object copy_field_data;
+
 	final public Object 	object;
 
 	final Vector<Object[]> 	rows			= new Vector<Object[]>();
@@ -156,7 +162,7 @@ public class ObjectPropertyPanel extends BaseObjectPropertyPanel
 	 * @author WAZA
 	 *
 	 */
-	class FieldTable extends JTable implements ListSelectionListener
+	class FieldTable extends JTable implements ListSelectionListener, KeyListener
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -172,7 +178,7 @@ public class ObjectPropertyPanel extends BaseObjectPropertyPanel
 			super.getColumn("value").setCellEditor(value_editor);
 			super.getColumn("type").setCellEditor(new NullEditor());
 			
-
+			super.addKeyListener(this);
 			super.getSelectionModel().addListSelectionListener(this);
 		}
 		
@@ -219,7 +225,55 @@ public class ObjectPropertyPanel extends BaseObjectPropertyPanel
 				this.setValueAt(row[1], r, 1);
 			}
 		}
+
+//		----------------------------------------------------------
+//		Key Events
+		@Override
+		public void keyPressed(KeyEvent e) {
+			if (e.isControlDown()) {
+				if (e.getKeyCode() == KeyEvent.VK_C) {
+					this.copy();
+				}else if (e.getKeyCode() == KeyEvent.VK_V) {
+					this.parser();
+				}
+			}
+		}
+		@Override
+		public void keyReleased(KeyEvent e) {}
+		@Override
+		public void keyTyped(KeyEvent e) {}
+
+//		----------------------------------------------------------
+
+		private void copy() {
+			try {
+				Object[] row = rows.elementAt(getSelectedRow());
+				copy_field_data = CIO.cloneObject(row[1]);
+			} catch (Exception err) {
+				err.printStackTrace();
+			}
+		}
 		
+		private void parser() {
+			try {
+				Object[] row = rows.elementAt(getSelectedRow());
+				Field column = (Field)row[3];
+				if (copy_field_data != null) {
+					if (Parser.isNumber(column.getType())) {
+						copy_field_data = Parser.castNumber(copy_field_data, column.getType());
+						column.set(object, copy_field_data);
+						setValueAt(copy_field_data, getSelectedRow(), 1);
+					} else if (column.getType().isInstance(copy_field_data)) {
+						column.set(object, copy_field_data);
+						setValueAt(copy_field_data, getSelectedRow(), 1);
+					}
+					this.repaint();
+				}
+			} catch (Exception err) {
+				err.printStackTrace();
+			}
+		}
+//		----------------------------------------------------------
 	}
 	
 //	--------------------------------------------------------------------------------------------------------------------------------------

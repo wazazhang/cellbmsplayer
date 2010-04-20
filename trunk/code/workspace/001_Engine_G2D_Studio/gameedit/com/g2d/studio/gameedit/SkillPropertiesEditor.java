@@ -28,6 +28,7 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
 
 import com.cell.CUtil;
+import com.cell.reflect.Parser;
 import com.cell.rpg.ability.AbstractAbility;
 import com.cell.rpg.item.ItemPropertyTemplate;
 import com.cell.rpg.item.ItemPropertyTemplate.ArgTemplate;
@@ -209,18 +210,22 @@ public class SkillPropertiesEditor extends JPanel implements ActionListener
 	public static class FillerRangeValue extends JPanel implements ColumnFiller
 	{
 		@Override
-		public String getCommand(Field columnType) {
+		public boolean validateFill(Field columnType) {
 			if (ArgTemplate.class.isAssignableFrom(columnType.getType())) {
-				return "填充"+ArgTemplate.class.getSimpleName();
+				return true;
 			}
-			return null;
+			return false;
 		}
 		
 		@Override
-		public Component startFill(ObjectPropertyRowPanel<?> panel,
-				Field columnType, int startRow, ArrayList<?> rowDatas,
-				ArrayList<Object> rowColumnDatas) {
-			// TODO Auto-generated method stub
+		public Component startFill(
+				ObjectPropertyRowPanel<?> panel,
+				Field columnType,
+				int startRow, 
+				ArrayList<?> rowDatas,
+				ArrayList<Object> rowColumnDatas) 
+		{
+			
 			return this;
 		}
 		

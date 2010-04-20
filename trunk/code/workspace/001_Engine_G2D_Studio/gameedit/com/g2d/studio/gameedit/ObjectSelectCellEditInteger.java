@@ -22,13 +22,6 @@ public class ObjectSelectCellEditInteger<T extends ObjectNode<?>> extends JCombo
 	public ObjectSelectCellEditInteger(Class<T> object_type) 
 	{
 		super(Studio.getInstance().getObjectManager().getObjects(object_type));
-		this.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				if (panel != null) {
-					panel.fireEditingStopped();
-				}
-			}
-		});
 	}
 	
 	public Component getComponent(ObjectPropertyEdit panel) {		

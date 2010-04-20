@@ -29,9 +29,6 @@ public class TalkSelectCellEdit extends TalkSelectDialog implements PropertyCell
 			edit_label.setText("");	
 			edit_label.setIcon(null);
 		}
-		if (panel != null) {
-			panel.fireEditingStopped();
-		}
 		return edit_label;
 	}
 

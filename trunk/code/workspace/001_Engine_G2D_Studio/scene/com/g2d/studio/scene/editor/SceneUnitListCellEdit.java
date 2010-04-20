@@ -22,11 +22,6 @@ public class SceneUnitListCellEdit extends JComboBox implements PropertyCellEdit
 		for (SceneUnitTag<?> unit : scene_viewer.getGameScene().getWorld().getChildsSubClass(cls)) {
 			super.addItem(unit);
 		}
-		this.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				panel.fireEditingStopped();
-			}
-		});
 	}
 	
 	public Component getComponent(ObjectPropertyEdit panel) {

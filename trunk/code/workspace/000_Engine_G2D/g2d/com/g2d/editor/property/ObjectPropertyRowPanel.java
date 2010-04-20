@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.lang.reflect.Field;
@@ -30,6 +32,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
 
+import com.cell.CIO;
+import com.cell.reflect.Parser;
 import com.g2d.util.AbstractDialog;
 import com.g2d.util.AbstractOptionDialog;
 
@@ -42,7 +46,13 @@ import com.g2d.util.AbstractOptionDialog;
 @SuppressWarnings("serial")
 public class ObjectPropertyRowPanel<T> extends BaseObjectPropertyPanel
 {
-	public static int DEFAULT_ROW_HEIGHT = 24;
+	public static int		DEFAULT_ROW_HEIGHT			= 24;
+	
+	public static String	DEFAULT_COLUMN_FILLER_TITLE	= "自动填充字段";
+	/** 剪贴板共享数据 */
+	private static transient Object copy_field_data;
+
+	
 	
 	final private Class<? extends T>data_type;
 	final private Field[]			column_fields;
@@ -82,6 +92,8 @@ public class ObjectPropertyRowPanel<T> extends BaseObjectPropertyPanel
 		this.table 			= new FieldTable();
 		
 		this.add(new JScrollPane(table), BorderLayout.CENTER);
+		
+		this.addColumnFiller(new ColumnFillerNumber());
 	}
 	
 	/**
@@ -103,7 +115,20 @@ public class ObjectPropertyRowPanel<T> extends BaseObjectPropertyPanel
 			return null;
 		}
 	}
-
+	
+	/**
+	 * 获得正在编辑的字段
+	 * @return
+	 */
+	final public Field getSelectedColumn() {
+		int column = table.getSelectedColumn();
+		try{
+			return column_fields[column-1];
+		}catch(Exception err){
+			return null;
+		}
+	}
+	
 	/**
 	 * 得到指定行
 	 * @param row
@@ -164,7 +189,7 @@ public class ObjectPropertyRowPanel<T> extends BaseObjectPropertyPanel
 
 //	------------------------------------------------------------------------------------------------------------------
 	
-	class FieldTable extends JTable implements ListSelectionListener, MouseListener
+	class FieldTable extends JTable implements ListSelectionListener, MouseListener, KeyListener
 	{
 		public FieldTable()
 		{
@@ -174,6 +199,7 @@ public class ObjectPropertyRowPanel<T> extends BaseObjectPropertyPanel
 			super.setColumnSelectionAllowed(true);
 			super.setRowSelectionAllowed(true);
 			super.setCellSelectionEnabled(true);
+//			super.getTableHeader().set
 			
 			int c = 0;
 			for (String header : column_headers) {
@@ -190,16 +216,18 @@ public class ObjectPropertyRowPanel<T> extends BaseObjectPropertyPanel
 			
 			super.getSelectionModel().addListSelectionListener(this);
 			
-			super.getTableHeader().addMouseListener(this);
+			super.addMouseListener(this);
+			super.addKeyListener(this);
 		}
-		
+
+//		----------------------------------------------------------
+//		Mouse Events
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			if (e.getButton() == MouseEvent.BUTTON3) {
-				showColumnHeaderMenu(
-						super.getTableHeader().columnAtPoint(e.getPoint()),
-						e.getX(),
-						e.getY());
+				int row		= rowAtPoint(e.getPoint());
+				int column	= columnAtPoint(e.getPoint());
+				showColumnHeaderMenu(column, row, e.getX(), e.getY());
 			}
 		}
 		@Override
@@ -211,10 +239,61 @@ public class ObjectPropertyRowPanel<T> extends BaseObjectPropertyPanel
 		@Override
 		public void mouseReleased(MouseEvent e) {}
 
+//		----------------------------------------------------------
+//		Key Events
+		@Override
+		public void keyPressed(KeyEvent e) {
+			if (e.isControlDown()) {
+				if (e.getKeyCode() == KeyEvent.VK_C) {
+					this.copy();
+				}else if (e.getKeyCode() == KeyEvent.VK_V) {
+					this.parser();
+				}
+			}
+		}
+		@Override
+		public void keyReleased(KeyEvent e) {}
+		@Override
+		public void keyTyped(KeyEvent e) {}
+
+//		----------------------------------------------------------
+
+		private void copy() {
+			try {
+				Object	row		= ObjectPropertyRowPanel.this.getSelectedRow();
+				Field	column	= ObjectPropertyRowPanel.this.getSelectedColumn();
+				if (row != null && column != null) {
+					copy_field_data = CIO.cloneObject(column.get(row));
+				}
+			} catch (Exception err) {
+				err.printStackTrace();
+			}
+		}
+		
+		private void parser() {
+			try {
+				Object	row		= ObjectPropertyRowPanel.this.getSelectedRow();
+				Field	column	= ObjectPropertyRowPanel.this.getSelectedColumn();
+				if (row != null && column != null && copy_field_data != null) {
+					if (Parser.isNumber(column.getType())) {
+						copy_field_data = Parser.castNumber(copy_field_data, column.getType());
+						column.set(row, copy_field_data);
+						setValueAt(copy_field_data, getSelectedRow(), getSelectedColumn());
+					} else if (column.getType().isInstance(copy_field_data)) {
+						column.set(row, copy_field_data);
+						setValueAt(copy_field_data, getSelectedRow(), getSelectedColumn());
+					}
+					this.repaint();
+				}
+			} catch (Exception err) {
+				err.printStackTrace();
+			}
+		}
+//		----------------------------------------------------------
 	}
 
 //	--------------------------------------------------------------------------------------------------------------------------------------
-	void showColumnHeaderMenu(int column, int x, int y)
+	void showColumnHeaderMenu(int column, int row, int x, int y)
 	{
 		String cn = table.getColumnName(column);
 		if (cn != null) {
@@ -222,9 +301,9 @@ public class ObjectPropertyRowPanel<T> extends BaseObjectPropertyPanel
 			if (tc != null) {
 				Field field	= column_map.get(tc);
 				for (ColumnFiller f : column_filler) {
-					String command = f.getCommand(field);
-					if (command != null) {
-						ColumnHeaderMenu menu = new ColumnHeaderMenu(command, field, f, x, y);
+					if (f.validateFill(field)) {
+						ColumnHeaderMenu menu = new ColumnHeaderMenu(
+								field, f, row, x, y);
 						menu.show(table.getTableHeader(), x, y);
 						return;
 					}
@@ -239,22 +318,22 @@ public class ObjectPropertyRowPanel<T> extends BaseObjectPropertyPanel
 		final ColumnFiller		filler;
 		final JMenuItem 		cmd;
 		final ArrayList<T>		filling_rows;
-		final int start;
-		final int count;
+		final int 				start;
+		final int 				count;
 		
-		public ColumnHeaderMenu(String command, Field field, ColumnFiller filler, int x, int y) 
+		public ColumnHeaderMenu(Field field, ColumnFiller filler, int row, int x, int y) 
 		{
 			this.field		= field;
 			this.filler		= filler;
 		
-			this.start = Math.max(table.getSelectedRow(), 0);
+			this.start = row;
 			this.count = table.getRowCount() - start;
 			this.filling_rows = new ArrayList<T>(count);
 			for (int i = 0; i < count; i++) {
 				this.filling_rows.add(getRow(i+start));
 			}
 			
-			this.cmd 		= new JMenuItem(command);
+			this.cmd 		= new JMenuItem(DEFAULT_COLUMN_FILLER_TITLE);
 			this.cmd.addActionListener(this);
 			this.add(cmd);
 		}
@@ -383,8 +462,9 @@ public class ObjectPropertyRowPanel<T> extends BaseObjectPropertyPanel
 				ArrayList<T>	row_datas) 
 		{
 			super(ObjectPropertyRowPanel.this);
+			super.setTitle(DEFAULT_COLUMN_FILLER_TITLE+" ("+Util.getEditFieldName(column_field)+")");
 			this.filler = filler;
-			super.add(filler.startFill(
+			this.add(filler.startFill(
 					ObjectPropertyRowPanel.this,
 					column_field, 
 					start_row,
@@ -415,7 +495,7 @@ public class ObjectPropertyRowPanel<T> extends BaseObjectPropertyPanel
 		 * 列标题弹出菜单的标题
 		 * @return
 		 */
-		public String		getCommand(Field column_type);
+		public boolean		validateFill(Field column_field);
 		
 		/**
 		 * 开始填充一段数据
