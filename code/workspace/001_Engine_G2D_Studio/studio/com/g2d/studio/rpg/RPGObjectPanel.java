@@ -17,6 +17,7 @@ import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.Studio;
 import com.g2d.studio.icon.IconFile;
 import com.g2d.studio.icon.IconSelectCellEdit;
+import com.g2d.studio.scene.editor.SceneAbilityAdapters;
 import com.g2d.util.AbstractDialog;
 
 public class RPGObjectPanel extends JPanel
@@ -33,14 +34,16 @@ public class RPGObjectPanel extends JPanel
 	{
 		CellEditAdapter<?>[] dadapters;
 		if (adapters!=null && adapters.length>0) {
-			dadapters = new CellEditAdapter<?>[adapters.length+2];
+			dadapters = new CellEditAdapter<?>[adapters.length+3];
 			System.arraycopy(adapters, 0, dadapters, 0, adapters.length);
 			dadapters[dadapters.length-1] = new IconSelectAdapter();
 			dadapters[dadapters.length-2] = new AbilityAdapter();
+			dadapters[dadapters.length-3] = new SceneAbilityAdapters.NPCTalkAdapter();
 		} else {
 			dadapters = new CellEditAdapter<?>[]{
 				new IconSelectAdapter(),
 				new AbilityAdapter(),
+				new SceneAbilityAdapters.NPCTalkAdapter(),
 			};
 		}
 		this.setLayout(new BorderLayout());

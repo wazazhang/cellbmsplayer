@@ -17,6 +17,10 @@ public class Actor extends SceneSprite
 {
 	final public String	template_unit_id;
 	
+	/** NPC闲话  */
+	@Property("NPC闲话")
+	public	String		npc_talk;
+	
 	@Property("警戒范围")
 	public int			look_range		= 300;
 	
