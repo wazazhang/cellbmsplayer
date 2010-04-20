@@ -209,24 +209,27 @@ public class SkillPropertiesEditor extends JPanel implements ActionListener
 	 */
 	public static class FillerRangeValue extends JPanel implements ColumnFiller
 	{
-		@Override
-		public boolean validateFill(Field columnType) {
-			if (ArgTemplate.class.isAssignableFrom(columnType.getType())) {
-				return true;
-			}
-			return false;
-		}
 		
 		@Override
-		public Component startFill(
-				ObjectPropertyRowPanel<?> panel,
-				Field columnType,
-				int startRow, 
-				ArrayList<?> rowDatas,
-				ArrayList<Object> rowColumnDatas) 
-		{
-			
+		public String getCommand(Object row_data, Field columnField) {
+			if (ArgTemplate.class.isAssignableFrom(columnField.getType())) {
+				return "填充" + ArgTemplate.class.getSimpleName();
+			}
+			return null;
+		}
+
+		@Override
+		public Component startFill(ObjectPropertyRowPanel<?> panel,
+				Field columnType, ArrayList<?> rowDatas) {
+
 			return this;
+		}
+
+		@Override
+		public ArrayList<Object> getValues(ObjectPropertyRowPanel<?> panel,
+				Field columnType, ArrayList<?> rowDatas) {
+
+			return null;
 		}
 		
 	}
