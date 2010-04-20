@@ -218,11 +218,10 @@ public class ColumnFillerAdapters
 			double add 		= (Double)num_prev_add.getValue();
 			
 			for (int r = 0; r < example_datas.size(); r++) {
-				Double value = base * multi + add;
-				example_datas.set(r, value);
+				example_datas.set(r, base);
 				example.setValueAt(r, r, 0);
-				example.setValueAt(value, r, 1);
-				base = value;
+				example.setValueAt(base, r, 1);
+				base = base * multi + add;
 			}
 		}
 	}
