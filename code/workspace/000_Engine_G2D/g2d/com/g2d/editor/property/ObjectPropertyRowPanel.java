@@ -94,6 +94,7 @@ public class ObjectPropertyRowPanel<T> extends BaseObjectPropertyPanel
 		
 		this.add(new JScrollPane(table), BorderLayout.CENTER);
 		
+		this.addColumnFiller(new ColumnFillerAdapters.ColumnFillerObject());
 		this.addColumnFiller(new ColumnFillerAdapters.ColumnFillerBoolean());
 		this.addColumnFiller(new ColumnFillerAdapters.ColumnFillerString());
 		this.addColumnFiller(new ColumnFillerAdapters.ColumnFillerNumber());

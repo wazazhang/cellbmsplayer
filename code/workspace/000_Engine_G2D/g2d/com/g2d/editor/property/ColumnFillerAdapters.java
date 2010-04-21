@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Vector;
@@ -15,17 +16,75 @@ import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import com.cell.CIO;
 import com.cell.reflect.Parser;
 import com.g2d.editor.property.ObjectPropertyRowPanel.ColumnFiller;
 
 @SuppressWarnings("serial")
 public class ColumnFillerAdapters 
 {
+
+//	-----------------------------------------------------------------------------------------------------
+	
+
+	public static class ColumnFillerObject extends JPanel implements ColumnFiller
+	{
+		public static String TITLE = "填充当前对象";
+		
+		private Object field_data;
+		
+		private JTextArea info = new JTextArea();
+		
+		public ColumnFillerObject() {
+			super(new BorderLayout());
+			info.setEditable(false);
+			this.add(info, BorderLayout.CENTER);
+		}
+		
+		@Override
+		public String getCommand(Object row_data, Field columnField) {
+			if (Serializable.class.isAssignableFrom(columnField.getType())) {
+				try {
+					field_data = columnField.get(row_data);
+					info.setText(field_data + "");
+				} catch (IllegalArgumentException e) {
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				}
+				return TITLE;
+			}
+			return null;
+		}
+		
+		@Override
+		public Component startFill(ObjectPropertyRowPanel<?> panel, Field columnType, ArrayList<?> rowDatas) {
+			return this;
+		}
+		
+		@Override
+		public ArrayList<Object> getValues(ObjectPropertyRowPanel<?> panel, Field columnType, ArrayList<?> rowDatas) {
+			ArrayList<Object> ret = new ArrayList<Object>(rowDatas.size());
+			if (field_data != null) {
+				for (int i = 0; i < rowDatas.size(); i++) {
+					ret.add(CIO.cloneObject(field_data));
+				}
+			} else {
+				for (int i = 0; i < rowDatas.size(); i++) {
+					ret.add(null);
+				}
+			}
+			return ret;
+		}
+	}
+
+	
 //	-----------------------------------------------------------------------------------------------------
 	
 	public static class ColumnFillerBoolean extends JPanel implements ColumnFiller
