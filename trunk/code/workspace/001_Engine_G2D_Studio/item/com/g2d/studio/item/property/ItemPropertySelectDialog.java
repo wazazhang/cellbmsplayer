@@ -24,6 +24,7 @@ public class ItemPropertySelectDialog extends G2DListSelectDialog<ItemPropertyNo
 	
 	public ItemPropertySelectDialog(Component owner) {
 		super(owner, new ItemPropertyList());
+		getList().setLayoutOrientation(G2DList.VERTICAL);
 	}
 	
 	@Override

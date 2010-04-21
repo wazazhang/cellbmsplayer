@@ -3,6 +3,7 @@ package com.g2d.studio.item;
 import java.awt.Component;
 
 import javax.swing.JLabel;
+import javax.swing.JList;
 
 import com.g2d.editor.property.ObjectPropertyEdit;
 import com.g2d.editor.property.ObjectPropertyPanel;
@@ -11,6 +12,7 @@ import com.g2d.studio.Studio;
 import com.g2d.studio.swing.G2DList;
 import com.g2d.studio.swing.G2DListSelectDialog;
 
+@SuppressWarnings("serial")
 public class ItemPropertiesSelectCellEdit extends G2DListSelectDialog<ItemPropertiesNode> implements PropertyCellEdit<Integer>
 {
 	JLabel cell_edit_component = new JLabel();
@@ -47,6 +49,7 @@ public class ItemPropertiesSelectCellEdit extends G2DListSelectDialog<ItemProper
 	{
 		public ItemPropertiesList() {
 			super(Studio.getInstance().getItemManager().getAllNodes());
+			super.setLayoutOrientation(JList.VERTICAL);
 		}
 	}
 }
