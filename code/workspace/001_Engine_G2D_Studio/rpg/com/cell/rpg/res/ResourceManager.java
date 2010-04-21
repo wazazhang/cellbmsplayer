@@ -25,6 +25,7 @@ import com.cell.rpg.template.TAvatar;
 import com.cell.rpg.template.TEffect;
 import com.cell.rpg.template.TItem;
 import com.cell.rpg.template.TItemList;
+import com.cell.rpg.template.TShopItem;
 import com.cell.rpg.template.TSkill;
 import com.cell.rpg.template.TUnit;
 import com.cell.rpg.template.TemplateNode;
@@ -51,40 +52,42 @@ public abstract class ResourceManager extends CellSetResourceManager
 	
 	
 	// res objects
-	protected Hashtable<String, SceneSet>	all_scene_set;
-	protected Hashtable<String, SpriteSet>	all_actor_set;
-	protected Hashtable<String, SpriteSet>	all_avatar_set;
-	protected Hashtable<String, SpriteSet>	all_effect_set;
+	protected Hashtable<String, SceneSet>			all_scene_set;
+	protected Hashtable<String, SpriteSet>			all_actor_set;
+	protected Hashtable<String, SpriteSet>			all_avatar_set;
+	protected Hashtable<String, SpriteSet>			all_effect_set;
 
 	
 	// xml templates dynamic object and scenes
-	protected Hashtable<Integer, ItemProperties> item_properties;
-	protected Hashtable<Integer, TUnit>			tunits;
-	protected Hashtable<Integer, TItem>			titems;
-	protected Hashtable<Integer, TAvatar>		tavatars;
-	protected Hashtable<Integer, TSkill>		tskills;
-	protected Hashtable<Integer, TEffect>		teffects;
-	protected Hashtable<Integer, TItemList>		titemlists;
-	protected Hashtable<Integer, Quest> 		quests;
-	protected Hashtable<Integer, QuestGroup> 	questgroups;
-	protected Hashtable<Integer, Scene>			scenes;
+	protected Hashtable<Integer, ItemProperties>	item_properties;
+	protected Hashtable<Integer, TUnit>				tunits;
+	protected Hashtable<Integer, TItem>				titems;
+	protected Hashtable<Integer, TShopItem>			tshopitems;
+	protected Hashtable<Integer, TAvatar>			tavatars;
+	protected Hashtable<Integer, TSkill>			tskills;
+	protected Hashtable<Integer, TEffect>			teffects;
+	protected Hashtable<Integer, TItemList>			titemlists;
+	protected Hashtable<Integer, Quest> 			quests;
+	protected Hashtable<Integer, QuestGroup> 		questgroups;
+	protected Hashtable<Integer, Scene>				scenes;
 
-	protected Hashtable<Integer, String> 	names_item_properties;
-	protected Hashtable<Integer, String>	names_tunits;
-	protected Hashtable<Integer, String>	names_titems;
-	protected Hashtable<Integer, String>	names_tavatars;
-	protected Hashtable<Integer, String>	names_tskills;
-	protected Hashtable<Integer, String>	names_teffects;
-	protected Hashtable<Integer, String>	names_titemlists;
-	protected Hashtable<Integer, String> 	names_quests;
-	protected Hashtable<Integer, String> 	names_questgroups;
-	protected Hashtable<Integer, String>	names_scenes;
+	protected Hashtable<Integer, String> 			names_item_properties;
+	protected Hashtable<Integer, String>			names_tunits;
+	protected Hashtable<Integer, String>			names_titems;
+	protected Hashtable<Integer, String>			names_tshopitems;
+	protected Hashtable<Integer, String>			names_tavatars;
+	protected Hashtable<Integer, String>			names_tskills;
+	protected Hashtable<Integer, String>			names_teffects;
+	protected Hashtable<Integer, String>			names_titemlists;
+	protected Hashtable<Integer, String> 			names_quests;
+	protected Hashtable<Integer, String> 			names_questgroups;
+	protected Hashtable<Integer, String>			names_scenes;
 	
 	
 	// icons , sounds, talks
-	protected Hashtable<String, AtomicReference<BufferedImage>> 		all_icons;
-	protected Hashtable<String, AtomicReference<ISound>> 				all_sounds;
-	protected Hashtable<String, AtomicReference<String>> 				all_npc_talks;
+	protected Hashtable<String, AtomicReference<BufferedImage>>	all_icons;
+	protected Hashtable<String, AtomicReference<ISound>>		all_sounds;
+	protected Hashtable<String, AtomicReference<String>>		all_npc_talks;
 	
 //	--------------------------------------------------------------------------------------------------------------------
 
@@ -148,6 +151,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 		
 		tunits			= readRPGObjects(save_dir + "/objects/tunit.obj/tunit.list", 			TUnit.class);
 		titems			= readRPGObjects(save_dir + "/objects/titem.obj/titem.list", 			TItem.class);
+		tshopitems		= readRPGObjects(save_dir + "/objects/tshopitem.obj/tshopitem.list", 	TShopItem.class);
 		tavatars		= readRPGObjects(save_dir + "/objects/tavatar.obj/tavatar.list",		TAvatar.class);
 		tskills			= readRPGObjects(save_dir + "/objects/tskill.obj/tskill.list",			TSkill.class);
 		teffects		= readRPGObjects(save_dir + "/objects/teffect.obj/teffect.list",		TEffect.class);
@@ -165,6 +169,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 		
 		names_tunits			= readRPGObjectNames(save_dir + "/objects/tunit.obj/name_tunit.list");
 		names_titems			= readRPGObjectNames(save_dir + "/objects/titem.obj/name_titem.list");
+		names_tshopitems		= readRPGObjectNames(save_dir + "/objects/tshopitem.obj/name_tshopitem.list");
 		names_tavatars			= readRPGObjectNames(save_dir + "/objects/tavatar.obj/name_tavatar.list");
 		names_tskills			= readRPGObjectNames(save_dir + "/objects/tskill.obj/name_tskill.list");
 		names_teffects			= readRPGObjectNames(save_dir + "/objects/teffect.obj/name_teffect.list");
@@ -357,8 +362,9 @@ public abstract class ResourceManager extends CellSetResourceManager
 	}
 
 //	--------------------------------------------------------------------------------------------------------------------
-//	Resources
+//	SetResources
 //	--------------------------------------------------------------------------------------------------------------------
+	private static void SetResources_____________________________________________________(){}
 	
 	public SceneSet getSceneSet(String cpj_name, String obj_name) throws Exception{
 		SceneSet set = all_scene_set.get(ResourceSet.toID(cpj_name, obj_name));
@@ -400,157 +406,6 @@ public abstract class ResourceManager extends CellSetResourceManager
 		return new Vector<SpriteSet>(all_effect_set.values());
 	}
 
-//	--------------------------------------------------------------------------------------------------------------------
-//	Templates
-//	--------------------------------------------------------------------------------------------------------------------
-	
-	public TUnit getTUnit(int id) {
-		return tunits.get(id);
-	}
-	public TItem getTItem(int id) {
-		return titems.get(id);
-	}
-	public TAvatar getTAvatar(int id) {
-		return tavatars.get(id);
-	}
-	public TSkill getTSkill(int id) {
-		return tskills.get(id);
-	}
-	public TEffect getTEffect(int id) {
-		return teffects.get(id);
-	}
-	public TItemList getItemList(int id) {
-		return titemlists.get(id);
-	}
-	
-	public Vector<TItemList> getAllItemList() {
-		return new Vector<TItemList>(titemlists.values());
-	}
-	
-//	--------------------------------------------------------------------------------------------------------------------
-//	ItemProperties
-//	--------------------------------------------------------------------------------------------------------------------
-	
-	public Hashtable<Integer, ItemProperties> getAllItemProperties(){
-		return new Hashtable<Integer, ItemProperties>(item_properties);
-	}
-
-	public ItemProperties getItemProperties(int id)
-	{
-		return item_properties.get(id);
-	}
-	
-//	--------------------------------------------------------------------------------------------------------------------
-//	Quests
-//	--------------------------------------------------------------------------------------------------------------------
-	
-	public Hashtable<Integer, Quest> getAllQuests(){
-		return new Hashtable<Integer, Quest>(quests);
-	}
-
-	public Quest getQuest(int quest_id) {
-		return quests.get(quest_id);
-	}
-	
-	public Hashtable<Integer, QuestGroup> getAllQuestGroups() {
-		return new Hashtable<Integer, QuestGroup>(questgroups);
-	}
-	
-	public QuestGroup getQuestGroup(int quest_group_id) {
-		return questgroups.get(quest_group_id);
-	}
-	
-//	--------------------------------------------------------------------------------------------------------------------
-//	Scenes
-//	--------------------------------------------------------------------------------------------------------------------
-	
-	public Scene getRPGScene(int id) {
-		return scenes.get(id);
-	}
-	
-	public Hashtable<Integer, Scene> getAllRPGScenes() {
-		return new Hashtable<Integer, Scene>(scenes);
-	}
-	
-	public SceneGraph createSceneGraph() {
-		return new SceneGraph(scenes.values());
-	}
-	
-//	--------------------------------------------------------------------------------------------------------------------
-//	Icons
-//	--------------------------------------------------------------------------------------------------------------------
-	
-	public BufferedImage getIcon(String index)
-	{
-		return all_icons.get(index).get();
-	}
-	
-//	--------------------------------------------------------------------------------------------------------------------
-//	sounds
-//	--------------------------------------------------------------------------------------------------------------------
-	
-	public ISound getSound(String index)
-	{
-		return all_sounds.get(index).get();
-	}
-	
-//	--------------------------------------------------------------------------------------------------------------------
-//	npc talks
-//	--------------------------------------------------------------------------------------------------------------------
-	
-	public String getNpcTalk(String index)
-	{
-		return all_npc_talks.get(index).get();
-	}
-
-//	--------------------------------------------------------------------------------------------------------------------
-//	Name List
-//	--------------------------------------------------------------------------------------------------------------------
-	
-	public String getItemPropertiesName(int id) {
-		return names_item_properties.get(id);
-	}
-	public String getTUnitName(int id) {
-		return names_tunits.get(id);
-	}
-	public String getTItemName(int id) {
-		return names_titems.get(id);
-	}
-	public String getTAvatarName(int id) {
-		return names_tavatars.get(id);
-	}
-	public String getTSkillName(int id) {
-		return names_tskills.get(id);
-	}
-	public String getTEffectName(int id) {
-		return names_teffects.get(id);
-	}
-	public String getTItemListName(int id) {
-		return names_titemlists.get(id);
-	}
-	public String getQuestName(int id) {
-		return names_quests.get(id);
-	}
-	public String getQuestGroupName(int id) {
-		return names_questgroups.get(id);
-	}
-	public String getRPGSceneName(int id) {
-		return names_scenes.get(id);
-	}
-//	--------------------------------------------------------------------------------------------------------------------
-//	Name List
-//	--------------------------------------------------------------------------------------------------------------------
-	
-//	public Resource getEffectResource(String cpj_project_name) {
-//		try {
-//			Resource resource = getSet(res_root + "/" + "" + cpj_project_name);
-//			return resource;
-//		} catch (Throwable e) {
-//			e.printStackTrace();
-//		}
-//		return null;
-//	}
-	
 	public CellSetResource.StreamTiles getEffectImages(String cpj_project_name, String cpj_sprite_name) {
 		try
 		{
@@ -577,5 +432,162 @@ public abstract class ResourceManager extends CellSetResourceManager
 		}
 		return null;
 	}
+	
+//	--------------------------------------------------------------------------------------------------------------------
+//	Templates
+//	--------------------------------------------------------------------------------------------------------------------
+	private static void Templates_____________________________________________________(){}
+	
+	public TUnit getTUnit(int id) {
+		return tunits.get(id);
+	}
+	public TItem getTItem(int id) {
+		return titems.get(id);
+	}
+	public TShopItem getTShopItem(int id) {
+		return tshopitems.get(id);
+	}
+	public TAvatar getTAvatar(int id) {
+		return tavatars.get(id);
+	}
+	public TSkill getTSkill(int id) {
+		return tskills.get(id);
+	}
+	public TEffect getTEffect(int id) {
+		return teffects.get(id);
+	}
+	public TItemList getItemList(int id) {
+		return titemlists.get(id);
+	}
+	
+	public String getTUnitName(int id) {
+		return names_tunits.get(id);
+	}
+	public String getTItemName(int id) {
+		return names_titems.get(id);
+	}
+	public String getTShopItemName(int id) {
+		return names_tshopitems.get(id);
+	}
+	public String getTAvatarName(int id) {
+		return names_tavatars.get(id);
+	}
+	public String getTSkillName(int id) {
+		return names_tskills.get(id);
+	}
+	public String getTEffectName(int id) {
+		return names_teffects.get(id);
+	}
+	public String getTItemListName(int id) {
+		return names_titemlists.get(id);
+	}
+	
+	
+	public Vector<TItemList> getAllItemList() {
+		return new Vector<TItemList>(titemlists.values());
+	}
+
+//	--------------------------------------------------------------------------------------------------------------------
+//	ItemProperties
+//	--------------------------------------------------------------------------------------------------------------------
+	private static void ItemProperties_____________________________________________________(){}
+	
+	public Hashtable<Integer, ItemProperties> getAllItemProperties() {
+		return new Hashtable<Integer, ItemProperties>(item_properties);
+	}
+
+	public ItemProperties getItemProperties(int id) {
+		return item_properties.get(id);
+	}
+
+	public String getItemPropertiesName(int id) {
+		return names_item_properties.get(id);
+	}
+	
+//	--------------------------------------------------------------------------------------------------------------------
+//	Quests
+//	--------------------------------------------------------------------------------------------------------------------
+	private static void Quests_____________________________________________________(){}
+	
+	public Hashtable<Integer, Quest> getAllQuests(){
+		return new Hashtable<Integer, Quest>(quests);
+	}
+
+	public Quest getQuest(int quest_id) {
+		return quests.get(quest_id);
+	}
+	
+	public Hashtable<Integer, QuestGroup> getAllQuestGroups() {
+		return new Hashtable<Integer, QuestGroup>(questgroups);
+	}
+	
+	public QuestGroup getQuestGroup(int quest_group_id) {
+		return questgroups.get(quest_group_id);
+	}
+
+	public String getQuestName(int id) {
+		return names_quests.get(id);
+	}
+	
+	public String getQuestGroupName(int id) {
+		return names_questgroups.get(id);
+	}
+	
+//	--------------------------------------------------------------------------------------------------------------------
+//	Scenes
+//	--------------------------------------------------------------------------------------------------------------------
+	private static void Scenes_____________________________________________________(){}
+	
+	public Scene getRPGScene(int id) {
+		return scenes.get(id);
+	}
+
+	public String getRPGSceneName(int id) {
+		return names_scenes.get(id);
+	}
+	
+	public Hashtable<Integer, Scene> getAllRPGScenes() {
+		return new Hashtable<Integer, Scene>(scenes);
+	}
+	
+	public SceneGraph createSceneGraph() {
+		return new SceneGraph(scenes.values());
+	}
+	
+//	--------------------------------------------------------------------------------------------------------------------
+//	EditResources
+//	--------------------------------------------------------------------------------------------------------------------
+	private static void EditResources_____________________________________________________(){}
+	
+	public BufferedImage getIcon(String index)
+	{
+		return all_icons.get(index).get();
+	}
+	
+	public ISound getSound(String index)
+	{
+		return all_sounds.get(index).get();
+	}
+	
+	public String getNpcTalk(String index)
+	{
+		return all_npc_talks.get(index).get();
+	}
+
+//	--------------------------------------------------------------------------------------------------------------------
+//	Name List
+//	--------------------------------------------------------------------------------------------------------------------
+	
+//	public Resource getEffectResource(String cpj_project_name) {
+//		try {
+//			Resource resource = getSet(res_root + "/" + "" + cpj_project_name);
+//			return resource;
+//		} catch (Throwable e) {
+//			e.printStackTrace();
+//		}
+//		return null;
+//	}
+	
+
 	
 }

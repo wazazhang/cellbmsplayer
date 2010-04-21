@@ -8,9 +8,11 @@ import java.util.TreeMap;
 import com.cell.rpg.template.TemplateNode;
 import com.cell.rpg.xls.XLSColumns;
 import com.cell.rpg.xls.XLSFullRow;
+import com.g2d.studio.Studio;
 import com.g2d.studio.Studio.ProgressForm;
 import com.g2d.studio.gameedit.entity.ObjectGroup;
 import com.g2d.studio.gameedit.template.XLSItem;
+import com.g2d.studio.gameedit.template.XLSShopItem;
 import com.g2d.studio.gameedit.template.XLSSkill;
 import com.g2d.studio.gameedit.template.XLSTemplateNode;
 import com.g2d.studio.gameedit.template.XLSUnit;
@@ -63,28 +65,10 @@ extends ObjectTreeView<T, D>
 	
 //	-----------------------------------------------------------------------------------------------------------------------------------
 	
-	private T createObjectFromRow(String row_key, TemplateNode data) 
-	{
-		T node = null;
-		try{
-			XLSFullRow row = xls_row_map.get(row_key);
-			if (row!=null) {
-				if (node_type.equals(XLSUnit.class)) {
-					node = (node_type.cast(new XLSUnit(row.xls_file, row, data)));
-				} else if (node_type.equals(XLSItem.class)) {
-					node = (node_type.cast(new XLSItem(row.xls_file, row, data)));
-				} else if (node_type.equals(XLSSkill.class)) {
-					node = (node_type.cast(new XLSSkill(row.xls_file, row, data)));
-				}
-			} else {
-				System.err.println(getTitle() + " : XML 行不存在 : " + row_key);
-			}
-		} catch (Exception err){
-			err.printStackTrace();
-		}
-		return node;
+	private T createObjectFromRow(String row_key, TemplateNode data) {
+		return ObjectManager.createXLSObjectFromRow(node_type, xls_row_map, row_key, data);
 	}
-	
+
 //	-----------------------------------------------------------------------------------------------------------------------------------
 
 	class XLSGroup extends ObjectGroup<T, D>

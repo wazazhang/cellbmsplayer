@@ -14,7 +14,9 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
 import javax.swing.JWindow;
 import javax.swing.UIManager;
@@ -34,6 +36,7 @@ import com.cell.util.concurrent.ThreadPool;
 import com.g2d.Tools;
 import com.g2d.studio.cpj.CPJResourceManager;
 import com.g2d.studio.gameedit.ObjectManager;
+import com.g2d.studio.gameedit.ObjectManagerTree;
 import com.g2d.studio.icon.IconManager;
 import com.g2d.studio.item.ItemManager;
 import com.g2d.studio.quest.QuestManager;
@@ -75,6 +78,7 @@ public class Studio extends AbstractFrame
 	final public File				xls_tplayer;
 	final public File 				xls_tunit;
 	final public File 				xls_titem;
+	final public File 				xls_tshopitem;
 	final public File 				xls_tskill;
 	
 	final public String				talk_example;
@@ -93,14 +97,6 @@ public class Studio extends AbstractFrame
 	
 	private Studio(String g2d_file) throws Throwable
 	{
-//		System.out.println(Thread.currentThread().getContextClassLoader().getResource(""));
-//		System.out.println(getClass().getClassLoader().getResource(""));
-//		System.out.println(ClassLoader.getSystemResource(""));
-//		System.out.println(getClass().getResource(""));
-//		System.out.println(getClass().getResource("/"));
-//		System.out.println(new File("").getAbsolutePath());
-//		System.out.println(System.getProperty("user.dir"));
-		
 		instance 			= this;
 		
 		CObject.initSystem(
@@ -117,9 +113,6 @@ public class Studio extends AbstractFrame
 
 		RPGObjectMap.setPersistanceManagerDriver(Config.PERSISTANCE_MANAGER);
 		SQMTypeManager.setTypeComparer(Config.PERSISTANCE_SQL_TYPE);
-//		project_lock		= new FileOutputStream(g2d_file, true);
-		
-//		Runtime.getRuntime().addShutdownHook(new ShutdownHook());
 		
 		root_icon_path		= getFile(Config.ICON_ROOT);
 		root_sound_path		= getFile(Config.SOUND_ROOT);
@@ -128,6 +121,7 @@ public class Studio extends AbstractFrame
 		xls_tplayer			= getFile(Config.XLS_TPLAYER);
 		xls_tunit			= getFile(Config.XLS_TUNIT);
 		xls_titem			= getFile(Config.XLS_TITEM);
+		xls_tshopitem		= getFile(Config.XLS_TSHOPITEM);
 		xls_tskill			= getFile(Config.XLS_TSKILL);
 		
 		File talk_example_file = getFile(Config.TALK_EXAMPLE);
@@ -136,14 +130,13 @@ public class Studio extends AbstractFrame
 		} else {
 			talk_example = "// talk example";
 		}
-//		plugins_dir			= getFile(Config.PLUGINS_ROOT);
 		
-		try{
-//			JComponent.setDefaultLocale(Locale.CHINA);
+		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
-		}catch(Exception err){
+		} catch (Exception err) {
 			err.printStackTrace();
 		}
+		
 		try{
 			sound_system = JALSoundManager.getInstance();
 			com.cell.sound.SoundManager.setSoundManager(sound_system);
@@ -164,7 +157,6 @@ public class Studio extends AbstractFrame
 		// sysetm init
 		ProgressForm progress_form = new ProgressForm();
 		progress_form.setVisible(true);
-		progress_form.setIconImage(Res.icon_edit);
 
 		try
 		{
@@ -175,32 +167,42 @@ public class Studio extends AbstractFrame
 			this.setLocation(0, 0);
 			this.setLayout(new BorderLayout());
 
-//			new SetResourceManager();
-
 			initToolBar(progress_form);
-			
 			initStateBar(progress_form);
 			
-			scene_manager = new SceneManager(this, progress_form);
-			this.add(scene_manager, BorderLayout.CENTER);
+			this.scene_manager = new SceneManager(this, progress_form);
+			
+//			if (false)
+//			{
+//				JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+//				
+//				split.setLeftComponent(scene_manager);
+//				split.setRightComponent(new JPanel());
+//				this.add(split, BorderLayout.CENTER);
+//			} 
+//			else 
+			{
+				this.add(scene_manager, BorderLayout.CENTER);
+			}
 			
 			this.addWindowListener(new StudioWindowListener());
-			
 		}
 		catch (Throwable e) {
 			throw e;
 		} finally{
 			progress_form.setVisible(false);
 			progress_form.dispose();
-			this.requestFocus();
 		}
 	}
 
 	// init tool bar
 	private void initToolBar(ProgressForm progress)
 	{
-		JToolBar tool_bar = new JToolBar();
-	
+		JToolBar tool_bar_1 	= new JToolBar();
+		JToolBar tool_bar_2 	= new JToolBar();
+		tool_bar_1.setFloatable(false);
+		tool_bar_2.setFloatable(false);
+		
 		// icon manager
 		{
 			frame_icon_manager = new IconManager(this, progress);
@@ -212,7 +214,7 @@ public class Studio extends AbstractFrame
 					frame_icon_manager.setVisible(true);
 				}
 			});
-			tool_bar.add(btn);
+			tool_bar_1.add(btn);
 		}
 		// sound manager
 		{
@@ -225,7 +227,7 @@ public class Studio extends AbstractFrame
 					frame_sound_manager.setVisible(true);
 				}
 			});
-			tool_bar.add(btn);
+			tool_bar_1.add(btn);
 		}
 		// talk manager
 		{
@@ -238,7 +240,7 @@ public class Studio extends AbstractFrame
 					frame_talk_manager.setVisible(true);
 				}
 			});
-			tool_bar.add(btn);
+			tool_bar_1.add(btn);
 		}
 		// res manager
 		{
@@ -251,7 +253,7 @@ public class Studio extends AbstractFrame
 					frame_cpj_resource_manager.setVisible(true);
 				}
 			});
-			tool_bar.add(btn);
+			tool_bar_1.add(btn);
 		}
 		// item manager
 		{
@@ -264,20 +266,23 @@ public class Studio extends AbstractFrame
 					frame_item_manager.setVisible(true);
 				}
 			});
-			tool_bar.add(btn);
+			tool_bar_1.add(btn);
 		}
-		// unit manager
+		// objects manager
 		{
 			frame_object_manager = new ObjectManager(this, progress);
-			JButton btn = new JButton();
-			btn.setToolTipText(frame_object_manager.getTitle());
-			btn.setIcon(Tools.createIcon(frame_object_manager.getIconImage()));
-			btn.addActionListener(new ActionListener(){
-				public void actionPerformed(ActionEvent e) {
-					frame_object_manager.setVisible(true);
-				}
-			});
-			tool_bar.add(btn);
+			for (ObjectManagerTree<?, ?> page : frame_object_manager.getPages()) {
+				JButton btn = new JButton();
+				btn.setToolTipText(page.getTitle());
+				btn.setIcon(Tools.createIcon(page.getIconImage()));
+				final ObjectManagerTree<?, ?> frame = page;
+				btn.addActionListener(new ActionListener(){
+					public void actionPerformed(ActionEvent e) {
+						frame.setVisible(true);
+					}
+				});
+				tool_bar_2.add(btn);
+			}
 		}
 		// quest group manager
 		{
@@ -303,9 +308,12 @@ public class Studio extends AbstractFrame
 					frame_quest_manager.setVisible(true);
 				}
 			});
-			tool_bar.add(btn);
+			tool_bar_1.add(btn);
 		}
-	
+
+		JPanel tool_bar = new JPanel(new BorderLayout());
+		tool_bar.add(tool_bar_1, BorderLayout.NORTH);
+		tool_bar.add(tool_bar_2, BorderLayout.SOUTH);
 		this.add(tool_bar, BorderLayout.NORTH);
 	}
 	
@@ -480,8 +488,10 @@ public class Studio extends AbstractFrame
 		public ProgressForm()
 		{
 			this.setSize(Res.img_splash.getWidth(), Res.img_splash.getHeight()+40);
-			this.setAlwaysOnTop(true);
+//			this.setAlwaysOnTop(true);
 			AbstractFrame.setCenter(this);
+
+			setIconImage(Res.icon_edit);
 			
 			progress.setStringPainted(true);
 			
