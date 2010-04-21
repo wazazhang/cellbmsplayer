@@ -153,34 +153,46 @@ public class ItemFormulaEdit extends AbstractOptionDialog<ItemFormula> implement
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() == del) {
-				ListItemData item = list.getSelectedItem();
-				if (item != null) {
-					this.list_data.remove(item);
-					this.list.setListData(list_data);
-					this.list.repaint();
-				}
-			} 
-			else if (e.getSource() == add) {
-				ObjectSelectDialog<XLSItem> dialog = new ObjectSelectDialog<XLSItem>(this, XLSItem.class, 1);
-				dialog.setSize(
-						200, 
-						ItemFormulaEdit.this.getHeight());
-				dialog.setLocation(
-						ItemFormulaEdit.this.getX() + ItemFormulaEdit.this.getWidth(), 
-						ItemFormulaEdit.this.getY());
-				XLSItem item = dialog.showDialog();
-				if (item != null) {
-					ListItemData data = new ListItemData(item, 1);
-					this.list_data.add(data);
-					this.list.setListData(list_data);
-					this.list.repaint();
-				}
+				doAdd();
+			} else if (e.getSource() == add) {
+				doDel();
+			} else if (e.getSource() == set_count) {
+				doSetCount();
 			}
-			else if (e.getSource() == set_count) {
-				ListItemData item = list.getSelectedItem();
-				if (item != null) {
-					String value = JOptionPane.showInputDialog(this, "设置数量", item.count);
-					try{
+		}
+
+		private void doAdd() {
+			ListItemData item = list.getSelectedItem();
+			if (item != null) {
+				this.list_data.remove(item);
+				this.list.setListData(list_data);
+				this.list.repaint();
+			}
+		}
+		
+		private void doDel() {
+			ObjectSelectDialog<XLSItem> dialog = new ObjectSelectDialog<XLSItem>(this, XLSItem.class, 1);
+			dialog.setSize(
+					200, 
+					ItemFormulaEdit.this.getHeight());
+			dialog.setLocation(
+					ItemFormulaEdit.this.getX() + ItemFormulaEdit.this.getWidth(), 
+					ItemFormulaEdit.this.getY());
+			XLSItem item = dialog.showDialog();
+			if (item != null) {
+				ListItemData data = new ListItemData(item, 1);
+				this.list_data.add(data);
+				this.list.setListData(list_data);
+				this.list.repaint();
+			}
+		}
+		
+		private void doSetCount() {
+			ListItemData item = list.getSelectedItem();
+			if (item != null) {
+				String value = JOptionPane.showInputDialog(this, "设置数量", item.count);
+				try{
+					if (value != null) {
 						int count = Integer.parseInt(value);
 						if (count < 1) {
 							JOptionPane.showMessageDialog(this, "输入错误！必须大于 1");
@@ -188,13 +200,13 @@ public class ItemFormulaEdit extends AbstractOptionDialog<ItemFormula> implement
 							item.count = count;
 							this.list.repaint();
 						}
-					} catch (Exception err){
-						JOptionPane.showMessageDialog(this, "输入错误！");
 					}
+				} catch (Exception err){
+					JOptionPane.showMessageDialog(this, "输入错误！");
 				}
 			}
 		}
-
+		
 	}
 	
 	class ListItemData implements G2DListItem

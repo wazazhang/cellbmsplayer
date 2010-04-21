@@ -17,6 +17,7 @@ public class Config extends com.cell.util.Config
 	public static String XLS_TPLAYER				= "xls/tplayer.xls";
 	public static String XLS_TUNIT					= "xls/tnpc.xls";
 	public static String XLS_TITEM					= "xls/titem.xls";
+	public static String XLS_TSHOPITEM				= "xls/tshopitem.xls";
 	public static String XLS_TSKILL					= "xls/tskill.xls";
 
 	// 声音和图像资源目录
