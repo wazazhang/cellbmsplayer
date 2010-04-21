@@ -5,6 +5,8 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,6 +17,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -105,7 +108,7 @@ public class ItemFormulaEdit extends AbstractOptionDialog<ItemFormula> implement
 		JToolBar 				tools 		= new JToolBar();
 		JButton					add			= new JButton("添加");
 		JButton					del			= new JButton("删除");
-
+		JButton					set_count	= new JButton("设置数量");
 		final Vector<ListItemData> list_data;
 		
 		public ListPanel(String title, HashMap<Integer, Integer> datas)
@@ -120,10 +123,13 @@ public class ItemFormulaEdit extends AbstractOptionDialog<ItemFormula> implement
 			this.tools.addSeparator();
 			this.tools.add(add);
 			this.tools.add(del);
-
+			this.tools.addSeparator();
+			this.tools.add(set_count);
+			
 			this.add.addActionListener(this);
 			this.del.addActionListener(this);
-
+			this.set_count.addActionListener(this);
+			
 			this.list_data = new Vector<ListItemData>(datas.size());
 			for (Integer key : datas.keySet()){
 				Integer value = datas.get(key);
@@ -134,7 +140,14 @@ public class ItemFormulaEdit extends AbstractOptionDialog<ItemFormula> implement
 				}
 			}
 			this.list.setListData(list_data);
-			
+		}
+		
+		public HashMap<Integer, Integer> getValue() {
+			HashMap<Integer, Integer> ret = new HashMap<Integer, Integer>(list_data.size());
+			for (ListItemData data : list_data) {
+				ret.put(data.item.getIntID(), data.count);
+			}
+			return ret;
 		}
 		
 		@Override
@@ -146,16 +159,15 @@ public class ItemFormulaEdit extends AbstractOptionDialog<ItemFormula> implement
 					this.list.setListData(list_data);
 					this.list.repaint();
 				}
-			} else if (e.getSource() == add) {
+			} 
+			else if (e.getSource() == add) {
 				ObjectSelectDialog<XLSItem> dialog = new ObjectSelectDialog<XLSItem>(this, XLSItem.class, 1);
-				
 				dialog.setSize(
 						200, 
 						ItemFormulaEdit.this.getHeight());
 				dialog.setLocation(
 						ItemFormulaEdit.this.getX() + ItemFormulaEdit.this.getWidth(), 
 						ItemFormulaEdit.this.getY());
-				
 				XLSItem item = dialog.showDialog();
 				if (item != null) {
 					ListItemData data = new ListItemData(item, 1);
@@ -164,15 +176,25 @@ public class ItemFormulaEdit extends AbstractOptionDialog<ItemFormula> implement
 					this.list.repaint();
 				}
 			}
-		}
-		
-		public HashMap<Integer, Integer> getValue() {
-			HashMap<Integer, Integer> ret = new HashMap<Integer, Integer>(list_data.size());
-			for (ListItemData data : list_data) {
-				ret.put(data.item.getIntID(), data.count);
+			else if (e.getSource() == set_count) {
+				ListItemData item = list.getSelectedItem();
+				if (item != null) {
+					String value = JOptionPane.showInputDialog(this, "设置数量", item.count);
+					try{
+						int count = Integer.parseInt(value);
+						if (count < 1) {
+							JOptionPane.showMessageDialog(this, "输入错误！必须大于 1");
+						} else {
+							item.count = count;
+							this.list.repaint();
+						}
+					} catch (Exception err){
+						JOptionPane.showMessageDialog(this, "输入错误！");
+					}
+				}
 			}
-			return ret;
 		}
+
 	}
 	
 	class ListItemData implements G2DListItem
@@ -202,10 +224,19 @@ public class ItemFormulaEdit extends AbstractOptionDialog<ItemFormula> implement
 		@Override
 		public String getListName() {
 			if (item!=null) {
-				return "[" + item.getListName() + "] 数量(" + count + ")";
+				StringBuffer sb = new StringBuffer();
+				sb.append("<html><body>");
+				sb.append("<p>");
+				sb.append(item.getListName());
+				sb.append("<font color=0000ff> - 数量(" + count + ")" + "</font>");
+				sb.append("</p>");
+				sb.append("</body></html>");
+				return sb.toString();
 			}
 			return "null " + count;
 		}
+		
+		
 	}
 	
 	
