@@ -8,7 +8,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 /**
  * @author WAZA
  *
- * @param <T> Filed type
+ * @param <T> Edit Object Type
  */
 public interface CellEditAdapter<T>
 {

@@ -27,5 +27,10 @@ public class ItemFormula extends AbstractAbility
 	public boolean isMultiField() {
 		return true;
 	}
+	
+	@Override
+	public String toString() {
+		return super.toString() + " [" + src_items_id.size() + " -> " + dst_items_id.size() + "]";
+	}
 
 }

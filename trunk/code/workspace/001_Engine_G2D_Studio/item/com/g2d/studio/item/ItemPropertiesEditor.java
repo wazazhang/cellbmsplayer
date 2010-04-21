@@ -8,6 +8,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 
 import com.g2d.studio.gameedit.ObjectViewer;
+import com.g2d.studio.rpg.ItemFormulaEdit;
 
 public class ItemPropertiesEditor extends ObjectViewer<ItemPropertiesNode> implements ActionListener
 {	
@@ -17,7 +18,9 @@ public class ItemPropertiesEditor extends ObjectViewer<ItemPropertiesNode> imple
 //	-------------------------------------------------------------------------------------
 	
 	public ItemPropertiesEditor(ItemPropertiesNode node) {
-		super(node, new ItemPropertiesAdapter.ValueRangeAdapter());
+		super(node, 
+				new ItemPropertiesAdapter.ValueRangeAdapter(),
+				new ItemFormulaEdit.ItemFormulaAdapter());
 		this.add(toolbar, BorderLayout.NORTH);
 	}
 	
