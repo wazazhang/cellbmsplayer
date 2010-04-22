@@ -5,7 +5,11 @@ import java.util.ArrayList;
 import com.cell.rpg.ability.AbstractAbility;
 import com.g2d.annotation.Property;
 
-@Property("[单位能力] 掉落/售卖物品")
+/**
+ * 掉落物品列表
+ * @author WAZA
+ */
+@Property("[单位能力] 掉落物品列表")
 public class UnitDropItem extends AbstractAbility
 {
 	private static final long serialVersionUID = 1L;
@@ -25,7 +29,7 @@ public class UnitDropItem extends AbstractAbility
 		private static final long serialVersionUID = 1L;
 	}
 	
-	@Property("[单位能力] 掉落/售卖物品")
+	@Property("[单位能力] 掉落物品")
 	public static class DropItemNode extends AbstractAbility
 	{
 		private static final long serialVersionUID = 1L;
