@@ -1,16 +1,16 @@
 package com.cell.rpg.template;
 
 import java.util.ArrayList;
-import java.util.Vector;
 
-import com.cell.CIO;
 import com.cell.rpg.item.ItemPropertyTemplate;
 import com.g2d.annotation.Property;
 
 
 public class TSkill extends TemplateNode
 {
-
+	@Property("图标编号")
+	public String	icon_index;
+	
 /**	 每级的属性类型*/
 	private ArrayList<Class<? extends ItemPropertyTemplate>> 
 			columns = new ArrayList<Class<? extends ItemPropertyTemplate>>();

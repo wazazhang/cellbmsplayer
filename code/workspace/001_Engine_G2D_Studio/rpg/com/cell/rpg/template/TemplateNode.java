@@ -11,9 +11,6 @@ public abstract class TemplateNode extends RPGObject implements NamedObject
 	
 	public String	name		= "no name";
 	
-	@Property("图标编号")
-	public String	icon_index;
-	
 	public TemplateNode(int id, String name) {
 		super(id+"");
 		this.int_id	= id;

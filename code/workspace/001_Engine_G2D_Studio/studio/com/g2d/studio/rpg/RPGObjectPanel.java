@@ -3,10 +3,12 @@ package com.g2d.studio.rpg;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.lang.reflect.Field;
+import java.util.Vector;
 
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import com.cell.CUtil;
 import com.cell.rpg.RPGObject;
 import com.cell.rpg.quest.Quest;
 import com.cell.rpg.template.TemplateNode;
@@ -32,23 +34,17 @@ public class RPGObjectPanel extends JPanel
 	
 	public RPGObjectPanel(RPGObject unit, CellEditAdapter<?> ... adapters)
 	{
-		CellEditAdapter<?>[] dadapters;
-		if (adapters!=null && adapters.length>0) {
-			dadapters = new CellEditAdapter<?>[adapters.length+3];
-			System.arraycopy(adapters, 0, dadapters, 0, adapters.length);
-			dadapters[dadapters.length-1] = new IconSelectAdapter();
-			dadapters[dadapters.length-2] = new AbilityAdapter();
-			dadapters[dadapters.length-3] = new SceneAbilityAdapters.NPCTalkAdapter();
-		} else {
-			dadapters = new CellEditAdapter<?>[]{
+		CellEditAdapter<?>[] appends = new CellEditAdapter<?>[]{
 				new IconSelectAdapter(),
-				new AbilityAdapter(),
+				new AbilityAdapter(), 
+				new PropertyAdapters.UnitTypeAdapter(),
 				new SceneAbilityAdapters.NPCTalkAdapter(),
-			};
-		}
+		};
+		Vector<CellEditAdapter<?>> ret = CUtil.linkv(adapters, appends);
+
 		this.setLayout(new BorderLayout());
 		this.current_unit = unit;
-		this.unit_property = new ObjectPropertyPanel(unit, dadapters);
+		this.unit_property = new ObjectPropertyPanel(unit, ret.toArray(new CellEditAdapter<?>[ret.size()]));
 		this.add(unit_property, BorderLayout.CENTER);
 	}
 

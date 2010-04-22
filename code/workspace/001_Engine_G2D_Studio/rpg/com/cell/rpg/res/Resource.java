@@ -5,9 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.ThreadPoolExecutor;
 
-import com.cell.gfx.IImages;
 import com.cell.j2se.CImage;
-import com.cell.util.concurrent.ThreadPool;
 import com.g2d.cell.CellSetResource;
 
 

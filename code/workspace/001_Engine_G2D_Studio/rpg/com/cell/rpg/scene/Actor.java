@@ -9,7 +9,6 @@ import com.cell.rpg.scene.ability.ActorPathStart;
 import com.cell.rpg.scene.ability.ActorSellItem;
 import com.cell.rpg.scene.ability.ActorSkillTrainer;
 import com.cell.rpg.scene.ability.ActorTalk;
-import com.cell.rpg.scene.ability.ActorTransport;
 import com.cell.rpg.scene.ability.ActorTransportCraft;
 import com.g2d.annotation.Property;
 
