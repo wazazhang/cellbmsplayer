@@ -55,7 +55,7 @@ final public class XLSShopItem extends XLSTemplateNode<TShopItem>
 	}
 	
 	public XLSItem getXLSItem() {
-		if (getData().item_count > 1) {
+		if (getData().item_count < 1) {
 			getData().item_count = 1;
 		}
 		if (item_template==null || item_template.getIntID() != getData().item_template_id) {
