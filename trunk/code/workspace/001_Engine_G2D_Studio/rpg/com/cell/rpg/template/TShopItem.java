@@ -12,7 +12,7 @@ public class TShopItem extends TemplateNode
 	public int item_template_id;
 	
 	@Property("数量")
-	public int item_count;
+	public int item_count = 1;
 	
 	public TShopItem(int id, String name) {
 		super(id, name);

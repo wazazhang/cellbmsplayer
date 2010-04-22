@@ -42,17 +42,20 @@ import com.g2d.studio.swing.G2DWindowToolBar;
 
 public class ObjectManager
 {
-	final public File		objects_dir;
-	final public XLSColumns	player_xls_columns;
-	final public XLSColumns	unit_xls_columns;
+	final public 	File		objects_dir;
+	final public 	XLSColumns	player_xls_columns;
+	private			XLSColumns	unit_xls_columns;
 
 	LinkedHashMap<Class<?>, ObjectManagerTree<?, ?>> managers = new LinkedHashMap<Class<?>, ObjectManagerTree<?,?>>();
 	
-	public ObjectManager(Studio studio, ProgressForm progress) 
+	public ObjectManager(Studio studio) 
 	{
 		this.objects_dir 		= new File(Studio.getInstance().project_save_path.getPath() + File.separatorChar +"objects");
 		this.player_xls_columns	= XLSColumns.getXLSColumns(studio.xls_tplayer);
-		
+	}
+	
+	public void loadAll(Studio studio, ProgressForm progress) 
+	{
 		// ------------ xls template ------------ //
 		{
 			// XLSUnit
@@ -80,9 +83,8 @@ public class ObjectManager
 			managers.put(tree_skills_view.node_type, form_skills_view);
 		}{	
 			// XLSShopItem
-			ObjectTreeViewTemplate<XLSShopItem, TShopItem> tree_shopitems_view = new ObjectTreeViewTemplate<XLSShopItem, TShopItem>(
-					"商品模板", XLSShopItem.class, TShopItem.class, 
-					new File(objects_dir, "tshopitem.obj/tshopitem.list"), studio.xls_tshopitem, progress);
+			ShopItemTreeView tree_shopitems_view = new ShopItemTreeView(
+					"商品模板", new File(objects_dir, "tshopitem.obj/tshopitem.list"), studio.xls_tshopitem, progress);
 			ObjectManagerTree<XLSShopItem, TShopItem> form_shopitems_view = new ObjectManagerTree<XLSShopItem, TShopItem>(
 					studio, progress, Res.icon_res_7, tree_shopitems_view);
 			managers.put(tree_shopitems_view.node_type, form_shopitems_view);

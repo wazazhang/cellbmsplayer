@@ -13,6 +13,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.TreePath;
 
 import com.cell.rpg.RPGObject;
 import com.cell.util.IDFactoryInteger;
@@ -111,7 +112,13 @@ extends JSplitPane implements TreeSelectionListener, ChangeListener
 	}
 	
 	final public void reload() {
+		TreePath path = g2d_tree.getSelectionPath();
 		g2d_tree.reload();
+		if (path != null) {
+			try{
+				g2d_tree.setSelectionPath(path);
+			}catch(Exception err){}
+		}
 	}
 
 	final public String getTitle() {
