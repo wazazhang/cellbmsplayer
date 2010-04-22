@@ -50,7 +50,7 @@ final public class DAvatar extends DynamicNode<TAvatar>
 	
 	@Override
 	protected ImageIcon createIcon() {
-		return Tools.createIcon(Res.icon_res_3);
+		return Tools.createIcon(Res.icon_res_2);
 	}
 	
 //	----------------------------------------------------------------------------------------------------

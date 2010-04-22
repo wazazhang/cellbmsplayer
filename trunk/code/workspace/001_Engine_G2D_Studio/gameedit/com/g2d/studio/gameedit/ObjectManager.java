@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.Collection;
 import java.util.Hashtable;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Vector;
 
@@ -45,7 +46,7 @@ public class ObjectManager
 	final public XLSColumns	player_xls_columns;
 	final public XLSColumns	unit_xls_columns;
 
-	Hashtable<Class<?>, ObjectManagerTree<?, ?>> managers = new Hashtable<Class<?>, ObjectManagerTree<?,?>>();
+	LinkedHashMap<Class<?>, ObjectManagerTree<?, ?>> managers = new LinkedHashMap<Class<?>, ObjectManagerTree<?,?>>();
 	
 	public ObjectManager(Studio studio, ProgressForm progress) 
 	{
@@ -59,7 +60,7 @@ public class ObjectManager
 					"单位模板", XLSUnit.class, TUnit.class, 
 					new File(objects_dir, "tunit.obj/tunit.list"), studio.xls_tunit, progress);
 			ObjectManagerTree<XLSUnit, TUnit> form = new ObjectManagerTree<XLSUnit, TUnit>(
-					studio, progress, Res.icon_res_2, view);
+					studio, progress, Res.icon_hd, view);
 			managers.put(view.node_type, form);
 			this.unit_xls_columns = view.xls_columns;
 		}{
@@ -71,20 +72,20 @@ public class ObjectManager
 					studio, progress, Res.icon_res_4, view);
 			managers.put(view.node_type, form);
 		}{	
+			// XLSSkill
+			ObjectTreeViewTemplate<XLSSkill, TSkill> tree_skills_view = new SkillTreeView(
+					"技能模板", new File(objects_dir, "tskill.obj/tskill.list"), studio.xls_tskill, progress);
+			ObjectManagerTree<XLSSkill, TSkill>	form_skills_view = new ObjectManagerTree<XLSSkill, TSkill>(
+					studio, progress, Res.icon_res_3, tree_skills_view);
+			managers.put(tree_skills_view.node_type, form_skills_view);
+		}{	
 			// XLSShopItem
 			ObjectTreeViewTemplate<XLSShopItem, TShopItem> tree_shopitems_view = new ObjectTreeViewTemplate<XLSShopItem, TShopItem>(
 					"商品模板", XLSShopItem.class, TShopItem.class, 
 					new File(objects_dir, "tshopitem.obj/tshopitem.list"), studio.xls_tshopitem, progress);
 			ObjectManagerTree<XLSShopItem, TShopItem> form_shopitems_view = new ObjectManagerTree<XLSShopItem, TShopItem>(
-					studio, progress, Res.icon_res_4, tree_shopitems_view);
+					studio, progress, Res.icon_res_7, tree_shopitems_view);
 			managers.put(tree_shopitems_view.node_type, form_shopitems_view);
-		}{	
-			// XLSSkill
-			ObjectTreeViewTemplate<XLSSkill, TSkill> tree_skills_view = new SkillTreeView("技能模板",
-					new File(objects_dir, "tskill.obj/tskill.list"), studio.xls_tskill, progress);
-			ObjectManagerTree<XLSSkill, TSkill>	form_skills_view = new ObjectManagerTree<XLSSkill, TSkill>(
-					studio, progress, Res.icon_res_3, tree_skills_view);
-			managers.put(tree_skills_view.node_type, form_skills_view);
 		}{
 		// ------------ dynamic ------------ //
 		}{
@@ -92,21 +93,21 @@ public class ObjectManager
 			ObjectTreeViewDynamic<DAvatar, TAvatar> tree_avatars_view = new AvatarTreeView(
 					"AVATAR", new File(objects_dir, "tavatar.obj/tavatar.list"));
 			ObjectManagerTree<DAvatar, TAvatar> form_avatars_view = new ObjectManagerTree<DAvatar, TAvatar>(
-					studio, progress, Res.icon_res_4, tree_avatars_view);
+					studio, progress, Res.icon_res_2, tree_avatars_view);
 			managers.put(tree_avatars_view.node_type, form_avatars_view);
 		}{	
 			// DAvatar
 			ObjectTreeViewDynamic<DEffect, TEffect>	tree_effects_view = new EffectTreeView(
 					"魔法效果/特效", new File(objects_dir, "teffect.obj/teffect.list"));
 			ObjectManagerTree<DEffect, TEffect>	form_effects_view = new ObjectManagerTree<DEffect, TEffect>(
-					studio, progress, Res.icon_res_3, tree_effects_view);
+					studio, progress, Res.icon_res_8, tree_effects_view);
 			managers.put(tree_effects_view.node_type, form_effects_view);
 		}{
 			// DItemList
 			ObjectTreeViewDynamic<DItemList, TItemList> tree_item_list_view = new ItemListTreeView(
-					"掉落/商店道具列表", new File(objects_dir, "titemlist.obj/titemlist.list"));
+					"掉落道具列表", new File(objects_dir, "titemlist.obj/titemlist.list"));
 			ObjectManagerTree<DItemList, TItemList>	form_item_list_view = new ObjectManagerTree<DItemList, TItemList>(
-					studio, progress, Res.icon_res_3, tree_item_list_view);
+					studio, progress, Res.icon_res_9, tree_item_list_view);
 			managers.put(tree_item_list_view.node_type, form_item_list_view);
 		}
 	}

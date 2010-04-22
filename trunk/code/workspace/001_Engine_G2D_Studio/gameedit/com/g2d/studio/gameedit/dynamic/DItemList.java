@@ -57,7 +57,7 @@ final public class DItemList extends DynamicNode<TItemList>
 	
 	@Override
 	public ImageIcon getIcon(boolean update) {
-		return Tools.createIcon(Res.icon_res_3);
+		return Tools.createIcon(Res.icon_res_9);
 	}
 	
 	@Override
