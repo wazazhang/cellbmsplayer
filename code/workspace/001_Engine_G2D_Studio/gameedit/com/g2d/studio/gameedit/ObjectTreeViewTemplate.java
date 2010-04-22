@@ -1,21 +1,22 @@
 package com.g2d.studio.gameedit;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.swing.JOptionPane;
+import javax.swing.JTree;
+
 import com.cell.rpg.template.TemplateNode;
 import com.cell.rpg.xls.XLSColumns;
 import com.cell.rpg.xls.XLSFullRow;
-import com.g2d.studio.Studio;
 import com.g2d.studio.Studio.ProgressForm;
 import com.g2d.studio.gameedit.entity.ObjectGroup;
-import com.g2d.studio.gameedit.template.XLSItem;
-import com.g2d.studio.gameedit.template.XLSShopItem;
-import com.g2d.studio.gameedit.template.XLSSkill;
 import com.g2d.studio.gameedit.template.XLSTemplateNode;
-import com.g2d.studio.gameedit.template.XLSUnit;
+import com.g2d.studio.swing.G2DTreeNodeGroup.GroupMenu;
 
 public class ObjectTreeViewTemplate<T extends XLSTemplateNode<D>, D extends TemplateNode> 
 extends ObjectTreeView<T, D>
@@ -55,6 +56,7 @@ extends ObjectTreeView<T, D>
 			}
 		}
 		reload();
+		getTree().setDragEnabled(true);
 	}
 //	-----------------------------------------------------------------------------------------------------------------------------------
 	
@@ -96,9 +98,39 @@ extends ObjectTreeView<T, D>
 		protected XLSGroup pathCreateGroupNode(String name) {
 			return new XLSGroup(name);
 		}
-		
+
+		@Override
+		public void onClicked(JTree tree, MouseEvent e) {
+			if (e.getButton() == MouseEvent.BUTTON3) {
+				new XLSGroupMenu(this).show(
+						tree,
+						e.getX(),
+						e.getY());
+			}
+		}
 	}
 	
+	
+	class XLSGroupMenu extends GroupMenu
+	{
+		XLSGroup root;
+		
+		public XLSGroupMenu(XLSGroup root) {
+			super(root, ObjectTreeViewTemplate.this, getTree());
+			this.root = root;
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (e.getSource() == delete) {
+				if (root.getChildCount()>0) {
+					JOptionPane.showMessageDialog(ObjectTreeViewTemplate.this, "不能删除该节点，过滤器不为空！");
+				}
+			} else {
+				super.actionPerformed(e);
+			}
+		}
+	}
 //	-----------------------------------------------------------------------------------------------------------------------------------
 	
 	
