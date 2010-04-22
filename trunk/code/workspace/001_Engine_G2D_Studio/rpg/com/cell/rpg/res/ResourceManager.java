@@ -1,7 +1,6 @@
 package com.cell.rpg.res;
 
 import java.awt.image.BufferedImage;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Vector;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -10,8 +9,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import com.cell.CIO;
 import com.cell.CUtil;
 import com.cell.gfx.IImage;
-import com.cell.gfx.IImages;
-import com.cell.rpg.NamedObject;
 import com.cell.rpg.RPGObject;
 import com.cell.rpg.io.RPGObjectMap;
 import com.cell.rpg.item.ItemProperties;
@@ -28,12 +25,10 @@ import com.cell.rpg.template.TItemList;
 import com.cell.rpg.template.TShopItem;
 import com.cell.rpg.template.TSkill;
 import com.cell.rpg.template.TUnit;
-import com.cell.rpg.template.TemplateNode;
 import com.cell.sound.ISound;
 import com.g2d.Tools;
 import com.g2d.cell.CellSetResource;
 import com.g2d.cell.CellSetResourceManager;
-import com.g2d.display.particle.Layer;
 
 
 /**

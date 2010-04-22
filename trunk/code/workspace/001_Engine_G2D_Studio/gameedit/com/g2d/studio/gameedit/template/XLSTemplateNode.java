@@ -26,9 +26,7 @@ public abstract class XLSTemplateNode<T extends TemplateNode> extends ObjectNode
 		this.xls_fullrow	= xls_row;
 		this.template_data	= (data == null) ? newData(xls_file, xls_row) : (T)data;
 //		System.out.println("read a xls row : " + xls_file.xls_file + " : " + xls_fullrow.id + " : " + xls_fullrow.desc);
-		if (template_data.icon_index!=null) {
-			icon_file = Studio.getInstance().getIconManager().getIcon(template_data.icon_index);
-		}
+
 	}
 	
 	/**
@@ -56,11 +54,6 @@ public abstract class XLSTemplateNode<T extends TemplateNode> extends ObjectNode
 	}
 	
 	@Override
-	public String getName() {
-		return getXLSRow().desc + "(" + getXLSRow().id + ")";
-	}
-
-	@Override
 	final public String getID() {
 		return getXLSRow().id;
 	}
@@ -68,49 +61,12 @@ public abstract class XLSTemplateNode<T extends TemplateNode> extends ObjectNode
 	final public int getIntID() {
 		return Integer.parseInt(getXLSRow().id);
 	}
-	
-//	public XLSObjectViewer<?> getEditComponent(){
-//		if (edit_component==null) {
-//			edit_component = new XLSObjectViewer<XLSTemplateNode<?>>(this);
-//		}
-//		return edit_component;
-//	}
-
-//	@Override
-//	public ImageIcon createIcon() {
-//		if (icon_file!=null) {
-//			return Tools.createIcon(Tools.combianImage(20, 20, icon_file.image));
-//		} else {
-//			return Tools.createIcon(Tools.combianImage(20, 20, Res.icon_error));
-//		}
-//	}
-	
-//	final public IconFile getIconFile() {
-//		return icon_file;	
-//	}
-//
-//	final public void setIcon(IconFile icon) {
-//		template_data.icon_index = icon.icon_file_name;
-//		this.icon_file = icon;
-//	}
 
 	@Override
-	public ImageIcon getIcon(boolean update) {
-		if (icon_file==null || !icon_file.icon_file_name.equals(getData().icon_index)) {
-			resetIcon();
-		} 
-		return super.getIcon(update);
+	public String getName() {
+		return getXLSRow().desc + "(" + getXLSRow().id + ")";
 	}
-	
-	@Override
-	protected ImageIcon createIcon() {
-		icon_file = Studio.getInstance().getIconManager().getIcon(getData().icon_index);
-		if (icon_file!=null) {
-			return new ImageIcon(Tools.combianImage(20, 20, icon_file.getImage()));
-		}
-		return Tools.createIcon(Tools.combianImage(20, 20, Res.icon_error));
-	}
-	
+
 //	----------------------------------------------------------------------------------------------------------------------
 	
 	

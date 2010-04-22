@@ -3,10 +3,7 @@ package com.cell.rpg.quest;
 import java.util.Collections;
 import java.util.Vector;
 
-import com.cell.rpg.NamedObject;
-import com.cell.rpg.RPGObject;
 import com.cell.rpg.template.TemplateNode;
-import com.g2d.annotation.Property;
 
 /**
  * 一个任务的全部描述

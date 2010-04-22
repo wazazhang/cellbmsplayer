@@ -24,6 +24,12 @@ public class ObjectSelectCellEditInteger<T extends ObjectNode<?>> extends JCombo
 		super(Studio.getInstance().getObjectManager().getObjects(object_type));
 	}
 	
+	public ObjectSelectCellEditInteger(Class<T> object_type, Object selected) 
+	{
+		super(Studio.getInstance().getObjectManager().getObjects(object_type));
+		super.setSelectedItem(selected);
+	}
+	
 	public Component getComponent(ObjectPropertyEdit panel) {		
 		this.panel = panel;
 		return this;

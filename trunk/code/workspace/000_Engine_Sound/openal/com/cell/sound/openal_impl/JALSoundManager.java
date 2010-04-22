@@ -64,7 +64,7 @@ public class JALSoundManager extends SoundManager
 			
 			for (int i=0; i<devices.length; i++) 
 			{
-				System.out.println("Device : " + devices[i]);
+				System.out.println("OpenAL Device : " + devices[i]);
 				
 				ALCdevice device = alc.alcOpenDevice(devices[i]);
 				

@@ -10,7 +10,6 @@ import com.cell.reflect.Parser;
 import com.cell.rpg.ability.AbstractAbility;
 import com.cell.rpg.item.anno.ItemPersistenceField;
 import com.cell.rpg.item.anno.ItemType;
-import com.g2d.annotation.Property;
 
 /**
  * 描述一个道具属性模板，子类必须标注签名{@link ItemType}，子类也必须有默认构造函数，

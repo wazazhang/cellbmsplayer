@@ -3,6 +3,8 @@ package com.cell.rpg.quest;
 import com.cell.rpg.NamedObject;
 import com.cell.rpg.RPGObject;
 import com.cell.rpg.ability.AbstractAbility;
+import com.cell.rpg.anno.PropertyAdapter;
+import com.cell.rpg.anno.PropertyType;
 import com.cell.rpg.formula.AbstractValue;
 import com.cell.rpg.formula.Value;
 import com.cell.rpg.quest.formula.TriggerUnitMethod;
@@ -10,8 +12,6 @@ import com.cell.rpg.quest.formula.TriggerUnitProperty;
 import com.cell.rpg.struct.BooleanCondition;
 import com.cell.rpg.struct.Comparison;
 import com.g2d.annotation.Property;
-import com.g2d.studio.anno.PropertyAdapter;
-import com.g2d.studio.rpg.PropertyAdapters;
 
 /**
  * 用于任务的状态存储<br>
@@ -367,7 +367,7 @@ public class QuestItem extends RPGObject implements NamedObject
 	final public static class AwardSummonNPC extends Result
 	{
 		@Property("NPC-类型")
-		@PropertyAdapter(PropertyAdapters.UNIT_ID)
+		@PropertyAdapter(PropertyType.UNIT_ID)
 		public int				tunit_index			= -1;
 	}
 	
@@ -375,7 +375,7 @@ public class QuestItem extends RPGObject implements NamedObject
 	final public static class DropQuestNPC extends Result
 	{
 		@Property("NPC-类型")
-		@PropertyAdapter(PropertyAdapters.UNIT_ID)
+		@PropertyAdapter(PropertyType.UNIT_ID)
 		public int				tunit_index			= -1;
 	}
 	
@@ -383,7 +383,7 @@ public class QuestItem extends RPGObject implements NamedObject
 	final public static class DropQuestServant extends Result
 	{
 		@Property("战魂-类型")
-		@PropertyAdapter(PropertyAdapters.UNIT_ID)
+		@PropertyAdapter(PropertyType.UNIT_ID)
 		public Integer			unit_id				= -1;
 	}	
 

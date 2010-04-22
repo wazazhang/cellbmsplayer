@@ -54,12 +54,12 @@ final public class XLSUnit extends XLSTemplateNode<TUnit>
 	
 	@Override
 	public ImageIcon getIcon(boolean update) {
-		getData().icon_index = "0";
 		if (icon_file==null) {
-			icon_file = Studio.getInstance().getIconManager().getIcon(getData().icon_index);
+			icon_file = Studio.getInstance().getIconManager().getIcon("0");
 		}
 		return super.getIcon(update);
 	}
+	
 	@Override
 	public ImageIcon createIcon() {
 		if (cpj_sprite!=null) {

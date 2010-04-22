@@ -1,7 +1,6 @@
 package com.cell.rpg.template;
 
 import com.cell.rpg.display.UnitNode;
-import com.cell.rpg.template.ability.ItemListID;
 import com.cell.rpg.template.ability.UnitBattleTeam;
 import com.cell.rpg.template.ability.UnitItemDrop;
 import com.cell.rpg.template.ability.UnitItemSell;

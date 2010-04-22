@@ -9,7 +9,6 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 import com.cell.CIO;
-import com.cell.CUtil;
 import com.cell.persistance.PersistanceManager;
 import com.cell.rpg.RPGObject;
 

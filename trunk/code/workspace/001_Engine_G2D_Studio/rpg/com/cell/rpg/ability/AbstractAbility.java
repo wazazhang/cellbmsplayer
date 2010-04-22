@@ -4,7 +4,6 @@ import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 
-import com.g2d.annotation.Property;
 import com.g2d.editor.property.Util;
 
 /**
