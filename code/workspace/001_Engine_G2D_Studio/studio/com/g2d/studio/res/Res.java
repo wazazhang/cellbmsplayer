@@ -17,13 +17,16 @@ public class Res
 	static public BufferedImage	icon_grid			= Tools.readImage("/com/g2d/studio/res/icon_grid.png");
 	static public BufferedImage icon_quest			= Tools.readImage("/com/g2d/studio/res/icon_quest.png");
 	static public BufferedImage icon_quest_group	= Tools.readImage("/com/g2d/studio/res/icon_quest_group.png");
-	
+
 	static public BufferedImage	icon_res_1			= Tools.readImage("/com/g2d/studio/res/icon_res_1.png");
 	static public BufferedImage	icon_res_2			= Tools.readImage("/com/g2d/studio/res/icon_res_2.png");
 	static public BufferedImage	icon_res_3			= Tools.readImage("/com/g2d/studio/res/icon_res_3.png");
 	static public BufferedImage	icon_res_4			= Tools.readImage("/com/g2d/studio/res/icon_res_4.png");
 	static public BufferedImage	icon_res_5			= Tools.readImage("/com/g2d/studio/res/icon_res_5.png");
 	static public BufferedImage	icon_res_6			= Tools.readImage("/com/g2d/studio/res/icon_res_6.png");
+	static public BufferedImage	icon_res_7			= Tools.readImage("/com/g2d/studio/res/icon_res_7.png");
+	static public BufferedImage	icon_res_8			= Tools.readImage("/com/g2d/studio/res/icon_res_8.png");
+	static public BufferedImage	icon_res_9			= Tools.readImage("/com/g2d/studio/res/icon_res_9.png");
 	
 	static public BufferedImage	icon_quest_condition= Tools.readImage("/com/g2d/studio/res/icon_quest_condition.png");
 	static public BufferedImage	icon_quest_result	= Tools.readImage("/com/g2d/studio/res/icon_quest_result.png");

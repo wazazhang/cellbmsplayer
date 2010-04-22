@@ -51,7 +51,7 @@ final public class DEffect extends DynamicNode<TEffect>
 	
 	@Override
 	public ImageIcon getIcon(boolean update) {
-		return Tools.createIcon(Res.icon_res_3);
+		return Tools.createIcon(Res.icon_res_8);
 	}
 	
 	@Override
