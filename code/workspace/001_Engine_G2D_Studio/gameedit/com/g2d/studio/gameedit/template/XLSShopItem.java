@@ -32,7 +32,7 @@ final public class XLSShopItem extends XLSTemplateNode<TShopItem>
 	public String getName() {
 		getXLSItem();
 		if (item_template != null) {
-			return item_template.getName();
+			return item_template.getData().name + "(" + getIntID() + ")";
 		}
 		return super.getName();
 	}

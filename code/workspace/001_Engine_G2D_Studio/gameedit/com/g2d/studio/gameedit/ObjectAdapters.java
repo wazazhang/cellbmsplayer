@@ -6,9 +6,9 @@ import java.lang.reflect.Field;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import com.cell.rpg.template.TItem;
-import com.cell.rpg.template.ability.ItemListID;
 import com.cell.rpg.template.ability.UnitBattleTeam;
 import com.cell.rpg.template.ability.UnitDropItem;
+import com.cell.rpg.template.ability.UnitItemDrop;
 import com.cell.rpg.template.ability.UnitDropItem.DropItemNode;
 import com.cell.rpg.template.ability.UnitDropItem.DropItems;
 import com.g2d.editor.property.ObjectPropertyEdit;
@@ -129,11 +129,11 @@ public class ObjectAdapters
 		}
 	}
 	
-	public static class ItemListIDSelectAdapter extends AbilityCellEditAdapter<ItemListID>
+	public static class ItemListIDSelectAdapter extends AbilityCellEditAdapter<UnitItemDrop>
 	{
 		@Override
-		public Class<ItemListID> getType() {
-			return ItemListID.class;
+		public Class<UnitItemDrop> getType() {
+			return UnitItemDrop.class;
 		}
 		
 		@Override
