@@ -125,10 +125,10 @@ extends ObjectTreeView<T, D>
 			if (e.getSource() == delete) {
 				if (root.getChildCount()>0) {
 					JOptionPane.showMessageDialog(ObjectTreeViewTemplate.this, "不能删除该节点，过滤器不为空！");
+					return;
 				}
-			} else {
-				super.actionPerformed(e);
 			}
+			super.actionPerformed(e);
 		}
 	}
 //	-----------------------------------------------------------------------------------------------------------------------------------
