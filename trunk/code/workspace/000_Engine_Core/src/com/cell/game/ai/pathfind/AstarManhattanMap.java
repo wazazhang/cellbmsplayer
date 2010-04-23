@@ -10,6 +10,12 @@ public interface AstarManhattanMap
 
 	public int getCellH() ;
 	
-	public int getFlag(int bx, int by);
+	/**
+	 * 测试是否可以通过
+	 * @param bx
+	 * @param by
+	 * @return true＝不能通过 ；false＝可以通过
+	 */
+	public boolean getFlag(int bx, int by);
 }
 
