@@ -18,8 +18,8 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
 import com.cell.CUtil;
-import com.cell.rpg.template.ability.UnitDropItem.DropItemNode;
-import com.cell.rpg.template.ability.UnitDropItem.DropItems;
+import com.cell.rpg.template.TItemList.UnitDropItems.DropItemNode;
+import com.cell.rpg.template.TItemList.UnitDropItems.DropItems;
 import com.g2d.editor.property.ObjectPropertyEdit;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
