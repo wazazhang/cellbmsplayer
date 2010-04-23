@@ -167,14 +167,14 @@ public abstract class ResourceManager extends CellSetResourceManager
 	{
 		names_item_properties	= readRPGObjectNames(save_dir + "/item_properties/name_item_properties.list");
 		
-		names_tunits			= readRPGObjectNames(toListFile(TUnit.class));
-		names_titems			= readRPGObjectNames(toListFile(TItem.class));
-		names_tshopitems		= readRPGObjectNames(toListFile(TShopItem.class));
-		names_tavatars			= readRPGObjectNames(toListFile(TAvatar.class));
-		names_tskills			= readRPGObjectNames(toListFile(TSkill.class));
-		names_teffects			= readRPGObjectNames(toListFile(TEffect.class));
-		names_titemlists		= readRPGObjectNames(toListFile(TItemList.class));
-		names_tshopitemlists	= readRPGObjectNames(toListFile(TShopItemList.class));
+		names_tunits			= readRPGObjectNames(toNameListFile(TUnit.class));
+		names_titems			= readRPGObjectNames(toNameListFile(TItem.class));
+		names_tshopitems		= readRPGObjectNames(toNameListFile(TShopItem.class));
+		names_tavatars			= readRPGObjectNames(toNameListFile(TAvatar.class));
+		names_tskills			= readRPGObjectNames(toNameListFile(TSkill.class));
+		names_teffects			= readRPGObjectNames(toNameListFile(TEffect.class));
+		names_titemlists		= readRPGObjectNames(toNameListFile(TItemList.class));
+		names_tshopitemlists	= readRPGObjectNames(toNameListFile(TShopItemList.class));
 		
 		names_quests			= readRPGObjectNames(save_dir + "/quests/name_quest.list");
 		names_questgroups		= readRPGObjectNames(save_dir + "/questgroups/name_questgroups.list");
@@ -326,7 +326,17 @@ public abstract class ResourceManager extends CellSetResourceManager
 	final public <T extends RPGObject>  String toListFile(Class<T> type) 
 	{
 		String type_name = type.getSimpleName().toLowerCase();
-		return save_dir + "/objects/" + type_name + ".obj" + "/" + type_name + ".list";
+		return save_dir + 
+		"/objects/" + type_name + ".obj" + 
+		"/" + type_name + ".list";
+	}
+	
+	final public <T extends RPGObject>  String toNameListFile(Class<T> type) 
+	{
+		String type_name = type.getSimpleName().toLowerCase();
+		return save_dir + 
+		"/objects/" + type_name + ".obj" + 
+		"/name_" + type_name + ".list";
 	}
 	
 	final protected <T extends RPGObject> Hashtable<Integer, T> readTemplateObjects(Class<T> type) throws Exception
