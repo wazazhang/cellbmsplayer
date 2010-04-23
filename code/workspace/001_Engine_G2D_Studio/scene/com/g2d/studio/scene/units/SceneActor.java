@@ -18,12 +18,14 @@ import com.cell.rpg.quest.ability.QuestAccepter;
 import com.cell.rpg.quest.ability.QuestPublisher;
 import com.cell.rpg.scene.Actor;
 import com.cell.rpg.scene.ability.ActorBank;
+import com.cell.rpg.scene.ability.ActorDropItem;
 import com.cell.rpg.scene.ability.ActorJobTrainer;
+import com.cell.rpg.scene.ability.ActorPathStart;
 import com.cell.rpg.scene.ability.ActorSellItem;
 import com.cell.rpg.scene.ability.ActorSkillTrainer;
 import com.cell.rpg.scene.ability.ActorTalk;
 import com.cell.rpg.scene.ability.ActorTransport;
-import com.cell.rpg.template.ability.UnitDropItem;
+import com.cell.rpg.template.ability.UnitItemDrop;
 import com.g2d.annotation.Property;
 import com.g2d.cell.CellSetResource;
 import com.g2d.cell.CellSetResource.SpriteSet;
@@ -61,26 +63,32 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 	Rectangle					snap_shape = new Rectangle(-2, -2, 4, 4);
 	AbilityEffectInfos<Actor>	effects = new AbilityEffectInfos<Actor>(
 			new Class<?>[]{
-					ActorTalk.class,
-					UnitDropItem.class, 
 					QuestPublisher.class,
 					QuestAccepter.class,
+					
+					ActorTalk.class,
 					ActorBank.class,
 					ActorSkillTrainer.class,
 					ActorJobTrainer.class,
 					ActorSellItem.class,
 					ActorTransport.class,
+					
+					ActorDropItem.class,
+					ActorPathStart.class,
 					},
 			new  BufferedImage[]{
-					Res.img_talk,
-					Res.img_item_info,
 					Res.img_quest_info,
 					Res.img_quest_info2,
+					
+					Res.img_talk,
 					Res.img_npc_bank,
 					Res.img_skill_trainer,
 					Res.img_job_trainer,
 					Res.img_sell_item,
 					Res.img_transport,
+					
+					Res.img_item_info,
+					Res.icon_camera,
 			}		
 	);
 

@@ -6,11 +6,11 @@ import java.lang.reflect.Field;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import com.cell.rpg.template.TItem;
+import com.cell.rpg.template.TItemList.UnitDropItems;
+import com.cell.rpg.template.TItemList.UnitDropItems.DropItemNode;
+import com.cell.rpg.template.TItemList.UnitDropItems.DropItems;
 import com.cell.rpg.template.ability.UnitBattleTeam;
-import com.cell.rpg.template.ability.UnitDropItem;
 import com.cell.rpg.template.ability.UnitItemDrop;
-import com.cell.rpg.template.ability.UnitDropItem.DropItemNode;
-import com.cell.rpg.template.ability.UnitDropItem.DropItems;
 import com.g2d.editor.property.ObjectPropertyEdit;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
@@ -76,11 +76,11 @@ public class ObjectAdapters
 	 * 编辑掉落道具的工具
 	 * @author WAZA
 	 */
-	public static class UnitDropItemNodeAdapter extends AbilityCellEditAdapter<UnitDropItem>
+	public static class UnitDropItemNodeAdapter extends AbilityCellEditAdapter<UnitDropItems>
 	{
 		@Override
-		public Class<UnitDropItem> getType() {
-			return UnitDropItem.class;
+		public Class<UnitDropItems> getType() {
+			return UnitDropItems.class;
 		}
 		
 		@Override
@@ -141,8 +141,10 @@ public class ObjectAdapters
 			if (field.getName().equals("item_list_id")) {
 				ObjectSelectCellEditInteger<DItemList> item_list = 
 					new ObjectSelectCellEditInteger<DItemList>(DItemList.class);
-				item_list.setSelectedItem(fieldValue);
-				return item_list;
+				if (item_list!=null) {
+					item_list.setSelectedItem(fieldValue);
+					return item_list;
+				}
 			}
 			return null;
 		}
@@ -154,7 +156,7 @@ public class ObjectAdapters
 				DItemList item_list = Studio.getInstance().getObjectManager().getObject(
 						DItemList.class,
 						(Integer)fieldValue);
-				if (src != null) {
+				if (src != null && item_list != null) {
 					src.setText(item_list.getData().name);
 				}
 				return src;
@@ -168,7 +170,9 @@ public class ObjectAdapters
 				DItemList item_list = Studio.getInstance().getObjectManager().getObject(
 						DItemList.class,
 						(Integer)fieldSrcValue);
-				return item_list.getData().name;
+				if (item_list!=null) {
+					return item_list.getData().name;
+				}
 			}
 			return null;
 		}
