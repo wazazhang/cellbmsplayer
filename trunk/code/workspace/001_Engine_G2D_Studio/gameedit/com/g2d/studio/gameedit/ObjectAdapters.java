@@ -6,6 +6,7 @@ import java.lang.reflect.Field;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import com.cell.rpg.template.TItem;
+import com.cell.rpg.template.TShopItemList;
 import com.cell.rpg.template.TItemList.UnitDropItems;
 import com.cell.rpg.template.TItemList.UnitDropItems.DropItemNode;
 import com.cell.rpg.template.TItemList.UnitDropItems.DropItems;
@@ -221,5 +222,43 @@ public class ObjectAdapters
 
 	
 
-	
+
+	/**
+	 * 编辑出售的商品
+	 * @author WAZA
+	 */
+	public static class ShopItemNodeAdapter extends RPGObjectAdapter<TShopItemList>
+	{
+		@Override
+		public Class<TShopItemList> getType() {
+			return TShopItemList.class;
+		}
+		
+		@Override
+		public PropertyCellEdit<?> getCellEdit(
+				ObjectPropertyEdit owner,
+				Object editObject, 
+				Object fieldValue, Field field) {
+			if (field.getName().equals("shopitems_id")){
+			
+			}
+			return null;
+		}
+		
+		@Override
+		public Component getCellRender(ObjectPropertyEdit owner, Object editObject, Object fieldValue, Field field, DefaultTableCellRenderer src) {
+			if (field.getName().equals("shopitems_id")){
+				
+			}
+			return null;
+		}
+		
+		@Override
+		public String getCellText(Object editObject, Field field, Object fieldSrcValue) {
+			if (field.getName().equals("shopitems_id")){
+				
+			}
+			return null;
+		}
+	}
 }

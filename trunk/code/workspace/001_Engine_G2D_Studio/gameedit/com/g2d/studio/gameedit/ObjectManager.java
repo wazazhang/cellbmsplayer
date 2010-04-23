@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.LinkedHashMap;
@@ -19,6 +20,7 @@ import com.cell.rpg.template.TEffect;
 import com.cell.rpg.template.TItem;
 import com.cell.rpg.template.TItemList;
 import com.cell.rpg.template.TShopItem;
+import com.cell.rpg.template.TShopItemList;
 import com.cell.rpg.template.TSkill;
 import com.cell.rpg.template.TUnit;
 import com.cell.rpg.template.TemplateNode;
@@ -31,6 +33,7 @@ import com.g2d.studio.Studio.ProgressForm;
 import com.g2d.studio.gameedit.dynamic.DAvatar;
 import com.g2d.studio.gameedit.dynamic.DEffect;
 import com.g2d.studio.gameedit.dynamic.DItemList;
+import com.g2d.studio.gameedit.dynamic.DShopItemList;
 import com.g2d.studio.gameedit.entity.ObjectNode;
 import com.g2d.studio.gameedit.template.XLSItem;
 import com.g2d.studio.gameedit.template.XLSShopItem;
@@ -46,7 +49,10 @@ public class ObjectManager
 	final public 	XLSColumns	player_xls_columns;
 	private			XLSColumns	unit_xls_columns;
 
-	LinkedHashMap<Class<?>, ObjectManagerTree<?, ?>> managers = new LinkedHashMap<Class<?>, ObjectManagerTree<?,?>>();
+	private			LinkedHashMap<Class<?>, ObjectManagerTree<?, ?>> 
+								managers = new LinkedHashMap<Class<?>, ObjectManagerTree<?,?>>();
+	
+	
 	
 	public ObjectManager(Studio studio) 
 	{
@@ -54,6 +60,11 @@ public class ObjectManager
 		this.player_xls_columns	= XLSColumns.getXLSColumns(studio.xls_tplayer);
 	}
 	
+	/**
+	 * 初始化管理器
+	 * @param studio
+	 * @param progress
+	 */
 	public void loadAll(Studio studio, ProgressForm progress) 
 	{
 		// ------------ xls template ------------ //
@@ -71,7 +82,7 @@ public class ObjectManager
 			ObjectTreeViewTemplate<XLSItem, TItem> view = new ObjectTreeViewTemplate<XLSItem, TItem>(
 					"道具模板", XLSItem.class, TItem.class, 
 					new File(objects_dir, "titem.obj/titem.list"), studio.xls_titem, progress);
-			ObjectManagerTree<XLSItem, TItem> form = new ObjectManagerTree<XLSItem, TItem>(
+			XLSItemManagerTree form = new XLSItemManagerTree(
 					studio, progress, Res.icon_res_4, view);
 			managers.put(view.node_type, form);
 		}{	
@@ -85,7 +96,7 @@ public class ObjectManager
 			// XLSShopItem
 			ShopItemTreeView tree_shopitems_view = new ShopItemTreeView(
 					"商品模板", new File(objects_dir, "tshopitem.obj/tshopitem.list"), studio.xls_tshopitem, progress);
-			ObjectManagerTree<XLSShopItem, TShopItem> form_shopitems_view = new ObjectManagerTree<XLSShopItem, TShopItem>(
+			XLSShopItemManagerTree form_shopitems_view = new XLSShopItemManagerTree(
 					studio, progress, Res.icon_res_7, tree_shopitems_view);
 			managers.put(tree_shopitems_view.node_type, form_shopitems_view);
 		}{
@@ -98,7 +109,7 @@ public class ObjectManager
 					studio, progress, Res.icon_res_2, tree_avatars_view);
 			managers.put(tree_avatars_view.node_type, form_avatars_view);
 		}{	
-			// DAvatar
+			// DEffect
 			ObjectTreeViewDynamic<DEffect, TEffect>	tree_effects_view = new EffectTreeView(
 					"魔法效果/特效", new File(objects_dir, "teffect.obj/teffect.list"));
 			ObjectManagerTree<DEffect, TEffect>	form_effects_view = new ObjectManagerTree<DEffect, TEffect>(
@@ -111,9 +122,33 @@ public class ObjectManager
 			ObjectManagerTree<DItemList, TItemList>	form_item_list_view = new ObjectManagerTree<DItemList, TItemList>(
 					studio, progress, Res.icon_res_9, tree_item_list_view);
 			managers.put(tree_item_list_view.node_type, form_item_list_view);
+		}{
+			// DShopItemList
+			ObjectTreeViewDynamic<DShopItemList, TShopItemList> tree = new ShopItemListTreeView(
+					"售卖商品列表", new File(objects_dir, "tshopitemlist.obj/tshopitemlist.list"));
+			ObjectManagerTree<DShopItemList, TShopItemList>	form = new ObjectManagerTree<DShopItemList, TShopItemList>(
+					studio, progress, Res.icon_res_9, tree);
+			managers.put(tree.node_type, form);
+		}
+		
+		for (ObjectManagerTree<?, ?> page : managers.values()) {
+			page.initToolbars(this);
 		}
 	}
 
+	/**
+	 * 得到显示在StudioToolbar上的控件
+	 * @return
+	 */
+	public ArrayList<ObjectManagerTree<?, ?>> getIconPages() {
+		ArrayList<ObjectManagerTree<?, ?>> pages = new ArrayList<ObjectManagerTree<?,?>>(managers.values());
+		pages.remove(managers.get(DItemList.class));
+		pages.remove(managers.get(DShopItemList.class));
+		return pages;
+	}
+	
+//	------------------------------------------------------------------------------------------------------------------------
+	
 	public Collection<ObjectManagerTree<?, ?>> getPages() {
 		return managers.values();
 	}
@@ -137,6 +172,13 @@ public class ObjectManager
 	public ObjectTreeView<?,?> getPage(Class<?> type) {
 		if (managers.containsKey(type)) {
 			return managers.get(type).tree_view;
+		}
+		return null;
+	}
+	
+	public ObjectManagerTree<?,?> getPageForm(Class<?> type) {
+		if (managers.containsKey(type)) {
+			return managers.get(type);
 		}
 		return null;
 	}

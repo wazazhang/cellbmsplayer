@@ -22,12 +22,12 @@ public class TItemList extends TemplateNode
 	 * 掉落物品列表
 	 * @author WAZA
 	 */
-	@Property("[单位能力] 掉落物品列表")
+	@Property("[单位能力] 掉落物品组")
 	static public class UnitDropItems extends AbstractAbility
 	{
 		private static final long serialVersionUID = 1L;
 
-		@Property("产生的单位")
+		@Property("产生的物品")
 		public DropItems	item_types = new DropItems();
 		
 		public UnitDropItems() {}
@@ -42,7 +42,7 @@ public class TItemList extends TemplateNode
 			private static final long serialVersionUID = 1L;
 		}
 		
-		@Property("[单位能力] 掉落物品")
+		@Property("[单位能力] 可能掉落的物品")
 		public static class DropItemNode extends AbstractAbility
 		{
 			private static final long serialVersionUID = 1L;
