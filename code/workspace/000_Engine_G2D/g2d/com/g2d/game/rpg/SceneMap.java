@@ -208,9 +208,24 @@ public abstract class SceneMap extends DisplayObjectContainer implements AstarMa
 		
 //	---------------------------------------------------------------------------------------------------------------------------
 
-	public int getFlag(int bx, int by) {
+	final public boolean getFlag(int bx, int by) {
+		return testFlagBlock(grid_matrix[bx][by]);
+	}
+
+	public int getFlagValue(int bx, int by) {
 		return grid_matrix[bx][by];
 	}
+	
+	/**
+	 * 指定的格子FLAG值是否可以通过
+	 * @param flag_value
+	 * @return true=不能通过， false=可以通过
+	 */
+	protected boolean testFlagBlock(int flag_value)  {
+		return flag_value != 0;
+	}
+
+//	---------------------------------------------------------------------------------------------------------------------------
 
 	public boolean touchMap(Shape shape) 
 	{

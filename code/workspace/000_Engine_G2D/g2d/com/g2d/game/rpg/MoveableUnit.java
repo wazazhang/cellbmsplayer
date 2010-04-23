@@ -75,7 +75,7 @@ public abstract class MoveableUnit extends Unit
 		
 		WayPoint end = new WayPoint((int)targetX, (int)targetY);
 		
-		if (getOwnerWorld().getFlag(dx, dy)!=0) {
+		if (getOwnerWorld().getFlag(dx, dy)!=false) {
 			end = null;
 			int rx = CMath.getDirect(dx - sx);
 			int ry = CMath.getDirect(dy - sy);
@@ -84,7 +84,7 @@ public abstract class MoveableUnit extends Unit
 			for (int i=0; i<r; i++) {
 				if (dx != sx) dx -= rx;
 				if (dy != sy) dy -= ry;
-				if (getOwnerWorld().getFlag(dx, dy)==0) {
+				if (getOwnerWorld().getFlag(dx, dy)==false) {
 					break;
 				}
 			}
@@ -164,7 +164,7 @@ public abstract class MoveableUnit extends Unit
 		if (move_blockade) {
 			int wx = getOwnerWorld().localToGridX((int)x);
 			int wy = getOwnerWorld().localToGridY((int)y);
-			if (getOwnerWorld().getFlag(wx, wy)!=0) {
+			if (getOwnerWorld().getFlag(wx, wy)!=false) {
 				super.move(-dx, -dy);
 				move_target_x = x;
 				move_target_y = y;

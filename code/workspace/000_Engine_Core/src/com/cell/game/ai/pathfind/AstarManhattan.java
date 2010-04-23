@@ -92,13 +92,13 @@ public class AstarManhattan extends AbstractAstar
 							int ndy = np[1];
 							MMapNode near = all_nodes_map[y+ndy][x+ndx];
 							if (is_static) {
-								if (near.static_flag != 0) {
+								if (near.static_flag != false) {
 									continue;
 								}
 								if (is_edge && ndx!=0 && ndy!=0) {
 									MMapNode ta	= all_nodes_map[y][x+ndx];
 									MMapNode tb = all_nodes_map[y+ndy][x];
-									if (ta.static_flag!=0 || tb.static_flag!=0 ) {
+									if (ta.static_flag!=false || tb.static_flag!=false ) {
 										continue;
 									}
 								}
@@ -135,10 +135,10 @@ public class AstarManhattan extends AbstractAstar
 	
 	static class MMapNode implements AbstractAstarMapNode
 	{
-		MMap 	mmap;
-		short 	X;
-		short 	Y;
-		int		static_flag;
+		MMap 		mmap;
+		short 		X;
+		short 		Y;
+		boolean		static_flag;
 		
 		transient ArrayList<AbstractAstarMapNode> nexts = new ArrayList<AbstractAstarMapNode>(8);
 		
@@ -158,9 +158,9 @@ public class AstarManhattan extends AbstractAstar
 		@Override
 		public boolean testCross(AbstractAstarMapNode father) {
 			if (mmap.is_static) {
-				return static_flag == 0;
+				return static_flag == false;
 			} else {
-				if (mmap.map.getFlag(X, Y) != 0) {
+				if (mmap.map.getFlag(X, Y) != false) {
 					return false;
 				}
 				if (mmap.is_edge) {
@@ -170,7 +170,7 @@ public class AstarManhattan extends AbstractAstar
 					if (ndx!=0 && ndy!=0) {
 						MMapNode ta	= mmap.all_nodes_map[Y][t.X];
 						MMapNode tb = mmap.all_nodes_map[t.Y][X];
-						if (ta.static_flag!=0 || tb.static_flag!=0 ) {
+						if (ta.static_flag!=false || tb.static_flag!=false ) {
 							return false;
 						}
 					}
