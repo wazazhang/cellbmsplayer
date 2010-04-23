@@ -23,13 +23,13 @@ import com.g2d.studio.swing.G2DTreeNodeGroup;
 import com.g2d.studio.swing.G2DTreeNodeGroup.GroupMenu;
 import com.g2d.util.AbstractDialog;
 
-public class AvatarTreeView extends ObjectTreeViewDynamic<DAvatar, TAvatar>
+public class AvatarTreeView extends ObjectTreeViewTemplateDynamic<DAvatar, TAvatar>
 {
 	private static final long serialVersionUID = 1L;
 
-	public AvatarTreeView(String title, File list_file) 
+	public AvatarTreeView(String title, String objects_dir) 
 	{
-		super(title, DAvatar.class, TAvatar.class, list_file);		
+		super(title, DAvatar.class, TAvatar.class, objects_dir);		
 	}
 
 	@Override

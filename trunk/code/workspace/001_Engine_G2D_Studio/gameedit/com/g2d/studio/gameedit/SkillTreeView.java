@@ -9,15 +9,15 @@ import com.g2d.studio.gameedit.template.XLSSkill;
 import com.g2d.studio.swing.G2DTree;
 
 @SuppressWarnings("serial")
-public class SkillTreeView extends ObjectTreeViewTemplate<XLSSkill, TSkill>
+public class SkillTreeView extends ObjectTreeViewTemplateXLS<XLSSkill, TSkill>
 {
 	
 	public SkillTreeView(
 			String		title, 
-			File		list_file,
+			String		objects_dir,
 			File		xls_file,
 			ProgressForm progress) {
-		super(title, XLSSkill.class, TSkill.class, list_file, xls_file, progress);
+		super(title, XLSSkill.class, TSkill.class, objects_dir, xls_file, progress);
 	}
 
 	@Override

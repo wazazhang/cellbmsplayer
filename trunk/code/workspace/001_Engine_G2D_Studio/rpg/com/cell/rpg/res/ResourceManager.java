@@ -23,6 +23,7 @@ import com.cell.rpg.template.TEffect;
 import com.cell.rpg.template.TItem;
 import com.cell.rpg.template.TItemList;
 import com.cell.rpg.template.TShopItem;
+import com.cell.rpg.template.TShopItemList;
 import com.cell.rpg.template.TSkill;
 import com.cell.rpg.template.TUnit;
 import com.cell.sound.ISound;
@@ -62,6 +63,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 	protected Hashtable<Integer, TSkill>			tskills;
 	protected Hashtable<Integer, TEffect>			teffects;
 	protected Hashtable<Integer, TItemList>			titemlists;
+	protected Hashtable<Integer, TShopItemList>		tshopitemlists;
 	protected Hashtable<Integer, Quest> 			quests;
 	protected Hashtable<Integer, QuestGroup> 		questgroups;
 	protected Hashtable<Integer, Scene>				scenes;
@@ -74,6 +76,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 	protected Hashtable<Integer, String>			names_tskills;
 	protected Hashtable<Integer, String>			names_teffects;
 	protected Hashtable<Integer, String>			names_titemlists;
+	protected Hashtable<Integer, String>			names_tshopitemlists;
 	protected Hashtable<Integer, String> 			names_quests;
 	protected Hashtable<Integer, String> 			names_questgroups;
 	protected Hashtable<Integer, String>			names_scenes;
@@ -144,13 +147,14 @@ public abstract class ResourceManager extends CellSetResourceManager
 	
 		item_properties = readRPGObjects(save_dir + "/item_properties/item_properties.list",	ItemProperties.class);
 		
-		tunits			= readRPGObjects(save_dir + "/objects/tunit.obj/tunit.list", 			TUnit.class);
-		titems			= readRPGObjects(save_dir + "/objects/titem.obj/titem.list", 			TItem.class);
-		tshopitems		= readRPGObjects(save_dir + "/objects/tshopitem.obj/tshopitem.list", 	TShopItem.class);
-		tavatars		= readRPGObjects(save_dir + "/objects/tavatar.obj/tavatar.list",		TAvatar.class);
-		tskills			= readRPGObjects(save_dir + "/objects/tskill.obj/tskill.list",			TSkill.class);
-		teffects		= readRPGObjects(save_dir + "/objects/teffect.obj/teffect.list",		TEffect.class);
-		titemlists		= readRPGObjects(save_dir + "/objects/titemlist.obj/titemlist.list",	TItemList.class);
+		tunits			= readTemplateObjects(TUnit.class);
+		titems			= readTemplateObjects(TItem.class);
+		tshopitems		= readTemplateObjects(TShopItem.class);
+		tavatars		= readTemplateObjects(TAvatar.class);
+		tskills			= readTemplateObjects(TSkill.class);
+		teffects		= readTemplateObjects(TEffect.class);
+		titemlists		= readTemplateObjects(TItemList.class);
+		tshopitemlists	= readTemplateObjects(TShopItemList.class);
 		
 		quests			= readRPGObjects(save_dir + "/quests/quest.list",						Quest.class);
 		questgroups		= readRPGObjects(save_dir + "/questgroups/questgroups.list",			QuestGroup.class);
@@ -314,6 +318,15 @@ public abstract class ResourceManager extends CellSetResourceManager
 		}
 		
 		return table;
+	}
+	
+	final protected <T extends RPGObject> Hashtable<Integer, T> readTemplateObjects(Class<T> type) throws Exception
+	{
+		String type_name = type.getSimpleName().toLowerCase();
+		return readRPGObjects(save_dir + 
+				"/objects/" + type_name + ".obj" + 
+				"/" + type_name + ".list", 
+				type);
 	}
 	
 	final protected <T extends RPGObject> Hashtable<Integer, T> readRPGObjects(String list_file, Class<T> type) throws Exception
