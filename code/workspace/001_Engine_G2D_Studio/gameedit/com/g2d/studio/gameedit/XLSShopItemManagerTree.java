@@ -1,6 +1,7 @@
 package com.g2d.studio.gameedit;
 
 import java.awt.BorderLayout;
+import java.awt.Event;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,6 +11,7 @@ import java.util.Vector;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JTabbedPane;
 
 import com.cell.rpg.RPGObject;
@@ -30,6 +32,7 @@ import com.g2d.studio.Studio.ProgressForm;
 import com.g2d.studio.gameedit.dynamic.DAvatar;
 import com.g2d.studio.gameedit.dynamic.DEffect;
 import com.g2d.studio.gameedit.dynamic.DItemList;
+import com.g2d.studio.gameedit.dynamic.DShopItemList;
 import com.g2d.studio.gameedit.entity.ObjectNode;
 import com.g2d.studio.gameedit.template.XLSItem;
 import com.g2d.studio.gameedit.template.XLSShopItem;
@@ -40,37 +43,53 @@ import com.g2d.studio.res.Res;
 import com.g2d.studio.swing.G2DWindowToolBar;
 
 @SuppressWarnings("serial")
-public class ObjectManagerTree<T extends ObjectNode<D>, D extends RPGObject> extends ManagerForm implements ActionListener
+public class XLSShopItemManagerTree extends ObjectManagerTree<XLSShopItem, TShopItem>
 {
-	final G2DWindowToolBar		toolbar	= new G2DWindowToolBar(this);
+	private JButton 				open_item_list;
+	private ObjectManagerTree<?, ?>	itemlist_form;
 	
-	final ObjectTreeView<T, D>	tree_view;
-	
-	public ObjectManagerTree(Studio studio, ProgressForm progress, Image icon, ObjectTreeView<T, D> tree_view) 
-	{
-		super(studio, progress, tree_view.getTitle(), icon);
-		this.tree_view = tree_view;
-		this.add(toolbar, BorderLayout.NORTH);
-		this.add(tree_view, BorderLayout.CENTER);
+	public XLSShopItemManagerTree(Studio studio, ProgressForm progress, Image icon, 
+			ObjectTreeView<XLSShopItem, TShopItem> tree_view) {
+		super(studio, progress, icon, tree_view);
 	}
 	
+	
+	
 	@Override
+	void initToolbars(ObjectManager manager) 
+	{
+		super.initToolbars(manager);
+		
+		open_item_list	= new JButton();
+		itemlist_form	= manager.getPageForm(DShopItemList.class);
+		toolbar.addSeparator();
+		{
+			open_item_list.setText(
+					itemlist_form.getTitle());
+			open_item_list.setToolTipText(
+					"打开\""+itemlist_form.getTitle()+"\"");
+			open_item_list.setIcon(
+					Tools.createIcon(itemlist_form.getIconImage()));
+			open_item_list.addActionListener(this);
+			
+			int dw = 200, dh = 50;
+			itemlist_form.setLocation(
+					itemlist_form.getX() + dw, 
+					itemlist_form.getY() + dh);
+			itemlist_form.setSize(
+					itemlist_form.getWidth()- dw, 
+					itemlist_form.getHeight()-dh);
+		}
+		toolbar.add(open_item_list);
+	}	
+	
+	
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == toolbar.save) {
-			try {
-				saveAll();
-			} catch (Throwable e1) {
-				e1.printStackTrace();
-			}
+		if (e.getSource() == open_item_list) {
+			itemlist_form.setVisible(true);
+		} else {
+			super.actionPerformed(e);
 		}
 	}
-
-	@Override
-	public void saveAll() throws Throwable {
-		tree_view.saveAll();
-		System.out.println(tree_view.data_type.getSimpleName() + " : save all");
-	}
 	
-	void initToolbars(ObjectManager manager) {}
-
 }

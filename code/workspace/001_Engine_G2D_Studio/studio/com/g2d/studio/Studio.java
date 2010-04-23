@@ -272,7 +272,7 @@ public class Studio extends AbstractFrame
 		{
 			frame_object_manager = new ObjectManager(this);
 			frame_object_manager.loadAll(this, progress);
-			for (ObjectManagerTree<?, ?> page : frame_object_manager.getPages()) {
+			for (ObjectManagerTree<?, ?> page : frame_object_manager.getIconPages()) {
 				JButton btn = new JButton();
 				btn.setToolTipText(page.getTitle());
 				btn.setIcon(Tools.createIcon(page.getIconImage()));

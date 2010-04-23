@@ -12,6 +12,7 @@ import javax.swing.JTree;
 import com.cell.CIO;
 import com.cell.rpg.template.TEffect;
 import com.cell.rpg.template.TItemList;
+import com.cell.rpg.template.TShopItemList;
 import com.g2d.Tools;
 import com.g2d.display.particle.Layer;
 import com.g2d.studio.gameedit.EffectEditor;
@@ -19,30 +20,32 @@ import com.g2d.studio.gameedit.EffectTreeView;
 import com.g2d.studio.gameedit.ItemListTreeView;
 import com.g2d.studio.gameedit.ObjectAdapters;
 import com.g2d.studio.gameedit.ObjectViewer;
+import com.g2d.studio.gameedit.ShopItemListTreeView;
 import com.g2d.studio.gameedit.EffectTreeView.EffectGroup;
 import com.g2d.studio.gameedit.ItemListTreeView.ItemListGroup;
+import com.g2d.studio.gameedit.ShopItemListTreeView.ShopItemListGroup;
 import com.g2d.studio.gameedit.dynamic.DynamicNode.DynamicNodeMenu;
 import com.g2d.studio.res.Res;
 
-final public class DItemList extends DynamicNode<TItemList>
+final public class DShopItemList extends DynamicNode<TShopItemList>
 {
 	private static final long serialVersionUID = 1L;
 
-	private ItemListTreeView factory;
+	private ShopItemListTreeView factory;
 	
-	public DItemList(ItemListTreeView f, String name) {
+	public DShopItemList(ShopItemListTreeView f, String name) {
 		super(f, name);
 		this.factory = f;
 	}
 	
-	public DItemList(ItemListTreeView f, TItemList effect) {
-		super(effect, Integer.parseInt(effect.id), effect.name);
+	public DShopItemList(ShopItemListTreeView f, TShopItemList data) {
+		super(data, Integer.parseInt(data.id), data.name);
 		this.factory = f;
 	}
 	
 	@Override
-	protected TItemList newData(IDynamicIDFactory<?> f, String name, Object... args) {
-		return new TItemList(getIntID(), name);
+	protected TShopItemList newData(IDynamicIDFactory<?> f, String name, Object... args) {
+		return new TShopItemList(getIntID(), name);
 	}
 	
 	@Override
@@ -62,24 +65,24 @@ final public class DItemList extends DynamicNode<TItemList>
 	
 	@Override
 	public void onRightClicked(JTree tree, MouseEvent e) {
-		new ItemListMenu().show(tree, e.getX(), e.getY());
+		new ShopItemListMenu().show(tree, e.getX(), e.getY());
 	}
 	
 	@Override
 	public ObjectViewer<?> getEditComponent() {
 		if (edit_component == null) {
-			edit_component = new ItemListViewer();
+			edit_component = new ShopItemListViewer();
 		}
 		return edit_component;
 	}
 	
 //	----------------------------------------------------------------------------------------------------------------------
-	public class ItemListMenu extends DynamicNodeMenu
+	public class ShopItemListMenu extends DynamicNodeMenu
 	{
 		protected JMenuItem 		clone	= new JMenuItem("复制");
 		
-		public ItemListMenu() {
-			super(DItemList.this);
+		public ShopItemListMenu() {
+			super(DShopItemList.this);
 			super.add(clone);
 			super.remove(delete);
 			super.add(delete);
@@ -90,10 +93,10 @@ final public class DItemList extends DynamicNode<TItemList>
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() == clone) {
-				if (node.getParent() instanceof ItemListGroup) {
-					ItemListGroup	root	= (ItemListGroup)node.getParent();
-					TItemList		src		= CIO.cloneObject(DItemList.this.getData());
-					DItemList		effect	= new DItemList(factory, src.name+" Copy");
+				if (node.getParent() instanceof ShopItemListGroup) {
+					ShopItemListGroup	root	= (ShopItemListGroup)node.getParent();
+					TShopItemList		src		= CIO.cloneObject(DShopItemList.this.getData());
+					DShopItemList		effect	= new DShopItemList(factory, src.name+" Copy");
 					factory.addNode(root, effect);
 				}
 			} 
@@ -104,12 +107,12 @@ final public class DItemList extends DynamicNode<TItemList>
 	}
 	
 	
-	public class ItemListViewer extends ObjectViewer<DItemList>
+	public class ShopItemListViewer extends ObjectViewer<DShopItemList>
 	{
 		private static final long serialVersionUID = 1L;
 		
-		public ItemListViewer() {
-			super(DItemList.this, new ObjectAdapters.UnitDropItemNodeAdapter());
+		public ShopItemListViewer() {
+			super(DShopItemList.this, new ObjectAdapters.ShopItemNodeAdapter());
 		}
 		
 		@Override
