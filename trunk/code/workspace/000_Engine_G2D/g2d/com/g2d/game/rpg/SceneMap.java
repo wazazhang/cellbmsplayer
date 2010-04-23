@@ -236,7 +236,7 @@ public abstract class SceneMap extends DisplayObjectContainer implements AstarMa
 		int dy = localToGridY(srect.y + srect.height);
 		for (int y = sy; y <= dy; ++y) {
 			for (int x = sx; x <= dx; ++x) {
-				if (grid_matrix[x][y] != 0) {
+				if (testFlagBlock(getFlagValue(x, y))) {
 					Rectangle rect = new Rectangle(x * gridW, y * gridH, gridW,
 							gridH);
 					if (shape instanceof Rectangle2D) {
