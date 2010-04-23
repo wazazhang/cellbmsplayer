@@ -18,7 +18,7 @@ import com.g2d.studio.gameedit.entity.ObjectGroup;
 import com.g2d.studio.gameedit.template.XLSTemplateNode;
 import com.g2d.studio.swing.G2DTreeNodeGroup.GroupMenu;
 
-public class ObjectTreeViewTemplate<T extends XLSTemplateNode<D>, D extends TemplateNode> 
+public class ObjectTreeViewTemplateXLS<T extends XLSTemplateNode<D>, D extends TemplateNode> 
 extends ObjectTreeView<T, D>
 {
 	private static final long serialVersionUID = 1L;
@@ -27,18 +27,20 @@ extends ObjectTreeView<T, D>
 	final public XLSColumns	xls_columns;
 	Map<String, XLSFullRow> xls_row_map;
 	
-	public ObjectTreeViewTemplate(
+	public ObjectTreeViewTemplateXLS(
 			String		title, 
 			Class<T>	node_type, 
 			Class<D>	data_type, 
-			File		list_file,
+			String		objects_dir,
 			File		xls_file,
 			ProgressForm progress) 
 	{
-		super(title, node_type, data_type, list_file);
+		super(title, node_type, data_type, ObjectManager.toListFile(objects_dir, data_type));
+		
 		this.xls_file = xls_file;
 		this.xls_row_map = new TreeMap<String, XLSFullRow>();
-		int i=0;		
+		int i=0;
+		
 		xls_columns = XLSColumns.getXLSColumns(xls_file);
 		Collection<XLSFullRow> list = XLSFullRow.getXLSRows(xls_file, XLSFullRow.class);
 		progress.setMaximum(title, list.size());
@@ -58,6 +60,9 @@ extends ObjectTreeView<T, D>
 		reload();
 		getTree().setDragEnabled(true);
 	}
+	
+	
+	
 //	-----------------------------------------------------------------------------------------------------------------------------------
 	
 	@Override
@@ -79,9 +84,9 @@ extends ObjectTreeView<T, D>
 
 		public XLSGroup(String name) {
 			super(name, 
-					ObjectTreeViewTemplate.this.list_file,
-					ObjectTreeViewTemplate.this.node_type, 
-					ObjectTreeViewTemplate.this.data_type);
+					ObjectTreeViewTemplateXLS.this.list_file,
+					ObjectTreeViewTemplateXLS.this.node_type, 
+					ObjectTreeViewTemplateXLS.this.data_type);
 		}
 		
 		protected boolean createObjectNode(String key, D data) {
@@ -116,7 +121,7 @@ extends ObjectTreeView<T, D>
 		XLSGroup root;
 		
 		public XLSGroupMenu(XLSGroup root) {
-			super(root, ObjectTreeViewTemplate.this, getTree());
+			super(root, ObjectTreeViewTemplateXLS.this, getTree());
 			this.root = root;
 		}
 		
@@ -124,7 +129,7 @@ extends ObjectTreeView<T, D>
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() == delete) {
 				if (root.getChildCount()>0) {
-					JOptionPane.showMessageDialog(ObjectTreeViewTemplate.this, "不能删除该节点，过滤器不为空！");
+					JOptionPane.showMessageDialog(ObjectTreeViewTemplateXLS.this, "不能删除该节点，过滤器不为空！");
 					return;
 				}
 			}

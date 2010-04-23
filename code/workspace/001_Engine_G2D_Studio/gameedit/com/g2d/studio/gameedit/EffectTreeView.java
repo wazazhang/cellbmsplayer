@@ -14,13 +14,13 @@ import com.g2d.studio.gameedit.entity.ObjectGroup;
 import com.g2d.studio.swing.G2DTreeNodeGroup;
 import com.g2d.studio.swing.G2DTreeNodeGroup.GroupMenu;
 
-public class EffectTreeView extends ObjectTreeViewDynamic<DEffect, TEffect>
+public class EffectTreeView extends ObjectTreeViewTemplateDynamic<DEffect, TEffect>
 {
 	private static final long serialVersionUID = 1L;
 
-	public EffectTreeView(String title, File list_file) 
+	public EffectTreeView(String title, String objects_dir) 
 	{
-		super(title, DEffect.class, TEffect.class, list_file);		
+		super(title, DEffect.class, TEffect.class, objects_dir);		
 	}
 
 	@Override

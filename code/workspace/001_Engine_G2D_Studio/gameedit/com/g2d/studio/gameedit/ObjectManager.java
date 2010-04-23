@@ -45,7 +45,7 @@ import com.g2d.studio.swing.G2DWindowToolBar;
 
 public class ObjectManager
 {
-	final public 	File		objects_dir;
+	final public 	String		objects_dir;
 	final public 	XLSColumns	player_xls_columns;
 	private			XLSColumns	unit_xls_columns;
 
@@ -56,7 +56,7 @@ public class ObjectManager
 	
 	public ObjectManager(Studio studio) 
 	{
-		this.objects_dir 		= new File(Studio.getInstance().project_save_path.getPath() + File.separatorChar +"objects");
+		this.objects_dir 		= new File(Studio.getInstance().project_save_path.getPath() + File.separatorChar +"objects").getPath();
 		this.player_xls_columns	= XLSColumns.getXLSColumns(studio.xls_tplayer);
 	}
 	
@@ -70,32 +70,30 @@ public class ObjectManager
 		// ------------ xls template ------------ //
 		{
 			// XLSUnit
-			ObjectTreeViewTemplate<XLSUnit, TUnit> view = new ObjectTreeViewTemplate<XLSUnit, TUnit>(
-					"单位模板", XLSUnit.class, TUnit.class, 
-					new File(objects_dir, "tunit.obj/tunit.list"), studio.xls_tunit, progress);
+			ObjectTreeViewTemplateXLS<XLSUnit, TUnit> view = new ObjectTreeViewTemplateXLS<XLSUnit, TUnit>(
+					"单位模板", XLSUnit.class, TUnit.class, objects_dir, studio.xls_tunit, progress);
 			ObjectManagerTree<XLSUnit, TUnit> form = new ObjectManagerTree<XLSUnit, TUnit>(
 					studio, progress, Res.icon_hd, view);
 			managers.put(view.node_type, form);
 			this.unit_xls_columns = view.xls_columns;
 		}{
 			// XLSItem
-			ObjectTreeViewTemplate<XLSItem, TItem> view = new ObjectTreeViewTemplate<XLSItem, TItem>(
-					"道具模板", XLSItem.class, TItem.class, 
-					new File(objects_dir, "titem.obj/titem.list"), studio.xls_titem, progress);
+			ObjectTreeViewTemplateXLS<XLSItem, TItem> view = new ObjectTreeViewTemplateXLS<XLSItem, TItem>(
+					"道具模板", XLSItem.class, TItem.class, objects_dir, studio.xls_titem, progress);
 			XLSItemManagerTree form = new XLSItemManagerTree(
 					studio, progress, Res.icon_res_4, view);
 			managers.put(view.node_type, form);
 		}{	
 			// XLSSkill
-			ObjectTreeViewTemplate<XLSSkill, TSkill> tree_skills_view = new SkillTreeView(
-					"技能模板", new File(objects_dir, "tskill.obj/tskill.list"), studio.xls_tskill, progress);
+			ObjectTreeViewTemplateXLS<XLSSkill, TSkill> tree_skills_view = new SkillTreeView(
+					"技能模板", objects_dir, studio.xls_tskill, progress);
 			ObjectManagerTree<XLSSkill, TSkill>	form_skills_view = new ObjectManagerTree<XLSSkill, TSkill>(
 					studio, progress, Res.icon_res_3, tree_skills_view);
 			managers.put(tree_skills_view.node_type, form_skills_view);
 		}{	
 			// XLSShopItem
 			ShopItemTreeView tree_shopitems_view = new ShopItemTreeView(
-					"商品模板", new File(objects_dir, "tshopitem.obj/tshopitem.list"), studio.xls_tshopitem, progress);
+					"商品模板", objects_dir, studio.xls_tshopitem, progress);
 			XLSShopItemManagerTree form_shopitems_view = new XLSShopItemManagerTree(
 					studio, progress, Res.icon_res_7, tree_shopitems_view);
 			managers.put(tree_shopitems_view.node_type, form_shopitems_view);
@@ -103,29 +101,29 @@ public class ObjectManager
 		// ------------ dynamic ------------ //
 		}{
 			// DAvatar
-			ObjectTreeViewDynamic<DAvatar, TAvatar> tree_avatars_view = new AvatarTreeView(
-					"AVATAR", new File(objects_dir, "tavatar.obj/tavatar.list"));
+			ObjectTreeViewTemplateDynamic<DAvatar, TAvatar> tree_avatars_view = new AvatarTreeView(
+					"AVATAR", objects_dir);
 			ObjectManagerTree<DAvatar, TAvatar> form_avatars_view = new ObjectManagerTree<DAvatar, TAvatar>(
 					studio, progress, Res.icon_res_2, tree_avatars_view);
 			managers.put(tree_avatars_view.node_type, form_avatars_view);
 		}{	
 			// DEffect
-			ObjectTreeViewDynamic<DEffect, TEffect>	tree_effects_view = new EffectTreeView(
-					"魔法效果/特效", new File(objects_dir, "teffect.obj/teffect.list"));
+			ObjectTreeViewTemplateDynamic<DEffect, TEffect>	tree_effects_view = new EffectTreeView(
+					"魔法效果/特效", objects_dir);
 			ObjectManagerTree<DEffect, TEffect>	form_effects_view = new ObjectManagerTree<DEffect, TEffect>(
 					studio, progress, Res.icon_res_8, tree_effects_view);
 			managers.put(tree_effects_view.node_type, form_effects_view);
 		}{
 			// DItemList
-			ObjectTreeViewDynamic<DItemList, TItemList> tree_item_list_view = new ItemListTreeView(
-					"掉落道具列表", new File(objects_dir, "titemlist.obj/titemlist.list"));
+			ObjectTreeViewTemplateDynamic<DItemList, TItemList> tree_item_list_view = new ItemListTreeView(
+					"掉落道具列表", objects_dir);
 			ObjectManagerTree<DItemList, TItemList>	form_item_list_view = new ObjectManagerTree<DItemList, TItemList>(
 					studio, progress, Res.icon_res_9, tree_item_list_view);
 			managers.put(tree_item_list_view.node_type, form_item_list_view);
 		}{
 			// DShopItemList
-			ObjectTreeViewDynamic<DShopItemList, TShopItemList> tree = new ShopItemListTreeView(
-					"售卖商品列表", new File(objects_dir, "tshopitemlist.obj/tshopitemlist.list"));
+			ObjectTreeViewTemplateDynamic<DShopItemList, TShopItemList> tree = new ShopItemListTreeView(
+					"售卖商品列表", objects_dir);
 			ObjectManagerTree<DShopItemList, TShopItemList>	form = new ObjectManagerTree<DShopItemList, TShopItemList>(
 					studio, progress, Res.icon_res_9, tree);
 			managers.put(tree.node_type, form);
@@ -135,7 +133,12 @@ public class ObjectManager
 			page.initToolbars(this);
 		}
 	}
-
+	
+	static File toListFile(String objects_dir, Class<?>	data_type) {
+		String name = data_type.getSimpleName().toLowerCase();
+		return new File(objects_dir, name + ".obj/" + name + ".list");
+	}
+	
 	/**
 	 * 得到显示在StudioToolbar上的控件
 	 * @return

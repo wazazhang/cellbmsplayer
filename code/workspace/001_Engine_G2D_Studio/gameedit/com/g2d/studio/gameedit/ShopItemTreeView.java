@@ -11,15 +11,15 @@ import com.g2d.studio.gameedit.template.XLSSkill;
 import com.g2d.studio.swing.G2DTree;
 
 @SuppressWarnings("serial")
-public class ShopItemTreeView extends ObjectTreeViewTemplate<XLSShopItem, TShopItem>
+public class ShopItemTreeView extends ObjectTreeViewTemplateXLS<XLSShopItem, TShopItem>
 {
 	
 	public ShopItemTreeView(
 			String		title, 
-			File		list_file,
+			String		objects_dir,
 			File		xls_file,
 			ProgressForm progress) {
-		super(title, XLSShopItem.class, TShopItem.class, list_file, xls_file, progress);
+		super(title, XLSShopItem.class, TShopItem.class, objects_dir, xls_file, progress);
 	}
 
 	@Override

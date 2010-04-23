@@ -18,13 +18,13 @@ import com.g2d.studio.gameedit.entity.ObjectGroup;
 import com.g2d.studio.swing.G2DTreeNodeGroup;
 import com.g2d.studio.swing.G2DTreeNodeGroup.GroupMenu;
 
-public class ShopItemListTreeView extends ObjectTreeViewDynamic<DShopItemList, TShopItemList>
+public class ShopItemListTreeView extends ObjectTreeViewTemplateDynamic<DShopItemList, TShopItemList>
 {
 	private static final long serialVersionUID = 1L;
 
-	public ShopItemListTreeView(String title, File list_file) 
+	public ShopItemListTreeView(String title, String objects_dir) 
 	{
-		super(title, DShopItemList.class, TShopItemList.class, list_file);		
+		super(title, DShopItemList.class, TShopItemList.class, objects_dir);		
 	}
 
 	@Override

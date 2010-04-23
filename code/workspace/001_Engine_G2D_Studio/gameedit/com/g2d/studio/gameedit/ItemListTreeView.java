@@ -16,13 +16,13 @@ import com.g2d.studio.gameedit.entity.ObjectGroup;
 import com.g2d.studio.swing.G2DTreeNodeGroup;
 import com.g2d.studio.swing.G2DTreeNodeGroup.GroupMenu;
 
-public class ItemListTreeView extends ObjectTreeViewDynamic<DItemList, TItemList>
+public class ItemListTreeView extends ObjectTreeViewTemplateDynamic<DItemList, TItemList>
 {
 	private static final long serialVersionUID = 1L;
 
-	public ItemListTreeView(String title, File list_file) 
+	public ItemListTreeView(String title, String objects_dir) 
 	{
-		super(title, DItemList.class, TItemList.class, list_file);		
+		super(title, DItemList.class, TItemList.class, objects_dir);		
 	}
 
 	@Override
