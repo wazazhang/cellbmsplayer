@@ -26,6 +26,7 @@ import com.cell.rpg.template.TShopItem;
 import com.cell.rpg.template.TShopItemList;
 import com.cell.rpg.template.TSkill;
 import com.cell.rpg.template.TUnit;
+import com.cell.rpg.template.TemplateNode;
 import com.cell.sound.ISound;
 import com.g2d.Tools;
 import com.g2d.cell.CellSetResource;
@@ -166,13 +167,15 @@ public abstract class ResourceManager extends CellSetResourceManager
 	{
 		names_item_properties	= readRPGObjectNames(save_dir + "/item_properties/name_item_properties.list");
 		
-		names_tunits			= readRPGObjectNames(save_dir + "/objects/tunit.obj/name_tunit.list");
-		names_titems			= readRPGObjectNames(save_dir + "/objects/titem.obj/name_titem.list");
-		names_tshopitems		= readRPGObjectNames(save_dir + "/objects/tshopitem.obj/name_tshopitem.list");
-		names_tavatars			= readRPGObjectNames(save_dir + "/objects/tavatar.obj/name_tavatar.list");
-		names_tskills			= readRPGObjectNames(save_dir + "/objects/tskill.obj/name_tskill.list");
-		names_teffects			= readRPGObjectNames(save_dir + "/objects/teffect.obj/name_teffect.list");
-		names_titemlists		= readRPGObjectNames(save_dir + "/objects/titemlist.obj/name_titemlist.list");
+		names_tunits			= readRPGObjectNames(toListFile(TUnit.class));
+		names_titems			= readRPGObjectNames(toListFile(TItem.class));
+		names_tshopitems		= readRPGObjectNames(toListFile(TShopItem.class));
+		names_tavatars			= readRPGObjectNames(toListFile(TAvatar.class));
+		names_tskills			= readRPGObjectNames(toListFile(TSkill.class));
+		names_teffects			= readRPGObjectNames(toListFile(TEffect.class));
+		names_titemlists		= readRPGObjectNames(toListFile(TItemList.class));
+		names_tshopitemlists	= readRPGObjectNames(toListFile(TShopItemList.class));
+		
 		names_quests			= readRPGObjectNames(save_dir + "/quests/name_quest.list");
 		names_questgroups		= readRPGObjectNames(save_dir + "/questgroups/name_questgroups.list");
 		names_scenes			= readRPGObjectNames(save_dir + "/scenes/name_scene.list");
@@ -320,13 +323,15 @@ public abstract class ResourceManager extends CellSetResourceManager
 		return table;
 	}
 	
-	final protected <T extends RPGObject> Hashtable<Integer, T> readTemplateObjects(Class<T> type) throws Exception
+	final public <T extends RPGObject>  String toListFile(Class<T> type) 
 	{
 		String type_name = type.getSimpleName().toLowerCase();
-		return readRPGObjects(save_dir + 
-				"/objects/" + type_name + ".obj" + 
-				"/" + type_name + ".list", 
-				type);
+		return save_dir + "/objects/" + type_name + ".obj" + "/" + type_name + ".list";
+	}
+	
+	final protected <T extends RPGObject> Hashtable<Integer, T> readTemplateObjects(Class<T> type) throws Exception
+	{
+		return readRPGObjects(toListFile(type), type);
 	}
 	
 	final protected <T extends RPGObject> Hashtable<Integer, T> readRPGObjects(String list_file, Class<T> type) throws Exception
