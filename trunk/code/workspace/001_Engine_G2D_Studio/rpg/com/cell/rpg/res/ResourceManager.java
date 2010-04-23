@@ -472,6 +472,10 @@ public abstract class ResourceManager extends CellSetResourceManager
 	public TItemList getItemList(int id) {
 		return titemlists.get(id);
 	}
+	public TShopItemList getShopItemList(int id) {
+		return tshopitemlists.get(id);
+	}
+	
 	
 	public String getTUnitName(int id) {
 		return names_tunits.get(id);
@@ -494,12 +498,17 @@ public abstract class ResourceManager extends CellSetResourceManager
 	public String getTItemListName(int id) {
 		return names_titemlists.get(id);
 	}
-	
+	public String getTShopItemListName(int id) {
+		return names_tshopitemlists.get(id);
+	}
 	
 	public Vector<TItemList> getAllItemList() {
 		return new Vector<TItemList>(titemlists.values());
 	}
-
+	public Vector<TShopItemList> getAllShopItemList() {
+		return new Vector<TShopItemList>(tshopitemlists.values());
+	}
+	
 //	--------------------------------------------------------------------------------------------------------------------
 //	ItemProperties
 //	--------------------------------------------------------------------------------------------------------------------
