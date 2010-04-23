@@ -10,14 +10,18 @@ import com.cell.rpg.template.TShopItemList;
 import com.cell.rpg.template.TItemList.UnitDropItems;
 import com.cell.rpg.template.TItemList.UnitDropItems.DropItemNode;
 import com.cell.rpg.template.TItemList.UnitDropItems.DropItems;
+import com.cell.rpg.template.TShopItemList.ShopItem;
 import com.cell.rpg.template.ability.UnitBattleTeam;
 import com.cell.rpg.template.ability.UnitItemDrop;
+import com.cell.rpg.template.ability.UnitItemSell;
 import com.g2d.editor.property.ObjectPropertyEdit;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.dynamic.DItemList;
+import com.g2d.studio.gameedit.dynamic.DShopItemList;
 import com.g2d.studio.gameedit.template.XLSItem;
+import com.g2d.studio.gameedit.template.XLSShopItem;
 import com.g2d.studio.gameedit.template.XLSUnit;
 import com.g2d.studio.item.ItemPropertiesNode;
 import com.g2d.studio.item.ItemPropertiesSelectCellEdit;
@@ -179,6 +183,56 @@ public class ObjectAdapters
 		}
 	}
 	
+	public static class ShopItemListIDSelectAdapter extends AbilityCellEditAdapter<UnitItemSell>
+	{
+		@Override
+		public Class<UnitItemSell> getType() {
+			return UnitItemSell.class;
+		}
+		
+		@Override
+		public PropertyCellEdit<?> getCellEdit(ObjectPropertyEdit owner, Object editObject, Object fieldValue, Field field) {
+			if (field.getName().equals("shopitem_list_id")) {
+				ObjectSelectCellEditInteger<DShopItemList> item_list = 
+					new ObjectSelectCellEditInteger<DShopItemList>(DShopItemList.class);
+				if (item_list!=null) {
+					item_list.setSelectedItem(fieldValue);
+					return item_list;
+				}
+			}
+			return null;
+		}
+		
+		@Override
+		public Component getCellRender(ObjectPropertyEdit owner, Object editObject,
+				Object fieldValue, Field field, DefaultTableCellRenderer src) {
+			if (field.getName().equals("shopitem_list_id")) {
+				DShopItemList item_list = Studio.getInstance().getObjectManager().getObject(
+						DShopItemList.class,
+						(Integer)fieldValue);
+				if (src != null && item_list != null) {
+					src.setText(item_list.getData().name);
+				}
+				return src;
+			}
+			return null;
+		}
+		
+		@Override
+		public String getCellText(Object editObject, Field field, Object fieldSrcValue) {
+			if (field.getName().equals("shopitem_list_id")) {
+				DShopItemList item_list = Studio.getInstance().getObjectManager().getObject(
+						DShopItemList.class,
+						(Integer)fieldSrcValue);
+				if (item_list!=null) {
+					return item_list.getData().name;
+				}
+			}
+			return null;
+		}
+	}
+	
+	
 
 	public static class ItemPropertiesSelectAdapter extends RPGObjectAdapter<TItem>
 	{
@@ -227,11 +281,11 @@ public class ObjectAdapters
 	 * 编辑出售的商品
 	 * @author WAZA
 	 */
-	public static class ShopItemNodeAdapter extends RPGObjectAdapter<TShopItemList>
+	public static class ShopItemNodeAdapter extends AbilityCellEditAdapter<ShopItem>
 	{
 		@Override
-		public Class<TShopItemList> getType() {
-			return TShopItemList.class;
+		public Class<ShopItem> getType() {
+			return ShopItem.class;
 		}
 		
 		@Override
@@ -239,24 +293,25 @@ public class ObjectAdapters
 				ObjectPropertyEdit owner,
 				Object editObject, 
 				Object fieldValue, Field field) {
-			if (field.getName().equals("shopitems_id")){
-			
+			if (field.getName().equals("shop_item_id")){
+				ObjectSelectCellEditInteger<XLSShopItem> item = new ObjectSelectCellEditInteger<XLSShopItem>(XLSShopItem.class);
+				if (item!=null) {
+					item.setSelectedItem(fieldValue);
+					return item;
+				}
 			}
 			return null;
 		}
 		
 		@Override
 		public Component getCellRender(ObjectPropertyEdit owner, Object editObject, Object fieldValue, Field field, DefaultTableCellRenderer src) {
-			if (field.getName().equals("shopitems_id")){
-				
-			}
-			return null;
-		}
-		
-		@Override
-		public String getCellText(Object editObject, Field field, Object fieldSrcValue) {
-			if (field.getName().equals("shopitems_id")){
-				
+			if (field.getName().equals("shop_item_id")){
+				XLSShopItem item = Studio.getInstance().getObjectManager().getObject(
+						XLSShopItem.class, 
+						(Integer)fieldValue);
+				if (item != null) {
+					src.setText(item.getName());
+				}
 			}
 			return null;
 		}
