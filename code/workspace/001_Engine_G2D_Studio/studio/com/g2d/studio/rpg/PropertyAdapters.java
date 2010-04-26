@@ -13,9 +13,13 @@ import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.ObjectSelectCellEditInteger;
+import com.g2d.studio.gameedit.dynamic.DItemList;
+import com.g2d.studio.gameedit.entity.ObjectNode;
 import com.g2d.studio.gameedit.template.XLSItem;
 import com.g2d.studio.gameedit.template.XLSTemplateNode;
 import com.g2d.studio.gameedit.template.XLSUnit;
+import com.g2d.studio.quest.QuestNode;
+import com.g2d.studio.quest.QuestSelectCellEdit;
 
 public class PropertyAdapters
 {
@@ -43,6 +47,12 @@ public class PropertyAdapters
 						return new ObjectSelectCellEditInteger<XLSUnit>(XLSUnit.class, fieldValue);
 					case ITEM_ID: 
 						return new ObjectSelectCellEditInteger<XLSItem>(XLSItem.class, fieldValue);
+					case ITEM_LIST_ID:
+						return new ObjectSelectCellEditInteger<DItemList>(DItemList.class, fieldValue);
+					case QUEST_ID:
+						QuestSelectCellEdit dialog = new QuestSelectCellEdit(owner.getComponent(), false);
+						dialog.showDialog();
+						return dialog;
 					}
 				}
 			}catch(Exception err){
@@ -60,15 +70,42 @@ public class PropertyAdapters
 			PropertyAdapter adapter = field.getAnnotation(PropertyAdapter.class);
 			try {
 				if (adapter != null) {
-					Class<? extends XLSTemplateNode<?>> type = null;
 					switch (adapter.value()) {
-					case UNIT_ID: type = XLSUnit.class; break;
-					case ITEM_ID: type = XLSItem.class; break;
+					case UNIT_ID: {
+						XLSTemplateNode<?> node = Studio.getInstance().getObjectManager().getObject(
+								XLSUnit.class, (Integer) fieldValue);
+						if (node != null) {
+							src.setText(node.getName());
+							src.setIcon(node.getIcon(false));
+						}
+						break;
 					}
-					XLSTemplateNode<?> node = Studio.getInstance().getObjectManager().getObject(type, (Integer) fieldValue);
-					if (node != null) {
-						src.setText(node.getName());
-						src.setIcon(node.getIcon(false));
+					case ITEM_ID: {
+						XLSTemplateNode<?> node = Studio.getInstance().getObjectManager().getObject(
+								XLSItem.class, (Integer) fieldValue);
+						if (node != null) {
+							src.setText(node.getName());
+							src.setIcon(node.getIcon(false));
+						}
+						break;
+					}
+					case ITEM_LIST_ID: {
+						DItemList node = Studio.getInstance().getObjectManager().getObject(
+								DItemList.class, (Integer) fieldValue);
+						if (node != null) {
+							src.setText(node.getName());
+							src.setIcon(node.getIcon(false));
+						}
+						break;
+					}
+					case QUEST_ID: {
+						QuestNode node = Studio.getInstance().getQuestManager().getQuest((Integer) fieldValue);
+						if (node != null) {
+							src.setText(node.getName());
+							src.setIcon(node.getIcon(false));
+						}
+						break;
+					}
 					}
 				}
 			} catch (Exception err) {

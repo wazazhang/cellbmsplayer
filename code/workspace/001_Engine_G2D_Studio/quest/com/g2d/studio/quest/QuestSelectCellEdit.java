@@ -9,6 +9,7 @@ import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.swing.G2DListSelectDialog;
 
+@SuppressWarnings("serial")
 public class QuestSelectCellEdit extends G2DListSelectDialog<QuestNode> implements PropertyCellEdit<Integer>
 {
 	JLabel cell_edit_component = new JLabel();

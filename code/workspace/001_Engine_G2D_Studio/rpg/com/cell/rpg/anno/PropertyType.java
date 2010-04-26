@@ -5,6 +5,8 @@ public enum PropertyType
 
 	UNIT_ID,
 	ITEM_ID,
+	QUEST_ID,
+	ITEM_LIST_ID,
 	;
 	
 	

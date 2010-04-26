@@ -6,6 +6,7 @@ import com.cell.rpg.scene.ability.ActorBank;
 import com.cell.rpg.scene.ability.ActorDropItem;
 import com.cell.rpg.scene.ability.ActorJobTrainer;
 import com.cell.rpg.scene.ability.ActorPathStart;
+import com.cell.rpg.scene.ability.ActorQuestDropItem;
 import com.cell.rpg.scene.ability.ActorSellItem;
 import com.cell.rpg.scene.ability.ActorSkillTrainer;
 import com.cell.rpg.scene.ability.ActorTalk;
@@ -42,9 +43,10 @@ public class Actor extends SceneSprite
 				ActorJobTrainer.class,
 				ActorSkillTrainer.class,
 				ActorTransportCraft.class,
-				// path
+				// other
 				ActorDropItem.class,
 				ActorPathStart.class,
+				ActorQuestDropItem.class,
 			};
 	}
 }
