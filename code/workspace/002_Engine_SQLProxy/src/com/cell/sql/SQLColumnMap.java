@@ -10,6 +10,7 @@ import java.util.Collection;
  * @author WAZA
  * @param <K>
  * @param <V>
+ * @see SQLColumnManager
  */
 public interface SQLColumnMap<K, V>
 {
