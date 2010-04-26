@@ -1,6 +1,7 @@
 package com.cell.rpg.template;
 
 import com.cell.rpg.display.UnitNode;
+import com.cell.rpg.template.ability.QuestItemDrop;
 import com.cell.rpg.template.ability.UnitBattleTeam;
 import com.cell.rpg.template.ability.UnitItemDrop;
 import com.cell.rpg.template.ability.UnitItemSell;
@@ -31,6 +32,7 @@ public class TUnit extends TemplateNode
 		return new Class<?>[]{
 				UnitBattleTeam.class,
 				UnitItemDrop.class,
+				QuestItemDrop.class,
 				UnitItemSell.class,
 		};
 	}
