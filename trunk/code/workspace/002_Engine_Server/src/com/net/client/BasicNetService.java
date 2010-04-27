@@ -3,6 +3,7 @@ package com.net.client;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -231,8 +232,8 @@ public abstract class BasicNetService
 	final private ConcurrentHashMap<Integer, Request> 
 									WaitingListeners 		= new ConcurrentHashMap<Integer, Request>();
 
-	final private ConcurrentHashMap<Class<?>, ArrayList<NotifyListener<?>>> 
-									NotifyListeners 		= new ConcurrentHashMap<Class<?>, ArrayList<NotifyListener<?>>>();
+	final private ConcurrentHashMap<Class<?>, Vector<NotifyListener<?>>> 
+									NotifyListeners 		= new ConcurrentHashMap<Class<?>, Vector<NotifyListener<?>>>();
 	
 	final private ConcurrentLinkedQueue<MessageHeader>
 									UnhandledMessages 		= new ConcurrentLinkedQueue<MessageHeader>();
@@ -411,9 +412,9 @@ public abstract class BasicNetService
 	final public void registNotifyListener(Class<? extends MessageHeader> message_type, NotifyListener<?> listener) {
 		notifylock.lock();
 		try{
-			ArrayList<NotifyListener<?>> listeners = NotifyListeners.get(message_type);
+			Vector<NotifyListener<?>> listeners = NotifyListeners.get(message_type);
 			if (listeners == null) {
-				listeners = new ArrayList<NotifyListener<?>>();
+				listeners = new Vector<NotifyListener<?>>();
 				NotifyListeners.put(message_type, listeners);
 			}
 			listeners.add(listener);
@@ -442,7 +443,7 @@ public abstract class BasicNetService
 	final public void unregistNotifyListener(Class<? extends MessageHeader> message_type, NotifyListener<?> listener) {
 		notifylock.lock();
 		try {
-			ArrayList<NotifyListener<?>> listeners = NotifyListeners.get(message_type);
+			Vector<NotifyListener<?>> listeners = NotifyListeners.get(message_type);
 			if (listeners != null) {
 				listeners.remove(listener);
 			}
@@ -513,18 +514,20 @@ public abstract class BasicNetService
 	@SuppressWarnings("unchecked")
 	final private boolean tryReceivedNotify(MessageHeader message) 
 	{
+		Vector<NotifyListener<?>> notifys = null;
 		notifylock.lock();
 		try{
-			ArrayList<NotifyListener<?>> notifys = NotifyListeners.get(message.getClass());
-			if (notifys != null && !notifys.isEmpty()){
-	    		for (NotifyListener notify : notifys) {
-	    			notify.notify(this, message);
-	    		}
-	    		return true;
-	    	}
+			notifys = NotifyListeners.get(message.getClass());
     	} finally {
 			notifylock.unlock();
 		}
+    	if (notifys != null && !notifys.isEmpty()){
+    		for (NotifyListener notify : notifys) {
+    			notify.notify(this, message);
+    		}
+    		return true;
+    	}
+    	
     	return false;
 	}
 	
