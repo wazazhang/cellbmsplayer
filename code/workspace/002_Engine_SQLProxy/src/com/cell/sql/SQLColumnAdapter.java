@@ -240,8 +240,9 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 			
 			ResultSet result = statement.executeQuery(sb.toString());
 			try {
-				result.next();
-				return fromResult(row, result);
+				if (result.next()) {
+					return fromResult(row, result);
+				}
 			} finally {
 				result.close();
 			}
