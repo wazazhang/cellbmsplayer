@@ -414,12 +414,14 @@ public class CUtil extends CObject
 	}
 	
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
 	public static final int[] toIntArray(Collection<Integer> array) {
 		if (array == null) {
 			return null;
 		}
 		return toIntArray(array.toArray(new Integer[array.size()]));
 	}
+	
 	public static final int[] toIntArray(Integer[] array) {
 		if (array == null) {
 			return null;
@@ -440,6 +442,16 @@ public class CUtil extends CObject
 		}
 		return ints;
 	}
+	
+	public static final ArrayList<Integer> toIntCollection(int ... array) {
+		ArrayList<Integer> ret = new ArrayList<Integer>(array.length);
+		for (int i : array) {
+			ret.add(i);
+		}
+		return ret;
+	}
+	
+	
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	public static int[] arrayAddElement(int[] array, int e, boolean isDuplicate){
