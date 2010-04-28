@@ -32,7 +32,7 @@ import javax.swing.ListCellRenderer;
 
 import com.cell.CObject;
 import com.cell.CUtil;
-import com.cell.game.CSprite;
+import com.cell.gfx.game.CSprite;
 import com.cell.rpg.scene.Actor;
 import com.cell.rpg.scene.Region;
 import com.cell.rpg.scene.SceneUnit;

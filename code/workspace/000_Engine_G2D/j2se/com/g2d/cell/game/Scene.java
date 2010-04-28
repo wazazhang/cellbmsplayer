@@ -11,10 +11,10 @@ import java.util.Collection;
 import java.util.Vector;
 
 import com.cell.CMath;
-import com.cell.game.CCD;
-import com.cell.game.CSprite;
-import com.cell.game.CWayPoint;
 import com.cell.game.ai.pathfind.AstarManhattanMap;
+import com.cell.gfx.game.CCD;
+import com.cell.gfx.game.CSprite;
+import com.cell.gfx.game.CWayPoint;
 import com.cell.j2se.CGraphics;
 import com.g2d.Tools;
 import com.g2d.Version;

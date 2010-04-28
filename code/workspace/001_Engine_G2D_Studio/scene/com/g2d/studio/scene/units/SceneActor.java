@@ -13,7 +13,7 @@ import java.util.Vector;
 import javax.swing.ImageIcon;
 import javax.swing.JList;
 
-import com.cell.game.CSprite;
+import com.cell.gfx.game.CSprite;
 import com.cell.rpg.quest.ability.QuestAccepter;
 import com.cell.rpg.quest.ability.QuestPublisher;
 import com.cell.rpg.scene.Actor;

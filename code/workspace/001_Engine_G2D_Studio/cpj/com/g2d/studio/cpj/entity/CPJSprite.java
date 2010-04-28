@@ -4,8 +4,8 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
-import com.cell.game.CCD;
-import com.cell.game.CSprite;
+import com.cell.gfx.game.CCD;
+import com.cell.gfx.game.CSprite;
 import com.cell.j2se.CGraphics;
 import com.g2d.Tools;
 import com.g2d.cell.CellSprite;

@@ -23,10 +23,10 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import com.cell.game.CCD;
-import com.cell.game.CSprite;
 import com.cell.gfx.IImage;
 import com.cell.gfx.IImages;
+import com.cell.gfx.game.CCD;
+import com.cell.gfx.game.CSprite;
 import com.cell.j2se.CGraphics;
 import com.g2d.Tools;
 import com.g2d.cell.CellSetResource.ImagesSet;

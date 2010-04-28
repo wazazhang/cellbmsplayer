@@ -23,16 +23,16 @@ import java.util.concurrent.TimeUnit;
 
 import com.cell.CIO;
 import com.cell.CUtil;
-import com.cell.game.CAnimates;
-import com.cell.game.CCD;
-import com.cell.game.CCollides;
-import com.cell.game.CMap;
-import com.cell.game.CSprite;
-import com.cell.game.CWayPoint;
 
 import com.cell.gfx.IGraphics;
 import com.cell.gfx.IImage;
 import com.cell.gfx.IImages;
+import com.cell.gfx.game.CAnimates;
+import com.cell.gfx.game.CCD;
+import com.cell.gfx.game.CCollides;
+import com.cell.gfx.game.CMap;
+import com.cell.gfx.game.CSprite;
+import com.cell.gfx.game.CWayPoint;
 import com.cell.io.TextDeserialize;
 import com.cell.j2se.CGraphics;
 import com.cell.j2se.CImage;
