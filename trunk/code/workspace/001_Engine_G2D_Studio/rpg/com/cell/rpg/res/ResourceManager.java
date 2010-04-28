@@ -7,8 +7,10 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.cell.CIO;
+import com.cell.CObject;
 import com.cell.CUtil;
 import com.cell.gfx.IImage;
+import com.cell.j2se.CStorage;
 import com.cell.rpg.RPGObject;
 import com.cell.rpg.io.RPGObjectMap;
 import com.cell.rpg.item.ItemProperties;
@@ -620,6 +622,9 @@ public abstract class ResourceManager extends CellSetResourceManager
 //		return null;
 //	}
 	
-
+	public static void main(String[] args)
+	{
+		System.out.println(CIO.readAllText("http://game.lordol.com/eatworld/project.g2d.save/questgroups/questgroups.list"));
+	}
 	
 }
