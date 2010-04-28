@@ -12,7 +12,7 @@ import java.util.Vector;
 import javax.swing.ImageIcon;
 import javax.swing.JList;
 
-import com.cell.game.CSprite;
+import com.cell.gfx.game.CSprite;
 import com.cell.rpg.scene.Immutable;
 import com.g2d.cell.CellSetResource;
 import com.g2d.cell.CellSetResource.SpriteSet;
