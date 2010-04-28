@@ -99,7 +99,7 @@ public class HtmlPan extends JPanel implements HyperlinkListener, Runnable
 				try {
 //					pane.setPage(e.getURL());
 					System.out.println("open : " + e.getURL().toString());
-					AScreen.GfxAdapter.openBrowser(e.getURL().toString());
+					AScreen.getGfxAdapter().openBrowser(e.getURL().toString());
 				} catch (Throwable t) {
 					t.printStackTrace();
 				}

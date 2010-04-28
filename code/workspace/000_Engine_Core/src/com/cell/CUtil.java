@@ -2243,7 +2243,7 @@ public class CUtil extends CObject
 	 */
 	public static final int getRandomEqual(int min, int max)
 	{
-		return (max-min)==0?max:(Math.abs(Random.nextInt() % (max-min+1)) + min);
+		return (max-min)==0?max:(Math.abs(getRandom().nextInt() % (max-min+1)) + min);
 	}
 	
 	/** Get a random number in the specified range

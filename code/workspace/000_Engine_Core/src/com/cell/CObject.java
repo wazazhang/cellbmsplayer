@@ -236,13 +236,13 @@ public class CObject
 }
 //	-------------------------------------------------------------------------------------------------------------------------
 
-	
-	static public IStorage 		Storage			= new NullStorage();
-	static public IAppBridge	AppBridge		= new NullAppBridge();
-	static public Random 		Random 			= new Random();
 	static public String		ProductVersion	= "0.0.0";
 	static public String		ENCODING		= "UTF-8";
-	static public  Locale		CurLocale		= Locale.getDefault();
+	
+	static IStorage 	Storage			= new NullStorage();
+	static IAppBridge	AppBridge		= new NullAppBridge();
+	static Random 		Random 			= new Random();
+	static Locale		CurLocale		= Locale.getDefault();
 	
 	static private String 		DateFormat 		= "YYYY-MM-DD hh:mm:ss";
 	static private String[]		DateFormats 	= new String[] {"YYYY", "MM", "DD", "W", "hh", "mm", "ss", };
@@ -258,14 +258,14 @@ public class CObject
 	
 	static public void initSystem(IStorage file, IAppBridge appBridge, Locale local)
 	{
-		Storage 	= file;
-		AppBridge	= appBridge;
-		CurLocale	= local;
+		setStorage(file);
+		setAppBridge(appBridge);
+		setCurLocale(local);
 		CurDate		= new Date(System.currentTimeMillis());
 		CurCalendar	= Calendar.getInstance(local);
 		
-		if (AppBridge instanceof IGfxBridge) {
-			AScreen.GfxAdapter = (IGfxBridge)AppBridge;
+		if (getAppBridge() instanceof IGfxBridge) {
+			AScreen.setGfxAdapter((IGfxBridge)getAppBridge());
 		}
 		
 		TimeZone.getAvailableIDs();
@@ -278,10 +278,10 @@ public class CObject
 		
 		System.out.println(
 				"CObject : System initialized !\n" + 
-					"\tIStorage   = " + Storage.getClass().getName() + "\n" + 
-					"\tIAppBridge = " + AppBridge.getClass().getName() + "\n" +
-					"\tIGfxBridge = " + AScreen.GfxAdapter + "\n" +
-					"\tLocale     = " + CurLocale  + "\n" +
+					"\tIStorage   = " + getStorage().getClass().getName() + "\n" + 
+					"\tIAppBridge = " + getAppBridge().getClass().getName() + "\n" +
+					"\tIGfxBridge = " + AScreen.getGfxAdapter() + "\n" +
+					"\tLocale     = " + getCurLocale()  + "\n" +
 					"");
 		
 	}
@@ -378,6 +378,38 @@ public class CObject
 		String ret = hh + ":" + CUtil.intToSting(mm,10,2,"0") + ":" + CUtil.intToSting(ss,10,2,"0") ;
 
 		return ret;
+	}
+
+	public static void setStorage(IStorage storage) {
+		Storage = storage;
+	}
+
+	public static IStorage getStorage() {
+		return Storage;
+	}
+
+	public static void setAppBridge(IAppBridge appBridge) {
+		AppBridge = appBridge;
+	}
+
+	public static IAppBridge getAppBridge() {
+		return AppBridge;
+	}
+
+	public static void setRandom(Random random) {
+		Random = random;
+	}
+
+	public static Random getRandom() {
+		return Random;
+	}
+
+	public static void setCurLocale(Locale curLocale) {
+		CurLocale = curLocale;
+	}
+
+	public static Locale getCurLocale() {
+		return CurLocale;
 	}
 
 	

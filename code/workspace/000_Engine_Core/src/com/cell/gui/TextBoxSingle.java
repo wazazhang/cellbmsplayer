@@ -445,20 +445,20 @@ public class TextBoxSingle extends Item implements IInputListener
 				{
 					if(PrewCaretPosition != CaretPosition)
 					{
-			            AppBridge.setClipboardText(getSelectedText());
+			            getAppBridge().setClipboardText(getSelectedText());
 					}
 				}
 				else if(c == 3)// ctrl + c
 				{
 					if(PrewCaretPosition != CaretPosition)
 					{
-			            AppBridge.setClipboardText(getSelectedText());
+			            getAppBridge().setClipboardText(getSelectedText());
 						if(CanEdit)PrewCaretPosition = CaretPosition;
 					}
 				}
 				else if(c == 22)// ctrl + v
 				{
-	                input = AppBridge.getClipboardText();
+	                input = getAppBridge().getClipboardText();
 				}
 				else if(c == 8)// backspace
 				{

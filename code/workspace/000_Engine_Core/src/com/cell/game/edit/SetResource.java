@@ -269,7 +269,7 @@ public class SetResource
 	
 	public static SetResource startLoadingWorld(final String path, final String worldID, final WorldMaker maker){
 		SetResource res = new SetResource(path);
-		Thread thread = CObject.AppBridge.createServiceThread(new LoadingTask(res, worldID, maker));
+		Thread thread = CObject.getAppBridge().createServiceThread(new LoadingTask(res, worldID, maker));
 		thread.start();
 		return res;
 	}
@@ -434,7 +434,7 @@ public class SetResource
 		}
 		
 		if (stuff==null){
-			IImage image = AScreen.GfxAdapter.createImage(new ByteArrayInputStream(loadRes("/set/"+img.File+".png")));
+			IImage image = AScreen.getGfxAdapter().createImage(new ByteArrayInputStream(loadRes("/set/"+img.File+".png")));
 			stuff = new CImages();
 			byte[] data = loadRes("/set/"+img.File+".ts");
 			SetInput.createImagesFromSet(data, image, stuff);
@@ -729,7 +729,7 @@ public class SetResource
 		
 		m_IsDataBuffer = true;
 		
-		Thread t = CObject.AppBridge.createServiceThread(
+		Thread t = CObject.getAppBridge().createServiceThread(
 		new Runnable()
 		{
 			public void run()

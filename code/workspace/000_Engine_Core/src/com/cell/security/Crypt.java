@@ -25,7 +25,7 @@ public class Crypt
 	static public String encrypt(String txt, String crykey) 
 	{
 		//String	encrypt_key = "a500d08a7f6f5a26e0b9db61c70a83b9"; 
-		String	encrypt_key = MD5.getMD5((Math.abs(CObject.Random.nextInt() % 32000)) + "");
+		String	encrypt_key = MD5.getMD5((Math.abs(CObject.getRandom().nextInt() % 32000)) + "");
 		int 	ctr 		= 0;
 		String	tmp			= "";
 		for (int i = 0; i < txt.length(); i++){

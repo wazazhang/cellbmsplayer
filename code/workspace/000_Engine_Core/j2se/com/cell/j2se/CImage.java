@@ -41,7 +41,7 @@ public class CImage implements IImage
 	public CImage(String file) 
 	{
 		try{
-			m_image = createBuffer(ImageIO.read(CObject.AppBridge.getResource(file)));
+			m_image = createBuffer(ImageIO.read(CObject.getAppBridge().getResource(file)));
 		}catch(Exception err){
 			err.printStackTrace();
 			System.err.println("CImage.<init> :  File="+file+" Failed !");

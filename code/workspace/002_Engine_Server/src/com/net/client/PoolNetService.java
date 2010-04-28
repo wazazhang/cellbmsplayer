@@ -47,7 +47,7 @@ public class PoolNetService extends BasicNetService
 	private ServerSession getSession() {
 		session_lock.lock();
 		try{
-			int start = Math.abs(CUtil.Random.nextInt() % sessions.length);
+			int start = Math.abs(CUtil.getRandom().nextInt() % sessions.length);
 			for (int i=0; i<sessions.length; i++) {
 				int id = (start + i ) % sessions.length;
 				if (sessions[id] != null) {
