@@ -58,7 +58,7 @@ public abstract class UIComponent extends UIObject
 //	switch
 //	-----------------------------------------------------------------------------------------------------
 //	event
-	transient private	TextTip			default_tip = new TextTip();
+	transient protected	TextTip			default_tip = new TextTip();
 	transient protected Window 			root_form;
 	transient Vector<ActionListener>	action_listeners;
 	protected Action					action;
