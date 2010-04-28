@@ -58,17 +58,18 @@ public abstract class UIComponent extends UIObject
 //	switch
 //	-----------------------------------------------------------------------------------------------------
 //	event
-	transient protected	TextTip			default_tip = new TextTip();
-	transient protected Window 			root_form;
-	transient Vector<ActionListener>	action_listeners;
-	protected Action					action;
+	TextTip					default_tip = new TextTip();
+	AnimateCursor			cursor;
+	Window 					root_form;
+	Vector<ActionListener>	action_listeners;
+	Action					action;
 	
 //	-----------------------------------------------------------------------------------------------------
 //	user data
 	
-	MarkedHashtable 					data_map;
-	Object								user_data;
-	public int							tag_data;
+	MarkedHashtable 		data_map;
+	Object					user_data;
+	public int				tag_data;
 	
 //	-----------------------------------------------------------------------------------------------------
 
@@ -132,9 +133,20 @@ public abstract class UIComponent extends UIObject
 		return this.custom_layout;
 	}
 	
-//	public void setCursorG2D(CursorG2D cursor) {
-//		this.cursorG2D = cursor;
-//	}
+	public void setCursor(AnimateCursor cursor) {
+		this.cursor = cursor;
+	}
+	
+	@Override
+	public Tip getTip() {
+		if (tip != null && !tip.isEmpty()) {
+			AttributedString atext = TextBuilder.buildScript(tip);
+			default_tip.setText(atext);
+			return default_tip;
+		}
+		return null;
+	}
+	
 //	-----------------------------------------------------------------------------------------------------
 
 	public boolean isFocusedComponent() {
@@ -207,16 +219,6 @@ public abstract class UIComponent extends UIObject
 		if (!enable) {
 			onDrawDisable(g);
 		}
-	}
-	
-	@Override
-	public Tip getTip() {
-		if (tip != null && !tip.isEmpty()) {
-			AttributedString atext = TextBuilder.buildScript(tip);
-			default_tip.setText(atext);
-			return default_tip;
-		}
-		return null;
 	}
 	
 //	-----------------------------------------------------------------------------------------------------
