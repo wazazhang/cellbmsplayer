@@ -28,7 +28,7 @@ public abstract class Tip extends DisplayObjectContainer
 	}
 	
 	@Override
-	protected boolean testCatchMouse(Graphics2D g) {
+	final protected boolean testCatchMouse(Graphics2D g) {
 		return false;
 	}
 	

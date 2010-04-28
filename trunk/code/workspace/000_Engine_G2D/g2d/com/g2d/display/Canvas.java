@@ -49,11 +49,11 @@ public interface Canvas
 	 */
 	public void setDefaultCursor(AnimateCursor cursor);
 	
-	/**
-	 * 设置鼠标指针
-	 * @param cursor
-	 */
-	public void setCursor(AnimateCursor cursor);
+//	/**
+//	 * 设置鼠标指针
+//	 * @param cursor
+//	 */
+//	public void setCursor(AnimateCursor cursor);
 	
 //	public CursorG2D getCursorG2D();
 	
@@ -65,17 +65,17 @@ public interface Canvas
 
 	public Font getDefaultFont();
 	
-	/**
-	 * 设置鼠标悬停
-	 * @param text
-	 */
-	public void setTip(AttributedString text) ;
-	
-	/**
-	 * 设置鼠标悬停
-	 * @param text
-	 */
-	public void setTip(String text);
+//	/**
+//	 * 设置鼠标悬停
+//	 * @param text
+//	 */
+//	public void setTip(AttributedString text) ;
+//	
+//	/**
+//	 * 设置鼠标悬停
+//	 * @param text
+//	 */
+//	public void setTip(String text);
 	
 	/**
 	 * 切换场景

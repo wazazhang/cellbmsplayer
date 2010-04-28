@@ -48,7 +48,6 @@ public class TextBoxSingle extends UIComponent implements Serializable, TextInpu
 		text				= new MultiTextLayout(true);
 		enable_key_input	= true;
 		enable_mouse_wheel	= true;
-		setCursor(AnimateCursor.TEXT_CURSOR);
 	}
 	
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException {   
@@ -83,6 +82,10 @@ public class TextBoxSingle extends UIComponent implements Serializable, TextInpu
 		this.setSize(width, height);
 	}
 	
+	@Override
+	public AnimateCursor getCursor() {
+		return AnimateCursor.TEXT_CURSOR;
+	}
 
 	@Override
 	public boolean isInput() {

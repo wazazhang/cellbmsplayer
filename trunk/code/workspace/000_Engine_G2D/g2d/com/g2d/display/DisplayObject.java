@@ -87,8 +87,11 @@ public abstract class DisplayObject extends DObject implements Comparable<Displa
 //	-------------------------------------------------------------
 //	extends 
 	
-	/**表示鼠标是否在local_bounds内*/
+	/** 表示鼠标是否在local_bounds内,
+	 * isHitMouse的快照，如果isHitMouse被重写，则该变量将无效*/
 	transient private boolean	hit_mouse;
+	
+	/** isCatchedMouse的快照，如果isCatchedMouse被重写，则该变量将无效*/
 	transient private boolean	catched_mouse;
 	
 	/**鼠标在当前对象的相对坐标*/
@@ -435,14 +438,6 @@ public abstract class DisplayObject extends DObject implements Comparable<Displa
 		return screen_rectangle.contains(x, y);
 	}
 
-	/**
-	 * 是否能被点到
-	 * @return
-	 */
-	public boolean hitTestMouse(){
-		return isHitMouse();
-	}
-	
 	/**鼠标在当前对象的相对坐标*/
 	public int getMouseX() {
 		return mouse_x;
@@ -464,12 +459,15 @@ public abstract class DisplayObject extends DObject implements Comparable<Displa
 	}
 
 	/**
-	 * 提供是否能被鼠标获取的能力
+	 * 提供是否能被鼠标获取的能力，一般情况，该方法将返回isCatchedMouse()的快照。
 	 * @param g
 	 * @return
 	 */
 	protected boolean testCatchMouse(Graphics2D g) {
-		return true;
+		if (isHitMouse() && g.hitClip(mouse_x, mouse_y, 1, 1)) {
+			return true;
+		}
+		return false;
 	}
 	
 	/**
@@ -573,8 +571,7 @@ public abstract class DisplayObject extends DObject implements Comparable<Displa
 				if (clip_local_bounds) {
 					g.clip(local_bounds);
 				}
-				boolean hit_mouse_clip = g.hitClip(mouse_x, mouse_y, 1, 1);
-				if (hit_mouse && hit_mouse_clip && testCatchMouse(g)) {
+				if (testCatchMouse(g)) {
 					catched_mouse = true;
 					getStage().setMousePickedObject(this);
 				} else {
