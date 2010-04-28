@@ -39,10 +39,13 @@ public class CWorld extends CObject
 	public CCamera 		Camera;
 	public CWayPoint[] 	WayPoints ;
 	public boolean 		isRPGView = false;
+
+	public boolean IsDebug			= false;
 	
 	//
 	public byte 	MovingFirstMapCD	= -1;
 	public byte 	MovingFirstSprCD	= -1;
+
 	
 //	public Vector Maps = new Vector(0);
 //	public Vector Cams = new Vector(0);
@@ -431,5 +434,13 @@ public class CWorld extends CObject
 			}
 		}
 	}
-
+	static public void tickTimer() {
+		AScreen.tickTimer();
+	}
+	static public void resetTimer() {
+		AScreen.resetTimer();
+	}
+	static public int getTimer() {
+		return AScreen.getTimer();
+	}
 }

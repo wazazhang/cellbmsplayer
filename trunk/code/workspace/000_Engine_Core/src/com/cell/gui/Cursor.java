@@ -177,4 +177,14 @@ public class Cursor extends CObject
 			setFormItemTip(msg);
 		}
 	}
+	
+	static public void tickTimer() {
+		AScreen.tickTimer();
+	}
+	static public void resetTimer() {
+		AScreen.resetTimer();
+	}
+	static public int getTimer() {
+		return AScreen.getTimer();
+	}
 }

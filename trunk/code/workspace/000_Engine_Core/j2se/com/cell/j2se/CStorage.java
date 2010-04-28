@@ -9,47 +9,22 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
-import com.cell.CObject;
-import com.cell.CUtil;
 import com.cell.IStorage;
+import com.cell.IStorage.IReadListener;
+
 
 public class CStorage implements IStorage
 {
-	
-//	下面是System的参数列表
-	/*
-		Key                     Meaning
-		-------------------     ------------------------------
-		"file.separator"        File separator (e.g., "/")
-		"java.class.path"       Java classpath
-		"java.class.version"    Java class version number
-		"java.home"             Java installation directory
-		"java.vendor"           Java vendor-specific string
-
-		"java.vendor.url"       Java vendor URL
-		"java.version"          Java version number
-		"line.separator"        Line separator
-		"os.arch"               Operating system architecture
-		"os.name"               Operating system name
-
-		"path.separator"        Path separator (e.g., ":")
-		"user.dir"              User's current working directory
-		"user.home"             User home directory
-		"user.name"             User account name
-	*/
-
-	
 	File rms_file;
-	
+
 	public CStorage(String gamename)
 	{
 		try
 		{
 			String usrHome = System.getProperty("user.home");
+			File home_dir = new File(usrHome);
 			
-			rms_file = new File(usrHome);
-			
-			if (rms_file.exists())
+			if (home_dir.exists())
 			{
 				rms_file = new File(usrHome + Separator + "CStorage" + Separator + gamename);
 			}

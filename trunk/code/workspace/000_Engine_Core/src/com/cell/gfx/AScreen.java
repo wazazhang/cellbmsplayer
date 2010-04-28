@@ -6,6 +6,7 @@ import java.util.Vector;
 
 import com.cell.CObject;
 import com.cell.CUtil;
+import com.cell.IAppBridge;
 
 
 /**
@@ -98,7 +99,7 @@ abstract public class AScreen extends CObject
 //	-------------------------------------------------------------------------------------------------------
 //	game refer
 	
-	//static public boolean IsActive = true;
+	static public IGfxBridge	GfxAdapter;
 	
 	/**GameOver Flag*/
 	volatile static public boolean ExitGame = false;
@@ -134,7 +135,32 @@ abstract public class AScreen extends CObject
 
 //	------------------------------------------------------------------------------------------------------	
 
-	static public int FrameImageDrawed = 0;
+	static public int 		FrameImageDrawed	= 0;
+
+	static public boolean	IsDebug				= false;
+	
+	static private int 		Timer 				= 1;
+
+	
+	/**
+	 * tick frame timer
+	 */
+	static public void tickTimer() {
+		Timer++;
+	}
+	/**
+	 * reset frame timer
+	 */
+	static public void resetTimer() {
+		Timer = 1;
+	}
+	/**
+	 * get current frame timer
+	 * @return 
+	 */
+	static public int getTimer() {
+		return Timer;
+	}
 	
 //	------------------------------------------------------------------------------------------------------	
 

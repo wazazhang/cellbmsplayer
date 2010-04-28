@@ -21,11 +21,11 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 import com.cell.CObject;
-import com.cell.CUtil;
 import com.cell.IAppBridge;
+import com.cell.gfx.IGfxBridge;
 import com.cell.gfx.IImage;
 
-public class CAppBridge implements IAppBridge
+public class CAppBridge implements IAppBridge, IGfxBridge
 {
 	public static void init()
 	{

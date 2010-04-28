@@ -10,6 +10,8 @@ import com.cell.util.MarkedHashtable;
 
 public abstract class Control extends AScreen 
 {
+
+	public boolean IsDebug			= false;
 	
 	static public int FreezeEventDelay = 10;
 	static public int FreezeEventSpeed = 1;

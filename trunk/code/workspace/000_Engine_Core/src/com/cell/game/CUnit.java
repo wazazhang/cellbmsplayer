@@ -6,6 +6,7 @@
 package com.cell.game;
 
 import com.cell.CObject;
+import com.cell.gfx.AScreen;
 
 
 /**
@@ -15,14 +16,26 @@ import com.cell.CObject;
  */
 public class CUnit extends CObject
 {
-	public CWorld world = null;
+	public CWorld world 			= null;
 
 	public boolean Visible 			= true;
 	
 	public boolean Active 			= true; 
 	
-	public int BackColor = 0xff00ff00;
+	public int BackColor 			= 0xff00ff00;
+	
+	public boolean IsDebug			= false;
 	
 	
+
+	static public void tickTimer() {
+		AScreen.tickTimer();
+	}
+	static public void resetTimer() {
+		AScreen.resetTimer();
+	}
+	static public int getTimer() {
+		return AScreen.getTimer();
+	}
 }
 

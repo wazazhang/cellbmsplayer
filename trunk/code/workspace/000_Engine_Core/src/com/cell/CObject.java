@@ -6,8 +6,10 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -21,6 +23,8 @@ import java.util.TimeZone;
 import java.util.Vector;
 
 import com.cell.exception.NotImplementedException;
+import com.cell.gfx.AScreen;
+import com.cell.gfx.IGfxBridge;
 import com.cell.gfx.IImage;
 
 
@@ -34,172 +38,251 @@ public class CObject
 {
 	static class NullStorage implements IStorage
 	{
-		public byte[] load(String name,int id) {
-			throw new NotImplementedException();
+		File rms_file;
+		
+		public NullStorage() {
+			try {
+				rms_file = File.createTempFile("null", "rms");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		public byte[] load(String name, int id) {
+			return null;
 		}
 		public int save(String name,int id, byte[] datas) {
-			throw new NotImplementedException();
+			return FILE_FAILE;
 		}
-		public int delete(String name,int id) {
-			throw new NotImplementedException();
+		public int delete(String name, int id) {
+			return FILE_FAILE;
 		}
 		public int getIdCount(String name) {
-			throw new NotImplementedException();
+			return 0; 
 		}
-		public byte[] syncReadBytesFromURL(String url, int timeOut) {
-			throw new NotImplementedException();
+
+		public byte[] syncReadBytesFromURL(String url, int timeOut)
+		{
+			URLConnection c = null;
+			InputStream is = null;
+			
+			URL Url = null;
+			try {
+				Url = new URL(url);
+			} catch (MalformedURLException e1) {
+				e1.printStackTrace();
+				return null;
+			}
+
+			try {
+				c = Url.openConnection();
+				c.setConnectTimeout(timeOut);
+				c.setReadTimeout(timeOut);
+				c.connect();
+
+				is = c.getInputStream();
+
+				int len = (int) c.getContentLength();
+				if (len > 0) {
+					int actual = 0;
+					int bytesread = 0;
+					byte[] data = new byte[len];
+					while ((bytesread != len) && (actual != -1)) {
+						actual = is.read(data, bytesread, len - bytesread);
+						bytesread += actual;
+					}
+					is.close();
+					return data;
+				}
+			} catch (IOException err){
+				err.printStackTrace();
+			} finally {
+				if (is != null) {
+					try {
+						is.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+
+			return null;
 		}
-		public boolean beginReadBytesFromURL(final String url,final IReadListener listener, final int timeOut){
-			throw new NotImplementedException();
+
+		public boolean beginReadBytesFromURL(final String url,final IReadListener listener, final int timeOut)
+		{
+			try{
+				Thread t = new Thread(new LoadTask(url, listener, timeOut));
+				t.start();
+				return true;
+			}catch(Exception err){
+				err.printStackTrace();
+				return false;
+			}
+		}
+		
+		class LoadTask implements Runnable
+		{
+			final String 		url;
+			final IReadListener	listener;
+			final int 			timeOut;
+			
+			public LoadTask(final String url,final IReadListener listener, final int timeOut)
+			{
+				this.url		= url;
+				this.listener	= listener;
+				this.timeOut	= timeOut;
+			}
+			
+			public void run()
+			{
+				byte data[] = syncReadBytesFromURL(url, timeOut);
+				if (listener != null) {
+					if (data != null) {
+						listener.notifyReadAction(IReadListener.ACTION_COMPLETE, url, data);
+					} else {
+						listener.notifyReadAction(IReadListener.ACTION_ERROR, url, data);
+					}
+				}
+			}
 		}
 	}
 	
 	static class NullAppBridge implements IAppBridge
 	{
+		final Hashtable<String, String>	Propertys = new Hashtable<String, String>();
+		final ClassLoader				m_ClassLoader;
+		final Class<?>					m_RootClass;
+		
+		public NullAppBridge() {
+			m_ClassLoader	= CObject.class.getClass().getClassLoader();
+			m_RootClass		= CObject.class.getClass();
+		}
+		
 		public Thread createTempThread() {
-			throw new NotImplementedException();
+			return new Thread("Temp-Thread");
 		}
 
 		public Thread createTempThread(Runnable run) {
-			throw new NotImplementedException();
+			return new Thread(run, "Temp-Thread");
 		}
 
 		public Thread createServiceThread() {
-			throw new NotImplementedException();
+			return new Thread("Service-Thread");
 		}
 
 		public Thread createServiceThread(Runnable run) {
-			throw new NotImplementedException();
+			return new Thread(run, "Service-Thread");
 		}
-
+		
 		public ClassLoader getClassLoader() {
-			return getClass().getClassLoader();
+			return m_ClassLoader;
 		}
 		
-		//
-		public InputStream getResource(String file) {
-			throw new NotImplementedException();
+		public InputStream	getResource(String file) 
+		{
+			InputStream is = m_ClassLoader.getResourceAsStream(file);
+			if (is == null) {
+				is = m_RootClass.getResourceAsStream(file);
+			}
+			if (is == null) {
+				is = m_RootClass.getClassLoader().getResourceAsStream(file);
+			}
+			if (is == null) {
+				is = Thread.currentThread().getContextClassLoader().getResourceAsStream(file);
+			}
+			return is;
 		}
-
+		
 		public String getAppProperty(String key) {
-			throw new NotImplementedException();
+			return Propertys.get(key);
 		}
-
-		public String setAppProperty(String key, String value) {
-			throw new NotImplementedException();
-		}
-
-//		public void addAppStateListener(IAppStateListener listener) {
-//			throw new NotImplementedException();
-//		}
-//
-//		public void removeAppStateListener(IAppStateListener listener) {
-//			throw new NotImplementedException();
-//		}
-//
-//		public Collection<IAppStateListener> getAppListeners() {
-//			throw new NotImplementedException();
-//		}
 		
-		public IImage createImage(InputStream is) {
-			throw new NotImplementedException();
-		}
-
-		public IImage createImage(int w, int h) {
-			throw new NotImplementedException();
-		}
-
-		public IImage createImage(int argb, int w, int h) {
-			throw new NotImplementedException();
-		}
-
-		public IImage createImage(String filename) {
-			throw new NotImplementedException();
+		public String setAppProperty(String key, String value) {
+			return Propertys.put(key, value);
 		}
 
 		//
-		public void setClipboardText(String str) {
-			throw new NotImplementedException();
+		public void 	setClipboardText(String str){
+			Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+	        StringSelection text = new StringSelection(str);
+	        clipboard.setContents(text,null);
 		}
-
-		public String getClipboardText() {
-			throw new NotImplementedException();
+		
+		public String 	getClipboardText(){
+			Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+			Transferable contents = clipboard.getContents(this);
+	        DataFlavor flavor = DataFlavor.stringFlavor;
+	        if(contents.isDataFlavorSupported(flavor)){
+	            try{
+	                return (String)contents.getTransferData(flavor);
+	            }catch(Exception ee){ee.printStackTrace();}    
+	        }
+	        return "";
 		}
-
+		
 		public String getMacAddr() {
-			throw new NotImplementedException();
+			try {
+				return InetAddress.getLocalHost().toString();
+			} catch (java.io.IOException e) {
+				System.err.println("IOException " + e.getMessage());
+				return System.currentTimeMillis() + "";
+			}
 		}
 
-		public int getPing(String host, int bufferSize) {
-			throw new NotImplementedException();
+		public int getPing(String host, int bufferSize){
+			return -1;
 		}
-
-		public void openBrowser(String url) {
-			throw new NotImplementedException();
-		}
-
-		public String getAppSavePath() {
-			throw new NotImplementedException();
-		}
-
-	}
+}
 //	-------------------------------------------------------------------------------------------------------------------------
 
 	
 	static public IStorage 		Storage			= new NullStorage();
 	static public IAppBridge	AppBridge		= new NullAppBridge();
-	static public boolean 		IsDebug 		= false;
 	static public Random 		Random 			= new Random();
 	static public String		ProductVersion	= "0.0.0";
 	static public String		ENCODING		= "UTF-8";
+	static public  Locale		CurLocale		= Locale.getDefault();
 	
-	static private int 			Timer 			= 1;
 	static private String 		DateFormat 		= "YYYY-MM-DD hh:mm:ss";
-	static private String[] DateFormats 		= new String[] {"YYYY", "MM", "DD", "W", "hh", "mm", "ss", };
-	static private Date			CurDate;
-	static private Calendar		CurCalendar;
-	static public	Locale		CurLocale;
+	static private String[]		DateFormats 	= new String[] {"YYYY", "MM", "DD", "W", "hh", "mm", "ss", };
+	static private Date			CurDate			= new Date(System.currentTimeMillis());
+	static private Calendar		CurCalendar		= Calendar.getInstance();
 	
 //	-------------------------------------------------------------------------------------------------------------------------
-
+	
 	static public void initSystem(IStorage file, IAppBridge appBridge)
 	{
 		initSystem(file, appBridge, Locale.getDefault());
 	}
 	
-	/**
-	 * init all system
-	 * @param file
-	 * @param appBridge
-	 */
 	static public void initSystem(IStorage file, IAppBridge appBridge, Locale local)
 	{
-		if (Storage instanceof NullStorage || AppBridge instanceof NullAppBridge)
-		{
-			Storage 		= file;
-			AppBridge	= appBridge;
-			CurLocale	= local;
-			CurDate		= new Date(System.currentTimeMillis());
-			CurCalendar	= Calendar.getInstance(local);
-			
-			TimeZone.getAvailableIDs();
-			
-			try
-			{
-				CurCalendar.setTime(CurDate);
-			}
-			catch(Exception err)
-			{
-				err.printStackTrace();
-			}
-			
-			System.out.println(
-					"CObject : System initialized !\n" + 
-						"\t" + Storage.getClass().getName() + "\n" + 
-						"\t" + AppBridge.getClass().getName() + "\n" +
-						"\t" + CurLocale  + "\n" +
-						"");
+		Storage 	= file;
+		AppBridge	= appBridge;
+		CurLocale	= local;
+		CurDate		= new Date(System.currentTimeMillis());
+		CurCalendar	= Calendar.getInstance(local);
+		
+		if (AppBridge instanceof IGfxBridge) {
+			AScreen.GfxAdapter = (IGfxBridge)AppBridge;
 		}
+		
+		TimeZone.getAvailableIDs();
+		
+		try {
+			CurCalendar.setTime(CurDate);
+		} catch (Exception err) {
+			err.printStackTrace();
+		}
+		
+		System.out.println(
+				"CObject : System initialized !\n" + 
+					"\tIStorage   = " + Storage.getClass().getName() + "\n" + 
+					"\tIAppBridge = " + AppBridge.getClass().getName() + "\n" +
+					"\tIGfxBridge = " + AScreen.GfxAdapter + "\n" +
+					"\tLocale     = " + CurLocale  + "\n" +
+					"");
 		
 	}
 	
@@ -207,28 +290,6 @@ public class CObject
 		return ENCODING;
 	}
 
-	/**
-	 * tick frame timer
-	 */
-	static public void tickTimer() {
-		Timer++;
-	}
-	/**
-	 * reset frame timer
-	 */
-	static public void resetTimer() {
-		Timer = 1;
-	}
-	/**
-	 * get current frame timer
-	 * @return 
-	 */
-	static public int getTimer() {
-		return Timer;
-	}
-
-	
-	
 //	 ------------------------------------------------------
 
 	/**
@@ -236,9 +297,7 @@ public class CObject
 	 * @param str 
 	 */
 	static public void print(String str) {
-//#ifdef _DEBUG
-			System.out.print(str);
-//#endif
+		System.out.print(str);
 	}
 
 	/**
@@ -246,16 +305,14 @@ public class CObject
 	 * @param str 
 	 */
 	static public void println(String str) {
-//#ifdef _DEBUG
-			System.out.println(str);
-//#endif
+		System.out.println(str);
 	}
-
 	
 	/**
 	 * @param fmt default is "YYYY-MM-DD hh:mm:ss"
 	 */
-	static public void setTimeFormat(String fmt){
+	static public void setTimeFormat(String fmt)
+	{
 		DateFormat = fmt;
 		
 		DateFormats[0] = CUtil.getSameCharBlock(fmt,0,'Y');

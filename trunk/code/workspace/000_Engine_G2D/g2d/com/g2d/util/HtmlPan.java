@@ -18,6 +18,7 @@ import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLFrameHyperlinkEvent;
 
 import com.cell.CObject;
+import com.cell.gfx.AScreen;
 import com.g2d.display.ui.layout.UILayout;
 
 public class HtmlPan extends JPanel implements HyperlinkListener, Runnable
@@ -98,7 +99,7 @@ public class HtmlPan extends JPanel implements HyperlinkListener, Runnable
 				try {
 //					pane.setPage(e.getURL());
 					System.out.println("open : " + e.getURL().toString());
-					CObject.AppBridge.openBrowser(e.getURL().toString());
+					AScreen.GfxAdapter.openBrowser(e.getURL().toString());
 				} catch (Throwable t) {
 					t.printStackTrace();
 				}
