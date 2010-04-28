@@ -62,9 +62,6 @@ public class CObject
 
 		public byte[] syncReadBytesFromURL(String url, int timeOut)
 		{
-			URLConnection c = null;
-			InputStream is = null;
-			
 			URL Url = null;
 			try {
 				Url = new URL(url);
@@ -73,7 +70,10 @@ public class CObject
 				return null;
 			}
 
-			try {
+			URLConnection c = null;
+			InputStream is = null;
+			try 
+			{
 				c = Url.openConnection();
 				c.setConnectTimeout(timeOut);
 				c.setReadTimeout(timeOut);
@@ -93,6 +93,10 @@ public class CObject
 					is.close();
 					return data;
 				}
+				else if (len == 0) {
+					return new byte[0];
+				}
+				
 			} catch (IOException err){
 				err.printStackTrace();
 			} finally {
