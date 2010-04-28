@@ -23,6 +23,8 @@ import com.cell.util.Pair;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.Sprite;
 import com.g2d.display.Stage;
+import com.g2d.display.TextTip;
+import com.g2d.display.Tip;
 import com.g2d.display.ui.Menu;
 import com.g2d.display.ui.Panel;
 import com.g2d.editor.DisplayObjectPanel;
@@ -198,6 +200,8 @@ public class SceneGraphViewer extends AbstractDialog
 //		-------------------------------------------------------------------------------------------------------------
 		class SceneFrame extends Sprite
 		{
+			TextTip			tip = new TextTip();
+			
 			SceneGraphNode	node ;
 			
 			SceneNode 		snode;
@@ -281,7 +285,6 @@ public class SceneGraphViewer extends AbstractDialog
 				Color high_color = new Color(d, d, d);
 				Color base_color = Color.RED;
 				if (isPickedMouse()) {
-					getStage().setTip(node.scene_name + "(" + node.scene_id + ") \nGroup="+node.scene_group);
 					base_color = Color.WHITE;
 				}
 				boolean is_path = path_start == this.node || finded!=null;
@@ -349,7 +352,12 @@ public class SceneGraphViewer extends AbstractDialog
 					g.setStroke(stroke);
 				}
 			}
-			
+
+			@Override
+			public Tip getTip() {
+				tip.setText(node.scene_name + "(" + node.scene_id + ") \nGroup="+node.scene_group);
+				return tip;
+			}
 			
 			@Override
 			protected void onMouseClick(com.g2d.display.event.MouseEvent event) {
@@ -358,10 +366,12 @@ public class SceneGraphViewer extends AbstractDialog
 				}
 			}
 			
+			
 //			-------------------------------------------------------------------------------------------------------------
 			
 			class LinkTP extends Sprite
 			{
+				TextTip			tip = new TextTip();
 				ActorTransport 	tp;
 				SceneUnit 		unit;
 				
@@ -381,13 +391,19 @@ public class SceneGraphViewer extends AbstractDialog
 				@Override
 				public void render(Graphics2D g) {
 					if (isPickedMouse()) {
-						getStage().setTip(unit.id + " -> " + tp.next_scene_id + ":" + tp.next_scene_object_id);
 						g.setColor(Color.WHITE);
 					} else {
 						g.setColor(Color.GREEN);
 					}
 					g.drawRect(this.local_bounds.x, this.local_bounds.y, this.local_bounds.width-1, this.local_bounds.height-1);
 				}
+				
+				@Override
+				public Tip getTip() {
+					tip.setText((unit.id + " -> " + tp.next_scene_id + ":" + tp.next_scene_object_id));
+					return tip;
+				}
+				
 			}
 
 //			-------------------------------------------------------------------------------------------------------------

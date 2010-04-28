@@ -3,6 +3,7 @@ package com.g2d.display.ui;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.text.AttributedString;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -13,6 +14,9 @@ import com.g2d.annotation.Property;
 import com.g2d.display.AnimateCursor;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.InteractiveObject;
+import com.g2d.display.TextTip;
+import com.g2d.display.Tip;
+import com.g2d.display.UIObject;
 import com.g2d.display.event.EventListener;
 import com.g2d.display.event.MouseEvent;
 import com.g2d.display.ui.event.Action;
@@ -25,7 +29,7 @@ import com.g2d.editor.UIComponentEditor;
 
 
 
-public abstract class UIComponent extends InteractiveObject
+public abstract class UIComponent extends UIObject
 {
 	private static final long 			serialVersionUID = Version.VersionG2D;
 	public static boolean				editor_mode = false;
@@ -54,7 +58,7 @@ public abstract class UIComponent extends InteractiveObject
 //	switch
 //	-----------------------------------------------------------------------------------------------------
 //	event
-	
+	transient private	TextTip			default_tip = new TextTip();
 	transient protected Window 			root_form;
 	transient Vector<ActionListener>	action_listeners;
 	protected Action					action;
@@ -206,9 +210,13 @@ public abstract class UIComponent extends InteractiveObject
 	}
 	
 	@Override
-	protected void trySetCursor() {
-		super.trySetCursor();
-		getStage().setTip(tip);
+	public Tip getTip() {
+		if (tip != null && !tip.isEmpty()) {
+			AttributedString atext = TextBuilder.buildScript(tip);
+			default_tip.setText(atext);
+			return default_tip;
+		}
+		return null;
 	}
 	
 //	-----------------------------------------------------------------------------------------------------

@@ -530,7 +530,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 			{
 				if (getSelectedUnit()!=null && pre_right_pos!=null) {
 					if ((pre_right_pos.x == getMouseX() && pre_right_pos.y == getMouseY())) {
-						if (getSelectedUnit().getGameUnit().hitTestMouse()) {
+						if (getSelectedUnit().getGameUnit().isHitMouse()) {
 							try{
 								Menu menu = ((SceneUnitTag<?>)getSelectedUnit()).getEditMenu();
 								menu.show(scene_panel, getMouseX(), getMouseY());

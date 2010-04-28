@@ -218,13 +218,13 @@ FocusListener
 		defaultCursor = cursor;
 	}
 	
-	/**
-	 * 设置鼠标指针
-	 * @param cursor
-	 */
-	public void setCursor(AnimateCursor cursor){
-		nextCursor = cursor;
-	}
+//	/**
+//	 * 设置鼠标指针
+//	 * @param cursor
+//	 */
+//	public void setCursor(AnimateCursor cursor){
+//		nextCursor = cursor;
+//	}
 	
 	/**
 	 * 设置默认渲染子体
@@ -239,29 +239,29 @@ FocusListener
 		return defaultFont;
 	}
 	
-	public void setCursor(Cursor cursor) {
-		nextCursor = new AnimateCursor(cursor);
-	}
-	
-	/**
-	 * 设置鼠标悬停
-	 * @param text
-	 */
-	public void setTip(AttributedString text) {
-		if (currentStage!=null) {
-			currentStage.setTip(text);
-		}
-	}
-	
-	/**
-	 * 设置鼠标悬停
-	 * @param text
-	 */
-	public void setTip(String text) {
-		if (currentStage!=null) {
-			currentStage.setTip(text);
-		}
-	}
+//	public void setCursor(Cursor cursor) {
+//		nextCursor = new AnimateCursor(cursor);
+//	}
+//	
+//	/**
+//	 * 设置鼠标悬停
+//	 * @param text
+//	 */
+//	public void setTip(AttributedString text) {
+//		if (currentStage!=null) {
+//			currentStage.setTip(text);
+//		}
+//	}
+//	
+//	/**
+//	 * 设置鼠标悬停
+//	 * @param text
+//	 */
+//	public void setTip(String text) {
+//		if (currentStage!=null) {
+//			currentStage.setTip(text);
+//		}
+//	}
 	
 //	--------------------------------------------------------------------------------
 //	substage manag
@@ -557,8 +557,7 @@ FocusListener
 
 //				g.drawImage(vm_buffer, 0, 0, getWidth(), getHeight(), null);
 			}
-		
-			
+
 			if (nextCursor!=null) {
 				component.setCursor(nextCursor.getCursor());
 				nextCursor.update();
@@ -586,6 +585,8 @@ FocusListener
 		{
 			currentStage.onUpdate(this, stageWidth, stageHeight);
 			currentStage.onRender(g);
+
+			nextCursor = currentStage.getCursor();
 			
 			if (!isFocusOwner()) {
 				currentStage.renderLostFocus(g);

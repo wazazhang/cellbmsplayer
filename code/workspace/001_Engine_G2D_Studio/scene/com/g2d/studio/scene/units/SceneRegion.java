@@ -3,6 +3,7 @@ package com.g2d.studio.scene.units;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Composite;
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
@@ -17,7 +18,12 @@ import com.cell.rpg.quest.ability.QuestAccepter;
 import com.cell.rpg.quest.ability.QuestPublisher;
 import com.cell.rpg.scene.Region;
 import com.g2d.annotation.Property;
+import com.g2d.display.AnimateCursor;
 import com.g2d.display.DisplayObjectContainer;
+import com.g2d.display.DragResizeObject;
+import com.g2d.display.InteractiveObject;
+import com.g2d.display.event.MouseDragResizeListener;
+import com.g2d.display.event.MouseMoveEvent;
 import com.g2d.display.ui.Menu;
 import com.g2d.editor.DisplayObjectEditor;
 import com.g2d.game.rpg.Unit;
@@ -36,11 +42,13 @@ public class SceneRegion extends com.g2d.game.rpg.Unit implements SceneUnitTag<R
 {
 	private static final long serialVersionUID = Version.VersionGS;
 
-	final SceneEditor		editor;
-	final public Region 	region;
+	final SceneEditor			editor;
+	final public Region 		region;
 	
 	@Property("color")
-	public Color 			color = new Color(0x8000ff00, true);
+	public Color 				color = new Color(0x8000ff00, true);
+
+	private DragResizeObject	drag_resize;
 	
 	AbilityEffectInfos<Region>	effects = new AbilityEffectInfos<Region>(
 			new Class<?>[]{
@@ -109,7 +117,6 @@ public class SceneRegion extends com.g2d.game.rpg.Unit implements SceneUnitTag<R
 		enable				= true;
 		enable_drag			= true;
 		enable_input		= true;
-		enable_drag_resize	= true;
 		enable_focus 		= true;
 		enable_input 		= true;
 		super.added(parent);
@@ -146,13 +153,73 @@ public class SceneRegion extends com.g2d.game.rpg.Unit implements SceneUnitTag<R
 	}
 
 //	--------------------------------------------------------------------------------------------------------
+
+	@Override
+	public AnimateCursor getCursor() 
+	{
+		if (enable_drag) 
+		{
+			byte direct = 4;
+			if (drag_resize == null) {
+				direct = DragResizeObject.getDragDirect(local_bounds, 4, getMouseX(), getMouseY());
+			} else {
+				direct = drag_resize.start_drag_direct;
+			}
+			return DragResizeObject.getCursor(direct);
+		}
+		return null;
+	}
 	
+	protected void onStartDrag(MouseMoveEvent event) 
+	{
+		this.drag_resize = new DragResizeObject(
+				event,
+				new Dimension(10, 10),
+				4, 
+				local_bounds, 
+				getMouseX(),
+				getMouseY());
+	}
+	
+	protected void onStopDrag()
+	{
+		if (drag_resize != null &&
+			drag_resize.start_drag_direct != DragResizeObject.DRAG_DIRECT_CENTER)
+		{
+			Rectangle start_rect = drag_resize.getDstRectangle();
+			
+			this.setLocation(
+					x + start_rect.x, 
+					y + start_rect.y);
+			this.setSize(
+					Math.max((int)(start_rect.getWidth()), 4), 
+					Math.max((int)(start_rect.getHeight()), 4));
+		}
+		drag_resize = null;
+	}
+
+	protected boolean onUpdateDragging() 
+	{
+		if (drag_resize != null) {
+			drag_resize.update(this);
+			return drag_resize.start_drag_direct == DragResizeObject.DRAG_DIRECT_CENTER;
+		} else {
+			return true;
+		}
+	}
+
+	/**
+	 * 渲染完子控件后被调用
+	 * @param g
+	 */
+	void renderDragResize(Graphics2D g) 
+	{
+		if (drag_resize != null) {
+			drag_resize.render(this, g);
+		}
+	}
+
 //	--------------------------------------------------------------------------------------------------------
-	
-//	@Override
-//	public Menu getEditMenu() {
-//		return new UnitMenu(scene_view, this);
-//	}
 	
 	@Override
 	public void update() {
@@ -162,11 +229,15 @@ public class SceneRegion extends com.g2d.game.rpg.Unit implements SceneUnitTag<R
 		effects.updateActor(this);
 	}
 
-//	--------------------------------------------------------------------------------------------------------
-	
 	@Override
 	protected void renderAfter(Graphics2D g) 
 	{
+		if (enable) {
+			if (enable_drag) {
+				renderDragResize(g);
+			}
+		}
+		
 		super.renderAfter(g);
 
 		if (editor!=null)

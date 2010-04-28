@@ -18,6 +18,7 @@ import com.g2d.Version;
 import com.g2d.annotation.Property;
 import com.g2d.display.AnimateCursor;
 import com.g2d.display.DisplayObject;
+import com.g2d.display.Tip;
 import com.g2d.display.event.EventListener;
 import com.g2d.display.event.KeyEvent;
 import com.g2d.display.event.TextInputer;
@@ -55,7 +56,6 @@ public class TextBox extends UIComponent implements Serializable, TextInputer
 	transient int 						text_draw_y;
 	transient MultiTextLayout			text;
 
-	transient AnimateCursor				link_cursor;
 	transient Hashtable<Attribute, ClickSegmentListener> click_segment_listeners;
 	
 //	-------------------------------------------------------------------------------------------------------------------
@@ -76,8 +76,6 @@ public class TextBox extends UIComponent implements Serializable, TextInputer
 		
 		super.addChild(v_scrollbar);
 		
-		setCursor(AnimateCursor.TEXT_CURSOR);
-		link_cursor	= AnimateCursor.HAND_CURSOR;
 	}
 	
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException 
@@ -200,33 +198,29 @@ public class TextBox extends UIComponent implements Serializable, TextInputer
 			text.insertChar(event.keyChar);
 		}
 	}
-	
+		
 	@Override
-	protected void trySetCursor() 
-	{
+	public AnimateCursor getCursor() {
 		if (CMath.includeRectPoint(
 				layout.BorderSize, 
 				layout.BorderSize, 
 				getWidth()-(layout.BorderSize<<1), 
 				getHeight()-(layout.BorderSize<<1), 
 				getMouseX(), getMouseY())) {
-
-			AnimateCursor oldcursor = getCursor();
-			
 			if (is_show_link) {
 				AttributedSegment segment = text.getSegment(
 						text.pointToPosition(getMouseX()-text_draw_x, getMouseY()-text_draw_y), 
 						com.g2d.display.ui.text.TextAttribute.LINK);
 				if (segment!=null) {
-					setCursor(link_cursor);
+					return AnimateCursor.HAND_CURSOR;
 				}
 			}
-			
-			super.trySetCursor();
-			
-			setCursor(oldcursor);
+			return AnimateCursor.TEXT_CURSOR;
 		}
+		return super.getCursor();
 	}
+	
+	
 	
 	public ScrollBar getVScrollBar() {
 		return v_scrollbar;

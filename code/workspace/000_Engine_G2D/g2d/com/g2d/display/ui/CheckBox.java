@@ -64,7 +64,6 @@ public class CheckBox extends UIComponent
 		
 		check_change_listeners = new Vector<CheckChangeListener>();
 		
-		setCursor(AnimateCursor.HAND_CURSOR);
 		{
 			check_image = Tools.createImage(10, 10);
 			Graphics2D g2d = (Graphics2D)check_image.getGraphics();
@@ -92,6 +91,11 @@ public class CheckBox extends UIComponent
 	
 	public CheckBox() {
 		this("CheckBox");
+	}
+	
+	@Override
+	public AnimateCursor getCursor() {
+		return AnimateCursor.HAND_CURSOR;
 	}
 	
 	public boolean isChecked() {

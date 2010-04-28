@@ -29,10 +29,10 @@ public abstract class Stage extends DisplayObjectContainer
 	transient private int 				transition_out_timer	= 0;
 	
 //	tip
-	transient private TextTip			default_tip;
-	transient private Tip				next_tip;
-	transient private String			next_tip_text;
-	transient private AttributedString	next_tip_atext;
+//	transient private TextTip			default_tip;
+//	transient private Tip				next_tip;
+//	transient private String			next_tip_text;
+//	transient private AttributedString	next_tip_atext;
 
 //	picked object
 	/**当前控件内，最后被鼠标捕获到的单位*/
@@ -47,7 +47,9 @@ public abstract class Stage extends DisplayObjectContainer
 										drag_drop_scale_y			= 1.0f;
 	
 	/**被拖拽的单位，该控件将覆盖显示鼠标提示*/
-	transient private InteractiveObject	mouse_drag_drop_object;
+	transient private UIObject			mouse_drag_drop_object;
+	
+	transient private AnimateCursor		last_cursor;
 	
 //	-----------------------------------------------------------------------------------------------------------
 	
@@ -67,7 +69,7 @@ public abstract class Stage extends DisplayObjectContainer
 		transition_in_timer		= 0;
 		is_transition_out		= false;
 		transition_out_timer	= 0;
-		default_tip				= new TextTip();
+//		default_tip				= new TextTip();
 //		cursor					= new CursorG2D();
 	}
 	
@@ -158,8 +160,8 @@ public abstract class Stage extends DisplayObjectContainer
 		super.onRender(g);
 		
 		if (getRoot().isMouseDown(MouseEvent.BUTTON_LEFT)) {
-			if (mouse_picked_object instanceof InteractiveObject) {
-				InteractiveObject interactive = (InteractiveObject) mouse_picked_object;
+			if (mouse_picked_object instanceof UIObject) {
+				UIObject interactive = (UIObject) mouse_picked_object;
 				if (interactive.enable_drag_drop) {
 					startDragDrop(interactive);
 				}
@@ -192,25 +194,37 @@ public abstract class Stage extends DisplayObjectContainer
 	private void renderTip(Graphics2D g)
 	{
 //		System.out.println("last_mouse_picked_object = "+last_mouse_picked_object);
-		
-		if (next_tip != null) {
-			next_tip.setLocation(this, mouse_x, mouse_y);
-			next_tip.onUpdate(this);
-			next_tip.onRender(g);
-			next_tip = null;
+		if (last_mouse_picked_object instanceof InteractiveObject) {
+			InteractiveObject interactive = (InteractiveObject)last_mouse_picked_object;
+			Tip tip = interactive.getTip();
+			if (tip != null) {
+				tip.setLocation(this, mouse_x, mouse_y);
+				tip.onUpdate(this);
+				tip.onRender(g);
+			}
+			last_cursor = interactive.getCursor();
 		} else {
-			if (next_tip_text!=null && next_tip_text.length()!=0) {
-				next_tip_atext = TextBuilder.buildScript(next_tip_text);
-				next_tip_text = null;
-			}
-			if (next_tip_atext != null) {
-				default_tip.setText(next_tip_atext);
-				default_tip.setLocation(this, mouse_x, mouse_y);
-				default_tip.onUpdate(this);
-				default_tip.onRender(g);
-				next_tip_atext = null;
-			}
+			last_cursor = null;
 		}
+		
+//		if (next_tip != null) {
+//			next_tip.setLocation(this, mouse_x, mouse_y);
+//			next_tip.onUpdate(this);
+//			next_tip.onRender(g);
+//			next_tip = null;
+//		} else {
+//			if (next_tip_text!=null && next_tip_text.length()!=0) {
+//				next_tip_atext = TextBuilder.buildScript(next_tip_text);
+//				next_tip_text = null;
+//			}
+//			if (next_tip_atext != null) {
+//				default_tip.setText(next_tip_atext);
+//				default_tip.setLocation(this, mouse_x, mouse_y);
+//				default_tip.onUpdate(this);
+//				default_tip.onRender(g);
+//				next_tip_atext = null;
+//			}
+//		}
 	}
 	
 	private void renderTransition(Graphics2D g)
@@ -244,7 +258,7 @@ public abstract class Stage extends DisplayObjectContainer
 		}
 	}
 
-	private void startDragDrop(InteractiveObject obj) {
+	private void startDragDrop(UIObject obj) {
 //		if (mouse_drag_drop_object == null) {
 			mouse_drag_drop_object = obj;
 			mouse_drag_drop_object.onMouseStartDragDrop();
@@ -261,8 +275,8 @@ public abstract class Stage extends DisplayObjectContainer
 			for (MouseDragDropListener l : mouse_drag_drop_object.mouse_drag_drop_listeners) {
 				l.onMouseStopDragDrop(mouse_drag_drop_object, last_mouse_picked_object);
 			}
-			if (last_mouse_picked_object instanceof InteractiveObject) {
-				InteractiveObject accepter = ((InteractiveObject)last_mouse_picked_object);
+			if (last_mouse_picked_object instanceof UIObject) {
+				UIObject accepter = ((UIObject)last_mouse_picked_object);
 				if (accepter.enable_accept_drag_drop){
 					accepter.onDragDropedObject(mouse_drag_drop_object);
 					for (MouseDragDropAccepter l : accepter.mouse_drag_drop_accepters) {
@@ -303,49 +317,53 @@ public abstract class Stage extends DisplayObjectContainer
 
 //	---------------------------------------------------------------------------------------------------------------
 	
+	public AnimateCursor getCursor() {
+		return last_cursor;
+	}
+	
 //	public CursorG2D getCursorG2D() {
 //		return this.cursor;
 //	}
 	
-	/**
-	 * 设置鼠标悬停
-	 * @param text
-	 */
-	public void setTip(AttributedString atext) {
-		synchronized (default_tip) {
-			next_tip_text = null;
-			next_tip_atext = atext;
-			next_tip = null;
-		}
-	}
-
-	/**
-	 * 设置鼠标悬停
-	 * @param text
-	 */
-	public void setTip(String script) {
-		synchronized (default_tip) {
-			next_tip_text = script;
-			next_tip_atext = null;
-			next_tip = null;
-		}
-	}
-	
-	/**
-	 * 设置鼠标悬停
-	 * @param text
-	 */
-	public void setTip(Tip tip) {
-		synchronized (default_tip) {
-			next_tip_text = null;
-			next_tip_atext = null;
-			next_tip = tip;
-		}
-	}
-
-	public void setTipTextAntialiasing(boolean enable) {
-		default_tip.enable_antialiasing = enable;
-	}
+//	/**
+//	 * 设置鼠标悬停
+//	 * @param text
+//	 */
+//	public void setTip(AttributedString atext) {
+//		synchronized (default_tip) {
+//			next_tip_text = null;
+//			next_tip_atext = atext;
+//			next_tip = null;
+//		}
+//	}
+//
+//	/**
+//	 * 设置鼠标悬停
+//	 * @param text
+//	 */
+//	public void setTip(String script) {
+//		synchronized (default_tip) {
+//			next_tip_text = script;
+//			next_tip_atext = null;
+//			next_tip = null;
+//		}
+//	}
+//	
+//	/**
+//	 * 设置鼠标悬停
+//	 * @param text
+//	 */
+//	public void setTip(Tip tip) {
+//		synchronized (default_tip) {
+//			next_tip_text = null;
+//			next_tip_atext = null;
+//			next_tip = tip;
+//		}
+//	}
+//
+//	public void setTipTextAntialiasing(boolean enable) {
+//		default_tip.enable_antialiasing = enable;
+//	}
 	
 //	----------------------------------------------------------------------------------------------------------------------
 
