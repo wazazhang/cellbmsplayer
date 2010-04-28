@@ -31,7 +31,7 @@ public class FormConfig
 	static public boolean initForm(Form form, String file, FormListener flistener, FormConfigListener fclistener)
 	{
 		try{
-			InputStream is = CObject.AppBridge.getResource(file);
+			InputStream is = CObject.getAppBridge().getResource(file);
 			initForm(form, is, flistener, fclistener);
 			return true;
 		}catch(Exception err){

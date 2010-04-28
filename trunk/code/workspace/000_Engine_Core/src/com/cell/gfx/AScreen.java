@@ -94,12 +94,19 @@ abstract public class AScreen extends CObject
 		}
 	}
 	
+
+	private static IGfxBridge	GfxAdapter;
+
+	public static void setGfxAdapter(IGfxBridge gfxAdapter) {
+		GfxAdapter = gfxAdapter;
+	}
+	public static IGfxBridge getGfxAdapter() {
+		return GfxAdapter;
+	}
 	
 	
 //	-------------------------------------------------------------------------------------------------------
 //	game refer
-	
-	static public IGfxBridge	GfxAdapter;
 	
 	/**GameOver Flag*/
 	volatile static public boolean ExitGame = false;
@@ -907,7 +914,7 @@ abstract public class AScreen extends CObject
 				TGQueryKeys[7] == KEY_1 
 				){
 				g.setClip(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-				g.setColor(0xff808080|Random.nextInt());
+				g.setColor(0xff808080|getRandom().nextInt());
 				g.drawString(new String(TGCharE), 1, 1);
 				if(isKeyDownState(KEY_A)){
 					TGQueryKeys[0] = 0;
@@ -1421,7 +1428,6 @@ abstract public class AScreen extends CObject
 	static public int getFPS(){
 		return CurFPS;
 	}
-	
 	//-----------------------------------------------------------------------------------------------------------------------------------
 	
 //	static IInputField s_m_InputField;

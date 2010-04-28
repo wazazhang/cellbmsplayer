@@ -550,7 +550,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 			// ctrl + c 复制名字
 			else if (getRoot().isKeyHold(KeyEvent.VK_CONTROL) && getRoot().isKeyDown(KeyEvent.VK_C)) {
 				if (getSelectedUnit() != null) {
-					CObject.AppBridge.setClipboardText(getSelectedUnit().getGameUnit().getID()+"");
+					CObject.getAppBridge().setClipboardText(getSelectedUnit().getGameUnit().getID()+"");
 				}
 			}
 			

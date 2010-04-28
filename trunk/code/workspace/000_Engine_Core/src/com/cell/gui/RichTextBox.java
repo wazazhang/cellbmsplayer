@@ -815,7 +815,7 @@ public class RichTextBox extends Item implements IInputListener
 			if (c == 3) {
 				if (PrewCaretPosition != CaretPosition) {
 					String text = getSelectedText();
-					AppBridge.setClipboardText(text);
+					getAppBridge().setClipboardText(text);
 				}
 			}
 		}

@@ -48,7 +48,7 @@ public class CIO extends CObject
 
 	public static URL getResourceURL(String resource)
 	{
-		return CObject.AppBridge.getClassLoader().getResource(resource);
+		return CObject.getAppBridge().getClassLoader().getResource(resource);
 	}
 	
 //	------------------------------------------------------------------------------------------------------------------------
@@ -85,7 +85,7 @@ public class CIO extends CObject
 			{
 				for (int i = 0; i < LoadRetryCount; i++)
 				{
-					data = CObject.Storage.syncReadBytesFromURL(path, LoadingTimeOut);
+					data = CObject.getStorage().syncReadBytesFromURL(path, LoadingTimeOut);
 					if (data!=null){
 						break;
 					}
@@ -94,7 +94,7 @@ public class CIO extends CObject
 			}
 			else if (path.startsWith("/"))
 			{
-				InputStream is = AppBridge.getResource(path);
+				InputStream is = getAppBridge().getResource(path);
 				data = readStream(is);
 			}
 			else
