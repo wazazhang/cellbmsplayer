@@ -13,6 +13,7 @@ import com.cell.game.CMap;
 import com.cell.game.CSprite;
 import com.cell.game.CWayPoint;
 import com.cell.game.ai.pathfind.AstarManhattan.WayPoint;
+import com.cell.gfx.AScreen;
 import com.cell.gfx.CImages;
 import com.cell.gfx.IImage;
 import com.cell.gfx.IImages;
@@ -433,7 +434,7 @@ public class SetResource
 		}
 		
 		if (stuff==null){
-			IImage image = CObject.AppBridge.createImage(new ByteArrayInputStream(loadRes("/set/"+img.File+".png")));
+			IImage image = AScreen.GfxAdapter.createImage(new ByteArrayInputStream(loadRes("/set/"+img.File+".png")));
 			stuff = new CImages();
 			byte[] data = loadRes("/set/"+img.File+".ts");
 			SetInput.createImagesFromSet(data, image, stuff);

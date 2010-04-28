@@ -144,7 +144,7 @@ public class CCamera extends CUnit {
 			BufW = BufBW*CellW;
 			BufH = BufBH*CellH;
 			
-			BackBuffer = AppBridge.createImage(BufW, BufH);
+			BackBuffer = AScreen.GfxAdapter.createImage(BufW, BufH);
 			BackBuffer.setMode(IImage.MODE_VRAM);
 //			BackBuffer.createBuffer(BufW, BufH);
 			
