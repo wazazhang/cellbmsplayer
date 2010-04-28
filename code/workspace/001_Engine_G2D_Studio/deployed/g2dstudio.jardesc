@@ -11,7 +11,9 @@
         </sealing>
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
+        <javaElement handleIdentifier="=000_Engine_Core/snd"/>
         <javaElement handleIdentifier="=002_Engine_SQLProxy/src"/>
+        <javaElement handleIdentifier="=000_Engine_Core/gfx"/>
         <javaElement handleIdentifier="=001_Engine_G2D_Studio/scene"/>
         <javaElement handleIdentifier="=001_Engine_G2D_Studio/rpg"/>
         <javaElement handleIdentifier="=000_Engine_Sound/src"/>
