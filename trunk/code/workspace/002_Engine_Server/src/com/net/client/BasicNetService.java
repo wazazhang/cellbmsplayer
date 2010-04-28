@@ -24,199 +24,6 @@ import com.net.MessageHeader;
  */
 public abstract class BasicNetService
 {
-
-//	-------------------------------------------------------------------------------------------------
-
-//	-------------------------------------------------------------------------------------------------
-	private class SimpleClientListenerImpl implements ServerSessionListener
-	{
-		public void connected(ServerSession session) {
-			log.info("reconnected : " + session);
-			onConnected(session);
-		}
-		
-	    public void disconnected(ServerSession session, boolean graceful, String reason) {
-	    	log.info("disconnected : " + graceful + " : " + reason);
-			onDisconnected(session, graceful, reason);
-			if (thread_pool != null) {
-				thread_pool.executeTask(new CleanTask());
-			}
-	    }
-	    
-	    public void joinedChannel(ServerSession session, ClientChannel channel) {
-	    	log.info("joined channel : \"" + channel.getID() + "\"");
-			onJoinedChannel(session, channel);
-	    }
-
-	    public void leftChannel(ClientChannel channel) {
-	    	log.info("left channel : \""  + channel.getID() + "\"");
-	        onLeftChannel(channel);	
-	    }
-	    
-	    public void receivedMessage(ServerSession session, MessageHeader message)
-	    {
-			if (message != null) {
-				if (thread_pool!=null) {
-					thread_pool.executeTask(new ReceiveTask(message));
-				} else {
-					processReceiveSessionMessage(message);
-				}
-			} else {
-				log.error("handle null message !");
-			}
-			if (thread_pool != null) {
-				thread_pool.executeTask(new CleanTask());
-			}
-	    }
-	    
-	    public void receivedChannelMessage(ClientChannel channel, MessageHeader message)
-	    {
-			if (message != null) {
-				if (thread_pool!=null) {
-					thread_pool.executeTask(new ReceiveChannelTask(message));
-				} else {
-					processReceiveChannelMessage(message);
-				}
-			} else {
-				log.error("handle null channel message !");
-			}
-			if (thread_pool != null) {
-				thread_pool.executeTask(new CleanTask());
-			}
-		}
-	    
-		private class ReceiveTask implements Runnable
-		{
-			final MessageHeader message;
-			
-			public ReceiveTask(MessageHeader message) {
-				this.message = message;
-			}
-			
-			@Override
-			public void run() {
-				try {
-					processReceiveSessionMessage(message);
-				} catch (Throwable err) {
-					err.printStackTrace();
-				}
-			}
-		}
-		
-		private class ReceiveChannelTask implements Runnable
-		{
-			final MessageHeader message;
-
-			public ReceiveChannelTask(MessageHeader message) {
-				this.message = message;
-			}
-			
-			@Override
-			public void run() {
-				try {
-					processReceiveChannelMessage(message);
-				} catch (Throwable err) {
-					err.printStackTrace();
-				}
-			}
-		}
-
-	    private class CleanTask implements Runnable
-	    {
-	    	@Override
-	    	public void run() {
-	    		cleanRequestAndNotify();
-	    	}
-	    }
-	}
-
-//	-------------------------------------------------------------------------------------------------
-	@SuppressWarnings("unchecked")
-	private class Request implements Runnable
-	{
-		final MessageHeader 				Message;
-		final ArrayList<WaitingListener> 	Listener;
-		final long 							SendTimeOut;
-		MessageHeader						Response;
-		
-		private Request(MessageHeader msg, long timeout, WaitingListener ... listeners)
-		{
-			if (SendedPacks.get() == 0) {
-				SendedPacks.incrementAndGet();
-			}
-			msg.PacketNumber 	= SendedPacks.getAndIncrement();
-	    	
-			this.Message 		= msg;
-			this.SendTimeOut 	= timeout > 0 ? timeout : 0;
-			this.Listener 		= new ArrayList<WaitingListener>(listeners.length);
-			for (WaitingListener l : listeners) {
-				this.Listener.add(l);
-			}
-		}
-		
-		public void run () 
-		{
-//			System.out.println("request " + this);
-			if (SendTimeOut>0) {
-				synchronized (this) {
-					send(Message);
-					try {
-						wait(SendTimeOut);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-			}else{
-				send(Message);
-			}
-		}
-		
-		private void messageResponsed(MessageHeader response) 
-		{
-//			System.out.println("response " + this);
-			Response = response;
-			
-			if (SendTimeOut>0) {
-				synchronized (this){
-					request_response_ping.set((int)(response.DynamicReceiveTime - Message.DynamicSendTime));
-					notify();
-				}
-			}
-			for (WaitingListener wait : Listener) {
-				wait.response(BasicNetService.this, Message, response);
-			}
-		}
-		
-		private void timeout() {
-			for (WaitingListener wait : Listener) {
-				wait.timeout(BasicNetService.this, Message, Message.DynamicSendTime);
-			}
-		}
-		
-//		private void removeWaitingListener(Class<?> type) {
-//			synchronized (Listener){
-//				for (int i=Listener.size()-1; i>=0; --i) {
-//					WaitingListener l = Listener.get(i);
-//					if (type.isInstance(l)) {
-//						Listener.remove(i);
-//						log.info("removeWaitingListener : " + l);
-//					}
-//				}
-//			}
-//		}
-		
-		protected boolean isDroped() {
-			return System.currentTimeMillis() - Message.DynamicSendTime > DropRequestTimeOut;
-		}
-		
-		public String toString() {
-			return "Request : Message=" + Message;
-		}
-		
-	}
-	
-//	---------------------------------------------------------------------------------------------------------------------------------
-
 	/**request从1开始*/
 	final private AtomicInteger 	SendedPacks 			= new AtomicInteger(1);
 	
@@ -545,9 +352,200 @@ public abstract class BasicNetService
 	protected void onLeftChannel(ClientChannel channel) {}
   
 
+//	----------------------------------------------------------------------------------------------------------------------------
+	
 
+	private class SimpleClientListenerImpl implements ServerSessionListener
+	{
+		public void connected(ServerSession session) {
+			log.info("reconnected : " + session);
+			onConnected(session);
+		}
+		
+	    public void disconnected(ServerSession session, boolean graceful, String reason) {
+	    	log.info("disconnected : " + graceful + " : " + reason);
+			onDisconnected(session, graceful, reason);
+			if (thread_pool != null) {
+				thread_pool.executeTask(new CleanTask());
+			}
+	    }
+	    
+	    public void joinedChannel(ServerSession session, ClientChannel channel) {
+	    	log.info("joined channel : \"" + channel.getID() + "\"");
+			onJoinedChannel(session, channel);
+	    }
+
+	    public void leftChannel(ClientChannel channel) {
+	    	log.info("left channel : \""  + channel.getID() + "\"");
+	        onLeftChannel(channel);	
+	    }
+	    
+	    public void receivedMessage(ServerSession session, MessageHeader message)
+	    {
+			if (message != null) {
+				if (thread_pool!=null) {
+					thread_pool.executeTask(new ReceiveTask(message));
+				} else {
+					processReceiveSessionMessage(message);
+				}
+			} else {
+				log.error("handle null message !");
+			}
+			if (thread_pool != null) {
+				thread_pool.executeTask(new CleanTask());
+			}
+	    }
+	    
+	    public void receivedChannelMessage(ClientChannel channel, MessageHeader message)
+	    {
+			if (message != null) {
+				if (thread_pool!=null) {
+					thread_pool.executeTask(new ReceiveChannelTask(message));
+				} else {
+					processReceiveChannelMessage(message);
+				}
+			} else {
+				log.error("handle null channel message !");
+			}
+			if (thread_pool != null) {
+				thread_pool.executeTask(new CleanTask());
+			}
+		}
+	    
+		private class ReceiveTask implements Runnable
+		{
+			final MessageHeader message;
+			
+			public ReceiveTask(MessageHeader message) {
+				this.message = message;
+			}
+			
+			@Override
+			public void run() {
+				try {
+					processReceiveSessionMessage(message);
+				} catch (Throwable err) {
+					err.printStackTrace();
+				}
+			}
+		}
+		
+		private class ReceiveChannelTask implements Runnable
+		{
+			final MessageHeader message;
+
+			public ReceiveChannelTask(MessageHeader message) {
+				this.message = message;
+			}
+			
+			@Override
+			public void run() {
+				try {
+					processReceiveChannelMessage(message);
+				} catch (Throwable err) {
+					err.printStackTrace();
+				}
+			}
+		}
+
+	    private class CleanTask implements Runnable
+	    {
+	    	@Override
+	    	public void run() {
+	    		cleanRequestAndNotify();
+	    	}
+	    }
+	}
+
+
+//	-------------------------------------------------------------------------------------------------
+
+//	-------------------------------------------------------------------------------------------------
 	
+//	-------------------------------------------------------------------------------------------------
 	
-	
+	@SuppressWarnings("unchecked")
+	private class Request implements Runnable
+	{
+		final MessageHeader 				Message;
+		final ArrayList<WaitingListener> 	Listener;
+		final long 							SendTimeOut;
+		MessageHeader						Response;
+		
+		private Request(MessageHeader msg, long timeout, WaitingListener ... listeners)
+		{
+			if (SendedPacks.get() == 0) {
+				SendedPacks.incrementAndGet();
+			}
+			msg.PacketNumber 	= SendedPacks.getAndIncrement();
+	    	
+			this.Message 		= msg;
+			this.SendTimeOut 	= timeout > 0 ? timeout : 0;
+			this.Listener 		= new ArrayList<WaitingListener>(listeners.length);
+			for (WaitingListener l : listeners) {
+				this.Listener.add(l);
+			}
+		}
+		
+		public void run () 
+		{
+//			System.out.println("request " + this);
+			if (SendTimeOut>0) {
+				synchronized (this) {
+					send(Message);
+					try {
+						wait(SendTimeOut);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}else{
+				send(Message);
+			}
+		}
+		
+		private void messageResponsed(MessageHeader response) 
+		{
+//			System.out.println("response " + this);
+			Response = response;
+			
+			if (SendTimeOut>0) {
+				synchronized (this){
+					request_response_ping.set((int)(response.DynamicReceiveTime - Message.DynamicSendTime));
+					notify();
+				}
+			}
+			for (WaitingListener wait : Listener) {
+				wait.response(BasicNetService.this, Message, response);
+			}
+		}
+		
+		private void timeout() {
+			for (WaitingListener wait : Listener) {
+				wait.timeout(BasicNetService.this, Message, Message.DynamicSendTime);
+			}
+		}
+		
+//		private void removeWaitingListener(Class<?> type) {
+//			synchronized (Listener){
+//				for (int i=Listener.size()-1; i>=0; --i) {
+//					WaitingListener l = Listener.get(i);
+//					if (type.isInstance(l)) {
+//						Listener.remove(i);
+//						log.info("removeWaitingListener : " + l);
+//					}
+//				}
+//			}
+//		}
+		
+		protected boolean isDroped() {
+			return System.currentTimeMillis() - Message.DynamicSendTime > DropRequestTimeOut;
+		}
+		
+		public String toString() {
+			return "Request : Message=" + Message;
+		}
+		
+	}
 	
 }
