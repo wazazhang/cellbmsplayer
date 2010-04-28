@@ -12,7 +12,7 @@ import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLFrameHyperlinkEvent;
 
 import com.cell.CObject;
-import com.cell.gfx.AScreen;
+
 
 //public class HtmlFrame extends JEditorPane implements HyperlinkListener
 //public class HtmlFrame extends JScrollPane implements HyperlinkListener
@@ -74,7 +74,7 @@ public class HtmlFrame extends JInternalFrame implements HyperlinkListener
 				try {
 //					pane.setPage(e.getURL());
 					System.out.println("open : " + e.getURL().toString());
-					AScreen.getGfxAdapter().openBrowser(e.getURL().toString());
+					CObject.getAppBridge().openBrowser(e.getURL().toString());
 				} catch (Throwable t) {
 					t.printStackTrace();
 				}

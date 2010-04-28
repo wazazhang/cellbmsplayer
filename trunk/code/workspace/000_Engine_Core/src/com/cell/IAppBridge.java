@@ -22,5 +22,6 @@ public interface IAppBridge
 	public String		setAppProperty(String key, String value);
 	
 	public ClassLoader	getClassLoader();
-	
+
+	public void 		openBrowser(String url);
 }

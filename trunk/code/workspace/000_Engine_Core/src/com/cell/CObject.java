@@ -1,6 +1,7 @@
 ﻿
 package com.cell;
 
+import java.awt.Desktop;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Calendar;
@@ -23,9 +25,6 @@ import java.util.TimeZone;
 import java.util.Vector;
 
 import com.cell.exception.NotImplementedException;
-import com.cell.gfx.AScreen;
-import com.cell.gfx.IGfxBridge;
-import com.cell.gfx.IImage;
 
 
 /**
@@ -221,6 +220,17 @@ public class CObject
 	        return "";
 		}
 		
+		public void openBrowser(String url) 
+		{
+			try 
+			{
+				Desktop.getDesktop().browse(new URI(url));
+			} 
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
 		public String getMacAddr() {
 			try {
 				return InetAddress.getLocalHost().toString();
@@ -263,11 +273,11 @@ public class CObject
 		setCurLocale(local);
 		CurDate		= new Date(System.currentTimeMillis());
 		CurCalendar	= Calendar.getInstance(local);
-		
-		if (getAppBridge() instanceof IGfxBridge) {
-			AScreen.setGfxAdapter((IGfxBridge)getAppBridge());
-		}
-		
+//		
+//		if (getAppBridge() instanceof IGfxBridge) {
+//			AScreen.setGfxAdapter((IGfxBridge)getAppBridge());
+//		}
+//		
 		TimeZone.getAvailableIDs();
 		
 		try {
@@ -280,7 +290,7 @@ public class CObject
 				"CObject : System initialized !\n" + 
 					"\tIStorage   = " + getStorage().getClass().getName() + "\n" + 
 					"\tIAppBridge = " + getAppBridge().getClass().getName() + "\n" +
-					"\tIGfxBridge = " + AScreen.getGfxAdapter() + "\n" +
+//					"\tIGfxBridge = " + AScreen.getGfxAdapter() + "\n" +
 					"\tLocale     = " + getCurLocale()  + "\n" +
 					"");
 		
