@@ -182,32 +182,28 @@ public abstract class BasicNetService
 					notify();
 				}
 			}
-			synchronized (Listener){
-				for (WaitingListener wait : Listener) {
-					wait.response(BasicNetService.this, Message, response);
-				}
+			for (WaitingListener wait : Listener) {
+				wait.response(BasicNetService.this, Message, response);
 			}
 		}
 		
 		private void timeout() {
-			synchronized (Listener){
-				for (WaitingListener wait : Listener) {
-					wait.timeout(BasicNetService.this, Message, Message.DynamicSendTime);
-				}
+			for (WaitingListener wait : Listener) {
+				wait.timeout(BasicNetService.this, Message, Message.DynamicSendTime);
 			}
 		}
 		
-		private void removeWaitingListener(Class<?> type) {
-			synchronized (Listener){
-				for (int i=Listener.size()-1; i>=0; --i) {
-					WaitingListener l = Listener.get(i);
-					if (type.isInstance(l)) {
-						Listener.remove(i);
-						log.info("removeWaitingListener : " + l);
-					}
-				}
-			}
-		}
+//		private void removeWaitingListener(Class<?> type) {
+//			synchronized (Listener){
+//				for (int i=Listener.size()-1; i>=0; --i) {
+//					WaitingListener l = Listener.get(i);
+//					if (type.isInstance(l)) {
+//						Listener.remove(i);
+//						log.info("removeWaitingListener : " + l);
+//					}
+//				}
+//			}
+//		}
 		
 		protected boolean isDroped() {
 			return System.currentTimeMillis() - Message.DynamicSendTime > DropRequestTimeOut;
@@ -343,8 +339,7 @@ public abstract class BasicNetService
     	sendlock.lock();
     	try{
     		for (Integer pnum : WaitingListeners.keySet()) {
-    			Request request = WaitingListeners.get(pnum);
-    			request.removeWaitingListener(type);
+    			WaitingListeners.remove(pnum);
     		}
     	}finally {
     		sendlock.unlock();
@@ -357,47 +352,38 @@ public abstract class BasicNetService
     final public void cleanRequestAndNotify() 
     {
 //    	System.err.println("waiting listeners : " + WaitingListeners.size());
-    	{        	
-    		sendlock.lock();
-        	try{
-        		for (Integer pnum : new ArrayList<Integer>(WaitingListeners.keySet())) {
-            		Request req = WaitingListeners.get(pnum);
-        			if (req != null && req.isDroped()) {
-        				WaitingListeners.remove(pnum);
-        				req.timeout();
-        				log.error("drop a timeout request : " + req.Message.PacketNumber + " : " + req.toString());
-        			}
-        		}
-        	}
-        	catch (Exception err){
-        		log.error(err.getMessage(), err);
-        	}finally {
-        		sendlock.unlock();
-        	}
-        	
-        	notifylock.lock();
-    		try{
-    			if (!UnhandledMessages.isEmpty()) {
-	    			ArrayList<MessageHeader> removed = null;
-	    			for (MessageHeader unotify : UnhandledMessages) {
-	    				if (System.currentTimeMillis() - unotify.DynamicReceiveTime > DropRequestTimeOut) {
-	    					if (removed == null) {
-	    						removed = new ArrayList<MessageHeader>(UnhandledMessages.size());
-	    					}
-	    					removed.add(unotify);
-	    					log.info("drop a unhandled notify : " + unotify);
-	    				}
-	    			}
-	    			if (removed!=null) {
-	    				UnhandledMessages.removeAll(removed);
-	    			}
+    	try{
+    		for (Integer pnum : new ArrayList<Integer>(WaitingListeners.keySet())) {
+        		Request req = WaitingListeners.get(pnum);
+    			if (req != null && req.isDroped()) {
+    				WaitingListeners.remove(pnum);
+    				req.timeout();
+    				log.error("drop a timeout request : " + req.Message.PacketNumber + " : " + req.toString());
     			}
-    		}catch (Exception err){
-        		log.error(err.getMessage(), err);
-        	}finally{
-    			notifylock.unlock();
     		}
-        	
+    	}
+    	catch (Exception err){
+    		log.error(err.getMessage(), err);
+    	}
+    	
+		try{
+			if (!UnhandledMessages.isEmpty()) {
+    			ArrayList<MessageHeader> removed = null;
+    			for (MessageHeader unotify : UnhandledMessages) {
+    				if (System.currentTimeMillis() - unotify.DynamicReceiveTime > DropRequestTimeOut) {
+    					if (removed == null) {
+    						removed = new ArrayList<MessageHeader>(UnhandledMessages.size());
+    					}
+    					removed.add(unotify);
+    					log.info("drop a unhandled notify : " + unotify);
+    				}
+    			}
+    			if (removed!=null) {
+    				UnhandledMessages.removeAll(removed);
+    			}
+			}
+		}catch (Exception err){
+    		log.error(err.getMessage(), err);
     	}
     }
     
@@ -418,21 +404,10 @@ public abstract class BasicNetService
 				NotifyListeners.put(message_type, listeners);
 			}
 			listeners.add(listener);
-			cleanUnhandledMessages();
-			
-//			System.out.println("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL");
-//			for (Class<?> k : NotifyListeners.keySet()) {
-//				ArrayList<NotifyListener<?>> list = NotifyListeners.get(k);
-//				System.out.println(k);
-//				for (NotifyListener<?> l : list) {
-//					System.out.println("\t"+l);
-//				}
-//			}
-//			System.out.println("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
-
 		}finally{
 			notifylock.unlock();
 		}
+		cleanUnhandledMessages();
 	}
 	
 	/**
@@ -469,25 +444,20 @@ public abstract class BasicNetService
 
     final public void cleanUnhandledMessages()
     {	
-    	notifylock.lock();
-		try {
-			if (!UnhandledMessages.isEmpty()) {
-				ArrayList<MessageHeader> removed = null;
-				for (MessageHeader unotify : UnhandledMessages) {
-					if (tryReceivedNotify(unotify)) {
-						if (removed == null) {
-							removed = new ArrayList<MessageHeader>(UnhandledMessages.size());
-						}
-						removed.add(unotify);
-//						log.info("pop a unhandled notify : " + unotify);
+    	if (!UnhandledMessages.isEmpty()) {
+			ArrayList<MessageHeader> removed = null;
+			for (MessageHeader unotify : UnhandledMessages) {
+				if (tryReceivedNotify(unotify)) {
+					if (removed == null) {
+						removed = new ArrayList<MessageHeader>(UnhandledMessages.size());
 					}
-				}
-				if (removed!=null) {
-					UnhandledMessages.removeAll(removed);
+					removed.add(unotify);
+//					log.info("pop a unhandled notify : " + unotify);
 				}
 			}
-		} finally {
-			notifylock.unlock();
+			if (removed!=null) {
+				UnhandledMessages.removeAll(removed);
+			}
 		}
     }
     
