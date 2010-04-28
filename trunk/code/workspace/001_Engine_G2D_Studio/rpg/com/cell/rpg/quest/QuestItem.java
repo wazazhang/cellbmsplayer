@@ -96,6 +96,8 @@ public class QuestItem extends RPGObject implements NamedObject
 					AwardSummonNPC.class,
 					DropQuestNPC.class,
 					DropQuestServant.class,
+					
+					DropQuest.class,
 				};
 		}
 	}
@@ -386,7 +388,14 @@ public class QuestItem extends RPGObject implements NamedObject
 		@PropertyAdapter(PropertyType.UNIT_ID)
 		public Integer			unit_id				= -1;
 	}	
-
+	
+	@Property({"[结果] 清理任务状态", "用于完成任务时，清理掉之前完成的任务状态"})
+	final public static class DropQuest extends Result
+	{
+		@Property("任务ID")
+		@PropertyAdapter(PropertyType.QUEST_ID)
+		public Integer			quest_id				= -1;
+	}	
 //	----------------------------------------------------------------------------
 	
 }
