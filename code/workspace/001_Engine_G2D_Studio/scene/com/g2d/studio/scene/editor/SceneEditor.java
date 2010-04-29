@@ -42,6 +42,7 @@ import com.g2d.cell.CellSetResource;
 import com.g2d.cell.CellSprite;
 import com.g2d.cell.CellSetResource.WorldSet.SpriteObject;
 import com.g2d.cell.game.Scene;
+import com.g2d.cell.game.Scene.WorldMap;
 import com.g2d.cell.game.ui.ScenePanel;
 import com.g2d.display.DisplayObject;
 import com.g2d.display.DisplayObjectContainer;
@@ -438,14 +439,9 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		
 		public SceneContainer() 
 		{
-			super(scene_resource, scene_world.name);
+			this.setWorld(new EatWorldMap(scene_resource, scene_world.name));
 			this.enable_input				= true;
 			this.getWorld().runtime_sort 	= false;
-		}
-		
-		@Override
-		protected WorldObject createWorldObject(CellSetResource set, SpriteObject worldSet) {
-			return new EatWorldObject(set, worldSet);
 		}
 		
 		@Override
@@ -586,6 +582,19 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		
 //		-----------------------------------------------------------------------------------------------------------------------------
 //		场景单位
+		
+		class EatWorldMap extends WorldMap
+		{
+			public EatWorldMap(CellSetResource resource, String worldname) {
+				super(resource, resource.WorldTable.get(worldname));
+			}
+			
+			@Override
+			protected WorldObject createWorldObject(CellSetResource set, SpriteObject worldSet) {
+				return new EatWorldObject(set, worldSet);
+			}
+			
+		}
 		
 		class EatWorldObject extends WorldObject 
 		{
