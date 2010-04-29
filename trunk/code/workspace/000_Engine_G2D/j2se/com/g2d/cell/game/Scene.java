@@ -41,7 +41,7 @@ public class Scene extends com.g2d.game.rpg.Scene
 	
 	@SuppressWarnings("deprecation")
 	public Scene(CellSetResource resource, String worldname) 	{
-		addChild(new WorldMap(resource, resource.WorldTable.get(worldname)));
+		addChild(new WorldMap(this, resource, resource.WorldTable.get(worldname)));
 	}
 	
 
@@ -49,14 +49,14 @@ public class Scene extends com.g2d.game.rpg.Scene
 	
 //	-----------------------------------------------------------------------------------------------------------
 
-	public class WorldMap extends com.g2d.game.rpg.SceneMap
+	public static class WorldMap extends com.g2d.game.rpg.SceneMap
 	{
 		final protected CellSetResource			set_resource;
 		final protected CellSetResource.WorldSet	set_world;
 
-		public WorldMap(CellSetResource resource, CellSetResource.WorldSet set_world) 
+		public WorldMap(Scene scene, CellSetResource resource, CellSetResource.WorldSet set_world) 
 		{
-			super(Scene.this, 
+			super(scene, 
 					set_world.GridW, 
 					set_world.GridH, 
 					set_world.GridXCount, 
