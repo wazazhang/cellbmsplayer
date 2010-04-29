@@ -208,7 +208,7 @@ public class CellSetResource
 	{
 		StreamTiles stuff = resource_manager.get("IMG_" + img.Index, StreamTiles.class);
 		if (stuff != null) {
-			if (!stuff.loaded) {
+			if (!stuff.isLoaded()) {
 				if (loading_service != null) {
 					loading_service.execute(stuff);
 				} else {
@@ -427,7 +427,7 @@ public class CellSetResource
 		if (img!=null) {
 			StreamTiles tiles = resource_manager.get("IMG_" + img.Index, StreamTiles.class);
 			if (tiles!=null) {
-				return !tiles.loaded;
+				return !tiles.isLoaded();
 			}
 		}
 		return false;
@@ -1429,7 +1429,7 @@ public class CellSetResource
 		final protected ImagesSet	img;
 		final protected IImage[]	images;
 		
-		private boolean	loaded = false;
+		private boolean	is_loaded = false;
 		private int		render_timer;
 		
 		public StreamTiles(ImagesSet img) throws IOException {
@@ -1450,7 +1450,7 @@ public class CellSetResource
 		
 		final public boolean isLoaded() {
 			synchronized (this) {
-				return loaded;
+				return is_loaded;
 			}
 		}
 		
@@ -1458,9 +1458,9 @@ public class CellSetResource
 		{
 			try {
 				synchronized (this) {
-					if (!loaded) {
+					if (!is_loaded) {
 						initImages();
-						loaded = true;
+						is_loaded = true;
 					}
 				}
 			} catch (Throwable e) {
@@ -1473,7 +1473,7 @@ public class CellSetResource
 				for (int i=0; i<images.length; i++){
 					images[i] = null;
 				}
-				loaded = false;
+				is_loaded = false;
 			}
 		}
 		
