@@ -1437,6 +1437,10 @@ public class CellSetResource
 			this.img = img;
 		}
 		
+		/**
+		 * 子类可以覆盖为自己的加载图片方法，注意，该方法已获得
+		 * CellSetResource， StreamTiles 的锁
+		 */
 		protected void initImages()
 		{
 			byte[] idata = loadRes(img.Name+".png");
