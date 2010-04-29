@@ -7,7 +7,9 @@ import java.awt.Shape;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Vector;
 
 import com.cell.CMath;
@@ -21,6 +23,7 @@ import com.g2d.Version;
 import com.g2d.cell.CellSetResource;
 import com.g2d.cell.CellSetResourceManager;
 import com.g2d.cell.CellSetResource.WorldSet;
+import com.g2d.cell.CellSetResource.WorldSet.SpriteObject;
 import com.g2d.display.DisplayObject;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.DisplayShape;
@@ -41,9 +44,7 @@ public class Scene extends com.g2d.game.rpg.Scene
 		addChild(new WorldMap(resource, resource.WorldTable.get(worldname)));
 	}
 	
-	protected WorldObject createWorldObject(CellSetResource set, CellSetResource.WorldSet.SpriteObject world_set) {
-		return new WorldObject(set, world_set);
-	}
+
 	
 	
 //	-----------------------------------------------------------------------------------------------------------
@@ -65,24 +66,36 @@ public class Scene extends com.g2d.game.rpg.Scene
 			this.set_resource 	= resource;
 			this.set_world		= set_world;
 			
-//			for (int x = set_world.GridXCount - 1; x >= 0; --x) {
-//				for (int y = set_world.GridYCount - 1; y >= 0; --y) {
-//					this.grid_matrix[x][y] = set_world.Terrian[x][y];
-//				}
-//			}
-			
-			for (int i=set_world.Sprs.size()-1; i>=0; --i){
-				WorldSet.SpriteObject wspr = set_world.Sprs.elementAt(i);
+			for (WorldSet.SpriteObject wspr : sortWorldObject(new ArrayList<SpriteObject>(set_world.Sprs))){
 				WorldObject cs = createWorldObject(resource, wspr);
 				addChild(cs);
 			}
 		}
 		
-		public CellSetResource getSetResource(){
+		/**
+		 * 自定义地图单元的加载顺序
+		 * @param objects
+		 * @return
+		 */
+		protected List<SpriteObject> sortWorldObject(List<SpriteObject> objects) {
+			return objects;
+		}
+		
+		/**
+		 * 返回自定义的地图单位实现
+		 * @param set
+		 * @param world_set
+		 * @return
+		 */
+		protected WorldObject createWorldObject(CellSetResource set, CellSetResource.WorldSet.SpriteObject world_set) {
+			return new WorldObject(set, world_set);
+		}
+		
+		final public CellSetResource getSetResource(){
 			return set_resource;
 		}
 		
-		public CellSetResource.WorldSet getSetWorld() {
+		final public CellSetResource.WorldSet getSetWorld() {
 			return set_world;
 		}
 
