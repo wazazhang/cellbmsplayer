@@ -586,7 +586,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		class EatWorldMap extends WorldMap
 		{
 			public EatWorldMap(CellSetResource resource, String worldname) {
-				super(resource, resource.WorldTable.get(worldname));
+				super(SceneContainer.this, resource, resource.WorldTable.get(worldname));
 			}
 			
 			@Override
