@@ -173,6 +173,12 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 			}
 		}
 	}
+
+	public void resetAllResources() {
+		for (SceneNode node : getAllScenes()) {
+			node.cleanSceneEditor();
+		}
+	}
 	
 //	------------------------------------------------------------------------------------------------------------------------------
 

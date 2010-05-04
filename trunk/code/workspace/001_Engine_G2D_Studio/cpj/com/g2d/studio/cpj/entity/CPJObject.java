@@ -19,10 +19,10 @@ public abstract class CPJObject <T extends CellSetObject> extends G2DTreeNode<CP
 	final public CPJFile			parent;
 	final public String				name;
 	final public CPJResourceType 	res_type;
-	final public T					set_object;
+
+	private T					set_object;
+	protected BufferedImage		snapshoot;
 	
-	transient
-	protected BufferedImage	snapshoot;
 	
 	public CPJObject(CPJFile parent, String name, Class<T> type, CPJResourceType res_type) {
 		this.parent 	= parent;
@@ -48,6 +48,10 @@ public abstract class CPJObject <T extends CellSetObject> extends G2DTreeNode<CP
 	
 	public T getSetObject() {
 		return set_object;
+	}
+
+	public void setSetObject(T obj) {
+		this.set_object = obj;
 	}
 	
 	@Override
