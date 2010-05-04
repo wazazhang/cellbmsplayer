@@ -38,6 +38,8 @@ import sun.awt.image.ImageWatched.Link;
 import com.cell.CIO;
 import com.cell.gfx.IGraphics;
 import com.cell.gfx.IImage;
+import com.cell.gfx.game.CCD;
+import com.cell.gfx.game.CSprite;
 import com.cell.j2se.CGraphics;
 import com.cell.math.MathVector;
 import com.cell.math.TVector;
@@ -268,6 +270,28 @@ public class Tools
 			IGraphics ig = new CGraphics(g);
 			ig.drawImage(image, 0, 0, 0);
 			g.dispose();
+			return buf;
+		}
+		catch(Exception err)
+		{
+			err.printStackTrace();
+		}
+		return null;
+	}
+	
+	static public BufferedImage createImage(CSprite spr, int anim, int frame)
+	{
+		try
+		{	
+			CCD bounds = spr.getFrameBounds(anim, frame);
+			BufferedImage buf = gc.createCompatibleImage(bounds.getWidth(), bounds.getHeight(), Transparency.TRANSLUCENT);
+			Graphics2D g = (Graphics2D)buf.createGraphics();
+			IGraphics ig = new CGraphics(g);
+			try {
+				spr.render(ig, -bounds.X1, -bounds.Y1, anim, frame);
+			} finally {
+				g.dispose();
+			}
 			return buf;
 		}
 		catch(Exception err)
