@@ -122,12 +122,32 @@ public class CPJFile extends G2DTreeNode<CPJObject<?>>
 			}catch(Exception err){
 				err.printStackTrace();
 			}
-		} else {
+		} else if (set != null) {
 			ret.setSetObject(set);
 		}
 		return ret;
 	}
 	
+	//	
+	private CPJWorld loadWorld(String name) {
+		WorldSet wordset = set_resource.getSetWorld(name);
+		CPJWorld ret = worlds.get(name);
+		if (ret == null) {
+			try{
+				if (wordset!=null) {
+					ret = new CPJWorld(this, name);
+					worlds.put(name, ret);
+				}
+				add(ret);
+			}catch(Exception err){
+				err.printStackTrace();
+			}
+		} else if (wordset!=null) {
+			ret.setSetObject(wordset);
+		}
+		return ret;
+	}
+
 	private void loadAllSprite(CPJResourceType res_type)
 	{
 		if (set_resource != null) {
@@ -137,24 +157,6 @@ public class CPJFile extends G2DTreeNode<CPJObject<?>>
 		}
 	}
 
-	//	
-	private CPJWorld loadWorld(String name) {
-		CPJWorld ret = worlds.get(name);
-		if (ret == null) {
-			try{
-				WorldSet wordset = set_resource.getSetWorld(name);
-				if (wordset!=null) {
-					ret = new CPJWorld(this, name);
-					worlds.put(name, ret);
-				}
-				add(ret);
-			}catch(Exception err){
-				err.printStackTrace();
-			}
-		}
-		return ret;
-	}
-	
 	private void loadAllWorld() {
 		if (set_resource != null) {
 			for (String world : set_resource.WorldTable.keySet()) {

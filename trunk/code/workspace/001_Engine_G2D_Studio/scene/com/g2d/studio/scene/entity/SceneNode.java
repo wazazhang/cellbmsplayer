@@ -96,6 +96,8 @@ final public class SceneNode extends DynamicNode<Scene>
 	
 	public void cleanSceneEditor() {
 		this.world_editor = null;
+		this.bind_data.scene_node.width		= world_index.getObject().getSetObject().Width;
+		this.bind_data.scene_node.height	= world_index.getObject().getSetObject().Height;
 	}
 	
 	public SceneEditor getSceneEditor() {
