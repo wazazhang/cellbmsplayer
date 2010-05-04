@@ -18,6 +18,7 @@ import com.cell.gfx.game.CSprite;
 import com.g2d.Tools;
 import com.g2d.cell.CellSetResource.SpriteSet;
 import com.g2d.cell.CellSetResource.WorldSet;
+import com.g2d.studio.Studio;
 import com.g2d.studio.StudioResource;
 import com.g2d.studio.cell.gameedit.Builder;
 import com.g2d.studio.cpj.CPJResourceType;
@@ -109,10 +110,10 @@ public class CPJFile extends G2DTreeNode<CPJObject<?>>
 
 	//
 	private CPJSprite loadSprite(String name, CPJResourceType res_type) {
+		SpriteSet set = set_resource.getSetSprite(name);
 		CPJSprite ret = sprites.get(name);
 		if (ret == null) {
 			try{
-				SpriteSet set = set_resource.getSetSprite(name);
 				if (set!=null) {
 					ret = new CPJSprite(this, name, res_type);
 					sprites.put(name, ret);
@@ -122,7 +123,7 @@ public class CPJFile extends G2DTreeNode<CPJObject<?>>
 				err.printStackTrace();
 			}
 		} else {
-			
+			ret.setSetObject(set);
 		}
 		return ret;
 	}
@@ -264,6 +265,10 @@ public class CPJFile extends G2DTreeNode<CPJObject<?>>
 					DefaultTreeModel tm = (DefaultTreeModel)tree.getModel();
 					tm.reload(CPJFile.this);
 				}catch (Exception err){}
+				try{
+					Studio.getInstance().getObjectManager().resetAllResources();
+					Studio.getInstance().getSceneManager().resetAllResources();
+				}catch (Exception err){err.printStackTrace();}
 			}
 		}
 		

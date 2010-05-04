@@ -41,6 +41,7 @@ import com.g2d.studio.gameedit.template.XLSSkill;
 import com.g2d.studio.gameedit.template.XLSTemplateNode;
 import com.g2d.studio.gameedit.template.XLSUnit;
 import com.g2d.studio.res.Res;
+import com.g2d.studio.scene.entity.SceneNode;
 import com.g2d.studio.swing.G2DWindowToolBar;
 
 public class ObjectManager
@@ -206,6 +207,10 @@ public class ObjectManager
 	public <T extends ObjectNode<?>> T getObject(Class<T> type, String id)
 	{
 		return getObject(type, Integer.parseInt(id));
+	}
+
+	public void resetAllResources() {
+		
 	}
 	
 	public void saveAll() throws Throwable

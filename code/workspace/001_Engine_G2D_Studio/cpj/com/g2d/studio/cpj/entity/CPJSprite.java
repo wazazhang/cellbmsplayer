@@ -24,6 +24,12 @@ public class CPJSprite extends CPJObject<SpriteSet>
 	}
 	
 	@Override
+	public void setSetObject(SpriteSet obj) {
+		super.setSetObject(obj);
+		cell_sprite = null;
+	}
+	
+	@Override
 	public CellSprite getDisplayObject() {
 		if (cell_sprite==null) {
 			parent.getSetResource().initAllStreamImages();

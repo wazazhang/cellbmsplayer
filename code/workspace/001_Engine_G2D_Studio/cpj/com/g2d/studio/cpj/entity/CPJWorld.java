@@ -28,6 +28,13 @@ public class CPJWorld extends CPJObject<WorldSet>
 	}
 	
 	@Override
+	public void setSetObject(WorldSet obj) {
+		super.setSetObject(obj);
+		snapshoot = null;
+		scene_snapshoot=null;
+	}
+	
+	@Override
 	public BufferedImage getSnapShoot() {
 		if (snapshoot==null) {
 			try{

@@ -30,8 +30,8 @@ final public class SceneNode extends DynamicNode<Scene>
 		this.bind_data.scene_node = new com.cell.rpg.display.SceneNode(
 				world_index.cpj_file_name,
 				world_index.set_object_name);
-		this.bind_data.scene_node.width		= world_index.getObject().set_object.Width;
-		this.bind_data.scene_node.height	= world_index.getObject().set_object.Height;
+		this.bind_data.scene_node.width		= world_index.getObject().getSetObject().Width;
+		this.bind_data.scene_node.height	= world_index.getObject().getSetObject().Height;
 	}
 
 	public SceneNode(Scene scene) {
@@ -42,8 +42,8 @@ final public class SceneNode extends DynamicNode<Scene>
 				scene.scene_node.cpj_object_id);
 		try {
 			CPJWorld res_world = Studio.getInstance().getCPJResourceManager().getNode(world_index);
-			this.bind_data.scene_node.width		= res_world.set_object.Width;
-			this.bind_data.scene_node.height	= res_world.set_object.Height;
+			this.bind_data.scene_node.width		= res_world.getSetObject().Width;
+			this.bind_data.scene_node.height	= res_world.getSetObject().Height;
 			System.out.println("load a scene : " + scene.name + "   (" + scene.id + ")");
 		} catch(Exception err) {
 			throw new RuntimeException("场景\""+scene.name+"("+scene.id+")\"读取错误！", err);
@@ -92,6 +92,10 @@ final public class SceneNode extends DynamicNode<Scene>
 			getWorldDisplay().saveSnapshot(image);
 			getIcon(true);
 		}
+	}
+	
+	public void cleanSceneEditor() {
+		this.world_editor = null;
 	}
 	
 	public SceneEditor getSceneEditor() {
