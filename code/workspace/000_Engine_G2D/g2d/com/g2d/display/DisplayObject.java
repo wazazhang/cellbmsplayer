@@ -67,7 +67,7 @@ public abstract class DisplayObject extends DObject implements Comparable<Displa
 	
 	@Property("当前坐标系的 rectangle")
 	/** 当前坐标系的 rectangle */
-	public Rectangle 			local_bounds;
+	final public Rectangle 		local_bounds 		= new Rectangle(0,0,100,100);
 	
 	protected boolean			clip_local_bounds;
 	
@@ -126,7 +126,6 @@ public abstract class DisplayObject extends DObject implements Comparable<Displa
 	/**初始化可序列化字段*/
 	protected void init_field() {
 		visible 			= true;
-		local_bounds 		= new Rectangle(0,0,100,100);
 		clip_local_bounds	= false;
 	}
 	

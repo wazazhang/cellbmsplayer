@@ -25,7 +25,7 @@ public class DisplayShape extends DisplayObject
 	{
 		this.shape = shape;
 		this.color = color;
-		this.local_bounds = this.shape.getBounds();
+		this.local_bounds.setBounds(this.shape.getBounds());
 	}
 
 	final protected void onUpdate(DisplayObjectContainer parent) {
