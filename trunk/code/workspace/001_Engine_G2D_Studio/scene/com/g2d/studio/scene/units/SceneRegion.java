@@ -64,9 +64,9 @@ public class SceneRegion extends com.g2d.game.rpg.Unit implements SceneUnitTag<R
 	
 	public SceneRegion(SceneEditor editor, Rectangle rect) 
 	{
-		this.editor 	= editor;
-		this.local_bounds	= rect;
+		this.editor 		= editor;
 		this.priority 		= -Integer.MAX_VALUE / 2;
+		this.local_bounds.setBounds(rect);
 		if (!editor.getGameScene().getWorld().addChild(this)){
 			throw new IllegalStateException();
 		}
