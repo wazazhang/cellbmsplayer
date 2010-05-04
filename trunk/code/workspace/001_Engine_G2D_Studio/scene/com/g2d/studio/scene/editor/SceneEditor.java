@@ -590,7 +590,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 			}
 			
 			@Override
-			protected WorldObject createWorldObject(CellSetResource set, SpriteObject worldSet) {
+			protected Unit createWorldObject(CellSetResource set, SpriteObject worldSet) {
 				return new EatWorldObject(set, worldSet);
 			}
 			

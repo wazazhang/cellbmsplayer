@@ -28,6 +28,7 @@ import com.g2d.display.DisplayObject;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.DisplayShape;
 import com.g2d.display.InteractiveObject;
+import com.g2d.game.rpg.Unit;
 import com.g2d.util.Drawing;
 
 public class Scene extends com.g2d.game.rpg.Scene 
@@ -67,7 +68,7 @@ public class Scene extends com.g2d.game.rpg.Scene
 			this.set_world		= set_world;
 			
 			for (WorldSet.SpriteObject wspr : sortWorldObject(new ArrayList<SpriteObject>(set_world.Sprs))){
-				WorldObject cs = createWorldObject(resource, wspr);
+				Unit cs = createWorldObject(resource, wspr);
 				addChild(cs);
 			}
 		}
@@ -87,7 +88,7 @@ public class Scene extends com.g2d.game.rpg.Scene
 		 * @param world_set
 		 * @return
 		 */
-		protected WorldObject createWorldObject(CellSetResource set, CellSetResource.WorldSet.SpriteObject world_set) {
+		protected Unit createWorldObject(CellSetResource set, CellSetResource.WorldSet.SpriteObject world_set) {
 			return new WorldObject(set, world_set);
 		}
 		
