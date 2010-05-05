@@ -51,16 +51,19 @@ public class CIO extends CObject
 	public static byte[] readStream(InputStream is) {
 		if (is != null) {
 			try {
-				int dataSize = is.available();
-				int count = 0, i;
-				byte[] data = new byte[dataSize];
-				while (true) {
-					i = is.read(data, count, dataSize - count);
-					if (i <= 0)
+				ByteArrayOutputStream baos = new ByteArrayOutputStream(is.available());
+				int count = 0;
+				while (is.available() > 0) {
+					byte[] data = new byte[is.available()];
+					int read_bytes = is.read(data);
+					if (read_bytes <= 0) {
 						break;
-					count += i;
+					} else {
+						baos.write(data);
+						count += read_bytes;
+					}
 				}
-				return data;
+				return baos.toByteArray();
 			} catch (IOException e) {
 				e.printStackTrace();
 			} finally {
@@ -334,7 +337,6 @@ public class CIO extends CObject
 					actual = is.read(data, bytesread, len - bytesread);
 					bytesread += actual;
 				}
-				is.close();
 				return data;
 			} else if (len == 0) {
 				return new byte[0];
@@ -345,9 +347,7 @@ public class CIO extends CObject
 			if (is != null) {
 				try {
 					is.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				} catch (IOException e) {}
 			}
 		}
 		return null;

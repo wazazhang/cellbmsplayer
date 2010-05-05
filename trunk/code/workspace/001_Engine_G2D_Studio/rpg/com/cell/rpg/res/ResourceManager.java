@@ -212,7 +212,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 		
 		for (int i=0; i<res_list.length; i++)
 		{
-			String[] split = CUtil.splitString(res_list[i], ";");
+			String[] split = CUtil.splitString(res_list[i].trim(), ";");
 			String res_path		= split[0];
 			String cpj_name 	= split[1];
 			String obj_name 	= split[2];
@@ -244,7 +244,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 		
 		for (int i=0; i<res_list.length; i++)
 		{
-			String[] split 	= CUtil.splitString(res_list[i], ",");
+			String[] split 	= CUtil.splitString(res_list[i].trim(), ",");
 			String icon_id 	= split[0];
 			String icon_w 	= split[1];
 			String icon_h 	= split[2];
@@ -309,6 +309,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 		String[] res_list = CIO.readAllLine(list_file, "UTF-8");
 		
 		for (String line : res_list) {
+			line = line.trim();
 			int bl = line.indexOf("(");
 			int br = line.indexOf(")");
 			String id = line.substring(bl+1, br);
