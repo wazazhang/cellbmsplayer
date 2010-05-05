@@ -13,7 +13,7 @@ import com.g2d.cell.CellSetResource.ImagesSet;
 import com.g2d.cell.CellSetResource.StreamTiles;
 
 
-public class Resource extends CellSetResource
+public abstract class Resource extends CellSetResource
 {
 	/**
 	 * @param file
@@ -37,81 +37,19 @@ public class Resource extends CellSetResource
 
 	@Override
 	protected StreamTiles getLocalImage(ImagesSet img) throws IOException {
-		StreamTypeTiles tiles = new StreamTypeTiles(img);
+		StreamTiles tiles = createStreamTiles(img);
 		tiles.run();
 		return tiles;
 	}
 	
 	@Override
 	protected StreamTiles getStreamImage(ImagesSet img) throws IOException {
-		StreamTypeTiles tiles = new StreamTypeTiles(img);
+		StreamTiles tiles = createStreamTiles(img);
 		return tiles;
 	}
 	
-	/**
-	 * 根据图片组名字确定读入jpg或png
-	 * @author WAZA
-	 */
-	public class StreamTypeTiles extends StreamTiles
-	{
-		public StreamTypeTiles(ImagesSet img) throws IOException {
-			super(img);
-		}
-		
-		@Override
-		protected void initImages() 
-		{
-			try {
-				// 根据tile的类型来判断读取何种图片
-				if (img.Name.equals("png") || img.Name.equals("jpg")) {
-					if (loadZipImages()) {
-						return;
-					}
-					if (loadSetImages()) {
-						return;
-					}
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			
-			try {
-				super.initImages();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		
-		protected boolean loadSetImages() {
-			try{
-				for (int i=0; i<images.length; i++){
-					if (img.ClipsW[i]>0 && img.ClipsH[i]>0){
-						byte[] idata = loadRes("set/"+img.Name+"/"+i+"."+img.Name);
-						images[i] = new CImage(new ByteArrayInputStream(idata));
-					}
-				}
-				return true;
-			} catch (Exception err) {
-				err.printStackTrace();
-				return false;
-			}
-		}
-		
-		protected boolean loadZipImages() {
-			byte[] zipdata = loadRes(img.Name+".zip");
-			if (zipdata != null) {
-				Map<String, ByteArrayInputStream> files = ZipUtil.unPackFile(new ByteArrayInputStream(zipdata));
-				for (int i = 0; i < images.length; i++) {
-					if (img.ClipsW[i] > 0 && img.ClipsH[i] > 0) {
-						ByteArrayInputStream idata = files.get(i+"."+img.Name);
-						images[i] = new CImage(idata);
-					}
-				}
-				return true;
-			}
-			return false;
-		}
-	}
+	abstract protected StreamTiles createStreamTiles(ImagesSet img);
+	
 	
 	
 }

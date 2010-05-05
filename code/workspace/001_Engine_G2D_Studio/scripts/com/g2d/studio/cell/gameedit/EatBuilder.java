@@ -1,16 +1,23 @@
 package com.g2d.studio.cell.gameedit;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import com.cell.CIO;
 import com.cell.CUtil;
 import com.cell.io.CFile;
 import com.cell.j2se.CAppBridge;
+import com.cell.j2se.CImage;
+import com.cell.rpg.res.Resource;
 import com.cell.util.zip.ZipUtil;
 import com.g2d.cell.CellGameEditWrap;
+import com.g2d.cell.CellSetResource.ImagesSet;
+import com.g2d.cell.CellSetResource.StreamTiles;
 
 
 public class EatBuilder extends Builder
@@ -166,6 +173,76 @@ public class EatBuilder extends Builder
 		return script_file;
 	}
 
+	@Override
+	public StreamTiles createResource(ImagesSet img, Resource resource) {
+		return new StreamTypeTiles(img, resource);
+	}
+
+	/**
+	 * 根据图片组名字确定读入jpg或png
+	 * @author WAZA
+	 */
+	public static class StreamTypeTiles extends StreamTiles
+	{
+		public StreamTypeTiles(ImagesSet img, Resource resource) {
+			super(img, resource);
+		}
+		
+		@Override
+		protected void initImages() 
+		{
+			try {
+				// 根据tile的类型来判断读取何种图片
+				if (img.Name.equals("png") || img.Name.equals("jpg")) {
+					if (loadZipImages()) {
+						return;
+					}
+					if (loadSetImages()) {
+						return;
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			try {
+				super.initImages();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		protected boolean loadSetImages() {
+			try{
+				for (int i=0; i<images.length; i++){
+					if (img.ClipsW[i]>0 && img.ClipsH[i]>0){
+						byte[] idata = set.loadRes("set/"+img.Name+"/"+i+"."+img.Name);
+						images[i] = new CImage(new ByteArrayInputStream(idata));
+					}
+				}
+				return true;
+			} catch (Exception err) {
+				err.printStackTrace();
+				return false;
+			}
+		}
+		
+		protected boolean loadZipImages() {
+			byte[] zipdata = set.loadRes(img.Name+".zip");
+			if (zipdata != null) {
+				Map<String, ByteArrayInputStream> files = ZipUtil.unPackFile(new ByteArrayInputStream(zipdata));
+				for (int i = 0; i < images.length; i++) {
+					if (img.ClipsW[i] > 0 && img.ClipsH[i] > 0) {
+						ByteArrayInputStream idata = files.get(i+"."+img.Name);
+						images[i] = new CImage(idata);
+					}
+				}
+				return true;
+			}
+			return false;
+		}
+	}
+	
 //	-----------------------------------------------------------------------------------------------------------
 	
 	public static void main(String[] args)

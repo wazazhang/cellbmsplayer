@@ -187,7 +187,7 @@ public class CellSetResource
 	 * @throws IOException
 	 */
 	protected StreamTiles getLocalImage(ImagesSet img) throws IOException {
-		StreamTiles tiles = new StreamTiles(img);
+		StreamTiles tiles = new StreamTiles(img, this);
 		return tiles;
 	}
 	
@@ -198,7 +198,7 @@ public class CellSetResource
 	 * @throws IOException
 	 */
 	protected StreamTiles getStreamImage(ImagesSet img) throws IOException {
-		StreamTiles tiles = new StreamTiles(img);
+		StreamTiles tiles = new StreamTiles(img, this);
 		return tiles;
 	}
 	
@@ -434,7 +434,12 @@ public class CellSetResource
 	}
 	
 
-	final protected byte[] loadRes(String path)
+	/**
+	 * 读取本目录资源
+	 * @param path
+	 * @return
+	 */
+	final public byte[] loadRes(String path)
 	{
 		byte[] data = CIO.loadData(PathDir+path);
 		if (data == null) {
@@ -1424,17 +1429,19 @@ public class CellSetResource
 	 * @author WAZA
 	 * 支持网络缓冲的图片组
 	 */
-	public class StreamTiles implements IImages, Runnable
+	public static class StreamTiles implements IImages, Runnable
 	{
-		final protected ImagesSet	img;
-		final protected IImage[]	images;
+		final protected CellSetResource	set;
+		final protected ImagesSet		img;
+		final protected IImage[]		images;
 		
-		private boolean	is_loaded = false;
-		private int		render_timer;
+		private boolean					is_loaded = false;
+		private int						render_timer;
 		
-		public StreamTiles(ImagesSet img) throws IOException {
-			this.images = new CImage[img.Count];
-			this.img = img;
+		public StreamTiles(ImagesSet img, CellSetResource res) {
+			this.set	= res;
+			this.images	= new CImage[img.Count];
+			this.img	= img;
 		}
 		
 		/**
@@ -1443,7 +1450,7 @@ public class CellSetResource
 		 */
 		protected void initImages()
 		{
-			byte[] idata = loadRes(img.Name+".png");
+			byte[] idata = set.loadRes(img.Name+".png");
 			CImage src = new CImage(new ByteArrayInputStream(idata));
 			for (int i=0; i<images.length; i++){
 				if (img.ClipsW[i]>0 && img.ClipsH[i]>0){
