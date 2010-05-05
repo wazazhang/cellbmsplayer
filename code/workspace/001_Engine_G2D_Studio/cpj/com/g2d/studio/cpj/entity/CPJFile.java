@@ -220,9 +220,11 @@ public class CPJFile extends G2DTreeNode<CPJObject<?>>
 			case AVATAR:
 			case EFFECT:
 				Builder.getInstance().buildSprite(cpj_file);
+				Builder.getInstance().saveBuildSpriteBat(cpj_file);
 				break;
 			case WORLD:
 				Builder.getInstance().buildScene(cpj_file);
+				Builder.getInstance().saveBuildSceneBat(cpj_file);
 				break;
 			}
 		}
