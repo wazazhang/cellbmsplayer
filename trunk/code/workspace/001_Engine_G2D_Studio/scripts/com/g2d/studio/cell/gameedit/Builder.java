@@ -15,7 +15,11 @@ public abstract class Builder
 	public abstract Process buildScene(File cpj_file_name);
 	
 	public abstract StreamTiles createResource(ImagesSet img, Resource resource);
+	
+	public abstract void saveBuildSpriteBat(File cpj_file_name);
 
+	public abstract void saveBuildSceneBat(File cpj_file_name);
+	
 //	----------------------------------------------------------------------------------------------------------
 	
 	private static Builder instance;
