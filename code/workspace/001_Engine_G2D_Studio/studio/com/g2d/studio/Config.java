@@ -66,5 +66,17 @@ public class Config extends com.cell.util.Config
 	/**执行Builder的类*/
 	public static String BUILDER_CLASS				= "com.g2d.studio.cell.gameedit.EatBuilder";
 	
+	/**CellGameEdit可执行文件*/
+	public static String CELL_GAME_EDIT_CMD			= "CellGameEdit.exe";
 	
+	/**保存的导出精灵批处理<br>
+	 * {file}变量为cpj文件*/
+	public static String CELL_BUILD_SPRITE_CMD		= 
+		"@java -classpath \"g2dstudio.jar\" com.g2d.studio.cell.gameedit.EatBuilder \"{file}\" \"sprite\"";
+	
+	/**保存的导出场景批处理<br>
+	 * {file}变量为cpj文件*/
+	public static String CELL_BUILD_SCENE_CMD		= 
+		"@java -classpath \"g2dstudio.jar\" com.g2d.studio.cell.gameedit.EatBuilder \"{file}\" \"scene\"";	
+
 }

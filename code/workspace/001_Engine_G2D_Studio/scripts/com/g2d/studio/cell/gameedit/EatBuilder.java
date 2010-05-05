@@ -18,14 +18,13 @@ import com.cell.util.zip.ZipUtil;
 import com.g2d.cell.CellGameEditWrap;
 import com.g2d.cell.CellSetResource.ImagesSet;
 import com.g2d.cell.CellSetResource.StreamTiles;
+import com.g2d.studio.Config;
 
 
 public class EatBuilder extends Builder
 {
 	final HashMap<String, String> script_map;
 
-	final String CELL_GAME_EDIT_CMD			= "CellGameEdit.exe";
-	
 	public EatBuilder() 
 	{
 		script_map = new HashMap<String, String>(5);
@@ -37,7 +36,7 @@ public class EatBuilder extends Builder
 	
 	public Process openCellGameEdit(File cpj_file) 
 	{
-		return CellGameEditWrap.openCellGameEdit(CELL_GAME_EDIT_CMD, cpj_file);
+		return CellGameEditWrap.openCellGameEdit(Config.CELL_GAME_EDIT_CMD, cpj_file);
 	}
 	
 	public Process buildSprite(File cpj_file_name)
@@ -45,10 +44,13 @@ public class EatBuilder extends Builder
 		System.out.println("build sprite : " + cpj_file_name);
 		try {
 			File output_properties = copyScript(cpj_file_name, "output.properties");
-			Process process = CellGameEditWrap.openCellGameEdit(CELL_GAME_EDIT_CMD, cpj_file_name, 
+			Process process = CellGameEditWrap.openCellGameEdit(Config.CELL_GAME_EDIT_CMD, cpj_file_name, 
 					output_properties.getPath());
 			process.waitFor();
 			cleanOutput(cpj_file_name);
+			String cmd = CUtil.replaceString(Config.CELL_BUILD_SPRITE_CMD, "{file}", cpj_file_name.getName());
+			cmd = CUtil.replaceString(cmd, "\\n", "\n");
+			CFile.writeText(new File(cpj_file_name.getParentFile(), "build_sprite.bat"), cmd, "UTF-8");
 			return process;
 		} catch (Throwable e) {
 			e.printStackTrace();
@@ -63,13 +65,16 @@ public class EatBuilder extends Builder
 			File output_properties	= copyScript(cpj_file_name,	"output.properties");
 			File scene_jpg_script	= copyScript(cpj_file_name,	"scene_jpg.script");
 			File scene_png_script	= copyScript(cpj_file_name,	"scene_png.script");
-			Process process = CellGameEditWrap.openCellGameEdit(CELL_GAME_EDIT_CMD, cpj_file_name, 
+			Process process = CellGameEditWrap.openCellGameEdit(Config.CELL_GAME_EDIT_CMD, cpj_file_name, 
 					output_properties.getPath(), 
 					scene_jpg_script.getPath(),
 					scene_png_script.getPath()
 					);
 			process.waitFor();
 			cleanOutput(cpj_file_name);
+			String cmd = CUtil.replaceString(Config.CELL_BUILD_SCENE_CMD, "{file}", cpj_file_name.getName());
+			cmd = CUtil.replaceString(cmd, "\\n", "\n");
+			CFile.writeText(new File(cpj_file_name.getParentFile(), "build_scene.bat"), cmd, "UTF-8");
 			return process;
 		} catch (Throwable e) {
 			e.printStackTrace();
