@@ -250,21 +250,106 @@ public class CIO extends CObject
 		return null;
 	}
 	
-	public static InputStream getInputStream(URL url) {
+	public static URLInputStream getInputStream(URL url) {
 		return getInputStream(url, LoadingTimeOut);
 	}
 	
-	public static InputStream getInputStream(URL url, int timeOut)
+	public static URLInputStream getInputStream(URL url, int timeOut)
 	{
 		try {
-			URLConnection c = url.openConnection();
+			return new URLInputStream(url, timeOut);
+		} catch (IOException err) {
+			err.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static class URLInputStream extends InputStream
+	{
+		final private URLConnection c;
+		final private InputStream is;
+		private int length ;
+		
+		public URLInputStream(URL url, int timeout) throws IOException 
+		{
+			this.c = url.openConnection();
+			this.c.setConnectTimeout(timeout);
+			this.c.setReadTimeout(timeout);
+			this.c.connect();
+			this.is = c.getInputStream();
+			this.length = c.getContentLength();
+		}
+		
+		@Override
+		public int available() throws IOException {
+			return length;
+		}
+
+		@Override
+		public int read() throws IOException {
+			return is.read();
+		}
+
+		@Override
+		public int read(byte[] b, int off, int len) throws IOException {
+			return is.read(b, off, len);
+		}
+
+		@Override
+		public int read(byte[] b) throws IOException {
+			return is.read(b);
+		}
+
+		@Override
+		public void close() throws IOException {
+			is.close();
+		}
+
+		@Override
+		public void mark(int readlimit) {}
+
+		@Override
+		public boolean markSupported() {
+			return false;
+		}
+
+	}
+
+	public static byte[] loadData(URL Url, int timeOut)
+	{
+		URLConnection c = null;
+		InputStream is = null;
+		try {
+			c = Url.openConnection();
 			c.setConnectTimeout(timeOut);
 			c.setReadTimeout(timeOut);
 			c.connect();
-			return c.getInputStream();
+			is = c.getInputStream();
+			int len = (int) c.getContentLength();
+			if (len > 0) {
+				int actual = 0;
+				int bytesread = 0;
+				byte[] data = new byte[len];
+				while ((bytesread != len) && (actual != -1)) {
+					actual = is.read(data, bytesread, len - bytesread);
+					bytesread += actual;
+				}
+				is.close();
+				return data;
+			} else if (len == 0) {
+				return new byte[0];
+			}
 		} catch (IOException err) {
 			err.printStackTrace();
-		} finally {}
+		} finally {
+			if (is != null) {
+				try {
+					is.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 		return null;
 	}
 }
