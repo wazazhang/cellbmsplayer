@@ -32,28 +32,8 @@ import com.cell.security.MD5;
  */
 public class CIO extends CObject
 {
-	
-//	public static InputStream openStream(String fileName) {
-//		InputStream is = null;
-//		try {
-//			if(fileName!=null){
-//				is = AppBridge.getResource(fileName); //fileName.getClass().getResourceAsStream(fileName);
-//			}else{
-//				System.err.println("File name is null -_-! ");
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		return is;
-//	}
-
-	public static URL getResourceURL(String resource)
-	{
-		return CObject.getAppBridge().getClassLoader().getResource(resource);
-	}
-	
 //	------------------------------------------------------------------------------------------------------------------------
-//	
+
 	static public int LoadingTimeOut = 20000; //ms
 	
 	static public long LoadedBytes = 0;
@@ -80,6 +60,7 @@ public class CIO extends CObject
 						break;
 					count += i;
 				}
+				return data;
 			} catch (IOException e) {
 				e.printStackTrace();
 			} finally {
@@ -114,12 +95,14 @@ public class CIO extends CObject
 
 			if (input != null) {
 				byte[] data = readStream(input);
-				LoadedBytes += data.length;
+				if (data != null) {
+					LoadedBytes += data.length;
+				}
 				return data;
 			}
 		}
 		catch(Exception err){
-			System.err.println("CIO.loadData error : " + path + " : " + err.getMessage());
+			err.printStackTrace();
 		}
 		
 		return null;
@@ -244,7 +227,11 @@ public class CIO extends CObject
 	}
 
 //	------------------------------------------------------------------------------------------------------------------------
-	
+
+	public static URL getResourceURL(String resource)
+	{
+		return CObject.getAppBridge().getClassLoader().getResource(resource);
+	}
 	
 	public static InputStream getInputStream(String path)
 	{
