@@ -34,21 +34,6 @@ public abstract class Resource extends CellSetResource
 	{
 		super(file, name, stream_image);
 	}
-
-	@Override
-	protected StreamTiles getLocalImage(ImagesSet img) throws IOException {
-		StreamTiles tiles = createStreamTiles(img);
-		tiles.run();
-		return tiles;
-	}
-	
-	@Override
-	protected StreamTiles getStreamImage(ImagesSet img) throws IOException {
-		StreamTiles tiles = createStreamTiles(img);
-		return tiles;
-	}
-	
-	abstract protected StreamTiles createStreamTiles(ImagesSet img);
 	
 	
 	
