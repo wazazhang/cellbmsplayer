@@ -3,10 +3,14 @@ package com.cell.rpg.res;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import com.cell.j2se.CImage;
+import com.cell.util.zip.ZipUtil;
 import com.g2d.cell.CellSetResource;
+import com.g2d.cell.CellSetResource.ImagesSet;
+import com.g2d.cell.CellSetResource.StreamTiles;
 
 
 public class Resource extends CellSetResource
@@ -48,7 +52,7 @@ public class Resource extends CellSetResource
 	 * 根据图片组名字确定读入jpg或png
 	 * @author WAZA
 	 */
-	protected class StreamTypeTiles extends StreamTiles
+	public class StreamTypeTiles extends StreamTiles
 	{
 		public StreamTypeTiles(ImagesSet img) throws IOException {
 			super(img);
@@ -57,35 +61,57 @@ public class Resource extends CellSetResource
 		@Override
 		protected void initImages() 
 		{
-			try{
+			try {
 				// 根据tile的类型来判断读取何种图片
-				if (img.Name.equals("png") || img.Name.equals("jpg"))
-				{
-					for (int i=0; i<images.length; i++){
-						if (img.ClipsW[i]>0 && img.ClipsH[i]>0){
-							byte[] idata = loadRes("set/"+img.Name+"/"+i+"."+img.Name);
-							images[i] = new CImage(new ByteArrayInputStream(idata));
-							//Thread.sleep(1000);
-						}
+				if (img.Name.equals("png") || img.Name.equals("jpg")) {
+					if (loadZipImages()) {
+						return;
+					}
+					if (loadSetImages()) {
+						return;
 					}
 				}
-				else
-				{
-					byte[] idata = loadRes(img.Name+".png");
-					CImage src = new CImage(new ByteArrayInputStream(idata));
-					for (int i=0; i<images.length; i++){
-						if (img.ClipsW[i]>0 && img.ClipsH[i]>0){
-							images[i] = src.subImage(img.ClipsX[i], img.ClipsY[i], img.ClipsW[i], img.ClipsH[i]);
-						}
-					}
-				}
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
+			}
+			
+			try {
 				super.initImages();
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 		
+		protected boolean loadSetImages() {
+			try{
+				for (int i=0; i<images.length; i++){
+					if (img.ClipsW[i]>0 && img.ClipsH[i]>0){
+						byte[] idata = loadRes("set/"+img.Name+"/"+i+"."+img.Name);
+						images[i] = new CImage(new ByteArrayInputStream(idata));
+					}
+				}
+				return true;
+			} catch (Exception err) {
+				err.printStackTrace();
+				return false;
+			}
+		}
+		
+		protected boolean loadZipImages() {
+			byte[] zipdata = loadRes(img.Name+".zip");
+			if (zipdata != null) {
+				Map<String, ByteArrayInputStream> files = ZipUtil.unPackFile(new ByteArrayInputStream(zipdata));
+				for (int i = 0; i < images.length; i++) {
+					if (img.ClipsW[i] > 0 && img.ClipsH[i] > 0) {
+						ByteArrayInputStream idata = files.get(i+"."+img.Name);
+						images[i] = new CImage(idata);
+					}
+				}
+				return true;
+			}
+			return false;
+		}
 	}
+	
 	
 }

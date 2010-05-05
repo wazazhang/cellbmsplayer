@@ -14,7 +14,7 @@ public class CellGameEditWrap
 				append.append("\"" + arg + "\" ");
 			}
 			String call_cmd = cmd + " " + cpj_file.getPath() + " " + append;
-			System.out.println("call cmd : " + call_cmd);
+//			System.out.println("call cmd : " + call_cmd);
 			return Runtime.getRuntime().exec(call_cmd);
 		} catch (Throwable ex) {
 			ex.printStackTrace();

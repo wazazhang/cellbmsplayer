@@ -3,15 +3,22 @@ package com.g2d.studio;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collection;
 import java.util.Enumeration;
+import java.util.Map;
 
+import com.cell.CIO;
 import com.cell.gfx.IImages;
 import com.cell.j2se.CImage;
+import com.cell.rpg.res.Resource;
+import com.cell.util.Pair;
+import com.cell.util.zip.ZipUtil;
 import com.g2d.cell.CellSetResource;
 
 
 
-public class StudioResource extends CellSetResource
+public class StudioResource extends Resource
 {
 	boolean is_load_resource = false;
 	
@@ -69,45 +76,7 @@ public class StudioResource extends CellSetResource
 		}
 	}
 	
-	/**
-	 * 根据图片组名字确定读入jpg或png
-	 * @author WAZA
-	 */
-	public class StreamTypeTiles extends StreamTiles
-	{
-		public StreamTypeTiles(ImagesSet img) throws IOException {
-			super(img);
-		}
-		
-		@Override
-		protected void initImages() 
-		{
-			try{
-				// 根据tile的类型来判断读取何种图片
-				if (img.Name.equals("png") || img.Name.equals("jpg"))
-				{
-					for (int i=0; i<images.length; i++){
-						if (img.ClipsW[i]>0 && img.ClipsH[i]>0){
-							byte[] idata = loadRes("set/"+img.Name+"/"+i+"."+img.Name);
-							images[i] = new CImage(new ByteArrayInputStream(idata));
-						}
-					}
-				}
-				else
-				{
-					byte[] idata = loadRes(img.Name+".png");
-					CImage src = new CImage(new ByteArrayInputStream(idata));
-					for (int i=0; i<images.length; i++){
-						if (img.ClipsW[i]>0 && img.ClipsH[i]>0){
-							images[i] = src.subImage(img.ClipsX[i], img.ClipsY[i], img.ClipsW[i], img.ClipsH[i]);
-						}
-					}
-				}
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		
-	}
+
+	
+
 }
