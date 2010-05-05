@@ -219,10 +219,10 @@ public class CPJFile extends G2DTreeNode<CPJObject<?>>
 			case ACTOR:	
 			case AVATAR:
 			case EFFECT:
-				Builder.buildSprite(cpj_file);
+				Builder.getInstance().buildSprite(cpj_file);
 				break;
 			case WORLD:
-				Builder.buildScene(cpj_file);
+				Builder.getInstance().buildScene(cpj_file);
 				break;
 			}
 		}
@@ -232,7 +232,7 @@ public class CPJFile extends G2DTreeNode<CPJObject<?>>
 	public void openEdit()
 	{
 		if (cpj_file.exists()) {
-			Builder.openCellGameEdit(cpj_file);
+			Builder.getInstance().openCellGameEdit(cpj_file);
 		}
 	}
 //	------------------------------------------------------------------------------------------------------------------------------

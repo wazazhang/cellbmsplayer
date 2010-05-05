@@ -34,6 +34,7 @@ import com.cell.sound.openal_impl.JALSoundManager;
 import com.cell.sql.SQMTypeManager;
 import com.cell.util.concurrent.ThreadPool;
 import com.g2d.Tools;
+import com.g2d.studio.cell.gameedit.Builder;
 import com.g2d.studio.cpj.CPJResourceManager;
 import com.g2d.studio.gameedit.ObjectManager;
 import com.g2d.studio.gameedit.ObjectManagerTree;
@@ -105,26 +106,27 @@ public class Studio extends AbstractFrame
 			this.getClass().getClassLoader(), 
 			this.getClass()));
 
-		project_file 		= new File(g2d_file);
-		project_path 		= new File(project_file.getParent());
-		project_save_path	= new File(project_file.getPath()+".save");
+		project_file 		= new File				(g2d_file);
+		project_path 		= new File				(project_file.getParent());
+		project_save_path	= new File				(project_file.getPath()+".save");
 		
 		Config.load(Config.class, g2d_file);
 
-		RPGObjectMap.setPersistanceManagerDriver(Config.PERSISTANCE_MANAGER);
-		SQMTypeManager.setTypeComparer(Config.PERSISTANCE_SQL_TYPE);
+		RPGObjectMap.setPersistanceManagerDriver	(Config.PERSISTANCE_MANAGER);
+		SQMTypeManager.setTypeComparer				(Config.PERSISTANCE_SQL_TYPE);
+		Builder.setBuilder							(Config.BUILDER_CLASS);
 		
-		root_icon_path		= getFile(Config.ICON_ROOT);
-		root_sound_path		= getFile(Config.SOUND_ROOT);
-		root_talk_path		= getFile(Config.TALK_ROOT);
+		root_icon_path		= getFile				(Config.ICON_ROOT);
+		root_sound_path		= getFile				(Config.SOUND_ROOT);
+		root_talk_path		= getFile				(Config.TALK_ROOT);
 		
-		xls_tplayer			= getFile(Config.XLS_TPLAYER);
-		xls_tunit			= getFile(Config.XLS_TUNIT);
-		xls_titem			= getFile(Config.XLS_TITEM);
-		xls_tshopitem		= getFile(Config.XLS_TSHOPITEM);
-		xls_tskill			= getFile(Config.XLS_TSKILL);
+		xls_tplayer			= getFile				(Config.XLS_TPLAYER);
+		xls_tunit			= getFile				(Config.XLS_TUNIT);
+		xls_titem			= getFile				(Config.XLS_TITEM);
+		xls_tshopitem		= getFile				(Config.XLS_TSHOPITEM);
+		xls_tskill			= getFile				(Config.XLS_TSKILL);
 		
-		File talk_example_file = getFile(Config.TALK_EXAMPLE);
+		File talk_example_file = getFile			(Config.TALK_EXAMPLE);
 		if (talk_example_file.exists()) {
 			talk_example = CFile.readText(talk_example_file, "UTF-8");
 		} else {
