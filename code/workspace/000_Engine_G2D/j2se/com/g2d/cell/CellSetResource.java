@@ -46,6 +46,10 @@ import com.g2d.cell.CellSetResource.WorldSet.WaypointObject;
 import com.g2d.display.DisplayObject;
 import com.g2d.util.Drawing;
 
+/**
+ * 对应output.properties的资源文件
+ * @author WAZA
+ */
 public class CellSetResource
 {
 //	-------------------------------------------------------------------------------------
