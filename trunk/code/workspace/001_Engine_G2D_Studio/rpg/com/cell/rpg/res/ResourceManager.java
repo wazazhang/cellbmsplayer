@@ -200,10 +200,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 	
 //	--------------------------------------------------------------------------------------------------------------------
 
-	protected CellSetResource createSet(String path) throws Exception
-	{
-		return new Resource(path, getLoadingService());
-	}
+	abstract protected Resource createSet(String path) throws Exception;
 	
 	final protected <T extends ResourceSet<?>> Hashtable<String, T> readSets(String file, Class<T> type) throws Exception
 	{

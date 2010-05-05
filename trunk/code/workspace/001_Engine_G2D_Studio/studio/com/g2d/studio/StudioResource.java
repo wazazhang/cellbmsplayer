@@ -15,6 +15,7 @@ import com.cell.rpg.res.Resource;
 import com.cell.util.Pair;
 import com.cell.util.zip.ZipUtil;
 import com.g2d.cell.CellSetResource;
+import com.g2d.studio.cell.gameedit.Builder;
 
 
 
@@ -32,14 +33,19 @@ public class StudioResource extends Resource
 	
 	@Override
 	protected StreamTiles getLocalImage(ImagesSet img) throws IOException {
-		StreamTypeTiles tiles = new StreamTypeTiles(img);
+		StreamTiles tiles = createStreamTiles(img);
 		return tiles;
 	}
 	
 	@Override
 	protected StreamTiles getStreamImage(ImagesSet img) throws IOException {
-		StreamTypeTiles tiles = new StreamTypeTiles(img);
+		StreamTiles tiles = createStreamTiles(img);
 		return tiles;
+	}
+	
+	@Override
+	protected StreamTiles createStreamTiles(ImagesSet img) {
+		return Builder.getInstance().createResource(img, this);
 	}
 	
 	synchronized public boolean isLoadImages()

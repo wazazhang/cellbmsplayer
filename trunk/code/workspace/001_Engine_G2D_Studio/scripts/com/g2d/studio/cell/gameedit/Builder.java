@@ -1,17 +1,10 @@
 package com.g2d.studio.cell.gameedit;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
 
-import com.cell.CIO;
-import com.cell.CUtil;
-import com.cell.io.CFile;
-import com.cell.j2se.CAppBridge;
-import com.cell.util.zip.ZipUtil;
-import com.g2d.cell.CellGameEditWrap;
-import com.g2d.studio.Config;
+import com.cell.rpg.res.Resource;
+import com.g2d.cell.CellSetResource.ImagesSet;
+import com.g2d.cell.CellSetResource.StreamTiles;
 
 public abstract class Builder 
 {
@@ -21,6 +14,7 @@ public abstract class Builder
 	
 	public abstract Process buildScene(File cpj_file_name);
 	
+	public abstract StreamTiles createResource(ImagesSet img, Resource resource);
 
 //	----------------------------------------------------------------------------------------------------------
 	
