@@ -108,6 +108,11 @@ public class CFile
 	}
 	
 	
+	/**
+	 * 删除目录下指定后缀的所有文件
+	 * @param png
+	 * @param suffix
+	 */
 	static public void deleteFiles(File png, String suffix) {
 		File[] list = png.listFiles();
 		if (list != null) {
@@ -116,6 +121,21 @@ public class CFile
 					_jpg.delete();
 				}
 			}
+		}
+	}
+	
+	/**
+	 * 递归删除file，如果file是个目录，则递归其子目录全部删除
+	 * @param file
+	 */
+	static public void deleteIfExists(File file) {
+		if (file != null && file.exists()) {
+			if (file.isDirectory()) {
+				for (File sub : file.listFiles()) {
+					deleteIfExists(sub);
+				}
+			}
+			file.delete();
 		}
 	}
 }
