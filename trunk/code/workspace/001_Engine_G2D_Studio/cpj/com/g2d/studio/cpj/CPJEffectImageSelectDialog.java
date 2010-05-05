@@ -33,7 +33,6 @@ import com.g2d.cell.CellSetResource.ImagesSet;
 import com.g2d.studio.Config;
 import com.g2d.studio.Studio;
 import com.g2d.studio.StudioResource;
-import com.g2d.studio.StudioResource.StreamTypeTiles;
 import com.g2d.studio.cpj.entity.CPJFile;
 import com.g2d.studio.cpj.entity.CPJImages;
 import com.g2d.studio.cpj.entity.CPJSprite;

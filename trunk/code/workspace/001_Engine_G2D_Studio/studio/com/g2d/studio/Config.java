@@ -1,5 +1,7 @@
 package com.g2d.studio;
 
+import com.g2d.studio.cell.gameedit.Builder;
+
 
 
 
@@ -46,6 +48,9 @@ public class Config extends com.cell.util.Config
 	
 	// 资源编辑器
 	public static String CELL_GAME_EDIT_CMD			= "CellGameEdit.exe";
-	
-	// 
+	public static String CELL_BUILD_SPRITE_CMD		= 
+		"@java -classpath \"g2dstudio.jar\" com.g2d.studio.cell.gameedit.Builder \"{file}\" \"sprite\"";
+	public static String CELL_BUILD_SCENE_CMD		= 
+		"@java -classpath \"g2dstudio.jar\" com.g2d.studio.cell.gameedit.Builder \"{file}\" \"scene\"";	
+
 }

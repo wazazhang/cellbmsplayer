@@ -1,20 +1,21 @@
 package com.g2d.studio.cell.gameedit;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.cell.CIO;
 import com.cell.CUtil;
 import com.cell.io.CFile;
 import com.cell.j2se.CAppBridge;
+import com.cell.util.zip.ZipUtil;
 import com.g2d.cell.CellGameEditWrap;
 import com.g2d.studio.Config;
 
 public class Builder 
 {
 	static HashMap<String, String> script_map;
-	static String build_scene_bat;
-	static String build_sprite_bat;
 
 	public static Process openCellGameEdit(File cpj_file) 
 	{
@@ -23,15 +24,16 @@ public class Builder
 	
 	public static Process buildSprite(File cpj_file_name)
 	{
+		System.out.println("build sprite : " + cpj_file_name);
 		try {
 			File output_properties = copyScript(cpj_file_name, "output.properties");
 			Process process = CellGameEditWrap.openCellGameEdit(Config.CELL_GAME_EDIT_CMD, cpj_file_name, 
 					output_properties.getPath());
 			process.waitFor();
-			CFile.writeText(
-					new File(cpj_file_name.getParentFile(), "build_sprite.bat"), 
-					CUtil.replaceString(build_sprite_bat, "<CPJ>", cpj_file_name.getName()), 
-					"UTF-8");
+			cleanOutput(cpj_file_name);
+			String cmd = CUtil.replaceString(Config.CELL_BUILD_SPRITE_CMD, "{file}", cpj_file_name.getName());
+			cmd = CUtil.replaceString(cmd, "\\n", "\n");
+			CFile.writeText(new File(cpj_file_name.getParentFile(), "build_sprite.bat"), cmd, "UTF-8");
 			return process;
 		} catch (Throwable e) {
 			e.printStackTrace();
@@ -41,22 +43,21 @@ public class Builder
 	
 	public static Process buildScene(File cpj_file_name)
 	{
+		System.out.println("build scene : " + cpj_file_name);
 		try {
 			File output_properties	= copyScript(cpj_file_name,	"output.properties");
-			File scene_graph_script	= copyScript(cpj_file_name,	"scene_graph.script");
 			File scene_jpg_script	= copyScript(cpj_file_name,	"scene_jpg.script");
 			File scene_png_script	= copyScript(cpj_file_name,	"scene_png.script");
 			Process process = CellGameEditWrap.openCellGameEdit(Config.CELL_GAME_EDIT_CMD, cpj_file_name, 
 					output_properties.getPath(), 
-					scene_graph_script.getPath(),
 					scene_jpg_script.getPath(),
 					scene_png_script.getPath()
 					);
 			process.waitFor();
 			cleanOutput(cpj_file_name);
-			CFile.writeText(new File(cpj_file_name.getParentFile(), "build_scene.bat"), 
-					CUtil.replaceString(build_scene_bat, "<CPJ>", cpj_file_name.getName()),
-					"UTF-8");
+			String cmd = CUtil.replaceString(Config.CELL_BUILD_SCENE_CMD, "{file}", cpj_file_name.getName());
+			cmd = CUtil.replaceString(cmd, "\\n", "\n");
+			CFile.writeText(new File(cpj_file_name.getParentFile(), "build_scene.bat"), cmd, "UTF-8");
 			return process;
 		} catch (Throwable e) {
 			e.printStackTrace();
@@ -64,40 +65,79 @@ public class Builder
 		return null;
 	}
 	
-	static private void cleanOutput(File cpj_file_name) 
-	{
-		try{
-			File output		= new File(cpj_file_name.getParentFile(), "output");
-			{
-				File jpg_png	= new File(output, "jpg.png");
-				if (jpg_png.exists()) {
-					jpg_png.delete();
-				}
-				File png_png	= new File(output, "png.png");
-				if (png_png.exists()) {
-					png_png.delete();
-				}
-				File set		= new File(output, "set");
-				{
-					File jpg	= new File(set, "jpg");
-					for (File _png : jpg.listFiles()) {
-						if (_png.getName().toLowerCase().endsWith(".png")) {
-							_png.delete();
-						}
-					}
-					File png	= new File(set, "png");
-					for (File _jpg : png.listFiles()) {
-						if (_jpg.getName().toLowerCase().endsWith(".jpg")) {
-							_jpg.delete();
-						}
-					}
+	static private void deleteIfExists(File file) {
+		if (file != null && file.exists()) {
+			if (file.isDirectory()) {
+				for (File sub : file.listFiles()) {
+					deleteIfExists(sub);
 				}
 			}
-		}catch(Exception err){
+			file.delete();
+		}
+	}
+	
+	static private void cleanOutput(File cpj_file_name) 
+	{
+		try
+		{
+			deleteIfExists(new File(cpj_file_name.getParentFile(), "_script"));
+			File output = new File(cpj_file_name.getParentFile(), "output");
+			if (output.exists())
+			{
+				deleteIfExists(new File(output, "jpg.png"));
+				deleteIfExists(new File(output, "png.png"));
+				deleteIfExists(new File(output, "scene_graph.conf"));
+				deleteIfExists(new File(output, "scene_jpg.conf"));
+				deleteIfExists(new File(output, "scene_png.conf"));
+				
+				File set = new File(output, "set");
+				if (set.exists())
+				{
+					{
+						File jpg	= new File(set, "jpg");
+						if (jpg.exists() && jpg.isDirectory()) {
+							CFile.deleteFiles(jpg, ".png");
+							pakFiles(jpg, ".jpg", new File(output, "jpg.zip"));
+							CFile.deleteFiles(jpg, ".jpg");
+						}
+					} {
+						File png	= new File(set, "png");
+						if (png.exists() && png.isDirectory()) {
+							CFile.deleteFiles(png, ".jpg");
+							pakFiles(png, ".png", new File(output, "png.zip"));
+							CFile.deleteFiles(png, ".png");
+						}
+					}
+					deleteIfExists(set);
+				}
+			}
+		}
+		catch(Exception err){
 			err.printStackTrace();
 		}
 	}
-
+	
+	static private File pakFiles(File dir, String suffix, File out)
+	{
+		try {
+			ArrayList<File> packs = new ArrayList<File>();
+			for (File file : dir.listFiles()) {
+				if (file.getName().toLowerCase().endsWith(suffix)) {
+					packs.add(file);
+				}
+			}
+			if (!packs.isEmpty()) {
+				ByteArrayOutputStream baos = ZipUtil.packFiles(packs);
+				CFile.wirteData(out, baos.toByteArray());
+				baos.close();
+				return out;
+			}
+		} catch (Exception err) {
+			err.printStackTrace();
+		}
+		return out;
+	}
+	
 	static private File copyScript(File cpj_file, String script_name)
 	{
 		init();
@@ -115,11 +155,8 @@ public class Builder
 		if (script_map == null) {
 			script_map = new HashMap<String, String>(5);
 			script_map.put("output.properties", 	CIO.readAllText("/com/g2d/studio/cell/gameedit/output.properties"));
-			script_map.put("scene_graph.script",	CIO.readAllText("/com/g2d/studio/cell/gameedit/scene_graph.script"));
 			script_map.put("scene_jpg.script",		CIO.readAllText("/com/g2d/studio/cell/gameedit/scene_jpg.script"));
 			script_map.put("scene_png.script",		CIO.readAllText("/com/g2d/studio/cell/gameedit/scene_png.script"));
-			build_scene_bat		= CIO.readAllText("/com/g2d/studio/cell/gameedit/build_scene.bat");
-			build_sprite_bat	= CIO.readAllText("/com/g2d/studio/cell/gameedit/build_sprite.bat");
 		}
 	}
 	

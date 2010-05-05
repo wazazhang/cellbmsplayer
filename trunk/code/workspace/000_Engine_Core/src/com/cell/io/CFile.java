@@ -1,9 +1,14 @@
 package com.cell.io;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 
 import com.cell.CObject;
+import com.cell.CUtil;
+import com.cell.util.zip.ZipUtil;
 
 public class CFile 
 {
@@ -100,6 +105,18 @@ public class CFile
 	{
 		byte[] data = readData(src);
 		wirteData(dst, data);
+	}
+	
+	
+	static public void deleteFiles(File png, String suffix) {
+		File[] list = png.listFiles();
+		if (list != null) {
+			for (File _jpg : list) {
+				if (_jpg.getName().toLowerCase().endsWith(suffix)) {
+					_jpg.delete();
+				}
+			}
+		}
 	}
 }
 
