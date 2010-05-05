@@ -26,12 +26,6 @@ public class EatBuilder extends Builder
 
 	final String CELL_GAME_EDIT_CMD			= "CellGameEdit.exe";
 	
-	final String CELL_BUILD_SPRITE_CMD		= 
-		"@java -classpath \"g2dstudio.jar\" com.g2d.studio.cell.gameedit.EBuilder \"{file}\" \"sprite\"";
-	
-	final String CELL_BUILD_SCENE_CMD		= 
-		"@java -classpath \"g2dstudio.jar\" com.g2d.studio.cell.gameedit.Builder \"{file}\" \"scene\"";	
-
 	public EatBuilder() 
 	{
 		script_map = new HashMap<String, String>(5);
@@ -55,9 +49,6 @@ public class EatBuilder extends Builder
 					output_properties.getPath());
 			process.waitFor();
 			cleanOutput(cpj_file_name);
-			String cmd = CUtil.replaceString(CELL_BUILD_SPRITE_CMD, "{file}", cpj_file_name.getName());
-			cmd = CUtil.replaceString(cmd, "\\n", "\n");
-			CFile.writeText(new File(cpj_file_name.getParentFile(), "build_sprite.bat"), cmd, "UTF-8");
 			return process;
 		} catch (Throwable e) {
 			e.printStackTrace();
@@ -79,9 +70,6 @@ public class EatBuilder extends Builder
 					);
 			process.waitFor();
 			cleanOutput(cpj_file_name);
-			String cmd = CUtil.replaceString(CELL_BUILD_SCENE_CMD, "{file}", cpj_file_name.getName());
-			cmd = CUtil.replaceString(cmd, "\\n", "\n");
-			CFile.writeText(new File(cpj_file_name.getParentFile(), "build_scene.bat"), cmd, "UTF-8");
 			return process;
 		} catch (Throwable e) {
 			e.printStackTrace();
