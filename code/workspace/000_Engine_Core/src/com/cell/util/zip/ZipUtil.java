@@ -79,7 +79,7 @@ public class ZipUtil
 				try {
 					ZipEntry entry =  zip_in.getNextEntry();
 					if (entry != null) {
-						ByteArrayInputStream bais = new ByteArrayInputStream(CIO.readBytes(zip_in));
+						ByteArrayInputStream bais = new ByteArrayInputStream(readBytes(zip_in));
 						inputs.put(entry.getName(), bais);
 					} else {
 						break;
@@ -98,4 +98,16 @@ public class ZipUtil
 		return inputs;
 	}
 	
+	static byte[] readBytes(InputStream is) throws IOException {
+		ByteArrayOutputStream data = new ByteArrayOutputStream(is.available());
+		byte[] buffer = new byte[8192];
+		int size;
+		while (is.available() > 0) {
+			size = is.read(buffer);
+			if (size > 0) {
+				data.write(buffer, 0, size);
+			}
+		}
+		return data.toByteArray();
+	}
 }

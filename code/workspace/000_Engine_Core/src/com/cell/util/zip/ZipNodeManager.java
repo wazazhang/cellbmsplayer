@@ -63,7 +63,7 @@ final public class ZipNodeManager
 		try{
 			ZipEntry entry =  zip_in.getNextEntry();
 			try{
-				String info = new String(CIO.readBytes(zip_in));
+				String info = new String(ZipUtil.readBytes(zip_in));
 //				System.out.println(info);
 			}catch(Exception err){}
 			
@@ -91,7 +91,7 @@ final public class ZipNodeManager
 	{
 		T ret = null;
 		try {
-			ByteArrayInputStream bais = new ByteArrayInputStream(CIO.readBytes(zip_in));
+			ByteArrayInputStream bais = new ByteArrayInputStream(ZipUtil.readBytes(zip_in));
 			ret = type.cast(filter.readNode(bais, type));
 		} catch (Throwable ex) {
 			ex.printStackTrace();

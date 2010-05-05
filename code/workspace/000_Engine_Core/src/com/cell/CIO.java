@@ -16,6 +16,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Hashtable;
 
 import com.cell.security.MD5;
@@ -59,12 +60,34 @@ public class CIO extends CObject
 	
 	static public int LoadRetryCount = 5;
 	
-	public static ByteArrayInputStream loadStream(String path) {
-		byte[] data = loadData(path);
-		if (data != null) {
-			return new ByteArrayInputStream(data);
-		}else{
-			System.err.println("CIO.loadStream : null : " + path);
+//	------------------------------------------------------------------------------------------------------------------------
+
+	/**
+	 * load a InputStream res to byte[]<br>
+	 * this will auto close InputStream
+	 * @param is
+	 * @return 
+	 */
+	public static byte[] readStream(InputStream is) {
+		if (is != null) {
+			try {
+				int dataSize = is.available();
+				int count = 0, i;
+				byte[] data = new byte[dataSize];
+				while (true) {
+					i = is.read(data, count, dataSize - count);
+					if (i <= 0)
+						break;
+					count += i;
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					is.close();
+				} catch (IOException e) {
+				}
+			}
 		}
 		return null;
 	}
@@ -77,126 +100,44 @@ public class CIO extends CObject
 	{
 		path = path.trim();
 		
-		byte[] data = null; 
-
 		try
 		{
-			if (path.startsWith("http://")) 
-			{
-				for (int i = 0; i < LoadRetryCount; i++)
-				{
-					data = CObject.getStorage().syncReadBytesFromURL(path, LoadingTimeOut);
-					if (data!=null){
-						break;
-					}
-					System.err.println("load retry " + i + " : " + path);
-				}
-			}
-			else if (path.startsWith("/"))
-			{
-				InputStream is = getAppBridge().getResource(path);
-				data = readStream(is);
-			}
-			else
-			{
-				InputStream is = new FileInputStream(new File(path));
-				data = readStream(is);
-			}
+			InputStream input = null;
 			
-			if (data!=null){
+			if (path.startsWith("http://")) {
+				input = getInputStream(new URL(path), LoadingTimeOut);
+			} else if (path.startsWith("/")) {
+				input = getAppBridge().getResource(path);
+			} else {
+				input = new FileInputStream(new File(path));
+			}
+
+			if (input != null) {
+				byte[] data = readStream(input);
 				LoadedBytes += data.length;
+				return data;
 			}
 		}
 		catch(Exception err){
 			System.err.println("CIO.loadData error : " + path + " : " + err.getMessage());
 		}
-		return data;
+		
+		return null;
 	}
 	
-//	/**
-//	 * load a file form class path to byte[]
-//	 * @param fileName
-//	 * @return 
-//	 */
-//	public static byte[] loadFile(String fileName) {
-//		byte[] data = null; 
-//		InputStream is = null;
-//		try {
-//			if(fileName!=null)
-//			{
-//				is = AppBridge.getResource(fileName); 
-//				int dataSize = is.available();
-//				int count = 0, i;		
-//				data = new byte[dataSize];
-//				while (true) 
-//				{
-//				    i = is.read(data, count, dataSize-count);
-//				    if (i <= 0) break;
-//				    count += i;
-//				}
-//				is.close();
-//				is = null;
-//			}else{
-//				System.err.println("File name is null -_-! ");
-//			}
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//		if(data!=null){
-////			println("Loaded File '" + fileName + "' " + data.length + " bytes ^_^!");
-//		}else{
-//			System.err.println("Can not Load File '" + fileName + "' -_-!");
-//		}
-//		return data;
-//	}
 	
-	/**
-	 * load a file form res to byte[]
-	 * @param fileName
-	 * @return 
-	 */
-	public static byte[] readStream(InputStream is) {
-		byte[] data = null; 
-		try {
-			if(is!=null){
-				int dataSize = is.available();
-				int count = 0, i;		
-				data = new byte[dataSize];
-				while (true) 
-				{
-				    i = is.read(data, count, dataSize-count);
-				    if (i <= 0) break;
-				    count += i;
-				}
-				is.close();
-				is = null;
-			}else{
-				System.err.println("InputStream is null -_-! ");
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		if(data!=null){
-//			println("Loaded File '" + fileName + "' " + data.length + " bytes ^_^!");
+//	------------------------------------------------------------------------------------------------------------------------
+	
+	public static ByteArrayInputStream loadStream(String path) {
+		byte[] data = loadData(path);
+		if (data != null) {
+			return new ByteArrayInputStream(data);
 		}else{
-			System.err.println("Can not Load InputStream -_-!");
+			System.err.println("CIO.loadStream : null : " + path);
 		}
-		return data;
+		return null;
 	}
 	
-	public static byte[] readBytes(InputStream is) throws IOException {
-		ByteArrayOutputStream data = new ByteArrayOutputStream(is.available());
-		byte[] buffer = new byte[8192];
-		int size;
-		while (is.available() > 0) {
-			size = is.read(buffer);
-			if (size > 0) {
-				data.write(buffer, 0, size);
-			}
-		}
-		return data.toByteArray();
-	}
-
 	
 	public static String readAllText(String file)
 	{
@@ -301,5 +242,42 @@ public class CIO extends CObject
 		String name		= file_path.substring(file_path.lastIndexOf("/")+1);
 		return name;
 	}
+
+//	------------------------------------------------------------------------------------------------------------------------
 	
+	
+	public static InputStream getInputStream(String path)
+	{
+		path = path.trim();
+		try {
+			if (path.startsWith("http://")) {
+				return getInputStream(new URL(path));
+			} else if (path.startsWith("/")) {
+				return getAppBridge().getResource(path);
+			} else {
+				return new FileInputStream(new File(path));
+			}
+		} catch (Exception err) {
+			err.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static InputStream getInputStream(URL url) {
+		return getInputStream(url, LoadingTimeOut);
+	}
+	
+	public static InputStream getInputStream(URL url, int timeOut)
+	{
+		try {
+			URLConnection c = url.openConnection();
+			c.setConnectTimeout(timeOut);
+			c.setReadTimeout(timeOut);
+			c.connect();
+			return c.getInputStream();
+		} catch (IOException err) {
+			err.printStackTrace();
+		} finally {}
+		return null;
+	}
 }
