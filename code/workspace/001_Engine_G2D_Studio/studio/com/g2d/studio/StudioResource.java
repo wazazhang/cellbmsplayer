@@ -32,20 +32,15 @@ public class StudioResource extends Resource
 	}
 	
 	@Override
-	protected StreamTiles getLocalImage(ImagesSet img) throws IOException {
-		StreamTiles tiles = createStreamTiles(img);
+	final protected StreamTiles getLocalImage(ImagesSet img) throws IOException {
+		StreamTiles tiles = Builder.getInstance().createResource(img, this);
 		return tiles;
 	}
 	
 	@Override
-	protected StreamTiles getStreamImage(ImagesSet img) throws IOException {
-		StreamTiles tiles = createStreamTiles(img);
+	final protected StreamTiles getStreamImage(ImagesSet img) throws IOException {
+		StreamTiles tiles = Builder.getInstance().createResource(img, this);
 		return tiles;
-	}
-	
-	@Override
-	protected StreamTiles createStreamTiles(ImagesSet img) {
-		return Builder.getInstance().createResource(img, this);
 	}
 	
 	synchronized public boolean isLoadImages()
