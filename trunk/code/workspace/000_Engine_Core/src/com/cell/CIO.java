@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -83,35 +84,93 @@ public class CIO extends CObject
 	public static byte[] loadData(String path)
 	{
 		path = path.trim();
-		
+		byte[] data = null;
 		try
 		{
-			InputStream input = null;
+			// load from url
+			try {
+				URL url = new URL(path);
+				data = loadURLData(url, LoadingTimeOut, LoadRetryCount);
+				if (data != null) {
+					return data;
+				}
+			} catch (MalformedURLException err) {}
+
+
+			// load from file
+			if (data == null) {
+				File file = new File(path);
+				if (file.exists()) {
+					data = readStream(new FileInputStream(file));
+					if (data != null) {
+						return data;
+					}
+				}
+			}
 			
-			if (path.startsWith("http://")) {
-				input = getInputStream(new URL(path), LoadingTimeOut);
-			} else if (path.startsWith("/")) {
-				input = getAppBridge().getResource(path);
-			} else {
-				input = new FileInputStream(new File(path));
+			// load from jar
+			{
+				data = readStream(getAppBridge().getResource(path));
+				if (data != null) {
+					return data;
+				}
 			}
 
-			if (input != null) {
-				byte[] data = readStream(input);
-				if (data != null) {
-					LoadedBytes += data.length;
-				}
-				return data;
+		} catch(Exception err) {
+			err.printStackTrace();
+		} finally {
+			if (data != null) {
+				LoadedBytes += data.length;
 			}
 		}
-		catch(Exception err){
-			err.printStackTrace();
+		return data;
+	}
+	
+
+
+	public static byte[] loadURLData(URL url, int timeout, int retry_count)
+	{
+		URLConnection c = null;
+		InputStream is = null;
+		for (int i = Math.max(1, retry_count); i > 0; --i) {
+			try {
+				c = url.openConnection();
+				c.setConnectTimeout(timeout);
+				c.setReadTimeout(timeout);
+				c.connect();
+				is = c.getInputStream();
+				int len = c.getContentLength();
+				if (len > 0) {
+					int actual = 0;
+					int bytesread = 0;
+					byte[] data = new byte[len];
+					while ((bytesread != len) && (actual != -1)) {
+						actual = is.read(data, bytesread, len - bytesread);
+						bytesread += actual;
+					}
+					return data;
+				} else if (len == 0) {
+					return new byte[0];
+				} else {
+					return null;
+				}
+			} catch (IOException err) {
+				err.printStackTrace();
+				System.out.println("retry load url data : " + url);
+			} finally {
+				if (is != null) {
+					try {
+						is.close();
+					} catch (IOException e) {}
+				}
+//				if (c instanceof HttpURLConnection) {
+//					((HttpURLConnection)c).disconnect();
+//				}
+			}
 		}
 		
 		return null;
 	}
-	
-	
 //	------------------------------------------------------------------------------------------------------------------------
 	
 	public static ByteArrayInputStream loadStream(String path) {
@@ -279,8 +338,8 @@ public class CIO extends CObject
 			this.c.setConnectTimeout(timeout);
 			this.c.setReadTimeout(timeout);
 			this.c.connect();
-			this.is = c.getInputStream();
 			this.length = c.getContentLength();
+			this.is = c.getInputStream();
 		}
 		
 		@Override
@@ -316,40 +375,5 @@ public class CIO extends CObject
 			return false;
 		}
 
-	}
-
-	public static byte[] loadData(URL Url, int timeOut)
-	{
-		URLConnection c = null;
-		InputStream is = null;
-		try {
-			c = Url.openConnection();
-			c.setConnectTimeout(timeOut);
-			c.setReadTimeout(timeOut);
-			c.connect();
-			is = c.getInputStream();
-			int len = (int) c.getContentLength();
-			if (len > 0) {
-				int actual = 0;
-				int bytesread = 0;
-				byte[] data = new byte[len];
-				while ((bytesread != len) && (actual != -1)) {
-					actual = is.read(data, bytesread, len - bytesread);
-					bytesread += actual;
-				}
-				return data;
-			} else if (len == 0) {
-				return new byte[0];
-			}
-		} catch (IOException err) {
-			err.printStackTrace();
-		} finally {
-			if (is != null) {
-				try {
-					is.close();
-				} catch (IOException e) {}
-			}
-		}
-		return null;
 	}
 }
