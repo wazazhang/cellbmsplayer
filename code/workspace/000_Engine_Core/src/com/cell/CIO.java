@@ -59,7 +59,7 @@ public class CIO extends CObject
 					if (read_bytes <= 0) {
 						break;
 					} else {
-						baos.write(data);
+						baos.write(data, 0, read_bytes);
 						count += read_bytes;
 					}
 				}
