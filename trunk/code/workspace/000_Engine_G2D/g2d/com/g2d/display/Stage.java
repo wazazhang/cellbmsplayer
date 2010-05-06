@@ -375,6 +375,13 @@ public abstract class Stage extends DisplayObjectContainer
 		return last_mouse_picked_object;
 	}
 	
+	public<T> T getMousePickedObjectAs(Class<T> type) {
+		if (type.isInstance(last_mouse_picked_object)) {
+			return type.cast(last_mouse_picked_object);
+		}
+		return null;
+	}
+	
 	void setMousePickedObject(DisplayObject object) {
 		mouse_picked_object = object;
 	}
