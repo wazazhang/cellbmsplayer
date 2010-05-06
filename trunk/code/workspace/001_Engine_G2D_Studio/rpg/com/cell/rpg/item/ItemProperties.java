@@ -32,7 +32,7 @@ public class ItemProperties extends RPGObject implements NamedObject
 
 	@Override
 	public Class<?>[] getSubAbilityTypes() {
-		return ItemPropertyTypes.getItemPropertyTypes();
+		return ItemPropertyTypes.getItemPropertyTypesList();
 	}
 	
 //	-----------------------------------------------------------------------------------------------------------------------

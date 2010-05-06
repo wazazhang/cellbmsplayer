@@ -10,7 +10,7 @@ public class ItemPropertyList extends G2DList<ItemPropertyNode>
 {
 	public ItemPropertyList() {
 		Vector<ItemPropertyNode> list_data = new Vector<ItemPropertyNode>();
-		for (Class<?> type : ItemPropertyTypes.getItemPropertyTypes()) {
+		for (Class<?> type : ItemPropertyTypes.getItemPropertyTypesList()) {
 			list_data.add(new ItemPropertyNode(type));
 		}
 		super.setListData(list_data);

@@ -1,9 +1,11 @@
 package com.cell.rpg.item;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
 import com.cell.rpg.item.anno.ItemType;
+import com.g2d.annotation.Property;
 
 public class ItemPropertyTypes 
 {
@@ -14,6 +16,7 @@ public class ItemPropertyTypes
 								item_property_types_map = new HashMap<Integer, Class<?>>();
 	
 	private static Class<?>[]	item_property_types;
+	private static Class<?>[]	item_property_types_list;
 	
 	public static void setItemPropertyTypes(Class<?>[] types) throws Exception {
 		for (Class<?> type : types) {						
@@ -30,6 +33,15 @@ public class ItemPropertyTypes
 			}
 		}
 		item_property_types = item_property_types_map.values().toArray(new Class<?>[item_property_types_map.size()]);
+		
+		ArrayList<Class<?>> show_types = new ArrayList<Class<?>>();
+		for (Class<?> type : item_property_types) {
+			Property itype = type.getAnnotation(Property.class);
+			if (itype != null) {
+				show_types.add(type);
+			}
+		}
+		item_property_types_list = show_types.toArray(new Class<?>[show_types.size()]);
 	}
 	
 	public static void setItemPropertyTypes(Collection<Class<?>> types) throws Exception {
@@ -40,8 +52,12 @@ public class ItemPropertyTypes
 		return item_property_types_map.get(type);
 	}
 	
-	public static Class<?>[] getItemPropertyTypes() {
+	public static Class<?>[] getAllItemPropertyTypes() {
 		return item_property_types;
+	}
+	
+	public static Class<?>[] getItemPropertyTypesList() {
+		return item_property_types_list;
 	}
 	
 //	-------------------------------------------------------------------------------------
