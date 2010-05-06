@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -19,6 +20,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Hashtable;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 import com.cell.security.MD5;
 
@@ -52,16 +55,18 @@ public class CIO extends CObject
 	public static byte[] readStream(InputStream is) {
 		if (is != null) {
 			try {
-				ByteArrayOutputStream baos = new ByteArrayOutputStream(is.available());
+				int available = is.available();
 				int count = 0;
-				while (is.available() > 0) {
-					byte[] data = new byte[is.available()];
+				ByteArrayOutputStream baos = new ByteArrayOutputStream(available);
+				while (available > 0) {
+					byte[] data = new byte[available];
 					int read_bytes = is.read(data);
 					if (read_bytes <= 0) {
 						break;
 					} else {
 						baos.write(data, 0, read_bytes);
 						count += read_bytes;
+						available = is.available();
 					}
 				}
 				return baos.toByteArray();
@@ -76,6 +81,37 @@ public class CIO extends CObject
 		}
 		return null;
 	}
+
+
+//	------------------------------------------------------------------------------------------------------------------------
+
+	public static InputStream getInputStream(String path)
+	{
+		path = path.trim();
+
+		try
+		{
+			// load from url
+			try {
+				URL url = new URL(path);
+				return new URLInputStream(url, LoadingTimeOut);
+			} catch (MalformedURLException err) {}
+
+			// load from file
+			File file = new File(path);
+			if (file.exists()) {
+				return new FileInputStream(file);
+			}
+
+			// load from jar
+			return getAppBridge().getResource(path);
+			
+		} catch(Exception err) {
+			err.printStackTrace();
+		}
+		return null;
+	}
+
 	
 	/**
 	 * @param path URL or class path or file
@@ -290,28 +326,69 @@ public class CIO extends CObject
 
 //	------------------------------------------------------------------------------------------------------------------------
 
+//	-----------------------------------------------------------------------------------------------------------------
+
 	public static URL getResourceURL(String resource)
 	{
 		return CObject.getAppBridge().getClassLoader().getResource(resource);
 	}
 	
-	public static InputStream getInputStream(String path)
+	public static class URLInputStream extends InputStream
 	{
-		path = path.trim();
-		try {
-			if (path.startsWith("http://")) {
-				return getInputStream(new URL(path));
-			} else if (path.startsWith("/")) {
-				return getAppBridge().getResource(path);
-			} else {
-				return new FileInputStream(new File(path));
-			}
-		} catch (Exception err) {
-			err.printStackTrace();
+		final private URLConnection	connection;
+		final private InputStream 	inputstream;
+		
+		private AtomicInteger	length;
+		private AtomicInteger	readed;			
+		
+		public URLInputStream(URL url, int timeout) throws IOException 
+		{
+			this.readed 		= new AtomicInteger(0);
+			this.connection		= url.openConnection();
+			this.connection.setConnectTimeout(timeout);
+			this.connection.setReadTimeout(timeout);
+			this.connection.connect();
+			this.inputstream	= connection.getInputStream();
 		}
-		return null;
+		
+		@Override
+		public int available() throws IOException {
+			synchronized (readed) {
+				if (length == null) {
+					length = new AtomicInteger(connection.getContentLength());
+					return length.get();
+				} else {
+					return length.get() - readed.get();
+				}
+			}
+		}
+
+		@Override
+		public int read() throws IOException {
+			synchronized (readed) {
+				int b = inputstream.read();
+				if (b >= 0) {
+					readed.incrementAndGet();
+				}
+				return b;
+			}
+		}
+
+		@Override
+		public void close() throws IOException {
+			inputstream.close();
+		}
+
+		@Override
+		public void mark(int readlimit) {}
+
+		@Override
+		public boolean markSupported() {
+			return false;
+		}
+
 	}
-	
+
 	public static URLInputStream getInputStream(URL url) {
 		return getInputStream(url, LoadingTimeOut);
 	}
@@ -326,54 +403,64 @@ public class CIO extends CObject
 		return null;
 	}
 	
-	public static class URLInputStream extends InputStream
+//	-----------------------------------------------------------------------------------------------------------------
+
+	public static interface ReadStreamListener
 	{
-		final private URLConnection c;
-		final private InputStream is;
-		private int length ;
+		/**
+		 * @param percent 0~1
+		 */
+		public void readUpdate(float percent);
 		
-		public URLInputStream(URL url, int timeout) throws IOException 
-		{
-			this.c = url.openConnection();
-			this.c.setConnectTimeout(timeout);
-			this.c.setReadTimeout(timeout);
-			this.c.connect();
-			this.length = c.getContentLength();
-			this.is = c.getInputStream();
-		}
-		
-		@Override
-		public int available() throws IOException {
-			return length;
-		}
-
-		@Override
-		public int read() throws IOException {
-			return is.read();
-		}
-
-		@Override
-		public int read(byte[] b, int off, int len) throws IOException {
-			return is.read(b, off, len);
-		}
-
-		@Override
-		public int read(byte[] b) throws IOException {
-			return is.read(b);
-		}
-
-		@Override
-		public void close() throws IOException {
-			is.close();
-		}
-
-		@Override
-		public void mark(int readlimit) {}
-
-		@Override
-		public boolean markSupported() {
-			return false;
-		}
-
+		/**
+		 * @param data
+		 */
+		public void readComplete(byte[] data);
 	}
+
+	public static byte[] readStream(InputStream is, ReadStreamListener listener) 
+	{
+		if (is != null) {
+			if (listener != null) {
+				listener.readUpdate(0f);
+			}
+			try {
+				int available	= is.available();
+				int count 		= 0;
+				int max_length	= available;
+				ByteArrayOutputStream baos = new ByteArrayOutputStream(max_length);
+				byte[] buf = new byte[1];
+				while (available > 0) {
+					for (int i = available; i > 0; --i) {
+						int read_bytes = is.read(buf);
+						if (read_bytes <= 0) {
+							break;
+						} else {
+							count += read_bytes;
+							baos.write(buf, 0, read_bytes);
+							if (listener != null) {
+								listener.readUpdate(count / (float)max_length);
+							}
+						}
+					}
+					available	= is.available();
+					max_length += available;
+				}
+				byte[] data = baos.toByteArray();
+				if (listener != null) {
+					listener.readComplete(data);
+				}
+				return data;
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					is.close();
+				} catch (IOException e) {
+				}
+			}
+		}
+		return null;
+	}
+	
 }
