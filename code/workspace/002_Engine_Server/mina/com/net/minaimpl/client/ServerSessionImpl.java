@@ -14,6 +14,8 @@ import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.net.ExternalizableFactory;
 import com.net.MessageHeader;
@@ -24,6 +26,7 @@ import com.net.minaimpl.NetPackageCodec;
 
 public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession 
 {
+	final private Logger 			log;
 
 	private ServerSessionListener 					Listener;
 	private Hashtable<Integer, ClientChannelImpl> 	channels			= new Hashtable<Integer, ClientChannelImpl>();
@@ -41,7 +44,8 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 
 	public ServerSessionImpl(ClassLoader cl, ExternalizableFactory ef)
 	{
-		Codec = new NetPackageCodec(cl, ef);
+		log			= LoggerFactory.getLogger(getClass().getName());
+		Codec		= new NetPackageCodec(cl, ef);
 		Connector 	= new NioSocketConnector();
 		Connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(Codec));
 		Connector.setHandler(this);
@@ -72,10 +76,10 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 				Runtime.getRuntime().addShutdownHook(new CleanTask(Session));
 				return true;
 			} else {
-				System.err.println("not connect : " + address.toString());
+				log.error("not connect : " + address.toString());
 			}
 		} else {
-			System.err.println("Already connected !");
+			log.error("Already connected !");
 		}
 		return false;
 	}
@@ -86,7 +90,7 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 				Session.close(force);
 				Session = null;
 			}else{
-				System.err.println("session is null !");
+				log.error("session is null !");
 			}
 		}
 		return false;
@@ -108,10 +112,10 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 				Session.write(message);
 				return true;
 			}else{
-				System.err.println("session is null !");
+				log.error("session is null !");
 			}
 		}else{
-			System.err.println("server not connected !");
+			log.error("server not connected !");
 		}
 		return false;
 	}
@@ -206,7 +210,7 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 						break;
 					}
 					default:{
-						System.err.println("messageReceived : " +
+						log.error("messageReceived : " +
 								"unknow protocol("+Integer.toString(header.Protocol, 16)+") : " +
 								"data : " + header);
 					}
@@ -215,13 +219,13 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 			}
 			catch (Exception e) 
 			{
-				System.err.println("messageReceived : bad protocol : " + header);
+				log.error("messageReceived : bad protocol : " + header);
 				e.printStackTrace();
 			}
 		}
 		else
 		{
-			System.err.println("messageReceived : bad message type : " + message);
+			log.error("messageReceived : bad message type : " + message);
 		}
 	}
 	
