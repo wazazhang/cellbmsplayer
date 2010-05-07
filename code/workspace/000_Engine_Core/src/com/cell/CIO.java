@@ -470,16 +470,14 @@ public class CIO extends CObject
 				ByteArrayOutputStream baos = new ByteArrayOutputStream(max_length);
 				byte[] buf = new byte[LoadDefaultMTU];
 				while (available > 0) {
-					for (int i = available; i > 0; --i) {
-						int read_bytes = is.read(buf);
-						if (read_bytes <= 0) {
-							break;
-						} else {
-							count += read_bytes;
-							baos.write(buf, 0, read_bytes);
-							if (listener != null) {
-								listener.readUpdate(count / (float)max_length);
-							}
+					int read_bytes = is.read(buf);
+					if (read_bytes <= 0) {
+						break;
+					} else {
+						count += read_bytes;
+						baos.write(buf, 0, read_bytes);
+						if (listener != null) {
+							listener.readUpdate(count / (float)max_length);
 						}
 					}
 					available	= is.available();
@@ -489,6 +487,7 @@ public class CIO extends CObject
 				if (listener != null) {
 					listener.readComplete(data);
 				}
+				LoadedBytes.addAndGet(data.length);
 				return data;
 			} catch (IOException e) {
 				e.printStackTrace();
