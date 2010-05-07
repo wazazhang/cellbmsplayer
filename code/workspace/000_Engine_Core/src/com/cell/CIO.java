@@ -45,9 +45,9 @@ public class CIO extends CObject
 //	------------------------------------------------------------------------------------------------------------------------
 
 	/**
-	 * load a InputStream res to byte[]<br>
-	 * this will auto close InputStream<br>
-	 * 只要InputStream里有数据，该方法都将阻塞，直到available=0，所以该方法不适合读取动态流。
+	 * 读取一个流的所有数据到字节序。<br>
+	 * 只要InputStream里有数据，该方法都将阻塞，直到available=0，所以该方法不适合读取动态流。<br>
+	 * <b>该方法将自动关闭流。</b>
 	 * @param is
 	 * @return 
 	 */
@@ -410,11 +410,11 @@ public class CIO extends CObject
 //	-----------------------------------------------------------------------------------------------------------------
 
 	/**
-	 * load a InputStream res to byte[]<br>
-	 * this will auto close InputStream<br>
-	 * 只要InputStream里有数据，该方法都将阻塞，直到available=0，所以该方法不适合读取动态流。
+	 * 只要InputStream里有数据，
+	 * 该方法都将阻塞，直到available=0，
+	 * 所以该方法不适合读取动态流。
 	 * @param is
-	 * @param 进度
+	 * @param 预计的进度 0~1
 	 * @return 
 	 */
 	public static byte[] readStream(InputStream is, AtomicReference<Float> percent) throws IOException
