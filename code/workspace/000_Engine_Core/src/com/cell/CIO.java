@@ -42,8 +42,6 @@ public class CIO extends CObject
 	private static int				LoadingTimeOut	= 20000; //ms
 	
 	private static int				LoadRetryCount	= 5;
-	
-	private static int				LoadDefaultMTU	= 1024;
 
 	private static AtomicLong		LoadedBytes		= new AtomicLong(0);
 	
@@ -74,15 +72,6 @@ public class CIO extends CObject
 		return LoadRetryCount;
 	}
 
-	/**一次读取流的缓冲大小*/
-	public static void setLoadDefaultMTU(int loadDefaultMTU) {
-		LoadDefaultMTU = Math.max(1, loadDefaultMTU);
-	}
-	/**一次读取流的缓冲大小*/
-	public static int getLoadDefaultMTU() {
-		return LoadDefaultMTU;
-	}
-	
 //	------------------------------------------------------------------------------------------------------------------------
 
 	/**
@@ -238,9 +227,9 @@ public class CIO extends CObject
 						is.close();
 					} catch (IOException e) {}
 				}
-//				if (c instanceof HttpURLConnection) {
-//					((HttpURLConnection)c).disconnect();
-//				}
+				if (c instanceof HttpURLConnection) {
+					((HttpURLConnection)c).disconnect();
+				}
 			}
 		}
 		
@@ -414,6 +403,17 @@ public class CIO extends CObject
 		}
 
 		@Override
+		public int read(byte[] b, int off, int len) throws IOException {
+			synchronized (readed) {
+				int count = inputstream.read(b, off, len);
+				if (count >= 0) {
+					readed.addAndGet(count);
+				}
+				return count;
+			}
+		}
+		
+		@Override
 		public void close() throws IOException {
 			inputstream.close();
 		}
@@ -443,63 +443,6 @@ public class CIO extends CObject
 	}
 	
 //	-----------------------------------------------------------------------------------------------------------------
-
-	public static interface ReadStreamListener
-	{
-		/**
-		 * @param percent 0~1
-		 */
-		public void readUpdate(float percent);
-		
-		/**
-		 * @param data
-		 */
-		public void readComplete(byte[] data);
-	}
-
-	public static byte[] readStream(InputStream is, ReadStreamListener listener) 
-	{
-		if (is != null) {
-			if (listener != null) {
-				listener.readUpdate(0f);
-			}
-			try {
-				int available	= is.available();
-				int count 		= 0;
-				int max_length	= available;
-				ByteArrayOutputStream baos = new ByteArrayOutputStream(max_length);
-				byte[] buf = new byte[LoadDefaultMTU];
-				while (available > 0) {
-					int read_bytes = is.read(buf);
-					if (read_bytes <= 0) {
-						break;
-					} else {
-						count += read_bytes;
-						baos.write(buf, 0, read_bytes);
-						if (listener != null) {
-							listener.readUpdate(count / (float)max_length);
-						}
-					}
-					available	= is.available();
-					max_length += available;
-				}
-				byte[] data = baos.toByteArray();
-				if (listener != null) {
-					listener.readComplete(data);
-				}
-				LoadedBytes.addAndGet(data.length);
-				return data;
-			} catch (IOException e) {
-				e.printStackTrace();
-			} finally {
-				try {
-					is.close();
-				} catch (IOException e) {
-				}
-			}
-		}
-		return null;
-	}
 
 
 	
