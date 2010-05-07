@@ -21,6 +21,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Hashtable;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.cell.security.MD5;
@@ -38,11 +39,49 @@ public class CIO extends CObject
 {
 //	------------------------------------------------------------------------------------------------------------------------
 
-	static public int LoadingTimeOut = 20000; //ms
+	private static int				LoadingTimeOut	= 20000; //ms
 	
-	static public long LoadedBytes = 0;
+	private static int				LoadRetryCount	= 5;
 	
-	static public int LoadRetryCount = 5;
+	private static int				LoadDefaultMTU	= 1024;
+
+	private static AtomicLong		LoadedBytes		= new AtomicLong(0);
+	
+
+	/**
+	 * 获得已从CIO读取的字节数
+	 * @return
+	 */
+	public static long getLoadedBytes() {
+		return LoadedBytes.get();
+	}
+
+	/**读取数据的超时时间*/
+	public static void setLoadingTimeOut(int loadingTimeOut) {
+		LoadingTimeOut = loadingTimeOut;
+	}
+	/**读取数据的超时时间*/
+	public static int getLoadingTimeOut() {
+		return LoadingTimeOut;
+	}
+
+	/**读取数据的重复次数*/
+	public static void setLoadRetryCount(int loadRetryCount) {
+		LoadRetryCount = Math.max(1, loadRetryCount);
+	}
+	/**读取数据的重复次数*/
+	public static int getLoadRetryCount() {
+		return LoadRetryCount;
+	}
+
+	/**一次读取流的缓冲大小*/
+	public static void setLoadDefaultMTU(int loadDefaultMTU) {
+		LoadDefaultMTU = Math.max(1, loadDefaultMTU);
+	}
+	/**一次读取流的缓冲大小*/
+	public static int getLoadDefaultMTU() {
+		return LoadDefaultMTU;
+	}
 	
 //	------------------------------------------------------------------------------------------------------------------------
 
@@ -156,7 +195,7 @@ public class CIO extends CObject
 			err.printStackTrace();
 		} finally {
 			if (data != null) {
-				LoadedBytes += data.length;
+				LoadedBytes.addAndGet(data.length);
 			}
 		}
 		return data;
@@ -429,7 +468,7 @@ public class CIO extends CObject
 				int count 		= 0;
 				int max_length	= available;
 				ByteArrayOutputStream baos = new ByteArrayOutputStream(max_length);
-				byte[] buf = new byte[1];
+				byte[] buf = new byte[LoadDefaultMTU];
 				while (available > 0) {
 					for (int i = available; i > 0; --i) {
 						int read_bytes = is.read(buf);
@@ -462,5 +501,7 @@ public class CIO extends CObject
 		}
 		return null;
 	}
+
+
 	
 }
