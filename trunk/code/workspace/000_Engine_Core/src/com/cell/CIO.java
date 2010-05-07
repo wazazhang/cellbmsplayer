@@ -178,6 +178,7 @@ public class CIO extends CObject
 						actual = is.read(data, bytesread, len - bytesread);
 						bytesread += actual;
 					}
+					loaded_bytes.addAndGet(data.length);
 					return data;
 				} else if (len == 0) {
 					return new byte[0];
