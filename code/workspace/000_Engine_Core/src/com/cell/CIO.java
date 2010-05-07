@@ -37,8 +37,6 @@ import com.cell.security.MD5;
  */
 public class CIO extends CObject
 {
-//	------------------------------------------------------------------------------------------------------------------------
-
 	private static int				LoadingTimeOut	= 20000; //ms
 	
 	private static int				LoadRetryCount	= 5;
@@ -46,37 +44,12 @@ public class CIO extends CObject
 	private static AtomicLong		LoadedBytes		= new AtomicLong(0);
 	
 
-	/**
-	 * 获得已从CIO读取的字节数
-	 * @return
-	 */
-	public static long getLoadedBytes() {
-		return LoadedBytes.get();
-	}
-
-	/**读取数据的超时时间*/
-	public static void setLoadingTimeOut(int loadingTimeOut) {
-		LoadingTimeOut = loadingTimeOut;
-	}
-	/**读取数据的超时时间*/
-	public static int getLoadingTimeOut() {
-		return LoadingTimeOut;
-	}
-
-	/**读取数据的重复次数*/
-	public static void setLoadRetryCount(int loadRetryCount) {
-		LoadRetryCount = Math.max(1, loadRetryCount);
-	}
-	/**读取数据的重复次数*/
-	public static int getLoadRetryCount() {
-		return LoadRetryCount;
-	}
-
 //	------------------------------------------------------------------------------------------------------------------------
 
 	/**
 	 * load a InputStream res to byte[]<br>
-	 * this will auto close InputStream
+	 * this will auto close InputStream<br>
+	 * 只要InputStream里有数据，该方法都将阻塞，直到available=0，所以该方法不适合读取动态流。
 	 * @param is
 	 * @return 
 	 */
@@ -444,6 +417,61 @@ public class CIO extends CObject
 	
 //	-----------------------------------------------------------------------------------------------------------------
 
+	/**
+	 * 读取该流的可用数据
+	 * @param is
+	 * @param listener
+	 * @return
+	 */
+	public static byte[] readAvailable(InputStream is, AtomicReference<Float> percent) throws IOException
+	{
+		if (is != null) {
+			int 	length	= is.available();
+			byte[]	data	= new byte[length];
+			int		count	= 0;
+			while (count < length) {
+				int actual = is.read(data, count, length - count);
+				if (actual > 0) {
+					count += actual;
+					percent.set(count / (float) length);
+				} else {
+					break;
+				}
+			}
+			LoadedBytes.addAndGet(data.length);
+			return data;
+		}
+		return null;
+	}
 
-	
+//	------------------------------------------------------------------------------------------------------------------------
+
+
+
+	/**
+	 * 获得已从CIO读取的字节数
+	 * @return
+	 */
+	public static long getLoadedBytes() {
+		return LoadedBytes.get();
+	}
+
+	/**读取数据的超时时间*/
+	public static void setLoadingTimeOut(int loadingTimeOut) {
+		LoadingTimeOut = loadingTimeOut;
+	}
+	/**读取数据的超时时间*/
+	public static int getLoadingTimeOut() {
+		return LoadingTimeOut;
+	}
+
+	/**读取数据的重复次数*/
+	public static void setLoadRetryCount(int loadRetryCount) {
+		LoadRetryCount = Math.max(1, loadRetryCount);
+	}
+	/**读取数据的重复次数*/
+	public static int getLoadRetryCount() {
+		return LoadRetryCount;
+	}
+
 }
