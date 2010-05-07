@@ -267,12 +267,12 @@ public class ServerImpl extends IoHandlerAdapter implements Server
 	}
 	
 	public void sessionIdle(IoSession session, IdleStatus status) throws Exception {
-		log.info("sessionIdle : " + session + " : " + status);
+		log.debug("sessionIdle : " + session + " : " + status);
 		session.close(false);
 	}
 	
 	public void sessionOpened(IoSession session) throws Exception {
-		log.info("sessionOpened : " + session);
+		log.debug("sessionOpened : " + session);
 		session_rw_lock.writeLock().lock();
 		try{
 			ClientSessionImpl client = new ClientSessionImpl(session, this);
@@ -285,7 +285,7 @@ public class ServerImpl extends IoHandlerAdapter implements Server
 	}
 	
 	public void sessionClosed(IoSession session) throws Exception {
-		log.info("sessionClosed : " + session);
+		log.debug("sessionClosed : " + session);
 		ClientSessionImpl client = getBindSession(session);
 		session.removeAttribute(SessionAttributeKey.CLIENT_SESSION);
 		if (client != null) {
@@ -311,7 +311,7 @@ public class ServerImpl extends IoHandlerAdapter implements Server
 	{
 		ClientSessionImpl client = getBindSession(session);
 		if (client == null) {
-			log.error("client is expire !");
+			log.error("client is expire : " + session);
 			return;
 		}
 		
@@ -342,13 +342,13 @@ public class ServerImpl extends IoHandlerAdapter implements Server
 					break;
 					
 				default:
-					log.error("unknow message : " + message);
+					log.error("unknow message : " + session + " : " + message);
 				}
 			}
 		}
 		else
 		{
-			log.error("bad message type : " + message);
+			log.error("bad message type : " + session + " : " + message);
 		}
 		
 	}
