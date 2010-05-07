@@ -91,24 +91,24 @@ public class CIO extends CObject
 
 		try
 		{
-			// load from jar
-			InputStream is = getAppBridge().getResource(path);
-			if (is != null) {
-				return is;
-			}
-			
-			// load from file
-			File file = new File(path);
-			if (file.exists()) {
-				return new FileInputStream(file);
-			}
-
 			// load from url
 			try {
 				URL url = new URL(path);
 				return new URLInputStream(url, url_loading_time_out);
 			} catch (MalformedURLException err) {}
 
+			// load from file
+			File file = new File(path);
+			if (file.exists()) {
+				return new FileInputStream(file);
+			}
+
+			// load from jar
+			InputStream is = getAppBridge().getResource(path);
+			if (is != null) {
+				return is;
+			}
+			
 		} catch(Exception err) {
 			err.printStackTrace();
 		}
@@ -126,11 +126,14 @@ public class CIO extends CObject
 		byte[] data = null;
 		try
 		{
-			// load from jar
-			data = readStream(getAppBridge().getResource(path));
-			if (data != null) {
-				return data;
-			}
+			// load from url
+			try {
+				URL url = new URL(path);
+				data = loadURLData(url, url_loading_time_out, url_loading_retry_count);
+				if (data != null) {
+					return data;
+				}
+			} catch (MalformedURLException err) {}
 
 			// load from file
 			File file = new File(path);
@@ -141,14 +144,11 @@ public class CIO extends CObject
 				}
 			}
 
-			// load from url
-			try {
-				URL url = new URL(path);
-				data = loadURLData(url, url_loading_time_out, url_loading_retry_count);
-				if (data != null) {
-					return data;
-				}
-			} catch (MalformedURLException err) {}
+			// load from jar
+			data = readStream(getAppBridge().getResource(path));
+			if (data != null) {
+				return data;
+			}
 
 		} catch(Exception err) {
 			err.printStackTrace();
