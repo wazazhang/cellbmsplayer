@@ -65,10 +65,10 @@ public class CIO extends CObject
 					} else {
 						baos.write(data, 0, read_bytes);
 						count += read_bytes;
-						loaded_bytes.addAndGet(count);
 						available = is.available();
 					}
 				}
+				loaded_bytes.addAndGet(baos.size());
 				return baos.toByteArray();
 			} catch (IOException e) {
 				e.printStackTrace();
