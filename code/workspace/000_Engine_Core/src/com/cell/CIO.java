@@ -37,11 +37,9 @@ import com.cell.security.MD5;
  */
 public class CIO extends CObject
 {
-	private static int				LoadingTimeOut	= 20000; //ms
-	
-	private static int				LoadRetryCount	= 5;
-
-	private static AtomicLong		LoadedBytes		= new AtomicLong(0);
+	private static int				url_loading_time_out	= 20000; //ms
+	private static int				url_loading_retry_count	= 5;
+	private static AtomicLong		loaded_bytes			= new AtomicLong(0);
 	
 
 //	------------------------------------------------------------------------------------------------------------------------
@@ -67,6 +65,7 @@ public class CIO extends CObject
 					} else {
 						baos.write(data, 0, read_bytes);
 						count += read_bytes;
+						loaded_bytes.addAndGet(count);
 						available = is.available();
 					}
 				}
@@ -92,21 +91,24 @@ public class CIO extends CObject
 
 		try
 		{
-			// load from url
-			try {
-				URL url = new URL(path);
-				return new URLInputStream(url, LoadingTimeOut);
-			} catch (MalformedURLException err) {}
-
+			// load from jar
+			InputStream is = getAppBridge().getResource(path);
+			if (is != null) {
+				return is;
+			}
+			
 			// load from file
 			File file = new File(path);
 			if (file.exists()) {
 				return new FileInputStream(file);
 			}
 
-			// load from jar
-			return getAppBridge().getResource(path);
-			
+			// load from url
+			try {
+				URL url = new URL(path);
+				return new URLInputStream(url, url_loading_time_out);
+			} catch (MalformedURLException err) {}
+
 		} catch(Exception err) {
 			err.printStackTrace();
 		}
@@ -124,41 +126,32 @@ public class CIO extends CObject
 		byte[] data = null;
 		try
 		{
+			// load from jar
+			data = readStream(getAppBridge().getResource(path));
+			if (data != null) {
+				return data;
+			}
+
+			// load from file
+			File file = new File(path);
+			if (file.exists()) {
+				data = readStream(new FileInputStream(file));
+				if (data != null) {
+					return data;
+				}
+			}
+
 			// load from url
 			try {
 				URL url = new URL(path);
-				data = loadURLData(url, LoadingTimeOut, LoadRetryCount);
+				data = loadURLData(url, url_loading_time_out, url_loading_retry_count);
 				if (data != null) {
 					return data;
 				}
 			} catch (MalformedURLException err) {}
 
-
-			// load from file
-			if (data == null) {
-				File file = new File(path);
-				if (file.exists()) {
-					data = readStream(new FileInputStream(file));
-					if (data != null) {
-						return data;
-					}
-				}
-			}
-			
-			// load from jar
-			{
-				data = readStream(getAppBridge().getResource(path));
-				if (data != null) {
-					return data;
-				}
-			}
-
 		} catch(Exception err) {
 			err.printStackTrace();
-		} finally {
-			if (data != null) {
-				LoadedBytes.addAndGet(data.length);
-			}
 		}
 		return data;
 	}
@@ -402,11 +395,10 @@ public class CIO extends CObject
 	}
 
 	public static URLInputStream getInputStream(URL url) {
-		return getInputStream(url, LoadingTimeOut);
+		return getInputStream(url, url_loading_time_out);
 	}
 	
-	public static URLInputStream getInputStream(URL url, int timeOut)
-	{
+	public static URLInputStream getInputStream(URL url, int timeOut) {
 		try {
 			return new URLInputStream(url, timeOut);
 		} catch (IOException err) {
@@ -418,28 +410,35 @@ public class CIO extends CObject
 //	-----------------------------------------------------------------------------------------------------------------
 
 	/**
-	 * 读取该流的可用数据
+	 * load a InputStream res to byte[]<br>
+	 * this will auto close InputStream<br>
+	 * 只要InputStream里有数据，该方法都将阻塞，直到available=0，所以该方法不适合读取动态流。
 	 * @param is
-	 * @param listener
-	 * @return
+	 * @param 进度
+	 * @return 
 	 */
-	public static byte[] readAvailable(InputStream is, AtomicReference<Float> percent) throws IOException
+	public static byte[] readStream(InputStream is, AtomicReference<Float> percent) throws IOException
 	{
 		if (is != null) {
-			int 	length	= is.available();
-			byte[]	data	= new byte[length];
-			int		count	= 0;
-			while (count < length) {
-				int actual = is.read(data, count, length - count);
-				if (actual > 0) {
-					count += actual;
-					percent.set(count / (float) length);
-				} else {
-					break;
+			int available = is.available();
+			ByteArrayOutputStream baos = new ByteArrayOutputStream(is.available());
+			do {
+				byte[]	data	= new byte[available];
+				int		count	= 0;
+				while (count < available) {
+					int actual = is.read(data, count, available - count);
+					if (actual > 0) {
+						baos.write(data, count, actual);
+						count += actual;
+						percent.set(count / (float) available);
+					} else {
+						break;
+					}
 				}
-			}
-			LoadedBytes.addAndGet(data.length);
-			return data;
+				loaded_bytes.addAndGet(data.length);
+				available = is.available();
+			} while (available > 0);
+			return baos.toByteArray();
 		}
 		return null;
 	}
@@ -453,25 +452,25 @@ public class CIO extends CObject
 	 * @return
 	 */
 	public static long getLoadedBytes() {
-		return LoadedBytes.get();
+		return loaded_bytes.get();
 	}
 
 	/**读取数据的超时时间*/
 	public static void setLoadingTimeOut(int loadingTimeOut) {
-		LoadingTimeOut = loadingTimeOut;
+		url_loading_time_out = loadingTimeOut;
 	}
 	/**读取数据的超时时间*/
 	public static int getLoadingTimeOut() {
-		return LoadingTimeOut;
+		return url_loading_time_out;
 	}
 
 	/**读取数据的重复次数*/
 	public static void setLoadRetryCount(int loadRetryCount) {
-		LoadRetryCount = Math.max(1, loadRetryCount);
+		url_loading_retry_count = Math.max(1, loadRetryCount);
 	}
 	/**读取数据的重复次数*/
 	public static int getLoadRetryCount() {
-		return LoadRetryCount;
+		return url_loading_retry_count;
 	}
 
 }
