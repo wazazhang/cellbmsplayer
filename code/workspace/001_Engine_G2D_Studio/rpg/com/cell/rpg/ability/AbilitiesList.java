@@ -15,7 +15,7 @@ import com.cell.rpg.RPGConfig;
 public abstract class AbilitiesList implements Abilities, Serializable
 {
 	/**将显示在单位属性的Ability面板*/
-	private ArrayList<AbstractAbility>	abilities = new ArrayList<AbstractAbility>();
+	protected ArrayList<AbstractAbility>	abilities = new ArrayList<AbstractAbility>();
 
 	transient AbstractAbility[]			static_abilities;
 	
