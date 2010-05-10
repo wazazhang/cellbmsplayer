@@ -15,7 +15,7 @@ public abstract class SceneUnit extends RPGObject
 	public float		y;
 	public float		z;
 
-	@Property("任务依赖显示条件")
+	@Property("任务依赖显示条件 (覆盖TUnit)")
 	public QuestStateDisplayOR quest_display = null;
 	
 	public SceneUnit(String id) {

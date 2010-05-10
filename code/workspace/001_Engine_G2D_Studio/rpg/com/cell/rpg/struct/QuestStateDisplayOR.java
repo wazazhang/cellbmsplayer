@@ -85,10 +85,10 @@ public class QuestStateDisplayOR extends ArrayList<QuestStateDisplayOR.State> im
 	@Property("任务状态")
 	public static class State extends AbstractAbility
 	{
-		@Property("只显示在接了某任务(覆盖TUnit)")
+		@Property("只显示在接了某任务")
 		public QuestState 	show_in_quest_state		= QuestState.NA;
 		
-		@Property("只显示在接了某任务ID(覆盖TUnit)")@PropertyAdapter(PropertyType.QUEST_ID)
+		@Property("只显示在接了某任务ID")@PropertyAdapter(PropertyType.QUEST_ID)
 		public int 			show_in_quest_id		= -1;
 		
 		@Override
