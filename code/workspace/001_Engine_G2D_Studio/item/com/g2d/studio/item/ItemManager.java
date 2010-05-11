@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.Vector;
 
+import com.cell.rpg.item.ItemPropertyManager;
 import com.cell.rpg.item.ItemPropertyTypes;
 import com.g2d.studio.Config;
 import com.g2d.studio.ManagerForm;
@@ -27,18 +28,11 @@ public class ItemManager extends ManagerForm implements ActionListener
 		super(studio, progress, "道具/技能能力管理器", Res.icons_bar[5]);
 		
 		this.add(toolbar, BorderLayout.NORTH);
-		
-//		File javaFile = new File(studio.plugins_dir, Config.PLUGIN_ITEM_TYPES.replace(".", "/")+".java");
-//		try {
-//			ArrayList<Class<?>> all_class = JavaCompiler.compileAndLoadAllClass(Config.PLUGIN_ITEM_TYPES, javaFile);
-//			ItemPropertyTypes.setItemPropertyTypes(all_class);
-//		} catch (Throwable e) {
-//			e.printStackTrace();
-//		}
-		
+
 		try {
-			Class<?> properties_type = Class.forName(Config.DYNAMIC_ITEM_PROPERTIES_CLASS);
-			ItemPropertyTypes.setItemPropertyTypes(properties_type.getClasses());
+			Class<?> properties_type = Class.forName(Config.DYNAMIC_ITEM_PROPERTY_MANAGER_CLASS);
+			ItemPropertyManager manager = (ItemPropertyManager)properties_type.newInstance();
+			ItemPropertyTypes.setItemPropertyTypes(manager);
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}

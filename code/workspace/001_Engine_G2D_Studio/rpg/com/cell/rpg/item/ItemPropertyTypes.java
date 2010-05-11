@@ -18,8 +18,8 @@ public class ItemPropertyTypes
 	private static Class<?>[]	item_property_types;
 	private static Class<?>[]	item_property_types_list;
 	
-	public static void setItemPropertyTypes(Class<?>[] types) throws Exception {
-		for (Class<?> type : types) {						
+	public static void setItemPropertyTypes(ItemPropertyManager manager) throws Exception {
+		for (Class<?> type : manager.getAllTypes()) {						
 			ItemType itype = type.getAnnotation(ItemType.class);
 			if (itype!=null) {
 				if (ItemPropertyTemplate.class.isAssignableFrom(type)) {
@@ -43,19 +43,25 @@ public class ItemPropertyTypes
 		}
 		item_property_types_list = show_types.toArray(new Class<?>[show_types.size()]);
 	}
-	
-	public static void setItemPropertyTypes(Collection<Class<?>> types) throws Exception {
-		setItemPropertyTypes(types.toArray(new Class<?>[types.size()]));
-	}
 
+	
 	public static Class<?> getItemPropertyType(int type) {
 		return item_property_types_map.get(type);
 	}
 	
+	
+	/**
+	 * 所有的类
+	 * @return
+	 */
 	public static Class<?>[] getAllItemPropertyTypes() {
 		return item_property_types;
 	}
 	
+	/**
+	 * 在编辑器中显示的类
+	 * @return
+	 */
 	public static Class<?>[] getItemPropertyTypesList() {
 		return item_property_types_list;
 	}
