@@ -46,7 +46,7 @@ public class Config extends com.cell.util.Config
 //	动态加载的类(插件类)
 	
 	/**所有道具属性*/
-	public static String DYNAMIC_ITEM_PROPERTIES_CLASS;
+	public static String DYNAMIC_ITEM_PROPERTY_MANAGER_CLASS;
 	/**与TriggerUnitMethod映射的类型PLAYER*/
 	public static String DYNAMIC_QUEST_PLAYER_CLASS;
 	/**与TriggerUnitMethod映射的类型PET*/
