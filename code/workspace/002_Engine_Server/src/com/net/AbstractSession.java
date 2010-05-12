@@ -18,8 +18,6 @@ public interface AbstractSession
 	public long 			getReceivedMessageCount () ;
 	public long 			getSentBytes();
 	public long 			getReceivedBytes();
-	
-	public long				getIdleDuration();
 
 	public Object 			getAttribute(Object key);
 	public Object 			setAttribute(Object key, Object value);

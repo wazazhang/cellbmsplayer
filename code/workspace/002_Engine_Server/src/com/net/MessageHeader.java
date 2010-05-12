@@ -7,7 +7,7 @@ import java.io.ObjectOutput;
 import java.io.ObjectStreamException;
 import java.io.Serializable;
 
-import com.cell.util.MarkedHashtable;
+
 
 public abstract class MessageHeader implements Serializable
 {
@@ -21,18 +21,8 @@ public abstract class MessageHeader implements Serializable
 
 	/** Session/Server 之间的消息 */
 	final public static short	PROTOCOL_SESSION_MESSAGE			= 0x3030;
-	/** 当前Session加入频道的事件 */
-	final public static short	PROTOCOL_CHANNEL_JOIN_S2C			= 0x3050;
-	/** 当前Session离开频道的事件 */
-	final public static short	PROTOCOL_CHANNEL_LEAVE_S2C			= 0x3051;
 	/** Session/Channel 之间的消息 */
 	final public static short	PROTOCOL_CHANNEL_MESSAGE			= 0x3052;
-	
-	
-	/** 标识为 {@link Serializable} 方式序列化 */
-	final public static byte	TRANSMISSION_TYPE_SERIALIZABLE		= 0;
-	/** 标识为 {@link ExternalizableMessage} 方式序列化，即以纯手工序列化/反序列化 */
-	final public static byte	TRANSMISSION_TYPE_EXTERNALIZABLE	= 1;
 	
 //----------------------------------------------------------------------------------------------------------------		
 //	protocol fields
@@ -44,7 +34,7 @@ public abstract class MessageHeader implements Serializable
 	transient public long		ChannelSesseionID;
 	
 	/**可以同时包含连接的IP地址和端口号以及所在的服务器端的频段号, ipv4*/
-	transient public long 		SesseionID;
+	transient public long 		SessionID;
 	
 	/**消息类型*/
 	transient public short 		Protocol;
@@ -52,8 +42,6 @@ public abstract class MessageHeader implements Serializable
 	/**匹配Request和Response的值，如果为0，则代表为Notify*/
 	transient public int		PacketNumber	= 0;
 	
-	/**消息的传输类型*/
-	transient public byte		TransmissionType;
 	
 //----------------------------------------------------------------------------------------------------------------		
 //	dynamic fields
@@ -63,7 +51,7 @@ public abstract class MessageHeader implements Serializable
 	
 	/**接收时间*/
 	transient public long		DynamicReceiveTime;
-
+	
 //----------------------------------------------------------------------------------------------------------------		
 	
 

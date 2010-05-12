@@ -21,17 +21,11 @@ public class ClientSessionImpl implements ClientSession
 {
 	private static final Logger log = LoggerFactory.getLogger(ClientSessionImpl.class.getName());
 	
-	final protected IoSession 	Session;
-	final protected Server		Server;
+	final protected IoSession 		Session;
+	final protected AbstractServer	Server;
+	protected ClientSessionListener	Listener;
 	
-	protected ClientSessionListener Listener;
-	
-	long LastHartBeatTime;
-
-//	private Future<?> heartbeat_future;
-	
-	
-	public ClientSessionImpl(IoSession session, Server server){
+	public ClientSessionImpl(IoSession session, AbstractServer server){
 		Session = session;
 		Server = server;
 	}
@@ -82,13 +76,6 @@ public class ClientSessionImpl implements ClientSession
 		return Session.isConnected();
 	}
 
-	void write(MessageHeader message){
-		if (Session.isConnected()) {
-			message.SesseionID = getID();
-			Session.write(message);
-		}
-	}
-	
 	void setListener(ClientSessionListener listener) {
 		Listener = listener;
 	}
@@ -99,16 +86,19 @@ public class ClientSessionImpl implements ClientSession
 	}
 	
 	public boolean send(MessageHeader message) {
-		message.Protocol 		= MessageHeader.PROTOCOL_SESSION_MESSAGE;
-		write(message);
+		Server.write(Session, 
+				message, 
+				MessageHeader.PROTOCOL_SESSION_MESSAGE, 
+				0, 0, 0);
 		return true;
 	}
 	
 	
 	public void send(MessageHeader request, MessageHeader response){
-		response.PacketNumber	= request.PacketNumber;
-		response.Protocol		= MessageHeader.PROTOCOL_SESSION_MESSAGE;
-		write(response);
+		Server.write(Session, 
+				response, 
+				MessageHeader.PROTOCOL_SESSION_MESSAGE, 
+				0, 0, request.PacketNumber);
 	}
 	
 	
@@ -130,11 +120,6 @@ public class ClientSessionImpl implements ClientSession
 
 	public Set<Object> getAttributeKeys(){
 		return Session.getAttributeKeys();
-	}
-	
-	
-	public long getIdleDuration() {
-		return  System.currentTimeMillis() - LastHartBeatTime;
 	}
 	
 //	synchronized public void stopHeartBeat() {
