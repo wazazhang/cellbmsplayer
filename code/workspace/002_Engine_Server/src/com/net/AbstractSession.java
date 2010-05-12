@@ -8,7 +8,7 @@ import java.util.Set;
 public interface AbstractSession 
 {
 	public long 			getID();
-	public SocketAddress 	getAddress();
+//	public SocketAddress 	getAddress();
 	public boolean			isConnected();
 	
 	public boolean			disconnect(boolean force);
