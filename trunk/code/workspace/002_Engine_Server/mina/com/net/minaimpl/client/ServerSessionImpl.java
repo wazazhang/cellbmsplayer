@@ -22,6 +22,8 @@ import com.net.MessageHeader;
 import com.net.client.ServerSession;
 import com.net.client.ServerSessionListener;
 import com.net.minaimpl.NetPackageCodec;
+import com.net.minaimpl.SystemMessages;
+import com.net.minaimpl.SystemMessages.SystemMessageS2C;
 
 
 public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession 
@@ -122,8 +124,9 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 	
 	protected void sendChannel(MessageHeader message, ClientChannelImpl channel) {
 		if (Session != null) {
-			message.Protocol	= MessageHeader.PROTOCOL_CHANNEL_MESSAGE;
-			message.ChannelID	= channel.getID();
+			message.Protocol			= MessageHeader.PROTOCOL_CHANNEL_MESSAGE;
+			message.ChannelID			= channel.getID();
+			message.ChannelSesseionID	= getID();
 			Session.write(message);
 		}
 	}
@@ -179,43 +182,29 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 			
 			try
 			{
-				switch (header.Protocol)
-				{
-					case MessageHeader.PROTOCOL_CHANNEL_JOIN_S2C:
-					{
-						ClientChannelImpl channel = new ClientChannelImpl(this, header.ChannelID);
-						channels.put(header.ChannelID, channel);
-						break;
-					}
-					case MessageHeader.PROTOCOL_CHANNEL_LEAVE_S2C:
-					{
-						ClientChannelImpl channel = channels.remove(header.ChannelID);
-						if (channel!=null) {
-							Listener.leftChannel(channel);
+				if (header.Protocol == MessageHeader.PROTOCOL_CHANNEL_MESSAGE) {
+					ClientChannelImpl channel = channels.get(header.ChannelID);
+					if (channel != null) {
+						if (header instanceof SystemMessageS2C) {
+							SystemMessageS2C sys = (SystemMessageS2C) header;
+							if (sys.event == SystemMessages.EVENT_CHANNEL_JOIN_S2C) {
+								channels.put(header.ChannelID, channel);
+							} else if (sys.event == SystemMessages.EVENT_CHANNEL_LEAVE_S2C) {
+								Listener.leftChannel(channel);
+								channels.remove(header.ChannelID);
+							}
 						}
-						break;
+						Listener.receivedChannelMessage(channel, header);
 					}
-					case MessageHeader.PROTOCOL_CHANNEL_MESSAGE:
-					{
-						ClientChannelImpl channel = channels.get(header.ChannelID);
-						if (channel!=null) {
-							Listener.receivedChannelMessage(channel, header);
-						}
-						break;
-					}
-					//
-					case MessageHeader.PROTOCOL_SESSION_MESSAGE:
-					{
-						Listener.receivedMessage(this, header);
-						break;
-					}
-					default:{
-						log.error("messageReceived : " +
-								"unknow protocol("+Integer.toString(header.Protocol, 16)+") : " +
-								"data : " + header);
-					}
+				} 
+				else if (header.Protocol == MessageHeader.PROTOCOL_SESSION_MESSAGE) {
+					Listener.receivedMessage(this, header);
+				} 
+				else {
+					log.error("messageReceived" +
+							" : unknow protocol(" + Integer.toString(header.Protocol, 16) + ")" +
+							" : " + "data : " + header);
 				}
-			
 			}
 			catch (Exception e) 
 			{

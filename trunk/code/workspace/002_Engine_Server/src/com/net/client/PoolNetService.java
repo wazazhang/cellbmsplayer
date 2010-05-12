@@ -44,7 +44,7 @@ public class PoolNetService extends BasicNetService
 		}
 	}
 	
-	private ServerSession getSession() {
+	protected ServerSession getSession() {
 		session_lock.lock();
 		try{
 			int start = Math.abs(CUtil.getRandom().nextInt() % sessions.length);

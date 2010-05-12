@@ -12,9 +12,9 @@ public class ChannelManagerImpl implements ChannelManager
 {
 	final private ConcurrentHashMap<Integer, Channel> Channels = new ConcurrentHashMap<Integer, Channel>(1000);
 	
-	final Server server;
+	final AbstractServer server;
 	
-	ChannelManagerImpl(Server server){
+	ChannelManagerImpl(AbstractServer server){
 		this.server = server;
 	}
 	

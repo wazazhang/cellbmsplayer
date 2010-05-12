@@ -1,54 +1,27 @@
 package com.net.minaimpl.server;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import org.apache.mina.core.service.IoAcceptor;
-import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
-import org.apache.mina.filter.codec.ProtocolCodecFilter;
-import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.net.ExternalizableFactory;
 import com.net.MessageHeader;
-import com.net.minaimpl.NetPackageCodec;
 import com.net.minaimpl.SessionAttributeKey;
-import com.net.minaimpl.SystemMessages;
-import com.net.minaimpl.SystemMessages.*;
+import com.net.minaimpl.SystemMessages.ServerStatusRequestC2S;
+import com.net.minaimpl.SystemMessages.ServerStatusResponseS2C;
 import com.net.server.Channel;
 import com.net.server.ChannelManager;
 import com.net.server.ClientSession;
-import com.net.server.Server;
-import com.net.server.ServerListener;
 
 
-public class ServerImpl extends IoHandlerAdapter implements Server
+public class ServerImpl extends AbstractServer
 {
-	/** 处理线程的数目 */
-	final private int 			IoProcessCount;
-	final private int			SessionReadIdleTimeSeconds;
-	final private int			SessionWriteIdleTimeSeconds;
-
-	// 
-	private ServerListener 		SrvListener;
-	private IoAcceptor 			Acceptor;
-	private NetPackageCodec 	Codec;	
-	private long 				StartTime;
-
-	
 	final private ChannelManager	channel_manager;
-	final private Logger 			log 			= LoggerFactory.getLogger(getClass().getName());
 	final ReentrantReadWriteLock	session_rw_lock	= new ReentrantReadWriteLock();
 
-	
 //	----------------------------------------------------------------------------------------------------------------------
 	
 	public ServerImpl() 
@@ -90,59 +63,11 @@ public class ServerImpl extends IoHandlerAdapter implements Server
 			int sessionWriteIdleTimeSeconds,
 			int sessionReadIdleTimeSeconds) 
 	{
+		super(cl, ef, ioProcessCount, sessionWriteIdleTimeSeconds, sessionReadIdleTimeSeconds);
 		this.channel_manager				= new ChannelManagerImpl(this);
-		this.IoProcessCount					= ioProcessCount;
-		this.SessionWriteIdleTimeSeconds	= sessionWriteIdleTimeSeconds;
-		this.SessionReadIdleTimeSeconds		= sessionReadIdleTimeSeconds;
-		this.Codec							= new NetPackageCodec(cl, ef);
 	}	
 	
 //	----------------------------------------------------------------------------------------------------------------------
-
-	public long getStartTime() {
-		return StartTime;
-	}
-	
-	synchronized public void open(int port, ServerListener listener) throws IOException 
-	{
-		if (Acceptor==null)
-		{
-			log.info("starting server at port : " + port);
-			
-			StartTime 	= System.currentTimeMillis();
-			SrvListener	= listener;
-			Acceptor	= new NioSocketAcceptor(IoProcessCount);
-			
-			Acceptor.getSessionConfig().setReaderIdleTime(SessionReadIdleTimeSeconds);
-			Acceptor.getSessionConfig().setWriterIdleTime(SessionWriteIdleTimeSeconds);
-//			Acceptor.setCloseOnDeactivation(true);
-			Acceptor.setHandler(this);
-			Acceptor.getFilterChain().addLast("codec", new ProtocolCodecFilter(Codec));
-			
-			Acceptor.bind(new InetSocketAddress(port));
-			
-			log.info("server started !");
-		}
-		else {
-			log.info("Server already open !");
-		}
-	}
-	
-	synchronized public void close() throws IOException
-	{
-		if (Acceptor!=null) 
-		{
-			log.info("server closing...");
-			Acceptor.unbind();
-			removeAllSession();
-			Acceptor.dispose();
-			Acceptor = null;
-			log.info("server closed !");
-		}
-		else{
-			log.info("Server is not open !");
-		}
-	}
 
 //	-----------------------------------------------------------------------------------------------------------------------
 
@@ -162,13 +87,6 @@ public class ServerImpl extends IoHandlerAdapter implements Server
 			session_rw_lock.readLock().unlock();
 		}
 		return null;
-	}
-	
-	private void removeAllSession()
-	{
-		for (IoSession session : Acceptor.getManagedSessions().values()){
-			session.close(false);
-		}
 	}
 	
 	
@@ -242,42 +160,12 @@ public class ServerImpl extends IoHandlerAdapter implements Server
 	
 //	-----------------------------------------------------------------------------------------------------------------------
 
-	public long getSentMessageCount() {
-		return Codec.SendedMessageCount;
-	}
-	
-	public long getReceivedMessageCount () {
-		return Codec.ReceivedMessageCount;
-	}
-	
-	public long getSentBytes(){
-		return Codec.TotalSentBytes;
-	}
-	
-	public long getReceivedBytes(){
-		return Codec.TotalReceivedBytes;
-	}
-	
-//	-----------------------------------------------------------------------------------------------------------------------
-
-	
-	public void exceptionCaught(IoSession session, Throwable cause) throws Exception {
-		log.error(cause.getMessage() + "\n" + session, cause);
-		session.close(false);
-	}
-	
-	public void sessionIdle(IoSession session, IdleStatus status) throws Exception {
-		log.debug("sessionIdle : " + session + " : " + status);
-		session.close(false);
-	}
-	
 	public void sessionOpened(IoSession session) throws Exception {
 		log.debug("sessionOpened : " + session);
 		session_rw_lock.writeLock().lock();
 		try{
 			ClientSessionImpl client = new ClientSessionImpl(session, this);
 			session.setAttribute(SessionAttributeKey.CLIENT_SESSION, client);
-			client.LastHartBeatTime = System.currentTimeMillis();
 			client.setListener(SrvListener.connected(client));
 		} finally {
 			session_rw_lock.writeLock().unlock();
@@ -318,8 +206,6 @@ public class ServerImpl extends IoHandlerAdapter implements Server
 		//System.out.println(Thread.currentThread().getName() + " messageReceived");
 		if (message instanceof MessageHeader)
 		{
-			client.LastHartBeatTime = System.currentTimeMillis();
-			
 			if (client.Listener != null)
 			{
 				MessageHeader header = (MessageHeader)message;

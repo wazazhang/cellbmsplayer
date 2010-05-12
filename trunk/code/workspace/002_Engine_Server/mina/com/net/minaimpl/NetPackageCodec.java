@@ -34,13 +34,20 @@ import com.net.NetDataOutput;
 
 public class NetPackageCodec implements ProtocolCodecFactory
 {
+	/** 标识为 {@link Serializable} 方式序列化 */
+	final public static byte	TRANSMISSION_TYPE_SERIALIZABLE		= 0;
+	/** 标识为 {@link ExternalizableMessage} 方式序列化，即以纯手工序列化/反序列化 */
+	final public static byte	TRANSMISSION_TYPE_EXTERNALIZABLE	= 1;
+	
 	private static final Logger _log = LoggerFactory.getLogger(NetPackageCodec.class.getName());
 
 	// 消息头
 	final static byte	protocol_start[] 		= new byte[] { 2, 0, 0, 6, };
 	// 消息头固定尺寸
 	final static int	protocol_fixed_size 	= 4 + 4;
-	
+
+	final static byte[]	zerodata				= new byte[0];
+
 	public static void setProtocolStart(byte b1, byte b2, byte b3, byte b4) 
 	{
 		protocol_start[0] = b1;
@@ -117,10 +124,10 @@ public class NetPackageCodec implements ProtocolCodecFactory
 	    				final MessageHeader message;
 	    				// 解出包包含的二进制消息
 	    				switch(TransmissionType) {
-						case MessageHeader.TRANSMISSION_TYPE_SERIALIZABLE:
+						case TRANSMISSION_TYPE_SERIALIZABLE:
 		    				message = (MessageHeader)in.getObject(class_loader);
 							break;
-						case MessageHeader.TRANSMISSION_TYPE_EXTERNALIZABLE:
+						case TRANSMISSION_TYPE_EXTERNALIZABLE:
 							message = ext_factory.getMessage(in.getInt());	// ext 4
 							ExternalizableMessage ext = (ExternalizableMessage)message;
 							ext.readExternal(new NetDataInputImpl(in));
@@ -131,10 +138,10 @@ public class NetPackageCodec implements ProtocolCodecFactory
 	    				
 	    				message.ChannelID 			= ChannelID;
 	    				message.ChannelSesseionID	= ChannelSesseionID;
-	    				message.SesseionID 			= SesseionID;
+	    				message.SessionID 			= SesseionID;
 	    				message.Protocol 			= Protocol;
 	    				message.PacketNumber		= PacketNumber;
-	    				message.TransmissionType	= TransmissionType;
+
 	    				
 	    				message.DynamicReceiveTime	= System.currentTimeMillis();
 	    				
@@ -183,8 +190,6 @@ public class NetPackageCodec implements ProtocolCodecFactory
 	
     class NetPackageEncoder extends ProtocolEncoderAdapter
     {
-    	final byte[] zerodata = new byte[0];
-    
     	public void encode(IoSession session, Object message, ProtocolEncoderOutput out) throws Exception 
     	{
     		try
@@ -207,19 +212,17 @@ public class NetPackageCodec implements ProtocolCodecFactory
 	    			{
 						buffer.putInt(header.ChannelID);			// 4
 						buffer.putLong(header.ChannelSesseionID);	// 8
-						buffer.putLong(header.SesseionID);			// 8
+						buffer.putLong(header.SessionID);			// 8
 						buffer.putShort(header.Protocol);			// 2
 						buffer.putInt(header.PacketNumber);			// 4
 						
 						if (header instanceof ExternalizableMessage) {
-							header.TransmissionType = MessageHeader.TRANSMISSION_TYPE_EXTERNALIZABLE;
-							buffer.put(header.TransmissionType);		// 1
-							buffer.putInt(ext_factory.getType(header));	// ext 4
+							buffer.put(TRANSMISSION_TYPE_EXTERNALIZABLE);	// 1
+							buffer.putInt(ext_factory.getType(header));		// ext 4
 							ExternalizableMessage ext = (ExternalizableMessage)header;
 							ext.writeExternal(new NetDataOutputImpl(buffer));
 						} else {
-							header.TransmissionType = MessageHeader.TRANSMISSION_TYPE_SERIALIZABLE;
-							buffer.put(header.TransmissionType);		// 1
+							buffer.put(TRANSMISSION_TYPE_SERIALIZABLE);		// 1
 							buffer.putObject(header);
 						}
 	    			}
@@ -265,10 +268,6 @@ public class NetPackageCodec implements ProtocolCodecFactory
     {
     	this.class_loader	= cl;
     	this.ext_factory	= ext_factory;
-//    	System.out.print("NetPackageCodec\n" +
-//    			"\tClassLoader : " + cl.getClass().getName() + "\n" + 
-//    			"\tExternalizableFactory : " + (ext_factory != null ? ext_factory.getClass().getName() : ext_factory) + "\n" + 
-//    			"");
     }
 
     public ProtocolEncoder getEncoder(IoSession ioSession) throws Exception {
@@ -279,13 +278,13 @@ public class NetPackageCodec implements ProtocolCodecFactory
         return decoder;
     }
     
-    public ProtocolDecoder getDecoder() throws Exception {
-    	return decoder;
-    }
-    
-    public ProtocolEncoder getEncoder() throws Exception {
-    	return encoder;
-    }
+//    public ProtocolDecoder getDecoder() throws Exception {
+//    	return decoder;
+//    }
+//    
+//    public ProtocolEncoder getEncoder() throws Exception {
+//    	return encoder;
+//    }
 //
 //    public static void main(String[] args)
 //    {
