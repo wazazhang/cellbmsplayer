@@ -304,7 +304,7 @@ public abstract class BasicNetService
     		}
     		return true;
     	}
-    	
+    	messageNotify(message);
     	return false;
 	}
 	
@@ -318,8 +318,11 @@ public abstract class BasicNetService
     		sendlock.unlock();
     	}
     	if (request != null) {
-    		request.messageResponsed(message);
+    		request.messageResponsed(message);    	
+    		messageResponse(request.Message, message);
     		return true;
+    	} else {
+    		messageNotify(message);
     	}
     	return false;
 	}
@@ -351,7 +354,10 @@ public abstract class BasicNetService
     
 	protected void onLeftChannel(ClientChannel channel) {}
   
-
+	protected void messageNotify(MessageHeader notify){}
+	
+	protected void messageResponse(MessageHeader request, MessageHeader response){}
+	
 //	----------------------------------------------------------------------------------------------------------------------------
 	
 
@@ -483,7 +489,9 @@ public abstract class BasicNetService
 			this.SendTimeOut 	= timeout > 0 ? timeout : 0;
 			this.Listener 		= new ArrayList<WaitingListener>(listeners.length);
 			for (WaitingListener l : listeners) {
-				this.Listener.add(l);
+				if (l != null) {
+					this.Listener.add(l);
+				}
 			}
 		}
 		
