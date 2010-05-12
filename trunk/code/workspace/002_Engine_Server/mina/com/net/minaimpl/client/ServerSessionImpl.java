@@ -233,10 +233,10 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 		return Session;
 	}
 
-	@Override
-	public SocketAddress getAddress() {
-		return Session.getRemoteAddress();
-	}
+//	@Override
+//	public SocketAddress getAddress() {
+//		return Session.getRemoteAddress();
+//	}
 
 	@Override
 	public boolean containsAttribute(Object key) {
