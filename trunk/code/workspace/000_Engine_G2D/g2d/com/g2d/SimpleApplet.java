@@ -48,7 +48,7 @@ public class SimpleApplet extends JApplet implements Runnable
 		this.setFocusable(true);
 		
 
-		new Thread(this).start();
+		new Thread(this, getClass().getName() + "-paint").start();
 	}
 
 	@Override

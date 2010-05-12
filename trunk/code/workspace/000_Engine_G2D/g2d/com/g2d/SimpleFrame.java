@@ -50,7 +50,7 @@ public class SimpleFrame extends JFrame implements Runnable, WindowListener, Com
 			this.canvas.changeStage(mainClass);
 		}
 		
-		new Thread(this).start();
+		new Thread(this, getClass().getName() + "-paint").start();
 	}
 	
 	public void fillCanvasSize() {
