@@ -51,7 +51,7 @@ public abstract class BasicNetService
 	final private ThreadPool		thread_pool;
 	
 	final protected Logger 			log;
-
+	
 //	---------------------------------------------------------------------------------------------------------------------------------
 
 	public BasicNetService(ThreadPool thread_pool) 
@@ -304,7 +304,6 @@ public abstract class BasicNetService
     		}
     		return true;
     	}
-    	messageNotify(message);
     	return false;
 	}
 	
@@ -319,10 +318,7 @@ public abstract class BasicNetService
     	}
     	if (request != null) {
     		request.messageResponsed(message);    	
-    		messageResponse(request.Message, message);
     		return true;
-    	} else {
-    		messageNotify(message);
     	}
     	return false;
 	}
@@ -354,10 +350,6 @@ public abstract class BasicNetService
     
 	protected void onLeftChannel(ClientChannel channel) {}
   
-	protected void messageNotify(MessageHeader notify){}
-	
-	protected void messageResponse(MessageHeader request, MessageHeader response){}
-	
 //	----------------------------------------------------------------------------------------------------------------------------
 	
 
