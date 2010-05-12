@@ -269,6 +269,11 @@ public abstract class BasicNetService
     }
     
 	final private void processReceiveSessionMessage(MessageHeader message) {
+		try{
+			onReceivedMessage(message);
+		}catch(Exception err) {
+			log.error(err.getMessage(), err);
+		}
 		if (tryReceivedNotify(message)) {
 			return;
 		} else if (tryReceivedResponse(message)) {
@@ -279,11 +284,16 @@ public abstract class BasicNetService
 	}
 	
 	final private void processReceiveChannelMessage(MessageHeader message) {
+		try{
+			onReceivedMessage(message);
+		}catch(Exception err) {
+			log.error(err.getMessage(), err);
+		}
 		if (tryReceivedNotify(message)) {
 			return;
 		} else if (!tryPushUnhandledNotify(message)) {
 			log.error("handle no listener channel message : " + message);
-		}
+		}	
 	}
 
 //	----------------------------------------------------------------------------------------------------------------------------
@@ -350,6 +360,7 @@ public abstract class BasicNetService
     
 	protected void onLeftChannel(ClientChannel channel) {}
   
+	protected void onReceivedMessage(MessageHeader message){}
 //	----------------------------------------------------------------------------------------------------------------------------
 	
 
