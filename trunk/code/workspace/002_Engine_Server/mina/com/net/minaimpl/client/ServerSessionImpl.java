@@ -5,6 +5,7 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.util.Hashtable;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.mina.core.future.ConnectFuture;
@@ -28,16 +29,17 @@ import com.net.minaimpl.SystemMessages.SystemMessageS2C;
 
 public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession 
 {
-	final private Logger 			log;
+	final Logger 			log;
 
-	private ServerSessionListener 					Listener;
-	private Hashtable<Integer, ClientChannelImpl> 	channels			= new Hashtable<Integer, ClientChannelImpl>();
-	private IoSession 								Session;
+	IoSession 				Session;
+
+	IoConnector				Connector;
+	NetPackageCodec			Codec;
+
+	ServerSessionListener	Listener;
 	
-	IoConnector										Connector;
-	NetPackageCodec									Codec;
-	
-	long											LastHartBeatTime	= 0;
+	ConcurrentHashMap<Integer, ClientChannelImpl> 	
+							channels			= new ConcurrentHashMap<Integer, ClientChannelImpl>();
 	
 	public ServerSessionImpl()
 	{
@@ -130,10 +132,6 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 			Session.write(message);
 		}
 	}
-	
-	synchronized public long getIdleDuration() {
-		return System.currentTimeMillis() - LastHartBeatTime;
-	}
 
 //	-----------------------------------------------------------------------------------------------------------------------
 	public long getSentMessageCount() {
@@ -162,7 +160,6 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 	}
 	
 	public void sessionOpened(IoSession session) throws Exception {
-		LastHartBeatTime = System.currentTimeMillis();
 		Listener.connected(this);
 	}
 	
@@ -176,24 +173,23 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 	{
 		if (message instanceof MessageHeader) 
 		{
-			LastHartBeatTime = System.currentTimeMillis();
-			
 			MessageHeader header = (MessageHeader)message;
-			
 			try
 			{
 				if (header.Protocol == MessageHeader.PROTOCOL_CHANNEL_MESSAGE) {
-					ClientChannelImpl channel = channels.get(header.ChannelID);
-					if (channel != null) {
-						if (header instanceof SystemMessageS2C) {
-							SystemMessageS2C sys = (SystemMessageS2C) header;
-							if (sys.event == SystemMessages.EVENT_CHANNEL_JOIN_S2C) {
-								channels.put(header.ChannelID, channel);
-							} else if (sys.event == SystemMessages.EVENT_CHANNEL_LEAVE_S2C) {
+					if (header instanceof SystemMessageS2C) {
+						SystemMessageS2C sys = (SystemMessageS2C) header;
+						if (sys.event == SystemMessages.EVENT_CHANNEL_JOIN_S2C) {
+							channels.put(header.ChannelID, new ClientChannelImpl(this, header.ChannelID));
+						} else if (sys.event == SystemMessages.EVENT_CHANNEL_LEAVE_S2C) {
+							ClientChannelImpl channel = channels.get(header.ChannelID);
+							if (channel != null) {
 								Listener.leftChannel(channel);
 								channels.remove(header.ChannelID);
 							}
 						}
+					} else {
+						ClientChannelImpl channel = channels.get(header.ChannelID);
 						Listener.receivedChannelMessage(channel, header);
 					}
 				} 

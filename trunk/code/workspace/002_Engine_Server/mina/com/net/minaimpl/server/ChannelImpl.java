@@ -56,7 +56,7 @@ public class ChannelImpl implements Channel
 			ClientSessionImpl impl = (ClientSessionImpl)session;
 			ClientSession old = sessions.putIfAbsent(session, impl);
 			if (old == null) {
-				broadcast(impl, new SystemMessageS2C(SystemMessages.EVENT_CHANNEL_JOIN_S2C));
+				broadcast(impl, new SystemMessageS2C(SystemMessages.EVENT_CHANNEL_JOIN_S2C), 0);
 				Listener.sessionJoined(this, session);
 				return true;
 			}
@@ -67,7 +67,7 @@ public class ChannelImpl implements Channel
 	public boolean leave(ClientSession session) {
 		ClientSessionImpl old = sessions.remove(session);
 		if (old != null) {
-			broadcast(old, new SystemMessageS2C(SystemMessages.EVENT_CHANNEL_LEAVE_S2C));
+			broadcast(old, new SystemMessageS2C(SystemMessages.EVENT_CHANNEL_LEAVE_S2C), 0);
 			Listener.sessionLeaved(this, session);
 			return true;
 		}
@@ -85,31 +85,27 @@ public class ChannelImpl implements Channel
 		return count;
 	}
 	
-	int broadcast(ClientSession sender, MessageHeader message)
+	int broadcast(ClientSession sender, MessageHeader message, int packnum)
 	{
 		long sender_id = (sender != null ? sender.getID() : 0);
 		int  count = 0;
 		for (Iterator<ClientSessionImpl> it = sessions.values().iterator(); it.hasNext(); ) {
 			ClientSessionImpl session = it.next();
-			server.write(session.Session, message, MessageHeader.PROTOCOL_CHANNEL_MESSAGE, getID(), sender_id, 0);
+			server.write(session.Session, message, MessageHeader.PROTOCOL_CHANNEL_MESSAGE, getID(), sender_id, packnum);
 		}
 		return count;
 	}
 	
 	public int send(MessageHeader message) {
-		message.Protocol		= MessageHeader.PROTOCOL_CHANNEL_MESSAGE;
-		return broadcast(null, message);
+		return broadcast(null, message, 0);
 	}
 	
 	public int send(ClientSession sender, MessageHeader message) {
-		message.Protocol		= MessageHeader.PROTOCOL_CHANNEL_MESSAGE;
-		return broadcast(sender, message);
+		return broadcast(sender, message, 0);
 	}
 	
 	public int send(ClientSession sender, MessageHeader request, MessageHeader response) {
-		response.PacketNumber	= request.PacketNumber;
-		response.Protocol		= MessageHeader.PROTOCOL_CHANNEL_MESSAGE;
-		return broadcast(sender, response);
+		return broadcast(sender, response, request.PacketNumber);
 	}
 	
 	public ChannelListener getChannelListener() {

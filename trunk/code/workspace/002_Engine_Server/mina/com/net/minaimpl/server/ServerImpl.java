@@ -214,7 +214,9 @@ public class ServerImpl extends AbstractServer
 				{
 				case MessageHeader.PROTOCOL_CHANNEL_MESSAGE:
 					ChannelImpl channel = (ChannelImpl)channel_manager.getChannel(header.ChannelID);
-					channel.getChannelListener().receivedMessage(channel, client, header);
+					if (channel != null) {
+						channel.getChannelListener().receivedMessage(channel, client, header);
+					}
 					break;
 					
 				case MessageHeader.PROTOCOL_SESSION_MESSAGE:
