@@ -89,13 +89,13 @@ final public class SimpleCanvasNoInternal extends Canvas implements CanvasContai
 	{
 		Graphics2D g = (Graphics2D)dg;
 		
-		if (!no_ddraw)
-		{
-			g.setRenderingHint(
-					RenderingHints.KEY_INTERPOLATION, 
-					RenderingHints.VALUE_INTERPOLATION_BILINEAR
-					);
-		}
+//		if (!no_ddraw)
+//		{
+//			g.setRenderingHint(
+//					RenderingHints.KEY_INTERPOLATION, 
+//					RenderingHints.VALUE_INTERPOLATION_BILINEAR
+//					);
+//		}
 		
 		canvas_adapter.update(g.getDeviceConfiguration());
 
