@@ -321,7 +321,8 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 //	-----------------------------------------------------------------------------------------------------------
 	
 	@Override
-	public DisplayObjectEditor<?> createEditorForm() {
+	public DisplayObjectEditor<?> getEditorForm() 
+	{
 		return new SceneUnitTagEditor(this,
 				new SceneAbilityAdapters.ActorPathStartAdapter(editor),
 				new SceneAbilityAdapters.ActorTransportAdapter(editor),

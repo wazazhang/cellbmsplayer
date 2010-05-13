@@ -183,7 +183,7 @@ public class SceneUnitList<T extends SceneUnitTag<?>> extends JPanel implements 
 				}
 			} 
 			else if (e.getSource() == property) {
-				DisplayObjectEditor<?> editor = unit.getGameUnit().getEditorForm();
+				DisplayObjectEditor<?> editor = unit.getEditorForm();
 				editor.setCenter();
 				editor.setAlwaysOnTop(true);
 				editor.setVisible(true);
