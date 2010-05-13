@@ -21,10 +21,13 @@ import com.cell.rpg.scene.Point;
 import com.g2d.annotation.Property;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.ui.Menu;
+import com.g2d.editor.DisplayObjectEditor;
 import com.g2d.studio.Version;
 import com.g2d.studio.scene.editor.PointLinkMenu;
+import com.g2d.studio.scene.editor.SceneAbilityAdapters;
 import com.g2d.studio.scene.editor.SceneEditor;
 import com.g2d.studio.scene.editor.SceneUnitMenu;
+import com.g2d.studio.scene.editor.SceneUnitTagEditor;
 
 
 @Property("一个点，通常用于路点")
@@ -281,6 +284,11 @@ public class ScenePoint extends com.g2d.game.rpg.Unit implements SceneUnitTag<Po
 //				new RPGUnitPanel(point),
 //				new AbilityPanel(this, point));
 //	}
+	
+	@Override
+	public DisplayObjectEditor<ScenePoint> getEditorForm() {
+		return new DisplayObjectEditor<ScenePoint>(this);
+	}
 	
 	@Override
 	public Menu getEditMenu() {

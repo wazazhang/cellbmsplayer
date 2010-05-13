@@ -39,7 +39,7 @@ public class SceneUnitMenu extends Menu
 			}
 		}
 		else if (item == item_properties) {
-			DisplayObjectEditor<?> editor = unit.getGameUnit().getEditorForm();
+			DisplayObjectEditor<?> editor = unit.getEditorForm();
 			editor.setCenter();
 			editor.setAlwaysOnTop(true);
 			editor.setVisible(true);
