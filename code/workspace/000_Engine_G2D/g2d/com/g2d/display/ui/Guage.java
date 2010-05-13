@@ -21,12 +21,10 @@ public class Guage extends UIComponent
 	public Color			textColor;
 
 	public boolean 			is_show_text;
-
 	public boolean 			is_show_percent;
 	
 	public String			text;
 	
-	transient public Image	strip_back;
 	transient public Image	strip_fore;
 	
 	public Guage() 
@@ -38,18 +36,11 @@ public class Guage extends UIComponent
 		textColor 		= Color.WHITE;
 		is_show_text	= true;
 		is_show_percent	= true;
-		{
-			strip_back = Tools.createImage(100, 10);
-			Graphics2D g2d = (Graphics2D) strip_back.getGraphics();
-			g2d.setColor(Color.RED);
-			g2d.fillRect(0, 0, 100, 10);
-		}
-		{
-			strip_fore = Tools.createImage(100, 10);
-			Graphics2D g2d = (Graphics2D) strip_fore.getGraphics();
-			g2d.setColor(Color.GREEN);
-			g2d.fillRect(0, 0, 100, 10);
-		}
+		
+		strip_fore = Tools.createImage(100, 10);
+		Graphics2D g2d = (Graphics2D) strip_fore.getGraphics();
+		g2d.setColor(Color.GREEN);
+		g2d.fillRect(0, 0, 100, 10);
 	}
 	
 	public Guage(int w, int h)
@@ -111,17 +102,22 @@ public class Guage extends UIComponent
 		g.setClip(local_bounds);
 		
 		if (is_show_text) {
-			g.setColor(textColor);
-			String text;
-			if (is_show_percent || min<0) {
-				text = (int)(sx / sw * 100) + "%";
-			} else {
-				text = (int)value + "/"+ (int)max;
-			}
-			Drawing.drawString(g, text, 0, 0, getWidth(), getHeight(), 
-					Drawing.TEXT_ANCHOR_HCENTER | Drawing.TEXT_ANCHOR_VCENTER
-			);
+			drawText(g, sx, sw);
 		}
 	}
 	
+	protected void drawText(Graphics2D g, double sx, double sw) 
+	{
+		g.setColor(textColor);
+		
+		int anchor = Drawing.TEXT_ANCHOR_HCENTER | Drawing.TEXT_ANCHOR_VCENTER;
+		if (text != null) {
+			Drawing.drawString(g, text, 0, 0, getWidth(), getHeight(), anchor);
+		} else if (is_show_percent || min < 0) {
+			Drawing.drawString(g, (int)(sx / sw * 100) + "%", 0, 0, getWidth(), getHeight(), anchor);
+		} else {
+			Drawing.drawString(g, (int)value + "/"+ (int)max, 0, 0, getWidth(), getHeight(), anchor);
+		}
+		
+	}
 }
