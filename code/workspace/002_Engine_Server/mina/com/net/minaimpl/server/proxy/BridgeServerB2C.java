@@ -3,9 +3,6 @@ package com.net.minaimpl.server.proxy;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
-import java.util.Hashtable;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.mina.core.future.ConnectFuture;
 import org.apache.mina.core.service.IoAcceptor;
@@ -21,21 +18,14 @@ import org.slf4j.LoggerFactory;
 
 import com.net.ExternalizableFactory;
 import com.net.MessageHeader;
-import com.net.client.BasicNetService;
-import com.net.client.ServerSession;
-import com.net.client.ServerSessionListener;
 import com.net.minaimpl.NetPackageCodec;
-import com.net.minaimpl.SystemMessages;
-import com.net.minaimpl.SystemMessages.SystemMessageS2C;
-
-import com.net.proxy.Proxy;
 
 /**
  * 将大量客户端链接，通过该服务器，转发到另外一个服务器上，只建立很少量的链接。<br>
  * BridgeServer <-> Client
  * @author WAZA
  */
-public abstract class BridgeServerB2C extends IoHandlerAdapter implements Proxy
+public abstract class BridgeServerB2C extends IoHandlerAdapter// implements Proxy
 {
 	final protected Logger 		log = LoggerFactory.getLogger(getClass().getName());
 	
