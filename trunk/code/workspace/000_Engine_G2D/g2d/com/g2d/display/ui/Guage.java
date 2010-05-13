@@ -23,7 +23,7 @@ public class Guage extends UIComponent
 	public boolean 			is_show_text;
 	public boolean 			is_show_percent;
 	
-	public String			text;
+	public String			text = null;
 	
 	transient public Image	strip_fore;
 	
@@ -45,6 +45,7 @@ public class Guage extends UIComponent
 	
 	public Guage(int w, int h)
 	{
+		this();
 		setSize(w, h);
 	}
 	
