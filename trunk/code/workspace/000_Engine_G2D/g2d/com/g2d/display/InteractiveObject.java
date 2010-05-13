@@ -77,22 +77,15 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 
 //	-----------------------------------------------------------------------------------------------------------------
 	
-	@Override
-	protected void init_field() 
+	public InteractiveObject() 
 	{
-		super.init_field();
 		enable					= true;
 		enable_input			= true;
 		enable_focus			= true;
 		enable_drag				= false;
 		enable_mouse_wheel		= false;
 		enable_key_input		= false;
-	}
-
-	@Override
-	protected void init_transient() 
-	{
-		super.init_transient();
+		
 		is_focused 				= false;
 		keylisteners 			= new Vector<KeyListener>();
 		mouselisteners 			= new Vector<MouseListener>();

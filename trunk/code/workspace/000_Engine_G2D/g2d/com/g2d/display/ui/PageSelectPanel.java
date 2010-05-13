@@ -16,75 +16,6 @@ public class PageSelectPanel extends UIComponent
 	private static final long serialVersionUID = Version.VersionG2D;
 
 
-	public static class Page extends Button
-	{
-		private static final long serialVersionUID = Version.VersionG2D;
-		
-		Panel			panel;
-		PageSelectPanel	page_select;
-		
-		
-		@Override
-		protected void init_field() {
-			super.init_field();
-			panel 		= new Panel();
-		}
-		
-		public Page(String headText)
-		{
-			super(headText);
-			setSize(60, 20);
-		}
-		
-		/** call getPanel().getContainer().addChild(DisplayObject child); */
-		@Deprecated
-		public boolean addChild(DisplayObject child) {
-			throw new IllegalStateException("can not add a custom child component in " + getClass().getName() + " !");
-		}
-		/**  call getPanel().getContainer().removeChild(DisplayObject child); */
-		@Deprecated
-		public boolean removeChild(DisplayObject child) {
-			throw new IllegalStateException("can not remove a custom child component in " + getClass().getName() + " !");
-		}
-		
-		protected void onMouseClick(MouseEvent event) {
-			super.onMouseClick(event);
-			if (page_select!=null) {
-				page_select.selectPage(this);
-			}
-		}
-		
-		public void render(Graphics2D g) {
-			UILayout up = custom_layout_up;
-			UILayout down = custom_layout_down;
-			
-			if (page_select.selected_page == this) {
-				custom_layout_up = custom_layout_down = (custom_layout_down!=null?custom_layout_down:layout_down);
-				super.render(g);
-			}else{
-				custom_layout_down = custom_layout_up = (custom_layout_up!=null?custom_layout_up:layout_up);
-				super.render(g);
-			}
-			
-			custom_layout_up = up;
-			custom_layout_down = down;
-		}
-		
-		@Override
-		public UIComponentEditor<?> createEditorForm() {
-			if (page_select!=null) {
-				return page_select.createEditorForm();
-			}
-			else {
-				return super.createEditorForm();
-			}
-		}
-		
-		public Panel getPanel(){
-			return panel;
-		}
-	}
-	
 //	----------------------------------------------------------------------------------------------------------------------------
 	
 	public int 		page_header_width	= 60;
@@ -99,14 +30,6 @@ public class PageSelectPanel extends UIComponent
 
 	public PageSelectPanel() 
 	{
-//		PageSelectPanel.Page pan = new PageSelectPanel.Page("page 1");
-//		addPage(pan);
-	}
-
-	@Override
-	protected void init_field()
-	{
-		super.init_field();
 		pages 			= new Vector<Page>();
 		enable_input 	= false;
 	}
@@ -229,5 +152,67 @@ public class PageSelectPanel extends UIComponent
 //	----------------------------------------------------------------------------------------------------------------------------
 
 
+	public static class Page extends Button
+	{
+		private static final long serialVersionUID = Version.VersionG2D;
+		
+		Panel			panel 		= new Panel();
+		PageSelectPanel	page_select;
+				
+		public Page(String headText)
+		{
+			super(headText);
+			setSize(60, 20);
+		}
+		
+		/** call getPanel().getContainer().addChild(DisplayObject child); */
+		@Deprecated
+		public boolean addChild(DisplayObject child) {
+			throw new IllegalStateException("can not add a custom child component in " + getClass().getName() + " !");
+		}
+		/**  call getPanel().getContainer().removeChild(DisplayObject child); */
+		@Deprecated
+		public boolean removeChild(DisplayObject child) {
+			throw new IllegalStateException("can not remove a custom child component in " + getClass().getName() + " !");
+		}
+		
+		protected void onMouseClick(MouseEvent event) {
+			super.onMouseClick(event);
+			if (page_select!=null) {
+				page_select.selectPage(this);
+			}
+		}
+		
+		public void render(Graphics2D g) {
+			UILayout up = custom_layout_up;
+			UILayout down = custom_layout_down;
+			
+			if (page_select.selected_page == this) {
+				custom_layout_up = custom_layout_down = (custom_layout_down!=null?custom_layout_down:layout_down);
+				super.render(g);
+			}else{
+				custom_layout_down = custom_layout_up = (custom_layout_up!=null?custom_layout_up:layout_up);
+				super.render(g);
+			}
+			
+			custom_layout_up = up;
+			custom_layout_down = down;
+		}
+		
+		@Override
+		public UIComponentEditor<?> createEditorForm() {
+			if (page_select!=null) {
+				return page_select.createEditorForm();
+			}
+			else {
+				return super.createEditorForm();
+			}
+		}
+		
+		public Panel getPanel(){
+			return panel;
+		}
+	}
+	
 	
 }

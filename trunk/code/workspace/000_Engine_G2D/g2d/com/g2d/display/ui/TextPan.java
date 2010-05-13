@@ -27,39 +27,13 @@ public class TextPan extends UIComponent implements Serializable
 	
 	transient int 						text_draw_x;
 	transient int 						text_draw_y;
-	transient MultiTextLayout			text;
+	transient MultiTextLayout			text				= new MultiTextLayout();
 	
-	@Property("文字颜色")
-	public Color 						textColor;
+	/**文字颜色*/
+	public Color 						textColor			= new Color(0xffffffff, true);
 
 	/**文字是否抗锯齿*/
-	@Property("文字是否抗锯齿")
 	public boolean	enable_antialiasing	 = false;
-	
-	
-	@Override
-	protected void init_field() 
-	{
-		super.init_field();
-		textColor			= new Color(0xffffffff, true);
-		text				= new MultiTextLayout();
-		enable_key_input	= false;
-		enable_mouse_wheel	= false;
-	}
-	
-	private void writeObject(java.io.ObjectOutputStream out) throws IOException {   
-		out.writeObject(textColor);
-		out.writeUTF(getText());
-	}
-	  
-	private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {   
-		textColor	= (Color)in.readObject();
-		String text	= (String)in.readUTF();
-		{
-			this.text = new MultiTextLayout();
-			this.setText(text);
-		}
-	}  
 	
 	
 	public TextPan() 
@@ -69,11 +43,14 @@ public class TextPan extends UIComponent implements Serializable
 	
 	public TextPan(String text)
 	{
-		setText(text);
+		this(text, 100, 100);
 	}
 	
 	public TextPan(String text, int w, int h)
 	{
+		enable_key_input	= false;
+		enable_mouse_wheel	= false;
+		
 		setText(text);
 		setSize(w, h);
 	}

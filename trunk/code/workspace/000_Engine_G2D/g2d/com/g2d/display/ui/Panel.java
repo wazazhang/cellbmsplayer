@@ -21,12 +21,10 @@ public class Panel extends UIComponent
 	/** 视口 */
 	protected Pan 				view_port;
 	
+//	------------------------------------------------------------------------------------------------------------------------------
 	
-	@Override
-	protected void init_field()
+	public Panel() 
 	{
-		super.init_field();
-		
 		enable_mouse_wheel = true;
 		
 		view_port 	= new Pan();
@@ -41,8 +39,6 @@ public class Panel extends UIComponent
 		
 		super.addChild(view_port);
 	}
-	
-//	------------------------------------------------------------------------------------------------------------------------------
 	
 	/** call getContainer().addChild(DisplayObject child); */
 	@Deprecated

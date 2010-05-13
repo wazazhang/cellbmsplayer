@@ -32,7 +32,6 @@ import com.g2d.editor.UIComponentEditor;
 public abstract class UIComponent extends UIObject
 {
 	private static final long 			serialVersionUID = Version.VersionG2D;
-	public static boolean				editor_mode = false;
 	
 //	-----------------------------------------------------------------------------------------------------
 //	visual
@@ -73,18 +72,13 @@ public abstract class UIComponent extends UIObject
 	
 //	-----------------------------------------------------------------------------------------------------
 
-	@Override
-	protected void init_field()
+	
+	
+	public UIComponent() 
 	{
-		super.init_field();
 		clip_local_bounds = true;
 		ignore_render_without_parent_bounds = true;
-	}
 	
-	@Override
-	protected void init_transient() 
-	{
-		super.init_transient();
 		action_listeners	= new Vector<ActionListener>();
 		layout 				= UILayout.createBlankRect();
 	}
@@ -242,11 +236,6 @@ public abstract class UIComponent extends UIObject
 			}
 			if (on_click_sound!=null) {
 				on_click_sound.play();
-			}
-		}
-		else if (event.mouseButton == MouseEvent.BUTTON_RIGHT) {
-			if (editor_mode) {
-				getRoot().setAppendWindow(getEditorForm());
 			}
 		}
 	}

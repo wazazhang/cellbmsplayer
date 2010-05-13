@@ -18,21 +18,19 @@ public class Guage extends UIComponent
 	double 					min;
 	double 					value;
 	
-	@Property("文字颜色")
 	public Color			textColor;
-	@Property("is_show_text")
+
 	public boolean 			is_show_text;
-	@Property("is_show_percent")
+
 	public boolean 			is_show_percent;
+	
+	public String			text;
 	
 	transient public Image	strip_back;
 	transient public Image	strip_fore;
 	
-	@Override
-	protected void init_field() 
+	public Guage() 
 	{
-		super.init_field();
-		
 		max 			= 100;
 		min 			= -50;
 		value 			= 50;
@@ -40,28 +38,19 @@ public class Guage extends UIComponent
 		textColor 		= Color.WHITE;
 		is_show_text	= true;
 		is_show_percent	= true;
-	}
-	
-	@Override
-	protected void init_transient()
-	{
-		super.init_transient();
 		{
 			strip_back = Tools.createImage(100, 10);
-			Graphics2D g2d = (Graphics2D)strip_back.getGraphics();
+			Graphics2D g2d = (Graphics2D) strip_back.getGraphics();
 			g2d.setColor(Color.RED);
 			g2d.fillRect(0, 0, 100, 10);
 		}
 		{
 			strip_fore = Tools.createImage(100, 10);
-			Graphics2D g2d = (Graphics2D)strip_fore.getGraphics();
+			Graphics2D g2d = (Graphics2D) strip_fore.getGraphics();
 			g2d.setColor(Color.GREEN);
 			g2d.fillRect(0, 0, 100, 10);
 		}
 	}
-	
-	public Guage() 
-	{}
 	
 	public Guage(int w, int h)
 	{

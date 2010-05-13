@@ -12,14 +12,7 @@ public class DisplayShape extends DisplayObject
 	
 	public Shape 		shape;
 	public Color 		color;
-	public boolean 		enable_fill;
-	
-	
-	@Override
-	protected void init_field() {
-		super.init_field();
-		enable_fill = false;
-	}
+	public boolean 		enable_fill = false;
 	
 	public DisplayShape(Shape shape, Color color) 
 	{

@@ -16,20 +16,17 @@ public class Sprite extends InteractiveObject implements Vector
 {
 	private static final long serialVersionUID = Version.VersionG2D;
 	
-	@Property("缩放比率")
+	/**缩放比率*/
 	public double		scale_x, scale_y;
 	
-	@Property("旋转参数(弧度)")
+	/**旋转参数(弧度)*/
 	public double		rotate;
 	
-	@Property("透明度(范围0.0~1.0)")
+	/**透明度(范围0.0~1.0)*/
 	public float		alpha;
 	
-	@Override
-	protected void init_field() 
+	public Sprite() 
 	{
-		super.init_field();
-		
 		scale_x			= 1;
 		scale_y			= 1;
 		rotate			= 0;
@@ -39,14 +36,6 @@ public class Sprite extends InteractiveObject implements Vector
 		enable_input	= false;
 		enable_focus	= false;
 	}
-	
-	@Override
-	protected void init_transient() 
-	{
-		super.init_transient();
-	}
-	
-	public Sprite() {}
 	
 //	 ------------------------------------------------------------------------------------------------------------------------
 //	 math util

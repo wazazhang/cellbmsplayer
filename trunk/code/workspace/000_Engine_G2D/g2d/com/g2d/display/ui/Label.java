@@ -13,50 +13,41 @@ public class Label extends UIComponent
 	private static final long serialVersionUID = Version.VersionG2D;
 	
 	@Property("文字颜色")
-	public Color	textColor;
+	public Color	textColor	= Color.WHITE;
 	
 	@Property("text")
-	public String	text;
+	public String	text		= getClass().getSimpleName();
 	
 	@Property("text_anchor")
-	public int		text_anchor;
+	public int		text_anchor	= Drawing.TEXT_ANCHOR_HCENTER | Drawing.TEXT_ANCHOR_VCENTER ;
 
 	/**文字是否抗锯齿*/
 	@Property("文字是否抗锯齿")
 	public boolean	enable_antialiasing	 = false;
+	
 
-	@Override
-	protected void init_field() 
+	public Label() 
 	{
-		super.init_field();
-		
-		textColor	= Color.WHITE;
-		text		= "";
-		text_anchor	= Drawing.TEXT_ANCHOR_HCENTER | Drawing.TEXT_ANCHOR_VCENTER ;
+		this.enable_focus = false;
 	}
+	
 	public Label(int w, int h) 
 	{
 		this();
 		setSize(w, h);
 	}
 	
-	public Label() 
-	{
-		this("Label");
-		this.enable_focus = false;
-	}
-	
 	public Label(String text)
 	{
+		this();
 		this.text = text;
-		this.enable_focus = false;
 	}
 	
 	public Label(String text, int width, int height) 
 	{
+		this();
 		this.text = text;
 		this.setSize(width, height);
-		this.enable_focus = false;
 	}
 	
 	public void setText(String text)

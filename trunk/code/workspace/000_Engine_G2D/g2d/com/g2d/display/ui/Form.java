@@ -24,29 +24,22 @@ public class Form extends Window
 	
 //	--------------------------------------------------------------------------------------------------------------------------
 
-	protected ButtonClose 			btn_close;
-	public int close_border_size 		= 4;
-	
-	
+	protected ButtonClose btn_close = new ButtonClose();
+	public int close_border_size = 4;
+
 	@Property("title")
-	public String	title;
-	
+	public String title;
+
 	@Property("title_y")
-	public int 		title_y 			= 4;
+	public int title_y = 4;
 	
 //	--------------------------------------------------------------------------------------------------------------------------
 
-	@Override
-	protected void init_field() 
+	public Form()
 	{
-		super.init_field();
-		btn_close = new ButtonClose();
-	}
-	
-	public Form(){
 		addChild(btn_close);
 	}
-	
+
 	
 	public void setTitle(String title) {
 		this.title = title;

@@ -53,26 +53,24 @@ public abstract class Stage extends DisplayObjectContainer
 	
 //	-----------------------------------------------------------------------------------------------------------
 	
-	protected Stage() {}
-	
-	public void inited(Canvas root, Object[] args)
+	protected Stage() 
 	{
-		// no args process
-	}
-
-	@Override
-	protected void init_transient() 
-	{
-		super.init_transient();
 		debug 					= false;
 		is_transition_in 		= true;
 		transition_in_timer		= 0;
 		is_transition_out		= false;
 		transition_out_timer	= 0;
-//		default_tip				= new TextTip();
-//		cursor					= new CursorG2D();
 	}
 	
+	/***
+	 * 由初始化后调用，用于参数传递。
+	 * @param root
+	 * @param args
+	 */
+	public void inited(Canvas root, Object[] args) {
+		// no args process
+	}
+
 //	---------------------------------------------------------------------------------------------------------------
 
 	public void setTransitionMaxTime(int time) {

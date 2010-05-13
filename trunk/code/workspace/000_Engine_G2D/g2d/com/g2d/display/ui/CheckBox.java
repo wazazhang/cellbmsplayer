@@ -23,47 +23,31 @@ public class CheckBox extends UIComponent
 	private static final long serialVersionUID = Version.VersionG2D;
 //	-----------------------------------------------------------------------------------------------------------------------------------
 	
-	
-	
 	transient public Image	check_image;
 	transient public Image	uncheck_image;
 	
-	@Property("文字颜色")
-	public Color			textColor;
+	/**文字颜色*/
+	public Color			textColor 	= Color.WHITE;
 	
-	@Property("text")
-	public String			text;
+	public String			text		= getClass().getSimpleName();
 	
-	@Property("text_anchor")
-	public int 				text_anchor;
+	public int 				text_anchor = Drawing.TEXT_ANCHOR_LEFT | Drawing.TEXT_ANCHOR_VCENTER ;
 	
-	boolean 				is_checked;
+	boolean 				is_checked 	= false;
 	
 	public boolean			is_check_right = false;
 
 	CheckBoxGroup			group;
 	
-	transient Vector<CheckChangeListener> check_change_listeners;
+	transient Vector<CheckChangeListener> 
+							check_change_listeners = new Vector<CheckChangeListener>();
 	
 //	-----------------------------------------------------------------------------------------------------------------------------------
 	
-	@Override
-	protected void init_field()
+	public CheckBox(String text, int w, int h)
 	{
-		super.init_field();
-		textColor 	= Color.WHITE;
-		text 		= "";
-		text_anchor = Drawing.TEXT_ANCHOR_LEFT | Drawing.TEXT_ANCHOR_VCENTER ;
-		is_checked 	= false;
-	}
-	
-	@Override
-	protected void init_transient() 
-	{
-		super.init_transient();
-		
-		check_change_listeners = new Vector<CheckChangeListener>();
-		
+		this.setSize(w, h);
+		this.text = text;
 		{
 			check_image = Tools.createImage(10, 10);
 			Graphics2D g2d = (Graphics2D)check_image.getGraphics();
@@ -77,16 +61,10 @@ public class CheckBox extends UIComponent
 			g2d.fillRect(0, 0, 10, 10);
 		}
 	}
-	
+
 	public CheckBox(String text) 
 	{
-		this.text = text;
-	}
-	
-	public CheckBox(String text, int w, int h)
-	{
-		this.text = text;
-		this.setSize(w, h);
+		this(text, 50, 20);
 	}
 	
 	public CheckBox() {

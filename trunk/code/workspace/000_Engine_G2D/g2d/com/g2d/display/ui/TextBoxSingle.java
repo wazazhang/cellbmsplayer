@@ -24,12 +24,12 @@ public class TextBoxSingle extends UIComponent implements Serializable, TextInpu
 	transient int 						text_draw_x;
 	transient int 						text_draw_y;
 	transient int 						text_draw_w;
-	transient MultiTextLayout			text;
+	transient MultiTextLayout			text				= new MultiTextLayout(true);
 	
-	@Property("文字颜色")
-	public Color 						textColor	= new Color(0xffffffff, true);
+	/**文字颜色*/
+	public Color 						textColor			= new Color(0xffffffff, true);
 	
-	public boolean 						is_readonly	= false;
+	public boolean 						is_readonly			= false;
 	
 	/** 光标超出范围的偏移量 */
 	transient int 						xoffset = 0;
@@ -38,35 +38,6 @@ public class TextBoxSingle extends UIComponent implements Serializable, TextInpu
 	@Property("文字是否抗锯齿")
 	public boolean	enable_antialiasing	 = false;
 	
-	
-	@Override
-	protected void init_field() 
-	{
-		super.init_field();
-		textColor			= new Color(0xffffffff, true);
-		is_readonly			= false;
-		text				= new MultiTextLayout(true);
-		enable_key_input	= true;
-		enable_mouse_wheel	= true;
-	}
-	
-	private void writeObject(java.io.ObjectOutputStream out) throws IOException {   
-		out.writeBoolean(is_readonly);
-		out.writeObject(textColor);
-		out.writeUTF(text.getText());
-	}   
-	  
-	private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {   
-		is_readonly	= in.readBoolean();
-		textColor	= (Color)in.readObject();
-		String text	= (String)in.readUTF();
-		{
-			this.text = new MultiTextLayout(true);
-			this.setText(text);
-		}
-	}
-
-
 	public TextBoxSingle() {
 		this("TextBoxSingle");
 	}
@@ -78,6 +49,9 @@ public class TextBoxSingle extends UIComponent implements Serializable, TextInpu
 	
 	public TextBoxSingle(String text, int width, int height)
 	{
+		enable_key_input	= true;
+		enable_mouse_wheel	= true;
+		
 		this.text.setText(text);
 		this.setSize(width, height);
 	}

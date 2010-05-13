@@ -13,35 +13,25 @@ import com.g2d.util.Drawing;
 
 public abstract class BaseButton extends UIComponent 
 {
-	private static final long serialVersionUID	= Version.VersionG2D;
+	transient public UILayout	layout_down	= UILayout.createBlankRect();
+	transient public UILayout	layout_up	= UILayout.createBlankRect();
 	
-	transient public UILayout	layout_down;
-	transient public UILayout	layout_up;
 	/** 当鼠标放置在该控件上的效果 */
 	transient public Image		mouse_catched_mask;
 	
-	@Property("自定义按下造型")
+	/**自定义按下造型*/
 	public UILayout				custom_layout_down;
-	@Property("自定义正常造型")
-	public UILayout				custom_layout_up;
 	
-	@Override
-	protected void init_transient() 
-	{
-		super.init_transient();
-//		cursor 		= Cursor.getPredefinedCursor(Cursor.HAND_CURSOR);
-		layout_down	= UILayout.createBlankRect();
-		layout_up	= UILayout.createBlankRect();
-	}
+	/**"自定义正常造型*/
+	public UILayout				custom_layout_up;
 	
 	public BaseButton(int width, int height) {
 		setSize(width, height);
 	}
 	
 	public BaseButton() {
-		setSize(20, 20);
+		this(20, 20);
 	}
-	
 	
 	@Override
 	public void setLayout(UILayout layout) {

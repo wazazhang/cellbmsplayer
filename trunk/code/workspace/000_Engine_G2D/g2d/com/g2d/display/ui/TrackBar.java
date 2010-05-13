@@ -25,13 +25,8 @@ public class TrackBar extends UIComponent
 	@Property("当前值")
 	double 			value = 0;
 	
-	@Override
-	protected void init_field() {
-		super.init_field();
-		min = -10;
-		max = 10;
-		value = 0;
-		
+	public TrackBar() 
+	{
 		btn_add 	= new Button("+"){
 			private static final long serialVersionUID = Version.VersionG2D;
 			protected void onMouseClick(MouseEvent event) {
@@ -57,10 +52,6 @@ public class TrackBar extends UIComponent
 		super.addChild(btn_add);
 		super.addChild(btn_dec);
 		super.addChild(btn_strip);
-	}
-	
-	public TrackBar() 
-	{
 	}
 	
 	@Deprecated

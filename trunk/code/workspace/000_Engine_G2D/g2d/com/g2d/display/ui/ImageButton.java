@@ -28,15 +28,6 @@ public class ImageButton extends BaseButton implements Runnable
 		background = bg;
 	}
 	
-	@Override
-	protected void init_transient() 
-	{
-		super.init_transient();
-		if (image_path!=null) {
-			new Thread(this).start();
-		}
-	}
-	
 	public void run() {
 		try {
 			background = Tools.readImage(image_path);
