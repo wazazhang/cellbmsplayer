@@ -39,7 +39,7 @@ import com.sun.org.apache.bcel.internal.classfile.Code;
  * @author WAZA
  *
  */
-public abstract class DisplayObject extends DObject implements Comparable<DisplayObject>, ImageObserver
+public abstract class DisplayObject implements Comparable<DisplayObject>, ImageObserver
 {
 	private static final long serialVersionUID = Version.VersionG2D;
 
@@ -54,27 +54,22 @@ public abstract class DisplayObject extends DObject implements Comparable<Displa
 //	 public
 	
 	/** 是否可视,如果父节点不可视,那么子节点将也不可视 */ 
-	@Property("是否可视,如果父节点不可视,那么子节点将也不可视") 
-	public boolean 				visible;
+	public boolean 				visible = true;
 	
 	/** 基于父节点的位置 */
-	@Property("基于父节点的位置")
 	public double				x, y, z;
 	
 	/** 优先级别 */
-	@Property("优先级别")
 	public int 					priority;
 	
-	@Property("当前坐标系的 rectangle")
 	/** 当前坐标系的 rectangle */
 	final public Rectangle 		local_bounds 		= new Rectangle(0,0,100,100);
 	
-	protected boolean			clip_local_bounds;
+	protected boolean			clip_local_bounds	= false;
 	
 //	-------------------------------------------------------------
 	
 	/** debug , transient 代表运行时的数据，不能够序列化*/
-	@Property("显示debug框")
 	transient public boolean 	debug;
 	
 	/** 该对象被更新了多少次, 不可序列化 */
@@ -98,83 +93,18 @@ public abstract class DisplayObject extends DObject implements Comparable<Displa
 	transient int		mouse_y;
 	transient int 		mouse_x;
 	
-	//	-------------------------------------------------------------
+//	-------------------------------------------------------------
 //	 local
 	
 	/** 父节点 */
 	transient DisplayObjectContainer	parent;
 	/** 父节点向子节点递归时,向子节点传输 root canvas 信息 */
 	transient Canvas 					root;
-	/** 屏幕坐标系的rectangle */
-	transient Rectangle 				screen_rectangle;
 	/** 屏幕坐标系的 x, y */
 	transient int 						screen_x, screen_y;
-	
-//	-------------------------------------------------------------
-	transient DisplayObjectEditor<?>	editor;
-//	-------------------------------------------------------------
+	/** 屏幕坐标系的rectangle */
+	transient final Rectangle 			screen_rectangle = new Rectangle(0,0,0,0);
 
-//	MarkedHashtable						data_group = new MarkedHashtable();
-	
-//	--------------------------------------------------------------------------------------------------------------------------------------------
-
-//	protected DisplayObject(){
-//		init_field();
-//		init_transient();
-//	}
-	
-	/**初始化可序列化字段*/
-	protected void init_field() {
-		visible 			= true;
-		clip_local_bounds	= false;
-	}
-	
-	/**初始化不可序列化字段, 该方法将在构造函数和反序列化后调用*/
-	protected void init_transient()	{
-		screen_rectangle	= new Rectangle(0,0,0,0);
-	}
-	
-	
-//	protected void onRead(MarkedHashtable data){}
-//	
-//	protected void onWrite(MarkedHashtable data){}
-//	
-////	private void writeObject(java.io.ObjectOutputStream out) throws IOException {   }   
-////	private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {   }
-////	final public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {}
-////	final public void writeExternal(ObjectOutput out) throws IOException {}
-//
-//	final protected Object writeReplace() throws ObjectStreamException {
-//		try{
-//			onWrite(data_group);
-//		}catch (Throwable e) {
-//			e.printStackTrace();
-//		}
-//		return this;
-//	}
-//	
-//	final protected Object readResolve() throws ObjectStreamException {
-//		try{
-//			onRead(data_group);
-//			init_transient();
-//		}catch (Throwable e) {
-//			e.printStackTrace();
-//		}
-//		return this;
-//	}
-	
-//  ==Serializable==
-//	writeReplace invoked 
-//	writeObject invoked 
-//	readObject invoked 
-//	readResolve invoked 
-	
-//	==Externalizable==
-//	writeReplace invoked 
-//	writeExternal invoked 
-//	readExternal invoked 
-//	readResolve invoked 
-	
 //	--------------------------------------------------------------------------------------------------------------------------------------------
 
 	public int compareTo(DisplayObject o) {
@@ -256,25 +186,6 @@ public abstract class DisplayObject extends DObject implements Comparable<Displa
 	
 //	--------------------------------------------------------------------------------------------------------------------------------------------
 //	advanced
-	
-	/**
-	 * 得到该object对应的编辑窗口
-	 * @return
-	 */
-	final public DisplayObjectEditor<?> getEditorForm() {
-		if (editor == null) {
-			editor = createEditorForm();
-		}
-		return editor;
-	}
-	
-	/**
-	 * 创建该object对应的编辑窗口，一般由子类覆盖
-	 * @return
-	 */
-	public DisplayObjectEditor<?> createEditorForm() {
-		return new DisplayObjectEditor<DisplayObject>(this);
-	}
 	
 	/**
 	 * 得到指定尺寸的快照

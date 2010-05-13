@@ -16,20 +16,21 @@ public class Button extends BaseButton
 {
 	private static final long serialVersionUID	= Version.VersionG2D;
 	
-	@Property("文字颜色")
-	public Color 				unfocusTextColor;
-	@Property("文字颜色(获得鼠标后)")
-	public Color 				focusTextColor;
+	/**文字颜色*/
+	public Color 				unfocusTextColor	= new Color(0xffffFF00, true);
 	
-	@Property("text")
-	public String 				text;
-	@Property("text_anchor")
-	public int 					text_anchor;
+	/**文字颜色(获得鼠标后)*/
+	public Color 				focusTextColor		= new Color(0xffffffff, true);
+	
+	/**text*/
+	public String 				text 				= getClass().getSimpleName();
+	
+	/**text_anchor*/
+	public int 					text_anchor			= Drawing.TEXT_ANCHOR_HCENTER | Drawing.TEXT_ANCHOR_VCENTER ;
 	public int 					text_offset_x;
 	public int 					text_offset_y;
 
 	/**文字是否抗锯齿*/
-	@Property("文字是否抗锯齿")
 	public boolean	enable_antialiasing	 = false;
 	
 	
@@ -45,16 +46,6 @@ public class Button extends BaseButton
 	
 	public Button() {
 		super();
-	}
-	
-	@Override
-	protected void init_field() 
-	{
-		super.init_field();
-		unfocusTextColor	= new Color(0xffffFF00, true);
-		focusTextColor		= new Color(0xffffffff, true);
-		text = "";
-		text_anchor = Drawing.TEXT_ANCHOR_HCENTER | Drawing.TEXT_ANCHOR_VCENTER ;
 	}
 	
 	public void setText(String text) {

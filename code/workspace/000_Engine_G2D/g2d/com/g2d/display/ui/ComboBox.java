@@ -98,41 +98,29 @@ public class ComboBox extends UIComponent
 	
 //	----------------------------------------------------------------------------------------------------------
 
-	@Override
-	protected void init_field()
-	{
-		super.init_field();
-		btn_dropdown		= new DropButton();
-		items 				= new Vector<Item<?>>();
-		textColor			= Color.WHITE;
-		
-		super.addChild(btn_dropdown);
-	}
-	
-	@Override
-	protected void init_transient() 
-	{
-		super.init_transient();
-		combox_listeners	= new Vector<ComboxListener<?>>();
-	}
-	
-	
 	public ComboBox() {
+		this(new String[] {}, 100, 20);
 	}
-	
+
 	public ComboBox(String[] items) {
-		this.addItems(items);
+		this(items, 100, 20);
 	}
-	
-	public ComboBox(int w, int h)
-	{
-		setSize(w, h);
+
+	public ComboBox(int w, int h) {
+		this(new String[] {}, w, h);
 	}
 	
 	public ComboBox(String[] items, int w, int h)
 	{
+		this.btn_dropdown		= new DropButton();
+		this.items 				= new Vector<Item<?>>();
+		this.textColor			= Color.WHITE;
+		this.combox_listeners	= new Vector<ComboxListener<?>>();
+		
+		super.setSize(w, h);
+		super.addChild(btn_dropdown);
+
 		this.addItems(items);
-		setSize(w, h);
 	}
 	
 	private void openDropDown() {

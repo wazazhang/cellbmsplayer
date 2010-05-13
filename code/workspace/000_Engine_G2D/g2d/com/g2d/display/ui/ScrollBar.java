@@ -22,115 +22,6 @@ public class ScrollBar extends UIComponent
 //	--------------------------------------------------------------------------------------------------------------------------------
 	int mouse_freeze_time = 500;
 	
-	public class Head extends BaseButton
-	{
-		private static final long serialVersionUID = Version.VersionG2D;
-		
-		public boolean isVscroll(){
-			return ScrollBar.this.isvscroll;
-		}
-
-		protected void onMouseDown(MouseEvent event) {
-			if (event.mouseButton == MouseEvent.BUTTON_LEFT) {
-				ScrollBar.this.moveInterval(-1);
-			}
-		}
-		@Override
-		public void update() {
-			super.update();
-			if (isPickedMouse() && isFocused() && getRoot().isMouseContinuous(mouse_freeze_time, MouseEvent.BUTTON_LEFT)){
-				ScrollBar.this.moveInterval(-1);
-			}
-		}
-	}
-	
-	public class Tail extends BaseButton
-	{
-		private static final long serialVersionUID = Version.VersionG2D;
-
-		public boolean isVscroll(){
-			return ScrollBar.this.isvscroll;
-		}
-
-		protected void onMouseDown(MouseEvent event) {
-			if (event.mouseButton == MouseEvent.BUTTON_LEFT) {
-				ScrollBar.this.moveInterval(1);
-			}
-		}
-		@Override
-		public void update() {
-			super.update();
-			if (isPickedMouse() && isFocused() && getRoot().isMouseContinuous(mouse_freeze_time, MouseEvent.BUTTON_LEFT)){
-				ScrollBar.this.moveInterval(1);
-			}
-		}
-	}
-	
-	public class Back extends BaseButton
-	{
-		private static final long serialVersionUID = Version.VersionG2D;
-
-		public boolean isVscroll(){
-			return ScrollBar.this.isvscroll;
-		}
-
-		public Back() {}
-
-		private int getDirect() {
-			int direct = 0;
-			if (ScrollBar.this.isvscroll) {
-				direct = getParent().getMouseY() - (int)ScrollBar.this.strip.y;
-				direct = CMath.getDirect(direct) * strip.getHeight();
-			}else{
-				direct = getParent().getMouseX() - (int)ScrollBar.this.strip.x;
-				direct = CMath.getDirect(direct) * strip.getWidth();
-			}
-			return direct;
-		}
-		
-		protected void onMouseDown(MouseEvent event) {
-			if (event.mouseButton == MouseEvent.BUTTON_LEFT) {
-				ScrollBar.this.moveStrip(getDirect());
-			}
-		}
-		
-//		@Override
-//		public void update() {
-//			super.update();
-//			if (isPickedMouse() && ScrollBar.this.isFocused() && getRoot().isMouseContinuous(mouse_freeze_time, MouseEvent.BUTTON_LEFT)){
-//				ScrollBar.this.moveStrip(getDirect());
-//			}
-//		}
-		
-		protected void onDrawMouseHover(Graphics2D g) {}
-		
-	}
-	
-	public class Strip extends BaseButton
-	{
-		private static final long serialVersionUID = Version.VersionG2D;
-
-		public boolean isVscroll(){
-			return ScrollBar.this.isvscroll;
-		}
-
-		public Strip() {
-			enable_drag = true;
-		}
-
-		protected void onMouseDraged(MouseMoveEvent event) {
-			if (ScrollBar.this.isvscroll) {
-				ScrollBar.this.setStripPos(getParent().getMouseY()-event.mouseDownStartY);
-			}else{
-				ScrollBar.this.setStripPos(getParent().getMouseX()-event.mouseDownStartX);
-			}
-		}
-		
-		protected void onDrawMouseHover(Graphics2D g) {}
-	}
-	
-//	--------------------------------------------------------------------------------------------------------------------------------
-	
 	public Head 			head;
 	public Tail 			tail;
 	public Back				back;
@@ -146,10 +37,10 @@ public class ScrollBar extends UIComponent
 	
 //	--------------------------------------------------------------------------------------------------------------------------------
 	
-	@Override
-	protected void init_field()
+	private ScrollBar(boolean vscrool, int size) 
 	{
-		super.init_field();
+		this.isvscroll = vscrool;
+		this.size = size;
 		
 		head 		= new Head();
 		tail 		= new Tail();
@@ -161,23 +52,11 @@ public class ScrollBar extends UIComponent
 		super.addChild(tail);
 		super.addChild(strip);
 		super.setAlwaysBottom(back);
-	}
-	
-	@Override
-	protected void init_transient() 
-	{
-		super.init_transient();
 		
 		UILayoutManager.getInstance().setLayout(back);
 		UILayoutManager.getInstance().setLayout(head);
 		UILayoutManager.getInstance().setLayout(tail);
 		UILayoutManager.getInstance().setLayout(strip);
-	}
-	
-	private ScrollBar(boolean vscrool, int size) 
-	{
-		this.isvscroll = vscrool;
-		this.size = size;
 	}
 	
 	@Deprecated
@@ -332,6 +211,112 @@ public class ScrollBar extends UIComponent
 	}
 	
 
+	public class Head extends BaseButton
+	{
+		private static final long serialVersionUID = Version.VersionG2D;
+		
+		public boolean isVscroll(){
+			return ScrollBar.this.isvscroll;
+		}
+
+		protected void onMouseDown(MouseEvent event) {
+			if (event.mouseButton == MouseEvent.BUTTON_LEFT) {
+				ScrollBar.this.moveInterval(-1);
+			}
+		}
+		@Override
+		public void update() {
+			super.update();
+			if (isPickedMouse() && isFocused() && getRoot().isMouseContinuous(mouse_freeze_time, MouseEvent.BUTTON_LEFT)){
+				ScrollBar.this.moveInterval(-1);
+			}
+		}
+	}
+	
+	public class Tail extends BaseButton
+	{
+		private static final long serialVersionUID = Version.VersionG2D;
+
+		public boolean isVscroll(){
+			return ScrollBar.this.isvscroll;
+		}
+
+		protected void onMouseDown(MouseEvent event) {
+			if (event.mouseButton == MouseEvent.BUTTON_LEFT) {
+				ScrollBar.this.moveInterval(1);
+			}
+		}
+		@Override
+		public void update() {
+			super.update();
+			if (isPickedMouse() && isFocused() && getRoot().isMouseContinuous(mouse_freeze_time, MouseEvent.BUTTON_LEFT)){
+				ScrollBar.this.moveInterval(1);
+			}
+		}
+	}
+	
+	public class Back extends BaseButton
+	{
+		private static final long serialVersionUID = Version.VersionG2D;
+
+		public boolean isVscroll(){
+			return ScrollBar.this.isvscroll;
+		}
+
+		public Back() {}
+
+		private int getDirect() {
+			int direct = 0;
+			if (ScrollBar.this.isvscroll) {
+				direct = getParent().getMouseY() - (int)ScrollBar.this.strip.y;
+				direct = CMath.getDirect(direct) * strip.getHeight();
+			}else{
+				direct = getParent().getMouseX() - (int)ScrollBar.this.strip.x;
+				direct = CMath.getDirect(direct) * strip.getWidth();
+			}
+			return direct;
+		}
+		
+		protected void onMouseDown(MouseEvent event) {
+			if (event.mouseButton == MouseEvent.BUTTON_LEFT) {
+				ScrollBar.this.moveStrip(getDirect());
+			}
+		}
+		
+//		@Override
+//		public void update() {
+//			super.update();
+//			if (isPickedMouse() && ScrollBar.this.isFocused() && getRoot().isMouseContinuous(mouse_freeze_time, MouseEvent.BUTTON_LEFT)){
+//				ScrollBar.this.moveStrip(getDirect());
+//			}
+//		}
+		
+		protected void onDrawMouseHover(Graphics2D g) {}
+		
+	}
+	
+	public class Strip extends BaseButton
+	{
+		private static final long serialVersionUID = Version.VersionG2D;
+
+		public boolean isVscroll(){
+			return ScrollBar.this.isvscroll;
+		}
+
+		public Strip() {
+			enable_drag = true;
+		}
+
+		protected void onMouseDraged(MouseMoveEvent event) {
+			if (ScrollBar.this.isvscroll) {
+				ScrollBar.this.setStripPos(getParent().getMouseY()-event.mouseDownStartY);
+			}else{
+				ScrollBar.this.setStripPos(getParent().getMouseX()-event.mouseDownStartX);
+			}
+		}
+		
+		protected void onDrawMouseHover(Graphics2D g) {}
+	}
 
 	public static class ScrollBarPair
 	{

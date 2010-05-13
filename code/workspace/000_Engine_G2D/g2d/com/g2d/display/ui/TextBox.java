@@ -38,10 +38,10 @@ public class TextBox extends UIComponent implements Serializable, TextInputer
 	public static int SCROLL_BAR_SIZE = 12;
 	
 	@Property("文字颜色")
-	public Color 						textColor;
-	public boolean 						is_readonly;
+	public Color 						textColor			= new Color(0xffffffff, true);
+	public boolean 						is_readonly			= false;
 	public boolean						is_show_link;
-	protected ScrollBar					v_scrollbar;
+	protected ScrollBar					v_scrollbar			= ScrollBar.createVScroll(SCROLL_BAR_SIZE);
 
 	/**文字是否抗锯齿*/
 	@Property("文字是否抗锯齿")
@@ -54,50 +54,11 @@ public class TextBox extends UIComponent implements Serializable, TextInputer
 	
 	transient int 						text_draw_x;
 	transient int 						text_draw_y;
-	transient MultiTextLayout			text;
+	transient MultiTextLayout			text				= new MultiTextLayout();
 
 	transient Hashtable<Attribute, ClickSegmentListener> click_segment_listeners;
 	
 //	-------------------------------------------------------------------------------------------------------------------
-	
-	@Override
-	protected void init_field() 
-	{
-		super.init_field();
-		
-		textColor			= new Color(0xffffffff, true);
-		is_readonly			= false;
-		text				= new MultiTextLayout();
-		
-		enable_key_input	= true;
-		enable_mouse_wheel	= true;
-		
-		v_scrollbar			= ScrollBar.createVScroll(SCROLL_BAR_SIZE);
-		
-		super.addChild(v_scrollbar);
-		
-	}
-	
-	private void writeObject(java.io.ObjectOutputStream out) throws IOException 
-	{
-		out.writeBoolean(is_readonly);
-		out.writeObject(textColor);
-		out.writeObject(v_scrollbar);
-		out.writeUTF(getText());
-	}   
-	  
-	private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException
-	{
-		is_readonly	= in.readBoolean();
-		textColor	= (Color)in.readObject();
-		v_scrollbar	= (ScrollBar)in.readObject();
-		String text	= (String)in.readUTF();
-		{
-			this.text = new MultiTextLayout();
-			this.setText(text);
-		}
-	}  
-	
 	
 	public TextBox() 
 	{
@@ -106,11 +67,15 @@ public class TextBox extends UIComponent implements Serializable, TextInputer
 	
 	public TextBox(String text)
 	{
-		this.text.setText(text);
+		this(text, 100, 100);
 	}
 	
 	public TextBox(String text, int w, int h)
 	{
+		enable_key_input	= true;
+		enable_mouse_wheel	= true;
+		super.addChild(v_scrollbar);
+		
 		this.text.setText(text);
 		this.setSize(w, h);
 	}

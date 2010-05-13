@@ -67,13 +67,7 @@ public class MessageBox extends Form implements ActionListener
 	private		int	click_out_bounds_timer		= 0;
 	protected	int	click_out_bounds_timer_max	= 20;
 	
-	transient Vector<MessageBoxListener> message_box_listeners;
-
-	@Override
-	protected void init_transient() {
-		super.init_transient();
-		message_box_listeners = new Vector<MessageBoxListener>();
-	}
+	transient Vector<MessageBoxListener> message_box_listeners = new Vector<MessageBoxListener>();
 	
 	public MessageBox(int type) 
 	{

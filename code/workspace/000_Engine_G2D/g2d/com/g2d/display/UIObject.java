@@ -56,22 +56,14 @@ public abstract class UIObject extends InteractiveObject
 	
 	
 //	-------------------------------------------------------------------------------------------------------------
-	@Override
-	protected void init_field() 
+
+	public UIObject() 
 	{
-		super.init_field();
+		this.enable_drag_resize				= false;
+		this.enable_drag_drop				= false;
+		this.drag_border_size				= 4;
+		this.drag_minimum_size				= new Dimension(9, 9);
 		
-		this.enable_drag_resize		= false;
-		this.enable_drag_drop		= false;
-		this.drag_border_size		= 4;
-		this.drag_minimum_size			= new Dimension(9, 9);
-	}
-
-	@Override
-	protected void init_transient() 
-	{
-		super.init_transient();
-
 		this.mouse_drag_resize_listeners	= new Vector<MouseDragResizeListener>();
 		this.mouse_drag_drop_listeners		= new Vector<MouseDragDropListener>();
 		this.mouse_drag_drop_accepters		= new Vector<MouseDragDropAccepter>();

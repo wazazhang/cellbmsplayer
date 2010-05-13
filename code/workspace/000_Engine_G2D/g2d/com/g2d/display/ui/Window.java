@@ -38,16 +38,12 @@ public abstract class Window extends Container
 	
 //	--------------------------------------------------------------------------------------------------------------------------
 
-	@Override
-	protected void init_field() 
+	public Window()
 	{
-		super.init_field();
 		enable_drag	= true;
 		root_form	= this;
 		setMinimumSize(100, 100);
 	}
-	
-	public Window(){}
 	
 	@Override
 	protected void renderChilds(Graphics2D g) {

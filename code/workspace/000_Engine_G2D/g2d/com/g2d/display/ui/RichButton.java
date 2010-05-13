@@ -20,10 +20,10 @@ public class RichButton extends BaseButton
 	private static final long serialVersionUID	= Version.VersionG2D;
 	
 	@Property("text")
-	transient protected MultiTextLayout	text;
+	transient protected MultiTextLayout	text		= new MultiTextLayout(true);
 	
 	@Property("text_anchor")
-	public int 					text_anchor;
+	public int 					text_anchor = Drawing.TEXT_ANCHOR_HCENTER | Drawing.TEXT_ANCHOR_VCENTER ;
 	public int 					text_offset_x;
 	public int 					text_offset_y;
 	
@@ -32,26 +32,23 @@ public class RichButton extends BaseButton
 	public RichButton(String script, int width, int height) {
 		super(width, height);
 		setText(script);
+		text.is_read_only 		= true;
+		text.is_show_caret 		= false;
 	}
 	
 	public RichButton(String script) {
 		super() ;
 		setText(script);
+		text.is_read_only 		= true;
+		text.is_show_caret 		= false;
 	}
 	
 	public RichButton() {
 		super();
-	}
-	
-	@Override
-	protected void init_field() 
-	{
-		super.init_field();
-		text_anchor = Drawing.TEXT_ANCHOR_HCENTER | Drawing.TEXT_ANCHOR_VCENTER ;
-		text		= new MultiTextLayout(true);
 		text.is_read_only 		= true;
 		text.is_show_caret 		= false;
 	}
+	
 	
 	public String getText() {
 		return text.getText();

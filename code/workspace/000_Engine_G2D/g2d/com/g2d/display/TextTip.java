@@ -35,36 +35,26 @@ public class TextTip extends Tip
 	transient BufferedImage		buffer;
 	transient Graphics2D		buffer_g;
 
-	
-	
-	@Override
-	protected void init_field() {
-		super.init_field();
-		textColor 	= new Color(0xffffffff, true);
-		backColor	= new Color(0x60000000, true);	
-		shadow_x	= 0;
-		shadow_y	= 0;
-	}
-	
-	@Override
-	protected void init_transient() {
-		super.init_transient();
-		this.text = new MultiTextLayout();
+	public TextTip()
+	{
+		this.textColor 	= new Color(0xffffffff, true);
+		this.backColor	= new Color(0x60000000, true);	
+		this.shadow_x	= 0;
+		this.shadow_y	= 0;
+		this.text		= new MultiTextLayout();
 		this.text.is_read_only = true;
 		this.text.is_show_caret = false;
 		
 		this.layout		= DefaultLayout;
 		this.text_width	= DefaultTipSize;
 		
-		buffer = Tools.createImage(1, 1);
-		buffer_g = buffer.createGraphics();
+		this.buffer		= Tools.createImage(1, 1);
+		this.buffer_g	= buffer.createGraphics();
 	}
 	
-	public TextTip() {
-		this("");
-	}
-	
-	public TextTip(String text){
+	public TextTip(String text)
+	{
+		this();
 		setText(text);
 	}
 	

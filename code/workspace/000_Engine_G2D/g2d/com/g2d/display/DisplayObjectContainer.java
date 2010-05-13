@@ -23,35 +23,9 @@ public abstract class DisplayObjectContainer extends DisplayObject
 {
 	private static final long serialVersionUID = Version.VersionG2D;
 	
-	class DisplayObjectEvent extends Event<DisplayObject> implements Serializable
-	{
-		private static final long serialVersionUID = Version.VersionG2D;
-		
-		final static public byte EVENT_SORT 		= 0;
-		final static public byte EVENT_ADD 			= 1;
-		final static public byte EVENT_DELETE 		= 2;
-
-		final static public byte EVENT_MOVE_TOP 	= 11;
-		final static public byte EVENT_MOVE_BOT 	= 12;
-		
-		byte event_type = 0;
-		
-		DisplayObject source;
-		
-		public DisplayObjectEvent(byte type, DisplayObject source) {
-			this.event_type = type;
-			this.source = source;
-		}
-		
-		public DisplayObjectEvent(byte type) {
-			this.event_type = type;
-		}
-	}
-	
 //	-------------------------------------------------------------
 
 	/** true 如果不在local_bounds内,则忽略事件处理 (包括孩子的) */
-	@Property("如果不在local_bounds内,则忽略事件处理 (包括孩子的)")
 	protected boolean 			ignore_render_without_parent_bounds;
 	
 	transient ReentrantLock		elements_lock = new ReentrantLock();
@@ -61,31 +35,24 @@ public abstract class DisplayObjectContainer extends DisplayObject
 
 	DisplayObject				always_top_element;
 	DisplayObject				always_bottom_element;
+	
 //	-------------------------------------------------------------
 
 	transient private Thread		update_thread;
 //	transient private Thread		render_thread;
 	
 //	-------------------------------------------------------------
-
-	@Override
-	protected void init_field() {
-		elements_lock	= new ReentrantLock();
-		super.init_field();
+	public DisplayObjectContainer() {
+		elements_lock = new ReentrantLock();
 		ignore_render_without_parent_bounds = false;
-		elements		= new Vector<DisplayObject>();
-		events			= new ConcurrentLinkedQueue<DisplayObjectEvent>();
-	}
-	
-	@Override
-	protected void init_transient() {
-		super.init_transient();
-		for (int i=elements.size()-1; i>=0; --i) {
+		elements = new Vector<DisplayObject>();
+		events = new ConcurrentLinkedQueue<DisplayObjectEvent>();
+		for (int i = elements.size() - 1; i >= 0; --i) {
 			DisplayObject child = elements.elementAt(i);
 			child.parent = this;
 		}
 	}
-	
+
 	final public void processEvent()
 	{
 		if (events.isEmpty()) return;
@@ -539,6 +506,31 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	}
 
 //	-------------------------------------------------------------------------------------------------------------------------------------
+
+	class DisplayObjectEvent extends Event<DisplayObject> implements Serializable
+	{
+		private static final long serialVersionUID = Version.VersionG2D;
+		
+		final static public byte EVENT_SORT 		= 0;
+		final static public byte EVENT_ADD 			= 1;
+		final static public byte EVENT_DELETE 		= 2;
+
+		final static public byte EVENT_MOVE_TOP 	= 11;
+		final static public byte EVENT_MOVE_BOT 	= 12;
+		
+		byte event_type = 0;
+		
+		DisplayObject source;
+		
+		public DisplayObjectEvent(byte type, DisplayObject source) {
+			this.event_type = type;
+			this.source = source;
+		}
+		
+		public DisplayObjectEvent(byte type) {
+			this.event_type = type;
+		}
+	}
 	
 //	/**
 //	 * 交换两个指定子对象的 Z 轴顺序（从前到后顺序）。 

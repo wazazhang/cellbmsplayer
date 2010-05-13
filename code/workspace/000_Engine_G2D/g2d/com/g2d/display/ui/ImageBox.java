@@ -13,8 +13,6 @@ public class ImageBox extends UIComponent
 	
 	transient public Image	background;
 	
-	String 					image_path;
-	
 	public ImageBox(){}
 	
 	public ImageBox(String path)
@@ -27,22 +25,15 @@ public class ImageBox extends UIComponent
 		setSize(img.getWidth(null), img.getHeight(null));
 	}
 
-	@Override
-	protected void init_transient() 
-	{
-		super.init_transient();
-		setImage(image_path);
-	}
-	
+
 	public void setImage(Image img) {
 		background = img;
 	}
 	
 	public void setImage(String path) {
-		image_path = path;
-		if (image_path!=null) {
+		if (path!=null) {
 			try {
-				background = Tools.readImage(image_path);
+				background = Tools.readImage(path);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
