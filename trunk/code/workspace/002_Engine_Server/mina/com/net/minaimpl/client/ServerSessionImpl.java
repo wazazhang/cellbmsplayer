@@ -6,6 +6,7 @@ import java.net.SocketAddress;
 import java.util.Hashtable;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.mina.core.future.ConnectFuture;
@@ -29,17 +30,15 @@ import com.net.minaimpl.SystemMessages.SystemMessageS2C;
 
 public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession 
 {
-	final Logger 			log;
+	final Logger log;
 
-	IoSession 				Session;
+	AtomicReference<IoSession> session_ref;
 
-	IoConnector				Connector;
-	NetPackageCodec			Codec;
+	ConcurrentHashMap<Integer, ClientChannelImpl> channels = new ConcurrentHashMap<Integer, ClientChannelImpl>();
 
-	ServerSessionListener	Listener;
-	
-	ConcurrentHashMap<Integer, ClientChannelImpl> 	
-							channels			= new ConcurrentHashMap<Integer, ClientChannelImpl>();
+	IoConnector Connector;
+	NetPackageCodec Codec;
+	ServerSessionListener Listener;
 	
 	public ServerSessionImpl()
 	{
@@ -63,21 +62,17 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 	{
 		if (!isConnected()) {
 			SocketAddress address = new InetSocketAddress(host, port);
-
 			Listener = listener;
-
-			synchronized (this) {
-				ConnectFuture future1 = Connector.connect(address);
-				future1.awaitUninterruptibly(timeout);
-
-				if (!future1.isConnected()) {
-					return false;
-				}
-				Session = future1.getSession();
+			Connector.setConnectTimeoutMillis(timeout);
+			ConnectFuture future1 = Connector.connect(address);
+			future1.awaitUninterruptibly(timeout);
+			if (!future1.isConnected()) {
+				return false;
 			}
-
-			if (Session != null && Session.isConnected()) {
-				Runtime.getRuntime().addShutdownHook(new CleanTask(Session));
+			IoSession io_session = future1.getSession();
+			if (io_session != null && io_session.isConnected()) {
+				session_ref.set(io_session);
+				Runtime.getRuntime().addShutdownHook(new CleanTask(io_session));
 				return true;
 			} else {
 				log.error("not connect : " + address.toString());
@@ -89,21 +84,23 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 	}
 	
 	public boolean disconnect(boolean force) {
-		synchronized(this) {
-			if (Session != null) {
-				Session.close(force);
-				Session = null;
-			}else{
-				log.error("session is null !");
-			}
+		IoSession io_session = session_ref.getAndSet(null);
+		if (io_session != null) {
+			io_session.close(force);
+		} else {
+			log.error("session is null !");
 		}
 		return false;
 	}
 	
 	public boolean isConnected() {
-		synchronized(this) {
-			if (Session != null) {
-				return Session.isConnected();
+		IoSession io_session = session_ref.get();
+		if (io_session != null) {
+			if (io_session.isConnected()) {
+				return true;
+			} else {
+				session_ref.set(null);
+				return false;
 			}
 		}
 		return false;
@@ -111,25 +108,23 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 	
 	public boolean send(MessageHeader message) {
 		if (isConnected()) {
-			if (Session != null) {
-				message.Protocol = MessageHeader.PROTOCOL_SESSION_MESSAGE;
-				Session.write(message);
-				return true;
-			}else{
-				log.error("session is null !");
-			}
-		}else{
+			IoSession io_session = session_ref.get();
+			message.Protocol = MessageHeader.PROTOCOL_SESSION_MESSAGE;
+			io_session.write(message);
+			return true;
+		} else {
 			log.error("server not connected !");
 		}
 		return false;
 	}
 	
 	protected void sendChannel(MessageHeader message, ClientChannelImpl channel) {
-		if (Session != null) {
+		IoSession io_session = session_ref.get();
+		if (io_session != null) {
 			message.Protocol			= MessageHeader.PROTOCOL_CHANNEL_MESSAGE;
 			message.ChannelID			= channel.getID();
 			message.ChannelSesseionID	= getID();
-			Session.write(message);
+			io_session.write(message);
 		}
 	}
 
@@ -164,9 +159,7 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 	}
 	
 	public void sessionClosed(IoSession session) throws Exception {
-		synchronized(this) {
-			Listener.disconnected(this, true, "sessionClosed : " + toString());
-		}
+		Listener.disconnected(this, true, "sessionClosed : " + toString());
 	}
 	
 	public void messageReceived(final IoSession iosession, final Object message) throws Exception 
@@ -215,51 +208,42 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 	}
 	
 	public IoSession getIoSession() {
-		return Session;
+		return session_ref.get();
 	}
-
-//	@Override
-//	public SocketAddress getAddress() {
-//		return Session.getRemoteAddress();
-//	}
 
 	@Override
 	public boolean containsAttribute(Object key) {
-		return Session.containsAttribute(key);
+		return session_ref.get().containsAttribute(key);
 	}
 
 	@Override
 	public Object getAttribute(Object key) {
-		return Session.getAttribute(key);
+		return session_ref.get().getAttribute(key);
 	}
 	@Override
 	public Set<Object> getAttributeKeys() {
-		return Session.getAttributeKeys();
+		return session_ref.get().getAttributeKeys();
 	}
 	
 	@Override
 	public long getID() {
-		return Session.getId();
+		return session_ref.get().getId();
 	}
 	
 	@Override
 	public Object removeAttribute(Object key) {
-		return Session.removeAttribute(key);
+		return session_ref.get().removeAttribute(key);
 	}
 	
 	@Override
 	public Object setAttribute(Object key, Object value) {
-		return Session.setAttribute(key, value);
+		return session_ref.get().setAttribute(key, value);
 	}
 	
 	public String toString() {
-		try{
-			if (!Session.isClosing()) {
-				return "" + Session;
-			} else {
-				return "closing ... ";
-			}
-		}catch(Exception err){
+		try {
+			return "" + session_ref.get();
+		} catch (Exception err) {
 			return err.getMessage();
 		}
 	}
@@ -276,7 +260,7 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 			try {
 				info = session.toString();
 			} catch (Throwable err){
-				info = session.getRemoteAddress() + "";
+				info = err.getMessage();
 			}
 			System.out.println("Clear session : " + info);
 			try {
