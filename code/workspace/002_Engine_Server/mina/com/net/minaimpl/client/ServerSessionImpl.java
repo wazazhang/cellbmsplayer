@@ -36,9 +36,9 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 
 	ConcurrentHashMap<Integer, ClientChannelImpl> channels = new ConcurrentHashMap<Integer, ClientChannelImpl>();
 
-	IoConnector Connector;
-	NetPackageCodec Codec;
-	ServerSessionListener Listener;
+	IoConnector 			Connector;
+	NetPackageCodec 		Codec;
+	ServerSessionListener 	Listener;
 	
 	public ServerSessionImpl()
 	{
@@ -61,21 +61,23 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 	public boolean connect(String host, int port, long timeout, ServerSessionListener listener) throws IOException 
 	{
 		if (!isConnected()) {
-			SocketAddress address = new InetSocketAddress(host, port);
-			Listener = listener;
-			Connector.setConnectTimeoutMillis(timeout);
-			ConnectFuture future1 = Connector.connect(address);
-			future1.awaitUninterruptibly(timeout);
-			if (!future1.isConnected()) {
-				return false;
-			}
-			IoSession io_session = future1.getSession();
-			if (io_session != null && io_session.isConnected()) {
-				session_ref.set(io_session);
-				Runtime.getRuntime().addShutdownHook(new CleanTask(io_session));
-				return true;
-			} else {
-				log.error("not connect : " + address.toString());
+			synchronized (session_ref) {
+				SocketAddress address = new InetSocketAddress(host, port);
+				Listener = listener;
+				Connector.setConnectTimeoutMillis(timeout);
+				ConnectFuture future1 = Connector.connect(address);
+				future1.awaitUninterruptibly(timeout);
+				if (!future1.isConnected()) {
+					return false;
+				}
+				IoSession io_session = future1.getSession();
+				if (io_session != null && io_session.isConnected()) {
+					session_ref.set(io_session);
+					Runtime.getRuntime().addShutdownHook(new CleanTask(io_session));
+					return true;
+				} else {
+					log.error("not connect : " + address.toString());
+				}
 			}
 		} else {
 			log.error("Already connected !");
@@ -84,7 +86,10 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 	}
 	
 	public boolean disconnect(boolean force) {
-		IoSession io_session = session_ref.getAndSet(null);
+		IoSession io_session = null;
+		synchronized (session_ref) {
+			io_session = session_ref.getAndSet(null);
+		}
 		if (io_session != null) {
 			io_session.close(force);
 		} else {
@@ -94,13 +99,15 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 	}
 	
 	public boolean isConnected() {
-		IoSession io_session = session_ref.get();
-		if (io_session != null) {
-			if (io_session.isConnected()) {
-				return true;
-			} else {
-				session_ref.set(null);
-				return false;
+		synchronized (session_ref) {
+			IoSession io_session = session_ref.get();
+			if (io_session != null) {
+				if (io_session.isConnected()) {
+					return true;
+				} else {
+					session_ref.set(null);
+					return false;
+				}
 			}
 		}
 		return false;
@@ -119,12 +126,14 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 	}
 	
 	protected void sendChannel(MessageHeader message, ClientChannelImpl channel) {
-		IoSession io_session = session_ref.get();
-		if (io_session != null) {
-			message.Protocol			= MessageHeader.PROTOCOL_CHANNEL_MESSAGE;
-			message.ChannelID			= channel.getID();
-			message.ChannelSesseionID	= getID();
-			io_session.write(message);
+		if (isConnected()) {
+			IoSession io_session = session_ref.get();
+			if (io_session != null) {
+				message.Protocol			= MessageHeader.PROTOCOL_CHANNEL_MESSAGE;
+				message.ChannelID			= channel.getID();
+				message.ChannelSesseionID	= getID();
+				io_session.write(message);
+			}
 		}
 	}
 
@@ -159,7 +168,7 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 	}
 	
 	public void sessionClosed(IoSession session) throws Exception {
-		Listener.disconnected(this, true, "sessionClosed : " + toString());
+		Listener.disconnected(this, true, "sessionClosed");
 	}
 	
 	public void messageReceived(final IoSession iosession, final Object message) throws Exception 
@@ -242,7 +251,9 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 	
 	public String toString() {
 		try {
-			return "" + session_ref.get();
+			synchronized (session_ref) {
+				return "" + session_ref.get();
+			}
 		} catch (Exception err) {
 			return err.getMessage();
 		}
