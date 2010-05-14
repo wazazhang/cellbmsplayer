@@ -45,7 +45,7 @@ public class PoolNetService extends BasicNetService
 			if (sessions[i].isConnected()) {
 				return sessions[i];
 			} else {
-				adapter.reconnect(this, getSessionListener());
+				sessions[i] = adapter.reconnect(this, sessions[i], getSessionListener());
 			}
 		}
 		return null;
