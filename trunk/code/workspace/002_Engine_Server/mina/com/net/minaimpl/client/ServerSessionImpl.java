@@ -32,7 +32,7 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 {
 	final Logger log;
 
-	AtomicReference<IoSession> session_ref;
+	final AtomicReference<IoSession> session_ref = new AtomicReference<IoSession>(null);
 
 	ConcurrentHashMap<Integer, ClientChannelImpl> channels = new ConcurrentHashMap<Integer, ClientChannelImpl>();
 
