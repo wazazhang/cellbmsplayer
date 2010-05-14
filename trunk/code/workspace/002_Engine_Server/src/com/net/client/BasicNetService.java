@@ -43,9 +43,6 @@ public abstract class BasicNetService
 	
 	private long					LastCleanRequestTime 	= System.currentTimeMillis();
 
-	protected ReentrantLock 		sendlock				= new ReentrantLock();
-	protected ReentrantLock 		notifylock				= new ReentrantLock();
-	
 	private AtomicInteger			request_response_ping	= new AtomicInteger();
 
 	final private ThreadPool		thread_pool;
@@ -101,18 +98,16 @@ public abstract class BasicNetService
      * @return
      */
     @SuppressWarnings("unchecked")
-	final public<T extends MessageHeader> T sendRequest(MessageHeader message, long timeout, WaitingListener ... listeners) {
+	final public<T extends MessageHeader> T sendRequest(MessageHeader message, long timeout, WaitingListener ... listeners)
+    {
     	if (System.currentTimeMillis() - LastCleanRequestTime > DropRequestTimeOut) {        	
     		LastCleanRequestTime = System.currentTimeMillis();
     		cleanRequestAndNotify();
     	}
+    	
 		Request request = new Request(message, timeout, listeners);
-		sendlock.lock();
-    	try{
-    		WaitingListeners.put(request.Message.PacketNumber, request);
-    	}finally {
-    		sendlock.unlock();
-    	}
+    	WaitingListeners.put(request.Message.PacketNumber, request);
+
     	for (WaitingListener l : listeners) {
     		onListeningRequest(message, l);
     	}
@@ -143,14 +138,11 @@ public abstract class BasicNetService
      * @param type
      */
     final public void removeRequestByType(Class<?> type){
-    	sendlock.lock();
-    	try{
-    		for (Integer pnum : WaitingListeners.keySet()) {
-    			WaitingListeners.remove(pnum);
-    		}
-    	}finally {
-    		sendlock.unlock();
-    	}
+		synchronized (WaitingListeners) {
+			for (Integer pnum : WaitingListeners.keySet()) {
+				WaitingListeners.remove(pnum);
+			}
+		}
     }
     
     /**
@@ -203,16 +195,13 @@ public abstract class BasicNetService
 	 * @param listener
 	 */
 	final public void registNotifyListener(Class<? extends MessageHeader> message_type, NotifyListener<?> listener) {
-		notifylock.lock();
-		try{
+		synchronized (NotifyListeners) {
 			Vector<NotifyListener<?>> listeners = NotifyListeners.get(message_type);
 			if (listeners == null) {
 				listeners = new Vector<NotifyListener<?>>();
 				NotifyListeners.put(message_type, listeners);
 			}
 			listeners.add(listener);
-		}finally{
-			notifylock.unlock();
 		}
 		cleanUnhandledMessages();
 	}
@@ -223,14 +212,11 @@ public abstract class BasicNetService
 	 * @param listener
 	 */
 	final public void unregistNotifyListener(Class<? extends MessageHeader> message_type, NotifyListener<?> listener) {
-		notifylock.lock();
-		try {
+		synchronized (NotifyListeners) {
 			Vector<NotifyListener<?>> listeners = NotifyListeners.get(message_type);
 			if (listeners != null) {
 				listeners.remove(listener);
 			}
-		} finally {
-			notifylock.unlock();
 		}
 	}
 	
@@ -239,12 +225,7 @@ public abstract class BasicNetService
 	 * @param message_type
 	 */
 	final public void clearNotifyListener(Class<? extends MessageHeader> message_type) {
-		notifylock.lock();
-		try {
-			NotifyListeners.remove(message_type);
-		} finally {
-			notifylock.unlock();
-		}
+		NotifyListeners.remove(message_type);
 	}
 
 //	----------------------------------------------------------------------------------------------------------------------------
@@ -269,9 +250,9 @@ public abstract class BasicNetService
     }
     
 	final private void processReceiveSessionMessage(MessageHeader message) {
-		try{
+		try {
 			onReceivedMessage(message);
-		}catch(Exception err) {
+		} catch (Exception err) {
 			log.error(err.getMessage(), err);
 		}
 		if (tryReceivedNotify(message)) {
@@ -284,16 +265,16 @@ public abstract class BasicNetService
 	}
 	
 	final private void processReceiveChannelMessage(MessageHeader message) {
-		try{
+		try {
 			onReceivedMessage(message);
-		}catch(Exception err) {
+		} catch (Exception err) {
 			log.error(err.getMessage(), err);
 		}
 		if (tryReceivedNotify(message)) {
 			return;
 		} else if (!tryPushUnhandledNotify(message)) {
 			log.error("handle no listener channel message : " + message);
-		}	
+		}
 	}
 
 //	----------------------------------------------------------------------------------------------------------------------------
@@ -301,31 +282,19 @@ public abstract class BasicNetService
 	@SuppressWarnings("unchecked")
 	final private boolean tryReceivedNotify(MessageHeader message) 
 	{
-		Vector<NotifyListener<?>> notifys = null;
-		notifylock.lock();
-		try{
-			notifys = NotifyListeners.get(message.getClass());
-    	} finally {
-			notifylock.unlock();
+		Vector<NotifyListener<?>> notifys = NotifyListeners.get(message.getClass());
+		if (notifys != null && !notifys.isEmpty()) {
+			for (NotifyListener notify : notifys) {
+				notify.notify(this, message);
+			}
+			return true;
 		}
-    	if (notifys != null && !notifys.isEmpty()){
-    		for (NotifyListener notify : notifys) {
-    			notify.notify(this, message);
-    		}
-    		return true;
-    	}
     	return false;
 	}
 	
 	final private boolean tryReceivedResponse(MessageHeader message)
 	{
-		Request request = null;
-		sendlock.lock();
-    	try{
-    		request = WaitingListeners.remove(message.PacketNumber);
-    	}finally {
-    		sendlock.unlock();
-    	}
+		Request request = WaitingListeners.remove(message.PacketNumber);
     	if (request != null) {
     		request.messageResponsed(message);    	
     		return true;
@@ -335,15 +304,9 @@ public abstract class BasicNetService
 	
 	final private boolean tryPushUnhandledNotify(MessageHeader message)
 	{
-		notifylock.lock();
-		try{
-			if (message.PacketNumber == 0) {
-				UnhandledMessages.add(message);
-//				log.info("push a unhandled notify, wait for notify listener : " + message);
-				return true;
-			}
-    	} finally {
-			notifylock.unlock();
+		if (message.PacketNumber == 0) {
+			UnhandledMessages.add(message);
+			return true;
 		}
     	return false;
 	}
@@ -501,7 +464,7 @@ public abstract class BasicNetService
 		public void run () 
 		{
 //			System.out.println("request " + this);
-			if (SendTimeOut>0) {
+			if (SendTimeOut > 0) {
 				synchronized (this) {
 					send(Message);
 					try {
@@ -510,7 +473,7 @@ public abstract class BasicNetService
 						e.printStackTrace();
 					}
 				}
-			}else{
+			} else {
 				send(Message);
 			}
 		}
@@ -519,10 +482,9 @@ public abstract class BasicNetService
 		{
 //			System.out.println("response " + this);
 			Response = response;
-			
-			if (SendTimeOut>0) {
+			request_response_ping.set((int)(response.DynamicReceiveTime - Message.DynamicSendTime));
+			if (SendTimeOut > 0) {
 				synchronized (this){
-					request_response_ping.set((int)(response.DynamicReceiveTime - Message.DynamicSendTime));
 					notify();
 				}
 			}

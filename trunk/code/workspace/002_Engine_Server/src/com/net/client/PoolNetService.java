@@ -16,7 +16,6 @@ public class PoolNetService extends BasicNetService
 {
 	final private PoolNetServiceAdapter	adapter;
 
-	final private ReentrantLock 		session_lock = new ReentrantLock();
 	final private ServerSession[] 		sessions;
 	
 	public PoolNetService(
@@ -27,55 +26,34 @@ public class PoolNetService extends BasicNetService
 		super(thread_pool);
 		this.adapter	= adapter;
 		this.sessions	= new ServerSession[session_count];
-		this.getSession();
+		for (int i = 0; i < sessions.length; i++) {
+			sessions[i] = adapter.createServerSession(this, getSessionListener());
+		}
 	}
 	
 	@Override
 	public void close(boolean force) {
-		session_lock.lock();
-		try{
-			for (ServerSession session : sessions) {
-				if (session != null) {
-					session.disconnect(false);
-				}
+		for (ServerSession session : sessions) {
+			if (session != null) {
+				session.disconnect(false);
 			}
-		}finally{
-			session_lock.unlock();
 		}
 	}
 	
 	protected ServerSession getSession() {
-		session_lock.lock();
-		try{
-			int start = Math.abs(CUtil.getRandom().nextInt() % sessions.length);
-			for (int i=0; i<sessions.length; i++) {
-				int id = (start + i ) % sessions.length;
-				if (sessions[id] != null) {
-					if (sessions[id].isConnected()) {
-						return sessions[id];
-					}
-				} else {
-					sessions[id] = adapter.createServerSession(this, getSessionListener());
-				}
+		for (int i = 0; i < sessions.length; i++) {
+			if (sessions[i].isConnected()) {
+				return sessions[i];
+			} else {
+				adapter.reconnect(this, getSessionListener());
 			}
-		}finally{
-			session_lock.unlock();
 		}
 		return null;
 	}
 	
 	public void send(MessageHeader message) {
-		sendlock.lock();
-		try{
-			ServerSession session = getSession();
-		 	if (session!=null && session.isConnected()) {
-	    		session.send(message);
-			}else{
-				log.error("no session found !");
-			}
-		}finally{
-			sendlock.unlock();
-		}
+		ServerSession session = getSession();
+		session.send(message);
 	}
 	
 }

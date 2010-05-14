@@ -18,8 +18,6 @@ import com.net.MessageHeader;
 
 public class NetService extends BasicNetService
 {
-//	-------------------------------------------------------------------------------------------------
-
 //	---------------------------------------------------------------------------------------------------------------------------------
 	
 	final private ServerSession 	Session;
@@ -47,32 +45,6 @@ public class NetService extends BasicNetService
 		return Session;
 	}
 	
-//	/**
-//	 * 得到链接的主机名
-//	 * @return
-//	 */
-//	public String getHost() {
-//		return ServerHost;
-//	}
-//	
-//	/**
-//	 * 得到链接的端口
-//	 * @return
-//	 */
-//	public Integer getPort() {
-//		return ServerPort;
-//	}
-//
-//	/**
-//	 * 链接到主机
-//	 * @param host
-//	 * @param port
-//	 * @return
-//	 */
-//	public boolean connect(String host, Integer port) {
-//		return this.connect(host, port, 10000L);
-//	}
-	
 	/**
 	 * 链接到主机并制定超时时间
 	 * @param host
@@ -81,23 +53,18 @@ public class NetService extends BasicNetService
 	 * @return
 	 */
 	public boolean connect(String host, Integer port, Long timeout) {
-		sendlock.lock();
-		try {
-			if (!Session.isConnected()) {
-				log.info("connecting... " + host + ":" + port);
-	    		try {
-	    			ServerHost = host;
-	    			ServerPort = port;
-	    			Session.connect(host, port, timeout, getSessionListener());
-	    			return true;
-	    		} catch (Exception e) {
-	    			e.printStackTrace();
-	    			return false;
-	    		}
-	    	}
-		} finally {
-			sendlock.unlock();
-		}
+		if (!Session.isConnected()) {
+			log.info("connecting... " + host + ":" + port);
+    		try {
+    			ServerHost = host;
+    			ServerPort = port;
+    			Session.connect(host, port, timeout, getSessionListener());
+    			return true;
+    		} catch (Exception e) {
+    			e.printStackTrace();
+    			return false;
+    		}
+    	}
     	return true;
 	}
 
@@ -107,19 +74,14 @@ public class NetService extends BasicNetService
 	 */
 	public boolean reconnect() 
 	{
-		sendlock.lock();
-		try {
-	    	if (!Session.isConnected()) {
-				try {
-					Session.connect(ServerHost, ServerPort, getSessionListener());
-					return true;
-				} catch (Exception e) {
-					e.printStackTrace();
-					return false;
-				}
+		if (!Session.isConnected()) {
+			try {
+				Session.connect(ServerHost, ServerPort, getSessionListener());
+				return true;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return false;
 			}
-		} finally {
-			sendlock.unlock();
 		}
     	return true;
 	}
