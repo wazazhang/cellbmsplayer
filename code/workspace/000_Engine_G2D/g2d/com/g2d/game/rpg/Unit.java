@@ -43,12 +43,12 @@ public abstract class Unit extends Sprite
 		if (getOwnerScene() != null) 
 		{
 			if (CMath.intersectRect2(
-					getOwnerScene().camera_x, 
-					getOwnerScene().camera_y, 
+					(float)getOwnerScene().camera_x, 
+					(float)getOwnerScene().camera_y, 
 					getOwnerScene().local_bounds.width, 
 					getOwnerScene().local_bounds.height,
-					x + local_bounds.x,
-					y + local_bounds.y, 
+					(float)x + local_bounds.x,
+					(float)y + local_bounds.y, 
 					local_bounds.width, 
 					local_bounds.height)) {
 				return true;
