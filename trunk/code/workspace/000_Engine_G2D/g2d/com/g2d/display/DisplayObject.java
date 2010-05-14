@@ -561,8 +561,8 @@ public abstract class DisplayObject implements Comparable<DisplayObject>, ImageO
 				parent.local_bounds.y,
 				parent.local_bounds.width,
 				parent.local_bounds.height,
-				x + local_bounds.x, 
-				y + local_bounds.y, 
+				(float)(x + local_bounds.x), 
+				(float)(y + local_bounds.y), 
 				local_bounds.width, 
 				local_bounds.height);
 	}
@@ -598,13 +598,13 @@ public abstract class DisplayObject implements Comparable<DisplayObject>, ImageO
 	public static boolean touch(DisplayObject src, DisplayObject dst)
 	{
 		return CMath.intersectRect2(
-				src.x+src.local_bounds.x, 
-				src.y+src.local_bounds.y, 
+				(float)src.x+src.local_bounds.x, 
+				(float)src.y+src.local_bounds.y, 
 				src.local_bounds.width, 
 				src.local_bounds.height, 
 				
-				dst.x+dst.local_bounds.x, 
-				dst.y+dst.local_bounds.y, 
+				(float)dst.x+dst.local_bounds.x, 
+				(float)dst.y+dst.local_bounds.y, 
 				dst.local_bounds.width, 
 				dst.local_bounds.height
 				);
@@ -619,12 +619,12 @@ public abstract class DisplayObject implements Comparable<DisplayObject>, ImageO
 	public static boolean include(DisplayObject src, DisplayObject dst)
 	{
 		return CMath.includeRectPoint2(
-				src.x+src.local_bounds.x, 
-				src.y+src.local_bounds.y, 
+				(float)src.x+src.local_bounds.x, 
+				(float)src.y+src.local_bounds.y, 
 				src.local_bounds.width, 
 				src.local_bounds.height, 
-				dst.x,
-				dst.y
+				(float)dst.x,
+				(float)dst.y
 				);
 	}
 }

@@ -205,7 +205,7 @@ public class CMath extends CObject{
 	 * @param qy
 	 * @return v[]
 	 */
-	final public static void vectorAdd(int[] out, int px, int py, int qx, int qy) {
+	final public static void vectorAdd(float[] out, float px, float py, float qx, float qy) {
 		out[0] = px + qx;
 		out[1] = py + qy;
 		
@@ -219,7 +219,7 @@ public class CMath extends CObject{
 	 * @param qy
 	 * @return v[]
 	 */
-	final public static void vectorSub(int[] out, int px, int py, int qx, int qy) {
+	final public static void vectorSub(float[] out, float px, float py, float qx, float qy) {
 		out[0] = px - qx;
 		out[1] = py - qy;
 	}
@@ -234,25 +234,10 @@ public class CMath extends CObject{
 	 * @param q
 	 * @return +-
 	 */
-	final public static int vectorCrossProduct(int[] p, int[] q) {
+	final public static float vectorCrossProduct(float[] p, float[] q) {
 		return (p[0] * q[1] - p[1] * q[0]);
 	}
 
-
-//	--------------------------------------------------------------------------------------------------
-	
-	/* croe */
-	static int v1[] = new int[2];
-	static int v2[] = new int[2];
-	static int v3[] = new int[2];
-	static int v4[] = new int[2];
-	
-	static int v5[] = new int[2];
-	static int v6[] = new int[2];
-	static int v7[] = new int[2];
-	static int v8[] = new int[2];
-	
-	
 	/**
 	 * ((Q2-Q1)��(P1-Q1))*((P2-Q1)��(Q2-Q1)) >= 0 
 	 * ((P2-P1)��(Q1-P1))*((Q2-P1)��(P2-P1)) >= 0
@@ -268,10 +253,20 @@ public class CMath extends CObject{
 	 * @return false:true
 	 */
 	final static public boolean intersectLine(
-			int p1x, int p1y, int p2x, int p2y,
-			int q1x, int q1y, int q2x, int q2y) 
+			float p1x, float p1y, float p2x, float p2y,
+			float q1x, float q1y, float q2x, float q2y) 
 	{
-		synchronized (v1) 
+		/* croe */
+		float v1[] = new float[2];
+		float v2[] = new float[2];
+		float v3[] = new float[2];
+//		float v4[] = new float[2];
+		
+		float v5[] = new float[2];
+		float v6[] = new float[2];
+		float v7[] = new float[2];
+//		float v8[] = new float[2];
+		
 		{
 			CMath.vectorSub(v1, q2x, q2y, q1x, q1y);//1
 			CMath.vectorSub(v2, p1x, p1y, q1x, q1y);//2
@@ -294,12 +289,12 @@ public class CMath extends CObject{
 //	--------------------------------------------------------------------------------------------------
 	
 	final static public boolean intersectRound(
-			int sx, int sy, int sr, 
-			int dx, int dy, int dr) 
+			float sx, float sy, float sr, 
+			float dx, float dy, float dr) 
 	{
-		int w = sx - dx;
-		int h = sy - dy;
-		int r = sr + dr;
+		float w = sx - dx;
+		float h = sy - dy;
+		float r = sr + dr;
 		
 		if (w*w + h*h <= r*r) {
 			return true;
@@ -311,11 +306,11 @@ public class CMath extends CObject{
 //	--------------------------------------------------------------------------------------------------
 	
 	final static public boolean includeRoundPoint(
-			int sx, int sy, int sr, 
-			int px, int py) 
+			float sx, float sy, float sr, 
+			float px, float py) 
 	{
-		int w = sx - px;
-		int h = sy - py;
+		float w = sx - px;
+		float h = sy - py;
 		
 		if (w*w + h*h <= sr*sr) {
 			return true;
@@ -327,33 +322,8 @@ public class CMath extends CObject{
 //	--------------------------------------------------------------------------------------------------
 	
 	final static public boolean intersectRect(
-			int sx1, int sy1, int sx2, int sy2, 
-			int dx1, int dy1, int dx2, int dy2) {
-		if (sx2 < dx1)		return false;
-		if (sx1 > dx2)		return false;
-		if (sy2 < dy1)		return false;
-		if (sy1 > dy2)		return false;
-		return true;
-	}
-	final static public boolean intersectRect(
-			double sx1, double sy1, double sx2, double sy2, 
-			double dx1, double dy1, double dx2, double dy2) {
-		if (sx2 < dx1)		return false;
-		if (sx1 > dx2)		return false;
-		if (sy2 < dy1)		return false;
-		if (sy1 > dy2)		return false;
-		return true;
-	}
-
-//	--------------------------------------------------------------------------------------------------
-	
-	final static public boolean intersectRect2(
-			int sx1, int sy1, int sw, int sh, 
-			int dx1, int dy1, int dw, int dh) {
-		int sx2 = sx1 + sw - 1 ;
-		int sy2 = sy1 + sh - 1 ;
-		int dx2 = dx1 + dw - 1 ;
-		int dy2 = dy1 + dh - 1 ;
+			float sx1, float sy1, float sx2, float sy2, 
+			float dx1, float dy1, float dx2, float dy2) {
 		if (sx2 < dx1)		return false;
 		if (sx1 > dx2)		return false;
 		if (sy2 < dy1)		return false;
@@ -362,12 +332,12 @@ public class CMath extends CObject{
 	}
 
 	final static public boolean intersectRect2(
-			double sx1, double sy1, double sw, double sh, 
-			double dx1, double dy1, double dw, double dh) {
-		double sx2 = sx1 + sw - 1 ;
-		double sy2 = sy1 + sh - 1 ;
-		double dx2 = dx1 + dw - 1 ;
-		double dy2 = dy1 + dh - 1 ;
+			float sx1, float sy1, float sw, float sh, 
+			float dx1, float dy1, float dw, float dh) {
+		float sx2 = sx1 + sw - 1 ;
+		float sy2 = sy1 + sh - 1 ;
+		float dx2 = dx1 + dw - 1 ;
+		float dy2 = dy1 + dh - 1 ;
 		if (sx2 < dx1)		return false;
 		if (sx1 > dx2)		return false;
 		if (sy2 < dy1)		return false;
@@ -378,18 +348,8 @@ public class CMath extends CObject{
 //	--------------------------------------------------------------------------------------------------
 	
 	final static public boolean includeRectPoint(
-			int sx1, int sy1, int sx2, int sy2, 
-			int dx, int dy) {
-		if (sx2 < dx)		return false;
-		if (sx1 > dx)		return false;
-		if (sy2 < dy)		return false;
-		if (sy1 > dy)		return false;
-		return true;
-	}
-	
-	final static public boolean includeRectPoint(
-			double sx1, double sy1, double sx2, double sy2, 
-			double dx, double dy) {
+			float sx1, float sy1, float sx2, float sy2, 
+			float dx, float dy) {
 		if (sx2 < dx)		return false;
 		if (sx1 > dx)		return false;
 		if (sy2 < dy)		return false;
@@ -397,25 +357,11 @@ public class CMath extends CObject{
 		return true;
 	}
 
-//	--------------------------------------------------------------------------------------------------
-	
 	final static public boolean includeRectPoint2(
-			int sx1, int sy1, int sw, int sh, 
-			int dx, int dy) {
-		int sx2 = sx1 + sw - 1 ;
-		int sy2 = sy1 + sh - 1 ;
-		if (sx2 < dx)		return false;
-		if (sx1 > dx)		return false;
-		if (sy2 < dy)		return false;
-		if (sy1 > dy)		return false;
-		return true;
-	}
-	
-	final static public boolean includeRectPoint2(
-			double sx1, double sy1, double sw, double sh, 
-			double dx, double dy) {
-		double sx2 = sx1 + sw - 1 ;
-		double sy2 = sy1 + sh - 1 ;
+			float sx1, float sy1, float sw, float sh, 
+			float dx, float dy) {
+		float sx2 = sx1 + sw - 1 ;
+		float sy2 = sy1 + sh - 1 ;
 		if (sx2 < dx)		return false;
 		if (sx1 > dx)		return false;
 		if (sy2 < dy)		return false;
