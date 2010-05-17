@@ -198,6 +198,7 @@ public class SkillPropertiesEditor extends JPanel implements ActionListener
 						skill.getData().getColumnProperties(column), 
 						COLUMN_LEVEL,
 						new AbilityAdapter(),
+						new AbilityAdapter.ObjectAdapter(),
 						new ItemPropertiesAdapter.ValueRangeAdapter(),
 						new ItemFormulaEdit.ItemFormulaAdapter());
 				super.addColumnFiller(new FillerRangeValue());
