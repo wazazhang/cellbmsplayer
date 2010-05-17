@@ -42,6 +42,7 @@ import com.g2d.studio.item.ItemPropertiesAdapter;
 import com.g2d.studio.item.property.ItemPropertyNode;
 import com.g2d.studio.item.property.ItemPropertySelectDialog;
 
+import com.g2d.studio.rpg.AbilityAdapter;
 import com.g2d.studio.rpg.ItemFormulaEdit;
 import com.g2d.studio.swing.G2DList;
 import com.g2d.studio.swing.G2DListItem;
@@ -196,6 +197,7 @@ public class SkillPropertiesEditor extends JPanel implements ActionListener
 				super(column_type, 
 						skill.getData().getColumnProperties(column), 
 						COLUMN_LEVEL,
+						new AbilityAdapter(),
 						new ItemPropertiesAdapter.ValueRangeAdapter(),
 						new ItemFormulaEdit.ItemFormulaAdapter());
 				super.addColumnFiller(new FillerRangeValue());
