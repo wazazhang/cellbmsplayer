@@ -1,7 +1,6 @@
 package com.g2d.display.particle;
 
 import java.awt.Shape;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
@@ -29,6 +28,8 @@ public interface OriginShape extends Serializable
 	/** 矩形  */
 	public static class Rectangle implements OriginShape
 	{
+		private static final long serialVersionUID = 1L;
+		
 		public float x = -100, y = -100, w = 200, h = 200;
 		
 		@Override
@@ -50,6 +51,8 @@ public interface OriginShape extends Serializable
 	 */
 	public static class Ring implements OriginShape
 	{
+		private static final long serialVersionUID = 1L;
+		
 		/** 内圆半径 */
 		public float radius1 = 50;
 		
