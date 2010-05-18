@@ -28,7 +28,6 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	/** true 如果不在local_bounds内,则忽略事件处理 (包括孩子的) */
 	protected boolean 			ignore_render_without_parent_bounds;
 	
-	transient ReentrantLock		elements_lock = new ReentrantLock();
 	Vector<DisplayObject> 		elements;
 	
 	Queue<DisplayObjectEvent>	events;
@@ -43,7 +42,6 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	
 //	-------------------------------------------------------------
 	public DisplayObjectContainer() {
-		elements_lock = new ReentrantLock();
 		ignore_render_without_parent_bounds = false;
 		elements = new Vector<DisplayObject>();
 		events = new ConcurrentLinkedQueue<DisplayObjectEvent>();
@@ -56,42 +54,38 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	final public void processEvent()
 	{
 		if (events.isEmpty()) return;
-		
-		synchronized(elements_lock)
+		while (!events.isEmpty()) 
 		{
-			while (!events.isEmpty()) 
+			DisplayObjectEvent event = events.poll();
+			
+			switch (event.event_type)
 			{
-				DisplayObjectEvent event = events.poll();
-				
-				switch (event.event_type)
-				{
-				case DisplayObjectEvent.EVENT_SORT:
-					Collections.sort(elements);
-					break;
+			case DisplayObjectEvent.EVENT_SORT:
+				Collections.sort(elements);
+				break;
 
-				case DisplayObjectEvent.EVENT_ADD:
-					elements.add(event.source);
-					event.source.parent = this;
-					event.source.root	= this.root;
-					event.source.onAdded(this);
-					break;
-					
-				case DisplayObjectEvent.EVENT_DELETE:
-					elements.remove(event.source);
-					event.source.onRemoved(this);
-					event.source.parent = null;
-					break;
-					
-				case DisplayObjectEvent.EVENT_MOVE_TOP:
-					elements.remove(event.source);
-					elements.add(event.source);
-					break;
-					
-				case DisplayObjectEvent.EVENT_MOVE_BOT:
-					elements.remove(event.source);
-					elements.insertElementAt(event.source, 0);
-					break;
-				}
+			case DisplayObjectEvent.EVENT_ADD:
+				elements.add(event.source);
+				event.source.parent = this;
+				event.source.root	= this.root;
+				event.source.onAdded(this);
+				break;
+				
+			case DisplayObjectEvent.EVENT_DELETE:
+				elements.remove(event.source);
+				event.source.onRemoved(this);
+				event.source.parent = null;
+				break;
+				
+			case DisplayObjectEvent.EVENT_MOVE_TOP:
+				elements.remove(event.source);
+				elements.add(event.source);
+				break;
+				
+			case DisplayObjectEvent.EVENT_MOVE_BOT:
+				elements.remove(event.source);
+				elements.insertElementAt(event.source, 0);
+				break;
 			}
 		}
 	}
@@ -156,10 +150,8 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	}
 	
 	protected void updateChilds() {
-		synchronized(elements_lock){
-			for (int i=elements.size()-1; i>=0; --i) {
-				elements.elementAt(i).onUpdate(this);
-			}
+		for (int i=elements.size()-1; i>=0; --i) {
+			elements.elementAt(i).onUpdate(this);
 		}
 	}
 	
@@ -185,11 +177,9 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	}
 	
 	protected void renderChilds(Graphics2D g) {
-		synchronized(elements_lock){
-			int size = elements.size();
-			for (int i = 0; i < size; i++) {
-				elements.elementAt(i).onRender(g);
-			}
+		int size = elements.size();
+		for (int i = 0; i < size; i++) {
+			elements.elementAt(i).onRender(g);
 		}
 	}
 	
@@ -284,39 +274,35 @@ public abstract class DisplayObjectContainer extends DisplayObject
 //	-----------------------------------------------------------------------------------------------------------
 	
 	public boolean addChild(DisplayObject child){
-		synchronized(elements_lock){
-			if (child.parent==null) {
-				child.parent = this;
-				child.root = this.getRoot();
-				events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_ADD, child));
-				if (update_thread==null) {
-					processEvent();
-				}
-				if (always_top_element!=null) {
-					events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_MOVE_TOP, always_top_element));
-				}
-				return true;
-			} else {
-				throw new IllegalArgumentException("child already have parent !");
+		if (child.parent==null) {
+			child.parent = this;
+			child.root = this.getRoot();
+			events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_ADD, child));
+			if (update_thread==null) {
+				processEvent();
 			}
+			if (always_top_element!=null) {
+				events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_MOVE_TOP, always_top_element));
+			}
+			return true;
+		} else {
+			throw new IllegalArgumentException("child already have parent !");
 		}
 	}
 	
 	public boolean removeChild(DisplayObject child) {
-		synchronized(elements_lock){
-			if (child.parent == this) {
-				child.parent = null;
-				if (always_top_element == child) {
-					always_top_element = null;
-				}
-				events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_DELETE, child));
-				if (update_thread==null) {
-					processEvent();
-				}
-				return true;
+		if (child.parent == this) {
+			child.parent = null;
+			if (always_top_element == child) {
+				always_top_element = null;
 			}
-			return false;
+			events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_DELETE, child));
+			if (update_thread==null) {
+				processEvent();
+			}
+			return true;
 		}
+		return false;
 	}
 
 	final public boolean addChild(DisplayObject child, boolean immediately){
@@ -336,31 +322,23 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	}
 
 	final public void addChilds(Collection<? extends DisplayObject> childs){
-		synchronized(elements_lock) {
-			for (DisplayObject child : childs) {
-				addChild(child);
-			}
+		for (DisplayObject child : childs) {
+			addChild(child);
 		}
 	}
 	
 	final public void removeChilds(Collection<? extends DisplayObject> childs) {
-		synchronized(elements_lock) {
-			for (DisplayObject child : childs) {
-				removeChild(child);
-			}
+		for (DisplayObject child : childs) {
+			removeChild(child);
 		}
 	}
 	final public void clearChilds() {
-		synchronized(elements_lock) {
-			removeChilds(getChilds());
-		}
+		removeChilds(getChilds());
 	}
 //	-----------------------------------------------------------------------------------------------------------
 
 	final public boolean contains(DisplayObject child) {
-		synchronized(elements_lock) {
-			return elements.contains(child);
-		}
+		return elements.contains(child);
 	}
 	
 	final public int getChildCount() {
@@ -369,7 +347,6 @@ public abstract class DisplayObjectContainer extends DisplayObject
 
 	@SuppressWarnings("unchecked")
 	final public Vector<DisplayObject> getChilds() {
-		synchronized(elements_lock) {
 			Vector<DisplayObject> ret = (Vector<DisplayObject>)(elements.clone());
 			for (DisplayObjectEvent event : events) {
 				if (event.event_type == DisplayObjectEvent.EVENT_ADD) {
@@ -377,7 +354,6 @@ public abstract class DisplayObjectContainer extends DisplayObject
 				}
 			}
 			return ret;
-		}
 	}
 	
 	/**
@@ -388,7 +364,6 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	 */
 	@SuppressWarnings("unchecked")
 	final public<T> Vector<T> getChilds(Class<T> c) {
-		synchronized(elements_lock) {
 			Vector<T> actors = new Vector<T>();
 			for (DisplayObject obj : elements) {
 				if (c.equals(obj.getClass())) {
@@ -403,7 +378,6 @@ public abstract class DisplayObjectContainer extends DisplayObject
 				}
 			}
 			return actors;
-		}
 	}
 	
 	/**
@@ -414,7 +388,6 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	 */
 	@SuppressWarnings("unchecked")
 	final public<T> Vector<T> getChildsSubClass(Class<T> c) {
-		synchronized(elements_lock) {
 			Vector<T> actors = new Vector<T>();
 			for (DisplayObject obj : elements) {
 				if (c.isInstance(obj)){
@@ -429,24 +402,19 @@ public abstract class DisplayObjectContainer extends DisplayObject
 				}
 			}
 			return actors;
-		}
 	}
 	
 	final public DisplayObject getChildAt(int index) {
-		synchronized(elements_lock) {
 			return elements.elementAt(index);
-		}
 	}
 
 	final public DisplayObject findChild(Object object) {
-		synchronized(elements_lock) {
 			for (DisplayObject child : elements) {
 				if (object.equals(child)) {
 					return child;
 				}
 			}
 			return null;
-		}
 	}
 
 	final public int getChildIndex(DisplayObject child) {
