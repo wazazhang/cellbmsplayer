@@ -2,11 +2,12 @@ package com.g2d.display.particle;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 
 public class ParticleData implements Iterable<Layer>, Serializable
 {
+	private static final long serialVersionUID = 1L;
+	
 	final private ArrayList<Layer> layers = new ArrayList<Layer>();
 
 	public ParticleData() {

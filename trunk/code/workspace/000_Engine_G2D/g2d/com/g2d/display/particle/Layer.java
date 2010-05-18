@@ -5,9 +5,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.TreeSet;
-
-import com.g2d.display.particle.affects.Vortex;
 
 /**
  * 包含多个例子的视图
@@ -15,6 +12,8 @@ import com.g2d.display.particle.affects.Vortex;
  */
 public class Layer implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	/** 设置别名 */
 	public String	alias	= "Layer";
 	
@@ -105,6 +104,8 @@ public class Layer implements Serializable
 	
 	public static class TimeLine implements Iterable<TimeNode> , Serializable
 	{
+		private static final long serialVersionUID = 1L;
+		
 		final private TimeNode start	= new TimeNode(0);
 		
 		final private TimeNode end		= new TimeNode(1);
@@ -164,6 +165,8 @@ public class Layer implements Serializable
 	 */
 	public static class TimeNode implements Comparable<TimeNode>, Serializable
 	{
+		private static final long serialVersionUID = 1L;
+		
 		/** 播放位置 */
 		public float 	position;
 		
