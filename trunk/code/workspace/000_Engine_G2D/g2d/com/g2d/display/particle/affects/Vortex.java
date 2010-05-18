@@ -9,6 +9,8 @@ import com.g2d.display.particle.ParticleAffectNode;
 @Property("漩涡")
 public class Vortex implements ParticleAffect {
 
+	private static final long serialVersionUID = 1L;
+	
 	@Property("角度(0~360)")
 	public float angle = 90f;
 	

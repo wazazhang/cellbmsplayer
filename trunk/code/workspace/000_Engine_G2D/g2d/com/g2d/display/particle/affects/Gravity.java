@@ -7,6 +7,8 @@ import com.g2d.display.particle.ParticleAffectNode;
 @Property("引力")
 public class Gravity implements ParticleAffect 
 {
+	private static final long serialVersionUID = 1L;
+	
 	@Property("X方向")
 	public float x = 0;
 	
