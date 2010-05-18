@@ -91,46 +91,50 @@ public class MultiTextLayout
 	 * 改变字符或尺寸的事件
 	 * @author WAZA
 	 */
-	class TextChange
+	class TextChanges
 	{
-		String 				text;
-		AttributedString 	textStyle;
-		int 				width;
+		String 				text	= MultiTextLayout.this.text;
+		AttributedString 	atext 	= MultiTextLayout.this.attr_text;
+		int 				width	= MultiTextLayout.this.width;
+		int					space	= MultiTextLayout.this.space;
 		
-		TextChange(int width)
-		{
-			this.width 		= width;
-			this.text 		= MultiTextLayout.this.text;
-			this.textStyle 	= MultiTextLayout.this.attr_text;
+		TextChanges() {
+		}
+
+		TextChanges(String text) {
+			set(text);
+		}
+
+		TextChanges(AttributedString atext) {
+			set(atext);
 		}
 		
-		TextChange(String text)
-		{
-			this.width 		= MultiTextLayout.this.width;
-			this.text 		= text;
-			this.textStyle	= new AttributedString(encodeChars(text));
-		}
-		
-		TextChange(AttributedString atext)
-		{
-			this.width		= MultiTextLayout.this.width;
-			this.textStyle	= atext;
-			this.text 		= Tools.toString(atext);
-			
-		}
-		
-		void set(int width) {
+		void setWidth(int width) {
 			this.width = width;
+		}
+
+		void setSpace(int space) {
+			this.space = space;
 		}
 
 		void set(String text) {
 			this.text = text;
-			this.textStyle = new AttributedString(encodeChars(text));
+			this.atext = new AttributedString(encodeChars(this.text));
 		}
 
 		void set(AttributedString atext) {
-			this.textStyle = atext;
-			this.text = Tools.toString(atext);
+			this.atext = atext;
+			this.text = Tools.toString(this.atext);
+		}
+		
+		void append(String text) {
+			this.text += text;
+			this.atext = new AttributedString(encodeChars(this.text));
+		}
+		
+		void append(AttributedString atext) {
+			this.atext = Tools.linkAttributedString(this.atext, atext);
+			this.text = Tools.toString(this.atext);
 		}
 	}
 	
@@ -201,7 +205,7 @@ public class MultiTextLayout
 //	----------------------------------------------------------------------------------------------------------------
 //	设置用以改变状态
 	
-	private TextChange 			textChange;
+	private TextChanges			textChange;
 	private String 				inserted_text	= null;
 	private char 				inserted_char	= 0;
 	int							set_caret_position	= -1;
@@ -222,7 +226,7 @@ public class MultiTextLayout
 
 	synchronized public void setIsPassword(boolean isPassword) {
 		is_password = isPassword;
-		if (textChange!=null) {
+		if (textChange != null) {
 			textChange.set(textChange.text);
 		} else {
 			setText(text);
@@ -659,33 +663,19 @@ public class MultiTextLayout
 		if (is_single_line) {
 			text = text.replaceAll("\n", "");
 		}
-		if (textChange!=null){
-			this.text = textChange.text;
-			this.attr_text = textChange.textStyle;
-			textChange = null;
-		}
-		if (!text.equals(this.text)) {
-			if (textChange != null) {
-				textChange.set(text);
-			} else {
-				textChange = new TextChange(text);
-			}
+		if (textChange != null) {
+			textChange.set(text);
+		} else {
+			textChange = new TextChanges(text);
 		}
 	}
 	
 	synchronized public void setText(AttributedString atext)
 	{
 		if (textChange!=null){
-			this.text = textChange.text;
-			this.attr_text = textChange.textStyle;
-			textChange = null;
-		}
-		if (atext!=null && !atext.equals(attr_text)) {
-			if (textChange != null) {
-				textChange.set(atext);
-			} else {
-				textChange = new TextChange(atext);
-			}
+			textChange.set(atext);
+		} else {
+			textChange = new TextChanges(atext);
 		}
 	}
 	
@@ -694,69 +684,72 @@ public class MultiTextLayout
 			text = text.replaceAll("\n", "");
 		}
 		if (textChange != null) {
-			this.text = textChange.text;
-			this.attr_text = textChange.textStyle;
-			textChange = null;
-		}
-		if (this.text != null) {
-			textChange = new TextChange(this.text + text);
+			textChange.append(text);
 		} else {
-			textChange = new TextChange(text);
+			textChange = new TextChanges(this.text + text);
 		}
 	}
 	
 	synchronized public void appendText(AttributedString atext)
 	{
-		if (textChange!=null){
-			this.text		= textChange.text;
-			this.attr_text	= textChange.textStyle;
-			textChange = null;
-		}
-		if (this.attr_text!=null) {
-			textChange = new TextChange(Tools.linkAttributedString(this.attr_text, atext));
+		if (textChange != null) {
+			textChange.append(atext);
 		} else {
-			textChange = new TextChange(atext);
+			textChange = new TextChanges(Tools.linkAttributedString(this.attr_text, atext));
 		}
-		
 	}
 	
 	
 	
 	
-	
-	synchronized public String getText() {
-		if (textChange!=null) {
-			return textChange.text;
-		}
-		return text==null ? "" : text;
-	}
 	
 	synchronized public void setWidth(int width) {
 		if (this.width != width) {
 			if (textChange != null) {
-				textChange.set(width);
+				textChange.setWidth(width);
 			} else {
-				textChange = new TextChange(width);
+				textChange = new TextChanges();
+				textChange.setWidth(width);
 			}
 		}
 	}
 	
 	synchronized public void setSpace(int space) {
-		this.space = space;
+		if (this.space != space) {
+			if (textChange != null) {
+				textChange.setSpace(space);
+			} else {
+				textChange = new TextChanges();
+				textChange.setSpace(space);
+			}
+		}
 	}
 	
 //	----------------------------------------------------------------------------------------------------------------
+
+	synchronized public String getText() {
+		if (textChange != null) {
+			return textChange.text;
+		}
+		return text == null ? "" : text;
+	}
 	
 	synchronized public int getWidth() {
+		if (textChange != null) {
+			return textChange.width;
+		}
 		return width;
+	}
+
+	synchronized public int getSpace() {
+		if (textChange != null) {
+			return textChange.space;
+		}
+		return space;
 	}
 	
 	synchronized public int getHeight() {
 		return height;
-	}
-	
-	synchronized public int getSpace() {
-		return space;
 	}
 	
 //	----------------------------------------------------------------------------------------------------------------
@@ -823,8 +816,8 @@ public class MultiTextLayout
 			}
 		}
 		// try change text
-		if (textChange!=null){
-			resetText(g, textChange.text, textChange.textStyle, textChange.width) ;
+		if (textChange != null) {
+			resetText(g, textChange);
 			textChange = null;
 			// update caret
 			if (!is_read_only) {
@@ -843,18 +836,21 @@ public class MultiTextLayout
 		}
 	}
 	
-	private void resetText(Graphics2D g, String text, AttributedString atext, int width) 
+	private void resetText(Graphics2D g, TextChanges change)
 	{
-		this.text		= text;
-		this.attr_text	= atext;
-		this.width		= width;
-		this.height		= space;
-		this.textlines.clear();
-
-		if (text.length()>0)
+		if (!this.text.equals(change.text) || this.width != change.width || this.space != change.space)
 		{
+			this.text		= change.text;
+			this.attr_text	= change.atext;
+			this.width		= change.width;
+			this.space		= change.space;
+			
+			this.height		= space;
+			this.textlines.clear();
+	
+			if (text.length()>0)
 			{
-				AttributedCharacterIterator it = atext.getIterator();
+				AttributedCharacterIterator it = change.atext.getIterator();
 				attr_text = new AttributedString(encodeChars(text));
 				int i=0, e=1;
 				for (char c = it.first(); c != CharacterIterator.DONE; c = it.next()) 
@@ -874,44 +870,46 @@ public class MultiTextLayout
 					i++;
 					e++;
 				}
-			}
-			// lines
-			if (!is_single_line)
-			{
-				LineBreakMeasurer textMeasurer = new LineBreakMeasurer(
-						attr_text.getIterator(), 
-						g.getFontRenderContext());
-		
-				while (textMeasurer.getPosition()>=0 && textMeasurer.getPosition()<text.length())
+				
+				// lines
+				if (!is_single_line)
 				{
-					TextLayout layout = null;
-					int limit = text.indexOf('\n', textMeasurer.getPosition());
-					if (limit >= textMeasurer.getPosition()) {
-						layout = textMeasurer.nextLayout(width, limit+1, false);
+					LineBreakMeasurer textMeasurer = new LineBreakMeasurer(
+							attr_text.getIterator(), 
+							g.getFontRenderContext());
+			
+					while (textMeasurer.getPosition()>=0 && textMeasurer.getPosition()<text.length())
+					{
+						TextLayout layout = null;
+						int limit = text.indexOf('\n', textMeasurer.getPosition());
+						if (limit >= textMeasurer.getPosition()) {
+							layout = textMeasurer.nextLayout(width, limit+1, false);
+						}
+						else {
+							layout = textMeasurer.nextLayout(width);
+						}
+						
+						TextLine line = new TextLine(layout, textlines.size());
+						line.x = 0;
+						line.y = height;
+						height += line.height + space;
+						textlines.add(line);
+	
+						//System.out.println(line.x+","+line.y+","+line.width+","+line.height);
 					}
-					else {
-						layout = textMeasurer.nextLayout(width);
-					}
-					
+				}
+				else
+				{
+					TextLayout layout = new TextLayout(attr_text.getIterator(), g.getFontRenderContext());
 					TextLine line = new TextLine(layout, textlines.size());
 					line.x = 0;
 					line.y = height;
-					height += line.height + space;
-					textlines.add(line);
-
-					//System.out.println(line.x+","+line.y+","+line.width+","+line.height);
+					this.height += line.height + space;
+					this.width = line.width;
+					this.textlines.add(line);
 				}
 			}
-			else
-			{
-				TextLayout layout = new TextLayout(attr_text.getIterator(), g.getFontRenderContext());
-				TextLine line = new TextLine(layout, textlines.size());
-				line.x = 0;
-				line.y = height;
-				this.height += line.height + space;
-				this.width = line.width;
-				this.textlines.add(line);
-			}
+			
 		}
 	}
 	
