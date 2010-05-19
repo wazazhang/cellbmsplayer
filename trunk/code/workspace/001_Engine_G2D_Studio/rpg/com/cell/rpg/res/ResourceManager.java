@@ -10,6 +10,7 @@ import com.cell.CIO;
 import com.cell.CObject;
 import com.cell.CUtil;
 import com.cell.gfx.IImage;
+import com.cell.gfx.game.CSprite;
 import com.cell.j2se.CStorage;
 import com.cell.rpg.RPGObject;
 import com.cell.rpg.io.RPGObjectMap;
@@ -455,6 +456,21 @@ public abstract class ResourceManager extends CellSetResourceManager
 		}
 		return null;
 	}
+	
+	public CSprite getEffectSprite(String cpj_project_name, String cpj_sprite_name) {
+		try
+		{
+			SpriteSet					effect_set	= getEffectSet(cpj_project_name, cpj_sprite_name);
+			CellSetResource				resource 	= effect_set.getSetResource(this);
+			CellSetResource.SpriteSet 	spr_set 	= effect_set.getSetObject(this);
+			CSprite						sprite		= resource.getSprite(spr_set);
+			return sprite;
+		} catch (Exception err) {
+			err.printStackTrace();
+		}
+		return null;
+	}
+	
 	
 //	--------------------------------------------------------------------------------------------------------------------
 //	Templates
