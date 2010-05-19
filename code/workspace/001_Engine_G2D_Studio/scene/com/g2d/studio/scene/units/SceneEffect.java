@@ -13,6 +13,7 @@ import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.JList;
+import javax.swing.SpinnerNumberModel;
 
 import com.cell.rpg.particle.ParticleAppearanceType.DisplayNodeImage;
 import com.cell.rpg.particle.ParticleAppearanceType.DisplayNodeSprite;
@@ -31,7 +32,10 @@ import com.g2d.editor.DisplayObjectEditor;
 import com.g2d.game.rpg.Unit;
 import com.g2d.studio.Studio;
 import com.g2d.studio.Version;
+import com.g2d.studio.cpj.CPJIndex;
+import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.cpj.CPJEffectImageSelectDialog.TileImage;
+import com.g2d.studio.cpj.entity.CPJSprite;
 import com.g2d.studio.gameedit.dynamic.DEffect;
 import com.g2d.studio.quest.QuestCellEditAdapter;
 import com.g2d.studio.res.Res;
@@ -52,7 +56,8 @@ public class SceneEffect extends com.g2d.game.rpg.Unit implements SceneUnitTag<E
 	Rectangle				snap_shape = new Rectangle(-1, -2, 2, 2);
 
 	ParticleDisplay			particles;
-	
+	Sprite 					particle_layers = new Sprite();
+
 	public int 				high;
 	
 //	--------------------------------------------------------------------------------------------------------
@@ -105,6 +110,7 @@ public class SceneEffect extends com.g2d.game.rpg.Unit implements SceneUnitTag<E
 		this.enable_input	= true;
 		this.priority 		= Integer.MAX_VALUE / 2;
 		super.added(parent);
+		addChild(particle_layers);
 	}
 
 //	--------------------------------------------------------------------------------------------------------
@@ -138,39 +144,55 @@ public class SceneEffect extends com.g2d.game.rpg.Unit implements SceneUnitTag<E
 
 //	--------------------------------------------------------------------------------------------------------
 	
+	private ParticleDisplay resetParticles()
+	{
+		try{
+			DEffect deffect = Studio.getInstance().getObjectManager().getObject(DEffect.class, effect.template_effect_id);
+			for (Layer layer : deffect.getData().particles) {
+				if (layer.appearance instanceof DisplayNodeImage) {
+					DisplayNodeImage image = (DisplayNodeImage)layer.appearance;
+					if (image.image == null) {
+						TileImage tile_image = new TileImage(
+								image.cpj_project_name, 
+								image.cpj_sprite_name, 
+								image.cpj_image_id
+								);
+						image.image	= tile_image.getEffectImage();
+					}
+				}
+				else if (layer.appearance instanceof DisplayNodeSprite) {
+					DisplayNodeSprite sprite = (DisplayNodeSprite)layer.appearance;
+					if (sprite.sprite == null) {
+						CPJIndex<CPJSprite> index = Studio.getInstance().getCPJResourceManager().getNode(
+								CPJResourceType.EFFECT, 
+								sprite.cpj_project_name, 
+								sprite.cpj_sprite_name);
+						if (index != null) {
+							CPJSprite spr = Studio.getInstance().getCPJResourceManager().getNode(index);
+							if (spr != null) {
+								sprite.sprite = spr.getDisplayObject().cspr;
+							}
+						}
+					}
+				}
+			}
+			ParticleDisplay particles = new ParticleDisplay(deffect.getData().particles);
+			particles.setLocation(0, -high);
+			particle_layers.addChild(particles);
+			return particles;
+		} catch (Exception err) {
+			err.printStackTrace();
+		}
+		return null;
+	}
+	
 	@Override
 	public void update() 
 	{
 		super.update();
 
 		if (particles == null) {
-			try{
-				DEffect deffect = Studio.getInstance().getObjectManager().getObject(DEffect.class, effect.template_effect_id);
-				for (Layer layer : deffect.getData().particles) {
-					if (layer.appearance instanceof DisplayNodeImage) {
-						DisplayNodeImage image = (DisplayNodeImage)layer.appearance;
-						if (image.image == null) {
-							TileImage tile_image = new TileImage(
-									image.cpj_project_name, 
-									image.cpj_sprite_name, 
-									image.cpj_image_id
-									);
-							image.image	= tile_image.getEffectImage();
-						}
-					}
-					else if (layer.appearance instanceof DisplayNodeSprite) {
-						DisplayNodeSprite sprite = (DisplayNodeSprite)layer.appearance;
-						
-					}
-				}
-				this.particles = new ParticleDisplay(deffect.getData().particles);
-				this.particles.setLocation(0, -high);
-				Sprite layers = new Sprite();
-				layers.addChild(this.particles);
-				this.addChild(layers);
-			} catch (Exception err) {
-				err.printStackTrace();
-			}
+			particles = resetParticles();
 		} else {
 			particles.setLocation(0, -high);
 		}
@@ -284,5 +306,12 @@ public class SceneEffect extends com.g2d.game.rpg.Unit implements SceneUnitTag<E
 	@Override
 	public String getListName() {
 		return getID() + "";
+	}
+	@Override
+	public void onHideFrom() {
+		if (particles != null) {
+			particle_layers.removeChild(particles);
+		}
+		particles = null;
 	}
 }

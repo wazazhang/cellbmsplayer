@@ -280,6 +280,9 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 			scene_resource.initAllStreamImages();
 		} else {
 			display_object_panel.stop();
+			for (SceneUnitTag<?> t : scene_container.getWorld().getChildsSubClass(SceneUnitTag.class)) {
+				t.onHideFrom();
+			}
 			scene_resource.destoryAllStreamImages();
 			if (scene_mini_map != null){
 				scene_mini_map.killSnapshot();

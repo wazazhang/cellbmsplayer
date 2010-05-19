@@ -307,4 +307,6 @@ public class SceneRegion extends com.g2d.game.rpg.Unit implements SceneUnitTag<R
 	public String getListName() {
 		return getID() + "";
 	}
+	@Override
+	public void onHideFrom() {}
 }

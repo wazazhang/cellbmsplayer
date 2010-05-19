@@ -34,5 +34,8 @@ public interface SceneUnitTag<T extends SceneUnit> extends G2DListItem
 	public Menu 					getEditMenu();	
 	public DisplayObjectEditor<?>	getEditorForm();
 
-	
+	/**
+	 * 当编辑器窗口被关闭时
+	 */
+	public void				onHideFrom();
 }

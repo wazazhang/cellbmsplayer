@@ -351,4 +351,7 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 	public String getListName() {
 		return getID() + "";
 	}
+
+	@Override
+	public void onHideFrom() {}
 }
