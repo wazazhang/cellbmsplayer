@@ -448,7 +448,9 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 								appearance.sprite			= spr.getDisplayObject().cspr;
 								sprite_anim_v.setModel(new SpinnerNumberModel(0, 0, appearance.sprite.getAnimateCount()-1, 1));
 								sprite_anim_v.setValue(appearance.sprite_anim);
-								sprite_anim_max.setText("最大"+(appearance.sprite.getAnimateCount()-1)+" ");
+								sprite_anim_max.setText(
+										" 动画数:"+(appearance.sprite.getAnimateCount()-1)+
+										" 总共帧数:" + appearance.sprite.getFrameCount(appearance.sprite_anim));
 								image_view.setIcon(Tools.createIcon(spr.getSnapShoot()));
 							}
 						}
