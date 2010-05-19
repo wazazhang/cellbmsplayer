@@ -17,25 +17,8 @@ public class Layer implements Serializable
 	/** 设置别名 */
 	public String	alias	= "Layer";
 	
-	/** CPJ工程名 */
-	public String	cpj_project_name;
-	
-	/** CPJ图片组名*/
-	public String	cpj_sprite_name;
-	
-	/** CPJ图片组图片编号*/
-	public int		cpj_image_id;
 
-	transient 
-	public BufferedImage image;
-
-	@Override
-	public String toString() {
-		if (alias!=null) {
-			return alias;
-		}
-		return super.toString();
-	}
+	public ParticleAppearance appearance;
 	
 //	------------------------------------------------------------------------------------------------------------------
 //	Scene
@@ -101,7 +84,17 @@ public class Layer implements Serializable
 	final public ArrayList<ParticleAffect> affects = new ArrayList<ParticleAffect>();
 	
 //	------------------------------------------------------------------------------------------------------------------
+
+	@Override
+	public String toString() {
+		if (alias!=null) {
+			return alias;
+		}
+		return super.toString();
+	}
 	
+//	------------------------------------------------------------------------------------------------------------------
+
 	public static class TimeLine implements Iterable<TimeNode> , Serializable
 	{
 		private static final long serialVersionUID = 1L;

@@ -14,6 +14,8 @@ import java.util.Vector;
 import javax.swing.ImageIcon;
 import javax.swing.JList;
 
+import com.cell.rpg.particle.ParticleAppearanceType.DisplayNodeImage;
+import com.cell.rpg.particle.ParticleAppearanceType.DisplayNodeSprite;
 import com.cell.rpg.quest.ability.QuestAccepter;
 import com.cell.rpg.quest.ability.QuestPublisher;
 import com.cell.rpg.scene.Effect;
@@ -145,13 +147,20 @@ public class SceneEffect extends com.g2d.game.rpg.Unit implements SceneUnitTag<E
 			try{
 				DEffect deffect = Studio.getInstance().getObjectManager().getObject(DEffect.class, effect.template_effect_id);
 				for (Layer layer : deffect.getData().particles) {
-					if (layer.image == null) {
-						TileImage tile_image = new TileImage(
-								layer.cpj_project_name, 
-								layer.cpj_sprite_name, 
-								layer.cpj_image_id
-								);
-						layer.image	= tile_image.getEffectImage();
+					if (layer.appearance instanceof DisplayNodeImage) {
+						DisplayNodeImage image = (DisplayNodeImage)layer.appearance;
+						if (image.image == null) {
+							TileImage tile_image = new TileImage(
+									image.cpj_project_name, 
+									image.cpj_sprite_name, 
+									image.cpj_image_id
+									);
+							image.image	= tile_image.getEffectImage();
+						}
+					}
+					else if (layer.appearance instanceof DisplayNodeSprite) {
+						DisplayNodeSprite sprite = (DisplayNodeSprite)layer.appearance;
+						
 					}
 				}
 				this.particles = new ParticleDisplay(deffect.getData().particles);
