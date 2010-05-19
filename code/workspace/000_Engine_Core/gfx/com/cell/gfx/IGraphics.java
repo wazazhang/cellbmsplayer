@@ -3,6 +3,10 @@ package com.cell.gfx;
 
 public interface IGraphics
 {
+	final static public double ANGLE_90		= Math.PI / 2;
+	final static public double ANGLE_270	= Math.PI * 3 / 2;
+	
+	
     public static final int TRANS_NONE = 0;
     public static final int TRANS_ROT90 = 5;
     public static final int TRANS_ROT180 = 3;

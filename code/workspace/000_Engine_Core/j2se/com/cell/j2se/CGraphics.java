@@ -22,9 +22,6 @@ import com.cell.gfx.IImage;
 
 public class CGraphics implements IGraphics 
 {
-	
-	
-	
 	public static Font DefaultFont;
 
 	protected int	font_t;
@@ -169,9 +166,6 @@ public class CGraphics implements IGraphics
 		return 0;
 	}
 
-	final public double ANGLE_90	= Math.PI / 2;
-	final public double ANGLE_270	= Math.PI * 3 / 2;
-	
 	final public void transform(int transform, int width, int height)
 	{
 		switch (transform) 

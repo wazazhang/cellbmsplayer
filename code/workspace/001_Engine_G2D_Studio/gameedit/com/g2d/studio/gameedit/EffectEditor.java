@@ -16,6 +16,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Hashtable;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -41,6 +42,9 @@ import javax.swing.event.ListSelectionListener;
 import com.cell.CIO;
 import com.cell.CUtil;
 import com.cell.reflect.Parser;
+import com.cell.rpg.particle.ParticleAppearanceType;
+import com.cell.rpg.particle.ParticleAppearanceType.DisplayNodeImage;
+import com.cell.rpg.particle.ParticleAppearanceType.DisplayNodeSprite;
 import com.cell.rpg.template.TEffect;
 import com.g2d.Tools;
 import com.g2d.annotation.Property;
@@ -52,10 +56,16 @@ import com.g2d.display.particle.affects.Gravity;
 import com.g2d.display.particle.affects.Vortex;
 import com.g2d.display.particle.affects.Wander;
 import com.g2d.display.particle.affects.Wind;
+import com.g2d.editor.property.ListEnumEdit;
 import com.g2d.editor.property.ObjectPropertyPanel;
+import com.g2d.studio.Studio;
 import com.g2d.studio.cpj.CPJEffectImageSelectDialog;
+import com.g2d.studio.cpj.CPJIndex;
+import com.g2d.studio.cpj.CPJResourceSelectDialog;
+import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.cpj.CPJEffectImageSelectDialog.TileImage;
 import com.g2d.studio.cpj.entity.CPJImages;
+import com.g2d.studio.cpj.entity.CPJSprite;
 import com.g2d.studio.particles.ParticleViewer;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.swing.G2DList;
@@ -63,6 +73,7 @@ import com.g2d.studio.swing.G2DListItem;
 import com.g2d.studio.swing.G2DListSelectDialog;
 
 
+@SuppressWarnings("serial")
 public class EffectEditor extends JSplitPane implements ActionListener, ListSelectionListener
 {
 	final TEffect effect;
@@ -270,60 +281,182 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 		}
 		
 //		-------------------------------------------------------------------------------------------------------------------------------
-
+		
 		class PageAppearance extends PropertyPage implements ActionListener
 		{
-			TileImage 		tile_image;
-			BufferedImage 	tile_snap;
+			ListEnumEdit<ParticleAppearanceType> 
+			type_list = new ListEnumEdit<ParticleAppearanceType>(ParticleAppearanceType.class);
 			
-			JButton		image_brwoser_btn		= new JButton("浏览图片");
-			JLabel 		image_view				= new JLabel();
+			Hashtable<ParticleAppearanceType, PropertyPage> 
+			panels = new Hashtable<ParticleAppearanceType, PropertyPage>();
+			
+			JScrollPane center = new JScrollPane(new JPanel());
 			
 			public PageAppearance() 
 			{
 				super.setLayout(new BorderLayout());
 				
-				super.add(image_brwoser_btn, BorderLayout.NORTH);
-				super.add(image_view, BorderLayout.CENTER);
+				panels.put(ParticleAppearanceType.IMAGE, new AppearanceImage());
+				panels.put(ParticleAppearanceType.SPRITE, new AppearanceSprite());
+
+				JPanel top = new JPanel(new BorderLayout());
+				top.add(new JLabel("选择外观类型"), BorderLayout.WEST);
+				top.add(type_list, BorderLayout.CENTER);
+
+				type_list.addActionListener(this);
+				type_list.setValue(ParticleAppearanceType.IMAGE);
 				
-				image_brwoser_btn.addActionListener(this);
+				this.add(top, BorderLayout.NORTH);
+				this.add(center, BorderLayout.CENTER);
 			}
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				TileImage ret = new CPJEffectImageSelectDialog(this).showDialog();
-				if (ret != null) {
-					tile_image	= ret;
-					tile_snap	= tile_image.getEffectImage();
-					if (tile_snap!=null) {
-						layer.image = tile_snap;
-						image_view.setIcon(Tools.createIcon(tile_snap));
-					}
-				} else {
-//					JOptionPane.showMessageDialog(this, "图片未选择。");
+				PropertyPage page = panels.get(type_list.getValue());
+				if (page != null) {
+					center.setViewportView(page);
 				}
 			}
 			
 			@Override
 			void getData(Layer layer) {
-				if (tile_image!=null) {
-					layer.cpj_project_name	= tile_image.parent_name;
-					layer.cpj_sprite_name	= tile_image.sprite_name;
-					layer.cpj_image_id		= tile_image.index;
-					layer.image				= tile_snap;
+				PropertyPage page = panels.get(type_list.getValue());
+				if (page != null) {
+					page.getData(layer);
 				}
 			}
+			
 			@Override
 			void setData(Layer layer) {
-				tile_image = new TileImage(
-						layer.cpj_project_name, 
-						layer.cpj_sprite_name, 
-						layer.cpj_image_id
-						);
-				tile_snap	= tile_image.getEffectImage();
-				if (tile_snap!=null) {
-					image_view.setIcon(Tools.createIcon(tile_snap));
+				PropertyPage page = panels.get(type_list.getValue());
+				if (page != null) {
+					page.getData(layer);
 				}
+			}
+			
+			
+			class AppearanceImage extends PropertyPage implements ActionListener
+			{
+				DisplayNodeImage	appearance;				
+				JButton				image_brwoser_btn	= new JButton("浏览图片");
+				JLabel 				image_view			= new JLabel();
+				
+				public AppearanceImage() 
+				{
+					super.setLayout(new BorderLayout());
+					super.add(image_brwoser_btn, BorderLayout.NORTH);
+					super.add(image_view, BorderLayout.CENTER);
+					image_brwoser_btn.addActionListener(this);				
+				}
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					TileImage ret = new CPJEffectImageSelectDialog(this).showDialog();
+					if (ret != null) {
+						appearance			= new DisplayNodeImage();
+						appearance.image	= ret.getEffectImage();
+						if (appearance.image != null) {
+							image_view.setIcon(Tools.createIcon(appearance.image));
+						}
+					}
+				}
+
+				void getData(Layer layer) {
+					if (appearance != null) {
+						layer.appearance = appearance;
+					}
+				}
+
+				void setData(Layer layer) {
+					if (layer.appearance instanceof DisplayNodeImage) {
+						appearance = (DisplayNodeImage) layer.appearance;
+						TileImage ret = new TileImage(
+								appearance.cpj_project_name,
+								appearance.cpj_sprite_name,
+								appearance.cpj_image_id);
+						appearance.image = ret.getEffectImage();
+						if (appearance.image != null) {
+							image_view.setIcon(Tools.createIcon(appearance.image));
+						}
+					}
+				}
+				
+				
+				
+			}
+			
+			
+			class AppearanceSprite extends PropertyPage implements ActionListener
+			{
+				DisplayNodeSprite	appearance;
+				
+				JButton				image_brwoser_btn	= new JButton("浏览精灵");
+				JLabel 				image_view			= new JLabel();
+				
+				JLabel				sprite_anim		= new JLabel("动画号");
+				JSpinner			sprite_anim_v 	= new JSpinner(new SpinnerNumberModel(0, 0, 0, 1));
+				JLabel				sprite_anim_max	= new JLabel("");
+				
+				public AppearanceSprite() 
+				{
+					super.setLayout(new BorderLayout());
+					super.add(image_brwoser_btn, BorderLayout.NORTH);
+					super.add(image_view, BorderLayout.CENTER);
+					JPanel south = new JPanel(new BorderLayout());
+					south.add(sprite_anim, BorderLayout.WEST);
+					south.add(sprite_anim_v, BorderLayout.CENTER);
+					south.add(sprite_anim_max, BorderLayout.EAST);
+					super.add(south, BorderLayout.SOUTH);
+					
+					image_brwoser_btn.addActionListener(this);				
+				}
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					CPJSprite spr = new CPJResourceSelectDialog<CPJSprite>(this, CPJResourceType.EFFECT).showDialog();
+					if (spr != null) {
+						if (appearance == null) {
+							appearance = new DisplayNodeSprite();
+						}
+						appearance.cpj_project_name	= spr.parent.name;
+						appearance.cpj_sprite_name	= spr.name;
+						appearance.sprite			= spr.getDisplayObject().cspr;
+						sprite_anim_v.setModel(new SpinnerNumberModel(0, 0, appearance.sprite.getAnimateCount()-1, 1));
+						sprite_anim_v.setValue(0);
+						sprite_anim_max.setText("最大"+(appearance.sprite.getAnimateCount()-1)+" ");
+						image_view.setIcon(Tools.createIcon(spr.getSnapShoot()));
+					}
+				}
+
+				void getData(Layer layer) {
+					if (appearance != null) {
+						appearance.sprite_anim = (Integer)(sprite_anim_v.getValue());
+						layer.appearance = appearance;
+					}
+				}
+
+				void setData(Layer layer) {
+					if (layer.appearance instanceof DisplayNodeSprite) {
+						appearance = (DisplayNodeSprite) layer.appearance;
+						CPJIndex<CPJSprite> index = Studio.getInstance().getCPJResourceManager().getNode(
+								CPJResourceType.EFFECT, 
+								appearance.cpj_project_name, 
+								appearance.cpj_sprite_name);
+						if (index != null) {
+							CPJSprite spr = Studio.getInstance().getCPJResourceManager().getNode(index);
+							if (spr != null) {
+								appearance.sprite			= spr.getDisplayObject().cspr;
+								sprite_anim_v.setModel(new SpinnerNumberModel(0, 0, appearance.sprite.getAnimateCount()-1, 1));
+								sprite_anim_v.setValue(appearance.sprite_anim);
+								sprite_anim_max.setText("最大"+(appearance.sprite.getAnimateCount()-1)+" ");
+								image_view.setIcon(Tools.createIcon(spr.getSnapShoot()));
+							}
+						}
+					}
+				}
+				
+				
+				
 			}
 		}
 //		-------------------------------------------------------------------------------------------------------------------------------
