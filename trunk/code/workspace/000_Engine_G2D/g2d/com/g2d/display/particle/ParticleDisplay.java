@@ -243,7 +243,7 @@ public class ParticleDisplay extends com.g2d.display.particle.ParticleSystem
 			setAlpha(g, tl_alpha);
 
 			if (appearance != null) {
-				appearance.render(g);
+				appearance.render(g, layer.layer);
 			} else {
 				g.setColor(tl_color);
 				g.drawArc(-2, -2, 4, 4, 0, 360);

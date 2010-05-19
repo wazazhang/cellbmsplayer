@@ -276,4 +276,6 @@ public class SceneImmutable extends SceneSprite implements SceneUnitTag<Immutabl
 	public String getListName() {
 		return getID() + "";
 	}
+	@Override
+	public void onHideFrom() {}
 }

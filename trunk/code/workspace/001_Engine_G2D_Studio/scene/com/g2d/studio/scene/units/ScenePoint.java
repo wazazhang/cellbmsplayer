@@ -307,5 +307,7 @@ public class ScenePoint extends com.g2d.game.rpg.Unit implements SceneUnitTag<Po
 	public String getListName() {
 		return getID() + "";
 	}
+	@Override
+	public void onHideFrom() {}
 	
 }

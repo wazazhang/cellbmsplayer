@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import com.cell.CMath;
 import com.cell.gfx.game.CSprite;
 import com.cell.j2se.CGraphicsImage;
+import com.g2d.display.particle.Layer;
 import com.g2d.display.particle.ParticleAppearance;
 
 public enum ParticleAppearanceType
@@ -50,7 +51,7 @@ public enum ParticleAppearanceType
 		}
 		
 		@Override
-		public void render(Graphics2D g) {
+		public void render(Graphics2D g, Layer layer) {
 			if (image != null) {
 				g.drawImage(image, -image.getWidth() >> 1, -image.getHeight() >> 1, null);
 			} else {
@@ -73,16 +74,14 @@ public enum ParticleAppearanceType
 		/** 精灵动画号 */
 		public int		sprite_anim;
 		
+		transient 
+		public CSprite	sprite;
 		
-		transient public CSprite			sprite;
-		
-		
-		transient private int				st_current_timer;
-		transient private DisplayNodeSprite st_orginal;
+		transient
+		private int		st_current_timer;
 		
 		public DisplayNodeSprite cloneDisplay() {
 			DisplayNodeSprite ret = new DisplayNodeSprite();
-			ret.st_orginal			= this;
 			ret.st_current_timer 	= st_current_timer;
 			ret.sprite_anim 		= sprite_anim;
 			ret.sprite 				= sprite;
@@ -90,10 +89,8 @@ public enum ParticleAppearanceType
 		}
 		
 		@Override
-		public void render(Graphics2D g) {
-			if (st_orginal.sprite != null) {
-				CSprite sprite		= st_orginal.sprite;
-				int		sprite_anim	= st_orginal.sprite_anim;
+		public void render(Graphics2D g, Layer layer) {
+			if (sprite != null) {
 				CGraphicsImage cg = new CGraphicsImage(g);
 				int anim = CMath.cycNum(sprite_anim, 0, sprite.getAnimateCount());
 				int fram = CMath.cycNum(st_current_timer, 0, sprite.getFrameCount(anim));
