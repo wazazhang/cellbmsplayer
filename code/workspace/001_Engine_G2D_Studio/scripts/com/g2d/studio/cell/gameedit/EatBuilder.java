@@ -10,6 +10,7 @@ import java.util.Map;
 
 import com.cell.CIO;
 import com.cell.CUtil;
+import com.cell.gfx.IGraphics;
 import com.cell.io.CFile;
 import com.cell.j2se.CAppBridge;
 import com.cell.j2se.CImage;
@@ -209,6 +210,10 @@ public class EatBuilder extends Builder
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		}
+		
+		@Override
+		protected void drawLoading(IGraphics g, int x, int y, int w, int h) {
 		}
 		
 		protected boolean loadSetImages() {
