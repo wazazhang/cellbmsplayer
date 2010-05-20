@@ -162,14 +162,14 @@ public class ServerImpl extends AbstractServer
 
 	public void sessionOpened(IoSession session) throws Exception {
 		log.debug("sessionOpened : " + session);
+		ClientSessionImpl client = new ClientSessionImpl(session, this);
 		session_rw_lock.writeLock().lock();
 		try{
-			ClientSessionImpl client = new ClientSessionImpl(session, this);
 			session.setAttribute(SessionAttributeKey.CLIENT_SESSION, client);
-			client.setListener(SrvListener.connected(client));
 		} finally {
 			session_rw_lock.writeLock().unlock();
 		}
+		client.setListener(SrvListener.connected(client));
 	}
 	
 	public void sessionClosed(IoSession session) throws Exception {
