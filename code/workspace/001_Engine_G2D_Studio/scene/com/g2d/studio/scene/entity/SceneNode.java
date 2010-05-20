@@ -73,10 +73,11 @@ final public class SceneNode extends DynamicNode<Scene>
 	protected ImageIcon createIcon() {
 		if (getWorldDisplay()!=null) {
 			ImageIcon ico = getWorldDisplay().getIcon(false);
-			return Tools.createIcon(Tools.combianImage(60, 40, ico.getImage()));
-		} else {
-			return null;
+			if (ico != null) {
+				return Tools.createIcon(Tools.combianImage(60, 40, ico.getImage()));
+			}
 		}
+		return null;
 	}
 	
 	public CPJWorld getWorldDisplay() {

@@ -49,15 +49,6 @@ public class CPJWorld extends CPJObject<WorldSet>
 				System.err.println(err.getMessage());
 			}
 		}
-		if (snapshoot==null) {
-			try{
-				snapshoot = Tools.readImage(parent.getCPJDir()+"/jpg.jpg");
-				float rate = 80f / (float)snapshoot.getWidth();
-				snapshoot = Tools.combianImage(80, (int)(snapshoot.getHeight()*rate), snapshoot);
-			}catch(Exception err){
-				System.err.println(err.getMessage());
-			}
-		}
 		return snapshoot;
 	}
 
