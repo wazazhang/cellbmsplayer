@@ -24,6 +24,8 @@ public class DisplayObjectPanel extends JPanel implements Runnable, ComponentLis
 {
 	private static final long serialVersionUID = 1L;
 	
+	public Color back_color = Color.GREEN;
+	
 	final SimpleCanvasNoInternal canvas = new SimpleCanvasNoInternal(100, 100);
 	ReentrantLock service_lock = new ReentrantLock();
 	Thread service;
@@ -115,7 +117,7 @@ public class DisplayObjectPanel extends JPanel implements Runnable, ComponentLis
 		
 		@Override
 		public void render(Graphics2D g) {
-			g.setColor(Color.GREEN);
+			g.setColor(back_color);
 			g.fill(local_bounds);
 		}
 		
