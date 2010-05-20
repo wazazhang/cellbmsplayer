@@ -2,35 +2,64 @@ package com.cell.reflect;
 
 public class Parser 
 {
+	final public static String PERFIX_RADIX_16 = "0x";
+	
+	@SuppressWarnings("unchecked")
 	public static <T> T stringToObject(String str, Class<T> return_type) {
 		try {
 			// 基础类型
-			if (return_type.equals(Byte.class) || return_type.equals(byte.class)) {
+			if (return_type.equals(Byte.class) || 
+				return_type.equals(byte.class)) {
+				if (str.startsWith(PERFIX_RADIX_16)) {
+					return (T)(new Byte(Byte.parseByte(str, 16)));
+				}
 				return (T)(new Byte(str));
 			} 
-			if (return_type.equals(Boolean.class) || return_type.equals(boolean.class)) {
-				return (T)(new Boolean(str));
-			} 
-			if (return_type.equals(Short.class) || return_type.equals(short.class)) {
+			if (return_type.equals(Short.class) ||
+				return_type.equals(short.class)) {
+				if (str.startsWith(PERFIX_RADIX_16)) {
+					return (T)(new Short(Short.parseShort(str, 16)));
+				}
 				return (T)(new Short(str));
 			} 
-			if (return_type.equals(Character.class) || return_type.equals(char.class)) {
-				return (T)(new Character(str.charAt(0)));
-			} 
-			if (return_type.equals(Integer.class) || return_type.equals(int.class)) {
+			if (return_type.equals(Integer.class) || 
+				return_type.equals(int.class)) {
+				if (str.startsWith(PERFIX_RADIX_16)) {
+					return (T)(new Integer(Integer.parseInt(str, 16)));
+				}
 				return (T)(new Integer(str));
 			} 
-			if (return_type.equals(Long.class) || return_type.equals(long.class)) {
+			if (return_type.equals(Long.class) || 
+				return_type.equals(long.class)) {
+				if (str.startsWith(PERFIX_RADIX_16)) {
+					return (T)(new Long(Long.parseLong(str, 16)));
+				}
 				return (T)(new Long(str));
 			} 
-			if (return_type.equals(Float.class) || return_type.equals(float.class)) {
+			
+			if (return_type.equals(Float.class) || 
+				return_type.equals(float.class)) {
 				return (T)(new Float(str));
 			} 
-			if (return_type.equals(Double.class) || return_type.equals(double.class)) {
+			if (return_type.equals(Double.class) ||
+				return_type.equals(double.class)) {
 				return (T)(new Double(str));
 			}
+
+			// char
+			if (return_type.equals(Character.class) || 
+				return_type.equals(char.class)) {
+				return (T)(new Character(str.charAt(0)));
+			} 
+			
+			// boolean
+			if (return_type.equals(Boolean.class) || 
+				return_type.equals(boolean.class)) {
+				return (T)(new Boolean(str));
+			} 
+			
 			// 字符
-			else if (return_type.equals(String.class)) {
+			if (return_type.equals(String.class)) {
 				return (T)(str);
 			}
 		} catch (Exception e) {
