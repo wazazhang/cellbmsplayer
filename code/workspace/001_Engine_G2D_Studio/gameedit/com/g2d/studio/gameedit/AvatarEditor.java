@@ -63,6 +63,7 @@ public class AvatarEditor extends JSplitPane implements ActionListener
 			right.add(stage_view);
 			stage_view.getStage().addChild(avatar_group);
 			stage_view.getCanvas().setFPS(Config.DEFAULT_FPS);
+			stage_view.back_color = new Color(Config.DEFAULT_BACK_COLOR, false);
 		}
 		{
 			left.add(part_list, BorderLayout.CENTER);

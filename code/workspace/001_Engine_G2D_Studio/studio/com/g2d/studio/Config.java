@@ -39,7 +39,8 @@ public class Config extends com.cell.util.Config
 	
 	/**低级界面默认的FPS*/
 	public static Integer DEFAULT_FPS				= 30;
-
+	public static Integer DEFAULT_BACK_COLOR		= 0xffff00ff;
+	
 //	--------------------------------------------------------------------------------------------------------
 //	(插件类)
 //	--------------------------------------------------------------------------------------------------------

@@ -5,38 +5,50 @@ public class Parser
 	final public static String PERFIX_RADIX_16 = "0x";
 	
 	@SuppressWarnings("unchecked")
-	public static <T> T stringToObject(String str, Class<T> return_type) {
+	public static <T> T stringToInteger(String str, Class<T> return_type) 
+	{
 		try {
+			long full = 0;
+			if (str.startsWith(PERFIX_RADIX_16)) {
+				str = str.substring(PERFIX_RADIX_16.length());
+				full = Long.parseLong(str, 16);
+			} else {
+				full = Long.parseLong(str);
+			}
+			
 			// 基础类型
 			if (return_type.equals(Byte.class) || 
 				return_type.equals(byte.class)) {
-				if (str.startsWith(PERFIX_RADIX_16)) {
-					return (T)(new Byte(Byte.parseByte(str, 16)));
-				}
-				return (T)(new Byte(str));
+				return (T)new Byte((byte)(full & 0xff));
 			} 
 			if (return_type.equals(Short.class) ||
 				return_type.equals(short.class)) {
-				if (str.startsWith(PERFIX_RADIX_16)) {
-					return (T)(new Short(Short.parseShort(str, 16)));
-				}
-				return (T)(new Short(str));
+				return (T)new Short((short)(full & 0xffff));
 			} 
 			if (return_type.equals(Integer.class) || 
 				return_type.equals(int.class)) {
-				if (str.startsWith(PERFIX_RADIX_16)) {
-					return (T)(new Integer(Integer.parseInt(str, 16)));
-				}
-				return (T)(new Integer(str));
+				return (T)new Integer((int)(full & 0xffffffff));
 			} 
 			if (return_type.equals(Long.class) || 
 				return_type.equals(long.class)) {
-				if (str.startsWith(PERFIX_RADIX_16)) {
-					return (T)(new Long(Long.parseLong(str, 16)));
-				}
-				return (T)(new Long(str));
-			} 
-			
+				return (T)new Long(full);
+			}
+		} catch (Exception e) {
+		}
+		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static <T> T stringToObject(String str, Class<T> return_type) 
+	{
+		T t = stringToInteger(str, return_type);
+		if (t != null) {
+			return t;
+		}
+		
+		try 
+		{
+			// 浮点
 			if (return_type.equals(Float.class) || 
 				return_type.equals(float.class)) {
 				return (T)(new Float(str));
