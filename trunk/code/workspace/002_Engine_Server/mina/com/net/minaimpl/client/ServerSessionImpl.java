@@ -139,19 +139,19 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 
 //	-----------------------------------------------------------------------------------------------------------------------
 	public long getSentMessageCount() {
-		return Codec.SendedMessageCount;
+		return Codec.getSendedMessageCount();
 	}
 	
 	public long getReceivedMessageCount () {
-		return Codec.ReceivedMessageCount;
+		return Codec.getReceivedMessageCount();
 	}
 	
 	public long getSentBytes(){
-		return Codec.TotalSentBytes;
+		return Codec.getTotalSentBytes();
 	}
 	
 	public long getReceivedBytes(){
-		return Codec.TotalReceivedBytes;
+		return Codec.getTotalReceivedBytes();
 	}
 //	-----------------------------------------------------------------------------------------------------------------------
 

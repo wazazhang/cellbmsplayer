@@ -15,6 +15,7 @@ import com.net.minaimpl.SystemMessages.ServerStatusResponseS2C;
 import com.net.server.Channel;
 import com.net.server.ChannelManager;
 import com.net.server.ClientSession;
+import com.net.server.ServerListener;
 
 
 public class ServerImpl extends AbstractServer
@@ -57,11 +58,11 @@ public class ServerImpl extends AbstractServer
 	 * @param sessionReadIdleTimeSeconds	多长时间内没有接受数据，断掉链接
 	 */
 	public ServerImpl(
-			ClassLoader cl,
-			ExternalizableFactory ef,
-			int ioProcessCount, 
-			int sessionWriteIdleTimeSeconds,
-			int sessionReadIdleTimeSeconds) 
+			ClassLoader 			cl,
+			ExternalizableFactory 	ef,
+			int 					ioProcessCount, 
+			int 					sessionWriteIdleTimeSeconds,
+			int 					sessionReadIdleTimeSeconds) 
 	{
 		super(cl, ef, ioProcessCount, sessionWriteIdleTimeSeconds, sessionReadIdleTimeSeconds);
 		this.channel_manager				= new ChannelManagerImpl(this);

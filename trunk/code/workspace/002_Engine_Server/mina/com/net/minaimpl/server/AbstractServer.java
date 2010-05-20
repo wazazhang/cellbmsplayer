@@ -32,19 +32,13 @@ import com.net.server.ServerListener;
 
 public abstract class AbstractServer extends IoHandlerAdapter implements Server
 {
-	final protected Logger 		log = LoggerFactory.getLogger(getClass().getName());
+	final protected Logger 			log = LoggerFactory.getLogger(getClass().getName());
 	
-	/** 处理线程的数目 */
-	final private int 			IoProcessCount;
-	final private int			SessionReadIdleTimeSeconds;
-	final private int			SessionWriteIdleTimeSeconds;
-
-	private NetPackageCodec 	Codec;
-	private long 				StartTime;
-
-	// 
-	ServerListener 				SrvListener;
-	IoAcceptor 					Acceptor;
+	final protected NetPackageCodec Codec;
+	final protected IoAcceptor 		Acceptor;
+	
+	protected ServerListener 		SrvListener;
+	protected long 					StartTime;
 	
 //	----------------------------------------------------------------------------------------------------------------------
 	
@@ -56,16 +50,18 @@ public abstract class AbstractServer extends IoHandlerAdapter implements Server
 	 * @param sessionReadIdleTimeSeconds	多长时间内没有接受数据，断掉链接
 	 */
 	public AbstractServer(
-			ClassLoader cl,
-			ExternalizableFactory ef,
-			int ioProcessCount, 
-			int sessionWriteIdleTimeSeconds,
-			int sessionReadIdleTimeSeconds) 
+			ClassLoader 			cl,
+			ExternalizableFactory 	ef,
+			int 					ioProcessCount, 
+			int 					sessionWriteIdleTimeSeconds,
+			int 					sessionReadIdleTimeSeconds) 
 	{
-		this.IoProcessCount					= ioProcessCount;
-		this.SessionWriteIdleTimeSeconds	= sessionWriteIdleTimeSeconds;
-		this.SessionReadIdleTimeSeconds		= sessionReadIdleTimeSeconds;
-		this.Codec							= new NetPackageCodec(cl, ef);
+		this.Codec			= new NetPackageCodec(cl, ef);
+		this.Acceptor		= new NioSocketAcceptor(ioProcessCount);
+		this.Acceptor.getSessionConfig().setReaderIdleTime(sessionWriteIdleTimeSeconds);
+		this.Acceptor.getSessionConfig().setWriterIdleTime(sessionReadIdleTimeSeconds);
+		this.Acceptor.setHandler(this);
+		this.Acceptor.getFilterChain().addLast("codec", new ProtocolCodecFilter(Codec));
 	}	
 	
 //	----------------------------------------------------------------------------------------------------------------------
@@ -76,67 +72,37 @@ public abstract class AbstractServer extends IoHandlerAdapter implements Server
 	
 	synchronized public void open(int port, ServerListener listener) throws IOException 
 	{
-		if (Acceptor==null)
-		{
-			log.info("starting server at port : " + port);
-			
-			StartTime 	= System.currentTimeMillis();
-			SrvListener	= listener;
-			Acceptor	= new NioSocketAcceptor(IoProcessCount);
-			
-			Acceptor.getSessionConfig().setReaderIdleTime(SessionReadIdleTimeSeconds);
-			Acceptor.getSessionConfig().setWriterIdleTime(SessionWriteIdleTimeSeconds);
-//			Acceptor.setCloseOnDeactivation(true);
-			Acceptor.setHandler(this);
-			Acceptor.getFilterChain().addLast("codec", new ProtocolCodecFilter(Codec));
-			
-			Acceptor.bind(new InetSocketAddress(port));
-			
-			log.info("server started !");
-		}
-		else {
-			log.info("Server already open !");
-		}
+		this.SrvListener	= listener;
+		this.StartTime		= System.currentTimeMillis();
+		log.info("starting server at port : " + port);
+		Acceptor.bind(new InetSocketAddress(port));
+		log.info("server started !");
 	}
 	
 	synchronized public void close() throws IOException
 	{
-		if (Acceptor!=null) 
-		{
-			log.info("server closing...");
-			Acceptor.unbind();
-			removeAllSession();
-			Acceptor.dispose();
-			Acceptor = null;
-			log.info("server closed !");
-		}
-		else{
-			log.info("Server is not open !");
-		}
+		log.info("server closing...");
+		Acceptor.unbind();
+		Acceptor.dispose();
+		log.info("server closed !");
 	}
 
-	private void removeAllSession() {
-		for (IoSession session : Acceptor.getManagedSessions().values()) {
-			session.close(false);
-		}
-	}
-	
 //	-----------------------------------------------------------------------------------------------------------------------
 
 	final public long getSentMessageCount() {
-		return Codec.SendedMessageCount;
+		return Codec.getSendedMessageCount();
 	}
 	
 	final public long getReceivedMessageCount () {
-		return Codec.ReceivedMessageCount;
+		return Codec.getReceivedMessageCount();
 	}
 	
 	final public long getSentBytes(){
-		return Codec.TotalSentBytes;
+		return Codec.getTotalSentBytes();
 	}
 	
 	final public long getReceivedBytes(){
-		return Codec.TotalReceivedBytes;
+		return Codec.getTotalReceivedBytes();
 	}
 	
 //	-----------------------------------------------------------------------------------------------------------------------

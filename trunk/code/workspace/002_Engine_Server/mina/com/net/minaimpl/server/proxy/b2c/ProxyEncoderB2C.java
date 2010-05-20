@@ -1,4 +1,4 @@
-package com.net.minaimpl;
+package com.net.minaimpl.server.proxy.b2c;
 
 
 import java.io.BufferedInputStream;
@@ -30,11 +30,15 @@ import com.net.ExternalizableFactory;
 import com.net.ExternalizableMessage;
 import com.net.MessageHeader;
 import com.net.NetDataOutput;
+import com.net.minaimpl.MessageHeaderCodec;
+import com.net.minaimpl.SessionAttributeKey;
 
 
-public class NetPackageCodec extends MessageHeaderCodec
+public class ProxyEncoderB2C extends MessageHeaderCodec
 {
-	private static final Logger _log = LoggerFactory.getLogger(NetPackageCodec.class.getName());
+	private static final Logger _log = LoggerFactory.getLogger(ProxyEncoderB2C.class.getName());
+
+	
 
 	class NetPackageDecoder extends CumulativeProtocolDecoder 
 	{
@@ -91,45 +95,22 @@ public class NetPackageCodec extends MessageHeaderCodec
 	    			// 如果有足够的数据
 	    			if (in.remaining() >= message_size) 
 	    			{
-	    				int		ChannelID 			= in.getInt();		// 4
-    					long	ChannelSesseionID	= in.getLong();		// 8
-    					long	SesseionID 			= in.getLong();		// 8
-    					short	Protocol 			= in.getShort();	// 2
-    					int		PacketNumber		= in.getInt();		// 4
-	    				byte	TransmissionType	= in.get();			// 1
-
+	    				ProxyMessage message		= new ProxyMessage();
+	    				message.ChannelID 			= in.getInt();		// 4
+	    				message.ChannelSesseionID	= in.getLong();		// 8
+	    				message.SessionID 			= in.getLong();		// 8
+	    				message.Protocol 			= in.getShort();	// 2
+	    				message.PacketNumber		= in.getInt();		// 4
+	    				message.TransmissionType	= in.get();			// 1
+	    				message.message_body		= new byte[message_size - header_fixed_size];
+	    				in.get(message.message_body);
+	    				
 	    				// 清空当前的解包状态
 	    				session.removeAttribute(SessionAttributeKey.STATUS_DECODING_PROTOCOL);
-	    				
-	    				final MessageHeader message;
-	    				// 解出包包含的二进制消息
-	    				switch(TransmissionType) {
-						case TRANSMISSION_TYPE_SERIALIZABLE:
-		    				message = (MessageHeader)in.getObject(class_loader);
-							break;
-						case TRANSMISSION_TYPE_EXTERNALIZABLE:
-							message = ext_factory.getMessage(in.getInt());	// ext 4
-							ExternalizableMessage ext = (ExternalizableMessage)message;
-							ext.readExternal(new NetDataInputImpl(in));
-							break;
-						default:
-							throw new NullPointerException("");
-						}
-	    				
-	    				message.ChannelID 			= ChannelID;
-	    				message.ChannelSesseionID	= ChannelSesseionID;
-	    				message.SessionID 			= SesseionID;
-	    				message.Protocol 			= Protocol;
-	    				message.PacketNumber		= PacketNumber;
-
-	    				
-	    				message.DynamicReceiveTime	= System.currentTimeMillis();
 	    				
 	    				// 告诉 Protocol Handler 有消息被接收到
 	    				out.write(message);
 	    				
-	    				//System.out.println("decoded <- " + session.getRemoteAddress() + " : " + protocol);
-
 	    				ReceivedMessageCount ++;
 	    				
 	    				// 无论如何都返回true，因为当前解包已完成
@@ -152,9 +133,7 @@ public class NetPackageCodec extends MessageHeaderCodec
         			_log.warn("drop and clean decode state ! size = " + protocol_size);
         			session.removeAttribute(SessionAttributeKey.STATUS_DECODING_PROTOCOL);
         		}
-        		//err.printStackTrace();
-        		_log.error(err.getMessage() + " : decode error : " + session , err);
-        		
+        		_log.error(err.getMessage(), err);
         		// 当解包时发生错误，则
         		// 返回true代表这次解包已完成,清空状态并准备下一次解包
         		return true;
@@ -174,7 +153,7 @@ public class NetPackageCodec extends MessageHeaderCodec
     	{
     		try
     		{
-    			MessageHeader header = (MessageHeader)message;
+    			ProxyMessage header = (ProxyMessage)message;
 
     			IoBuffer buffer = IoBuffer.allocate(MessageHeader.PACKAGE_DEFAULT_SIZE);
     			buffer.setAutoExpand(true);
@@ -183,28 +162,19 @@ public class NetPackageCodec extends MessageHeaderCodec
     			{
 	    			// fixed data region
     				{
-		    			buffer.put(protocol_start);					// 4
-		    			buffer.putInt(protocol_fixed_size);			// 4
+		    			buffer.put		(protocol_start);			// 4
+		    			buffer.putInt	(protocol_fixed_size);		// 4
     				}
     				
 	    			// message data region
     				int cur = buffer.position();
 	    			{
-						buffer.putInt(header.ChannelID);			// 4
-						buffer.putLong(header.ChannelSesseionID);	// 8
-						buffer.putLong(header.SessionID);			// 8
-						buffer.putShort(header.Protocol);			// 2
-						buffer.putInt(header.PacketNumber);			// 4
-						
-						if (header instanceof ExternalizableMessage) {
-							buffer.put(TRANSMISSION_TYPE_EXTERNALIZABLE);	// 1
-							buffer.putInt(ext_factory.getType(header));		// ext 4
-							ExternalizableMessage ext = (ExternalizableMessage)header;
-							ext.writeExternal(new NetDataOutputImpl(buffer));
-						} else {
-							buffer.put(TRANSMISSION_TYPE_SERIALIZABLE);		// 1
-							buffer.putObject(header);
-						}
+						buffer.putInt	(header.ChannelID);			// 4
+						buffer.putLong	(header.ChannelSesseionID);	// 8
+						buffer.putLong	(header.SessionID);			// 8
+						buffer.putShort	(header.Protocol);			// 2
+						buffer.putInt	(header.PacketNumber);		// 4
+						buffer.put		(header.message_body);
 	    			}
 	    			buffer.putInt(4, protocol_fixed_size + (buffer.position() - cur));
 	    		}
@@ -214,17 +184,12 @@ public class NetPackageCodec extends MessageHeaderCodec
     			
     			buffer.flip();
     			out.write(buffer);
-    			
-    			header.DynamicSendTime = System.currentTimeMillis();
-    			
-    			//System.out.println("encoded -> " + session.getRemoteAddress() + " : " + protocol);
     		    
 				SendedMessageCount ++;
         	}
     		catch(Throwable err) 
     		{
-    			_log.error(err.getMessage() + "\nencode error : " + session + " :\n" + message + "", err);
-        		//err.printStackTrace();
+    			_log.error(err.getMessage(), err);
         	}
     	}
     }
@@ -234,7 +199,7 @@ public class NetPackageCodec extends MessageHeaderCodec
     final private ProtocolEncoder	encoder			= new NetPackageEncoder();
     final private ProtocolDecoder	decoder			= new NetPackageDecoder();
     
-    public NetPackageCodec(ClassLoader cl, ExternalizableFactory ext_factory) 
+    public ProxyEncoderB2C(ClassLoader cl, ExternalizableFactory ext_factory) 
     {
     	super(cl, ext_factory);
     }
@@ -247,7 +212,6 @@ public class NetPackageCodec extends MessageHeaderCodec
         return decoder;
     }
     
-
 }
 
 
