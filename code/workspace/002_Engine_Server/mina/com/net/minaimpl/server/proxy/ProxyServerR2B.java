@@ -1,4 +1,4 @@
-package com.net.minaimpl.server.proxy;
+package com.net.minaimpl.server.proxy.r2b;
 
 import java.io.IOException;
 import java.util.ArrayList;
