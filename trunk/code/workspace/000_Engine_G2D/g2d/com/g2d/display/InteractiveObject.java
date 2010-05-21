@@ -132,7 +132,12 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 	}
 
 	/**子类提供可拖拽数据的方法*/
-	boolean enable_drag_drop() {
+	protected boolean enable_drag_drop() {
+		return false;
+	}
+	
+	/**是否鼠标颠倒就聚焦*/
+	protected boolean enable_click_focus() {
 		return false;
 	}
 	
