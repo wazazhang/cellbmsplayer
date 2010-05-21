@@ -175,7 +175,7 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 				} else if (enable_focus) {
 					if ((event instanceof MouseEvent) && 
 						((MouseEvent)event).type == MouseEvent.EVENT_MOUSE_DOWN) {
-						if (isCatchedMouse()) {
+						if (isCatchedMouse() && enable_click_focus()) {
 							getParent().focus(this);
 							is_focused = true;
 						}
