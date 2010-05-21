@@ -70,10 +70,15 @@ public abstract class UIObject extends InteractiveObject
 	}
 
 	/**子类提供可拖拽数据的方法*/
-	boolean enable_drag_drop() {
+	protected boolean enable_drag_drop() {
 		return enable_drag_drop;
 	}
-
+	
+	/**是否鼠标颠倒就聚焦*/
+	protected boolean enable_click_focus() {
+		return true;
+	}
+	
 //	-------------------------------------------------------------------------------------------------------------
 	
 	void renderInteractive(Graphics2D g)
