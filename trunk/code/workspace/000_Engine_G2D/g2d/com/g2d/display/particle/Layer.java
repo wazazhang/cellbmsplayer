@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 
+import com.g2d.display.particle.appearance.GeometryRound;
+
 /**
  * 包含多个例子的视图
  * @author WAZA
@@ -18,14 +20,14 @@ public class Layer implements Serializable
 	public String	alias	= "Layer";
 	
 
-	public ParticleAppearance appearance;
+	public ParticleAppearance appearance	= new GeometryRound();
 	
 //	------------------------------------------------------------------------------------------------------------------
 //	Scene
 //	------------------------------------------------------------------------------------------------------------------
 
 	/** 粒子生命周期时间范围(帧)*/
-	public int		particle_min_age = 30, particle_max_age = 60;
+	public int		particle_min_age 		= 30, particle_max_age = 60;
 	
 	/** 每帧释放多少个粒子 */
 	public int		particles_per_frame 	= 10;
