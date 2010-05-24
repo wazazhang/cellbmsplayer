@@ -25,6 +25,7 @@ import java.util.Stack;
 
 import com.cell.CMath;
 import com.cell.DObject;
+import com.cell.math.Vector;
 import com.cell.util.MarkedHashtable;
 import com.g2d.Tools;
 import com.g2d.Version;
@@ -39,7 +40,7 @@ import com.sun.org.apache.bcel.internal.classfile.Code;
  * @author WAZA
  *
  */
-public abstract class DisplayObject implements Comparable<DisplayObject>, ImageObserver
+public abstract class DisplayObject implements Comparable<DisplayObject>, ImageObserver, Vector
 {
 	private static final long serialVersionUID = Version.VersionG2D;
 
@@ -588,7 +589,38 @@ public abstract class DisplayObject implements Comparable<DisplayObject>, ImageO
 	}
 	
 //	---------------------------------------------------------------------------------------------------------------------------------------
+	@Override
+	public void addVectorX(double dx) {
+		this.x += dx;
+	}
+
+	@Override
+	public void addVectorY(double dy) {
+		this.y += dy;
+	}
+
+	@Override
+	public double getVectorX() {
+		return this.x;
+	}
+
+	@Override
+	public double getVectorY() {
+		return this.y;
+	}
+
+	@Override
+	public void setVectorX(double x) {
+		this.x = x;
+	}
+
+	@Override
+	public void setVectorY(double y) {
+		this.y = y;
+	}
 	
+//	---------------------------------------------------------------------------------------------------------------------------------------
+
 	/**
 	 * 测试同一父节点的2个单位是否碰撞
 	 * @param src

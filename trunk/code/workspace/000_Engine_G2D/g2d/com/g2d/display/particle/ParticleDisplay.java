@@ -1,8 +1,6 @@
 package com.g2d.display.particle;
 
-import java.awt.AlphaComposite;
 import java.awt.Color;
-import java.awt.Composite;
 import java.awt.Graphics2D;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
@@ -15,43 +13,53 @@ import com.cell.CUtil;
 import com.cell.math.MathVector;
 import com.cell.math.TVector;
 import com.cell.math.Vector;
-import com.g2d.display.DisplayObject;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.DisplayObjectLeaf;
-import com.g2d.display.Sprite;
 import com.g2d.display.particle.Layer.TimeNode;
-import com.g2d.display.particle.OriginShape.Rectangle;
 
 
 public class ParticleDisplay extends com.g2d.display.particle.ParticleSystem
 {
 	public static Random 			random 			= new Random();
+	
+	private ParticleData 			data;
+	
+	private ArrayList<LayerObject> 	layers;
 
-//	public static int				composite_rule	= AlphaComposite.SRC_OVER;
-	
-	final public ParticleData 		data;
-	
-	final ArrayList<LayerObject> 	layers;
+	public ParticleDisplay() {
+	}
 	
 	public ParticleDisplay(ParticleData data) {
+		setData(data);
+	}
+	
+	public ParticleData getData() {
+		return data;
+	}
+	
+	public void setData(ParticleData data) {
 		this.data = data;
 		this.layers = new ArrayList<LayerObject>(data.size());
 		for (Layer layer : data) {
-			layers.add(new LayerObject(layer));
+			layers.add(new LayerObject(layer, this));
 		}
 		this.local_bounds.setBounds(getOriginBounds(data));
 	}
 	
 	public void spawn() {
-		for (LayerObject layer : layers) {
-			layer.spawn();
+		if (layers != null) {
+			for (LayerObject layer : layers) {
+				layer.spawn();
+			}
 		}
 	}
 
 	@Override
 	public void update() {
-		for (LayerObject layer : layers) {
-			layer.update();
+		if (layers != null) {
+			for (LayerObject layer : layers) {
+				layer.update();
+			}
 		}
 	}
 
@@ -114,14 +122,15 @@ public class ParticleDisplay extends com.g2d.display.particle.ParticleSystem
 	/**
 	 * Layer Display Object
 	 */
-	private class LayerObject
+	private static class LayerObject
 	{
-		Queue<SingleObject> idle_nodes = new LinkedList<SingleObject>();
+		final Queue<SingleObject>	idle_nodes = new LinkedList<SingleObject>();
+		final ParticleDisplay 		display;
+		final Layer 				layer;
 		
-		Layer layer;
-		
-		public LayerObject(Layer layer) {
+		public LayerObject(Layer layer, ParticleDisplay display) {
 			this.layer = layer;
+			this.display = display;
 			for (int i = 0; i < layer.particles_capacity; i++) {
 				SingleObject node = new SingleObject(this);
 				idle_nodes.add(node);
@@ -140,14 +149,14 @@ public class ParticleDisplay extends com.g2d.display.particle.ParticleSystem
 					// node
 					node.age_time		= CUtil.getRandom(random, layer.particle_min_age, layer.particle_max_age);
 					node.timer			= 0;
-					node.x				= ParticleDisplay.this.x + (float)origin_pos.getVectorX();
-					node.y				= ParticleDisplay.this.y + (float)origin_pos.getVectorY();
+					node.x				= display.x + (float)origin_pos.getVectorX();
+					node.y				= display.y + (float)origin_pos.getVectorY();
 					node.speed			.setVectorX(spawn_speed.getVectorX());
 					node.speed			.setVectorY(spawn_speed.getVectorY());
 					node.acceleration	= layer.spawn_acc + CUtil.getRandom(random, -layer.spawn_acc_range, layer.spawn_acc_range);
 					
-					if (ParticleDisplay.this.getParent() != null) {
-						ParticleDisplay.this.getParent().addChild(node);
+					if (display.getParent() != null) {
+						display.getParent().addChild(node);
 					}
 				} else {
 					break;

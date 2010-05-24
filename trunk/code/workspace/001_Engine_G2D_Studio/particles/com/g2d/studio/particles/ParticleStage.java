@@ -70,7 +70,7 @@ public class ParticleStage extends Stage
 	{
 		if (is_show_spawn_region) {
 			g.setColor(Color.WHITE);
-			for (Layer layer : particle.data) {
+			for (Layer layer : particle.getData()) {
 				Shape shape = ParticleDisplay.getOriginShape(layer);
 				double tx = particle.x;
 				double ty = particle.y;
@@ -85,7 +85,7 @@ public class ParticleStage extends Stage
 		
 		if (is_show_spawn_bounds) {
 			g.setColor(Color.YELLOW);
-			Rectangle rect = ParticleDisplay.getOriginBounds(particle.data);
+			Rectangle rect = ParticleDisplay.getOriginBounds(particle.getData());
 			double tx = particle.x;
 			double ty = particle.y;
 			try{
