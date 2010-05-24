@@ -40,25 +40,6 @@ public class Sprite extends InteractiveObject implements Vector
 //	 ------------------------------------------------------------------------------------------------------------------------
 //	 math util
 	
-	public void addVectorX(double dx) {
-		this.x += dx;
-	}
-	public void addVectorY(double dy) {
-		this.y += dy;
-	}
-	public void setVectorX(double x) {
-		this.x = x;
-	}
-	public void setVectorY(double y) {
-		this.y = y;
-	}
-	public double getVectorX() {
-		return this.x;
-	}
-	public double getVectorY() {
-		return this.y;
-	}
-
 	public void move(double dx, double dy){
 		MathVector.move(this, dx, dy);
 	}
