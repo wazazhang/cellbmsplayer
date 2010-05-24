@@ -1464,9 +1464,8 @@ public class CellSetResource
 		}
 		
 		final public boolean isLoaded() {
-			synchronized (this) {
-				return is_loaded;
-			}
+			return is_loaded;
+			
 		}
 		
 		final public void run() 
@@ -1475,20 +1474,20 @@ public class CellSetResource
 				synchronized (this) {
 					if (!is_loaded) {
 						initImages();
-						is_loaded = true;
 					}
 				}
+				is_loaded = true;
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
 		}
 		
 		final public void unloadAllImages() {
+			is_loaded = false;
 			synchronized (this) {
 				for (int i=0; i<images.length; i++){
 					images[i] = null;
 				}
-				is_loaded = false;
 			}
 		}
 		
