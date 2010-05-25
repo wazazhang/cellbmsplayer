@@ -54,7 +54,7 @@ public class MathVector
 			v.setVectorX(x);
 			v.setVectorY(y);
 			return true;
-		}else{
+		} else {
 			double angle = Math.atan2(ddy, ddx);
 			movePolar(v, angle, distance);
 			return false;
