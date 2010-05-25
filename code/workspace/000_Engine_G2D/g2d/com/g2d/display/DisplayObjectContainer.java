@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Queue;
 import java.util.Vector;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -31,7 +32,8 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	/** true 如果不在local_bounds内,则忽略事件处理 (包括孩子的) */
 	protected boolean 				ignore_render_without_parent_bounds = false;
 	
-	HashSet<DisplayObject>			elements_set	= new HashSet<DisplayObject>();
+	ConcurrentHashMap<DisplayObject, DisplayObject>
+									elements_set	= new ConcurrentHashMap<DisplayObject, DisplayObject>();
 	
 	final ArrayList<DisplayObject>	elements_buffer = new ArrayList<DisplayObject>();
 	final Queue<DisplayObjectEvent>	events 			= new ConcurrentLinkedQueue<DisplayObjectEvent>();
@@ -50,38 +52,41 @@ public abstract class DisplayObjectContainer extends DisplayObject
 
 	final public void processEvent()
 	{
-		while (!events.isEmpty())
+		synchronized (events)
 		{
-			DisplayObjectEvent event = events.poll();
-			
-			switch (event.event_type)
+			while (!events.isEmpty())
 			{
-			case DisplayObjectEvent.EVENT_SORT:
-				Collections.sort(elements_buffer);
-				break;
+				DisplayObjectEvent event = events.poll();
+				
+				switch (event.event_type)
+				{
+				case DisplayObjectEvent.EVENT_SORT:
+					Collections.sort(elements_buffer);
+					break;
 
-			case DisplayObjectEvent.EVENT_ADD:
-				elements_buffer.add(event.source);
-				event.source.parent = this;
-				event.source.root	= this.root;
-				event.source.onAdded(this);
-				break;
-				
-			case DisplayObjectEvent.EVENT_DELETE:
-				elements_buffer.remove(event.source);
-				event.source.onRemoved(this);
-				event.source.parent = null;
-				break;
-				
-			case DisplayObjectEvent.EVENT_MOVE_TOP:
-				elements_buffer.remove(event.source);
-				elements_buffer.add(event.source);
-				break;
-				
-			case DisplayObjectEvent.EVENT_MOVE_BOT:
-				elements_buffer.remove(event.source);
-				elements_buffer.add(0, event.source);
-				break;
+				case DisplayObjectEvent.EVENT_ADD:
+					elements_buffer.add(event.source);
+					event.source.parent = this;
+					event.source.root	= this.root;
+					event.source.onAdded(this);
+					break;
+					
+				case DisplayObjectEvent.EVENT_DELETE:
+					elements_buffer.remove(event.source);
+					event.source.onRemoved(this);
+					event.source.parent = null;
+					break;
+					
+				case DisplayObjectEvent.EVENT_MOVE_TOP:
+					elements_buffer.remove(event.source);
+					elements_buffer.add(event.source);
+					break;
+					
+				case DisplayObjectEvent.EVENT_MOVE_BOT:
+					elements_buffer.remove(event.source);
+					elements_buffer.add(0, event.source);
+					break;
+				}
 			}
 		}
 	}
@@ -273,7 +278,7 @@ public abstract class DisplayObjectContainer extends DisplayObject
 		if (child.parent == null) {
 			child.parent = this;
 			child.root = this.getRoot();
-			elements_set.add(child);
+			elements_set.put(child, child);
 			events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_ADD, child));
 			if (always_top_element != null) {
 				events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_MOVE_TOP, always_top_element));
@@ -342,7 +347,7 @@ public abstract class DisplayObjectContainer extends DisplayObject
 
 	@SuppressWarnings("unchecked")
 	final public Vector<DisplayObject> getChilds() {
-		return new Vector<DisplayObject>(elements_set);
+		return new Vector<DisplayObject>(elements_set.values());
 	}
 	
 	/**
@@ -353,7 +358,7 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	 */
 	final public<T> Vector<T> getChilds(Class<T> c) {
 		Vector<T> actors = new Vector<T>();
-		for (DisplayObject obj : elements_set) {
+		for (DisplayObject obj : elements_set.values()) {
 			if (c.equals(obj.getClass())) {
 				actors.add(c.cast(obj));
 			}
@@ -369,7 +374,7 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	 */
 	final public<T> Vector<T> getChildsSubClass(Class<T> c) {
 		Vector<T> actors = new Vector<T>();
-		for (DisplayObject obj : elements_set) {
+		for (DisplayObject obj : elements_set.values()) {
 			if (c.isInstance(obj)) {
 				actors.add(c.cast(obj));
 			}
@@ -382,7 +387,7 @@ public abstract class DisplayObjectContainer extends DisplayObject
 //	}
 
 	final public DisplayObject findChild(Object object) {
-		for (DisplayObject child : elements_set) {
+		for (DisplayObject child : elements_set.values()) {
 			if (object.equals(child)) {
 				return child;
 			}
@@ -405,7 +410,7 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	 * @return
 	 */
 	public<T> T getChildAtPos(int x, int y, Class<T> c) {
-		for (DisplayObject obj : elements_set) {
+		for (DisplayObject obj : elements_set.values()) {
 			if (obj.local_bounds.contains(x-obj.x, y-obj.y)) {
 				if (c.equals(obj.getClass())) {
 					return c.cast(obj);
@@ -424,7 +429,7 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	 * @return
 	 */
 	public<T> T getChildAtPosSubClass(int x, int y, Class<T> c) {
-		for (DisplayObject obj : elements_set) {
+		for (DisplayObject obj : elements_set.values()) {
 			if (obj.local_bounds.contains(x-obj.x, y-obj.y)) {
 				if (c.isInstance(obj)) {
 					return c.cast(obj);
@@ -435,7 +440,7 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	}
 	
 	public DisplayObject getChildAtPos(int x, int y) {
-		for (DisplayObject obj : elements_set) {
+		for (DisplayObject obj : elements_set.values()) {
 			if (obj.local_bounds.contains(x-obj.x, y-obj.y)) {
 				return obj;
 			}
