@@ -8,6 +8,7 @@ import java.awt.Shape;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -67,6 +68,8 @@ public abstract class SceneMap extends DisplayObjectContainer implements AstarMa
 		world_grid_y_size	= grid_y_count;
 		grid_matrix			= new int[grid_x_count][grid_y_count];
 
+		setSorter(new SceneUnitSorter());
+		
 		for (int x = grid_x_count - 1; x >= 0; --x) {
 			for (int y = grid_y_count - 1; y >= 0; --y) {
 				this.grid_matrix[x][y] = matrix[x][y];
@@ -342,4 +345,11 @@ public abstract class SceneMap extends DisplayObjectContainer implements AstarMa
 		}
 	}
 
+	public static class SceneUnitSorter implements Comparator<DisplayObject> {
+		@Override
+		public int compare(DisplayObject o1, DisplayObject o2) {
+			return (int) ((o1.y + o1.priority) - (o2.y + o2.priority));
+		}
+	}
+	
 }
