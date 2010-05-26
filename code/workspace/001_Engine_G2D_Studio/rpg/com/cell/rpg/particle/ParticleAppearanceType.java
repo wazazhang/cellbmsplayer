@@ -3,6 +3,7 @@ package com.cell.rpg.particle;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 
 import com.cell.CMath;
 import com.cell.gfx.game.CSprite;
@@ -30,7 +31,7 @@ public enum ParticleAppearanceType
 	
 //	-----------------------------------------------------------------------------------------------
 	
-	public static class DisplayNodeImage implements ParticleAppearance
+	public static class DisplayNodeImage implements ParticleAppearance, Serializable
 	{
 		private static final long serialVersionUID = 1L;
 		
@@ -61,7 +62,7 @@ public enum ParticleAppearanceType
 		}
 	}
 	
-	public static class DisplayNodeSprite implements ParticleAppearance
+	public static class DisplayNodeSprite implements ParticleAppearance, Serializable
 	{
 		private static final long serialVersionUID = 1L;
 		

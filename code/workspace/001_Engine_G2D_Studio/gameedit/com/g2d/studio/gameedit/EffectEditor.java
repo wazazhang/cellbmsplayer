@@ -353,8 +353,14 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 				public void actionPerformed(ActionEvent e) {
 					TileImage ret = new CPJEffectImageSelectDialog(this).showDialog();
 					if (ret != null) {
-						appearance			= new DisplayNodeImage();
-						appearance.image	= ret.getEffectImage();
+						if (appearance == null) {
+							appearance = new DisplayNodeImage();
+						}
+						appearance.cpj_image_id		= ret.index;
+						appearance.cpj_project_name	= ret.parent_name;
+						appearance.cpj_sprite_name	= ret.sprite_name;
+						appearance.image			= ret.getEffectImage();
+						layer.appearance = appearance;
 						if (appearance.image != null) {
 							image_view.setIcon(Tools.createIcon(appearance.image));
 						}
@@ -421,6 +427,8 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 						appearance.cpj_project_name	= spr.parent.name;
 						appearance.cpj_sprite_name	= spr.name;
 						appearance.sprite			= spr.getDisplayObject().cspr;
+						layer.appearance = appearance;
+						
 						sprite_anim_v.setModel(new SpinnerNumberModel(0, 0, appearance.sprite.getAnimateCount()-1, 1));
 						sprite_anim_v.setValue(0);
 						sprite_anim_max.setText("最大"+(appearance.sprite.getAnimateCount()-1)+" ");
