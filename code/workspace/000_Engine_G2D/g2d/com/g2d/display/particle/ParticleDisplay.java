@@ -151,6 +151,7 @@ public class ParticleDisplay extends com.g2d.display.particle.ParticleSystem
 					node.timer			= 0;
 					node.x				= display.x + (float)origin_pos.getVectorX();
 					node.y				= display.y + (float)origin_pos.getVectorY();
+					node.priority		= display.priority;
 					node.speed			.setVectorX(spawn_speed.getVectorX());
 					node.speed			.setVectorY(spawn_speed.getVectorY());
 					node.acceleration	= layer.spawn_acc + CUtil.getRandom(random, -layer.spawn_acc_range, layer.spawn_acc_range);
