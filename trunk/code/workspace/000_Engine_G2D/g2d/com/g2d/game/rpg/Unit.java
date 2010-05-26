@@ -34,10 +34,6 @@ public abstract class Unit extends Sprite
 		return identify;
 	}
 	
-	public int compareTo(DisplayObject o) {
-		return (int)((y+priority) - (o.y+o.priority));
-	}
-
 	public boolean isInCamera()
 	{
 		if (getOwnerScene() != null) 

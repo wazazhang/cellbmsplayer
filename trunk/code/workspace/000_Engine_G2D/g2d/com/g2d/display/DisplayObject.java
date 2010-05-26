@@ -40,7 +40,7 @@ import com.sun.org.apache.bcel.internal.classfile.Code;
  * @author WAZA
  *
  */
-public abstract class DisplayObject implements Comparable<DisplayObject>, ImageObserver, Vector
+public abstract class DisplayObject implements ImageObserver, Vector
 {
 	private static final long serialVersionUID = Version.VersionG2D;
 
@@ -108,7 +108,7 @@ public abstract class DisplayObject implements Comparable<DisplayObject>, ImageO
 
 //	--------------------------------------------------------------------------------------------------------------------------------------------
 
-	public int compareTo(DisplayObject o) {
+	final protected int compareTo(DisplayObject o) {
 		return (int)((z+priority) - (o.z+o.priority));
 	}
 	
