@@ -330,7 +330,7 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 			void setData(Layer layer) {
 				PropertyPage page = panels.get(type_list.getValue());
 				if (page != null) {
-					page.getData(layer);
+					page.setData(layer);
 				}
 			}
 			
