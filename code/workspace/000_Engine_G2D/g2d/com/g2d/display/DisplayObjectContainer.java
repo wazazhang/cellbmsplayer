@@ -11,7 +11,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Queue;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
@@ -30,65 +32,73 @@ public abstract class DisplayObjectContainer extends DisplayObject
 //	-------------------------------------------------------------
 
 	/** true 如果不在local_bounds内,则忽略事件处理 (包括孩子的) */
-	protected boolean 				ignore_render_without_parent_bounds = false;
+	protected boolean 					ignore_render_without_parent_bounds = false;
 	
 	ConcurrentHashMap<DisplayObject, DisplayObject>
-									elements_set	= new ConcurrentHashMap<DisplayObject, DisplayObject>();
+										elements_set	= new ConcurrentHashMap<DisplayObject, DisplayObject>();
 	
-	final ArrayList<DisplayObject>	elements_buffer = new ArrayList<DisplayObject>();
-	final Queue<DisplayObjectEvent>	events 			= new ConcurrentLinkedQueue<DisplayObjectEvent>();
+	private ReentrantLock				elements_lock	= new ReentrantLock();
+	private Vector<DisplayObject>		elements_buffer = new Vector<DisplayObject>();
+	private Queue<DisplayObjectEvent>	events 			= new ConcurrentLinkedQueue<DisplayObjectEvent>();
 
-	DisplayObject					always_top_element;
-	DisplayObject					always_bottom_element;
+	DisplayObject						always_top_element;
+	DisplayObject						always_bottom_element;
 	
 //	-------------------------------------------------------------
-
+	Comparator<DisplayObject>			sorter 			= new DefaultObjectSorter();
 //	-------------------------------------------------------------
 	
-	public DisplayObjectContainer() 
+	public DisplayObjectContainer() {}
+	
+	/**
+	 * 该方法已无用
+	 */
+	@Deprecated
+	final public void processEvent(){}
+	
+	final private void processEvents()
 	{
-		
-	}
-
-	final public void processEvent()
-	{
-		synchronized (events)
+		while (!events.isEmpty())
 		{
-			while (!events.isEmpty())
+			DisplayObjectEvent event = events.poll();
+			
+			switch (event.event_type)
 			{
-				DisplayObjectEvent event = events.poll();
-				
-				switch (event.event_type)
-				{
-				case DisplayObjectEvent.EVENT_SORT:
-					Collections.sort(elements_buffer);
-					break;
-
-				case DisplayObjectEvent.EVENT_ADD:
-					elements_buffer.add(event.source);
-					event.source.parent = this;
-					event.source.root	= this.root;
-					event.source.onAdded(this);
-					break;
-					
-				case DisplayObjectEvent.EVENT_DELETE:
-					elements_buffer.remove(event.source);
-					event.source.onRemoved(this);
-					event.source.parent = null;
-					break;
-					
-				case DisplayObjectEvent.EVENT_MOVE_TOP:
-					elements_buffer.remove(event.source);
-					elements_buffer.add(event.source);
-					break;
-					
-				case DisplayObjectEvent.EVENT_MOVE_BOT:
-					elements_buffer.remove(event.source);
-					elements_buffer.add(0, event.source);
-					break;
+			case DisplayObjectEvent.EVENT_SORT:
+				synchronized (elements_lock) {
+				Collections.sort(elements_buffer, sorter);
 				}
+				break;
+
+			case DisplayObjectEvent.EVENT_ADD:
+				elements_buffer.add(event.source);
+				event.source.parent = this;
+				event.source.root	= this.root;
+				event.source.onAdded(this);
+				break;
+				
+			case DisplayObjectEvent.EVENT_DELETE:
+				elements_buffer.remove(event.source);
+				event.source.onRemoved(this);
+				event.source.parent = null;
+				break;
+				
+			case DisplayObjectEvent.EVENT_MOVE_TOP:
+				synchronized (elements_lock) {
+				elements_buffer.remove(event.source);
+				elements_buffer.add(event.source);
+				}
+				break;
+				
+			case DisplayObjectEvent.EVENT_MOVE_BOT:
+				synchronized (elements_lock) {
+				elements_buffer.remove(event.source);
+				elements_buffer.add(0, event.source);
+				}
+				break;
 			}
 		}
+	
 	}
 	
 	
@@ -97,9 +107,11 @@ public abstract class DisplayObjectContainer extends DisplayObject
 		if (always_top_element!=null) {
 			return always_top_element.onPoolEvent(event);
 		}else{
-			for (int i = elements_buffer.size() - 1; i >= 0; --i) {
-				if (elements_buffer.get(i).onPoolEvent(event)) {
-					return true;
+			synchronized (elements_lock) {
+				for (int i = elements_buffer.size() - 1; i >= 0; --i) {
+					if (elements_buffer.get(i).onPoolEvent(event)) {
+						return true;
+					}
 				}
 			}
 		}
@@ -132,7 +144,7 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	
 	@Override
 	final void updateBefore(DisplayObjectContainer parent) {
-		processEvent();
+		processEvents();
 		updateChilds();
 	}
 	
@@ -195,6 +207,12 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	
 	final public void sort() {
 		events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_SORT));
+	}
+	
+	final public void setSorter(Comparator<DisplayObject> sorter) {
+		if (sorter != null) {
+			this.sorter = sorter;
+		}
 	}
 	
 	// focus
@@ -304,7 +322,6 @@ public abstract class DisplayObjectContainer extends DisplayObject
 
 	final public boolean addChild(DisplayObject child, boolean immediately){
 		if (addChild(child) && immediately) {
-			processEvent();
 			return true;
 		}
 		return false;
@@ -312,7 +329,6 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	
 	final public boolean removeChild(DisplayObject child, boolean immediately) {
 		if (removeChild(child, false) && immediately) {
-			processEvent();
 			return true;
 		}
 		return false;
@@ -472,6 +488,13 @@ public abstract class DisplayObjectContainer extends DisplayObject
 		
 		public DisplayObjectEvent(byte type) {
 			this.event_type = type;
+		}
+	}
+	
+	public static class DefaultObjectSorter implements Comparator<DisplayObject> {
+		@Override
+		public int compare(DisplayObject o1, DisplayObject o2) {
+			return o1.compareTo(o2);
 		}
 	}
 	
