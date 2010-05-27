@@ -45,19 +45,19 @@ public class ItemProperties extends RPGObject implements NamedObject
 		return properties;
 	}
 	
-	/***
-	 * 生成该道具时，产生一组模板内的道具属性数据。
-	 * @return
-	 */
-	synchronized public ItemPropertyData[] createItemPropertiesData() throws Exception {
-		getItemProperties();
-		ItemPropertyData[] ret = new ItemPropertyData[properties.length];
-		for (int i = 0; i < ret.length; i++) {
-			ItemPropertyTemplate t = properties[i];
-			ret[i] = t.createData();
-		}
-		return ret;
-	}
+//	/***
+//	 * 生成该道具时，产生一组模板内的道具属性数据。
+//	 * @return
+//	 */
+//	synchronized public ItemPropertyData[] createItemPropertiesData() throws Exception {
+//		getItemProperties();
+//		ItemPropertyData[] ret = new ItemPropertyData[properties.length];
+//		for (int i = 0; i < ret.length; i++) {
+//			ItemPropertyTemplate t = properties[i];
+//			ret[i] = t.createData();
+//		}
+//		return ret;
+//	}
 //	-----------------------------------------------------------------------------------------------------------------------
 
 }
