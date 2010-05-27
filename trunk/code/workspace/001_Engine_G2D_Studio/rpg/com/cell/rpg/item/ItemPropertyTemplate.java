@@ -51,22 +51,22 @@ public abstract class ItemPropertyTemplate extends AbstractAbility
 		return save_fields;
 	}
 	
-	final public ItemPropertyData createData() throws Exception 
-	{
-		ItemPropertyData data = new ItemPropertyData();
-		
-		data.property_type	= getSaveType();
-
-		Field[]	save_fields = getSaveFields();
-
-		data.args			= new Object[save_fields.length];
-		
-		for (int i=save_fields.length-1; i>=0; --i) {
-			data.args[i] = createFieldData(save_fields[i]);
-		}
-		
-		return data;
-	}
+//	final public ItemPropertyData createData() throws Exception 
+//	{
+//		ItemPropertyData data = new ItemPropertyData();
+//		
+//		data.property_type	= getSaveType();
+//
+//		Field[]	save_fields = getSaveFields();
+//
+//		data.args			= new Object[save_fields.length];
+//		
+//		for (int i=save_fields.length-1; i>=0; --i) {
+//			data.args[i] = createFieldData(save_fields[i]);
+//		}
+//		
+//		return data;
+//	}
 	
 	/**
 	 * 子类可以自定义存储自己的复杂格式参数
