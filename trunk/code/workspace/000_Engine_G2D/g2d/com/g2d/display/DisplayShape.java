@@ -42,5 +42,8 @@ public class DisplayShape extends DisplayObject
 		}
 	}
 
-
+	@Override
+	protected boolean testCatchMouse(Graphics2D g) {
+		return false;
+	}
 }

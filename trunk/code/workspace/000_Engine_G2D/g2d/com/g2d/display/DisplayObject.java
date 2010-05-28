@@ -108,15 +108,11 @@ public abstract class DisplayObject implements ImageObserver, Vector
 
 //	--------------------------------------------------------------------------------------------------------------------------------------------
 
-	final protected int compareTo(DisplayObject o) {
-		return (int)((z+priority) - (o.z+o.priority));
-	}
-	
 	/**
 	 * 得到stage外的最上层java控件
 	 * @return
 	 */
-	public com.g2d.display.Canvas getRoot() {
+	final public com.g2d.display.Canvas getRoot() {
 		return root;
 	}
 	
@@ -124,7 +120,7 @@ public abstract class DisplayObject implements ImageObserver, Vector
 	 * 得到父节点
 	 * @return
 	 */
-	public DisplayObjectContainer getParent() {
+	final public DisplayObjectContainer getParent() {
 		return parent;
 	}
 	
@@ -132,7 +128,7 @@ public abstract class DisplayObject implements ImageObserver, Vector
 	 * 得到当前所在的stage
 	 * @return
 	 */
-	public Stage getStage() {
+	final public Stage getStage() {
 		if (root != null) {
 			return root.getStage();
 		}
@@ -143,7 +139,7 @@ public abstract class DisplayObject implements ImageObserver, Vector
 	 * 是否在当前操作系统中被聚焦
 	 * @return
 	 */
-	public boolean isFocusedRoot()
+	final public boolean isFocusedRoot()
 	{
 		if (root!=null && !root.isFocusOwner()){
 			return false;
@@ -168,7 +164,7 @@ public abstract class DisplayObject implements ImageObserver, Vector
 	 * 从父节点移除自己
 	 * @return
 	 */
-	public boolean removeFromParent() {
+	final public boolean removeFromParent() {
 		try{
 			if( parent != null) {
 				parent.removeChild(this);
@@ -181,7 +177,7 @@ public abstract class DisplayObject implements ImageObserver, Vector
 	}
 //	--------------------------------------------------------------------------------------------------------------------------------------------
 
-	public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
+	final public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
 		return false;
 	}
 	
@@ -302,60 +298,60 @@ public abstract class DisplayObject implements ImageObserver, Vector
 //	--------------------------------------------------------------------------------------------------------------------------------------------
 //	screen position with root
 	
-	public Rectangle getScreenBounds(){
+	final public Rectangle getScreenBounds(){
 		return screen_rectangle;
 	}
 	
-	public Rectangle getScreenBounds(DisplayObject targetCoordinateSpace){
+	final public Rectangle getScreenBounds(DisplayObject targetCoordinateSpace){
 		return screen_rectangle.intersection(targetCoordinateSpace.screen_rectangle);
 	}
 	
-	public int getScreenX(){
+	final public int getScreenX(){
 		return screen_x;
 	}
 	
-	public int getScreenY(){
+	final public int getScreenY(){
 		return screen_y;
 	}
 	
-	public int screenToLocalX(int x) {
+	final public int screenToLocalX(int x) {
 		return x - screen_x;
 	}
 
-	public int screenToLocalY(int y) {
+	final public int screenToLocalY(int y) {
 		return y - screen_y;
 	}
 
-	public int localToScreenX(int x) {
+	final public int localToScreenX(int x) {
 		return screen_x + x;
 	}
 
-	public int localToScreenY(int y) {
+	final public int localToScreenY(int y) {
 		return screen_y + y;
 	}
 	
 //	-------------------------------------------------------------
 
 	/**表示鼠标是否在local_bounds内*/
-	public boolean isHitMouse() {
+	final public boolean isHitMouse() {
 		return hit_mouse;
 	}
 	
-	public boolean hitTestScreenObject(DisplayObject obj) {
+	final public boolean hitTestScreenObject(DisplayObject obj) {
 		return screen_rectangle.intersects(obj.screen_rectangle);
 	}
 
-	public boolean hitTestScreenPoint(int x, int y) {
+	final public boolean hitTestScreenPoint(int x, int y) {
 		return screen_rectangle.contains(x, y);
 	}
 
 	/**鼠标在当前对象的相对坐标*/
-	public int getMouseX() {
+	final public int getMouseX() {
 		return mouse_x;
 	}
 	
 	/**鼠标在当前对象的相对坐标*/
-	public int getMouseY() {
+	final public int getMouseY() {
 		return mouse_y;
 	}
 
@@ -365,7 +361,7 @@ public abstract class DisplayObject implements ImageObserver, Vector
 	 * 默认情况下是鼠标在local_bounds内,并且鼠标在graphics的clip内<br>
 	 * 可以覆盖 {@link testCatchMouse(Graphics2D g)}方法来确定是否能获取鼠标
 	 */
-	public boolean isCatchedMouse() {
+	final public boolean isCatchedMouse() {
 		return catched_mouse;
 	}
 
@@ -374,18 +370,13 @@ public abstract class DisplayObject implements ImageObserver, Vector
 	 * @param g
 	 * @return
 	 */
-	protected boolean testCatchMouse(Graphics2D g) {
-		if (isHitMouse() && g.hitClip(mouse_x, mouse_y, 1, 1)) {
-			return true;
-		}
-		return false;
-	}
+	abstract protected boolean testCatchMouse(Graphics2D g);
 	
 	/**
 	 * 是否是当前唯一获得鼠标的最高层对象
 	 * @return
 	 */
-	public boolean isPickedMouse() {
+	final public boolean isPickedMouse() {
 		if (root!=null) {
 			return root.getStage().getMousePickedObject() == this;
 		}
@@ -555,7 +546,7 @@ public abstract class DisplayObject implements ImageObserver, Vector
 	
 //	---------------------------------------------------------------------------------------------------------------------------------------
 	
-	public boolean isInParentBounds(DisplayObjectContainer parent)
+	final public boolean isInParentBounds(DisplayObjectContainer parent)
 	{
 		return CMath.intersectRect2(
 				parent.local_bounds.x,
@@ -569,7 +560,7 @@ public abstract class DisplayObject implements ImageObserver, Vector
 	}
 	
 	
-	public void setAlpha(Graphics2D g, float alpha)
+	final public void setAlpha(Graphics2D g, float alpha)
 	{
 		if (g.getComposite() instanceof AlphaComposite) {
 			AlphaComposite ac = (AlphaComposite)g.getComposite();
@@ -580,37 +571,37 @@ public abstract class DisplayObject implements ImageObserver, Vector
 	}
 
 
-	public <T> void pushObject(T value){
+	final public <T> void pushObject(T value){
 		display_stack.push(value);
 	}
 	
-	public <T> T popObject(Class<T> type){
+	final public <T> T popObject(Class<T> type){
 		return type.cast(display_stack.pop());
 	}
 	
 //	---------------------------------------------------------------------------------------------------------------------------------------
 	@Override
-	public void addVectorX(double dx) {
+	final public void addVectorX(double dx) {
 		this.x += dx;
 	}
 
 	@Override
-	public void addVectorY(double dy) {
+	final public void addVectorY(double dy) {
 		this.y += dy;
 	}
 
 	@Override
-	public double getVectorX() {
+	final public double getVectorX() {
 		return this.x;
 	}
 
 	@Override
-	public double getVectorY() {
+	final public double getVectorY() {
 		return this.y;
 	}
 
 	@Override
-	public void setVectorX(double x) {
+	final public void setVectorX(double x) {
 		this.x = x;
 	}
 

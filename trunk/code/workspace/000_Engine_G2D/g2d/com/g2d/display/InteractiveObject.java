@@ -126,8 +126,10 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 			return false;
 		} else if (isOnDragged()) {
 			return true;
+		} else if (isHitMouse() && g.hitClip(mouse_x, mouse_y, 1, 1)) {
+			return true;
 		} else {
-			return super.testCatchMouse(g);
+			return false;
 		}
 	}
 

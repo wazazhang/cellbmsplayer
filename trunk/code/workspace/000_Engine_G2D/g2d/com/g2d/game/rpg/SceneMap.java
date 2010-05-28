@@ -82,6 +82,11 @@ public abstract class SceneMap extends DisplayObjectContainer implements AstarMa
 	}
 
 	@Override
+	protected boolean testCatchMouse(Graphics2D g) {
+		return false;
+	}
+	
+	@Override
 	synchronized public boolean addChild(DisplayObject child) {
 		if ((child instanceof Unit)) {
 			Unit unit = (Unit)child;
@@ -304,6 +309,12 @@ public abstract class SceneMap extends DisplayObjectContainer implements AstarMa
 		public TerrainViewer() {
 			priority = 10000;
 		}
+		
+		@Override
+		protected boolean testCatchMouse(Graphics2D g) {
+			return false;
+		}
+		
 		public void added(DisplayObjectContainer parent) {}
 		public void removed(DisplayObjectContainer parent) {}
 		public void update() {}	

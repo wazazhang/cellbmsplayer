@@ -494,7 +494,7 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	public static class DefaultObjectSorter implements Comparator<DisplayObject> {
 		@Override
 		public int compare(DisplayObject o1, DisplayObject o2) {
-			return o1.compareTo(o2);
+			return (int)((o1.z+o1.priority) - (o2.z+o2.priority));
 		}
 	}
 	
