@@ -72,10 +72,15 @@ public abstract class DisplayObjectContainer extends DisplayObject
 
 			case DisplayObjectEvent.EVENT_ADD:
 				elements_buffer.add(event.source);
+				event.source.parent = this;
+				event.source.root	= this.root;
+				event.source.onAdded(this);
 				break;
 				
 			case DisplayObjectEvent.EVENT_DELETE:
 				elements_buffer.remove(event.source);
+				event.source.onRemoved(this);
+				event.source.parent = null;
 				break;
 				
 			case DisplayObjectEvent.EVENT_MOVE_TOP:
@@ -289,10 +294,9 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	
 	public boolean addChild(DisplayObject child){
 		if (child.parent == null) {
+			child.parent = this;
+			child.root = this.getRoot();
 			elements_set.put(child, child);
-			child.parent 	= this;
-			child.root		= this.root;
-			child.onAdded(this);
 			events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_ADD, child));
 			if (always_top_element != null) {
 				events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_MOVE_TOP, always_top_element));
@@ -306,7 +310,6 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	public boolean removeChild(DisplayObject child) {
 		if (child.parent == this) {
 			elements_set.remove(child);
-			child.onRemoved(this);
 			child.parent = null;
 			if (always_top_element == child) {
 				always_top_element = null;
