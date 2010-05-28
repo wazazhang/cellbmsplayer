@@ -32,5 +32,9 @@ public class DisplayImage extends DisplayObject
 	@Override
 	public void update() {}
 	
+	@Override
+	protected boolean testCatchMouse(Graphics2D g) {
+		return false;
+	}
 
 }

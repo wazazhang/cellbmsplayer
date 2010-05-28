@@ -120,7 +120,6 @@ public class DisplayObjectPanel extends JPanel implements Runnable, ComponentLis
 			g.setColor(back_color);
 			g.fill(local_bounds);
 		}
-		
 		@Override
 		public void update() {}
 	}

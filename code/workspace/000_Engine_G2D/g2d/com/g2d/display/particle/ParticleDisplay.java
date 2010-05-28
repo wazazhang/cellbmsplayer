@@ -205,19 +205,23 @@ public class ParticleDisplay extends com.g2d.display.particle.ParticleSystem
 			}
 		}
 		
-		public double 	getVectorX() {return this.x;}
-		public double 	getVectorY() {return this.y;}
-		public void 	setVectorX(double x) {this.x = x;}
-		public void 	setVectorY(double y) {this.y = y;}
-		public void 	addVectorX(double dx) {this.x+=dx;}
-		public void 	addVectorY(double dy) {this.y+=dy;}
+//		public double 	getVectorX() {return this.x;}
+//		public double 	getVectorY() {return this.y;}
+//		public void 	setVectorX(double x) {this.x = x;}
+//		public void 	setVectorY(double y) {this.y = y;}
+//		public void 	addVectorX(double dx) {this.x+=dx;}
+//		public void 	addVectorY(double dy) {this.y+=dy;}
 		public float 	getAlpha() {return this.tl_alpha;}
 		public float 	getSize() {return this.tl_size;}
 		public float 	getSpin() {return this.tl_spin;}
 		public Vector 	getSpeed() {return this.speed;}
 		public float 	getAcceleration() {return acceleration;}
 		public void 	setAcceleration(float acc) {this.acceleration=acc;}
-	
+		
+		@Override
+		protected boolean testCatchMouse(Graphics2D g) {
+			return false;
+		}
 		
 		@Override
 		public void removed(DisplayObjectContainer parent) {

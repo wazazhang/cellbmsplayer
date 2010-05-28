@@ -289,6 +289,11 @@ public abstract class Stage extends DisplayObjectContainer
 	
 //	---------------------------------------------------------------------------------------------------------------
 
+	@Override
+	final protected boolean testCatchMouse(Graphics2D g) {
+		return false;
+	}
+	
 	final public void focuseClean(Canvas canvas) {
 		stopDragDrop();
 	}
