@@ -13,6 +13,7 @@ import com.cell.CUtil;
 import com.cell.math.MathVector;
 import com.cell.math.TVector;
 import com.cell.math.Vector;
+import com.g2d.display.DisplayObject;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.DisplayObjectLeaf;
 import com.g2d.display.particle.Layer.TimeNode;
@@ -63,59 +64,13 @@ public class ParticleDisplay extends com.g2d.display.particle.ParticleSystem
 		}
 	}
 
-//	------------------------------------------------------------------------------------------------------------------------
-	
-	public static java.awt.Rectangle getOriginBounds(ParticleData data) {
-		int x1=0, y1=0, x2=0, y2=0;
-		for (Layer layer : data) {
-			java.awt.Rectangle shape = getOriginShape(layer).getBounds();
-			x1 = Math.min(x1, shape.x);
-			y1 = Math.min(y1, shape.y);
-			x2 = Math.max(x2, shape.x+shape.width);
-			y2 = Math.max(y2, shape.y+shape.height);
-		}
-		return new java.awt.Rectangle(x1, y1, x2-x1, y2-y1);
-	}
-	
-	public static Shape getOriginShape(Layer layer)
-	{
-		// spawn shape
-		Shape shape = layer.origin_shape.getShape();
-				
-		shape = AffineTransform.getScaleInstance(layer.origin_scale_x, layer.origin_scale_y)
-				.createTransformedShape(shape);
-		shape = AffineTransform.getRotateInstance(layer.origin_rotation_angle)
-				.createTransformedShape(shape);
-		shape = AffineTransform.getTranslateInstance(layer.origin_x, layer.origin_y)
-				.createTransformedShape(shape);
-		
-		return shape;
-	}
-	
-	public static Vector getOriginPosition(Layer layer)
-	{
-		// spawn origin
-		Vector pos = layer.origin_shape.getPosition(random);
-		MathVector.scale(pos, layer.origin_scale_x, layer.origin_scale_y);
-		MathVector.rotate(pos, layer.origin_rotation_angle);
-		MathVector.move(pos, layer.origin_x, layer.origin_y);
-		return pos;
-	}
-	
-	public static Vector getSpawnSpeed(Layer layer, Vector origin_pos)
-	{
-		Vector speed	= new TVector();
-		if (!layer.spawn_orgin_angle) {
-			MathVector.movePolar(speed, 
-					layer.spawn_angle    + CUtil.getRandom(random, -layer.spawn_angle_range,    layer.spawn_angle_range), 
-					layer.spawn_velocity + CUtil.getRandom(random, -layer.spawn_velocity_range, layer.spawn_velocity_range));
-		} else {
-			double degree = MathVector.getDegree(origin_pos.getVectorX(), origin_pos.getVectorY());
-			MathVector.movePolar(speed, 
-					degree, 
-					layer.spawn_velocity + CUtil.getRandom(random, -layer.spawn_velocity_range, layer.spawn_velocity_range));
-		}
-		return speed;
+	/**
+	 * 将粒子节点放到父节点里显示
+	 * @param parent
+	 * @param node
+	 */
+	protected void addParticleNode(DisplayObjectContainer parent, DisplayObject node) {
+		parent.addChild(node);
 	}
 	
 //	------------------------------------------------------------------------------------------------------------------------
@@ -157,12 +112,12 @@ public class ParticleDisplay extends com.g2d.display.particle.ParticleSystem
 					if (layer.is_local_coordinate) {
 						node.x				= (float)origin_pos.getVectorX();
 						node.y				= (float)origin_pos.getVectorY();
-						display.addChild(node);
+						display.addParticleNode(display, node);
 					} else {
 						node.x				= display.x + (float)origin_pos.getVectorX();
 						node.y				= display.y + (float)origin_pos.getVectorY();
 						if (display.getParent() != null) {
-							display.getParent().addChild(node);
+							display.addParticleNode(display.getParent(), node);
 						}
 					}
 					
@@ -332,5 +287,62 @@ public class ParticleDisplay extends com.g2d.display.particle.ParticleSystem
 		}
 		
 	}
+
+//	------------------------------------------------------------------------------------------------------------------------
+	
+	public static java.awt.Rectangle getOriginBounds(ParticleData data) {
+		int x1=0, y1=0, x2=0, y2=0;
+		for (Layer layer : data) {
+			java.awt.Rectangle shape = getOriginShape(layer).getBounds();
+			x1 = Math.min(x1, shape.x);
+			y1 = Math.min(y1, shape.y);
+			x2 = Math.max(x2, shape.x+shape.width);
+			y2 = Math.max(y2, shape.y+shape.height);
+		}
+		return new java.awt.Rectangle(x1, y1, x2-x1, y2-y1);
+	}
+	
+	public static Shape getOriginShape(Layer layer)
+	{
+		// spawn shape
+		Shape shape = layer.origin_shape.getShape();
+				
+		shape = AffineTransform.getScaleInstance(layer.origin_scale_x, layer.origin_scale_y)
+				.createTransformedShape(shape);
+		shape = AffineTransform.getRotateInstance(layer.origin_rotation_angle)
+				.createTransformedShape(shape);
+		shape = AffineTransform.getTranslateInstance(layer.origin_x, layer.origin_y)
+				.createTransformedShape(shape);
+		
+		return shape;
+	}
+	
+	public static Vector getOriginPosition(Layer layer)
+	{
+		// spawn origin
+		Vector pos = layer.origin_shape.getPosition(random);
+		MathVector.scale(pos, layer.origin_scale_x, layer.origin_scale_y);
+		MathVector.rotate(pos, layer.origin_rotation_angle);
+		MathVector.move(pos, layer.origin_x, layer.origin_y);
+		return pos;
+	}
+	
+	public static Vector getSpawnSpeed(Layer layer, Vector origin_pos)
+	{
+		Vector speed	= new TVector();
+		if (!layer.spawn_orgin_angle) {
+			MathVector.movePolar(speed, 
+					layer.spawn_angle    + CUtil.getRandom(random, -layer.spawn_angle_range,    layer.spawn_angle_range), 
+					layer.spawn_velocity + CUtil.getRandom(random, -layer.spawn_velocity_range, layer.spawn_velocity_range));
+		} else {
+			double degree = MathVector.getDegree(origin_pos.getVectorX(), origin_pos.getVectorY());
+			MathVector.movePolar(speed, 
+					degree, 
+					layer.spawn_velocity + CUtil.getRandom(random, -layer.spawn_velocity_range, layer.spawn_velocity_range));
+		}
+		return speed;
+	}
+	
+//	------------------------------------------------------------------------------------------------------------------------
 	
 }
