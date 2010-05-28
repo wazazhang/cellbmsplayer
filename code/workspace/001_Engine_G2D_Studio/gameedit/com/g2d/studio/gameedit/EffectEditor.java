@@ -484,6 +484,7 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 			JLabel		particles_per_frame		= new JLabel("粒子每帧释放多少个");
 			JSpinner	particles_per_frame_v 	= new JSpinner(new SpinnerNumberModel(10, 0, Integer.MAX_VALUE, 1));
 			JCheckBox	particles_cointinued_v 	= new JCheckBox("粒子持续释放");
+			JCheckBox	is_local_coordinate_v 	= new JCheckBox("粒子是否释放到本身坐标系统");
 			
 			public PageScene() 
 			{
@@ -514,6 +515,9 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 					particles_cointinued_v	.setBounds(sx, sy, 200, 24); sy += 25;
 					super.add(particles_cointinued_v);
 					
+					is_local_coordinate_v	.setBounds(sx, sy, 200, 24); sy += 25;
+					super.add(is_local_coordinate_v);
+					
 					name_v.addKeyListener(this);
 				}
 			}
@@ -536,7 +540,7 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 				particle_max_age_v		.setValue(layer.particle_max_age);
 				particles_per_frame_v	.setValue(layer.particles_per_frame);
 				particles_cointinued_v	.setSelected(layer.particles_continued);
-
+				is_local_coordinate_v	.setSelected(layer.is_local_coordinate);
 			}
 			
 			void getData(Layer layer) {
@@ -546,6 +550,7 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 				layer.particle_max_age		= Parser.castNumber(particle_max_age_v.getValue(), Integer.class);
 				layer.particles_per_frame	= Parser.castNumber(particles_per_frame_v.getValue(), Integer.class);
 				layer.particles_continued	= particles_cointinued_v.isSelected();
+				layer.is_local_coordinate	= is_local_coordinate_v.isSelected();
 			}
 		}
 //		-------------------------------------------------------------------------------------------------------------------------------
