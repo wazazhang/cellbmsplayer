@@ -31,7 +31,7 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	
 //	-------------------------------------------------------------
 
-	/** true 如果不在local_bounds内,则忽略事件处理 (包括孩子的) */
+	/** true 如果不在父节点的local_bounds内,则忽略事件处理 (包括孩子的) */
 	protected boolean 					ignore_render_without_parent_bounds = false;
 	
 	ConcurrentHashMap<DisplayObject, DisplayObject>

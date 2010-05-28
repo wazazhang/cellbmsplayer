@@ -149,16 +149,24 @@ public class ParticleDisplay extends com.g2d.display.particle.ParticleSystem
 					// node
 					node.age_time		= CUtil.getRandom(random, layer.particle_min_age, layer.particle_max_age);
 					node.timer			= 0;
-					node.x				= display.x + (float)origin_pos.getVectorX();
-					node.y				= display.y + (float)origin_pos.getVectorY();
-					node.priority		= display.priority;
 					node.speed			.setVectorX(spawn_speed.getVectorX());
 					node.speed			.setVectorY(spawn_speed.getVectorY());
 					node.acceleration	= layer.spawn_acc + CUtil.getRandom(random, -layer.spawn_acc_range, layer.spawn_acc_range);
+					node.priority		= display.priority;
 					
-					if (display.getParent() != null) {
-						display.getParent().addChild(node);
+					if (layer.is_local_coordinate) {
+						node.x				= (float)origin_pos.getVectorX();
+						node.y				= (float)origin_pos.getVectorY();
+						display.addChild(node);
+					} else {
+						node.x				= display.x + (float)origin_pos.getVectorX();
+						node.y				= display.y + (float)origin_pos.getVectorY();
+						if (display.getParent() != null) {
+							display.getParent().addChild(node);
+						}
 					}
+					
+					
 				} else {
 					break;
 				}
