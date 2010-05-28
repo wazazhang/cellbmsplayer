@@ -73,7 +73,7 @@ public abstract class Stage extends DisplayObjectContainer
 
 //	---------------------------------------------------------------------------------------------------------------
 
-	public void setTransitionMaxTime(int time) {
+	final public void setTransitionMaxTime(int time) {
 		transition_max_time = Math.max(1, time);
 	}
 	
@@ -291,7 +291,7 @@ public abstract class Stage extends DisplayObjectContainer
 
 	@Override
 	final protected boolean testCatchMouse(Graphics2D g) {
-		return false;
+		return true;
 	}
 	
 	final public void focuseClean(Canvas canvas) {
@@ -320,7 +320,7 @@ public abstract class Stage extends DisplayObjectContainer
 
 //	---------------------------------------------------------------------------------------------------------------
 	
-	public AnimateCursor getCursor() {
+	final public AnimateCursor getCursor() {
 		return last_cursor;
 	}
 	
@@ -374,35 +374,35 @@ public abstract class Stage extends DisplayObjectContainer
 	 * 得到当前获得鼠标的最高层单位
 	 * @return
 	 */
-	public DisplayObject getMousePickedObject() {
+	final public DisplayObject getMousePickedObject() {
 		return last_mouse_picked_object;
 	}
 	
-	public<T> T getMousePickedObjectAs(Class<T> type) {
+	final public<T> T getMousePickedObjectAs(Class<T> type) {
 		if (type.isInstance(last_mouse_picked_object)) {
 			return type.cast(last_mouse_picked_object);
 		}
 		return null;
 	}
 	
-	void setMousePickedObject(DisplayObject object) {
+	final void setMousePickedObject(DisplayObject object) {
 		mouse_picked_object = object;
 	}
 
 //	----------------------------------------------------------------------------------------------------------------------
 	
-	public void setDragDropObjectAlpha(float alpha) {
+	final public void setDragDropObjectAlpha(float alpha) {
 		alpha = Math.min(1.0f, alpha);
 		alpha = Math.max(0.1f, alpha);
 		drag_drop_object_alpha = alpha;
 	}
 	
-	public void setDragDropObjectScale(float sw, float sh) {
+	final public void setDragDropObjectScale(float sw, float sh) {
 		drag_drop_scale_x = sw;
 		drag_drop_scale_y = sh;
 	}
 	
-	public InteractiveObject getDraggedObject() {
+	final public InteractiveObject getDraggedObject() {
 		return mouse_drag_drop_object;
 	}
 }
