@@ -69,8 +69,18 @@ public class ParticleDisplay extends com.g2d.display.particle.ParticleSystem
 	 * @param parent
 	 * @param node
 	 */
-	protected void addParticleNode(DisplayObjectContainer parent, DisplayObject node) {
-		parent.addChild(node);
+	protected void addParticleNode(DisplayObject node, Layer layer, double ox, double oy) {
+		if (layer.is_local_coordinate) {
+			node.x = ox;
+			node.y = oy;
+			this.addChild(node);
+		} else {
+			node.x = this.x + ox;
+			node.y = this.y + oy;
+			if (getParent() != null) {
+				getParent().addChild(node);
+			}
+		}
 	}
 	
 //	------------------------------------------------------------------------------------------------------------------------
@@ -109,19 +119,9 @@ public class ParticleDisplay extends com.g2d.display.particle.ParticleSystem
 					node.acceleration	= layer.spawn_acc + CUtil.getRandom(random, -layer.spawn_acc_range, layer.spawn_acc_range);
 					node.priority		= display.priority;
 					
-					if (layer.is_local_coordinate) {
-						node.x				= (float)origin_pos.getVectorX();
-						node.y				= (float)origin_pos.getVectorY();
-						display.addParticleNode(display, node);
-					} else {
-						node.x				= display.x + (float)origin_pos.getVectorX();
-						node.y				= display.y + (float)origin_pos.getVectorY();
-						if (display.getParent() != null) {
-							display.addParticleNode(display.getParent(), node);
-						}
-					}
-					
-					
+					display.addParticleNode(node, layer, 
+							origin_pos.getVectorX(), 
+							origin_pos.getVectorY());
 				} else {
 					break;
 				}
