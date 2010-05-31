@@ -247,11 +247,6 @@ public abstract class DisplayObject implements ImageObserver, Vector
 		return local_bounds.height;
 	}
 	
-	public void setLocation(int x, int y) {
-		this.x = x;
-		this.y = y;
-	}
-	
 	/**
 	 * 设置位于父节点的坐标
 	 * @return
