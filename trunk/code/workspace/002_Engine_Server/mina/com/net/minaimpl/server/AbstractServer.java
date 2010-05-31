@@ -72,19 +72,23 @@ public abstract class AbstractServer extends IoHandlerAdapter implements Server
 	
 	synchronized public void open(int port, ServerListener listener) throws IOException 
 	{
-		this.SrvListener	= listener;
-		this.StartTime		= System.currentTimeMillis();
-		log.info("starting server at port : " + port);
-		Acceptor.bind(new InetSocketAddress(port));
-		log.info("server started !");
+		if (!Acceptor.isActive()) {
+			this.SrvListener	= listener;
+			this.StartTime		= System.currentTimeMillis();
+			log.info("starting server at port : " + port);
+			Acceptor.bind(new InetSocketAddress(port));
+			log.info("server started !");
+		}
 	}
 	
 	synchronized public void close() throws IOException
 	{
-		log.info("server closing...");
-		Acceptor.unbind();
-		Acceptor.dispose();
-		log.info("server closed !");
+		if (!Acceptor.isDisposed()) {
+			log.info("server closing...");
+			Acceptor.unbind();
+			Acceptor.dispose();
+			log.info("server closed !");
+		}
 	}
 
 //	-----------------------------------------------------------------------------------------------------------------------
