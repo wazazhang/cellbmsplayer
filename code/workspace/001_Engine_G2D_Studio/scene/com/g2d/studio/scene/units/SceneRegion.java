@@ -121,7 +121,10 @@ public class SceneRegion extends com.g2d.game.rpg.Unit implements SceneUnitTag<R
 		enable_input 		= true;
 		super.added(parent);
 	}
-	
+
+	protected boolean enable_click_focus() {
+		return true;
+	}
 
 //	--------------------------------------------------------------------------------------------------------
 	
