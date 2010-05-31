@@ -93,6 +93,9 @@ public abstract class Window extends Container
 		return this.getParent() == null;
 	}
 	
+	public boolean isVisible() {
+		return this.getParent() != null;
+	}
 	
 	public void setCenter(DisplayObjectContainer screen) {
 		setLocation(
