@@ -113,7 +113,10 @@ public class ScenePoint extends com.g2d.game.rpg.Unit implements SceneUnitTag<Po
 			err.printStackTrace();
 		}
 	}
-	
+
+	protected boolean enable_click_focus() {
+		return true;
+	}
 //	--------------------------------------------------------------------------------------------------------
 
 	@Override

@@ -121,7 +121,10 @@ public class SceneImmutable extends SceneSprite implements SceneUnitTag<Immutabl
 		super.loaded(set, cspr, spr);
 		this.getSprite().setCurrentAnimate(cur_anim);
 	}
-	
+
+	protected boolean enable_click_focus() {
+		return true;
+	}
 //	--------------------------------------------------------------------------------------------------------
 	
 	@Override

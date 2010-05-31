@@ -13,6 +13,7 @@ import java.util.Vector;
 import javax.swing.ImageIcon;
 import javax.swing.JList;
 
+import com.cell.gfx.game.CCD;
 import com.cell.gfx.game.CSprite;
 import com.cell.rpg.quest.ability.QuestAccepter;
 import com.cell.rpg.quest.ability.QuestPublisher;
@@ -169,6 +170,10 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 		this.getSprite().setCurrentAnimate(cur_anim);
 	}
 	
+	protected boolean enable_click_focus() {
+		return true;
+	}
+
 //	--------------------------------------------------------------------------------------------------------
 	
 	@Override
@@ -215,6 +220,12 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 		if (csprite!=null) 
 		{
 			csprite.nextCycFrame();
+			CCD bounds = csprite.getFrameBounds(csprite.getCurrentAnimate());
+			this.local_bounds.setBounds(
+					bounds.X1, 
+					bounds.Y1,
+					bounds.getWidth(),
+					bounds.getHeight());
 		}
 		
 //		current selected unit
@@ -231,6 +242,7 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 				cur_anim = getSprite().getCurrentAnimate();
 			}
 		}
+		
 		
 		effects.updateActor(this);
 	}

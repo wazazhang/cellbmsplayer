@@ -113,6 +113,9 @@ public class SceneEffect extends com.g2d.game.rpg.Unit implements SceneUnitTag<E
 		addChild(particle_layers);
 	}
 
+	protected boolean enable_click_focus() {
+		return true;
+	}
 //	--------------------------------------------------------------------------------------------------------
 	
 	@Override

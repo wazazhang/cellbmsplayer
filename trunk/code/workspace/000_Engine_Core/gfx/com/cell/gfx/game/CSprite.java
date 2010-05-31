@@ -971,6 +971,18 @@ public class CSprite extends CUnit {
 		return getFrameBounds(anim, frame, bounds);
 	}
 	
+	public CCD getFrameBounds(int anim) {
+		CCD bounds = CCD.createCDRect(CCD.CD_TYPE_RECT, 0, 0, 0, 0);
+		bounds.X1 = Short.MAX_VALUE;
+		bounds.Y1 = Short.MAX_VALUE;
+		bounds.X2 = Short.MIN_VALUE;
+		bounds.Y2 = Short.MIN_VALUE;
+		for (int f = 0; f < getFrameCount(anim); f++) {
+			getFrameBounds(anim, f, bounds);
+		}
+		return bounds;
+	}
+	
 	public CCD getFrameBounds(CCD out_bounds){
 		return getFrameBounds(CurAnimate, CurFrame, out_bounds);
 	}
