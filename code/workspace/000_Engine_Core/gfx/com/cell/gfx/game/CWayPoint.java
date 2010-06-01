@@ -1,14 +1,17 @@
 
 package com.cell.gfx.game;
 
+import java.io.Serializable;
 import java.util.Vector;
 
 
 import com.cell.CObject;
 import com.cell.gfx.IGraphics;
 
-public class CWayPoint extends CObject {
-
+public class CWayPoint extends CObject implements Serializable
+{
+	private static final long serialVersionUID = 1L;
+	
 	public int X = 0;
 	public int Y = 0;
 	

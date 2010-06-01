@@ -1,5 +1,7 @@
 ﻿package com.cell.gfx.game;
 
+import java.io.Serializable;
+
 import com.cell.CMath;
 import com.cell.CObject;
 
@@ -8,7 +10,9 @@ import com.cell.CObject;
  * @since 2006-11-30 
  * @version 1.0
  */
-public class CGroup extends CObject {
+public class CGroup extends CObject implements Serializable
+{
+	private static final long serialVersionUID = 1L;
 
 	protected short Frames[][];
 	

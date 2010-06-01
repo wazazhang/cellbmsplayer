@@ -1,6 +1,8 @@
 
 package com.cell.gfx.game;
 
+import java.io.Serializable;
+
 import com.cell.gfx.IGraphics;
 import com.cell.gfx.IImage;
 
@@ -12,7 +14,9 @@ import com.cell.gfx.IImage;
  * @since 2006-11-30 
  * @version 1.0
  */
-public class CMap extends CUnit {
+public class CMap extends CUnit implements Serializable
+{
+	private static final long serialVersionUID = 1L;
 
 	public	int AnimateTimer = 0;
 	
