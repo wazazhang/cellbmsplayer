@@ -2,6 +2,8 @@
 package com.cell.gfx.game;
 
 
+import java.io.Serializable;
+
 import com.cell.CMath;
 import com.cell.gfx.IGraphics;
 import com.cell.gfx.IImage;
@@ -19,7 +21,10 @@ import com.cell.gfx.IImage;
  * @since 2006-11-30 
  * @version 1.0
  */
-public class CSprite extends CUnit {
+public class CSprite extends CUnit implements Serializable
+{
+
+	private static final long serialVersionUID = 1L;
 	
 //	----------------------------------------------------------------------------------------------
 	protected boolean IsRemoved 	= false;
