@@ -13,7 +13,10 @@ import com.cell.gfx.IGraphics;
  * @since 2006-11-29 
  * @version 1.0
  */
-public class CCollides extends CGroup{
+public class CCollides extends CGroup
+{
+	private static final long serialVersionUID = 1L;
+	
 	protected CCD cds[];
 
 	/**

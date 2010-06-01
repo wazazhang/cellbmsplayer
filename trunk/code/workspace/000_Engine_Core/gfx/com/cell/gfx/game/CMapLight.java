@@ -5,6 +5,7 @@ import com.cell.gfx.IGraphics;
 
 public class CMapLight extends CMap 
 {
+	private static final long serialVersionUID = 1L;
 	
 	int[][] MatrixColor;
 

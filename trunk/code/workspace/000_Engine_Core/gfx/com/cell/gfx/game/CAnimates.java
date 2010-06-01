@@ -17,7 +17,10 @@ import com.cell.gfx.IImages;
  * @since 2006-11-29 
  * @version 1.0
  */
-public class CAnimates extends CGroup{
+public class CAnimates extends CGroup
+{
+	private static final long serialVersionUID = 1L;
+	
 	protected IImages images ;
 	
 	protected short[] SX;
