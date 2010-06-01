@@ -5,13 +5,16 @@
  */
 package com.cell.gfx.game;
 
+import java.io.Serializable;
+
 import com.cell.CMath;
 import com.cell.CObject;
 import com.cell.gfx.IGraphics;
 
-public class CCD extends CObject
+public class CCD extends CObject implements Serializable
 {
-
+	private static final long serialVersionUID = 1L;
+	
 	final static public byte CD_TYPE_RECT = 1;
 	final static public byte CD_TYPE_LINE = 2;
 	final static public byte CD_TYPE_POINT = 3;
@@ -29,9 +32,9 @@ public class CCD extends CObject
 	/**Bottom*/
 	public short Y2;
 
-	public Object Data;
+	transient public Object Data;
 	
-	public String[] SetData;
+	transient public String[] SetData;
 	
 	public CCD() {}
 
