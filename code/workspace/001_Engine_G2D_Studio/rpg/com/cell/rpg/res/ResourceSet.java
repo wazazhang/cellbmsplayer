@@ -58,6 +58,8 @@ public abstract class ResourceSet<T extends CellSetObject> implements Serializab
 
 	public static class ImagesSet extends ResourceSet<CellSetResource.ImagesSet>
 	{
+		private static final long serialVersionUID = 1L;
+		
 		public ImagesSet(
 				String cpj_name, 
 				String set_name, 
@@ -79,6 +81,8 @@ public abstract class ResourceSet<T extends CellSetObject> implements Serializab
 	/** 将编辑器导出的output文件里的场景信息的描述 */
 	public static class SceneSet extends ResourceSet<CellSetResource.WorldSet>
 	{
+		private static final long serialVersionUID = 1L;
+		
 		SceneSet(
 				String cpj_name, 
 				String set_name, 
@@ -98,6 +102,8 @@ public abstract class ResourceSet<T extends CellSetObject> implements Serializab
 	
 	public static class SpriteSet extends ResourceSet<CellSetResource.SpriteSet>
 	{
+		private static final long serialVersionUID = 1L;
+
 		SpriteSet(
 				String cpj_name, 
 				String set_name, 
