@@ -272,6 +272,16 @@ public class QuestItem extends RPGObject implements NamedObject
 		public AbstractValue		dst_value		= new Value(1);
 	}
 	
+	@Property({"[条件] 组队人数", "0代表没组队"})
+	public static class TagTeamPlayerCountComparison extends Tag
+	{
+		@Property("比较器")
+		public Comparison 			comparison		= Comparison.EQUAL;
+		
+		@Property("目标值")
+		public AbstractValue		dst_value		= new Value(1);
+	}
+	
 //	--------------------------------------------------------------------------------------
 	
 	public static abstract class Result extends QuestItemAbility
