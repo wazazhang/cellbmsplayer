@@ -289,7 +289,15 @@ public abstract class DisplayObject implements ImageObserver, Vector
 		local_bounds.width = w;
 		local_bounds.height = h;
 	}
-	
+
+	/**
+	 * 设置优先级
+	 * @param p
+	 */
+	public void setPriority(int p) {
+		this.priority = p;
+	}
+
 //	--------------------------------------------------------------------------------------------------------------------------------------------
 //	screen position with root
 	
