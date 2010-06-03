@@ -2,8 +2,8 @@ package com.cell.math;
 
 public class TVector implements Vector
 {
-	double x;
-	double y;
+	public double x;
+	public double y;
 
 	public TVector() {}
 	
