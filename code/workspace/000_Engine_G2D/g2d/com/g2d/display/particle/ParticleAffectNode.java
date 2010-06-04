@@ -9,6 +9,6 @@ public interface ParticleAffectNode extends Vector
 	public float	getAlpha();
 
 	public Vector	getSpeed();
-	public float	getAcceleration();
-	public void 	setAcceleration(float acc);
+	public Vector	getAcc();
+	public float	getDamp();
 }

@@ -576,19 +576,28 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 			JScrollPane	orgin_shape_pane		= new JScrollPane(new JPanel());
 			
 			JCheckBox	spawn_orgin_angle		= new JCheckBox("以原点发射");
+		
 			JLabel		spawn_angle				= new JLabel("发射角度");
 			JSpinner	spawn_angle_v			= new JSpinner(new SpinnerNumberModel(-90f, -360d, 360d, 1f));
 			JLabel		spawn_angle_range		= new JLabel("发射角度随机±范围");
 			JSpinner	spawn_angle_range_v		= new JSpinner(new SpinnerNumberModel(-90f, -360d, 360d, 1f));
+			
 			JLabel		spawn_velocity			= new JLabel("发射速度");
 			JSpinner	spawn_velocity_v		= new JSpinner(new SpinnerNumberModel(4.0f, -Float.MAX_VALUE, Float.MAX_VALUE, 0.1f));
 			JLabel		spawn_velocity_range	= new JLabel("发射速度随机±范围");
 			JSpinner	spawn_velocity_range_v	= new JSpinner(new SpinnerNumberModel(2.0f, -Float.MAX_VALUE, Float.MAX_VALUE, 0.1f));
+			
 			JLabel		spawn_acc				= new JLabel("发射加速度");
-			JSpinner	spawn_acc_v				= new JSpinner(new SpinnerNumberModel(1.0f, 0f, Float.MAX_VALUE, 0.01f));
+			JSpinner	spawn_acc_v				= new JSpinner(new SpinnerNumberModel(1.0f, -Float.MAX_VALUE, Float.MAX_VALUE, 0.01f));
 			JLabel		spawn_acc_range			= new JLabel("发射加速度随机±范围");
 			JSpinner	spawn_acc_range_v		= new JSpinner(new SpinnerNumberModel(0.0f, -Float.MAX_VALUE, Float.MAX_VALUE, 0.01f));
-
+			
+			JLabel		spawn_damp				= new JLabel("速度阻尼");
+			JSpinner	spawn_damp_v			= new JSpinner(new SpinnerNumberModel(1.0f, 0f, Float.MAX_VALUE, 0.01f));
+			JLabel		spawn_damp_range		= new JLabel("速度阻尼随机±范围");
+			JSpinner	spawn_damp_range_v		= new JSpinner(new SpinnerNumberModel(0.0f, -Float.MAX_VALUE, Float.MAX_VALUE, 0.01f));
+			
+			
 			public PageOrigin() 
 			{
 				int sx = 20, sy = 20;
@@ -655,6 +664,15 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 					super.add(spawn_acc_v);
 					super.add(spawn_acc_range);
 					super.add(spawn_acc_range_v);
+					
+					spawn_damp				.setBounds(sx + 0,   sy, 200, 24); sy += 25;
+					spawn_damp_v			.setBounds(sx + 0,   sy, 200, 24); sy += 25;
+					spawn_damp_range		.setBounds(sx + 0,   sy, 200, 24); sy += 25;
+					spawn_damp_range_v		.setBounds(sx + 0,   sy, 200, 24); sy += 25;
+					super.add(spawn_damp);
+					super.add(spawn_damp_v);
+					super.add(spawn_damp_range);
+					super.add(spawn_damp_range_v);
 				}
 			}
 			
@@ -676,12 +694,18 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 				}
 				
 				spawn_orgin_angle		.setSelected(layer.spawn_orgin_angle);
+				
 				spawn_angle_v			.setValue(Math.toDegrees(layer.spawn_angle));
 				spawn_angle_range_v		.setValue(Math.toDegrees(layer.spawn_angle_range));
+				
 				spawn_velocity_v		.setValue(layer.spawn_velocity);
 				spawn_velocity_range_v	.setValue(layer.spawn_velocity_range);
+			
 				spawn_acc_v				.setValue(layer.spawn_acc);
 				spawn_acc_range_v		.setValue(layer.spawn_acc_range);
+
+				spawn_damp_v			.setValue(layer.spawn_damp);
+				spawn_damp_range_v		.setValue(layer.spawn_damp_range);
 				
 				spawn_angle_v			.setEnabled(!spawn_orgin_angle.isSelected());
 				spawn_angle_range_v		.setEnabled(!spawn_orgin_angle.isSelected());
@@ -702,12 +726,18 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 				}
 				
 				layer.spawn_orgin_angle		= spawn_orgin_angle.isSelected();
+				
 				layer.spawn_angle			= (float)Math.toRadians((Double)(spawn_angle_v.getValue()));
 				layer.spawn_angle_range		= (float)Math.toRadians((Double)(spawn_angle_range_v.getValue()));
+				
 				layer.spawn_velocity		= Parser.castNumber(spawn_velocity_v.getValue(), Float.class);
 				layer.spawn_velocity_range	= Parser.castNumber(spawn_velocity_range_v.getValue(), Float.class);
+				
 				layer.spawn_acc				= Parser.castNumber(spawn_acc_v.getValue(), Float.class);
 				layer.spawn_acc_range		= Parser.castNumber(spawn_acc_range_v.getValue(), Float.class);
+				
+				layer.spawn_damp			= Parser.castNumber(spawn_damp_v.getValue(), Float.class);
+				layer.spawn_damp_range		= Parser.castNumber(spawn_damp_range_v.getValue(), Float.class);
 				
 				spawn_angle_v			.setEnabled(!spawn_orgin_angle.isSelected());
 				spawn_angle_range_v		.setEnabled(!spawn_orgin_angle.isSelected());
