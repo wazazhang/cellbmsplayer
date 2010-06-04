@@ -51,6 +51,9 @@ public class ParticleStage extends Stage
 			particle.setLocation(getMouseX(), getMouseY());
 			particle.spawn();
 		}
+		if (getRoot().isMouseHold(MouseEvent.BUTTON3)) {
+			particle.setLocation(getMouseX(), getMouseY());
+		}
 	}
 
 	public void render(java.awt.Graphics2D g) 
