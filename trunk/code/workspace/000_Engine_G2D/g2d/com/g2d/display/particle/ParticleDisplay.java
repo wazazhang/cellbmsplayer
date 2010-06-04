@@ -110,13 +110,22 @@ public class ParticleDisplay extends com.g2d.display.particle.ParticleSystem
 					Vector origin_pos	= getOriginPosition(layer);
 					// spawn speed direction acc
 					Vector spawn_speed	= getSpawnSpeed(layer, origin_pos);
+					Vector spawn_acc	= new TVector(0, 0);
+					MathVector.moveTo(spawn_acc, 
+							spawn_speed.getVectorX(), 
+							spawn_speed.getVectorY(), 
+							layer.spawn_acc + CUtil.getRandom(random, -layer.spawn_acc_range, layer.spawn_acc_range));
 					
 					// node
 					node.age_time		= CUtil.getRandom(random, layer.particle_min_age, layer.particle_max_age);
 					node.timer			= 0;
+					
 					node.speed			.setVectorX(spawn_speed.getVectorX());
 					node.speed			.setVectorY(spawn_speed.getVectorY());
-					node.acceleration	= layer.spawn_acc + CUtil.getRandom(random, -layer.spawn_acc_range, layer.spawn_acc_range);
+					node.acc			.setVectorX(spawn_acc.getVectorX());
+					node.acc			.setVectorY(spawn_acc.getVectorY());
+					
+					node.damp			= layer.spawn_damp + CUtil.getRandom(random, -layer.spawn_damp_range, layer.spawn_damp_range);
 					node.priority		= display.priority;
 					
 					display.addParticleNode(node, layer, 
@@ -157,7 +166,8 @@ public class ParticleDisplay extends com.g2d.display.particle.ParticleSystem
 		float	tl_spin			= 0;
 		
 		Vector	speed 			= new TVector(0, 0);
-		float	acceleration	= 0f;
+		Vector	acc				= new TVector(0, 0);
+		float	damp			= 0f;
 		
 		ParticleAppearance appearance;
 		
@@ -168,18 +178,12 @@ public class ParticleDisplay extends com.g2d.display.particle.ParticleSystem
 			}
 		}
 		
-//		public double 	getVectorX() {return this.x;}
-//		public double 	getVectorY() {return this.y;}
-//		public void 	setVectorX(double x) {this.x = x;}
-//		public void 	setVectorY(double y) {this.y = y;}
-//		public void 	addVectorX(double dx) {this.x+=dx;}
-//		public void 	addVectorY(double dy) {this.y+=dy;}
 		public float 	getAlpha() {return this.tl_alpha;}
 		public float 	getSize() {return this.tl_size;}
 		public float 	getSpin() {return this.tl_spin;}
 		public Vector 	getSpeed() {return this.speed;}
-		public float 	getAcceleration() {return acceleration;}
-		public void 	setAcceleration(float acc) {this.acceleration=acc;}
+		public Vector	getAcc() {return acc;}
+		public float 	getDamp() {return damp;}
 		
 		@Override
 		protected boolean testCatchMouse(Graphics2D g) {
@@ -203,7 +207,8 @@ public class ParticleDisplay extends com.g2d.display.particle.ParticleSystem
 			MathVector.move(this, 
 					speed.getVectorX(), 
 					speed.getVectorY());
-			MathVector.scale(speed, acceleration);
+			MathVector.move(speed, acc.getVectorX(), acc.getVectorY());
+			MathVector.scale(speed, damp);
 
 			float timeline_position = (float)(timer / age_time);
 			

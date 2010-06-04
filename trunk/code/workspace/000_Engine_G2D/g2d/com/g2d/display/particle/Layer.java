@@ -75,9 +75,14 @@ public class Layer implements Serializable
 	public float spawn_velocity_range	= 1.0f;
 	
 	/** 发射加速度 */
-	public float spawn_acc				= 1.0f;
+	public float spawn_acc				= 0.0f;
 	/** 发射加速度随机范围 */
 	public float spawn_acc_range		= 0.0f;
+	
+	/** 发射阻尼 */
+	public float spawn_damp				= 1.0f;
+	/** 发射阻尼随机范围 */
+	public float spawn_damp_range		= 0.0f;
 	
 //	------------------------------------------------------------------------------------------------------------------
 //	TimeLine And Affect
