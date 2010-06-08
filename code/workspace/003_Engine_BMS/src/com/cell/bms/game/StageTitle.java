@@ -57,7 +57,7 @@ public class StageTitle extends Stage
 			if (item == btn_load) {
 				File last = null;
 				try{
-					byte[] last_loaded = CObject.Storage.load("last_loaded", 0);
+					byte[] last_loaded = CObject.getStorage().load("last_loaded", 0);
 					File last_file = new File(new String(last_loaded, "UTF-8"));
 					if (last_file.exists()) {
 						last = last_file.getParentFile();
@@ -78,7 +78,7 @@ public class StageTitle extends Stage
 							StageGame.class
 					);
 					try{
-						CObject.Storage.save("last_loaded", 0, file.getPath().getBytes("UTF-8"));
+						CObject.getStorage().save("last_loaded", 0, file.getPath().getBytes("UTF-8"));
 					}catch(Exception err){}
 				}
 			}
