@@ -53,9 +53,10 @@ public abstract class Stage extends DisplayObjectContainer
 	
 	transient private AnimateCursor		last_cursor;
 	
-	transient private TVector			last_mouse_down_pos;
 	/** 鼠标移动多少像素开始拖拽 */
 	protected int						drag_drop_start_length			= 8;
+	transient private TVector			last_mouse_down_pos;
+	transient private UIObject			last_mouse_down_object;
 	
 //	-----------------------------------------------------------------------------------------------------------
 	
@@ -164,20 +165,25 @@ public abstract class Stage extends DisplayObjectContainer
 		super.onRender(g);
 		
 		if (getRoot().isMouseDown(MouseEvent.BUTTON_LEFT)) {
-			last_mouse_down_pos = new TVector(mouse_x, mouse_y);
-		} 
-		else if (getRoot().isMouseHold(MouseEvent.BUTTON_LEFT)) {
-			if (last_mouse_down_pos != null) {
+			if (mouse_picked_object instanceof UIObject) {
+				last_mouse_down_object = (UIObject)mouse_picked_object;
+				if (last_mouse_down_object.enable_drag_drop) {
+					last_mouse_down_pos = new TVector(mouse_x, mouse_y);
+				}
+			}
+		}
+		
+		if (getRoot().isMouseHold(MouseEvent.BUTTON_LEFT)) {
+			if (last_mouse_down_pos != null && last_mouse_down_object != null) {
 				if (MathVector.getDistance(
 						last_mouse_down_pos.x, 
 						last_mouse_down_pos.y, 
 						mouse_x, mouse_y) > Math.abs(drag_drop_start_length)) {
-					last_mouse_down_pos = null;
-					if (mouse_picked_object instanceof UIObject) {
-						UIObject interactive = (UIObject) mouse_picked_object;
-						if (interactive.enable_drag_drop) {
-							startDragDrop(interactive);
-						}
+					try {
+						startDragDrop(last_mouse_down_object);
+					} finally {
+						last_mouse_down_object = null;
+						last_mouse_down_pos = null;
 					}
 				}
 			}
