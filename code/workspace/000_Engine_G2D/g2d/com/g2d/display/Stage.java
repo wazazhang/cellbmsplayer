@@ -5,6 +5,8 @@ import java.awt.Graphics2D;
 import java.awt.event.FocusEvent;
 import java.text.AttributedString;
 
+import com.cell.math.MathVector;
+import com.cell.math.TVector;
 import com.g2d.Tools;
 import com.g2d.Version;
 import com.g2d.display.event.Event;
@@ -50,6 +52,10 @@ public abstract class Stage extends DisplayObjectContainer
 	transient private UIObject			mouse_drag_drop_object;
 	
 	transient private AnimateCursor		last_cursor;
+	
+	transient private TVector			last_mouse_down_pos;
+	/** 鼠标移动多少像素开始拖拽 */
+	protected int						drag_drop_start_length			= 8;
 	
 //	-----------------------------------------------------------------------------------------------------------
 	
@@ -158,14 +164,24 @@ public abstract class Stage extends DisplayObjectContainer
 		super.onRender(g);
 		
 		if (getRoot().isMouseDown(MouseEvent.BUTTON_LEFT)) {
-			if (mouse_picked_object instanceof UIObject) {
-				UIObject interactive = (UIObject) mouse_picked_object;
-				if (interactive.enable_drag_drop) {
-					startDragDrop(interactive);
+			last_mouse_down_pos = new TVector(mouse_x, mouse_y);
+		} 
+		else if (getRoot().isMouseHold(MouseEvent.BUTTON_LEFT)) {
+			if (last_mouse_down_pos != null) {
+				if (MathVector.getDistance(
+						last_mouse_down_pos.x, 
+						last_mouse_down_pos.y, 
+						mouse_x, mouse_y) > Math.abs(drag_drop_start_length)) {
+					last_mouse_down_pos = null;
+					if (mouse_picked_object instanceof UIObject) {
+						UIObject interactive = (UIObject) mouse_picked_object;
+						if (interactive.enable_drag_drop) {
+							startDragDrop(interactive);
+						}
+					}
 				}
 			}
-		} 
-		if (!getRoot().isMouseHold(MouseEvent.BUTTON_LEFT)) {
+		} else {
 			if (mouse_drag_drop_object!=null) {
 				stopDragDrop();
 			}
