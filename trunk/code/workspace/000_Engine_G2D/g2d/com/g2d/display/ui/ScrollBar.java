@@ -35,6 +35,7 @@ public class ScrollBar extends UIComponent
 	public int 				size			;
 	public int 				interval		= 20;
 	
+	private boolean			first			= true;
 //	--------------------------------------------------------------------------------------------------------------------------------
 	
 	private ScrollBar(boolean vscrool, int size) 
@@ -176,6 +177,19 @@ public class ScrollBar extends UIComponent
 			this.visible = true;
 		}
 		
+	}
+	
+	
+	@Override
+	public void render(Graphics2D g) {}
+	
+	@Override
+	protected void renderChilds(Graphics2D g) {
+		if (!first) {
+			super.renderChilds(g);
+		} else {
+			first = false;
+		}
 	}
 //	
 //	public int getWidth()
@@ -340,44 +354,38 @@ public class ScrollBar extends UIComponent
 				double h_len, double h_max,
 				double v_len, double v_max) 
 		{
+			{
+				v_scroll.setMax(v_max);
+				v_scroll.setValue(v_scroll.getValue(), v_len);
+				h_scroll.setMax(h_max);
+				h_scroll.setValue(h_scroll.getValue(), h_len);
+				v_scroll.visible = !v_scroll.isMaxLength();
+				h_scroll.visible = !h_scroll.isMaxLength();
+			}
+			
 			int vw = sw;
 			int vh = sh;
 			
+			boolean ev = (v_scroll.getParent() == parent) && v_scroll.visible;
+			boolean eh = (h_scroll.getParent() == parent) && h_scroll.visible;
 			{
-				if (v_scroll.enable) {
+				if (ev) {
 					v_scroll.setLocation(sx + sw - v_scroll.size, sy);
-					if (h_scroll.enable && h_scroll.visible) {
+					if (eh) {
 						v_scroll.setSize(v_scroll.size, sh - h_scroll.size);
 					} else {
 						v_scroll.setSize(v_scroll.size, sh);
 					}
+					vw -= v_scroll.getWidth();
 				}
-				if (h_scroll.enable) {
+				if (eh) {
 					h_scroll.setLocation(sx, sy + sh - h_scroll.size);
-					if (v_scroll.enable && v_scroll.visible) {
+					if (ev) {
 						h_scroll.setSize(sw - v_scroll.size, h_scroll.size);
 					} else {
 						h_scroll.setSize(sw, h_scroll.size);
 					}
-				}
-				
-				if (v_scroll.enable) {
-					v_scroll.setMax(v_max);
-					v_scroll.setValue(v_scroll.getValue(), v_len);
-				}
-				if (h_scroll.enable) {
-					h_scroll.setMax(h_max);
-					h_scroll.setValue(h_scroll.getValue(), h_len);
-				}
-				
-				v_scroll.visible = !v_scroll.isMaxLength();
-				h_scroll.visible = !h_scroll.isMaxLength();
-				
-				if (v_scroll.enable && v_scroll.visible) {
-					vh = v_scroll.getHeight();
-				}
-				if (h_scroll.enable && h_scroll.visible) {
-					vw = h_scroll.getWidth();
+					vh -= h_scroll.getHeight();
 				}
 			}
 			return new Rectangle(sx, sy, vw, vh);

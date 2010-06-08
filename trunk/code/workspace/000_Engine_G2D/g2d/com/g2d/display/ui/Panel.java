@@ -1,5 +1,7 @@
 package com.g2d.display.ui;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.util.Vector;
 
@@ -115,9 +117,13 @@ public class Panel extends UIComponent
 		scrollbar.h_scroll.enable = enable;
 	}
 	
+//	Rectangle view_rect ;
+	
 	@Override
-	protected void updateChilds() 
+	public void update() 
 	{
+		super.update();
+
 		int sx = layout.BorderSize;
 		int sy = layout.BorderSize;
 		int sw = getWidth()-(layout.BorderSize<<1);
@@ -132,9 +138,22 @@ public class Panel extends UIComponent
 		container.setLocation(
 				-(int)scrollbar.h_scroll.getValue(), 
 				-(int)scrollbar.v_scroll.getValue());
-		
+	}
+	
+	@Override
+	protected void updateChilds() 
+	{
 		super.updateChilds();
 	}
+	
+//	@Override
+//	protected void renderAfter(Graphics2D g) {
+//		super.renderAfter(g);
+//		if (view_rect!=null) {
+//			g.setColor(Color.GREEN);
+//			g.draw(view_rect);
+//		}
+//	}
 
 	public class PanelContainer extends Container
 	{
