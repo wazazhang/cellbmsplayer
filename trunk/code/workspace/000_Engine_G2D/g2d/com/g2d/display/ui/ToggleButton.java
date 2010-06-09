@@ -17,7 +17,7 @@ public abstract class ToggleButton extends BaseButton
 {
 	private static final long serialVersionUID	= Version.VersionG2D;
 	
-	private boolean is_checked = false;
+	boolean is_checked = false;
 	
 	public ToggleButton() {}
 	
@@ -57,6 +57,10 @@ public abstract class ToggleButton extends BaseButton
 	
 	public static class ImageToggleButton extends ToggleButton
 	{
+
+		transient public UILayout	focuse_layout_down	= UILayout.createBlankRect();
+		transient public UILayout	focuse_layout_up	= UILayout.createBlankRect();
+		
 		public ImageToggleButton(Image checked, Image unchecked)
 		{
 			custom_layout_down = new UILayout();
@@ -64,6 +68,36 @@ public abstract class ToggleButton extends BaseButton
 			
 			custom_layout_up = new UILayout();
 			custom_layout_up.setImages(unchecked, UILayout.ImageStyle.IMAGE_STYLE_BACK_4, 0);
+		}
+		
+		public ImageToggleButton(Image checked, Image unchecked, Image focuse_checked, Image focuse_unchecked)
+		{
+			this(focuse_checked, focuse_unchecked);
+			
+			focuse_layout_down = new UILayout();
+			focuse_layout_down.setImages(focuse_checked, UILayout.ImageStyle.IMAGE_STYLE_BACK_4, 0);
+			
+			focuse_layout_up = new UILayout();
+			focuse_layout_up.setImages(focuse_unchecked, UILayout.ImageStyle.IMAGE_STYLE_BACK_4, 0);
+		}
+		
+		public void render(Graphics2D g) 
+		{
+			if (isCatchedMouse() && focuse_layout_down != null && focuse_layout_up != null) {
+				if (is_checked) {
+					custom_layout = focuse_layout_down;
+				} else {
+					custom_layout = focuse_layout_up;
+				}
+			} else {
+				if (is_checked) {
+					custom_layout = custom_layout_down;
+				} else {
+					custom_layout = custom_layout_up;
+				}
+			}
+			
+			renderLayout(g);
 		}
 	}
 }

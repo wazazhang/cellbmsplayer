@@ -53,6 +53,25 @@ public class ImageButton extends BaseButton implements Runnable
 //		renderCatchedMouse(g);
 	}
 	
-	
+	public static class FocusImageButton extends BaseButton
+	{
+		transient Image	unfocus;
+		transient Image	focus;
+		
+		public FocusImageButton(Image unfocus, Image focus){
+			this.unfocus = unfocus;
+			this.focus = focus;
+		}
+		
+		@Override
+		public void render(Graphics2D g)
+		{
+			if (isCatchedMouse()) {
+				g.drawImage(focus, 0, 0, getWidth(), getHeight(), this);
+			} else {
+				g.drawImage(unfocus, 0, 0, getWidth(), getHeight(), this);
+			}
+		}
+	}
 }
 
