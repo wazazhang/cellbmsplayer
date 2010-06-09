@@ -192,7 +192,17 @@ public class UILayout extends DObject
 
 	public void setImages(Image src, ImageStyle style, int clipsize, int bordersize)
 	{
-		BorderSize 			= bordersize;
+		BorderSize = bordersize;
+		clipImages(src, style, clipsize, clipsize, clipsize, clipsize);
+	}
+	
+
+	protected void clipImages(Image src, ImageStyle style, int L, int R, int T, int B)
+	{
+		BorderSizeTop 		= T;
+		BorderSizeBottom 	= B;
+		BorderSizeLeft		= L;
+		BorderSizeRight 	= R;
 		
 		BorderTL	= null;
 		BorderT		= null;
@@ -204,38 +214,41 @@ public class UILayout extends DObject
 		BorderB		= null;
 		BorderBR	= null;
 
-		if(src!=null)
+		if (src != null)
 		{
+			int W = src.getWidth(null);
+			int H = src.getHeight(null);
+
 			switch(style)
 			{
 			case IMAGE_STYLE_ALL_9:
-				BackImage	= Tools.subImage(src, clipsize, clipsize, src.getWidth(null)-clipsize*2, src.getHeight(null)-clipsize*2);
+				BackImage 	= Tools.subImage(src, L, T, W - L - R, H - T - B);
+				
 			case IMAGE_STYLE_ALL_8:
-				BorderTL	= Tools.subImage(src, 0, 0, clipsize, clipsize);
-				BorderT		= Tools.subImage(src, clipsize, 0, src.getWidth(null)-clipsize*2, clipsize);
-				BorderTR 	= Tools.subImage(src, src.getWidth(null)-clipsize, 0, clipsize, clipsize);
-				BorderL  	= Tools.subImage(src, 0, clipsize, clipsize, src.getHeight(null)-clipsize*2);
-				BorderR  	= Tools.subImage(src, src.getWidth(null)-clipsize, clipsize, clipsize, src.getHeight(null)-clipsize*2);
-				BorderBL	= Tools.subImage(src, 0, src.getHeight(null)-clipsize, clipsize, clipsize);
-				BorderB		= Tools.subImage(src, clipsize, src.getHeight(null)-clipsize, src.getWidth(null)-clipsize*2, clipsize);
-				BorderBR	= Tools.subImage(src, src.getWidth(null)-clipsize, src.getHeight(null)-clipsize, clipsize, clipsize);
-//				BackImage	= Tools.subImage(src, clipsize, clipsize, 1, 1);
+				BorderTL 	= Tools.subImage(src, 0, 0, L, T);
+				BorderT 	= Tools.subImage(src, L, 0, W - L - R, T);
+				BorderTR 	= Tools.subImage(src, W - R, 0, R, T);
+				BorderL 	= Tools.subImage(src, 0, T, L, H - T - B);
+				BorderR 	= Tools.subImage(src, W - R, T, R, H - T - B);
+				BorderBL 	= Tools.subImage(src, 0, H - B, L, B);
+				BorderB 	= Tools.subImage(src, L, H - B, W - L - R, B);
+				BorderBR 	= Tools.subImage(src, W - R, H - B, R, B);
 				IImage m = new CImage(src).newInstance();
 				int rgb[] = new int[1];
-				m.getRGB(rgb, 0, 1, clipsize, clipsize, 1, 1);
+				m.getRGB(rgb, 0, 1, R, T, 1, 1);
 				BackColor = new Color(rgb[0]);
 				break;
 				
 			case IMAGE_STYLE_H_012:
-				BorderTL	= Tools.subImage(src, 0, 0, clipsize, src.getHeight(null));
-				BorderT		= Tools.subImage(src, clipsize, 0, src.getWidth(null)-clipsize*2, src.getHeight(null));
-				BorderTR 	= Tools.subImage(src, src.getWidth(null)-clipsize, 0, clipsize, src.getHeight(null));
+				BorderTL	= Tools.subImage(src, 0, 0, L, H);
+				BorderT		= Tools.subImage(src, L, 0, W-R-L, H);
+				BorderTR 	= Tools.subImage(src, W-R, 0, R, H);
 				break;
 				
 			case IMAGE_STYLE_V_036:
-				BorderTL	= Tools.subImage(src, 0, 0, src.getWidth(null), clipsize);
-				BorderL  	= Tools.subImage(src, 0, clipsize, src.getWidth(null), src.getHeight(null)-clipsize*2);
-				BorderBL	= Tools.subImage(src, 0, src.getHeight(null)-clipsize, src.getWidth(null), clipsize);
+				BorderTL 	= Tools.subImage(src, 0, 0, W, T);
+				BorderL 	= Tools.subImage(src, 0, T, W, H - T - B);
+				BorderBL 	= Tools.subImage(src, 0, H - B, W, B);
 				break;
 				
 			case IMAGE_STYLE_BACK_4:
@@ -246,6 +259,9 @@ public class UILayout extends DObject
 		
 		validateImages();
 	}
+	
+	
+	
 	protected void validateImages()
 	{
 		if (
