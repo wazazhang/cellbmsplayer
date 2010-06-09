@@ -148,9 +148,9 @@ public class TextBox extends UIComponent implements Serializable, TextInputer
 		}
 	}
 	
-	public AttributedSegment getSegment(Attribute attribute, int x, int y) {
+	public AttributedSegment getSegment(Attribute attribute, Object value, int x, int y) {
 		int position = text.pointToPosition(x - text_draw_x, y - text_draw_y);
-		AttributedSegment segment = text.getSegment(position, attribute);
+		AttributedSegment segment = text.getSegment(position, attribute, value);
 		return segment;
 	}
 	
