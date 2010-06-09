@@ -101,6 +101,10 @@ public class ScrollBar extends UIComponent
 		this.value = Math.max(this.value, 0);
 	}
 	
+	public boolean isMaxValue() {
+		return value + valuelength >= max;
+	}
+	
 	public boolean isMaxLength() {
 		return valuelength >= max;
 	}
