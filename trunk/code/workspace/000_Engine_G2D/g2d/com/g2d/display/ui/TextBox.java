@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Cursor;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.io.IOException;
 import java.io.Serializable;
@@ -42,6 +43,7 @@ public class TextBox extends UIComponent implements Serializable, TextInputer
 	public boolean 						is_readonly			= false;
 	public boolean						is_show_link;
 	protected ScrollBar					v_scrollbar			= ScrollBar.createVScroll(SCROLL_BAR_SIZE);
+	protected boolean					v_scroll_left_dock	= false;
 
 	/**文字是否抗锯齿*/
 	@Property("文字是否抗锯齿")
@@ -50,13 +52,16 @@ public class TextBox extends UIComponent implements Serializable, TextInputer
 	public int							text_shadow_x = 0;
 	public int							text_shadow_y = 0;
 
+	
 //	-------------------------------------------------------------------------------------------------------------------
 	
 	transient int 						text_draw_x;
 	transient int 						text_draw_y;
 	transient MultiTextLayout			text				= new MultiTextLayout();
+	private Rectangle 					view_port_rect		= new Rectangle();
 
 	transient Hashtable<Attribute, ClickSegmentListener> click_segment_listeners;
+	
 	
 //	-------------------------------------------------------------------------------------------------------------------
 	
@@ -212,6 +217,10 @@ public class TextBox extends UIComponent implements Serializable, TextInputer
 		return super.getCursor();
 	}
 	
+
+	public Rectangle getTextViewPortRectangle() {
+		return view_port_rect;
+	}
 	
 	
 	public ScrollBar getVScrollBar() {
@@ -234,13 +243,24 @@ public class TextBox extends UIComponent implements Serializable, TextInputer
 		}
 		
 		{
+			
 			int sw = getWidth() -(layout.BorderSize<<1);
 			int sh = getHeight()-(layout.BorderSize<<1);
-			
+
 			v_scrollbar.setMax(Math.max(text.getHeight(), sh));
 			v_scrollbar.setValue(v_scrollbar.getValue(), sh);
 			
-			v_scrollbar.setLocation(getWidth()-layout.BorderSize-v_scrollbar.size, layout.BorderSize);
+			view_port_rect.x = layout.BorderSize;
+			view_port_rect.y = layout.BorderSize;
+			view_port_rect.width = text.getWidth();
+			view_port_rect.height = sh;
+			
+			if (v_scroll_left_dock) {
+				view_port_rect.x = layout.BorderSize + v_scrollbar.size;
+				v_scrollbar.setLocation(layout.BorderSize, layout.BorderSize);
+			} else {
+				v_scrollbar.setLocation(getWidth()-layout.BorderSize-v_scrollbar.size, layout.BorderSize);
+			}
 			v_scrollbar.setSize(v_scrollbar.size, sh);
 			
 			if (v_scrollbar.isMaxLength()) {
@@ -249,14 +269,13 @@ public class TextBox extends UIComponent implements Serializable, TextInputer
 				text.setWidth(sw-v_scrollbar.size);
 			}
 			
-			text_draw_x = layout.BorderSize;
-			text_draw_y = layout.BorderSize - (int)v_scrollbar.getValue();
+			text_draw_x = view_port_rect.x;
+			text_draw_y = view_port_rect.y - (int)v_scrollbar.getValue();
 		}
 		
 		super.update();
 		
 	}
-	
 	
 	public void render(Graphics2D g) 
 	{
@@ -268,22 +287,25 @@ public class TextBox extends UIComponent implements Serializable, TextInputer
 			int tsh = (int)v_scrollbar.getValueLength();
 			
 			Object v = g.getRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING);
-			{
+			try {
 				if (enable_antialiasing) {
 					g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 				}
 				if (text_shadow_x!=0 || text_shadow_y!=0) {
 					Composite composite = g.getComposite();
-					g.setComposite(AlphaComposite.SrcOut);
-					g.setColor(Color.BLACK);
-					text.drawText(g, text_draw_x+text_shadow_x, text_draw_y+text_shadow_y, tsx, tsy, tsw, tsh);
-					g.setComposite(composite);
+					try{
+						g.setComposite(AlphaComposite.SrcOut);
+						g.setColor(Color.BLACK);
+						text.drawText(g, text_draw_x+text_shadow_x, text_draw_y+text_shadow_y, tsx, tsy, tsw, tsh);
+					} finally {
+						g.setComposite(composite);
+					}
 				}
 				g.setColor(textColor);
 				text.drawText(g, text_draw_x, text_draw_y, tsx, tsy, tsw, tsh);
+			} finally {
+				g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, v);
 			}
-			g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, v);
-			
 		}
 	}
 

@@ -54,4 +54,16 @@ public abstract class ToggleButton extends BaseButton
 		renderLayout(g);
 	}
 	
+	
+	public static class ImageToggleButton extends ToggleButton
+	{
+		public ImageToggleButton(Image checked, Image unchecked)
+		{
+			custom_layout_down = new UILayout();
+			custom_layout_down.setImages(checked, UILayout.ImageStyle.IMAGE_STYLE_BACK_4, 0);
+			
+			custom_layout_up = new UILayout();
+			custom_layout_up.setImages(unchecked, UILayout.ImageStyle.IMAGE_STYLE_BACK_4, 0);
+		}
+	}
 }

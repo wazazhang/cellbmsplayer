@@ -791,6 +791,16 @@ public class MultiTextLayout
 		return this.drawText(g, x, y, 0, 0, width, height);
 	}
 	
+	/**
+	 * @param g
+	 * @param x 绘制到g的位置
+	 * @param y 绘制到g的位置
+	 * @param sx 绘制文本的范围，是该Layout的内部坐标
+	 * @param sy 绘制文本的范围，是该Layout的内部坐标
+	 * @param sw 绘制文本的范围，是该Layout的内部坐标
+	 * @param sh 绘制文本的范围，是该Layout的内部坐标
+	 * @return
+	 */
 	synchronized public Dimension drawText(Graphics2D g, int x, int y, int sx, int sy, int sw, int sh) 
 	{
 		x += 1;
@@ -805,11 +815,10 @@ public class MultiTextLayout
 		render_size.setSize(0, height);
 		{
 			Rectangle rect = new Rectangle(sx, sy, sw, sh);
-			
-			g.translate(x, y);	
+			g.translate(x, y);
 			Shape prewShape = g.getClip();
 			g.clip(rect);
-			{
+			try {
 				for (TextLine line : textlines) {
 					if (rect.intersects(line.x, line.y, line.width, line.height)) {
 						line.render(g);
@@ -825,10 +834,11 @@ public class MultiTextLayout
 							g.fillRect(0, 0, 2, g.getFont().getSize());
 						}
 					}
-				}
+				}	
+			} finally {
+				g.setClip(prewShape);
+				g.translate(-x, -y);
 			}
-			g.setClip(prewShape);
-			g.translate(-x, -y);
 		}
 		return render_size;
 	}
