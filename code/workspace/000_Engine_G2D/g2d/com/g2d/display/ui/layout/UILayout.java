@@ -77,8 +77,11 @@ public class UILayout extends DObject
 	
 	//border
 	public int 				BorderSize	= 1;
-	public int				BorderSizeTop = 1;
-	public int				BorderSizeBottom = 1;
+	
+	public int				BorderSizeTop 		= 1;
+	public int				BorderSizeBottom 	= 1;
+	public int				BorderSizeLeft 		= 1;
+	public int				BorderSizeRight 	= 1;
 	
 	// color layout
 	private Color 			BackColor	= new Color(0xffc0c0c0);//0xffc0c0c0;
@@ -117,8 +120,12 @@ public class UILayout extends DObject
 		
 //		border
 		BorderSize		= set.BorderSize;
-		BorderSizeTop	= set.BorderSizeTop;
-		BorderSizeBottom = set.BorderSizeBottom;
+		
+		BorderSizeTop		= set.BorderSizeTop;
+		BorderSizeBottom 	= set.BorderSizeBottom;
+		BorderSizeLeft 		= set.BorderSizeLeft;
+		BorderSizeRight 	= set.BorderSizeRight;
+		
 		BorderColor		= set.BorderColor;
 		
 		BorderT			= set.BorderT;
@@ -182,12 +189,10 @@ public class UILayout extends DObject
 	{
 		setImages(src, style, clipsize, clipsize>>1);
 	}
-	
+
 	public void setImages(Image src, ImageStyle style, int clipsize, int bordersize)
 	{
-		BorderSize = bordersize;
-		BorderSizeTop = bordersize;
-		BorderSizeBottom = bordersize;
+		BorderSize 			= bordersize;
 		
 		BorderTL	= null;
 		BorderT		= null;
@@ -241,64 +246,6 @@ public class UILayout extends DObject
 		
 		validateImages();
 	}
-	
-	public void setImages(Image src, ImageStyle style, int Topsize, int Bottomsize, int bordersize){
-		BorderSize = bordersize;
-		BorderSizeTop = Topsize;
-		BorderSizeBottom = Bottomsize;
-		
-		BorderTL	= null;
-		BorderT		= null;
-		BorderTR 	= null;
-		BorderL  	= null;
-		BackImage 	= null;
-		BorderR  	= null;
-		BorderBL	= null;
-		BorderB		= null;
-		BorderBR	= null;
-
-		if(src!=null)
-		{
-			switch(style)
-			{
-			case IMAGE_STYLE_ALL_9:
-				BackImage	= Tools.subImage(src, bordersize, Topsize, src.getWidth(null)-bordersize*2, src.getHeight(null)-Topsize - Bottomsize);
-			case IMAGE_STYLE_ALL_8:
-				BorderTL	= Tools.subImage(src, 0, 0, bordersize, Topsize);
-				BorderT		= Tools.subImage(src, bordersize, 0, src.getWidth(null)-bordersize*2, Topsize);
-				BorderTR 	= Tools.subImage(src, src.getWidth(null)-bordersize, 0, bordersize, Topsize);
-				BorderL  	= Tools.subImage(src, 0, Topsize, bordersize, src.getHeight(null)-Topsize - Bottomsize);
-				BorderR  	= Tools.subImage(src, src.getWidth(null)-bordersize, Topsize, bordersize, src.getHeight(null)-Topsize - Bottomsize);
-				BorderBL	= Tools.subImage(src, 0, src.getHeight(null)-Bottomsize, bordersize, Bottomsize);
-				BorderB		= Tools.subImage(src, bordersize, src.getHeight(null)-Bottomsize, src.getWidth(null)-bordersize*2, Bottomsize);
-				BorderBR	= Tools.subImage(src, src.getWidth(null)-bordersize, src.getHeight(null)-Bottomsize, bordersize, Bottomsize);
-				IImage m = new CImage(src).newInstance();
-				int rgb[] = new int[1];
-				m.getRGB(rgb, 0, 1, bordersize, Topsize, 1, 1);
-				BackColor = new Color(rgb[0]);
-				break;
-				
-			case IMAGE_STYLE_H_012:
-				BorderTL	= Tools.subImage(src, 0, 0, bordersize, src.getHeight(null));
-				BorderT		= Tools.subImage(src, bordersize, 0, src.getWidth(null)-bordersize*2, src.getHeight(null));
-				BorderTR 	= Tools.subImage(src, src.getWidth(null)-bordersize, 0, bordersize, src.getHeight(null));
-				break;
-				
-			case IMAGE_STYLE_V_036:
-				BorderTL	= Tools.subImage(src, 0, 0, src.getWidth(null), Topsize);
-				BorderL  	= Tools.subImage(src, 0, Topsize, src.getWidth(null), src.getHeight(null)-Topsize - Bottomsize);
-				BorderBL	= Tools.subImage(src, 0, src.getHeight(null)-Bottomsize, src.getWidth(null), Bottomsize);
-				break;
-				
-			case IMAGE_STYLE_BACK_4:
-				BackImage 	= src;
-				break;
-			}
-		}
-		
-		validateImages();
-	}
-	
 	protected void validateImages()
 	{
 		if (

@@ -93,9 +93,9 @@ public class Guage extends UIComponent
 		double sx = value - min;
 		UILayout ui = this.getLayout();
 		int x = ui.BorderSize;
-		int y = ui.BorderSizeTop;
-		int w = getWidth()- ui.BorderSize*2;
-		int h = getHeight() - ui.BorderSizeTop- ui.BorderSizeBottom;
+		int y = ui.BorderSize;
+		int w = getWidth() - ui.BorderSize * 2;
+		int h = getHeight() - ui.BorderSize * 2;
 		
 //		g.drawImage(strip_back, 0, 0, getWidth(), getHeight(), null);
 		g.clipRect(x, y, (int)(w*sx/sw), h);
