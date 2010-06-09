@@ -74,7 +74,7 @@ public class MultiTextLayout
 //			}
 			synchronized (g) {
 				g.translate(x, y);
-				if (selected!=null){
+				if (is_show_select && selected != null) {
 					Color pc = g.getColor();
 					g.setColor(selected_color);
 					g.fill(selected);
@@ -179,6 +179,8 @@ public class MultiTextLayout
 	public boolean 				is_read_only;
 	/**是否显示光标*/
 	public boolean 				is_show_caret 	= true;
+	/**是否显示选择的区域*/
+	public boolean 				is_show_select	= true;
 	/**是否显示为密码*/
 	private boolean 			is_password 	= false;
 	

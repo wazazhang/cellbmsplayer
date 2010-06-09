@@ -51,14 +51,15 @@ public class TextBox extends UIComponent implements Serializable, TextInputer
 
 	public int							text_shadow_x = 0;
 	public int							text_shadow_y = 0;
-	public Color						text_shadow_color = Color.BLACK;
+	public float						text_shadow_alpha = 1f;
 	
 //	-------------------------------------------------------------------------------------------------------------------
 	
-	transient int 						text_draw_x;
-	transient int 						text_draw_y;
-	transient MultiTextLayout			text				= new MultiTextLayout();
+	private int 						text_draw_x;
+	private int 						text_draw_y;
 	private Rectangle 					view_port_rect		= new Rectangle();
+	
+	protected MultiTextLayout			text				= new MultiTextLayout();
 
 	transient Hashtable<Attribute, ClickSegmentListener> click_segment_listeners;
 	
@@ -294,8 +295,7 @@ public class TextBox extends UIComponent implements Serializable, TextInputer
 				if (text_shadow_x!=0 || text_shadow_y!=0) {
 					Composite composite = g.getComposite();
 					try{
-						g.setComposite(AlphaComposite.SrcOut);
-						g.setColor(text_shadow_color);
+						g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OUT, text_shadow_alpha));
 						text.drawText(g, text_draw_x+text_shadow_x, text_draw_y+text_shadow_y, tsx, tsy, tsw, tsh);
 					} finally {
 						g.setComposite(composite);
