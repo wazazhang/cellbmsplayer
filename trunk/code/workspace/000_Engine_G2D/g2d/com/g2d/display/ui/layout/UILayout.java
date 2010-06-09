@@ -24,27 +24,11 @@ public class UILayout extends DObject
 		IMAGE_STYLE_H_012, 
 		IMAGE_STYLE_V_036,
 		IMAGE_STYLE_BACK_4,
+		IMAGE_STYLE_BACK_4_CENTER,
 		;
 		
-		public static ImageStyle getStyle(String style) 
-		{
-			if (IMAGE_STYLE_ALL_9.toString().equals(style)) {
-				return IMAGE_STYLE_ALL_9;
-			}
-			else if (IMAGE_STYLE_ALL_8.toString().equals(style)) {
-				return IMAGE_STYLE_ALL_8;
-			}
-			else if (IMAGE_STYLE_H_012.toString().equals(style)) {
-				return IMAGE_STYLE_H_012;
-			}
-			else if (IMAGE_STYLE_V_036.toString().equals(style)) {
-				return IMAGE_STYLE_V_036;
-			}
-			else if (IMAGE_STYLE_BACK_4.toString().equals(style)) {
-				return IMAGE_STYLE_BACK_4;
-			}
-			
-			return NULL;
+		public static ImageStyle getStyle(String style) {
+			return ImageStyle.valueOf(style);
 		}
 	}
 	
@@ -94,8 +78,7 @@ public class UILayout extends DObject
 	transient private Image BorderTR;
 	transient private Image BorderBL;
 	transient private Image BorderBR;
-	
-	private int				ClipSize;
+
 //	------------------------------------------------------------------------------------------------------------------------------
 
 	
@@ -127,7 +110,7 @@ public class UILayout extends DObject
 		BorderBL		= set.BorderBL;
 		BorderBR		= set.BorderBR;
 		
-		validateImages();
+		Style			= set.Style;
 	}
 	
 	public void setBackColor(Color color){
@@ -157,7 +140,7 @@ public class UILayout extends DObject
 	 * 0,3,6 可以用来纵向平铺
 	 * 4 可以用来缩放
 	 */
-	public void setImages(Image[] images, int bordersize)
+	public void setImages(Image[] images, ImageStyle style, int bordersize)
 	{
 		if(images==null)return;
 
@@ -167,11 +150,7 @@ public class UILayout extends DObject
 		BorderL  = images[3];BackImage=images[4];BorderR  = images[5];//
 		BorderBL = images[6];BorderB = images[7];BorderBR = images[8];//
 		
-		validateImages();
-	}
-	
-	public int getClipSize() {
-		return ClipSize;
+		Style = style;
 	}
 	
 	public void setImages(Image src, ImageStyle style, int clipsize)
@@ -236,12 +215,13 @@ public class UILayout extends DObject
 				break;
 				
 			case IMAGE_STYLE_BACK_4:
+			case IMAGE_STYLE_BACK_4_CENTER:
 				BackImage 	= src;
 				break;
 			}
+			Style = style;
 		}
 		
-		validateImages();
 	}
 	
 
@@ -276,56 +256,6 @@ public class UILayout extends DObject
 		return 0;
 	}
 	
-	protected void validateImages()
-	{
-		if (
-				BorderT != null &&
-				BorderB != null &&
-				BorderL != null &&
-				BorderR	!= null &&
-				BackImage != null &&
-				BorderTL != null &&
-				BorderTR != null &&
-				BorderBL != null &&
-				BorderBR != null )
-		{
-			Style = ImageStyle.IMAGE_STYLE_ALL_9;
-		}
-		else if (
-				BorderT != null &&
-				BorderB != null &&
-				BorderL != null &&
-				BorderR	!= null &&
-				BorderTL != null &&
-				BorderTR != null &&
-				BorderBL != null &&
-				BorderBR != null )
-		{
-			Style = ImageStyle.IMAGE_STYLE_ALL_8;
-		}
-		else if (
-				BorderT != null &&
-				BorderTL != null &&
-				BorderTR != null )
-		{
-			Style = ImageStyle.IMAGE_STYLE_H_012;
-		}
-		else if (
-				BorderL != null &&
-				BorderTL != null &&
-				BorderBL != null )
-		{
-			Style = ImageStyle.IMAGE_STYLE_V_036;
-		}
-		else if (BackImage != null)
-		{
-			Style = ImageStyle.IMAGE_STYLE_BACK_4;
-		}
-		else
-		{
-			Style = ImageStyle.NULL;
-		}
-	}
 	
 	public void render(Graphics2D g, int x, int y, int W, int H)
 	{
@@ -350,6 +280,9 @@ public class UILayout extends DObject
 			break;
 		case IMAGE_STYLE_BACK_4:
 			renderBack4(g, x, y, W, H);
+			break;
+		case IMAGE_STYLE_BACK_4_CENTER:
+			renderBack4Center(g, x, y, W, H);
 			break;
 		}
 	}
@@ -466,5 +399,13 @@ public class UILayout extends DObject
 		//Drawing.drawRoundImage(g, BackImage, x, y, W, H);
 		g.drawImage(BackImage, x, y, W, H, null);
 	}
-
+	
+	protected void renderBack4Center(Graphics2D g, int x, int y, int W, int H)
+	{
+		//Drawing.drawRoundImage(g, BackImage, x, y, W, H);
+		g.drawImage(BackImage, 
+				x + ((W - BackImage.getWidth(null)) >> 1),
+				y + ((H - BackImage.getHeight(null)) >> 1), 
+				null);
+	}
 }
