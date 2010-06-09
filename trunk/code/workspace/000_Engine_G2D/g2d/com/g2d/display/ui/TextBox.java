@@ -51,7 +51,7 @@ public class TextBox extends UIComponent implements Serializable, TextInputer
 
 	public int							text_shadow_x = 0;
 	public int							text_shadow_y = 0;
-
+	public Color						text_shadow_color = Color.BLACK;
 	
 //	-------------------------------------------------------------------------------------------------------------------
 	
@@ -295,7 +295,7 @@ public class TextBox extends UIComponent implements Serializable, TextInputer
 					Composite composite = g.getComposite();
 					try{
 						g.setComposite(AlphaComposite.SrcOut);
-						g.setColor(Color.BLACK);
+						g.setColor(text_shadow_color);
 						text.drawText(g, text_draw_x+text_shadow_x, text_draw_y+text_shadow_y, tsx, tsy, tsw, tsh);
 					} finally {
 						g.setComposite(composite);
