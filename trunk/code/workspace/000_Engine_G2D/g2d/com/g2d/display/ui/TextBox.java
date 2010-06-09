@@ -51,10 +51,7 @@ public class TextBox extends UIComponent implements Serializable, TextInputer
 
 	public int							text_shadow_x		= 0;
 	public int							text_shadow_y		= 0;
-	public float						text_shadow_alpha	= 1f;
-	public int							text_shadow_mode	= AlphaComposite.CLEAR;
 
-	private AlphaComposite				cur_text_shadow_comp;
 //	-------------------------------------------------------------------------------------------------------------------
 	
 	private int 						text_draw_x;
@@ -297,13 +294,7 @@ public class TextBox extends UIComponent implements Serializable, TextInputer
 				if (text_shadow_x!=0 || text_shadow_y!=0) {
 					Composite composite = g.getComposite();
 					try{
-						if (cur_text_shadow_comp == null || 
-							cur_text_shadow_comp.getAlpha() != text_shadow_alpha ||
-							cur_text_shadow_comp.getRule() != text_shadow_mode) {
-							cur_text_shadow_comp = AlphaComposite.getInstance(text_shadow_mode, text_shadow_alpha);
-							System.out.println("TextBox : create new shadow comp !");
-						}
-						g.setComposite(cur_text_shadow_comp);
+						g.setComposite(AlphaComposite.SrcOut);
 						text.drawText(g, text_draw_x+text_shadow_x, text_draw_y+text_shadow_y, tsx, tsy, tsw, tsh);
 					} finally {
 						g.setComposite(composite);
@@ -317,6 +308,8 @@ public class TextBox extends UIComponent implements Serializable, TextInputer
 		}
 	}
 
+	
+	
 	public void addClickSegmentListener(Attribute attribute, ClickSegmentListener listener)
 	{
 		if (attribute != null) {
