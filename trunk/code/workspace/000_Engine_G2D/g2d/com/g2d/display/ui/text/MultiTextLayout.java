@@ -547,10 +547,10 @@ public class MultiTextLayout
 	}
 	
 	/**
-	 * 得到该位置的文字属性
-	 * @param position
-	 * @param attribute
-	 * @param value
+	 * 得到该位置的文字属性，比如 attribute=TextAttribute.FOREGROUND, value=Color.BLUE，则返回该位置是否有颜色是蓝色的属性
+	 * @param position 文本位置
+	 * @param attribute 属性
+	 * @param value 属性值
 	 * @return
 	 */
 	synchronized public AttributedSegment getSegment(int position, Attribute attribute, Object value)
