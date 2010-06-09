@@ -78,11 +78,6 @@ public class UILayout extends DObject
 	//border
 	public int 				BorderSize	= 1;
 	
-	public int				BorderSizeTop 		= 1;
-	public int				BorderSizeBottom 	= 1;
-	public int				BorderSizeLeft 		= 1;
-	public int				BorderSizeRight 	= 1;
-	
 	// color layout
 	private Color 			BackColor	= new Color(0xffc0c0c0);//0xffc0c0c0;
 	private Color 			BorderColor	= new Color(0xff000000);//0xff000000;
@@ -120,12 +115,6 @@ public class UILayout extends DObject
 		
 //		border
 		BorderSize		= set.BorderSize;
-		
-		BorderSizeTop		= set.BorderSizeTop;
-		BorderSizeBottom 	= set.BorderSizeBottom;
-		BorderSizeLeft 		= set.BorderSizeLeft;
-		BorderSizeRight 	= set.BorderSizeRight;
-		
 		BorderColor		= set.BorderColor;
 		
 		BorderT			= set.BorderT;
@@ -199,11 +188,6 @@ public class UILayout extends DObject
 
 	protected void clipImages(Image src, ImageStyle style, int L, int R, int T, int B)
 	{
-		BorderSizeTop 		= T;
-		BorderSizeBottom 	= B;
-		BorderSizeLeft		= L;
-		BorderSizeRight 	= R;
-		
 		BorderTL	= null;
 		BorderT		= null;
 		BorderTR 	= null;
@@ -260,7 +244,37 @@ public class UILayout extends DObject
 		validateImages();
 	}
 	
+
 	
+	
+	public int getTopClip() {
+		if (BorderTL != null) {
+			return BorderTL.getHeight(null);
+		}
+		return 0;
+	}
+
+	public int getBottomClip() {
+		if (BorderBL != null) {
+			return BorderBL.getHeight(null);
+		}
+		return 0;
+	}
+	
+	
+	public int getLeftClip() {
+		if (BorderTL != null) {
+			return BorderTL.getWidth(null);
+		}
+		return 0;
+	}
+
+	public int getRightClip() {
+		if (BorderTR != null) {
+			return BorderTR.getWidth(null);
+		}
+		return 0;
+	}
 	
 	protected void validateImages()
 	{
@@ -452,4 +466,5 @@ public class UILayout extends DObject
 		//Drawing.drawRoundImage(g, BackImage, x, y, W, H);
 		g.drawImage(BackImage, x, y, W, H, null);
 	}
+
 }
