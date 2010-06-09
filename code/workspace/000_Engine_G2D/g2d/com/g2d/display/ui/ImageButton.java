@@ -7,6 +7,7 @@ import java.awt.geom.AffineTransform;
 
 import com.g2d.Tools;
 import com.g2d.Version;
+import com.g2d.display.ui.layout.UILayout;
 import com.g2d.util.Drawing;
 
 public class ImageButton extends BaseButton implements Runnable
@@ -55,22 +56,27 @@ public class ImageButton extends BaseButton implements Runnable
 	
 	public static class FocusImageButton extends BaseButton
 	{
-		transient Image	unfocus;
-		transient Image	focus;
-		
-		public FocusImageButton(Image unfocus, Image focus){
-			this.unfocus = unfocus;
-			this.focus = focus;
+		public UILayout	unfocus	= UILayout.createBlankRect();
+		public UILayout	focus	= UILayout.createBlankRect();
+
+		public FocusImageButton(Image unfocus, Image focus)
+		{
+			this.unfocus = new UILayout();
+			this.unfocus.setImages(unfocus, UILayout.ImageStyle.IMAGE_STYLE_BACK_4_CENTER, 0);
+			
+			this.focus = new UILayout();
+			this.focus.setImages(focus, UILayout.ImageStyle.IMAGE_STYLE_BACK_4_CENTER, 0);
 		}
 		
 		@Override
 		public void render(Graphics2D g)
 		{
 			if (isCatchedMouse()) {
-				g.drawImage(focus, 0, 0, getWidth(), getHeight(), this);
+				this.custom_layout = focus;				
 			} else {
-				g.drawImage(unfocus, 0, 0, getWidth(), getHeight(), this);
+				this.custom_layout = unfocus;		
 			}
+			renderLayout(g);
 		}
 	}
 }

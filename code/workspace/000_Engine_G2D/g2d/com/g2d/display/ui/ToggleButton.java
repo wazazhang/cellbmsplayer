@@ -58,27 +58,27 @@ public abstract class ToggleButton extends BaseButton
 	public static class ImageToggleButton extends ToggleButton
 	{
 
-		transient public UILayout	focuse_layout_down	= UILayout.createBlankRect();
-		transient public UILayout	focuse_layout_up	= UILayout.createBlankRect();
+		public UILayout	focuse_layout_down	= UILayout.createBlankRect();
+		public UILayout	focuse_layout_up	= UILayout.createBlankRect();
 		
 		public ImageToggleButton(Image checked, Image unchecked)
 		{
 			custom_layout_down = new UILayout();
-			custom_layout_down.setImages(checked, UILayout.ImageStyle.IMAGE_STYLE_BACK_4, 0);
+			custom_layout_down.setImages(checked, UILayout.ImageStyle.IMAGE_STYLE_BACK_4_CENTER, 0);
 			
 			custom_layout_up = new UILayout();
-			custom_layout_up.setImages(unchecked, UILayout.ImageStyle.IMAGE_STYLE_BACK_4, 0);
+			custom_layout_up.setImages(unchecked, UILayout.ImageStyle.IMAGE_STYLE_BACK_4_CENTER, 0);
 		}
 		
 		public ImageToggleButton(Image checked, Image unchecked, Image focuse_checked, Image focuse_unchecked)
 		{
-			this(focuse_checked, focuse_unchecked);
+			this(checked, unchecked);
 			
 			focuse_layout_down = new UILayout();
-			focuse_layout_down.setImages(focuse_checked, UILayout.ImageStyle.IMAGE_STYLE_BACK_4, 0);
+			focuse_layout_down.setImages(focuse_checked, UILayout.ImageStyle.IMAGE_STYLE_BACK_4_CENTER, 0);
 			
 			focuse_layout_up = new UILayout();
-			focuse_layout_up.setImages(focuse_unchecked, UILayout.ImageStyle.IMAGE_STYLE_BACK_4, 0);
+			focuse_layout_up.setImages(focuse_unchecked, UILayout.ImageStyle.IMAGE_STYLE_BACK_4_CENTER, 0);
 		}
 		
 		public void render(Graphics2D g) 
