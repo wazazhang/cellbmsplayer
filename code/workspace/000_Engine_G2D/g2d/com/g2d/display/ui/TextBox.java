@@ -148,6 +148,12 @@ public class TextBox extends UIComponent implements Serializable, TextInputer
 		}
 	}
 	
+	public AttributedSegment getSegment(Attribute attribute, int x, int y) {
+		int position = text.pointToPosition(x - text_draw_x, y - text_draw_y);
+		AttributedSegment segment = text.getSegment(position, attribute);
+		return segment;
+	}
+	
 	protected void onMouseDraged(MouseMoveEvent event) {
 		//System.out.println("TextBox onMouseDraged");
 		text.dragCaret(getMouseX()-text_draw_x, getMouseY()-text_draw_y);

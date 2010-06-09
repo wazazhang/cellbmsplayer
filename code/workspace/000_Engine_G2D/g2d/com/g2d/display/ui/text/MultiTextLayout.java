@@ -142,7 +142,7 @@ public class MultiTextLayout
 	 * 一段有属性的字符串
 	 * @author WAZA
 	 */
-	public class AttributedSegment
+	public static class AttributedSegment
 	{
 		final public Attribute	attribute;
 		final public Object		attribute_value;
@@ -220,10 +220,17 @@ public class MultiTextLayout
 		this(false);
 	}
 	
-	synchronized public boolean isIsPassword() {
+	/**
+	 * 是否显示为密码
+	 * @return
+	 */
+	synchronized public boolean isPassword() {
 		return is_password;
 	}
 
+	/**
+	 * 是否显示为密码
+	 */
 	synchronized public void setIsPassword(boolean isPassword) {
 		is_password = isPassword;
 		if (textChange != null) {
@@ -235,6 +242,11 @@ public class MultiTextLayout
 
 //	----------------------------------------------------------------------------------------------------------------
 
+	/**
+	 * 将光标设置到x，y位置
+	 * @param x
+	 * @param y
+	 */
 	synchronized public void setCaret(int x, int y)
 	{
 		if (x<0) x = 0;
@@ -499,6 +511,12 @@ public class MultiTextLayout
 		}
 	}
 	
+	/**
+	 * 坐标位置转换到文字位置
+	 * @param x
+	 * @param y
+	 * @return
+	 */
 	synchronized public int pointToPosition(int x, int y)
 	{
 		if (x<0) x = 0;
@@ -528,6 +546,13 @@ public class MultiTextLayout
 		return position;
 	}
 	
+	/**
+	 * 得到该位置的文字属性
+	 * @param position
+	 * @param attribute
+	 * @param value
+	 * @return
+	 */
 	synchronized public AttributedSegment getSegment(int position, Attribute attribute, Object value)
 	{
 		if (attr_text != null)
@@ -538,6 +563,12 @@ public class MultiTextLayout
 		return null;
 	}
 	
+	/**
+	 * 得到该位置的文字属性
+	 * @param position
+	 * @param attribute
+	 * @return
+	 */
 	synchronized public AttributedSegment getSegment(int position, Attribute attribute)
 	{
 		if (attr_text != null)
