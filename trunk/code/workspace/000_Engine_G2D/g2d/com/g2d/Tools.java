@@ -184,6 +184,13 @@ public class Tools
 	
 //	--------------------------------------------------------------------------------
 
+	/**
+	 * 将一个图片所有不透明的部分，都设置成指定的颜色和ALPHA值
+	 * @param src
+	 * @param alpha
+	 * @param rgb
+	 * @return 返回原图
+	 */
 	static public BufferedImage toAlpha(BufferedImage src, float alpha, int rgb)
 	{
 		rgb = 0x00ffffff & rgb;
@@ -207,6 +214,11 @@ public class Tools
 		return src;
 	}
 	
+	/**
+	 * 将一幅图片的所有像素设置成灰度
+	 * @param src
+	 * @return 返回原图
+	 */
 	public static BufferedImage toTurngrey(BufferedImage src)
 	{
 		int rgb;
@@ -234,12 +246,24 @@ public class Tools
 		return src;
 	}
 
+	/**
+	 * 将一个图片所有不透明的部分，都设置成指定的颜色和ALPHA值
+	 * @param src
+	 * @param alpha
+	 * @param rgb
+	 * @return 返回一个新的图片
+	 */
 	static public BufferedImage createAlpha(BufferedImage src, float alpha, int rgb)
 	{
 		BufferedImage dst = combianImage(src.getWidth(), src.getHeight(), src);
 		return toAlpha(dst, alpha, rgb);
 	}
 	
+	/**
+	 * 将一幅图片的所有像素设置成灰度
+	 * @param src
+	 * @return 返回一个新的图片
+	 */
 	static public BufferedImage createTurngrey(BufferedImage src) 
 	{
 		BufferedImage dst = combianImage(src.getWidth(), src.getHeight(), src);

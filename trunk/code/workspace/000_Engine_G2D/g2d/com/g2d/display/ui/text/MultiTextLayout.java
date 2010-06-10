@@ -1,15 +1,19 @@
 package com.g2d.display.ui.text;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.font.FontRenderContext;
 import java.awt.font.LineBreakMeasurer;
 import java.awt.font.TextAttribute;
 import java.awt.font.TextHitInfo;
 import java.awt.font.TextLayout;
+import java.awt.image.BufferedImage;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
 import java.text.CharacterIterator;
@@ -27,11 +31,12 @@ public class MultiTextLayout
 	 * MultiTextLayout 中的一行数据
 	 * @author WAZA
 	 */
-	class TextLine 
+	private class TextLine 
 	{
 		// 相对于MultiTextLayout的坐标
 		int x;
 		int y;
+		
 		final int 			width;
 		final int 			height;
 		
@@ -39,59 +44,78 @@ public class MultiTextLayout
 		final int			offsetx;
 		final int			offsety;
 
-		final TextLayout	text_layout;
 		final int 			line_index;
 		
-		Rectangle 			selected;
-		Color 				selected_color = new Color(0x40ffffff, true);
+		final TextLayout	text_layout;
 		
-		public TextLine(TextLayout layout, int line)
+		Rectangle 			selected 		= null;
+
+		BufferedImage		shadow_buffer 	= null;
+		
+		TextLine(TextLayout layout, int line, FontRenderContext frc)
 		{
-			this.text_layout	= layout;
-			this.line_index		= line;
-			this.offsetx		= -(int)layout.getBounds().getX();
-			this.offsety		= -(int)layout.getBounds().getY();
-			this.width			= (int)text_layout.getBounds().getWidth();
-			this.height			= Math.max(10, (int)text_layout.getBounds().getHeight()+space);
+			this.text_layout		= layout;
+			this.line_index			= line;
+
+			Rectangle bounds 		= layout.getPixelBounds(frc, 0, 0);
+			
+			this.offsetx		= -bounds.x;
+			this.offsety		= (int)layout.getAscent();
+			this.width			= bounds.width;
+			this.height			= (int)Math.max(10, layout.getAscent() + layout.getDescent() + space);
 		}
 		
-		final public TextLayout getLayout() 
+		TextLayout getLayout() 
 		{
 			return text_layout;
 		}
 		
-		public void render(Graphics2D g)
+		void render(Graphics2D g, int shadow_x, int shadow_y, float shadow_alpha, int shadow_color)
 		{
-//			{
-//				Color c = g.getColor();
-//					g.translate(x, y);
-//						g.translate(offsetx, offsety);
-//							g.setColor(Color.green);
-//							g.fill(text_layout.getBounds());
-//						g.translate(-offsetx, -offsety);
-//					g.translate(-x, -y);
-//				g.setColor(c);
-//			}
-			synchronized (g) {
-				g.translate(x, y);
+			int tx = x; int ty = y;
+			g.translate(tx, ty);
+			try {
 				if (is_show_select && selected != null) {
 					Color pc = g.getColor();
 					g.setColor(selected_color);
 					g.fill(selected);
 					g.setColor(pc);
 				}
+				drawShadow(g, shadow_x, shadow_y, shadow_alpha, shadow_color);
 				text_layout.draw(g, offsetx, offsety);
-				g.translate(-x, -y);
+			} finally {
+				g.translate(-tx, -ty);
 			}
 		}
 	
+		private void drawShadow(Graphics2D g, int shadow_x, int shadow_y, float shadow_alpha, int shadow_color)
+		{
+			if (shadow_x != 0 && shadow_y != 0) {
+				if (render_shadow_alpha != shadow_alpha && 
+					render_shadow_color != shadow_color) {
+					shadow_buffer = null;
+				}
+				if (shadow_buffer == null) {
+					this.shadow_buffer = Tools.createImage(width, height);
+					try {
+						Graphics2D g2d = shadow_buffer.createGraphics();
+						g2d.setColor(Color.BLACK);
+//						g2d.fillRect(0, 0, width, height);
+						text_layout.draw(g2d, offsetx, offsety);
+						g2d.dispose();
+						this.shadow_buffer = Tools.toAlpha(shadow_buffer, shadow_alpha, shadow_color);
+					} catch (Throwable err) {}
+				}
+				g.drawImage(shadow_buffer, shadow_x, shadow_y, null);
+			}
+		}
 	}
 	
 	/**
 	 * 改变字符或尺寸的事件
 	 * @author WAZA
 	 */
-	class TextChanges
+	private class TextChanges
 	{
 		String 				text	= MultiTextLayout.this.text;
 		AttributedString 	atext 	= MultiTextLayout.this.attr_text;
@@ -185,6 +209,8 @@ public class MultiTextLayout
 	private boolean 			is_password 	= false;
 	
 	transient private int		render_timer;
+	transient private float		render_shadow_alpha = 0;
+	transient private int		render_shadow_color	= 0;
 	
 //	----------------------------------------------------------------------------------------------------------------
 //	交互
@@ -203,6 +229,8 @@ public class MultiTextLayout
 	
 	TextHitInfo 				caret_start_hit;
 	TextHitInfo 				caret_end_hit;
+	
+	Color 						selected_color = new Color(0x40ffffff, true);
 
 //	----------------------------------------------------------------------------------------------------------------
 //	设置用以改变状态
@@ -803,7 +831,29 @@ public class MultiTextLayout
 	 * @param sh 绘制文本的范围，是该Layout的内部坐标
 	 * @return
 	 */
-	synchronized public Dimension drawText(Graphics2D g, int x, int y, int sx, int sy, int sw, int sh) 
+	synchronized public Dimension drawText(Graphics2D g, int x, int y, int sx, int sy, int sw, int sh) {
+		return this.drawText(g, x, y, sx, sy, sw, sh, 0, 0, 0, 0);
+	}
+	
+	/**
+	 * @param g
+	 * @param x 绘制到g的位置
+	 * @param y 绘制到g的位置
+	 * @param sx 绘制文本的范围，是该Layout的内部坐标
+	 * @param sy 绘制文本的范围，是该Layout的内部坐标
+	 * @param sw 绘制文本的范围，是该Layout的内部坐标
+	 * @param sh 绘制文本的范围，是该Layout的内部坐标
+	 * @param shadow_x 阴影偏移
+	 * @param shadow_y 阴影偏移	 
+	 * @param shadow_alpha 阴影透明度
+	 * @param shadow_color 阴影颜色
+	 * @return
+	 */
+	synchronized public Dimension drawText(
+			Graphics2D g, 
+			int x, int y, 
+			int sx, int sy, int sw, int sh, 
+			int shadow_x, int shadow_y, float shadow_alpha, int shadow_color) 
 	{
 		x += 1;
 		y += 1;
@@ -823,12 +873,12 @@ public class MultiTextLayout
 			try {
 				for (TextLine line : textlines) {
 					if (rect.intersects(line.x, line.y, line.width, line.height)) {
-						line.render(g);
+						line.render(g, shadow_x, shadow_y, shadow_alpha, shadow_color);
 					}
 					render_size.width = Math.max(line.width, render_size.width);
 				}
 				if (!is_read_only && is_show_caret) {
-					if (render_timer++/6%2==0 && caret_bounds!=null) {
+					if (render_timer/6%2==0 && caret_bounds!=null) {
 						g.setColor(Color.WHITE);
 						if (text.length()>0) {
 							g.fillRect(caret_bounds.x, caret_bounds.y, 2, caret_bounds.height);
@@ -842,6 +892,9 @@ public class MultiTextLayout
 				g.translate(-x, -y);
 			}
 		}
+		render_timer++;
+		render_shadow_alpha = shadow_alpha;
+		render_shadow_color = shadow_color;
 		return render_size;
 	}
 
@@ -914,12 +967,12 @@ public class MultiTextLayout
 					e++;
 				}
 				
+				FontRenderContext frc = g.getFontRenderContext();
+				
 				// lines
 				if (!is_single_line)
 				{
-					LineBreakMeasurer textMeasurer = new LineBreakMeasurer(
-							attr_text.getIterator(), 
-							g.getFontRenderContext());
+					LineBreakMeasurer textMeasurer = new LineBreakMeasurer(attr_text.getIterator(), frc);
 			
 					while (textMeasurer.getPosition()>=0 && textMeasurer.getPosition()<text.length())
 					{
@@ -932,7 +985,7 @@ public class MultiTextLayout
 							layout = textMeasurer.nextLayout(width);
 						}
 						
-						TextLine line = new TextLine(layout, textlines.size());
+						TextLine line = new TextLine(layout, textlines.size(), frc);
 						line.x = 0;
 						line.y = height;
 						height += line.height + space;
@@ -944,7 +997,7 @@ public class MultiTextLayout
 				else
 				{
 					TextLayout layout = new TextLayout(attr_text.getIterator(), g.getFontRenderContext());
-					TextLine line = new TextLine(layout, textlines.size());
+					TextLine line = new TextLine(layout, textlines.size(), frc);
 					line.x = 0;
 					line.y = height;
 					this.height += line.height + space;
