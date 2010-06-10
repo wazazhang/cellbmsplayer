@@ -22,6 +22,10 @@ public abstract class IObjectiveFactory
 	
 	public String build(String src)
 	{
+		if (src.endsWith("]")) {
+			src += " ";
+		}
+		
 		build_state = "";
 		
 		int count = src.length();
@@ -48,16 +52,15 @@ public abstract class IObjectiveFactory
 	{
 		if (src.charAt(begin)=='[')
 		{
-			int end = src.indexOf(']', begin+1);
-			if (end>begin){
+			int end = src.indexOf(']', begin);
+			if (end > begin) {
 				String ins = src.substring(begin+1, end);
 				String kv[] = ins.split(":", 2);
 				String k = kv[0].trim();
 				String v = kv.length>1?kv[1].trim():null;
 				if (kv.length>0){
 					Objective obj = getObjective(src, begin, end+1, k, v);
-					if (obj!=null)
-					{
+					if (obj!=null) {
 						obj.Key = k;
 						obj.Value = v;
 						obj.Index = begin;

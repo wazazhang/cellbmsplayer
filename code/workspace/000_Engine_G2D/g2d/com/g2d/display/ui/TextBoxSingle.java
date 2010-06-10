@@ -157,12 +157,20 @@ public class TextBoxSingle extends UIComponent implements Serializable, TextInpu
 		if (enable_antialiasing) {
 			Object v = g.getRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING);
 			g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-			text.drawText(g, text_draw_x - xoffset, text_draw_y, xoffset, 0,
-					text_draw_w + 2, getHeight());
+			text.drawText(g, 
+					text_draw_x - xoffset, 
+					text_draw_y, xoffset, 
+					0, 
+					text_draw_w + 2, 
+					getHeight() - layout.BorderSize*2);
 			g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, v);
 		} else {
-			text.drawText(g, text_draw_x - xoffset, text_draw_y, xoffset, 0,
-					text_draw_w + 2, getHeight());
+			text.drawText(g, 
+					text_draw_x - xoffset, 
+					text_draw_y, xoffset, 
+					0,
+					text_draw_w + 2,
+					getHeight() - layout.BorderSize*2);
 		}
 	}
 
