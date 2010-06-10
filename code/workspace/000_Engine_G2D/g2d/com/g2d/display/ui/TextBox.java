@@ -51,6 +51,8 @@ public class TextBox extends UIComponent implements Serializable, TextInputer
 
 	public int							text_shadow_x		= 0;
 	public int							text_shadow_y		= 0;
+	public float						text_shadow_alpha	= 1f;
+	public int							text_shadow_rgb		= 0xff000000;
 
 //	-------------------------------------------------------------------------------------------------------------------
 	
@@ -263,12 +265,7 @@ public class TextBox extends UIComponent implements Serializable, TextInputer
 			}
 			v_scrollbar.setSize(v_scrollbar.size, sh);
 			
-			if (v_scrollbar.isMaxLength()) {
-				text.setWidth(sw);
-			} else {
-				text.setWidth(sw-v_scrollbar.size);
-			}
-			
+			text.setWidth(sw-v_scrollbar.size);
 			text_draw_x = view_port_rect.x;
 			text_draw_y = view_port_rect.y - (int)v_scrollbar.getValue();
 		}
@@ -291,17 +288,11 @@ public class TextBox extends UIComponent implements Serializable, TextInputer
 				if (enable_antialiasing) {
 					g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 				}
-				if (text_shadow_x!=0 || text_shadow_y!=0) {
-					Composite composite = g.getComposite();
-					try{
-						g.setComposite(AlphaComposite.SrcOut);
-						text.drawText(g, text_draw_x+text_shadow_x, text_draw_y+text_shadow_y, tsx, tsy, tsw, tsh);
-					} finally {
-						g.setComposite(composite);
-					}
-				}
 				g.setColor(textColor);
-				text.drawText(g, text_draw_x, text_draw_y, tsx, tsy, tsw, tsh);
+				text.drawText(g, 
+						text_draw_x, text_draw_y, 
+						tsx, tsy, tsw, tsh, 
+						text_shadow_x, text_shadow_y, text_shadow_alpha, text_shadow_rgb);
 			} finally {
 				g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, v);
 			}
