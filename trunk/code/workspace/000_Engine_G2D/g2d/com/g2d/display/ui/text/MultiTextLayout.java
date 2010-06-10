@@ -57,11 +57,9 @@ public class MultiTextLayout
 			this.text_layout		= layout;
 			this.line_index			= line;
 
-			Rectangle bounds 		= layout.getPixelBounds(frc, 0, 0);
-			
-			this.offsetx		= -bounds.x;
+			this.offsetx		= (int)0;
 			this.offsety		= (int)layout.getAscent();
-			this.width			= bounds.width;
+			this.width			= (int)layout.getAdvance();
 			this.height			= (int)Math.max(10, layout.getAscent() + layout.getDescent() + space);
 		}
 		
@@ -107,6 +105,8 @@ public class MultiTextLayout
 					} catch (Throwable err) {}
 				}
 				g.drawImage(shadow_buffer, shadow_x, shadow_y, null);
+			} else {
+				shadow_buffer = null;
 			}
 		}
 	}
@@ -232,6 +232,8 @@ public class MultiTextLayout
 	
 	Color 						selected_color = new Color(0x40ffffff, true);
 
+	private int					max_line_count	= 1000;
+	
 //	----------------------------------------------------------------------------------------------------------------
 //	设置用以改变状态
 	
@@ -984,7 +986,7 @@ public class MultiTextLayout
 						else {
 							layout = textMeasurer.nextLayout(width);
 						}
-						
+						// TODO 处理最大行数
 						TextLine line = new TextLine(layout, textlines.size(), frc);
 						line.x = 0;
 						line.y = height;
@@ -1036,8 +1038,8 @@ public class MultiTextLayout
 					caret_bounds.height	= line.height+space;
 					caret_bounds.width	= 2;
 					
-					//System.out.println(caret_bounds+" caret_position="+caret_position+" pos="+pos);
-					//System.out.println("caret_position="+caret_position+" pos="+pos);
+					System.out.println(caret_bounds+" caret_position="+caret_position+" pos="+pos);
+					System.out.println("caret_position="+caret_position+" pos="+pos);
 				}
 				catch (Exception e) {
 					e.printStackTrace();
