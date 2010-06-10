@@ -1038,8 +1038,8 @@ public class MultiTextLayout
 					caret_bounds.height	= line.height+space;
 					caret_bounds.width	= 2;
 					
-					System.out.println(caret_bounds+" caret_position="+caret_position+" pos="+pos);
-					System.out.println("caret_position="+caret_position+" pos="+pos);
+//					System.out.println(caret_bounds+" caret_position="+caret_position+" pos="+pos);
+//					System.out.println("caret_position="+caret_position+" pos="+pos);
 				}
 				catch (Exception e) {
 					e.printStackTrace();

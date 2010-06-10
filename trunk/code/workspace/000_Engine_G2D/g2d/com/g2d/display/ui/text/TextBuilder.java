@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.TexturePaint;
+import java.awt.font.ImageGraphicAttribute;
 import java.awt.font.TextAttribute;
 import java.awt.image.BufferedImage;
 import java.text.AttributedString;
@@ -20,6 +21,9 @@ import com.cell.script.objective.Objective;
 import com.cell.util.EnumManager;
 import com.cell.util.EnumManager.ValueEnum;
 import com.g2d.Tools;
+import com.g2d.cell.CellSetResourceManager;
+import com.g2d.display.ui.text.ga.GraphicsAttributeImage;
+import com.g2d.display.ui.text.ga.GraphicsAttributeSprite;
 
 /** 
  * 通过在字符串中嵌入代码，构造样式文本。<br>
@@ -32,8 +36,10 @@ import com.g2d.Tools;
  * [anti:1 or 0]text[anti]<br>
  * @see com.g2d.display.ui.text.TextBuilder.Instruction
  */
-final public class TextBuilder extends IObjectiveFactory
+public class TextBuilder extends IObjectiveFactory
 {
+	public static TextBuilderAdapter DEFAULT_TEXT_BUILDER_ADAPTER = null;
+	
 	public static AttributedString buildScript(String script)
 	{
 		if (script!=null){
@@ -42,30 +48,34 @@ final public class TextBuilder extends IObjectiveFactory
 		return null;
 	}
 	
-	public static String toString(AttributedString atext) {
-		String text = "";
-		CharacterIterator iter = atext.getIterator();
-		for (char c = iter.first(); c != CharacterIterator.DONE; c = iter.next()) {
-			text += c;
-		}
-		return text;
+	public static AttributedString buildScript(String script, TextBuilderAdapter adapter)
+	{
+		if (script!=null){
+			return new TextBuilder(adapter, script).attributed_text;
+		} 
+		return null;
 	}
 	
 //	-----------------------------------------------------------------------------------------------------------------------------------
-	
-	AttributedString								attributed_text;
-	
-	Hashtable<Attribute, Stack<InstructionObjective>>	CallStacks;
-	Vector<InstructionObjective> 						ObjectQueue;
-	
+	TextBuilderAdapter adapter;
+	AttributedString attributed_text;
+	Hashtable<Instruction, Stack<InstructionObjective>> CallStacks;
+	Vector<InstructionObjective> ObjectQueue;
+
 //	-----------------------------------------------------------------------------------------------------------------------------------
 	
 	public TextBuilder(String script)
 	{
+		this(DEFAULT_TEXT_BUILDER_ADAPTER, script);
+	}
+
+	public TextBuilder(TextBuilderAdapter adapter, String script) 
+	{
 		if (script.length()>3)
 		{
-			CallStacks	= new Hashtable<Attribute, Stack<InstructionObjective>>();
-			ObjectQueue	= new Vector<InstructionObjective>();
+			this.adapter 		= adapter;
+			this.CallStacks		= new Hashtable<Instruction, Stack<InstructionObjective>>();
+			this.ObjectQueue	= new Vector<InstructionObjective>();
 
 			build(script);
 			
@@ -73,16 +83,16 @@ final public class TextBuilder extends IObjectiveFactory
 			{
 				try
 				{
-					attributed_text = new AttributedString(build_state);
-					
-					for (InstructionObjective item : ObjectQueue)
-					{
-						if (item.AttrValue!=null) {
-							attributed_text.addAttribute(
-									item.Attr, 
-									item.AttrValue,
-									item.AttrStart,
-									item.AttrEnd);
+					attributed_text = new AttributedString(getBuildState());
+					for (InstructionObjective item : ObjectQueue) {
+						for (int i = 0; i < item.Attr.length; i++) {
+							if (item.Attr[i] != null) {
+								attributed_text.addAttribute(
+										item.Attr[i],
+										item.AttrValue[i], 
+										item.AttrStart,
+										item.AttrEnd);
+							}
 						}
 					}
 				}
@@ -96,53 +106,46 @@ final public class TextBuilder extends IObjectiveFactory
 		attributed_text = new AttributedString(script);
 	}
 
-	Stack<InstructionObjective> getStack(Attribute attribute) 
+	final Stack<InstructionObjective> getStack(Instruction ins) 
 	{
-		Stack<InstructionObjective> stack = CallStacks.get(attribute);
-		if (stack==null){
+		Stack<InstructionObjective> stack = CallStacks.get(ins);
+		if (stack == null) {
 			stack = new Stack<InstructionObjective>();
-			CallStacks.put(attribute, stack);
+			CallStacks.put(ins, stack);
 		}
 		return stack;
 	}
 	
 	@Override
-	public Objective<Attribute> getObjective(String src, int begin, int end, String key, String value) 
+	final public InstructionObjective getObjective(String src, int begin, int end, String key, String value) 
 	{
 		// 对应的 TextAttribute
-		Attribute attribute = Instructions.get(key);
+		Instruction ins = Instruction.getInstraction(key);
 		
-		if (attribute != null)
+		if (ins != null)
 		{
 			// 该 TextAttribute对应的堆栈
-			Stack<InstructionObjective> stack = getStack(attribute);
-			// 得到值
-			Object valueObject = getInstructionValue(key, value);
+			Stack<InstructionObjective> stack = getStack(ins);
 			
-			InstructionObjective objective = new InstructionObjective(attribute, valueObject);
+			InstructionObjective objective = stack.isEmpty() ? null : stack.pop();
 			
-			// 如果 value不为空,则为color头 [color:AARRGGBB]
-			if (valueObject!=null)
+			// 如果 以前没有该类型的数据在堆栈中，则代表为数据头
+			if (objective == null)
 			{
-				objective.AttrStart	= build_state.length();
-				
+				objective = getInstructionValue(ins, key, value);
+				objective.AttrStart	= getBuildState().length();
 				// 入栈
 				stack.push(objective);
 			}
-			// 如果value为空,则为color尾 [color]
-			else if (!stack.isEmpty()) 
+			else 
 			{
 				// 出栈上一个匹配值
-				InstructionObjective prew	= stack.pop();
-
-				prew.AttrEnd		= build_state.length();
-				
+				objective.AttrEnd		= getBuildState().length();
 				// 添加到对象集
-				ObjectQueue.addElement(prew);
+				ObjectQueue.addElement(objective);
 			}
 			
 			return objective;
-			
 		}
 		else
 		{
@@ -152,42 +155,59 @@ final public class TextBuilder extends IObjectiveFactory
 		return null;
 	}
 
-	protected Object getInstructionValue(String key, String value) 
+	protected InstructionObjective getInstructionValue(Instruction instruction, String key, String value) 
 	{
-		Instruction instruction = EnumManager.getEnum(Instruction.class, key);
-		
 		try
 		{
-			if (value==null || value.length()==0) {
-				return null;
-			}
-			
 			if (instruction != null)
 			{
+				Attribute attr = instruction.attribute;
+				
 				switch (instruction) {
-				case COLOR:
-					return new Color((int)Long.parseLong(value, 16) & 0x00ffffffff, true);
-				case BACK_COLOR:
-					return new Color((int)Long.parseLong(value, 16) & 0x00ffffffff, true);
-				case SIZE:
-					return new Integer(Integer.parseInt(value));
-				case BOLD:
-					return TextAttribute.WEIGHT_BOLD;
-				case UNDERLINE:
-					return TextAttribute.UNDERLINE_ON;
-				case FONT:
+				case COLOR: {
+					return new InstructionObjective(attr, 
+							new Color((int)Long.parseLong(value, 16) & 0x00ffffffff, true));
+				}
+				case BACK_COLOR: {
+					return new InstructionObjective(attr, 
+							new Color((int)Long.parseLong(value, 16) & 0x00ffffffff, true));
+				}
+				case SIZE: {
+					return new InstructionObjective(attr, 
+							new Integer(Integer.parseInt(value)));
+				}
+				case BOLD: {
+					return new InstructionObjective(attr, 
+							TextAttribute.WEIGHT_BOLD);
+				}
+				case UNDERLINE: {
+					return new InstructionObjective(attr, 
+							TextAttribute.UNDERLINE_ON);
+				}
+				case FONT: {
 					String[] fs = CUtil.splitString(value, "@");
-					return new Font(fs[0], Integer.parseInt(fs[1]), Integer.parseInt(fs[2]));
-				case IMAGE:
-					BufferedImage image = getImage(instruction, value);
-					if (image != null) {
-						return new TexturePaint(image, new Rectangle(0, 0, image.getWidth(), image.getHeight()));
+					return new InstructionObjective(attr, 
+							new Font(fs[0], Integer.parseInt(fs[1]), Integer.parseInt(fs[2])));
+				}
+				case LINK: {
+					return new InstructionObjective(attr, value);
+				}
+				case ANTIALIASING: {
+					return new InstructionObjective(attr, Integer.parseInt(value));
+				}
+				// graphics adapter
+				case IMAGE: {
+					if (adapter != null) {
+						return new InstructionObjective(attr, 
+								adapter.createGraphicAttribute(instruction, key, value));
 					}
-					return null;
-				case LINK:
-					return value;
-				case ANTIALIASING:
-					return Integer.parseInt(value);
+				}
+				case SPRITE: {
+					if (adapter != null) {
+						return new InstructionObjective(attr, 
+								adapter.createGraphicAttribute(instruction, key, value));
+					}
+				}
 				}
 			}
 		}
@@ -200,49 +220,49 @@ final public class TextBuilder extends IObjectiveFactory
 		return null;
 	}
 	
-
-	/**
-	 * 获取图片
-	 * @param attr
-	 * @param path
-	 * @return
-	 */
-	protected BufferedImage getImage(Instruction instraction, Object path) {
-		BufferedImage image = Tools.readImage(path.toString());
-		return image;
-	}
-	
-	public AttributedString getAttributedText() 
+	final public AttributedString getAttributedText() 
 	{
 		return attributed_text;
 	}
 	
-	public String getText()
-	{
-		return build_state;
+	final public String getText() {
+		return getBuildState();
 	}
 	
 	@Override
-	public String toString() {
-		return build_state;
+	final public String toString() {
+		return getBuildState();
 	}
 
+	public static String toString(AttributedString atext) {
+		String text = "";
+		CharacterIterator iter = atext.getIterator();
+		for (char c = iter.first(); c != CharacterIterator.DONE; c = iter.next()) {
+			text += c;
+		}
+		return text;
+	}
+	
 //	-----------------------------------------------------------------------------------------------------------------------------------
 	
-	class InstructionObjective extends Objective<Attribute>
+	protected class InstructionObjective extends Objective<Attribute[]>
 	{
-		public Attribute	Attr;
-		public Object 		AttrValue;
+		public Attribute[]	Attr;
+		public Object[] 	AttrValue;
 		int					AttrStart;
 		int					AttrEnd;
 		
-		public InstructionObjective(Attribute attr, Object attrvalue)
-		{
-			Attr 		= attr;
-			AttrValue	= attrvalue;
+		public InstructionObjective(Attribute attr, Object attrvalue) {
+			Attr = new Attribute[] { attr };
+			AttrValue = new Object[] { attrvalue };
+		}
+
+		public InstructionObjective(Attribute[] attrs, Object[] attrvalues) {
+			Attr = attrs;
+			AttrValue = attrvalues;
 		}
 		
-		public Attribute getValue()
+		public Attribute[] getValue()
 		{
 			return Attr;
 		}
@@ -250,14 +270,7 @@ final public class TextBuilder extends IObjectiveFactory
 	
 //	------------------------------------------------------------------------------------------------------------------
 
-	final public static Hashtable<String, Attribute> Instructions = new Hashtable<String, Attribute>();
-
-	static 
-	{
-		for (Instruction ins : Instruction.values()) {
-			Instructions.put(ins.value, ins.attribute);
-		}
-	}
+	
 	
 	
 }
