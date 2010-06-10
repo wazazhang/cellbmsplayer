@@ -2,6 +2,7 @@ package com.g2d.display.ui.text;
 
 import java.awt.font.TextAttribute;
 import java.text.AttributedCharacterIterator.Attribute;
+import java.util.Hashtable;
 
 import com.cell.util.EnumManager.ValueEnum;
 
@@ -13,7 +14,7 @@ public enum Instruction implements ValueEnum<String>
 	/** [back:color as AARRGGBB]text[back] */
 	BACK_COLOR		("back",	TextAttribute.BACKGROUND),
 	
-	/** [size:font size]text[size] */
+	/** [size:font_size]text[size] */
 	SIZE			("size",	TextAttribute.SIZE),
 
 	/** [bold]text[bold] */
@@ -34,8 +35,11 @@ public enum Instruction implements ValueEnum<String>
 
 	/** [image:path]replacement[image]<br>
 	 * 其中的文字将用图片填充*/
-	IMAGE			("image",	TextAttribute.FOREGROUND),
+	IMAGE			("image",	TextAttribute.CHAR_REPLACEMENT),
 	
+	/** [sprite:path@sprite name@animate]replacement[sprite]<br>
+	 * 其中的文字将用精灵填充*/
+	SPRITE			("sprite",	TextAttribute.CHAR_REPLACEMENT),
 	;
 
 	final public String		value;
@@ -48,5 +52,18 @@ public enum Instruction implements ValueEnum<String>
 	
 	public String getValue() {
 		return value;
+	}
+	
+	private static Hashtable<String, Instruction> instractions = null;
+
+	static public Instruction getInstraction(String string)
+	{
+		if (instractions == null) {
+			instractions = new Hashtable<String, Instruction>();
+			for (Instruction ins : Instruction.values()) {
+				instractions.put(ins.value, ins);
+			}
+		}
+		return instractions.get(string);
 	}
 }

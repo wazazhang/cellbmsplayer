@@ -12,12 +12,20 @@ public abstract class IObjectiveFactory
 	/**
 	 * 调用build后,当前的编译状态
 	 */
-	protected String 			build_state;
+	private String 				build_state;
 	
-	protected Vector<Objective> Instructions = new Vector<Objective>();
+	private Vector<Objective>	Instructions = new Vector<Objective>();
 	
 
-	abstract public Objective getObjective(String src, int begin, int end, String key, String value);
+	abstract protected Objective getObjective(String src, int begin, int end, String key, String value);
+	
+	/**
+	 * 调用build后,当前的编译状态
+	 */
+	protected String getBuildState() {
+		return build_state;
+	}
+	
 	
 	
 	public String build(String src)

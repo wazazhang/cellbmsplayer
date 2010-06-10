@@ -26,6 +26,7 @@ import com.g2d.display.event.TextInputer;
 import com.g2d.display.event.MouseEvent;
 import com.g2d.display.event.MouseMoveEvent;
 import com.g2d.display.event.MouseWheelEvent;
+import com.g2d.display.ui.text.Instruction;
 import com.g2d.display.ui.text.MultiTextLayout;
 import com.g2d.display.ui.text.TextBuilder;
 import com.g2d.display.ui.text.MultiTextLayout.AttributedSegment;
@@ -311,10 +312,11 @@ public class TextBox extends UIComponent implements Serializable, TextInputer
 		}
 	}
 	
-	public void addClickSegmentListener(String instruction, ClickSegmentListener listener)
-	{
-		addClickSegmentListener(TextBuilder.Instructions.get(instruction), listener);
-	}
+//	public void addClickSegmentListener(String instruction, ClickSegmentListener listener)
+//	{
+//		Instruction.getInstraction(instruction);
+//		addClickSegmentListener(, listener);
+//	}
 	
 	/**
 	 * 用于监听特殊属性的字符段被点击的接口
