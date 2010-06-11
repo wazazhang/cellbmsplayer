@@ -7,6 +7,7 @@ import java.awt.TexturePaint;
 import java.awt.font.ImageGraphicAttribute;
 import java.awt.font.TextAttribute;
 import java.awt.image.BufferedImage;
+import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
 import java.text.CharacterIterator;
 import java.text.AttributedCharacterIterator.Attribute;
@@ -234,15 +235,6 @@ public class TextBuilder extends IObjectiveFactory
 		return getBuildState();
 	}
 
-	public static String toString(AttributedString atext) {
-		String text = "";
-		CharacterIterator iter = atext.getIterator();
-		for (char c = iter.first(); c != CharacterIterator.DONE; c = iter.next()) {
-			text += c;
-		}
-		return text;
-	}
-	
 //	-----------------------------------------------------------------------------------------------------------------------------------
 	
 	protected class InstructionObjective extends Objective<Attribute[]>
@@ -270,7 +262,66 @@ public class TextBuilder extends IObjectiveFactory
 	
 //	------------------------------------------------------------------------------------------------------------------
 
+	public static String toString(AttributedString texta)
+	{
+		StringBuilder sb = new StringBuilder();
+		CharacterIterator iter = texta.getIterator();
+		for (char c = iter.first(); c != CharacterIterator.DONE; c = iter.next()) {
+			sb.append(c);
+		}
+		return sb.toString();
+	}
 	
+	public static AttributedString linkAttributedString(AttributedString texta, AttributedString textb)
+	{
+		String dst_text = toString(texta) + toString(textb);
+
+		AttributedString ret = new AttributedString(dst_text);
+		
+		int i=0;
+		{
+			AttributedCharacterIterator ita = texta.getIterator();
+			for (char c = ita.first(); c != CharacterIterator.DONE; c = ita.next()) {
+				ret.addAttributes(ita.getAttributes(), i, i+1);
+				i ++;
+			}
+		}{
+			AttributedCharacterIterator itb = textb.getIterator();
+			for (char c = itb.first(); c != CharacterIterator.DONE; c = itb.next()) {
+				ret.addAttributes(itb.getAttributes(), i, i+1);
+				i ++;
+			}
+		}
+		return ret;
+	}
 	
+	public static AttributedString concat(AttributedString texta, AttributedString textb) 
+	{
+		return linkAttributedString(texta, textb);
+	}
+
+	/**
+	 * @param src
+     * @param start   the beginning index, inclusive.
+     * @param end     the ending index, exclusive.
+	 * @return 
+	 */
+	public static AttributedString subString(AttributedString src, int start, int end)
+	{
+		String dst_text = toString(src);
+		dst_text = dst_text.substring(start, end);
+		AttributedString ret = new AttributedString(dst_text);
+		int src_i = 0;
+		int dst_i = 0;
+		AttributedCharacterIterator ita = src.getIterator();
+		for (char c = ita.first(); c != CharacterIterator.DONE; c = ita.next()) {
+			if (src_i >= start && src_i < end) {
+				ret.addAttributes(ita.getAttributes(), dst_i, dst_i+1);
+				dst_i ++;
+			}
+			src_i ++;
+		}
+		return ret;
+	}
 	
 }

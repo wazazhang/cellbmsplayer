@@ -143,7 +143,7 @@ public class MultiTextLayout
 
 		void set(String text) {
 			this.text = text;
-			this.atext = new AttributedString(encodeChars(this.text));
+			this.atext = new AttributedString(this.text);
 		}
 		
 		void set(String text, AttributedString atext) {
@@ -158,7 +158,7 @@ public class MultiTextLayout
 		
 		void append(String text) {
 			this.text += text;
-			this.atext = new AttributedString(encodeChars(this.text));
+			this.atext = new AttributedString(this.text);
 		}
 		
 		void append(AttributedString atext) {
@@ -209,8 +209,6 @@ public class MultiTextLayout
 	public boolean 				is_show_caret 	= true;
 	/**是否显示选择的区域*/
 	public boolean 				is_show_select	= true;
-	/**是否显示为密码*/
-	private boolean 			is_password 	= false;
 	
 	transient private int		render_timer;
 	transient private float		render_shadow_alpha = 0;
@@ -256,25 +254,25 @@ public class MultiTextLayout
 		this(false);
 	}
 	
-	/**
-	 * 是否显示为密码
-	 * @return
-	 */
-	synchronized public boolean isPassword() {
-		return is_password;
-	}
-
-	/**
-	 * 是否显示为密码
-	 */
-	synchronized public void setIsPassword(boolean isPassword) {
-		is_password = isPassword;
-		if (textChange != null) {
-			textChange.set(textChange.text);
-		} else {
-			setText(text);
-		}
-	}
+//	/**
+//	 * 是否显示为密码
+//	 * @return
+//	 */
+//	synchronized public boolean isPassword() {
+//		return is_password;
+//	}
+//
+//	/**
+//	 * 是否显示为密码
+//	 */
+//	synchronized public void setIsPassword(boolean isPassword) {
+//		is_password = isPassword;
+//		if (textChange != null) {
+//			textChange.set(textChange.text);
+//		} else {
+//			setText(text);
+//		}
+//	}
 
 //	----------------------------------------------------------------------------------------------------------------
 
@@ -314,6 +312,11 @@ public class MultiTextLayout
 		}
 	}
 
+	/**
+	 * 尝试拖动光标到x，y位置
+	 * @param x
+	 * @param y
+	 */
 	synchronized public void dragCaret(int x, int y)
 	{
 		if (x<0) x = 0;
@@ -535,7 +538,7 @@ public class MultiTextLayout
 			try{
 				max = Math.min(max, text.length());
 				min = Math.max(min, 0);
-				return encodeChars(text.substring(min, max));
+				return text.substring(min, max);
 			}catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -738,6 +741,10 @@ public class MultiTextLayout
 
 //	----------------------------------------------------------------------------------------------------------------
 
+	/**
+	 * 设置文本
+	 * @param text
+	 */
 	synchronized public void setText(String text){
 		if (is_single_line) {
 			text = text.replaceAll("\n", "");
@@ -749,6 +756,10 @@ public class MultiTextLayout
 		}
 	}
 	
+	/**
+	 * 设置高级文本
+	 * @param atext
+	 */
 	synchronized public void setText(AttributedString atext)
 	{
 		if (textChange!=null){
@@ -758,6 +769,10 @@ public class MultiTextLayout
 		}
 	}
 	
+	/**
+	 * 在最后附加文字
+	 * @param atext
+	 */
 	synchronized public void appendText(String text) {
 		if (is_single_line) {
 			text = text.replaceAll("\n", "");
@@ -769,6 +784,10 @@ public class MultiTextLayout
 		}
 	}
 	
+	/**
+	 * 在最后附加高级文字
+	 * @param atext
+	 */
 	synchronized public void appendText(AttributedString atext)
 	{
 		if (textChange != null) {
@@ -837,6 +856,130 @@ public class MultiTextLayout
 			}
 		}
 		
+	}
+	
+	/**
+	 * 在开始处插入文字
+	 * @param start
+	 * @param atext
+	 */
+	synchronized public void insertText(int start, AttributedString atext)
+	{
+		if (start < 0) {
+			return;
+		}
+		
+		String 				get_text	= getText();
+		AttributedString	get_atext	= getAttributeText();
+		
+		if (textChange == null) {
+			textChange = new TextChanges();
+		}
+
+		if (get_text.length() == 0) 
+		{
+			textChange.set(atext);
+		}
+		else if (start >= get_text.length()) 
+		{
+			textChange.append(atext);
+		}
+		else if (get_atext != null)
+		{
+			String 				text_left	= get_text.substring(0, start);
+			String 				text_right	= get_text.substring(start, get_text.length());
+			AttributedString	atext_left	= TextBuilder.subString(get_atext, 0, start);
+			AttributedString	atext_right	= TextBuilder.subString(get_atext, start, get_text.length());
+			String				add_text	= TextBuilder.toString(atext);
+			
+			textChange.set(
+					text_left.concat(add_text).concat(text_right),
+					TextBuilder.concat(TextBuilder.concat(atext_left, atext), atext_right));
+		}
+	}
+	
+	/**
+	 * 将此范围的文字替换成atext
+	 * @param start
+	 * @param end
+	 * @param atext
+	 */
+	synchronized public void insertText(int start, int end, AttributedString atext)
+	{
+		if (start == end) {
+			return;
+		}
+		
+		int min = Math.min(start, end);
+		int max = Math.max(start, end);
+
+		String				add_text	= TextBuilder.toString(atext);
+		String 				get_text	= getText();
+		AttributedString	get_atext	= getAttributeText();
+		
+		if (get_atext != null)
+		{
+			if (textChange == null) {
+				textChange = new TextChanges();
+			}
+			
+			// 全部被删除
+			if (min <= 0 && max >= get_text.length()) 
+			{
+				textChange.set(atext);
+			}
+			// 前面一半被删除
+			else if (min <= 0)
+			{
+				String 				text_right	= get_text.substring(max, get_text.length());
+				AttributedString	atext_right	= TextBuilder.subString(get_atext, max, get_text.length());
+				textChange.set(
+						add_text.concat(text_right), 
+						TextBuilder.concat(atext, atext_right));
+			}
+			// 后面一半被删除
+			else if (max >= get_text.length()) 
+			{
+				String 				text_left	= get_text.substring(0, min);
+				AttributedString	atext_left	= TextBuilder.subString(get_atext, 0, min);
+				
+				textChange.set(
+						text_left.concat(add_text), 
+						TextBuilder.concat(atext_left, atext));
+			}
+			// 中间一段被删除
+			else
+			{
+				String 				text_left	= get_text.substring(0, min);
+				String 				text_right	= get_text.substring(max, get_text.length());
+				AttributedString	atext_left	= TextBuilder.subString(get_atext, 0, min);
+				AttributedString	atext_right	= TextBuilder.subString(get_atext, max, get_text.length());
+			
+				textChange.set(
+						text_left.concat(add_text).concat(text_right),
+						TextBuilder.concat(TextBuilder.concat(atext_left, atext), atext_right));
+			}
+		}
+		
+	}
+	
+	/**
+	 * 在开始处插入文字
+	 * @param start
+	 * @param atext
+	 */
+	synchronized public void insertText(int start, String text) {
+		this.insertText(start, new AttributedString(text));
+	}
+	
+	/**
+	 * 将此范围的文字替换成atext
+	 * @param start
+	 * @param end
+	 * @param atext
+	 */
+	synchronized public void insertText(int start, int end, String text) {
+		this.insertText(start, end, new AttributedString(text));
 	}
 	
 //	---------------------------------------------------------------------------------------------------------------
@@ -1032,7 +1175,7 @@ public class MultiTextLayout
 			if (text.length()>0)
 			{
 				AttributedCharacterIterator it = change.atext.getIterator();
-				attr_text = new AttributedString(encodeChars(text));
+				attr_text = new AttributedString(text);
 				int i=0, e=1;
 				for (char c = it.first(); c != CharacterIterator.DONE; c = it.next()) 
 				{
@@ -1065,8 +1208,7 @@ public class MultiTextLayout
 						int limit = text.indexOf('\n', textMeasurer.getPosition());
 						if (limit >= textMeasurer.getPosition()) {
 							layout = textMeasurer.nextLayout(width, limit+1, false);
-						}
-						else {
+						} else {
 							layout = textMeasurer.nextLayout(width);
 						}
 						// TODO 处理最大行数
@@ -1098,14 +1240,13 @@ public class MultiTextLayout
 	{
 		int text_remain = text.length();
 		
-		for (int i=textlines.size()-1; i>=0; --i) 
+		for (int i = textlines.size() - 1; i >= 0; --i)
 		{
 			TextLine line = textlines.elementAt(i);
 			
 			text_remain -= line.getLayout().getCharacterCount();
 			
-			if (text_remain <= caret_position)
-			{
+			if (text_remain <= caret_position) {
 				try
 				{
 					int pos = Math.max(1, (caret_position - text_remain)+1);
@@ -1145,11 +1286,7 @@ public class MultiTextLayout
 				switch (inserted_char) {
 				case CHAR_BACKSPACE:
 				case CHAR_DELETE:
-					if (max < text.length()) {
-						setText(text.substring(0, min) + text.substring(max));
-					} else {
-						setText(text.substring(0, min));
-					}
+					deleteText(min, max);
 					caret_position = min;
 					break;
 				}
@@ -1157,21 +1294,19 @@ public class MultiTextLayout
 			else {
 				switch (inserted_char) {
 				case CHAR_BACKSPACE:
-					if (caret_position>0 && text.length()>0) {
-						if (caret_position<text.length()) {
-							setText(text.substring(0, caret_position-1) + text.substring(caret_position));
-						}else{
-							setText(text.substring(0, text.length()-1));
+					if (caret_position > 0 && text.length() > 0) {
+						if (caret_position < text.length()) {
+							deleteText(caret_position-1, caret_position);
+						} else {
+							deleteText(text.length()-1, text.length());
 						}
 						caret_position -= 1;
 					}
 					break;
 				case CHAR_DELETE:
-					if (caret_position>=0 && text.length()>0){
+					if (caret_position >= 0 && text.length() > 0) {
 						if (caret_position<text.length()) {
-							setText(text.substring(0, caret_position) + text.substring(caret_position+1));
-						} else {
-//							setText(text.substring(0, caret_position));
+							deleteText(caret_position, caret_position+1);
 						}
 					}
 					break;
@@ -1190,16 +1325,16 @@ public class MultiTextLayout
 				int max = Math.max(caret_start_position, caret_end_position);
 				int min = Math.min(caret_start_position, caret_end_position);
 				if (max < text.length()) {
-					setText(text.substring(0, min) + inserted_text + text.substring(max));
+					insertText(min, max, inserted_text);
 				}else{
-					setText(text.substring(0, min) + inserted_text);
+					insertText(min, text.length(), inserted_text);
 				}
 				caret_position = min + inserted_text.length();
 			} else {
 				if (caret_position < text.length()){
-					setText(text.substring(0, caret_position) + inserted_text + text.substring(caret_position));
+					insertText(caret_position, inserted_text);
 				}else{
-					setText(text + inserted_text);
+					insertText(text.length(), inserted_text);
 				}
 				caret_position += inserted_text.length();
 			}
@@ -1210,15 +1345,5 @@ public class MultiTextLayout
 	}
 	
 
-	private String encodeChars(String text)
-	{
-		if (is_password) {
-			char[] chars = new char[text.length()];
-			for (int i = text.length() - 1; i >= 0; --i) {
-				chars[i] = ('*');
-			}
-			return new String(chars);
-		}
-		return text;
-	}
+
 }

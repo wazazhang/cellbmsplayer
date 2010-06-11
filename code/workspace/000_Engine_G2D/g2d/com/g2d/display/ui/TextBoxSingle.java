@@ -24,7 +24,8 @@ public class TextBoxSingle extends UIComponent implements Serializable, TextInpu
 	transient int 						text_draw_x;
 	transient int 						text_draw_y;
 	transient int 						text_draw_w;
-	transient MultiTextLayout			text				= new MultiTextLayout(true);
+	
+	transient private MultiTextLayout	text				= new MultiTextLayout(true);
 	
 	/**文字颜色*/
 	public Color 						textColor			= new Color(0xffffffff, true);
@@ -34,6 +35,9 @@ public class TextBoxSingle extends UIComponent implements Serializable, TextInpu
 	/** 光标超出范围的偏移量 */
 	transient int 						xoffset = 0;
 
+	/**是否显示为密码*/
+	private boolean 					is_password 		= false;
+	
 	/**文字是否抗锯齿*/
 	@Property("文字是否抗锯齿")
 	public boolean	enable_antialiasing	 = false;
@@ -52,7 +56,7 @@ public class TextBoxSingle extends UIComponent implements Serializable, TextInpu
 		enable_key_input	= true;
 		enable_mouse_wheel	= true;
 		
-		this.text.setText(text);
+		this.text.setText(encodeChars(text));
 		this.setSize(width, height);
 	}
 	
@@ -68,16 +72,16 @@ public class TextBoxSingle extends UIComponent implements Serializable, TextInpu
 	
 	
 	public void setText(String text) {
-		this.text.setText(text);
+		this.text.setText(encodeChars(text));
 	}
 	
 	public void appendText(String text) {
-		this.text.appendText(text);
+		this.text.appendText(encodeChars(text));
 	}
 	
 	public void insertCharAtCurrentCaret(char ch){
 		if (!is_readonly || ch == MultiTextLayout.CHAR_COPY) {
-			text.insertChar(ch);
+			text.insertChar(encodeChar(ch));
 		}
 	}
 
@@ -86,7 +90,12 @@ public class TextBoxSingle extends UIComponent implements Serializable, TextInpu
 	}
 	
 	public void setTextPassword(boolean b) {
-		this.text.setIsPassword(b);
+		this.is_password = b;
+		this.text.setText(encodeChars(this.text.getText()));
+	}
+	
+	public boolean getTextPassword() {
+		return this.is_password;
 	}
 	
 	protected void onMouseDown(MouseEvent event) {
@@ -174,6 +183,20 @@ public class TextBoxSingle extends UIComponent implements Serializable, TextInpu
 		}
 	}
 
+	private String encodeChars(String text)
+	{
+		char[] chars = new char[text.length()];
+		for (int i = text.length() - 1; i >= 0; --i) {
+			chars[i] = encodeChar(chars[i]);
+		}
+		return new String(chars);
+	}
 	
-	
+	protected char encodeChar(char ch)
+	{
+		if (is_password) {
+			return '*';
+		}
+		return ch;
+	}
 }
