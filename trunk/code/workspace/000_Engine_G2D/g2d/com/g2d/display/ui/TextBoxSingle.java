@@ -3,10 +3,16 @@ package com.g2d.display.ui;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.Shape;
+import java.awt.font.ShapeGraphicAttribute;
+import java.awt.font.TextAttribute;
+import java.awt.geom.Ellipse2D;
 import java.io.IOException;
 import java.io.Serializable;
 
+import com.g2d.Tools;
 import com.g2d.Version;
 import com.g2d.annotation.Property;
 import com.g2d.display.AnimateCursor;
@@ -56,8 +62,8 @@ public class TextBoxSingle extends UIComponent implements Serializable, TextInpu
 		enable_key_input	= true;
 		enable_mouse_wheel	= true;
 		
-		this.text.setText(encodeChars(text));
 		this.setSize(width, height);
+		this.setText(text);
 	}
 	
 	@Override
@@ -70,32 +76,41 @@ public class TextBoxSingle extends UIComponent implements Serializable, TextInpu
 		return text.is_show_caret;
 	}
 	
-	
 	public void setText(String text) {
-		this.text.setText(encodeChars(text));
+		this.text.setText(text);
+		encode();
 	}
 	
 	public void appendText(String text) {
-		this.text.appendText(encodeChars(text));
+		this.text.appendText(text);
+		encode();
 	}
 	
 	public void insertCharAtCurrentCaret(char ch){
-		if (!is_readonly || ch == MultiTextLayout.CHAR_COPY) {
-			text.insertChar(encodeChar(ch));
+		if (!is_readonly) {
+			if (is_password && (
+					ch == MultiTextLayout.CHAR_COPY || 
+					ch == MultiTextLayout.CHAR_CUT || 
+					ch == MultiTextLayout.CHAR_PASTE)) {
+				return;
+			}
+			text.insertChar(ch);
+			encode();
 		}
 	}
 
-	public String getText() {
-		return this.text.getText();
-	}
-	
 	public void setTextPassword(boolean b) {
 		this.is_password = b;
-		this.text.setText(encodeChars(this.text.getText()));
+		this.setText(text.getText());
+		encode();
 	}
 	
 	public boolean getTextPassword() {
 		return this.is_password;
+	}
+
+	public String getText() {
+		return this.text.getText();
 	}
 	
 	protected void onMouseDown(MouseEvent event) {
@@ -183,20 +198,17 @@ public class TextBoxSingle extends UIComponent implements Serializable, TextInpu
 		}
 	}
 
-	private String encodeChars(String text)
-	{
-		char[] chars = new char[text.length()];
-		for (int i = text.length() - 1; i >= 0; --i) {
-			chars[i] = encodeChar(chars[i]);
-		}
-		return new String(chars);
-	}
-	
-	protected char encodeChar(char ch)
-	{
+	protected void encode() {
 		if (is_password) {
-			return '*';
+			String show = text.getText();
+			if (!show.isEmpty()) {
+				int height = getHeight() - layout.BorderSize*2;
+				Shape shape = new Ellipse2D.Float(0, 0, height/2, height/2);
+				text.putAttribute(
+						TextAttribute.CHAR_REPLACEMENT, 
+						new ShapeGraphicAttribute(shape, ShapeGraphicAttribute.BOTTOM_ALIGNMENT, false), 
+						0, show.length());
+			}
 		}
-		return ch;
 	}
 }

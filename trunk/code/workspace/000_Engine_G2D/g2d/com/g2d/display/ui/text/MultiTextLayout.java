@@ -123,6 +123,8 @@ public class MultiTextLayout
 	 */
 	private class TextChanges
 	{
+		/** 强行刷新数据 */
+		boolean				force	= false;
 		String 				text	= MultiTextLayout.this.text;
 		AttributedString 	atext 	= MultiTextLayout.this.attr_text;
 		int 				width	= MultiTextLayout.this.width;
@@ -673,16 +675,16 @@ public class MultiTextLayout
 //	----------------------------------------------------------------------------------------------------------------
 
 	
-	synchronized public void insertText(String str) {
-		if (is_read_only) return;
-		if (inserted_text == null) {
-			inserted_text = "";
-		}
-		if (is_single_line) {
-			str = str.replaceAll("\n", "");
-		}
-		inserted_text += str;
-	}
+//	synchronized public void insertText(String str) {
+//		if (is_read_only) return;
+//		if (inserted_text == null) {
+//			inserted_text = "";
+//		}
+//		if (is_single_line) {
+//			str = str.replaceAll("\n", "");
+//		}
+//		inserted_text += str;
+//	}
 
 	synchronized public void insertChar(char c)
 	{
@@ -717,7 +719,7 @@ public class MultiTextLayout
 		{
 			inserted_char = c;
 		}
-		else if (c=='\t')
+		else if (c == '\t')
 		{
 			if (!is_single_line) {
 				inserted_text += "    ";
@@ -732,8 +734,92 @@ public class MultiTextLayout
 			inserted_text += c;
 		}
 		
+		doInsert();
 	}
 
+	private void doInsert()
+	{
+		// try insert text
+		if (!is_read_only) {
+			if (inserted_text!=null && inserted_text.length()>0){
+				doInstertText();
+				inserted_text = null;
+			}
+			if (inserted_char!=0){
+				doInstertChar();
+				inserted_char = 0;
+			}
+		}
+	}
+
+	private void doInstertChar()
+	{
+		try {
+			if (caret_start_hit!=null && caret_end_hit!=null && caret_start_position!=caret_end_position) {
+				int max = Math.max(caret_start_position, caret_end_position);
+				int min = Math.min(caret_start_position, caret_end_position);
+				switch (inserted_char) {
+				case CHAR_BACKSPACE:
+				case CHAR_DELETE:
+					deleteText(min, max);
+					caret_position = min;
+					break;
+				}
+			}
+			else {
+				switch (inserted_char) {
+				case CHAR_BACKSPACE:
+					if (caret_position > 0 && text.length() > 0) {
+						if (caret_position < text.length()) {
+							deleteText(caret_position-1, caret_position);
+						} else {
+							deleteText(text.length()-1, text.length());
+						}
+						caret_position -= 1;
+					}
+					break;
+				case CHAR_DELETE:
+					if (caret_position >= 0 && text.length() > 0) {
+						if (caret_position<text.length()) {
+							deleteText(caret_position, caret_position+1);
+						}
+					}
+					break;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		caret_end_hit = null;
+	}
+	
+	private void doInstertText()
+	{
+		try {
+			if (caret_start_hit!=null && caret_end_hit!=null && caret_start_position!=caret_end_position) {
+				int max = Math.max(caret_start_position, caret_end_position);
+				int min = Math.min(caret_start_position, caret_end_position);
+				if (max < text.length()) {
+					insertText(min, max, inserted_text);
+				}else{
+					insertText(min, text.length(), inserted_text);
+				}
+				caret_position = min + inserted_text.length();
+			} else {
+				if (caret_position < text.length()){
+					insertText(caret_position, inserted_text);
+				}else{
+					insertText(text.length(), inserted_text);
+				}
+				caret_position += inserted_text.length();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		caret_end_hit = null;
+	}
+	
+	
 //	----------------------------------------------------------------------------------------------------------------
 
 	/**
@@ -976,6 +1062,19 @@ public class MultiTextLayout
 	synchronized public void insertText(int start, int end, String text) {
 		this.insertText(start, end, new AttributedString(text));
 	}
+
+	
+	synchronized public void putAttribute(Attribute attribute, Object value, int start, int end) {
+		if (textChange == null) {
+			textChange = new TextChanges();
+		}
+		if (textChange.atext != null) {
+			textChange.force = true;
+			textChange.atext.addAttribute(attribute, value, start, end);
+		}
+	}
+	
+	
 	
 //	---------------------------------------------------------------------------------------------------------------
 	
@@ -1122,17 +1221,6 @@ public class MultiTextLayout
 
 	private void tryChangeTextAndCaret(Graphics2D g) 
 	{
-		// try insert text
-		if (!is_read_only) {
-			if (inserted_text!=null && inserted_text.length()>0){
-				instertText();
-				inserted_text = null;
-			}
-			if (inserted_char!=0){
-				instertChar();
-				inserted_char = 0;
-			}
-		}
 		// try change text
 		if (textChange != null) {
 			resetText(g, textChange);
@@ -1156,7 +1244,10 @@ public class MultiTextLayout
 	
 	private void resetText(Graphics2D g, TextChanges change)
 	{
-		if (!this.text.equals(change.text) || this.width != change.width || this.line_space != change.space)
+		if (change.force || 
+			change.width != this.width || 
+			change.space != this.line_space || 
+			change.text.equals(this.text) == false)
 		{
 			this.text		= change.text;
 			this.attr_text	= change.atext;
@@ -1270,73 +1361,6 @@ public class MultiTextLayout
 				break;
 			}
 		}
-	}
-	
-	private void instertChar()
-	{
-		try {
-			if (caret_start_hit!=null && caret_end_hit!=null && caret_start_position!=caret_end_position) {
-				int max = Math.max(caret_start_position, caret_end_position);
-				int min = Math.min(caret_start_position, caret_end_position);
-				switch (inserted_char) {
-				case CHAR_BACKSPACE:
-				case CHAR_DELETE:
-					deleteText(min, max);
-					caret_position = min;
-					break;
-				}
-			}
-			else {
-				switch (inserted_char) {
-				case CHAR_BACKSPACE:
-					if (caret_position > 0 && text.length() > 0) {
-						if (caret_position < text.length()) {
-							deleteText(caret_position-1, caret_position);
-						} else {
-							deleteText(text.length()-1, text.length());
-						}
-						caret_position -= 1;
-					}
-					break;
-				case CHAR_DELETE:
-					if (caret_position >= 0 && text.length() > 0) {
-						if (caret_position<text.length()) {
-							deleteText(caret_position, caret_position+1);
-						}
-					}
-					break;
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		caret_end_hit = null;
-	}
-	
-	private void instertText()
-	{
-		try {
-			if (caret_start_hit!=null && caret_end_hit!=null && caret_start_position!=caret_end_position) {
-				int max = Math.max(caret_start_position, caret_end_position);
-				int min = Math.min(caret_start_position, caret_end_position);
-				if (max < text.length()) {
-					insertText(min, max, inserted_text);
-				}else{
-					insertText(min, text.length(), inserted_text);
-				}
-				caret_position = min + inserted_text.length();
-			} else {
-				if (caret_position < text.length()){
-					insertText(caret_position, inserted_text);
-				}else{
-					insertText(text.length(), inserted_text);
-				}
-				caret_position += inserted_text.length();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		caret_end_hit = null;
 	}
 	
 
