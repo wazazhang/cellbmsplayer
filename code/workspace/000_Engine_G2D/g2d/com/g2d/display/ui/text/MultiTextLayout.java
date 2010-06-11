@@ -60,7 +60,7 @@ public class MultiTextLayout
 			this.offsetx		= (int)0;
 			this.offsety		= (int)layout.getAscent();
 			this.width			= (int)layout.getAdvance();
-			this.height			= (int)Math.max(10, layout.getAscent() + layout.getDescent() + space);
+			this.height			= (int)Math.max(10, layout.getAscent() + layout.getDescent() + line_space);
 		}
 		
 		TextLayout getLayout() 
@@ -120,7 +120,7 @@ public class MultiTextLayout
 		String 				text	= MultiTextLayout.this.text;
 		AttributedString 	atext 	= MultiTextLayout.this.attr_text;
 		int 				width	= MultiTextLayout.this.width;
-		int					space	= MultiTextLayout.this.space;
+		int					space	= MultiTextLayout.this.line_space;
 		
 		TextChanges() {
 		}
@@ -189,8 +189,7 @@ public class MultiTextLayout
 	
 	private int 				width;
 	private int 				height;
-	private int 				space 			= 2;
-	
+	private int 				line_space 		= 2;
 	private String 				text 			= "";
 	private AttributedString 	attr_text;
 
@@ -341,6 +340,12 @@ public class MultiTextLayout
 		}
 	}
 	
+	/**
+	 * 点击
+	 * @param line
+	 * @param x
+	 * @param y
+	 */
 	private void testCaretStart(TextLine line, int x, int y)
 	{
 		if (x<0) x = 0;
@@ -350,17 +355,17 @@ public class MultiTextLayout
 				x-line.x+line.offsetx, 
 				y-line.y+line.offsety);
 		
-		caret_bounds = line.getLayout().getCaretShape(caret_start_hit).getBounds();
-		caret_bounds.x = caret_bounds.x-1;
-		caret_bounds.y = line.y-space;
-		caret_bounds.height = line.height+space;
-		caret_bounds.width = 2;
+		caret_bounds 		= line.getLayout().getCaretShape(caret_start_hit).getBounds();
+		caret_bounds.x 		= caret_bounds.x-1;
+		caret_bounds.y 		= line.y;
+		caret_bounds.height = line.height;
+		caret_bounds.width 	= 2;
 		
 		caret_start_position += caret_start_hit.getInsertionIndex();
-		caret_start_line = line.line_index;
+		caret_start_line 	= line.line_index;
 		
-		caret_position = caret_start_position;
-		caret_line = caret_start_line;
+		caret_position 		= caret_start_position;
+		caret_line 			= caret_start_line;
 		
 		if (caret_position > 0) {
 			if (caret_start_hit.getInsertionIndex()>0) {
@@ -372,6 +377,12 @@ public class MultiTextLayout
 		}
 	}
 	
+	/**
+	 * 松开
+	 * @param line
+	 * @param x
+	 * @param y
+	 */
 	private void testCaretEnd(TextLine line, int x, int y)
 	{
 		if (x<0) x = 0;
@@ -381,17 +392,17 @@ public class MultiTextLayout
 				x-line.x+line.offsetx, 
 				y-line.y+line.offsety);
 		
-		caret_bounds = line.getLayout().getCaretShape(caret_end_hit).getBounds();
-		caret_bounds.x = caret_bounds.x-1;
-		caret_bounds.y = line.y-space;
-		caret_bounds.height = line.height+space;
-		caret_bounds.width = 2;
+		caret_bounds 		= line.getLayout().getCaretShape(caret_end_hit).getBounds();
+		caret_bounds.x 		= caret_bounds.x-1;
+		caret_bounds.y 		= line.y;
+		caret_bounds.height	= line.height;
+		caret_bounds.width	= 2;
 		
 		caret_end_position += caret_end_hit.getInsertionIndex();
 		caret_end_line = line.line_index;
 		
-		caret_position = caret_end_position;
-		caret_line = caret_end_line;
+		caret_position 		= caret_end_position;
+		caret_line 			= caret_end_line;
 		
 		if (caret_position > 0) {
 			if (caret_end_hit.getInsertionIndex()>0) {
@@ -448,8 +459,8 @@ public class MultiTextLayout
 				
 					if (rect!=null) {
 						line.selected = rect.getBounds();
-						line.selected.y = -space;
-						line.selected.height = line.height+space;
+						line.selected.y = 0;
+						line.selected.height = line.height;
 						//System.out.println(line.selected + " line=" + line.line);
 					}else{
 						line.selected = null;
@@ -778,7 +789,7 @@ public class MultiTextLayout
 	}
 	
 	synchronized public void setSpace(int space) {
-		if (this.space != space) {
+		if (this.line_space != space) {
 			if (textChange != null) {
 				textChange.setSpace(space);
 			} else {
@@ -808,7 +819,7 @@ public class MultiTextLayout
 		if (textChange != null) {
 			return textChange.space;
 		}
-		return space;
+		return line_space;
 	}
 	
 	synchronized public int getHeight() {
@@ -936,14 +947,15 @@ public class MultiTextLayout
 	
 	private void resetText(Graphics2D g, TextChanges change)
 	{
-		if (!this.text.equals(change.text) || this.width != change.width || this.space != change.space)
+		if (!this.text.equals(change.text) || this.width != change.width || this.line_space != change.space)
 		{
 			this.text		= change.text;
 			this.attr_text	= change.atext;
 			this.width		= change.width;
-			this.space		= change.space;
+			this.height		= 0;
 			
-			this.height		= space;
+			this.line_space	= change.space;
+			
 			this.textlines.clear();
 	
 			if (text.length()>0)
@@ -990,7 +1002,7 @@ public class MultiTextLayout
 						TextLine line = new TextLine(layout, textlines.size(), frc);
 						line.x = 0;
 						line.y = height;
-						height += line.height + space;
+						height += line.height;
 						textlines.add(line);
 	
 						//System.out.println(line.x+","+line.y+","+line.width+","+line.height);
@@ -1002,7 +1014,7 @@ public class MultiTextLayout
 					TextLine line = new TextLine(layout, textlines.size(), frc);
 					line.x = 0;
 					line.y = height;
-					this.height += line.height + space;
+					this.height += line.height;
 					this.width = line.width;
 					this.textlines.add(line);
 				}
@@ -1034,8 +1046,8 @@ public class MultiTextLayout
 						caret_bounds.x 	= line.width+1;
 					}
 					
-					caret_bounds.y 		= line.y-space;
-					caret_bounds.height	= line.height+space;
+					caret_bounds.y 		= line.y;
+					caret_bounds.height	= line.height;
 					caret_bounds.width	= 2;
 					
 //					System.out.println(caret_bounds+" caret_position="+caret_position+" pos="+pos);
