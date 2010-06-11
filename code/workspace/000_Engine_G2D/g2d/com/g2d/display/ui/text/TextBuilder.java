@@ -271,35 +271,30 @@ public class TextBuilder extends IObjectiveFactory
 		}
 		return sb.toString();
 	}
-	
-	public static AttributedString linkAttributedString(AttributedString texta, AttributedString textb)
-	{
-		String dst_text = toString(texta) + toString(textb);
 
-		AttributedString ret = new AttributedString(dst_text);
-		
+	public static AttributedString concat(AttributedString ... texts) 
+	{
+		StringBuilder dst_text = new StringBuilder();
+		for (AttributedString atext : texts) {
+			dst_text.append(toString(atext));
+		}
 		int i=0;
-		{
-			AttributedCharacterIterator ita = texta.getIterator();
+		AttributedString ret = new AttributedString(dst_text.toString());
+		for (AttributedString atext : texts) {
+			AttributedCharacterIterator ita = atext.getIterator();
 			for (char c = ita.first(); c != CharacterIterator.DONE; c = ita.next()) {
 				ret.addAttributes(ita.getAttributes(), i, i+1);
-				i ++;
-			}
-		}{
-			AttributedCharacterIterator itb = textb.getIterator();
-			for (char c = itb.first(); c != CharacterIterator.DONE; c = itb.next()) {
-				ret.addAttributes(itb.getAttributes(), i, i+1);
 				i ++;
 			}
 		}
 		return ret;
 	}
-	
-	public static AttributedString concat(AttributedString texta, AttributedString textb) 
-	{
-		return linkAttributedString(texta, textb);
-	}
 
+	public static AttributedString linkAttributedString(AttributedString texta, AttributedString textb)
+	{
+		return concat(texta, textb);
+	}
+	
 	/**
 	 * @param src
      * @param start   the beginning index, inclusive.
