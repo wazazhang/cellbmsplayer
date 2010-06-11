@@ -874,7 +874,11 @@ public class MultiTextLayout
 		if (textChange != null) {
 			textChange.append(atext);
 		} else {
-			textChange = new TextChanges(Tools.linkAttributedString(this.attr_text, atext));
+			if (this.attr_text != null) {
+				textChange = new TextChanges(Tools.linkAttributedString(this.attr_text, atext));
+			} else {
+				textChange = new TextChanges(atext);
+			}
 		}
 	}
 	
