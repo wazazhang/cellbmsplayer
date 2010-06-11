@@ -44,6 +44,7 @@ import com.cell.j2se.CGraphics;
 import com.cell.math.MathVector;
 import com.cell.math.TVector;
 import com.cell.math.Vector;
+import com.g2d.display.ui.text.TextBuilder;
 
 
 public class Tools
@@ -575,37 +576,12 @@ public class Tools
 //	--------------------------------------------------------------------------------
 
 	
-	public static String toString(AttributedString texta)
-	{
-		StringBuilder sb = new StringBuilder();
-		CharacterIterator iter = texta.getIterator();
-		for (char c = iter.first(); c != CharacterIterator.DONE; c = iter.next()) {
-			sb.append(c);
-		}
-		return sb.toString();
+	public static String toString(AttributedString texta) {
+		return TextBuilder.toString(texta);
 	}
-	
-	public static AttributedString linkAttributedString(AttributedString texta, AttributedString textb)
-	{
-		String dst_text = toString(texta) + toString(textb);
 
-		AttributedString ret = new AttributedString(dst_text);
-		
-		int i=0;
-		{
-			AttributedCharacterIterator ita = texta.getIterator();
-			for (char c = ita.first(); c != CharacterIterator.DONE; c = ita.next()) {
-				ret.addAttributes(ita.getAttributes(), i, i+1);
-				i ++;
-			}
-		}{
-			AttributedCharacterIterator itb = textb.getIterator();
-			for (char c = itb.first(); c != CharacterIterator.DONE; c = itb.next()) {
-				ret.addAttributes(itb.getAttributes(), i, i+1);
-				i ++;
-			}
-		}
-		return ret;
+	public static AttributedString linkAttributedString(AttributedString texta, AttributedString textb) {
+		return TextBuilder.linkAttributedString(texta, textb);
 	}
 	
 	
