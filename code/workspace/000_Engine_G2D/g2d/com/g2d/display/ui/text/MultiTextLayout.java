@@ -519,6 +519,10 @@ public class MultiTextLayout
 		setCaretPosition(getCaretPosition() + d);
 	}
 	
+	synchronized public void moveCaretPositionEnd() {
+		setCaretPosition(getText().length());
+	}
+	
 	synchronized public void setCaretPosition(int position) {
 		set_caret_position = position;
 		set_caret_position = Math.max(set_caret_position, 0);
