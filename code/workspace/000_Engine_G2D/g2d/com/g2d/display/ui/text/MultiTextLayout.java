@@ -145,7 +145,12 @@ public class MultiTextLayout
 			this.text = text;
 			this.atext = new AttributedString(encodeChars(this.text));
 		}
-
+		
+		void set(String text, AttributedString atext) {
+			this.text	= text;
+			this.atext	= atext;
+		}
+		
 		void set(AttributedString atext) {
 			this.atext = atext;
 			this.text = Tools.toString(this.atext);
@@ -774,8 +779,67 @@ public class MultiTextLayout
 	}
 	
 	
+	/**
+	 * 删除一段文字
+	 * @param start
+	 * @param end
+	 */
+	synchronized public void deleteText(int start, int end)
+	{
+		if (start == end) {
+			return;
+		}
+		
+		int min = Math.min(start, end);
+		int max = Math.max(start, end);
+		
+		String 				get_text	= getText();
+		AttributedString	get_atext	= getAttributeText();
+		
+		if (get_atext != null)
+		{
+			if (textChange == null) {
+				textChange = new TextChanges();
+			}
+			
+			// 全部被删除
+			if (min <= 0 && max >= get_text.length()) 
+			{
+				textChange.set("");
+			}
+			// 前面一半被删除
+			else if (min <= 0)
+			{
+				String 				text_right	= get_text.substring(max, get_text.length());
+				AttributedString	atext_right	= TextBuilder.subString(get_atext, max, get_text.length());
+				
+				textChange.set(text_right, atext_right);
+			}
+			// 后面一半被删除
+			else if (max >= get_text.length()) 
+			{
+				String 				text_left	= get_text.substring(0, min);
+				AttributedString	atext_left	= TextBuilder.subString(get_atext, 0, min);
+				
+				textChange.set(text_left, atext_left);
+			}
+			// 中间一段被删除
+			else
+			{
+				String 				text_left	= get_text.substring(0, min);
+				String 				text_right	= get_text.substring(max, get_text.length());
+				AttributedString	atext_left	= TextBuilder.subString(get_atext, 0, min);
+				AttributedString	atext_right	= TextBuilder.subString(get_atext, max, get_text.length());
+				
+				textChange.set(
+						text_left.concat(text_right),
+						TextBuilder.concat(atext_left, atext_right));
+			}
+		}
+		
+	}
 	
-	
+//	---------------------------------------------------------------------------------------------------------------
 	
 	synchronized public void setWidth(int width) {
 		if (this.width != width) {
@@ -801,6 +865,13 @@ public class MultiTextLayout
 	
 //	----------------------------------------------------------------------------------------------------------------
 
+	synchronized private AttributedString getAttributeText() {
+		if (textChange != null) {
+			return textChange.atext;
+		}
+		return attr_text;
+	}
+	
 	synchronized public String getText() {
 		if (textChange != null) {
 			return textChange.text;
@@ -1074,12 +1145,11 @@ public class MultiTextLayout
 				switch (inserted_char) {
 				case CHAR_BACKSPACE:
 				case CHAR_DELETE:
-					if (max<text.length()) {
+					if (max < text.length()) {
 						setText(text.substring(0, min) + text.substring(max));
-					}else{
+					} else {
 						setText(text.substring(0, min));
 					}
-					
 					caret_position = min;
 					break;
 				}
@@ -1100,7 +1170,7 @@ public class MultiTextLayout
 					if (caret_position>=0 && text.length()>0){
 						if (caret_position<text.length()) {
 							setText(text.substring(0, caret_position) + text.substring(caret_position+1));
-						}else{
+						} else {
 //							setText(text.substring(0, caret_position));
 						}
 					}
