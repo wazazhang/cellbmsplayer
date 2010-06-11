@@ -188,6 +188,8 @@ public abstract class Stage extends DisplayObjectContainer
 				}
 			}
 		} else {
+			last_mouse_down_object = null;
+			last_mouse_down_pos = null;
 			if (mouse_drag_drop_object!=null) {
 				stopDragDrop();
 			}
