@@ -23,10 +23,16 @@ import java.util.Vector;
 
 import com.cell.CMath;
 import com.g2d.Tools;
-import com.g2d.display.DisplayObject;
 
 public class MultiTextLayout 
-{
+{	
+	final public static char CHAR_CUT			= 24;	// ctrl + x
+	final public static char CHAR_PASTE			= 22;	// ctrl + v
+	final public static char CHAR_COPY			= 3;	// ctrl + c
+	
+	final public static char CHAR_BACKSPACE		= 8;	// backspace
+	final public static char CHAR_DELETE		= 127;	// delete
+
 	/**
 	 * MultiTextLayout 中的一行数据
 	 * @author WAZA
@@ -666,12 +672,11 @@ public class MultiTextLayout
 	
 //	----------------------------------------------------------------------------------------------------------------
 
-
 	
 	synchronized public void insertText(String str) {
 		if (is_read_only) return;
-		if (inserted_text==null){
-			inserted_text="";
+		if (inserted_text == null) {
+			inserted_text = "";
 		}
 		if (is_single_line) {
 			str = str.replaceAll("\n", "");
@@ -679,22 +684,12 @@ public class MultiTextLayout
 		inserted_text += str;
 	}
 
-	
-	
-	final public static char CHAR_CUT			= 24;	// ctrl + x
-	final public static char CHAR_PASTE		= 22;	// ctrl + v
-	final public static char CHAR_COPY			= 3;	// ctrl + c
-	
-	final public static char CHAR_BACKSPACE	= 8;	// backspace
-	final public static char CHAR_DELETE		= 127;	// delete
-	
-	
 	synchronized public void insertChar(char c)
 	{
 		if (is_read_only) return;
 		
-		if (inserted_text==null){
-			inserted_text="";
+		if (inserted_text == null) {
+			inserted_text = "";
 		}
 		
 		if(c == CHAR_CUT)// ctrl + x
