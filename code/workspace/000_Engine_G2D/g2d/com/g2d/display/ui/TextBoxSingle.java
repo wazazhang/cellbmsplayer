@@ -31,7 +31,7 @@ public class TextBoxSingle extends UIComponent implements Serializable, TextInpu
 	transient int 						text_draw_y;
 	transient int 						text_draw_w;
 	
-	transient private MultiTextLayout	text				= new MultiTextLayout(true);
+	transient protected MultiTextLayout	text				= new MultiTextLayout(true);
 	
 	/**文字颜色*/
 	public Color 						textColor			= new Color(0xffffffff, true);
