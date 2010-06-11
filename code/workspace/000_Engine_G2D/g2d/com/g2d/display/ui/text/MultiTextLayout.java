@@ -166,7 +166,7 @@ public class MultiTextLayout
 		
 		void append(String text) {
 			this.text += text;
-			this.atext = new AttributedString(this.text);
+			this.atext = Tools.linkAttributedString(this.atext, new AttributedString(text)); 
 		}
 		
 		void append(AttributedString atext) {
