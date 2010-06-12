@@ -138,7 +138,7 @@ public class UILayout extends DObject
 		if (src instanceof BufferedImage) {
 			clipImages((BufferedImage)src, 
 					style, clipsize, clipsize, clipsize, clipsize);
-		} else {
+		} else if (src != null) {
 			clipImages(Tools.combianImage(src.getWidth(null), src.getHeight(null), src), 
 					style, clipsize, clipsize, clipsize, clipsize);
 		}

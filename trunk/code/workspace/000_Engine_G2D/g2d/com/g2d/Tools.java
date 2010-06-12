@@ -115,10 +115,10 @@ public class Tools
 //				cursor.getWidth(null),
 //				cursor.getHeight(null));
 
-		System.out.println(
-				cursor.getWidth(null) +","+ cursor.getHeight(null) + " -> " + 
-				bestCursorSize.width + "," + bestCursorSize.height
-		);
+//		System.out.println(
+//				cursor.getWidth(null) +","+ cursor.getHeight(null) + " -> " + 
+//				bestCursorSize.width + "," + bestCursorSize.height
+//		);
 		
 		
 		
