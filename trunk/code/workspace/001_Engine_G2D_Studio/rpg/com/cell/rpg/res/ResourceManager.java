@@ -357,6 +357,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 		
 		for (int i=0; i<res_list.length; i++)
 		{
+			String display_list = res_list[i];
 			int last_split = res_list[i].lastIndexOf("/");
 			if (last_split>=0) {
 				res_list[i] = res_list[i].substring(last_split+1);
@@ -364,7 +365,8 @@ public abstract class ResourceManager extends CellSetResourceManager
 			
 			String xml_file = tdir +"/"+ res_list[i];
 			
-			T set = RPGObjectMap.readNode(xml_file, type);			
+			T set = RPGObjectMap.readNode(xml_file, type);
+			set.loadTreePath(this, display_list);
 			if (PRINT_VERBOS)
 			System.out.println("\tget " + type.getSimpleName() + " : " + set + "(" + set.id + ")");
 
