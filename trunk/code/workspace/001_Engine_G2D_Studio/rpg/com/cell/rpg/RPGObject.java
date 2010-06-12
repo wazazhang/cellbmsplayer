@@ -3,10 +3,12 @@ package com.cell.rpg;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import com.cell.CUtil;
 import com.cell.DObject;
 import com.cell.rpg.ability.Abilities;
 import com.cell.rpg.ability.AbstractAbility;
 import com.cell.rpg.io.RPGSerializationListener;
+import com.cell.rpg.res.ResourceManager;
 import com.cell.util.zip.ZipNode;
 
 public abstract class RPGObject extends DObject implements Abilities, ZipNode, RPGSerializationListener
@@ -22,10 +24,28 @@ public abstract class RPGObject extends DObject implements Abilities, ZipNode, R
 	
 	transient Vector<RPGSerializationListener> 	seriListeners;
 	
+	private String[]							show_path;
+	
 //	------------------------------------------------------------------------------------------------------------------
 	
 	public RPGObject(String id) {
 		this.id = id;
+	}
+	
+	/**
+	 * 在ResourceManager读取该数据时，设置编辑器中的可视路径
+	 * @param xml_path
+	 */
+	public void loadTreePath(ResourceManager res, String tree_path) {
+		this.show_path = CUtil.splitString(tree_path, "/");
+	}
+	
+	/**
+	 * 在ResourceManager读取该数据后，获得编辑器中的可视路径
+	 * @return
+	 */
+	public String[] getTreePath() {
+		return show_path;
 	}
 	
 	@Override
