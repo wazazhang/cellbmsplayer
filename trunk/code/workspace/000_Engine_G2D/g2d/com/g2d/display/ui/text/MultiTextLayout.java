@@ -33,170 +33,6 @@ public class MultiTextLayout
 	final public static char CHAR_BACKSPACE		= 8;	// backspace
 	final public static char CHAR_DELETE		= 127;	// delete
 
-	/**
-	 * MultiTextLayout 中的一行数据
-	 * @author WAZA
-	 */
-	private class TextLine 
-	{
-		// 相对于MultiTextLayout的坐标
-		int x;
-		int y;
-		
-		final int 			width;
-		final int 			height;
-		
-		// 字符对齐的修正值
-		final int			offsetx;
-		final int			offsety;
-
-		final int 			line_index;
-		
-		final TextLayout	text_layout;
-		
-		Rectangle 			selected 		= null;
-
-		BufferedImage		shadow_buffer 	= null;
-		
-		TextLine(TextLayout layout, int line, FontRenderContext frc)
-		{
-			this.text_layout		= layout;
-			this.line_index			= line;
-
-			this.offsetx		= (int)0;
-			this.offsety		= (int)layout.getAscent();
-			this.width			= (int)layout.getAdvance();
-			this.height			= (int)Math.max(10, layout.getAscent() + layout.getDescent() + line_space);
-		}
-		
-		TextLayout getLayout() 
-		{
-			return text_layout;
-		}
-		
-		void render(Graphics2D g, int shadow_x, int shadow_y, float shadow_alpha, int shadow_color)
-		{
-			int tx = x; int ty = y;
-			g.translate(tx, ty);
-			try {
-				if (is_show_select && selected != null) {
-					Color pc = g.getColor();
-					g.setColor(selected_color);
-					g.fill(selected);
-					g.setColor(pc);
-				}
-				drawShadow(g, shadow_x, shadow_y, shadow_alpha, shadow_color);
-				text_layout.draw(g, offsetx, offsety);
-			} finally {
-				g.translate(-tx, -ty);
-			}
-		}
-	
-		private void drawShadow(Graphics2D g, int shadow_x, int shadow_y, float shadow_alpha, int shadow_color)
-		{
-			if (shadow_x != 0 && shadow_y != 0) {
-				if (render_shadow_alpha != shadow_alpha && 
-					render_shadow_color != shadow_color) {
-					shadow_buffer = null;
-				}
-				if (shadow_buffer == null) {
-					this.shadow_buffer = Tools.createImage(width, height);
-					try {
-						Graphics2D g2d = shadow_buffer.createGraphics();
-						g2d.setColor(Color.BLACK);
-//						g2d.fillRect(0, 0, width, height);
-						text_layout.draw(g2d, offsetx, offsety);
-						g2d.dispose();
-						this.shadow_buffer = Tools.toAlpha(shadow_buffer, shadow_alpha, shadow_color);
-					} catch (Throwable err) {}
-				}
-				g.drawImage(shadow_buffer, shadow_x, shadow_y, null);
-			} else {
-				shadow_buffer = null;
-			}
-		}
-	}
-	
-	/**
-	 * 改变字符或尺寸的事件
-	 * @author WAZA
-	 */
-	private class TextChanges
-	{
-		/** 强行刷新数据 */
-		boolean				force	= false;
-		String 				text	= MultiTextLayout.this.text;
-		AttributedString 	atext 	= MultiTextLayout.this.attr_text;
-		int 				width	= MultiTextLayout.this.width;
-		int					space	= MultiTextLayout.this.line_space;
-		
-		TextChanges() {
-		}
-
-		TextChanges(String text) {
-			set(text);
-		}
-
-		TextChanges(AttributedString atext) {
-			set(atext);
-		}
-		
-		void setWidth(int width) {
-			this.width = width;
-		}
-
-		void setSpace(int space) {
-			this.space = space;
-		}
-
-		void set(String text) {
-			this.text = text;
-			this.atext = new AttributedString(this.text);
-		}
-		
-		void set(String text, AttributedString atext) {
-			this.text	= text;
-			this.atext	= atext;
-		}
-		
-		void set(AttributedString atext) {
-			this.atext = atext;
-			this.text = Tools.toString(this.atext);
-		}
-		
-		void append(String text) {
-			this.text += text;
-			this.atext = Tools.linkAttributedString(this.atext, new AttributedString(text)); 
-		}
-		
-		void append(AttributedString atext) {
-			this.atext = Tools.linkAttributedString(this.atext, atext);
-			this.text = Tools.toString(this.atext);
-		}
-	}
-	
-	/**
-	 * 一段有属性的字符串
-	 * @author WAZA
-	 */
-	public static class AttributedSegment
-	{
-		final public Attribute	attribute;
-		final public Object		attribute_value;
-		final public String		text;
-		
-		AttributedSegment(Attribute	attribute, Object value, String text){
-			this.attribute = attribute;
-			this.attribute_value = value;
-			this.text = text;
-		}
-		
-		@Override
-		public String toString() {
-			return "\"" + text + "\" : " + attribute + " : " + attribute_value;
-		}
-	}
-	
 //	----------------------------------------------------------------------------------------------------------------
 //	显示
 	
@@ -248,8 +84,8 @@ public class MultiTextLayout
 //	设置用以改变状态
 	
 	private TextChanges			textChange;
-	private String 				inserted_text	= null;
-	private char 				inserted_char	= 0;
+//	private String 				inserted_text	= null;
+//	private char 				inserted_char	= 0;
 	int							set_caret_position	= -1;
 	
 //	----------------------------------------------------------------------------------------------------------------
@@ -690,18 +526,22 @@ public class MultiTextLayout
 //		inserted_text += str;
 //	}
 
-	synchronized public void insertChar(char c)
+	/**
+	 * @param c
+	 * @return 增加多少文字，负数代表删除了多少文字
+	 */
+	synchronized public InsertInfo insertChar(char c)
 	{
-		if (is_read_only) return;
-		
-		if (inserted_text == null) {
-			inserted_text = "";
+		if (is_read_only) {
+			return null;
 		}
+		
+		InsertInfo info = new InsertInfo(c);
 		
 		if(c == CHAR_CUT)// ctrl + x
 		{
 			Tools.setClipboardText(getSelectedText());
-			inserted_char = CHAR_DELETE;
+			return doInstertChar(info, CHAR_DELETE);
 		}
 		else if(c == CHAR_COPY)// ctrl + c
 		{
@@ -713,50 +553,37 @@ public class MultiTextLayout
 			if (is_single_line) {
 				str = str.replaceAll("\n", "");
 			}
-			inserted_text += str;
+			return doInstertText(info, str);
 		}
 		else if(c == CHAR_BACKSPACE)// backspace
 		{
-			inserted_char = c;
+			return doInstertChar(info, CHAR_BACKSPACE);
 		}
 		else if(c == CHAR_DELETE)// delete
 		{
-			inserted_char = c;
+			return doInstertChar(info, CHAR_DELETE);
 		}
 		else if (c == '\t')
 		{
 			if (!is_single_line) {
-				inserted_text += "    ";
+				return doInstertText(info, "    ");
 			}
 		}
 		else if (c=='\n')
 		{
-			if (!is_single_line) inserted_text += "\n";
+			if (!is_single_line) {
+				return doInstertText(info, "\n");
+			}
 		}
 		else if(c >= 32)
 		{
-			inserted_text += c;
+			return doInstertText(info, c+"");
 		}
 		
-		doInsert();
+		return null;
 	}
 
-	private void doInsert()
-	{
-		// try insert text
-		if (!is_read_only) {
-			if (inserted_text!=null && inserted_text.length()>0){
-				doInstertText();
-				inserted_text = null;
-			}
-			if (inserted_char!=0){
-				doInstertChar();
-				inserted_char = 0;
-			}
-		}
-	}
-
-	private void doInstertChar()
+	private InsertInfo doInstertChar(InsertInfo info, char inserted_char)
 	{
 		try {
 			if (caret_start_hit!=null && caret_end_hit!=null && caret_start_position!=caret_end_position) {
@@ -767,7 +594,8 @@ public class MultiTextLayout
 				case CHAR_DELETE:
 					deleteText(min, max);
 					caret_position = min;
-					break;
+					info.length_change = min - max;
+					return info;
 				}
 			}
 			else {
@@ -780,12 +608,16 @@ public class MultiTextLayout
 							deleteText(text.length()-1, text.length());
 						}
 						caret_position -= 1;
+						info.length_change = -1;
+						return info;
 					}
 					break;
 				case CHAR_DELETE:
 					if (caret_position >= 0 && text.length() > 0) {
 						if (caret_position<text.length()) {
 							deleteText(caret_position, caret_position+1);
+							info.length_change = -1;
+							return info;
 						}
 					}
 					break;
@@ -793,13 +625,16 @@ public class MultiTextLayout
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			caret_end_hit = null;
 		}
-		caret_end_hit = null;
+		return null;
 	}
 	
-	private void doInstertText()
+	private InsertInfo doInstertText(InsertInfo info, String inserted_text)
 	{
 		try {
+			String text = getText();
 			if (caret_start_hit!=null && caret_end_hit!=null && caret_start_position!=caret_end_position) {
 				int max = Math.max(caret_start_position, caret_end_position);
 				int min = Math.min(caret_start_position, caret_end_position);
@@ -809,6 +644,9 @@ public class MultiTextLayout
 					insertText(min, text.length(), inserted_text);
 				}
 				caret_position = min + inserted_text.length();
+				info.inserted_text = inserted_text;
+				info.length_change = inserted_text.length();
+				return info;
 			} else {
 				if (caret_position < text.length()){
 					insertText(caret_position, inserted_text);
@@ -816,11 +654,16 @@ public class MultiTextLayout
 					insertText(text.length(), inserted_text);
 				}
 				caret_position += inserted_text.length();
+				info.inserted_text = inserted_text;
+				info.length_change = inserted_text.length();
+				return info;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			caret_end_hit = null;
 		}
-		caret_end_hit = null;
+		return null;
 	}
 	
 	
@@ -1371,6 +1214,193 @@ public class MultiTextLayout
 		}
 	}
 	
+//	------------------------------------------------------------------------------------------------------------------------
 
+	/**
+	 * MultiTextLayout 中的一行数据
+	 * @author WAZA
+	 */
+	private class TextLine 
+	{
+		// 相对于MultiTextLayout的坐标
+		int x;
+		int y;
+		
+		final int 			width;
+		final int 			height;
+		
+		// 字符对齐的修正值
+		final int			offsetx;
+		final int			offsety;
 
+		final int 			line_index;
+		
+		final TextLayout	text_layout;
+		
+		Rectangle 			selected 		= null;
+
+		BufferedImage		shadow_buffer 	= null;
+		
+		TextLine(TextLayout layout, int line, FontRenderContext frc)
+		{
+			this.text_layout		= layout;
+			this.line_index			= line;
+
+			this.offsetx		= (int)0;
+			this.offsety		= (int)layout.getAscent();
+			this.width			= (int)layout.getAdvance();
+			this.height			= (int)Math.max(10, layout.getAscent() + layout.getDescent() + line_space);
+		}
+		
+		TextLayout getLayout() 
+		{
+			return text_layout;
+		}
+		
+		void render(Graphics2D g, int shadow_x, int shadow_y, float shadow_alpha, int shadow_color)
+		{
+			int tx = x; int ty = y;
+			g.translate(tx, ty);
+			try {
+				if (is_show_select && selected != null) {
+					Color pc = g.getColor();
+					g.setColor(selected_color);
+					g.fill(selected);
+					g.setColor(pc);
+				}
+				drawShadow(g, shadow_x, shadow_y, shadow_alpha, shadow_color);
+				text_layout.draw(g, offsetx, offsety);
+			} finally {
+				g.translate(-tx, -ty);
+			}
+		}
+	
+		private void drawShadow(Graphics2D g, int shadow_x, int shadow_y, float shadow_alpha, int shadow_color)
+		{
+			if (shadow_x != 0 && shadow_y != 0) {
+				if (render_shadow_alpha != shadow_alpha && 
+					render_shadow_color != shadow_color) {
+					shadow_buffer = null;
+				}
+				if (shadow_buffer == null) {
+					this.shadow_buffer = Tools.createImage(width, height);
+					try {
+						Graphics2D g2d = shadow_buffer.createGraphics();
+						g2d.setColor(Color.BLACK);
+//						g2d.fillRect(0, 0, width, height);
+						text_layout.draw(g2d, offsetx, offsety);
+						g2d.dispose();
+						this.shadow_buffer = Tools.toAlpha(shadow_buffer, shadow_alpha, shadow_color);
+					} catch (Throwable err) {}
+				}
+				g.drawImage(shadow_buffer, shadow_x, shadow_y, null);
+			} else {
+				shadow_buffer = null;
+			}
+		}
+	}
+	
+	/**
+	 * 改变字符或尺寸的事件
+	 * @author WAZA
+	 */
+	private class TextChanges
+	{
+		/** 强行刷新数据 */
+		boolean				force	= false;
+		String 				text	= MultiTextLayout.this.text;
+		AttributedString 	atext 	= MultiTextLayout.this.attr_text;
+		int 				width	= MultiTextLayout.this.width;
+		int					space	= MultiTextLayout.this.line_space;
+		
+		TextChanges() {
+		}
+
+		TextChanges(String text) {
+			set(text);
+		}
+
+		TextChanges(AttributedString atext) {
+			set(atext);
+		}
+		
+		void setWidth(int width) {
+			this.width = width;
+		}
+
+		void setSpace(int space) {
+			this.space = space;
+		}
+
+		void set(String text) {
+			this.text = text;
+			this.atext = new AttributedString(this.text);
+		}
+		
+		void set(String text, AttributedString atext) {
+			this.text	= text;
+			this.atext	= atext;
+		}
+		
+		void set(AttributedString atext) {
+			this.atext = atext;
+			this.text = Tools.toString(this.atext);
+		}
+		
+		void append(String text) {
+			this.text += text;
+			this.atext = Tools.linkAttributedString(this.atext, new AttributedString(text)); 
+		}
+		
+		void append(AttributedString atext) {
+			this.atext = Tools.linkAttributedString(this.atext, atext);
+			this.text = Tools.toString(this.atext);
+		}
+	}
+	
+	/**
+	 * 一段有属性的字符串
+	 * @author WAZA
+	 */
+	public static class AttributedSegment
+	{
+		final public Attribute	attribute;
+		final public Object		attribute_value;
+		final public String		text;
+		
+		AttributedSegment(Attribute	attribute, Object value, String text){
+			this.attribute = attribute;
+			this.attribute_value = value;
+			this.text = text;
+		}
+		
+		@Override
+		public String toString() {
+			return "\"" + text + "\" : " + attribute + " : " + attribute_value;
+		}
+	}
+	
+
+//	------------------------------------------------------------------------------------------------------------------------
+
+	/**
+	 * 插入字符后，变化结果
+	 * @author WAZA
+	 *
+	 */
+	public static class InsertInfo
+	{
+		/** 插入的原字符 */
+		final public char		src_char;
+		
+		/** 长度的变化，删减 */
+		public int		length_change;
+		
+		/** 如果长度增加，返回增加的字符 */
+		public String	inserted_text;
+		
+		public InsertInfo(char src) {
+			this.src_char = src;
+		}
+	}
 }
