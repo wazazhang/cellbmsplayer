@@ -108,11 +108,10 @@ public abstract class UILayoutManager
 		
 		public SimpleLayoutManager(){
 			super(".");
-			initLayout();
 		}
 		
 		
-		void initLayout()
+		protected void initLayout()
 		{
 			// form
 			{
