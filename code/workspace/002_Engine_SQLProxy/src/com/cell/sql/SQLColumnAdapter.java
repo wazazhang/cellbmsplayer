@@ -458,7 +458,7 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 				{
 					String add_sql = "ALTER TABLE " + table_name + " ADD COLUMN " + 
 					c.name + " " + 
-					c.anno.type() + " " + 
+					c.anno.type() + " " + " DEFAULT '" + c.anno.defaultValue() + "'"+
 					c.anno.constraint() + ";";
 					System.out.println(add_sql);
 					statement.executeUpdate(add_sql);
