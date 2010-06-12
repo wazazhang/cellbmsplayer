@@ -3,14 +3,42 @@ package com.g2d.util;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Paint;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.TexturePaint;
 import java.awt.geom.Rectangle2D;
 
 import com.g2d.display.ui.text.MultiTextLayout;
 
 public class Drawing 
 {
+	final static public void fillPaintRect(Graphics2D g, Paint paint, int x, int y, int width, int height) 
+	{
+		Paint op = g.getPaint();
+		g.translate(x, y);
+		try {
+			g.setPaint(paint);
+			g.fillRect(0, 0, width, height);
+		} finally {
+			g.translate(-x, -y);
+			g.setPaint(op);
+		}
+	}	
+	
+	final static public void fillPaint(Graphics2D g, Paint paint, int x, int y, Shape shape) 
+	{
+		Paint op = g.getPaint();
+		g.translate(x, y);
+		try {
+			g.setPaint(paint);
+			g.fill(shape);
+		} finally {
+			g.translate(-x, -y);
+			g.setPaint(op);
+		}
+	}
+	
 	final static public void drawRoundImage(Graphics2D g, Image src, int x, int y, int width, int height)
 	{
 		Shape rect = g.getClip();

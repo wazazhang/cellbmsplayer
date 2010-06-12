@@ -1,6 +1,7 @@
 package com.g2d.display.ui.layout;
 
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 
 import com.cell.util.MarkedHashtable;
 import com.g2d.Tools;
@@ -10,12 +11,12 @@ public class ImageUILayout extends UILayout
 {
 	private static final long serialVersionUID = Version.VersionG2D;
 	
-	transient Image image;
+	transient BufferedImage image;
 	String			image_name;
 	ImageStyle 		clip_style;
 	int				clip_border;
 	
-	public ImageUILayout(Image image, String image_name, ImageStyle style, int clip_border) 
+	public ImageUILayout(BufferedImage image, String image_name, ImageStyle style, int clip_border) 
 	{
 		this.image			= image;
 		this.image_name		= image_name;
