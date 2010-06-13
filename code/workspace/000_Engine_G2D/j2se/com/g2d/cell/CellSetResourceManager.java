@@ -9,13 +9,12 @@ public abstract class CellSetResourceManager
 //	
 	protected ConcurrentHashMap<String, CellSetResource> set_resources = new ConcurrentHashMap<String, CellSetResource>();
 	
-	@SuppressWarnings("unchecked")
-	public <T extends CellSetResource> T getSet(String path) throws Exception {
+	public CellSetResource getSet(String path) throws Exception {
 		synchronized (set_resources) {
 			if (set_resources.containsKey(path)) {
-				return (T)set_resources.get(path);
+				return set_resources.get(path);
 			} else {
-				T set = (T)createSet(path);
+				CellSetResource set = createSet(path);
 				set_resources.put(path, set);
 				return set;
 			}
