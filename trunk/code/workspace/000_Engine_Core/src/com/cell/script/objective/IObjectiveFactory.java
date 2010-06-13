@@ -30,10 +30,6 @@ public abstract class IObjectiveFactory
 	
 	public String build(String src)
 	{
-		if (src.endsWith("]")) {
-			src += " ";
-		}
-		
 		build_state = "";
 		
 		int count = src.length();
