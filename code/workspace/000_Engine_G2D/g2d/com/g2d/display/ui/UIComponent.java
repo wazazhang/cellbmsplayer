@@ -166,7 +166,7 @@ public abstract class UIComponent extends UIObject
 			root_form = (Window)parent;
 		}
 		else if (parent instanceof UIComponent) {
-			root_form = ((UIComponent)getParent()).root_form;
+			root_form = ((UIComponent)parent).root_form;
 		}
 	}
 	
