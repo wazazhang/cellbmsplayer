@@ -7,7 +7,7 @@ public abstract class CellSetResourceManager
 {
 //	--------------------------------------------------------------------------------------------------------------------
 //	
-	protected ConcurrentHashMap<String, CellSetResource> set_resources = new ConcurrentHashMap<String, CellSetResource>();
+	final protected ConcurrentHashMap<String, CellSetResource> set_resources = new ConcurrentHashMap<String, CellSetResource>();
 	
 	public CellSetResource getSet(String path) throws Exception {
 		synchronized (set_resources) {
