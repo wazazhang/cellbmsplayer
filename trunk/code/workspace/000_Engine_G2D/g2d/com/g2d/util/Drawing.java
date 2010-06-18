@@ -48,9 +48,9 @@ public class Drawing
 		int w = src.getWidth(null);
 		int h = src.getHeight(null);
 		
-		for(int dx=0;dx<width;){
-			for(int dy=0;dy<height;){
-				g.drawImage(src, x+dx, y+dy, null);
+		for (int dx = 0; dx < width;) {
+			for (int dy = 0; dy < height;) {
+				g.drawImage(src, x + dx, y + dy, null);
 				dy += h;
 			}
 			dx += w;

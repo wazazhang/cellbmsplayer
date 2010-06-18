@@ -234,15 +234,27 @@ public class UILayout extends DObject
 		if (images == null)
 			return;
 
-		if (images[0] != null)BorderTL	= new TexturePaint(images[0], new Rectangle(images[0].getWidth(), images[0].getHeight()));
-		if (images[1] != null)BorderT	= new TexturePaint(images[1], new Rectangle(images[1].getWidth(), images[1].getHeight()));
-		if (images[2] != null)BorderTR	= new TexturePaint(images[2], new Rectangle(images[2].getWidth(), images[2].getHeight()));//
-		if (images[3] != null)BorderL	= new TexturePaint(images[3], new Rectangle(images[3].getWidth(), images[3].getHeight()));
-		if (images[4] != null)BackImage	= new TexturePaint(images[4], new Rectangle(images[4].getWidth(), images[4].getHeight()));
-		if (images[5] != null)BorderR	= new TexturePaint(images[5], new Rectangle(images[5].getWidth(), images[5].getHeight()));//
-		if (images[6] != null)BorderBL	= new TexturePaint(images[6], new Rectangle(images[6].getWidth(), images[6].getHeight()));
-		if (images[7] != null)BorderB	= new TexturePaint(images[7], new Rectangle(images[7].getWidth(), images[7].getHeight()));
-		if (images[8] != null)BorderBR	= new TexturePaint(images[8], new Rectangle(images[8].getWidth(), images[8].getHeight()));//
+		TexturePaint[] clips = new TexturePaint[images.length];
+		for (int i = 0; i < clips.length; i++) {
+			if (images[i] != null) {
+				clips[i] = new TexturePaint(images[i], new Rectangle(images[i].getWidth(), images[i].getHeight()));
+			}
+		}
+		
+		BorderTL = clips[0]; BorderT   = clips[1]; BorderTR = clips[2];
+		BorderL  = clips[3]; BackImage = clips[4]; BorderR  = clips[5];
+		BorderBL = clips[6]; BorderB   = clips[7]; BorderBR = clips[8];
+		
+//		if (images[0] != null)BorderTL	= new TexturePaint(images[0], new Rectangle(images[0].getWidth(), images[0].getHeight()));
+//		if (images[1] != null)BorderT	= new TexturePaint(images[1], new Rectangle(images[1].getWidth(), images[1].getHeight()));
+//		if (images[2] != null)BorderTR	= new TexturePaint(images[2], new Rectangle(images[2].getWidth(), images[2].getHeight()));//
+//		if (images[3] != null)BorderL	= new TexturePaint(images[3], new Rectangle(images[3].getWidth(), images[3].getHeight()));
+//		if (images[4] != null)BackImage	= new TexturePaint(images[4], new Rectangle(images[4].getWidth(), images[4].getHeight()));
+//		if (images[5] != null)BorderR	= new TexturePaint(images[5], new Rectangle(images[5].getWidth(), images[5].getHeight()));//
+//		if (images[6] != null)BorderBL	= new TexturePaint(images[6], new Rectangle(images[6].getWidth(), images[6].getHeight()));
+//		if (images[7] != null)BorderB	= new TexturePaint(images[7], new Rectangle(images[7].getWidth(), images[7].getHeight()));
+//		if (images[8] != null)BorderBR	= new TexturePaint(images[8], new Rectangle(images[8].getWidth(), images[8].getHeight()));//
+		
 		
 		Style		= style;
 	}
@@ -416,7 +428,7 @@ public class UILayout extends DObject
 			g.drawImage(BorderTR.getImage(), 
 					wl, 0, wr, H, null);
 		} else {
-			drawPaintRect(g, BorderT, bl, 0, W - bl - br, H);
+			Drawing.drawRoundImageH(g, BorderT.getImage(), bl, 0, W - bl - br, H);
 			g.drawImage(BorderTL.getImage(),    0, 0, bl, H, null);
 			g.drawImage(BorderTR.getImage(), W-br, 0, br, H, null);
 		}
@@ -436,7 +448,7 @@ public class UILayout extends DObject
 			g.drawImage(BorderBL.getImage(), 
 					0, ht, W, hb, null);
 		} else {
-			drawPaintRect(g, BorderL, 0, bt, W, H - bt - bb);
+			Drawing.drawRoundImageV(g, BorderL.getImage(), 0, bt, W, H - bt - bb);
 			g.drawImage(BorderTL.getImage(), 0,    0, W, bt, null);
 			g.drawImage(BorderBL.getImage(), 0, H-bb, W, bb, null);
 		}
