@@ -18,6 +18,17 @@ public abstract class Config
 	 * @param file
 	 * @return 返回静态变量的 名字：值　对应关系
 	 */
+	public static Map<Field, Object> load(Config config, String file)
+	{
+		return load(config, config.getClass(), file, true);
+	}
+	
+	/**
+	 * 将 Config 中的所有静态字段全部初始化
+	 * @param config_class
+	 * @param file
+	 * @return 返回静态变量的 名字：值　对应关系
+	 */
 	public static Map<Field, Object> load(Class<? extends Config> config_class, String file)
 	{
 		return load(config_class, file, true);
@@ -31,6 +42,18 @@ public abstract class Config
 	 * @return 返回静态变量的 名字：值　对应关系
 	 */
 	public static Map<Field, Object> load(Class<? extends Config> config_class, String file, boolean verbos)
+	{
+		return load((Config)null, config_class, file, verbos);
+	}
+	
+	/**
+	 * 将 Config 中的所有静态字段全部初始化
+	 * @param config_class
+	 * @param file
+	 * @param verbos 打印详细信息
+	 * @return 返回静态变量的 名字：值　对应关系
+	 */
+	protected static Map<Field, Object> load(Config instance, Class<? extends Config> config_class, String file, boolean verbos)
 	{
 		HashMap<Field, Object> map = new HashMap<Field, Object>();
 		
@@ -52,36 +75,36 @@ public abstract class Config
 					
 					if (v != null) {
 						value = Parser.stringToObject(v.trim(), field.getType());
-						if (value!=null) {
-							try{
-								field.set(null, value);
+						if (value != null) {
+							try {
+								field.set(instance, value);
 								map.put(field, value);
-							}catch (Exception e) {
+							} catch (Exception e) {
 								value = null;
 							}
 						}
 					}
 					if (verbos)
 					{
-						if (v == null) 
+						if (v == null)
 						{
 								System.out.println("\t"+ //
 										CUtil.snapStringRightSize(field.getName(),		32, ' ') + " = " + // 
-										CUtil.snapStringRightSize(field.get(null)+"",	32, ' ') + "   " + //
+										CUtil.snapStringRightSize(field.get(instance)+"",	32, ' ') + "   " + //
 										" (default)");// 
 						}
-						else if (value == null) 
+						else if (value == null)
 						{
 								System.err.println("\t"+// 
 										CUtil.snapStringRightSize(field.getName(),		32, ' ') + " = " +// 
-										CUtil.snapStringRightSize(field.get(null)+"",	32, ' ') + "   " +// 
+										CUtil.snapStringRightSize(field.get(instance)+"",	32, ' ') + "   " +// 
 										" (bad exchange \"" + v + "\", set default)");// 
 						}
 						else
 						{
 								System.out.println("\t"+// 
 										CUtil.snapStringRightSize(field.getName(),		32, ' ') + " = " + // 
-										CUtil.snapStringRightSize(field.get(null)+"",	32, ' ') + "   ");// 
+										CUtil.snapStringRightSize(field.get(instance)+"",	32, ' ') + "   ");// 
 						}
 					}
 					
@@ -99,4 +122,5 @@ public abstract class Config
 		System.out.println("load config completed !");
 		return map;
 	}
+	
 }
