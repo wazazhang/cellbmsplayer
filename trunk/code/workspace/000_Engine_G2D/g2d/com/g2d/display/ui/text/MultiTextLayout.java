@@ -985,6 +985,14 @@ public class MultiTextLayout
 		return height;
 	}
 	
+	/**
+	 * 获取分段后总的行数，在头一次渲染后有效
+	 * @return
+	 */
+	synchronized public int getLineCount() {
+		return textlines.size();
+	}
+	
 //	----------------------------------------------------------------------------------------------------------------
 	
 	Dimension render_size = new Dimension();
@@ -1027,6 +1035,31 @@ public class MultiTextLayout
 			int sx, int sy, int sw, int sh, 
 			int shadow_x, int shadow_y, float shadow_alpha, int shadow_color) 
 	{
+		return drawText(g, Integer.MAX_VALUE, x, y, sx, sy, sw, sh, shadow_x, shadow_y, shadow_alpha, shadow_color);
+	}
+
+	/**
+	 * @param g
+	 * @param max_line 最多显示几行
+	 * @param x 绘制到g的位置
+	 * @param y 绘制到g的位置
+	 * @param sx 绘制文本的范围，是该Layout的内部坐标
+	 * @param sy 绘制文本的范围，是该Layout的内部坐标
+	 * @param sw 绘制文本的范围，是该Layout的内部坐标
+	 * @param sh 绘制文本的范围，是该Layout的内部坐标
+	 * @param shadow_x 阴影偏移
+	 * @param shadow_y 阴影偏移	 
+	 * @param shadow_alpha 阴影透明度
+	 * @param shadow_color 阴影颜色
+	 * @return
+	 */
+	synchronized public Dimension drawText(
+			Graphics2D g, 
+			int max_line,
+			int x, int y, 
+			int sx, int sy, int sw, int sh, 
+			int shadow_x, int shadow_y, float shadow_alpha, int shadow_color) 
+	{
 		x += 1;
 		y += 1;
 		sx -= 1;
@@ -1043,11 +1076,15 @@ public class MultiTextLayout
 			Shape prewShape = g.getClip();
 			g.clip(rect);
 			try {
+				int rended_line = 0;
 				for (TextLine line : textlines) {
-					if (rect.intersects(line.x, line.y, line.width, line.height)) {
-						line.render(g, shadow_x, shadow_y, shadow_alpha, shadow_color);
+					if (rended_line < max_line) {
+						if (rect.intersects(line.x, line.y, line.width, line.height)) {
+							line.render(g, shadow_x, shadow_y, shadow_alpha, shadow_color);
+						}
 					}
 					render_size.width = Math.max(line.width, render_size.width);
+					rended_line++;
 				}
 				if (!is_read_only && is_show_caret) {
 					if (render_timer/6%2==0 && caret_bounds!=null) {
@@ -1069,7 +1106,8 @@ public class MultiTextLayout
 		render_shadow_color = shadow_color;
 		return render_size;
 	}
-
+	
+	
 	private void tryChangeTextAndCaret(Graphics2D g) 
 	{
 		// try change text

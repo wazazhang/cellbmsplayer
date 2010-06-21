@@ -966,7 +966,7 @@ public class CSprite extends CUnit implements Serializable
 	public CCD getFrameBounds(){
 		return getFrameBounds(CurAnimate, CurFrame);
 	}
-	
+
 	public CCD getFrameBounds(int anim, int frame) {
 		CCD bounds = CCD.createCDRect(CCD.CD_TYPE_RECT, 0,0,0,0);
 		bounds.X1 = Short.MAX_VALUE;
@@ -987,15 +987,17 @@ public class CSprite extends CUnit implements Serializable
 		}
 		return bounds;
 	}
+
+//	------------------------------------------------------------------------------------------
+
 	
 	public CCD getFrameBounds(CCD out_bounds){
 		return getFrameBounds(CurAnimate, CurFrame, out_bounds);
 	}
-
+	
 	public CCD getFrameBounds(int anim, int frame, CCD out_bounds)
 	{
 		CCD bounds = out_bounds;
-		
 		int frameid = FrameAnimate[anim][frame];
 		int count = animates.getComboFrameCount(frameid);
 		for (int i=0; i<count; i++) {
@@ -1004,7 +1006,15 @@ public class CSprite extends CUnit implements Serializable
 			bounds.X2 = (short)Math.max(bounds.X2, animates.getFrameX(frameid, i)+animates.getFrameW(frameid, i));
 			bounds.Y2 = (short)Math.max(bounds.Y2, animates.getFrameY(frameid, i)+animates.getFrameH(frameid, i));
 		}
-		
+		return bounds;
+	}
+	
+	public CCD getFrameBounds(int anim, CCD out_bounds)
+	{
+		CCD bounds = out_bounds;
+		for (int f = 0; f < getFrameCount(anim); f++) {
+			getFrameBounds(anim, f, bounds);
+		}
 		return bounds;
 	}
 	
