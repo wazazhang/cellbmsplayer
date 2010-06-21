@@ -2,26 +2,16 @@ package com.cell.sql.util;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.cell.CIO;
-import com.cell.CUtil;
-import com.cell.io.TextDeserialize;
-import com.cell.io.TextSerialize;
-import com.cell.reflect.Parser;
 import com.cell.sql.SQLColumn;
 import com.cell.sql.SQLFieldGroup;
-import com.cell.sql.SQLStructBLOB;
 import com.cell.sql.SQLStructCLOB;
-import com.cell.sql.SQLStructXML;
 import com.cell.sql.SQLTableManager;
 import com.cell.sql.SQMTypeManager;
 
@@ -37,7 +27,7 @@ public class SQLUtil
 	 * @return
 	 * @throws Exception
 	 */
-	public static byte[] blobToBin(SQLStructBLOB struct) throws Exception
+	public static byte[] blobToBin(Serializable struct) throws Exception
 	{
 		if (struct == null) {
 			return ZERO_DATA;
@@ -59,14 +49,14 @@ public class SQLUtil
 	 * @return
 	 * @throws Exception
 	 */
-	public static SQLStructBLOB binToBlob(byte[] data) throws Exception
+	public static Serializable binToBlob(byte[] data) throws Exception
 	{
 		ByteArrayInputStream	bais	= new ByteArrayInputStream(data);
 		ObjectInputStream		ois		= new ObjectInputStream(bais);
 		try{
-			SQLStructBLOB ret = (SQLStructBLOB)ois.readObject();
+			Serializable ret = (Serializable)ois.readObject();
 			return ret;
-		}finally{
+		} finally {
 			ois.close();
 		}
 	}
@@ -130,7 +120,7 @@ public class SQLUtil
 	 * @return
 	 * @throws Exception
 	 */
-	public static String xmlToString(SQLStructXML struct) throws Exception
+	public static String xmlToString(Serializable struct) throws Exception
 	{
 		if (struct == null) {
 			return ZERO_TEXT;
@@ -153,7 +143,7 @@ public class SQLUtil
 	 * @return
 	 * @throws Exception
 	 */
-	public static SQLStructXML stringToXML(String data) throws Exception
+	public static Serializable stringToXML(String data) throws Exception
 	{
 		if (data == null || data.length() == 0) {
 			return null;
@@ -161,7 +151,7 @@ public class SQLUtil
 		StringReader		sr	= new StringReader(data);
 		ObjectInputStream	ois	= SQMTypeManager.getTypeComparer().getXMLInputStream(sr);
 		try{
-			SQLStructXML ret = (SQLStructXML)ois.readObject();
+			Serializable ret = (Serializable)ois.readObject();
 			return ret;
 		}finally{
 			ois.close();
