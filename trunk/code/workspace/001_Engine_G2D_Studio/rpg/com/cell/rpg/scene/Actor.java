@@ -4,8 +4,10 @@ import com.cell.rpg.quest.ability.QuestAccepter;
 import com.cell.rpg.quest.ability.QuestPublisher;
 import com.cell.rpg.scene.ability.ActorBank;
 import com.cell.rpg.scene.ability.ActorDropItem;
+import com.cell.rpg.scene.ability.ActorFlag;
 import com.cell.rpg.scene.ability.ActorJobTrainer;
 import com.cell.rpg.scene.ability.ActorPathStart;
+import com.cell.rpg.scene.ability.ActorPostOffice;
 import com.cell.rpg.scene.ability.ActorQuestDropItem;
 import com.cell.rpg.scene.ability.ActorSellItem;
 import com.cell.rpg.scene.ability.ActorSkillTrainer;
@@ -40,6 +42,7 @@ public class Actor extends SceneSprite
 				ActorTalk.class,
 				ActorSellItem.class,
 				ActorBank.class,
+				ActorPostOffice.class,
 				ActorJobTrainer.class,
 				ActorSkillTrainer.class,
 				ActorTransportCraft.class,
@@ -47,6 +50,7 @@ public class Actor extends SceneSprite
 				ActorDropItem.class,
 				ActorPathStart.class,
 				ActorQuestDropItem.class,
+				ActorFlag.class,
 			};
 	}
 }
