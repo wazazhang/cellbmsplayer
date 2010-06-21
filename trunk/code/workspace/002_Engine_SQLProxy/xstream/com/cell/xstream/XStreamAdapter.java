@@ -89,7 +89,7 @@ public class XStreamAdapter extends PersistanceManager
 		}
 		
 		@Override
-		public Class realClass(String elementName) {
+		public Class<?> realClass(String elementName) {
 			try{
 				return super.realClass(elementName);
 			}catch(Exception err){

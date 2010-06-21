@@ -4,15 +4,13 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Reader;
+import java.io.Serializable;
 import java.io.Writer;
 import java.sql.Types;
 
-import com.cell.sql.SQLStructBLOB;
 import com.cell.sql.SQLStructCLOB;
-import com.cell.sql.SQLStructXML;
 import com.cell.sql.SQLType;
 import com.cell.sql.SQLTypeComparer;
-import com.cell.sql.SQMTypeManager;
 import com.cell.sql.util.SQLUtil;
 import com.cell.xstream.XStreamAdapter;
 
@@ -70,11 +68,11 @@ public class SQLTypeComparerMySQL implements SQLTypeComparer
 		switch(type)
 		{
 		case STRUCT:
-			return SQLUtil.blobToBin((SQLStructBLOB)javaObject);
+			return SQLUtil.blobToBin((Serializable)javaObject);
 		case TEXT_STRUCT:
 			return SQLUtil.clobToString((SQLStructCLOB)javaObject);
 		case XML_STRUCT:
-			return SQLUtil.xmlToString((SQLStructXML)javaObject);
+			return SQLUtil.xmlToString((Serializable)javaObject);
 		default:
 			return javaObject;
 		}
