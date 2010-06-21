@@ -53,14 +53,6 @@ FocusListener
 {
 
 //	--------------------------------------------------------------------------------
-
-//	public static interface ExitListener
-//	{
-//		public void onExited();
-//	}
-	
-	
-//	--------------------------------------------------------------------------------
 	
 	final CanvasContainer				parent;
 	final Component 					component;
