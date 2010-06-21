@@ -460,7 +460,7 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 					c.name + " " + 
 					c.anno.type() + " " + 
 					c.anno.constraint() + 
-					" DEFAULT '" + c.anno.defaultValue() + "'"+
+					(c.anno.defaultValue().isEmpty() ? "" : " DEFAULT '" + c.anno.defaultValue() + "'") +
 					";";
 					System.out.println(add_sql);
 					statement.executeUpdate(add_sql);
