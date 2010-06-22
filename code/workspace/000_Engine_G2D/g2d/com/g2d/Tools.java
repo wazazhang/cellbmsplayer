@@ -499,30 +499,43 @@ public class Tools
 		return null;
 		
 	}
+
+//	--------------------------------------------------------------------------------
 	
 	static public void writeImage(String file, Image image)
 	{
-		try
-		{
+		if (file.endsWith(".jpg")) {
+			writeImage(file, "jpg", image);
+		} 
+		else if (file.endsWith(".png")) {
+			writeImage(file, "png", image);
+		} 
+		else if (file.endsWith(".bmp")) {
+			writeImage(file, "bmp", image);
+		} 
+		else if (file.endsWith(".gif")) {
+			writeImage(file, "gif", image);
+		}
+		else {
+			writeImage(file, "png", image);
+		}
+	}
+	
+	static public void writeImage(String file, String format, Image image)
+	{
+		try {
 			BufferedImage buf = null;
-			
-			if (image instanceof BufferedImage){
-				buf = (BufferedImage)image;
-			}else{
+			if (image instanceof BufferedImage) {
+				buf = (BufferedImage) image;
+			} else {
 				buf = cloneImage(image);
 			}
-			
-			ImageIO.write(buf, "png", new File(file));
-			
-		}
-		catch(Exception err)
-		{
+			ImageIO.write(buf, format, new File(file));
+		} catch (Exception err) {
 			System.err.println(file);
 			err.printStackTrace();
 		}
 	}
-	
-	
 	
 	
 //	--------------------------------------------------------------------------------

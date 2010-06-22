@@ -1,8 +1,10 @@
 package com.g2d.studio.cell.gameedit;
 
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +18,7 @@ import com.cell.j2se.CAppBridge;
 import com.cell.j2se.CImage;
 import com.cell.rpg.res.Resource;
 import com.cell.util.zip.ZipUtil;
+import com.g2d.Tools;
 import com.g2d.cell.CellGameEditWrap;
 import com.g2d.cell.CellSetResource.ImagesSet;
 import com.g2d.cell.CellSetResource.StreamTiles;
@@ -29,9 +32,11 @@ public class EatBuilder extends Builder
 	public EatBuilder() 
 	{
 		script_map = new HashMap<String, String>(5);
-		script_map.put("output.properties", 	CIO.readAllText("/com/g2d/studio/cell/gameedit/output.properties"));
-		script_map.put("scene_jpg.script",		CIO.readAllText("/com/g2d/studio/cell/gameedit/scene_jpg.script"));
-		script_map.put("scene_png.script",		CIO.readAllText("/com/g2d/studio/cell/gameedit/scene_png.script"));
+		script_map.put("output.properties", 		CIO.readAllText("/com/g2d/studio/cell/gameedit/output.properties"));
+		script_map.put("scene_jpg.script",			CIO.readAllText("/com/g2d/studio/cell/gameedit/scene_jpg.script"));
+		script_map.put("scene_jpg_thumb.script",	CIO.readAllText("/com/g2d/studio/cell/gameedit/scene_jpg_thumb.script"));
+		script_map.put("scene_png.script",			CIO.readAllText("/com/g2d/studio/cell/gameedit/scene_png.script"));
+		
 	}
 	
 	
@@ -60,15 +65,19 @@ public class EatBuilder extends Builder
 	{
 		System.out.println("build scene : " + cpj_file_name);
 		try {
-			File output_properties	= copyScript(cpj_file_name,	"output.properties");
-			File scene_jpg_script	= copyScript(cpj_file_name,	"scene_jpg.script");
-			File scene_png_script	= copyScript(cpj_file_name,	"scene_png.script");
+			File output_properties		= copyScript(cpj_file_name,	"output.properties");
+			File scene_jpg_script		= copyScript(cpj_file_name,	"scene_jpg.script");
+			File scene_jpg_thumb_script	= copyScript(cpj_file_name,	"scene_jpg_thumb.script");
+			File scene_png_script		= copyScript(cpj_file_name,	"scene_png.script");
+			
 			Process process = CellGameEditWrap.openCellGameEdit(Config.CELL_GAME_EDIT_CMD, cpj_file_name, 
 					output_properties.getPath(), 
 					scene_jpg_script.getPath(),
+					scene_jpg_thumb_script.getPath(),
 					scene_png_script.getPath()
 					);
 			process.waitFor();
+			saveSceneThumb(cpj_file_name) ;
 			cleanOutput(cpj_file_name);
 			return process;
 		} catch (Throwable e) {
@@ -100,12 +109,39 @@ public class EatBuilder extends Builder
 		}
 	}
 	
+	private void saveSceneThumb(File cpj_file_name) {
+		try {
+			File jpg = new File(cpj_file_name.getParentFile(), "jpg.jpg");
+			if (jpg.exists()) {
+				BufferedImage src = Tools.readImage(jpg.getPath());
+				BufferedImage tag = new BufferedImage(
+						(int)(src.getWidth() *Config.CELL_BUILD_SCENE_THUMB_SCALE), 
+						(int)(src.getHeight()*Config.CELL_BUILD_SCENE_THUMB_SCALE), 
+						BufferedImage.TYPE_INT_RGB);
+				tag.getGraphics().drawImage(
+						src, 0, 0, 
+						tag.getWidth(),
+						tag.getHeight(), null);
+				Tools.writeImage(
+						new File(cpj_file_name.getParentFile(), "thumb.jpg").getPath(), 
+						"jpg", tag);
+			}
+		} catch (Exception err) {
+			err.printStackTrace();
+		}
+	}
+	
 	private void cleanOutput(File cpj_file_name) 
 	{
 		try
 		{
 			deleteIfExists(new File(cpj_file_name.getParentFile(), "_script"));
+			deleteIfExists(new File(cpj_file_name.getParentFile(), "scene_jpg_thumb.conf"));
+			deleteIfExists(new File(cpj_file_name.getParentFile(), "png.jpg"));
+			deleteIfExists(new File(cpj_file_name.getParentFile(), "jpg.jpg"));
+			
 			File output = new File(cpj_file_name.getParentFile(), "output");
+			
 			if (output.exists())
 			{
 				deleteIfExists(new File(output, "jpg.png"));
@@ -113,7 +149,6 @@ public class EatBuilder extends Builder
 				deleteIfExists(new File(output, "scene_graph.conf"));
 				deleteIfExists(new File(output, "scene_jpg.conf"));
 				deleteIfExists(new File(output, "scene_png.conf"));
-				
 				File set = new File(output, "set");
 				if (set.exists())
 				{

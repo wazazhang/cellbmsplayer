@@ -30,6 +30,7 @@ public class CPJWorld extends CPJObject<WorldSet>
 	@Override
 	public void setSetObject(WorldSet obj) {
 		super.setSetObject(obj);
+		resetIcon();
 		snapshoot = null;
 		scene_snapshoot=null;
 	}
