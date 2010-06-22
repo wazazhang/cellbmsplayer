@@ -293,6 +293,8 @@ public class EatBuilder extends Builder
 		if (args != null && args.length > 1) {
 			String arg_0 = args[0].toLowerCase().trim();
 			String arg_1 = args[1].toLowerCase().trim();
+			String arg_2 = args[2].toLowerCase().trim();
+			Config.load(Config.class, arg_2);
 			if (arg_1.equals("scene")) {
 				builder.buildScene(new File(arg_0));
 			} else {
