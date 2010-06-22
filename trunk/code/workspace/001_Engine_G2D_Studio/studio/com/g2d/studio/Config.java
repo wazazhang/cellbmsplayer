@@ -80,4 +80,5 @@ public class Config extends com.cell.util.Config
 	public static String CELL_BUILD_SCENE_CMD		= 
 		"@java -classpath \"g2dstudio.jar\" com.g2d.studio.cell.gameedit.EatBuilder \"{file}\" \"scene\"";	
 
+	public static Float	 CELL_BUILD_SCENE_THUMB_SCALE	= 0.1f;
 }
