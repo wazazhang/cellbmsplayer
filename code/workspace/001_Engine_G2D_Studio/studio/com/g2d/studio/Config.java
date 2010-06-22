@@ -73,12 +73,12 @@ public class Config extends com.cell.util.Config
 	/**保存的导出精灵批处理<br>
 	 * {file}变量为cpj文件*/
 	public static String CELL_BUILD_SPRITE_CMD		= 
-		"@java -classpath \"g2dstudio.jar\" com.g2d.studio.cell.gameedit.EatBuilder \"{file}\" \"sprite\"";
+		"@java -classpath \"g2dstudio.jar\" com.g2d.studio.cell.gameedit.EatBuilder \"{file}\" \"sprite\" \"project.g2d\"";
 	
 	/**保存的导出场景批处理<br>
 	 * {file}变量为cpj文件*/
 	public static String CELL_BUILD_SCENE_CMD		= 
-		"@java -classpath \"g2dstudio.jar\" com.g2d.studio.cell.gameedit.EatBuilder \"{file}\" \"scene\"";	
+		"@java -classpath \"g2dstudio.jar\" com.g2d.studio.cell.gameedit.EatBuilder \"{file}\" \"scene\" \"project.g2d\"";	
 
 	public static Float	 CELL_BUILD_SCENE_THUMB_SCALE	= 0.1f;
 }
