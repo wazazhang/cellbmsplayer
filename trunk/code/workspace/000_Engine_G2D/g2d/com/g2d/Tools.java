@@ -286,6 +286,24 @@ public class Tools
 		return null;
 	}
 	
+	static public BufferedImage createImage(int width, int height, Color color)
+	{
+		try
+		{
+			BufferedImage buf = gc.createCompatibleImage(width, height, Transparency.TRANSLUCENT);
+			Graphics2D g = (Graphics2D)buf.createGraphics();
+			g.setColor(color);
+			g.fillRect(0, 0, width, height);
+			g.dispose();
+			return buf;
+		}
+		catch(Exception err)
+		{
+			err.printStackTrace();
+		}
+		return null;
+	}
+	
 	static public BufferedImage createImage(IImage image)
 	{
 		try
