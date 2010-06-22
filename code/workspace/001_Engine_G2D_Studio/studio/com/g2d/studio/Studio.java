@@ -34,6 +34,8 @@ import com.cell.sound.openal_impl.JALSoundManager;
 import com.cell.sql.SQMTypeManager;
 import com.cell.util.concurrent.ThreadPool;
 import com.g2d.Tools;
+import com.g2d.display.ui.layout.UILayoutManager;
+import com.g2d.display.ui.layout.UILayoutManager.SimpleLayoutManager;
 import com.g2d.studio.cell.gameedit.Builder;
 import com.g2d.studio.cpj.CPJResourceManager;
 import com.g2d.studio.gameedit.ObjectManager;
@@ -115,7 +117,7 @@ public class Studio extends AbstractFrame
 		RPGObjectMap.setPersistanceManagerDriver	(Config.PERSISTANCE_MANAGER);
 		SQMTypeManager.setTypeComparer				(Config.PERSISTANCE_SQL_TYPE);
 		Builder.setBuilder							(Config.BUILDER_CLASS);
-		
+
 		root_icon_path		= getFile				(Config.ICON_ROOT);
 		root_sound_path		= getFile				(Config.SOUND_ROOT);
 		root_talk_path		= getFile				(Config.TALK_ROOT);
@@ -134,6 +136,7 @@ public class Studio extends AbstractFrame
 		}
 		
 		try {
+			UILayoutManager.setInstance(new UILayoutManager());
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
 		} catch (Exception err) {
 			err.printStackTrace();
@@ -525,7 +528,13 @@ public class Studio extends AbstractFrame
 	
 //	----------------------------------------------------------------------------------------------------------------
 //	resource manager
-	
+	public class UILayoutManager extends SimpleLayoutManager
+	{
+		public UILayoutManager() {
+			super();
+			initLayout();
+		}
+	}
 //	public class SetResourceManager extends CellSetResourceManager
 //	{
 //		public SetResourceManager() {}
