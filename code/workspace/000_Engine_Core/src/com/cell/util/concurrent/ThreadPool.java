@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
 
-public class ThreadPool
+public class ThreadPool implements ThreadPoolService
 {
     /** temp workaround for VM issue */
     private static final long 				MAX_DELAY		= Long.MAX_VALUE/1000000/2;
