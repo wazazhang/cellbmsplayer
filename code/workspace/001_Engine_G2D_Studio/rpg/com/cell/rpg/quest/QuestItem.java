@@ -83,6 +83,7 @@ public class QuestItem extends RPGObject implements NamedObject
 					TagOneMoreUnitComparison.class,
 					TagOneMoreUnitMethodComparison.class,
 					TagUnitGroupCountComparison.class,
+					TagTeamPlayerCountComparison.class,
 				};
 		} else {
 			return new Class<?>[]{
