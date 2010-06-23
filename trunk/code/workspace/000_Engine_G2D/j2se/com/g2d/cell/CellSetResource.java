@@ -7,24 +7,16 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.io.StringReader;
-
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Map;
 import java.util.Vector;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.cell.CIO;
 import com.cell.CUtil;
-
 import com.cell.gfx.IGraphics;
 import com.cell.gfx.IImage;
 import com.cell.gfx.IImages;
@@ -39,13 +31,10 @@ import com.cell.j2se.CGraphics;
 import com.cell.j2se.CImage;
 import com.cell.util.MarkedHashtable;
 import com.cell.util.PropertyGroup;
-import com.cell.util.concurrent.ThreadPool;
+import com.cell.util.concurrent.ThreadPoolService;
 import com.g2d.Version;
-
 import com.g2d.cell.CellSetResource.WorldSet.RegionObject;
 import com.g2d.cell.CellSetResource.WorldSet.WaypointObject;
-
-import com.g2d.display.DisplayObject;
 import com.g2d.util.Drawing;
 
 /**
@@ -67,7 +56,7 @@ public class CellSetResource
 	transient public Hashtable<String, WorldSet>		WorldTable;
 	
 	final transient protected	MarkedHashtable 		resource_manager;
-	final transient private		ThreadPool				loading_service;
+	final transient private		ThreadPoolService		loading_service;
 	
 //	-------------------------------------------------------------------------------------
 	
@@ -76,17 +65,17 @@ public class CellSetResource
 		this(file, file, null);
 	}
 	
-	public CellSetResource(String file, ThreadPool loading_service) throws Exception
+	public CellSetResource(String file, ThreadPoolService loading_service) throws Exception
 	{
 		this(file, file, loading_service);
 	}
 
-	public CellSetResource(File file, String name, ThreadPool loading_service) throws Exception
+	public CellSetResource(File file, String name, ThreadPoolService loading_service) throws Exception
 	{
 		this(file.getPath().replace('\\', '/'), file.getPath().replace('\\', '/'), loading_service);
 	}
 	
-	public CellSetResource(String file, String name, ThreadPool loading_service) throws Exception
+	public CellSetResource(String file, String name, ThreadPoolService loading_service) throws Exception
 	{
 		this.Path				= file;
 		this.PathDir 			= file.substring(0, file.lastIndexOf("/")+1);
