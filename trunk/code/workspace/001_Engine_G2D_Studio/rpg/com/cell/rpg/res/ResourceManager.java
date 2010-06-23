@@ -3,7 +3,6 @@ package com.cell.rpg.res;
 import java.awt.image.BufferedImage;
 import java.util.Hashtable;
 import java.util.Vector;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.cell.CIO;
@@ -28,7 +27,7 @@ import com.cell.rpg.template.TShopItemList;
 import com.cell.rpg.template.TSkill;
 import com.cell.rpg.template.TUnit;
 import com.cell.sound.ISound;
-import com.cell.util.concurrent.ThreadPool;
+import com.cell.util.concurrent.ThreadPoolService;
 import com.g2d.Tools;
 import com.g2d.cell.CellSetResource;
 import com.g2d.cell.CellSetResourceManager;
@@ -134,7 +133,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 	
 //	--------------------------------------------------------------------------------------------------------------------
 
-	abstract protected ThreadPool getLoadingService() ;
+	abstract protected ThreadPoolService getLoadingService() ;
 	
 	final protected void initAllSet() throws Exception
 	{
