@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import com.cell.util.concurrent.ThreadPool;
+import com.cell.util.concurrent.ThreadPoolService;
 import com.g2d.cell.CellSetResource;
 
 
@@ -14,17 +15,17 @@ public abstract class Resource extends CellSetResource
 	 * @param async true 代表是异步获得图片
 	 * @throws Exception
 	 */
-	public Resource(String file, ThreadPool async) throws Exception
+	public Resource(String file, ThreadPoolService async) throws Exception
 	{
 		super(file, async);
 	}
 	
-	public Resource(String file, String name, ThreadPool stream_image) throws Exception
+	public Resource(String file, String name, ThreadPoolService stream_image) throws Exception
 	{
 		super(file, name, stream_image);
 	}
 	
-	public Resource(File file, String name, ThreadPool stream_image) throws Exception
+	public Resource(File file, String name, ThreadPoolService stream_image) throws Exception
 	{
 		super(file, name, stream_image);
 	}
