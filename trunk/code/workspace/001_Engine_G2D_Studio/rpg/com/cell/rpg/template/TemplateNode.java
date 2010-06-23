@@ -2,7 +2,6 @@ package com.cell.rpg.template;
 
 import com.cell.rpg.NamedObject;
 import com.cell.rpg.RPGObject;
-import com.g2d.annotation.Property;
 
 public abstract class TemplateNode extends RPGObject implements NamedObject
 {

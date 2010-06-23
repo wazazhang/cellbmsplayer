@@ -7,18 +7,14 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Vector;
 
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import com.cell.rpg.ability.AbstractAbility;
 import com.cell.rpg.scene.Actor;
 import com.cell.rpg.scene.Scene;
-import com.cell.rpg.scene.ability.ActorJobTrainer;
 import com.cell.rpg.scene.ability.ActorPathStart;
 import com.cell.rpg.scene.ability.ActorSkillTrainer;
 import com.cell.rpg.scene.ability.ActorTransport;
@@ -27,7 +23,6 @@ import com.cell.rpg.scene.ability.IActorAbility;
 import com.cell.rpg.scene.ability.RegionSpawnNPC.NPCSpawn;
 import com.g2d.editor.property.CellEditAdapter;
 import com.g2d.editor.property.ObjectPropertyEdit;
-import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.ObjectSelectCellEdit;
@@ -44,10 +39,8 @@ import com.g2d.studio.scene.units.SceneRegion;
 import com.g2d.studio.scene.units.SceneUnitTag;
 import com.g2d.studio.sound.SoundSelectDialog;
 import com.g2d.studio.swing.G2DList;
-import com.g2d.studio.swing.G2DListItem;
 import com.g2d.studio.talks.TalkFile;
 import com.g2d.studio.talks.TalkSelectDialog;
-import com.g2d.util.AbstractDialog;
 import com.g2d.util.AbstractOptionDialog;
 
 public class SceneAbilityAdapters

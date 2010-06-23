@@ -1,13 +1,11 @@
 package com.g2d.studio.icon;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Vector;
 
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 
-import com.g2d.Tools;
 import com.g2d.studio.Config;
 import com.g2d.studio.ManagerForm;
 import com.g2d.studio.Studio;

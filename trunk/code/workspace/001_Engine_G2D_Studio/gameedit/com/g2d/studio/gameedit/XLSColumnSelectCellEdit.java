@@ -9,7 +9,6 @@ import javax.swing.JList;
 import com.cell.CUtil;
 import com.cell.rpg.xls.XLSColumns;
 import com.g2d.editor.property.ObjectPropertyEdit;
-import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 
 public class XLSColumnSelectCellEdit extends JComboBox implements PropertyCellEdit<String>

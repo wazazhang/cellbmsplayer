@@ -21,7 +21,6 @@ import javax.swing.JScrollPane;
 import javax.swing.tree.TreePath;
 
 import com.cell.CIO;
-import com.cell.CUtil;
 import com.cell.rpg.NamedObject;
 import com.cell.rpg.io.RPGObjectMap;
 import com.cell.rpg.scene.Scene;

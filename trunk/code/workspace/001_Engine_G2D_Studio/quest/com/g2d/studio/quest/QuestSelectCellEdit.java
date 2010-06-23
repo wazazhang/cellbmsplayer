@@ -5,7 +5,6 @@ import java.awt.Component;
 import javax.swing.JLabel;
 
 import com.g2d.editor.property.ObjectPropertyEdit;
-import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.swing.G2DListSelectDialog;
 

@@ -1,7 +1,6 @@
 package com.cell.rpg.item;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 
 import com.cell.rpg.item.anno.ItemType;

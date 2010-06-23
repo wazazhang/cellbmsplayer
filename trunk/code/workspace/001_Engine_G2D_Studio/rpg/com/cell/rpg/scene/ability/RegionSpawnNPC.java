@@ -7,6 +7,7 @@ import com.g2d.annotation.Property;
 /**
  * @author WAZA
  */
+@SuppressWarnings("deprecation")
 @Property("[区域能力] NPC产生区域")
 public class RegionSpawnNPC extends AbstractAbility 
 {

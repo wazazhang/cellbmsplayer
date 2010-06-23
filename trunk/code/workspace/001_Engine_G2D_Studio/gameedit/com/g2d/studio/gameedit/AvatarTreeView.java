@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
-import java.io.File;
 
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;

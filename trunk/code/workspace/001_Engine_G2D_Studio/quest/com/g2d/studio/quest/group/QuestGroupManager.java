@@ -6,14 +6,9 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.Vector;
 
-import javax.swing.JFrame;
-
-import com.g2d.Tools;
 import com.g2d.studio.ManagerForm;
 import com.g2d.studio.Studio;
 import com.g2d.studio.Studio.ProgressForm;
-import com.g2d.studio.quest.QuestNode;
-import com.g2d.studio.quest.QuestTreeView;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.swing.G2DWindowToolBar;
 

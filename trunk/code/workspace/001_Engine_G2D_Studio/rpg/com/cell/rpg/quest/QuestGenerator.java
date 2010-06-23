@@ -1,8 +1,5 @@
 package com.cell.rpg.quest;
 
-import java.text.DateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import com.cell.rpg.ability.AbilitiesList;
@@ -28,7 +25,7 @@ public class QuestGenerator extends AbilitiesList
 	
 //	-----------------------------------------------------------------------------------
 	static abstract class QuestGeneratorAbility extends AbstractAbility {
-
+		private static final long serialVersionUID = 1L;
 	}
 	
 //	-----------------------------------------------------------------------------------
@@ -39,6 +36,7 @@ public class QuestGenerator extends AbilitiesList
 	 */
 	@Property({"[任务触发] 系统任务", "满足条件后，立即可以做"})
 	public static class System extends QuestGeneratorAbility {
+		private static final long serialVersionUID = 1L;
 		@Override
 		public boolean isMultiField() {
 			return false;
@@ -54,6 +52,7 @@ public class QuestGenerator extends AbilitiesList
 	@Property({"[任务触发] 定时任务", "每隔一定时间后，可重新做"})
 	public static class Scheduled extends QuestGeneratorAbility
 	{
+		private static final long serialVersionUID = 1L;
 		@Property("刷新时间")
 		public TimeObject	refresh_time		= new TimeObject(1, TimeUnit.DAYS);
 		
@@ -79,7 +78,11 @@ public class QuestGenerator extends AbilitiesList
 	@Property({"[任务类型] 节日任务", "在某个时间段内，重复刷新"})
 	public static class Festival extends QuestGeneratorAbility
 	{
-		public static class FestivalDate extends CronExpression{}
+		private static final long serialVersionUID = 1L;
+		
+		public static class FestivalDate extends CronExpression{
+			private static final long serialVersionUID = 1L;
+		}
 		
 		@Property("日期")
 		public FestivalDate	date_time		= new FestivalDate();
@@ -96,10 +99,10 @@ public class QuestGenerator extends AbilitiesList
 
 //	-----------------------------------------------------------------------------------
 	
-	public static void main(String[] args)
-	{
-		Date date = new Date(java.lang.System.currentTimeMillis());
-		Calendar ca = DateFormat.getDateInstance().getCalendar();
-		java.lang.System.out.println(ca.get(Calendar.DAY_OF_WEEK));
-	}
+//	public static void main(String[] args)
+//	{
+//		Date date = new Date(java.lang.System.currentTimeMillis());
+//		Calendar ca = DateFormat.getDateInstance().getCalendar();
+//		java.lang.System.out.println(ca.get(Calendar.DAY_OF_WEEK));
+//	}
 }

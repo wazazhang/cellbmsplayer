@@ -20,6 +20,8 @@ import com.cell.rpg.item.anno.ItemType;
  */
 public abstract class ItemPropertyTemplate extends AbstractAbility
 {
+	private static final long serialVersionUID = 1L;
+
 	public static Random RANDOM = new Random();
 	
 	private transient Integer	save_type 	= null;

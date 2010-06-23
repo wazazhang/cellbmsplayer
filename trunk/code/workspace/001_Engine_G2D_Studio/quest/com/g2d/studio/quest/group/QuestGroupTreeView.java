@@ -9,9 +9,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTree;
 
 import com.cell.rpg.quest.QuestGroup;
-import com.cell.rpg.template.TEffect;
 import com.g2d.studio.gameedit.ObjectTreeViewDynamic;
-import com.g2d.studio.gameedit.dynamic.DEffect;
 import com.g2d.studio.gameedit.entity.ObjectGroup;
 import com.g2d.studio.swing.G2DTreeNodeGroup;
 import com.g2d.studio.swing.G2DTreeNodeGroup.GroupMenu;

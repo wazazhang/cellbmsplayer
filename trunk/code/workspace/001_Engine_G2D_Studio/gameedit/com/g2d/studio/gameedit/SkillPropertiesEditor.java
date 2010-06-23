@@ -2,16 +2,12 @@ package com.g2d.studio.gameedit;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.EventObject;
 import java.util.Vector;
 
-import javax.swing.AbstractCellEditor;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JList;
@@ -19,29 +15,20 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTable;
 import javax.swing.JToolBar;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableColumn;
 
-import com.cell.CUtil;
-import com.cell.reflect.Parser;
 import com.cell.rpg.ability.AbstractAbility;
 import com.cell.rpg.item.ItemPropertyTemplate;
 import com.cell.rpg.item.ItemPropertyTemplate.ArgTemplate;
-import com.g2d.annotation.Property;
 import com.g2d.editor.property.ObjectPropertyRowPanel;
-import com.g2d.editor.property.Util;
 import com.g2d.editor.property.ObjectPropertyRowPanel.ColumnFiller;
 import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.template.XLSSkill;
 import com.g2d.studio.item.ItemPropertiesAdapter;
 import com.g2d.studio.item.property.ItemPropertyNode;
 import com.g2d.studio.item.property.ItemPropertySelectDialog;
-
 import com.g2d.studio.rpg.AbilityAdapter;
 import com.g2d.studio.rpg.ItemFormulaEdit;
 import com.g2d.studio.swing.G2DList;

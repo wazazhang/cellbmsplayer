@@ -7,11 +7,9 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.cell.CIO;
-import com.cell.CObject;
 import com.cell.CUtil;
 import com.cell.gfx.IImage;
 import com.cell.gfx.game.CSprite;
-import com.cell.j2se.CStorage;
 import com.cell.rpg.RPGObject;
 import com.cell.rpg.io.RPGObjectMap;
 import com.cell.rpg.item.ItemProperties;
@@ -29,7 +27,6 @@ import com.cell.rpg.template.TShopItem;
 import com.cell.rpg.template.TShopItemList;
 import com.cell.rpg.template.TSkill;
 import com.cell.rpg.template.TUnit;
-import com.cell.rpg.template.TemplateNode;
 import com.cell.sound.ISound;
 import com.g2d.Tools;
 import com.g2d.cell.CellSetResource;
@@ -41,7 +38,8 @@ import com.g2d.cell.CellSetResourceManager;
  * 第三方程序用来读入G2D Studio对象的类。
  * 该类的初始化方法只能在构造中调用。
  * 该类不需要同步，因为运行过程中只读，不能改动其内容。
- */
+ */	
+@SuppressWarnings("unused")
 public abstract class ResourceManager extends CellSetResourceManager
 {
 	public static boolean	PRINT_VERBOS 	= false;
@@ -390,6 +388,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 //	--------------------------------------------------------------------------------------------------------------------
 //	SetResources
 //	--------------------------------------------------------------------------------------------------------------------
+
 	private static void SetResources_____________________________________________________(){}
 	
 	public SceneSet getSceneSet(String cpj_name, String obj_name) throws Exception{

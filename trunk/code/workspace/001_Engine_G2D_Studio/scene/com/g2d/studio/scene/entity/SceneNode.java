@@ -5,7 +5,6 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 
 import com.cell.rpg.scene.Scene;
 import com.g2d.Tools;

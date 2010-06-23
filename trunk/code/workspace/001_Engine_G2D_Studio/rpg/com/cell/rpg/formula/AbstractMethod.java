@@ -21,7 +21,7 @@ public abstract class AbstractMethod extends AbstractValue
 {
 //	------------------------------------------------------------------------------------------------------------------------------
 	
-	transient private String method_name;
+//	transient private String method_name;
 	
 	@Property("方法名")
 	public MethodInfo			method_info;

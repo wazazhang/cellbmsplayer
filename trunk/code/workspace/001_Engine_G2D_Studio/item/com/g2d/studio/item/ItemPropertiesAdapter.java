@@ -9,7 +9,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import com.cell.rpg.item.ItemPropertyTemplate.ArgTemplate;
 import com.g2d.editor.property.CellEditAdapter;
 import com.g2d.editor.property.ObjectPropertyEdit;
-import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.editor.property.TextCellEdit;
 

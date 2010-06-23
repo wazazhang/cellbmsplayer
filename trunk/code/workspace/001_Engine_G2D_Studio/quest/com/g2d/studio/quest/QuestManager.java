@@ -14,7 +14,6 @@ import com.g2d.studio.Config;
 import com.g2d.studio.ManagerForm;
 import com.g2d.studio.Studio;
 import com.g2d.studio.Studio.ProgressForm;
-import com.g2d.studio.gameedit.EffectTreeView;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.swing.G2DWindowToolBar;
 

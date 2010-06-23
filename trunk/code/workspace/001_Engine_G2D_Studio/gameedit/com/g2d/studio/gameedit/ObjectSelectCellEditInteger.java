@@ -1,13 +1,10 @@
 package com.g2d.studio.gameedit;
 
 import java.awt.Component;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 
 import javax.swing.JComboBox;
 
 import com.g2d.editor.property.ObjectPropertyEdit;
-import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.entity.ObjectNode;

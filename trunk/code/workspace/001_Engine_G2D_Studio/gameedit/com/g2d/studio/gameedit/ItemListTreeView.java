@@ -2,15 +2,12 @@ package com.g2d.studio.gameedit;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
-import java.io.File;
 
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JTree;
 
-import com.cell.rpg.template.TEffect;
 import com.cell.rpg.template.TItemList;
-import com.g2d.studio.gameedit.dynamic.DEffect;
 import com.g2d.studio.gameedit.dynamic.DItemList;
 import com.g2d.studio.gameedit.entity.ObjectGroup;
 import com.g2d.studio.swing.G2DTreeNodeGroup;

@@ -21,8 +21,6 @@ import com.g2d.annotation.Property;
 import com.g2d.display.AnimateCursor;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.DragResizeObject;
-import com.g2d.display.InteractiveObject;
-import com.g2d.display.event.MouseDragResizeListener;
 import com.g2d.display.event.MouseMoveEvent;
 import com.g2d.display.ui.Menu;
 import com.g2d.editor.DisplayObjectEditor;

@@ -10,8 +10,6 @@ import com.g2d.Tools;
 import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.ObjectViewer;
 import com.g2d.studio.gameedit.SkillViewer;
-import com.g2d.studio.gameedit.XLSObjectViewer;
-import com.g2d.studio.icon.IconFile;
 import com.g2d.studio.res.Res;
 
 final public class XLSSkill extends XLSTemplateNode<TSkill>

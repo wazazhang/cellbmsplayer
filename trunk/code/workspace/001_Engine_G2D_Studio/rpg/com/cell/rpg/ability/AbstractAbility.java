@@ -1,6 +1,5 @@
 package com.cell.rpg.ability;
 
-import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 
@@ -28,13 +27,13 @@ public abstract class AbstractAbility implements Serializable
 	
 //	----------------------------------------------------------------------------------------------------------------
 	
-	protected Object writeReplace() throws ObjectStreamException {
-		return this;
-	}
-	
-	protected Object readResolve() throws ObjectStreamException {
-		return this;
-	}
+//	protected Object writeReplace() throws ObjectStreamException {
+//		return this;
+//	}
+//	
+//	protected Object readResolve() throws ObjectStreamException {
+//		return this;
+//	}
 
 //	----------------------------------------------------------------------------------------------------------------
 	

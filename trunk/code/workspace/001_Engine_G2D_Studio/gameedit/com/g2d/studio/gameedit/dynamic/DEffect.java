@@ -5,7 +5,6 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTree;
 
@@ -17,7 +16,6 @@ import com.g2d.studio.gameedit.EffectEditor;
 import com.g2d.studio.gameedit.EffectTreeView;
 import com.g2d.studio.gameedit.ObjectViewer;
 import com.g2d.studio.gameedit.EffectTreeView.EffectGroup;
-import com.g2d.studio.gameedit.dynamic.DynamicNode.DynamicNodeMenu;
 import com.g2d.studio.res.Res;
 
 final public class DEffect extends DynamicNode<TEffect>

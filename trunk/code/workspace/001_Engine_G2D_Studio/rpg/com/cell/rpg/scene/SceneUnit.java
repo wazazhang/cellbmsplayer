@@ -1,9 +1,6 @@
 package com.cell.rpg.scene;
 
 import com.cell.rpg.RPGObject;
-import com.cell.rpg.anno.PropertyAdapter;
-import com.cell.rpg.anno.PropertyType;
-import com.cell.rpg.quest.QuestState;
 import com.cell.rpg.struct.QuestStateDisplayOR;
 import com.g2d.annotation.Property;
 

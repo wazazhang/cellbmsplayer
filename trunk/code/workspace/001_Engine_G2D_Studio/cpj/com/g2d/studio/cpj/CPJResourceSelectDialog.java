@@ -1,7 +1,6 @@
 package com.g2d.studio.cpj;
 
 import java.awt.Component;
-import java.awt.Window;
 
 import com.g2d.studio.Studio;
 import com.g2d.studio.cpj.entity.CPJObject;

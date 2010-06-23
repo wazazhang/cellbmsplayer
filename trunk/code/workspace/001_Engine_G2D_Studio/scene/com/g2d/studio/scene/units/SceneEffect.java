@@ -2,26 +2,19 @@ package com.g2d.studio.scene.units;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Composite;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.JList;
-import javax.swing.SpinnerNumberModel;
 
 import com.cell.rpg.particle.ParticleAppearanceType.DisplayNodeImage;
 import com.cell.rpg.particle.ParticleAppearanceType.DisplayNodeSprite;
-import com.cell.rpg.quest.ability.QuestAccepter;
-import com.cell.rpg.quest.ability.QuestPublisher;
 import com.cell.rpg.scene.Effect;
-import com.cell.rpg.scene.Region;
-import com.g2d.Tools;
 import com.g2d.annotation.Property;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.Sprite;
@@ -38,12 +31,10 @@ import com.g2d.studio.cpj.CPJEffectImageSelectDialog.TileImage;
 import com.g2d.studio.cpj.entity.CPJSprite;
 import com.g2d.studio.gameedit.dynamic.DEffect;
 import com.g2d.studio.quest.QuestCellEditAdapter;
-import com.g2d.studio.res.Res;
 import com.g2d.studio.scene.editor.SceneAbilityAdapters;
 import com.g2d.studio.scene.editor.SceneEditor;
 import com.g2d.studio.scene.editor.SceneUnitMenu;
 import com.g2d.studio.scene.editor.SceneUnitTagEditor;
-import com.g2d.studio.scene.effect.AbilityEffectInfos;
 
 
 @Property("一个在场景中渲染的特效")

@@ -1,15 +1,10 @@
 package com.g2d.studio.gameedit.template;
 
-import javax.swing.ImageIcon;
-
 import com.cell.rpg.template.TemplateNode;
 import com.cell.rpg.xls.XLSFile;
 import com.cell.rpg.xls.XLSFullRow;
-import com.g2d.Tools;
-import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.entity.ObjectNode;
 import com.g2d.studio.icon.IconFile;
-import com.g2d.studio.res.Res;
 
 public abstract class XLSTemplateNode<T extends TemplateNode> extends ObjectNode<T>
 {

@@ -5,23 +5,16 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTree;
 
 import com.cell.CIO;
-import com.cell.rpg.template.TEffect;
 import com.cell.rpg.template.TItemList;
 import com.g2d.Tools;
-import com.g2d.display.particle.Layer;
-import com.g2d.studio.gameedit.EffectEditor;
-import com.g2d.studio.gameedit.EffectTreeView;
 import com.g2d.studio.gameedit.ItemListTreeView;
 import com.g2d.studio.gameedit.ObjectAdapters;
 import com.g2d.studio.gameedit.ObjectViewer;
-import com.g2d.studio.gameedit.EffectTreeView.EffectGroup;
 import com.g2d.studio.gameedit.ItemListTreeView.ItemListGroup;
-import com.g2d.studio.gameedit.dynamic.DynamicNode.DynamicNodeMenu;
 import com.g2d.studio.res.Res;
 
 final public class DItemList extends DynamicNode<TItemList>
