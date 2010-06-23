@@ -28,6 +28,7 @@ import com.cell.rpg.template.TShopItemList;
 import com.cell.rpg.template.TSkill;
 import com.cell.rpg.template.TUnit;
 import com.cell.sound.ISound;
+import com.cell.util.concurrent.ThreadPool;
 import com.g2d.Tools;
 import com.g2d.cell.CellSetResource;
 import com.g2d.cell.CellSetResourceManager;
@@ -133,7 +134,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 	
 //	--------------------------------------------------------------------------------------------------------------------
 
-	abstract protected ThreadPoolExecutor getLoadingService() ;
+	abstract protected ThreadPool getLoadingService() ;
 	
 	final protected void initAllSet() throws Exception
 	{

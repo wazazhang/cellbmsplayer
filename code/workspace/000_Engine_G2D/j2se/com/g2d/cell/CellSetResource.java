@@ -39,6 +39,7 @@ import com.cell.j2se.CGraphics;
 import com.cell.j2se.CImage;
 import com.cell.util.MarkedHashtable;
 import com.cell.util.PropertyGroup;
+import com.cell.util.concurrent.ThreadPool;
 import com.g2d.Version;
 
 import com.g2d.cell.CellSetResource.WorldSet.RegionObject;
@@ -66,7 +67,7 @@ public class CellSetResource
 	transient public Hashtable<String, WorldSet>		WorldTable;
 	
 	final transient protected	MarkedHashtable 		resource_manager;
-	final transient private		ThreadPoolExecutor		loading_service;
+	final transient private		ThreadPool				loading_service;
 	
 //	-------------------------------------------------------------------------------------
 	
@@ -75,17 +76,17 @@ public class CellSetResource
 		this(file, file, null);
 	}
 	
-	public CellSetResource(String file, ThreadPoolExecutor loading_service) throws Exception
+	public CellSetResource(String file, ThreadPool loading_service) throws Exception
 	{
 		this(file, file, loading_service);
 	}
 
-	public CellSetResource(File file, String name, ThreadPoolExecutor loading_service) throws Exception
+	public CellSetResource(File file, String name, ThreadPool loading_service) throws Exception
 	{
 		this(file.getPath().replace('\\', '/'), file.getPath().replace('\\', '/'), loading_service);
 	}
 	
-	public CellSetResource(String file, String name, ThreadPoolExecutor loading_service) throws Exception
+	public CellSetResource(String file, String name, ThreadPool loading_service) throws Exception
 	{
 		this.Path				= file;
 		this.PathDir 			= file.substring(0, file.lastIndexOf("/")+1);
@@ -215,7 +216,7 @@ public class CellSetResource
 		if (stuff != null) {
 			if (!stuff.isLoaded()) {
 				if (loading_service != null) {
-					loading_service.execute(stuff);
+					loading_service.executeTask(stuff);
 				} else {
 					stuff.run();
 				}
@@ -226,7 +227,7 @@ public class CellSetResource
 		try {
 			if (loading_service != null) {
 				stuff = getStreamImage(img);
-				loading_service.execute(stuff);
+				loading_service.executeTask(stuff);
 			} else {
 				stuff = getLocalImage(img);
 				stuff.run();
@@ -291,7 +292,7 @@ public class CellSetResource
 				return;
 			}
 			if (loading_service != null) {
-				loading_service.execute(new LoadSpriteTask(spr, listener));
+				loading_service.executeTask(new LoadSpriteTask(spr, listener));
 			} else {
 				new Thread(new LoadSpriteTask(spr, listener), "get-sprite-" + key).start();
 			}
@@ -1440,7 +1441,7 @@ public class CellSetResource
 		final protected ImagesSet		img;
 		final protected IImage[]		images;
 		
-		private boolean					is_loaded	= false;
+		private AtomicBoolean			is_loaded	= new AtomicBoolean(false);
 		private AtomicBoolean			is_loading	= new AtomicBoolean(false);
 		
 		private int						render_timer;
@@ -1467,7 +1468,7 @@ public class CellSetResource
 		}
 		
 		final public boolean isLoaded() {
-			return is_loaded;
+			return is_loaded.get();
 		}
 		
 		final public void run() 
@@ -1476,11 +1477,11 @@ public class CellSetResource
 				return;
 			}
 			try {
-				synchronized (this) {
-					if (!is_loaded) {
+				if (!is_loaded.get()) {
+					synchronized (this) {
 						initImages();
+						is_loaded.set(true);
 					}
-					is_loaded = true;
 				}
 			} catch (Throwable e) {
 				e.printStackTrace();
@@ -1491,8 +1492,8 @@ public class CellSetResource
 		
 		final public void unloadAllImages() {
 			synchronized (this) {
-				is_loaded = false;
-				for (int i=0; i<images.length; i++){
+				is_loaded.set(false);
+				for (int i = 0; i < images.length; i++) {
 					images[i] = null;
 				}
 			}
@@ -1535,16 +1536,12 @@ public class CellSetResource
 			if (g instanceof CGraphics) 
 			{
 				Graphics2D cg = ((CGraphics)g).getGraphics();
-				
 				float d = Math.abs((float)Math.sin(render_timer++/20d));
-				
 				cg.setColor(new Color(1,1,1,d));
 				cg.drawRect(x, y, w, h);
 				Drawing.drawStringShadow(cg, "loading...", x, y, w, h, 
 						Drawing.TEXT_ANCHOR_HCENTER | Drawing.TEXT_ANCHOR_VCENTER);
-				
-				
-			}else{
+			} else {
 				g.setColor(0xff808080);
 				g.fillRect(x, y, w, h);
 				g.setColor(0xffffffff);
