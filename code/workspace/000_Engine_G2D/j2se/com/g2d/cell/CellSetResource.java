@@ -20,6 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.cell.CIO;
 import com.cell.CUtil;
@@ -1439,7 +1440,9 @@ public class CellSetResource
 		final protected ImagesSet		img;
 		final protected IImage[]		images;
 		
-		private boolean					is_loaded = false;
+		private boolean					is_loaded	= false;
+		private AtomicBoolean			is_loading	= new AtomicBoolean(false);
+		
 		private int						render_timer;
 		
 		public StreamTiles(ImagesSet img, CellSetResource res) {
@@ -1469,6 +1472,9 @@ public class CellSetResource
 		
 		final public void run() 
 		{
+			if (is_loading.getAndSet(true)) {
+				return;
+			}
 			try {
 				synchronized (this) {
 					if (!is_loaded) {
@@ -1478,6 +1484,8 @@ public class CellSetResource
 				}
 			} catch (Throwable e) {
 				e.printStackTrace();
+			} finally {
+				is_loading.set(false);
 			}
 		}
 		
