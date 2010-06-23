@@ -1,20 +1,13 @@
 package com.g2d.studio.item.property;
 
 import java.awt.Component;
-import java.util.Vector;
 
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import javax.swing.JList;
 
 import com.cell.rpg.item.ItemPropertyTemplate;
-import com.cell.rpg.item.ItemPropertyTypes;
 import com.g2d.editor.property.ObjectPropertyEdit;
-import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
-import com.g2d.studio.Studio;
 import com.g2d.studio.swing.G2DList;
-import com.g2d.studio.swing.G2DListItem;
 import com.g2d.studio.swing.G2DListSelectDialog;
 
 @SuppressWarnings("serial")

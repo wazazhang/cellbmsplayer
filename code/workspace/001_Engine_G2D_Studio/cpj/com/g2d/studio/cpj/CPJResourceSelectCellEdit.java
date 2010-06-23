@@ -6,7 +6,6 @@ import javax.swing.JLabel;
 
 import com.cell.rpg.display.Node;
 import com.g2d.editor.property.ObjectPropertyEdit;
-import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 
 public class CPJResourceSelectCellEdit<T extends Node> extends JLabel implements PropertyCellEdit<T>

@@ -47,7 +47,6 @@ import com.cell.util.Pair;
 import com.g2d.annotation.Property;
 import com.g2d.editor.property.ListEnumEdit;
 import com.g2d.editor.property.ObjectPropertyEdit;
-import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.ObjectSelectCellEditInteger;

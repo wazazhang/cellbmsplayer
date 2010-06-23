@@ -6,7 +6,6 @@ import java.lang.reflect.Field;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import com.cell.rpg.template.TItem;
-import com.cell.rpg.template.TShopItemList;
 import com.cell.rpg.template.TItemList.UnitDropItems;
 import com.cell.rpg.template.TItemList.UnitDropItems.DropItemNode;
 import com.cell.rpg.template.TItemList.UnitDropItems.DropItems;
@@ -15,7 +14,6 @@ import com.cell.rpg.template.ability.UnitBattleTeam;
 import com.cell.rpg.template.ability.UnitItemDrop;
 import com.cell.rpg.template.ability.UnitItemSell;
 import com.g2d.editor.property.ObjectPropertyEdit;
-import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.dynamic.DItemList;

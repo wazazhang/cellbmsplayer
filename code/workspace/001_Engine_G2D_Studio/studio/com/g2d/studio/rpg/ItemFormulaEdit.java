@@ -2,15 +2,10 @@ package com.g2d.studio.rpg;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -25,7 +20,6 @@ import javax.swing.JToolBar;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import com.cell.rpg.template.ability.ItemFormula;
-import com.g2d.display.ui.UIComponent;
 import com.g2d.editor.property.CellEditAdapter;
 import com.g2d.editor.property.ObjectPropertyEdit;
 import com.g2d.editor.property.PropertyCellEdit;

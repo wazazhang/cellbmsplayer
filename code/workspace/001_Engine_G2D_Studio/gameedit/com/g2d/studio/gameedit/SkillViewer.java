@@ -1,6 +1,7 @@
 package com.g2d.studio.gameedit;
 
 import javax.swing.JScrollPane;
+
 import com.g2d.studio.gameedit.template.XLSSkill;
 
 public class SkillViewer extends XLSObjectViewer<XLSSkill>

@@ -21,7 +21,6 @@ import com.cell.CUtil;
 import com.cell.rpg.template.TItemList.UnitDropItems.DropItemNode;
 import com.cell.rpg.template.TItemList.UnitDropItems.DropItems;
 import com.g2d.editor.property.ObjectPropertyEdit;
-import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.template.XLSItem;

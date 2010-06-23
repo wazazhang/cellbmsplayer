@@ -1,7 +1,5 @@
 package com.g2d.studio.gameedit;
 
-import java.io.File;
-
 import com.cell.rpg.RPGObject;
 import com.g2d.studio.gameedit.dynamic.DynamicNode;
 import com.g2d.studio.gameedit.dynamic.IDynamicIDFactory;

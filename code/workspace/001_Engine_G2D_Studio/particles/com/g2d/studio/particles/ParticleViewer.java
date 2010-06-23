@@ -1,31 +1,21 @@
 package com.g2d.studio.particles;
 
-import java.awt.AlphaComposite;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.EnumSet;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 
-import com.cell.util.EnumManager.ValueEnum;
 import com.g2d.CompositeRule;
-import com.g2d.display.particle.ParticleData;
-import com.g2d.display.particle.ParticleDisplay;
-import com.g2d.display.ui.ComboBox;
 import com.g2d.editor.DisplayObjectPanel;
 import com.g2d.studio.Config;
-import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.EffectEditor;
-import com.g2d.studio.res.Res;
 
 public class ParticleViewer extends JFrame implements ActionListener
 {

@@ -10,7 +10,6 @@ import com.g2d.display.Canvas;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.Stage;
 import com.g2d.display.particle.Layer;
-import com.g2d.display.particle.ParticleData;
 import com.g2d.display.particle.ParticleDisplay;
 import com.g2d.studio.gameedit.EffectEditor;
 

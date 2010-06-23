@@ -1,10 +1,8 @@
 package com.cell.rpg.struct;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import com.cell.rpg.ability.Abilities;
-import com.cell.rpg.ability.AbilitiesList;
 import com.cell.rpg.ability.AbstractAbility;
 import com.cell.rpg.anno.PropertyAdapter;
 import com.cell.rpg.anno.PropertyType;
@@ -85,6 +83,8 @@ public class QuestStateDisplayOR extends ArrayList<QuestStateDisplayOR.State> im
 	@Property("任务状态")
 	public static class State extends AbstractAbility
 	{
+		private static final long serialVersionUID = 1L;
+
 		@Property("只显示在接了某任务")
 		public QuestState 	show_in_quest_state		= QuestState.NA;
 		

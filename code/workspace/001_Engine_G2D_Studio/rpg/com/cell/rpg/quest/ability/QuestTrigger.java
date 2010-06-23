@@ -5,6 +5,7 @@ import com.g2d.annotation.Property;
 
 public class QuestTrigger extends AbstractAbility
 {
+	private static final long serialVersionUID = 1L;
 	@Property("任务ID")
 	public Integer quest_id	= -1;
 	

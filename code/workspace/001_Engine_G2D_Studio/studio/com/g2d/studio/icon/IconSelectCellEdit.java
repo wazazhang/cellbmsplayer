@@ -6,7 +6,6 @@ import java.awt.Window;
 import javax.swing.JLabel;
 
 import com.g2d.editor.property.ObjectPropertyEdit;
-import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 
 public class IconSelectCellEdit extends IconSelectDialog implements PropertyCellEdit<String>

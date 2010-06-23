@@ -27,7 +27,6 @@ import com.cell.rpg.scene.ability.ActorSellItem;
 import com.cell.rpg.scene.ability.ActorSkillTrainer;
 import com.cell.rpg.scene.ability.ActorTalk;
 import com.cell.rpg.scene.ability.ActorTransport;
-import com.cell.rpg.template.ability.UnitItemDrop;
 import com.g2d.annotation.Property;
 import com.g2d.cell.CellSetResource;
 import com.g2d.cell.CellSetResource.SpriteSet;

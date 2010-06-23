@@ -1,10 +1,6 @@
 package com.cell.rpg.template;
 
-import java.util.ArrayList;
-
 import com.cell.rpg.ability.AbstractAbility;
-import com.cell.rpg.template.TItemList.UnitDropItems.DropItemNode;
-import com.cell.rpg.template.TItemList.UnitDropItems.DropItems;
 import com.g2d.annotation.Property;
 
 public class TShopItemList extends TemplateNode 

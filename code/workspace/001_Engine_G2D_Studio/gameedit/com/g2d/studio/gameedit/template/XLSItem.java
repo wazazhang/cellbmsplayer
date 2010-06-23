@@ -11,7 +11,6 @@ import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.ObjectAdapters;
 import com.g2d.studio.gameedit.ObjectViewer;
 import com.g2d.studio.gameedit.XLSObjectViewer;
-import com.g2d.studio.icon.IconFile;
 import com.g2d.studio.res.Res;
 
 final public class XLSItem  extends XLSTemplateNode<TItem>

@@ -1,33 +1,22 @@
 package com.g2d.studio.gameedit;
 
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Vector;
-
-import javax.swing.JButton;
-import javax.swing.JTabbedPane;
-import javax.swing.JToolBar;
 
 import com.cell.rpg.template.TAvatar;
 import com.cell.rpg.template.TEffect;
 import com.cell.rpg.template.TItem;
 import com.cell.rpg.template.TItemList;
-import com.cell.rpg.template.TShopItem;
 import com.cell.rpg.template.TShopItemList;
 import com.cell.rpg.template.TSkill;
 import com.cell.rpg.template.TUnit;
 import com.cell.rpg.template.TemplateNode;
 import com.cell.rpg.xls.XLSColumns;
 import com.cell.rpg.xls.XLSFullRow;
-import com.g2d.Tools;
-import com.g2d.studio.ManagerForm;
 import com.g2d.studio.Studio;
 import com.g2d.studio.Studio.ProgressForm;
 import com.g2d.studio.gameedit.dynamic.DAvatar;
@@ -41,8 +30,6 @@ import com.g2d.studio.gameedit.template.XLSSkill;
 import com.g2d.studio.gameedit.template.XLSTemplateNode;
 import com.g2d.studio.gameedit.template.XLSUnit;
 import com.g2d.studio.res.Res;
-import com.g2d.studio.scene.entity.SceneNode;
-import com.g2d.studio.swing.G2DWindowToolBar;
 
 public class ObjectManager
 {

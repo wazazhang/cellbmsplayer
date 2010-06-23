@@ -6,6 +6,7 @@ import com.g2d.annotation.Property;
 @Property("[单位能力] 飞行管理员")
 public class ActorTransportCraft extends ActorTransport implements IActorAbility
 {
+	private static final long serialVersionUID = 1L;
 	/** NPC闲话  */
 	@Property("NPC闲话")
 	public	String		npc_talk;

@@ -3,14 +3,11 @@ package com.g2d.studio.cpj;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.Vector;
 
-import javax.swing.DefaultListCellRenderer;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -21,25 +18,15 @@ import javax.swing.JSplitPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.tree.DefaultMutableTreeNode;
 
 import com.cell.gfx.IImage;
 import com.cell.gfx.IImages;
-import com.cell.gfx.game.CCD;
-import com.cell.gfx.game.CSprite;
-import com.cell.j2se.CGraphics;
 import com.g2d.Tools;
-import com.g2d.cell.CellSetResource.ImagesSet;
-import com.g2d.studio.Config;
 import com.g2d.studio.Studio;
-import com.g2d.studio.StudioResource;
 import com.g2d.studio.cpj.entity.CPJFile;
-import com.g2d.studio.cpj.entity.CPJImages;
 import com.g2d.studio.cpj.entity.CPJSprite;
-import com.g2d.studio.res.Res;
 import com.g2d.studio.swing.G2DList;
 import com.g2d.studio.swing.G2DListItem;
-import com.g2d.studio.swing.G2DTree;
 import com.g2d.util.AbstractDialog;
 
 public class CPJEffectImageSelectDialog extends AbstractDialog implements ActionListener, ListSelectionListener

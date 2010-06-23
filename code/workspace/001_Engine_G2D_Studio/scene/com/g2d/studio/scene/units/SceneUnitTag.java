@@ -9,7 +9,6 @@ import com.g2d.display.ui.Menu;
 import com.g2d.editor.DisplayObjectEditor;
 import com.g2d.game.rpg.Unit;
 import com.g2d.studio.swing.G2DListItem;
-import com.g2d.util.AbstractFrame;
 
 public interface SceneUnitTag<T extends SceneUnit> extends G2DListItem
 {

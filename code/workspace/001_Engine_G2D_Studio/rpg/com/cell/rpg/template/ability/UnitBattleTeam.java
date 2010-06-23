@@ -5,6 +5,7 @@ import com.cell.rpg.ability.AbstractAbility;
 import com.g2d.annotation.Property;
 
 
+@SuppressWarnings("deprecation")
 @Property("[单位能力] 战斗队伍")
 public class UnitBattleTeam extends AbstractAbility
 {

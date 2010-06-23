@@ -6,10 +6,8 @@ import java.lang.reflect.Field;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import com.cell.rpg.ability.Abilities;
-import com.cell.rpg.ability.AbstractAbility;
 import com.g2d.editor.property.CellEditAdapter;
 import com.g2d.editor.property.ObjectPropertyEdit;
-import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 
 public class AbilityAdapter implements CellEditAdapter<Abilities>

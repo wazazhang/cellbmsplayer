@@ -1,16 +1,9 @@
 package com.cell.rpg.res;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
-import java.util.Map;
 import java.util.concurrent.ThreadPoolExecutor;
 
-import com.cell.j2se.CImage;
-import com.cell.util.zip.ZipUtil;
 import com.g2d.cell.CellSetResource;
-import com.g2d.cell.CellSetResource.ImagesSet;
-import com.g2d.cell.CellSetResource.StreamTiles;
 
 
 public abstract class Resource extends CellSetResource

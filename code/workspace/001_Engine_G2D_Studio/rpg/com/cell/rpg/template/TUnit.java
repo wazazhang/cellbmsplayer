@@ -1,9 +1,6 @@
 package com.cell.rpg.template;
 
-import com.cell.rpg.anno.PropertyAdapter;
-import com.cell.rpg.anno.PropertyType;
 import com.cell.rpg.display.UnitNode;
-import com.cell.rpg.quest.QuestState;
 import com.cell.rpg.struct.QuestStateDisplayOR;
 import com.cell.rpg.template.ability.QuestItemDrop;
 import com.cell.rpg.template.ability.UnitBattleTeam;

@@ -107,13 +107,15 @@ public class QuestItem extends RPGObject implements NamedObject
 	
 //	--------------------------------------------------------------------------------------
 	
-	public static abstract class QuestItemAbility extends AbstractAbility
-	{}
+	public static abstract class QuestItemAbility extends AbstractAbility {
+		private static final long serialVersionUID = 1L;
+	}
 
 //	--------------------------------------------------------------------------------------
 
 	public static abstract class Tag extends QuestItemAbility
 	{
+		private static final long serialVersionUID = 1L;
 		@Property("该标志的布尔条件(默认true)")
 		public BooleanCondition boolean_condition = BooleanCondition.TRUE;
 		
@@ -137,6 +139,7 @@ public class QuestItem extends RPGObject implements NamedObject
 	@Property("[条件] 依赖的物品")
 	final public static class TagItem extends Tag
 	{
+		private static final long serialVersionUID = 1L;
 		@Property("物品-类型")
 		public int				titem_index			= -1;
 		@Property("比较器")
@@ -154,6 +157,7 @@ public class QuestItem extends RPGObject implements NamedObject
 	@Property("[条件] 依赖已完成的任务")
 	final public static class TagQuest extends Tag
 	{
+		private static final long serialVersionUID = 1L;
 		@Property("已完成的任务ID")
 		public int				quest_id	= -1;
 	}
@@ -165,6 +169,7 @@ public class QuestItem extends RPGObject implements NamedObject
 	@Property("[条件] 依赖已完成的任务奖励")
 	final public static class TagQuestItem extends Tag
 	{
+		private static final long serialVersionUID = 1L;
 		@Property("已完成的任务ID")
 		public int				quest_id			= -1;
 		
@@ -179,6 +184,7 @@ public class QuestItem extends RPGObject implements NamedObject
 	@Property({"[条件] 依赖当前的任务状态(杀死敌人数)", "(不能用作接受条件)"})
 	final public static class TagQuestStateKillMonsterComparison extends Tag
 	{
+		private static final long serialVersionUID = 1L;
 		@Property("杀死的单位模板ID")
 		public Integer				kill_unit_id	= -1;
 
@@ -196,6 +202,7 @@ public class QuestItem extends RPGObject implements NamedObject
 	@Property("[条件] 比较条件")
 	public static class TagValueComparison extends Tag
 	{
+		private static final long serialVersionUID = 1L;
 		@Property("原值")
 		public AbstractValue		src_value	= new Value(1);
 		
@@ -212,6 +219,7 @@ public class QuestItem extends RPGObject implements NamedObject
 	@Property("[条件] 每个单位属性")
 	public static class TagEveryUnitComparison extends Tag
 	{
+		private static final long serialVersionUID = 1L;
 		@Property("原单位属性")
 		public TriggerUnitProperty	src_value	= new TriggerUnitProperty();
 		
@@ -224,6 +232,7 @@ public class QuestItem extends RPGObject implements NamedObject
 	@Property("[条件] 每个单位函数")
 	public static class TagEveryUnitMethodComparison extends Tag
 	{
+		private static final long serialVersionUID = 1L;
 		@Property("原单位函数")
 		public TriggerUnitMethod	src_value	= new TriggerUnitMethod();
 		
@@ -237,6 +246,7 @@ public class QuestItem extends RPGObject implements NamedObject
 	@Property("[条件] 至少一个单位属性")
 	public static class TagOneMoreUnitComparison extends Tag
 	{
+		private static final long serialVersionUID = 1L;
 		@Property("原单位属性")
 		public TriggerUnitProperty	src_value	= new TriggerUnitProperty();
 		
@@ -250,6 +260,7 @@ public class QuestItem extends RPGObject implements NamedObject
 	@Property("[条件] 至少一个单位函数")
 	public static class TagOneMoreUnitMethodComparison extends Tag
 	{
+		private static final long serialVersionUID = 1L;
 		@Property("原单位函数")
 		public TriggerUnitMethod	src_value	= new TriggerUnitMethod();
 		
@@ -263,6 +274,7 @@ public class QuestItem extends RPGObject implements NamedObject
 	@Property("[条件] 单位组数量")
 	public static class TagUnitGroupCountComparison extends Tag
 	{
+		private static final long serialVersionUID = 1L;
 		@Property("单位类型")
 		public TriggerUnitType 		group_unit_type	= TriggerUnitType.PET_GROUP;
 		
@@ -276,6 +288,7 @@ public class QuestItem extends RPGObject implements NamedObject
 	@Property({"[条件] 组队人数", "0代表没组队"})
 	public static class TagTeamPlayerCountComparison extends Tag
 	{
+		private static final long serialVersionUID = 1L;
 		@Property("比较器")
 		public Comparison 			comparison		= Comparison.EQUAL;
 		
@@ -287,6 +300,7 @@ public class QuestItem extends RPGObject implements NamedObject
 	
 	public static abstract class Result extends QuestItemAbility
 	{
+		private static final long serialVersionUID = 1L;
 		@Override
 		public boolean isMultiField() {
 			return true;
@@ -301,6 +315,7 @@ public class QuestItem extends RPGObject implements NamedObject
 	@Property("[结果] 奖励物品")
 	final public static class AwardItem extends Result
 	{
+		private static final long serialVersionUID = 1L;
 //		@Property("单位类型")
 //		public TriggerUnitType trigger_unit_type	= TriggerUnitType.PLAYER;
 		@Property("物品-类型")
@@ -314,6 +329,7 @@ public class QuestItem extends RPGObject implements NamedObject
 	@Property("[结果] 强制丢弃物品")
 	final public static class DropItem extends Result
 	{
+		private static final long serialVersionUID = 1L;
 		@Property("物品-类型")
 		public int				titem_index			= -1;
 		@Property("物品-数量")
@@ -328,6 +344,7 @@ public class QuestItem extends RPGObject implements NamedObject
 	@Property("[结果] 传送到某场景")
 	final public static class AwardTeleport extends Result
 	{
+		private static final long serialVersionUID = 1L;
 		@Property("场景ID")
 		public String			scene_id;
 		
@@ -342,6 +359,7 @@ public class QuestItem extends RPGObject implements NamedObject
 	@Property("[结果] 开始战斗")
 	final public static class AwardBattle extends Result
 	{
+		private static final long serialVersionUID = 1L;
 		@Property("和指定单位类型战斗")
 		public Integer			unit_id			= -1;
 	}
@@ -351,6 +369,7 @@ public class QuestItem extends RPGObject implements NamedObject
 	@Property("[结果] 增加单位属性")
 	final public static class AwardAddUnitProperty extends Result
 	{
+		private static final long serialVersionUID = 1L;
 		@Property("原单位属性")
 		public TriggerUnitProperty	src_value	= new TriggerUnitProperty();
 
@@ -361,6 +380,7 @@ public class QuestItem extends RPGObject implements NamedObject
 	@Property("[结果] 设置单位属性")
 	final public static class AwardSetUnitProperty extends Result
 	{
+		private static final long serialVersionUID = 1L;
 		@Property("原单位属性")
 		public TriggerUnitProperty	src_value	= new TriggerUnitProperty();
 
@@ -379,6 +399,7 @@ public class QuestItem extends RPGObject implements NamedObject
 	@Property({"[结果] 加入NPC到队伍", "产生一个NPC并带走"})
 	final public static class AwardSummonNPC extends Result
 	{
+		private static final long serialVersionUID = 1L;
 		@Property("NPC-类型")
 		@PropertyAdapter(PropertyType.UNIT_ID)
 		public int				tunit_index			= -1;
@@ -387,6 +408,7 @@ public class QuestItem extends RPGObject implements NamedObject
 	@Property({"[结果] 踢出NPC从队伍", "用于完成任务时，丢弃掉任务获得的NPC"})
 	final public static class DropQuestNPC extends Result
 	{
+		private static final long serialVersionUID = 1L;
 		@Property("NPC-类型")
 		@PropertyAdapter(PropertyType.UNIT_ID)
 		public int				tunit_index			= -1;
@@ -395,6 +417,7 @@ public class QuestItem extends RPGObject implements NamedObject
 	@Property({"[结果] 踢出指定类型战魂", "用于完成任务时，丢弃掉任务获得的战魂"})
 	final public static class DropQuestServant extends Result
 	{
+		private static final long serialVersionUID = 1L;
 		@Property("战魂-类型")
 		@PropertyAdapter(PropertyType.UNIT_ID)
 		public Integer			unit_id				= -1;
@@ -403,6 +426,7 @@ public class QuestItem extends RPGObject implements NamedObject
 	@Property({"[结果] 清理任务状态", "用于完成任务时，清理掉之前完成的任务状态"})
 	final public static class DropQuest extends Result
 	{
+		private static final long serialVersionUID = 1L;
 		@Property("任务ID")
 		@PropertyAdapter(PropertyType.QUEST_ID)
 		public Integer			quest_id				= -1;

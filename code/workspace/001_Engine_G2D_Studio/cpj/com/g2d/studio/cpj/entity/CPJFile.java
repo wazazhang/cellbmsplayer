@@ -14,7 +14,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeModel;
 
-import com.cell.gfx.game.CSprite;
 import com.g2d.Tools;
 import com.g2d.cell.CellSetResource.SpriteSet;
 import com.g2d.cell.CellSetResource.WorldSet;
