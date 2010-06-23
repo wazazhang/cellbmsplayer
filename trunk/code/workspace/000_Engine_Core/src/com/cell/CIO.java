@@ -420,6 +420,20 @@ public class CIO extends CObject
 	 */
 	public static byte[] readStream(InputStream is, AtomicReference<Float> percent) throws IOException
 	{
+		return readStream(is, percent, Integer.MAX_VALUE);
+	}
+	
+	/**
+	 * 只要InputStream里有数据，
+	 * 该方法都将阻塞，直到available=0，
+	 * 所以该方法不适合读取动态流。
+	 * @param is
+	 * @param percent 预计的进度 0~1
+	 * @param block_size 每次读取的块大小
+	 * @return 
+	 */
+	public static byte[] readStream(InputStream is, AtomicReference<Float> percent, int block_size) throws IOException
+	{
 		if (is != null) {
 			int available = is.available();
 			ByteArrayOutputStream baos = new ByteArrayOutputStream(is.available());
@@ -427,11 +441,16 @@ public class CIO extends CObject
 				byte[]	data	= new byte[available];
 				int		count	= 0;
 				while (count < available) {
-					int actual = is.read(data, count, available - count);
+					int block = Math.min(block_size, available - count);
+					int actual = is.read(data, count, block);
 					if (actual > 0) {
 						baos.write(data, count, actual);
 						count += actual;
 						percent.set(count / (float) available);
+//						try{
+//							Thread.sleep(100);
+//							System.out.println(percent.get());
+//						}catch(Exception err){}
 					} else {
 						break;
 					}
@@ -443,7 +462,7 @@ public class CIO extends CObject
 		}
 		return null;
 	}
-
+	
 //	------------------------------------------------------------------------------------------------------------------------
 
 
