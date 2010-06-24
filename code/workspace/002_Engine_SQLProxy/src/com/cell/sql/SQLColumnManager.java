@@ -306,7 +306,7 @@ public abstract class SQLColumnManager<K, R extends SQLTableRow<K>> extends SQLC
 	 * @param new_value
 	 * @return 如果原值不存在，则返回新值
 	 */
-	public R getIfAbsent(K primary_key, R new_value)
+	public R getIfAbsent(Connection conn, K primary_key, R new_value) throws Exception
 	{
 		data_readLock.lock();
 		try {
@@ -315,6 +315,7 @@ public abstract class SQLColumnManager<K, R extends SQLTableRow<K>> extends SQLC
 				return row;
 			} else if (new_value!=null) {
 				if (primary_key.equals(new_value.getPrimaryKey())) {
+					insertWithDB(row, conn);
 					data_map.put(primary_key, new_value);
 				}
 				return new_value;
