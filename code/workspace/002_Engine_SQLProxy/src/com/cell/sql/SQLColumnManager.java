@@ -301,6 +301,29 @@ public abstract class SQLColumnManager<K, R extends SQLTableRow<K>> extends SQLC
 	}
 	
 	/**
+	 * 根据key值获得对象，如果目标不存在，则将新值插入
+	 * @param primary_key
+	 * @return
+	 */
+	public R putIfAbsent(K primary_key, R new_value)
+	{
+		data_readLock.lock();
+		try {
+			R row = data_map.get(primary_key);
+			if (row != null) {
+				return row;
+			} else {
+				if (primary_key.equals(new_value.getPrimaryKey())) {
+					data_map.put(primary_key, new_value);
+				}
+				return null;
+			}
+		} finally {
+			data_readLock.unlock();
+		}
+	}
+	
+	/**
 	 * 查找指定的对象
 	 * @param finder 重载finder的equals(Object obj)方法获得对象
 	 * @return
