@@ -303,9 +303,10 @@ public abstract class SQLColumnManager<K, R extends SQLTableRow<K>> extends SQLC
 	/**
 	 * 根据key值获得对象，如果目标不存在，则将新值插入
 	 * @param primary_key
+	 * @param new_value
 	 * @return
 	 */
-	public R putIfAbsent(K primary_key, R new_value)
+	public R getAndSetIfAbsent(K primary_key, R new_value)
 	{
 		data_readLock.lock();
 		try {
