@@ -315,7 +315,7 @@ public abstract class SQLColumnManager<K, R extends SQLTableRow<K>> extends SQLC
 				return row;
 			} else if (new_value!=null) {
 				if (primary_key.equals(new_value.getPrimaryKey())) {
-					insertWithDB(row, conn);
+					insertWithDB(new_value, conn);
 					data_map.put(primary_key, new_value);
 				}
 				return new_value;
