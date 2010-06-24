@@ -304,19 +304,21 @@ public abstract class SQLColumnManager<K, R extends SQLTableRow<K>> extends SQLC
 	 * 根据key值获得对象，如果目标不存在，则将新值插入
 	 * @param primary_key
 	 * @param new_value
-	 * @return
+	 * @return 如果原值不存在，则返回新值
 	 */
-	public R getAndSetIfAbsent(K primary_key, R new_value)
+	public R getIfAbsent(K primary_key, R new_value)
 	{
 		data_readLock.lock();
 		try {
 			R row = data_map.get(primary_key);
 			if (row != null) {
 				return row;
-			} else {
+			} else if (new_value!=null) {
 				if (primary_key.equals(new_value.getPrimaryKey())) {
 					data_map.put(primary_key, new_value);
 				}
+				return new_value;
+			} else {
 				return null;
 			}
 		} finally {
