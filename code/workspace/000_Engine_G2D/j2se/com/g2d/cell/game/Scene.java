@@ -104,11 +104,11 @@ public class Scene extends com.g2d.game.rpg.Scene
 		{
 			for (int i=set_world.Sprs.size()-1; i>=0; --i){
 				WorldSet.SpriteObject wspr = set_world.Sprs.elementAt(i);
-				if (!set_resource.isStreamingImages(wspr.ImagesID)){
-					return false;
+				if (set_resource.isStreamingImages(wspr.ImagesID)){
+					return true;
 				}
 			}
-			return true;
+			return false;
 		}
 		
 		public BufferedImage createMiniMap(double width, double height) 
