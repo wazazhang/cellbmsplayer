@@ -113,7 +113,7 @@ public class ListView extends UIComponent
 			addItem(item);
 		}
 	}
-	synchronized public void clearItem(Item<?> child) {
+	synchronized public void clearItem() {
 		for (UIComponent item : panel.container.getComonents()) {
 			removeItem((Item<?>)item);
 		}
