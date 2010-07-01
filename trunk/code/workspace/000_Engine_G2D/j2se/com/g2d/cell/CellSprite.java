@@ -51,32 +51,11 @@ public class CellSprite extends Sprite
 	 */
 	public static AnimateCursor createSpriteCursor(String name, CSprite cspr, int anim)
 	{
-		int frame_count = cspr.getFrameCount(anim);
-
-		Cursor[] cursors = new Cursor[frame_count];
-
-		for (int f = 0; f < frame_count; f++) {
-			BufferedImage img = getFrameSnapshot(cspr, anim, f);
-			CCD bounds = cspr.getFrameBounds(anim, f);
-			Cursor cur = Tools.createCustomCursor(img, 
-					new Point(-bounds.X1, -bounds.Y1), 
-					name + "_" + anim + "_" + f);
-			cursors[f] = cur;
-//			System.out.println(name + "_" + anim + "_" + f);
-		}
-
-		return new AnimateCursor(cursors);
+		return Tools.createSpriteCursor(name, cspr, anim);
 	}
 	
 	public static BufferedImage getFrameSnapshot(CSprite cspr, int anim, int frame)
 	{
-		CCD border = cspr.getFrameBounds(anim, frame);
-		
-		BufferedImage ret = Tools.createImage(border.getWidth(), border.getHeight());
-		Graphics2D g = (Graphics2D)ret.getGraphics();
-		cspr.render(new CGraphics(g), -border.X1, -border.Y1, anim, frame);
-		g.dispose();
-		
-		return ret;
+		return Tools.getFrameSnapshot(cspr, anim, frame);
 	}
 }

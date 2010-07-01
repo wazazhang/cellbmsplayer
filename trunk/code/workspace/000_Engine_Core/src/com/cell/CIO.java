@@ -110,6 +110,7 @@ public class CIO extends CObject
 			}
 			
 		} catch(Exception err) {
+			System.err.println(path);
 			err.printStackTrace();
 		}
 		return null;
@@ -151,6 +152,7 @@ public class CIO extends CObject
 			}
 
 		} catch(Exception err) {
+			System.err.println(path);
 			err.printStackTrace();
 		}
 		return data;
@@ -220,6 +222,7 @@ public class CIO extends CObject
 		try{
 			return new String(CIO.loadData(file), CObject.getEncoding());
 		}catch(Exception err){
+			System.err.println(file);
 			err.printStackTrace();
 			return "";
 		}
@@ -230,6 +233,7 @@ public class CIO extends CObject
 		try{
 			return new String(CIO.loadData(file), encoding);
 		}catch(Exception err){
+			System.err.println(file);
 			err.printStackTrace();
 			return "";
 		}
@@ -248,6 +252,7 @@ public class CIO extends CObject
 			}
 			return ret;
 		}catch(Exception err){
+			System.err.println(file);
 			err.printStackTrace();
 			return new String[]{""};
 		}
@@ -266,6 +271,7 @@ public class CIO extends CObject
 			}
 			return ret;
 		}catch(Exception err){
+			System.err.println(file);
 			err.printStackTrace();
 			return new String[]{""};
 		}
@@ -403,6 +409,7 @@ public class CIO extends CObject
 		try {
 			return new URLInputStream(url, timeOut);
 		} catch (IOException err) {
+			System.err.println(url);
 			err.printStackTrace();
 		}
 		return null;
