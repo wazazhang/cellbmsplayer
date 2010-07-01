@@ -44,6 +44,7 @@ import com.cell.j2se.CGraphics;
 import com.cell.math.MathVector;
 import com.cell.math.TVector;
 import com.cell.math.Vector;
+import com.g2d.display.AnimateCursor;
 import com.g2d.display.ui.text.TextBuilder;
 
 
@@ -153,6 +154,47 @@ public class Tools
 		}
 	}
 
+	/**
+	 * 由指定的精灵，创建一个动画鼠标
+	 * @param cspr
+	 * @return
+	 */
+	public static AnimateCursor createSpriteCursor(String name, CSprite cspr, int anim)
+	{
+		int frame_count = cspr.getFrameCount(anim);
+
+		Cursor[] cursors = new Cursor[frame_count];
+
+		for (int f = 0; f < frame_count; f++) {
+			BufferedImage img = getFrameSnapshot(cspr, anim, f);
+			CCD bounds = cspr.getFrameBounds(anim, f);
+			Cursor cur = Tools.createCustomCursor(img, 
+					new Point(-bounds.X1, -bounds.Y1), 
+					name + "_" + anim + "_" + f);
+			cursors[f] = cur;
+//			System.out.println(name + "_" + anim + "_" + f);
+		}
+
+		return new AnimateCursor(cursors);
+	}
+	
+	public static BufferedImage getFrameSnapshot(CSprite cspr, int anim, int frame)
+	{
+		CCD border = cspr.getFrameBounds(anim, frame);
+		
+		BufferedImage ret = Tools.createImage(border.getWidth(), border.getHeight());
+		Graphics2D g = (Graphics2D)ret.getGraphics();
+		cspr.render(new CGraphics(g), -border.X1, -border.Y1, anim, frame);
+		g.dispose();
+		
+		return ret;
+	}
+	
+
+//	--------------------------------------------------------------------------------
+	
+	
+	
 	public static ImageIcon createIcon(Image image)
 	{
 		ImageIcon icon = new ImageIcon(image);
