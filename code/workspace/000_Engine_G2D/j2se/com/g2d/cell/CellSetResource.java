@@ -56,7 +56,7 @@ public class CellSetResource
 	transient public Hashtable<String, WorldSet>		WorldTable;
 	
 	final transient protected	MarkedHashtable 		resource_manager;
-	final transient private		ThreadPoolService		loading_service;
+	final transient protected	ThreadPoolService		loading_service;
 	
 //	-------------------------------------------------------------------------------------
 	
