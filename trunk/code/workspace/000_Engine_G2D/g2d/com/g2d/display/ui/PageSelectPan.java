@@ -19,6 +19,11 @@ public class PageSelectPan extends PageSelect<com.g2d.display.ui.PageSelectPan.P
 		public Page(String headText) {
 			super(headText);
 		}
+		
+		public Pan getPan() {
+			return pan;
+		}
+		
 		@Override
 		protected UIComponent getPageView() {
 			return pan;
