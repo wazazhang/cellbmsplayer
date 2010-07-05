@@ -67,6 +67,7 @@ public class NetPackageCodec extends MessageHeaderCodec
 							if (data != protocol_start[i]) {
 								// 丢弃掉非法字节//返回true代表这次解包已完成,清空状态并准备下一次解包
 								_log.warn("bad head, drop data : " + data);
+								session.close(false);
 								return true;
 							}
 						}
