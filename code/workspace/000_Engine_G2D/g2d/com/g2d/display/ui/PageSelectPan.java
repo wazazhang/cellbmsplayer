@@ -1,5 +1,7 @@
 package com.g2d.display.ui;
 
+import com.g2d.display.ui.layout.FillContainerLayout;
+
 public class PageSelectPan extends PageSelect<com.g2d.display.ui.PageSelectPan.Page>
 {
 	public PageSelectPan() {
@@ -18,6 +20,7 @@ public class PageSelectPan extends PageSelect<com.g2d.display.ui.PageSelectPan.P
 
 		public Page(String headText) {
 			super(headText);
+			pan.setContainerLayout(new FillContainerLayout());
 		}
 		
 		public Pan getPan() {
