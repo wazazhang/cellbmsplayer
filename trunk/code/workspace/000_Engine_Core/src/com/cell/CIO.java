@@ -310,6 +310,19 @@ public class CIO extends CObject
 		return null;
 	}
 	
+	public static ByteArrayOutputStream copyObject(Object src)
+	{
+		try {
+			ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
+			ObjectOutputStream oos = new ObjectOutputStream(baos);
+			oos.writeObject(src);
+			oos.flush();
+			return baos;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 	
 	public static String getPathDir(String file_path)
 	{
