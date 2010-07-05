@@ -402,7 +402,7 @@ public abstract class UILayoutManager
 				component.setLayout(BlankLayout);
 			}
 			else if (component instanceof PageSelect.Page) {
-				((PageSelectPanel.Page)component).setLayout(PageU, PageD);
+				((PageSelect.Page)component).setLayout(PageU, PageD);
 			}
 			
 			// Panel
