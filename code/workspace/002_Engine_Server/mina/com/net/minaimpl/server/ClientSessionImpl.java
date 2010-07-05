@@ -25,7 +25,7 @@ public class ClientSessionImpl implements ClientSession
 	final protected AbstractServer	Server;
 	protected ClientSessionListener	Listener;
 	
-	public ClientSessionImpl(IoSession session, AbstractServer server){
+	ClientSessionImpl(IoSession session, AbstractServer server){
 		Session = session;
 		Server = server;
 	}
