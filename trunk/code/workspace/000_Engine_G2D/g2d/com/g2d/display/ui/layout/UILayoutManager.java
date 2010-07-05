@@ -16,6 +16,7 @@ import com.g2d.display.ui.ImageBox;
 import com.g2d.display.ui.ImageButton;
 import com.g2d.display.ui.Label;
 import com.g2d.display.ui.MessageBox;
+import com.g2d.display.ui.PageSelect;
 import com.g2d.display.ui.PageSelectPanel;
 import com.g2d.display.ui.Pan;
 import com.g2d.display.ui.Panel;
@@ -397,10 +398,10 @@ public abstract class UILayoutManager
 			}
 			
 			// PageSelectPanel
-			else if (component instanceof PageSelectPanel) {
+			else if (component instanceof PageSelect<?>) {
 				component.setLayout(BlankLayout);
 			}
-			else if (component instanceof PageSelectPanel.Page) {
+			else if (component instanceof PageSelect.Page) {
 				((PageSelectPanel.Page)component).setLayout(PageU, PageD);
 			}
 			
