@@ -252,8 +252,12 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 				SceneNode node = (SceneNode)value;
 				StringBuffer sb = new StringBuffer();
 				sb.append("<html><body>");
-				sb.append("<p>" + node.getName() + "</p>");
-				sb.append("<p style=\"color:#808080\">" + "资源(" + node.getResourceName()+")" + "</p>");
+				sb.append("<p>" + node.getData().getName() + 
+						"(<font color=\"#ff0000\">" + node.getData().getIntID()  + "</font>" + ")</p>");
+				sb.append("<p>" + 
+						"<font color=\"#0000ff\">G" + node.getData().group  + "</font> " +
+						"<font color=\"#808080\">" + "资源(" + node.getResourceName()+")"  + "</font>" +
+						"</p>");
 				sb.append("</body></html>");
 				return sb.toString();
 			}
@@ -266,7 +270,7 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 	{
 		public void mouseClicked(MouseEvent e) {
 			TreePath path = g2d_tree.getPathForLocation(e.getX(), e.getY());			
-			if (path!=null) {
+			if (path != null) {
 				Object click_node = path.getLastPathComponent();
 				if (click_node == g2d_tree.getSelectedNode()) {
 					if (e.getButton() == MouseEvent.BUTTON3) {
