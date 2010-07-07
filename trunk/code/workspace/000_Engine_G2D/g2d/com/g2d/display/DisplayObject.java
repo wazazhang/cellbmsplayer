@@ -33,7 +33,6 @@ import com.g2d.annotation.Property;
 import com.g2d.display.ui.UIComponent;
 import com.g2d.editor.DisplayObjectEditor;
 import com.g2d.editor.UIComponentEditor;
-import com.sun.org.apache.bcel.internal.classfile.Code;
 
 
 /**
