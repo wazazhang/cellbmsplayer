@@ -77,8 +77,7 @@ public class SQLColumn implements ICompare<SQLColumn, SQLColumn>
 					java_object);
 		} catch (Exception err) {
 			log.error("getObject Column field \"" + leaf_field.getName() + "\" error : " + err.getMessage());
-//			throw err;
-			return null;
+			throw err;
 		}
 	}
 	
@@ -94,7 +93,7 @@ public class SQLColumn implements ICompare<SQLColumn, SQLColumn>
 								data));
 			} catch (Exception err) {
 				log.error("setObject Column field \"" + leaf_field.getName() + "\" error : " + err.getMessage());
-//				throw err;
+				throw err;
 			}
 		}
 	}
