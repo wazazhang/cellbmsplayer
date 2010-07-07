@@ -44,8 +44,15 @@ public enum ParticleAppearanceType
 		/** CPJ图片组图片编号*/
 		public int		cpj_image_id;
 
-		transient 
-		public BufferedImage image;
+		private transient BufferedImage image;
+		
+		public void setImage(BufferedImage src) {
+			this.image = src;
+		}
+		
+		public BufferedImage getImage() {
+			return image;
+		}
 		
 		public DisplayNodeImage cloneDisplay() {
 			return this;
@@ -53,8 +60,8 @@ public enum ParticleAppearanceType
 		
 		@Override
 		public void render(Graphics2D g, Layer layer) {
-			if (image != null) {
-				g.drawImage(image, -image.getWidth() >> 1, -image.getHeight() >> 1, null);
+			if (getImage() != null) {
+				g.drawImage(getImage(), -getImage().getWidth() >> 1, -getImage().getHeight() >> 1, null);
 			} else {
 				g.setColor(Color.WHITE);
 				g.drawArc(-2, -2, 4, 4, 0, 360);
