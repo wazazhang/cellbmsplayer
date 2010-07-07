@@ -349,10 +349,10 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 						appearance.cpj_image_id		= ret.index;
 						appearance.cpj_project_name	= ret.parent_name;
 						appearance.cpj_sprite_name	= ret.sprite_name;
-						appearance.image			= ret.getEffectImage();
+						appearance.setImage(ret.getEffectImage());
 						layer.appearance = appearance;
-						if (appearance.image != null) {
-							image_view.setIcon(Tools.createIcon(appearance.image));
+						if (appearance.getImage() != null) {
+							image_view.setIcon(Tools.createIcon(appearance.getImage()));
 						}
 					}
 				}
@@ -370,9 +370,9 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 								appearance.cpj_project_name,
 								appearance.cpj_sprite_name,
 								appearance.cpj_image_id);
-						appearance.image = ret.getEffectImage();
-						if (appearance.image != null) {
-							image_view.setIcon(Tools.createIcon(appearance.image));
+						appearance.setImage(ret.getEffectImage());
+						if (appearance.getImage() != null) {
+							image_view.setIcon(Tools.createIcon(appearance.getImage()));
 						}
 					}
 				}

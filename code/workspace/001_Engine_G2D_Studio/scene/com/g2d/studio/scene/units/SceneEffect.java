@@ -145,13 +145,13 @@ public class SceneEffect extends com.g2d.game.rpg.Unit implements SceneUnitTag<E
 			for (Layer layer : deffect.getData().particles) {
 				if (layer.appearance instanceof DisplayNodeImage) {
 					DisplayNodeImage image = (DisplayNodeImage)layer.appearance;
-					if (image.image == null) {
+					if (image.getImage() == null) {
 						TileImage tile_image = new TileImage(
 								image.cpj_project_name, 
 								image.cpj_sprite_name, 
 								image.cpj_image_id
 								);
-						image.image	= tile_image.getEffectImage();
+						image.setImage(tile_image.getEffectImage());
 					}
 				}
 				else if (layer.appearance instanceof DisplayNodeSprite) {
