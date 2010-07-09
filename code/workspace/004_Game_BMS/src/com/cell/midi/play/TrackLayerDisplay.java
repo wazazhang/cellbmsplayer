@@ -56,13 +56,16 @@ public class TrackLayerDisplay extends Sprite
 			MidiMessage mm = me.getMessage();
 			if (mm instanceof ShortMessage) {
 				ShortMessage sm = (ShortMessage)mm;
-				if ((sm.getCommand() & ShortMessage.NOTE_ON) != 0) {
-					int note = sm.getData1();
-					g.fillRect(
-							(int)(sw*note), 
-							(int)(getHeight() - sh * (me.getTick()-current_tick)), 
-							(int)(sw), 
-							(int)(sh));
+				if ((sm.getCommand() & ShortMessage.NOTE_ON) != 0 && sm.getData2()>0) {
+					int note 		= sm.getData1();
+					int tick_pos	= (int)(me.getTick()-current_tick);
+					if (tick_pos >= 0) {
+						g.fillRect(
+								(int)(sw*note), 
+								(int)(getHeight() - sh * tick_pos), 
+								(int)(sw), 
+								(int)(sh));
+					}
 				}
 				
 //				g.fillRect(
