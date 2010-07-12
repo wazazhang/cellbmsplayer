@@ -18,14 +18,29 @@ public class JSManager
 {
 //	-----------------------------------------------------------------------------------------------
 	
+	/**
+	 * 创建一个脚本接口
+	 * @param <T>
+	 * @param path
+	 * @param type
+	 * @return
+	 */
 	public <T> T getInterface(String path, Class<T> type)
 	{
-		String script 	= CIO.readAllText(path, "UTF-8");
+		String script 	= readString(path);
 		String root   	= CUtil.replaceString(path, "\\", "/");
 		root 			= root.substring(0, path.lastIndexOf('/'));			
 		return getInterface(script, root, type);
 	}
 
+	/**
+	 * 创建一个脚本接口
+	 * @param <T>
+	 * @param script
+	 * @param root
+	 * @param type
+	 * @return
+	 */
 	public <T> T getInterface(String script, String root, Class<T> type)
 	{
 		try {
@@ -47,6 +62,26 @@ public class JSManager
 		return null;
 	}
 	
+	/**
+	 * 可覆盖，从地址读入脚本，子类可以用来缓存资源
+	 * @param path
+	 * @return
+	 */
+	protected String readString(String path)
+	{
+		return CIO.readAllText(path, "UTF-8");
+	}
+	
+	/**
+	 * 查询脚本里所有 importScript(path); 语句，并连接脚本<br>
+	 * 比如：
+	 * importScript(lib/util.js);
+	 * @param vm_engine
+	 * @param root
+	 * @param script
+	 * @return
+	 * @throws ScriptException
+	 */
 	protected String importScript(ScriptEngine vm_engine, String root, String script) throws ScriptException 
 	{
 		HashSet<String> readed_path	= new LinkedHashSet<String>();
@@ -70,7 +105,7 @@ public class JSManager
 							}
 							if (!readed_path.contains(import_path)) {
 								readed_path.add(import_path);
-								lib_js = CIO.readAllText(root + "/" + import_path, "UTF-8");
+								lib_js = readString(root + "/" + import_path);
 								if (lib_js != null) {
 									eval(vm_engine, lib_js);
 								} else {
@@ -93,6 +128,12 @@ public class JSManager
 		return script;
 	}
 	
+	/**
+	 * 编译链接脚本
+	 * @param vm_engine
+	 * @param script
+	 * @throws ScriptException
+	 */
 	protected void eval(ScriptEngine vm_engine, String script) throws ScriptException {
 		if (vm_engine instanceof Compilable) {
 			Compilable 		compilable 	= (Compilable)vm_engine;
