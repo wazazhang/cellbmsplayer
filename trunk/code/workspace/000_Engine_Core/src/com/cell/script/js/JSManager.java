@@ -16,6 +16,18 @@ import com.cell.CUtil;
 
 public class JSManager
 {
+	final protected String script_name;
+	
+//	-----------------------------------------------------------------------------------------------
+	
+	public JSManager(String script_name) {
+		this.script_name = script_name;
+	}
+	
+	public JSManager() {
+		this("JavaScript");
+	}
+
 //	-----------------------------------------------------------------------------------------------
 	
 	/**
@@ -46,7 +58,7 @@ public class JSManager
 		try {
 			// 创建虚拟机
 			ScriptEngineManager vm_sem 		= new ScriptEngineManager();
-			ScriptEngine 		vm_engine 	= vm_sem.getEngineByName("JavaScript");
+			ScriptEngine 		vm_engine 	= vm_sem.getEngineByName(script_name);
 			
 			// 执行脚本
 			script = importScript(vm_engine, root, script);
