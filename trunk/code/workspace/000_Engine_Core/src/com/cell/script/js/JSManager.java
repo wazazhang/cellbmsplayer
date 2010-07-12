@@ -48,7 +48,7 @@ public class JSManager
 		if (vm_engine instanceof Compilable) {
 			Compilable 		compilable 	= (Compilable)vm_engine;
 			CompiledScript 	compiled 	= compilable.compile(script);
-			compiled.eval();
+			compiled.eval(vm_engine.getContext());
 		} else {
 			vm_engine.eval(script);
 		}
