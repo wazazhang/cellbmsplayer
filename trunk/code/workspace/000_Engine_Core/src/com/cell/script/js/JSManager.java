@@ -23,8 +23,11 @@ public class JSManager
 		String script 	= CIO.readAllText(path, "UTF-8");
 		String root   	= CUtil.replaceString(path, "\\", "/");
 		root 			= root.substring(0, path.lastIndexOf('/'));			
-//		script			= importScript(root, script);
+		return getInterface(script, root, type);
+	}
 
+	public <T> T getInterface(String script, String root, Class<T> type)
+	{
 		try {
 			// 创建虚拟机
 			ScriptEngineManager vm_sem 		= new ScriptEngineManager();
@@ -44,20 +47,11 @@ public class JSManager
 		return null;
 	}
 	
-	protected void eval(ScriptEngine vm_engine, String script) throws ScriptException {
-		if (vm_engine instanceof Compilable) {
-			Compilable 		compilable 	= (Compilable)vm_engine;
-			CompiledScript 	compiled 	= compilable.compile(script);
-			compiled.eval(vm_engine.getContext());
-		} else {
-			vm_engine.eval(script);
-		}
-	}
-	
 	protected String importScript(ScriptEngine vm_engine, String root, String script) throws ScriptException 
 	{
-		HashSet<String> readed_path = new LinkedHashSet<String>();
+		HashSet<String> readed_path	= new LinkedHashSet<String>();
 		HashMap<String, String> libs = new HashMap<String, String>();
+		
 		for (int i = 0; i < script.length(); i++) {
 			int start = script.indexOf("importScript", i);
 			if (start >= 0) {
@@ -98,4 +92,18 @@ public class JSManager
 		}
 		return script;
 	}
+	
+	protected void eval(ScriptEngine vm_engine, String script) throws ScriptException {
+		if (vm_engine instanceof Compilable) {
+			Compilable 		compilable 	= (Compilable)vm_engine;
+			CompiledScript 	compiled 	= compilable.compile(script);
+			compiled.eval(vm_engine.getContext());
+		} else {
+			vm_engine.eval(script);
+		}
+	}
+	
+	
+	
+	
 }
