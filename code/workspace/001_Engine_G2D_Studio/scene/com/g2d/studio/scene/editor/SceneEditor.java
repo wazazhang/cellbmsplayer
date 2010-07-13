@@ -18,6 +18,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.util.Set;
 import java.util.Vector;
 
 import javax.swing.ButtonGroup;
@@ -34,6 +35,7 @@ import com.cell.CUtil;
 import com.cell.gfx.game.CSprite;
 import com.cell.rpg.scene.Actor;
 import com.cell.rpg.scene.Region;
+import com.cell.rpg.scene.SceneAbilityManager;
 import com.cell.rpg.scene.SceneUnit;
 import com.cell.sound.util.StaticSoundPlayer;
 import com.g2d.Tools;
@@ -48,6 +50,7 @@ import com.g2d.display.Stage;
 import com.g2d.display.ui.Menu;
 import com.g2d.editor.DisplayObjectEditor;
 import com.g2d.editor.DisplayObjectPanel;
+import com.g2d.editor.property.CellEditAdapter;
 import com.g2d.game.rpg.Unit;
 import com.g2d.studio.Config;
 import com.g2d.studio.Studio;
@@ -55,6 +58,8 @@ import com.g2d.studio.StudioResource;
 import com.g2d.studio.cpj.entity.CPJWorld;
 import com.g2d.studio.gameedit.dynamic.DEffect;
 import com.g2d.studio.res.Res;
+import com.g2d.studio.rpg.AbilityAdapter;
+import com.g2d.studio.rpg.AbilityPanel;
 import com.g2d.studio.rpg.RPGObjectPanel;
 import com.g2d.studio.scene.entity.SceneNode;
 import com.g2d.studio.scene.units.SceneActor;
@@ -303,10 +308,24 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 			scene_container.getWorld().setDebug(tool_show_grid.isSelected());
 		}
 		else if (e.getSource() == tool_edit_prop) {
+			CellEditAdapter<?>[] adapters = new CellEditAdapter[] {
+					new SceneAbilityAdapters.SceneBGMAdapter(),
+			};
+			SceneAbilityManager sam = SceneAbilityManager.getManager();
+			if (sam != null) {
+				Set<CellEditAdapter<?>>	sa = sam.getEditAdapters();
+				if (sa != null) {
+					CellEditAdapter<?> append[] = new CellEditAdapter<?>[sa.size()];
+					append = sa.toArray(append);
+					Vector<CellEditAdapter<?>> vc =  CUtil.linkv(adapters, append);
+					adapters = vc.toArray(new CellEditAdapter[vc.size()]);
+				}
+			}
 			DisplayObjectEditor<SceneContainer> editor = new DisplayObjectEditor<SceneContainer>(
 					scene_container,
-					new RPGObjectPanel(scene_node.getData(), 
-							new SceneAbilityAdapters.SceneBGMAdapter()));
+					new RPGObjectPanel(scene_node.getData(), adapters),
+					new AbilityPanel(scene_node.getData(), adapters)
+			);
 			editor.setCenter();
 			editor.setVisible(true);
 		}

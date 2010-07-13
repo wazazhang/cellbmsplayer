@@ -59,13 +59,14 @@ public class Scene extends RPGObject implements NamedObject
 	
 	@Override
 	public Class<?>[] getSubAbilityTypes() {
-		SceneAbilityManager m = SceneAbilityManager.getManager();
-		if (m != null) {
-			Set<Class<?>> set = m.getAllTypes();
-			return set.toArray(new Class<?>[set.size()]);
-		} else {
-			return null;
+		SceneAbilityManager sam = SceneAbilityManager.getManager();
+		if (sam != null) {
+			Set<Class<?>> set = sam.getAllTypes();
+			if (set != null) {
+				return set.toArray(new Class<?>[set.size()]);
+			}
 		}
+		return null;
 	}
 
 //	------------------------------------------------------------------------------------------------------------------
