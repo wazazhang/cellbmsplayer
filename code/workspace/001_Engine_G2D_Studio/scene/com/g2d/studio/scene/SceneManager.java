@@ -23,10 +23,14 @@ import javax.swing.tree.TreePath;
 import com.cell.CIO;
 import com.cell.rpg.NamedObject;
 import com.cell.rpg.io.RPGObjectMap;
+import com.cell.rpg.item.ItemPropertyManager;
+import com.cell.rpg.item.ItemPropertyTypes;
 import com.cell.rpg.scene.Scene;
+import com.cell.rpg.scene.SceneAbilityManager;
 import com.cell.rpg.scene.graph.SceneGraph;
 import com.cell.util.IDFactoryInteger;
 import com.g2d.Tools;
+import com.g2d.studio.Config;
 import com.g2d.studio.Studio;
 import com.g2d.studio.Studio.ProgressForm;
 import com.g2d.studio.cpj.CPJResourceSelectDialog;
@@ -67,6 +71,15 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 	public SceneManager(Studio studio, ProgressForm progress)
 	{
 		super(new BorderLayout());
+		
+		try {
+			Class<?> cls = Class.forName(Config.DYNAMIC_SCENE_ABILITY_MANAGER_CLASS);
+			SceneAbilityManager manager = (SceneAbilityManager)cls.newInstance();
+			SceneAbilityManager.setManager(manager);
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		
 		progress.startReadBlock("初始化场景...");
 		instance = this;
 		this.scene_dir	= new File(studio.project_save_path, "scenes");
