@@ -53,6 +53,8 @@ public class Config extends com.cell.util.Config
 	public static String DYNAMIC_QUEST_PET_CLASS;
 	/**与TriggerUnitMethod映射的类型NPC*/
 	public static String DYNAMIC_QUEST_NPC_CLASS;
+	/**场景能力属性管理器*/
+	public static String DYNAMIC_SCENE_ABILITY_MANAGER_CLASS;
 	
 	/**XML持久化工具*/
 	public static String PERSISTANCE_MANAGER		= "com.cell.xstream.XStreamAdapter";

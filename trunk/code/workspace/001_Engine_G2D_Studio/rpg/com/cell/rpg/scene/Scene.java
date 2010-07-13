@@ -1,5 +1,6 @@
 package com.cell.rpg.scene;
 
+import java.util.Set;
 import java.util.Vector;
 
 import com.cell.rpg.NamedObject;
@@ -58,7 +59,15 @@ public class Scene extends RPGObject implements NamedObject
 	
 	@Override
 	public Class<?>[] getSubAbilityTypes() {
-		return null;
+		SceneAbilityManager m = SceneAbilityManager.getManager();
+		if (m != null) {
+			Set<Class<?>> set = m.getAllTypes();
+			return set.toArray(new Class<?>[set.size()]);
+		} else {
+			return null;
+		}
 	}
+
+//	------------------------------------------------------------------------------------------------------------------
 	
 }
