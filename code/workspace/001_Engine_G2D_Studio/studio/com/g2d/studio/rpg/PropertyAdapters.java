@@ -17,6 +17,8 @@ import com.g2d.studio.gameedit.template.XLSTemplateNode;
 import com.g2d.studio.gameedit.template.XLSUnit;
 import com.g2d.studio.quest.QuestNode;
 import com.g2d.studio.quest.QuestSelectCellEdit;
+import com.g2d.studio.scene.editor.SceneListCellEditInteger;
+import com.g2d.studio.scene.entity.SceneNode;
 
 public class PropertyAdapters
 {
@@ -50,6 +52,8 @@ public class PropertyAdapters
 						QuestSelectCellEdit dialog = new QuestSelectCellEdit(owner.getComponent(), false);
 						dialog.showDialog();
 						return dialog;
+					case SCENE_ID:
+						return new SceneListCellEditInteger();
 					}
 				}
 			}catch(Exception err){
@@ -103,6 +107,15 @@ public class PropertyAdapters
 						}
 						break;
 					}
+					case SCENE_ID: {
+						SceneNode node = Studio.getInstance().getSceneManager().getSceneNode((Integer) fieldValue);
+						if (node != null) {
+							src.setText(node.getName());
+							src.setIcon(node.getIcon(false));
+						}
+						break;
+					}
+					
 					}
 				}
 			} catch (Exception err) {

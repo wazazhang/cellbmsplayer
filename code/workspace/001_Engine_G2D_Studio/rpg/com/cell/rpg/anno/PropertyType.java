@@ -7,6 +7,7 @@ public enum PropertyType
 	ITEM_ID,
 	QUEST_ID,
 	ITEM_LIST_ID,
+	SCENE_ID,
 	;
 	
 	
