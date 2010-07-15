@@ -7,6 +7,7 @@ import java.util.LinkedHashSet;
 import javax.script.Compilable;
 import javax.script.CompiledScript;
 import javax.script.Invocable;
+import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
@@ -17,17 +18,28 @@ import com.cell.CUtil;
 public class JSManager
 {
 	final protected String script_name;
+
+	final protected ScriptEngineManager vm_sem;
 	
 //	-----------------------------------------------------------------------------------------------
-	
-	public JSManager(String script_name) {
-		this.script_name = script_name;
-	}
-	
+
 	public JSManager() {
 		this("JavaScript");
 	}
+	
+	public JSManager(String script_name) {
+		this("JavaScript", Thread.currentThread().getContextClassLoader());
+	}
 
+	public JSManager(ClassLoader class_loader) {
+		this("JavaScript", class_loader);
+	}
+	
+	public JSManager(String script_name, ClassLoader class_loader) {
+		this.script_name 	= script_name;
+		this.vm_sem 		= new ScriptEngineManager(class_loader);
+	}
+	
 //	-----------------------------------------------------------------------------------------------
 	
 	/**
@@ -57,9 +69,9 @@ public class JSManager
 	{
 		try {
 			// 创建虚拟机
-			ScriptEngineManager vm_sem 		= new ScriptEngineManager();
-			ScriptEngine 		vm_engine 	= vm_sem.getEngineByName(script_name);
-			
+			ScriptEngine vm_engine = vm_sem.getEngineByName(script_name);
+			vm_engine.setBindings(vm_sem.getBindings(), ScriptContext.GLOBAL_SCOPE);
+			System.out.println("create script engine : " + script_name + " : " + vm_engine);
 			// 执行脚本
 			script = importScript(vm_engine, root, script);
 			eval(vm_engine, script);
