@@ -70,7 +70,6 @@ public class JSManager
 		try {
 			// 创建虚拟机
 			ScriptEngine vm_engine = vm_sem.getEngineByName(script_name);
-			vm_engine.setBindings(vm_sem.getBindings(), ScriptContext.GLOBAL_SCOPE);
 			System.out.println("create script engine : " + script_name + " : " + vm_engine);
 			// 执行脚本
 			script = importScript(vm_engine, root, script);
