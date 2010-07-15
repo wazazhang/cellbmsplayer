@@ -202,6 +202,8 @@ public class JarClassLoader extends ClassLoader
 			String 			key,
 			boolean 		is_sign_class) throws Throwable
 	{
+		super(class_loader);
+		
 		resources = dds(resources, key);
 
 		HashMap<String, byte[]> natives		= new HashMap<String, byte[]>();
@@ -290,6 +292,7 @@ public class JarClassLoader extends ClassLoader
 	public Class<?> findClass(String className) throws ClassNotFoundException 
 	{
 		try{
+			
 			Class clazz = this.findLoadedClass(className);
 			if (null == clazz) {
 				byte[] bytes = Classes.get(className);
