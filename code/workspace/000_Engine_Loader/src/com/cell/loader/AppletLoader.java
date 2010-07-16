@@ -53,11 +53,15 @@ public class AppletLoader extends JarAppletLoader
 	String 			l_applet;
 	Object 			applet_obj;
 	JApplet 		applet_game = null;
+
+	String			dk;
 	
 	@Override
 	protected void onTaskInit()
 	{
-		l_applet = getParameter("l_applet");
+		l_applet	= getParameter("l_applet");
+		dk			= LoadTask.getVK(getClass().getResourceAsStream("vk.enc"));
+
 	}
 	
 	@Override
@@ -65,7 +69,7 @@ public class AppletLoader extends JarAppletLoader
 	{
 		ClassLoader			old_class_loader	= Thread.currentThread().getContextClassLoader();
 		JarClassLoader		jar_class_loader	= JarClassLoader.createJarClassLoader(
-				old_class_loader, datas, getDecodeKey(), true);
+				old_class_loader, datas, dk, true);
 		Thread.currentThread().setContextClassLoader(jar_class_loader);
 		System.out.println("Class loader changed : " + 
 				old_class_loader.getClass().getName() + " -> " + 

@@ -73,12 +73,6 @@ public abstract class JarAppletLoader extends JApplet implements LoadTaskListene
 	private PaintTask 		paint_task;
 	private LoadTask 		load_task;
 
-	private String			dk;
-	
-	final protected String getDecodeKey() {
-		return dk;
-	}
-
 	final protected String getParameter(String name, String default_value) {
 		String ret = super.getParameter(name);
 		if (ret==null) {
@@ -91,8 +85,6 @@ public abstract class JarAppletLoader extends JApplet implements LoadTaskListene
 	{
 		try
 		{
-			dk = LoadTask.getVK(getClass().getResourceAsStream("vk.enc"));
-			
 			paint_task = new PaintTask(this);
 			
 			root_dir 			= new URL(getCodeBase().toString());
