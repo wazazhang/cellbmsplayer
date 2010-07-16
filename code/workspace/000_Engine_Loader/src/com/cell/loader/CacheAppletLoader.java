@@ -41,8 +41,11 @@ public class CacheAppletLoader extends JarAppletLoader
 		JSObject win 		= JSObject.getWindow(this); 
 		// 访问JavaScript对象
 		JSObject doc 		= (JSObject) win.getMember("document"); 
+		System.out.println("---------call window method---------");
+		System.out.println(l_method);
 		win.eval(l_method);
-
+		System.out.println("close current applet!");
+		Runtime.getRuntime().exit(0);
 	}
 
 }
