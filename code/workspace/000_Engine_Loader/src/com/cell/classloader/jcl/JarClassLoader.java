@@ -202,7 +202,7 @@ public class JarClassLoader extends ClassLoader
 			String 			key,
 			boolean 		is_sign_class) throws Throwable
 	{
-		super(class_loader);
+//		super(class_loader);
 		
 		resources = dds(resources, key);
 
