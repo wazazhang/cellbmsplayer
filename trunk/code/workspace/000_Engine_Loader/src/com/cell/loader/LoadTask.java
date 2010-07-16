@@ -58,11 +58,12 @@ public class LoadTask extends Thread
 	{
 		for (int i=0; i<LoadRetryTime; i++) 
 		{
+			InputStream	is = null;
 			try
 			{
-				InputStream	is		= c.getInputStream();
-				int 		len		= c.getContentLength();
-				byte[]		data	= new byte[len];
+				is = c.getInputStream();
+				int len = c.getContentLength();
+				byte[] data = new byte[len];
 				
 				if (len > 0) {
 					int actual = 0;
@@ -75,12 +76,19 @@ public class LoadTask extends Thread
 						}
 					}
 				}
-				is.close();
 				return data;
 			}
 			catch (Throwable e) {
 				e.printStackTrace();
 				System.err.println("loadURL error, retry " + (i+1) + "/" + LoadRetryTime);
+			}
+			finally {
+				try {
+					if (is != null) {
+						is.close();
+					}
+				} catch (Exception err) {
+				}
 			}
 		}
 		
