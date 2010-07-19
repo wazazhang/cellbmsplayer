@@ -3,6 +3,7 @@ package com.cell.rpg.ability;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 
+import com.cell.CUtil;
 import com.g2d.editor.property.Util;
 
 /**
@@ -10,7 +11,7 @@ import com.g2d.editor.property.Util;
  * @author WAZA
  *
  */
-public abstract class AbstractAbility implements Serializable
+public abstract class AbstractAbility implements Serializable, Comparable<AbstractAbility>
 {
 	private static final long serialVersionUID = 1L;
 
@@ -26,6 +27,11 @@ public abstract class AbstractAbility implements Serializable
 	}
 	
 //	----------------------------------------------------------------------------------------------------------------
+	
+	@Override
+	public int compareTo(AbstractAbility o) {
+		return CUtil.getStringCompare().compare(o.toString(), this.toString());
+	}
 	
 //	protected Object writeReplace() throws ObjectStreamException {
 //		return this;

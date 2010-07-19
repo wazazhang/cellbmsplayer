@@ -3,6 +3,7 @@ package com.cell.rpg.ability;
 import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Vector;
 
 import com.cell.rpg.RPGConfig;
@@ -61,7 +62,9 @@ public class AbilitiesVector implements Abilities, Serializable
 			}
 			return static_abilities;
 		}
-		return abilities.toArray(new AbstractAbility[abilities.size()]);
+		AbstractAbility[] abilities_data = abilities.toArray(new AbstractAbility[abilities.size()]);
+		Arrays.sort(abilities_data);
+		return abilities_data;
 	}
 
 	@SuppressWarnings("unchecked")
