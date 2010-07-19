@@ -10,6 +10,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
@@ -23,6 +25,7 @@ import javax.swing.JToolBar;
 import javax.swing.ListCellRenderer;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import com.cell.CUtil;
 import com.cell.rpg.ability.Abilities;
 import com.cell.rpg.ability.AbstractAbility;
 import com.g2d.editor.property.CellEditAdapter;
@@ -192,12 +195,14 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 	
 
 //	-----------------------------------------------------------------------------------------------------------------------------
-
+	
+	
+	
 	/**
 	 * 添加能力时弹出的框
 	 * @author WAZA
 	 */
-	final class AddAbilityForm extends AbstractDialog implements ListCellRenderer, ActionListener
+	final class AddAbilityForm extends AbstractDialog implements ListCellRenderer, ActionListener, Comparator<Class<?>>
 	{
 		private static final long serialVersionUID = 1L;
 		
@@ -214,7 +219,9 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 			super.setLayout(new BorderLayout());
 			this.setIconImage(Res.icon_edit);
 			{
-				combo_abilities = new JComboBox(abilities.getSubAbilityTypes());
+				Class<?>[] types_data = abilities.getSubAbilityTypes();
+				Arrays.sort(types_data, this);
+				combo_abilities = new JComboBox(types_data);
 				combo_abilities.setRenderer(this);
 				combo_abilities.addActionListener(this);
 				this.add(combo_abilities, BorderLayout.NORTH);
@@ -237,6 +244,11 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 				this.add(south, BorderLayout.SOUTH);
 			}
 			combo_abilities.setSelectedIndex(0);
+		}
+		
+		@Override
+		public int compare(Class<?> o1, Class<?> o2) {
+			return CUtil.getStringCompare().compare(AbstractAbility.getEditName(o2), AbstractAbility.getEditName(o1));
 		}
 		
 		@SuppressWarnings("unchecked")

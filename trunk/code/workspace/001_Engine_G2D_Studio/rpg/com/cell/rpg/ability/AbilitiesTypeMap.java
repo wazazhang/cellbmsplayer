@@ -2,6 +2,7 @@ package com.cell.rpg.ability;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 
 import com.cell.rpg.RPGConfig;
@@ -45,7 +46,9 @@ public abstract class AbilitiesTypeMap implements Abilities, Serializable
 			}
 			return static_abilities;
 		}
-		return type_map.values().toArray(new AbstractAbility[type_map.size()]);
+		AbstractAbility[] abilities_data = type_map.values().toArray(new AbstractAbility[type_map.size()]);
+		Arrays.sort(abilities_data);
+		return abilities_data;
 	}
 
 	@Override

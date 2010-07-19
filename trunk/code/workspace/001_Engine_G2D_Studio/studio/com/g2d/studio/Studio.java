@@ -24,6 +24,7 @@ import com.cell.CObject;
 import com.cell.io.CFile;
 import com.cell.j2se.CAppBridge;
 import com.cell.j2se.CStorage;
+import com.cell.rpg.RPGConfig;
 import com.cell.rpg.io.RPGObjectMap;
 import com.cell.sound.IPlayer;
 import com.cell.sound.ISound;
@@ -111,7 +112,8 @@ public class Studio extends AbstractFrame
 		project_save_path	= new File				(project_file.getPath()+".save");
 		
 		Config.load(Config.class, g2d_file);
-
+		
+		RPGConfig.IS_EDIT_MODE = true;
 		RPGObjectMap.setPersistanceManagerDriver	(Config.PERSISTANCE_MANAGER);
 		SQMTypeManager.setTypeComparer				(Config.PERSISTANCE_SQL_TYPE);
 		Builder.setBuilder							(Config.BUILDER_CLASS);

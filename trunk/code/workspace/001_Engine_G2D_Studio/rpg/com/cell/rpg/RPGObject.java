@@ -1,6 +1,7 @@
 package com.cell.rpg;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Vector;
 
 import com.cell.CUtil;
@@ -84,7 +85,9 @@ public abstract class RPGObject extends DObject implements Abilities, ZipNode, R
 			}
 			return static_abilities;
 		}
-		return abilities.toArray(new AbstractAbility[abilities.size()]);
+		AbstractAbility[] abilities_data = abilities.toArray(new AbstractAbility[abilities.size()]);
+		Arrays.sort(abilities_data);
+		return abilities_data;
 	}
 
 	public <T> T getAbility(Class<T> type) {
