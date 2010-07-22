@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.awt.font.LineBreakMeasurer;
 import java.awt.font.TextAttribute;
 import java.awt.font.TextLayout;
 import java.awt.geom.AffineTransform;
@@ -19,6 +20,7 @@ import com.cell.CMath;
 import com.cell.gfx.AScreen;
 import com.cell.gfx.IGraphics;
 import com.cell.gfx.IImage;
+
 
 public class CGraphics implements IGraphics 
 {
@@ -338,42 +340,78 @@ public class CGraphics implements IGraphics
 
 	public String[] getStringLines(String text, int w, int[] out_para)
 	{
-		try
+		try 
 		{
-			// calc new text space
-			char ret = '\n';
-			char chars[] = text.toCharArray();
-			int prewPos = 0;
+			AttributedString atext = new AttributedString(text);
+			atext.addAttribute(TextAttribute.FONT, m_graphics2d.getFont(), 0, text.length());
+			atext.addAttribute(TextAttribute.SIZE, m_graphics2d.getFont(), 0, text.length());
+			
 			Vector<String> lines = new Vector<String>();
-			
-			for(int i=0;i<chars.length;i++){
-				if(chars[i]==ret){
-					lines.addElement(new String(chars,prewPos,i-prewPos+1));
-					prewPos = i + 1;
-					continue;
+			LineBreakMeasurer textMeasurer = new LineBreakMeasurer(
+					atext.getIterator(),
+					m_graphics2d.getFontRenderContext());
+
+			while (
+				textMeasurer.getPosition() >= 0 && 
+				textMeasurer.getPosition() < text.length())
+			{
+				int curr_pos = textMeasurer.getPosition();
+				int next_pos = curr_pos;
+				int limit = text.indexOf('\n', curr_pos);
+				if (limit >= curr_pos) {
+					next_pos = textMeasurer.nextOffset(w, limit + 1, false);
+				} else {
+					next_pos = textMeasurer.nextOffset(w);
 				}
-				if (getStringWidth(new String(chars,prewPos,i-prewPos+1)) > w){
-					lines.addElement(new String(chars,prewPos,i-prewPos+0));
-					prewPos = i + 0;
-					continue;
-				}
-				if(i==chars.length-1){
-					lines.addElement(new String(chars,prewPos,chars.length - prewPos));
-					break;
-				}
+				lines.addElement(text.substring(curr_pos, next_pos));
+				textMeasurer.setPosition(next_pos);
 			}
-			
-			String[] texts = new String[lines.size()];
-			lines.copyInto(texts);
-			lines = null;
-			
-			return texts;
-		}
-		catch(Exception err)
+
+			return lines.toArray(new String[lines.size()]);
+		} 
+		catch (Throwable err)
 		{
 			err.printStackTrace();
 			return new String[]{"(Error !)"};
 		}
+		
+		
+//		try
+//		{
+//			// calc new text space
+//			char ret = '\n';
+//			char chars[] = text.toCharArray();
+//			int prewPos = 0;
+//			Vector<String> lines = new Vector<String>();
+//			
+//			for(int i=0;i<chars.length;i++){
+//				if(chars[i]==ret){
+//					lines.addElement(new String(chars,prewPos,i-prewPos+1));
+//					prewPos = i + 1;
+//					continue;
+//				}
+//				if (getStringWidth(new String(chars,prewPos,i-prewPos+1)) > w){
+//					lines.addElement(new String(chars,prewPos,i-prewPos+0));
+//					prewPos = i + 0;
+//					continue;
+//				}
+//				if(i==chars.length-1){
+//					lines.addElement(new String(chars,prewPos,chars.length - prewPos));
+//					break;
+//				}
+//			}
+//			
+//			String[] texts = new String[lines.size()];
+//			lines.copyInto(texts);
+//			lines = null;
+//			
+//			return texts;
+//		}
+//		catch(Exception err)
+//		{
+//			err.printStackTrace();
+//			return new String[]{"(Error !)"};
+//		}
 	}
 	
 	
@@ -431,19 +469,19 @@ public class CGraphics implements IGraphics
 	
 	class CStringLayer implements StringLayer
 	{
-		final String Src;
-		final AttributedString AString;
-		final AttributedCharacterIterator AChars;
-		final StringAttribute[] Attributes;
-		final TextLayout Layout;
-		final int W, H; 
-		final private float ascent;
+		final String 						Src;
+		final AttributedString 				AString;
+		final AttributedCharacterIterator 	AChars;
+		final StringAttribute[] 			Attributes;
+		final TextLayout 					Layout;
+		final int 							W, H; 
+		final private float 				ascent;
 		
 		CStringLayer(String text, StringAttribute[] attributes)
 		{
-			Src = text;
-			AString = new AttributedString(text);
-			Attributes = attributes;
+			Src 		= text;
+			AString 	= new AttributedString(text);
+			Attributes 	= attributes;
 			
 			if (text.length()>0)
 			{
@@ -552,48 +590,82 @@ public class CGraphics implements IGraphics
 		
 		public StringLayer[] getStringLines(int w, int[] out_para)
 		{
-			try
+			try 
 			{
-				// calc new text space
-				char ret = '\n';
-				char chars[] = Src.toCharArray();
-				int prewPos = 0;
 				Vector<StringLayer> lines = new Vector<StringLayer>();
-				
-				for(int i=0;i<chars.length;i++){
-					if(chars[i]==ret){
-						if (prewPos < i+1) {
-							lines.addElement(new CStringLayer(this, prewPos, i+1));
-						}
-						prewPos = i + 1;
-						continue;
+				LineBreakMeasurer textMeasurer = new LineBreakMeasurer(
+						AString.getIterator(),
+						m_graphics2d.getFontRenderContext());
+	
+				while (
+					textMeasurer.getPosition() >= 0 && 
+					textMeasurer.getPosition() < Src.length())
+				{
+					int curr_pos = textMeasurer.getPosition();
+					int next_pos = curr_pos;
+					int limit = Src.indexOf('\n', curr_pos);
+					if (limit >= curr_pos) {
+						next_pos = textMeasurer.nextOffset(w, limit + 1, false);
+					} else {
+						next_pos = textMeasurer.nextOffset(w);
 					}
-					else if (getStringWidth(new String(chars, prewPos, i-prewPos+1)) > w){
-						if (prewPos<i) {
-							lines.addElement(new CStringLayer(this, prewPos, i));
-						}
-						prewPos = i + 0;
-						continue;
-					}
-					else if(i==chars.length-1){
-						if (prewPos < chars.length) {
-							lines.addElement(new CStringLayer(this, prewPos, chars.length));
-						}
-						break;
-					}
+					lines.addElement(new CStringLayer(this, curr_pos, next_pos));
+					textMeasurer.setPosition(next_pos);
 				}
-				
-				StringLayer[] texts = new StringLayer[lines.size()];
-				lines.copyInto(texts);
-				lines = null;
-				
-				return texts;
-			}
-			catch(Exception err)
+
+				return lines.toArray(new StringLayer[lines.size()]);
+			} 
+			catch (Throwable err)
 			{
 				err.printStackTrace();
 				return new CStringLayer[]{new CStringLayer("(Error !)", null)};
 			}
+			
+			
+//			try
+//			{
+//				// calc new text space
+//				char ret = '\n';
+//				char chars[] = Src.toCharArray();
+//				int prewPos = 0;
+//				Vector<StringLayer> lines = new Vector<StringLayer>();
+//				
+//				for (int i = 0; i < chars.length; i++) {
+//					if (chars[i] == ret) {
+//						if (prewPos < i+1) {
+//							lines.addElement(new CStringLayer(this, prewPos, i+1));
+//						}
+//						prewPos = i + 1;
+//						continue;
+//					}
+//					else if (getStringWidth(new String(chars, prewPos, i - prewPos + 1)) > w) {
+//						if (prewPos < i) {
+//							lines.addElement(new CStringLayer(this, prewPos, i));
+//						}
+//						prewPos = i + 0;
+//						continue;
+//					}
+//					else if (i == chars.length - 1) {
+//						if (prewPos < chars.length) {
+//							lines.addElement(new CStringLayer(this, prewPos, chars.length));
+//						}
+//						break;
+//					}
+//				}
+//				
+//				StringLayer[] texts = new StringLayer[lines.size()];
+//				lines.copyInto(texts);
+//				lines = null;
+//				
+//				return texts;
+//			}
+//			catch(Exception err)
+//			{
+//				err.printStackTrace();
+//				return new CStringLayer[]{new CStringLayer("(Error !)", null)};
+//			}
+			
+			
 		}
 		
 
