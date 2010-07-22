@@ -53,8 +53,6 @@ public class ObjectPropertyRowPanel<T> extends BaseObjectPropertyPanel
 	/** 剪贴板共享数据 */
 	private static transient Object copy_field_data;
 
-	
-	
 	final private Class<? extends T>data_type;
 	final private Field[]			column_fields;
 	final private ArrayList<T> 		datas;

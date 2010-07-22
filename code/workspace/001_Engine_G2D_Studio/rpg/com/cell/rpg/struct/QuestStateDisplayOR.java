@@ -20,7 +20,9 @@ public class QuestStateDisplayOR extends ArrayList<QuestStateDisplayOR.State> im
 	@Property("对所有或取反")
 	public boolean all_not = false;
 	
-	
+
+//	--------------------------------------------------------------------------------------------------------
+
 	@Override
 	public void addAbility(AbstractAbility element) {
 		if (element instanceof State) {
@@ -75,9 +77,16 @@ public class QuestStateDisplayOR extends ArrayList<QuestStateDisplayOR.State> im
 	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
-		for (State st : this) {
-			sb.append("[" + st.show_in_quest_state.toTinyString() + "," + st.show_in_quest_id + "] or ");
-		}sb.append(" [true]");
+		if (all_not) {
+			sb.append("[all_not] ");
+		}
+		for (int i=0; i<this.size(); i++) {
+			State st = this.get(i);
+			sb.append("[" + st.show_in_quest_state.toTinyString() + "," + st.show_in_quest_id + "]");
+			if (i < this.size() - 1) {
+				sb.append(" or ");
+			}
+		}
 		return sb.toString();
 	}
 	
