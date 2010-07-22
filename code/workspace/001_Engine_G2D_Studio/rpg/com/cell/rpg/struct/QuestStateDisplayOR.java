@@ -14,8 +14,12 @@ import com.g2d.annotation.Property;
 public class QuestStateDisplayOR extends ArrayList<QuestStateDisplayOR.State> implements Abilities
 {
 	private static final long serialVersionUID = 1L;
-
+	
 //	--------------------------------------------------------------------------------------------------------
+
+	@Property("对所有或取反")
+	public boolean all_not = false;
+	
 	
 	@Override
 	public void addAbility(AbstractAbility element) {
@@ -72,8 +76,8 @@ public class QuestStateDisplayOR extends ArrayList<QuestStateDisplayOR.State> im
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 		for (State st : this) {
-			sb.append("[" + st.show_in_quest_state.toTinyString() + "," + st.show_in_quest_id + "],");
-		}
+			sb.append("[" + st.show_in_quest_state.toTinyString() + "," + st.show_in_quest_id + "] or ");
+		}sb.append(" [true]");
 		return sb.toString();
 	}
 	
