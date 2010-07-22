@@ -30,6 +30,7 @@ import com.cell.rpg.ability.Abilities;
 import com.cell.rpg.ability.AbstractAbility;
 import com.g2d.editor.property.CellEditAdapter;
 import com.g2d.editor.property.ObjectPropertyEdit;
+import com.g2d.editor.property.ObjectPropertyForm;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.res.Res;
@@ -53,6 +54,7 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 	JList 				list_cur_ability 	= new JList();
 	JButton 			btn_add_ability 	= new JButton("添加能力");
 	JButton 			btn_del_ability 	= new JButton("删除能力");
+	JButton 			btn_self		 	= new JButton("自有属性");
 	
 	JSplitPane 			split 				= new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 	JPanel 				left 				= new JPanel(new BorderLayout());
@@ -83,8 +85,11 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 				JToolBar bpan = new JToolBar();
 				this.btn_add_ability.addActionListener(this);
 				this.btn_del_ability.addActionListener(this);
+				this.btn_self.addActionListener(this);
 				bpan.add(btn_add_ability);
 				bpan.add(btn_del_ability);
+				bpan.addSeparator();
+				bpan.add(btn_self);
 				left.add(bpan, BorderLayout.NORTH);
 			}
 			split.setLeftComponent(left);
@@ -108,6 +113,15 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 			if (abilities.getSubAbilityTypes()!=null && abilities.getSubAbilityTypes().length>0){
 				new AddAbilityForm(this).setVisible(true);
 			}
+		}
+		else if (e.getSource() == btn_self) {
+			AbstractDialog ad = new AbstractDialog(this);
+			ad.add(new ObjectPropertyPanel(
+					abilities, 
+					adapters.toArray(new CellEditAdapter<?>[adapters.size()])));
+			ad.setSize(400, 400);
+			ad.setCenter();
+			ad.setVisible(true);
 		}
 	}
 
