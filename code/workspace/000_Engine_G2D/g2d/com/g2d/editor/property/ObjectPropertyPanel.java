@@ -263,8 +263,9 @@ public class ObjectPropertyPanel extends BaseObjectPropertyPanel
 						copy_field_data = Parser.castNumber(copy_field_data, column.getType());
 					}
 					try {
-						column.set(object, copy_field_data);
-						setValueAt(copy_field_data, getSelectedRow(), 1);
+						Object fdata = CIO.cloneObject(copy_field_data);
+						column.set(object, fdata);
+						setValueAt(fdata, getSelectedRow(), 1);
 					} catch (Exception err) {}
 					this.repaint();
 				}
