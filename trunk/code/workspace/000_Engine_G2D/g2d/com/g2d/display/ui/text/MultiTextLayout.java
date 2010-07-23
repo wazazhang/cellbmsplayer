@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.font.FontRenderContext;
 import java.awt.font.LineBreakMeasurer;
@@ -57,7 +58,7 @@ public class MultiTextLayout
 	transient private int		render_timer;
 	transient private float		render_shadow_alpha = 0;
 	transient private int		render_shadow_color	= 0;
-	
+	transient private boolean	render_antialiasing	= false;
 //	----------------------------------------------------------------------------------------------------------------
 //	交互
 	
@@ -1074,8 +1075,12 @@ public class MultiTextLayout
 			Rectangle rect = new Rectangle(sx, sy, sw, sh);
 			g.translate(x, y);
 			Shape prewShape = g.getClip();
+			Object rh = g.getRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING);
 			g.clip(rect);
 			try {
+				if (render_antialiasing) {
+					g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+				}
 				int rended_line = 0;
 				for (TextLine line : textlines) {
 					if (rended_line < max_line) {
@@ -1097,6 +1102,7 @@ public class MultiTextLayout
 					}
 				}	
 			} finally {
+				g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, rh);
 				g.setClip(prewShape);
 				g.translate(-x, -y);
 			}
@@ -1146,7 +1152,9 @@ public class MultiTextLayout
 			this.line_space	= change.space;
 			
 			this.textlines.clear();
-	
+
+			this.render_antialiasing = false;
+			
 			if (text.length()>0)
 			{
 				AttributedCharacterIterator it = change.atext.getIterator();
@@ -1157,6 +1165,10 @@ public class MultiTextLayout
 					Map<Attribute,Object> map = it.getAttributes();
 					Number 	size = (Number)map.get(TextAttribute.SIZE);
 					Font 	font = (Font)map.get(TextAttribute.FONT);
+					Integer anti = (Integer)map.get(com.g2d.display.ui.text.TextAttribute.ANTIALIASING);
+					if (anti != null && anti == 1) {
+						this.render_antialiasing = true;
+					}
 					if (font == null) {
 						font = g.getFont();
 					}

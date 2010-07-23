@@ -34,7 +34,7 @@ import com.g2d.display.ui.text.ga.GraphicsAttributeSprite;
  * [font:font name@style@size]text[font]<br>
  * [under]text[under]<br>
  * [link:text or url]text[link]<br>
- * [anti:1 or 0]text[anti]<br>
+ * [anti:1 or 0]<br>
  * @see com.g2d.display.ui.text.TextBuilder.Instruction
  */
 public class TextBuilder extends IObjectiveFactory
@@ -58,10 +58,10 @@ public class TextBuilder extends IObjectiveFactory
 	}
 	
 //	-----------------------------------------------------------------------------------------------------------------------------------
-	TextBuilderAdapter adapter;
-	AttributedString attributed_text;
+	TextBuilderAdapter 									adapter;
+	AttributedString 									attributed_text;
 	Hashtable<Instruction, Stack<InstructionObjective>> CallStacks;
-	Vector<InstructionObjective> ObjectQueue;
+	Vector<InstructionObjective> 						ObjectQueue;
 
 //	-----------------------------------------------------------------------------------------------------------------------------------
 	
@@ -125,25 +125,37 @@ public class TextBuilder extends IObjectiveFactory
 		
 		if (ins != null)
 		{
-			// 该 TextAttribute对应的堆栈
-			Stack<InstructionObjective> stack = getStack(ins);
+			InstructionObjective objective = null;
 			
-			InstructionObjective objective = stack.isEmpty() ? null : stack.pop();
-			
-			// 如果 以前没有该类型的数据在堆栈中，则代表为数据头
-			if (objective == null)
+			if (ins.is_single) 
 			{
 				objective = getInstructionValue(ins, key, value);
 				objective.AttrStart	= getBuildState().length();
-				// 入栈
-				stack.push(objective);
-			}
+				objective.AttrEnd	= getBuildState().length() + 1;
+				ObjectQueue.addElement(objective);
+			} 
 			else 
 			{
-				// 出栈上一个匹配值
-				objective.AttrEnd		= getBuildState().length();
-				// 添加到对象集
-				ObjectQueue.addElement(objective);
+				// 该 TextAttribute对应的堆栈
+				Stack<InstructionObjective> stack = getStack(ins);
+				
+				objective = stack.isEmpty() ? null : stack.pop();
+				
+				// 如果 以前没有该类型的数据在堆栈中，则代表为数据头
+				if (objective == null)
+				{
+					objective = getInstructionValue(ins, key, value);
+					objective.AttrStart	= getBuildState().length();
+					// 入栈
+					stack.push(objective);
+				}
+				else 
+				{
+					// 出栈上一个匹配值
+					objective.AttrEnd		= getBuildState().length();
+					// 添加到对象集
+					ObjectQueue.addElement(objective);
+				}
 			}
 			
 			return objective;

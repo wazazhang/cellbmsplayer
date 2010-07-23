@@ -31,7 +31,7 @@ public enum Instruction implements ValueEnum<String>
 	LINK			("link",	com.g2d.display.ui.text.TextAttribute.LINK),
 	
 	/** [anti:1 or 0]text[anti] */
-	ANTIALIASING	("anti",	com.g2d.display.ui.text.TextAttribute.ANTIALIASING),
+	ANTIALIASING	("anti",	com.g2d.display.ui.text.TextAttribute.ANTIALIASING, true),
 
 	/** [image:path]replacement[image]<br>
 	 * 其中的文字将用图片填充*/
@@ -44,10 +44,16 @@ public enum Instruction implements ValueEnum<String>
 
 	final public String		value;
 	final public Attribute	attribute;
+	final public boolean	is_single;
 	
 	Instruction(String v, Attribute attr) {
-		value = v;
-		attribute = attr;
+		this(v, attr, false);
+	}
+	
+	Instruction(String v, Attribute attr, boolean is_single) {
+		this.value 		= v;
+		this.attribute 	= attr;
+		this.is_single 	= is_single;
 	}
 	
 	public String getValue() {
