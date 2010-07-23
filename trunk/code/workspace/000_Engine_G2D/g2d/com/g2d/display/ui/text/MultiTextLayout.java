@@ -1072,15 +1072,12 @@ public class MultiTextLayout
 		
 		render_size.setSize(0, height);
 		{
-			Rectangle rect = new Rectangle(sx, sy, sw, sh);
-			g.translate(x, y);
-			Shape prewShape = g.getClip();
-			Object rh = g.getRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING);
-			g.clip(rect);
+			Shape	 	prew_shape 	= g.getClip();
 			try {
-				if (render_antialiasing) {
-					g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-				}
+				Rectangle	rect 	= new Rectangle(sx, sy, sw, sh);
+				g.translate(x, y);
+				g.clip(rect);
+				
 				int rended_line = 0;
 				for (TextLine line : textlines) {
 					if (rended_line < max_line) {
@@ -1092,18 +1089,17 @@ public class MultiTextLayout
 					rended_line++;
 				}
 				if (!is_read_only && is_show_caret) {
-					if (render_timer/6%2==0 && caret_bounds!=null) {
+					if (render_timer / 6 % 2 == 0 && caret_bounds != null) {
 						g.setColor(Color.WHITE);
-						if (text.length()>0) {
+						if (text.length() > 0) {
 							g.fillRect(caret_bounds.x, caret_bounds.y, 2, caret_bounds.height);
-						}else{
+						} else {
 							g.fillRect(0, 0, 2, g.getFont().getSize());
 						}
 					}
 				}	
 			} finally {
-				g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, rh);
-				g.setClip(prewShape);
+				g.setClip(prew_shape);
 				g.translate(-x, -y);
 			}
 		}
@@ -1166,7 +1162,7 @@ public class MultiTextLayout
 					Number 	size = (Number)map.get(TextAttribute.SIZE);
 					Font 	font = (Font)map.get(TextAttribute.FONT);
 					Integer anti = (Integer)map.get(com.g2d.display.ui.text.TextAttribute.ANTIALIASING);
-					if (anti != null && anti == 1) {
+					if (anti != null && anti.intValue() == 1) {
 						this.render_antialiasing = true;
 					}
 					if (font == null) {
@@ -1181,42 +1177,51 @@ public class MultiTextLayout
 					i++;
 					e++;
 				}
-				
-				FontRenderContext frc = g.getFontRenderContext();
-				
-				// lines
-				if (!is_single_line)
+
+				Object prew_rh = g.getRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING);
+				try 
 				{
-					LineBreakMeasurer textMeasurer = new LineBreakMeasurer(attr_text.getIterator(), frc);
-			
-					while (textMeasurer.getPosition()>=0 && textMeasurer.getPosition()<text.length())
+					if (render_antialiasing) {
+						g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+					}
+					FontRenderContext frc = g.getFontRenderContext();
+					// lines
+					if (!is_single_line)
 					{
-						TextLayout layout = null;
-						int limit = text.indexOf('\n', textMeasurer.getPosition());
-						if (limit >= textMeasurer.getPosition()) {
-							layout = textMeasurer.nextLayout(width, limit+1, false);
-						} else {
-							layout = textMeasurer.nextLayout(width);
+						LineBreakMeasurer textMeasurer = new LineBreakMeasurer(attr_text.getIterator(), frc);
+				
+						while (textMeasurer.getPosition()>=0 && textMeasurer.getPosition()<text.length())
+						{
+							TextLayout layout = null;
+							int limit = text.indexOf('\n', textMeasurer.getPosition());
+							if (limit >= textMeasurer.getPosition()) {
+								layout = textMeasurer.nextLayout(width, limit+1, false);
+							} else {
+								layout = textMeasurer.nextLayout(width);
+							}
+							// TODO 处理最大行数
+							TextLine line = new TextLine(layout, textlines.size(), frc);
+							line.x = 0;
+							line.y = height;
+							height += line.height;
+							textlines.add(line);
+		
+							//System.out.println(line.x+","+line.y+","+line.width+","+line.height);
 						}
-						// TODO 处理最大行数
+					}
+					else
+					{
+						TextLayout layout = new TextLayout(attr_text.getIterator(), g.getFontRenderContext());
 						TextLine line = new TextLine(layout, textlines.size(), frc);
 						line.x = 0;
 						line.y = height;
-						height += line.height;
-						textlines.add(line);
-	
-						//System.out.println(line.x+","+line.y+","+line.width+","+line.height);
+						this.height += line.height;
+						this.width = line.width;
+						this.textlines.add(line);
 					}
-				}
-				else
-				{
-					TextLayout layout = new TextLayout(attr_text.getIterator(), g.getFontRenderContext());
-					TextLine line = new TextLine(layout, textlines.size(), frc);
-					line.x = 0;
-					line.y = height;
-					this.height += line.height;
-					this.width = line.width;
-					this.textlines.add(line);
+					
+				} finally {
+					g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, prew_rh);
 				}
 			}
 			
@@ -1337,6 +1342,7 @@ public class MultiTextLayout
 					try {
 						Graphics2D g2d = shadow_buffer.createGraphics();
 						g2d.setColor(Color.BLACK);
+						g2d.setRenderingHints(g.getRenderingHints());
 //						g2d.fillRect(0, 0, width, height);
 						text_layout.draw(g2d, offsetx, offsety);
 						g2d.dispose();
