@@ -1072,12 +1072,11 @@ public class MultiTextLayout
 		
 		render_size.setSize(0, height);
 		{
-			Shape	 	prew_shape 	= g.getClip();
+			g.translate(x, y);
+			Shape prew_shape = g.getClip();
 			try {
-				Rectangle	rect 	= new Rectangle(sx, sy, sw, sh);
-				g.translate(x, y);
+				Rectangle rect = new Rectangle(sx, sy, sw, sh);
 				g.clip(rect);
-				
 				int rended_line = 0;
 				for (TextLine line : textlines) {
 					if (rended_line < max_line) {
