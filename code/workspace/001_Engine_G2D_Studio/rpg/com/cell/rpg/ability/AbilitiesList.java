@@ -16,6 +16,8 @@ import com.g2d.studio.rpg.AbilityPanel;
  */
 public abstract class AbilitiesList implements Abilities, Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	/**将显示在单位属性的Ability面板*/
 	protected ArrayList<AbstractAbility>	abilities = new ArrayList<AbstractAbility>();
 

@@ -15,8 +15,8 @@ public class QuestItemDrop extends AbstractAbility
 	@PropertyAdapter(PropertyType.QUEST_ID)
 	public int quest_id		= -1;
 	
-	/** 道具列表ID */
-	@Property("道具列表ID")
+	/** 掉落道具列表ID */
+	@Property("掉落道具列表ID")
 	@PropertyAdapter(PropertyType.ITEM_LIST_ID)
 	public int item_list_id = -1;
 

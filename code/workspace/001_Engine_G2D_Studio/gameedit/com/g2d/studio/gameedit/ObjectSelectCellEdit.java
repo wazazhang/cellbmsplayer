@@ -1,6 +1,8 @@
 package com.g2d.studio.gameedit;
 
 import java.awt.Component;
+import java.util.ArrayList;
+import java.util.Vector;
 
 import javax.swing.JComboBox;
 
@@ -18,7 +20,12 @@ public class ObjectSelectCellEdit<T extends ObjectNode<?>> extends JComboBox imp
 	
 	public ObjectSelectCellEdit(Class<T> object_type) 
 	{
-		super(Studio.getInstance().getObjectManager().getObjects(object_type));
+		this(object_type, null);
+	}
+	
+	public ObjectSelectCellEdit(Class<T> object_type, ObjectSelectCellEditFillter<T> filter) 
+	{
+		super(getObjects(object_type, filter));
 	}
 	
 	public Component getComponent(ObjectPropertyEdit panel) {		
@@ -32,5 +39,20 @@ public class ObjectSelectCellEdit<T extends ObjectNode<?>> extends JComboBox imp
 			return ((ObjectNode<?>) item).getID();
 		}
 		return null;
+	}
+	
+	public static<T extends ObjectNode<?>> Vector<T> getObjects(Class<T> object_type, ObjectSelectCellEditFillter<T> filter)
+	{
+		Vector<T> src = Studio.getInstance().getObjectManager().getObjects(object_type);
+		if (filter == null) {
+			return src;
+		}
+		Vector<T> ret = new Vector<T>(src.size());
+		for (T d : src) {
+			if (filter.accept(d)) {
+				ret.add(d);
+			}
+		}
+		return ret;
 	}
 }

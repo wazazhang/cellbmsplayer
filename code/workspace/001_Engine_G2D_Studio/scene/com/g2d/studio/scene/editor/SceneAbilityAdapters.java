@@ -21,11 +21,14 @@ import com.cell.rpg.scene.ability.ActorTransport;
 import com.cell.rpg.scene.ability.ActorTransportCraft;
 import com.cell.rpg.scene.ability.IActorAbility;
 import com.cell.rpg.scene.ability.RegionSpawnNPC.NPCSpawn;
+import com.cell.rpg.scene.ability.RegionSpawnTrezuro.CollectionSpawn;
+import com.cell.rpg.template.ability.UnitItemCollection;
 import com.g2d.editor.property.CellEditAdapter;
 import com.g2d.editor.property.ObjectPropertyEdit;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.ObjectSelectCellEdit;
+import com.g2d.studio.gameedit.ObjectSelectCellEditFillter;
 import com.g2d.studio.gameedit.ObjectSelectDialog;
 import com.g2d.studio.gameedit.template.XLSSkill;
 import com.g2d.studio.gameedit.template.XLSUnit;
@@ -211,6 +214,62 @@ public class SceneAbilityAdapters
 				Object fieldValue, Field field) {
 			if (field.getName().equals("template_unit_id")){
 				return new ObjectSelectCellEdit<XLSUnit>(XLSUnit.class);
+			}
+			return null;
+		}
+		
+		@Override
+		public Component getCellRender(
+				ObjectPropertyEdit owner,
+				Object editObject,
+				Object fieldValue,
+				Field field, DefaultTableCellRenderer src) {
+			if (field.getName().equals("template_unit_id")){
+				XLSUnit unit = null;
+				if (fieldValue != null) {
+					String tid = (String)fieldValue;
+					unit = Studio.getInstance().getObjectManager().getObject(XLSUnit.class, tid);
+				}
+				if (fieldValue != null && unit != null) {
+					src.setText(unit.getName()+"(" + unit.getID() + ")");
+				} else {
+//					src.setForeground(Color.RED);
+					src.setText("null");
+				}
+			}
+			return src;
+		}
+		
+	}
+
+	/**
+	 * 产生区域内产生的单位工具
+	 * @author WAZA
+	 */
+	public static class RegionSpawnCollectionNodeAdapter
+	extends AbilityCellEditAdapter<CollectionSpawn> 
+	implements ObjectSelectCellEditFillter<XLSUnit>
+	{
+		@Override
+		public Class<CollectionSpawn> getType() {
+			return CollectionSpawn.class;
+		}
+		
+		@Override
+		public boolean accept(XLSUnit node) {
+			if (node.getData().getAbility(UnitItemCollection.class) != null) {
+				return true;
+			}
+			return false;
+		}
+		
+		@Override
+		public PropertyCellEdit<?> getCellEdit(
+				ObjectPropertyEdit owner,
+				Object editObject, 
+				Object fieldValue, Field field) {
+			if (field.getName().equals("template_unit_id")){
+				return new ObjectSelectCellEdit<XLSUnit>(XLSUnit.class, this);
 			}
 			return null;
 		}

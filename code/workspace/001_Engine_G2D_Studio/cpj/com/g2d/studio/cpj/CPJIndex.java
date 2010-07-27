@@ -14,9 +14,9 @@ final public class CPJIndex<T extends CPJObject<?>> implements Serializable
 	transient T						object;
 	
 	public CPJIndex(CPJResourceType type, String cpj, String set) {
-		this.res_type = type;
-		this.cpj_file_name = cpj;
-		this.set_object_name = set;
+		this.res_type			= type;
+		this.cpj_file_name		= cpj;
+		this.set_object_name	= set;
 	}
 	
 	public T getObject() {
