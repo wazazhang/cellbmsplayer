@@ -4,6 +4,7 @@ import com.cell.rpg.display.UnitNode;
 import com.cell.rpg.struct.QuestStateDisplayOR;
 import com.cell.rpg.template.ability.QuestItemDrop;
 import com.cell.rpg.template.ability.UnitBattleTeam;
+import com.cell.rpg.template.ability.UnitItemCollection;
 import com.cell.rpg.template.ability.UnitItemDrop;
 import com.cell.rpg.template.ability.UnitItemSell;
 import com.g2d.annotation.Property;
@@ -39,6 +40,7 @@ public class TUnit extends TemplateNode
 				UnitItemDrop.class,
 				QuestItemDrop.class,
 				UnitItemSell.class,
+				UnitItemCollection.class,
 		};
 	}
 }

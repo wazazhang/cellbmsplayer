@@ -5,6 +5,7 @@ import com.cell.rpg.quest.ability.QuestAccepter;
 import com.cell.rpg.quest.ability.QuestPublisher;
 import com.cell.rpg.scene.ability.RegionPlayerEnter;
 import com.cell.rpg.scene.ability.RegionSpawnNPC;
+import com.cell.rpg.scene.ability.RegionSpawnTrezuro;
 
 
 
@@ -29,6 +30,7 @@ public class Region extends SceneUnit
 		return new Class<?>[]{
 				RegionPlayerEnter.class,
 				RegionSpawnNPC.class,
+				RegionSpawnTrezuro.class,
 				QuestAccepter.class,
 				QuestPublisher.class,
 			};

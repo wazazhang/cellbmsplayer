@@ -13,6 +13,7 @@ import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.ObjectSelectCellEditInteger;
 import com.g2d.studio.gameedit.dynamic.DItemList;
 import com.g2d.studio.gameedit.template.XLSItem;
+import com.g2d.studio.gameedit.template.XLSSkill;
 import com.g2d.studio.gameedit.template.XLSTemplateNode;
 import com.g2d.studio.gameedit.template.XLSUnit;
 import com.g2d.studio.quest.QuestNode;
@@ -52,6 +53,8 @@ public class PropertyAdapters
 						QuestSelectCellEdit dialog = new QuestSelectCellEdit(owner.getComponent(), false);
 						dialog.showDialog();
 						return dialog;
+					case SKILL_ID:
+						return new ObjectSelectCellEditInteger<XLSSkill>(XLSSkill.class, fieldValue);
 					case SCENE_ID:
 						return new SceneListCellEditInteger();
 					}
@@ -84,6 +87,15 @@ public class PropertyAdapters
 					case ITEM_ID: {
 						XLSTemplateNode<?> node = Studio.getInstance().getObjectManager().getObject(
 								XLSItem.class, (Integer) fieldValue);
+						if (node != null) {
+							src.setText(node.getName());
+							src.setIcon(node.getIcon(false));
+						}
+						break;
+					}
+					case SKILL_ID: {
+						XLSTemplateNode<?> node = Studio.getInstance().getObjectManager().getObject(
+								XLSSkill.class, (Integer) fieldValue);
 						if (node != null) {
 							src.setText(node.getName());
 							src.setIcon(node.getIcon(false));

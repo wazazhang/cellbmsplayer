@@ -9,8 +9,8 @@ public class UnitItemDrop extends AbstractAbility
 {
 	private static final long serialVersionUID = 1L;
 
-	/** 道具列表ID */
-	@Property("道具列表ID")
+	/** 掉落道具列表ID */
+	@Property("掉落道具列表ID")
 	public int item_list_id = -1;
 
 	@Override
