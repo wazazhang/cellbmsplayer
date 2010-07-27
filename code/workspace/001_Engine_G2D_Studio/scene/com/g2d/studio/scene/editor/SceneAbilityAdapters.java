@@ -280,14 +280,14 @@ public class SceneAbilityAdapters
 				Object editObject,
 				Object fieldValue,
 				Field field, DefaultTableCellRenderer src) {
-			if (field.getName().equals("template_unit_id")){
+			if (field.getName().equals("template_unit_id")) {
 				XLSUnit unit = null;
 				if (fieldValue != null) {
 					String tid = (String)fieldValue;
 					unit = Studio.getInstance().getObjectManager().getObject(XLSUnit.class, tid);
 				}
 				if (fieldValue != null && unit != null) {
-					src.setText(unit.getName()+"(" + unit.getID() + ")");
+					src.setText(unit.getName() + "(" + unit.getID() + ")");
 				} else {
 //					src.setForeground(Color.RED);
 					src.setText("null");
