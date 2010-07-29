@@ -86,7 +86,7 @@ public class Panel extends UIComponent
 	}
 	
 	public void setAutoScroll(boolean hScroll, boolean vbScroll) {
-		setEnableVScrollBar(hScroll);
+		setEnableHScrollBar(hScroll);
 		setEnableVScrollBar(vbScroll);
 	}
 	
