@@ -83,7 +83,7 @@ public class ObjectPropertyRowPanel<T> extends BaseObjectPropertyPanel
 		
 		this.data_type		= data_type;
 		this.primary_key	= primary_key;
-		this.column_fields	= data_type.getFields();
+		this.column_fields	= Util.getPublicFields(data_type);
 		this.datas			= new ArrayList<T>(datas);
 		
 		this.column_headers	= toTableHeadData();
