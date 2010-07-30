@@ -175,11 +175,13 @@ public abstract class Window extends Container
 		public void startOpen() {
 			time = 0;
 			is_open = true;
+			time_rate = 0;
 		}
 		
 		public void startClose(){
 			time = 0;
 			is_open = false;
+			time_rate = 0;
 		}
 		
 		public boolean isOpening(){
