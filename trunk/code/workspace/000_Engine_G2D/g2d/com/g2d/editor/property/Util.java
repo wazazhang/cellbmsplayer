@@ -58,4 +58,24 @@ public class Util
 		}
 	}
 	
+	
+	/**
+	 * 得到所有标注为{@link Property}的字段
+	 * cls.getFields()
+	 * @see Property
+	 * @return
+	 */
+	public static Field[] getPublicFields(Class<?> cls) {
+		Field[] edit_fields = null;
+			ArrayList<Field> fields = new ArrayList<Field>();
+			for (Field field : cls.getFields()) {
+				Property pro = field.getAnnotation(Property.class);
+				if (pro != null) {
+					fields.add(field);
+				}
+			}
+			edit_fields = fields.toArray(new Field[fields.size()]);
+		
+		return edit_fields;
+	}
 }
