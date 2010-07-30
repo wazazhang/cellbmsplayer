@@ -1,8 +1,12 @@
 package com.g2d.studio.gameedit.dynamic;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 import com.cell.rpg.display.Node;
@@ -18,9 +22,7 @@ import com.g2d.studio.res.Res;
 
 
 final public class DAvatar extends DynamicNode<TAvatar>
-{
-	static AvatarEditor 					editor = new AvatarEditor();
-	
+{	
 	private CPJIndex<CPJSprite>				body;
 	private ArrayList<CPJIndex<CPJSprite>>	avatars = new ArrayList<CPJIndex<CPJSprite>>();
 	
@@ -146,14 +148,13 @@ final public class DAvatar extends DynamicNode<TAvatar>
 		if (edit_component==null) {
 			edit_component = new AvatarViewer();
 		}
-		editor.setAvatar(DAvatar.this, edit_component.getPages());
-		edit_component.getPages().addTab("预览", editor);
 		return edit_component;
 	}
 	
 	
 //	----------------------------------------------------------------------------------------------------------------------
-	
+
+	@SuppressWarnings("serial")
 	public class AvatarViewer extends ObjectViewer<DAvatar>
 	{
 		private static final long serialVersionUID = 1L;
@@ -163,7 +164,27 @@ final public class DAvatar extends DynamicNode<TAvatar>
 		}
 		
 		@Override
-		protected void appendPages(JTabbedPane table) {}
+		protected void appendPages(JTabbedPane table) {
+			table.addTab("预览", new ViewPanel());
+		}
+		
+		class ViewPanel extends JPanel implements ActionListener
+		{
+			JButton btn_open_viewer = new JButton("预览");
+			public ViewPanel() {
+				btn_open_viewer.addActionListener(this);
+				this.add(btn_open_viewer);
+			}
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (e.getSource() == btn_open_viewer) {
+					AvatarEditor editor = new AvatarEditor();
+					editor.setAvatar(DAvatar.this);
+					editor.setCenter();
+					editor.setVisible(true);
+				}
+			}
+		}
 	}
 	
 }

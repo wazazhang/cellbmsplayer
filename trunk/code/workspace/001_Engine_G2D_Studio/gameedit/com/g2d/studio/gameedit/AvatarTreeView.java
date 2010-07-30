@@ -57,11 +57,11 @@ public class AvatarTreeView extends ObjectTreeViewTemplateDynamic<DAvatar, TAvat
 		
 		@Override
 		protected boolean createObjectNode(String key, TAvatar data) {
-			try{
+			try {
 //				System.out.println("create avatar tree node : " + getName() + " : "+ key);
 				addNode(this, new DAvatar(data));
 				return true;
-			}catch(Exception err){
+			} catch (Exception err) {
 				err.printStackTrace();
 			}
 			return false;
@@ -137,11 +137,11 @@ public class AvatarTreeView extends ObjectTreeViewTemplateDynamic<DAvatar, TAvat
 		
 		@Override
 		protected boolean checkOK() {
-			if (text.getText().length()==0) {
+			if (text.getText().length() == 0) {
 				JOptionPane.showMessageDialog(this, "AVATAR名字不能为空！");
 				return false;
 			}
-			if (getSelectedObject()==null) {
+			if (getSelectedObject() == null) {
 				JOptionPane.showMessageDialog(this, "还未选择AVATAR主角身体！");
 				return false;
 			}
