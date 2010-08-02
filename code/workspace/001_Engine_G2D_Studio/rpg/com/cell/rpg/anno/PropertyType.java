@@ -9,6 +9,7 @@ public enum PropertyType
 	ITEM_LIST_ID,
 	SCENE_ID,
 	SKILL_ID,
+	AVATAR_ID,
 	;
 	
 	

@@ -84,7 +84,8 @@ final public class XLSUnit extends XLSTemplateNode<TUnit>
 		
 		JPanel	page_properties;
 		JButton	set_binding		= new JButton("绑定资源");
-
+//		JButton	set_avatar		= new JButton("设置AVATAR");
+		
 		public NPCObjectViewer() 
 		{
 			super(XLSUnit.this,
@@ -97,8 +98,13 @@ final public class XLSUnit extends XLSTemplateNode<TUnit>
 			}
 			page_properties = new JPanel();
 //			page_properties.setLayout(new GridLayout(2, 1));
-			set_binding.addActionListener(this);
-			page_properties.add(set_binding);			
+			{
+				set_binding.addActionListener(this);
+				page_properties.add(set_binding);
+				
+//				set_avatar.addActionListener(this);
+//				page_properties.add(set_avatar);
+			}
 			table.insertTab("属性", null, page_properties, null, 0);
 			table.setSelectedIndex(0);
 		}
@@ -116,6 +122,9 @@ final public class XLSUnit extends XLSTemplateNode<TUnit>
 					Studio.getInstance().getObjectManager().getPage(XLSUnit.class).repaint();
 				}
 			}
+//			else if (set_avatar == e.getSource()) {
+//				
+//			}
 		}
 		
 	}

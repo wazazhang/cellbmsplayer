@@ -11,7 +11,9 @@ import com.g2d.editor.property.ObjectPropertyEdit;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.ObjectSelectCellEditInteger;
+import com.g2d.studio.gameedit.dynamic.DAvatar;
 import com.g2d.studio.gameedit.dynamic.DItemList;
+import com.g2d.studio.gameedit.dynamic.DynamicNode;
 import com.g2d.studio.gameedit.template.XLSItem;
 import com.g2d.studio.gameedit.template.XLSSkill;
 import com.g2d.studio.gameedit.template.XLSTemplateNode;
@@ -57,6 +59,8 @@ public class PropertyAdapters
 						return new ObjectSelectCellEditInteger<XLSSkill>(XLSSkill.class, fieldValue);
 					case SCENE_ID:
 						return new SceneListCellEditInteger();
+					case AVATAR_ID:
+						return new ObjectSelectCellEditInteger<DAvatar>(DAvatar.class, fieldValue);
 					}
 				}
 			}catch(Exception err){
@@ -127,7 +131,16 @@ public class PropertyAdapters
 						}
 						break;
 					}
-					
+					case AVATAR_ID: {
+						DynamicNode<?> node = Studio.getInstance().getObjectManager().getObject(
+								DAvatar.class, (Integer) fieldValue);
+						if (node != null) {
+							src.setText(node.getName());
+							src.setIcon(node.getIcon(false));
+						}
+						break;
+					}
+						
 					}
 				}
 			} catch (Exception err) {
