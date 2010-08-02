@@ -7,6 +7,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTree;
 
 import com.cell.rpg.RPGObject;
+import com.cell.rpg.template.TemplateNode;
 import com.g2d.studio.gameedit.entity.ObjectNode;
 import com.g2d.studio.swing.G2DTreeNodeGroup.NodeMenu;
 
@@ -91,7 +92,11 @@ public abstract class DynamicNode<T extends RPGObject> extends ObjectNode<T>
 				}
 			}
 			else if (e.getSource() == rename) {
-				String text = JOptionPane.showInputDialog("输入新的名字");
+				String init = node.getName();
+				if (node.getData() instanceof TemplateNode) {
+					init = ((TemplateNode)node.getData()).name;
+				}
+				String text = JOptionPane.showInputDialog("输入新的名字", init);
 				if (text != null && !text.isEmpty()) {
 					node.setName(text);
 				}
