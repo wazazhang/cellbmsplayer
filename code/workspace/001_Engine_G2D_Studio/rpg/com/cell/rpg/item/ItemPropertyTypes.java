@@ -17,7 +17,17 @@ public class ItemPropertyTypes
 	private static Class<?>[]	item_property_types;
 	private static Class<?>[]	item_property_types_list;
 	
-	public static void setItemPropertyTypes(ItemPropertyManager manager) throws Exception {
+	private static ItemPropertyManager item_property_manager;
+	
+	public static ItemPropertyManager getItemPropertyManager(){
+		return item_property_manager;
+	}
+	
+	
+	public static void setItemPropertyTypes(ItemPropertyManager manager) throws Exception
+	{
+		item_property_manager = manager;
+		
 		for (Class<?> type : manager.getAllTypes()) {						
 			ItemType itype = type.getAnnotation(ItemType.class);
 			if (itype!=null) {
