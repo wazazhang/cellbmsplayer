@@ -42,6 +42,8 @@ public class TreeView extends Container
 	private HashSet<TreeNode>
 						expaneds = new HashSet<TreeNode>();
 	
+	private boolean 	display_root_node = true;
+	
 //	------------------------------------------------------------------------------------------
 	
 	public TreeView() {
@@ -66,6 +68,13 @@ public class TreeView extends Container
 	@Override
 	public void setSize(int w, int h) {
 		super.setMinimumSize(w, h);
+		this.refresh();
+	}
+	
+	@Override
+	public void setMinimumSize(int width, int height) {
+		super.setMinimumSize(width, height);
+		this.refresh();
 	}
 	
 //	------------------------------------------------------------------------------------------
@@ -112,19 +121,24 @@ public class TreeView extends Container
 	void resetTreeNode(TreeNode node, int deep, AtomicInteger x, AtomicInteger y) 
 	{
 		UIComponent ui = nodes.get(node);
-		this.addComponent(ui, x.get(), y.get());
-		y.addAndGet(ui.getHeight() + border_h);
+		boolean tab_width = true;
+		if (deep != 0 || display_root_node) {
+			this.addComponent(ui, x.get(), y.get());
+			y.addAndGet(ui.getHeight() + border_h);
+		} else {
+			tab_width = false;
+		}
 		
 		if (node.getChildCount() > 0) {
 			if (isExpanded(node)) {
 				try {
-					x.addAndGet(border_w);
+					if (tab_width) x.addAndGet(border_w);
 					for (int cr = 0; cr < node.getChildCount(); cr++) {
 						TreeNode cn = node.getChildAt(cr);
 						resetTreeNode(cn, deep + 1, x, y);
 					}
 				} finally {
-					x.addAndGet(-border_w);
+					if (tab_width) x.addAndGet(-border_w);
 				}
 			}
 		}
@@ -159,6 +173,13 @@ public class TreeView extends Container
 			expaneds.clear();
 		}
 		refresh();
+	}
+	
+	public void setDisplayRootNode(boolean show) {
+		if (this.display_root_node != show) {
+			this.display_root_node = show;
+			refresh();
+		}
 	}
 	
 //	------------------------------------------------------------------------------------------

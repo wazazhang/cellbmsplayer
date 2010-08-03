@@ -129,7 +129,9 @@ public class ScrolledPan extends Container
 		view_port_view.setLocation(
 				-(int)scrollbar.h_scroll.getValue(), 
 				-(int)scrollbar.v_scroll.getValue());
-		view_port_view.setMinimumSize(view_port.getWidth(), view_port.getHeight());
+		view_port_view.setMinimumSize(
+				view_port.getWidth(), 
+				view_port.getHeight());
 	}
 
 	
