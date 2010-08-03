@@ -78,7 +78,6 @@ public class UILayout extends DObject
 	private TexturePaint	BorderB;
 	private TexturePaint	BorderL;
 	private TexturePaint	BorderR;
-	
 	private TexturePaint	BackImage;
 	private TexturePaint	BorderTL;
 	private TexturePaint	BorderTR;
@@ -93,6 +92,35 @@ public class UILayout extends DObject
 	public UILayout(UILayout set){
 		this.set(set);
 	}
+	
+	public TexturePaint getBorderT() {
+		return BorderT;
+	}
+	public TexturePaint getBorderB() {
+		return BorderB;
+	}
+	public TexturePaint getBorderL() {
+		return BorderL;
+	}
+	public TexturePaint getBorderR() {
+		return BorderR;
+	}
+	public TexturePaint getBackImage() {
+		return BackImage;
+	}
+	public TexturePaint getBorderTL() {
+		return BorderTL;
+	}
+	public TexturePaint getBorderTR() {
+		return BorderTR;
+	}
+	public TexturePaint getBorderBL() {
+		return BorderBL;
+	}
+	public TexturePaint getBorderBR() {
+		return BorderBR;
+	}
+
 	
 	
 	public void set(UILayout set)

@@ -274,7 +274,7 @@ public abstract class DisplayObject implements ImageObserver, Vector
 		local_bounds.height = h;
 	}
 
-	public void setSize(Dimension dimension) {
+	final public void setSize(Dimension dimension) {
 		setSize(dimension.width, dimension.height);
 	}
 	
