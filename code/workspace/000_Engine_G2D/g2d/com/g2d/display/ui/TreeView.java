@@ -9,13 +9,23 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import com.cell.CIO;
 import com.g2d.display.DisplayObject;
+import com.g2d.display.event.EventListener;
 import com.g2d.display.tree.DefaultTreeAdapter;
 import com.g2d.display.tree.TreeAdapter;
 import com.g2d.display.tree.TreeNode;
+import com.g2d.display.tree.TreeNodeListener;
+import com.g2d.display.ui.event.ActionEvent;
+import com.g2d.display.ui.event.ActionListener;
 
 public class TreeView extends Container
 {
 	final private TreeAdapter	adapter;
+	
+	final private TreeNodeActionListener
+								action_listener = new TreeNodeActionListener();
+	
+	final private HashSet<TreeNodeListener> 
+								tree_node_listeners = new HashSet<TreeNodeListener>();
 	
 //	------------------------------------------------------------------------------------------
 	
@@ -72,6 +82,7 @@ public class TreeView extends Container
 	void initTreeNode(TreeNode node, int deep)
 	{
 		UIComponent ui = adapter.getComponent(node, this) ;
+		ui.addEventListener(action_listener);
 		this.nodes.put(node, ui);
 		if (node.getChildCount() > 0) {
 			for (int cr = 0; cr < node.getChildCount(); cr++) {
@@ -150,5 +161,42 @@ public class TreeView extends Container
 		refresh();
 	}
 	
+//	------------------------------------------------------------------------------------------
+	
+	@Override
+	public void addEventListener(EventListener listener) {
+		super.addEventListener(listener);
+		if (listener instanceof TreeNodeListener) {
+			tree_node_listeners.add((TreeNodeListener)listener);
+		}
+	}
+	
+	@Override
+	public void removeEventListener(EventListener listener) {
+		super.removeEventListener(listener);
+		if (listener instanceof TreeNodeListener) {
+			tree_node_listeners.remove((TreeNodeListener)listener);
+		}
+	}
+	
+	private TreeNode getTreeNode(UIComponent comp) {
+		for (TreeNode tn : nodes.keySet()) {
+			UIComponent ui = nodes.get(tn);
+			if (ui == comp) {
+				return tn;
+			}
+		}
+		return null;
+	}
+	
+	class TreeNodeActionListener implements ActionListener {
+		@Override
+		public void itemAction(UIComponent item, ActionEvent event) {
+			for (TreeNodeListener tnl : tree_node_listeners) {
+				TreeNode tn = getTreeNode(item);
+				tnl.onTreeNodeClick(tn, item, TreeView.this);
+			}
+		}
+	}
 	
 }
