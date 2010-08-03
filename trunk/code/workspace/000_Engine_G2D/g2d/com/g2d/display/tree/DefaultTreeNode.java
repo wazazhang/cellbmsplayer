@@ -5,6 +5,8 @@ import java.util.Vector;
 
 public class DefaultTreeNode implements TreeNode
 {
+	private static final long serialVersionUID = 1L;
+
 	private TreeNode 			parent;
 	
 	private Vector<TreeNode>	sub_childs = new Vector<TreeNode>();
