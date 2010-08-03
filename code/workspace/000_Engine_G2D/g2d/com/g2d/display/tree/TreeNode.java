@@ -1,5 +1,6 @@
 package com.g2d.display.tree;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 
@@ -7,7 +8,7 @@ import java.util.Collection;
  * 定义可以用作 TreeView 中树节点的对象所需的要求。 
  * @author WAZA
  */
-public interface TreeNode
+public interface TreeNode extends Serializable
 {
 	/**
 	 * 以 Enumeration 的形式返回接收者的子节点。
