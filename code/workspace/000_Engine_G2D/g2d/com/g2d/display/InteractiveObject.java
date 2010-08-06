@@ -171,38 +171,43 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 	{
 		if (enable)
 		{
-			if (getParent()!=null) {
-				if (getParent().getFocus() == this) {
-					is_focused = true;
-				} else if (enable_focus) {
-					if ((event instanceof MouseEvent) && 
-						((MouseEvent)event).type == MouseEvent.EVENT_MOUSE_DOWN) {
-						if (isCatchedMouse() && enable_click_focus()) {
-							getParent().focus(this);
-							is_focused = true;
+			try {
+				if (getParent()!=null) {
+					if (getParent().getFocus() == this) {
+						is_focused = true;
+					} else if (enable_focus) {
+						if ((event instanceof MouseEvent) && 
+							((MouseEvent)event).type == MouseEvent.EVENT_MOUSE_DOWN) {
+							if (isCatchedMouse() && enable_click_focus()) {
+								is_focused = true;
+							}
 						}
 					}
 				}
-			}
-			
-			// 先向孩子传递
-			if (is_focused) {
-				if (super.onPoolEvent(event)) {
-					return true;
+				
+				// 先向孩子传递
+				if (is_focused) {
+					if (super.onPoolEvent(event)) {
+						return true;
+					}
 				}
-			}
-			
-			if (enable_input && visible) {
-				if (event instanceof MouseWheelEvent) {
-					return processMouseWheelEvent((MouseWheelEvent) event);
-				} else if (event instanceof MouseEvent) {
-					boolean ret = processMouseEvent((MouseEvent) event);
-//					if (ret) {
-//						System.out.println("f object = " + toString());
-//					}
-					return ret;
-				} else if (event instanceof KeyEvent) {
-					return processKeyEvent((KeyEvent) event);
+				
+				if (enable_input && visible) {
+					if (event instanceof MouseWheelEvent) {
+						return processMouseWheelEvent((MouseWheelEvent) event);
+					} else if (event instanceof MouseEvent) {
+						boolean ret = processMouseEvent((MouseEvent) event);
+	//					if (ret) {
+	//						System.out.println("f object = " + toString());
+	//					}
+						return ret;
+					} else if (event instanceof KeyEvent) {
+						return processKeyEvent((KeyEvent) event);
+					}
+				}
+			} finally {
+				if (is_focused) {
+					getParent().focus(this);
 				}
 			}
 		}
