@@ -207,7 +207,9 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 				}
 			} finally {
 				if (is_focused) {
-					getParent().focus(this);
+					if (getParent() != null) {
+						getParent().focus(this);
+					}
 				}
 			}
 		}
