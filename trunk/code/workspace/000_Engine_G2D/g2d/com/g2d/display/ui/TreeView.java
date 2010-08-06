@@ -10,12 +10,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.cell.CIO;
 import com.g2d.display.DisplayObject;
 import com.g2d.display.event.EventListener;
-import com.g2d.display.tree.DefaultTreeAdapter;
-import com.g2d.display.tree.TreeAdapter;
-import com.g2d.display.tree.TreeNode;
-import com.g2d.display.tree.TreeNodeListener;
 import com.g2d.display.ui.event.ActionEvent;
 import com.g2d.display.ui.event.ActionListener;
+import com.g2d.display.ui.tree.DefaultTreeAdapter;
+import com.g2d.display.ui.tree.TreeAdapter;
+import com.g2d.display.ui.tree.TreeNode;
+import com.g2d.display.ui.tree.TreeNodeListener;
 
 public class TreeView extends Container
 {
@@ -102,6 +102,7 @@ public class TreeView extends Container
 	}
 
 	synchronized public void refresh() {
+		DisplayObject focus = getFocus();
 		removeChilds(nodes.values());
 		if (root != null) {
 			resetTreeNode(root, 0, new AtomicInteger(border_h), new AtomicInteger(border_h));
@@ -113,6 +114,9 @@ public class TreeView extends Container
 				mw = Math.max(mw, ui.getX() + ui.getWidth()  + border_h);
 				mh = Math.max(mh, ui.getY() + ui.getHeight() + border_h);
 			}
+		}
+		if (focus != null) {
+			focus(focus);
 		}
 		super.setSize(mw, mh);
 	}
