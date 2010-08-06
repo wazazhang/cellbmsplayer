@@ -1,4 +1,4 @@
-package com.g2d.display.tree;
+package com.g2d.display.ui.tree;
 
 import com.g2d.display.event.EventListener;
 import com.g2d.display.ui.TreeView;

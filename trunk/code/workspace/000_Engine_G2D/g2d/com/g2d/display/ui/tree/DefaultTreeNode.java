@@ -1,4 +1,4 @@
-package com.g2d.display.tree;
+package com.g2d.display.ui.tree;
 
 import java.util.Collection;
 import java.util.Vector;
