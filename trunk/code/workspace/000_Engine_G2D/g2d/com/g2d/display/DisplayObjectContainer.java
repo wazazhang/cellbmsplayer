@@ -85,15 +85,19 @@ public abstract class DisplayObjectContainer extends DisplayObject
 				
 			case DisplayObjectEvent.EVENT_MOVE_TOP:
 				synchronized (elements_lock) {
-				elements_buffer.remove(event.source);
-				elements_buffer.add(event.source);
+					if (elements_set.contains(event.source)) {
+						elements_buffer.remove(event.source);
+						elements_buffer.add(event.source);
+					}
 				}
 				break;
 				
 			case DisplayObjectEvent.EVENT_MOVE_BOT:
 				synchronized (elements_lock) {
-				elements_buffer.remove(event.source);
-				elements_buffer.add(0, event.source);
+					if (elements_set.contains(event.source)) {
+						elements_buffer.remove(event.source);
+						elements_buffer.add(0, event.source);
+					}
 				}
 				break;
 			}
