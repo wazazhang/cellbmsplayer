@@ -1,4 +1,4 @@
-package com.g2d.display.tree;
+package com.g2d.display.ui.tree;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
