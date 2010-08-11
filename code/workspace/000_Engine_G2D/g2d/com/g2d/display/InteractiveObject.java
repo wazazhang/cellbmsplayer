@@ -171,7 +171,7 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 	{
 		if (enable)
 		{
-			try {
+	
 				if (getParent()!=null) {
 					if (getParent().getFocus() == this) {
 						is_focused = true;
@@ -180,6 +180,9 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 							((MouseEvent)event).type == MouseEvent.EVENT_MOUSE_DOWN) {
 							if (isCatchedMouse() && enable_click_focus()) {
 								is_focused = true;
+								if (getParent() != null) {
+									getParent().focus(this);
+								}
 							}
 						}
 					}
@@ -205,13 +208,7 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 						return processKeyEvent((KeyEvent) event);
 					}
 				}
-			} finally {
-				if (is_focused) {
-					if (getParent() != null) {
-						getParent().focus(this);
-					}
-				}
-			}
+
 		}
 		return false;
 	}
