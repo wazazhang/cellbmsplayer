@@ -208,14 +208,20 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 	{
 		final Layer layer;
 		
-		PageAppearance	page_appearance	= new PageAppearance();
-		PageScene		page_scene		= new PageScene();
-		PageOrigin 		page_origin		= new PageOrigin();
-		PageTimeLine	page_timeline	= new PageTimeLine();
-		PageInfluences	page_influences	= new PageInfluences();
+		PageAppearance	page_appearance	;
+		PageScene		page_scene		;
+		PageOrigin 		page_origin		;
+		PageTimeLine	page_timeline	;
+		PageInfluences	page_influences	;
 		
-		public LayerEdit(Layer layer) {
+		public LayerEdit(Layer layer) 
+		{
 			this.layer = layer;
+			this.page_appearance	= new PageAppearance();
+			this.page_scene			= new PageScene();
+			this.page_origin		= new PageOrigin();
+			this.page_timeline		= new PageTimeLine();
+			this.page_influences	= new PageInfluences();
 			addTab("场景", 		page_scene);
 			addTab("粒子外观", 	page_appearance);
 			addTab("发射", 		page_origin);
@@ -286,6 +292,8 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 			{
 				super.setLayout(new BorderLayout());
 				
+				
+				
 				panels.put(ParticleAppearanceType.IMAGE, new AppearanceImage());
 				panels.put(ParticleAppearanceType.SPRITE, new AppearanceSprite());
 
@@ -294,7 +302,13 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 				top.add(type_list, BorderLayout.CENTER);
 
 				type_list.addActionListener(this);
-				type_list.setValue(ParticleAppearanceType.IMAGE);
+				
+				if (layer.appearance instanceof ParticleAppearanceType.DisplayNodeImage) {
+					type_list.setValue(ParticleAppearanceType.IMAGE);
+				}
+				if (layer.appearance instanceof ParticleAppearanceType.DisplayNodeSprite) {
+					type_list.setValue(ParticleAppearanceType.SPRITE);
+				}
 				
 				this.add(top, BorderLayout.NORTH);
 				this.add(center, BorderLayout.CENTER);
