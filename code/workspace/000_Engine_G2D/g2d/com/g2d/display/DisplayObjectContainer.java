@@ -111,12 +111,7 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	boolean onPoolEvent(com.g2d.display.event.Event<?> event) 
 	{
 		if (always_top_elements != null && !always_top_elements.isEmpty()) {
-			for (int i = always_top_elements.size() - 1; i >= 0; --i) {
-				if (always_top_elements.get(i).onPoolEvent(event)) {
-					return true;
-				}
-			}
-			return false;
+			return always_top_elements.lastElement().onPoolEvent(event);
 		} else {
 			synchronized (elements_lock) {
 				for (int i = elements_buffer.size() - 1; i >= 0; --i) {

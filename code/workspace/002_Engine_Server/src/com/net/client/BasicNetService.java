@@ -144,7 +144,15 @@ public abstract class BasicNetService
 			}
 		}
     }
+
+//	-------------------------------------------------------------------------------------------------------------
     
+	final public void runCleanTask(ThreadPool tp) {
+		tp.schedule(new CleanTask(), DropRequestTimeOut);
+	}
+	
+//  -------------------------------------------------------------------------------------------------------------
+  
     /**
      * 立刻清理所有未响应的请求
      */
@@ -230,6 +238,7 @@ public abstract class BasicNetService
 
 //	----------------------------------------------------------------------------------------------------------------------------
 
+	
     final public void cleanUnhandledMessages()
     {	
     	if (!UnhandledMessages.isEmpty()) {
@@ -419,20 +428,20 @@ public abstract class BasicNetService
 				}
 			}
 		}
-
-	    private class CleanTask implements Runnable
-	    {
-	    	@Override
-	    	public void run() {
-	    		cleanRequestAndNotify();
-	    	}
-	    }
 	}
 
 
 //	-------------------------------------------------------------------------------------------------
 
 //	-------------------------------------------------------------------------------------------------
+	
+	private class CleanTask implements Runnable
+	{
+		@Override
+		public void run() {
+			cleanRequestAndNotify() ;
+		}
+	}
 	
 //	-------------------------------------------------------------------------------------------------
 	
