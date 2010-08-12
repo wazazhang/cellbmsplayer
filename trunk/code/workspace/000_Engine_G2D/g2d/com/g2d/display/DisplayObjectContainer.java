@@ -111,11 +111,8 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	boolean onPoolEvent(com.g2d.display.event.Event<?> event) 
 	{
 		if (always_top_elements != null && !always_top_elements.isEmpty()) {
-			for (ListIterator<DisplayObject> it = always_top_elements
-					.listIterator(always_top_elements.size() - 1); it
-					.hasPrevious();) {
-				DisplayObject e = it.previous();
-				if (e.onPoolEvent(event)) {
+			for (int i = always_top_elements.size() - 1; i >= 0; --i) {
+				if (always_top_elements.get(i).onPoolEvent(event)) {
 					return true;
 				}
 			}
@@ -297,7 +294,7 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	 * always_top_elements
 	 * @param child
 	 */
-	final public void setAlwaysTopFocus(DisplayObject child) {
+	final public void addAlwaysTopFocus(DisplayObject child) {
 		if (child != null) {
 			events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_MOVE_TOP, child));
 			if (always_top_elements == null) {
@@ -314,7 +311,7 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	 * always_bottom_elements
 	 * @param child
 	 */
-	final public void setAlwaysBottom(DisplayObject child) {
+	final public void addAlwaysBottom(DisplayObject child) {
 		if (child != null) {
 			events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_MOVE_BOT, child));
 			if (always_bottom_elements == null) {
@@ -336,6 +333,14 @@ public abstract class DisplayObjectContainer extends DisplayObject
 		if (always_bottom_elements != null && !always_bottom_elements.isEmpty()) {
 			always_bottom_elements.remove(child);
 		}
+	}
+	
+	final public void clearAlwaysTopFocus(){
+		always_top_elements = null;
+	}
+	
+	final public void clearAlwaysBottom(){
+		always_bottom_elements = null;
 	}
 	
 	final public DisplayObject getAlwaysTopFocus() {
@@ -375,8 +380,12 @@ public abstract class DisplayObjectContainer extends DisplayObject
 		if (child.parent == this) {
 			elements_set.remove(child);
 			child.parent = null;
-			always_top_elements.remove(child);
-			always_bottom_elements.remove(child);
+			if (always_top_elements != null) {
+				always_top_elements.remove(child);
+			}
+			if (always_bottom_elements != null) {
+				always_bottom_elements.remove(child);
+			}
 			events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_DELETE, child));
 			return true;
 		}

@@ -52,7 +52,7 @@ public class ScrollBar extends UIComponent
 		super.addChild(head);
 		super.addChild(tail);
 		super.addChild(strip);
-		super.setAlwaysBottom(back);
+		super.addAlwaysBottom(back);
 		
 		UILayoutManager.getInstance().setLayout(back);
 		UILayoutManager.getInstance().setLayout(head);
