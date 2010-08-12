@@ -107,7 +107,7 @@ public class MessageBox extends Form implements ActionListener
 	@Override
 	public void open(DisplayObjectContainer screen) {
 		this.setCenter(screen);
-		screen.setAlwaysTopFocus(this);
+		screen.addAlwaysTopFocus(this);
 		super.open(screen);
 	}
 	
