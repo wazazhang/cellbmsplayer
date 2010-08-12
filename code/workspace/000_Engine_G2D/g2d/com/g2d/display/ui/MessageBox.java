@@ -114,7 +114,7 @@ public class MessageBox extends Form implements ActionListener
 	@Override
 	public void removed(DisplayObjectContainer parent) {
 		super.removed(parent);
-		parent.removeAlwaysTopFocus();
+		parent.removeAlwaysTopFocus(this);
 	}
 	
 	@Override
