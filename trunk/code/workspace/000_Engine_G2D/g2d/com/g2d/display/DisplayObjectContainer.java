@@ -13,7 +13,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Queue;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
@@ -41,8 +43,8 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	private Vector<DisplayObject>		elements_buffer = new Vector<DisplayObject>();
 	private Queue<DisplayObjectEvent>	events 			= new ConcurrentLinkedQueue<DisplayObjectEvent>();
 
-	DisplayObject						always_top_element;
-	DisplayObject						always_bottom_element;
+	Vector<DisplayObject>				always_top_elements;
+	Vector<DisplayObject>				always_bottom_elements;
 	
 //	-------------------------------------------------------------
 	Comparator<DisplayObject>			sorter 			= new DefaultObjectSorter();
@@ -108,9 +110,17 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	
 	boolean onPoolEvent(com.g2d.display.event.Event<?> event) 
 	{
-		if (always_top_element!=null) {
-			return always_top_element.onPoolEvent(event);
-		}else{
+		if (always_top_elements != null && !always_top_elements.isEmpty()) {
+			for (ListIterator<DisplayObject> it = always_top_elements
+					.listIterator(always_top_elements.size() - 1); it
+					.hasPrevious();) {
+				DisplayObject e = it.previous();
+				if (e.onPoolEvent(event)) {
+					return true;
+				}
+			}
+			return false;
+		} else {
 			synchronized (elements_lock) {
 				for (int i = elements_buffer.size() - 1; i >= 0; --i) {
 					if (elements_buffer.get(i).onPoolEvent(event)) {
@@ -154,12 +164,24 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	
 	@Override
 	final void updateAfter(DisplayObjectContainer parent) {
-		if (always_top_element != null) {		
-			if (always_top_element.parent != this) {
-				setAlwaysTopFocus(null);
+		if (always_top_elements!=null && !always_top_elements.isEmpty()) {
+			ArrayList<DisplayObject> removed = null;
+			DisplayObject top = null;
+			for (DisplayObject e : always_top_elements) {
+				if (e.parent != this) {
+					if (removed == null) {
+						removed = new ArrayList<DisplayObject>(1);
+					}
+					removed.add(e);
+				} else {
+					top = e;
+				}
 			}
-			else if (elements_buffer.get(elements_buffer.size()-1) != always_top_element) {
-				focus(always_top_element);
+			if (removed != null) {
+				always_top_elements.removeAll(removed);
+			}
+			if (top != null) {
+				focus(top);
 			}
 		}
 	}
@@ -251,46 +273,83 @@ public abstract class DisplayObjectContainer extends DisplayObject
 			return obj;
 		}
 	}
-	
-	final public void focus(DisplayObject child){
-		if (always_top_element != null) {
-			events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_MOVE_TOP, always_top_element));
-		} else if (child == always_bottom_element){
-			events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_MOVE_BOT, child));
+
+	final public void focus(DisplayObject child)
+	{
+		if (always_top_elements != null && !always_top_elements.isEmpty()) {
+			for (DisplayObject e : always_top_elements) {
+				events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_MOVE_TOP, e));
+			}
 		} else {
 			events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_MOVE_TOP, child));
 		}
+		if (always_bottom_elements != null && !always_bottom_elements.isEmpty()) {
+			for (DisplayObject e : always_bottom_elements) {
+				events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_MOVE_BOT, e));
+			}
+		}
 	}
+
+//	--------------------------------------------------------------------------------------------------------------------
 	
-//	top element
-	final public void removeAlwaysTopFocus(){
-		setAlwaysTopFocus(null);
-	}
-	
+	/** 
+	 * Top <- top[2] top[1] top[0] 
+	 * always_top_elements
+	 * @param child
+	 */
 	final public void setAlwaysTopFocus(DisplayObject child) {
 		if (child != null) {
 			events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_MOVE_TOP, child));
+			if (always_top_elements == null) {
+				always_top_elements = new Vector<DisplayObject>();
+				always_top_elements.add(child);
+			} else if (!always_top_elements.contains(child)) {
+				always_top_elements.add(child);
+			}
 		}
-		always_top_element = child;
 	}
-	
-	final public DisplayObject getAlwaysTopFocus() {
-		return always_top_element;
-	}
-	
-//	bottom element
-	final public void removeAlwaysBottom(){
-		setAlwaysBottom(null);
-	}
-	
+
+	/**
+	 * Bottom <- b[2] b[1] b[0] 
+	 * always_bottom_elements
+	 * @param child
+	 */
 	final public void setAlwaysBottom(DisplayObject child) {
 		if (child != null) {
 			events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_MOVE_BOT, child));
+			if (always_bottom_elements == null) {
+				always_bottom_elements = new Vector<DisplayObject>();
+				always_bottom_elements.add(child);
+			} else if (!always_bottom_elements.contains(child)) {
+				always_bottom_elements.add(child);
+			}
 		}
-		always_bottom_element = child;
 	}
+	
+	final public void removeAlwaysTopFocus(DisplayObject child){
+		if (always_top_elements != null && !always_top_elements.isEmpty()) {
+			always_top_elements.remove(child);
+		}
+	}
+	
+	final public void removeAlwaysBottom(DisplayObject child){
+		if (always_bottom_elements != null && !always_bottom_elements.isEmpty()) {
+			always_bottom_elements.remove(child);
+		}
+	}
+	
+	final public DisplayObject getAlwaysTopFocus() {
+		if (always_top_elements != null && !always_top_elements.isEmpty()) {
+			return always_top_elements.lastElement();
+		}
+		return null;
+	}
+	
 	final public DisplayObject getAlwaysBottom() {
-		return always_bottom_element;
+		if (always_bottom_elements != null && !always_bottom_elements.isEmpty()) {
+			return always_bottom_elements.lastElement();
+		}
+		return null;
 	}
 
 
@@ -302,8 +361,9 @@ public abstract class DisplayObjectContainer extends DisplayObject
 			child.root = this.getRoot();
 			elements_set.put(child, child);
 			events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_ADD, child));
-			if (always_top_element != null) {
-				events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_MOVE_TOP, always_top_element));
+			DisplayObject top = getAlwaysTopFocus();
+			if (top != null) {
+				events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_MOVE_TOP, top));
 			}
 			return true;
 		} else {
@@ -315,9 +375,8 @@ public abstract class DisplayObjectContainer extends DisplayObject
 		if (child.parent == this) {
 			elements_set.remove(child);
 			child.parent = null;
-			if (always_top_element == child) {
-				always_top_element = null;
-			}
+			always_top_elements.remove(child);
+			always_bottom_elements.remove(child);
 			events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_DELETE, child));
 			return true;
 		}
