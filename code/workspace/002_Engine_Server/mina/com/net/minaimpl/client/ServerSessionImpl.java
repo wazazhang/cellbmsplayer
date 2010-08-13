@@ -39,19 +39,28 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 	IoConnector 			Connector;
 	NetPackageCodec 		Codec;
 	ServerSessionListener 	Listener;
+	final boolean			smooth_close;
 	
-	public ServerSessionImpl()
-	{
+	public ServerSessionImpl() {
 		this(Thread.currentThread().getContextClassLoader(), null);
 	}
-
-	public ServerSessionImpl(ClassLoader cl, ExternalizableFactory ef)
+	
+	public ServerSessionImpl(boolean smooth_close) {
+		this(Thread.currentThread().getContextClassLoader(), null, smooth_close);
+	}
+	
+	public ServerSessionImpl(ClassLoader cl, ExternalizableFactory ef) {
+		this(Thread.currentThread().getContextClassLoader(), null, true);
+	}
+	
+	public ServerSessionImpl(ClassLoader cl, ExternalizableFactory ef, boolean smooth_close)
 	{
 		log			= LoggerFactory.getLogger(getClass().getName());
 		Codec		= new NetPackageCodec(cl, ef);
 		Connector 	= new NioSocketConnector();
 		Connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(Codec));
 		Connector.setHandler(this);
+		this.smooth_close = smooth_close;
 	}
 	
 	public boolean connect(String host, int port, ServerSessionListener listener) throws IOException {
@@ -73,7 +82,9 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 				IoSession io_session = future1.getSession();
 				if (io_session != null && io_session.isConnected()) {
 					session_ref.set(io_session);
-//					Runtime.getRuntime().addShutdownHook(new CleanTask(io_session));
+					if (smooth_close) {
+						Runtime.getRuntime().addShutdownHook(new CleanTask(io_session));
+					}
 					return true;
 				} else {
 					log.error("not connect : " + address.toString());
