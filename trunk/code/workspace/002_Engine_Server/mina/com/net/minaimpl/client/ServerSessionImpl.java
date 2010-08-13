@@ -73,7 +73,7 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 				IoSession io_session = future1.getSession();
 				if (io_session != null && io_session.isConnected()) {
 					session_ref.set(io_session);
-					Runtime.getRuntime().addShutdownHook(new CleanTask(io_session));
+//					Runtime.getRuntime().addShutdownHook(new CleanTask(io_session));
 					return true;
 				} else {
 					log.error("not connect : " + address.toString());
