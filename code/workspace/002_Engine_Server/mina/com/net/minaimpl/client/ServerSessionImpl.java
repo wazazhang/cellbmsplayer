@@ -50,7 +50,7 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 	}
 	
 	public ServerSessionImpl(ClassLoader cl, ExternalizableFactory ef) {
-		this(Thread.currentThread().getContextClassLoader(), null, true);
+		this(Thread.currentThread().getContextClassLoader(), ef, true);
 	}
 	
 	public ServerSessionImpl(ClassLoader cl, ExternalizableFactory ef, boolean smooth_close)
