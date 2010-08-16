@@ -95,6 +95,7 @@ final public class XLSUnit extends XLSTemplateNode<TUnit>
 			);
 			if (cpj_sprite!=null) {
 				set_binding.setIcon(cpj_sprite.getIcon(false));
+				set_binding.setText("(" + cpj_sprite.name + ")" + "绑定资源");
 			}
 			page_properties = new JPanel();
 //			page_properties.setLayout(new GridLayout(2, 1));
@@ -119,6 +120,7 @@ final public class XLSUnit extends XLSTemplateNode<TUnit>
 					setCPJSprite(spr);
 					XLSUnit.this.getIcon(true);
 					set_binding.setIcon(cpj_sprite.getIcon(false));
+					set_binding.setText("(" + cpj_sprite.name + ")" + "绑定资源");
 					Studio.getInstance().getObjectManager().getPage(XLSUnit.class).repaint();
 				}
 			}
