@@ -118,7 +118,7 @@ public class Tracker
 			if (prewTime == 0) {
 				super.record(0);
 			}else{
-				double v = (value - prewValue) / ((curTime - prewTime) / 1000);
+				double v = (value - prewValue) / ((curTime - prewTime) / 1000d);
 				//System.out.println("recort second rate : " + v + " " + prewTime + " " + prewValue);
 				super.record(v);
 			}
