@@ -105,11 +105,7 @@ public class NetService extends BasicNetService
 	 */
 	@Override
 	public void close(boolean force) {
-		if (Session.isConnected()) {
-    		Session.disconnect(force);
-		}else{
-			printNotConnectError();
-		}
+    	Session.disconnect(force);
 	}
 	
 	/**
