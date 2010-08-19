@@ -3,6 +3,8 @@ package com.net.client;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -35,8 +37,13 @@ public abstract class BasicNetService
 	final private ConcurrentHashMap<Integer, Request> 
 									WaitingListeners 		= new ConcurrentHashMap<Integer, Request>();
 
+	final private ReentrantLock		notifies_lock			= new ReentrantLock();
 	final private ConcurrentHashMap<Class<?>, Vector<NotifyListener<?>>> 
-									NotifyListeners 		= new ConcurrentHashMap<Class<?>, Vector<NotifyListener<?>>>();
+									notifies_map 				= new ConcurrentHashMap<Class<?>, Vector<NotifyListener<?>>>();
+	final private HashMap<Class<?>, NotifyListener<?>> 
+									adding_notifies			= new HashMap<Class<?>, NotifyListener<?>>();
+	final private HashMap<Class<?>, NotifyListener<?>> 	
+									removing_notifies		= new HashMap<Class<?>, NotifyListener<?>>();
 	
 	final private ConcurrentLinkedQueue<MessageHeader>
 									UnhandledMessages 		= new ConcurrentLinkedQueue<MessageHeader>();
@@ -151,6 +158,42 @@ public abstract class BasicNetService
 		tp.schedule(new CleanTask(), DropRequestTimeOut);
 	}
 	
+//	----------------------------------------------------------------------------------------------------------------------------
+//	notify
+    
+	/**
+	 * 添加一个用于主动监听服务器端的消息的监听器
+	 * @param message_type
+	 * @param listener
+	 */
+	final public void registNotifyListener(Class<? extends MessageHeader> message_type, NotifyListener<?> listener) {
+		synchronized (adding_notifies) {
+			adding_notifies.put(message_type, listener);
+		}
+		cleanUnhandledMessages();
+	}
+	
+	/**
+	 * 删除一个用于主动监听服务器端的消息的监听器
+	 * @param message_type
+	 * @param listener
+	 */
+	final public void unregistNotifyListener(Class<? extends MessageHeader> message_type, NotifyListener<?> listener) {
+		synchronized (removing_notifies) {
+			removing_notifies.put(message_type, listener);
+		}
+	}
+	
+	/**
+	 * 清理所有用于主动监听服务器端的消息的监听器
+	 * @param message_type
+	 */
+	final public void clearNotifyListener(Class<? extends MessageHeader> message_type) {
+		notifies_map.remove(message_type);
+	}
+
+//	----------------------------------------------------------------------------------------------------------------------------
+
 //  -------------------------------------------------------------------------------------------------------------
   
     /**
@@ -159,6 +202,7 @@ public abstract class BasicNetService
     final public void cleanRequestAndNotify() 
     {
 //    	System.err.println("waiting listeners : " + WaitingListeners.size());
+    	
     	try{
     		for (Integer pnum : new ArrayList<Integer>(WaitingListeners.keySet())) {
         		Request req = WaitingListeners.get(pnum);
@@ -194,50 +238,6 @@ public abstract class BasicNetService
     	}
     }
     
-//	----------------------------------------------------------------------------------------------------------------------------
-//	notify
-    
-	/**
-	 * 添加一个用于主动监听服务器端的消息的监听器
-	 * @param message_type
-	 * @param listener
-	 */
-	final public void registNotifyListener(Class<? extends MessageHeader> message_type, NotifyListener<?> listener) {
-		synchronized (NotifyListeners) {
-			Vector<NotifyListener<?>> listeners = NotifyListeners.get(message_type);
-			if (listeners == null) {
-				listeners = new Vector<NotifyListener<?>>();
-				NotifyListeners.put(message_type, listeners);
-			}
-			listeners.add(listener);
-		}
-		cleanUnhandledMessages();
-	}
-	
-	/**
-	 * 删除一个用于主动监听服务器端的消息的监听器
-	 * @param message_type
-	 * @param listener
-	 */
-	final public void unregistNotifyListener(Class<? extends MessageHeader> message_type, NotifyListener<?> listener) {
-		synchronized (NotifyListeners) {
-			Vector<NotifyListener<?>> listeners = NotifyListeners.get(message_type);
-			if (listeners != null) {
-				listeners.remove(listener);
-			}
-		}
-	}
-	
-	/**
-	 * 清理所有用于主动监听服务器端的消息的监听器
-	 * @param message_type
-	 */
-	final public void clearNotifyListener(Class<? extends MessageHeader> message_type) {
-		NotifyListeners.remove(message_type);
-	}
-
-//	----------------------------------------------------------------------------------------------------------------------------
-
 	
     final public void cleanUnhandledMessages()
     {	
@@ -257,6 +257,8 @@ public abstract class BasicNetService
 			}
 		}
     }
+    
+//    -------------------------------------------------------------------------------------------------------------------
     
 	final private void processReceiveSessionMessage(MessageHeader message) {
 		try {
@@ -291,12 +293,40 @@ public abstract class BasicNetService
 	@SuppressWarnings("unchecked")
 	final private boolean tryReceivedNotify(MessageHeader message) 
 	{
-		Vector<NotifyListener<?>> notifys = NotifyListeners.get(message.getClass());
-		if (notifys != null && !notifys.isEmpty()) {
-			for (NotifyListener notify : notifys) {
-				notify.notify(this, message);
+		synchronized (notifies_lock)
+		{
+			synchronized (adding_notifies) {
+				if (!adding_notifies.isEmpty()) {
+					for (Class<?> type : adding_notifies.keySet()) {
+						Vector<NotifyListener<?>> notifys = notifies_map.get(type);
+						if (notifys == null) {
+							notifys = new Vector<NotifyListener<?>>();
+						}
+						notifys.add(adding_notifies.get(type));
+						notifies_map.put(type, notifys);
+					}
+					adding_notifies.clear();
+				}
 			}
-			return true;
+			synchronized (removing_notifies) {
+				if (!removing_notifies.isEmpty()) {
+					for (Class<?> type : removing_notifies.keySet()) {
+						Vector<NotifyListener<?>> notifys = notifies_map.get(type);
+						if (notifys != null) {
+							notifys.remove(removing_notifies.get(type));
+						}
+					}
+					removing_notifies.clear();
+				}
+			}
+			
+			Vector<NotifyListener<?>> notifys = notifies_map.get(message.getClass());
+			if (notifys != null && !notifys.isEmpty()) {
+				for (NotifyListener notify : notifys) {
+					notify.notify(this, message);
+				}
+				return true;
+			}
 		}
     	return false;
 	}
