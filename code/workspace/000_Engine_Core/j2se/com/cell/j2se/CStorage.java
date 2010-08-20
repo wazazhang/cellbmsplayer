@@ -72,6 +72,13 @@ public class CStorage implements IStorage
 		return path;
 	}
 	
+	String getRootFilePath(String name)
+	{
+		String path = rms_file.getPath() + Separator  + name;
+		return path;
+	}
+	
+	
 	int getFileCount(String name)
 	{
 		try {
@@ -79,9 +86,12 @@ public class CStorage implements IStorage
 			java.io.File file = new java.io.File(path);
 			if (file.exists()) {
 				FileInputStream fs = new FileInputStream(file);
-				int count = fs.read();
-				fs.close();
-				return count;
+				try {
+					int count = fs.read();
+					return count;
+				} finally {
+					fs.close();
+				}
 			}
 		} catch (Exception err) {
 			err.printStackTrace();
@@ -104,8 +114,11 @@ public class CStorage implements IStorage
 			java.io.File file = new java.io.File(path);
 			if (!file.exists()) file.createNewFile();
 			FileOutputStream fs = new FileOutputStream(file);
-			fs.write(count);
-			fs.close();
+			try {
+				fs.write(count);
+			} finally {
+				fs.close();
+			}
 			return count;
 		} catch (Exception err) {
 			err.printStackTrace();
@@ -119,33 +132,28 @@ public class CStorage implements IStorage
 	public byte[] load(String name, int id)
 	{
 		byte[] SaveData = null;
-
-		try 
-		{
+		try {
 			java.io.File file = new java.io.File(getFilePath(name, id));
-
 			if (file.exists()) {
 				FileInputStream fs = new FileInputStream(file);
-
-				int dataSize = fs.available();
-				int count = 0, i;
-				SaveData = new byte[dataSize];
-
-				while (true) {
-					i = fs.read(SaveData, count, dataSize - count);
-					if (i <= 0)
-						break;
-					count += i;
+				try {
+					int dataSize = fs.available();
+					int count = 0, i;
+					SaveData = new byte[dataSize];
+					while (true) {
+						i = fs.read(SaveData, count, dataSize - count);
+						if (i <= 0)
+							break;
+						count += i;
+					}
+				} finally {
+					fs.close();
 				}
-				fs.close();
 			}
-			
 		} catch (Exception err) {
 			err.printStackTrace();
 		}
-
 		return SaveData;
-	
 	}
 
 	public int save(String name,int id, byte[] datas) 
@@ -164,8 +172,11 @@ public class CStorage implements IStorage
 			}
 
 			FileOutputStream fs = new FileOutputStream(file);
-			fs.write(datas);
-			fs.close();
+			try {
+				fs.write(datas);
+			} finally {
+				fs.close();
+			}
 
 			int count = getFileCount(name);
 			if (count < id + 1)
@@ -198,6 +209,86 @@ public class CStorage implements IStorage
 		
 		return FILE_FAILE;
 	}
+	
+	
+	
+	@Override
+	public int root_delete(String name) {
+		try {
+			java.io.File file = new java.io.File(getRootFilePath(name));
+			if (file.exists()) {
+				file.delete();
+				return FILE_OK;
+			}
+		} catch (Exception err) {
+			err.printStackTrace();
+		}
+		return FILE_FAILE;
+	}
+	
+	@Override
+	public byte[] root_load(String name) {
+		byte[] SaveData = null;
+		try {
+			java.io.File file = new java.io.File(getRootFilePath(name));
+			if (file.exists()) {
+				FileInputStream fs = new FileInputStream(file);
+				try {
+					int dataSize = fs.available();
+					int count = 0, i;
+					SaveData = new byte[dataSize];
+					while (true) {
+						i = fs.read(SaveData, count, dataSize - count);
+						if (i <= 0)
+							break;
+						count += i;
+					} 
+				} finally {
+					fs.close();
+				}
+			}
+		} catch (Exception err) {
+			err.printStackTrace();
+		}
+		return SaveData;
+	}
+	
+	@Override
+	public int root_save(String name, byte[] datas) {
+		try {
+			java.io.File file = new java.io.File(getRootFilePath(name));
+			if (!file.getParentFile().exists()) {
+				file.getParentFile().mkdirs();
+			}
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+			FileOutputStream fs = new FileOutputStream(file);
+			try {
+				fs.write(datas);
+			} finally {
+				fs.close();
+			}
+			return FILE_OK;
+		} catch (Exception err) {
+			err.printStackTrace();
+		}
+
+		return FILE_FAILE;
+
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	public int getIdCount(String name) 
 	{

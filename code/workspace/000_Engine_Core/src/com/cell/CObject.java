@@ -7,9 +7,13 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -46,7 +50,20 @@ public class CObject
 				e.printStackTrace();
 			}
 		}
-
+		
+		@Override
+		public int root_delete(String name) {
+			return 0;
+		}
+		@Override
+		public int root_save(String name, byte[] datas) {
+			return 0;
+		}
+		@Override
+		public byte[] root_load(String name) {
+			return null;
+		}
+		
 		public byte[] load(String name, int id) {
 			return null;
 		}
@@ -300,6 +317,9 @@ public class CObject
 		
 	}
 	
+	
+	
+	
 	public static String getEncoding(){
 		return ENCODING;
 	}
@@ -426,6 +446,54 @@ public class CObject
 		return CurLocale;
 	}
 
+	
+//	--------------------------------------------------------------------------------------------------------------------------------------
+
+	public static<T> void storageSave(String key, T data) 
+	{
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		try {
+			ObjectOutputStream oos = new ObjectOutputStream(baos);
+			oos.writeObject(data);
+			getStorage().root_save(key, baos.toByteArray());
+		} catch (Exception err) {
+			err.printStackTrace();
+		} finally {
+			try {
+				baos.close();
+			} catch (IOException e) {}
+		}
+	}
+	
+	public static<T> T storageLoad(String key, Class<T> type) 
+	{
+		byte[] data = getStorage().root_load(key);
+		if (data != null) {
+			ByteArrayInputStream bais = new ByteArrayInputStream(data);
+			try {
+				ObjectInputStream ois = new ObjectInputStream(bais);
+				Object o = ois.readObject();
+				if (type.isInstance(o)) {
+					return type.cast(o);
+				}
+			} catch (Exception err) {
+				err.printStackTrace();
+			} finally {
+				try {
+					bais.close();
+				} catch (IOException e) {}
+			}
+		}
+		return null;
+	}
+	
+	public static<T> T storageLoad(String key, Class<T> type, T default_value) {
+		T ret = storageLoad(key, type) ;
+		if (ret == null) {
+			return default_value;
+		}
+		return ret;
+	}
 	
 //	--------------------------------------------------------------------------------------------------------------------------------------
 

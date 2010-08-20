@@ -18,6 +18,11 @@ public interface IStorage
 	public byte[]	load(String name, int id);
 	public int		getIdCount(String name);
 	
+	public int		root_save	(String name, byte[] datas);
+	public int		root_delete	(String name);
+	public byte[]	root_load	(String name);
+	
+	
 	public byte[] syncReadBytesFromURL(String url, int timeOut);
 	
 	public boolean beginReadBytesFromURL(String url, IReadListener listener, int timeOut);
