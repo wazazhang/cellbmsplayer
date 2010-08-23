@@ -31,7 +31,7 @@ public class JALPlayer implements IPlayer, Comparable<JALPlayer>
 			if (JALSoundManager.checkError(al)) {
 				throw new Exception("Error generating OpenAL source !");
 			}
-	
+
 			this.source = source;
 			
 			float[] sourcePos = { 0.0f, 0.0f, 0.0f };
@@ -40,9 +40,10 @@ public class JALPlayer implements IPlayer, Comparable<JALPlayer>
 			al.alSourcefv(source[0], AL.AL_POSITION, sourcePos, 0);
 			al.alSourcefv(source[0], AL.AL_VELOCITY, sourceVel, 0);
 			
-			al.alSourcef(source[0], AL.AL_PITCH,	1.0f);
-			al.alSourcef(source[0], AL.AL_GAIN,		1.0f);
-			al.alSourcei(source[0], AL.AL_LOOPING,	0);
+			al.alSourcef(source[0], AL.AL_ROLLOFF_FACTOR, 	1.0f);
+			al.alSourcef(source[0], AL.AL_PITCH,			1.0f);
+			al.alSourcef(source[0], AL.AL_GAIN,				1.0f);
+			al.alSourcei(source[0], AL.AL_LOOPING,			0);
 			
 			JALSoundManager.checkError(al);
 		}
@@ -80,7 +81,7 @@ public class JALPlayer implements IPlayer, Comparable<JALPlayer>
 	
 	@Override
 	synchronized public void play(boolean loop) {
-		if (source!=null && al_sound!=null) {			
+		if (source!=null && al_sound!=null) {
 			al.alSourcei(source[0], AL.AL_LOOPING,	loop?1:0);
 			if (JALSoundManager.checkError(al)) {
 			} else {

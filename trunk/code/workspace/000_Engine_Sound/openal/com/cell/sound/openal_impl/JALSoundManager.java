@@ -70,7 +70,7 @@ public class JALSoundManager extends SoundManager
 				
 				int[] nummono	= new int[1];
 				int[] numstereo = new int[1];
-				alc.alcGetIntegerv(device, ALC.ALC_MONO_SOURCES, 1, nummono, 0); 
+				alc.alcGetIntegerv(device, ALC.ALC_MONO_SOURCES,   1, nummono,   0); 
 				alc.alcGetIntegerv(device, ALC.ALC_STEREO_SOURCES, 1, numstereo, 0); 
 
 				System.out.println("\tMax mono sources   : " + nummono[0]); 
@@ -81,11 +81,14 @@ public class JALSoundManager extends SoundManager
 					max_index = i;
 				}
 			}
-
-			ALCdevice soft_device = alc.alcOpenDevice(devices[max_index]);
-			ALCcontext context = alc.alcCreateContext(soft_device, null);
-			alc.alcMakeContextCurrent(context);
 			
+			System.out.println("Enable OpenAL Device : " + devices[max_index]);
+			ALCdevice 	soft_device = alc.alcOpenDevice(devices[max_index]);
+			ALCcontext 	context 	= alc.alcCreateContext(soft_device, null);
+			
+			alc.alcMakeContextCurrent(context);
+//			al.alSpeedOfSound(1.0f);
+//			al.alDopplerFactor(1.0f);
 		}
 		
 		// set listeners
