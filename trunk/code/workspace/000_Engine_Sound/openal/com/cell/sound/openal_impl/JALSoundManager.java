@@ -153,7 +153,7 @@ public class JALSoundManager extends SoundManager
 	public IPlayer createPlayer() 
 	{
 		for (JALPlayer player : players) {
-			if (!player.actived.get()) {
+			if (player.actived.get() == false) {
 				player.actived.set(true);
 				return player;
 			}
@@ -184,45 +184,7 @@ public class JALSoundManager extends SoundManager
 		if (input == null) {
 			throw new IOException("InputStream is null !");
 		}
-		int[] 			out_format	= new int[1];
-		int[] 			out_size  	= new int[1];
-		ByteBuffer[] 	out_data	= new ByteBuffer[1];
-		int[] 			out_freq	= new int[1];
-		int[] 			out_loop	= new int[1];
-		// Load wav data into a buffer.
-		ALut.alutLoadWAVFile(input, out_format, out_data, out_size, out_freq, out_loop);
-		if (out_data[0] == null) {
-			throw new IOException("Error loading WAV file !");
-		}
-		
-		SoundInfo info = new SoundInfo();
-		info.data 		= out_data[0];
-		info.size 		= out_size[0];
-		info.frame_rate = out_freq[0];
-		info.resource	= resource;
-		info.comment	= "ALut.alutLoadWAVFile(input, out_format, out_data, out_size, out_freq, out_loop);";
-		
-		switch(out_format[0])
-		{
-		case AL.AL_FORMAT_MONO16:
-		case AL.AL_FORMAT_STEREO16: info.bit_length = 16;
-			break;
-		case AL.AL_FORMAT_MONO8:
-		case AL.AL_FORMAT_STEREO8: info.bit_length = 8;
-			break;
-		}
-		
-		switch(out_format[0])
-		{
-		case AL.AL_FORMAT_MONO8:
-		case AL.AL_FORMAT_MONO16: info.channels = 1;
-			break;
-		case AL.AL_FORMAT_STEREO16:
-		case AL.AL_FORMAT_STEREO8: info.channels = 2;
-			break;
-		}
-		
-		return info;
+		return new JALWavSoundInfo(resource, input);
 	}
 
 	SoundInfo initOgg(String resource, InputStream input) throws Exception
@@ -230,8 +192,7 @@ public class JALSoundManager extends SoundManager
 		if (input == null) {
 			throw new IOException("InputStream is null !");
 		}
-		SoundInfo info = ogg_decoder.decode(input);
-		info.resource = resource;
+		SoundInfo info = ogg_decoder.decode(resource, input);
 		return info;
 	}
 	

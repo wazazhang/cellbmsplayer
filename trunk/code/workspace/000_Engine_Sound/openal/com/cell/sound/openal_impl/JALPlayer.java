@@ -39,15 +39,17 @@ public class JALPlayer implements IPlayer, Comparable<JALPlayer>
 
 			this.source = source;
 			
-			float[] sourcePos = { 0.0f, 0.0f, 0.0f };
-			float[] sourceVel = { 0.0f, 0.0f, 0.0f };
+			float[] zero_v = { 0.0f, 0.0f, 0.0f };
 			
-			al.alSourcefv(source[0], AL.AL_POSITION, sourcePos, 0);
-			al.alSourcefv(source[0], AL.AL_VELOCITY, sourceVel, 0);
+			al.alSourcefv(source[0], AL.AL_POSITION,	zero_v, 0);
+			al.alSourcefv(source[0], AL.AL_VELOCITY,	zero_v, 0);
+			al.alSourcefv(source[0], AL.AL_DIRECTION,	zero_v, 0);
 			
-			al.alSourcef(source[0], AL.AL_ROLLOFF_FACTOR, 	1.0f);
 			al.alSourcef(source[0], AL.AL_PITCH,			1.0f);
 			al.alSourcef(source[0], AL.AL_GAIN,				1.0f);
+			al.alSourcef(source[0], AL.AL_ROLLOFF_FACTOR, 	0.0f);
+
+			al.alSourcei(source[0], AL.AL_SOURCE_RELATIVE, 	AL.AL_TRUE);
 			al.alSourcei(source[0], AL.AL_LOOPING,			0);
 			
 			JALSoundManager.checkError(al);
@@ -59,11 +61,10 @@ public class JALPlayer implements IPlayer, Comparable<JALPlayer>
 	{
 		if (source!=null) 
 		{
-			if (al_sound!=null && al_sound.buffer!=null) {
+			if (al_sound != null && al_sound.buffer != null) {
 				al.alSourcei(source[0], AL.AL_BUFFER, 0);
 //				al.alSourceUnqueueBuffers(source[0], 1, al_sound.buffer, 0);
 				if (JALSoundManager.checkError(al)) {}
-				al_sound.binded_source.remove(this);
 			}
 			
 			if (sound instanceof JALSound) {
@@ -72,7 +73,6 @@ public class JALPlayer implements IPlayer, Comparable<JALPlayer>
 //					al.alSourceQueueBuffers(source[0], 1, al_sound.buffer, 0);
 					al.alSourcei(source[0], AL.AL_BUFFER, al_sound.buffer[0]);
 					if (JALSoundManager.checkError(al)) {}
-					al_sound.binded_source.add(this);
 					last_bind_time = System.currentTimeMillis();
 				}
 			}

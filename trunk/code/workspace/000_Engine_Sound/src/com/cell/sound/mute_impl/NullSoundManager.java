@@ -26,12 +26,12 @@ public class NullSoundManager extends SoundManager
 	
 	@Override
 	public SoundInfo createSoundInfo(String resource, InputStream is) {
-		return new SoundInfo();	
+		return new NullSoundInfo();	
 	}
 	
 	@Override
 	public SoundInfo createSoundInfo(String resource) {
-		return new SoundInfo();
+		return new NullSoundInfo();
 	}
 	
 	@Override
