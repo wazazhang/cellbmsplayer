@@ -2,36 +2,39 @@ package com.cell.sound;
 
 import java.nio.ByteBuffer;
 
-public class SoundInfo
+public abstract class SoundInfo
 {
-	public String		resource;
+	abstract public String		getResource();
 	
 	/** stereo mono */
-	public int			channels;
+	abstract public int			getChannels();
 	
 	/** 16bit 8bit */
-	public int			bit_length;
+	abstract public int			getBitLength();
 	
 	/** 44100hz 22050hz */
-	public int 			frame_rate;
-	
-	/** PCM raw data */
-	public ByteBuffer 	data;
-	
-	/** raw data size */
-	public int			size;
+	abstract public int 		getFrameRate();
 	
 	/** file comment */
-	public String		comment = "";
+	abstract public String		getComment();
+	
+	/** PCM raw data stream */
+	abstract public ByteBuffer	getData();
+
+	/** if the raw stream has remain data */
+	abstract public boolean		hasData();
+	
+	/** reset the raw data stream to head */
+	abstract public void		resetData();
 	
 	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
-		sb.append("channels: " + channels + "\n");
-		sb.append("bit_length: " + bit_length + "\n");
-		sb.append("frame_rate: " + frame_rate + "\n");
-		sb.append("size: " + size + "\n");
-		sb.append(comment);
+		sb.append("SoundInfo : " + getResource() + "\n");
+		sb.append("\tchannels : " + getChannels() + "\n");
+		sb.append("\tbit_length : " + getBitLength() + "\n");
+		sb.append("\tframe_rate : " + getFrameRate() + "\n");
+		sb.append(getComment());
 		return sb.toString();
 	}
 

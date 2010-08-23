@@ -8,7 +8,7 @@ public abstract class Decoder
 {
 	abstract public String getName();
 	
-	abstract public SoundInfo decode(InputStream in) throws Exception;
+	abstract public SoundInfo decode(String resource, InputStream in) throws Exception;
 	
 	
 }

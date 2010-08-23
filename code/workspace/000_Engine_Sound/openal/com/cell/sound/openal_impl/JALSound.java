@@ -19,8 +19,6 @@ public class JALSound implements ISound
 	
 	// Buffers hold sound data.
 	int[] 					buffer;
-	HashSet<JALPlayer>		binded_source = new HashSet<JALPlayer>(1);
-	
 	
 	JALSound(JALSoundManager factory, SoundInfo info) throws Exception
 	{
@@ -32,15 +30,15 @@ public class JALSound implements ISound
 
 		{
 			int format = AL.AL_FORMAT_MONO16;
-			if (info.bit_length == 16) {
-				if (info.channels==1) {
+			if (info.getBitLength() == 16) {
+				if (info.getChannels()==1) {
 					format = AL.AL_FORMAT_MONO16;
 				} else {
 					format = AL.AL_FORMAT_STEREO16;
 				}
 			}
-			else if (info.bit_length == 8) {
-				if (info.channels==1) {
+			else if (info.getBitLength() == 8) {
+				if (info.getChannels()==1) {
 					format = AL.AL_FORMAT_MONO8;
 				} else {
 					format = AL.AL_FORMAT_STEREO8;
@@ -57,7 +55,9 @@ public class JALSound implements ISound
 					throw new Exception("Error generating OpenAL buffers : " + toString());
 				}
 				
-				al.alBufferData(buffer[0], format, info.data, info.size, info.frame_rate);
+				ByteBuffer data = info.getData();
+				al.alBufferData(buffer[0], format, data, data.remaining(), info.getFrameRate());
+				
 				// Do another error check and return.
 				if (JALSoundManager.checkError(al)) {
 					al.alDeleteBuffers(1, buffer, 0);
@@ -79,15 +79,7 @@ public class JALSound implements ISound
 	
 	synchronized public void dispose() 
 	{
-		for (JALPlayer p : binded_source) {
-			if (p.al_sound==this) {				
-				p.stop();
-				p.setSound(null);
-			}
-		}
-		binded_source.clear();
-		
-		if (buffer!=null) {
+		if (buffer != null) {
 //			System.out.println("dispose buffer " + buffer[0]);
 			al.alDeleteBuffers(1, buffer, 0);
 			if (JALSoundManager.checkError(al)) {}
@@ -97,7 +89,7 @@ public class JALSound implements ISound
 	
 	@Override
 	synchronized public String toString() {
-		return getClass().getName() + " : " + info.resource;
+		return getClass().getName() + " : " + info.getResource();
 	}
 	
 	protected void finalize() throws Throwable {
