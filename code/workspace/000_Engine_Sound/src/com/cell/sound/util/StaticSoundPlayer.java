@@ -50,7 +50,10 @@ public class StaticSoundPlayer implements IPlayer
 	public void pause() {
 		player.pause();
 	}
-	
+	@Override
+	public void resume() {
+		player.resume();
+	}
 	@Override
 	public void play(boolean looping) {
 		player.play(looping);
