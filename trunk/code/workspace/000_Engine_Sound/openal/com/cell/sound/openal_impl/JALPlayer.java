@@ -1,5 +1,8 @@
 package com.cell.sound.openal_impl;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
+
 import com.cell.sound.IPlayer;
 import com.cell.sound.ISound;
 
@@ -16,6 +19,8 @@ public class JALPlayer implements IPlayer, Comparable<JALPlayer>
 	JALSound			al_sound;
 	
 	public long 		last_bind_time = 0;
+	
+	AtomicBoolean		actived = new AtomicBoolean(false);
 	
 	JALPlayer(AL al) throws Exception
 	{
@@ -127,6 +132,8 @@ public class JALPlayer implements IPlayer, Comparable<JALPlayer>
 	}
 	
 	synchronized public void dispose() {
+		this.actived.set(false);
+		setSound(null);
 		stop();
 	}
 
