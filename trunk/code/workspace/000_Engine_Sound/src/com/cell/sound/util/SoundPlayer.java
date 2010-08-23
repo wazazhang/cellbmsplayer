@@ -70,7 +70,12 @@ public class SoundPlayer implements IPlayer, Runnable
 			player.pause();
 		}
 	}
-	
+	@Override
+	public void resume() {
+		if (this.player!=null) {
+			player.resume();
+		}
+	}
 	@Override
 	synchronized public void play(boolean looping) {
 		this.looping = looping;

@@ -5,6 +5,8 @@ public interface IPlayer
 	public void 	play(boolean looping);
 	
 	public void		pause();
+
+	public void		resume();
 	
 	public void 	stop();
 	

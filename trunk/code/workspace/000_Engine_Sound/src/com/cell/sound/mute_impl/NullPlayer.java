@@ -20,14 +20,15 @@ public class NullPlayer implements IPlayer
 
 	public void play(boolean looping) {}
 	public void pause() {}
+	public void resume() {}
 	public void stop() {}
 
 	@Override
 	public boolean isPlaying() {
 		return false;
 	}
-	
-	public void dispose() {}
 
+	public void dispose() {}
+	
 	
 }

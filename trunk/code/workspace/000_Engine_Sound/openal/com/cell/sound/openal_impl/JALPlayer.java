@@ -98,7 +98,14 @@ public class JALPlayer implements IPlayer, Comparable<JALPlayer>
 			}
 		}
 	}
-	
+	@Override
+	public void resume() {
+		if (source!=null){
+			al.alSourcePlay(source[0]);
+			if (JALSoundManager.checkError(al)) {
+			}
+		}
+	}
 	synchronized public void stop() {
 		if (source!=null){
 			al.alSourceStop(source[0]);
