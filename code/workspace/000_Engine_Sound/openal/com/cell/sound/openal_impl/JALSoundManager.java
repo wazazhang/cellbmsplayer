@@ -153,17 +153,12 @@ public class JALSoundManager extends SoundManager
 	public IPlayer createPlayer() 
 	{
 		for (JALPlayer player : players) {
-			if (!player.isPlaying()) {
+			if (!player.actived.get()) {
+				player.actived.set(true);
 				return player;
 			}
 		}
-		if (players.size()>0) {
-			Collections.sort(players);
-			JALPlayer player = players.get(0);
-			player.stop();
-			System.err.println("no free source, cut an active source !");
-			return player;
-		}
+		System.err.println("no free source, cut an active source !");
 		return new NullPlayer();
 		
 	}
@@ -171,8 +166,8 @@ public class JALSoundManager extends SoundManager
 	synchronized
 	public void cleanAllPlayer() {
 		for (JALPlayer player : players) {
-			player.stop();
 			player.setSound(null);
+			player.dispose();
 		}
 	}
 	
