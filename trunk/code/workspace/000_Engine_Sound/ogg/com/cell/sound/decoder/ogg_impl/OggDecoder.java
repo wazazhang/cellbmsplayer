@@ -14,6 +14,7 @@ import com.cell.sound.Decoder;
 import com.cell.sound.SoundInfo;
 import com.cell.sound.SoundManager;
 import com.cell.sound.openal_impl.JALSoundManager;
+import com.cell.sound.util.StreamSoundPlayer;
 
 import com.jcraft.jogg.*;
 import com.jcraft.jorbis.*;
@@ -61,7 +62,7 @@ public class OggDecoder extends Decoder
 //			Thread.sleep(1000);
 //		}
 		SoundManager.setSoundManager(JALSoundManager.getInstance());
-		OggStreamPlayer player = new OggStreamPlayer(
+		StreamSoundPlayer player = new StreamSoundPlayer(
 				SoundManager.getSoundManager().createPlayer(),
 				new OggStreamSoundInfo(url, CIO.getInputStream(url)));
 		
