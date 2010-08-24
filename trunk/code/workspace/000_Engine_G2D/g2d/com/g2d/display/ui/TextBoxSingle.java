@@ -1,29 +1,23 @@
 package com.g2d.display.ui;
 
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.font.ShapeGraphicAttribute;
 import java.awt.font.TextAttribute;
 import java.awt.geom.Ellipse2D;
-import java.io.IOException;
 import java.io.Serializable;
 
-import com.g2d.Tools;
 import com.g2d.Version;
 import com.g2d.annotation.Property;
 import com.g2d.display.AnimateCursor;
 import com.g2d.display.event.KeyEvent;
-import com.g2d.display.event.TextInputer;
 import com.g2d.display.event.MouseEvent;
 import com.g2d.display.event.MouseMoveEvent;
 import com.g2d.display.ui.text.MultiTextLayout;
-import com.g2d.util.Drawing;
 
-public class TextBoxSingle extends UIComponent implements Serializable, TextInputer
+public class TextBoxSingle extends UIComponent implements Serializable
 {
 	private static final long serialVersionUID = Version.VersionG2D;
 	
@@ -71,11 +65,6 @@ public class TextBoxSingle extends UIComponent implements Serializable, TextInpu
 		return AnimateCursor.TEXT_CURSOR;
 	}
 
-	@Override
-	public boolean isInput() {
-		return text.is_show_caret;
-	}
-	
 	public void setText(String text) {
 		this.text.setText(text);
 		encode();

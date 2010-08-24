@@ -640,10 +640,10 @@ FocusListener
 //	--------------------------------------------------------------------------------
 //	control and input
 	
-	private boolean isPickedKeyInputer() {
+	private boolean isPickedKeyInputer(int[] chars) {
 		if (getStage()!=null && getStage().getMousePickedObject() instanceof TextInputer) {
 			TextInputer inputer = (TextInputer)getStage().getMousePickedObject();
-			return inputer.isInput();
+			return inputer.isInput(chars);
 		}
 		return false;
 	}
@@ -676,7 +676,7 @@ FocusListener
 	public boolean isOnTextInput() {
 		if (getStage()!=null) {
 			if (getStage().getFocusLeaf() instanceof TextInputer) {
-				return ((TextInputer)getStage().getFocusLeaf()).isInput();
+				return true;
 			}
 		}
 		return false;
@@ -689,7 +689,7 @@ FocusListener
 	 */
 	synchronized public boolean isKeyHold(int ... keycode) 
 	{
-		if (isPickedKeyInputer()){
+		if (isPickedKeyInputer(keycode)){
 			return false;
 		}
 		for (int k : keycode) 
@@ -705,7 +705,7 @@ FocusListener
 	 */
 	synchronized public boolean isKeyDown(int ... keycode)
 	{		
-		if (isPickedKeyInputer()){
+		if (isPickedKeyInputer(keycode)){
 			return false;
 		}
 		for (int k : keycode) 
@@ -721,7 +721,7 @@ FocusListener
 	 */
 	synchronized public boolean isKeyUp(int ... keycode)
 	{
-		if (isPickedKeyInputer()){
+		if (isPickedKeyInputer(keycode)){
 			return false;
 		}
 		for (int k : keycode) 

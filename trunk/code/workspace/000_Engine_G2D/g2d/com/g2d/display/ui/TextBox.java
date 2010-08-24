@@ -1,13 +1,9 @@
 package com.g2d.display.ui;
 
-import java.awt.AlphaComposite;
 import java.awt.Color;
-import java.awt.Composite;
-import java.awt.Cursor;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
-import java.io.IOException;
 import java.io.Serializable;
 import java.text.AttributedString;
 import java.text.AttributedCharacterIterator.Attribute;
@@ -19,21 +15,18 @@ import com.g2d.Version;
 import com.g2d.annotation.Property;
 import com.g2d.display.AnimateCursor;
 import com.g2d.display.DisplayObject;
-import com.g2d.display.Tip;
 import com.g2d.display.event.EventListener;
 import com.g2d.display.event.KeyEvent;
-import com.g2d.display.event.TextInputer;
 import com.g2d.display.event.MouseEvent;
 import com.g2d.display.event.MouseMoveEvent;
 import com.g2d.display.event.MouseWheelEvent;
-import com.g2d.display.ui.text.Instruction;
 import com.g2d.display.ui.text.MultiTextLayout;
 import com.g2d.display.ui.text.TextBuilder;
 import com.g2d.display.ui.text.MultiTextLayout.AttributedSegment;
 
 
 
-public class TextBox extends UIComponent implements Serializable, TextInputer
+public class TextBox extends UIComponent implements Serializable
 {
 	private static final long serialVersionUID = Version.VersionG2D;
 
@@ -96,12 +89,7 @@ public class TextBox extends UIComponent implements Serializable, TextInputer
 	public boolean removeChild(DisplayObject child) {
 		throw new IllegalStateException("can not remove a custom child component in " + getClass().getName() + " !");
 	}
-	
-	@Override
-	public boolean isInput() {
-		return text.is_show_caret;
-	}
-	
+		
 	public void setText(String text) {
 		this.text.setText(text);
 	}
