@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 
+import com.cell.CUtil;
 import com.cell.sound.SoundInfo;
 import com.jcraft.jogg.Packet;
 import com.jcraft.jogg.Page;
@@ -19,15 +20,16 @@ public class OggStreamSoundInfo extends SoundInfo implements Runnable
 {
 	final String		resource;
 	final InputStream	input;
-	final ByteArrayOutputStream 
-						output = new ByteArrayOutputStream();
-	int					output_count = 0;
+	final OggOutput		output = new OggOutput();
 	
 	int					size;
 	int					frame_rate;
 	int					channels;
 	int					bit_length;
 	String				comment;
+	
+	private int			output_count = 0;
+	private boolean		is_complete = false;
 	
 	public OggStreamSoundInfo(String res, InputStream input) {
 		this.resource	= res;
@@ -220,6 +222,9 @@ public class OggStreamSoundInfo extends SoundInfo implements Runnable
 			oy.clear();
 		} catch (Throwable ex) {
 			ex.printStackTrace();
+		} finally {
+			this.is_complete = true;
+//			System.out.println("done ! size = " + CUtil.getBytesSizeString(output.size()));
 		}
 	}
 
@@ -232,22 +237,25 @@ public class OggStreamSoundInfo extends SoundInfo implements Runnable
 	@Override
 	public ByteBuffer getData() {
 		synchronized (output) {
-			byte[] data = output.toByteArray();
 			int count = output.size() - output_count;
 			if (count > 0) {
-				ByteBuffer buffer = ByteBuffer.wrap(data, output_count, count);
+				ByteBuffer buffer = ByteBuffer.wrap(output.buf(), output_count, count);
 				output_count += count;
 				return buffer;
 			}
 		}
-		return ByteBuffer.wrap(new byte[0]);
+		return null;
 	}
 
 	@Override
 	public boolean hasData() {
-		synchronized (output) {
-			return output.size() > output_count;
+		if (!is_complete) {
+			return true;
 		}
+		if (output.size() > output_count) {
+			return true;
+		}
+		return false;
 	}
 	
 	@Override
@@ -280,5 +288,12 @@ public class OggStreamSoundInfo extends SoundInfo implements Runnable
 	@Override
 	public String getResource() {
 		return resource;
+	}
+	
+	class OggOutput extends ByteArrayOutputStream
+	{
+		byte[] buf() {
+			return buf;
+		}
 	}
 }
