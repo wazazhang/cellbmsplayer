@@ -74,14 +74,10 @@ public class JALSound implements ISound
 			al.alDeleteBuffers(1, buffer, 0);
 			if (JALSoundManager.checkError(al)) {}
 			buffer = null;
-			System.out.println("unbind sound !");
+//			System.out.println("unbind sound !");
 		}
 	}
 
-	protected void finalize() throws Throwable {
-		dispose();
-	}
-	
 	@Override
 	public SoundInfo getSoundInfo() {
 		return info;

@@ -22,7 +22,6 @@ public class JALPlayer extends JALSource implements IStreamPlayer
 	@Override
 	synchronized public void setSound(ISound sound)
 	{
-		clearAllSound();
 		if (source!=null) {
 			if (sound instanceof JALSound) {
 				JALSound al_sound = (JALSound)sound;

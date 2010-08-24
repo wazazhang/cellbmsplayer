@@ -90,7 +90,7 @@ public abstract class JALSource implements IPlayer
 
 	@Override
 	synchronized public boolean isPlaying() {
-		if (source!=null) {
+		if (source != null) {
 			int state[] = new int[1];
 			al.alGetSourcei(source[0], AL.AL_SOURCE_STATE, state, 0);
 			if (JALSoundManager.checkError(al)) {
@@ -102,28 +102,30 @@ public abstract class JALSource implements IPlayer
 	}
 	
 	synchronized public void dispose() {
-		stop();
-		clearAllSound();
-		this.actived.set(false);
-	}
-
-	@Override
-	protected void finalize() throws Throwable {
-		dispose();
+		if (this.actived.getAndSet(false)) {
+			clearAllSound();
+			System.out.println(
+					"SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS\n" +
+					"S Dispose sound : " + this + "\n"+
+					"SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
+		}
 	}
 
 	protected void clearAllSound() {
 		if (source != null) {
+			// stop all sound
+			al.alSourceStop(source[0]);
+			JALSoundManager.checkError(al);
 			// clean all queued sound
 			int[] queued = new int[1];
 			al.alGetSourcei(source[0], AL.AL_BUFFERS_QUEUED, queued, 0);
 			JALSoundManager.checkError(al);
+			
 			int[] buffers = new int[queued[0]];
 			for (int n = 0; n < buffers.length; n++) {
 				al.alSourceUnqueueBuffers(source[0], 1, buffers, n);
 				JALSoundManager.checkError(al);
 			}
-			
 			// clean all sound
 			al.alSourcei(source[0], AL.AL_BUFFER, 0);
 			JALSoundManager.checkError(al);

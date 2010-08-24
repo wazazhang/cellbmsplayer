@@ -89,10 +89,5 @@ public class StreamSoundPlayer
 		}
 	}
 	
-	@Override
-	protected void finalize() throws Throwable {
-		super.finalize();
-		dispose();
-	}
 
 }

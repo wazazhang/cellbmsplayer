@@ -162,8 +162,12 @@ public class JALSoundManager extends SoundManager
 	public IPlayer createPlayer() 
 	{
 		for (JALPlayer player : players) {
-			if (player.actived.get() == false) {
+			if (!player.actived.get()) {
 				player.actived.set(true);
+				System.out.println(
+						"SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS\n" +
+						"S Create sound : " + player + "\n"+
+						"SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
 				return player;
 			}
 		}
