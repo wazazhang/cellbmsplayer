@@ -164,10 +164,10 @@ public class JALSoundManager extends SoundManager
 		for (JALPlayer player : players) {
 			if (!player.actived.get()) {
 				player.actived.set(true);
-				System.out.println(
-						"SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS\n" +
-						"S Create sound : " + player + "\n"+
-						"SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
+//				System.out.println(
+//						"SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS\n" +
+//						"S Create sound : " + player + "\n"+
+//						"SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
 				return player;
 			}
 		}
