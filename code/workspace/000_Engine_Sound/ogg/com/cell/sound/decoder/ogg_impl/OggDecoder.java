@@ -41,7 +41,7 @@ public class OggDecoder extends Decoder
 	
 //		String url = "D:\\Projects\\EatWorld\\trunk\\data\\edit\\resource\\sound\\WC0002.ogg";
 
-		String url = "http://game.lordol.com/eatworld_test/sound/WC0019.ogg";
+		String url = "http://game.lordol.com/eatworld_test/sound/WC0001.ogg";
 		
 //		OggDecoder dec = new OggDecoder();
 //		SoundInfo info = dec.decode(url, CIO.loadStream(url));
@@ -68,9 +68,12 @@ public class OggDecoder extends Decoder
 		
 		
 		while (true) {
-			if (player.update()) {
-//				System.out.println("stream completed !");
+			if (!player.update()) {
+				if (!player.isPlaying()) {
+					player.play(true);
+				}
 			}
+//			System.out.println("stream completed !");
 			Thread.sleep(500);
 		}
 	}
