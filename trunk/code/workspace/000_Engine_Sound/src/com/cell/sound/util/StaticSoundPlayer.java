@@ -26,10 +26,6 @@ public class StaticSoundPlayer implements IPlayer
 		this.player.setSound(sound);
 	}
 	
-	protected void finalize() throws Throwable {
-		dispose();
-	}
-	
 	@Override
 	public void dispose() {
 		this.player.dispose();
