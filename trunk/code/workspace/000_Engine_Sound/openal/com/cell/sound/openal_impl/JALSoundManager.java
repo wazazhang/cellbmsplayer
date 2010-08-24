@@ -75,17 +75,21 @@ public class JALSoundManager extends SoundManager
 					System.out.println("OpenAL Device : " + devices[i]);
 					
 					ALCdevice device = alc.alcOpenDevice(devices[i]);
-					
-					int[] nummono	= new int[1];
-					int[] numstereo = new int[1];
-					alc.alcGetIntegerv(device, ALC.ALC_MONO_SOURCES,   1, nummono,   0); 
-					alc.alcGetIntegerv(device, ALC.ALC_STEREO_SOURCES, 1, numstereo, 0); 
 
-					System.out.println("\tMax mono sources   : " + nummono[0]); 
-					System.out.println("\tMax stereo sources : " + numstereo[0]); 
+					int[] alc_state	= new int[4];
 					
-					if (max_source < (nummono[0] + numstereo[0])) {
-						max_source = nummono[0] + numstereo[0];
+					alc.alcGetIntegerv(device, ALC.ALC_FREQUENCY,      1, alc_state, 0); 
+					alc.alcGetIntegerv(device, ALC.ALC_MONO_SOURCES,   1, alc_state, 1); 
+					alc.alcGetIntegerv(device, ALC.ALC_STEREO_SOURCES, 1, alc_state, 2); 
+					alc.alcGetIntegerv(device, ALC.ALC_REFRESH,        1, alc_state, 3); 
+
+					System.out.println("\t      Frequency : " + alc_state[0]); 
+					System.out.println("\t   Mono sources : " + alc_state[1]); 
+					System.out.println("\t Stereo sources : " + alc_state[2]); 
+					System.out.println("\t        Refresh : " + alc_state[3]); 
+					
+					if (max_source < (alc_state[1] + alc_state[2])) {
+						max_source =  alc_state[1] + alc_state[2];
 						max_index = i;
 					}
 				}

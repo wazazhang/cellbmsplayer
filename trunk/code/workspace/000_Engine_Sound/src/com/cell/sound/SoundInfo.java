@@ -18,13 +18,22 @@ public abstract class SoundInfo
 	/** file comment */
 	abstract public String		getComment();
 	
-	/** PCM raw data stream */
+	/** 
+	 * PCM raw data stream <br>
+	 * 读取此缓冲区当前位置的字节流，然后该位置递增。 
+	 * */
 	abstract public ByteBuffer	getData();
 
-	/** if the raw stream has remain data */
+	/**
+	 * if the raw stream has remain data <br>
+	 * 该缓冲区是否有新数据。
+	 */
 	abstract public boolean		hasData();
 	
-	/** reset the raw data stream to head */
+	/**
+	 * reset the raw data stream to head<br>
+	 * 重设读取的数据流到最开始。
+	 */
 	abstract public void		resetData();
 	
 	@Override
