@@ -13,10 +13,10 @@ public class NullPlayer implements IPlayer
 		this.sound = sound;
 	}
 
-	@Override
-	public ISound getSound() {
-		return sound;
-	}
+//	@Override
+//	public ISound getSound() {
+//		return sound;
+//	}
 
 	public void play(boolean looping) {}
 	public void pause() {}

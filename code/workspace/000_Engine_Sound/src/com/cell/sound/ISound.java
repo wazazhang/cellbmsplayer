@@ -5,4 +5,6 @@ public interface ISound
 	public SoundInfo getSoundInfo();
 	
 	public void dispose() ;
+	
+	public int getSize();
 }

@@ -92,7 +92,7 @@ public class JALWavSoundInfo extends SoundInfo
 	
 	@Override
 	synchronized public boolean hasData() {
-		return false;
+		return data.hasRemaining();
 	}
 	
 	@Override

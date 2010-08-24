@@ -36,10 +36,10 @@ public class StaticSoundPlayer implements IPlayer
 		this.sound.dispose();
 	}
 	
-	@Override
-	public ISound getSound() {
-		return sound;
-	}
+//	@Override
+//	public ISound getSound() {
+//		return sound;
+//	}
 	
 	@Override
 	public boolean isPlaying() {

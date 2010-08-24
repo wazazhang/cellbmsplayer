@@ -50,12 +50,12 @@ public class SoundPlayer implements IPlayer, Runnable
 			this.player.dispose();
 		}
 	}
-	
-	@Override
-	synchronized public ISound getSound() {
-		return sound;
-	}
-	
+//	
+//	@Override
+//	synchronized public ISound getSound() {
+//		return sound;
+//	}
+//	
 	@Override
 	synchronized public boolean isPlaying() {
 		if (this.player!=null) {
