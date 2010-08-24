@@ -104,10 +104,10 @@ public abstract class JALSource implements IPlayer
 	synchronized public void dispose() {
 		if (this.actived.getAndSet(false)) {
 			clearAllSound();
-			System.out.println(
-					"SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS\n" +
-					"S Dispose sound : " + this + "\n"+
-					"SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
+//			System.out.println(
+//					"SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS\n" +
+//					"S Dispose sound : " + this + "\n"+
+//					"SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
 		}
 	}
 
