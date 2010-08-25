@@ -93,4 +93,9 @@ public class JALSound implements ISound
 		return getClass().getName() + " : " + CUtil.getBytesSizeString(size);
 	}
 	
+	@Override
+	protected void finalize() throws Throwable {
+		super.finalize();
+		dispose();
+	}
 }

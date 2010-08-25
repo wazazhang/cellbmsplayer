@@ -32,6 +32,4 @@ public abstract class SoundManager
 	abstract public ISound		createSound(SoundInfo info);
 	
 	abstract public IPlayer		createPlayer();
-
-	abstract public void		cleanAllPlayer();
 }
