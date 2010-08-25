@@ -12,6 +12,7 @@ import net.java.games.joal.AL;
 import net.java.games.joal.ALC;
 import net.java.games.joal.ALCcontext;
 import net.java.games.joal.ALCdevice;
+import net.java.games.joal.ALException;
 import net.java.games.joal.ALFactory;
 import net.java.games.joal.util.ALut;
 
@@ -38,98 +39,125 @@ public class JALSoundManager extends SoundManager
 	
 //	--------------------------------------------------------------------------------------------------
 	
-	AL	al;
-	ALC alc;
-
-	ArrayList<JALPlayer>	players = new ArrayList<JALPlayer>(255);
+	final AL				al;
 	
-
+	ALC						alc;
+	ALCdevice 				soft_device;
+	ALCcontext 				context;
+	
+	ArrayList<JALPlayer>	players 	= new ArrayList<JALPlayer>(255);
+	
 //	--------------------------------------------------------------------------------------------------
-	OggDecoder ogg_decoder = new OggDecoder();
+	OggDecoder 				ogg_decoder = new OggDecoder();
 
 //	--------------------------------------------------------------------------------------------------
 	
 	private JALSoundManager() throws Exception
 	{
 	    // Initialize OpenAL and clear the error bit.
+		al 	= ALFactory.getAL();
 		ALut.alutInit();
-		al = ALFactory.getAL();
-		
 		if (checkError(al)) 
 		{
 			System.out.println("OpenAL Error !");
 		}
 		else 
 		{
-			alc = ALFactory.getALC();
-
-			// set device, find device with the maximum source
-			{
-				String[] devices = alc.alcGetDeviceSpecifiers();
-				
-				int max_source = 0;
-				int max_index = 0;
-				
-				for (int i=0; i<devices.length; i++) 
-				{
-					System.out.println("OpenAL Device : " + devices[i]);
-					
-					ALCdevice device = alc.alcOpenDevice(devices[i]);
-
-					int[] alc_state	= new int[4];
-					
-					alc.alcGetIntegerv(device, ALC.ALC_FREQUENCY,      1, alc_state, 0); 
-					alc.alcGetIntegerv(device, ALC.ALC_MONO_SOURCES,   1, alc_state, 1); 
-					alc.alcGetIntegerv(device, ALC.ALC_STEREO_SOURCES, 1, alc_state, 2); 
-					alc.alcGetIntegerv(device, ALC.ALC_REFRESH,        1, alc_state, 3); 
-
-					System.out.println("\t      Frequency : " + alc_state[0]); 
-					System.out.println("\t   Mono sources : " + alc_state[1]); 
-					System.out.println("\t Stereo sources : " + alc_state[2]); 
-					System.out.println("\t        Refresh : " + alc_state[3]); 
-					
-					if (max_source < (alc_state[1] + alc_state[2])) {
-						max_source =  alc_state[1] + alc_state[2];
-						max_index = i;
-					}
-				}
-				
-				System.out.println("Enable OpenAL Device : " + devices[max_index]);
-				ALCdevice 	soft_device = alc.alcOpenDevice(devices[max_index]);
-				ALCcontext 	context 	= alc.alcCreateContext(soft_device, null);
-				
-				alc.alcMakeContextCurrent(context);
-//				al.alSpeedOfSound(1.0f);
-//				al.alDopplerFactor(1.0f);
-			}
+			alc	= ALFactory.getALC();
+			checkError(al);
 			
-			// set listeners
-		    {	
-		    	// Position of the listener.
-		    	float[] listenerPos = { 0.0f, 0.0f, 0.0f };
-		    	// Velocity of the listener.
-		    	float[] listenerVel = { 0.0f, 0.0f, 0.0f };
-		    	// Orientation of the listener. (first 3 elems are "at", second 3 are "up")
-		    	float[] listenerOri = { 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f };
-
-		    	al.alListenerfv(AL.AL_POSITION, 	listenerPos, 0);
-			    al.alListenerfv(AL.AL_VELOCITY, 	listenerVel, 0);
-			    al.alListenerfv(AL.AL_ORIENTATION, 	listenerOri, 0);
-		    }
+			initDevice();
+			
+			initListeners();
 		    
-		    // create players
-			for (int i=0; i<255; i++) {
-		  		try{
-		  			players.add(new JALPlayer(al));
-		  		}catch(Exception err){
-		  			break;
-		  		}
-		  	}
-		  	System.out.println("Gen OpenAL players : " + players.size());
+			initPlayers();
 		}
 	}
+	
+	// set device, find device with the maximum source
+	private void initDevice()
+	{
+		String[] devices = alc.alcGetDeviceSpecifiers();
+		
+		int max_source = 0;
+		int max_index = 0;
+		
+		for (int i=0; i<devices.length; i++) 
+		{
+			System.out.println("OpenAL Device : " + devices[i]);
+			ALCdevice device = alc.alcOpenDevice(devices[i]);
+			if (!checkError(al)) {
+				if (device != null) {
+					try {
+						int[] alc_state	= new int[4];
+						alc.alcGetIntegerv(device, ALC.ALC_FREQUENCY,      1, alc_state, 0); 
+						alc.alcGetIntegerv(device, ALC.ALC_MONO_SOURCES,   1, alc_state, 1); 
+						alc.alcGetIntegerv(device, ALC.ALC_STEREO_SOURCES, 1, alc_state, 2); 
+						alc.alcGetIntegerv(device, ALC.ALC_REFRESH,        1, alc_state, 3); 
+						checkError(al);
+						System.out.println("\t      Frequency : " + alc_state[0]); 
+						System.out.println("\t   Mono sources : " + alc_state[1]); 
+						System.out.println("\t Stereo sources : " + alc_state[2]); 
+						System.out.println("\t        Refresh : " + alc_state[3]); 
+						if (max_source < (alc_state[1] + alc_state[2])) {
+							max_source =  alc_state[1] + alc_state[2];
+							max_index = i;
+						}
+					} finally {
+						 alc.alcCloseDevice(device);
+					}
+				}
+			}
+		}
+		
+		System.out.println("Enable OpenAL Device : " + devices[max_index]);
+		soft_device = alc.alcOpenDevice(devices[max_index]);
+		if (checkError(al)) {
+			 throw new ALException("Error creating OpenAL context");
+		}
+		
+		context 	= alc.alcCreateContext(soft_device, null);
+		if (checkError(al)) {
+			throw new ALException("Error creating OpenAL context");
+		}
+		
+		alc.alcMakeContextCurrent(context);
+		if (checkError(al)) {
+			alc.alcDestroyContext(context);
+			alc.alcCloseDevice(soft_device);
+			throw new ALException("Error making OpenAL context current");
+		}
+	}
+	
+	// set listeners
+	private void initListeners()
+	{
+		// Position of the listener.
+    	float[] listenerPos = { 0.0f, 0.0f, 0.0f };
+    	// Velocity of the listener.
+    	float[] listenerVel = { 0.0f, 0.0f, 0.0f };
+    	// Orientation of the listener. (first 3 elems are "at", second 3 are "up")
+    	float[] listenerOri = { 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f };
 
-
+    	al.alListenerfv(AL.AL_POSITION, 	listenerPos, 0);
+	    al.alListenerfv(AL.AL_VELOCITY, 	listenerVel, 0);
+	    al.alListenerfv(AL.AL_ORIENTATION, 	listenerOri, 0);
+	    checkError(al);
+	}
+	
+	private void initPlayers()
+	{
+		// create players
+		for (int i=0; i<255; i++) {
+	  		try{
+	  			players.add(new JALPlayer(al));
+	  		}catch(Exception err){
+	  			break;
+	  		}
+	  	}
+	  	System.out.println("Gen OpenAL players : " + players.size());
+	}
+	
 //	--------------------------------------------------------------------------------------------------
 
 	synchronized 
