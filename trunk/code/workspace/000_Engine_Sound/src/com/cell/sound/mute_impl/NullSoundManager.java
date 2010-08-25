@@ -33,7 +33,4 @@ public class NullSoundManager extends SoundManager
 	public SoundInfo createSoundInfo(String resource) {
 		return new NullSoundInfo();
 	}
-	
-	@Override
-	public void cleanAllPlayer() {}
 }

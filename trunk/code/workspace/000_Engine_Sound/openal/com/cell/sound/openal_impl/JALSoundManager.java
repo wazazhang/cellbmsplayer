@@ -10,6 +10,7 @@ import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 import net.java.games.joal.AL;
 import net.java.games.joal.ALC;
@@ -41,13 +42,13 @@ public class JALSoundManager extends SoundManager
 		return instance;
 	}
 	
+	static Logger logger = Logger.getLogger("OpenAL");
+	
 //	--------------------------------------------------------------------------------------------------
 	
 	final AL					al;
 	
 	ALC							alc;
-	
-	ArrayList<JALPlayer>		players 	= new ArrayList<JALPlayer>(255);
 
 	OggDecoder 					ogg_decoder = new OggDecoder();
 
@@ -59,13 +60,8 @@ public class JALSoundManager extends SoundManager
 		al 	= ALFactory.getAL();
 		alc	= ALFactory.getALC();
 		ALut.alutInit();
-		{
-			initDevice();
-			
-			initListeners();
-		    
-			initPlayers();
-		}			
+		initDevice();
+		initListeners();
 	}
 	
 	// set device, find device with the maximum source
@@ -124,18 +120,6 @@ public class JALSoundManager extends SoundManager
 	    checkError(al);
 	}
 	
-	private void initPlayers()
-	{
-		// create players
-		for (int i=0; i<255; i++) {
-			try {
-				players.add(new JALPlayer(al));
-			} catch (Exception err) {
-				break;
-			}
-	  	}
-	  	System.out.println("Gen OpenAL players : " + players.size());
-	}
 
 	class DeviceInfo
 	{
@@ -226,8 +210,11 @@ public class JALSoundManager extends SoundManager
 	
 //	--------------------------------------------------------------------------------------------------
 
-	synchronized 
-	public SoundInfo createSoundInfo(String resource, InputStream is){
+	public void setVolume(float volume) {
+		al.alListenerf(AL.AL_GAIN, volume);
+	}
+
+	public SoundInfo createSoundInfo(String resource, InputStream is) {
 		try {
 			String name = resource.toLowerCase();
 			if (name.endsWith(".wav")) {
@@ -241,12 +228,10 @@ public class JALSoundManager extends SoundManager
 		return null;
 	}
 	
-	synchronized 
 	public SoundInfo createSoundInfo(String resource) {
 		return createSoundInfo(resource, CIO.loadStream(resource));
 	}
-	
-	synchronized 
+
 	public ISound createSound(SoundInfo info) {
 		try {
 			return new JALSound(this, info);
@@ -255,38 +240,16 @@ public class JALSoundManager extends SoundManager
 		}
 		return new NullSound();
 	}
-	
-	synchronized 
-	public IPlayer createPlayer() 
-	{
-		for (JALPlayer player : players) {
-			if (!player.actived.get()) {
-				player.actived.set(true);
-//				System.out.println(
-//						"SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS\n" +
-//						"S Create sound : " + player + "\n"+
-//						"SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
-				return player;
-			}
-		}
-		System.err.println("no free source, cut an active source !");
-		return new NullPlayer();
-		
-	}
-	
-	synchronized
-	public void cleanAllPlayer() {
-		for (JALPlayer player : players) {
-			player.setSound(null);
-			player.dispose();
-		}
-	}
-	
-	synchronized
-	public void setVolume(float volume) {
-		al.alListenerf(AL.AL_GAIN, volume);
-	}
 
+	public IPlayer createPlayer() {
+		try {
+			return new JALPlayer(al);
+		} catch (Exception err) {
+			err.printStackTrace();
+		}
+		return new NullPlayer();
+	}
+	
 //	--------------------------------------------------------------------------------------------------
 	
 

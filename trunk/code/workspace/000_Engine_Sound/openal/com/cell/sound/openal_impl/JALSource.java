@@ -1,20 +1,14 @@
 package com.cell.sound.openal_impl;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 
 import com.cell.sound.IPlayer;
-import com.cell.sound.ISound;
 
 import net.java.games.joal.AL;
-import net.java.games.sound3d.AudioSystem3D;
-import net.java.games.sound3d.Source;
 
 public abstract class JALSource implements IPlayer
 {
-	final AL 			al;
-	final int[]			source;
-	final AtomicBoolean	actived = new AtomicBoolean(false);
+	final AL	al;
+	int[]		source;
 	
 	JALSource(AL al) throws Exception
 	{
@@ -27,9 +21,15 @@ public abstract class JALSource implements IPlayer
 			al.alGenSources(1, source, 0);
 			if (JALSoundManager.checkError(al)) {
 				throw new Exception("Error generating OpenAL source !");
+			} else {
+				this.source = source;
 			}
 
-			this.source = source;
+			System.out.println(
+			"SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS\n" +
+			"S Create sound : " + source[0] + " : " + this + "\n"+
+			"SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
+
 			
 			float[] zero_v = { 0.0f, 0.0f, 0.0f };
 			
@@ -47,11 +47,22 @@ public abstract class JALSource implements IPlayer
 			JALSoundManager.checkError(al);
 		}
 	}
-	
-//	@Override
-//	synchronized public ISound getSound() {
-//		return al_sound;
-//	}
+
+	synchronized public void dispose() {
+		if (source != null) {
+			try {
+				System.out.println(
+						"SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS\n" +
+						"S Dispose sound : " + source[0] + " : " + this + "\n"+
+						"SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
+				clearAllSound();
+				al.alDeleteSources(1, source, 0);
+			} finally {
+				this.source = null;
+			}
+			
+		}
+	}
 
 	@Override
 	synchronized public void play(boolean loop) {
@@ -100,16 +111,6 @@ public abstract class JALSource implements IPlayer
 		return true;
 	}
 	
-	synchronized public void dispose() {
-		if (this.actived.getAndSet(false)) {
-			clearAllSound();
-//			System.out.println(
-//					"SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS\n" +
-//					"S Dispose sound : " + this + "\n"+
-//					"SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
-		}
-	}
-
 	protected void clearAllSound() {
 		if (source != null) {
 			// stop all sound
@@ -131,4 +132,9 @@ public abstract class JALSource implements IPlayer
 		}
 	}
 	
+	@Override
+	protected void finalize() throws Throwable {
+		super.finalize();
+		dispose();
+	}
 }
