@@ -34,15 +34,23 @@ public abstract class JALSource implements IPlayer
 			float[] zero_v = { 0.0f, 0.0f, 0.0f };
 			
 			al.alSourcefv(source[0], AL.AL_POSITION,	zero_v, 0);
+			JALSoundManager.checkError(al);
 			al.alSourcefv(source[0], AL.AL_VELOCITY,	zero_v, 0);
+			JALSoundManager.checkError(al);
 			al.alSourcefv(source[0], AL.AL_DIRECTION,	zero_v, 0);
+			JALSoundManager.checkError(al);
 			
 			al.alSourcef(source[0], AL.AL_PITCH,			1.0f);
+			JALSoundManager.checkError(al);
 			al.alSourcef(source[0], AL.AL_GAIN,				1.0f);
+			JALSoundManager.checkError(al);
 			al.alSourcef(source[0], AL.AL_ROLLOFF_FACTOR, 	0.0f);
+			JALSoundManager.checkError(al);
 
 			al.alSourcei(source[0], AL.AL_SOURCE_RELATIVE, 	AL.AL_TRUE);
+			JALSoundManager.checkError(al);
 			al.alSourcei(source[0], AL.AL_LOOPING,			0);
+			JALSoundManager.checkError(al);
 			
 			JALSoundManager.checkError(al);
 		}
@@ -72,8 +80,6 @@ public abstract class JALSource implements IPlayer
 			} else {
 				al.alSourcePlay(source[0]);
 				JALSoundManager.checkError(al);
-				al.alSourcef(source[0], AL.AL_PITCH,			1.0f);
-				al.alSourcef(source[0], AL.AL_GAIN,				1.0f);
 			}
 		}
 	}
