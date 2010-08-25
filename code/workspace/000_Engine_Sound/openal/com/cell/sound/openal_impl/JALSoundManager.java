@@ -78,6 +78,7 @@ public class JALSoundManager extends SoundManager
 	private void initDevice()
 	{
 		String[] devices = alc.alcGetDeviceSpecifiers();
+		checkError(al);
 		
 		int max_source = 0;
 		int max_index = 0;
@@ -86,45 +87,49 @@ public class JALSoundManager extends SoundManager
 		{
 			System.out.println("OpenAL Device : " + devices[i]);
 			ALCdevice device = alc.alcOpenDevice(devices[i]);
-			if (!checkError(al)) {
-				if (device != null) {
-					try {
-						int[] alc_state	= new int[4];
-						alc.alcGetIntegerv(device, ALC.ALC_FREQUENCY,      1, alc_state, 0); 
-						alc.alcGetIntegerv(device, ALC.ALC_MONO_SOURCES,   1, alc_state, 1); 
-						alc.alcGetIntegerv(device, ALC.ALC_STEREO_SOURCES, 1, alc_state, 2); 
-						alc.alcGetIntegerv(device, ALC.ALC_REFRESH,        1, alc_state, 3); 
-						System.out.println("\t      Frequency : " + alc_state[0]); 
-						System.out.println("\t   Mono sources : " + alc_state[1]); 
-						System.out.println("\t Stereo sources : " + alc_state[2]); 
-						System.out.println("\t        Refresh : " + alc_state[3]); 
-						checkError(al);
-						if (max_source < (alc_state[1] + alc_state[2])) {
-							max_source =  alc_state[1] + alc_state[2];
-							max_index = i;
-						}
-					} finally {
-						 alc.alcCloseDevice(device);
+			if (checkError(al) || device == null) {
+				System.err.println("\t open device error");
+			} else {
+				try {
+					int[] alc_state	= new int[4];
+					alc.alcGetIntegerv(device, ALC.ALC_FREQUENCY,      1, alc_state, 0); 
+					alc.alcGetIntegerv(device, ALC.ALC_MONO_SOURCES,   1, alc_state, 1); 
+					alc.alcGetIntegerv(device, ALC.ALC_STEREO_SOURCES, 1, alc_state, 2); 
+					alc.alcGetIntegerv(device, ALC.ALC_REFRESH,        1, alc_state, 3); 
+					System.out.println("\t      Frequency : " + alc_state[0]); 
+					System.out.println("\t   Mono sources : " + alc_state[1]); 
+					System.out.println("\t Stereo sources : " + alc_state[2]); 
+					System.out.println("\t        Refresh : " + alc_state[3]); 
+					checkError(al);
+					if (max_source < alc_state[1]) {
+						max_source = alc_state[1];
+						max_index = i;
 					}
+				} finally {
+					 alc.alcCloseDevice(device);
 				}
 			}
 		}
 		
 		System.out.println("Enable OpenAL Device : " + devices[max_index]);
 		soft_device = alc.alcOpenDevice(devices[max_index]);
-		if (checkError(al)) {
+		if (checkError(al) || soft_device == null) {
 			 throw new ALException("Error creating OpenAL context");
 		}
 		
-		context 	= alc.alcCreateContext(soft_device, null);
-		if (checkError(al)) {
+		context = alc.alcCreateContext(soft_device, null);
+		if (checkError(al) || context == null) {
+			alc.alcCloseDevice(soft_device);
+			checkError(al);
 			throw new ALException("Error creating OpenAL context");
 		}
 		
 		alc.alcMakeContextCurrent(context);
 		if (checkError(al)) {
 			alc.alcDestroyContext(context);
+			checkError(al);
 			alc.alcCloseDevice(soft_device);
+			checkError(al);
 			throw new ALException("Error making OpenAL context current");
 		}
 	}
