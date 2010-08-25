@@ -62,11 +62,27 @@ public class JALSoundManager extends SoundManager
 		ALut.alutInit();
 		initDevice();
 		initListeners();
+		System.err.println(this);
 	}
 	
 	// set device, find device with the maximum source
 	private void initDevice()
 	{
+		// clear current device context
+		try
+		{
+			ALCcontext cc = alc.alcGetCurrentContext();
+			checkError(al);
+			ALCdevice  cd = alc.alcGetContextsDevice(cc);
+			checkError(al);
+			alc.alcMakeContextCurrent(null);
+			checkError(al);
+			alc.alcDestroyContext(cc);
+			checkError(al);
+			alc.alcCloseDevice(cd);
+			checkError(al);
+		} catch (Exception e) {}
+		
 		String[] devices = alc.alcGetDeviceSpecifiers();
 		checkError(al);
 		
@@ -77,7 +93,7 @@ public class JALSoundManager extends SoundManager
 			try {
 				DeviceInfo device_info = new DeviceInfo(devices[i]);
 				device_info.open();
-				System.out.println(device_info);
+				System.out.println("OpenAL enum device : " + device_info.getName());
 				try {
 					if (max_device_info == null || 
 						max_device_info.getMonoSources()<device_info.getMonoSources()) {
@@ -91,7 +107,7 @@ public class JALSoundManager extends SoundManager
 			}
 		}
 		
-		System.out.println("Enable OpenAL Device : " + max_device_info.getName());
+//		System.out.println("OpenAL Open Device : " + max_device_info.getName());
 		max_device_info.open();
 		ALCcontext context = max_device_info.createContext();
 		if (context != null) {
@@ -120,7 +136,31 @@ public class JALSoundManager extends SoundManager
 	    checkError(al);
 	}
 	
-
+	@Override
+	public String toString() {
+		try {
+			ALCcontext cc = alc.alcGetCurrentContext();
+			ALCdevice  cd = alc.alcGetContextsDevice(cc);
+			String device_spec = alc.alcGetString(cd, ALC.ALC_DEVICE_SPECIFIER);
+			int[] 			alc_state = new int[5];
+			alc.alcGetIntegerv(cd, ALC.ALC_FREQUENCY,      	1, alc_state, 0); 
+			alc.alcGetIntegerv(cd, ALC.ALC_MONO_SOURCES,   	1, alc_state, 1); 
+			alc.alcGetIntegerv(cd, ALC.ALC_REFRESH,        	1, alc_state, 2); 
+			alc.alcGetIntegerv(cd, ALC.ALC_STEREO_SOURCES,	1, alc_state, 3); 
+			alc.alcGetIntegerv(cd, ALC.ALC_SYNC, 			1, alc_state, 4); 
+			StringBuilder sb = new StringBuilder(getClass().getSimpleName() + " : Current OpenAL Device !\n");
+			sb.append("\t  OpenAL Device : " + device_spec + "\n");
+			sb.append("\t      Frequency : " + alc_state[0] + "\n");
+			sb.append("\t   Mono sources : " + alc_state[1] + "\n");
+			sb.append("\t        Refresh : " + alc_state[2] + "\n");
+			sb.append("\t Stereo sources : " + alc_state[3] + "\n");
+			sb.append("\t           Sync : " + alc_state[4]);
+			return sb.toString();
+		} catch (Exception e) {
+			return super.toString();
+		}
+	}
+	
 	class DeviceInfo
 	{
 		final String 	name;
