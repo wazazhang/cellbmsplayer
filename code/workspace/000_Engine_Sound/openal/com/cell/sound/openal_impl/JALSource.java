@@ -25,7 +25,6 @@ public abstract class JALSource implements IPlayer
 			
 			// Bind buffer with a source.
 			al.alGenSources(1, source, 0);
-	
 			if (JALSoundManager.checkError(al)) {
 				throw new Exception("Error generating OpenAL source !");
 			}
