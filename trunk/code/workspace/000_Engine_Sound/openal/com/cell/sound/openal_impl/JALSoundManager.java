@@ -94,11 +94,11 @@ public class JALSoundManager extends SoundManager
 						alc.alcGetIntegerv(device, ALC.ALC_MONO_SOURCES,   1, alc_state, 1); 
 						alc.alcGetIntegerv(device, ALC.ALC_STEREO_SOURCES, 1, alc_state, 2); 
 						alc.alcGetIntegerv(device, ALC.ALC_REFRESH,        1, alc_state, 3); 
-						checkError(al);
 						System.out.println("\t      Frequency : " + alc_state[0]); 
 						System.out.println("\t   Mono sources : " + alc_state[1]); 
 						System.out.println("\t Stereo sources : " + alc_state[2]); 
 						System.out.println("\t        Refresh : " + alc_state[3]); 
+						checkError(al);
 						if (max_source < (alc_state[1] + alc_state[2])) {
 							max_source =  alc_state[1] + alc_state[2];
 							max_index = i;
