@@ -72,6 +72,8 @@ public abstract class JALSource implements IPlayer
 			} else {
 				al.alSourcePlay(source[0]);
 				JALSoundManager.checkError(al);
+				al.alSourcef(source[0], AL.AL_PITCH,			1.0f);
+				al.alSourcef(source[0], AL.AL_GAIN,				1.0f);
 			}
 		}
 	}
