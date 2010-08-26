@@ -95,7 +95,7 @@ public class JALSoundManager extends SoundManager
 			try {
 				DeviceInfo device_info = new DeviceInfo(devices[i]);
 				device_info.open();
-				System.out.println("enum OpenAL device : \"" + device_info.getName() + "\" mono source="+max_device_info.getMonoSources());
+				System.out.println("enum OpenAL device : \"" + device_info.getName() + "\" mono source="+device_info.getMonoSources());
 				try {
 					if (max_device_info == null || 
 						max_device_info.getMonoSources()<device_info.getMonoSources()) {
