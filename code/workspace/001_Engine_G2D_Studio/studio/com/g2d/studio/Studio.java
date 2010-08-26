@@ -31,6 +31,7 @@ import com.cell.sound.ISound;
 import com.cell.sound.SoundInfo;
 import com.cell.sound.mute_impl.NullSoundManager;
 import com.cell.sound.openal_impl.JALSoundManager;
+import com.cell.sound.util.StaticSoundPlayer;
 import com.cell.sql.SQMTypeManager;
 import com.cell.util.concurrent.ThreadPool;
 import com.g2d.Tools;
@@ -65,7 +66,6 @@ public class Studio extends AbstractFrame
 	final public ThreadPool			thread_pool = new ThreadPool("studio project");
 	
 	com.cell.sound.SoundManager		sound_system;
-	ISound 							sound_opening;
 	
 //	final private FileOutputStream	project_lock;
 	
@@ -96,6 +96,8 @@ public class Studio extends AbstractFrame
 	private QuestGroupManager		frame_quest_group_manager;
 	
 	private SceneManager			scene_manager;
+	
+	private StaticSoundPlayer		g2d_sound;
 	
 	private Studio(String g2d_file) throws Throwable
 	{
@@ -145,11 +147,8 @@ public class Studio extends AbstractFrame
 		try{
 			sound_system = JALSoundManager.getInstance();
 			com.cell.sound.SoundManager.setSoundManager(sound_system);
-			SoundInfo soundinfo = sound_system.createSoundInfo("openning.wav", Res.snd_openning);
-			sound_opening = sound_system.createSound(soundinfo);
-			IPlayer player = sound_system.createPlayer();
-			player.setSound(sound_opening);
-			player.play(false);
+			g2d_sound = new StaticSoundPlayer("/com/g2d/studio/res/openning.wav");
+			g2d_sound.play(false);
 		}catch(Throwable tr) {
 			tr.printStackTrace();
 			sound_system = new NullSoundManager();		

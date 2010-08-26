@@ -63,11 +63,6 @@ public class Res
 //	---------------------------------------------------------------------------------------------------------------
 	
 	
-	static public ByteArrayInputStream snd_openning	= CIO.loadStream("/com/g2d/studio/res/openning.wav");
-	
-	
-	
-	
 //	---------------------------------------------------------------------------------------------------------------
 	
 	static public BufferedImage[] clipImage(String src, int column, int row) {

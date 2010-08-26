@@ -24,11 +24,13 @@ import java.util.Vector;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JToggleButton;
+import javax.swing.JToolBar;
 
 import com.cell.CObject;
 import com.cell.CUtil;
@@ -96,10 +98,12 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 	private G2DWindowToolBar	tool_bar;
 	private JToggleButton		tool_selector	= new JToggleButton(Tools.createIcon(Res.icons_bar[0]), true);
 	private JToggleButton		tool_addactor	= new JToggleButton(Tools.createIcon(Res.icons_bar[8]));
-	private JToggleButton		tool_show_grid	= new JToggleButton(Tools.createIcon(Res.icon_grid));
+	private JToggleButton		tool_show_grid	= new JToggleButton(Tools.createIcon(Res.icon_grid));	
 	private JButton				tool_edit_prop	= new JButton(Tools.createIcon(Res.icons_bar[1]));
 	private JToggleButton		tool_play_bgm	= new JToggleButton(Tools.createIcon(Res.icons_bar[3]));
 	private JTabbedPane			unit_page;
+	private JToolBar			status_bar		= new JToolBar();
+	private JLabel				status_rule		= new JLabel("尺子");
 //	private SceneUnitTagAdapter<SceneActor>		page_actors;
 //	private SceneUnitTagAdapter<SceneRegion>	page_regions;
 //	private SceneUnitTagAdapter<ScenePoint>		page_points;
@@ -196,6 +200,10 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		
 		this.add(split_h, BorderLayout.CENTER); 
 		
+		{
+			status_bar.add(status_rule);
+		}
+		this.add(status_bar, BorderLayout.SOUTH);
 		
 		refreshAll();
 	}
@@ -440,6 +448,11 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 
 		public void update() {
 			scene_panel.setSize(getWidth(), getHeight());
+			if (getRoot().isMouseDown(MouseEvent.BUTTON1)) {
+				status_rule.setText(
+						"屏幕:("+getMouseX()+","+getMouseY()+") " + 
+						"场景:("+scene_container.getWorld().getMouseX()+","+scene_container.getWorld().getMouseY()+")");
+			}
 		}
 		
 	}
