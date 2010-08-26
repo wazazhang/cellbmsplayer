@@ -72,16 +72,18 @@ public class JALSoundManager extends SoundManager
 		try
 		{
 			ALCcontext cc = alc.alcGetCurrentContext();
+			if (cc != null) {
+				ALCdevice  cd = alc.alcGetContextsDevice(cc);
+				alc.alcMakeContextCurrent(null);
+				alc.alcDestroyContext(cc);
+				if (cd != null) {
+					alc.alcCloseDevice(cd);
+				}
+			}
+		} catch (Exception e) {
+		} finally{
 			checkError(al);
-			ALCdevice  cd = alc.alcGetContextsDevice(cc);
-			checkError(al);
-			alc.alcMakeContextCurrent(null);
-			checkError(al);
-			alc.alcDestroyContext(cc);
-			checkError(al);
-			alc.alcCloseDevice(cd);
-			checkError(al);
-		} catch (Exception e) {}
+		}
 		
 		String[] devices = alc.alcGetDeviceSpecifiers();
 		checkError(al);
@@ -93,7 +95,7 @@ public class JALSoundManager extends SoundManager
 			try {
 				DeviceInfo device_info = new DeviceInfo(devices[i]);
 				device_info.open();
-				System.out.println("OpenAL enum device : " + device_info.getName());
+				System.out.println("enum OpenAL device : \"" + device_info.getName() + "\" mono source="+max_device_info.getMonoSources());
 				try {
 					if (max_device_info == null || 
 						max_device_info.getMonoSources()<device_info.getMonoSources()) {
