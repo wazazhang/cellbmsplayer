@@ -449,9 +449,13 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		public void update() {
 			scene_panel.setSize(getWidth(), getHeight());
 			if (getRoot().isMouseDown(MouseEvent.BUTTON1)) {
-				status_rule.setText(
-						"屏幕:("+getMouseX()+","+getMouseY()+") " + 
-						"场景:("+scene_container.getWorld().getMouseX()+","+scene_container.getWorld().getMouseY()+")");
+				StringBuilder sb = new StringBuilder();
+				sb.append("屏幕:("+getMouseX()+","+getMouseY()+") ");
+				sb.append("场景:("+scene_container.getWorld().getMouseX()+","+scene_container.getWorld().getMouseY()+") ");
+				if (getSelectedUnit()!=null) {
+					sb.append("单位:("+getSelectedUnit().getGameUnit().getX()+","+getSelectedUnit().getGameUnit().getY()+") ");
+				}
+				status_rule.setText(sb.toString());
 			}
 		}
 		
