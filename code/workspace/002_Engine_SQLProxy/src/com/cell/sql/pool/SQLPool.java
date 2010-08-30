@@ -138,7 +138,8 @@ public class SQLPool
 	{
 		this(dirver, url, user, password, 
 				proxool_alias, proxool_min_connection, proxool_max_connection,
-				proxool_alias, proxool_min_connection, proxool_max_connection);
+				proxool_alias, proxool_min_connection, proxool_max_connection, 
+				null);
 	}
 	
 	/**
@@ -162,7 +163,8 @@ public class SQLPool
 			int proxool_max_connection,
 			String threadpool_name,
 			int threadpool_min_thread_count,
-			int threadpool_max_thread_count
+			int threadpool_max_thread_count, 
+			Properties append_properties
 	) throws Exception
 	{
 		info.setProperty(PropertyKey.PROXOOL_ALIAS.toString(), 					proxool_alias);
@@ -176,7 +178,12 @@ public class SQLPool
 		info.setProperty(PropertyKey.DB_USER.toString(), 						user);
 		info.setProperty(PropertyKey.DB_PASSWORD.toString(),					password);
 		
+		if (append_properties != null) {
+			info.putAll(append_properties);
+		}
+		
 		init(dirver, url, info);
+		
 	}
 	
 	private void init(String dirver, String url, Properties info) throws Exception

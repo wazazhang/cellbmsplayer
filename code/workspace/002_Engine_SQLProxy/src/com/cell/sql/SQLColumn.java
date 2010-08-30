@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import com.cell.CUtil.ICompare;
 import com.cell.sql.anno.SQLField;
+import com.cell.sql.anno.SQLGroupField;
 
 public class SQLColumn implements ICompare<SQLColumn, SQLColumn>
 {
@@ -39,7 +40,7 @@ public class SQLColumn implements ICompare<SQLColumn, SQLColumn>
 		this.leaf_field	= this.fields.get(fields.size()-1);
 		
 		String name = fields.get(0).getName();
-		for (int i=1; i<fields.size(); i++) {
+		for (int i = 1; i < fields.size(); i++) {
 			name += "__" + fields.get(i).getName();
 		}
 		this.name		= name;
@@ -48,6 +49,18 @@ public class SQLColumn implements ICompare<SQLColumn, SQLColumn>
 	@Override
 	public String toString() {
 		return getClass().getSimpleName() + " : " + name;
+	}
+
+	public String getAllComment() {
+		String comment = anno.comment();
+		for (int i = fields.size() - 2; i >= 0; i--) {
+			Field field = fields.get(i);
+			SQLGroupField gf = field.getAnnotation(SQLGroupField.class);
+			if (gf != null) {
+				comment = gf.comment_prefix() + ". " + comment;
+			}
+		}
+		return comment;
 	}
 	
 	public int compare(SQLColumn a, SQLColumn b) {

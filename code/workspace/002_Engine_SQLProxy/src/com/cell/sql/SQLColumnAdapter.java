@@ -304,7 +304,10 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 		ERROR_TYPE,
 	}
 	
-	final public boolean validateTable(Connection conn, boolean auto_create_struct) throws SQLException
+	final public boolean validateTable(Connection conn,
+			boolean auto_create_struct,
+			boolean sort_field,
+			boolean create_comment) throws SQLException
 	{
 		// 验证表结构
 		log.info("validating table struct [" + table_name + "] ...");
@@ -321,7 +324,7 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 				
 				Statement statement = conn.createStatement();
 				
-				String create = getCreateTableSQL(this, false);
+				String create = getCreateTableSQL(this, sort_field, create_comment);
 				System.out.println(create);
 				statement.execute(create);
 				statement.close();
@@ -599,17 +602,18 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 	 */
 	public static String getCreateTableSQL(SQLColumnAdapter<?, ?> table)
 	{
-		return getCreateTableSQL(table, true);
+		return getCreateTableSQL(table, true, true);
 	}
 	
 	/**
 	 * 获得该类型对应SQL的创建语句
 	 * @param table
-	 * @param sort		是否对列进行排序
-	 * @return
+	 * @param sort_fields		是否对列进行排序
+	 * @param create_comment	是否产生注释信息
+	 * @return 
 	 * @throws SQLException
 	 */
-	public static String getCreateTableSQL(final SQLColumnAdapter<?, ?> table, final boolean sort)
+	public static String getCreateTableSQL(final SQLColumnAdapter<?, ?> table, final boolean sort_fields, boolean create_comment)
 	{
 		SQLColumn[] columnss = new SQLColumn[table.table_columns.length];
 		System.arraycopy(table.table_columns, 0, columnss, 0, columnss.length);
@@ -618,7 +622,7 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 			public int compare(SQLColumn a, SQLColumn b) {
 				if (a.name.equals(table.table_type.primary_key_name())) return 1;
 				if (b.name.equals(table.table_type.primary_key_name())) return -1;
-				if (sort) {
+				if (sort_fields) {
 					return sc.compare(a.name, b.name);
 				}
 				return 0;
@@ -631,15 +635,22 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 			SQLColumn column = columnss[i];
 			sql += "\t"+
 				column.name + " " + 
-				column.anno.type() + " " + 
-				column.anno.constraint();
-				if (column.anno.defaultValue() != null &&
-					column.anno.defaultValue().length() > 0) {
-					sql += " DEFAULT '" + column.anno.defaultValue() + "' ";
+				column.anno.type();
+			
+				String constraint = column.anno.constraint();
+				if (constraint != null && constraint.length() > 0) {
+					sql += " " + constraint;
 				}
-				if (column.anno.comment() != null && 
-					column.anno.comment().length() > 0) {
-					sql += " COMMENT '" + column.anno.comment() + "' ";
+				
+				String default_value = column.anno.defaultValue();
+				if (default_value != null && default_value.length() > 0) {
+					sql += " DEFAULT '" + default_value + "'";
+				}
+				if (create_comment) {
+					String comment = column.getAllComment();
+					if (comment != null && comment.length() > 0) {
+						sql += " COMMENT '" + comment + "'";
+					}
 				}
 				sql += ",\n";
 		}
@@ -650,16 +661,14 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 		} else {
 			sql += "\n";
 		}
-		sql += ") \n";
+		sql += ")";
 		
 		if (!table.table_type.properties().trim().isEmpty()) {
-			sql += table.table_type.properties() + " \n";
+			sql += " " + table.table_type.properties();
 		}
-		
-		if (!table.table_type.comment().trim().isEmpty()) {
-			sql += "COMMENT='" + table.table_type.comment() + "' ";
+		if (create_comment && !table.table_type.comment().trim().isEmpty()) {
+			sql += " COMMENT='" + table.table_type.comment() + "'";
 		}
-		
 		sql += ";";
 		return sql;
 	}
