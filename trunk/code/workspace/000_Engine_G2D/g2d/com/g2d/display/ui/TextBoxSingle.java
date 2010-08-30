@@ -17,7 +17,7 @@ import com.g2d.display.event.MouseEvent;
 import com.g2d.display.event.MouseMoveEvent;
 import com.g2d.display.ui.text.MultiTextLayout;
 
-public class TextBoxSingle extends UIComponent implements Serializable
+public class TextBoxSingle extends UIComponent
 {
 	private static final long serialVersionUID = Version.VersionG2D;
 	
