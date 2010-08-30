@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.cell.CObject;
+import com.cell.util.Pair;
 import com.cell.util.concurrent.ThreadPool;
 import com.net.MessageHeader;
 
@@ -37,13 +38,17 @@ public abstract class BasicNetService
 	final private ConcurrentHashMap<Integer, Request> 
 									WaitingListeners 		= new ConcurrentHashMap<Integer, Request>();
 
+	
+	// notifiers
 	final private ReentrantLock		notifies_lock			= new ReentrantLock();
 	final private ConcurrentHashMap<Class<?>, Vector<NotifyListener<?>>> 
 									notifies_map 				= new ConcurrentHashMap<Class<?>, Vector<NotifyListener<?>>>();
-	final private HashMap<Class<?>, NotifyListener<?>> 
-									adding_notifies			= new HashMap<Class<?>, NotifyListener<?>>();
-	final private HashMap<Class<?>, NotifyListener<?>> 	
-									removing_notifies		= new HashMap<Class<?>, NotifyListener<?>>();
+	final private Vector<Pair<Class<?>, NotifyListener<?>>> 
+									adding_notifies			= new Vector<Pair<Class<?>, NotifyListener<?>>>();
+	final private Vector<Pair<Class<?>, NotifyListener<?>>> 
+									removing_notifies		= new Vector<Pair<Class<?>, NotifyListener<?>>>();
+	//
+	
 	
 	final private ConcurrentLinkedQueue<MessageHeader>
 									UnhandledMessages 		= new ConcurrentLinkedQueue<MessageHeader>();
@@ -168,7 +173,7 @@ public abstract class BasicNetService
 	 */
 	final public void registNotifyListener(Class<? extends MessageHeader> message_type, NotifyListener<?> listener) {
 		synchronized (adding_notifies) {
-			adding_notifies.put(message_type, listener);
+			adding_notifies.add(new Pair<Class<?>, NotifyListener<?>>(message_type, listener));
 		}
 		cleanUnhandledMessages();
 	}
@@ -180,7 +185,7 @@ public abstract class BasicNetService
 	 */
 	final public void unregistNotifyListener(Class<? extends MessageHeader> message_type, NotifyListener<?> listener) {
 		synchronized (removing_notifies) {
-			removing_notifies.put(message_type, listener);
+			removing_notifies.add(new Pair<Class<?>, NotifyListener<?>>(message_type, listener));
 		}
 	}
 	
@@ -297,23 +302,23 @@ public abstract class BasicNetService
 		{
 			synchronized (adding_notifies) {
 				if (!adding_notifies.isEmpty()) {
-					for (Class<?> type : adding_notifies.keySet()) {
-						Vector<NotifyListener<?>> notifys = notifies_map.get(type);
+					for (Pair<Class<?>, NotifyListener<?>> pair : adding_notifies) {
+						Vector<NotifyListener<?>> notifys = notifies_map.get(pair.getKey());
 						if (notifys == null) {
 							notifys = new Vector<NotifyListener<?>>();
+							notifies_map.put(pair.getKey(), notifys);
 						}
-						notifys.add(adding_notifies.get(type));
-						notifies_map.put(type, notifys);
+						notifys.add(pair.getValue());
 					}
 					adding_notifies.clear();
 				}
 			}
 			synchronized (removing_notifies) {
 				if (!removing_notifies.isEmpty()) {
-					for (Class<?> type : removing_notifies.keySet()) {
-						Vector<NotifyListener<?>> notifys = notifies_map.get(type);
+					for (Pair<Class<?>, NotifyListener<?>> pair : removing_notifies) {
+						Vector<NotifyListener<?>> notifys = notifies_map.get(pair.getKey());
 						if (notifys != null) {
-							notifys.remove(removing_notifies.get(type));
+							notifys.remove(pair.getValue());
 						}
 					}
 					removing_notifies.clear();
