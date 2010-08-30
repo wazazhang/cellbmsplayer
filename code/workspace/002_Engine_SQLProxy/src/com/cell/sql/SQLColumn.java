@@ -74,7 +74,13 @@ public class SQLColumn implements ICompare<SQLColumn, SQLColumn>
 	SQLFieldGroup getLeafTable(SQLFieldGroup table) throws Exception
 	{
 		for (int i=1; i<fields.size(); i++) {
-			table = (SQLFieldGroup)(table.getField(fields.get(i-1)));
+			Field field = fields.get(i-1);
+			Object obj = table.getField(field);
+			if (obj == null) {
+				obj = field.getType().newInstance();
+				table.setField(field, obj);
+			}
+			table = (SQLFieldGroup)obj;
 		}
 		return table;
 	}
@@ -89,7 +95,7 @@ public class SQLColumn implements ICompare<SQLColumn, SQLColumn>
 					leaf_field.getType(),
 					java_object);
 		} catch (Exception err) {
-			log.error("getObject Column field \"" + leaf_field.getName() + "\" error : " + err.getMessage());
+			log.error("getObject Column field \"" + leaf_field.getName() + "@"+table+"\" error : " + err.getMessage());
 			throw err;
 		}
 	}
@@ -105,7 +111,7 @@ public class SQLColumn implements ICompare<SQLColumn, SQLColumn>
 								leaf_field.getType(),
 								data));
 			} catch (Exception err) {
-				log.error("setObject Column field \"" + leaf_field.getName() + "\" error : " + err.getMessage());
+				log.error("setObject Column field \"" + leaf_field.getName() + "@"+table+"\" error : " + err.getMessage());
 				throw err;
 			}
 		}
