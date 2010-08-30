@@ -633,24 +633,34 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 				column.name + " " + 
 				column.anno.type() + " " + 
 				column.anno.constraint();
-			
-				String default_value = column.anno.defaultValue();
-				if (default_value!=null && default_value.length()>0) {
-					sql += " DEFAULT '" + column.anno.defaultValue() + "',\n";
-				}else{
-					sql += ",\n";
+				if (column.anno.defaultValue() != null &&
+					column.anno.defaultValue().length() > 0) {
+					sql += " DEFAULT '" + column.anno.defaultValue() + "' ";
 				}
+				if (column.anno.comment() != null && 
+					column.anno.comment().length() > 0) {
+					sql += " COMMENT '" + column.anno.comment() + "' ";
+				}
+				sql += ",\n";
 		}
 		
 		sql += "\tPRIMARY KEY (" + table.table_type.primary_key_name() + ")";
 		if (!table.table_type.constraint().trim().isEmpty()) {
 			sql += ", " + table.table_type.constraint() + "\n";
-		}else{
+		} else {
 			sql += "\n";
 		}
+		sql += ") \n";
 		
-		sql += ")" + table.table_type.properties() + ";";
-
+		if (!table.table_type.properties().trim().isEmpty()) {
+			sql += table.table_type.properties() + " \n";
+		}
+		
+		if (!table.table_type.comment().trim().isEmpty()) {
+			sql += "COMMENT='" + table.table_type.comment() + "' ";
+		}
+		
+		sql += ";";
 		return sql;
 	}
 

@@ -35,4 +35,7 @@ public @interface SQLField
 	 * @return
 	 */
 	String	defaultValue() default "";
+	
+	/** 注释 */
+	String	comment() default "";
 }

@@ -28,10 +28,14 @@ public @interface SQLTable
 	/** 数据库表主键类型 */
 	SQLType	primary_key_type();
 	
-	/** 数据库表其他约束  */
+	/** 数据库表其他约束 <br> 
+	 * 比如：UNIQUE KEY `name` (`name`)*/
 	String	constraint() default "";
 	
 	/** 不同数据库驱动需要的表属性<br>
 	 * 比如MYSQL : ENGINE=MyISAM DEFAULT CHARSET=utf8 */
 	String	properties() default ""; //
+	
+	/** 注释 */
+	String	comment() default "";
 }
