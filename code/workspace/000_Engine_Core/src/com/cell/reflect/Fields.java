@@ -14,14 +14,14 @@ public class Fields
 	{
 		ArrayList<Field> ret = new ArrayList<Field>();
 		
-		Class<?> super_class = gclass.getSuperclass();
-		if (super_class!=null) {
-			ret.addAll(getDeclaredAndSuperFields(super_class));
-		}
-		
 		Field[] d_fields = gclass.getDeclaredFields();
 		for (Field field : d_fields) {
 			ret.add(field);
+		}
+
+		Class<?> super_class = gclass.getSuperclass();
+		if (super_class!=null) {
+			ret.addAll(getDeclaredAndSuperFields(super_class));
 		}
 		
 		return ret;
