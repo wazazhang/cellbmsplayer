@@ -537,7 +537,6 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 					fields_stack);
 			
 			columns = full_columns_list.toArray(new SQLColumn[full_columns_list.size()]);
-			
 		}
 		catch (Exception e) {
 			e.printStackTrace();
