@@ -76,9 +76,9 @@ public abstract class DisplayObject implements ImageObserver, Vector
 	transient public int 		timer;
 
 	/**上次更新和这次更新相距的时间*/
-	transient public int		interval_ms;
+	transient int				interval_ms;
 	
-	transient long				last_update_time;
+//	transient long				last_update_time	= System.currentTimeMillis();
 //	-------------------------------------------------------------
 //	extends 
 	
@@ -443,8 +443,7 @@ public abstract class DisplayObject implements ImageObserver, Vector
 		this.parent 			= parent;
 		this.root 				= parent.root;
 		this.timer ++;
-		this.interval_ms 		= (int)(System.currentTimeMillis() - last_update_time);
-		this.last_update_time 	= System.currentTimeMillis();
+		this.interval_ms		= parent.interval_ms;
 		this.refreshScreen(parent);
 
 		updateBefore(parent);
@@ -651,5 +650,10 @@ public abstract class DisplayObject implements ImageObserver, Vector
 				(float)dst.x,
 				(float)dst.y
 				);
+	}
+
+	/**上次更新和这次更新相距的时间*/
+	public int getIntervalMS() {
+		return interval_ms;
 	}
 }

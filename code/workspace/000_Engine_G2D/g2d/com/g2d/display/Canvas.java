@@ -19,6 +19,8 @@ public interface Canvas
 	
 	public boolean isFocusOwner();
 	
+	public int getUpdateIntervalMS();
+	
 	/**
 	 * 是否在进行文本输入
 	 * @return

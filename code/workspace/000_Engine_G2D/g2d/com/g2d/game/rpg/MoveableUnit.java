@@ -180,7 +180,7 @@ public abstract class MoveableUnit extends Unit
 		
 		if (move_target_x!=x || move_target_y!=y || path!=null)
 		{
-			double distance = CMath.getDistance(move_speed, interval_ms);
+			double distance = CMath.getDistance(move_speed, getIntervalMS());
 			
 			if (moveTo(move_target_x, move_target_y, distance))
 			{
