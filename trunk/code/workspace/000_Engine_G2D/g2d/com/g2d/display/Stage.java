@@ -142,11 +142,11 @@ public abstract class Stage extends DisplayObjectContainer
 	
 	final public void onUpdate(Canvas canvas, int w, int h)
 	{
-		this.parent = this;
-		this.root = canvas;
-		
-		this.x = 0;
-		this.y = 0;
+		this.parent 		= this;
+		this.root 			= canvas;
+		this.interval_ms	= canvas.getUpdateIntervalMS();
+		this.x 				= 0;
+		this.y 				= 0;
 		this.local_bounds.x = 0;
 		this.local_bounds.y = 0;
 		this.local_bounds.width  = w;

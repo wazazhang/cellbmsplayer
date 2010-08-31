@@ -15,8 +15,7 @@ public abstract class DisplayObjectLeaf extends DisplayObject
 		this.parent 			= parent;
 		this.root 				= parent.root;
 		this.timer ++;
-		this.interval_ms 		= (int)(System.currentTimeMillis() - last_update_time);
-		this.last_update_time 	= System.currentTimeMillis();
+		this.interval_ms		= parent.interval_ms;
 		this.refreshScreen(parent);
 		this.update();
 	}

@@ -86,6 +86,8 @@ FocusListener
 	private int							framedelay_unactive 	= 1000;
 	private double 						fps;
 	
+	private long						last_update_time	= 0;
+	private int							update_interval		= 0;
 //	append window
 	transient Window 					append_window;
 	transient Component					internal_frame;
@@ -94,7 +96,8 @@ FocusListener
 //	transient Vector<Runnable>			window_close_hooks	= new Vector<Runnable>();
 	
 //	game event
-
+	
+	
 	ConcurrentLinkedQueue<Event<?>>		event_queue 		= new ConcurrentLinkedQueue<Event<?>>();
 	
 	transient float 					size_rate_x;
@@ -479,6 +482,10 @@ FocusListener
 		return (int)fps;
 	}
 
+	@Override
+	public int getUpdateIntervalMS() {
+		return update_interval;
+	}
 //	--------------------------------------------------------------------------------
 //	game
 	
@@ -508,6 +515,13 @@ FocusListener
 		
 		try 
 		{
+			if (last_update_time == 0) {
+				update_interval = 0;
+			} else {
+				update_interval = (int)(System.currentTimeMillis() - last_update_time);
+			}
+			last_update_time = System.currentTimeMillis();
+			
 			fixMouse() ;
 			
 			queryKey();
