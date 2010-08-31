@@ -31,7 +31,6 @@ import com.cell.sql.anno.SQLField;
 import com.cell.sql.anno.SQLTable;
 import com.cell.sql.util.SQLUtil;
 
-
 /**
  * 数据库表和实体的关系
  * @author WAZA
@@ -111,7 +110,7 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 		}
 		return row;
 	}
-
+	
 	/**
 	 * 执行插入指令，将一个新行插入到DB。
 	 * @param conn
@@ -119,27 +118,37 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 	 */
 	final protected void insertWithDB(R row, Connection conn) throws Exception
 	{
+		insertWithDB(row, conn, table_columns);
+	}
+	
+	/**
+	 * 执行插入指令，将一个新行插入到DB。
+	 * @param conn
+	 * @throws Exception
+	 */
+	final protected void insertWithDB(R row, Connection conn, SQLColumn[] columns) throws Exception
+	{
 		StringBuffer sb = new StringBuffer("INSERT INTO ");
 		sb.append(table_name);
 		sb.append("(\n");
 		
-		for (int i=0; i<table_columns.length; i++){
-			SQLColumn c = table_columns[i];
+		for (int i=0; i<columns.length; i++){
+			SQLColumn c = columns[i];
 			sb.append("\t"); 
 			sb.append(c.name);
-			sb.append(getSplitChar(i, table_columns.length));
+			sb.append(getSplitChar(i, columns.length));
 		}
 		sb.append(") VALUES (\n");
-		for (int i=0; i<table_columns.length; i++){
+		for (int i=0; i<columns.length; i++){
 			sb.append("\t?"); 
-			sb.append(getSplitChar(i, table_columns.length));
+			sb.append(getSplitChar(i, columns.length));
 		}
 		sb.append(");");
 
 		PreparedStatement statement = conn.prepareStatement(sb.toString());
 		try{
-			for (int i=0; i<table_columns.length; i++){
-				SQLColumn c = table_columns[i];
+			for (int i=0; i<columns.length; i++){
+				SQLColumn c = columns[i];
 				statement.setObject(i+1, c.getObject(row), c.anno.type().jdbc_type);
 			}
 			statement.execute();
@@ -149,15 +158,15 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 		sb = null;
 	}
 
-//	/**
-//	 * 执行更新指令，将更新指定的行。
-//	 * @param conn
-//	 * @throws Exception
-//	 */
-//	final void updateWithDB(R row, Connection conn) throws Exception
-//	{
-//		updateWithDB(row, conn, table_columns);
-//	}
+	/**
+	 * 执行更新指令，将更新指定的行。
+	 * @param conn
+	 * @throws Exception
+	 */
+	final protected void updateWithDB(R row, Connection conn) throws Exception
+	{
+		updateWithDB(row, conn, table_columns);
+	}
 	
 	/**
 	 * 执行更新指令，将更新指定的行。
@@ -267,12 +276,14 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 	 */
 	final protected ArrayList<R> selectAll(Connection conn) throws SQLException
 	{
-		ArrayList<R> ret = new ArrayList<R>();
-
-		String 		sql 		= "SELECT * FROM " + table_name + " ;";
-		Statement	statement 	= conn.createStatement();
-		ResultSet 	result 		= statement.executeQuery(sql);
-		
+		return query(conn, "SELECT * FROM " + table_name + " ;");
+	}
+	
+	final protected ArrayList<R> query(Connection conn, String sql) throws SQLException
+	{
+		ArrayList<R> 	ret 		= new ArrayList<R>();
+		Statement		statement 	= conn.createStatement();
+		ResultSet 		result 		= statement.executeQuery(sql);
 		try {
 			while (result.next()) {
 				try {
@@ -284,12 +295,17 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 		} catch (SQLException e) {
 			throw e;
 		}  catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 		} finally {
-			result.close();
-			statement.close();
+			try {
+				result.close();
+			} catch (Exception err) {}
+			try {
+				statement.close();
+			} catch (Exception err) {}
 		}
 		return ret;
+		
 	}
 
 //	---------------------------------------------------------------------------------------------------------------------------------------------------------
