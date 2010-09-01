@@ -18,6 +18,7 @@ import com.cell.gfx.game.CSprite;
 import com.cell.rpg.quest.ability.QuestAccepter;
 import com.cell.rpg.quest.ability.QuestPublisher;
 import com.cell.rpg.scene.Actor;
+import com.cell.rpg.scene.ability.ActorAuctioneer;
 import com.cell.rpg.scene.ability.ActorBank;
 import com.cell.rpg.scene.ability.ActorDropItem;
 import com.cell.rpg.scene.ability.ActorJobTrainer;
@@ -69,6 +70,7 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 					
 					ActorTalk.class,
 					ActorBank.class,
+					ActorAuctioneer.class,
 					ActorPostOffice.class,
 					ActorSkillTrainer.class,
 					ActorJobTrainer.class,
@@ -84,6 +86,7 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 					
 					Res.img_talk,
 					Res.img_npc_bank,
+					Res.img_sell_item,
 					Res.img_mail,
 					Res.img_skill_trainer,
 					Res.img_job_trainer,
