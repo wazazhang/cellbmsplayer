@@ -37,7 +37,7 @@ public abstract class ExternalizableFactory
 	 * 将标注{@link ExternalizableMessageType}的类注册到系统
 	 * @param clazz
 	 */
-	public void registClass(Class<?> clazz) {		
+	public void registClass(Class<?> clazz) throws Exception {
 		clazz.asSubclass(ExternalizableMessage.class);
 		ExternalizableMessageType ext_type = clazz.getAnnotation(ExternalizableMessageType.class);
 		if (ext_type == null) {
