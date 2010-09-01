@@ -11,38 +11,64 @@ import com.sun.xml.internal.txw2.IllegalAnnotationException;
  */
 public abstract class ExternalizableFactory 
 {
-	final Map<Integer, Class<? extends MessageHeader>> type_map;
+	final Map<Integer, Class<?>> type_map;
 	
 	public ExternalizableFactory() {
 		this.type_map = createMap();
 	}
+
+	/**
+	 * 子类提供的表实现
+	 * @return
+	 */
+	abstract protected Map<Integer, Class<?>> createMap();
 	
-	final public int getType(MessageHeader message){
+	public int getType(MessageHeader message) {
 		ExternalizableMessageType ext_type = message.getClass().getAnnotation(ExternalizableMessageType.class);
 		return ext_type.value();
 	}
 	
-	final public MessageHeader getMessage(int type) throws InstantiationException, IllegalAccessException   {
-		Class<? extends MessageHeader> ext_type = type_map.get(type);
-		return ext_type.newInstance();
+	public MessageHeader createMessage(int type) throws InstantiationException, IllegalAccessException   {
+		Class<?> ext_type = type_map.get(type);
+		return (MessageHeader)ext_type.newInstance();
 	}
 	
 	/**
 	 * 将标注{@link ExternalizableMessageType}的类注册到系统
 	 * @param clazz
 	 */
-	final public void registClass(Class<? extends MessageHeader> clazz) {
+	public void registClass(Class<?> clazz) {		
+		clazz.asSubclass(ExternalizableMessage.class);
 		ExternalizableMessageType ext_type = clazz.getAnnotation(ExternalizableMessageType.class);
 		if (ext_type == null) {
-			throw new NotImplementedException(
-					"not ExternalizableMessageType : " + clazz);
-		} else if (!type_map.containsKey(ext_type.value())) {
-			type_map.put(ext_type.value(), clazz);
+			throw new NotImplementedException("not Annotation ExternalizableMessageType : " + clazz);
 		} else {
-			throw new IllegalAnnotationException(
-					"duplicate ExternalizableMessageType : " + clazz + "(" + ext_type.value() + ")");
+			Class<?> sc = type_map.get(ext_type.value());
+			if (sc == null) {
+				type_map.put(ext_type.value(), clazz);
+			} else {
+				throw new IllegalAnnotationException("duplicate Annotation ExternalizableMessageType : " +
+						"\"" + clazz + "\"(" + ext_type.value() + ") src=\""+sc.getName()+"\"");
+			}
 		}
 	}
 	
-	abstract protected Map<Integer, Class<? extends MessageHeader>> createMap();
+	
+	/**
+	 * 如果该类是ExternalizableMessage，则将标注{@link ExternalizableMessageType}的类注册到系统，否则查找在此类中定义的类种类。
+	 * @param cls
+	 */
+	public void registClasses(Class<?> cls) {
+		try {
+			cls.asSubclass(ExternalizableMessage.class);
+			ExternalizableMessageType ext_type = cls.getAnnotation(ExternalizableMessageType.class);
+			if (ext_type != null) {
+				registClass(cls);
+			}
+		} catch (Exception err) {}
+		
+		for (Class<?> sub : cls.getClasses()) {
+			registClasses(sub);
+		}
+	}
 }
