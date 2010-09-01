@@ -110,7 +110,7 @@ public class NetPackageCodec extends MessageHeaderCodec
 		    				message = (MessageHeader)in.getObject(class_loader);
 							break;
 						case TRANSMISSION_TYPE_EXTERNALIZABLE:
-							message = ext_factory.getMessage(in.getInt());	// ext 4
+							message = ext_factory.createMessage(in.getInt());	// ext 4
 							ExternalizableMessage ext = (ExternalizableMessage)message;
 							ext.readExternal(new NetDataInputImpl(in));
 							break;
