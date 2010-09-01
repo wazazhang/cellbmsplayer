@@ -1,5 +1,7 @@
 package com.net;
 
+import java.io.IOException;
+
 import com.net.anno.ExternalizableMessageType;
 
 
@@ -10,7 +12,7 @@ import com.net.anno.ExternalizableMessageType;
  */
 public interface ExternalizableMessage 
 {
-	public void readExternal(NetDataInput in) throws Exception ;
+	public void readExternal(NetDataInput in) throws IOException ;
 	
-	public void writeExternal(NetDataOutput out) throws Exception ;
+	public void writeExternal(NetDataOutput out) throws IOException ;
 }
