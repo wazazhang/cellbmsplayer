@@ -2,6 +2,7 @@ package com.cell.rpg.scene;
 
 import com.cell.rpg.quest.ability.QuestAccepter;
 import com.cell.rpg.quest.ability.QuestPublisher;
+import com.cell.rpg.scene.ability.ActorAuctioneer;
 import com.cell.rpg.scene.ability.ActorBank;
 import com.cell.rpg.scene.ability.ActorDropItem;
 import com.cell.rpg.scene.ability.ActorFlag;
@@ -42,6 +43,7 @@ public class Actor extends SceneSprite
 				ActorTalk.class,
 				ActorSellItem.class,
 				ActorBank.class,
+				ActorAuctioneer.class,
 				ActorPostOffice.class,
 				ActorJobTrainer.class,
 				ActorSkillTrainer.class,
