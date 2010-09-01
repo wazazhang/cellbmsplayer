@@ -99,8 +99,13 @@ public class NetDataOutputImpl implements NetDataOutput
 	
 	synchronized
 	public void writeUTF(String s) throws IOException {
-		charset_encoder_utf8.reset();
-		buffer.putString(s, charset_encoder_utf8);
+		if (s != null) {
+			buffer.putInt(s.length());
+			charset_encoder_utf8.reset();
+			buffer.putString(s, charset_encoder_utf8);
+		} else {
+			buffer.putInt(-1);
+		}
 	}
 
 //	-----------------------------------------------------------------------------------------------------------
