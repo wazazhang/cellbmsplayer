@@ -113,8 +113,12 @@ public class NetDataInputImpl implements NetDataInput
 
 	synchronized
 	public String readUTF() throws IOException {
-		charset_decoder_utf8.reset();
-		return buffer.getString(charset_decoder_utf8);
+		int size = buffer.getInt();
+		if (size >= 0) {
+			charset_decoder_utf8.reset();
+			return buffer.getString(charset_decoder_utf8);
+		}
+		return null;
 	}
 	synchronized
 	public int skipBytes(int n) throws IOException {
