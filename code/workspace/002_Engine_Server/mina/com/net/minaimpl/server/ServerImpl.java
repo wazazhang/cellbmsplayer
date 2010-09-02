@@ -68,6 +68,24 @@ public class ServerImpl extends AbstractServer
 		this.channel_manager				= new ChannelManagerImpl(this);
 	}	
 	
+	/**
+	 * @param cl ClassLoader
+	 * @param ef ExternalizableFactory
+	 * @param ioProcessCount IO处理线程数
+	 * @param sessionWriteIdleTimeSeconds	多长时间内没有发送数据，断掉链接
+	 * @param sessionReadIdleTimeSeconds	多长时间内没有接受数据，断掉链接
+	 */
+	public ServerImpl(
+			ClassLoader 			cl,
+			ExternalizableFactory 	ef,
+			int 					ioProcessCount, 
+			int 					sessionWriteIdleTimeSeconds,
+			int 					sessionReadIdleTimeSeconds, 
+			boolean					close_on_error) 
+	{
+		super(cl, ef, ioProcessCount, sessionWriteIdleTimeSeconds, sessionReadIdleTimeSeconds, close_on_error);
+		this.channel_manager				= new ChannelManagerImpl(this);
+	}	
 //	----------------------------------------------------------------------------------------------------------------------
 
 //	-----------------------------------------------------------------------------------------------------------------------

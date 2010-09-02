@@ -39,6 +39,7 @@ public abstract class AbstractServer extends IoHandlerAdapter implements Server
 	
 	protected ServerListener 		SrvListener;
 	protected long 					StartTime;
+	protected boolean				CloseOnError = true;
 	
 //	----------------------------------------------------------------------------------------------------------------------
 	
@@ -56,6 +57,25 @@ public abstract class AbstractServer extends IoHandlerAdapter implements Server
 			int 					sessionWriteIdleTimeSeconds,
 			int 					sessionReadIdleTimeSeconds) 
 	{
+		this(cl, ef, ioProcessCount, sessionWriteIdleTimeSeconds, sessionReadIdleTimeSeconds, true);
+	}	
+	
+	/**
+	 * @param cl ClassLoader
+	 * @param ef ExternalizableFactory
+	 * @param ioProcessCount IO处理线程数
+	 * @param sessionWriteIdleTimeSeconds	多长时间内没有发送数据，断掉链接
+	 * @param sessionReadIdleTimeSeconds	多长时间内没有接受数据，断掉链接
+	 */
+	public AbstractServer(
+			ClassLoader 			cl,
+			ExternalizableFactory 	ef,
+			int 					ioProcessCount, 
+			int 					sessionWriteIdleTimeSeconds,
+			int 					sessionReadIdleTimeSeconds,
+			boolean					close_on_error) 
+	{		
+		this.CloseOnError	= close_on_error;
 		this.Codec			= new NetPackageCodec(cl, ef);
 		this.Acceptor		= new NioSocketAcceptor(ioProcessCount);
 		this.Acceptor.getSessionConfig().setReaderIdleTime(sessionWriteIdleTimeSeconds);
@@ -114,12 +134,16 @@ public abstract class AbstractServer extends IoHandlerAdapter implements Server
 
 	public void exceptionCaught(IoSession session, Throwable cause) throws Exception {
 		log.error(cause.getMessage() + "\n" + session, cause);
-		session.close(false);
+		if (CloseOnError) {
+			session.close(false);
+		}
 	}
 	
 	public void sessionIdle(IoSession session, IdleStatus status) throws Exception {
 		log.debug("sessionIdle : " + session + " : " + status);
-		session.close(false);
+		if (CloseOnError) {
+			session.close(false);
+		}
 	}
 
 //	-----------------------------------------------------------------------------------------------------------------------

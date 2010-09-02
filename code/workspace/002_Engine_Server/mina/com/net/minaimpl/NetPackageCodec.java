@@ -5,6 +5,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.Externalizable;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -66,10 +67,7 @@ public class NetPackageCodec extends MessageHeaderCodec
 							byte data = in.get();
 							if (data != protocol_start[i]) {
 								// 丢弃掉非法字节//返回true代表这次解包已完成,清空状态并准备下一次解包
-								_log.warn("bad head, drop data : " + data);
-								// 收到非法字节后，断开连接
-								session.close(false);
-								return true;
+								throw new IOException("bad head, drop data : " + data);
 							}
 						}
 			            
