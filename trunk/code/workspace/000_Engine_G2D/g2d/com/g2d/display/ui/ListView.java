@@ -1,8 +1,11 @@
 package com.g2d.display.ui;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Vector;
 
 import com.g2d.Tools;
@@ -19,7 +22,6 @@ public class ListView extends UIComponent
 	private static final long serialVersionUID = Version.VersionG2D;
 
 	ViewMode 					view_mode			= ViewMode.BIG_ICON;
-	ViewMode 					next_view_mode		= ViewMode.BIG_ICON;
 	
 	ListViewPanel 				panel 				= new ListViewPanel();
 	
@@ -27,41 +29,69 @@ public class ListView extends UIComponent
 	
 	Vector<ListViewListener<?>> listview_listeners = new Vector<ListViewListener<?>>();
 
+	ListViewAdapter				adapter;
+	
 //	----------------------------------------------------------------------------------------------------------
 
 	
-	public ListView()
-	{
-		enable_input 		= false;
-		
+	public ListView() {
+		enable_input = false;
+		adapter = new DefaultListViewAdapter();
 		super.addChild(panel);
 	}
-	
-	public ListView(String items[]){
-		this();
-		addItems(items);
-	}
-	
-	public ListView(Item<?> items[]){
+
+	public ListView(String items[]) {
 		this();
 		addItems(items);
 	}
 
-	public ListView(Collection<? extends Item<?>> items){
+	public ListView(Item<?> items[]) {
+		this();
+		addItems(items);
+	}
+
+	public ListView(Collection<? extends Item<?>> items) {
 		this();
 		addItems(items);
 	}
 	
-	public void setViewMode(ViewMode mode) 
-	{
-		this.next_view_mode = mode;
+	
+
+	public ListView(ListViewAdapter adapter) {
+		this.enable_input = false;
+		this.adapter = adapter;
+		super.addChild(panel);
+	}
+
+	public ListView(ListViewAdapter adapter, String items[]) {
+		this(adapter);
+		addItems(items);
+	}
+
+	public ListView(ListViewAdapter adapter, Item<?> items[]) {
+		this(adapter);
+		addItems(items);
+	}
+
+	public ListView(ListViewAdapter adapter, Collection<? extends Item<?>> items) {
+		this(adapter);
+		addItems(items);
 	}
 	
-	
+//	----------------------------------------------------------------------------------------------------------
+
+	public void setViewMode(ViewMode mode) {
+		this.view_mode = mode;
+	}
+
+	public ViewMode getViewMode() {
+		return this.view_mode;
+	}
+
 //	----------------------------------------------------------------------------------------------------------
 //	items
 
-	public ListViewPanel getPanel() {
+	public Panel getPanel() {
 		return panel;
 	}
 	
@@ -164,89 +194,36 @@ public class ListView extends UIComponent
 		panel.setLocation(0, 0);
 		panel.setSize(getWidth(), getHeight());
 		
-		if (next_view_mode!=null)
-		{
-			view_mode = next_view_mode;
-			panel.resetViewMode();
-		}
+		adapter.layoutItems(
+				this, 
+				new Dimension(panel.getViewPortWidth(), panel.getViewPortHeight()), 
+				view_mode, 
+				new java.util.ArrayList<Item<?>>(panel.components));
 	}
 	
 
 //	----------------------------------------------------------------------------------------------------------
 
-	public class ListViewPanel extends Panel
+	class ListViewPanel extends Panel
 	{
 		private static final long serialVersionUID = Version.VersionG2D;
-//		
-//		public void addChild(Item<?> child) {
-//			super.getContainer().addChild(child);
-//		}
-//		public void removeChild(Item<?> child) {
-//			super.getContainer().removeChild(child);
-//		}
 
-		Vector<UIComponent> components = new Vector<UIComponent>();
+		Vector<Item<?>> components = new Vector<Item<?>>();
 		
-		public boolean addItem(Item<?> child) {
+		boolean addItem(Item<?> child) {
 			synchronized (components) {
-				if (child instanceof UIComponent) {
-					components.add((UIComponent) child);
-				}
+				components.add(child);
 			}
 			return super.getContainer().addChild(child);
 		}
 		
-		public boolean removeItem(Item<?> child) {
+		boolean removeItem(Item<?> child) {
 			synchronized(components) {
-				if (child instanceof UIComponent) {
-					components.remove((UIComponent)child);
-				}
+				components.remove(child);
 			}
 			return super.getContainer().removeChild(child);
 		}
-		
-		
-		@Override
-		public UIComponentEditor<?> createEditorForm() {
-			return ListView.this.createEditorForm();
-		}
-		
-		void resetViewMode()
-		{
-			switch (view_mode)
-			{
-			case LIST: 
-			case DETAIL: {
-				int h = 0;
-				for (UIComponent item : components) {
-					item.setLocation(0, h);
-					item.setSize(view_port.getWidth(), 20);
-					h += 20;
-				}
-				break;
-			}
-			
-			case BIG_ICON: 
-			case SMALL_ICON: {
-				int h = 0;
-				int w = 0;
-				for (UIComponent item : components) {
-					item.setLocation(w, h);
-					item.setSize(40, 40);
-					w += 40;
-					if (w >= view_port.getWidth()) {
-						h += 40;
-						w = 0;
-					}
-				}
-				break;
-			}
-			
-			}
-		}
-		
 	}
-	
 	
 
 	public static enum ViewMode
@@ -334,6 +311,58 @@ public class ListView extends UIComponent
 			);
 		}
 		
+	}
+	
+
+	public static interface ListViewAdapter
+	{
+		public void layoutItems(ListView view, Dimension bounds, ViewMode view_mode, List<Item<?>> components);
+	}
+	
+	public static class DefaultListViewAdapter implements ListViewAdapter
+	{
+		public int LIST_ITEM_HEIGHT		= 20;
+		
+		public int LIST_ITEM_SMALL_SIZE	= 20;
+
+		public int LIST_ITEM_BIG_SIZE 	= 40;
+		
+		@Override
+		public void layoutItems(ListView view, Dimension bounds, ViewMode viewMode, List<Item<?>> components) 
+		{
+			switch (viewMode)
+			{
+			case LIST: 
+			case DETAIL: {
+				int h = 0;
+				for (UIComponent item : components) {
+					item.setLocation(0, h);
+					item.setSize(bounds.width, LIST_ITEM_HEIGHT);
+					h += LIST_ITEM_HEIGHT;
+				}
+				break;
+			}
+			
+			case BIG_ICON: 
+			case SMALL_ICON: 
+				int sw = viewMode == ViewMode.BIG_ICON ? LIST_ITEM_BIG_SIZE : LIST_ITEM_SMALL_SIZE;
+				int h = 0;
+				int w = 0;
+				for (UIComponent item : components) {
+					item.setLocation(w, h);
+					item.setSize(sw, sw);
+					w += sw;
+					if (w >= bounds.width) {
+						h += sw;
+						w = 0;
+					}
+				}
+				break;
+			
+			}
+			
+			
+		}
 	}
 	
 	
