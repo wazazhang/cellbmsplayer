@@ -113,8 +113,9 @@ public class NetDataInputImpl implements NetDataInput
 	synchronized
 	public String readUTF() throws IOException {
 		int size = buffer.getInt();
-		if (size > 0) {
-			byte[] data = readByteArray();
+		if (size >= 0) {		
+			byte[] data = new byte[size];
+			buffer.get(data);
 			return new String(data, CUtil.getEncoding());
 		}
 		return null;
