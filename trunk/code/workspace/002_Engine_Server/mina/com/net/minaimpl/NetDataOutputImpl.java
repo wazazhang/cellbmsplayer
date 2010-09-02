@@ -9,15 +9,14 @@ import java.nio.charset.CharsetEncoder;
 
 import org.apache.mina.core.buffer.IoBuffer;
 
+import com.cell.CUtil;
 import com.cell.exception.NotImplementedException;
 import com.cell.io.ExternalizableUtil;
 import com.net.ExternalizableMessage;
 import com.net.NetDataOutput;
 
 public class NetDataOutputImpl implements NetDataOutput
-{
-	CharsetEncoder charset_encoder_utf8 = Charset.forName("UTF-8").newEncoder();
-	
+{	
 	final IoBuffer buffer ;
 	
 	public NetDataOutputImpl(IoBuffer buffer) {
@@ -26,21 +25,21 @@ public class NetDataOutputImpl implements NetDataOutput
 	
 	synchronized
 	public void writeExternal(ExternalizableMessage data) throws IOException {
-		buffer.putInt(0);
 		if (data != null) {
-			int pos = buffer.position();
+			buffer.putInt(1);
 			data.writeExternal(this);
-			buffer.putInt(pos-1, buffer.position()-pos);
+		} else {
+			buffer.putInt(0);
 		}
 	}
 	
 	synchronized
 	public void writeObject(Object data) throws IOException {
-		buffer.putInt(0);
 		if (data != null) {
-			int pos = buffer.position();
+			buffer.putInt(1);
 			buffer.putObject(data);
-			buffer.putInt(pos-1, buffer.position()-pos);
+		} else {
+			buffer.putInt(0);
 		}
 	}
 	
@@ -99,12 +98,11 @@ public class NetDataOutputImpl implements NetDataOutput
 	
 	synchronized
 	public void writeUTF(String s) throws IOException {
-		if (s != null) {
-			buffer.putInt(s.length());
-			charset_encoder_utf8.reset();
-			buffer.putString(s, charset_encoder_utf8);
+		if (s != null) {			
+			byte[] data = s.getBytes(CUtil.getEncoding());
+			writeByteArray(data);
 		} else {
-			buffer.putInt(-1);
+			buffer.putInt(0);
 		}
 	}
 

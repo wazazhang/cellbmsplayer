@@ -8,15 +8,14 @@ import java.nio.charset.CharsetDecoder;
 
 import org.apache.mina.core.buffer.IoBuffer;
 
+import com.cell.CUtil;
 import com.cell.exception.NotImplementedException;
 import com.cell.io.ExternalizableUtil;
 import com.net.ExternalizableMessage;
 import com.net.NetDataInput;
 
 public class NetDataInputImpl implements NetDataInput
-{
-	CharsetDecoder charset_decoder_utf8 = Charset.forName("UTF-8").newDecoder();
-	
+{	
 	final IoBuffer buffer ;
 	
 	public NetDataInputImpl(IoBuffer buffer) {
@@ -114,9 +113,9 @@ public class NetDataInputImpl implements NetDataInput
 	synchronized
 	public String readUTF() throws IOException {
 		int size = buffer.getInt();
-		if (size >= 0) {
-			charset_decoder_utf8.reset();
-			return buffer.getString(charset_decoder_utf8);
+		if (size > 0) {
+			byte[] data = readByteArray();
+			return new String(data, CUtil.getEncoding());
 		}
 		return null;
 	}
