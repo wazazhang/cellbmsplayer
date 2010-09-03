@@ -308,7 +308,7 @@ public abstract class SQLColumnManager<K, R extends SQLTableRow<K>> extends SQLC
 	 */
 	public R getIfAbsent(Connection conn, K primary_key, R new_value) throws Exception
 	{
-		data_readLock.lock();
+		data_writeLock.lock();
 		try {
 			R row = data_map.get(primary_key);
 			if (row != null) {
@@ -323,7 +323,7 @@ public abstract class SQLColumnManager<K, R extends SQLTableRow<K>> extends SQLC
 				return null;
 			}
 		} finally {
-			data_readLock.unlock();
+			data_writeLock.unlock();
 		}
 	}
 	
