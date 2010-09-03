@@ -66,6 +66,7 @@ public class NetPackageCodec extends MessageHeaderCodec
 						for (int i = 0; i < protocol_start.length; ++i) {
 							byte data = in.get();
 							if (data != protocol_start[i]) {
+								in.clear();
 								// 丢弃掉非法字节//返回true代表这次解包已完成,清空状态并准备下一次解包
 								throw new IOException("bad head, drop data : " + data);
 							}
