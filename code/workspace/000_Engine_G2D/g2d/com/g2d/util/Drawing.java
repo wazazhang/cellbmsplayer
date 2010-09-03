@@ -255,5 +255,20 @@ public class Drawing
 		src.drawText(g, x, y, 0, 0, w, h);
 	}
 	
-	
+	final static public void drawStringShwdow(Graphics2D g, MultiTextLayout src, int x, int y, int w, int h, int anchor)
+	{
+		if ((anchor & TEXT_ANCHOR_RIGHT) != 0) {
+			x += w - src.getWidth();
+		}else if ((anchor & TEXT_ANCHOR_HCENTER) != 0) {
+			x += ((w-src.getWidth())>>1);
+		}
+		
+		if ((anchor & TEXT_ANCHOR_BOTTON) != 0) {
+			y += h - src.getHeight();
+		}else if ((anchor & TEXT_ANCHOR_VCENTER) != 0) {
+			y += ((h-src.getHeight())>>1);
+		}
+		
+		src.drawText(g, x, y, 0, 0, w, h, 1, 1, 1f, 0);
+	}
 }

@@ -38,7 +38,7 @@ public class TextBox extends UIComponent implements Serializable
 	public boolean						is_show_link;
 	protected ScrollBar					v_scrollbar			= ScrollBar.createVScroll(SCROLL_BAR_SIZE);
 	protected boolean					v_scroll_left_dock	= false;
-
+	
 	/**文字是否抗锯齿*/
 	@Property("文字是否抗锯齿")
 	public boolean						enable_antialiasing	 = false;
@@ -79,6 +79,19 @@ public class TextBox extends UIComponent implements Serializable
 		
 		this.text.setText(text);
 		this.setSize(w, h);
+	}
+	
+	public void setEnableScrollBar(boolean vs) {
+		v_scrollbar.visible = vs;
+		if (!vs) {
+			if (super.contains(v_scrollbar)) {
+				super.removeChild(v_scrollbar);
+			}
+		} else {
+			if (!super.contains(v_scrollbar)) {
+				super.addChild(v_scrollbar);
+			}
+		}
 	}
 	
 	@Deprecated
@@ -178,7 +191,9 @@ public class TextBox extends UIComponent implements Serializable
 	
 	protected void onMouseWheelMoved(MouseWheelEvent event) {
 		//System.out.println(" mouseWheelMoved");
-		v_scrollbar.moveInterval(event.scrollDirection);
+		if (v_scrollbar.visible) {
+			v_scrollbar.moveInterval(event.scrollDirection);
+		}
 	}
 	
 	protected void onKeyTyped(KeyEvent event) {
@@ -237,26 +252,38 @@ public class TextBox extends UIComponent implements Serializable
 			
 			int sw = getWidth() -(layout.BorderSize<<1);
 			int sh = getHeight()-(layout.BorderSize<<1);
-
-			v_scrollbar.setMax(Math.max(text.getHeight(), sh));
-			v_scrollbar.setValue(v_scrollbar.getValue(), sh);
+			if (v_scrollbar.visible) {
+				v_scrollbar.setMax(Math.max(text.getHeight(), sh));
+				v_scrollbar.setValue(v_scrollbar.getValue(), sh);
+			} else {
+				v_scrollbar.setMax(Math.max(text.getHeight(), sh));
+				v_scrollbar.setValue(0, sh);
+			}
+			
 			
 			view_port_rect.x = layout.BorderSize;
 			view_port_rect.y = layout.BorderSize;
 			view_port_rect.width = text.getWidth();
 			view_port_rect.height = sh;
 			
-			if (v_scroll_left_dock) {
-				view_port_rect.x = layout.BorderSize + v_scrollbar.size;
-				v_scrollbar.setLocation(layout.BorderSize, layout.BorderSize);
-			} else {
-				v_scrollbar.setLocation(getWidth()-layout.BorderSize-v_scrollbar.size, layout.BorderSize);
+			if (v_scrollbar.visible) {
+				if (v_scroll_left_dock) {
+					view_port_rect.x = layout.BorderSize + v_scrollbar.size;
+					v_scrollbar.setLocation(layout.BorderSize, layout.BorderSize);
+				} else {
+					v_scrollbar.setLocation(getWidth()-layout.BorderSize-v_scrollbar.size, layout.BorderSize);
+				}
+				v_scrollbar.setSize(v_scrollbar.size, sh);
+				text.setWidth(sw-v_scrollbar.size);
+				text_draw_x = view_port_rect.x;
+				text_draw_y = view_port_rect.y - (int)v_scrollbar.getValue();
 			}
-			v_scrollbar.setSize(v_scrollbar.size, sh);
+			else {
+				text.setWidth(sw);
+				text_draw_x = view_port_rect.x;
+				text_draw_y = view_port_rect.y;
+			}
 			
-			text.setWidth(sw-v_scrollbar.size);
-			text_draw_x = view_port_rect.x;
-			text_draw_y = view_port_rect.y - (int)v_scrollbar.getValue();
 		}
 		
 		super.update();
@@ -271,6 +298,12 @@ public class TextBox extends UIComponent implements Serializable
 			int tsy = (int)v_scrollbar.getValue();
 			int tsw = text.getWidth();
 			int tsh = (int)v_scrollbar.getValueLength();
+			
+			if (v_scrollbar.visible) {
+				tsy = (int)v_scrollbar.getValue();
+			} else {
+				tsy = 0;
+			}
 			
 			Object v = g.getRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING);
 			try {
