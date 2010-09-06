@@ -4,17 +4,25 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+
+import javax.imageio.ImageIO;
 
 import com.cell.CIO;
 import com.cell.CUtil;
 import com.cell.gfx.IGraphics;
+import com.cell.io.BigIODeserialize;
+import com.cell.io.BigIOSerialize;
 import com.cell.io.CFile;
-import com.cell.j2se.CAppBridge;
 import com.cell.j2se.CImage;
 import com.cell.rpg.res.Resource;
+import com.cell.util.Pair;
 import com.cell.util.zip.ZipUtil;
 import com.g2d.Tools;
 import com.g2d.cell.CellGameEditWrap;
@@ -51,7 +59,7 @@ public class EatBuilder extends Builder
 			Process process = CellGameEditWrap.openCellGameEdit(Config.CELL_GAME_EDIT_CMD, cpj_file_name, 
 					output_properties.getPath());
 			process.waitFor();
-			cleanOutput(cpj_file_name);
+			cleanOutput(cpj_file_name, false);
 			return process;
 		} catch (Throwable e) {
 			e.printStackTrace();
@@ -76,7 +84,7 @@ public class EatBuilder extends Builder
 					);
 			process.waitFor();
 			saveSceneThumb(cpj_file_name) ;
-			cleanOutput(cpj_file_name);
+			cleanOutput(cpj_file_name, true);
 			return process;
 		} catch (Throwable e) {
 			e.printStackTrace();
@@ -129,7 +137,7 @@ public class EatBuilder extends Builder
 		}
 	}
 	
-	private void cleanOutput(File cpj_file_name) 
+	private void cleanOutput(File cpj_file_name, boolean is_scene) 
 	{
 		try
 		{
@@ -161,7 +169,11 @@ public class EatBuilder extends Builder
 						File png	= new File(set, "png");
 						if (png.exists() && png.isDirectory()) {
 							CFile.deleteFiles(png, ".jpg");
-							pakFiles(png, ".png", new File(output, "png.zip"));
+							if (is_scene) {
+								pakPngMasks	(png, ".png", new File(output, "png.zip"));
+							} else {
+								pakFiles	(png, ".png", new File(output, "png.zip"));
+							}
 							CFile.deleteFiles(png, ".png");
 						}
 					}
@@ -172,6 +184,67 @@ public class EatBuilder extends Builder
 		catch(Exception err){
 			err.printStackTrace();
 		}
+	}
+	
+	private File pakPngMasks(File dir, String suffix, File out) {
+		try {
+			ArrayList<Pair<ByteArrayOutputStream, String>> packs = new ArrayList<Pair<ByteArrayOutputStream, String>>();
+			for (File file : dir.listFiles()) {
+				if (file.getName().toLowerCase().endsWith(suffix)) {
+					try {
+						BufferedImage bi = Tools.readImage(file.getPath());
+						if (bi != null) {
+							int [] rgb = new int[bi.getWidth() * bi.getHeight()];
+							bi.getRGB(0, 0, bi.getWidth(), bi.getHeight(), rgb, 0, bi.getWidth());
+							ByteArrayOutputStream baos = new ByteArrayOutputStream(rgb.length / 8 + 10);
+							BigIOSerialize.putInt(baos, bi.getWidth());
+							BigIOSerialize.putInt(baos, bi.getHeight());
+							for (int i = 0; i < rgb.length; i+=8) {
+								byte state = 0;
+								for (int s = 0; s < 8; s ++) {
+									int index = i + s;
+									if (index < rgb.length && ((rgb[index] & 0xff000000) != 0)) {
+										state += (0x01 << s);
+									}
+								}
+								BigIOSerialize.putByte(baos, state);
+							}
+							packs.add(new Pair<ByteArrayOutputStream, String>(baos, file.getName()));
+						}
+					} catch (Throwable tx) {
+						tx.printStackTrace();
+					}
+				}
+			}
+
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ZipOutputStream zip_out = new ZipOutputStream(baos);
+			try{
+				for (Pair<ByteArrayOutputStream, String> pak : packs) {
+					ZipEntry entry = new ZipEntry(pak.getValue());
+					try{
+						zip_out.putNextEntry(entry);
+						zip_out.write(pak.getKey().toByteArray());
+//						System.out.println(pak.getValue());
+					} catch(Exception err){
+						err.printStackTrace();
+					}
+				}
+			} finally {
+				try {
+					zip_out.close();
+				} catch (IOException e) {}
+				try {
+					baos.close();
+				} catch (IOException e) {}
+			}
+			CFile.wirteData(out, baos.toByteArray());
+
+		} catch (Exception err) {
+			err.printStackTrace();
+		}
+		return out;
+	
 	}
 	
 	private File pakFiles(File dir, String suffix, File out)
@@ -265,13 +338,25 @@ public class EatBuilder extends Builder
 		}
 		
 		protected boolean loadZipImages() {
+			boolean is_png_mask = set.Path.endsWith("scene.properties");
+			if (is_png_mask) {
+				is_png_mask = img.Name.startsWith("png");
+			}
 			byte[] zipdata = set.loadRes(img.Name+".zip");
 			if (zipdata != null) {
 				Map<String, ByteArrayInputStream> files = ZipUtil.unPackFile(new ByteArrayInputStream(zipdata));
 				for (int i = 0; i < images.length; i++) {
 					if (img.ClipsW[i] > 0 && img.ClipsH[i] > 0) {
 						ByteArrayInputStream idata = files.get(i+"."+img.Name);
-						images[i] = new CImage(idata);
+						try { 
+							if (is_png_mask) {
+								images[i] = new CImage(createMaskImage(idata));
+							} else {
+								images[i] = new CImage(Tools.readImage(idata));
+							}
+						} catch (Exception err) {
+							err.printStackTrace();
+						}
 					}
 				}
 				return true;
@@ -280,24 +365,62 @@ public class EatBuilder extends Builder
 		}
 	}
 	
+	public static BufferedImage createMaskImage(ByteArrayInputStream idata) 
+	{
+		try {
+			int width	= BigIODeserialize.getInt(idata);
+			int height	= BigIODeserialize.getInt(idata);
+			BufferedImage buffer = Tools.createImage(width, height);
+			int len = width * height;
+			for (int i = 0; i < len; i++) {
+				byte state = BigIODeserialize.getByte(idata);
+				for (int s = 0; s < 8; s++) {
+					int index = i * 8 + s;
+					int x = index % width;
+					int y = index / width;
+					int b = ((0x00ff & state) >> s) & 0x01;
+					if (b != 0) {
+						if (x < width && y < height) {
+							buffer.setRGB(x, y, 0xff000000);
+						}
+					}
+				}
+			}
+			return buffer;
+		} catch (Exception err) {
+			err.printStackTrace();
+		}
+		return null;
+	}
+	
 //	-----------------------------------------------------------------------------------------------------------
 	
 	public static void main(String[] args)
 	{
-		System.err.close();
-		System.out.close();
-		CAppBridge.init();
-		Builder builder = Builder.setBuilder(EatBuilder.class.getName());
-		if (args != null && args.length > 1) {
-			String arg_0 = args[0].toLowerCase().trim();
-			String arg_1 = args[1].toLowerCase().trim();
-			String arg_2 = args[2].toLowerCase().trim();
-			Config.load(Config.class, arg_2);
-			if (arg_1.equals("scene")) {
-				builder.buildScene(new File(arg_0));
-			} else {
-				builder.buildSprite(new File(arg_0));
-			}
-		}
+//		System.err.close();
+//		System.out.close();
+//		CAppBridge.init();
+//		Builder builder = Builder.setBuilder(EatBuilder.class.getName());
+//		if (args != null && args.length > 1) {
+//			String arg_0 = args[0].toLowerCase().trim();
+//			String arg_1 = args[1].toLowerCase().trim();
+//			String arg_2 = args[2].toLowerCase().trim();
+//			Config.load(Config.class, arg_2);
+//			if (arg_1.equals("scene")) {
+//				builder.buildScene(new File(arg_0));
+//			} else {
+//				builder.buildSprite(new File(arg_0));
+//			}
+//		}
+		
+//		byte state = 0;
+//		for (int i=0; i<100; i++) {
+//			if (i%8==0) {
+//				state = 0;
+//			}
+//			state = (byte)((state << 1) | 1);
+//			System.out.println(Integer.toString((state & 0x00ff), 2));
+//			
+//		}
 	}
 }

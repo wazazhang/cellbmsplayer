@@ -67,6 +67,54 @@ public class ZipUtil
 		}
 		return baos;
 	}
+
+	static public ByteArrayOutputStream packStreams(ArrayList<Pair<InputStream, String>> files)
+	{
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ZipOutputStream zip_out = new ZipOutputStream(baos);
+		try{
+			for (Pair<InputStream, String> file : files) {
+				byte[] data = CIO.readStream(file.getKey());
+				if (data != null) {
+					ZipEntry entry = new ZipEntry(file.getValue());
+					try{
+						zip_out.putNextEntry(entry);
+						zip_out.write(data);
+					} catch(Exception err){
+						err.printStackTrace();
+					}
+				}
+			}
+		} finally {
+			try {
+				zip_out.close();
+			} catch (IOException e) {}
+		}
+		return baos;
+	}
+	
+	static public ByteArrayOutputStream packStream(InputStream is, String name)
+	{
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ZipOutputStream zip_out = new ZipOutputStream(baos);
+		try{
+			byte[] data = CIO.readStream(is);
+			if (data != null) {
+				ZipEntry entry = new ZipEntry(name);
+				try{
+					zip_out.putNextEntry(entry);
+					zip_out.write(data);
+				} catch(Exception err){
+					err.printStackTrace();
+				}
+			}
+		} finally {
+			try {
+				zip_out.close();
+			} catch (IOException e) {}
+		}
+		return baos;
+	}
 	
 	static public Map<String, ByteArrayInputStream> unPackFile(InputStream input)
 	{

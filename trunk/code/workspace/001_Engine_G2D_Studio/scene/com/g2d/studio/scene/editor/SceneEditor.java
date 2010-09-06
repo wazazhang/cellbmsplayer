@@ -3,6 +3,7 @@ package com.g2d.studio.scene.editor;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Composite;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -26,6 +27,7 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
@@ -34,7 +36,10 @@ import javax.swing.JToolBar;
 
 import com.cell.CObject;
 import com.cell.CUtil;
+import com.cell.gfx.game.CCD;
 import com.cell.gfx.game.CSprite;
+import com.cell.j2se.CGraphics;
+import com.cell.j2se.CGraphicsImage;
 import com.cell.rpg.scene.Actor;
 import com.cell.rpg.scene.Region;
 import com.cell.rpg.scene.SceneAbilityManager;
@@ -79,6 +84,8 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 {
 	private static final long serialVersionUID = 1L;
 
+	private static float	default_mask_alpha 	= 0.5f;
+	private static int		default_mask_color	= 0x808080;
 //	--------------------------------------------------------------------------------------------------------------
 //	game
 
@@ -101,6 +108,9 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 	private JToggleButton		tool_show_grid	= new JToggleButton(Tools.createIcon(Res.icon_grid));	
 	private JButton				tool_edit_prop	= new JButton(Tools.createIcon(Res.icons_bar[1]));
 	private JToggleButton		tool_play_bgm	= new JToggleButton(Tools.createIcon(Res.icons_bar[3]));
+	private JButton				tool_mask_alpha	= new JButton("MA");
+	private JButton				tool_mask_color	= new JButton("MC");
+	
 	private JTabbedPane			unit_page;
 	private JToolBar			status_bar		= new JToolBar();
 	private JLabel				status_rule		= new JLabel("尺子");
@@ -149,6 +159,14 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 				tool_edit_prop.setToolTipText("查看场景属性");
 				tool_edit_prop.addActionListener(this);
 				tool_bar.add(tool_edit_prop);
+				
+				tool_mask_alpha.setToolTipText("改变MASK透明度");
+				tool_mask_color.setToolTipText("改变MASK颜色");
+				tool_mask_alpha.addActionListener(this);
+				tool_mask_color.addActionListener(this);
+				tool_bar.add(tool_mask_alpha);
+				tool_bar.add(tool_mask_color);
+				
 				tool_bar.addSeparator();
 			}
 			{
@@ -302,10 +320,43 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 	
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent e)
+	{
+		
+		
 		if (e.getSource() == tool_bar.save) {
 			save();
 			Studio.getInstance().getSceneManager().saveScene(scene_node);
+		}
+		else if (e.getSource() == tool_mask_alpha) {
+			String ret = JOptionPane.showInputDialog(this, 
+					"输入0～1的小数", 
+					default_mask_alpha + "");
+			try {
+				if (ret != null) {
+					float v = Float.parseFloat(ret.trim());
+					if (v >= 0 && v <= 1f) {
+						default_mask_alpha = v;
+					} else {
+						JOptionPane.showMessageDialog(this, "输入错误!");
+					}
+				}
+			} catch (Throwable ex) {
+				JOptionPane.showMessageDialog(this, "输入错误!");
+			}
+		}
+		else if (e.getSource() == tool_mask_color) {
+			String ret = JOptionPane.showInputDialog(this, 
+					"输入16进制颜色值，比如 (红色)\"ff0000\"", 
+					Integer.toString(default_mask_color, 16));
+			try {
+				if (ret != null) {
+					int v = Integer.parseInt(ret.trim(), 16);
+					default_mask_color = v;
+				}
+			} catch (Throwable ex) {
+				JOptionPane.showMessageDialog(this, "输入错误!");
+			}
 		}
 		else if (e.getSource() == tool_addactor) {
 			if (isToolAdd() && getSelectedPage().isShowSelectUnitTool()){
@@ -634,6 +685,11 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		
 		class EatWorldObject extends WorldObject 
 		{
+			boolean is_png = false;
+			int old_color = 0;
+			float old_alpha = 0;
+			BufferedImage mask;
+			
 			public EatWorldObject(CellSetResource set, SpriteObject worldSet) {
 				super(set, worldSet);
 			}
@@ -641,8 +697,38 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 			public synchronized void loaded(CellSetResource set, CSprite cspr,
 					com.g2d.cell.CellSetResource.SpriteSet spr) {
 				super.loaded(set, cspr, spr);
+				this.is_png = !spr.ImagesName.startsWith("jpg");
 				if (spr.ImagesName.startsWith("jpg")) {
 					this.priority = Integer.MIN_VALUE;
+				}
+			}
+			
+			@Override
+			public void render(Graphics2D g) 
+			{
+				if (csprite != null)
+				{
+					if (old_color != default_mask_color || 
+						old_alpha != default_mask_alpha) {
+						old_color = default_mask_color;
+						old_alpha = default_mask_alpha;
+						mask = null;
+					}
+					CCD cd = csprite.getFrameBounds();
+					if (mask == null) {
+						mask = Tools.createImage(cd.getWidth(), cd.getHeight());
+						Graphics2D g2d = mask.createGraphics();
+						csprite.render(new CGraphicsImage(g2d), -cd.X1, -cd.Y1);
+						g2d.dispose();
+						if (is_png) {
+							mask = Tools.createAlpha(mask,
+									default_mask_alpha, 
+									default_mask_color);
+						}
+					}
+					if (mask != null) {
+						g.drawImage(mask, cd.X1, cd.Y1, this);
+					}
 				}
 			}
 		}
