@@ -20,6 +20,7 @@ import com.cell.rpg.scene.graph.SceneGraphAstar;
 import com.cell.rpg.scene.graph.SceneGraphNode;
 import com.cell.rpg.scene.graph.SceneGraphNode.LinkInfo;
 import com.cell.util.Pair;
+import com.g2d.Tools;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.Sprite;
 import com.g2d.display.Stage;
@@ -224,7 +225,15 @@ public class SceneGraphViewer extends AbstractDialog
 				
 				this.snode 			= Studio.getInstance().getSceneManager().getSceneNode(node.scene_id);
 				
-				this.snapshot		= snode.getIcon(false).getImage();
+				if (snode.getIcon(false) == null) {
+					snode.getIcon(true);
+				}
+				if (snode.getIcon(false) != null) {
+					this.snapshot		= snode.getIcon(false).getImage();
+				} else {
+					this.snapshot		= Tools.createImage(80, 60);
+				}
+				
 				
 				this.setLocation(node.x, node.y);
 				this.setSize(
