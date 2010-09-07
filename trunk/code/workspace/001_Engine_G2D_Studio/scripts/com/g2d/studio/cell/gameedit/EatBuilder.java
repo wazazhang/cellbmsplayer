@@ -38,11 +38,10 @@ public class EatBuilder extends Builder
 	public EatBuilder() 
 	{
 		script_map = new HashMap<String, String>(5);
-		script_map.put("output.properties", 		CIO.readAllText("/com/g2d/studio/cell/gameedit/output.properties"));
+		script_map.put("output.properties", 		CIO.readAllText("/com/g2d/cell/output.properties"));
 		script_map.put("scene_jpg.script",			CIO.readAllText("/com/g2d/studio/cell/gameedit/scene_jpg.script"));
 		script_map.put("scene_jpg_thumb.script",	CIO.readAllText("/com/g2d/studio/cell/gameedit/scene_jpg_thumb.script"));
 		script_map.put("scene_png.script",			CIO.readAllText("/com/g2d/studio/cell/gameedit/scene_png.script"));
-		
 	}
 	
 	
