@@ -8,6 +8,8 @@ public abstract class SceneSprite extends SceneUnit
 	public int			touch_range		= 30;
 	
 	public int			animate;
+	@Property("动画行为")
+	public String		animate_intention;
 	
 	public SceneSprite(String id) {
 		super(id);
