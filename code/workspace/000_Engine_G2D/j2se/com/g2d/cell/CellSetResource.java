@@ -54,9 +54,12 @@ public class CellSetResource
 	transient public Hashtable<String, SpriteSet>		SprTable;
 	transient public Hashtable<String, MapSet>			MapTable;
 	transient public Hashtable<String, WorldSet>		WorldTable;
-	
+	transient public Hashtable<String, TableSet>		TableGroups;
+
 	final transient protected	MarkedHashtable 		resource_manager;
 	final transient protected	ThreadPoolService		loading_service;
+	
+	
 	
 //	-------------------------------------------------------------------------------------
 	
@@ -104,11 +107,13 @@ public class CellSetResource
 		int SpriteCount 	= Config.getInteger("SpriteCount", 0);
 		int MapCount 		= Config.getInteger("MapCount", 0);
 		int WorldCount 		= Config.getInteger("WorldCount", 0);
+		int TableGroupCount	= Config.getInteger("TableGroupCount", 0);
 
 		ImgTable 		= new Hashtable<String, ImagesSet>();
 		SprTable 		= new Hashtable<String, SpriteSet>();
 		MapTable 		= new Hashtable<String, MapSet>();
 		WorldTable		= new Hashtable<String, WorldSet>();
+		TableGroups		= new Hashtable<String, TableSet>();
 		
 		for (int i=0; i<ImagesCount; i++){
 			ImagesSet img = new ImagesSet(
@@ -160,6 +165,12 @@ public class CellSetResource
 					Config.getString("World_" + i + "_terrain")
 			);
 			WorldTable.put(world.Name, world);
+		}
+		
+		for (int i = 0; i < TableGroupCount; i++) {
+			TableSet tg = new TableSet(
+					Config.getString("TG_" + i), Config);
+			TableGroups.put(tg.Name, tg);
 		}
 	}
 	
@@ -325,6 +336,7 @@ public class CellSetResource
 //	-------------------------------------------------------------------------------------------------------------------------------
 
 	
+	
 	final public WorldSet getSetWorld(String key) {
 		return WorldTable.get(key);
 	}
@@ -341,6 +353,10 @@ public class CellSetResource
 		return ImgTable.get(key);
 	}
 	
+	final public TableSet getTableGroup(String key) {
+		return TableGroups.get(key);
+	}
+	
 	final public<T extends CellSetObject> T getSetObject(Class<T> cls, String key)
 	{
 		CellSetObject ret = null;
@@ -355,6 +371,9 @@ public class CellSetResource
 		}
 		else if (WorldSet.class.isAssignableFrom(cls)) {
 			ret = WorldTable.get(key);
+		}
+		else if (TableSet.class.isAssignableFrom(cls)) {
+			ret = TableGroups.get(key);
 		}
 		if (ret!=null) {
 			return cls.cast(ret);
@@ -1139,9 +1158,134 @@ public class CellSetResource
 	}
 
 //	-------------------------------------------------------------------------------------
-	
+//	#<COMMAND>
+//	TableGroupCount=<COMMAND TABLE GROUP COUNT>
+//	#<TABLE GROUP>
+//	TG_<TABLE GROUP INDEX>=<TABLE GROUP INDEX>,<TABLE COUNT>,<TABLE GROUP NAME>
+//	#<TABLE>
+//	T_<TABLE GROUP INDEX>_<TABLE INDEX>	=<TABLE INDEX>,<COLUMN COUNT>,<ROW COUNT>,<TABLE NAME>
+//	T_<TABLE GROUP INDEX>_<TABLE INDEX>_C	=#<COLUMN HEAD>{<INDEX>,<TEXT>},#<END COLUMN HEAD>
+//	T_<TABLE GROUP INDEX>_<TABLE INDEX>_R	=#<ROWS>{<INDEX>,<ARRAY STR>},#<END ROWS>//	#<END TABLE>
+//	#<END TABLE GROUP>
+//	#<END COMMAND>
+	    
+	public static class TableSet implements CellSetObject
+	{
+		private static final long serialVersionUID = Version.VersionG2D;
 
-	public static IImages createImagesFromSet(ImagesSet img, IImage image, IImages stuff)
+		final public int				Index;
+		final public int				TableCount;
+		final public String				Name;
+		final public Vector<Table> 		Tables 			= new Vector<Table>();
+
+		public TableSet(String table_group, PropertyGroup cfg) throws IOException
+		{
+			String[] args = CUtil.splitString(table_group, ",", 4);
+			Index			= Integer.parseInt(args[0]);
+			TableCount		= Integer.parseInt(args[1]);
+			Name			= args[2];
+			for (int i = 0; i < TableCount; i++) {
+				Table table = new Table(
+						cfg.getString("T_" + Index + "_" + i),
+						cfg.getString("T_" + Index + "_" + i + "_C"),
+						cfg.getString("T_" + Index + "_" + i + "_R")
+				);
+				Tables.add(table);
+			}
+		}
+		
+		public int getIndex() {
+			return Index;
+		}
+		
+		public String getName() {
+			return Name;
+		}
+
+		public static class Table implements CellSetObject
+		{
+			private static final long serialVersionUID = Version.VersionG2D;
+			
+			final public int				Index;
+			final public String				Name;
+			final public int				ColumnCount;
+			final public int				RowCount;
+			final public String[]			Columns;
+			final public String[][]			Rows;
+			
+			public Table(String table, String _columns, String _rows) throws IOException
+			{
+				String[] args = CUtil.splitString(table, ",", 5);
+				Index			= Integer.parseInt(args[0]);
+				ColumnCount		= Integer.parseInt(args[1]);
+				RowCount		= Integer.parseInt(args[2]);
+				Name			= args[3];
+				
+				Columns			= getArray2D(_columns);
+				Rows			= new String[RowCount][ColumnCount];
+				
+				String[] rows	= getArray2D(_rows);
+				for (int r = 0; r < RowCount; r++) {
+					StringReader reader = new StringReader(rows[r]);
+					for (int c = 0; c < ColumnCount; c++) {
+						Rows[r][c] = TextDeserialize.getBytesString(reader);
+					}
+				}
+				
+				System.out.println(this);
+			}
+
+			public int getIndex() {
+				return Index;
+			}
+			
+			public String getName() {
+				return Name;
+			}
+
+			public String getColumnHeader(int column_index){
+				return Columns[column_index];
+			}
+			
+			public String getCell(int column_index, int row_index){
+				return Rows[row_index][column_index];
+			}
+			
+			public String[] getRow(int row_index) {
+				return Rows[row_index];
+			}
+			
+			@Override
+			public String toString() 
+			{
+				StringBuilder sb = new StringBuilder(getClass().getName()+"\n");
+				
+				for (int c = 0; c < ColumnCount; c++) {
+					sb.append("| " + Columns[c] + "\t");
+				}
+				sb.append("\n");
+				for (int r = 0; r < RowCount; r++) {
+					for (int c = 0; c < ColumnCount; c++) {
+						sb.append("| " + Rows[r][c] + "\t");
+					}
+					sb.append("\n");
+				}
+				
+				return sb.toString();
+			}
+		}
+		
+	
+		
+		
+	}
+	
+	
+	
+	
+//	--------------------------------------------------------------------------------------------------------------
+	
+	private static IImages createImagesFromSet(ImagesSet img, IImage image, IImages stuff)
 	{
 		try{
 			if (img != null)
@@ -1171,7 +1315,7 @@ public class CellSetResource
 	
 //	########################################################################################################################
 
-	public static CMap createMapFromSet(MapSet tmap, IImages tiles, boolean isAnimate, boolean isCyc)
+	private static CMap createMapFromSet(MapSet tmap, IImages tiles, boolean isAnimate, boolean isCyc)
 	{
 
 		CMap ret = null;
@@ -1266,7 +1410,7 @@ public class CellSetResource
 	
 //	########################################################################################################################
 	
-	public static CSprite createSpriteFromSet(SpriteSet tsprite, IImages tiles){
+	private static CSprite createSpriteFromSet(SpriteSet tsprite, IImages tiles){
 		
 		CSprite ret = null;
 			 
@@ -1338,7 +1482,7 @@ public class CellSetResource
 	
 //	########################################################################################################################
 
-	public static CWayPoint[] createWayPointsFromSet(Vector<WaypointObject> waypoints)
+	private static CWayPoint[] createWayPointsFromSet(Vector<WaypointObject> waypoints)
 	{
 		CWayPoint wayPoints[] = new CWayPoint[waypoints.size()];
 		for (int i = waypoints.size() - 1; i >= 0; --i) {
@@ -1360,7 +1504,7 @@ public class CellSetResource
 	}
 	
 	
-	public static CCD[] createRegionsFromSet(Vector<RegionObject> regions)
+	private static CCD[] createRegionsFromSet(Vector<RegionObject> regions)
 	{
 		CCD cds[] = new CCD[regions.size()];
 		for (int i = regions.size() - 1; i >= 0; --i) {
