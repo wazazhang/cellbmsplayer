@@ -1232,7 +1232,7 @@ public class CellSetResource
 					}
 				}
 				
-				System.out.println(this);
+//				System.out.println(this);
 			}
 
 			public int getIndex() {
