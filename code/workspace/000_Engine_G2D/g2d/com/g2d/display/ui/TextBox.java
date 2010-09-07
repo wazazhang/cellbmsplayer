@@ -38,6 +38,7 @@ public class TextBox extends UIComponent implements Serializable
 	public boolean						is_show_link;
 	protected ScrollBar					v_scrollbar			= ScrollBar.createVScroll(SCROLL_BAR_SIZE);
 	protected boolean					v_scroll_left_dock	= false;
+	private boolean						enable_scrollbar	= true;
 	
 	/**文字是否抗锯齿*/
 	@Property("文字是否抗锯齿")
@@ -82,7 +83,7 @@ public class TextBox extends UIComponent implements Serializable
 	}
 	
 	public void setEnableScrollBar(boolean vs) {
-		v_scrollbar.visible = vs;
+		enable_scrollbar = vs;
 		if (!vs) {
 			if (super.contains(v_scrollbar)) {
 				super.removeChild(v_scrollbar);
@@ -191,7 +192,7 @@ public class TextBox extends UIComponent implements Serializable
 	
 	protected void onMouseWheelMoved(MouseWheelEvent event) {
 		//System.out.println(" mouseWheelMoved");
-		if (v_scrollbar.visible) {
+		if (enable_scrollbar) {
 			v_scrollbar.moveInterval(event.scrollDirection);
 		}
 	}
@@ -252,7 +253,7 @@ public class TextBox extends UIComponent implements Serializable
 			
 			int sw = getWidth() -(layout.BorderSize<<1);
 			int sh = getHeight()-(layout.BorderSize<<1);
-			if (v_scrollbar.visible) {
+			if (enable_scrollbar) {
 				v_scrollbar.setMax(Math.max(text.getHeight(), sh));
 				v_scrollbar.setValue(v_scrollbar.getValue(), sh);
 			} else {
@@ -266,7 +267,7 @@ public class TextBox extends UIComponent implements Serializable
 			view_port_rect.width = text.getWidth();
 			view_port_rect.height = sh;
 			
-			if (v_scrollbar.visible) {
+			if (enable_scrollbar) {
 				if (v_scroll_left_dock) {
 					view_port_rect.x = layout.BorderSize + v_scrollbar.size;
 					v_scrollbar.setLocation(layout.BorderSize, layout.BorderSize);
@@ -299,7 +300,7 @@ public class TextBox extends UIComponent implements Serializable
 			int tsw = text.getWidth();
 			int tsh = (int)v_scrollbar.getValueLength();
 			
-			if (v_scrollbar.visible) {
+			if (enable_scrollbar) {
 				tsy = (int)v_scrollbar.getValue();
 			} else {
 				tsy = 0;
