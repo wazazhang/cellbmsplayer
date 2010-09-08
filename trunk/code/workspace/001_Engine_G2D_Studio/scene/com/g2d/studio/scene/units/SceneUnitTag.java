@@ -5,6 +5,7 @@ import java.awt.Shape;
 import java.util.Vector;
 
 import com.cell.rpg.scene.SceneUnit;
+import com.cell.rpg.scene.script.trigger.Event;
 import com.g2d.display.ui.Menu;
 import com.g2d.editor.DisplayObjectEditor;
 import com.g2d.game.rpg.Unit;
@@ -27,6 +28,9 @@ public interface SceneUnitTag<T extends SceneUnit> extends G2DListItem
 	public Color 			getSnapColor();
 	public Shape 			getSnapShape();
 
+	public Class<? extends com.cell.rpg.scene.script.entity.SceneUnit>	
+							getEventType();
+	
 //	---------------------------------------------------------------------------------------
 //	edit
 	

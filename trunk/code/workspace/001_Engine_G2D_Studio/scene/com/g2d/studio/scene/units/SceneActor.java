@@ -28,6 +28,7 @@ import com.cell.rpg.scene.ability.ActorSellItem;
 import com.cell.rpg.scene.ability.ActorSkillTrainer;
 import com.cell.rpg.scene.ability.ActorTalk;
 import com.cell.rpg.scene.ability.ActorTransport;
+import com.cell.rpg.scene.script.trigger.Event;
 import com.g2d.annotation.Property;
 import com.g2d.cell.CellSetResource;
 import com.g2d.cell.CellSetResource.SpriteSet;
@@ -334,7 +335,11 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 	public String toString() {
 		return getID()+"";
 	}
-
+	
+	@Override
+	public Class<com.cell.rpg.scene.script.entity.Actor> getEventType() {
+		return com.cell.rpg.scene.script.entity.Actor.class;
+	}
 //	-----------------------------------------------------------------------------------------------------------
 	
 	@Override

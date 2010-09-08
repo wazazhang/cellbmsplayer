@@ -26,6 +26,7 @@ import com.cell.j2se.CAppBridge;
 import com.cell.j2se.CStorage;
 import com.cell.rpg.RPGConfig;
 import com.cell.rpg.io.RPGObjectMap;
+import com.cell.rpg.scene.script.SceneScriptManager;
 import com.cell.sound.IPlayer;
 import com.cell.sound.ISound;
 import com.cell.sound.SoundInfo;
@@ -66,6 +67,8 @@ public class Studio extends AbstractFrame
 	final public ThreadPool			thread_pool = new ThreadPool("studio project");
 	
 	com.cell.sound.SoundManager		sound_system;
+	
+	private SceneScriptManager		scene_script_manager;
 	
 //	final private FileOutputStream	project_lock;
 	
@@ -120,6 +123,13 @@ public class Studio extends AbstractFrame
 		SQMTypeManager.setTypeComparer				(Config.PERSISTANCE_SQL_TYPE);
 		Builder.setBuilder							(Config.BUILDER_CLASS);
 
+		try {
+			scene_script_manager = (SceneScriptManager)Class.forName("").newInstance();
+		} catch (Exception err) {
+			err.printStackTrace();
+			System.exit(1);
+		}
+		
 		root_icon_path		= getFile				(Config.ICON_ROOT);
 		root_sound_path		= getFile				(Config.SOUND_ROOT);
 		root_talk_path		= getFile				(Config.TALK_ROOT);
@@ -154,7 +164,7 @@ public class Studio extends AbstractFrame
 			sound_system = new NullSoundManager();		
 			com.cell.sound.SoundManager.setSoundManager(sound_system);
 		}			
-
+		
 		System.out.println(System.setProperty("user.dir", project_path.getPath()));
 		System.out.println(System.getProperty("user.dir"));
 		
@@ -382,6 +392,10 @@ public class Studio extends AbstractFrame
 		return frame_cpj_resource_manager;
 	}
 
+	public SceneScriptManager getSceneScriptManager() {
+		return scene_script_manager;
+	}
+	
 	public ObjectManager getObjectManager() {
 		return frame_object_manager;
 	}

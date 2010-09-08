@@ -10,24 +10,26 @@ import com.g2d.annotation.Property;
 
 public class Scene extends RPGObject implements NamedObject
 {
-	transient private int 			int_id;
+	transient private int 				int_id;
 
-	public String					name;
+	public String						name;
 	
-	public SceneNode				scene_node;
+	public SceneNode					scene_node;
 	
-	final public Vector<SceneUnit> 	scene_units = new Vector<SceneUnit>();
+	final public Vector<SceneUnit> 		scene_units = new Vector<SceneUnit>();
 
+	final public Vector<SceneTrigger>	scene_triggers = new Vector<SceneTrigger>();
+	
 //	------------------------------------------------------------------------------------------------------------------
 	
 	@Property("场景背景音乐")
-	public String		bgm_sound_name;
+	public String						bgm_sound_name;
 	
 	@Property("场景编组号码")
-	public Integer		group;
+	public Integer						group;
 	
 	@Property("场景事件冷冻时间(毫秒)")
-	public Integer		event_freezing_time_ms	= 5000;
+	public Integer						event_freezing_time_ms	= 5000;
 	
 //	------------------------------------------------------------------------------------------------------------------
 	

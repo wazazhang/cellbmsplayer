@@ -15,6 +15,7 @@ import javax.swing.JList;
 import com.cell.rpg.particle.ParticleAppearanceType.DisplayNodeImage;
 import com.cell.rpg.particle.ParticleAppearanceType.DisplayNodeSprite;
 import com.cell.rpg.scene.Effect;
+import com.cell.rpg.scene.script.entity.SceneUnit;
 import com.g2d.annotation.Property;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.Sprite;
@@ -308,5 +309,10 @@ public class SceneEffect extends com.g2d.game.rpg.Unit implements SceneUnitTag<E
 			particle_layers.removeChild(particles);
 		}
 		particles = null;
+	}
+	
+	@Override
+	public Class<? extends SceneUnit> getEventType() {
+		return null;
 	}
 }

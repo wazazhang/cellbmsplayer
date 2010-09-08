@@ -275,7 +275,11 @@ public class ScenePoint extends com.g2d.game.rpg.Unit implements SceneUnitTag<Po
 	{
 		return getID()+"";
 	}
-	
+
+	@Override
+	public Class<com.cell.rpg.scene.script.entity.Point> getEventType() {
+		return com.cell.rpg.scene.script.entity.Point.class;
+	}
 	
 //	@Override
 //	public DisplayObjectEditor<?> createEditorForm() 
