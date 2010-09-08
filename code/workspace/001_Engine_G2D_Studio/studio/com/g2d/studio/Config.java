@@ -1,9 +1,12 @@
 package com.g2d.studio;
 
+import com.cell.util.anno.ConfigField;
+import com.cell.util.anno.ConfigType;
 
 
 
 
+@ConfigType("G2DStudio编辑器配置文件")
 public class Config extends com.cell.util.Config
 {
 	public static String TITLE						= "G2DStudio";
@@ -13,9 +16,13 @@ public class Config extends com.cell.util.Config
 //	--------------------------------------------------------------------------------------------------------
 	
 //	 角色，场景，特效资源目录
+	@ConfigField("角色精灵资源子目录名")
 	public static String RES_ACTOR_ROOT				= "character";
+	@ConfigField("AVATAR部件资源子目录名")
 	public static String RES_AVATAR_ROOT			= "avatar";
+	@ConfigField("特效精灵资源子目录名")
 	public static String RES_EFFECT_ROOT			= "effect";
+	@ConfigField("场景资源子目录名")
 	public static String RES_SCENE_ROOT				= "scene";
 	
 //	 XLS模板数据目录
@@ -49,6 +56,8 @@ public class Config extends com.cell.util.Config
 	public static String DYNAMIC_ITEM_PROPERTY_MANAGER_CLASS;
 	/**场景能力属性管理器*/
 	public static String DYNAMIC_SCENE_ABILITY_MANAGER_CLASS;
+	/**场景脚本管理器*/
+	public static String DYNAMIC_SCENE_SCRIPT_MANAGER_CLASS;
 	
 	/**与TriggerUnitMethod映射的类型PLAYER*/
 	public static String DYNAMIC_QUEST_PLAYER_CLASS;
@@ -61,6 +70,7 @@ public class Config extends com.cell.util.Config
 	public static String PERSISTANCE_MANAGER		= "com.cell.xstream.XStreamAdapter";
 	/**SQL持久化工具*/
 	public static String PERSISTANCE_SQL_TYPE		= "com.cell.mysql.SQLTypeComparerMySQL";
+	
 	
 //	--------------------------------------------------------------------------------------------------------
 //	 扩展资源编辑器
