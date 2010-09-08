@@ -20,6 +20,7 @@ import com.cell.gfx.IGraphics;
 import com.cell.io.BigIODeserialize;
 import com.cell.io.BigIOSerialize;
 import com.cell.io.CFile;
+import com.cell.j2se.CAppBridge;
 import com.cell.j2se.CImage;
 import com.cell.rpg.res.Resource;
 import com.cell.util.Pair;
@@ -396,21 +397,21 @@ public class EatBuilder extends Builder
 	
 	public static void main(String[] args)
 	{
-//		System.err.close();
-//		System.out.close();
-//		CAppBridge.init();
-//		Builder builder = Builder.setBuilder(EatBuilder.class.getName());
-//		if (args != null && args.length > 1) {
-//			String arg_0 = args[0].toLowerCase().trim();
-//			String arg_1 = args[1].toLowerCase().trim();
-//			String arg_2 = args[2].toLowerCase().trim();
-//			Config.load(Config.class, arg_2);
-//			if (arg_1.equals("scene")) {
-//				builder.buildScene(new File(arg_0));
-//			} else {
-//				builder.buildSprite(new File(arg_0));
-//			}
-//		}
+		System.err.close();
+		System.out.close();
+		CAppBridge.init();
+		Builder builder = Builder.setBuilder(EatBuilder.class.getName());
+		if (args != null && args.length > 1) {
+			String arg_0 = args[0].toLowerCase().trim();
+			String arg_1 = args[1].toLowerCase().trim();
+			String arg_2 = args[2].toLowerCase().trim();
+			Config.load(Config.class, arg_2);
+			if (arg_1.equals("scene")) {
+				builder.buildScene(new File(arg_0));
+			} else {
+				builder.buildSprite(new File(arg_0));
+			}
+		}
 		
 //		byte state = 0;
 //		for (int i=0; i<100; i++) {
