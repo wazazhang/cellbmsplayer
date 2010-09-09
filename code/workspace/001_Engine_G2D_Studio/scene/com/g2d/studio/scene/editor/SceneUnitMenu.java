@@ -34,6 +34,8 @@ public class SceneUnitMenu extends Menu
 			if (new_name!=null) {
 				if (!unit.getGameUnit().setID(view.getGameScene().getWorld(), new_name)){
 					JOptionPane.showMessageDialog(view, "bad name or duplicate !");
+				} else {
+					unit.getUnit().name = unit.getGameUnit().getID()+"";
 				}
 				view.refreshAll();
 			}

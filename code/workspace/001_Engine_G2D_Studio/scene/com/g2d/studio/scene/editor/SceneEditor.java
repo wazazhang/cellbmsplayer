@@ -960,6 +960,9 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 					sb.append("<html><body>");
 					sb.append("<p>");
 					sb.append(actor.getListName());
+					if (actor.getUnit().getTriggerCount()>0) {
+						sb.append("<font color=0000ff>(S)</font>");
+					}
 					sb.append("<font color=808080> - " + actor.xls_unit.getName() + "</font>");
 					sb.append("</p>");
 					sb.append("</body></html>");
@@ -1064,7 +1067,10 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 					StringBuffer sb = new StringBuffer();
 					sb.append("<html><body>");
 					sb.append("<p>");
-					sb.append(actor.getListName());
+					sb.append(actor.getListName());	
+					if (actor.getUnit().getTriggerCount()>0) {
+						sb.append("<font color=0000ff>(S)</font>");
+					}
 					sb.append("<font color=808080> - " + actor.cpj_spr.getName() + "</font>");
 					sb.append("</p>");
 					sb.append("</body></html>");
@@ -1159,6 +1165,33 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		}
 
 		@Override
+		protected JList createList() {
+			JList list = new JList();
+			list.setCellRenderer(new DefaultListCellRenderer() {
+				private static final long serialVersionUID = 1L;
+				@Override
+				public Component getListCellRendererComponent(JList list, Object value,
+						int index, boolean isSelected, boolean cellHasFocus) {
+					Component ret = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+					SceneRegion actor = (SceneRegion)value;
+					StringBuffer sb = new StringBuffer();
+					sb.append("<html><body>");
+					sb.append("<p>");
+					sb.append(actor.getListName());	
+					if (actor.getUnit().getTriggerCount()>0) {
+						sb.append("<font color=0000ff>(S)</font>");
+					}
+					sb.append("</p>");
+					sb.append("</body></html>");
+					this.setText(sb.toString());
+					return ret;
+				}
+			});
+			return list;
+		
+		}
+		
+		@Override
 		public void updateAddUnit(SceneContainer scene, boolean catchMouse, int worldx, int worldy) 
 		{
 			add_region_dp.x = worldx; 
@@ -1227,6 +1260,33 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		public ScenePointAdapter() {
 			super(ScenePoint.class);
 		}
+		
+		@Override
+		protected JList createList() {
+			JList list = new JList();
+			list.setCellRenderer(new DefaultListCellRenderer() {
+				private static final long serialVersionUID = 1L;
+				@Override
+				public Component getListCellRendererComponent(JList list, Object value,
+						int index, boolean isSelected, boolean cellHasFocus) {
+					Component ret = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+					ScenePoint actor = (ScenePoint)value;
+					StringBuffer sb = new StringBuffer();
+					sb.append("<html><body>");
+					sb.append("<p>");
+					sb.append(actor.getListName());	
+					if (actor.getUnit().getTriggerCount()>0) {
+						sb.append("<font color=0000ff>(S)</font>");
+					}
+					sb.append("</p>");
+					sb.append("</body></html>");
+					this.setText(sb.toString());
+					return ret;
+				}
+			});
+			return list;
+		}
+		
 		@Override
 		public void clearAddUnitObject(SceneContainer scene) {
 		}
@@ -1285,6 +1345,32 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		
 		public SceneEffectAdapter() {
 			super(SceneEffect.class);
+		}
+
+		@Override
+		protected JList createList() {
+			JList list = new JList();
+			list.setCellRenderer(new DefaultListCellRenderer() {
+				private static final long serialVersionUID = 1L;
+				@Override
+				public Component getListCellRendererComponent(JList list, Object value,
+						int index, boolean isSelected, boolean cellHasFocus) {
+					Component ret = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+					SceneEffect actor = (SceneEffect)value;
+					StringBuffer sb = new StringBuffer();
+					sb.append("<html><body>");
+					sb.append("<p>");
+					sb.append(actor.getListName());	
+					if (actor.getUnit().getTriggerCount()>0) {
+						sb.append("<font color=0000ff>(S)</font>");
+					}
+					sb.append("</p>");
+					sb.append("</body></html>");
+					this.setText(sb.toString());
+					return ret;
+				}
+			});
+			return list;
 		}
 		
 		@Override

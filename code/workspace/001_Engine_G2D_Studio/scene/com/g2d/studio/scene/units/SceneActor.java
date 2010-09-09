@@ -168,6 +168,7 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 		this.enable_drag	= true;
 		this.enable_input	= true;
 		super.added(parent);
+		actor.name 			= getID()+"";
 	}
 	
 	@Override
