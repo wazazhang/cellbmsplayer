@@ -28,8 +28,8 @@ public interface SceneUnitTag<T extends SceneUnit> extends G2DListItem
 	public Color 			getSnapColor();
 	public Shape 			getSnapShape();
 
-	public Class<? extends com.cell.rpg.scene.script.entity.SceneUnit>	
-							getEventType();
+//	public Class<? extends com.cell.rpg.scene.script.entity.SceneUnit>	
+//							getEventType();
 	
 //	---------------------------------------------------------------------------------------
 //	edit
