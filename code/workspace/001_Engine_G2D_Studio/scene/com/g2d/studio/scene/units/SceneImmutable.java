@@ -26,6 +26,7 @@ import com.g2d.studio.Version;
 import com.g2d.studio.cpj.CPJIndex;
 import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.cpj.entity.CPJSprite;
+import com.g2d.studio.res.Res;
 import com.g2d.studio.scene.editor.SceneAbilityAdapters;
 import com.g2d.studio.scene.editor.SceneEditor;
 import com.g2d.studio.scene.editor.SceneUnitMenu;
@@ -198,6 +199,9 @@ public class SceneImmutable extends SceneSprite implements SceneUnitTag<Immutabl
 		
 		if (editor != null) 
 		{	
+			if (getUnit().getTriggerCount() > 0) {
+				g.drawImage(Res.img_script, -Res.img_script.getWidth()/2, local_bounds.y, null);
+			}
 			pushObject(g.getStroke());
 			try
 			{

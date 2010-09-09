@@ -23,6 +23,7 @@ import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.ui.Menu;
 import com.g2d.editor.DisplayObjectEditor;
 import com.g2d.studio.Version;
+import com.g2d.studio.res.Res;
 import com.g2d.studio.scene.editor.PointLinkMenu;
 import com.g2d.studio.scene.editor.SceneEditor;
 import com.g2d.studio.scene.editor.SceneUnitMenu;
@@ -207,6 +208,9 @@ public class ScenePoint extends com.g2d.game.rpg.Unit implements SceneUnitTag<Po
 		
 		if (editor!=null) 
 		{
+			if (getUnit().getTriggerCount() > 0) {
+				g.drawImage(Res.img_script, 0, 0, null);
+			}
 			if (editor.getSelectedPage().isSelectedType(getClass())) 
 			{
 				g.setColor(color);

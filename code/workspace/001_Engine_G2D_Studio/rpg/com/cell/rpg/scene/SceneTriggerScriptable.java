@@ -14,8 +14,8 @@ public class SceneTriggerScriptable extends SceneTrigger implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 	
-	public SceneTriggerScriptable(Class<? extends Event> event_type) {
-		super(event_type);
+	public SceneTriggerScriptable() {
+		super();
 	}
 
 }

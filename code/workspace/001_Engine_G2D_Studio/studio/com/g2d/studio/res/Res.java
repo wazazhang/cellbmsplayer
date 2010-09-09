@@ -38,6 +38,11 @@ public class Res
 	static public BufferedImage	icon_affect			= Tools.readImage("/com/g2d/studio/res/icon_affect.png");
 	static public BufferedImage	icon_talk			= Tools.readImage("/com/g2d/studio/res/icon_talk.png");
 	
+	static public BufferedImage	icon_condition		= Tools.readImage("/com/g2d/studio/res/icon_condition.png");
+	static public BufferedImage	icon_run			= Tools.readImage("/com/g2d/studio/res/icon_run.png");
+	static public BufferedImage	icon_scene			= Tools.readImage("/com/g2d/studio/res/icon_scene.png");
+	static public BufferedImage	icon_trigger		= Tools.readImage("/com/g2d/studio/res/icon_trigger.png");
+
 	static public BufferedImage	icon_scene_graph	= Tools.readImage("/com/g2d/studio/res/icon_scene_graph.png");
 	
 //	---------------------------------------------------------------------------------------------------------------
@@ -59,6 +64,7 @@ public class Res
 	static public BufferedImage	img_transport		= Tools.readImage("/com/g2d/studio/res/img_transport.png");
 	static public BufferedImage	img_job_trainer		= Tools.readImage("/com/g2d/studio/res/img_job_trainer.png");
 	static public BufferedImage	img_talk			= Tools.readImage("/com/g2d/studio/res/img_talk.png");
+	static public BufferedImage	img_script			= Tools.readImage("/com/g2d/studio/res/img_script.png");
 	
 //	---------------------------------------------------------------------------------------------------------------
 	

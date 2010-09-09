@@ -8,10 +8,12 @@ import com.cell.rpg.scene.script.trigger.Event;
 public interface TriggerGenerator 
 {
 	public String getTriggerObjectName();
-	
-	public SceneTrigger addTrigger(SceneTrigger st);
-	
-	public SceneTrigger getTrigger(Class<? extends Event> event_type);
-	
+
+	public void removeTrigger(SceneTrigger st);
+		
+	public void addTrigger(SceneTrigger st);
+		
 	public ArrayList<SceneTrigger> getTriggers();
+	
+	public int getTriggerCount();
 }

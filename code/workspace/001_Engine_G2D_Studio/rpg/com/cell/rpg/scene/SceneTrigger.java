@@ -1,7 +1,12 @@
 package com.cell.rpg.scene;
 
 import java.io.Serializable;
+import java.util.Comparator;
+import java.util.Set;
+import java.util.TreeSet;
 
+import com.cell.CUtil;
+import com.cell.rpg.scene.script.SceneScriptManager;
 import com.cell.rpg.scene.script.Scriptable;
 import com.cell.rpg.scene.script.anno.EventType;
 import com.cell.rpg.scene.script.trigger.Event;
@@ -10,38 +15,44 @@ import com.cell.rpg.scene.script.trigger.Event;
  * 触发器
  * @author WAZA
  */
-abstract public class SceneTrigger implements Serializable
+abstract public class SceneTrigger implements Serializable, Comparator<Class<?>>
 {
 	private static final long serialVersionUID = 1L;
-		
-	private String	event_type_name;
-
-	transient 
-	private Class<? extends Event> event_type;
 	
-	public SceneTrigger(Class<? extends Event> event_type) {
-		this.event_type_name		= event_type.getName();
-	}
+	public String name;
+	
+	transient private TreeSet<Class<? extends Event>> event_types;
+	
+	private TreeSet<String> event_types_name = new TreeSet<String>(CUtil.getStringCompare());
+	
+	public SceneTrigger() {}
 
+	
+	public void addTriggerEvent(Class<? extends Event> event) {
+		event_types_name.add(event.getName());
+	}
+	
+	public void removeTriggerEvent(Class<? extends Event> event) {
+		event_types_name.remove(event.getName());
+	}
+	
 	@SuppressWarnings("unchecked")
-	final public Class<? extends Event> getEventType() {
-		if (event_type == null) {
-			try {
-				event_type = (Class<? extends Event>)Class.forName(event_type_name);
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
+	public Set<Class<? extends Event>> getEventTypes() {
+		if (event_types == null) {
+			event_types = new TreeSet<Class<? extends Event>>(this);
+			for (String tn : event_types_name) {
+				try {
+					event_types.add((Class<? extends Event>)Class.forName(tn));
+				} catch(Exception err) {
+					err.printStackTrace();
+				}
 			}
 		}
-		return event_type;
+		return event_types;
 	}
-	
-	final public boolean asTriggeredObjectType(Class<? extends Scriptable> type) {
-		EventType et = getEventType().getAnnotation(EventType.class);
-		for (Class<? extends Scriptable> st : et.trigger_type()) {
-			if (st.isAssignableFrom(type)) {
-				return true;
-			}
-		}
-		return false;
+
+	@Override
+	public int compare(Class<?> o1, Class<?> o2) {
+		return CUtil.getStringCompare().compare(o1.getName(), o2.getName());
 	}
 }
