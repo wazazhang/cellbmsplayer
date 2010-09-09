@@ -19,6 +19,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.Vector;
 
@@ -226,6 +227,10 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		refreshAll();
 	}
 	
+	public SceneNode getSceneNode() {
+		return scene_node;
+	}
+	
 	@SuppressWarnings("unchecked")
 	private void load()
 	{
@@ -297,6 +302,17 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 			ex.printStackTrace();
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	public ArrayList<SceneUnit> getRuntimeUnits() {
+		Vector<SceneUnitTag> list = scene_container.getWorld()
+				.getChildsSubClass(SceneUnitTag.class);
+		ArrayList<SceneUnit> ret = new ArrayList<SceneUnit>();
+		for (SceneUnitTag tag : list) {
+			ret.add(tag.getUnit());
+		}
+		return ret;
+	} 
 	
 //	-----------------------------------------------------------------------------------------------------------------------------
 
@@ -566,6 +582,9 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 			}
 			
 			updateLocateCamera(catch_mouse, worldx, worldy);
+			
+			getWorld().sort();
+
 		}
 
 //		-----------------------------------------------------------------------------------------------------------------------------

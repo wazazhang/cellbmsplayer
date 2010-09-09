@@ -32,6 +32,7 @@ import com.g2d.studio.cpj.CPJEffectImageSelectDialog.TileImage;
 import com.g2d.studio.cpj.entity.CPJSprite;
 import com.g2d.studio.gameedit.dynamic.DEffect;
 import com.g2d.studio.quest.QuestCellEditAdapter;
+import com.g2d.studio.res.Res;
 import com.g2d.studio.scene.editor.SceneAbilityAdapters;
 import com.g2d.studio.scene.editor.SceneEditor;
 import com.g2d.studio.scene.editor.SceneUnitMenu;
@@ -220,9 +221,12 @@ public class SceneEffect extends com.g2d.game.rpg.Unit implements SceneUnitTag<E
 	protected void renderAfter(Graphics2D g) 
 	{
 		super.renderAfter(g);
-
+		
 		if (editor!=null)
 		{
+			if (getUnit().getTriggerCount() > 0) {
+				g.drawImage(Res.img_script, -Res.img_script.getWidth()/2, 0, null);
+			}
 			if (editor.getSelectedPage().isSelectedType(getClass())) 
 			{
 				g.setColor(Color.YELLOW);

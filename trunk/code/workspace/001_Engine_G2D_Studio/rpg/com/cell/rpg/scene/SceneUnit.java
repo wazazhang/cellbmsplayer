@@ -13,7 +13,7 @@ import com.cell.rpg.scene.script.trigger.Event;
 import com.cell.rpg.struct.QuestStateDisplayOR;
 import com.g2d.annotation.Property;
 
-public abstract class SceneUnit extends RPGObject implements Comparator<Class<? extends Event>>, TriggerGenerator
+public abstract class SceneUnit extends RPGObject implements TriggerGenerator
 {
 	/** scene graph 结构的视图 */
 	public String 						name	= "no name";
@@ -24,13 +24,19 @@ public abstract class SceneUnit extends RPGObject implements Comparator<Class<? 
 	@Property("任务依赖显示条件 (覆盖TUnit)")
 	public QuestStateDisplayOR 			quest_display = null;
 	
-	final private TreeMap<Class<? extends Event>, SceneTrigger>	
-										scene_triggers = new TreeMap<Class<? extends Event>, SceneTrigger>(this);
+	private ArrayList<SceneTrigger>		scene_triggers = new ArrayList<SceneTrigger>();
 	
 	public SceneUnit(String id) {
 		super(id);
 	}
 
+	@Override
+	protected void init_transient() {
+		super.init_transient();
+		if (scene_triggers == null) {
+			scene_triggers = new ArrayList<SceneTrigger>();
+		}
+	}
 
 	public String getName() {
 		return name;
@@ -44,25 +50,21 @@ public abstract class SceneUnit extends RPGObject implements Comparator<Class<? 
 	
 	abstract public Class<? extends com.cell.rpg.scene.script.entity.SceneUnit>	getEventType();
 
-	public SceneTrigger addTrigger(SceneTrigger st) {
-		if (st.asTriggeredObjectType(getEventType())) {
-			return scene_triggers.put(st.getEventType(), st);
-		}
-		return null;
+	public void addTrigger(SceneTrigger st) {
+		scene_triggers.add(st);
 	}
-	
-	public SceneTrigger getTrigger(Class<? extends Event> event_type){
-		return scene_triggers.get(event_type);
+	@Override
+	public void removeTrigger(SceneTrigger st) {
+		scene_triggers.remove(st);
+	}
+	public int getTriggerCount(){
+		return scene_triggers.size();
 	}
 	
 	public ArrayList<SceneTrigger> getTriggers(){
-		return new ArrayList<SceneTrigger>(scene_triggers.values());
+		return scene_triggers;
 	}
 	
-	@Override
-	public int compare(Class<? extends Event> o1, Class<? extends Event> o2) {
-		return CUtil.getStringCompare().compare(o1.getName(), o2.getName());
-	}
 //	------------------------------------------------------------------------------------------------------------------
 	
 }

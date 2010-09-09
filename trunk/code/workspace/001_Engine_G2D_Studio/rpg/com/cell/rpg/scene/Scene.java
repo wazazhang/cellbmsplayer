@@ -13,7 +13,7 @@ import com.cell.rpg.display.SceneNode;
 import com.cell.rpg.scene.script.trigger.Event;
 import com.g2d.annotation.Property;
 
-public class Scene extends RPGObject implements NamedObject, Comparator<Class<? extends Event>>, TriggerGenerator
+public class Scene extends RPGObject implements NamedObject, TriggerGenerator
 {
 	transient private int 				int_id;
 
@@ -23,8 +23,7 @@ public class Scene extends RPGObject implements NamedObject, Comparator<Class<? 
 	
 	final public Vector<SceneUnit> 		scene_units = new Vector<SceneUnit>();
 
-	final private TreeMap<Class<? extends Event>, SceneTrigger>	
-										scene_triggers = new TreeMap<Class<? extends Event>, SceneTrigger>(this);
+	private ArrayList<SceneTrigger>		scene_triggers = new ArrayList<SceneTrigger>();
 
 //	------------------------------------------------------------------------------------------------------------------
 	
@@ -53,6 +52,9 @@ public class Scene extends RPGObject implements NamedObject, Comparator<Class<? 
 		}
 		if (group == null) {
 			this.group = 0;
+		}
+		if (scene_triggers == null) {
+			scene_triggers = new ArrayList<SceneTrigger>();
 		}
 	}
 	
@@ -83,23 +85,18 @@ public class Scene extends RPGObject implements NamedObject, Comparator<Class<? 
 		return name + "(" + id + ")";
 	}
 	
-	public SceneTrigger addTrigger(SceneTrigger st) {
-		if (st.asTriggeredObjectType(com.cell.rpg.scene.script.entity.Scene.class)) {
-			return scene_triggers.put(st.getEventType(), st);
-		}
-		return null;
+	public void addTrigger(SceneTrigger st) {
+		scene_triggers.add(st);
 	}
-	
-	public SceneTrigger getTrigger(Class<? extends Event> event_type){
-		return scene_triggers.get(event_type);
-	}
-	
-	public ArrayList<SceneTrigger> getTriggers(){
-		return new ArrayList<SceneTrigger>(scene_triggers.values());
-	}
-	
 	@Override
-	public int compare(Class<? extends Event> o1, Class<? extends Event> o2) {
-		return CUtil.getStringCompare().compare(o1.getName(), o2.getName());
+	public void removeTrigger(SceneTrigger st) {
+		scene_triggers.remove(st);
+	}
+	public ArrayList<SceneTrigger> getTriggers(){
+		return scene_triggers;
+	}
+	
+	public int getTriggerCount(){
+		return scene_triggers.size();
 	}
 }

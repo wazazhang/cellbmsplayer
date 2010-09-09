@@ -7,6 +7,7 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
 
+@SuppressWarnings("serial")
 public abstract class G2DTreeNode<C extends G2DTreeNode<?>> extends DefaultMutableTreeNode
 {
 	private ImageIcon 		icon_snapshot;
