@@ -37,7 +37,7 @@ public abstract class SceneUnit extends RPGObject implements Comparator<Class<? 
 	}
 	
 	public String getTriggerObjectName(){
-		return id;
+		return name;
 	}
 
 //	------------------------------------------------------------------------------------------------------------------

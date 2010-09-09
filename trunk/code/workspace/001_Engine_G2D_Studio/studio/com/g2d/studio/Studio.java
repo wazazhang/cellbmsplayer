@@ -124,7 +124,8 @@ public class Studio extends AbstractFrame
 		Builder.setBuilder							(Config.BUILDER_CLASS);
 
 		try {
-			scene_script_manager = (SceneScriptManager)Class.forName("").newInstance();
+			scene_script_manager = (SceneScriptManager)Class.forName(
+					Config.DYNAMIC_SCENE_SCRIPT_MANAGER_CLASS).newInstance();
 		} catch (Exception err) {
 			err.printStackTrace();
 			System.exit(1);

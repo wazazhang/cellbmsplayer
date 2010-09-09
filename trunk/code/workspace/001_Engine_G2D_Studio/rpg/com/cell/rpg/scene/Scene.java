@@ -80,7 +80,7 @@ public class Scene extends RPGObject implements NamedObject, Comparator<Class<? 
 //	------------------------------------------------------------------------------------------------------------------
 	
 	public String getTriggerObjectName() {
-		return id;
+		return name + "(" + id + ")";
 	}
 	
 	public SceneTrigger addTrigger(SceneTrigger st) {
