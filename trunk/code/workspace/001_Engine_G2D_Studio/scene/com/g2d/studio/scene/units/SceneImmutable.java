@@ -115,6 +115,7 @@ public class SceneImmutable extends SceneSprite implements SceneUnitTag<Immutabl
 		this.enable_drag	= true;
 		this.enable_input	= true;
 		super.added(parent);
+		sprite.name 			= getID()+"";
 	}
 	
 	@Override

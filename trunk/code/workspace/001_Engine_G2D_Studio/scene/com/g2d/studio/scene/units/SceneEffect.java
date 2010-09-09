@@ -104,6 +104,7 @@ public class SceneEffect extends com.g2d.game.rpg.Unit implements SceneUnitTag<E
 		this.priority 		= Integer.MAX_VALUE / 2;
 		super.added(parent);
 		addChild(particle_layers);
+		effect.name 			= getID()+"";
 	}
 
 	protected boolean enable_click_focus() {

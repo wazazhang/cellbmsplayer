@@ -178,6 +178,8 @@ public class SceneUnitList<T extends SceneUnitTag<?>> extends JPanel implements 
 				if (new_name!=null) {
 					if (!unit.getGameUnit().setID(scene.getWorld(), new_name)){
 						JOptionPane.showMessageDialog(list, "bad name or duplicate !");
+					} else {
+						unit.getUnit().name = unit.getGameUnit().getID()+"";
 					}
 					viewer.refreshAll();
 				}
