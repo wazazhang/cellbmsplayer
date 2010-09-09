@@ -35,4 +35,10 @@ public class Region extends SceneUnit
 				QuestPublisher.class,
 			};
 	}
+	
+	@Override
+	public Class<com.cell.rpg.scene.script.entity.Region> getEventType() {
+		return com.cell.rpg.scene.script.entity.Region.class;
+	}
+
 }

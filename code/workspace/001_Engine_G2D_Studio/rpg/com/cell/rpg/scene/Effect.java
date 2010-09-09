@@ -13,5 +13,11 @@ public class Effect extends SceneUnit
 	public Class<?>[] getSubAbilityTypes()
 	{
 		return new Class<?>[]{};
+	}	
+	
+	@Override
+	public Class<? extends com.cell.rpg.scene.script.entity.SceneUnit> getEventType() {
+		return null;
 	}
+
 }
