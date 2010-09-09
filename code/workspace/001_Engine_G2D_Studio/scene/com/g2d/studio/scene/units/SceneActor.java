@@ -336,10 +336,6 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 		return getID()+"";
 	}
 	
-	@Override
-	public Class<com.cell.rpg.scene.script.entity.Actor> getEventType() {
-		return com.cell.rpg.scene.script.entity.Actor.class;
-	}
 //	-----------------------------------------------------------------------------------------------------------
 	
 	@Override

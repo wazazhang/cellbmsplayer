@@ -252,11 +252,6 @@ public class SceneImmutable extends SceneSprite implements SceneUnitTag<Immutabl
 		return getID()+"";
 	}
 
-	@Override
-	public Class<com.cell.rpg.scene.script.entity.Immutable> getEventType() {
-		return com.cell.rpg.scene.script.entity.Immutable.class;
-	}
-	
 //	-----------------------------------------------------------------------------------------------------------
 	
 	@Override

@@ -283,11 +283,6 @@ public class SceneRegion extends com.g2d.game.rpg.Unit implements SceneUnitTag<R
 	{
 		return getID()+"";
 	}
-
-	@Override
-	public Class<com.cell.rpg.scene.script.entity.Region> getEventType() {
-		return com.cell.rpg.scene.script.entity.Region.class;
-	}
 	
 	@Override
 	public DisplayObjectEditor<?> getEditorForm() {

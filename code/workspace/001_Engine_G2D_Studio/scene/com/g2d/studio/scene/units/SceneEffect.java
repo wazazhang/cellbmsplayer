@@ -310,9 +310,5 @@ public class SceneEffect extends com.g2d.game.rpg.Unit implements SceneUnitTag<E
 		}
 		particles = null;
 	}
-	
-	@Override
-	public Class<? extends SceneUnit> getEventType() {
-		return null;
-	}
+
 }
