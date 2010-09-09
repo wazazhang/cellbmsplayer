@@ -8,6 +8,7 @@ import java.io.ObjectOutputStream;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Vector;
@@ -759,7 +760,7 @@ public class CUtil extends CObject
 		public int compare(T1 a, T2 b);
 	}
 	
-	static public class StringCompare implements ICompare<String, String>
+	static public class StringCompare implements ICompare<String, String>, Comparator<String>
 	{
 		public int compare(String a, String b) {
 			int len = Math.min(a.length(), b.length());
