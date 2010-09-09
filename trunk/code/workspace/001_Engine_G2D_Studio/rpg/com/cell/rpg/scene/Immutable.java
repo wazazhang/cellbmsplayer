@@ -23,5 +23,10 @@ public class Immutable extends SceneSprite
 				ActorTransport.class,	
 		};
 	}
+
+	@Override
+	public Class<com.cell.rpg.scene.script.entity.Immutable> getEventType() {
+		return com.cell.rpg.scene.script.entity.Immutable.class;
+	}
 	
 }

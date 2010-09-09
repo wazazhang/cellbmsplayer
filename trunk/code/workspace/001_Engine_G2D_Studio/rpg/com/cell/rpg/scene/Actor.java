@@ -55,4 +55,10 @@ public class Actor extends SceneSprite
 				ActorFlag.class,
 			};
 	}
+	
+	@Override
+	public Class<com.cell.rpg.scene.script.entity.Actor> getEventType() {
+		return com.cell.rpg.scene.script.entity.Actor.class;
+	}
+
 }

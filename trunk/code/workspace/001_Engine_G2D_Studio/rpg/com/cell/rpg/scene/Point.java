@@ -20,4 +20,10 @@ public class Point extends SceneUnit
 	{
 		return new Class<?>[]{};
 	}
+	
+	@Override
+	public Class<com.cell.rpg.scene.script.entity.Point> getEventType() {
+		return com.cell.rpg.scene.script.entity.Point.class;
+	}
+	
 }
