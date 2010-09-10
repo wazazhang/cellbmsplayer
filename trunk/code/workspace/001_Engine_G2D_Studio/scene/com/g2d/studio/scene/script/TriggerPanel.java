@@ -25,8 +25,10 @@ import com.cell.rpg.scene.SceneTriggerScriptable;
 import com.cell.rpg.scene.script.Scriptable;
 import com.cell.rpg.scene.script.anno.EventType;
 import com.cell.rpg.scene.script.trigger.Event;
+import com.g2d.studio.Studio;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.scene.script.TriggerGenerateTreeNode.TriggerNode;
+import com.g2d.studio.scene.script.TriggerPanel.TriggerEventRoot.EventNode;
 import com.g2d.studio.swing.G2DTree;
 import com.g2d.studio.swing.G2DTreeNode;
 import com.g2d.util.TextEditor;
@@ -47,9 +49,9 @@ public abstract class TriggerPanel<T extends SceneTrigger> extends JPanel implem
 	final protected TriggerConditionsRoot 		group_conditions;
 	final protected TriggerActionRoot			group_actions;
 
-	JSplitPane		split		= new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-	JSplitPane		split_h		= new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-	JPanel			right_h		= new JPanel();
+	private JSplitPane		split		= new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+	private JSplitPane		split_h		= new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+	private JPanel			south_h		= new JPanel(new BorderLayout());
 	
 	public TriggerPanel(T trigger, Class<? extends Scriptable> trigger_object_type)
 	{
@@ -71,12 +73,13 @@ public abstract class TriggerPanel<T extends SceneTrigger> extends JPanel implem
 		this.comment			.setText(trigger.comment);
 		
 		split.setTopComponent(split_h);
-		split.setBottomComponent(right_h);
+		split.setBottomComponent(south_h);
 		
 		JScrollPane left = new JScrollPane(tree_view);
-		left.setPreferredSize(new Dimension(200, 200));
+		left.setMinimumSize(new Dimension(200, 120));
 		split_h.setLeftComponent(left);
 		split_h.setRightComponent(new JScrollPane(comment));
+		split_h.setMinimumSize(new Dimension(200, 160));
 		
 		tree_view.expandAll();
 		
@@ -84,6 +87,10 @@ public abstract class TriggerPanel<T extends SceneTrigger> extends JPanel implem
 		super.addAncestorListener(this);
 		
 		
+	}
+	
+	protected JPanel getMainPanel() {
+		return south_h;
 	}
 	
 	@Override
@@ -110,6 +117,7 @@ public abstract class TriggerPanel<T extends SceneTrigger> extends JPanel implem
 	
 	abstract protected void onTreeSelectChanged(TriggerTreeView tree_view, TreeNode node);
 	
+	abstract protected void onAddEventNode(TriggerEventRoot.EventNode en);
 	
 //	--------------------------------------------------------------------------------------------------------
 	
@@ -145,6 +153,7 @@ public abstract class TriggerPanel<T extends SceneTrigger> extends JPanel implem
 			if (trigger.addTriggerEvent(evt)) {
 				EventNode en = new EventNode(evt);
 				this.add(en);
+				onAddEventNode(en);
 			} else {
 				JOptionPane.showMessageDialog(tree_view, "该事件已经存在！");
 			}
@@ -174,8 +183,8 @@ public abstract class TriggerPanel<T extends SceneTrigger> extends JPanel implem
 		
 		protected class EventNode extends G2DTreeNode<G2DTreeNode<?>>
 		{
-			Class<? extends Event> 	evt;
-			EventType 				type ;
+			final protected Class<? extends Event> 	evt;
+			final protected EventType 				type ;
 			
 			public EventNode(Class<? extends Event> evt) {
 				this.evt 	= evt;

@@ -38,10 +38,12 @@ abstract public class SceneTrigger implements Serializable, Comparator<Class<?>>
 
 	
 	public boolean addTriggerEvent(Class<? extends Event> event) {
+		event_types = null;
 		return event_types_name.add(event.getName());
 	}
 	
 	public boolean removeTriggerEvent(Class<? extends Event> event) {
+		event_types = null;
 		return event_types_name.remove(event.getName());
 	}
 	
