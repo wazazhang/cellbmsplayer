@@ -57,7 +57,7 @@ public class Actor extends SceneSprite
 	}
 	
 	@Override
-	public Class<com.cell.rpg.scene.script.entity.Actor> getEventType() {
+	public Class<com.cell.rpg.scene.script.entity.Actor> getTriggerObjectType() {
 		return com.cell.rpg.scene.script.entity.Actor.class;
 	}
 

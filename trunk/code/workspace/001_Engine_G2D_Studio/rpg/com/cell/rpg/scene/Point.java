@@ -22,7 +22,7 @@ public class Point extends SceneUnit
 	}
 	
 	@Override
-	public Class<com.cell.rpg.scene.script.entity.Point> getEventType() {
+	public Class<com.cell.rpg.scene.script.entity.Point> getTriggerObjectType() {
 		return com.cell.rpg.scene.script.entity.Point.class;
 	}
 	

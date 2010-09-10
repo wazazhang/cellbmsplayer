@@ -16,7 +16,7 @@ public class Effect extends SceneUnit
 	}	
 	
 	@Override
-	public Class<? extends com.cell.rpg.scene.script.entity.SceneUnit> getEventType() {
+	public Class<? extends com.cell.rpg.scene.script.entity.SceneUnit> getTriggerObjectType() {
 		return null;
 	}
 
