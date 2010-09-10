@@ -8,13 +8,17 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTree;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 
 import com.cell.rpg.scene.SceneTrigger;
 import com.cell.rpg.scene.SceneTriggerScriptable;
@@ -28,7 +32,7 @@ import com.g2d.studio.swing.G2DTreeNode;
 import com.g2d.util.TextEditor;
 
 @SuppressWarnings("serial")
-public abstract class TriggerPanel<T extends SceneTrigger> extends JPanel
+public abstract class TriggerPanel<T extends SceneTrigger> extends JPanel implements AncestorListener
 {
 	final protected T 			trigger;
 	final protected Class<? extends Scriptable> 
@@ -64,21 +68,38 @@ public abstract class TriggerPanel<T extends SceneTrigger> extends JPanel
 		
 		this.tree_view			= new TriggerTreeView();
 		
-		split.setTopComponent(split_h);
-		split.setBottomComponent(new JScrollPane(comment));
+		this.comment			.setText(trigger.comment);
 		
-		split_h.setLeftComponent(new JScrollPane(tree_view));
-		split_h.setRightComponent(right_h);
+		split.setTopComponent(split_h);
+		split.setBottomComponent(right_h);
+		
+		JScrollPane left = new JScrollPane(tree_view);
+		left.setPreferredSize(new Dimension(200, 200));
+		split_h.setLeftComponent(left);
+		split_h.setRightComponent(new JScrollPane(comment));
+		
+		tree_view.expandAll();
 		
 		this.add(split);
+		super.addAncestorListener(this);
 		
+		
+	}
+	
+	@Override
+	public void ancestorAdded(AncestorEvent event) {}
+	@Override
+	public void ancestorMoved(AncestorEvent event) {}
+	@Override
+	public void ancestorRemoved(AncestorEvent event) {
+		trigger.comment = comment.getText();
+//		System.out.println(comment.getText());
 	}
 	
 	protected class TriggerTreeView extends G2DTree
 	{
 		public TriggerTreeView() {
 			super(tree_root);
-			super.setPreferredSize(new Dimension(200, 200));
 			super.setRootVisible(false);
 		}
 		@Override
@@ -94,7 +115,12 @@ public abstract class TriggerPanel<T extends SceneTrigger> extends JPanel
 	
 	protected class TriggerEventRoot extends G2DTreeNode<G2DTreeNode<?>>
 	{
-		public TriggerEventRoot() {}
+		public TriggerEventRoot() {
+			for (Class<? extends Event> evt : trigger.getEventTypes()) {
+				EventNode en = new EventNode(evt);
+				this.add(en);
+			}
+		}
 		
 		@Override
 		protected ImageIcon createIcon() {
@@ -108,15 +134,19 @@ public abstract class TriggerPanel<T extends SceneTrigger> extends JPanel
 
 		@Override
 		public void onClicked(JTree tree, MouseEvent e) {
-			if (e.getButton() == MouseEvent.BUTTON3) {
-				new RootMenu().show(tree_view, e.getX(), e.getY());
-			}
 		}
-
+		
+		@Override
+		public void onRightClicked(JTree tree, MouseEvent e) {
+			new RootMenu().show(tree_view, e.getX(), e.getY());
+		}
+		
 		protected void addEvent(Class<? extends Event> evt) {
 			if (trigger.addTriggerEvent(evt)) {
 				EventNode en = new EventNode(evt);
 				this.add(en);
+			} else {
+				JOptionPane.showMessageDialog(tree_view, "该事件已经存在！");
 			}
 		}
 		
@@ -154,7 +184,7 @@ public abstract class TriggerPanel<T extends SceneTrigger> extends JPanel
 			
 			@Override
 			protected ImageIcon createIcon() {
-				return new ImageIcon(Res.icon_condition);
+				return new ImageIcon(Res.icon_event);
 			}
 			
 			@Override
@@ -185,7 +215,9 @@ public abstract class TriggerPanel<T extends SceneTrigger> extends JPanel
 		public void onClicked(JTree tree, MouseEvent e) {
 		
 		}	
-		
+		public void onRightClicked(JTree tree, MouseEvent e) {
+			
+		}
 		
 	}
 //	--------------------------------------------------------------------------------------------------------
@@ -206,5 +238,8 @@ public abstract class TriggerPanel<T extends SceneTrigger> extends JPanel
 		public void onClicked(JTree tree, MouseEvent e) {
 		
 		}	
+		public void onRightClicked(JTree tree, MouseEvent e) {
+			
+		}
 	}
 }

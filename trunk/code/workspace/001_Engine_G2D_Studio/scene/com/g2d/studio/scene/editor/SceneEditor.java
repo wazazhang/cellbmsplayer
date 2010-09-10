@@ -108,6 +108,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 	private JToggleButton		tool_addactor	= new JToggleButton(Tools.createIcon(Res.icons_bar[8]));
 	private JToggleButton		tool_show_grid	= new JToggleButton(Tools.createIcon(Res.icon_grid));	
 	private JButton				tool_edit_prop	= new JButton(Tools.createIcon(Res.icons_bar[1]));
+	private JButton				tool_triggers		= new JButton(Tools.createIcon(Res.icon_action));
 	private JToggleButton		tool_play_bgm	= new JToggleButton(Tools.createIcon(Res.icons_bar[3]));
 	private JButton				tool_mask_alpha	= new JButton("MA");
 	private JButton				tool_mask_color	= new JButton("MC");
@@ -141,8 +142,20 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		
 		// tool bar
 		{
+			tool_bar = new G2DWindowToolBar(this);
+			
+			
+			tool_edit_prop.setToolTipText("查看场景属性");
+			tool_edit_prop.addActionListener(this);
+			tool_bar.add(tool_edit_prop);
+			
+			tool_triggers.setToolTipText("场景触发事件");
+			tool_triggers.addActionListener(this);
+			tool_bar.add(tool_triggers);
+			
+			tool_bar.addSeparator();
+			
 			{
-				tool_bar = new G2DWindowToolBar(this);
 				tool_selector.setToolTipText("选择");
 				tool_addactor.setToolTipText("添加");
 				tool_addactor.addActionListener(this);
@@ -157,9 +170,6 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 				tool_show_grid.setToolTipText("显示碰撞");
 				tool_show_grid.addActionListener(this);
 				tool_bar.add(tool_show_grid);
-				tool_edit_prop.setToolTipText("查看场景属性");
-				tool_edit_prop.addActionListener(this);
-				tool_bar.add(tool_edit_prop);
 				
 				tool_mask_alpha.setToolTipText("改变MASK透明度");
 				tool_mask_color.setToolTipText("改变MASK颜色");
@@ -338,11 +348,35 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
-		
-		
 		if (e.getSource() == tool_bar.save) {
 			save();
 			Studio.getInstance().getSceneManager().saveScene(scene_node);
+		}
+		else if (e.getSource() == tool_triggers) {
+			SceneTriggers st = new SceneTriggers(this);
+			st.setVisible(true);
+		}
+		else if (e.getSource() == tool_edit_prop) {
+			CellEditAdapter<?>[] adapters = new CellEditAdapter[] {
+					new SceneAbilityAdapters.SceneBGMAdapter(),
+			};
+			SceneAbilityManager sam = SceneAbilityManager.getManager();
+			if (sam != null) {
+				Set<CellEditAdapter<?>>	sa = sam.getEditAdapters();
+				if (sa != null) {
+					CellEditAdapter<?> append[] = new CellEditAdapter<?>[sa.size()];
+					append = sa.toArray(append);
+					Vector<CellEditAdapter<?>> vc =  CUtil.linkv(adapters, append);
+					adapters = vc.toArray(new CellEditAdapter[vc.size()]);
+				}
+			}
+			DisplayObjectEditor<SceneContainer> editor = new DisplayObjectEditor<SceneContainer>(
+					scene_container,
+					new RPGObjectPanel(scene_node.getData(), adapters),
+					new AbilityPanel(scene_node.getData(), adapters)
+			);
+			editor.setCenter();
+			editor.setVisible(true);
 		}
 		else if (e.getSource() == tool_mask_alpha) {
 			String ret = JOptionPane.showInputDialog(this, 
@@ -381,28 +415,6 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		}
 		else if (e.getSource() == tool_show_grid) {
 			scene_container.getWorld().setDebug(tool_show_grid.isSelected());
-		}
-		else if (e.getSource() == tool_edit_prop) {
-			CellEditAdapter<?>[] adapters = new CellEditAdapter[] {
-					new SceneAbilityAdapters.SceneBGMAdapter(),
-			};
-			SceneAbilityManager sam = SceneAbilityManager.getManager();
-			if (sam != null) {
-				Set<CellEditAdapter<?>>	sa = sam.getEditAdapters();
-				if (sa != null) {
-					CellEditAdapter<?> append[] = new CellEditAdapter<?>[sa.size()];
-					append = sa.toArray(append);
-					Vector<CellEditAdapter<?>> vc =  CUtil.linkv(adapters, append);
-					adapters = vc.toArray(new CellEditAdapter[vc.size()]);
-				}
-			}
-			DisplayObjectEditor<SceneContainer> editor = new DisplayObjectEditor<SceneContainer>(
-					scene_container,
-					new RPGObjectPanel(scene_node.getData(), adapters),
-					new AbilityPanel(scene_node.getData(), adapters)
-			);
-			editor.setCenter();
-			editor.setVisible(true);
 		}
 		else if (e.getSource() == tool_play_bgm) {
 			if (v_bgm_sound_player!=null) {

@@ -42,6 +42,7 @@ public class Res
 	static public BufferedImage	icon_run			= Tools.readImage("/com/g2d/studio/res/icon_run.png");
 	static public BufferedImage	icon_scene			= Tools.readImage("/com/g2d/studio/res/icon_scene.png");
 	static public BufferedImage	icon_trigger		= Tools.readImage("/com/g2d/studio/res/icon_trigger.png");
+	static public BufferedImage	icon_event			= Tools.readImage("/com/g2d/studio/res/icon_event.png");
 
 	static public BufferedImage	icon_scene_graph	= Tools.readImage("/com/g2d/studio/res/icon_scene_graph.png");
 	
