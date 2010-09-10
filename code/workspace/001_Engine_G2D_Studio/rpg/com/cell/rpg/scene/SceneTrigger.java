@@ -24,7 +24,7 @@ abstract public class SceneTrigger implements Serializable, Comparator<Class<?>>
 	
 	public boolean 	enable = true;
 	
-	public String	comment;
+	public String	comment = "comment here ....";
 	
 //	------------------------------------------------------------------------------------------------------
 	

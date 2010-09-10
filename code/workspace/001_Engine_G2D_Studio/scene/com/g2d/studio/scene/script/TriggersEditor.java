@@ -1,6 +1,7 @@
 package com.g2d.studio.scene.script;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 
 import javax.swing.JPanel;
@@ -29,31 +30,33 @@ public class TriggersEditor extends JPanel
 		
 		edit_panel	= new JPanel(new BorderLayout());
 		
-		split.setLeftComponent(new JScrollPane(tree_view));
+		JScrollPane left = new JScrollPane(tree_view);
+		left.setPreferredSize(new Dimension(250, 200));
+		split.setLeftComponent(left);
 		split.setRightComponent(edit_panel);
 		
 		super.add(split, BorderLayout.CENTER);
 		
+		tree_view.reload();
 	}
 	
 	class TriggerTreeView extends G2DTree
 	{
 		public TriggerTreeView(TriggerGenerateTreeNode root) {
 			super(root);
-			super.setPreferredSize(new Dimension(200, 200));
 		}
 		
 		protected void onSelectChanged(TreeNode node) {
+			Component right = edit_panel;
 			if (node instanceof TriggerGenerateTreeNode.TriggerNode) {
 				TriggerGenerateTreeNode.TriggerNode tn = (TriggerGenerateTreeNode.TriggerNode)node;
 				JPanel page = tn.getEditPage();
 				if (page != null) {
-					split.setRightComponent(page);
-				} else {
-					split.setRightComponent(edit_panel);
+					right = page;
 				}
-			} else {
-				split.setRightComponent(edit_panel);
+			}
+			if (right != split.getRightComponent()) {
+				split.setRightComponent(right);
 			}
 		}
 		

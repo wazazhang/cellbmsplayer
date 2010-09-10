@@ -8,6 +8,7 @@ import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JPanel;
 
 import com.cell.rpg.scene.script.Scriptable;
 import com.cell.rpg.scene.script.anno.EventType;
@@ -30,7 +31,9 @@ public class SelectEventDialog extends AbstractOptionDialog<Class<? extends Even
 		super(owner);
 		super.setSize(400, 200);
 		this.list = new SelectEventCombobox(trigger_unit_type, SelectEventCombobox.last_selected);
-		this.add(list, BorderLayout.CENTER);
+		JPanel pan = new JPanel();
+		pan.add(list);
+		this.add(pan, BorderLayout.CENTER);
 	}
 	
 	@Override
@@ -55,7 +58,7 @@ public class SelectEventDialog extends AbstractOptionDialog<Class<? extends Even
 	 			Class<? extends Scriptable> trigger_unit_type, 
 	 			Class<? extends Event> default_value) 
 	 	{
-	 		super();
+	 		super(getList(trigger_unit_type));
 	 		try{
 	 			if (default_value!=null) {
 	 				setSelectedItem(default_value);

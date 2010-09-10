@@ -3,6 +3,9 @@ package com.g2d.studio.scene.script;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import javax.swing.ImageIcon;
 import javax.swing.JMenu;
@@ -11,7 +14,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTree;
+import javax.swing.tree.DefaultMutableTreeNode;
 
+import com.cell.CUtil;
+import com.cell.rpg.scene.Actor;
 import com.cell.rpg.scene.Scene;
 import com.cell.rpg.scene.SceneTrigger;
 import com.cell.rpg.scene.SceneTriggerScriptable;
@@ -24,6 +30,7 @@ import com.g2d.display.ui.TreeView;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.scene.editor.SceneEditor;
 import com.g2d.studio.scene.units.SceneActor;
+import com.g2d.studio.swing.G2DDefaultTreeNode;
 import com.g2d.studio.swing.G2DTree;
 import com.g2d.studio.swing.G2DTreeNode;
 
@@ -34,11 +41,24 @@ public class TriggerGenerateTreeNode extends G2DTreeNode<G2DTreeNode<?>>
 	Class<? extends Scriptable>		trigger_object_type;
 
 //	-------------------------------------------------------------------------------------
-	public TriggerGenerateTreeNode(SceneEditor se) {
-		this(se.getSceneNode().getData(), com.cell.rpg.scene.script.entity.Scene.class);		
-		for (SceneUnit su : se.getRuntimeUnits()) {
-			TriggerGenerateTreeNode tn = new TriggerGenerateTreeNode(su, su.getTriggerObjectType());
-			super.add(tn);
+	public TriggerGenerateTreeNode(SceneEditor se)
+	{
+		this(se.getSceneNode().getData(), com.cell.rpg.scene.script.entity.Scene.class);	
+		
+		ArrayList<SceneUnit> sub_nodes = se.getRuntimeUnits();
+		if (!sub_nodes.isEmpty()) {
+			Collections.sort(sub_nodes, new Comparator<SceneUnit>() {
+				@Override
+				public int compare(SceneUnit o1, SceneUnit o2) {
+					return CUtil.getStringCompare().compare(o1.name, o2.name);
+				}
+			});
+			G2DDefaultTreeNode group = new G2DDefaultTreeNode(new ImageIcon(Res.icons_bar[4]), "场景物体");
+			for (SceneUnit su : sub_nodes) {
+				TriggerGenerateTreeNode tn = new TriggerGenerateTreeNode(su, su.getTriggerObjectType());
+				group.add(tn);
+			}
+			this.add(group);
 		}
 	}
 	
@@ -53,7 +73,7 @@ public class TriggerGenerateTreeNode extends G2DTreeNode<G2DTreeNode<?>>
 		this.trigger_object_type 	= tot;
 		for (SceneTrigger st : su.getTriggers()) {
 			TriggerNode en = new TriggerNode(st);
-			super.add(en);
+			this.add(en);
 		}
 	}
 //	-------------------------------------------------------------------------------------
@@ -81,7 +101,7 @@ public class TriggerGenerateTreeNode extends G2DTreeNode<G2DTreeNode<?>>
 	}
 
 	private void addTrigger(TriggerNode tn) {
-		this.add(tn);
+		this.insert(tn, 0);
 		this.root_object.addTrigger(tn.trigger);
 	}
 	
