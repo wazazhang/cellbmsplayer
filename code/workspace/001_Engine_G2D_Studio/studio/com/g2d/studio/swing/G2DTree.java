@@ -101,6 +101,11 @@ public class G2DTree extends JTree implements G2DDragDropListener<G2DTree>
 	public void removeDragDropListener(G2DDragDropListener<G2DTree> listener) {
 		drag_drop_listeners.remove(listener);
 	}
+	
+	protected void onSelectChanged(TreeNode node) {
+		
+	}
+	
 	@Override
 	public void onDragDrop(G2DTree comp, Object src, Object dst) {
 		if (checkDrag(drop_target, src, dst, drag_drop_position)) {
@@ -390,6 +395,7 @@ public class G2DTree extends JTree implements G2DDragDropListener<G2DTree>
 			if (value instanceof G2DTreeNode<?>){
 				G2DTreeNode<?> node = ((G2DTreeNode<?>)value);
 				node.onSelected(tree);
+				onSelectChanged(node);
 			}			
 		}
 	}

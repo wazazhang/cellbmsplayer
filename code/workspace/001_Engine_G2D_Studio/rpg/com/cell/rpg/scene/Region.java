@@ -37,7 +37,7 @@ public class Region extends SceneUnit
 	}
 	
 	@Override
-	public Class<com.cell.rpg.scene.script.entity.Region> getEventType() {
+	public Class<com.cell.rpg.scene.script.entity.Region> getTriggerObjectType() {
 		return com.cell.rpg.scene.script.entity.Region.class;
 	}
 

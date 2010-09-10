@@ -48,7 +48,7 @@ public abstract class SceneUnit extends RPGObject implements TriggerGenerator
 
 //	------------------------------------------------------------------------------------------------------------------
 	
-	abstract public Class<? extends com.cell.rpg.scene.script.entity.SceneUnit>	getEventType();
+	abstract public Class<? extends com.cell.rpg.scene.script.entity.SceneUnit>	getTriggerObjectType();
 
 	public void addTrigger(SceneTrigger st) {
 		scene_triggers.add(st);

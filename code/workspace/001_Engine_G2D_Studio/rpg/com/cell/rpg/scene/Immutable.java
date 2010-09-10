@@ -25,7 +25,7 @@ public class Immutable extends SceneSprite
 	}
 
 	@Override
-	public Class<com.cell.rpg.scene.script.entity.Immutable> getEventType() {
+	public Class<com.cell.rpg.scene.script.entity.Immutable> getTriggerObjectType() {
 		return com.cell.rpg.scene.script.entity.Immutable.class;
 	}
 	

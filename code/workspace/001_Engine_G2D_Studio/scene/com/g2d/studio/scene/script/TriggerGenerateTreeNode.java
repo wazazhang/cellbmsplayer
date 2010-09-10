@@ -8,6 +8,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTree;
 
@@ -16,6 +17,7 @@ import com.cell.rpg.scene.SceneTrigger;
 import com.cell.rpg.scene.SceneTriggerScriptable;
 import com.cell.rpg.scene.SceneUnit;
 import com.cell.rpg.scene.TriggerGenerator;
+import com.cell.rpg.scene.script.Scriptable;
 import com.cell.rpg.scene.script.anno.EventType;
 import com.cell.rpg.scene.script.trigger.Event;
 import com.g2d.display.ui.TreeView;
@@ -26,33 +28,42 @@ import com.g2d.studio.swing.G2DTree;
 import com.g2d.studio.swing.G2DTreeNode;
 
 @SuppressWarnings("serial")
-public class TriggerGenerateNode extends G2DTreeNode<G2DTreeNode<?>>
+public class TriggerGenerateTreeNode extends G2DTreeNode<G2DTreeNode<?>>
 {
-	TriggerGenerator root_object;
+	TriggerGenerator 				root_object;
+	Class<? extends Scriptable>		trigger_object_type;
+
+//	-------------------------------------------------------------------------------------
+	public TriggerGenerateTreeNode(SceneEditor se) {
+		this(se.getSceneNode().getData(), com.cell.rpg.scene.script.entity.Scene.class);		
+		for (SceneUnit su : se.getRuntimeUnits()) {
+			TriggerGenerateTreeNode tn = new TriggerGenerateTreeNode(su, su.getTriggerObjectType());
+			super.add(tn);
+		}
+	}
 	
-	public TriggerGenerateNode(TriggerGenerator su) {
-		this.root_object = su;
+	public TriggerGenerateTreeNode(SceneUnit su) {
+		this(su, su.getTriggerObjectType());
+	}
+	
+	protected TriggerGenerateTreeNode(
+			TriggerGenerator su, 
+			Class<? extends Scriptable> tot) {
+		this.root_object 			= su;
+		this.trigger_object_type 	= tot;
 		for (SceneTrigger st : su.getTriggers()) {
 			TriggerNode en = new TriggerNode(st);
 			super.add(en);
 		}
 	}
-	
-	public TriggerGenerateNode(SceneEditor se) {
-		this(se.getSceneNode().getData());		
-		for (SceneUnit su : se.getRuntimeUnits()) {
-			TriggerGenerateNode tn = new TriggerGenerateNode(su);
-			super.add(tn);
-		}
-	}
-	
+//	-------------------------------------------------------------------------------------
 	@Override
 	protected ImageIcon createIcon() {
 		if (root_object instanceof Scene) {
 			return new ImageIcon(Res.icon_scene);
 		}
 		if (root_object instanceof SceneUnit) {
-			return new ImageIcon(Res.icon_trigger);
+			return new ImageIcon(Res.icon_hd);
 		}
 		return null;
 	}
@@ -61,13 +72,7 @@ public class TriggerGenerateNode extends G2DTreeNode<G2DTreeNode<?>>
 	public String getName() {
 		return root_object.getTriggerObjectName();
 	}
-	
-	@Override
-	public void onSelected(JTree tree) {
-		super.onSelected(tree);
-//		(TriggersEditor.TriggerTreeView)tree;
-	}
-	
+
 	@Override
 	public void onRightClicked(JTree tree, MouseEvent e) {
 		if (e.getButton() == MouseEvent.BUTTON3) {
@@ -106,7 +111,7 @@ public class TriggerGenerateNode extends G2DTreeNode<G2DTreeNode<?>>
 					sts.name = res.toString();
 					TriggerNode trigger = new TriggerNode(sts);
 					addTrigger(trigger);
-					tree.reload(TriggerGenerateNode.this);
+					tree.reload(TriggerGenerateTreeNode.this);
 				}
 			}
 		}
@@ -122,10 +127,20 @@ public class TriggerGenerateNode extends G2DTreeNode<G2DTreeNode<?>>
 	 */
 	public class TriggerNode extends G2DTreeNode<G2DTreeNode<?>>
 	{
-		SceneTrigger trigger;
+		SceneTrigger 	trigger;
+		
+		TriggerPanel<?> edit_page;
 		
 		public TriggerNode(SceneTrigger trigger) {
 			this.trigger = trigger;
+			if (trigger instanceof SceneTriggerScriptable) {
+				edit_page = new TriggerPanelScriptable(
+						(SceneTriggerScriptable)trigger,
+						trigger_object_type
+						);
+			} else {
+				
+			}
 		}
 		
 		@Override
@@ -148,6 +163,10 @@ public class TriggerGenerateNode extends G2DTreeNode<G2DTreeNode<?>>
 			}
 		}
 
+		TriggerPanel<?> getEditPage() {
+			return edit_page;
+		} 
+		
 		class TriggerNodeMenu extends JPopupMenu implements ActionListener
 		{
 			G2DTree tree;
@@ -166,13 +185,16 @@ public class TriggerGenerateNode extends G2DTreeNode<G2DTreeNode<?>>
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (e.getSource() == delete) {
-					removeTrigger(TriggerNode.this);
-					tree.reload(TriggerGenerateNode.this);
+					if (JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(tree, "confirm ?")) {
+						removeTrigger(TriggerNode.this);
+						tree.reload(TriggerGenerateTreeNode.this);
+					}
 				}
 				else if (e.getSource() == rename) {
 					Object res = JOptionPane.showInputDialog(tree, "输入名字", TriggerNode.this.getName());
 					if (res != null) {
 						TriggerNode.this.trigger.name = res.toString();
+						tree.reload(TriggerNode.this);
 						tree.repaint();
 					}
 				}
