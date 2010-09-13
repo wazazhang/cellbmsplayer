@@ -83,7 +83,7 @@ public abstract class ObjectGroup<T extends ObjectNode<D>, D extends RPGObject> 
 				String[] lines = CIO.readAllLine(list_file.getPath(), "UTF-8");
 				for (String line : lines) {
 					try{
-						loadPath(line);
+						loadPath(line.trim());
 					}catch(Exception e){
 						e.printStackTrace();
 					}

@@ -171,7 +171,7 @@ public class QuestItemTree extends G2DTree
 			try{
 				for (String line : condition.getNameList()) {
 					try{
-						loadPath(line);
+						loadPath(line.trim());
 					}catch(Exception e){
 						e.printStackTrace();
 					}

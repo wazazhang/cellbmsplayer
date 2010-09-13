@@ -92,7 +92,7 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 				progress.setMaximum("", all_scene.length);
 				int i=0;
 				for (String node_path : all_scene) {
-					tree_root.loadPath(node_path);
+					tree_root.loadPath(node_path.trim());
 					progress.setValue("", i++);
 				}
 			}
