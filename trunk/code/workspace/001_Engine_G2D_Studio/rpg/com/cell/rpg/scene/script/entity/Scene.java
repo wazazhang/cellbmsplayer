@@ -1,5 +1,8 @@
 package com.cell.rpg.scene.script.entity;
 
-public interface Scene extends SceneUnit {
+import com.cell.rpg.scene.script.Scriptable;
+
+public interface Scene extends Scriptable 
+{
 
 }
