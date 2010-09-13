@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 
+import com.cell.CIO;
 import com.cell.CObject;
 import com.cell.CUtil;
 import com.cell.util.zip.ZipUtil;
@@ -15,21 +16,13 @@ public class CFile
 
 	public static String readText(java.io.File file, String encoding)
 	{
-		String ret = null;
-		FileInputStream fis = null;
 		try{
-			fis = new FileInputStream(file);
-			byte[] data = new byte[fis.available()];
-			fis.read(data);
-			ret = new String(data, encoding);
+			FileInputStream fis = new FileInputStream(file);
+			return CIO.stringDecode(CIO.readStream(fis), encoding);
 		}catch (Exception e) {
 			e.printStackTrace();
-		}finally{
-			try {
-				fis.close();
-			} catch (Exception e2) {}
 		}
-		return ret;
+		return null;
 	}
 	
 	public static void writeText(java.io.File file, String text, String encoding)
@@ -38,7 +31,7 @@ public class CFile
 			if (!file.exists()) {
 				file.createNewFile();
 			}
-			byte[] data = text.getBytes(encoding);
+			byte[] data = CIO.stringEncode(text, encoding);
 			FileOutputStream fos = new FileOutputStream(file);
 			try{
 				fos.write(data);
