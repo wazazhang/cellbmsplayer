@@ -35,6 +35,9 @@ public class TriggerPanelEditable extends TriggerPanel<SceneTriggerEditable>
 	
 	}
 	
+	protected void onRemoveEventNode(TriggerEventRoot.EventNode en) {
+		
+	}
 	
 	
 }

@@ -119,6 +119,8 @@ public abstract class TriggerPanel<T extends SceneTrigger> extends JPanel implem
 	
 	abstract protected void onAddEventNode(TriggerEventRoot.EventNode en);
 	
+	abstract protected void onRemoveEventNode(TriggerEventRoot.EventNode en);
+	
 //	--------------------------------------------------------------------------------------------------------
 	
 	protected class TriggerEventRoot extends G2DTreeNode<G2DTreeNode<?>>
@@ -156,6 +158,13 @@ public abstract class TriggerPanel<T extends SceneTrigger> extends JPanel implem
 				onAddEventNode(en);
 			} else {
 				JOptionPane.showMessageDialog(tree_view, "该事件已经存在！");
+			}
+		}
+
+		protected void removeEvent(EventNode evt) {
+			if (trigger.removeTriggerEvent(evt.evt)) {
+				this.remove(evt);
+				onRemoveEventNode(evt);
 			}
 		}
 		
@@ -200,6 +209,33 @@ public abstract class TriggerPanel<T extends SceneTrigger> extends JPanel implem
 			public String getName() {
 				return type.comment();
 			}
+			
+
+			@Override
+			public void onRightClicked(JTree tree, MouseEvent e) {
+				new EventMenu().show(tree_view, e.getX(), e.getY());
+			}
+			
+			class EventMenu extends JPopupMenu implements ActionListener
+			{
+				JMenuItem remove = new JMenuItem("删除");
+				
+				public EventMenu() {
+					remove.addActionListener(this);
+					super.add(remove);
+				}
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if (e.getSource() == remove) {
+						if (JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(tree_view, "确定?")) {
+							removeEvent(EventNode.this);
+							tree_view.reload(TriggerEventRoot.this);
+						}
+					}
+				}
+			}
+			
 		}
 		
 	}

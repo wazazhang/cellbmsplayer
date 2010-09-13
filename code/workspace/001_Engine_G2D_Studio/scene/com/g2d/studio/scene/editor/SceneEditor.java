@@ -292,7 +292,6 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 			tag.onReadComplete(list);
 		}
 		
-		
 	}
 	
 	@SuppressWarnings("unchecked")

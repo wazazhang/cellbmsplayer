@@ -82,7 +82,7 @@ public class Scene extends RPGObject implements NamedObject, TriggerGenerator
 //	------------------------------------------------------------------------------------------------------------------
 	
 	public String getTriggerObjectName() {
-		return name + "(" + id + ")";
+		return name;
 	}
 	
 	public boolean addTrigger(SceneTrigger st) {

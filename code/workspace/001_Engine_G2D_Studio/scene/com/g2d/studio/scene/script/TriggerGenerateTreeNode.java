@@ -207,9 +207,7 @@ public class TriggerGenerateTreeNode extends G2DTreeNode<G2DTreeNode<?>>
 
 		@Override
 		public void onRightClicked(JTree tree, MouseEvent e) {
-			if (e.getButton() == MouseEvent.BUTTON3) {
-				new TriggerNodeMenu((G2DTree)tree).show(tree, e.getX(), e.getY());
-			}
+			new TriggerNodeMenu((G2DTree)tree).show(tree, e.getX(), e.getY());
 		}
 
 		TriggerPanel<?> getEditPage() {
