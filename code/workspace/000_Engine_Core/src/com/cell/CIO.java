@@ -19,6 +19,11 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CharsetEncoder;
 import java.util.Hashtable;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
@@ -216,52 +221,63 @@ public class CIO extends CObject
 		return null;
 	}
 	
+	public static String stringDecode(byte[] data, String encoding) {
+		ByteBuffer bb = ByteBuffer.wrap(data);
+		try {
+			CharsetDecoder decoder = Charset.forName(encoding).newDecoder();  
+			CharBuffer cb = decoder.decode(bb);
+			try {
+				char[] ret = new char[cb.remaining()];
+				cb.get(ret);
+				return new String(ret);
+			} finally {
+				cb.clear();
+			}
+		} catch (Exception err) {
+			return null;
+		} finally {
+			bb.clear();
+		}
+	}
+	
+	public static byte[] stringEncode(String src, String encoding) {
+		CharBuffer cb = CharBuffer.wrap(src);
+		try {
+			CharsetEncoder encoder = Charset.forName(encoding).newEncoder();  
+			ByteBuffer bb = encoder.encode(cb);
+			try {
+				byte[] ret = new byte[bb.remaining()];
+				bb.get(ret);
+				return ret;
+			} finally {
+				bb.clear();
+			}
+		} catch (Exception err) {
+			return null;
+		} finally {
+			cb.clear();
+		}
+	}
 	
 	public static String readAllText(String file)
 	{
-		try{
-			return new String(CIO.loadData(file), CObject.getEncoding());
-		}catch(Exception err){
-			System.err.println(file);
-			err.printStackTrace();
-			return "";
-		}
+		return readAllText(file, CObject.getEncoding());
 	}
 	
 	public static String readAllText(String file, String encoding)
 	{
-		try{
-			return new String(CIO.loadData(file), encoding);
-		}catch(Exception err){
-			System.err.println(file);
-			err.printStackTrace();
-			return "";
-		}
+		return stringDecode(CIO.loadData(file), encoding);
 	}
 	
 	public static String[] readAllLine(String file)
 	{
-		try{
-			String src = new String(CIO.loadData(file), CObject.getEncoding());
-			String[] ret = CUtil.splitString(src, "\n");
-			for(int i=ret.length-1;i>=0;i--){
-				int ld = ret[i].lastIndexOf('\r');
-				if(ld>=0){
-					ret[i] = ret[i].substring(0,ld);
-				}
-			}
-			return ret;
-		}catch(Exception err){
-			System.err.println(file);
-			err.printStackTrace();
-			return new String[]{""};
-		}
+		return readAllLine(file, CObject.getEncoding());
 	}
 	
 	public static String[] readAllLine(String file, String encoding)
 	{
 		try{
-			String src = new String(CIO.loadData(file), encoding);
+			String src = readAllText(file, encoding);
 			String[] ret = CUtil.splitString(src, "\n");
 			for(int i=ret.length-1;i>=0;i--){
 				int ld = ret[i].lastIndexOf('\r');
