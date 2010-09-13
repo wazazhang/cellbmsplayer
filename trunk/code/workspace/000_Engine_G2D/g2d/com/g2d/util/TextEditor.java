@@ -22,13 +22,10 @@ import javax.swing.text.StyledDocument;
 import javax.swing.text.StyledEditorKit;
 import javax.swing.text.html.HTMLEditorKit;
 
+@SuppressWarnings("serial")
 public class TextEditor extends JPanel
 {
-	DefaultStyledDocument 	document		= new DefaultStyledDocument();
-	JTextPane 				text_pane		= new JTextPane();
-	
-	Font					cur_font;
-	Color					cur_color;
+	JTextPane text_pane = new JTextPane();
 	
 	public TextEditor() 
 	{
@@ -36,6 +33,10 @@ public class TextEditor extends JPanel
 		
 		super.add(new JScrollPane(text_pane), BorderLayout.CENTER);
 		
+	}
+	
+	public JTextPane getTextPane() {
+		return text_pane;
 	}
 	
 	public void setText(String text) {
