@@ -85,13 +85,22 @@ public class Scene extends RPGObject implements NamedObject, TriggerGenerator
 		return name + "(" + id + ")";
 	}
 	
-	public void addTrigger(SceneTrigger st) {
+	public boolean addTrigger(SceneTrigger st) {
+		for (SceneTrigger s : getTriggers()) {
+			if (s.getName().equals(st.getName())) {
+				return false;
+			}
+		}
 		scene_triggers.add(st);
+		return true;
 	}
+	
 	@Override
-	public void removeTrigger(SceneTrigger st) {
-		scene_triggers.remove(st);
+	public boolean removeTrigger(SceneTrigger st) {
+		return scene_triggers.remove(st);
 	}
+	
+	
 	public ArrayList<SceneTrigger> getTriggers(){
 		return scene_triggers;
 	}

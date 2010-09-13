@@ -296,7 +296,7 @@ public class ScenePoint extends com.g2d.game.rpg.Unit implements SceneUnitTag<Po
 	
 	@Override
 	public SceneUnitTagEditor getEditorForm() {
-		return new SceneUnitTagEditor(this);
+		return new SceneUnitTagEditor(editor, this);
 	}
 	
 	@Override

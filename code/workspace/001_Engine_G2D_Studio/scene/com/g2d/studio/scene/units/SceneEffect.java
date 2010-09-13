@@ -285,7 +285,7 @@ public class SceneEffect extends com.g2d.game.rpg.Unit implements SceneUnitTag<E
 	
 	@Override
 	public DisplayObjectEditor<?> getEditorForm() {
-		return new SceneUnitTagEditor(this,
+		return new SceneUnitTagEditor(editor, this,
 				new SceneAbilityAdapters.RegionSpawnNPCNodeAdapter(),
 				new SceneAbilityAdapters.RegionSpawnCollectionNodeAdapter(),
 				new QuestCellEditAdapter.QuestTriggerAdapter());

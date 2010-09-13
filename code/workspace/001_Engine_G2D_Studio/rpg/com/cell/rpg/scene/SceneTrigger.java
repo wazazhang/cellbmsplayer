@@ -20,7 +20,7 @@ abstract public class SceneTrigger implements Serializable, Comparator<Class<?>>
 {
 	private static final long serialVersionUID = 1L;
 	
-	public String 	name;
+	private String 	name;
 	
 	public boolean 	enable = true;
 	
@@ -34,8 +34,27 @@ abstract public class SceneTrigger implements Serializable, Comparator<Class<?>>
 
 //	------------------------------------------------------------------------------------------------------
 	
-	public SceneTrigger() {}
+	public SceneTrigger(TriggerGenerator parent, String name) throws Exception
+	{
+		if (!setName(parent, name) ) {
+			throw new Exception("duplicate name in : " + parent.getTriggerObjectName());
+		}
+	}
 
+	public String getName() {
+		return name;
+	}
+
+	public boolean setName(TriggerGenerator parent, String name) 
+	{
+		for (SceneTrigger st : parent.getTriggers()) {
+			if (st != this && st.getName().equals(name)) {
+				return false;
+			}
+		}
+		this.name = name;
+		return true;
+	}
 	
 	public boolean addTriggerEvent(Class<? extends Event> event) {
 		event_types = null;

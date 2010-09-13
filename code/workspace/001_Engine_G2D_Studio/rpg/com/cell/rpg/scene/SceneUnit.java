@@ -50,19 +50,27 @@ public abstract class SceneUnit extends RPGObject implements TriggerGenerator
 	
 	abstract public Class<? extends com.cell.rpg.scene.script.entity.SceneUnit>	getTriggerObjectType();
 
-	public void addTrigger(SceneTrigger st) {
+	public boolean addTrigger(SceneTrigger st) {
+		for (SceneTrigger s : getTriggers()) {
+			if (s.getName().equals(st.getName())) {
+				return false;
+			}
+		}
 		scene_triggers.add(st);
+		return true;
 	}
+	
 	@Override
-	public void removeTrigger(SceneTrigger st) {
-		scene_triggers.remove(st);
+	public boolean removeTrigger(SceneTrigger st) {
+		return scene_triggers.remove(st);
 	}
+	
 	public int getTriggerCount(){
 		return scene_triggers.size();
 	}
 	
 	public ArrayList<SceneTrigger> getTriggers(){
-		return scene_triggers;
+		return new ArrayList<SceneTrigger>(scene_triggers);
 	}
 	
 //	------------------------------------------------------------------------------------------------------------------

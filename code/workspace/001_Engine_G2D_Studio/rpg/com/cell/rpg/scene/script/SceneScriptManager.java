@@ -1,5 +1,6 @@
 package com.cell.rpg.scene.script;
 
+import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.TypeVariable;
@@ -10,6 +11,8 @@ import java.util.Set;
 
 import com.cell.CObject;
 import com.cell.CUtil;
+import com.cell.rpg.scene.SceneTriggerScriptable;
+import com.cell.rpg.scene.TriggerGenerator;
 import com.cell.rpg.scene.script.anno.EventMethod;
 import com.cell.rpg.scene.script.anno.EventParam;
 import com.cell.rpg.scene.script.anno.EventType;
@@ -72,7 +75,17 @@ public abstract class SceneScriptManager
 		return false;
 	}
 	
-	
+	public File createTemplateScriptFile(
+			File root,
+			String prefix, 
+			TriggerGenerator tg, 
+			SceneTriggerScriptable sts) 
+	{
+		return new File(root,
+				((prefix == null || prefix.isEmpty()) ? "" : (prefix + "."))
+				+ tg.getTriggerObjectName() + "."
+				+ sts.getName() + ".js");
+	}
 	
 
 	/**
@@ -101,7 +114,7 @@ public abstract class SceneScriptManager
 			Annotation	params_ats[][]	= method.getParameterAnnotations();
 			Class<?> 	params[] 		= method.getParameterTypes();
 			for (int i = 0; i < params.length; i++) {
-				sb.append(" * " + params[i].getSimpleName() + "\t - ");
+				sb.append(" * arg" + i + " \t- " + params[i].getSimpleName() + ";");
 				for (Annotation at : params_ats[i]) {
 					if (at.annotationType() == EventParam.class) {
 						EventParam ep = (EventParam)at;
@@ -113,7 +126,7 @@ public abstract class SceneScriptManager
 			sb.append(" */\n");
 			String args ="";
 			for (int i = 0; i < params.length; i++) {
-				args += params[i].getSimpleName();
+				args += "arg"+i;//params[i].getSimpleName();
 				if (i < params.length - 1) {
 					args += ", ";
 				}

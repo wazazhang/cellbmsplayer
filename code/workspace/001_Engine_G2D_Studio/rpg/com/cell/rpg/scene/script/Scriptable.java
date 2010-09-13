@@ -2,7 +2,16 @@ package com.cell.rpg.scene.script;
 
 public interface Scriptable 
 {
-	public Scriptable putAttribute(String key, Scriptable value);
+	/**
+	 * @param key
+	 * @param value
+	 * @return old value
+	 */
+	public Object put(String key, Object value);
 	
-	public Scriptable getAttribute(String key);
+	/**
+	 * @param key
+	 * @return
+	 */
+	public Object get(String key);
 }
