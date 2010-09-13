@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.io.File;
 
 import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
@@ -60,7 +61,7 @@ public abstract class TriggerPanel<T extends SceneTrigger> extends JPanel implem
 		this.trigger 				= trigger;
 		this.trigger_object_type	= trigger_object_type;
 		
-		this.tree_root			= new DefaultMutableTreeNode(trigger.name);
+		this.tree_root			= new DefaultMutableTreeNode(trigger.getName());
 		this.group_events		= new TriggerEventRoot();
 		this.group_conditions	= new TriggerConditionsRoot();
 		this.group_actions		= new TriggerActionRoot();
@@ -85,7 +86,6 @@ public abstract class TriggerPanel<T extends SceneTrigger> extends JPanel implem
 		
 		this.add(split);
 		super.addAncestorListener(this);
-		
 		
 	}
 	

@@ -9,9 +9,9 @@ public interface TriggerGenerator
 {
 	public String getTriggerObjectName();
 
-	public void removeTrigger(SceneTrigger st);
+	public boolean removeTrigger(SceneTrigger st);
 		
-	public void addTrigger(SceneTrigger st);
+	public boolean addTrigger(SceneTrigger st);
 		
 	public ArrayList<SceneTrigger> getTriggers();
 	

@@ -19,6 +19,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.Vector;
@@ -44,7 +45,10 @@ import com.cell.j2se.CGraphicsImage;
 import com.cell.rpg.scene.Actor;
 import com.cell.rpg.scene.Region;
 import com.cell.rpg.scene.SceneAbilityManager;
+import com.cell.rpg.scene.SceneTrigger;
+import com.cell.rpg.scene.SceneTriggerScriptable;
 import com.cell.rpg.scene.SceneUnit;
+import com.cell.rpg.scene.TriggerGenerator;
 import com.cell.sound.util.StaticSoundPlayer;
 import com.g2d.Tools;
 import com.g2d.cell.CellSetResource;
@@ -81,6 +85,7 @@ import com.g2d.studio.swing.G2DWindowToolBar;
 import com.g2d.util.AbstractFrame;
 import com.g2d.util.Drawing;
 
+@SuppressWarnings("serial")
 public class SceneEditor extends AbstractFrame implements ActionListener
 {
 	private static final long serialVersionUID = 1L;
@@ -108,7 +113,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 	private JToggleButton		tool_addactor	= new JToggleButton(Tools.createIcon(Res.icons_bar[8]));
 	private JToggleButton		tool_show_grid	= new JToggleButton(Tools.createIcon(Res.icon_grid));	
 	private JButton				tool_edit_prop	= new JButton(Tools.createIcon(Res.icons_bar[1]));
-	private JButton				tool_triggers		= new JButton(Tools.createIcon(Res.icon_action));
+	private JButton				tool_triggers	= new JButton(Tools.createIcon(Res.icon_action));
 	private JToggleButton		tool_play_bgm	= new JToggleButton(Tools.createIcon(Res.icons_bar[3]));
 	private JButton				tool_mask_alpha	= new JButton("MA");
 	private JButton				tool_mask_color	= new JButton("MC");
@@ -241,9 +246,16 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		return scene_node;
 	}
 	
+	public File getSceneChildsDir() {		
+		File scene_root = new File(Studio.getInstance().project_save_path, "scenes");
+		return new File(scene_root, this.scene_node.getID());
+	}
+	
 	@SuppressWarnings("unchecked")
 	private void load()
 	{
+		load_triggers(getSceneNode().getData(), getSceneChildsDir(), null);
+		
 		if (scene_node.getData().scene_units!=null) {
 			for (SceneUnit unit : scene_node.getData().scene_units) {
 				SceneUnitTag<?> unit_tag = null;
@@ -265,13 +277,15 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 					}
 					if (unit_tag != null) {
 						scene_container.getWorld().addChild(unit_tag.getGameUnit());
+						load_triggers(unit_tag.getUnit(), 
+								getSceneChildsDir(),
+								scene_node.getData().getName());
 					}
-				}catch(Throwable err){
+				} catch (Throwable err) {
 					err.printStackTrace();
 				}
 			}
 		}
-		scene_container.getWorld().processEvent();
 		
 		Vector<SceneUnitTag> list = scene_container.getWorld().getChildsSubClass(SceneUnitTag.class);
 		for (SceneUnitTag tag : list) {
@@ -280,11 +294,12 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		
 		
 	}
-		
 	
 	@SuppressWarnings("unchecked")
 	private void save()
 	{
+		save_triggers(getSceneNode().getData(), getSceneChildsDir(), null);
+		
 		Vector<SceneUnitTag> list = scene_container.getWorld().getChildsSubClass(SceneUnitTag.class);
 		for (SceneUnitTag tag : list) {
 			tag.onWriteReady(list);
@@ -293,25 +308,58 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		scene_node.getData().scene_units.clear();
 		
 		for (SceneUnitTag tag : list) {
-			try{
+			try {
 				scene_node.getData().scene_units.add(tag.onWrite());
-			}catch(Throwable err){
+				save_triggers(tag.getUnit(),
+						getSceneChildsDir(),
+						scene_node.getData().getName());
+			} catch (Throwable err) {
 				err.printStackTrace();
 			}
 		}
 		
-		try{
-			if (scene_node.getWorldDisplay()!=null && 
+		try {
+			if (scene_node.getWorldDisplay() != null &&
 				scene_node.getWorldDisplay().scene_snapshoot == null) {
 				BufferedImage icon = scene_container.getWorld().createMiniMap(
-						scene_container.getWorld().getWidth(), 
+						scene_container.getWorld().getWidth(),
 						scene_container.getWorld().getHeight());
 				scene_node.saveSnapshot(icon);
 			}
-		}catch(Throwable ex) {
+		} catch (Throwable ex) {
 			ex.printStackTrace();
 		}
 	}
+	
+	private void load_triggers(TriggerGenerator tg, File root, String prefix) {
+		try {
+			for (SceneTrigger st : tg.getTriggers()) {
+				if (st instanceof SceneTriggerScriptable) {
+					SceneTriggerScriptable sts = (SceneTriggerScriptable) st;
+					File sf = Studio.getInstance().getSceneScriptManager().createTemplateScriptFile(
+							root, prefix, tg, sts);
+					sts.loadEditScript(sf);
+				}
+			}
+		} catch (Exception err) {
+			err.printStackTrace();
+		}
+	}
+	
+	private void save_triggers(TriggerGenerator tg, File root, String prefix) {
+		try {
+			for (SceneTrigger st : tg.getTriggers()) {
+				if (st instanceof SceneTriggerScriptable) {
+					SceneTriggerScriptable sts = (SceneTriggerScriptable) st;
+					File sf = Studio.getInstance().getSceneScriptManager().createTemplateScriptFile(
+							root, prefix, tg, sts);
+					sts.saveEditScript(sf);
+				}
+			}
+		} catch (Exception err) {
+			err.printStackTrace();
+		}
+}
 	
 	@SuppressWarnings("unchecked")
 	public ArrayList<SceneUnit> getRuntimeUnits() {
@@ -468,7 +516,6 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 	public void addTagUnit(SceneUnitTag<?> unit) {
 		try{
 			scene_container.getWorld().addChild(unit.getGameUnit());
-			scene_container.getWorld().processEvent();
 		}catch(Exception err){
 			err.printStackTrace();
 		}

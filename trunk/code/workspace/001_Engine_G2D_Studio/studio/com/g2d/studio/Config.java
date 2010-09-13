@@ -1,5 +1,7 @@
 package com.g2d.studio;
 
+import java.awt.Font;
+
 import com.cell.util.anno.ConfigField;
 import com.cell.util.anno.ConfigType;
 
@@ -46,6 +48,7 @@ public class Config extends com.cell.util.Config
 	/**低级界面默认的FPS*/
 	public static Integer DEFAULT_FPS				= 30;
 	public static Integer DEFAULT_BACK_COLOR		= 0xffff00ff;
+	public static String  DEFAULT_FONT				= "宋体";
 	
 //	--------------------------------------------------------------------------------------------------------
 //	(插件类)
@@ -93,4 +96,7 @@ public class Config extends com.cell.util.Config
 		"@java -classpath \"g2dstudio.jar\" com.g2d.studio.cell.gameedit.EatBuilder \"{file}\" \"scene\" \"project.g2d\"";	
 
 	public static Float	 CELL_BUILD_SCENE_THUMB_SCALE	= 0.1f;
+
+//	--------------------------------------------------------------------------------------------------------
+	
 }

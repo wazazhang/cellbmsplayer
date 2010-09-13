@@ -290,7 +290,7 @@ public class SceneRegion extends com.g2d.game.rpg.Unit implements SceneUnitTag<R
 	
 	@Override
 	public DisplayObjectEditor<?> getEditorForm() {
-		return new SceneUnitTagEditor(this,
+		return new SceneUnitTagEditor(editor, this,
 				new SceneAbilityAdapters.RegionSpawnNPCNodeAdapter(),
 				new SceneAbilityAdapters.RegionSpawnCollectionNodeAdapter(),
 				new QuestCellEditAdapter.QuestTriggerAdapter());

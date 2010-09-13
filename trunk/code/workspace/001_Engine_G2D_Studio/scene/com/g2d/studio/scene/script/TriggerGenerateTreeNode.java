@@ -3,6 +3,7 @@ package com.g2d.studio.scene.script;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -20,6 +21,7 @@ import com.cell.CUtil;
 import com.cell.rpg.scene.Actor;
 import com.cell.rpg.scene.Scene;
 import com.cell.rpg.scene.SceneTrigger;
+import com.cell.rpg.scene.SceneTriggerEditable;
 import com.cell.rpg.scene.SceneTriggerScriptable;
 import com.cell.rpg.scene.SceneUnit;
 import com.cell.rpg.scene.TriggerGenerator;
@@ -37,9 +39,9 @@ import com.g2d.studio.swing.G2DTreeNode;
 @SuppressWarnings("serial")
 public class TriggerGenerateTreeNode extends G2DTreeNode<G2DTreeNode<?>>
 {
-	TriggerGenerator 				root_object;
-	Class<? extends Scriptable>		trigger_object_type;
-
+	final TriggerGenerator 				root_object;
+	final Class<? extends Scriptable>	trigger_object_type;
+	
 //	-------------------------------------------------------------------------------------
 	public TriggerGenerateTreeNode(SceneEditor se)
 	{
@@ -50,7 +52,7 @@ public class TriggerGenerateTreeNode extends G2DTreeNode<G2DTreeNode<?>>
 			Collections.sort(sub_nodes, new Comparator<SceneUnit>() {
 				@Override
 				public int compare(SceneUnit o1, SceneUnit o2) {
-					return CUtil.getStringCompare().compare(o1.name, o2.name);
+					return CUtil.getStringCompare().compare(o2.name, o1.name);
 				}
 			});
 			G2DDefaultTreeNode group = new G2DDefaultTreeNode(new ImageIcon(Res.icons_bar[4]), "场景物体");
@@ -101,37 +103,59 @@ public class TriggerGenerateTreeNode extends G2DTreeNode<G2DTreeNode<?>>
 	}
 
 	private void addTrigger(TriggerNode tn) {
-		this.insert(tn, 0);
-		this.root_object.addTrigger(tn.trigger);
+//		this.insert(tn, 0);
+		if (this.root_object.addTrigger(tn.trigger)) {
+			this.add(tn);
+		}
 	}
 	
 	private void removeTrigger(TriggerNode tn) {
-		this.remove(tn);
-		this.root_object.removeTrigger(tn.trigger);
+		if (this.root_object.removeTrigger(tn.trigger)) {
+			this.remove(tn);
+		}
 	}
 	
 	class GenerateMenu extends JPopupMenu implements ActionListener
 	{
 		G2DTree tree;
 		
-		JMenuItem item_add_scriptable_trigger 	= new JMenuItem("添加触发器");
+		JMenuItem item_add_scriptable_trigger 	= new JMenuItem("添加触发器(脚本)");
+		JMenuItem item_add_editable_trigger 	= new JMenuItem("添加触发器(编辑)");
 		
 		public GenerateMenu(G2DTree tree) {
 			this.tree = tree;
 			item_add_scriptable_trigger.addActionListener(this);
+			item_add_editable_trigger.addActionListener(this);
 			add(item_add_scriptable_trigger);
+			add(item_add_editable_trigger);
 		}
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() == item_add_scriptable_trigger) {
-				Object res = JOptionPane.showInputDialog(tree, "输入名字", "未命名触发器");
+				Object res = JOptionPane.showInputDialog(tree, "输入名字", "未命名触发器(脚本)");
 				if (res != null) {
-					SceneTriggerScriptable sts = new SceneTriggerScriptable();
-					sts.name = res.toString();
-					TriggerNode trigger = new TriggerNode(sts);
-					addTrigger(trigger);
-					tree.reload(TriggerGenerateTreeNode.this);
+					try {
+						SceneTriggerScriptable sts = new SceneTriggerScriptable(root_object, res.toString());
+						TriggerNode trigger = new TriggerNode(sts);
+						addTrigger(trigger);
+						tree.reload(TriggerGenerateTreeNode.this);
+					} catch (Exception err) {
+						JOptionPane.showMessageDialog(tree, "重复的名字!");
+					}
+				}
+			}
+			if (e.getSource() == item_add_editable_trigger) {
+				Object res = JOptionPane.showInputDialog(tree, "输入名字", "未命名触发器(编辑)");
+				if (res != null) {
+					try {
+						SceneTriggerEditable sts = new SceneTriggerEditable(root_object, res.toString());
+						TriggerNode trigger = new TriggerNode(sts);
+						addTrigger(trigger);
+						tree.reload(TriggerGenerateTreeNode.this);
+					} catch (Exception err) {
+						JOptionPane.showMessageDialog(tree, "重复的名字!");
+					}
 				}
 			}
 		}
@@ -156,22 +180,27 @@ public class TriggerGenerateTreeNode extends G2DTreeNode<G2DTreeNode<?>>
 			if (trigger instanceof SceneTriggerScriptable) {
 				edit_page = new TriggerPanelScriptable(
 						(SceneTriggerScriptable)trigger,
-						trigger_object_type
-						);
+						trigger_object_type);
 			} else {
-				
+				edit_page = new TriggerPanelEditable(
+						(SceneTriggerEditable)trigger,
+						trigger_object_type);
 			}
 		}
 		
 		@Override
 		protected ImageIcon createIcon() {
-			return new ImageIcon(Res.icon_action);
+			if (trigger instanceof SceneTriggerScriptable) {
+				return new ImageIcon(Res.icon_action);
+			} else {
+				return new ImageIcon(Res.icon_condition);
+			}
 		}
 		
 		@Override
 		public String getName() {
 			if (trigger != null) {
-				return trigger.name+"";
+				return trigger.getName();
 			}
 			return "null";
 		}
@@ -205,7 +234,7 @@ public class TriggerGenerateTreeNode extends G2DTreeNode<G2DTreeNode<?>>
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (e.getSource() == delete) {
-					if (JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(tree, "confirm ?")) {
+					if (JOptionPane.OK_OPTION == JOptionPane.showConfirmDialog(tree, "确定 ?")) {
 						removeTrigger(TriggerNode.this);
 						tree.reload(TriggerGenerateTreeNode.this);
 					}
@@ -213,9 +242,12 @@ public class TriggerGenerateTreeNode extends G2DTreeNode<G2DTreeNode<?>>
 				else if (e.getSource() == rename) {
 					Object res = JOptionPane.showInputDialog(tree, "输入名字", TriggerNode.this.getName());
 					if (res != null) {
-						TriggerNode.this.trigger.name = res.toString();
-						tree.reload(TriggerNode.this);
-						tree.repaint();
+						if (TriggerNode.this.trigger.setName(root_object, res.toString())) {
+							tree.reload(TriggerNode.this);
+							tree.repaint();
+						} else {
+							JOptionPane.showMessageDialog(tree, "重复的名字!");
+						}
 					}
 				}
 			}

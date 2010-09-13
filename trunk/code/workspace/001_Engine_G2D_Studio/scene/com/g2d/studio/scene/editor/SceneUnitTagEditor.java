@@ -1,5 +1,7 @@
 package com.g2d.studio.scene.editor;
 
+import java.io.File;
+
 import com.g2d.editor.DisplayObjectEditor;
 import com.g2d.game.rpg.Unit;
 import com.g2d.studio.res.Res;
@@ -17,6 +19,7 @@ public class SceneUnitTagEditor extends DisplayObjectEditor<Unit>
 	TriggersEditor triggers_editor;
 	
 	public SceneUnitTagEditor(
+			SceneEditor se,
 			SceneUnitTag<?> unit, 
 			AbilityCellEditAdapter<?> ... adapters)
 	{
