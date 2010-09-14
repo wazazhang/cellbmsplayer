@@ -279,7 +279,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 						scene_container.getWorld().addChild(unit_tag.getGameUnit());
 						load_triggers(unit_tag.getUnit(), 
 								getSceneChildsDir(),
-								scene_node.getData().getName());
+								scene_node.getData().getIntID()+"");
 					}
 				} catch (Throwable err) {
 					err.printStackTrace();
@@ -311,7 +311,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 				scene_node.getData().scene_units.add(tag.onWrite());
 				save_triggers(tag.getUnit(),
 						getSceneChildsDir(),
-						scene_node.getData().getName());
+						scene_node.getData().getIntID()+"");
 			} catch (Throwable err) {
 				err.printStackTrace();
 			}

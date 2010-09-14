@@ -133,7 +133,7 @@ public class TriggerGenerateTreeNode extends G2DTreeNode<G2DTreeNode<?>>
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() == item_add_scriptable_trigger) {
-				Object res = JOptionPane.showInputDialog(tree, "输入名字", "未命名触发器(脚本)");
+				Object res = JOptionPane.showInputDialog(tree, "输入名字", "UnamedScript");
 				if (res != null) {
 					try {
 						SceneTriggerScriptable sts = new SceneTriggerScriptable(root_object, res.toString());
@@ -146,7 +146,7 @@ public class TriggerGenerateTreeNode extends G2DTreeNode<G2DTreeNode<?>>
 				}
 			}
 			if (e.getSource() == item_add_editable_trigger) {
-				Object res = JOptionPane.showInputDialog(tree, "输入名字", "未命名触发器(编辑)");
+				Object res = JOptionPane.showInputDialog(tree, "输入名字", "UnamedEditor");
 				if (res != null) {
 					try {
 						SceneTriggerEditable sts = new SceneTriggerEditable(root_object, res.toString());
@@ -180,11 +180,13 @@ public class TriggerGenerateTreeNode extends G2DTreeNode<G2DTreeNode<?>>
 			if (trigger instanceof SceneTriggerScriptable) {
 				edit_page = new TriggerPanelScriptable(
 						(SceneTriggerScriptable)trigger,
-						trigger_object_type);
+						trigger_object_type,
+						root_object);
 			} else {
 				edit_page = new TriggerPanelEditable(
 						(SceneTriggerEditable)trigger,
-						trigger_object_type);
+						trigger_object_type,
+						root_object);
 			}
 		}
 		
