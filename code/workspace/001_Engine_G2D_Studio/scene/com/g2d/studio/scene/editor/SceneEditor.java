@@ -245,16 +245,17 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 	public SceneNode getSceneNode() {
 		return scene_node;
 	}
-	
-	public File getSceneChildsDir() {		
+
+	public File getSceneChildsRoot() {		
 		File scene_root = new File(Studio.getInstance().project_save_path, "scenes");
-		return new File(scene_root, this.scene_node.getID());
+		return new File(scene_root, "scene_"+scene_node.getIntID());
 	}
 	
 	@SuppressWarnings("unchecked")
 	private void load()
 	{
-		load_triggers(getSceneNode().getData(), getSceneChildsDir(), null);
+		Studio.getInstance().getSceneScriptManager().loadTriggers(
+				getSceneNode().getData(), getSceneChildsRoot());
 		
 		if (scene_node.getData().scene_units!=null) {
 			for (SceneUnit unit : scene_node.getData().scene_units) {
@@ -277,9 +278,8 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 					}
 					if (unit_tag != null) {
 						scene_container.getWorld().addChild(unit_tag.getGameUnit());
-						load_triggers(unit_tag.getUnit(), 
-								getSceneChildsDir(),
-								scene_node.getData().getIntID()+"");
+						Studio.getInstance().getSceneScriptManager().loadTriggers(
+								unit_tag.getUnit(), getSceneChildsRoot());
 					}
 				} catch (Throwable err) {
 					err.printStackTrace();
@@ -297,7 +297,8 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 	@SuppressWarnings("unchecked")
 	private void save()
 	{
-		save_triggers(getSceneNode().getData(), getSceneChildsDir(), null);
+		Studio.getInstance().getSceneScriptManager().saveTriggers(
+				getSceneNode().getData(), getSceneChildsRoot());
 		
 		Vector<SceneUnitTag> list = scene_container.getWorld().getChildsSubClass(SceneUnitTag.class);
 		for (SceneUnitTag tag : list) {
@@ -309,9 +310,8 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		for (SceneUnitTag tag : list) {
 			try {
 				scene_node.getData().scene_units.add(tag.onWrite());
-				save_triggers(tag.getUnit(),
-						getSceneChildsDir(),
-						scene_node.getData().getIntID()+"");
+				Studio.getInstance().getSceneScriptManager().saveTriggers(
+						tag.getUnit(), getSceneChildsRoot());
 			} catch (Throwable err) {
 				err.printStackTrace();
 			}
@@ -330,35 +330,6 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		}
 	}
 	
-	private void load_triggers(TriggerGenerator tg, File root, String prefix) {
-		try {
-			for (SceneTrigger st : tg.getTriggers()) {
-				if (st instanceof SceneTriggerScriptable) {
-					SceneTriggerScriptable sts = (SceneTriggerScriptable) st;
-					File sf = Studio.getInstance().getSceneScriptManager().createTemplateScriptFile(
-							root, prefix, tg, sts);
-					sts.loadEditScript(sf);
-				}
-			}
-		} catch (Exception err) {
-			err.printStackTrace();
-		}
-	}
-	
-	private void save_triggers(TriggerGenerator tg, File root, String prefix) {
-		try {
-			for (SceneTrigger st : tg.getTriggers()) {
-				if (st instanceof SceneTriggerScriptable) {
-					SceneTriggerScriptable sts = (SceneTriggerScriptable) st;
-					File sf = Studio.getInstance().getSceneScriptManager().createTemplateScriptFile(
-							root, prefix, tg, sts);
-					sts.saveEditScript(sf);
-				}
-			}
-		} catch (Exception err) {
-			err.printStackTrace();
-		}
-}
 	
 	@SuppressWarnings("unchecked")
 	public ArrayList<SceneUnit> getRuntimeUnits() {

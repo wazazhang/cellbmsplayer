@@ -11,6 +11,8 @@ import java.util.Set;
 
 import com.cell.CObject;
 import com.cell.CUtil;
+import com.cell.rpg.scene.Scene;
+import com.cell.rpg.scene.SceneTrigger;
 import com.cell.rpg.scene.SceneTriggerScriptable;
 import com.cell.rpg.scene.TriggerGenerator;
 import com.cell.rpg.scene.script.anno.EventMethod;
@@ -75,28 +77,15 @@ public abstract class SceneScriptManager
 		return false;
 	}
 	
-	public File createTemplateScriptFile(
-			File root,
-			String prefix, 
-			TriggerGenerator tg, 
-			SceneTriggerScriptable sts) 
-	{
-		return new File(root,
-				((prefix == null || prefix.isEmpty()) ? "" : (prefix + "."))
-				+ tg.getTriggerObjectName() + "."
-				+ sts.getName() + ".js");
-	}
-	
-
 	/**
 	 * 创建脚本模板
 	 * @param event_type
 	 * @return
 	 */
 	public String createTemplateScript(
-			Class<? extends Event> event_type, 
-			TriggerGenerator tg, 
-			SceneTriggerScriptable sts) 
+			Class<? extends Event> 	event_type, 
+			TriggerGenerator 		tg, 
+			SceneTriggerScriptable 	sts) 
 	{
 		EventType et = event_type.getAnnotation(EventType.class);
 		StringBuilder sb = new StringBuilder();
@@ -147,6 +136,55 @@ public abstract class SceneScriptManager
 		}
 		
 		return sb.toString();
+	}
+
+//	-----------------------------------------------------------------------------------------------------------------------
+	
+	private File createTemplateScriptFile(
+			File 					root,
+			TriggerGenerator 		tg, 
+			SceneTriggerScriptable 	sts) 
+	{
+		if (tg instanceof Scene) {
+			return new File(root, 
+					tg.getClass().getSimpleName() + "." + 
+					sts.getName() + ".js");
+		} else {
+			return new File(root, 
+					tg.getClass().getSimpleName() + "." + 
+					tg.getTriggerObjectName() + "." + 
+					sts.getName() + ".js");
+		}
+	}
+	
+	public void loadTriggers(TriggerGenerator tg, File root) {
+		try {
+			for (SceneTrigger st : tg.getTriggers()) {
+				if (st instanceof SceneTriggerScriptable) {
+					SceneTriggerScriptable sts = (SceneTriggerScriptable) st;
+					File sf = Studio.getInstance().getSceneScriptManager().createTemplateScriptFile(
+							root, tg, sts);
+					sts.loadEditScript(sf);
+				}
+			}
+		} catch (Exception err) {
+			err.printStackTrace();
+		}
+	}
+	
+	public void saveTriggers(TriggerGenerator tg, File root) {
+		try {
+			for (SceneTrigger st : tg.getTriggers()) {
+				if (st instanceof SceneTriggerScriptable) {
+					SceneTriggerScriptable sts = (SceneTriggerScriptable) st;
+					File sf = Studio.getInstance().getSceneScriptManager().createTemplateScriptFile(
+							root, tg, sts);
+					sts.saveEditScript(sf);
+				}
+			}
+		} catch (Exception err) {
+			err.printStackTrace();
+		}
 	}
 	
 }
