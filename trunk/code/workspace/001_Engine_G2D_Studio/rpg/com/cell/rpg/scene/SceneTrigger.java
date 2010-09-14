@@ -1,6 +1,8 @@
 package com.cell.rpg.scene;
 
+import java.io.ObjectStreamException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Set;
 import java.util.SortedSet;
@@ -30,8 +32,8 @@ abstract public class SceneTrigger implements Serializable, Comparator<Class<?>>
 	
 	transient private TreeSet<Class<? extends Event>> event_types;
 	
-	private TreeSet<String> event_types_name = new TreeSet<String>(CUtil.getStringCompare());
-
+	private ArrayList<String> event_names = new ArrayList<String>();
+		
 //	------------------------------------------------------------------------------------------------------
 	
 	public SceneTrigger(TriggerGenerator parent, String name) throws Exception
@@ -40,7 +42,16 @@ abstract public class SceneTrigger implements Serializable, Comparator<Class<?>>
 			throw new Exception("duplicate name in : " + parent.getTriggerObjectName());
 		}
 	}
+	
+	final protected Object writeReplace() throws ObjectStreamException {
+		
+		return this;
+	}
+	final protected Object readResolve() throws ObjectStreamException {
+		return this;
+	}
 
+	
 	public String getName() {
 		return name;
 	}
@@ -58,19 +69,19 @@ abstract public class SceneTrigger implements Serializable, Comparator<Class<?>>
 	
 	public boolean addTriggerEvent(Class<? extends Event> event) {
 		event_types = null;
-		return event_types_name.add(event.getName());
+		return event_names.add(event.getName());
 	}
 	
 	public boolean removeTriggerEvent(Class<? extends Event> event) {
 		event_types = null;
-		return event_types_name.remove(event.getName());
+		return event_names.remove(event.getName());
 	}
 	
 	@SuppressWarnings("unchecked")
 	public SortedSet<Class<? extends Event>> getEventTypes() {
 		if (event_types == null) {
 			event_types = new TreeSet<Class<? extends Event>>(this);
-			for (String tn : event_types_name) {
+			for (String tn : event_names) {
 				try {
 					event_types.add((Class<? extends Event>)Class.forName(tn));
 				} catch(Exception err) {
