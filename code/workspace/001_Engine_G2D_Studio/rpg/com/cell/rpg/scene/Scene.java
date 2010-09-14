@@ -25,6 +25,8 @@ public class Scene extends RPGObject implements NamedObject, TriggerGenerator
 
 	private ArrayList<SceneTrigger>		scene_triggers = new ArrayList<SceneTrigger>();
 
+	private Triggers					player_triggers = new Triggers("player");
+	
 //	------------------------------------------------------------------------------------------------------------------
 	
 	@Property("场景背景音乐")
@@ -56,6 +58,9 @@ public class Scene extends RPGObject implements NamedObject, TriggerGenerator
 		if (scene_triggers == null) {
 			scene_triggers = new ArrayList<SceneTrigger>();
 		}
+		if (player_triggers == null) {
+			player_triggers = new Triggers("player");
+		}
 	}
 	
 	final public int getIntID() {
@@ -79,6 +84,10 @@ public class Scene extends RPGObject implements NamedObject, TriggerGenerator
 		return null;
 	}
 
+	public Triggers getPlayerTriggers() {
+		return player_triggers;
+	}
+	
 //	------------------------------------------------------------------------------------------------------------------
 	
 	public String getTriggerObjectName() {

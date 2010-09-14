@@ -4,12 +4,14 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collections;
 import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
+import com.cell.CUtil;
 import com.cell.rpg.scene.script.Scriptable;
 import com.cell.rpg.scene.script.anno.EventType;
 import com.cell.rpg.scene.script.trigger.Event;
@@ -85,10 +87,11 @@ public class SelectEventDialog extends AbstractOptionDialog<Class<? extends Even
 	 		for (Class<? extends Event> evt : Studio.getInstance().getSceneScriptManager().getEvents(trigger_unit_type)) {
 	 			ret.add(new EventTypeItem(evt));
 	 		}
+	 		Collections.sort(ret);
 	 		return ret;
 	 	}
 	 	
-	 	static class EventTypeItem
+	 	static class EventTypeItem implements Comparable<EventTypeItem>
 	 	{
 	 		Class<? extends Event> type;
 	 		public EventTypeItem(Class<? extends Event> type) {
@@ -98,6 +101,10 @@ public class SelectEventDialog extends AbstractOptionDialog<Class<? extends Even
 	 		public String toString() {
 	 			EventType tp = type.getAnnotation(EventType.class);
 	 			return tp.comment();
+	 		}
+	 		@Override
+	 		public int compareTo(EventTypeItem o) {
+	 			return CUtil.getStringCompare().compare(o.type.getName(), this.type.getName());
 	 		}
 	 	}
 	 }
