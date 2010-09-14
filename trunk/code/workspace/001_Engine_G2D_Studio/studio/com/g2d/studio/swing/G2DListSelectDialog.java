@@ -24,7 +24,7 @@ public abstract class G2DListSelectDialog<T extends G2DListItem>  extends Abstra
 	
 	T object;
 	
-	public G2DListSelectDialog(Component owner, G2DList<T> list)
+	public G2DListSelectDialog(Component owner, G2DList<T> list, T default_value)
 	{
 		super(owner);
 		super.setLayout(new BorderLayout());
@@ -36,6 +36,8 @@ public abstract class G2DListSelectDialog<T extends G2DListItem>  extends Abstra
 		this.list.setVisibleRowCount(list.getModel().getSize()/5+1);
 		this.add(new JScrollPane(list), BorderLayout.CENTER);
 		
+		this.object = default_value;
+		
 		{
 			JPanel south = new JPanel(new FlowLayout());
 			
@@ -46,6 +48,10 @@ public abstract class G2DListSelectDialog<T extends G2DListItem>  extends Abstra
 			cancel.addActionListener(this);
 			
 			this.add(south, BorderLayout.SOUTH);
+		}
+		
+		if (default_value != null) {
+			list.setSelectedValue(default_value, true);
 		}
 	}
 	

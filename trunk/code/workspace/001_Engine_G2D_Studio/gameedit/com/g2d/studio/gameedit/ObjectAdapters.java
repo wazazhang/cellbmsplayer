@@ -243,7 +243,10 @@ public class ObjectAdapters
 		public PropertyCellEdit<?> getCellEdit(ObjectPropertyEdit owner, Object editObject, Object fieldValue, Field field) {
 			if (editObject instanceof TItem) {
 				if (field.getName().equals("item_properties_id")) {
-					ItemPropertiesSelectCellEdit edit = new ItemPropertiesSelectCellEdit(owner.getComponent());
+					ItemPropertiesSelectCellEdit edit = new ItemPropertiesSelectCellEdit(
+							owner.getComponent(), 
+							Studio.getInstance().getItemManager().getNode((Integer)fieldValue)
+							);
 					edit.setValue((Integer)fieldValue);
 					edit.showDialog();
 					return edit;

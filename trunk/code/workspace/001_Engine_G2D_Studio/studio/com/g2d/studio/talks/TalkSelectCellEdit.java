@@ -14,8 +14,8 @@ public class TalkSelectCellEdit extends TalkSelectDialog implements PropertyCell
 	
 	JLabel	edit_label 	= new JLabel();
 	
-	public TalkSelectCellEdit(Window owner) {
-		super(owner);
+	public TalkSelectCellEdit(Window owner, TalkFile dv) {
+		super(owner, dv);
 	}
 	
 	@Override

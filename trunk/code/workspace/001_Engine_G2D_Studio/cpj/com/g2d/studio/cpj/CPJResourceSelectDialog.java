@@ -11,7 +11,10 @@ public class CPJResourceSelectDialog<T extends CPJObject<?>> extends G2DListSele
 	private static final long serialVersionUID = 1L;
 	@SuppressWarnings("unchecked")
 	public CPJResourceSelectDialog(Component window, CPJResourceType type) {
-		super(window, (CPJResourceList<T>)Studio.getInstance().getCPJResourceManager().createObjectsPanel(type));
+		super(window, 
+				(CPJResourceList<T>)Studio.getInstance().getCPJResourceManager().createObjectsPanel(type),
+				null
+		);
 		super.setTitle("选择一个资源");
 	}
 }

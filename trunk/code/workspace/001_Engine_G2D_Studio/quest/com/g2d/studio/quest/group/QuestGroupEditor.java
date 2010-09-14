@@ -57,7 +57,7 @@ public class QuestGroupEditor extends JPanel implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btn_add_quest) {
-			QuestSelectCellEdit dialog = new QuestSelectCellEdit(this, false);
+			QuestSelectCellEdit dialog = new QuestSelectCellEdit(this, false, null);
 			QuestNode node = dialog.showDialog();
 			if (node != null) {
 				list_data.add(node);

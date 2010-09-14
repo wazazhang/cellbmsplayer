@@ -9,14 +9,14 @@ public class IconSelectDialog extends G2DListSelectDialog<IconFile>
 {
 	private static final long serialVersionUID = 1L;
 	
-	public IconSelectDialog()
+	public IconSelectDialog(IconFile dv)
 	{
-		super(Studio.getInstance().getIconManager(), new IconList());
+		super(Studio.getInstance().getIconManager(), new IconList(), dv);
 		super.setTitle("选择一个图标");
 	}
 	
-	public IconSelectDialog(Window owner) {
-		super(owner, new IconList());
+	public IconSelectDialog(Window owner, IconFile dv) {
+		super(owner, new IconList(), dv);
 		super.setTitle("选择一个图标");
 	}
 }

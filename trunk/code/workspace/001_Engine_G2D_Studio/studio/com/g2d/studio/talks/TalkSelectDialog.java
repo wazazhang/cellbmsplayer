@@ -9,14 +9,14 @@ public class TalkSelectDialog extends G2DListSelectDialog<TalkFile>
 {
 	private static final long serialVersionUID = 1L;
 	
-	public TalkSelectDialog()
+	public TalkSelectDialog(TalkFile dv)
 	{
-		super(Studio.getInstance().getTalkManager(), new TalkList());
+		super(Studio.getInstance().getTalkManager(), new TalkList(), dv);
 		super.setTitle("选择一个对话");
 	}
 	
-	public TalkSelectDialog(Component owner) {
-		super(owner, new TalkList());
+	public TalkSelectDialog(Component owner, TalkFile dv) {
+		super(owner, new TalkList(), dv);
 		super.setTitle("选择一个对话");
 	}
 }

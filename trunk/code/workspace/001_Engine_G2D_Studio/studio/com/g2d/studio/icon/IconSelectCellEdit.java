@@ -12,8 +12,8 @@ public class IconSelectCellEdit extends IconSelectDialog implements PropertyCell
 {
 	JLabel	edit_label 	= new JLabel();
 	
-	public IconSelectCellEdit(Window owner) {
-		super(owner);
+	public IconSelectCellEdit(Window owner, IconFile dv) {
+		super(owner, dv);
 	}
 	
 	@Override
