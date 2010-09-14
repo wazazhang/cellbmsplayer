@@ -16,8 +16,8 @@ public class ItemPropertiesSelectCellEdit extends G2DListSelectDialog<ItemProper
 {
 	JLabel cell_edit_component = new JLabel();
 	
-	public ItemPropertiesSelectCellEdit(Component owner) {
-		super(owner, new ItemPropertiesList());
+	public ItemPropertiesSelectCellEdit(Component owner, ItemPropertiesNode dv) {
+		super(owner, new ItemPropertiesList(), dv);
 	}
 	
 	@Override

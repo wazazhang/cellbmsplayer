@@ -15,7 +15,7 @@ public class QuestItemSelectCellEdit extends G2DListSelectDialog<QuestItemNode> 
 	JLabel cell_edit_component = new JLabel();
 	
 	public QuestItemSelectCellEdit(Window owner, int quest_id) {
-		super(owner, new QuestNode.QuestItemList(quest_id));
+		super(owner, new QuestNode.QuestItemList(quest_id), null);
 	}
 	
 	@Override

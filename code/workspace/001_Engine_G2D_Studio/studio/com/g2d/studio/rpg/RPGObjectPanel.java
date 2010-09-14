@@ -101,7 +101,9 @@ public class RPGObjectPanel extends JPanel
 //				System.out.println("IconSelectAdapter getCellEdit");
 				if (field.getName().equals("icon_index")) {
 					IconSelectCellEdit edit = new IconSelectCellEdit(
-							AbstractDialog.getTopWindow(RPGObjectPanel.this));
+							AbstractDialog.getTopWindow(RPGObjectPanel.this),
+							Studio.getInstance().getIconManager().getIcon((String)fieldValue)
+							);
 					edit.showDialog();
 					return edit;
 				}

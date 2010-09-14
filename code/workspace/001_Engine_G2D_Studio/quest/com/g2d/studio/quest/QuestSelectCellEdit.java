@@ -6,6 +6,7 @@ import javax.swing.JLabel;
 
 import com.g2d.editor.property.ObjectPropertyEdit;
 import com.g2d.editor.property.PropertyCellEdit;
+import com.g2d.studio.Studio;
 import com.g2d.studio.swing.G2DListSelectDialog;
 
 @SuppressWarnings("serial")
@@ -16,8 +17,10 @@ public class QuestSelectCellEdit extends G2DListSelectDialog<QuestNode> implemen
 	/**
 	 * @param not_transient 是否排除所有临时任务
 	 */
-	public QuestSelectCellEdit(Component owner, boolean not_transient) {
-		super(owner, new QuestList(not_transient));
+	public QuestSelectCellEdit(Component owner, boolean not_transient, Integer dv) {
+		super(owner, 
+				new QuestList(not_transient), 
+				Studio.getInstance().getQuestManager().getQuest(dv));
 	}
 	
 	@Override

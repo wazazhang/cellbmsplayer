@@ -52,7 +52,8 @@ public class PropertyAdapters
 					case ITEM_LIST_ID:
 						return new ObjectSelectCellEditInteger<DItemList>(DItemList.class, fieldValue);
 					case QUEST_ID:
-						QuestSelectCellEdit dialog = new QuestSelectCellEdit(owner.getComponent(), false);
+						QuestSelectCellEdit dialog = new QuestSelectCellEdit(owner.getComponent(), false,
+								(Integer)fieldValue);
 						dialog.showDialog();
 						return dialog;
 					case SKILL_ID:

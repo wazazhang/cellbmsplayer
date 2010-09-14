@@ -434,7 +434,7 @@ public class SceneAbilityAdapters
 		public PropertyCellEdit<?> getCellEdit(ObjectPropertyEdit owner,
 				Object editObject, Object fieldValue, Field field) {
 			if (field.getName().equals("npc_talk")){
-				NpcTalkSelecDialog talk = new NpcTalkSelecDialog(owner.getComponent());
+				NpcTalkSelecDialog talk = new NpcTalkSelecDialog(owner.getComponent(), fieldValue+"");
 				talk.showDialog();
 				return talk;
 			}
@@ -477,7 +477,7 @@ public class SceneAbilityAdapters
 				Object editObject, Object fieldValue, Field field) {
 			if (field.getName().equals("npc_talk")){
 				if (editObject instanceof IActorAbility) {
-					NpcTalkSelecDialog talk = new NpcTalkSelecDialog(owner.getComponent());
+					NpcTalkSelecDialog talk = new NpcTalkSelecDialog(owner.getComponent(), fieldValue+"");
 					talk.showDialog();
 					return talk;
 				}
@@ -491,9 +491,9 @@ public class SceneAbilityAdapters
 		private static final long serialVersionUID = 1L;
 		
 		JLabel talk_name = new JLabel();
-		
-		public NpcTalkSelecDialog(Component owner) {
-			super(owner);
+	
+		public NpcTalkSelecDialog(Component owner, String dv) {
+			super(owner, Studio.getInstance().getTalkManager().getTalk(dv));
 		}
 		@Override
 		public Component getComponent(ObjectPropertyEdit panel) {

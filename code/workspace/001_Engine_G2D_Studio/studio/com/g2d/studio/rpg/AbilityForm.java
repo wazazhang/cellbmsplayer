@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import com.cell.CIO;
 import com.cell.rpg.ability.Abilities;
 import com.g2d.editor.property.CellEditAdapter;
 import com.g2d.editor.property.ObjectPropertyEdit;
@@ -33,14 +34,17 @@ public class AbilityForm extends AbstractDialog implements PropertyCellEdit<Abil
 	
 	JButton				btn_ok = new JButton("OK");
 	
+	 Abilities		result;
+	
 	public AbilityForm(ObjectPropertyEdit owner, Abilities abilities, CellEditAdapter<?> ... adapters) 
 	{
 		super(owner.getComponent());
 		super.setLayout(new BorderLayout());
-		this.abilities 		= abilities;
-		this.ability_panel = new AbilityPanel(abilities, adapters);
+		this.abilities 		= CIO.cloneObject(abilities);
+		this.result 		= abilities;
+		this.ability_panel = new AbilityPanel(this.abilities, adapters);
 		this.add(ability_panel, BorderLayout.CENTER);
-		this.setTitle(abilities.toString());
+		this.setTitle(this.abilities.toString());
 		this.setIconImage(Res.icon_edit);
 		this.setSize(700, 400);
 		this.setCenter();
@@ -49,14 +53,14 @@ public class AbilityForm extends AbstractDialog implements PropertyCellEdit<Abil
 		south.add(btn_ok);
 		btn_ok.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				result = ability_panel.abilities;
 				AbilityForm.this.setVisible(false);
 			}
 		});
 		this.add(south, BorderLayout.SOUTH);
 		
 		
-		
-		button = new JButton(abilities.toString());
+		button = new JButton(this.abilities.toString());
 		button.setActionCommand("ok");
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -72,7 +76,7 @@ public class AbilityForm extends AbstractDialog implements PropertyCellEdit<Abil
 	}
 	
 	public Abilities getValue() {
-		return ability_panel.abilities;
+		return result;
 	}
 	
 	

@@ -79,7 +79,7 @@ public class SkillPropertiesEditor extends JPanel implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (tool_add_column == e.getSource()) {
-			ItemPropertyNode node = new ItemPropertySelectDialog(this).showDialog();
+			ItemPropertyNode node = new ItemPropertySelectDialog(this, null).showDialog();
 			if (node != null) {
 				ItemPropertyTemplate tt = node.getItemPropertyTemplate();
 				if (tt != null) {

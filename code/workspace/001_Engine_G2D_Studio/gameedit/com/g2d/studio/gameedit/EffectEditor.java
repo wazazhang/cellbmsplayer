@@ -1058,7 +1058,7 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 					affects.repaint();
 				}
 				else if (e.getSource() == btn_add) {
-					DialogAddAffect dialog = new DialogAddAffect(this);
+					DialogAddAffect dialog = new DialogAddAffect(this, null);
 					AffectType type = dialog.showDialog();
 					if (type != null) {
 						try{
@@ -1347,8 +1347,8 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 	
 	static class DialogAddAffect extends G2DListSelectDialog<AffectType>
 	{
-		public DialogAddAffect(Component owner) {
-			super(owner, new G2DList<AffectType>(AffectType.getTypes()));
+		public DialogAddAffect(Component owner, AffectType dv) {
+			super(owner, new G2DList<AffectType>(AffectType.getTypes()), dv);
 			super.getList().setLayoutOrientation(G2DList.VERTICAL_WRAP);
 		}
 	}
