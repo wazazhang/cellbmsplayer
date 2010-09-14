@@ -249,7 +249,8 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 	@SuppressWarnings("unchecked")
 	private void load()
 	{
-		File scene_script_root = new File(Studio.getInstance().project_path, "scene_script");
+		File scene_script_root = new File(Studio.getInstance().project_path, 
+				"scene_script/scene_" + getSceneNode().getIntID());
 
 		Studio.getInstance().getSceneScriptManager().loadTriggers(
 				getSceneNode().getData(), 
@@ -296,7 +297,8 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 	@SuppressWarnings("unchecked")
 	private void save()
 	{
-		File scene_script_root = new File(Studio.getInstance().project_path, "scene_script");
+		File scene_script_root = new File(Studio.getInstance().project_path, 
+				"scene_script/scene_" + getSceneNode().getIntID());
 //		System.out.println(scene_script_root);
 
 		Studio.getInstance().getSceneScriptManager().saveTriggers(
