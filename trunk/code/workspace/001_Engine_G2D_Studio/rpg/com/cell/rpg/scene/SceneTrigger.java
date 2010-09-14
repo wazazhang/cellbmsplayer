@@ -24,7 +24,7 @@ abstract public class SceneTrigger implements Serializable, Comparator<Class<?>>
 	
 	private String 	name;
 	
-	public boolean 	enable = true;
+	private boolean	enable = true;
 	
 	public String	comment = "comment here ....";
 	
@@ -33,7 +33,7 @@ abstract public class SceneTrigger implements Serializable, Comparator<Class<?>>
 	transient private TreeSet<Class<? extends Event>> event_types;
 	
 	private ArrayList<String> event_names = new ArrayList<String>();
-		
+	
 //	------------------------------------------------------------------------------------------------------
 	
 	public SceneTrigger(TriggerGenerator parent, String name) throws Exception
@@ -53,6 +53,14 @@ abstract public class SceneTrigger implements Serializable, Comparator<Class<?>>
 		return this;
 	}
 
+	public void setEnable(boolean enable) {
+		this.enable = enable;
+	}
+	
+	public boolean isEnable() {
+		return this.enable;
+	}
+	
 	
 	public String getName() {
 		return name;
@@ -70,8 +78,12 @@ abstract public class SceneTrigger implements Serializable, Comparator<Class<?>>
 	}
 	
 	public boolean addTriggerEvent(Class<? extends Event> event) {
-		event_types = null;
-		return event_names.add(event.getName());
+		if (!event_names.contains(event.getName())) {		
+			event_types = null;
+			event_names.add(event.getName());
+			return true;
+		}
+		return false;
 	}
 	
 	public boolean removeTriggerEvent(Class<? extends Event> event) {

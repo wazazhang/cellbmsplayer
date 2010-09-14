@@ -25,8 +25,10 @@ import com.cell.rpg.scene.SceneTriggerEditable;
 import com.cell.rpg.scene.SceneTriggerScriptable;
 import com.cell.rpg.scene.SceneUnit;
 import com.cell.rpg.scene.TriggerGenerator;
+import com.cell.rpg.scene.Triggers;
 import com.cell.rpg.scene.script.Scriptable;
 import com.cell.rpg.scene.script.anno.EventType;
+import com.cell.rpg.scene.script.entity.Player;
 import com.cell.rpg.scene.script.trigger.Event;
 import com.g2d.display.ui.TreeView;
 import com.g2d.studio.res.Res;
@@ -43,6 +45,7 @@ public class TriggerGenerateTreeNode extends G2DTreeNode<G2DTreeNode<?>>
 	final Class<? extends Scriptable>	trigger_object_type;
 	
 //	-------------------------------------------------------------------------------------
+
 	public TriggerGenerateTreeNode(SceneEditor se)
 	{
 		this(se.getSceneNode().getData(), com.cell.rpg.scene.script.entity.Scene.class);	
@@ -60,7 +63,14 @@ public class TriggerGenerateTreeNode extends G2DTreeNode<G2DTreeNode<?>>
 				TriggerGenerateTreeNode tn = new TriggerGenerateTreeNode(su, su.getTriggerObjectType());
 				group.add(tn);
 			}
-			this.add(group);
+			this.insert(group, 0);
+		} {
+			G2DDefaultTreeNode players = new G2DDefaultTreeNode(new ImageIcon(Res.icons_bar[4]), "场景玩家");
+			TriggerGenerateTreeNode tn = new TriggerGenerateTreeNode(
+					se.getSceneNode().getData().getPlayerTriggers(), 
+					Player.class);
+			players.add(tn);
+			this.insert(players, 1);
 		}
 	}
 	
@@ -86,6 +96,9 @@ public class TriggerGenerateTreeNode extends G2DTreeNode<G2DTreeNode<?>>
 		}
 		if (root_object instanceof SceneUnit) {
 			return new ImageIcon(Res.icon_hd);
+		}	
+		if (Player.class.isAssignableFrom(trigger_object_type)) {
+			return new ImageIcon(Res.icon_res_2);
 		}
 		return null;
 	}

@@ -246,16 +246,14 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		return scene_node;
 	}
 
-	public File getSceneChildsRoot() {		
-		File scene_root = new File(Studio.getInstance().project_save_path, "scenes");
-		return new File(scene_root, "scene_"+scene_node.getIntID());
-	}
-	
 	@SuppressWarnings("unchecked")
 	private void load()
 	{
+		File scene_script_root = new File(Studio.getInstance().project_path, "scene_script");
+
 		Studio.getInstance().getSceneScriptManager().loadTriggers(
-				getSceneNode().getData(), getSceneChildsRoot());
+				getSceneNode().getData(), 
+				scene_script_root);
 		
 		if (scene_node.getData().scene_units!=null) {
 			for (SceneUnit unit : scene_node.getData().scene_units) {
@@ -279,7 +277,8 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 					if (unit_tag != null) {
 						scene_container.getWorld().addChild(unit_tag.getGameUnit());
 						Studio.getInstance().getSceneScriptManager().loadTriggers(
-								unit_tag.getUnit(), getSceneChildsRoot());
+								unit_tag.getUnit(), 
+								scene_script_root);
 					}
 				} catch (Throwable err) {
 					err.printStackTrace();
@@ -297,8 +296,11 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 	@SuppressWarnings("unchecked")
 	private void save()
 	{
+		File scene_script_root = new File(Studio.getInstance().project_path, "scene_script");
+//		System.out.println(scene_script_root);
+
 		Studio.getInstance().getSceneScriptManager().saveTriggers(
-				getSceneNode().getData(), getSceneChildsRoot());
+				getSceneNode().getData(), scene_script_root);
 		
 		Vector<SceneUnitTag> list = scene_container.getWorld().getChildsSubClass(SceneUnitTag.class);
 		for (SceneUnitTag tag : list) {
@@ -311,7 +313,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 			try {
 				scene_node.getData().scene_units.add(tag.onWrite());
 				Studio.getInstance().getSceneScriptManager().saveTriggers(
-						tag.getUnit(), getSceneChildsRoot());
+						tag.getUnit(), scene_script_root);
 			} catch (Throwable err) {
 				err.printStackTrace();
 			}

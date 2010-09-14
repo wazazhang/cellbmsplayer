@@ -70,7 +70,8 @@ public abstract class SceneScriptManager
 	public boolean asTriggeredObjectType(Class<? extends Event> event_type, Class<? extends Scriptable> trigger_type) {
 		EventType et = event_type.getAnnotation(EventType.class);
 		for (Class<? extends Scriptable> st : et.trigger_type()) {
-			if (st.isAssignableFrom(trigger_type)) {
+			if (trigger_type.isAssignableFrom(st) || 
+				st.isAssignableFrom(trigger_type)) {
 				return true;
 			}
 		}
@@ -91,18 +92,20 @@ public abstract class SceneScriptManager
 		StringBuilder sb = new StringBuilder();
 		String ets = "";
 		for (Class<?> param : et.trigger_type()) {
-			ets += param.getSimpleName() + ", ";
+			ets += param.getSimpleName() + ";";
 		}
-		sb.append("/*******************************************************************************\n");
 		sb.append(
+				"/*******************************************************************************\n"+
 				" Comment         : " + et.comment() + "\n" +
 				" Create On       : " + CObject.timeToString(System.currentTimeMillis()) + "\n" +
 				" Event Class     : " + event_type.getName() + "\n" +
-				" Trigger Objects : " + ets + "\n");
-		sb.append(" *******************************************************************************/\n");
+				" Trigger Objects : " + ets + "\n"+
+				" *******************************************************************************/\n");
 		sb.append("\n");
 		for (Method method : getEventMethods(event_type)) {
 			sb.append("/**\n");
+			EventMethod em = method.getAnnotation(EventMethod.class);
+			sb.append(" * " + CUtil.arrayToString(em.value(), ";") + "\n");
 			Annotation	params_ats[][]	= method.getParameterAnnotations();
 			Class<?> 	params[] 		= method.getParameterTypes();
 			for (int i = 0; i < params.length; i++) {
@@ -110,7 +113,7 @@ public abstract class SceneScriptManager
 				for (Annotation at : params_ats[i]) {
 					if (at.annotationType() == EventParam.class) {
 						EventParam ep = (EventParam)at;
-						sb.append(CUtil.arrayToString(ep.value()));
+						sb.append(CUtil.arrayToString(ep.value(), ";"));
 					}
 				}
 				sb.append("\n");
@@ -184,6 +187,11 @@ public abstract class SceneScriptManager
 			}
 		} catch (Exception err) {
 			err.printStackTrace();
+		} finally {
+			if (tg instanceof Scene) {
+				Scene scene = (Scene)tg;
+				saveTriggers(scene.getPlayerTriggers(), root);
+			}
 		}
 	}
 	
