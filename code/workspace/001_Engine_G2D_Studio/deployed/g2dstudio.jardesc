@@ -11,12 +11,14 @@
         </sealing>
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
+		<file path="/001_Engine_G2D_Studio/deployed/.svn/entries"/>
         <javaElement handleIdentifier="=000_Engine_Core/snd"/>
         <javaElement handleIdentifier="=002_Engine_SQLProxy/src"/>
         <javaElement handleIdentifier="=000_Engine_Core/gfx"/>
         <javaElement handleIdentifier="=001_Engine_G2D_Studio/scene"/>
         <javaElement handleIdentifier="=001_Engine_G2D_Studio/rpg"/>
         <javaElement handleIdentifier="=000_Engine_Sound/src"/>
+        <javaElement handleIdentifier="=001_Engine_G2D_Studio/instancezone"/>
         <javaElement handleIdentifier="=000_Engine_Sound/ogg"/>
         <javaElement handleIdentifier="=001_Engine_G2D_Studio/gameedit"/>
         <javaElement handleIdentifier="=002_Engine_SQLProxy/xstream"/>
