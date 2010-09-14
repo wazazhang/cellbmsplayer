@@ -43,11 +43,13 @@ abstract public class SceneTrigger implements Serializable, Comparator<Class<?>>
 		}
 	}
 	
-	final protected Object writeReplace() throws ObjectStreamException {
-		
+	protected Object writeReplace() throws ObjectStreamException {
 		return this;
 	}
-	final protected Object readResolve() throws ObjectStreamException {
+	protected Object readResolve() throws ObjectStreamException {
+		if (event_names == null) {
+			event_names = new ArrayList<String>();
+		}
 		return this;
 	}
 

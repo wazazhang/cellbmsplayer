@@ -23,6 +23,7 @@ import javax.swing.tree.TreePath;
 
 import com.cell.rpg.scene.SceneTrigger;
 import com.cell.rpg.scene.SceneTriggerScriptable;
+import com.cell.rpg.scene.TriggerGenerator;
 import com.cell.rpg.scene.script.Scriptable;
 import com.cell.rpg.scene.script.anno.EventType;
 import com.cell.rpg.scene.script.trigger.Event;
@@ -37,11 +38,11 @@ import com.g2d.util.TextEditor;
 @SuppressWarnings("serial")
 public abstract class TriggerPanel<T extends SceneTrigger> extends JPanel implements AncestorListener
 {
-	final protected T 			trigger;
-	final protected Class<? extends Scriptable> 
-								trigger_object_type;
+	final protected TriggerGenerator			root_object;
+	final protected T 							trigger;
+	final protected Class<? extends Scriptable> trigger_object_type;
 	
-	final protected TextEditor	comment		= new TextEditor();
+	final protected TextEditor					comment		= new TextEditor();
 	
 	final protected TriggerTreeView 			tree_view;
 	final protected DefaultMutableTreeNode		tree_root;
@@ -54,10 +55,10 @@ public abstract class TriggerPanel<T extends SceneTrigger> extends JPanel implem
 	private JSplitPane		split_h		= new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 	private JPanel			south_h		= new JPanel(new BorderLayout());
 	
-	public TriggerPanel(T trigger, Class<? extends Scriptable> trigger_object_type)
+	public TriggerPanel(T trigger, Class<? extends Scriptable> trigger_object_type, TriggerGenerator root_object)
 	{
 		super(new BorderLayout());
-		
+		this.root_object			= root_object;
 		this.trigger 				= trigger;
 		this.trigger_object_type	= trigger_object_type;
 		

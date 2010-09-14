@@ -93,7 +93,10 @@ public abstract class SceneScriptManager
 	 * @param event_type
 	 * @return
 	 */
-	public String createTemplateScript(Class<? extends Event> event_type) 
+	public String createTemplateScript(
+			Class<? extends Event> event_type, 
+			TriggerGenerator tg, 
+			SceneTriggerScriptable sts) 
 	{
 		EventType et = event_type.getAnnotation(EventType.class);
 		StringBuilder sb = new StringBuilder();
