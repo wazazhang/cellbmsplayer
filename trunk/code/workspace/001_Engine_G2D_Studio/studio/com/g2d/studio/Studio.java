@@ -4,10 +4,12 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FileDialog;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 
 import javax.swing.JButton;
@@ -37,6 +39,8 @@ import com.cell.sql.SQMTypeManager;
 import com.cell.util.concurrent.ThreadPool;
 import com.g2d.Tools;
 import com.g2d.display.ui.layout.UILayoutManager.SimpleLayoutManager;
+import com.g2d.display.ui.text.MultiTextLayout;
+import com.g2d.display.ui.text.TextBuilder;
 import com.g2d.studio.cell.gameedit.Builder;
 import com.g2d.studio.cpj.CPJResourceManager;
 import com.g2d.studio.gameedit.ObjectManager;
@@ -50,6 +54,7 @@ import com.g2d.studio.scene.SceneManager;
 import com.g2d.studio.sound.SoundManager;
 import com.g2d.studio.talks.TalkManager;
 import com.g2d.util.AbstractFrame;
+import com.g2d.util.Drawing;
 import com.g2d.util.Util;
 
 public class Studio extends AbstractFrame
@@ -326,7 +331,18 @@ public class Studio extends AbstractFrame
 			});
 			tool_bar_1.add(btn);
 		}
-
+		// about
+		{
+			JButton btn = new JButton();
+			btn.setToolTipText("About");
+			btn.setIcon(Tools.createIcon(Res.icon_edit));
+			btn.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent e) {
+					new VersionFrame().setVisible(true);
+				}
+			});
+			tool_bar_1.add(btn);
+		}
 		JPanel tool_bar = new JPanel(new BorderLayout());
 		tool_bar.add(tool_bar_1, BorderLayout.NORTH);
 		tool_bar.add(tool_bar_2, BorderLayout.SOUTH);
@@ -502,8 +518,8 @@ public class Studio extends AbstractFrame
 		private static final long serialVersionUID = 1L;
 		private JProgressBar progress = new JProgressBar();
 
-		JLabel lbl_title 	= new JLabel("初始化中...");
-		JLabel back 		= new JLabel(Tools.createIcon(Res.img_splash));
+		JLabel lbl_title;
+		JLabel back;
 		
 		public ProgressForm()
 		{
@@ -515,6 +531,22 @@ public class Studio extends AbstractFrame
 			
 			progress.setStringPainted(true);
 			
+			lbl_title 	= new JLabel("初始化中...");
+			BufferedImage back_image = Tools.cloneImage(Res.img_splash);
+			try {
+				MultiTextLayout text = new MultiTextLayout();
+				text.appendText(TextBuilder.buildScript(
+						"[anti:1]" + Version.getFullVersion() + ""
+				));
+				text.is_read_only = true;
+				text.is_show_caret = false;
+				text.setWidth(getWidth()-2);
+				Graphics2D g2d = back_image.createGraphics();
+				Drawing.drawStringShwdow(g2d, text, 1, 1, getWidth()-2, getHeight()-2, 0);
+				g2d.dispose();
+			} catch (Throwable ex) {}
+			back 		= new JLabel(Tools.createIcon(back_image));
+			 
 			this.add(lbl_title, BorderLayout.NORTH);
 			this.add(back, BorderLayout.CENTER);
 			this.add(progress, BorderLayout.SOUTH);	
