@@ -36,10 +36,10 @@ abstract public class SceneTrigger implements Serializable, Comparator<Class<?>>
 	
 //	------------------------------------------------------------------------------------------------------
 	
-	public SceneTrigger(TriggerGenerator parent, String name) throws Exception
+	public SceneTrigger(Triggers parent, String name) throws Exception
 	{
 		if (!setName(parent, name) ) {
-			throw new Exception("duplicate name in : " + parent.getTriggerObjectName());
+			throw new Exception("duplicate name in : " + name);
 		}
 	}
 	
@@ -66,7 +66,7 @@ abstract public class SceneTrigger implements Serializable, Comparator<Class<?>>
 		return name;
 	}
 
-	public boolean setName(TriggerGenerator parent, String name) 
+	public boolean setName(Triggers parent, String name) 
 	{
 		for (SceneTrigger st : parent.getTriggers()) {
 			if (st != this && st.getName().equals(name)) {

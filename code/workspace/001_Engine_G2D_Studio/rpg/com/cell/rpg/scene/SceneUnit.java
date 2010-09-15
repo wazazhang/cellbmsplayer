@@ -13,7 +13,7 @@ import com.cell.rpg.scene.script.trigger.Event;
 import com.cell.rpg.struct.QuestStateDisplayOR;
 import com.g2d.annotation.Property;
 
-public abstract class SceneUnit extends RPGObject implements TriggerGenerator
+public abstract class SceneUnit extends RPGObject
 {
 	/** scene graph 结构的视图 */
 	public String 						name	= "no name";
@@ -24,7 +24,7 @@ public abstract class SceneUnit extends RPGObject implements TriggerGenerator
 	@Property("任务依赖显示条件 (覆盖TUnit)")
 	public QuestStateDisplayOR 			quest_display = null;
 	
-	private ArrayList<SceneTrigger>		scene_triggers = new ArrayList<SceneTrigger>();
+	private TriggerGenerator			binded_triggers = new TriggerGenerator();
 	
 	public SceneUnit(String id) {
 		super(id);
@@ -33,8 +33,8 @@ public abstract class SceneUnit extends RPGObject implements TriggerGenerator
 	@Override
 	protected void init_transient() {
 		super.init_transient();
-		if (scene_triggers == null) {
-			scene_triggers = new ArrayList<SceneTrigger>();
+		if (binded_triggers == null) {
+			binded_triggers = new TriggerGenerator();
 		}
 	}
 
@@ -50,27 +50,8 @@ public abstract class SceneUnit extends RPGObject implements TriggerGenerator
 	
 	abstract public Class<? extends com.cell.rpg.scene.script.entity.SceneUnit>	getTriggerObjectType();
 
-	public boolean addTrigger(SceneTrigger st) {
-		for (SceneTrigger s : getTriggers()) {
-			if (s.getName().equals(st.getName())) {
-				return false;
-			}
-		}
-		scene_triggers.add(st);
-		return true;
-	}
-	
-	@Override
-	public boolean removeTrigger(SceneTrigger st) {
-		return scene_triggers.remove(st);
-	}
-	
-	public int getTriggerCount(){
-		return scene_triggers.size();
-	}
-	
-	public ArrayList<SceneTrigger> getTriggers(){
-		return new ArrayList<SceneTrigger>(scene_triggers);
+	public TriggerGenerator getBindedTriggers() {
+		return binded_triggers;
 	}
 	
 //	------------------------------------------------------------------------------------------------------------------
