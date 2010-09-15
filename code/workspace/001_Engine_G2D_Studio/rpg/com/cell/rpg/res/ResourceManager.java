@@ -535,7 +535,10 @@ public abstract class ResourceManager extends CellSetResourceManager
 	public Vector<TShopItemList> getAllShopItemList() {
 		return new Vector<TShopItemList>(tshopitemlists.values());
 	}
-	
+
+	public Vector<TAvatar> getAllTAvatar() {
+		return new Vector<TAvatar>(tavatars.values());
+	}
 //	--------------------------------------------------------------------------------------------------------------------
 //	ItemProperties
 //	--------------------------------------------------------------------------------------------------------------------
