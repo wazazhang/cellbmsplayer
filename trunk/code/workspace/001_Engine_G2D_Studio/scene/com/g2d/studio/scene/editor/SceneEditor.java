@@ -249,11 +249,10 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 	@SuppressWarnings("unchecked")
 	private void load()
 	{
-		File scene_script_root = new File(Studio.getInstance().project_path, 
-				"scene_script/scene_" + getSceneNode().getIntID());
-
+		File scene_script_root = new File(Studio.getInstance().project_save_path, 
+				"scenes/scene_" + getSceneNode().getIntID());
 		Studio.getInstance().getSceneScriptManager().loadTriggers(
-				getSceneNode().getData(), 
+				getSceneNode().getData().getTriggersPackage(), 
 				scene_script_root);
 		
 		if (scene_node.getData().scene_units!=null) {
@@ -277,16 +276,13 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 					}
 					if (unit_tag != null) {
 						scene_container.getWorld().addChild(unit_tag.getGameUnit());
-						Studio.getInstance().getSceneScriptManager().loadTriggers(
-								unit_tag.getUnit(), 
-								scene_script_root);
 					}
 				} catch (Throwable err) {
 					err.printStackTrace();
 				}
 			}
 		}
-		
+
 		Vector<SceneUnitTag> list = scene_container.getWorld().getChildsSubClass(SceneUnitTag.class);
 		for (SceneUnitTag tag : list) {
 			tag.onReadComplete(list);
@@ -297,13 +293,6 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 	@SuppressWarnings("unchecked")
 	private void save()
 	{
-		File scene_script_root = new File(Studio.getInstance().project_path, 
-				"scene_script/scene_" + getSceneNode().getIntID());
-//		System.out.println(scene_script_root);
-
-		Studio.getInstance().getSceneScriptManager().saveTriggers(
-				getSceneNode().getData(), scene_script_root);
-		
 		Vector<SceneUnitTag> list = scene_container.getWorld().getChildsSubClass(SceneUnitTag.class);
 		for (SceneUnitTag tag : list) {
 			tag.onWriteReady(list);
@@ -314,12 +303,16 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		for (SceneUnitTag tag : list) {
 			try {
 				scene_node.getData().scene_units.add(tag.onWrite());
-				Studio.getInstance().getSceneScriptManager().saveTriggers(
-						tag.getUnit(), scene_script_root);
 			} catch (Throwable err) {
 				err.printStackTrace();
 			}
 		}
+
+		File scene_script_root = new File(Studio.getInstance().project_save_path, 
+				"scenes/scene_" + getSceneNode().getIntID());
+		Studio.getInstance().getSceneScriptManager().saveTriggers(
+				getSceneNode().getData().getTriggersPackage(), 
+				scene_script_root);
 		
 		try {
 			if (scene_node.getWorldDisplay() != null &&
@@ -993,7 +986,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 					sb.append("<html><body>");
 					sb.append("<p>");
 					sb.append(actor.getListName());
-					if (actor.getUnit().getTriggerCount()>0) {
+					if (actor.getUnit().getBindedTriggers().getTriggerCount()>0) {
 						sb.append("<font color=0000ff>(S)</font>");
 					}
 					sb.append("<font color=808080> - " + actor.xls_unit.getName() + "</font>");
@@ -1101,7 +1094,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 					sb.append("<html><body>");
 					sb.append("<p>");
 					sb.append(actor.getListName());	
-					if (actor.getUnit().getTriggerCount()>0) {
+					if (actor.getUnit().getBindedTriggers().getTriggerCount()>0) {
 						sb.append("<font color=0000ff>(S)</font>");
 					}
 					sb.append("<font color=808080> - " + actor.cpj_spr.getName() + "</font>");
@@ -1211,7 +1204,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 					sb.append("<html><body>");
 					sb.append("<p>");
 					sb.append(actor.getListName());	
-					if (actor.getUnit().getTriggerCount()>0) {
+					if (actor.getUnit().getBindedTriggers().getTriggerCount()>0) {
 						sb.append("<font color=0000ff>(S)</font>");
 					}
 					sb.append("</p>");
@@ -1308,7 +1301,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 					sb.append("<html><body>");
 					sb.append("<p>");
 					sb.append(actor.getListName());	
-					if (actor.getUnit().getTriggerCount()>0) {
+					if (actor.getUnit().getBindedTriggers().getTriggerCount()>0) {
 						sb.append("<font color=0000ff>(S)</font>");
 					}
 					sb.append("</p>");
@@ -1394,7 +1387,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 					sb.append("<html><body>");
 					sb.append("<p>");
 					sb.append(actor.getListName());	
-					if (actor.getUnit().getTriggerCount()>0) {
+					if (actor.getUnit().getBindedTriggers().getTriggerCount()>0) {
 						sb.append("<font color=0000ff>(S)</font>");
 					}
 					sb.append("</p>");

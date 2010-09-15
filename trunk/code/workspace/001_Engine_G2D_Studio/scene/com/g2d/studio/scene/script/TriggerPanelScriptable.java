@@ -38,12 +38,9 @@ public class TriggerPanelScriptable extends TriggerPanel<SceneTriggerScriptable>
 //	G2DWindowToolBar	tool_g2d	= new G2DWindowToolBar(this);
 	JLabel				lbl			= new JLabel();
 	
-	public TriggerPanelScriptable(
-			SceneTriggerScriptable 		trigger, 
-			Class<? extends Scriptable>	trigger_object_type,
-			TriggerGenerator 			root_object)
+	public TriggerPanelScriptable(SceneTriggerScriptable trigger)
 	{
-		super(trigger, trigger_object_type, root_object);
+		super(trigger);
 		
 //		tool_g2d.setFloatable(false);
 //		getMainPanel().add(tool_g2d, BorderLayout.NORTH);
@@ -53,7 +50,7 @@ public class TriggerPanelScriptable extends TriggerPanel<SceneTriggerScriptable>
 			text = "";
 			for (Class<? extends Event> evt : trigger.getEventTypes()) {
 				text += Studio.getInstance().getSceneScriptManager().createTemplateScript(
-						evt, root_object, trigger) + "\n";
+						evt, trigger) + "\n";
 			}
 		}
 		script_text.setText(text);
@@ -85,7 +82,7 @@ public class TriggerPanelScriptable extends TriggerPanel<SceneTriggerScriptable>
 		String append =
 			script_text.getText() + 
 			Studio.getInstance().getSceneScriptManager().createTemplateScript(
-					en.evt, root_object, trigger) + "\n";
+					en.evt, trigger) + "\n";
 		script_text.setText(append);
 	}
 

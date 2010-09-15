@@ -3,7 +3,6 @@ package com.g2d.studio.scene.editor;
 import java.awt.BorderLayout;
 
 import com.g2d.studio.res.Res;
-import com.g2d.studio.scene.script.TriggerGenerateTreeNode;
 import com.g2d.studio.scene.script.TriggersEditor;
 import com.g2d.util.AbstractDialog;
 
@@ -19,7 +18,8 @@ public class SceneTriggers extends AbstractDialog
 		super.setCenter();
 		super.setLayout(new BorderLayout());
 		
-		this.triggers = new TriggersEditor(new TriggerGenerateTreeNode(root));
+		this.triggers = new TriggersEditor(
+				root.getSceneNode().getData().getTriggersPackage());
 		this.add(triggers, BorderLayout.CENTER);
 	}
 }

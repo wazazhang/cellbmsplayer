@@ -84,8 +84,14 @@ public class SelectEventDialog extends AbstractOptionDialog<Class<? extends Even
 	 	
 	 	static Vector<EventTypeItem> getList(Class<? extends Scriptable> trigger_unit_type) {
 	 		Vector<EventTypeItem> ret = new Vector<EventTypeItem>();
-	 		for (Class<? extends Event> evt : Studio.getInstance().getSceneScriptManager().getEvents(trigger_unit_type)) {
-	 			ret.add(new EventTypeItem(evt));
+	 		if (trigger_unit_type != null) {
+	 			for (Class<? extends Event> evt : Studio.getInstance().getSceneScriptManager().getEvents(trigger_unit_type)) {
+		 			ret.add(new EventTypeItem(evt));
+		 		}
+	 		} else {
+	 			for (Class<? extends Event> evt : Studio.getInstance().getSceneScriptManager().getEvents()) {
+		 			ret.add(new EventTypeItem(evt));
+		 		}
 	 		}
 	 		Collections.sort(ret);
 	 		return ret;

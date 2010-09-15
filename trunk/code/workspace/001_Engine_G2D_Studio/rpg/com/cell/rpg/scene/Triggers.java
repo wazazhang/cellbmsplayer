@@ -1,18 +1,21 @@
 package com.cell.rpg.scene;
 
+import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.TreeMap;
 
 import com.cell.CUtil;
 
-public class Triggers implements Serializable, Comparator<String>
+public class Triggers implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
-	private TreeMap<String, SceneTrigger> triggers = new TreeMap<String, SceneTrigger>(this);
-	
+	private LinkedHashMap<String, SceneTrigger> triggers = new LinkedHashMap<String, SceneTrigger>();
+		
 	public Triggers() {}
 
 	public boolean addTrigger(SceneTrigger st) {
@@ -22,7 +25,19 @@ public class Triggers implements Serializable, Comparator<String>
 		}
 		return false;
 	}
+	
+//	----------------------------------------------------------------------------------------------
 
+	protected Object writeReplace() throws ObjectStreamException {
+		return this;
+	}
+	
+	protected Object readResolve() throws ObjectStreamException {
+		return this;
+	}
+	
+//	----------------------------------------------------------------------------------------------
+	
 	public SceneTrigger getTrigger(String name) {
 		return triggers.get(name);
 	}
@@ -38,9 +53,18 @@ public class Triggers implements Serializable, Comparator<String>
 	public int getTriggerCount(){
 		return triggers.size();
 	}
-	
-	@Override
-	public int compare(String o1, String o2) {
-		return CUtil.getStringCompare().compare(o2, o1);
+//	----------------------------------------------------------------------------------------------
+
+	public void saveList(ArrayList<String> nameList) {
+		LinkedHashMap<String, SceneTrigger> new_list = new LinkedHashMap<String, SceneTrigger>(triggers.size());
+		for (String name : nameList) {
+			SceneTrigger st = getTrigger(name);
+			if (st != null) {
+				new_list.put(st.getName(), st);
+			}
+		}
+		triggers = new_list;
 	}
+
+	
 }

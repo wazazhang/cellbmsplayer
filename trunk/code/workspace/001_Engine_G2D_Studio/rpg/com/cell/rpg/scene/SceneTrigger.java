@@ -24,6 +24,8 @@ abstract public class SceneTrigger implements Serializable, Comparator<Class<?>>
 	
 	private String 	name;
 	
+	private String 	tree_path;
+	
 	private boolean	enable = true;
 	
 	public String	comment = "comment here ....";
@@ -76,7 +78,15 @@ abstract public class SceneTrigger implements Serializable, Comparator<Class<?>>
 		this.name = name;
 		return true;
 	}
-	
+
+	public String getTreePath() {
+		return tree_path;
+	}
+
+	public void setTreePath(String treePath) {
+		tree_path = treePath;
+	}
+
 	public boolean addTriggerEvent(Class<? extends Event> event) {
 		if (!event_names.contains(event.getName())) {		
 			event_types = null;

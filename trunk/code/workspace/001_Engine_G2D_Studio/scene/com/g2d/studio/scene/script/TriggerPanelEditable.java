@@ -22,12 +22,9 @@ import com.g2d.util.TextEditor;
 @SuppressWarnings("serial")
 public class TriggerPanelEditable extends TriggerPanel<SceneTriggerEditable>
 {
-	public TriggerPanelEditable(
-			SceneTriggerEditable 		trigger, 
-			Class<? extends Scriptable>	trigger_object_type, 
-			TriggerGenerator 			root_object)
+	public TriggerPanelEditable(SceneTriggerEditable trigger)
 	{
-		super(trigger, trigger_object_type, root_object);
+		super(trigger);
 	}
 	
 	protected void onTreeSelectChanged(TriggerTreeView tree_view, TreeNode node) {
