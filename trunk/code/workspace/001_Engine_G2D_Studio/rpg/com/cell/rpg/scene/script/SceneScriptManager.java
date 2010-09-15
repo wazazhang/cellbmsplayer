@@ -15,6 +15,7 @@ import com.cell.rpg.scene.Scene;
 import com.cell.rpg.scene.SceneTrigger;
 import com.cell.rpg.scene.SceneTriggerScriptable;
 import com.cell.rpg.scene.TriggerGenerator;
+import com.cell.rpg.scene.Triggers;
 import com.cell.rpg.scene.script.anno.EventMethod;
 import com.cell.rpg.scene.script.anno.EventParam;
 import com.cell.rpg.scene.script.anno.EventType;
@@ -85,7 +86,6 @@ public abstract class SceneScriptManager
 	 */
 	public String createTemplateScript(
 			Class<? extends Event> 	event_type, 
-			TriggerGenerator 		tg, 
 			SceneTriggerScriptable 	sts) 
 	{
 		EventType et = event_type.getAnnotation(EventType.class);
@@ -143,30 +143,12 @@ public abstract class SceneScriptManager
 
 //	-----------------------------------------------------------------------------------------------------------------------
 	
-	private File createTemplateScriptFile(
-			File 					root,
-			TriggerGenerator 		tg, 
-			SceneTriggerScriptable 	sts) 
-	{
-		if (tg instanceof Scene) {
-			return new File(root, 
-					tg.getClass().getSimpleName() + "." + 
-					sts.getName() + ".js");
-		} else {
-			return new File(root, 
-					tg.getClass().getSimpleName() + "." + 
-					tg.getTriggerObjectName() + "." + 
-					sts.getName() + ".js");
-		}
-	}
-	
-	public void loadTriggers(TriggerGenerator tg, File root) {
+	public void loadTriggers(Triggers tgs, File root) {
 		try {
-			for (SceneTrigger st : tg.getTriggers()) {
+			for (SceneTrigger st : tgs.getTriggers()) {
 				if (st instanceof SceneTriggerScriptable) {
 					SceneTriggerScriptable sts = (SceneTriggerScriptable) st;
-					File sf = Studio.getInstance().getSceneScriptManager().createTemplateScriptFile(
-							root, tg, sts);
+					File sf = new File(root, sts.getName() + ".js");
 					sts.loadEditScript(sf);
 				}
 			}
@@ -175,23 +157,17 @@ public abstract class SceneScriptManager
 		}
 	}
 	
-	public void saveTriggers(TriggerGenerator tg, File root) {
+	public void saveTriggers(Triggers tgs, File root) {
 		try {
-			for (SceneTrigger st : tg.getTriggers()) {
+			for (SceneTrigger st : tgs.getTriggers()) {
 				if (st instanceof SceneTriggerScriptable) {
 					SceneTriggerScriptable sts = (SceneTriggerScriptable) st;
-					File sf = Studio.getInstance().getSceneScriptManager().createTemplateScriptFile(
-							root, tg, sts);
+					File sf = new File(root, sts.getName() + ".js");
 					sts.saveEditScript(sf);
 				}
 			}
 		} catch (Exception err) {
 			err.printStackTrace();
-		} finally {
-			if (tg instanceof Scene) {
-				Scene scene = (Scene)tg;
-				saveTriggers(scene.getPlayerTriggers(), root);
-			}
 		}
 	}
 	

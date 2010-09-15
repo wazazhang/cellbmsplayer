@@ -13,7 +13,7 @@ import com.cell.rpg.display.SceneNode;
 import com.cell.rpg.scene.script.trigger.Event;
 import com.g2d.annotation.Property;
 
-public class Scene extends RPGObject implements NamedObject, TriggerGenerator
+public class Scene extends RPGObject implements NamedObject
 {
 	transient private int 				int_id;
 
@@ -23,10 +23,10 @@ public class Scene extends RPGObject implements NamedObject, TriggerGenerator
 	
 	final public Vector<SceneUnit> 		scene_units = new Vector<SceneUnit>();
 
-	private ArrayList<SceneTrigger>		scene_triggers = new ArrayList<SceneTrigger>();
-
-	private Triggers					player_triggers = new Triggers("player");
+	private Triggers					triggers_package = new Triggers();
 	
+	private TriggerGenerator			binded_triggers = new TriggerGenerator();
+
 //	------------------------------------------------------------------------------------------------------------------
 	
 	@Property("场景背景音乐")
@@ -55,11 +55,11 @@ public class Scene extends RPGObject implements NamedObject, TriggerGenerator
 		if (group == null) {
 			this.group = 0;
 		}
-		if (scene_triggers == null) {
-			scene_triggers = new ArrayList<SceneTrigger>();
+		if (triggers_package == null) {
+			triggers_package = new Triggers();
 		}
-		if (player_triggers == null) {
-			player_triggers = new Triggers("player");
+		if (binded_triggers == null) {
+			binded_triggers = new TriggerGenerator();
 		}
 	}
 	
@@ -84,37 +84,14 @@ public class Scene extends RPGObject implements NamedObject, TriggerGenerator
 		return null;
 	}
 
-	public Triggers getPlayerTriggers() {
-		return player_triggers;
+	public Triggers getTriggersPackage() {
+		return triggers_package;
+	}
+
+	public TriggerGenerator getBindedTriggers() {
+		return binded_triggers;
 	}
 	
 //	------------------------------------------------------------------------------------------------------------------
 	
-	public String getTriggerObjectName() {
-		return name;
-	}
-	
-	public boolean addTrigger(SceneTrigger st) {
-		for (SceneTrigger s : getTriggers()) {
-			if (s.getName().equals(st.getName())) {
-				return false;
-			}
-		}
-		scene_triggers.add(st);
-		return true;
-	}
-	
-	@Override
-	public boolean removeTrigger(SceneTrigger st) {
-		return scene_triggers.remove(st);
-	}
-	
-	
-	public ArrayList<SceneTrigger> getTriggers(){
-		return scene_triggers;
-	}
-	
-	public int getTriggerCount(){
-		return scene_triggers.size();
-	}
 }

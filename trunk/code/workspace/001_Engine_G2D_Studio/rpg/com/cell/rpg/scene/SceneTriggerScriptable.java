@@ -19,7 +19,7 @@ public class SceneTriggerScriptable extends SceneTrigger implements Serializable
 	
 	private transient String script = null;
 	
-	public SceneTriggerScriptable(TriggerGenerator parent, String name) throws Exception {
+	public SceneTriggerScriptable(Triggers parent, String name) throws Exception {
 		super(parent, name);
 	}
 	

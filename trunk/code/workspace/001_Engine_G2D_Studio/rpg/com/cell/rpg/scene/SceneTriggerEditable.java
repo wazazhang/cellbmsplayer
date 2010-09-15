@@ -14,7 +14,7 @@ public class SceneTriggerEditable extends SceneTrigger implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
-	public SceneTriggerEditable(TriggerGenerator parent, String name) throws Exception {
+	public SceneTriggerEditable(Triggers parent, String name) throws Exception {
 		super(parent, name);
 	}
 }

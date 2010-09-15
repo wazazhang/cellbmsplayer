@@ -2,44 +2,45 @@ package com.cell.rpg.scene;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.TreeMap;
 
-public class Triggers implements Serializable, TriggerGenerator
+import com.cell.CUtil;
+
+public class Triggers implements Serializable, Comparator<String>
 {
 	private static final long serialVersionUID = 1L;
 
-	private ArrayList<SceneTrigger>		triggers = new ArrayList<SceneTrigger>();
+	private TreeMap<String, SceneTrigger> triggers = new TreeMap<String, SceneTrigger>(this);
 	
-	private String name;
-	
-	public Triggers(String name) {
-		this.name = name;
-	}
-	
-	public String getTriggerObjectName() {
-		return name;
-	}
-	
+	public Triggers() {}
+
 	public boolean addTrigger(SceneTrigger st) {
-		for (SceneTrigger s : getTriggers()) {
-			if (s.getName().equals(st.getName())) {
-				return false;
-			}
+		if (!triggers.containsKey(st.getName())) {
+			triggers.put(st.getName(), st);
+			return true;
 		}
-		triggers.add(st);
-		return true;
+		return false;
+	}
+
+	public SceneTrigger getTrigger(String name) {
+		return triggers.get(name);
 	}
 	
-	@Override
-	public boolean removeTrigger(SceneTrigger st) {
-		return triggers.remove(st);
+	public SceneTrigger removeTrigger(String name) {
+		return triggers.remove(name);
 	}
 	
 	public ArrayList<SceneTrigger> getTriggers(){
-		return triggers;
+		return new ArrayList<SceneTrigger>(triggers.values());
 	}
 	
 	public int getTriggerCount(){
 		return triggers.size();
 	}
-
+	
+	@Override
+	public int compare(String o1, String o2) {
+		return CUtil.getStringCompare().compare(o2, o1);
+	}
 }
