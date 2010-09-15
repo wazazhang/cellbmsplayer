@@ -38,6 +38,7 @@ public class SceneTriggerScriptable extends SceneTrigger implements Serializable
 	 * @param script
 	 */
 	public void saveEditScript(File file) {
+//		System.out.println(file);
 		if (script != null) {
 			file.getParentFile().mkdirs();
 			CFile.writeText(file, this.script, "UTF-8");

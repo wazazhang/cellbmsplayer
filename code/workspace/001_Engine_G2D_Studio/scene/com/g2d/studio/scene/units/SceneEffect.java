@@ -225,7 +225,7 @@ public class SceneEffect extends com.g2d.game.rpg.Unit implements SceneUnitTag<E
 		
 		if (editor!=null)
 		{
-			if (getUnit().getTriggerCount() > 0) {
+			if (getUnit().getBindedTriggers().getTriggerCount() > 0) {
 				g.drawImage(Res.img_script, -Res.img_script.getWidth()/2, 0, null);
 			}
 			if (editor.getSelectedPage().isSelectedType(getClass())) 

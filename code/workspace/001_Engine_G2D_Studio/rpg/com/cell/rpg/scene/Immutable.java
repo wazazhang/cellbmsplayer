@@ -2,6 +2,7 @@ package com.cell.rpg.scene;
 
 import com.cell.rpg.display.UnitNode;
 import com.cell.rpg.scene.ability.ActorTransport;
+import com.cell.rpg.scene.ability.ImmutableDisplay;
 
 public class Immutable extends SceneSprite
 {
@@ -20,7 +21,8 @@ public class Immutable extends SceneSprite
 	@Override
 	public Class<?>[] getSubAbilityTypes() {
 		return new Class<?>[]{				
-				ActorTransport.class,	
+				ActorTransport.class,
+				ImmutableDisplay.class,
 		};
 	}
 

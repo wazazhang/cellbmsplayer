@@ -8,7 +8,6 @@ import com.g2d.studio.res.Res;
 import com.g2d.studio.rpg.AbilityPanel;
 import com.g2d.studio.rpg.RPGObjectPanel;
 import com.g2d.studio.rpg.AbilityPanel.AbilityCellEditAdapter;
-import com.g2d.studio.scene.script.TriggerGenerateTreeNode;
 import com.g2d.studio.scene.script.TriggersEditor;
 import com.g2d.studio.scene.units.SceneUnitTag;
 
@@ -30,7 +29,7 @@ public class SceneUnitTagEditor extends DisplayObjectEditor<Unit>
 		super.setSize(800, 500);
 		this.setIconImage(Res.icon_edit);
 		
-		this.triggers_editor = new TriggersEditor(new TriggerGenerateTreeNode(unit.getUnit()));
-		this.table.addTab("事件触发器", this.triggers_editor);
+//		this.triggers_editor = new TriggersEditor(new TriggerGenerateTreeNode(unit.getUnit()));
+//		this.table.addTab("事件触发器", this.triggers_editor);
 	}
 }

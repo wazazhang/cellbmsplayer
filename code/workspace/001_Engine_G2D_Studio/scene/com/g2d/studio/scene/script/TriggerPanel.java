@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.io.File;
 
 import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
@@ -19,18 +18,11 @@ import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
-import javax.swing.tree.TreePath;
 
 import com.cell.rpg.scene.SceneTrigger;
-import com.cell.rpg.scene.SceneTriggerScriptable;
-import com.cell.rpg.scene.TriggerGenerator;
-import com.cell.rpg.scene.script.Scriptable;
 import com.cell.rpg.scene.script.anno.EventType;
 import com.cell.rpg.scene.script.trigger.Event;
-import com.g2d.studio.Studio;
 import com.g2d.studio.res.Res;
-import com.g2d.studio.scene.script.TriggerGenerateTreeNode.TriggerNode;
-import com.g2d.studio.scene.script.TriggerPanel.TriggerEventRoot.EventNode;
 import com.g2d.studio.swing.G2DTree;
 import com.g2d.studio.swing.G2DTreeNode;
 import com.g2d.util.TextEditor;
@@ -38,9 +30,7 @@ import com.g2d.util.TextEditor;
 @SuppressWarnings("serial")
 public abstract class TriggerPanel<T extends SceneTrigger> extends JPanel implements AncestorListener
 {
-	final protected TriggerGenerator			root_object;
 	final protected T 							trigger;
-	final protected Class<? extends Scriptable> trigger_object_type;
 	
 	final protected TextEditor					comment		= new TextEditor();
 	
@@ -55,12 +45,11 @@ public abstract class TriggerPanel<T extends SceneTrigger> extends JPanel implem
 	private JSplitPane		split_h		= new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 	private JPanel			south_h		= new JPanel(new BorderLayout());
 	
-	public TriggerPanel(T trigger, Class<? extends Scriptable> trigger_object_type, TriggerGenerator root_object)
+	public TriggerPanel(T trigger)
 	{
 		super(new BorderLayout());
-		this.root_object			= root_object;
-		this.trigger 				= trigger;
-		this.trigger_object_type	= trigger_object_type;
+		
+		this.trigger 			= trigger;
 		
 		this.tree_root			= new DefaultMutableTreeNode(trigger.getName());
 		this.group_events		= new TriggerEventRoot();
@@ -181,7 +170,7 @@ public abstract class TriggerPanel<T extends SceneTrigger> extends JPanel implem
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (e.getSource() == add_event) {
-					SelectEventDialog dlg = new SelectEventDialog(tree_view, trigger_object_type);
+					SelectEventDialog dlg = new SelectEventDialog(tree_view, null);
 					Class<? extends Event> evt = dlg.showDialog();
 					if (evt != null) {
 						addEvent(evt);

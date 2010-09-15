@@ -78,6 +78,10 @@ public class G2DTree extends JTree implements G2DDragDropListener<G2DTree>
 		}
 	}
 	
+	public void expand(TreeNode node) {
+		expandPath(createTreePath(node));
+	}
+	
 	public void reload() {
 		tree_model.reload();
 	}

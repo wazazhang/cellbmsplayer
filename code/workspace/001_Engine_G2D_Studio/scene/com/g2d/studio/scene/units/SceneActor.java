@@ -263,7 +263,7 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 
 		if (editor != null) 
 		{
-			if (getUnit().getTriggerCount() > 0) {
+			if (getUnit().getBindedTriggers().getTriggerCount() > 0) {
 				g.drawImage(Res.img_script, -Res.img_script.getWidth()/2, local_bounds.y, null);
 			}
 			pushObject(g.getStroke());
