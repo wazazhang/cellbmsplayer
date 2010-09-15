@@ -1,6 +1,7 @@
 package com.cell.rpg.scene.script;
 
 import java.io.File;
+import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.TypeVariable;
@@ -9,6 +10,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.cell.CIO;
 import com.cell.CObject;
 import com.cell.CUtil;
 import com.cell.rpg.scene.Scene;
@@ -143,13 +145,15 @@ public abstract class SceneScriptManager
 
 //	-----------------------------------------------------------------------------------------------------------------------
 	
-	public void loadTriggers(Triggers tgs, File root) {
+	public void loadTriggers(Triggers tgs, String root) {
 		try {
 			for (SceneTrigger st : tgs.getTriggers()) {
 				if (st instanceof SceneTriggerScriptable) {
 					SceneTriggerScriptable sts = (SceneTriggerScriptable) st;
-					File sf = new File(root, sts.getName() + ".js");
-					sts.loadEditScript(sf);
+					InputStream sf = CIO.getInputStream(root + "/" + sts.getName() + ".js");
+					if (sf != null) {
+						sts.loadEditScript(sf);
+					}
 				}
 			}
 		} catch (Exception err) {

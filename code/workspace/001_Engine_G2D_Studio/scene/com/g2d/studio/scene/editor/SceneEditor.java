@@ -74,6 +74,7 @@ import com.g2d.studio.rpg.AbilityAdapter;
 import com.g2d.studio.rpg.AbilityPanel;
 import com.g2d.studio.rpg.RPGObjectPanel;
 import com.g2d.studio.scene.entity.SceneNode;
+import com.g2d.studio.scene.script.TriggerGeneratorPanel;
 import com.g2d.studio.scene.units.SceneActor;
 import com.g2d.studio.scene.units.SceneEffect;
 import com.g2d.studio.scene.units.SceneImmutable;
@@ -253,7 +254,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 				"scenes/scene_" + getSceneNode().getIntID());
 		Studio.getInstance().getSceneScriptManager().loadTriggers(
 				getSceneNode().getData().getTriggersPackage(), 
-				scene_script_root);
+				scene_script_root.getPath());
 		
 		if (scene_node.getData().scene_units!=null) {
 			for (SceneUnit unit : scene_node.getData().scene_units) {
@@ -388,7 +389,11 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 			DisplayObjectEditor<SceneContainer> editor = new DisplayObjectEditor<SceneContainer>(
 					scene_container,
 					new RPGObjectPanel(scene_node.getData(), adapters),
-					new AbilityPanel(scene_node.getData(), adapters)
+					new AbilityPanel(scene_node.getData(), adapters),
+					new TriggerGeneratorPanel(
+							scene_node.getData().getBindedTriggers(),
+							scene_node.getData().getTriggersPackage(),
+							com.cell.rpg.scene.script.entity.Scene.class)
 			);
 			editor.setCenter();
 			editor.setVisible(true);

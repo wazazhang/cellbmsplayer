@@ -1,6 +1,7 @@
 package com.cell.rpg.scene;
 
 import java.io.File;
+import java.io.InputStream;
 import java.io.Serializable;
 
 import com.cell.CIO;
@@ -27,10 +28,8 @@ public class SceneTriggerScriptable extends SceneTrigger implements Serializable
 	 * 设置编辑器生命周期的脚本, 该数据不会被序列化。
 	 * @param script
 	 */
-	public void loadEditScript(File file) {
-		if (file.exists()) {
-			this.script = CFile.readText(file, "UTF-8");
-		}
+	public void loadEditScript(InputStream is) {
+		this.script = CIO.stringDecode(CIO.readStream(is), "UTF-8");
 	}
 	
 	/**
