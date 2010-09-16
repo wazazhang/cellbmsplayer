@@ -4,10 +4,12 @@ import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 
 import com.cell.math.MathVector;
+import com.cell.math.TVector;
 import com.cell.math.Vector;
 import com.g2d.Version;
 import com.g2d.annotation.Property;
@@ -22,8 +24,12 @@ public class Sprite extends InteractiveObject implements Vector
 	/**旋转参数(弧度)*/
 	public double		rotate;
 	
+	public TVector		rotate_origin;
+	
 	/**透明度(范围0.0~1.0)*/
 	public float		alpha;
+	
+	
 	
 	public Sprite() 
 	{
@@ -74,14 +80,23 @@ public class Sprite extends InteractiveObject implements Vector
 	}
 
 	@Override
-	final protected void renderBefore(Graphics2D g) {
+	final protected void renderBefore(Graphics2D g) 
+	{
 		super.renderBefore(g);
-		if (scale_x != 1 || scale_y != 1)
+		
+		if (scale_x != 1 || scale_y != 1) {
 			g.scale(scale_x, scale_y);
-		if (rotate != 0)
-			g.rotate(rotate);
-		if (alpha < 1f)
+		}
+		if (rotate != 0) {
+			if (rotate_origin != null) {
+				g.rotate(rotate, rotate_origin.x, rotate_origin.y);
+			} else {
+				g.rotate(rotate);
+			}
+		}
+		if (alpha < 1f) {
 			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+		}
 	}
 	
 	public void added(DisplayObjectContainer parent) {}
