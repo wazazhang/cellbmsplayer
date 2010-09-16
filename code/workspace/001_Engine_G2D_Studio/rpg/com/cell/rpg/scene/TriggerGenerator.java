@@ -19,11 +19,11 @@ public class TriggerGenerator implements Serializable, Comparator<String>, Abili
 {
 	private static final long serialVersionUID = 1L;
 	
-	private TreeMap<String, TriggerInstance> binded_triggers = new TreeMap<String, TriggerInstance>(this);
+	private TreeMap<String, TriggerInstance> binded_triggers = new TreeMap<String, TriggerInstance>();
 	
 	final protected Object writeReplace() throws ObjectStreamException {
 		if (binded_triggers != null) {
-			TreeMap<String, TriggerInstance> new_list = new TreeMap<String, TriggerInstance>(this);
+			TreeMap<String, TriggerInstance> new_list = new TreeMap<String, TriggerInstance>();
 			for (TriggerInstance e : binded_triggers.values()) {
 				new_list.put(e.trigger_name, e);
 			}
@@ -33,7 +33,7 @@ public class TriggerGenerator implements Serializable, Comparator<String>, Abili
 	}
 	final protected Object readResolve() throws ObjectStreamException {
 		if (binded_triggers == null) {
-			binded_triggers = new TreeMap<String, TriggerInstance>(this);
+			binded_triggers = new TreeMap<String, TriggerInstance>();
 		}
 		return this;
 	}
@@ -150,7 +150,8 @@ public class TriggerGenerator implements Serializable, Comparator<String>, Abili
 				TriggerInstance.class,
 		};
 	}
-
+	
+	@Property("[触发器]")
 	public static class TriggerInstance extends AbstractAbility implements Serializable
 	{
 		private static final long serialVersionUID = 1L;
@@ -172,6 +173,10 @@ public class TriggerGenerator implements Serializable, Comparator<String>, Abili
 			return true;
 		}
 		
+		@Override
+		public String toString() {
+			return super.toString() + " - " + trigger_name;
+		}
 	}
 	
 	
