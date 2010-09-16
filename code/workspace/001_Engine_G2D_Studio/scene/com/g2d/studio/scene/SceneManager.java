@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Vector;
 import java.util.concurrent.locks.ReentrantLock;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
@@ -37,6 +38,7 @@ import com.g2d.studio.cpj.CPJResourceSelectDialog;
 import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.cpj.entity.CPJWorld;
 import com.g2d.studio.gameedit.dynamic.IDynamicIDFactory;
+import com.g2d.studio.instancezone.InstanceZonesManager;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.scene.entity.SceneGroup;
 import com.g2d.studio.scene.entity.SceneNode;
@@ -65,6 +67,9 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 	
 	final private G2DWindowToolBar	tool_bar			= new G2DWindowToolBar(this);
 	final private JButton			tool_scene_graph 	= new JButton(Tools.createIcon(Res.icon_scene_graph));
+	final private JButton			tool_instance_zones;
+	
+	final private InstanceZonesManager	instance_zones;
 	
 //	------------------------------------------------------------------------------------------------------------------------------
 	
@@ -101,17 +106,28 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 		this.g2d_tree.addMouseListener(new TreeMouseAdapter());
 		JScrollPane scroll = new JScrollPane(g2d_tree);
 		this.add(scroll, BorderLayout.CENTER);
-		
-		tool_scene_graph.setToolTipText("打开场景图");
-		tool_scene_graph.addActionListener(this);
-		tool_bar.add(tool_scene_graph);
-		
-		this.tool_bar.setFloatable(false);
-		this.add(tool_bar, BorderLayout.NORTH);
-		
+		{
+			this.tool_scene_graph.setToolTipText("打开场景图");
+			this.tool_scene_graph.addActionListener(this);
+			this.tool_bar.add(tool_scene_graph);
+
+			this.instance_zones = new InstanceZonesManager(studio, progress);
+			this.tool_instance_zones = new JButton(new ImageIcon(instance_zones.getIconImage()));
+			this.tool_instance_zones.setToolTipText("副本管理器");
+			this.tool_instance_zones.addActionListener(this);
+			this.tool_bar.add(tool_instance_zones);
+			
+			this.tool_bar.setFloatable(false);
+			this.add(tool_bar, BorderLayout.NORTH);
+		}
 		g2d_tree.setDragEnabled(true);
+		
 	}
 
+	public InstanceZonesManager getInstanceZonesManager() {
+		return null;
+	}
+	
 //	------------------------------------------------------------------------------------------------------------------------------
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -121,6 +137,9 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 		else if (e.getSource() == tool_scene_graph) {
 			SceneGraphViewer sg = new SceneGraphViewer(this);
 			sg.setVisible(true);
+		} 
+		else if (e.getSource() == tool_instance_zones) {
+			instance_zones.setVisible(true);
 		}
 	}
 

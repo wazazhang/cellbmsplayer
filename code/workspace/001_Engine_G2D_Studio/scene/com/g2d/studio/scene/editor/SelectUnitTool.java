@@ -229,25 +229,26 @@ public class SelectUnitTool extends AbstractFrame// implements ActionListener
 						int i=0;
 						for (CPJSprite actor : actors)
 						{
-							JToggleButton btn = new JToggleButton();
-							btn.setToolTipText(actor.getName());
-							btn.setLocation(i%wc * w, i/wc * h);
-							btn.setSize(w, h);
 							try{
+								JToggleButton btn = new JToggleButton();
+								btn.setToolTipText(actor.getName());
+								btn.setLocation(i%wc * w, i/wc * h);
+								btn.setSize(w, h);
 								btn.setIcon(Tools.createIcon(Tools.combianImage(w-4, h-4, actor.getSnapShoot())));
+								btn.addActionListener(CPJSpritePanel.this);
+								map.put(btn, actor);
+								button_group.add(btn);
+								panel.add(btn);
+								mw = Math.max(mw, btn.getX() + btn.getWidth());
+								mh = Math.max(mh, btn.getY() + btn.getHeight());
 							} catch (Exception er){
 								er.printStackTrace();
 							}
-							btn.addActionListener(CPJSpritePanel.this);
-							map.put(btn, actor);
-							button_group.add(btn);
-							panel.add(btn);
-							mw = Math.max(mw, btn.getX() + btn.getWidth());
-							mh = Math.max(mh, btn.getY() + btn.getHeight());
 							i++;
 							progress.setValue(i);
 							progress.setString(actor.getName() + 
 									"    " + i +"/" + actors.size());
+							
 						}
 		
 						panel.setSize(mw, mh);

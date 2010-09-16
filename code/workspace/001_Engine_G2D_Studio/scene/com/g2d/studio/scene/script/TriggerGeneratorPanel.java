@@ -15,6 +15,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import com.cell.rpg.ability.AbstractAbility;
 import com.cell.rpg.scene.SceneTrigger;
 import com.cell.rpg.scene.TriggerGenerator;
 import com.cell.rpg.scene.Triggers;
@@ -49,6 +50,23 @@ public class TriggerGeneratorPanel extends AbilityPanel
 	}
 
 	@Override
+	protected String getListAbilityText(AbstractAbility ability) {
+		TriggerInstance ins = (TriggerInstance)ability;
+		StringBuffer sb = new StringBuffer();
+		sb.append("<html><body>");
+		sb.append("<p>");
+		if (ins.enable) {
+			sb.append(ins.toString());
+		} else {
+			sb.append("<font color=ff0000>"+ins.toString()+"</font>");
+		}
+		sb.append("</p>");
+		sb.append("</body></html>");
+		
+		return sb.toString();
+	}
+	
+	@Override
 	public String toString() {
 		return "绑定的触发器";
 	}
@@ -82,6 +100,13 @@ public class TriggerGeneratorPanel extends AbilityPanel
 				
 			}
 			return super.fieldChanged(editObject, fieldValue, field);
+		}
+		
+		@Override
+		public String getCellText(Object editObject, Field field,
+				Object fieldSrcValue) {
+			// TODO Auto-generated method stub
+			return super.getCellText(editObject, field, fieldSrcValue);
 		}
 		
 		@Override
