@@ -24,7 +24,8 @@ public class Sprite extends InteractiveObject implements Vector
 	/**旋转参数(弧度)*/
 	public double		rotate;
 	
-	public TVector		rotate_origin;
+	/**旋转基准点*/
+	public TVector		rotate_origin	= new TVector(0, 0);
 	
 	/**透明度(范围0.0~1.0)*/
 	public float		alpha;
