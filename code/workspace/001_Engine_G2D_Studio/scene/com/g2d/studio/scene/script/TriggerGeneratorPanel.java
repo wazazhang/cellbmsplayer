@@ -25,6 +25,7 @@ import com.g2d.editor.property.ComboTextListEdit;
 import com.g2d.editor.property.ObjectPropertyEdit;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.editor.property.TextCellEdit;
+import com.g2d.studio.Studio;
 import com.g2d.studio.rpg.AbilityPanel;
 import com.g2d.studio.swing.G2DList;
 import com.g2d.studio.swing.G2DListItem;
@@ -32,17 +33,19 @@ import com.g2d.studio.swing.G2DListItem;
 @SuppressWarnings("serial")
 public class TriggerGeneratorPanel extends AbilityPanel
 {
-	Triggers 			triggers;
-	TriggerGenerator 	instances;
-
+	Triggers 					triggers;
+	TriggerGenerator 			instances;
+	Class<? extends Scriptable>	trigger_object_type;
+	
 	public TriggerGeneratorPanel(
 			TriggerGenerator instances,
 			Triggers lib,
 			Class<? extends Scriptable> trigger_object_type) 
 	{
-		super(instances, new TriggerGeneratorAdapter(lib, instances));
-		this.triggers	= lib;
-		this.instances	= instances;
+		super(instances, new TriggerGeneratorAdapter(lib, instances, trigger_object_type));
+		this.triggers				= lib;
+		this.instances				= instances;
+		this.trigger_object_type	= trigger_object_type;
 	}
 
 	@Override
@@ -52,12 +55,17 @@ public class TriggerGeneratorPanel extends AbilityPanel
 	
 	static class TriggerGeneratorAdapter extends AbilityCellEditAdapter<TriggerInstance>
 	{
-		Triggers 			triggers;
-		TriggerGenerator 	instances;
+		Triggers 					triggers;
+		TriggerGenerator 			instances;
+		Class<? extends Scriptable>	trigger_object_type;
 		
-		public TriggerGeneratorAdapter(Triggers triggers, TriggerGenerator instances) {
-			this.triggers	= triggers;
-			this.instances	= instances;
+		public TriggerGeneratorAdapter(
+				Triggers triggers, 
+				TriggerGenerator instances,
+				Class<? extends Scriptable> trigger_object_type) {
+			this.triggers				= triggers;
+			this.instances				= instances;
+			this.trigger_object_type	= trigger_object_type;
 		}
 
 		@Override
