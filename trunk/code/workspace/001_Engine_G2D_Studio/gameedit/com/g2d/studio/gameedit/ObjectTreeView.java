@@ -35,10 +35,10 @@ extends JSplitPane implements TreeSelectionListener, ChangeListener
 	final private ObjectGroup<T, D>			tree_root;
 
 	// ui
-	final private G2DTree 					g2d_tree;
-	final private JScrollPane				left 		= new JScrollPane();
-	final private JPanel					right		= new JPanel();
-	transient private Component				old_right;
+	final protected G2DTree 				g2d_tree;
+	final protected JScrollPane				left 		= new JScrollPane();
+	final protected JPanel					right		= new JPanel();
+	transient protected Component			old_right;
 
 	protected IDFactoryInteger<T>			node_index	= new IDFactoryInteger<T>();
 
@@ -137,15 +137,13 @@ extends JSplitPane implements TreeSelectionListener, ChangeListener
 				tb_index = old_viewer.table.getSelectedIndex();
 			}
 			T node = node_type.cast(e.getPath().getLastPathComponent());
-			if (node.getEditComponent()!=null) {
-				node.getEditComponent().setVisible(true);
-				this.setRightComponent(node.getEditComponent());
-				if (node.getEditComponent() instanceof ObjectViewer<?>) {
-					ObjectViewer<?> new_viewer = (ObjectViewer<?>)node.getEditComponent();
-					new_viewer.table.setSelectedIndex(tb_index);
-				}
+			ObjectViewer<?> new_viewer = node.getEditComponent();
+			if (new_viewer!=null) {
+				new_viewer.table.setSelectedIndex(tb_index);
+				new_viewer.setVisible(true);
+				this.setRightComponent(new_viewer);
 			}
-			if (old_right != null && old_right != node.getEditComponent()) {
+			if (old_right != null && old_right != new_viewer) {
 				old_right.setVisible(false);
 			}
 		} else {

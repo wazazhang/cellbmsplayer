@@ -12,6 +12,7 @@ import com.cell.rpg.scene.instance.InstanceZone;
 import com.g2d.studio.gameedit.ObjectViewer;
 import com.g2d.studio.gameedit.dynamic.DynamicNode;
 import com.g2d.studio.gameedit.dynamic.IDynamicIDFactory;
+import com.g2d.studio.res.Res;
 import com.g2d.studio.swing.G2DTreeNodeGroup.NodeMenu;
 import com.g2d.util.AbstractDialog;
 
@@ -45,7 +46,7 @@ final public class InstanceZoneNode extends DynamicNode<InstanceZone>
 	
 	@Override
 	protected ImageIcon createIcon() {
-		return null;
+		return new ImageIcon(Res.icon_scene);
 	}
 
 	@Override
@@ -59,9 +60,11 @@ final public class InstanceZoneNode extends DynamicNode<InstanceZone>
 	}
 	
 	@Override
-	public ObjectViewer<?> getEditComponent() {
-		
-		return edit_component;
+	public InstanceZoneEditor getEditComponent() {
+//		if (edit_component == null) {
+			edit_component = new InstanceZoneEditor(this);
+//		}
+		return (InstanceZoneEditor)edit_component;
 	}
 	
 //	---------------------------------------------------------------------------------------------------------------

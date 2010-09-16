@@ -1,6 +1,7 @@
 package com.g2d.studio.instancezone;
 
 
+import java.awt.Dimension;
 import java.io.File;
 
 import com.cell.rpg.scene.instance.InstanceZone;
@@ -14,6 +15,8 @@ public class InstanceZonesTreeView extends ObjectTreeViewDynamic<InstanceZoneNod
 
 	public InstanceZonesTreeView(File list_file) {
 		super("副本管理器", InstanceZoneNode.class, InstanceZone.class, list_file);
+		super.left.setMinimumSize(new Dimension(300, 300));
+		super.getTree().expandAll();
 	}
 	
 	@Override
@@ -40,13 +43,11 @@ public class InstanceZonesTreeView extends ObjectTreeViewDynamic<InstanceZoneNod
 			if (value instanceof InstanceZoneNode) {
 				InstanceZoneNode node = (InstanceZoneNode)value;
 				StringBuffer sb = new StringBuffer();
-				sb.append("<html><body>");
-				sb.append("<p>" + node.getData().getName() + 
-						"(<font color=\"#ff0000\">" + node.getData().getIntID()  + "</font>" + ")</p>");
-				sb.append("<p>" + 
-						"<font color=\"#0000ff\"> [" + node.getData().player_count  + "人]</font> " +
-						"</p>");
-				sb.append("</body></html>");
+				sb.append("<html><body><p>");
+				sb.append("<font color=\"#0000ff\"> [" + node.getData().player_count  + "人]</font> ");
+				sb.append(node.getData().getName());
+				sb.append("(<font color=\"#ff0000\">" + node.getData().getIntID()  + "</font>" + ")");
+				sb.append("</p></body></html>");
 				return sb.toString();
 			}
 			return super.convertValueToText(value, selected, expanded, leaf, row, hasFocus);

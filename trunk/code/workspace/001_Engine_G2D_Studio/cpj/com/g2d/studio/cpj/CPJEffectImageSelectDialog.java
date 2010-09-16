@@ -31,7 +31,7 @@ import com.g2d.util.AbstractDialog;
 
 public class CPJEffectImageSelectDialog extends AbstractDialog implements ActionListener, ListSelectionListener
 {
-	JSplitPane			split	= new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+	JSplitPane			split	= new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 	
 	G2DList<CPJSprite>	list	= new G2DList<CPJSprite>();
 	Vector<CPJSprite>	list_data;
@@ -46,7 +46,7 @@ public class CPJEffectImageSelectDialog extends AbstractDialog implements Action
 	{
 		super(owner);
 		super.setLayout(new BorderLayout());
-		super.setSize(600, 400);
+		super.setSize(800, 400);
 		super.setCenter();
 		
 		this.add(split, BorderLayout.CENTER);
