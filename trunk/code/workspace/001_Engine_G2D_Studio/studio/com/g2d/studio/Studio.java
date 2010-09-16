@@ -46,6 +46,7 @@ import com.g2d.studio.cpj.CPJResourceManager;
 import com.g2d.studio.gameedit.ObjectManager;
 import com.g2d.studio.gameedit.ObjectManagerTree;
 import com.g2d.studio.icon.IconManager;
+import com.g2d.studio.instancezone.InstanceZonesManager;
 import com.g2d.studio.item.ItemManager;
 import com.g2d.studio.quest.QuestManager;
 import com.g2d.studio.quest.group.QuestGroupManager;
@@ -102,6 +103,7 @@ public class Studio extends AbstractFrame
 	private TalkManager				frame_talk_manager;
 	private QuestManager			frame_quest_manager;
 	private QuestGroupManager		frame_quest_group_manager;
+	private InstanceZonesManager	frame_instance_zone_manager;
 	
 	private SceneManager			scene_manager;
 	
@@ -192,18 +194,9 @@ public class Studio extends AbstractFrame
 			
 			this.scene_manager = new SceneManager(this, progress_form);
 			
-//			if (false)
-//			{
-//				JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-//				
-//				split.setLeftComponent(scene_manager);
-//				split.setRightComponent(new JPanel());
-//				this.add(split, BorderLayout.CENTER);
-//			} 
-//			else 
-			{
-				this.add(scene_manager, BorderLayout.CENTER);
-			}
+			this.frame_instance_zone_manager = scene_manager.getInstanceZonesManager();
+			
+			this.add(scene_manager, BorderLayout.CENTER);
 			
 			this.addWindowListener(new StudioWindowListener());
 		}
@@ -441,6 +434,10 @@ public class Studio extends AbstractFrame
 		return frame_item_manager;
 	}
 	
+	public InstanceZonesManager	getInstanceZoneManager() {
+		return frame_instance_zone_manager;
+	}
+	
 	public SceneManager getSceneManager() {
 		return scene_manager;
 	}
@@ -471,6 +468,11 @@ public class Studio extends AbstractFrame
 		
 		scene_manager.saveAll();
 	
+		try {
+			frame_instance_zone_manager.saveAll();
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 	}
 
 //	----------------------------------------------------------------------------------------------------------------

@@ -186,6 +186,10 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 	}
 
 //	-----------------------------------------------------------------------------------------------------------------------------
+
+	protected String getListAbilityText(AbstractAbility ability) {
+		return AbstractAbility.getEditName(ability.getClass());
+	}
 	
 	class ListRender extends DefaultListCellRenderer
 	{
@@ -201,13 +205,12 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 			Component ret = super.getListCellRendererComponent(list, value,
 					index, isSelected, cellHasFocus);
 			if (value instanceof AbstractAbility) {
-				this.setText(AbstractAbility.getEditName(value.getClass()));
+				this.setText(getListAbilityText((AbstractAbility)value));
 			}
 			return ret;
 		}
 	}
 	
-
 //	-----------------------------------------------------------------------------------------------------------------------------
 	
 	
