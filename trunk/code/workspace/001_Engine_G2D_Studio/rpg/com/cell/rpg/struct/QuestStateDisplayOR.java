@@ -10,15 +10,18 @@ import com.cell.rpg.quest.QuestState;
 import com.g2d.annotation.Property;
 
 
-@Property("任务显示状态，或")
+@Property("任务显示状态")
 public class QuestStateDisplayOR extends ArrayList<QuestStateDisplayOR.State> implements Abilities
 {
 	private static final long serialVersionUID = 1L;
 	
 //	--------------------------------------------------------------------------------------------------------
 
-	@Property("对所有或取反")
+	@Property("对所有或取反, 值为false控制显示，值为true控制不显示")
 	public boolean all_not = false;
+	
+	@Property("控制所有条件与运算，值为false则所有条件或运算，值为true则所有条件与运算")
+	public boolean and = false;
 	
 
 //	--------------------------------------------------------------------------------------------------------
@@ -77,14 +80,13 @@ public class QuestStateDisplayOR extends ArrayList<QuestStateDisplayOR.State> im
 	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
-		if (all_not) {
+		if (all_not)
 			sb.append("[all_not] ");
-		}
 		for (int i=0; i<this.size(); i++) {
 			State st = this.get(i);
 			sb.append("[" + st.show_in_quest_state.toTinyString() + "," + st.show_in_quest_id + "]");
 			if (i < this.size() - 1) {
-				sb.append(" or ");
+				sb.append(and? "and " : " or ");
 			}
 		}
 		return sb.toString();
