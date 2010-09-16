@@ -30,7 +30,7 @@ public class InstanceZonesManager extends ManagerForm implements ActionListener
 
 		progress.startReadBlock("初始化副本...");
 
-		this.zones_dir	= new File(studio.project_save_path, "instancezones");
+		this.zones_dir	= new File(studio.project_save_path, "instance_zones");
 		this.zones_list	= new File(zones_dir, "zones.list");
 
 		this.tool_bar = new G2DWindowToolBar(this);
@@ -62,6 +62,13 @@ public class InstanceZonesManager extends ManagerForm implements ActionListener
 	
 	@Override
 	public void saveAll() throws Throwable {
+		for (InstanceZoneNode node : getNodes()) {
+			try {
+				node.getEditComponent().save();
+			} catch (Exception err) {
+				err.printStackTrace();
+			}
+		}
 		g2d_tree.saveAll();
 	}
 	

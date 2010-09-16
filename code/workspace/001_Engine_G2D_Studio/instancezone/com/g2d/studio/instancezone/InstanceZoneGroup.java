@@ -60,6 +60,7 @@ public class InstanceZoneGroup extends ObjectGroup<InstanceZoneNode, InstanceZon
 		public Menu(InstanceZoneGroup root) {
 			super(root, view.getTree(), view.getTree());
 			this.root = root;
+			addSeparator();
 			add_zone.addActionListener(this);
 			add(add_zone);
 		}
