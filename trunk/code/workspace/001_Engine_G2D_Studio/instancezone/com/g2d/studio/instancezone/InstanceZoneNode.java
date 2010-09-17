@@ -70,17 +70,13 @@ final public class InstanceZoneNode extends DynamicNode<InstanceZone>
 	}
 	
 	void loadScript(File script_root) {
-		File script_dir = new File(script_root, 
-				"zone_" + getData().getIntID());
 		Studio.getInstance().getSceneScriptManager().loadTriggers(
-				getData(), script_dir.getPath());
+				getData(), script_root.getPath());
 	}
 	
 	void saveScript(File script_root) {
-		File script_dir = new File(script_root, 
-				"zone_" + getData().getIntID());
 		Studio.getInstance().getSceneScriptManager().saveTriggers(
-				getData(), script_dir);
+				getData(), script_root);
 	}
 	
 //	---------------------------------------------------------------------------------------------------------------
