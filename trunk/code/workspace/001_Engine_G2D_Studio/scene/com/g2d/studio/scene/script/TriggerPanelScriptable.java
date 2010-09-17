@@ -10,6 +10,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 
 import javax.swing.ImageIcon;
@@ -44,7 +46,7 @@ import com.g2d.util.TextEditor;
 
 @SuppressWarnings("serial")
 public class TriggerPanelScriptable extends TriggerPanel<SceneTriggerScriptable> 
-implements ActionListener, AncestorListener, KeyListener
+implements ActionListener, AncestorListener, KeyListener, PropertyChangeListener
 {
 	TextEditor			script_text = new TextEditor();
 	G2DWindowToolBar	tool_g2d	= new G2DWindowToolBar(this, true, true, true);
@@ -69,7 +71,7 @@ implements ActionListener, AncestorListener, KeyListener
 		this.addAncestorListener(this);
 		
 		script_text.getTextPane().addKeyListener(this);
-		
+		script_text.getTextPane().addPropertyChangeListener(this);
 		load();
 	}
 
@@ -92,10 +94,7 @@ implements ActionListener, AncestorListener, KeyListener
 		}
 		script_text.setText(last_script);
 		
-		JDialog top = AbstractDialog.getTopComponent(this, JDialog.class);
-		if (top != null) {
-			top.getRootPane().repaint();
-		}
+		refreshChanged();
 	}
 	
 	void save() {
@@ -103,10 +102,7 @@ implements ActionListener, AncestorListener, KeyListener
 		Studio.getInstance().getSceneScriptManager().saveTriggers(
 				pak, Studio.getInstance().project_path, trigger, last_script);
 		
-		JDialog top = AbstractDialog.getTopComponent(this, JDialog.class);
-		if (top != null) {
-			top.getRootPane().repaint();
-		}
+		refreshChanged();
 	}
 	
 	public boolean hasChanged() {
@@ -160,11 +156,18 @@ implements ActionListener, AncestorListener, KeyListener
 	public void keyReleased(KeyEvent e) {}
 	@Override
 	public void keyTyped(KeyEvent e) {
-		JDialog top = AbstractDialog.getTopComponent(this, JDialog.class);
+		refreshChanged();
+	}
+	
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		
+	}
+	
+	private void refreshChanged() {
+		TriggersEditor top = AbstractDialog.getTopComponent(this, TriggersEditor.class);
 		if (top != null) {
-			top.getRootPane().repaint();
+			top.refreshChanged();
 		}
 	}
-
-
 }

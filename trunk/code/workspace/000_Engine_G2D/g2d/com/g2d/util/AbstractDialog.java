@@ -55,16 +55,22 @@ public class AbstractDialog extends JDialog
 
 	public static Window getTopWindow(Component component) 
 	{
-		if (component instanceof Window) {
-			return (Window)component;
+		return getTopComponent(component, Window.class);
+	}
+	
+	public static<T extends Component> T getTopComponent(Component component, Class<T> type) 
+	{
+		T ret = null;
+		if (type.isInstance(component)) {
+			ret = type.cast(component);
 		}
 		Container p = component.getParent();
 		while (p!=null) {
-			if (p instanceof Window) {
-				return (Window) p;
+			if (type.isInstance(p)) {
+				ret = type.cast(p);
 			}
 			p = p.getParent();
 		}
-		return null;
+		return ret;
 	}
 }

@@ -140,8 +140,7 @@ public class TriggersEditor extends JPanel implements AncestorListener, WindowLi
 	public void windowOpened(WindowEvent e) {}
 	
 
-	@Override
-	public void update(Graphics g) {
+	void refreshChanged() {		
 		for (TriggerNode tn : G2DTree.getNodesSubClass(tree_root, TriggerNode.class)) {
 			if (tn.getEditPage() instanceof TriggerPanelScriptable) {
 				TriggerPanelScriptable tps = (TriggerPanelScriptable)tn.getEditPage();
@@ -152,9 +151,9 @@ public class TriggersEditor extends JPanel implements AncestorListener, WindowLi
 			}
 		}
 		root_dialog.setTitle(old_title);
-		super.update(g);
+		root_dialog.repaint();
 	}
-
+	
 //	-------------------------------------------------------------------------------------------------------
 
 	private void loadList() {
