@@ -238,7 +238,7 @@ public class InstanceZoneEditor extends ObjectViewer<InstanceZoneNode> implement
 				int sw = 120;
 				int sh = 100;
 				if (node != null) {
-					Image img = node.getIcon(true).getImage();
+					Image img = node.getIcon(false).getImage();
 					if (img != null) {
 						this.icon = Tools.combianImage(sw, sh, img);
 					} else {
