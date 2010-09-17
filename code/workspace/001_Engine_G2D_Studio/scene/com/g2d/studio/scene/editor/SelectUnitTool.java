@@ -100,10 +100,16 @@ public class SelectUnitTool extends AbstractFrame// implements ActionListener
 	
 	@Override
 	public void setVisible(boolean b) {
+		if (b) {
+			if (super.isVisible()) {
+				return;
+			} else {
+				this.page_xls_unit_panel.onRefresh();
+				this.page_cpj_sprite_panel.onRefresh();
+				this.page_deffect_panel.onRefresh();
+			}
+		}
 		super.setVisible(b);		
-		this.page_xls_unit_panel.onRefresh();
-		this.page_cpj_sprite_panel.onRefresh();
-		this.page_deffect_panel.onRefresh();
 	}
 	
 //	----------------------------------------------------------------------------------------------------------------
