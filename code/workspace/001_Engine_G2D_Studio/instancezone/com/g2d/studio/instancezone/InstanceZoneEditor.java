@@ -165,16 +165,18 @@ public class InstanceZoneEditor extends ObjectViewer<InstanceZoneNode> implement
 		
 		@Override
 		public void paint(Graphics g) {
-			super.paint(g);
+			synchronized(this) {
+				super.paint(g);
+			}
 		}
 		
 		@Override
 		protected void paintChildren(Graphics g)
 		{
 			Graphics2D g2d = (Graphics2D)g;
-			g2d.setColor(Color.GREEN);
 			g2d.setStroke(new BasicStroke(4));
 			
+			g.setColor(Color.GREEN);
 			for (SceneItem si : scenes.values()) 
 			{
 				int fx = si.getX();
@@ -189,10 +191,20 @@ public class InstanceZoneEditor extends ObjectViewer<InstanceZoneNode> implement
 				} else if (fy > getHeight()-si.getHeight()/2) {
 					fy = getHeight()-si.getHeight()/2;
 				}
-
-				si.setLocation(fx, fy);
+				if (fx != si.getX() || fy != si.getY()) {
+					si.setLocation(fx, fy);
+				}
+				
 				si.drawLink(g2d, scenes);
 			}
+			
+			JInternalFrame selected = getSelectedFrame();
+			if (selected instanceof SceneItem) {
+				g.setColor(Color.RED);
+				((SceneItem)selected).drawLink(g2d, scenes);
+			}
+			
+			
 			super.paintChildren(g);
 		}
 		
@@ -281,10 +293,14 @@ public class InstanceZoneEditor extends ObjectViewer<InstanceZoneNode> implement
 			public void componentMoved(ComponentEvent e) {
 				data.edit_x	= this.getX();
 				data.edit_y	= this.getY();
-				PageScenes.this.repaint();
+				PageScenes.this.repaint(100);
 			}
-			public void internalFrameActivated(InternalFrameEvent e) {}
-			public void internalFrameDeactivated(InternalFrameEvent e) {}
+			public void internalFrameActivated(InternalFrameEvent e) {
+				PageScenes.this.repaint(100);
+			}
+			public void internalFrameDeactivated(InternalFrameEvent e) {
+				PageScenes.this.repaint(100);
+			}
 			public void internalFrameDeiconified(InternalFrameEvent e) {}
 			public void internalFrameIconified(InternalFrameEvent e) {}
 			public void internalFrameOpened(InternalFrameEvent e) {}
@@ -305,14 +321,15 @@ public class InstanceZoneEditor extends ObjectViewer<InstanceZoneNode> implement
 			void drawLink(Graphics2D g, HashMap<Integer, SceneItem> scenes) {
 				for (Transport tp : transports) {
 					try {
-						int next_scene = Integer.parseInt(tp.next.next_scene_id);
-						SceneItem next = scenes.get(next_scene);
-						int sx = getX() + getWidth() / 2;
-						int sy = getY() + getHeight() / 2;
-						int dx = next.getX() + next.getWidth() / 2;
-						int dy = next.getY() + next.getHeight() / 2;
-						g.drawLine(sx, sy, dx, dy);
-						g.drawRect(getX()-2, getY()-2, getWidth()+4, getHeight()+4);
+						SceneItem next = scenes.get(Integer.parseInt(tp.next.next_scene_id));
+						if (next != null) {
+							int sx = getX() + getWidth() / 2;
+							int sy = getY() + getHeight() / 2;
+							int dx = next.getX() + next.getWidth() / 2;
+							int dy = next.getY() + next.getHeight() / 2;
+							g.drawLine(sx, sy, dx, dy);
+							g.drawRect(getX()-2, getY()-2, getWidth()+4, getHeight()+4);
+						}
 					} catch (Exception err) {}
 				}
 			}

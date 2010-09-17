@@ -267,11 +267,16 @@ public class SceneGraphViewer extends AbstractDialog
 
 			private void addNext(SceneFrame next_sf, LinkInfo link) 
 			{
-				nexts.add(new Pair<LinkTP, Pair<SceneFrame, LinkTP>>(
-						tp_map.get(link.this_scene_obj_name), 
-						new Pair<SceneFrame, LinkTP>(
-								next_sf, 
-								next_sf.tp_map.get(link.next_scene_obj_name))));
+				try {
+					nexts.add(new Pair<LinkTP, Pair<SceneFrame, LinkTP>>(
+							tp_map.get(link.this_scene_obj_name), 
+							new Pair<SceneFrame, LinkTP>(
+									next_sf, 
+									next_sf.tp_map.get(link.next_scene_obj_name))));
+				} catch (Exception err) {
+					err.printStackTrace();
+				}
+				
 			}
 			
 			@Override

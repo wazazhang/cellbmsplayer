@@ -9,6 +9,8 @@ import java.awt.event.MouseEvent;
 import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.JPanel;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
 
 import com.g2d.CanvasAdapter;
 import com.g2d.SimpleCanvasNoInternal;
@@ -20,7 +22,7 @@ import com.g2d.display.Stage;
 
 import com.g2d.util.AbstractFrame;
 
-public class DisplayObjectPanel extends JPanel implements Runnable, ComponentListener
+public class DisplayObjectPanel extends JPanel implements Runnable, ComponentListener, AncestorListener
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -34,6 +36,7 @@ public class DisplayObjectPanel extends JPanel implements Runnable, ComponentLis
 	{
 		this.setLayout(new BorderLayout());
 		this.addComponentListener(this);
+		this.addAncestorListener(this);
 		this.canvas.getCanvasAdapter().setStage(new ObjectStage());
 		this.add(canvas);
 	}
@@ -44,9 +47,12 @@ public class DisplayObjectPanel extends JPanel implements Runnable, ComponentLis
 	public void componentHidden(ComponentEvent e) {}
 	public void componentMoved(ComponentEvent e) {}
 	public void componentShown(ComponentEvent e) {}
-	
-	
-	
+	public void ancestorAdded(AncestorEvent event) {}
+	public void ancestorMoved(AncestorEvent event) {}
+	public void ancestorRemoved(AncestorEvent event) {
+		stop();
+	}
+
 	public Canvas getCanvas() {
 		return canvas.getCanvasAdapter();
 	}
@@ -61,7 +67,7 @@ public class DisplayObjectPanel extends JPanel implements Runnable, ComponentLis
 			if (service==null) {
 				service = new Thread(this);
 				service.start();
-				System.out.println("start");
+				System.out.println("DisplayObjectPanel : start");
 			}
 		} finally {
 			service_lock.unlock();
@@ -79,9 +85,10 @@ public class DisplayObjectPanel extends JPanel implements Runnable, ComponentLis
 					t.join(2000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
-					t.interrupt();
-				}				
-				System.out.println("stop");
+				} finally {
+					canvas.getCanvasAdapter().exit();
+				}
+//				System.out.println("stop");
 			}
 		} finally {
 			service_lock.unlock();
@@ -103,6 +110,8 @@ public class DisplayObjectPanel extends JPanel implements Runnable, ComponentLis
 				e.printStackTrace();
 			}
 		}
+		canvas.getCanvasAdapter().exit();
+		System.out.println("DisplayObjectPanel : stop paint !");
 	}
 	
 	class ObjectStage extends Stage

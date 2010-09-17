@@ -150,7 +150,7 @@ FocusListener
 		component.addMouseMotionListener(this);
 		component.addMouseWheelListener(this);
 		component.addFocusListener(this);
-		
+
 		//
 		component.setFocusable(true);
 		component.setEnabled(true);
@@ -182,6 +182,7 @@ FocusListener
 		if (currentStage!=null) {
 			currentStage.onRemoved(this);
 		}
+		destory_vm_buffer();
 	}
 	
 	public boolean isFocusOwner() {
@@ -416,7 +417,6 @@ FocusListener
 			}
 		}
 	}
-	
 
 	/**
 	 * 显示在低级stage中的高级ui
@@ -493,6 +493,7 @@ FocusListener
 		if (vm_buffer != null) {
 			vm_buffer.flush();
 			vm_buffer = null;
+			System.out.println("CanvasAdapter : destory_vm_buffer");
 		}
 //		if (vm_buffer_g2d!=null) {
 //			vm_buffer_g2d.dispose();
@@ -503,8 +504,17 @@ FocusListener
 	void create_vm_buffer(GraphicsConfiguration gc) {
 		vm_buffer 		= gc.createCompatibleVolatileImage(stageWidth, stageHeight, Transparency.OPAQUE);
 //		vm_buffer_g2d 	= (Graphics2D)vm_buffer.getGraphics();
+		System.out.println("CanvasAdapter : create_vm_buffer");
 	}
 	
+	@Override
+	protected void finalize() throws Throwable {
+		super.finalize();
+		destory_vm_buffer();
+		System.out.println("CanvasAdapter : finalize");
+	}
+	
+
 	public void repaint_game() {
 		component.repaint(0, 0, 0, getWidth(), getHeight());
 	}
@@ -534,7 +544,6 @@ FocusListener
 			{
 				destory_vm_buffer();
 				create_vm_buffer(gc);
-				System.out.println("restore vm buffer !");
 			}
 			
 			size_rate_x = (float)stageWidth / getWidth();
