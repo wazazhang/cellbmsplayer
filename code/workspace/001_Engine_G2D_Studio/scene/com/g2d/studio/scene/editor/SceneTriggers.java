@@ -19,7 +19,7 @@ public class SceneTriggers extends AbstractDialog
 		super.setLayout(new BorderLayout());
 		
 		this.triggers = new TriggersEditor(
-				root.getSceneNode().getData().getTriggersPackage());
+				root.getSceneNode().getData());
 		this.add(triggers, BorderLayout.CENTER);
 	}
 }

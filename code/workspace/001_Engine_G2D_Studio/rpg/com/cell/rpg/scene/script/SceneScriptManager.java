@@ -18,6 +18,7 @@ import com.cell.rpg.scene.SceneTrigger;
 import com.cell.rpg.scene.SceneTriggerScriptable;
 import com.cell.rpg.scene.TriggerGenerator;
 import com.cell.rpg.scene.Triggers;
+import com.cell.rpg.scene.TriggersPackage;
 import com.cell.rpg.scene.script.anno.EventMethod;
 import com.cell.rpg.scene.script.anno.EventParam;
 import com.cell.rpg.scene.script.anno.EventType;
@@ -147,9 +148,9 @@ public abstract class SceneScriptManager
 
 //	-----------------------------------------------------------------------------------------------------------------------
 	
-	public void loadTriggers(Triggers tgs, String root) {
+	public void loadTriggers(TriggersPackage pak, String root) {
 		try {
-			for (SceneTrigger st : tgs.getTriggers()) {
+			for (SceneTrigger st : pak.getTriggersPackage().getTriggers()) {
 				if (st instanceof SceneTriggerScriptable) {
 					SceneTriggerScriptable sts = (SceneTriggerScriptable) st;
 					InputStream sf = CIO.getInputStream(root + "/" + sts.getName() + ".js");
@@ -163,9 +164,9 @@ public abstract class SceneScriptManager
 		}
 	}
 	
-	public void saveTriggers(Triggers tgs, File root) {
+	public void saveTriggers(TriggersPackage pak, File root) {
 		try {
-			for (SceneTrigger st : tgs.getTriggers()) {
+			for (SceneTrigger st : pak.getTriggersPackage().getTriggers()) {
 				if (st instanceof SceneTriggerScriptable) {
 					SceneTriggerScriptable sts = (SceneTriggerScriptable) st;
 					File sf = new File(root, sts.getName() + ".js");
