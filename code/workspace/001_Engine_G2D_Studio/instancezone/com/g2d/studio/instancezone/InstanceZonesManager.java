@@ -44,9 +44,6 @@ public class InstanceZonesManager extends ManagerForm implements ActionListener
 		this.g2d_tree = new InstanceZonesTreeView(zones_list);
 		this.add(g2d_tree, BorderLayout.CENTER);
 		
-		for (InstanceZoneNode node : getNodes()) {
-			node.loadScript(script_root);
-		}
 	}
 	
 	@Override

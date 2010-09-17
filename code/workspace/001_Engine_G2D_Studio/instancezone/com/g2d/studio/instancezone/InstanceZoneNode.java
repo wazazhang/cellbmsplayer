@@ -69,16 +69,6 @@ final public class InstanceZoneNode extends DynamicNode<InstanceZone>
 		return (InstanceZoneEditor)edit_component;
 	}
 	
-	void loadScript(File script_root) {
-		Studio.getInstance().getSceneScriptManager().loadTriggers(
-				getData(), script_root.getPath());
-	}
-	
-	void saveScript(File script_root) {
-		Studio.getInstance().getSceneScriptManager().saveTriggers(
-				getData(), script_root);
-	}
-	
 //	---------------------------------------------------------------------------------------------------------------
 
 	class Menu extends NodeMenu<InstanceZoneNode>

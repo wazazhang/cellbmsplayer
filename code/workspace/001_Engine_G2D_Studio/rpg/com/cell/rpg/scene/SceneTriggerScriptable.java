@@ -17,46 +17,8 @@ import com.cell.rpg.scene.script.trigger.Event;
 public class SceneTriggerScriptable extends SceneTrigger implements Serializable
 {
 	private static final long serialVersionUID = 1L;
-	
-	private transient String script = null;
-	
+		
 	public SceneTriggerScriptable(Triggers parent, String name) throws Exception {
 		super(parent, name);
-	}
-	
-	/**
-	 * 设置编辑器生命周期的脚本, 该数据不会被序列化。
-	 * @param script
-	 */
-	public void loadEditScript(InputStream is) {
-		this.script = CIO.stringDecode(CIO.readStream(is), "UTF-8");
-	}
-	
-	/**
-	 * 设置编辑器生命周期的脚本, 该数据不会被序列化。
-	 * @param script
-	 */
-	public void saveEditScript(File file) {
-//		System.out.println(file);
-		if (script != null) {
-			file.getParentFile().mkdirs();
-			CFile.writeText(file, this.script, "UTF-8");
-		}
-	}
-
-	/**
-	 * 得到编辑器生命周期的脚本, 该数据不会被序列化。
-	 * @param script
-	 */
-	public String getScript() {
-		return script;
-	}
-	
-	/**
-	 * 设置编辑器生命周期的脚本, 该数据不会被序列化。
-	 * @param script
-	 */
-	public void setScript(String script) {
-		this.script = script;
 	}
 }

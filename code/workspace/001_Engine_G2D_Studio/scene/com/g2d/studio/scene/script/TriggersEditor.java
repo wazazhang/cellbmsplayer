@@ -3,12 +3,17 @@ package com.g2d.studio.scene.script;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.ArrayList;
+import java.util.Vector;
 
 import javax.swing.ImageIcon;
+import javax.swing.JDialog;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -33,10 +38,12 @@ import com.g2d.studio.swing.G2DTreeNode;
 import com.g2d.studio.swing.G2DTreeNodeGroup;
 
 @SuppressWarnings("serial")
-public class TriggersEditor extends JPanel implements AncestorListener
+public class TriggersEditor extends JPanel implements AncestorListener, WindowListener
 {
 	final TriggersPackage 	triggers_pak;
 	final Triggers 			triggers;
+	JDialog 				root_dialog;
+	String					old_title;
 	
 	TriggerGroup	tree_root;
 	
@@ -46,9 +53,13 @@ public class TriggersEditor extends JPanel implements AncestorListener
 	
 	JPanel			edit_panel;
 	
-	public TriggersEditor(TriggersPackage root) 
+	public TriggersEditor(JDialog dialog, TriggersPackage root) 
 	{
 		super(new BorderLayout());
+		
+		this.root_dialog	= dialog;
+		this.root_dialog	.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+		this.old_title		= dialog.getTitle();
 		
 		this.triggers_pak 	= root;
 		this.triggers		= root.getTriggersPackage();
@@ -71,6 +82,7 @@ public class TriggersEditor extends JPanel implements AncestorListener
 		this.tree_view.expandAll();
 		
 		this.addAncestorListener(this);
+		this.root_dialog.addWindowListener(this);
 	}
 	
 
@@ -83,6 +95,64 @@ public class TriggersEditor extends JPanel implements AncestorListener
 	@Override
 	public void ancestorRemoved(AncestorEvent event) {
 		saveList();
+	}
+
+	@Override
+	public void windowActivated(WindowEvent e) {}
+	@Override
+	public void windowClosed(WindowEvent e) {}
+	@Override
+	public void windowClosing(WindowEvent e) 
+	{
+		Vector<TriggerPanelScriptable> changed = new Vector<TriggerPanelScriptable>();
+		for (TriggerNode tn : G2DTree.getNodesSubClass(tree_root, TriggerNode.class)) {
+			if (tn.getEditPage() instanceof TriggerPanelScriptable) {
+				TriggerPanelScriptable tps = (TriggerPanelScriptable)tn.getEditPage();
+				if (tps.hasChanged()) {
+					changed.add(tps);
+				}
+			}
+		}
+		if (!changed.isEmpty()) {
+			int result = JOptionPane.showConfirmDialog(this, "关闭前保存脚本？");
+			if (JOptionPane.CANCEL_OPTION == result) {
+				root_dialog.setVisible(true);
+			}
+			else if (JOptionPane.OK_OPTION == result) {
+				for (TriggerPanelScriptable tps : changed) {
+					tps.save();
+				}
+				root_dialog.dispose();
+			} else {
+				root_dialog.dispose();
+			}
+		} else {
+			e.getWindow().dispose();
+		}
+	}
+	@Override
+	public void windowDeactivated(WindowEvent e) {}
+	@Override
+	public void windowDeiconified(WindowEvent e) {}
+	@Override
+	public void windowIconified(WindowEvent e) {}
+	@Override
+	public void windowOpened(WindowEvent e) {}
+	
+
+	@Override
+	public void update(Graphics g) {
+		for (TriggerNode tn : G2DTree.getNodesSubClass(tree_root, TriggerNode.class)) {
+			if (tn.getEditPage() instanceof TriggerPanelScriptable) {
+				TriggerPanelScriptable tps = (TriggerPanelScriptable)tn.getEditPage();
+				if (tps.hasChanged()) {
+					root_dialog.setTitle("*" + old_title);
+					return;
+				}
+			}
+		}
+		root_dialog.setTitle(old_title);
+		super.update(g);
 	}
 
 //	-------------------------------------------------------------------------------------------------------
@@ -114,7 +184,6 @@ public class TriggersEditor extends JPanel implements AncestorListener
 		}
 	}
 	
-
 //	-------------------------------------------------------------------------------------------------------
 	class TriggerTreeView extends G2DTree
 	{
@@ -292,13 +361,6 @@ public class TriggersEditor extends JPanel implements AncestorListener
 			
 			public TriggerNode(SceneTrigger trigger) {
 				this.trigger = trigger;
-				if (trigger instanceof SceneTriggerScriptable) {
-					edit_page = new TriggerPanelScriptable(
-							(SceneTriggerScriptable)trigger);
-				} else if (trigger instanceof SceneTriggerEditable) {
-					edit_page = new TriggerPanelEditable(
-							(SceneTriggerEditable)trigger);
-				}
 			}
 			
 			@Override
@@ -315,6 +377,14 @@ public class TriggersEditor extends JPanel implements AncestorListener
 			@Override
 			public String getName() {
 				if (trigger != null) {
+					if (edit_page instanceof TriggerPanelScriptable) {
+						TriggerPanelScriptable sc = (TriggerPanelScriptable)edit_page;
+						if (sc.hasChanged()) {
+							return "*" + trigger.getName();
+						} else {
+							return trigger.getName();
+						}
+					}
 					return trigger.getName();
 				}
 				return "null";
@@ -326,6 +396,17 @@ public class TriggersEditor extends JPanel implements AncestorListener
 			}
 
 			TriggerPanel<?> getEditPage() {
+				if (edit_page == null) {
+					if (trigger instanceof SceneTriggerScriptable) {
+						edit_page = new TriggerPanelScriptable(
+								triggers_pak,
+								(SceneTriggerScriptable)trigger);
+					} else if (trigger instanceof SceneTriggerEditable) {
+						edit_page = new TriggerPanelEditable(
+								triggers_pak,
+								(SceneTriggerEditable)trigger);
+					}
+				}
 				return edit_page;
 			} 
 			

@@ -13,6 +13,7 @@ import java.util.Set;
 import com.cell.CIO;
 import com.cell.CObject;
 import com.cell.CUtil;
+import com.cell.io.CFile;
 import com.cell.rpg.scene.Scene;
 import com.cell.rpg.scene.SceneTrigger;
 import com.cell.rpg.scene.SceneTriggerScriptable;
@@ -89,7 +90,8 @@ public abstract class SceneScriptManager
 	 * @param event_type
 	 * @return
 	 */
-	public String createTemplateScript(
+	public String createTemplateScript(		
+			TriggersPackage 		pak, 
 			Class<? extends Event> 	event_type, 
 			SceneTriggerScriptable 	sts) 
 	{
@@ -148,33 +150,27 @@ public abstract class SceneScriptManager
 
 //	-----------------------------------------------------------------------------------------------------------------------
 	
-	public void loadTriggers(TriggersPackage pak, String root) {
+	public String loadTriggers(TriggersPackage pak, String root, SceneTriggerScriptable sts) {
 		try {
 			String path = root + "/scene_script/"+pak.getClass().getSimpleName().toLowerCase();
-			for (SceneTrigger st : pak.getTriggersPackage().getTriggers()) {
-				if (st instanceof SceneTriggerScriptable) {
-					SceneTriggerScriptable sts = (SceneTriggerScriptable) st;
-					InputStream sf = CIO.getInputStream(path + "/" + sts.getName() + ".js");
-					if (sf != null) {
-						sts.loadEditScript(sf);
-					}
-				}
+			InputStream sf = CIO.getInputStream(path + "/" + sts.getName() + ".js");
+			if (sf != null) {
+				return CIO.stringDecode(CIO.readStream(sf), CObject.ENCODING);
 			}
 		} catch (Exception err) {
 			err.printStackTrace();
 		}
+		return null;
 	}
 	
-	public void saveTriggers(TriggersPackage pak, File root) {
+	public void saveTriggers(TriggersPackage pak, File root, SceneTriggerScriptable sts, String script) {
 		try {
 			File path = new File(root, "/scene_script/"+pak.getClass().getSimpleName().toLowerCase());
-			for (SceneTrigger st : pak.getTriggersPackage().getTriggers()) {
-				if (st instanceof SceneTriggerScriptable) {
-					SceneTriggerScriptable sts = (SceneTriggerScriptable) st;
-					File sf = new File(path, sts.getName() + ".js");
-					sts.saveEditScript(sf);
-				}
+			if (!path.exists()) {
+				path.mkdirs();
 			}
+			File sf = new File(path, sts.getName() + ".js");
+			CFile.writeText(sf, script, CObject.ENCODING);
 		} catch (Exception err) {
 			err.printStackTrace();
 		}

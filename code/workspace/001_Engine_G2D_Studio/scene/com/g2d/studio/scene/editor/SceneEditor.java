@@ -250,11 +250,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 
 	@SuppressWarnings("unchecked")
 	private void load()
-	{
-		Studio.getInstance().getSceneScriptManager().loadTriggers(
-				getSceneNode().getData(), 
-				scene_script_root.getPath());
-		
+	{		
 		if (scene_node.getData().scene_units!=null) {
 			for (SceneUnit unit : scene_node.getData().scene_units) {
 				SceneUnitTag<?> unit_tag = null;
@@ -308,10 +304,6 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 			}
 		}
 
-		Studio.getInstance().getSceneScriptManager().saveTriggers(
-				getSceneNode().getData(), 
-				scene_script_root);
-		
 		try {
 			if (scene_node.getWorldDisplay() != null &&
 				scene_node.getWorldDisplay().scene_snapshoot == null) {

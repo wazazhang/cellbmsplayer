@@ -12,6 +12,7 @@ import com.cell.rpg.scene.SceneTrigger;
 import com.cell.rpg.scene.SceneTriggerEditable;
 import com.cell.rpg.scene.SceneTriggerScriptable;
 import com.cell.rpg.scene.TriggerGenerator;
+import com.cell.rpg.scene.TriggersPackage;
 import com.cell.rpg.scene.script.Scriptable;
 import com.cell.rpg.scene.script.trigger.Event;
 import com.g2d.studio.Studio;
@@ -22,9 +23,9 @@ import com.g2d.util.TextEditor;
 @SuppressWarnings("serial")
 public class TriggerPanelEditable extends TriggerPanel<SceneTriggerEditable>
 {
-	public TriggerPanelEditable(SceneTriggerEditable trigger)
+	public TriggerPanelEditable(TriggersPackage pak, SceneTriggerEditable trigger)
 	{
-		super(trigger);
+		super(pak, trigger);
 	}
 	
 	protected void onTreeSelectChanged(TriggerTreeView tree_view, TreeNode node) {
