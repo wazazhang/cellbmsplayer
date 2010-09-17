@@ -73,7 +73,13 @@ public class Config extends com.cell.util.Config
 	public static String PERSISTANCE_MANAGER		= "com.cell.xstream.XStreamAdapter";
 	/**SQL持久化工具*/
 	public static String PERSISTANCE_SQL_TYPE		= "com.cell.mysql.SQLTypeComparerMySQL";
+
+//	--------------------------------------------------------------------------------------------------------
+//	--------------------------------------------------------------------------------------------------------
 	
+	public static String SCRIPT_SCENE_ROOT			= "scene_script";	
+	public static String SCRIPT_INSTANCE_ZONE_ROOT	= "instance_zone_script";
+
 	
 //	--------------------------------------------------------------------------------------------------------
 //	 扩展资源编辑器
@@ -98,5 +104,6 @@ public class Config extends com.cell.util.Config
 	public static Float	 CELL_BUILD_SCENE_THUMB_SCALE	= 0.1f;
 
 //	--------------------------------------------------------------------------------------------------------
-	
+
+//	--------------------------------------------------------------------------------------------------------
 }

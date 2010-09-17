@@ -127,6 +127,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 //	private SceneUnitTagAdapter<ScenePoint>		page_points;
 //	private SceneUnitTagAdapter<SceneImmutable>	page_immutables;
 	
+	private File scene_script_root;
 
 //	--------------------------------------------------------------------------------------------------------------
 //	transient
@@ -139,13 +140,14 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 	{
 		super.setSize(AbstractFrame.getScreenWidth()-Studio.getInstance().getWidth(), Studio.getInstance().getHeight());
 		super.setLocation(Studio.getInstance().getX()+Studio.getInstance().getWidth(), Studio.getInstance().getY());
-		super.setIconImage(Res.icon_edit);		
+		super.setIconImage(Res.icon_edit);
 		super.setTitle("场景 : " + scene.getName() + " (" + scene.getID() + ")");
 		
 		this.scene_node		= scene;
 		this.scene_world	= scene_node.getWorldDisplay();
 		this.scene_resource	= scene_world.getCPJFile().getSetResource();
-		
+		this.scene_script_root = new File(Studio.getInstance().project_path, 
+				Config.SCRIPT_SCENE_ROOT+"/scene_"+scene_node.getIntID());
 		// tool bar
 		{
 			tool_bar = new G2DWindowToolBar(this);
@@ -250,8 +252,6 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 	@SuppressWarnings("unchecked")
 	private void load()
 	{
-		File scene_script_root = new File(Studio.getInstance().project_save_path, 
-				"scenes/scene_" + getSceneNode().getIntID());
 		Studio.getInstance().getSceneScriptManager().loadTriggers(
 				getSceneNode().getData().getTriggersPackage(), 
 				scene_script_root.getPath());
@@ -309,8 +309,6 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 			}
 		}
 
-		File scene_script_root = new File(Studio.getInstance().project_save_path, 
-				"scenes/scene_" + getSceneNode().getIntID());
 		Studio.getInstance().getSceneScriptManager().saveTriggers(
 				getSceneNode().getData().getTriggersPackage(), 
 				scene_script_root);
