@@ -44,9 +44,9 @@ public class CStorage implements IStorage
 				rms_file = new File(base + Separator + "CStorage" + Separator + gamename);
 			}
 			
-			if (!rms_file.exists()) {
-				rms_file.mkdirs();
-			}
+//			if (!rms_file.exists()) {
+//				rms_file.mkdirs();
+//			}
 		}
 		catch (Exception e) 
 		{
@@ -162,7 +162,7 @@ public class CStorage implements IStorage
 		{
 			java.io.File file = new java.io.File(getFileDir(name));
 			if (!file.exists()){
-				file.mkdir();
+				file.mkdirs();
 			}
 			
 			file = new java.io.File(getFilePath(name, id));
