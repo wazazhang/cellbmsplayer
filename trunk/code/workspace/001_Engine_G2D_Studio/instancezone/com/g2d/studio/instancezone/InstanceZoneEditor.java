@@ -13,6 +13,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -128,8 +129,9 @@ public class InstanceZoneEditor extends ObjectViewer<InstanceZoneNode> implement
 		return getRPGObject().getData();
 	}
 	
-	void save() {
-		page_discussion.save();
+	void save(File script_root) {
+		this.page_discussion.save();
+		this.getRPGObject().saveScript(script_root);
 	}
 	
 //	-------------------------------------------------------------------------------------

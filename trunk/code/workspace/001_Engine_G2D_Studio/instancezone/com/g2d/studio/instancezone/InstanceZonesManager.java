@@ -6,6 +6,8 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.Vector;
 
+import com.cell.rpg.scene.script.SceneScriptManager;
+import com.g2d.studio.Config;
 import com.g2d.studio.ManagerForm;
 import com.g2d.studio.Studio;
 import com.g2d.studio.Studio.ProgressForm;
@@ -19,9 +21,11 @@ public class InstanceZonesManager extends ManagerForm implements ActionListener
 	
 	final public File				zones_dir;
 	final public File				zones_list;
+	final public File 				script_root;
+	
 	private G2DWindowToolBar 		tool_bar;
 	private InstanceZonesTreeView	g2d_tree;
-	
+
 //	------------------------------------------------------------------------------------------------------------------------------
 	
 	public InstanceZonesManager(Studio studio, ProgressForm progress) 
@@ -30,15 +34,19 @@ public class InstanceZonesManager extends ManagerForm implements ActionListener
 
 		progress.startReadBlock("初始化副本...");
 
-		this.zones_dir	= new File(studio.project_save_path, "instance_zones");
-		this.zones_list	= new File(zones_dir, "zones.list");
+		this.zones_dir		= new File(studio.project_save_path, "instance_zones");
+		this.zones_list		= new File(zones_dir, "zones.list");
+		this.script_root	= new File(Studio.getInstance().project_path, Config.SCRIPT_INSTANCE_ZONE_ROOT);
 
 		this.tool_bar = new G2DWindowToolBar(this);
 		this.add(tool_bar, BorderLayout.NORTH);
 		
 		this.g2d_tree = new InstanceZonesTreeView(zones_list);
 		this.add(g2d_tree, BorderLayout.CENTER);
-
+		
+		for (InstanceZoneNode node : getNodes()) {
+			node.loadScript(script_root);
+		}
 	}
 	
 	@Override
@@ -64,7 +72,7 @@ public class InstanceZonesManager extends ManagerForm implements ActionListener
 	public void saveAll() throws Throwable {
 		for (InstanceZoneNode node : getNodes()) {
 			try {
-				node.getEditComponent().save();
+				node.getEditComponent().save(script_root);
 			} catch (Exception err) {
 				err.printStackTrace();
 			}

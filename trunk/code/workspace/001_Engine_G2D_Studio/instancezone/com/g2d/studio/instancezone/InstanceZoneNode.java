@@ -2,6 +2,7 @@ package com.g2d.studio.instancezone;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
+import java.io.File;
 
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -9,6 +10,7 @@ import javax.swing.JTree;
 import javax.swing.tree.TreeNode;
 
 import com.cell.rpg.scene.instance.InstanceZone;
+import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.ObjectViewer;
 import com.g2d.studio.gameedit.dynamic.DynamicNode;
 import com.g2d.studio.gameedit.dynamic.IDynamicIDFactory;
@@ -61,10 +63,24 @@ final public class InstanceZoneNode extends DynamicNode<InstanceZone>
 	
 	@Override
 	public InstanceZoneEditor getEditComponent() {
-//		if (edit_component == null) {
+		if (edit_component == null) {
 			edit_component = new InstanceZoneEditor(this);
-//		}
+		}
 		return (InstanceZoneEditor)edit_component;
+	}
+	
+	void loadScript(File script_root) {
+		File script_dir = new File(script_root, 
+				"zone_" + getData().getIntID());
+		Studio.getInstance().getSceneScriptManager().loadTriggers(
+				getData().getTriggersPackage(), script_dir.getPath());
+	}
+	
+	void saveScript(File script_root) {
+		File script_dir = new File(script_root, 
+				"zone_" + getData().getIntID());
+		Studio.getInstance().getSceneScriptManager().saveTriggers(
+				getData().getTriggersPackage(), script_dir);
 	}
 	
 //	---------------------------------------------------------------------------------------------------------------
