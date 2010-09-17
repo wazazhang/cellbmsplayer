@@ -150,10 +150,11 @@ public abstract class SceneScriptManager
 	
 	public void loadTriggers(TriggersPackage pak, String root) {
 		try {
+			String path = root + "/scene_script/"+pak.getClass().getSimpleName().toLowerCase();
 			for (SceneTrigger st : pak.getTriggersPackage().getTriggers()) {
 				if (st instanceof SceneTriggerScriptable) {
 					SceneTriggerScriptable sts = (SceneTriggerScriptable) st;
-					InputStream sf = CIO.getInputStream(root + "/" + sts.getName() + ".js");
+					InputStream sf = CIO.getInputStream(path + "/" + sts.getName() + ".js");
 					if (sf != null) {
 						sts.loadEditScript(sf);
 					}
@@ -166,10 +167,11 @@ public abstract class SceneScriptManager
 	
 	public void saveTriggers(TriggersPackage pak, File root) {
 		try {
+			File path = new File(root, "/scene_script/"+pak.getClass().getSimpleName().toLowerCase());
 			for (SceneTrigger st : pak.getTriggersPackage().getTriggers()) {
 				if (st instanceof SceneTriggerScriptable) {
 					SceneTriggerScriptable sts = (SceneTriggerScriptable) st;
-					File sf = new File(root, sts.getName() + ".js");
+					File sf = new File(path, sts.getName() + ".js");
 					sts.saveEditScript(sf);
 				}
 			}
