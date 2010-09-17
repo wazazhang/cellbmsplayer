@@ -131,7 +131,6 @@ public class InstanceZoneEditor extends ObjectViewer<InstanceZoneNode> implement
 	
 	void save(File script_root) {
 		this.page_discussion.save();
-		this.getRPGObject().saveScript(script_root);
 	}
 	
 //	-------------------------------------------------------------------------------------
@@ -343,7 +342,7 @@ public class InstanceZoneEditor extends ObjectViewer<InstanceZoneNode> implement
 			super.setIconImage(Res.icon_action);
 			super.setCenter();
 			super.setLayout(new BorderLayout());
-			this.triggers = new TriggersEditor(getData());
+			this.triggers = new TriggersEditor(this, getData());
 			this.add(triggers, BorderLayout.CENTER);
 		}
 	}

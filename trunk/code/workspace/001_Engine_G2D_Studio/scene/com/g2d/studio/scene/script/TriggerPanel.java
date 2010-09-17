@@ -20,6 +20,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 
 import com.cell.rpg.scene.SceneTrigger;
+import com.cell.rpg.scene.TriggersPackage;
 import com.cell.rpg.scene.script.anno.EventType;
 import com.cell.rpg.scene.script.trigger.Event;
 import com.g2d.studio.res.Res;
@@ -31,6 +32,7 @@ import com.g2d.util.TextEditor;
 public abstract class TriggerPanel<T extends SceneTrigger> extends JPanel implements AncestorListener
 {
 	final protected T 							trigger;
+	final protected TriggersPackage 			pak;
 	
 	final protected TextEditor					comment		= new TextEditor();
 	
@@ -45,10 +47,11 @@ public abstract class TriggerPanel<T extends SceneTrigger> extends JPanel implem
 	private JSplitPane		split_h		= new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 	private JPanel			south_h		= new JPanel(new BorderLayout());
 	
-	public TriggerPanel(T trigger)
+	public TriggerPanel(TriggersPackage pak, T trigger)
 	{
 		super(new BorderLayout());
 		
+		this.pak				= pak;
 		this.trigger 			= trigger;
 		
 		this.tree_root			= new DefaultMutableTreeNode(trigger.getName());
