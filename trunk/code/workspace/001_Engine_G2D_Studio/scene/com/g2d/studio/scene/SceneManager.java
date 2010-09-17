@@ -150,7 +150,9 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 		Vector<SceneNode> 	nodes 	= getAllScenes();
 		ArrayList<Scene> 	scenes 	= new ArrayList<Scene>(nodes.size());
 		for (SceneNode node : nodes) {
-			scenes.add(node.getData());
+			if (!node.getData().is_instance_zone) {
+				scenes.add(node.getData());
+			}
 		}
 		return new SceneGraph(scenes);
 	}
@@ -287,9 +289,12 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 				StringBuffer sb = new StringBuffer();
 				sb.append("<html><body>");
 				sb.append("<p>" + node.getData().getName() + 
-						"(<font color=\"#ff0000\">" + node.getData().getIntID()  + "</font>" + ")</p>");
+						"(<font color=\"#ff0000\">" + node.getData().getIntID()  + "</font>" + ")" +
+						"</p>");
 				sb.append("<p>" + 
-						"<font color=\"#0000ff\">G" + node.getData().group  + "</font> " +
+						"<font color=\"#0000ff\">" +
+						(node.getData().is_instance_zone?"副本 ":("G" + node.getData().group)) +
+						"</font> " +
 						"<font color=\"#808080\">" + "资源(" + node.getResourceName()+")"  + "</font>" +
 						"</p>");
 				sb.append("</body></html>");

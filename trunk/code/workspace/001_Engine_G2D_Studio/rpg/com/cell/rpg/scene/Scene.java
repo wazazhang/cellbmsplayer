@@ -37,7 +37,9 @@ public class Scene extends RPGObject implements NamedObject, TriggersPackage
 	
 	@Property("场景事件冷冻时间(毫秒)")
 	public Integer						event_freezing_time_ms	= 5000;
-	
+
+	@Property("是否是副本")
+	public boolean						is_instance_zone = false;
 //	------------------------------------------------------------------------------------------------------------------
 	
 	public Scene(int id, String name) {

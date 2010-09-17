@@ -35,6 +35,8 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
 
 import com.cell.CObject;
 import com.cell.CUtil;
@@ -87,7 +89,7 @@ import com.g2d.util.AbstractFrame;
 import com.g2d.util.Drawing;
 
 @SuppressWarnings("serial")
-public class SceneEditor extends AbstractFrame implements ActionListener
+public class SceneEditor extends AbstractFrame implements ActionListener, AncestorListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -206,6 +208,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 			scene_panel				= new ScenePanel(scene_container);
 			scene_mini_map			= new SceneMiniMap();
 			display_object_panel.getCanvas().changeStage(scene_stage);
+			display_object_panel.addAncestorListener(this);
 			load();
 		}
 		
@@ -287,23 +290,28 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 	}
 	
 	@SuppressWarnings("unchecked")
-	private void save()
-	{
+	public Vector<SceneUnit> getList() {
 		Vector<SceneUnitTag> list = scene_container.getWorld().getChildsSubClass(SceneUnitTag.class);
 		for (SceneUnitTag tag : list) {
 			tag.onWriteReady(list);
 		}
-		
-		scene_node.getData().scene_units.clear();
-		
+		Vector<SceneUnit> ret = new Vector<SceneUnit>(list.size());
 		for (SceneUnitTag tag : list) {
 			try {
-				scene_node.getData().scene_units.add(tag.onWrite());
+				ret.add(tag.onWrite());
 			} catch (Throwable err) {
 				err.printStackTrace();
 			}
 		}
-
+		scene_node.getData().scene_units.clear();
+		scene_node.getData().scene_units.addAll(ret);
+		return ret;
+	}
+	
+	
+	private void save()
+	{
+		getList();
 		try {
 			if (scene_node.getWorldDisplay() != null &&
 				scene_node.getWorldDisplay().scene_snapshoot == null) {
@@ -338,18 +346,32 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 			display_object_panel.start();
 			scene_resource.initAllStreamImages();
 		} else {
-			display_object_panel.stop();
-			for (SceneUnitTag<?> t : scene_container.getWorld().getChildsSubClass(SceneUnitTag.class)) {
-				t.onHideFrom();
-			}
-			scene_resource.destoryAllStreamImages();
-			if (scene_mini_map != null){
-				scene_mini_map.killSnapshot();
-			}
+			clean();
 		}
 	}
 	
-
+	private void clean() {
+		display_object_panel.stop();
+		for (SceneUnitTag<?> t : scene_container.getWorld().getChildsSubClass(SceneUnitTag.class)) {
+			t.onHideFrom();
+		}
+		scene_resource.destoryAllStreamImages();
+		if (scene_mini_map != null){
+			scene_mini_map.killSnapshot();
+		}
+	}
+	
+	@Override
+	public void ancestorAdded(AncestorEvent event) {}
+	@Override
+	public void ancestorMoved(AncestorEvent event) {}
+	@Override
+	public void ancestorRemoved(AncestorEvent event) {
+		getList();
+		clean();
+		System.out.println("SceneEditor closed !");
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{

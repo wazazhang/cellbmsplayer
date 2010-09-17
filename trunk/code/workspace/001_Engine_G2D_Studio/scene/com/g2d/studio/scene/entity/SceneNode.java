@@ -20,7 +20,7 @@ final public class SceneNode extends DynamicNode<Scene>
 {
 	final private	CPJIndex<CPJWorld>	world_index;
 	transient		CPJWorld			world_display;
-	transient		SceneEditor			world_editor;
+//	transient		SceneEditor			world_editor;
 	
 	
 	public SceneNode(IDynamicIDFactory<?> factory, String name, CPJIndex<CPJWorld> world_index) {
@@ -95,16 +95,16 @@ final public class SceneNode extends DynamicNode<Scene>
 	}
 	
 	public void cleanSceneEditor() {
-		this.world_editor = null;
+//		this.world_editor = null;
 		this.bind_data.scene_node.width		= world_index.getObject().getSetObject().Width;
 		this.bind_data.scene_node.height	= world_index.getObject().getSetObject().Height;
 	}
 	
 	public SceneEditor getSceneEditor() {
-		if (world_editor==null) {
-			world_editor = new SceneEditor(this);
-		}
-		return world_editor;
+//		if (world_editor==null) {
+//			world_editor = new SceneEditor(this);
+//		}
+		return new SceneEditor(this);
 	}
 	
 	@Override
