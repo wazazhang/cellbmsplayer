@@ -24,6 +24,7 @@ import com.cell.rpg.scene.SceneTrigger;
 import com.cell.rpg.scene.SceneTriggerEditable;
 import com.cell.rpg.scene.SceneTriggerScriptable;
 import com.cell.rpg.scene.Triggers;
+import com.cell.rpg.scene.TriggersPackage;
 import com.g2d.studio.quest.items.QuestItemNode;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.scene.script.TriggersEditor.TriggerGroup.TriggerNode;
@@ -34,7 +35,8 @@ import com.g2d.studio.swing.G2DTreeNodeGroup;
 @SuppressWarnings("serial")
 public class TriggersEditor extends JPanel implements AncestorListener
 {
-	final Triggers triggers;
+	final TriggersPackage 	triggers_pak;
+	final Triggers 			triggers;
 	
 	TriggerGroup	tree_root;
 	
@@ -44,20 +46,21 @@ public class TriggersEditor extends JPanel implements AncestorListener
 	
 	JPanel			edit_panel;
 	
-	public TriggersEditor(Triggers root) 
+	public TriggersEditor(TriggersPackage root) 
 	{
 		super(new BorderLayout());
 		
-		this.triggers	= root;
+		this.triggers_pak 	= root;
+		this.triggers		= root.getTriggersPackage();
 		
-		this.tree_root	= new TriggerGroup("触发器");
+		this.tree_root		= new TriggerGroup("触发器");
 		this.loadList();
 		
-		this.tree_view	= new TriggerTreeView();
+		this.tree_view		= new TriggerTreeView();
 		
-		this.edit_panel	= new JPanel(new BorderLayout());
+		this.edit_panel		= new JPanel(new BorderLayout());
 		
-		JScrollPane left = new JScrollPane(tree_view);
+		JScrollPane left 	= new JScrollPane(tree_view);
 		left.setPreferredSize(new Dimension(250, 200));
 		this.split.setLeftComponent(left);
 		this.split.setRightComponent(edit_panel);

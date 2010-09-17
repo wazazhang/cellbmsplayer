@@ -343,7 +343,7 @@ public class InstanceZoneEditor extends ObjectViewer<InstanceZoneNode> implement
 			super.setIconImage(Res.icon_action);
 			super.setCenter();
 			super.setLayout(new BorderLayout());
-			this.triggers = new TriggersEditor(getData().getTriggersPackage());
+			this.triggers = new TriggersEditor(getData());
 			this.add(triggers, BorderLayout.CENTER);
 		}
 	}

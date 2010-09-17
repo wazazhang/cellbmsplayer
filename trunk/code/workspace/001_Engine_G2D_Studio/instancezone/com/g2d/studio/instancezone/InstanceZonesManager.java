@@ -36,7 +36,7 @@ public class InstanceZonesManager extends ManagerForm implements ActionListener
 
 		this.zones_dir		= new File(studio.project_save_path, "instance_zones");
 		this.zones_list		= new File(zones_dir, "zones.list");
-		this.script_root	= new File(Studio.getInstance().project_path, Config.SCRIPT_INSTANCE_ZONE_ROOT);
+		this.script_root	= Studio.getInstance().project_path;
 
 		this.tool_bar = new G2DWindowToolBar(this);
 		this.add(tool_bar, BorderLayout.NORTH);

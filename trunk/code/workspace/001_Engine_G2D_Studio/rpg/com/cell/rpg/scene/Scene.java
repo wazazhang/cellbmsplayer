@@ -13,7 +13,7 @@ import com.cell.rpg.display.SceneNode;
 import com.cell.rpg.scene.script.trigger.Event;
 import com.g2d.annotation.Property;
 
-public class Scene extends RPGObject implements NamedObject
+public class Scene extends RPGObject implements NamedObject, TriggersPackage
 {
 	transient private int 				int_id;
 

@@ -143,11 +143,10 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		super.setIconImage(Res.icon_edit);
 		super.setTitle("场景 : " + scene.getName() + " (" + scene.getID() + ")");
 		
-		this.scene_node		= scene;
-		this.scene_world	= scene_node.getWorldDisplay();
-		this.scene_resource	= scene_world.getCPJFile().getSetResource();
-		this.scene_script_root = new File(Studio.getInstance().project_path, 
-				Config.SCRIPT_SCENE_ROOT+"/scene_"+scene_node.getIntID());
+		this.scene_node			= scene;
+		this.scene_world		= scene_node.getWorldDisplay();
+		this.scene_resource		= scene_world.getCPJFile().getSetResource();
+		this.scene_script_root 	= Studio.getInstance().project_path;
 		// tool bar
 		{
 			tool_bar = new G2DWindowToolBar(this);
@@ -253,7 +252,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 	private void load()
 	{
 		Studio.getInstance().getSceneScriptManager().loadTriggers(
-				getSceneNode().getData().getTriggersPackage(), 
+				getSceneNode().getData(), 
 				scene_script_root.getPath());
 		
 		if (scene_node.getData().scene_units!=null) {
@@ -310,7 +309,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener
 		}
 
 		Studio.getInstance().getSceneScriptManager().saveTriggers(
-				getSceneNode().getData().getTriggersPackage(), 
+				getSceneNode().getData(), 
 				scene_script_root);
 		
 		try {

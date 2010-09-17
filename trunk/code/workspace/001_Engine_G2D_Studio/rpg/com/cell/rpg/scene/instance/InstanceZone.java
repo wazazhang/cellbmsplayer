@@ -9,11 +9,12 @@ import com.cell.rpg.RPGObject;
 import com.cell.rpg.scene.Scene;
 import com.cell.rpg.scene.TriggerGenerator;
 import com.cell.rpg.scene.Triggers;
+import com.cell.rpg.scene.TriggersPackage;
 import com.g2d.annotation.Property;
 
 
 @Property("副本")
-public class InstanceZone extends RPGObject implements NamedObject
+public class InstanceZone extends RPGObject implements NamedObject, TriggersPackage
 {
 	private String name;
 	
