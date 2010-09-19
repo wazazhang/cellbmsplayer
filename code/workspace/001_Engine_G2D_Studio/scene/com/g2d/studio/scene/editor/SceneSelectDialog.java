@@ -20,26 +20,38 @@ import com.g2d.util.AbstractOptionDialog;
 
 public class SceneSelectDialog extends AbstractOptionDialog<SceneNode> implements PropertyCellEdit<Integer>
 {
+	static int last_selected_scene_id;
+	
 	JLabel cell_edit_comp = new JLabel();
 	
 	G2DList<SceneItem> scene_panel = new G2DList<SceneItem>();
 	
 	public SceneSelectDialog(Component comp) {
-		this(comp, null);
+		this(comp, last_selected_scene_id);
 	}
 	
 	public SceneSelectDialog(Component comp, Integer default_scene) {
+		this(comp, default_scene, false);
+	}
+	
+	public SceneSelectDialog(Component comp, boolean only_zone) {
+		this(comp, last_selected_scene_id, only_zone);
+	}
+	
+	public SceneSelectDialog(Component comp, Integer default_scene, boolean only_zone) {
 		super(comp);
 		super.setTitle("选择一个场景");
 		super.setSize(700, 400);
 		Vector<SceneItem> items = new Vector<SceneItem>();
 		SceneItem selected = null;
 		for (SceneNode sn : Studio.getInstance().getSceneManager().getAllScenes()) {
-			SceneItem item = new SceneItem(sn);
-			items.add(item);
-			if (default_scene != null && 
-				default_scene == item.node.getIntID()) {
-				selected = item;
+			if (!only_zone || sn.getData().is_instance_zone) {
+				SceneItem item = new SceneItem(sn);
+				items.add(item);
+				if (default_scene != null && 
+					default_scene == item.node.getIntID()) {
+					selected = item;
+				}
 			}
 		}
 		scene_panel.setListData(items);
