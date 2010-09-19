@@ -20,7 +20,7 @@ public class SceneUnitListCellEdit extends JComboBox implements PropertyCellEdit
 	{
 		for (SceneUnit unit : scene.scene_units) {
 			if (cls.isInstance(unit)) {
-				super.addItem(unit);
+				super.addItem(unit.getName());
 			}
 		}
 	}
@@ -32,9 +32,6 @@ public class SceneUnitListCellEdit extends JComboBox implements PropertyCellEdit
 	
 	public String getValue() {
 		Object item = getSelectedItem();
-		if (item instanceof SceneUnit) {
-			return ((SceneUnit) item).getName()+"";
-		}
-		return null;
+		return item + "";
 	}
 }
