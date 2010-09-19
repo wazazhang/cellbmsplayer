@@ -21,6 +21,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
@@ -237,6 +238,7 @@ public class InstanceZoneEditor extends ObjectViewer<InstanceZoneNode> implement
 			public SceneItem(BindedScene bs) 
 			{
 				super("", false, true, false, false);
+				super.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 				super.addInternalFrameListener(this);
 				super.addComponentListener(this);
 //				super.addInternalFrameListener(this);
