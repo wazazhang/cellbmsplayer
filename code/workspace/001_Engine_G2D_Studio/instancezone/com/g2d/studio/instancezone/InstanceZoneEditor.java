@@ -106,7 +106,7 @@ public class InstanceZoneEditor extends ObjectViewer<InstanceZoneNode> implement
 			new DialogTriggers().setVisible(true);
 		}
 		else if (e.getSource() == btn_add_scene) {
-			SceneSelectDialog dialog = new SceneSelectDialog(this, null, true);
+			SceneSelectDialog dialog = new SceneSelectDialog(this, true);
 			SceneNode node = dialog.showDialog();
 			if (node != null) {
 				page_scenes.addScene(new BindedScene(node.getData()));
