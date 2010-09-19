@@ -58,6 +58,7 @@ public abstract class DisplayObjectViewer<D extends DisplayObject> extends Abstr
 	protected DisplayObjectViewer(D object)
 	{
 		view_object = object;
+		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		
 //		Runtime.getRuntime().addShutdownHook(new Thread(){public void run() {close();}});
 		

@@ -13,6 +13,9 @@ public abstract class AbstractFrame extends JFrame {
 
 	private static final long serialVersionUID = Version.VersionG2D;
 	
+	public AbstractFrame() {
+		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+	}
 
 	public void setCenter()
 	{

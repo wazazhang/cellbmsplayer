@@ -58,15 +58,6 @@ final public class SimpleCanvasNoInternal extends Canvas implements CanvasContai
 
 	final CanvasAdapter canvas_adapter;
 	
-	boolean no_ddraw = true;
-	{
-		no_ddraw = "true".equals(System.getProperty("sun.java2d.noddraw"));
-		
-		System.out.println("sun.java2d.noddraw=" + System.getProperty("sun.java2d.noddraw"));
-		
-	}
-	
-	
 	public SimpleCanvasNoInternal()
 	{
 		canvas_adapter = new CanvasAdapter(this);

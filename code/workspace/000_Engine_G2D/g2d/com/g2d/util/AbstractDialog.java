@@ -19,6 +19,7 @@ public class AbstractDialog extends JDialog
 		super((Window)null, ModalityType.APPLICATION_MODAL);
 		super.setAlwaysOnTop(true);
 		super.setSize(600, 400);
+		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setCenter();
 	}
 	
@@ -27,6 +28,7 @@ public class AbstractDialog extends JDialog
 		super(owner, ModalityType.APPLICATION_MODAL);
 		super.setAlwaysOnTop(true);
 		super.setSize(600, 400);
+		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setCenter();
 	}
 	
@@ -35,6 +37,7 @@ public class AbstractDialog extends JDialog
 		super(getTopWindow(owner), ModalityType.APPLICATION_MODAL);
 		super.setAlwaysOnTop(true);
 		super.setSize(600, 400);
+		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		setCenter();
 	}
 	
