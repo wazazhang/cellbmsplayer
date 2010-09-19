@@ -373,6 +373,7 @@ public class Studio extends AbstractFrame
 			gc.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					System.gc();
+					System.runFinalization();
 				}
 			});
 			state_bar.add(gc);

@@ -34,6 +34,7 @@ import com.cell.rpg.quest.QuestItem.TagQuest;
 import com.cell.rpg.quest.QuestItem.TagQuestItem;
 import com.cell.rpg.quest.QuestItem.TagQuestStateKillMonsterComparison;
 import com.cell.rpg.quest.ability.QuestTrigger;
+import com.cell.rpg.scene.SceneUnit;
 import com.cell.util.EnumManager;
 import com.cell.util.DateUtil.DayOfWeek;
 import com.cell.util.DateUtil.MonthOfYear;
@@ -409,7 +410,7 @@ public class QuestCellEditAdapter {
 				AwardTeleport tp = (AwardTeleport)editObject;
 				if (tp.scene_id!=null) {
 					SceneNode scene = Studio.getInstance().getSceneManager().getSceneNode(tp.scene_id+"");
-					return new SceneUnitListCellEdit(scene.getSceneEditor(), SceneImmutable.class);
+					return new SceneUnitListCellEdit(scene.getData(), SceneUnit.class);
 				}
 			}
 			return null;

@@ -15,6 +15,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -89,7 +91,7 @@ import com.g2d.util.AbstractFrame;
 import com.g2d.util.Drawing;
 
 @SuppressWarnings("serial")
-public class SceneEditor extends AbstractFrame implements ActionListener, AncestorListener
+public class SceneEditor extends AbstractFrame implements ActionListener, WindowListener
 {
 	private static final long serialVersionUID = 1L;
 
@@ -144,6 +146,10 @@ public class SceneEditor extends AbstractFrame implements ActionListener, Ancest
 		super.setLocation(Studio.getInstance().getX()+Studio.getInstance().getWidth(), Studio.getInstance().getY());
 		super.setIconImage(Res.icon_edit);
 		super.setTitle("场景 : " + scene.getName() + " (" + scene.getID() + ")");
+		
+		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		
+		this.addWindowListener(this);
 		
 		this.scene_node			= scene;
 		this.scene_world		= scene_node.getWorldDisplay();
@@ -201,14 +207,13 @@ public class SceneEditor extends AbstractFrame implements ActionListener, Ancest
 		
 		
 		// g2d stage
-		{
-			display_object_panel	= new DisplayObjectPanel();
+		{			
 			scene_stage				= new SceneStage();
 			scene_container			= new SceneContainer();
 			scene_panel				= new ScenePanel(scene_container);
 			scene_mini_map			= new SceneMiniMap();
-			display_object_panel.getCanvas().changeStage(scene_stage);
-			display_object_panel.addAncestorListener(this);
+			
+			display_object_panel	= new DisplayObjectPanel(scene_stage);
 			load();
 		}
 		
@@ -362,15 +367,24 @@ public class SceneEditor extends AbstractFrame implements ActionListener, Ancest
 	}
 	
 	@Override
-	public void ancestorAdded(AncestorEvent event) {}
+	public void windowActivated(WindowEvent e) {}
 	@Override
-	public void ancestorMoved(AncestorEvent event) {}
-	@Override
-	public void ancestorRemoved(AncestorEvent event) {
+	public void windowClosed(WindowEvent e) {
 		getList();
 		clean();
 		System.out.println("SceneEditor closed !");
 	}
+	@Override
+	public void windowClosing(WindowEvent e) {}
+	@Override
+	public void windowDeactivated(WindowEvent e) {}
+	@Override
+	public void windowDeiconified(WindowEvent e) {}
+	@Override
+	public void windowIconified(WindowEvent e) {}
+	@Override
+	public void windowOpened(WindowEvent e) {}
+
 	
 	@Override
 	public void actionPerformed(ActionEvent e)
@@ -553,7 +567,8 @@ public class SceneEditor extends AbstractFrame implements ActionListener, Ancest
 			getRoot().setFPS(Config.DEFAULT_FPS);
 		}
 		public void removed(DisplayObjectContainer parent) {}
-		public void render(Graphics2D g) {}
+		public void render(Graphics2D g) {
+		}
 
 		public void update() {
 			scene_panel.setSize(getWidth(), getHeight());
@@ -607,6 +622,10 @@ public class SceneEditor extends AbstractFrame implements ActionListener, Ancest
 			// 添加单位时显示在鼠标上的单位
 			renderAddUnitObject(g);
 			g.setTransform(trans);
+			
+			g.setColor(Color.WHITE);
+			Drawing.drawStringBorder(g, "FPS="+getRoot().getFPS(), 1, 1, 0);
+
 		}
 		
 		
@@ -625,7 +644,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener, Ancest
 			
 			updateLocateCamera(catch_mouse, worldx, worldy);
 			
-			getWorld().sort();
+//			getWorld().sort();
 
 		}
 

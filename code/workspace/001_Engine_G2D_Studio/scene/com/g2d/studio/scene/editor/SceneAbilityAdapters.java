@@ -14,7 +14,12 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import com.cell.rpg.ability.AbstractAbility;
 import com.cell.rpg.scene.Actor;
+import com.cell.rpg.scene.Effect;
+import com.cell.rpg.scene.Immutable;
+import com.cell.rpg.scene.Point;
+import com.cell.rpg.scene.Region;
 import com.cell.rpg.scene.Scene;
+import com.cell.rpg.scene.SceneUnit;
 import com.cell.rpg.scene.ability.ActorPathStart;
 import com.cell.rpg.scene.ability.ActorSkillTrainer;
 import com.cell.rpg.scene.ability.ActorTransport;
@@ -117,29 +122,29 @@ public class SceneAbilityAdapters
 			else if (field.getName().equals("next_scene_object_id")){
 				ActorTransport tp = (ActorTransport)editObject;
 				if (tp.next_scene_id!=null) {
-					Class<? extends SceneUnitTag<?>> type = SceneImmutable.class;
+					Class<? extends SceneUnit> type = SceneUnit.class;
 					if (editObject instanceof ActorTransportCraft) {
 						ActorTransportCraft tpc = (ActorTransportCraft)editObject;
 						switch(tpc.target_type) {
 						case ACTOR:
-							type = SceneActor.class;
+							type = Actor.class;
 							break;
 						case IMMUTABLE:
-							type = SceneImmutable.class;
+							type = Immutable.class;
 							break;
 						case EFFECT:
-							type = SceneEffect.class;
+							type = Effect.class;
 							break;
 						case POINT:
-							type = ScenePoint.class;
+							type = Point.class;
 							break;
 						case REGION:
-							type = SceneRegion.class;
+							type = Region.class;
 							break;
 						}
 					}
 					SceneNode scene = Studio.getInstance().getSceneManager().getSceneNode(tp.next_scene_id);
-					return new SceneUnitListCellEdit(scene.getSceneEditor(), type);
+					return new SceneUnitListCellEdit(scene.getData(), type);
 				}
 			}
 			return null;
@@ -189,7 +194,7 @@ public class SceneAbilityAdapters
 				Object editObject,
 				Object fieldValue, Field field) {
 			if (field.getName().equals("point_name")){
-				return new SceneUnitListCellEdit(editor, ScenePoint.class);
+				return new SceneUnitListCellEdit(editor.getSceneNode().getData(), Point.class);
 			}
 			return null;
 		}

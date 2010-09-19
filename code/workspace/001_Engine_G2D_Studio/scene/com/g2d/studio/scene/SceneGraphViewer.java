@@ -38,7 +38,7 @@ import com.g2d.util.Drawing;
 
 public class SceneGraphViewer extends AbstractDialog
 {
-	DisplayObjectPanel display_object_panel = new DisplayObjectPanel();
+	DisplayObjectPanel display_object_panel;
 	
 	public SceneGraphViewer(Component owner) 
 	{
@@ -47,7 +47,10 @@ public class SceneGraphViewer extends AbstractDialog
 		super.setIconImage(Res.icon_scene_graph);
 		super.setLocation(Studio.getInstance().getIconManager().getLocation());
 		super.setSize(Studio.getInstance().getIconManager().getSize());
-		super.add(display_object_panel, BorderLayout.CENTER);
+		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		this.display_object_panel = new DisplayObjectPanel(
+				new DisplayObjectPanel.ObjectStage(new Color(Config.DEFAULT_BACK_COLOR, false)));
+		this.add(display_object_panel, BorderLayout.CENTER);
 		
 		refreshSceneGraph(Studio.getInstance().getSceneManager().createSceneGraph());
 	}
