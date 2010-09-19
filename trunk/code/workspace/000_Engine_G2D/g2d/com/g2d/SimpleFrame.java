@@ -32,11 +32,11 @@ public class SimpleFrame extends JFrame implements Runnable, WindowListener, Com
 		this.addWindowListener(this);
 		this.addComponentListener(this);
 		
-		this.add(canvas.component);
+		this.add(canvas.getComponent());
 		this.setVisible(true);
 
-		int frameWidth  = canvas.component.getWidth()  + (getInsets().left+getInsets().right);
-		int frameHeight = canvas.component.getHeight() + (getInsets().top+getInsets().bottom);
+		int frameWidth  = canvas.getComponent().getWidth()  + (getInsets().left+getInsets().right);
+		int frameHeight = canvas.getComponent().getHeight() + (getInsets().top+getInsets().bottom);
 		
 		
 		this.setSize(frameWidth, frameHeight);
@@ -54,10 +54,10 @@ public class SimpleFrame extends JFrame implements Runnable, WindowListener, Com
 	}
 	
 	public void fillCanvasSize() {
-		if (canvas!=null) {
+		if (canvas != null) {
 			int cw = getWidth()  - (getInsets().left+getInsets().right);
 			int ch = getHeight() - (getInsets().top+getInsets().bottom);
-			canvas.component.setSize(Math.max(cw, 10), Math.max(ch, 10));
+			canvas.getComponent().setSize(Math.max(cw, 10), Math.max(ch, 10));
 		}
 	}
 	
@@ -91,8 +91,8 @@ public class SimpleFrame extends JFrame implements Runnable, WindowListener, Com
 	public void windowOpened(WindowEvent e) {}
 	public void windowClosed(WindowEvent e) {}
 	public void windowClosing(WindowEvent e) {
-		if (canvas.currentStage!=null) {
-			if (!canvas.currentStage.onWindowClose()) {
+		if (canvas.getStage() != null) {
+			if (!canvas.getStage().onWindowClose()) {
 				canvas.exit();
 			}
 		}

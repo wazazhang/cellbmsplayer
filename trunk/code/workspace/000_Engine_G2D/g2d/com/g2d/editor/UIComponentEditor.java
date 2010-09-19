@@ -44,8 +44,6 @@ public class UIComponentEditor<C extends UIComponent> extends DisplayObjectEdito
 {
 	private static final long serialVersionUID = 1L;
 	
-	
-	
 	class ComponentView extends JInternalFrame implements ComponentListener , ChangeListener
 	{
 		private static final long serialVersionUID = 1L;
@@ -133,7 +131,7 @@ public class UIComponentEditor<C extends UIComponent> extends DisplayObjectEdito
 	public UIComponentEditor(C comp)
 	{
 		super(comp);
-		
+		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		
 		{
 			this.setTitle(object.toString());

@@ -54,29 +54,29 @@ FocusListener
 
 //	--------------------------------------------------------------------------------
 	
-	final CanvasContainer				parent;
-	final Component 					component;
+	final private CanvasContainer		parent;
+	final private Component 			component;
 
-	Applet								owner_applet;
+	private Applet						owner_applet;
 	
 	private boolean 					game_exit		= false;
 	
 //	java swing/awt refre
-	Font 								defaultFont 	= new Font("song", Font.PLAIN, 13);
+	private Font 						defaultFont 	= new Font("song", Font.PLAIN, 13);
 //	Container 							parentFrame;
-	boolean								is_root_applet	= false;
-	AnimateCursor						defaultCursor;
-	AnimateCursor						nextCursor;
+//	private boolean						is_root_applet	= false;
+	private AnimateCursor				defaultCursor;
+	private AnimateCursor				nextCursor;
 	
 	
 //	game stage
-	int 								stageWidth 		= 800;
-	int 								stageHeight 	= 600;
-	Stage 								currentStage 	= null;
+	private int 						stageWidth 		= 800;
+	private int 						stageHeight 	= 600;
+	private Stage 						currentStage 	= null;
 	
-	transient Class<?>					nextStageClass 	= null;
-	transient Object[]					nextStageArgs;
-	transient Stage						nextStage;
+	private Class<?>					nextStageClass 	= null;
+	private Object[]					nextStageArgs;
+	private Stage						nextStage;
 	
 //	graphics and updating system
 	transient private VolatileImage		vm_buffer;
@@ -86,11 +86,16 @@ FocusListener
 	private int							framedelay_unactive 	= 1000;
 	private double 						fps;
 	
+	private float 						size_rate_x;
+	private float 						size_rate_y;
+	private int 						mousex;
+	private int 						mousey;
+	
 	private long						last_update_time	= 0;
 	private int							update_interval		= 0;
 //	append window
-	transient Window 					append_window;
-	transient Component					internal_frame;
+	private Window 						append_window;
+	private Component					internal_frame;
 	
 //	game hook
 //	transient Vector<Runnable>			window_close_hooks	= new Vector<Runnable>();
@@ -98,31 +103,28 @@ FocusListener
 //	game event
 	
 	
-	ConcurrentLinkedQueue<Event<?>>		event_queue 		= new ConcurrentLinkedQueue<Event<?>>();
+//	private ConcurrentLinkedQueue<Event<?>>		event_queue 		= new ConcurrentLinkedQueue<Event<?>>();
 	
-	transient float 					size_rate_x;
-	transient float 					size_rate_y;
 	
-	HashMap<Integer, KeyEvent> 			keystate 			= new HashMap<Integer, KeyEvent>();	// hold state
-	HashMap<Integer, KeyEvent> 			keystate_down 		= new HashMap<Integer, KeyEvent>();	// 收集按键
-	HashMap<Integer, KeyEvent> 			keystate_up 		= new HashMap<Integer, KeyEvent>();	// 收集按键
-	HashMap<Integer, KeyEvent> 			keystate_query_down = new HashMap<Integer, KeyEvent>(); // 用于查询
-	HashMap<Integer, KeyEvent> 			keystate_query_up	= new HashMap<Integer, KeyEvent>(); // 用于查询
+	private HashMap<Integer, KeyEvent> 			keystate 			= new HashMap<Integer, KeyEvent>();	// hold state
+	private HashMap<Integer, KeyEvent> 			keystate_down 		= new HashMap<Integer, KeyEvent>();	// 收集按键
+	private HashMap<Integer, KeyEvent> 			keystate_up 		= new HashMap<Integer, KeyEvent>();	// 收集按键
+	private HashMap<Integer, KeyEvent> 			keystate_query_down = new HashMap<Integer, KeyEvent>(); // 用于查询
+	private HashMap<Integer, KeyEvent> 			keystate_query_up	= new HashMap<Integer, KeyEvent>(); // 用于查询
 	
-	HashMap<Integer, MouseEvent> 		mousestate 				= new HashMap<Integer, MouseEvent>();
-	HashMap<Integer, MouseEvent> 		mousestate_down 		= new HashMap<Integer, MouseEvent>();
-	HashMap<Integer, MouseEvent> 		mousestate_up 			= new HashMap<Integer, MouseEvent>();
-	HashMap<Integer, MouseEvent> 		mousestate_query_down	= new HashMap<Integer, MouseEvent>();
-	HashMap<Integer, MouseEvent> 		mousestate_query_up		= new HashMap<Integer, MouseEvent>();
+	private HashMap<Integer, MouseEvent> 		mousestate 				= new HashMap<Integer, MouseEvent>();
+	private HashMap<Integer, MouseEvent> 		mousestate_down 		= new HashMap<Integer, MouseEvent>();
+	private HashMap<Integer, MouseEvent> 		mousestate_up 			= new HashMap<Integer, MouseEvent>();
+	private HashMap<Integer, MouseEvent> 		mousestate_query_down	= new HashMap<Integer, MouseEvent>();
+	private HashMap<Integer, MouseEvent> 		mousestate_query_up		= new HashMap<Integer, MouseEvent>();
 	
-	HashMap<Integer, Long> 				mousestate_prev_down_time	= new HashMap<Integer, Long>();
-	HashMap<Integer, MouseEvent> 		mousestate_prev_down_pos	= new HashMap<Integer, MouseEvent>();
+	private HashMap<Integer, Long> 				mousestate_prev_down_time	= new HashMap<Integer, Long>();
+	private HashMap<Integer, MouseEvent> 		mousestate_prev_down_pos	= new HashMap<Integer, MouseEvent>();
 	
-	HashMap<Integer, MouseWheelEvent> 	mousewheel			= new HashMap<Integer, MouseWheelEvent>();
-	HashMap<Integer, MouseWheelEvent> 	mousewheel_query	= new HashMap<Integer, MouseWheelEvent>();
-	
-	private int 						mousex;
-	private int 						mousey;
+	private HashMap<Integer, MouseWheelEvent> 	mousewheel			= new HashMap<Integer, MouseWheelEvent>();
+	private HashMap<Integer, MouseWheelEvent> 	mousewheel_query	= new HashMap<Integer, MouseWheelEvent>();
+
+
 	
 //	--------------------------------------------------------------------------------------------------------------------------
 //	construction
@@ -162,7 +164,8 @@ FocusListener
 
 		component.setSize(stageWidth, stageHeight);
 		component.setMinimumSize(new Dimension(100,100));
-
+	
+		System.out.println("sun.java2d.noddraw=" + System.getProperty("sun.java2d.noddraw"));
 	}
 	
 	public Component getParent(){
@@ -194,13 +197,17 @@ FocusListener
 	 * @return
 	 */
 	public boolean isRootApplet() {
-		return is_root_applet;
+		return owner_applet != null;
 	}
 
 	public Applet getApplet() {
 		return owner_applet;
 	}
-
+	
+	public void setApplet(Applet applet) {
+		this.owner_applet = applet;
+	}
+	
 	public Image getVMBuffer() {
 		return vm_buffer;
 	}

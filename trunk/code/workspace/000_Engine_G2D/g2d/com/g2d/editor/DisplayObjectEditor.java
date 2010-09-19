@@ -35,7 +35,7 @@ public class DisplayObjectEditor<V extends DisplayObject> extends AbstractFrame
 	{
 		this.setSize(640,480);
 		this.setTitle(o.getClass().getName() + " : " + o.toString());
-		
+		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.object = o;
 	
 		{

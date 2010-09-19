@@ -24,15 +24,11 @@ public class SimpleApplet extends JApplet implements Runnable
 		this.setLayout(null);
 		
 		this.canvas = canvas;//new SimpleCanvas(width, height);
-		this.canvas.is_root_applet = true;
-		this.canvas.owner_applet = this;
-		
-		this.add(canvas.component);
-		
+		this.canvas.setApplet(this);
+		this.add(canvas.getComponent());
 		if (mainClass!=null) {
 			this.canvas.changeStage(mainClass);
 		}
-
 	}
 	
 	
@@ -44,10 +40,8 @@ public class SimpleApplet extends JApplet implements Runnable
 	@Override
 	public void init()
 	{
-		this.setSize(this.canvas.stageWidth, this.canvas.stageHeight);
+		this.setSize(this.canvas.getStageWidth(), this.canvas.getStageHeight());
 		this.setFocusable(true);
-		
-
 		new Thread(this, getClass().getName() + "-paint").start();
 	}
 
