@@ -26,18 +26,23 @@ public class DisplayObjectPanel extends JPanel implements Runnable, ComponentLis
 {
 	private static final long serialVersionUID = 1L;
 	
-	public Color back_color = Color.GREEN;
+//	public Color back_color = Color.GREEN;
 	
 	final SimpleCanvasNoInternal canvas = new SimpleCanvasNoInternal(100, 100);
 	ReentrantLock service_lock = new ReentrantLock();
 	Thread service;
 	
-	public DisplayObjectPanel()
+//	public DisplayObjectPanel()
+//	{
+//		this(new ObjectStage(Color.GREEN));
+//	}
+	
+	public DisplayObjectPanel(Stage stage)
 	{
 		this.setLayout(new BorderLayout());
 		this.addComponentListener(this);
 		this.addAncestorListener(this);
-		this.canvas.getCanvasAdapter().setStage(new ObjectStage());
+		this.canvas.getCanvasAdapter().setStage(stage);
 		this.add(canvas);
 	}
 	
@@ -114,8 +119,14 @@ public class DisplayObjectPanel extends JPanel implements Runnable, ComponentLis
 		System.out.println("DisplayObjectPanel : stop paint !");
 	}
 	
-	class ObjectStage extends Stage
+	static public class ObjectStage extends Stage
 	{
+		public Color back_color;
+		
+		public ObjectStage(Color back_color) {
+			this.back_color = back_color;
+		}
+		
 		@Override
 		public void added(DisplayObjectContainer parent) {
 			getRoot().setFPS(40);
