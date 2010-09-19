@@ -89,8 +89,8 @@ public class PopupCellEditUILayout extends PopupCellEdit<UILayout>
 		@SuppressWarnings("deprecation")
 		public MakeLayoutForm(UIComponent src) throws Exception
 		{
+			this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 			object = src;
-			
 			canvas 				= new SrcCanvas() ;
 			dstview				= new DstView();
 			
