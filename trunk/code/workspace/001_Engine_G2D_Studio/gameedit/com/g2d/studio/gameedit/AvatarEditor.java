@@ -43,6 +43,7 @@ public class AvatarEditor extends AbstractFrame
 	public AvatarEditor() {
 		super.setSize(500, 500);
 		super.add(split);
+		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 	}
 	
 	public void setAvatar(DAvatar avatar) {
@@ -66,7 +67,8 @@ public class AvatarEditor extends AbstractFrame
 	class AvatarSplit extends JSplitPane implements ActionListener
 	{
 		ReentrantLock 		lock 			= new ReentrantLock();
-		DisplayObjectPanel	stage_view 		= new DisplayObjectPanel();
+		DisplayObjectPanel	stage_view 		= new DisplayObjectPanel(
+				new DisplayObjectPanel.ObjectStage(new Color(Config.DEFAULT_BACK_COLOR, false)));
 		AvatarSprite		avatar_group	= new AvatarSprite();
 		DAvatar 			current_avatar;
 		
@@ -96,7 +98,6 @@ public class AvatarEditor extends AbstractFrame
 						part_list.clearSelection();
 					}
 				});
-				stage_view.back_color = new Color(Config.DEFAULT_BACK_COLOR, false);
 			}
 			{
 				left.add(part_list, BorderLayout.CENTER);

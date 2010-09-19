@@ -23,15 +23,13 @@ public class ParticleStage extends Stage
 	boolean			is_show_spawn_region	= false;
 	boolean			is_show_spawn_bounds	= false;
 	
-	@Override
-	public void inited(Canvas root, Object[] args) {
-		if (args!=null && args.length>0 && args[0] instanceof EffectEditor) {
-			cur_edit = (EffectEditor)args[0];
-		}
-		particle = new ParticleDisplay(cur_edit.getData().particles);
+	public ParticleStage(EffectEditor cur_edit) 
+	{
+		this.cur_edit = cur_edit;
+		this.particle = new ParticleDisplay(cur_edit.getData().particles);
 		this.addChild(particle);
+
 	}
-	
 	
 	public void added(DisplayObjectContainer parent) {
 		particle.setLocation(getWidth()/2, getHeight()/2);

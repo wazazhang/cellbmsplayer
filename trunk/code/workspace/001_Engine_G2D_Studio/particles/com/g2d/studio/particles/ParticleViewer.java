@@ -21,7 +21,7 @@ public class ParticleViewer extends JFrame implements ActionListener
 {
 	final private EffectEditor cur_edit;
 
-	DisplayObjectPanel	display_object_panel	= new DisplayObjectPanel();
+	DisplayObjectPanel	display_object_panel;
 	JToolBar 			tools 					= new JToolBar();
 	JComboBox			composite_list			= new JComboBox(CompositeRule.getEnumNames());
 	
@@ -37,6 +37,8 @@ public class ParticleViewer extends JFrame implements ActionListener
 		super.setTitle("粒子查看器 : " + data.getData().getName());
 		super.setSize(800, 600);
 		super.setAlwaysOnTop(true);
+		
+		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		
 		this.cur_edit = data;
 		{
@@ -58,12 +60,15 @@ public class ParticleViewer extends JFrame implements ActionListener
 			btn_change_color.setBackground(Color.BLACK);
 			btn_change_color.addActionListener(this);
 		}
+		
+		display_object_panel	= new DisplayObjectPanel(new DisplayObjectPanel.ObjectStage(Color.GREEN));
+		display_object_panel.getCanvas().setFPS(Config.DEFAULT_FPS);
+		
 		add(display_object_panel, BorderLayout.CENTER);
 		add(tools, BorderLayout.SOUTH);
-		
-		stage = new ParticleStage();
-		display_object_panel.getCanvas().setFPS(Config.DEFAULT_FPS);
-		display_object_panel.getCanvas().changeStage(stage, data);
+
+		stage = new ParticleStage(cur_edit);
+		display_object_panel.getCanvas().changeStage(stage);
 	}
 
 	@Override

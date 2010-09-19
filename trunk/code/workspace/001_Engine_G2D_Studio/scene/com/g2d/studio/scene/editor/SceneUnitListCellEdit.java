@@ -4,6 +4,8 @@ import java.awt.Component;
 
 import javax.swing.JComboBox;
 
+import com.cell.rpg.scene.Scene;
+import com.cell.rpg.scene.SceneUnit;
 import com.g2d.editor.property.ObjectPropertyEdit;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.scene.units.SceneUnitTag;
@@ -14,10 +16,12 @@ public class SceneUnitListCellEdit extends JComboBox implements PropertyCellEdit
 
 	ObjectPropertyEdit panel;
 	
-	public SceneUnitListCellEdit(SceneEditor scene_viewer, Class<? extends SceneUnitTag<?>> cls) 
+	public SceneUnitListCellEdit(Scene scene, Class<? extends SceneUnit> cls) 
 	{
-		for (SceneUnitTag<?> unit : scene_viewer.getGameScene().getWorld().getChildsSubClass(cls)) {
-			super.addItem(unit);
+		for (SceneUnit unit : scene.scene_units) {
+			if (cls.isInstance(unit)) {
+				super.addItem(unit);
+			}
 		}
 	}
 	
@@ -28,8 +32,8 @@ public class SceneUnitListCellEdit extends JComboBox implements PropertyCellEdit
 	
 	public String getValue() {
 		Object item = getSelectedItem();
-		if (item instanceof SceneUnitTag<?>) {
-			return ((SceneUnitTag<?>) item).getGameUnit().getID()+"";
+		if (item instanceof SceneUnit) {
+			return ((SceneUnit) item).getName()+"";
 		}
 		return null;
 	}
