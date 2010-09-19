@@ -28,7 +28,7 @@ public class DisplayObjectPanel extends JPanel implements Runnable, ComponentLis
 	
 //	public Color back_color = Color.GREEN;
 	
-	final SimpleCanvasNoInternal canvas = new SimpleCanvasNoInternal(100, 100);
+	final SimpleCanvasNoInternal canvas;
 	ReentrantLock service_lock = new ReentrantLock();
 	Thread service;
 	
@@ -42,6 +42,8 @@ public class DisplayObjectPanel extends JPanel implements Runnable, ComponentLis
 		this.setLayout(new BorderLayout());
 		this.addComponentListener(this);
 		this.addAncestorListener(this);
+		
+		this.canvas = new SimpleCanvasNoInternal(100, 100);
 		this.canvas.getCanvasAdapter().setStage(stage);
 		this.add(canvas);
 	}
@@ -57,7 +59,7 @@ public class DisplayObjectPanel extends JPanel implements Runnable, ComponentLis
 	public void ancestorRemoved(AncestorEvent event) {
 		stop();
 	}
-
+	
 	public Canvas getCanvas() {
 		return canvas.getCanvasAdapter();
 	}
