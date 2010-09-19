@@ -188,6 +188,7 @@ public class Studio extends AbstractFrame
 			this.setSize(300, AbstractFrame.getScreenHeight()-60);
 			this.setLocation(0, 0);
 			this.setLayout(new BorderLayout());
+			this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 
 			initToolBar(progress_form);
 			initStateBar(progress_form);
