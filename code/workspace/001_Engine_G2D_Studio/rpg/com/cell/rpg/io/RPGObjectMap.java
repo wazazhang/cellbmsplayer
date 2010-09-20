@@ -116,6 +116,10 @@ public class RPGObjectMap<T extends RPGObject> extends Hashtable<String, T> //im
 		return null;
 	}
 	
+	public static<T extends RPGObject> T readNode(String xml_file, Class<T> type) {
+		return readNode(CIO.getInputStream(xml_file), xml_file, type);
+	}
+	
 	public static<T extends RPGObject> String writeNode(String xml_file, T node) {
 		try {
 			StringWriter 		writer 	= new StringWriter(1024);
