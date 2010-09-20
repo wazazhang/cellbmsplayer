@@ -87,7 +87,7 @@ public class CIO extends CObject
 		return null;
 	}
 
-
+	
 //	------------------------------------------------------------------------------------------------------------------------
 
 	public static InputStream getInputStream(String path)
