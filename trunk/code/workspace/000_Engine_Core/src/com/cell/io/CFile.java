@@ -77,6 +77,9 @@ public class CFile
 	public static void wirteData(java.io.File file, byte[] data)
 	{
 		try{
+			if (!file.getParentFile().exists()) {
+				file.getParentFile().mkdirs();
+			}
 			if (!file.exists()) {
 				file.createNewFile();
 			}

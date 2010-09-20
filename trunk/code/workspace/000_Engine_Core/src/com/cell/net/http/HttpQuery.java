@@ -1,73 +1,92 @@
 package com.cell.net.http;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
 import com.cell.CIO;
+import com.cell.CUtil;
 import com.cell.security.MD5;
+import com.sun.org.apache.xerces.internal.util.HTTPInputSource;
 
 public class HttpQuery implements Runnable
 {	
 	final public String 		url;
-	
 	final HttpQueryListener 	listener;
 
+	public boolean				interaction;
 	public String				charset	= "UTF-8";
 	public String 				result;
-	int 						timeout = 20000;
+	public int 					timeout = 20000;
 	
-	public HttpQuery(String url, int timeout, HttpQueryListener listener) {
-		this.url = url;
-		this.timeout = timeout;
-		this.listener = listener;
-	}
-	
-	public HttpQuery(String url, int timeout, HttpQueryListener listener, String charset) {
-		this.url		= url;
-		this.timeout	= timeout;
-		this.listener	= listener;
-		this.charset	= charset;
-	}
-	
-	public HttpQuery(String url, int timeout) {
-		this.url = url;
-		this.timeout = timeout;
-		this.listener = null;
+	public HttpQuery(String url, int timeout)
+	{
+		this(url, timeout, CIO.ENCODING, null, true);
 	}
 
-	public HttpQuery(String url, int timeout, String charset) {
-		this.url = url;
-		this.timeout = timeout;
-		this.listener = null;
+	public HttpQuery(String url, int timeout, String charset)
+	{
+		this(url, timeout, charset, null, true);
 	}
-	
+
+	public HttpQuery(String url, int timeout, String charset, HttpQueryListener listener)
+	{
+		this(url, timeout, charset, listener, true);
+	}
+
+	public HttpQuery(String url, int timeout, String charset, HttpQueryListener listener, boolean allow_user_interaction)
+	{
+		this.url					= url;
+		this.timeout				= timeout;
+		this.listener				= listener;
+		this.charset				= charset;
+		this.interaction 			= allow_user_interaction;
+	}
 	
 	public void run() 
 	{
 		try
         {
-        	URLConnection c;
-        	
-            InputStream is = null;
-            
             URL Url = new URL(url);
-          	 
-            c = Url.openConnection();
+            
+            URLConnection c = Url.openConnection();
             c.setConnectTimeout(timeout);
             c.setReadTimeout(timeout);
             c.setDoInput(true);
-            c.connect();
-            
-            Thread.yield();
-            
-            is = c.getInputStream();
-            	
-            byte[] data = CIO.readStream(is);
-            
-            result = new String(data, charset);
-            
+			
+        	HttpURLConnection uc = null;
+			if (c instanceof HttpURLConnection) {
+				uc = ((HttpURLConnection)c);
+			}
+			
+			c.connect();
+			try {
+//				System.out.println(c.getContent());
+				Thread.yield();
+	            InputStream is = c.getInputStream();
+				try {
+					ByteArrayOutputStream baos = new ByteArrayOutputStream();
+					while (true) {
+						int data = is.read();
+						if (data != -1) {
+							baos.write(data);
+						} else {
+							break;
+						}
+					}
+					result = CIO.stringDecode(baos.toByteArray(), charset);
+				} finally {
+					is.close();
+				}
+			} finally {
+				if (uc != null) {
+					uc.disconnect();
+				}
+			}
             if (listener!=null) {
             	listener.response(url, result);
             }
@@ -75,11 +94,11 @@ public class HttpQuery implements Runnable
 		catch(Throwable err)
 		{
 			err.printStackTrace();
-			
 			listener.timeout(url);
 		}
-		
 	}
+
+
 	
 	public static String blockQuery(String url, int timeout)
 	{
@@ -103,12 +122,12 @@ public class HttpQuery implements Runnable
 
 	public static void query(String url, int timeout, HttpQueryListener listener)
 	{
-		new Thread(new HttpQuery(url, timeout, listener)).start();
+		new Thread(new HttpQuery(url, timeout, CIO.ENCODING, listener)).start();
 	}
 
 	public static void query(String url, int timeout, HttpQueryListener listener, String charset)
 	{
-		new Thread(new HttpQuery(url, timeout, listener, charset)).start();
+		new Thread(new HttpQuery(url, timeout, charset, listener)).start();
 	}
 	
 	public static void main(String[] args) 
