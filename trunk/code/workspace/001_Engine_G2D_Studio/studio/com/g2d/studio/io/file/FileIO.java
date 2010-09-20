@@ -18,12 +18,7 @@ import com.g2d.studio.io.File;
 import com.g2d.studio.io.IO;
 
 public class FileIO implements IO
-{	
-	public FileIO() throws Throwable
-	{}
-	
-	
-	
+{
     public File createFile(String pathname) {
     	return new FileImpl(new java.io.File(pathname));
     }
@@ -70,6 +65,9 @@ public class FileIO implements IO
     	}
     	@Override
     	public void writeBytes(byte[] data) {
+    		if (file.getParentFile().exists()) {
+    			file.getParentFile().mkdirs();
+    		}
     		CFile.wirteData(file, data);
     	}
     	
@@ -82,21 +80,6 @@ public class FileIO implements IO
     		writeBytes(CIO.stringEncode(data, CIO.ENCODING));
     	}
     	
-		@Override
-		public boolean createNewFile() {
-			try {
-				return file.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return false;
-		}
-
-		@Override
-		public boolean delete() {
-			return file.delete();
-		}
-
 		@Override
 		public boolean exists() {
 			return file.exists();
@@ -128,16 +111,6 @@ public class FileIO implements IO
 		}
 
 		@Override
-		public boolean isDirectory() {
-			return file.isDirectory();
-		}
-
-		@Override
-		public boolean isFile() {
-			return file.isFile();
-		}
-
-		@Override
 		public File[] listFiles() {
 			java.io.File[] rfs = file.listFiles();
 			ArrayList<File> files = new ArrayList<File>(rfs.length);
@@ -147,15 +120,5 @@ public class FileIO implements IO
 			return files.toArray(new File[files.size()]);
 		}
 		
-		@Override
-		public boolean mkdir() {
-			return file.mkdir();
-		}
-
-		@Override
-		public boolean mkdirs() {
-			return file.mkdirs();
-		}
-    	
     }
 }

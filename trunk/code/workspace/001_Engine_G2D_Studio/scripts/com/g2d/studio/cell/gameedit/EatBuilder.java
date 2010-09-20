@@ -30,6 +30,7 @@ import com.g2d.cell.CellGameEditWrap;
 import com.g2d.cell.CellSetResource.ImagesSet;
 import com.g2d.cell.CellSetResource.StreamTiles;
 import com.g2d.studio.Config;
+import com.g2d.studio.io.file.FileIO;
 
 
 public class EatBuilder extends Builder
@@ -45,15 +46,22 @@ public class EatBuilder extends Builder
 		script_map.put("scene_png.script",			CIO.readAllText("/com/g2d/studio/cell/gameedit/scene_png.script"));
 	}
 	
-	
-	public Process openCellGameEdit(File cpj_file) 
-	{
-		return CellGameEditWrap.openCellGameEdit(Config.CELL_GAME_EDIT_CMD, cpj_file);
+	private java.io.File getLocalFile(com.g2d.studio.io.File cpj_file) {
+		return new File(cpj_file.getPath());
 	}
 	
-	public Process buildSprite(File cpj_file_name)
+	public Process openCellGameEdit(com.g2d.studio.io.File cpj_file) 
 	{
-		System.out.println("build sprite : " + cpj_file_name);
+		return CellGameEditWrap.openCellGameEdit(
+				Config.CELL_GAME_EDIT_CMD, 
+				getLocalFile(cpj_file)
+				);
+	}
+	
+	public Process buildSprite(com.g2d.studio.io.File cpj_file)
+	{
+		System.out.println("build sprite : " + cpj_file.getPath());
+		File cpj_file_name = getLocalFile(cpj_file);
 		try {
 			File output_properties = copyScript(cpj_file_name, "output.properties");
 			Process process = CellGameEditWrap.openCellGameEdit(Config.CELL_GAME_EDIT_CMD, cpj_file_name, 
@@ -63,13 +71,16 @@ public class EatBuilder extends Builder
 			return process;
 		} catch (Throwable e) {
 			e.printStackTrace();
+		} finally {
+			saveBuildSpriteBat(cpj_file_name);
 		}
 		return null;
 	}
 	
-	public Process buildScene(File cpj_file_name)
+	public Process buildScene(com.g2d.studio.io.File cpj_file)
 	{
-		System.out.println("build scene : " + cpj_file_name);
+		System.out.println("build scene : " + cpj_file.getPath());
+		File cpj_file_name = getLocalFile(cpj_file);
 		try {
 			File output_properties		= copyScript(cpj_file_name,	"output.properties");
 			File scene_jpg_script		= copyScript(cpj_file_name,	"scene_jpg.script");
@@ -88,17 +99,19 @@ public class EatBuilder extends Builder
 			return process;
 		} catch (Throwable e) {
 			e.printStackTrace();
+		} finally {
+			saveBuildSceneBat(cpj_file_name);
 		}
 		return null;
 	}
 
-	public void saveBuildSpriteBat(File cpj_file_name) {
+	void saveBuildSpriteBat(File cpj_file_name) {
 		String cmd = CUtil.replaceString(Config.CELL_BUILD_SPRITE_CMD, "{file}", cpj_file_name.getName());
 		cmd = CUtil.replaceString(cmd, "\\n", "\n");
 		CFile.writeText(new File(cpj_file_name.getParentFile(), "build_sprite.bat"), cmd, "UTF-8");
 	}
 
-	public void saveBuildSceneBat(File cpj_file_name) {
+	void saveBuildSceneBat(File cpj_file_name) {
 		String cmd = CUtil.replaceString(Config.CELL_BUILD_SCENE_CMD, "{file}", cpj_file_name.getName());
 		cmd = CUtil.replaceString(cmd, "\\n", "\n");
 		CFile.writeText(new File(cpj_file_name.getParentFile(), "build_scene.bat"), cmd, "UTF-8");
@@ -406,10 +419,11 @@ public class EatBuilder extends Builder
 			String arg_1 = args[1].toLowerCase().trim();
 			String arg_2 = args[2].toLowerCase().trim();
 			Config.load(Config.class, arg_2);
+			FileIO io = new FileIO();
 			if (arg_1.equals("scene")) {
-				builder.buildScene(new File(arg_0));
+				builder.buildScene(io.createFile(arg_0));
 			} else {
-				builder.buildSprite(new File(arg_0));
+				builder.buildSprite(io.createFile(arg_0));
 			}
 		}
 		

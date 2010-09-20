@@ -1,10 +1,10 @@
 package com.g2d.studio.cell.gameedit;
 
-import java.io.File;
 
 import com.cell.rpg.res.Resource;
 import com.g2d.cell.CellSetResource.ImagesSet;
 import com.g2d.cell.CellSetResource.StreamTiles;
+import com.g2d.studio.io.File;
 
 public abstract class Builder 
 {
@@ -16,9 +16,9 @@ public abstract class Builder
 	
 	public abstract StreamTiles createResource(ImagesSet img, Resource resource);
 	
-	public abstract void saveBuildSpriteBat(File cpj_file_name);
-
-	public abstract void saveBuildSceneBat(File cpj_file_name);
+//	public abstract void saveBuildSpriteBat(File cpj_file_name);
+//
+//	public abstract void saveBuildSceneBat(File cpj_file_name);
 	
 //	----------------------------------------------------------------------------------------------------------
 	

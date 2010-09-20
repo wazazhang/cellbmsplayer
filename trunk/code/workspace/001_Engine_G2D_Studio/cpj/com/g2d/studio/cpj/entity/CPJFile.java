@@ -3,7 +3,6 @@ package com.g2d.studio.cpj.entity;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -21,6 +20,7 @@ import com.g2d.studio.Studio;
 import com.g2d.studio.StudioResource;
 import com.g2d.studio.cell.gameedit.Builder;
 import com.g2d.studio.cpj.CPJResourceType;
+import com.g2d.studio.io.File;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.swing.G2DTreeNode;
 
@@ -193,7 +193,7 @@ public class CPJFile extends G2DTreeNode<CPJObject<?>>
 		if (output_file!=null && output_file.exists()) 
 		{
 			try {
-				set_resource = new StudioResource(output_file, name);
+				set_resource = new StudioResource(output_file);
 				switch (res_type) {
 				case ACTOR:	
 				case AVATAR:
@@ -219,11 +219,9 @@ public class CPJFile extends G2DTreeNode<CPJObject<?>>
 			case AVATAR:
 			case EFFECT:
 				Builder.getInstance().buildSprite(cpj_file);
-				Builder.getInstance().saveBuildSpriteBat(cpj_file);
 				break;
 			case WORLD:
 				Builder.getInstance().buildScene(cpj_file);
-				Builder.getInstance().saveBuildSceneBat(cpj_file);
 				break;
 			}
 		}
@@ -286,19 +284,22 @@ public class CPJFile extends G2DTreeNode<CPJObject<?>>
 	public static String RES_SCENE_OUTPUT			= "output/scene.properties";<br>
 	@see {@link Config}
 	*/
-	public static ArrayList<CPJFile> listFile (String root, String res_root, CPJResourceType res_type)
+	public static ArrayList<CPJFile> listFile (String root, String res_root, CPJResourceType res_type, String prefix)
 	{
 //		res_prefix = res_prefix.toLowerCase();
 		ArrayList<CPJFile> ret = new ArrayList<CPJFile>();
 		try{
-			for (File file : new File(root+File.separator+res_root).listFiles()) {
-				File cpj = getCPJFile(file);
-				if (cpj != null) {
-					try{
-						ret.add(new CPJFile(cpj, res_type));
-					} catch(Throwable err){
-						System.err.println("init cpj file error : " + cpj.getPath());
-						err.printStackTrace();
+			File root_file = Studio.getInstance().getIO().createFile(root, res_root);
+			for (File file : root_file.listFiles()) {
+				if (file.getName().startsWith(prefix)) {
+					File cpj = getCPJFile(file);
+					if (cpj != null) {
+						try{
+							ret.add(new CPJFile(cpj, res_type));
+						} catch(Throwable err){
+							System.err.println("init cpj file error : " + cpj.getPath());
+							err.printStackTrace();
+						}
 					}
 				}
 			}
@@ -312,17 +313,21 @@ public class CPJFile extends G2DTreeNode<CPJObject<?>>
 	{
 		try{
 			String cpj_file_name = cpj_file.getName().toLowerCase().replace("cpj", "");
-			for (File output : cpj_file.getParentFile().listFiles()) {
-				if (output.getName().toLowerCase().equals("output")) {
-					for (File o : output.listFiles()) {
-						String output_name = o.getName().toLowerCase();
-						if (output_name.startsWith(cpj_file_name) && 
-							output_name.endsWith(".properties")) {
-							return o;
-						}
-					}
-				}
-			}
+			File o = cpj_file.getParentFile().getChildFile("output").getChildFile(cpj_file_name+"properties");
+//			System.out.println(o.getPath());
+			return o;
+			
+//			for (File output : cpj_file.getParentFile().listFiles()) {
+//				if (output.getName().toLowerCase().equals("output")) {
+//					for (File o : output.listFiles()) {
+//						String output_name = o.getName().toLowerCase();
+//						if (output_name.startsWith(cpj_file_name) && 
+//							output_name.endsWith(".properties")) {
+//							return o;
+//						}
+//					}
+//				}
+//			}
 		}
 		catch(Exception err){}
 		return null;
@@ -331,14 +336,13 @@ public class CPJFile extends G2DTreeNode<CPJObject<?>>
 	private static File getCPJFile(File cpj_root) 
 	{
 		try{		
-			if (cpj_root.isDirectory()) {
-				for (File f : cpj_root.listFiles()) {
-					if (f.getName().toLowerCase().endsWith(".cpj")) {
-						return f;
-					}
+			for (File f : cpj_root.listFiles()) {
+				if (f.getName().toLowerCase().endsWith(".cpj")) {
+					return f;
 				}
 			}
-		}catch(Exception err){}
+		} catch (Exception err) {
+		}
 		return null;
 	}
 }

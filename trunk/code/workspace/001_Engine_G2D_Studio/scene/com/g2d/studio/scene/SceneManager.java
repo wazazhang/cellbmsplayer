@@ -92,7 +92,7 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 		{
 			SceneGroup tree_root = new SceneGroup("场景管理器");
 			this.g2d_tree	= new SceneTree(tree_root);
-			if (scene_dir.exists() && scene_list.exists()) {
+			if (scene_list.exists()) {
 				String[] all_scene = CIO.readAllLine(scene_list.getPath(), "UTF-8");
 				progress.setMaximum("", all_scene.length);
 				int i=0;
@@ -127,7 +127,7 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 	}
 
 	public InstanceZonesManager getInstanceZonesManager() {
-		return null;
+		return instance_zones;
 	}
 	
 //	------------------------------------------------------------------------------------------------------------------------------

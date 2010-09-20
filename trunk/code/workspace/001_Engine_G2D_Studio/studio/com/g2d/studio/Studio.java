@@ -51,6 +51,7 @@ import com.g2d.studio.instancezone.InstanceZonesManager;
 import com.g2d.studio.io.File;
 import com.g2d.studio.io.IO;
 import com.g2d.studio.io.file.FileIO;
+import com.g2d.studio.io.http.FileHttp;
 import com.g2d.studio.item.ItemManager;
 import com.g2d.studio.quest.QuestManager;
 import com.g2d.studio.quest.group.QuestGroupManager;
@@ -120,17 +121,11 @@ public class Studio extends AbstractFrame
 		instance 			= this;
 		this.io				= io;
 		
-		CObject.initSystem(
-			new CStorage("g2d_studio"), 
-			new CAppBridge(
-			this.getClass().getClassLoader(), 
-			this.getClass()));
-
+		System.out.println("IO system : " + io.getClass().getName());
+		
 		project_file 		= g2d_file;
 		project_path 		= io.createFile(project_file.getParent());
 		project_save_path	= io.createFile(project_file.getPath()+".save");
-		
-		Config.load(Config.class, g2d_file.getInputStream());
 		
 		RPGConfig.IS_EDIT_MODE = true;
 		RPGObjectMap.setPersistanceManagerDriver	(Config.PERSISTANCE_MANAGER);
@@ -614,12 +609,29 @@ public class Studio extends AbstractFrame
 	{
 		try
 		{
-			if (args == null || args.length == 0) {
-				System.err.println("usage : g2dstudio.jar [g2d file path]");
+			if (args == null || args.length == 0) 
+			{
+				System.err.println("usage : g2dstudio.jar [g2d file path] <IO class name>");
 				return;
-			} else {
+			} 
+			else
+			{
+				CObject.initSystem(
+					new CStorage("g2d_studio"), 
+					new CAppBridge(
+					Studio.class.getClassLoader(), 
+					Studio.class));
+				Config.load(Config.class, args[0]);
+
+				IO io = null;
+				if (args.length > 1 && args[0].startsWith("http")) {
+					io = new FileHttp(args);
+				}
+				else if (io == null) {
+					io = new FileIO();
+				}
+				
 				System.out.println("Open: " + args[0]);
-				IO io = new FileIO();
 				File g2d_file = io.createFile(args[0]);
 				Studio studio = new Studio(g2d_file, io);
 				studio.setVisible(true);

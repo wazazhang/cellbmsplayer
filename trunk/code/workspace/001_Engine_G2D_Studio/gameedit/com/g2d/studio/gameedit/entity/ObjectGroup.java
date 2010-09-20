@@ -54,10 +54,6 @@ public abstract class ObjectGroup<T extends ObjectNode<D>, D extends RPGObject> 
 	
 	public void saveList()
 	{
-		if (!list_file.getParentFile().exists()) {
-			list_file.getParentFile().mkdirs();
-		}
-		
 		File name_list_file = Studio.getInstance().getIO().createFile(
 				list_file.getParentFile(), 
 				"name_" + list_file.getName());

@@ -5,7 +5,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Vector;
@@ -26,6 +25,7 @@ import com.g2d.studio.cpj.entity.CPJFile;
 import com.g2d.studio.cpj.entity.CPJObject;
 import com.g2d.studio.cpj.entity.CPJSprite;
 import com.g2d.studio.cpj.entity.CPJWorld;
+import com.g2d.studio.io.File;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.swing.G2DTree;
 import com.g2d.studio.swing.G2DTreeNode;
@@ -53,7 +53,8 @@ public class CPJResourceManager extends ManagerForm implements MouseListener
 		// actors
 		{
 			unit_root = new DefaultMutableTreeNode("单位模板");
-			ArrayList<CPJFile> files = CPJFile.listFile(path, Config.RES_ACTOR_ROOT, CPJResourceType.ACTOR);
+			ArrayList<CPJFile> files = CPJFile.listFile(path, Config.RES_ACTOR_ROOT, 
+					CPJResourceType.ACTOR, "actor_");
 			progress.setMaximum("", files.size());
 			for (int i=0; i<files.size(); i++) {
 				unit_root.add(files.get(i));
@@ -68,7 +69,8 @@ public class CPJResourceManager extends ManagerForm implements MouseListener
 		// avatars
 		{
 			avatar_root = new DefaultMutableTreeNode("AVATAR模板");
-			ArrayList<CPJFile> files = CPJFile.listFile(path, Config.RES_AVATAR_ROOT, CPJResourceType.AVATAR);
+			ArrayList<CPJFile> files = CPJFile.listFile(path, Config.RES_AVATAR_ROOT, 
+					CPJResourceType.AVATAR, "item_");
 			progress.setMaximum("", files.size());
 			for (int i=0; i<files.size(); i++) {
 				avatar_root.add(files.get(i));
@@ -83,7 +85,8 @@ public class CPJResourceManager extends ManagerForm implements MouseListener
 		// effect
 		{
 			effect_root = new DefaultMutableTreeNode("特效模板");
-			ArrayList<CPJFile> files = CPJFile.listFile(path, Config.RES_EFFECT_ROOT, CPJResourceType.EFFECT);
+			ArrayList<CPJFile> files = CPJFile.listFile(path, Config.RES_EFFECT_ROOT, 
+					CPJResourceType.EFFECT, "effect_");
 			progress.setMaximum("", files.size());
 			for (int i=0; i<files.size(); i++) {
 				effect_root.add(files.get(i));
@@ -98,7 +101,8 @@ public class CPJResourceManager extends ManagerForm implements MouseListener
 		// scenes
 		{
 			scene_root = new DefaultMutableTreeNode("场景模板");
-			ArrayList<CPJFile> files = CPJFile.listFile(path, Config.RES_SCENE_ROOT, CPJResourceType.WORLD);
+			ArrayList<CPJFile> files = CPJFile.listFile(path, Config.RES_SCENE_ROOT, 
+					CPJResourceType.WORLD, "scene_");
 			progress.setMaximum("", files.size());
 			for (int i=0; i<files.size(); i++) {
 				scene_root.add(files.get(i));
@@ -113,7 +117,7 @@ public class CPJResourceManager extends ManagerForm implements MouseListener
 		
 		this.add(table, BorderLayout.CENTER);
 		
-		saveAll();
+//		saveAll();
 	}
 	
 	public <T extends CPJObject<?>> CPJIndex<T> getNodeIndex(T node)
@@ -258,20 +262,19 @@ public class CPJResourceManager extends ManagerForm implements MouseListener
 	
 	public void saveAll()
 	{
-		File save_dir = new File(Studio.getInstance().project_save_path.getPath() + File.separatorChar +"resources");
-		save_dir.mkdirs();
+		File save_dir = Studio.getInstance().project_save_path.getChildFile("resources");
 		
 		String actor_list = getList(G2DTree.getNodesSubClass(unit_root, CPJSprite.class));
-		com.cell.io.CFile.writeText(new File(save_dir, "actor_list.list"), actor_list, "UTF-8");
+		save_dir.getChildFile("actor_list.list").writeUTF(actor_list);
 		
 		String effect_list = getList(G2DTree.getNodesSubClass(effect_root, CPJSprite.class));
-		com.cell.io.CFile.writeText(new File(save_dir, "effect_list.list"), effect_list, "UTF-8");
+		save_dir.getChildFile("effect_list.list").writeUTF(effect_list);
 		
 		String avatar_list = getList(G2DTree.getNodesSubClass(avatar_root, CPJSprite.class));
-		com.cell.io.CFile.writeText(new File(save_dir, "avatar_list.list"), avatar_list, "UTF-8");
+		save_dir.getChildFile("avatar_list.list").writeUTF(avatar_list);
 		
 		String scene_list = getList(G2DTree.getNodesSubClass(scene_root, CPJWorld.class));
-		com.cell.io.CFile.writeText(new File(save_dir, "scene_list.list"), scene_list, "UTF-8");
+		save_dir.getChildFile("scene_list.list").writeUTF(scene_list);
 
 	}
 
