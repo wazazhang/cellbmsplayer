@@ -1,9 +1,14 @@
 package com.g2d.studio.io.file;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
+import com.cell.CIO;
 import com.cell.CObject;
 import com.cell.io.CFile;
 import com.cell.j2se.CAppBridge;
@@ -13,39 +18,11 @@ import com.g2d.studio.io.File;
 import com.g2d.studio.io.IO;
 
 public class FileIO implements IO
-{
-	java.io.File root;
+{	
+	public FileIO() throws Throwable
+	{}
 	
-	public FileIO(String g2d_file) throws Throwable
-	{
-		this.root = new java.io.File(g2d_file);
-		if (!root.exists() || !root.isFile()) {
-			throw new FileNotFoundException(g2d_file);
-		}
-		this.root = this.root.getParentFile();
-		CObject.initSystem(
-				new CStorage("g2d_studio"), 
-				new CAppBridge(
-				this.getClass().getClassLoader(), 
-				this.getClass()));
-
-		System.out.println(System.setProperty("user.dir", this.root.getPath()));
-		System.out.println(System.getProperty("user.dir"));
-		Config.load(Config.class, g2d_file);
-	}
 	
-	public void save(File url, byte[] data) {
-		java.io.File file = ((FileImpl)url).file;
-		if (!file.getParentFile().exists()) {
-			file.mkdirs();
-		}
-		CFile.wirteData(file, data);
-	}
-
-	public byte[] load(File url) {
-		java.io.File file = ((FileImpl)url).file;
-		return CFile.readData(file);
-	}
 	
     public File createFile(String pathname) {
     	return new FileImpl(new java.io.File(pathname));
@@ -59,7 +36,6 @@ public class FileIO implements IO
     	return new FileImpl(new java.io.File(((FileImpl)parent).file, child));
     }
     
-    
     private static class FileImpl implements File
     {
     	java.io.File file;
@@ -67,7 +43,36 @@ public class FileIO implements IO
     	private FileImpl(java.io.File file) {
 			this.file = file;
 		}
+    	
+    	@Override
+    	public InputStream getInputStream() {
+    		try {
+				return new FileInputStream(file);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+			return null;
+    	}
 
+    	@Override
+    	public OutputStream getOutputStream() {
+    		try {
+				return new FileOutputStream(file);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+			return null;
+    	}
+    	
+    	@Override
+    	public byte[] readBytes() throws Exception {
+    		return CIO.readStream(getInputStream());
+    	}
+    	@Override
+    	public void writeBytes(byte[] data) throws Exception {
+    		CFile.wirteData(file, data);
+    	}
+    	
 		@Override
 		public boolean createNewFile() {
 			try {
@@ -102,7 +107,12 @@ public class FileIO implements IO
 		public File getParentFile() {
 			return new FileImpl(file.getParentFile());
 		}
-
+		
+		@Override
+		public File getChildFile(String name) {
+			return new FileImpl(new java.io.File(file, name));
+		}
+		
 		@Override
 		public String getPath() {
 			return file.getPath();
