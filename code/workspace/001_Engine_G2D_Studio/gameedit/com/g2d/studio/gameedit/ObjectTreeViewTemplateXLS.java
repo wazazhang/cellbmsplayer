@@ -2,7 +2,6 @@ package com.g2d.studio.gameedit;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
-import java.io.File;
 import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
@@ -16,6 +15,7 @@ import com.cell.rpg.xls.XLSFullRow;
 import com.g2d.studio.Studio.ProgressForm;
 import com.g2d.studio.gameedit.entity.ObjectGroup;
 import com.g2d.studio.gameedit.template.XLSTemplateNode;
+import com.g2d.studio.io.File;
 import com.g2d.studio.swing.G2DTreeNodeGroup.GroupMenu;
 
 public class ObjectTreeViewTemplateXLS<T extends XLSTemplateNode<D>, D extends TemplateNode> 
@@ -41,8 +41,11 @@ extends ObjectTreeView<T, D>
 		this.xls_row_map = new TreeMap<String, XLSFullRow>();
 		int i=0;
 		
-		xls_columns = XLSColumns.getXLSColumns(xls_file);
-		Collection<XLSFullRow> list = XLSFullRow.getXLSRows(xls_file, XLSFullRow.class);
+		xls_columns = XLSColumns.getXLSColumns(xls_file.getInputStream());
+		Collection<XLSFullRow> list = XLSFullRow.getXLSRows(
+				xls_file.getInputStream(), 
+				xls_file.getName(),
+				XLSFullRow.class);
 		progress.setMaximum(title, list.size());
 		for (XLSFullRow row : list) {
 			xls_row_map.put(row.id, row);

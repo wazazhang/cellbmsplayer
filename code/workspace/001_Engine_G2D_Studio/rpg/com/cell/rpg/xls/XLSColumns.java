@@ -36,7 +36,17 @@ public class XLSColumns extends LinkedHashMap<String, String> implements Seriali
 	 */
 	public static XLSColumns getXLSColumns(File path)
 	{
-		InputStream		is		= CIO.loadStream(path.getPath());
+		InputStream is = CIO.loadStream(path.getPath());
+		return getXLSColumns(is);
+	}
+	
+	/**
+	 * 返回以 xls 的 row[c0][c1] 的集合
+	 * @param xls_file
+	 * @return
+	 */
+	public static XLSColumns getXLSColumns(InputStream is)
+	{
 		try {
 			Workbook	rwb		= Workbook.getWorkbook(is);
 			Sheet 		rs 		= rwb.getSheet(0);

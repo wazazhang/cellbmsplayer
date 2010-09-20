@@ -3,7 +3,6 @@ package com.g2d.studio.quest;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -14,6 +13,7 @@ import com.g2d.studio.Config;
 import com.g2d.studio.ManagerForm;
 import com.g2d.studio.Studio;
 import com.g2d.studio.Studio.ProgressForm;
+import com.g2d.studio.io.File;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.swing.G2DWindowToolBar;
 
@@ -47,8 +47,8 @@ public class QuestManager extends ManagerForm implements ActionListener
 //		File items_list	= new File(items_dir, "questitems.list");
 //		quest_items		= new QuestItemManager(studio, items_list);
 		
-		File quest_dir	= new File(studio.project_save_path, "quests");
-		File quest_list	= new File(quest_dir, "quest.list");
+		File quest_dir	= studio.project_save_path.getChildFile("quests");
+		File quest_list	= quest_dir.getChildFile("quest.list");
 		tree_view 		= new QuestTreeView(quest_list);
 		this.add(tree_view, BorderLayout.CENTER);
 		

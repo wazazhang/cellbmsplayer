@@ -5,7 +5,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.io.File;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -20,6 +19,7 @@ import com.g2d.Tools;
 import com.g2d.studio.Config;
 import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.ObjectViewer;
+import com.g2d.studio.io.File;
 import com.g2d.studio.quest.events.QuestEventView;
 import com.g2d.studio.quest.items.QuestItemView;
 import com.g2d.studio.res.Res;
@@ -75,11 +75,11 @@ public class QuestEditor extends ObjectViewer<QuestNode> implements RPGSerializa
 	}
 
 	@Override
-	public void onReadComplete(RPGObject object, String xmlFile) {
+	public void onReadComplete(RPGObject object) {
 	}
 	
 	@Override
-	public void onWriteBefore(RPGObject object, String xmlFile) {
+	public void onWriteBefore(RPGObject object) {
 		data_event.save();
 		data_quest.save();
 //		tobject.getData().setDiscussion(page_quest_discussion.getText());
@@ -88,9 +88,10 @@ public class QuestEditor extends ObjectViewer<QuestNode> implements RPGSerializa
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btn_discussion) {
-			new DiscussionForm(new File(
-					Studio.getInstance().project_save_path, 
-					"quests/" + tobject.getIntID() + ".xml" + Config.TALK_SUFFIX)).setVisible(true);
+			new DiscussionForm(
+					Studio.getInstance().project_save_path.getChildFile(
+					"quests/" + tobject.getIntID() + ".xml" + Config.TALK_SUFFIX)
+					).setVisible(true);
 		}
 	}
 	
@@ -120,7 +121,7 @@ public class QuestEditor extends ObjectViewer<QuestNode> implements RPGSerializa
 			add(text, 		BorderLayout.CENTER);
 			
 			if (file.exists()) {
-				this.src = CFile.readText(file, "UTF-8");
+				this.src = file.readUTF();
 			} else {
 				this.src = Studio.getInstance().talk_example;
 			}
@@ -131,7 +132,7 @@ public class QuestEditor extends ObjectViewer<QuestNode> implements RPGSerializa
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() == toolbar.save) {
-				CFile.writeText(file, text.getText(), "UTF-8");
+				file.writeUTF(text.getText());
 			}
 		}
 		
@@ -145,7 +146,7 @@ public class QuestEditor extends ObjectViewer<QuestNode> implements RPGSerializa
 			if (!dst.equals(src)) {
 				int result = JOptionPane.showConfirmDialog(this, "关闭该任务脚本前是否要保存？", "确认", JOptionPane.YES_NO_CANCEL_OPTION);
 				if (result == JOptionPane.OK_OPTION) {
-					CFile.writeText(file, dst, "UTF-8");
+					file.writeUTF(dst);
 					this.setVisible(false);
 				} else if (result == JOptionPane.NO_OPTION) {
 					this.setVisible(false);

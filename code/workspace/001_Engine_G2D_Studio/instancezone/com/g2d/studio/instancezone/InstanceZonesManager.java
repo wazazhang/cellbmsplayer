@@ -3,7 +3,6 @@ package com.g2d.studio.instancezone;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.util.Vector;
 
 import com.cell.rpg.scene.script.SceneScriptManager;
@@ -11,6 +10,7 @@ import com.g2d.studio.Config;
 import com.g2d.studio.ManagerForm;
 import com.g2d.studio.Studio;
 import com.g2d.studio.Studio.ProgressForm;
+import com.g2d.studio.io.File;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.swing.G2DWindowToolBar;
 
@@ -34,8 +34,8 @@ public class InstanceZonesManager extends ManagerForm implements ActionListener
 
 		progress.startReadBlock("初始化副本...");
 
-		this.zones_dir		= new File(studio.project_save_path, "instance_zones");
-		this.zones_list		= new File(zones_dir, "zones.list");
+		this.zones_dir		= studio.project_save_path.getChildFile("instance_zones");
+		this.zones_list		= zones_dir.getChildFile("zones.list");
 		this.script_root	= Studio.getInstance().project_path;
 
 		this.tool_bar = new G2DWindowToolBar(this);
@@ -69,7 +69,7 @@ public class InstanceZonesManager extends ManagerForm implements ActionListener
 	public void saveAll() throws Throwable {
 		for (InstanceZoneNode node : getNodes()) {
 			try {
-				node.getEditComponent().save(script_root);
+				node.getEditComponent().save();
 			} catch (Exception err) {
 				err.printStackTrace();
 			}

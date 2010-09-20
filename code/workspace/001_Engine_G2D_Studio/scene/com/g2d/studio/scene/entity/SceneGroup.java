@@ -1,7 +1,7 @@
 package com.g2d.studio.scene.entity;
 
-import java.io.File;
 
+import com.g2d.studio.io.File;
 import com.g2d.studio.scene.SceneManager;
 import com.g2d.studio.swing.G2DTreeNodeGroup;
 
@@ -23,7 +23,7 @@ public class SceneGroup extends G2DTreeNodeGroup<SceneNode>
 		if (name.endsWith(".xml")) {
 			SceneManager manager = SceneManager.getInstance();
 			File scene_dir = manager.scene_dir;
-			File file = new File(scene_dir, name);
+			File file = scene_dir.getChildFile(name);
 			if (file.exists()) {
 				manager.addScene(file, this);
 				return true;

@@ -127,9 +127,9 @@ public abstract class RPGObject extends DObject implements Abilities, ZipNode, R
 	}
 	
 	@Override
-	public void onReadComplete(RPGObject object, String xmlFile) {}
+	public void onReadComplete(RPGObject object) {}
 	@Override
-	public void onWriteBefore(RPGObject object, String xmlFile) {}
+	public void onWriteBefore(RPGObject object) {}
 
 //	------------------------------------------------------------------------------------------------------------------
 	

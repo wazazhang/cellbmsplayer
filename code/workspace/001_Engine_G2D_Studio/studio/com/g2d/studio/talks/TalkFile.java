@@ -1,11 +1,11 @@
 package com.g2d.studio.talks;
 
 import java.awt.Component;
-import java.io.File;
 
 import javax.swing.ImageIcon;
 import javax.swing.JList;
 
+import com.g2d.studio.io.File;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.swing.G2DListItem;
 

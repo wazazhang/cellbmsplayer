@@ -12,7 +12,6 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.File;
 
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
@@ -100,7 +99,7 @@ implements ActionListener, AncestorListener, KeyListener, PropertyChangeListener
 	void save() {
 		last_script = script_text.getText();
 		Studio.getInstance().getSceneScriptManager().saveTriggers(
-				pak, Studio.getInstance().project_path, trigger, last_script);
+				pak, Studio.getInstance().project_path.getPath(), trigger, last_script);
 		
 		refreshChanged();
 	}

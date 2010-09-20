@@ -1,12 +1,12 @@
 package com.g2d.studio.quest;
 
-import java.io.File;
 import java.util.Vector;
 
 import com.cell.rpg.quest.Quest;
 import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.ObjectTreeViewDynamic;
 import com.g2d.studio.gameedit.entity.ObjectGroup;
+import com.g2d.studio.io.File;
 import com.g2d.studio.quest.group.DQuestGroup;
 import com.g2d.studio.swing.G2DTree;
 

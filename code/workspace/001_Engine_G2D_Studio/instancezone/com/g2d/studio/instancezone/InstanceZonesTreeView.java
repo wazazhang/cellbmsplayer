@@ -2,12 +2,13 @@ package com.g2d.studio.instancezone;
 
 
 import java.awt.Dimension;
-import java.io.File;
 
 import com.cell.rpg.scene.instance.InstanceZone;
 import com.g2d.studio.gameedit.ObjectTreeViewDynamic;
 import com.g2d.studio.gameedit.entity.ObjectGroup;
+import com.g2d.studio.io.File;
 import com.g2d.studio.swing.G2DTree;
+
 @SuppressWarnings("serial")
 public class InstanceZonesTreeView extends ObjectTreeViewDynamic<InstanceZoneNode, InstanceZone>
 {

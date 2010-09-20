@@ -34,51 +34,17 @@ public class XLSRow implements Serializable
 	}
 	
 //	---------------------------------------------------------------------------------------------------------
-	
+
 	/**
 	 * 返回以 xls 的 row[c0][c1] 的集合
 	 * @param xls_file
 	 * @return
 	 */
-	public static <T extends XLSRow> Collection<T> getXLSRows(File path, Class<T> cls)
-	{
-		return getXLSRows(path, new AtomicReference<XLSFile>(null), cls);
-	}
-	
-	/**
-	 * 返回以 xls 的 row[c0][c1] 的集合
-	 * @param xls_file
-	 * @return
-	 */
-	public static <T extends XLSRow> Collection<T> getXLSRows(File path, XLSFile xls_file, Class<T> cls)
-	{
-		return getXLSRows(path, new AtomicReference<XLSFile>(xls_file), cls);
-	}
-	
-	/**
-	 * 返回以 xls 的 row[c0][c1] 的集合
-	 * @param xls_file
-	 * @return
-	 */
-	public static <T extends XLSRow> Collection<T> getXLSRows(
-			File path, 
-			AtomicReference<XLSFile> xls_file_ref,
-			Class<T> cls)
+	public static <T extends XLSRow> Collection<T> getXLSRows(InputStream is, String filename, Class<T> cls)
 	{
 		ArrayList<T>	ret			= new ArrayList<T>();
-		XLSFile			xls_file;
-		if (xls_file_ref!=null) {
-			if (xls_file_ref.get()!=null) {
-				xls_file =  xls_file_ref.get();
-			} else {
-				xls_file	= new XLSFile(path);
-				xls_file_ref.set(xls_file);
-			}
-		} else {
-			xls_file	= new XLSFile(path);
-		}
+		XLSFile			xls_file	= new XLSFile(filename);
 
-		InputStream		is			= CIO.loadStream(path.getPath());
 		try {
 			Workbook	rwb				= Workbook.getWorkbook(is);
 			for (Sheet rs : rwb.getSheets()) {

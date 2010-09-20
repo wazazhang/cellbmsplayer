@@ -1,10 +1,10 @@
 package com.g2d.studio.item;
 
-import java.io.File;
 
 import com.cell.rpg.item.ItemProperties;
 import com.g2d.studio.gameedit.ObjectTreeViewDynamic;
 import com.g2d.studio.gameedit.entity.ObjectGroup;
+import com.g2d.studio.io.File;
 
 public class ItemPropertiesTreeView extends ObjectTreeViewDynamic<ItemPropertiesNode, ItemProperties>
 {

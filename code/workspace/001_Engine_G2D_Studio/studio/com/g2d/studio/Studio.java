@@ -10,7 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
-import java.io.File;
+import java.io.FileNotFoundException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -22,6 +22,7 @@ import javax.swing.JToolBar;
 import javax.swing.JWindow;
 import javax.swing.UIManager;
 
+import com.cell.CIO;
 import com.cell.CObject;
 import com.cell.io.CFile;
 import com.cell.j2se.CAppBridge;
@@ -47,6 +48,9 @@ import com.g2d.studio.gameedit.ObjectManager;
 import com.g2d.studio.gameedit.ObjectManagerTree;
 import com.g2d.studio.icon.IconManager;
 import com.g2d.studio.instancezone.InstanceZonesManager;
+import com.g2d.studio.io.File;
+import com.g2d.studio.io.IO;
+import com.g2d.studio.io.file.FileIO;
 import com.g2d.studio.item.ItemManager;
 import com.g2d.studio.quest.QuestManager;
 import com.g2d.studio.quest.group.QuestGroupManager;
@@ -71,6 +75,8 @@ public class Studio extends AbstractFrame
 //	------------------------------------------------------------------------------------------------------------------------------------------
 	
 	final public ThreadPool			thread_pool = new ThreadPool("studio project");
+	
+	final private IO				io;
 	
 	com.cell.sound.SoundManager		sound_system;
 	
@@ -109,9 +115,10 @@ public class Studio extends AbstractFrame
 	
 	private StaticSoundPlayer		g2d_sound;
 	
-	private Studio(String g2d_file) throws Throwable
+	private Studio(File g2d_file, IO io) throws Throwable
 	{
 		instance 			= this;
+		this.io				= io;
 		
 		CObject.initSystem(
 			new CStorage("g2d_studio"), 
@@ -119,11 +126,11 @@ public class Studio extends AbstractFrame
 			this.getClass().getClassLoader(), 
 			this.getClass()));
 
-		project_file 		= new File				(g2d_file);
-		project_path 		= new File				(project_file.getParent());
-		project_save_path	= new File				(project_file.getPath()+".save");
+		project_file 		= g2d_file;
+		project_path 		= io.createFile(project_file.getParent());
+		project_save_path	= io.createFile(project_file.getPath()+".save");
 		
-		Config.load(Config.class, g2d_file);
+		Config.load(Config.class, g2d_file.getInputStream());
 		
 		RPGConfig.IS_EDIT_MODE = true;
 		RPGObjectMap.setPersistanceManagerDriver	(Config.PERSISTANCE_MANAGER);
@@ -150,7 +157,7 @@ public class Studio extends AbstractFrame
 		
 		File talk_example_file = getFile			(Config.TALK_EXAMPLE);
 		if (talk_example_file.exists()) {
-			talk_example = CFile.readText(talk_example_file, "UTF-8");
+			talk_example = CIO.stringDecode(talk_example_file.readBytes(), CObject.ENCODING);
 		} else {
 			talk_example = "// talk example";
 		}
@@ -384,6 +391,10 @@ public class Studio extends AbstractFrame
 		progress.setValue("", 1);
 	}
 	
+	public IO getIO() {
+		return io;
+	}
+	
 	/**
 	 * 得到工作空间跟目录下的文件
 	 * @param path
@@ -391,7 +402,7 @@ public class Studio extends AbstractFrame
 	 */
 	public File getFile(String path)
 	{
-		return new File(project_path.getPath() + "/" + path);
+		return io.createFile(project_path.getPath(), path);
 	}
 
 //-----------------------------------------------------------------------------------------------------------
@@ -603,40 +614,25 @@ public class Studio extends AbstractFrame
 	{
 		try
 		{
-			Studio studio = null;
-			
-			if (args==null || args.length==0 || !new File(args[0]).exists() || !new File(args[0]).isFile()) 
-			{
-				//
-				java.awt.FileDialog fd = new FileDialog(new JFrame(), "Open workspace", FileDialog.LOAD);
-				fd.show();
-				String file = fd.getDirectory() + fd.getFile();
-				
-				System.out.println("Chose to open this file: " + file);
-				
-				studio = new Studio(file);
-			}
-			else
-			{
+			if (args == null || args.length == 0) {
+				System.err.println("usage : g2dstudio.jar [g2d file path]");
+				return;
+			} else {
 				System.out.println("Open: " + args[0]);
-				studio = new Studio(args[0]);
+				IO io = new FileIO();
+				File g2d_file = io.createFile(args[0]);
+				Studio studio = new Studio(g2d_file, io);
+				studio.setVisible(true);
 			}
-			
-			studio.setVisible(true);
-				
-			studio.setAlwaysOnTop(true);
-			studio.setAlwaysOnTop(false);
 		}
 		catch (Throwable e)
 		{
 			e.printStackTrace();
-			
 			String message = "Open workspace error ! \n" + e.getClass().getName() + " : " + e.getMessage() + "\n";
 			for (StackTraceElement stack : e.getStackTrace()) {
 				message += "\t"+stack.toString()+"\n";
 			}
 			JOptionPane.showMessageDialog(null, message);
-			
 			System.exit(1);
 		}
 	}

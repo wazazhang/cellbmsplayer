@@ -6,7 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Vector;
 import java.util.concurrent.locks.ReentrantLock;
@@ -39,6 +38,7 @@ import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.cpj.entity.CPJWorld;
 import com.g2d.studio.gameedit.dynamic.IDynamicIDFactory;
 import com.g2d.studio.instancezone.InstanceZonesManager;
+import com.g2d.studio.io.File;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.scene.entity.SceneGroup;
 import com.g2d.studio.scene.entity.SceneNode;
@@ -87,8 +87,8 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 		
 		progress.startReadBlock("初始化场景...");
 		instance = this;
-		this.scene_dir	= new File(studio.project_save_path, "scenes");
-		this.scene_list	= new File(scene_dir, "scene.list");
+		this.scene_dir	= studio.project_save_path.getChildFile("scenes");
+		this.scene_list	= scene_dir.getChildFile("scene.list");
 		{
 			SceneGroup tree_root = new SceneGroup("场景管理器");
 			this.g2d_tree	= new SceneTree(tree_root);
@@ -240,14 +240,14 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 	{
 		synchronized (scene_lock) {
 			StringBuffer all_scene = new StringBuffer();
-			File name_list_file = new File(scene_list.getParentFile(), "name_" + scene_list.getName());
+			File name_list_file = scene_list.getParentFile().getChildFile("name_" + scene_list.getName());
 			StringBuffer all_names = new StringBuffer();
 			for (SceneNode node : getAllScenes()) {
 				all_scene.append(SceneGroup.toPathString(node, "/") + node.getID() + ".xml" + "\n");
 				all_names.append("("+node.getData().id+")"+((NamedObject)node.getData()).getName()+"\n");
 			}
-			com.cell.io.CFile.writeText(scene_list, all_scene.toString(), "UTF-8");
-			com.cell.io.CFile.writeText(name_list_file, all_names.toString(), "UTF-8");
+			scene_list		.writeUTF(all_scene.toString());
+			name_list_file	.writeUTF(all_names.toString());
 		}
 		System.out.println("save scene list");
 	}
@@ -454,7 +454,7 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 	SceneNode loadScene(File file)
 	{
 		if (file.exists()) {
-			Scene data = RPGObjectMap.readNode(file.getPath(), Scene.class);
+			Scene data = RPGObjectMap.readNode(file.getInputStream(), file.getPath(), Scene.class);
 			if (data!=null) {
 				SceneNode node = new SceneNode(data);
 				return node;
@@ -466,8 +466,8 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 	static void saveScene(File root, SceneNode node)
 	{
 		Scene data = node.getData();
-		File file = new File(root, node.getID()+".xml");
-		RPGObjectMap.writeNode(data, file);
+		File file = root.getChildFile(node.getID()+".xml");
+		file.writeUTF(RPGObjectMap.writeNode(file.getPath(), data));
 	}
 	
 //	-------------------------------------------------------------------------------------------------------------------------

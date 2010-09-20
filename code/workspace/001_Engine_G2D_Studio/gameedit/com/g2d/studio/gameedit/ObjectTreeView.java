@@ -2,7 +2,6 @@ package com.g2d.studio.gameedit;
 
 import java.awt.Component;
 import java.awt.Dimension;
-import java.io.File;
 import java.util.Vector;
 
 import javax.swing.JPanel;
@@ -14,12 +13,12 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreePath;
-
 import com.cell.rpg.RPGObject;
 import com.cell.util.IDFactoryInteger;
 import com.g2d.studio.gameedit.entity.ObjectGroup;
 import com.g2d.studio.gameedit.entity.ObjectNode;
 import com.g2d.studio.swing.G2DTree;
+import com.g2d.studio.io.File;
 
 public abstract class ObjectTreeView<T extends ObjectNode<D>, D extends RPGObject> 
 extends JSplitPane implements TreeSelectionListener, ChangeListener

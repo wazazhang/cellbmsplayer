@@ -130,8 +130,6 @@ public class SceneEditor extends AbstractFrame implements ActionListener, Window
 //	private SceneUnitTagAdapter<SceneRegion>	page_regions;
 //	private SceneUnitTagAdapter<ScenePoint>		page_points;
 //	private SceneUnitTagAdapter<SceneImmutable>	page_immutables;
-	
-	private File scene_script_root;
 
 //	--------------------------------------------------------------------------------------------------------------
 //	transient
@@ -154,7 +152,6 @@ public class SceneEditor extends AbstractFrame implements ActionListener, Window
 		this.scene_node			= scene;
 		this.scene_world		= scene_node.getWorldDisplay();
 		this.scene_resource		= scene_world.getCPJFile().getSetResource();
-		this.scene_script_root 	= Studio.getInstance().project_path;
 		// tool bar
 		{
 			tool_bar = new G2DWindowToolBar(this);
