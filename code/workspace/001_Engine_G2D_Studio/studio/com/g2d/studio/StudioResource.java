@@ -1,12 +1,12 @@
 package com.g2d.studio;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
 
 import com.cell.gfx.IImages;
 import com.cell.rpg.res.Resource;
 import com.g2d.studio.cell.gameedit.Builder;
+import com.g2d.studio.io.File;
 
 
 
@@ -18,8 +18,9 @@ public class StudioResource extends Resource
 //		super(setPath, name, null);
 //	}
 	
-	public StudioResource(File file, String name) throws Exception {
-		super(file, name, null);
+	public StudioResource(File file) throws Exception {
+		super(file.getPath(), null);
+//		System.out.println(file.getPath());
 	}
 	
 	@Override

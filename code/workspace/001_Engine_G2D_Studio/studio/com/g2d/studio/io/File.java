@@ -6,36 +6,21 @@ import java.io.OutputStream;
 
 public interface File 
 {
-    public String 		getName();
+    public String 			getName();
 
-    public String		getParent();
+    public String			getParent();
 
-    public File 		getParentFile();
+    public File 			getParentFile();
 
-    public File 		getChildFile(String name);
+    public File 			getChildFile(String name);
     
 
-    public File[] 		listFiles();
+    public File[] 			listFiles();
 
-    public boolean 		exists();
-
+    public boolean 			exists();
     
-    public String 		getPath();
+    public String 			getPath();
 
-    public boolean 		isDirectory();
-
-    public boolean 		isFile();
-
-    public boolean 		createNewFile();
-
-    public boolean 		delete();
-
-    public boolean 		mkdir() ;
-
-    public boolean 		mkdirs();
-    
-    
-    
     
     public InputStream 		getInputStream();
 

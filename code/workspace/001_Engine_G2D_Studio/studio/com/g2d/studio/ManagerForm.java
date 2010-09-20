@@ -20,7 +20,7 @@ public abstract class ManagerForm extends JFrame
 		super.setIconImage(icon);		
 		super.setTitle(title);
 		this.studio = studio;
-		System.out.println("init : " + getClass().getSimpleName() + " : " + title);
+		System.out.println("init : " + title + " \t: " +  getClass().getSimpleName());
 		progress.startReadBlock("初始化" + title + "...");
 	}
 	

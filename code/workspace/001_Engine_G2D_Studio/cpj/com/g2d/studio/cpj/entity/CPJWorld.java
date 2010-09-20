@@ -1,12 +1,19 @@
 package com.g2d.studio.cpj.entity;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageOutputStream;
 
 import com.g2d.Tools;
 import com.g2d.cell.CellSetResource.WorldSet;
 import com.g2d.cell.game.Scene;
+import com.g2d.studio.Studio;
 import com.g2d.studio.cpj.CPJResourceType;
+import com.g2d.studio.io.File;
 
 public class CPJWorld extends CPJObject<WorldSet>
 {	
@@ -39,9 +46,10 @@ public class CPJWorld extends CPJObject<WorldSet>
 	public BufferedImage getSnapShoot() {
 		if (snapshoot==null) {
 			try{
-				File snap_file = new File(parent.getCPJDir(), name + ".png");
-				if (snap_file.exists()) {
-					snapshoot = Tools.readImage(snap_file.getPath());
+				File snap_file = Studio.getInstance().getIO().createFile(parent.getCPJDir(), name + ".png");
+				byte[] data = snap_file.readBytes();
+				if (data != null) {
+					snapshoot = Tools.readImage(new ByteArrayInputStream(data));
 					float rate = 80f / (float)snapshoot.getWidth();
 					snapshoot = Tools.combianImage(80, (int)(snapshoot.getHeight()*rate), snapshoot);
 					scene_snapshoot = snapshoot;
@@ -55,11 +63,21 @@ public class CPJWorld extends CPJObject<WorldSet>
 
 	public void saveSnapshot(BufferedImage image) {
 		if (scene_snapshoot == null) {
-			File snap_file = new File(parent.getCPJDir(), name + ".png");
+			File snap_file = Studio.getInstance().getIO().createFile(parent.getCPJDir(), name + ".png");
 			scene_snapshoot = image;
 			float rate = 80f / (float)scene_snapshoot.getWidth();
 			scene_snapshoot = Tools.combianImage(80, (int)(scene_snapshoot.getHeight()*rate), scene_snapshoot);
-			Tools.writeImage(snap_file.getPath(), scene_snapshoot);
+//			Tools.writeImage(snap_file.getPath(), scene_snapshoot);
+			try {
+				ByteArrayOutputStream buff = new ByteArrayOutputStream();
+				ImageOutputStream ios = ImageIO.createImageOutputStream(buff);
+				ImageIO.write(scene_snapshoot, "png", ios);
+				ios.flush();
+				ios.close();
+				snap_file.writeBytes(buff.toByteArray());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			snapshoot = scene_snapshoot;
 			getIcon(true);
 		}

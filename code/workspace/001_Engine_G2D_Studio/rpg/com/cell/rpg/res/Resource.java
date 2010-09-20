@@ -20,14 +20,9 @@ public abstract class Resource extends CellSetResource
 		super(file, async);
 	}
 	
-	public Resource(String file, String name, ThreadPoolService stream_image) throws Exception
+	public Resource(File file, ThreadPoolService stream_image) throws Exception
 	{
-		super(file, name, stream_image);
-	}
-	
-	public Resource(File file, String name, ThreadPoolService stream_image) throws Exception
-	{
-		super(file, name, stream_image);
+		super(file, stream_image);
 	}
 	
 	
