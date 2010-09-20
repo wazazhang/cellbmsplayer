@@ -163,7 +163,7 @@ public abstract class SceneScriptManager
 		return null;
 	}
 	
-	public void saveTriggers(TriggersPackage pak, File root, SceneTriggerScriptable sts, String script) {
+	public void saveTriggers(TriggersPackage pak, String root, SceneTriggerScriptable sts, String script) {
 		try {
 			File path = new File(root, "/scene_script/"+pak.getClass().getSimpleName().toLowerCase());
 			if (!path.exists()) {

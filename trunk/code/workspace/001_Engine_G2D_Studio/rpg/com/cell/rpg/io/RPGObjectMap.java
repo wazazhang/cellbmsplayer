@@ -1,6 +1,7 @@
 package com.cell.rpg.io;
 
 import java.io.File;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.StringReader;
@@ -9,6 +10,7 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 import com.cell.CIO;
+import com.cell.CObject;
 import com.cell.persistance.PersistanceManager;
 import com.cell.rpg.RPGObject;
 
@@ -87,19 +89,19 @@ public class RPGObjectMap<T extends RPGObject> extends Hashtable<String, T> //im
 
 //	------------------------------------------------------------------------------------------------------------------------------
 
-	public static<T extends RPGObject> T readNode(String xml_file, Class<T> type) {
+	public static<T extends RPGObject> T readNode(InputStream is, String xml_file, Class<T> type) {
 		try{
-			String 				xml 	= CIO.readAllText(xml_file, "UTF-8");
+			String 				xml 	= CIO.stringDecode(CIO.readStream(is), CObject.ENCODING);
 			StringReader 		reader 	= new StringReader(xml);
 			ObjectInputStream 	ois 	= persistance_manager.createReadStream(reader);
 			try{
 				T ret = type.cast(ois.readObject());
 				if (ret != null) {
-					ret.onReadComplete(ret, xml_file);
+					ret.onReadComplete(ret);
 					Vector<RPGSerializationListener> rlisteners = ret.getRPGSerializationListeners();
 					if (rlisteners != null) {
 						for (RPGSerializationListener l : rlisteners) {
-							l.onReadComplete(ret, xml_file);
+							l.onReadComplete(ret);
 						}
 					}
 				}
@@ -114,32 +116,28 @@ public class RPGObjectMap<T extends RPGObject> extends Hashtable<String, T> //im
 		return null;
 	}
 	
-	public static<T extends RPGObject> boolean writeNode(T node, File xml_file) {
-		try{
-			if (!xml_file.exists()) {
-				xml_file.getParentFile().mkdirs();
-			}
+	public static<T extends RPGObject> String writeNode(String xml_file, T node) {
+		try {
 			StringWriter 		writer 	= new StringWriter(1024);
 			ObjectOutputStream 	oos 	= persistance_manager.createWriteStream(writer);
 			try{
 				Vector<RPGSerializationListener> wlisteners = node.getRPGSerializationListeners();
 				if (wlisteners!=null) {
 					for (int i=wlisteners.size()-1; i>=0; --i) {
-						wlisteners.get(i).onWriteBefore(node, xml_file.getPath());
+						wlisteners.get(i).onWriteBefore(node);
 					}
 				}
-				node.onWriteBefore(node, xml_file.getPath());
+				node.onWriteBefore(node);
 				oos.writeObject(node);
 			}finally{
 				oos.close();
 			}
 			String xml = writer.toString();
-			com.cell.io.CFile.writeText(xml_file, xml, "UTF-8");
-			return true;
+			return xml;
 		} catch(Throwable ex) {
 			System.err.println("write node error : " + node + " : " + xml_file);
 			ex.printStackTrace();
 		}
-		return false;
+		return null;
 	}
 }

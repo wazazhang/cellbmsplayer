@@ -14,10 +14,13 @@ public interface File
 
     public File 		getChildFile(String name);
     
-    
-    public String 		getPath();
+
+    public File[] 		listFiles();
 
     public boolean 		exists();
+
+    
+    public String 		getPath();
 
     public boolean 		isDirectory();
 
@@ -26,10 +29,6 @@ public interface File
     public boolean 		createNewFile();
 
     public boolean 		delete();
-
-    public String[] 	list();
-
-    public File[] 		listFiles();
 
     public boolean 		mkdir() ;
 
@@ -42,9 +41,12 @@ public interface File
 
     public OutputStream		getOutputStream();
     
-    public byte[] 			readBytes() throws Exception;
+    public byte[] 			readBytes();
     
-    public void 			writeBytes(byte[] data) throws Exception; 
+    public void 			writeBytes(byte[] data); 
     
+    public String 			readUTF();
+    
+    public void 			writeUTF(String data); 
 
 }

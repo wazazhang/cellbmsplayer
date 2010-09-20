@@ -1,6 +1,6 @@
 package com.g2d.studio.gameedit.entity;
 
-import java.io.File;
+
 import java.util.Vector;
 
 import com.cell.CIO;
@@ -8,8 +8,10 @@ import com.cell.CUtil;
 import com.cell.rpg.NamedObject;
 import com.cell.rpg.RPGObject;
 import com.cell.rpg.io.RPGObjectMap;
+import com.g2d.studio.Studio;
 import com.g2d.studio.swing.G2DTree;
 import com.g2d.studio.swing.G2DTreeNodeGroup;
+import com.g2d.studio.io.File;
 
 
 
@@ -40,8 +42,8 @@ public abstract class ObjectGroup<T extends ObjectNode<D>, D extends RPGObject> 
 		if (name.toLowerCase().endsWith(_XML)) {
 			try{
 				String key = CUtil.replaceString(name, _XML, "");
-				File file = new File(list_file.getParentFile(), name);
-				D data = RPGObjectMap.readNode(file.getPath(), data_type);
+				File file = Studio.getInstance().getIO().createFile(list_file.getParentFile(), name);
+				D data = RPGObjectMap.readNode(file.getInputStream(), file.getPath(), data_type);
 				return createObjectNode(key, data);
 			}catch(Exception err){
 				err.printStackTrace();
@@ -55,24 +57,42 @@ public abstract class ObjectGroup<T extends ObjectNode<D>, D extends RPGObject> 
 		if (!list_file.getParentFile().exists()) {
 			list_file.getParentFile().mkdirs();
 		}
-		File name_list_file = new File(list_file.getParentFile(), "name_" + list_file.getName());
+		
+		File name_list_file = Studio.getInstance().getIO().createFile(
+				list_file.getParentFile(), 
+				"name_" + list_file.getName());
+		
 		StringBuffer all_objects = new StringBuffer();
 		StringBuffer all_names = new StringBuffer();
 		Vector<T> nodes = G2DTree.getNodesSubClass(this, node_type);
 		for (T node : nodes) {
 			try{
-				File xml_file = new File(list_file.getParentFile(), node.getID()+_XML);
-				if (RPGObjectMap.writeNode(node.getData(), xml_file)){
+				File xml_file = Studio.getInstance().getIO().createFile(
+						list_file.getParentFile(), node.getID()+_XML);
+				String xml = RPGObjectMap.writeNode(xml_file.getPath(), node.getData());
+				if (xml != null){
+					xml_file.writeBytes(CIO.stringEncode(xml, CIO.ENCODING));
 					all_objects.append(toPathString(node, "/") + node.getID() + _XML + "\n");
 				}
 				if (node.getData() instanceof NamedObject) {
 					all_names.append("("+node.getData().id+")"+((NamedObject)node.getData()).getName()+"\n");
 				}
-			}catch(Exception err){}
+			} catch (Exception err) {
+				err.printStackTrace();
+			}
 		}
-		com.cell.io.CFile.writeText(list_file, all_objects.toString(), "UTF-8");
+		try {
+			list_file.writeBytes(CIO.stringEncode(all_objects.toString(), CIO.ENCODING));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		if (NamedObject.class.isAssignableFrom(data_type)) {
-			com.cell.io.CFile.writeText(name_list_file, all_names.toString(), "UTF-8");
+			try {
+				name_list_file.writeBytes(CIO.stringEncode(all_names.toString(), CIO.ENCODING));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	

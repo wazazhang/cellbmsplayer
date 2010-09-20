@@ -52,10 +52,10 @@ public class QuestItemEditor extends ObjectViewer<QuestItemNode> implements RPGS
 	}
 	
 	@Override
-	public void onReadComplete(RPGObject object, String xmlFile) {}
+	public void onReadComplete(RPGObject object) {}
 	
 	@Override
-	public void onWriteBefore(RPGObject object, String xmlFile) {
+	public void onWriteBefore(RPGObject object) {
 //		tobject.getData().script = script_panel.getScript();
 	}
 }

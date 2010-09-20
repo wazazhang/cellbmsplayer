@@ -9,8 +9,8 @@ public class XLSFile implements Serializable
 	
 	final public String xls_file;
 	
-	public XLSFile(File file) {
-		this.xls_file = file.getName();
+	public XLSFile(String file) {
+		this.xls_file = file;
 	}
 	
 	@Override

@@ -13,7 +13,6 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -44,6 +43,7 @@ import com.g2d.Tools;
 import com.g2d.studio.Config;
 import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.ObjectViewer;
+import com.g2d.studio.io.File;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.scene.editor.SceneEditor;
 import com.g2d.studio.scene.editor.SceneSelectDialog;
@@ -130,7 +130,7 @@ public class InstanceZoneEditor extends ObjectViewer<InstanceZoneNode> implement
 		return getRPGObject().getData();
 	}
 	
-	void save(File script_root) {
+	void save() {
 		this.page_discussion.save();
 	}
 	

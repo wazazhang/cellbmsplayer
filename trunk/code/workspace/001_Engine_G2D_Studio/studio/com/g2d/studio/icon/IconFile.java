@@ -2,12 +2,12 @@ package com.g2d.studio.icon;
 
 import java.awt.Component;
 import java.awt.image.BufferedImage;
-import java.io.File;
 
 import javax.swing.ImageIcon;
 import javax.swing.JList;
 
 import com.g2d.Tools;
+import com.g2d.studio.io.File;
 import com.g2d.studio.swing.G2DListItem;
 
 public class IconFile implements G2DListItem

@@ -3,7 +3,6 @@ package com.g2d.studio.item;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.util.Vector;
 
 import com.cell.rpg.item.ItemPropertyManager;
@@ -12,6 +11,7 @@ import com.g2d.studio.Config;
 import com.g2d.studio.ManagerForm;
 import com.g2d.studio.Studio;
 import com.g2d.studio.Studio.ProgressForm;
+import com.g2d.studio.io.File;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.swing.G2DWindowToolBar;
 
@@ -37,7 +37,7 @@ public class ItemManager extends ManagerForm implements ActionListener
 			e.printStackTrace();
 		}
 	
-		File item_properties_list_file = new File(studio.project_save_path, "item_properties/item_properties.list");
+		File item_properties_list_file = studio.project_save_path.getChildFile("item_properties/item_properties.list");
 		this.tree_view = new ItemPropertiesTreeView(item_properties_list_file);
 		this.add(tree_view, BorderLayout.CENTER);
 	}

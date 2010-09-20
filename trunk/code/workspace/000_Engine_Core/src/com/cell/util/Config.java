@@ -1,5 +1,6 @@
 package com.cell.util;
 
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -30,12 +31,34 @@ public abstract class Config
 	/**
 	 * 将 Config 中的所有静态字段全部初始化
 	 * @param config_class
+	 * @param is
+	 * @return 返回静态变量的 名字：值　对应关系
+	 */
+	public static Map<Field, Object> load(Config config, InputStream is)
+	{
+		return load(config, config.getClass(), is, true);
+	}
+	
+	/**
+	 * 将 Config 中的所有静态字段全部初始化
+	 * @param config_class
 	 * @param file
 	 * @return 返回静态变量的 名字：值　对应关系
 	 */
 	public static Map<Field, Object> load(Class<? extends Config> config_class, String file)
 	{
 		return load(config_class, file, true);
+	}
+	
+	/**
+	 * 将 Config 中的所有静态字段全部初始化
+	 * @param config_class
+	 * @param is
+	 * @return 返回静态变量的 名字：值　对应关系
+	 */
+	public static Map<Field, Object> load(Class<? extends Config> config_class, InputStream is)
+	{
+		return load(config_class, is, true);
 	}
 	
 	/**
@@ -57,7 +80,31 @@ public abstract class Config
 	 * @param verbos 打印详细信息
 	 * @return 返回静态变量的 名字：值　对应关系
 	 */
+	public static Map<Field, Object> load(Class<? extends Config> config_class, InputStream is, boolean verbos)
+	{
+		return load((Config)null, config_class, is, verbos);
+	}
+	
+	/**
+	 * 将 Config 中的所有静态字段全部初始化
+	 * @param config_class
+	 * @param file
+	 * @param verbos 打印详细信息
+	 * @return 返回静态变量的 名字：值　对应关系
+	 */
 	protected static Map<Field, Object> load(Config instance, Class<? extends Config> config_class, String file, boolean verbos)
+	{
+		return load(instance, config_class, CIO.getInputStream(file), verbos);
+	}
+	
+	/**
+	 * 将 Config 中的所有静态字段全部初始化
+	 * @param config_class
+	 * @param is
+	 * @param verbos 打印详细信息
+	 * @return 返回静态变量的 名字：值　对应关系
+	 */
+	protected static Map<Field, Object> load(Config instance, Class<? extends Config> config_class, InputStream is, boolean verbos)
 	{
 		HashMap<Field, Object> map = new HashMap<Field, Object>();
 		
@@ -66,7 +113,7 @@ public abstract class Config
 		try
 		{
 			Properties cfg = new Properties();
-			cfg.load(CIO.loadData(file));
+			cfg.load(is);
 			
 			Field[] fields = config_class.getFields();
 			
@@ -126,7 +173,6 @@ public abstract class Config
 		System.out.println("load config completed !");
 		return map;
 	}
-	
 //	----------------------------------------------------------------------------------------------------------------
 	static private void toCommetLine(StringBuilder sb, String s, int size) {
 		sb.append("###");

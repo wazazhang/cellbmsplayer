@@ -65,12 +65,21 @@ public class FileIO implements IO
     	}
     	
     	@Override
-    	public byte[] readBytes() throws Exception {
+    	public byte[] readBytes() {
     		return CIO.readStream(getInputStream());
     	}
     	@Override
-    	public void writeBytes(byte[] data) throws Exception {
+    	public void writeBytes(byte[] data) {
     		CFile.wirteData(file, data);
+    	}
+    	
+    	@Override
+    	public String readUTF() {
+    		return CIO.stringDecode(readBytes(), CIO.ENCODING);
+    	}
+    	@Override
+    	public void writeUTF(String data) {
+    		writeBytes(CIO.stringEncode(data, CIO.ENCODING));
     	}
     	
 		@Override
@@ -126,11 +135,6 @@ public class FileIO implements IO
 		@Override
 		public boolean isFile() {
 			return file.isFile();
-		}
-
-		@Override
-		public String[] list() {
-			return file.list();
 		}
 
 		@Override

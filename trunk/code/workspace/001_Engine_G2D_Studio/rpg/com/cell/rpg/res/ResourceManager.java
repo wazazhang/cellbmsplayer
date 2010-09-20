@@ -363,7 +363,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 			
 			String xml_file = tdir +"/"+ res_list[i];
 			
-			T set = RPGObjectMap.readNode(xml_file, type);
+			T set = RPGObjectMap.readNode(CIO.getInputStream(xml_file), xml_file, type);
 			set.loadTreePath(this, display_list);
 			if (PRINT_VERBOS)
 			System.out.println("\tget " + type.getSimpleName() + " : " + set + "(" + set.id + ")");
@@ -379,7 +379,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 	
 	final public <T extends RPGObject> T readRPGObject(String xml_file, Class<T> type) 
 	{
-		T set = RPGObjectMap.readNode(xml_file, type);			
+		T set = RPGObjectMap.readNode(CIO.getInputStream(xml_file), xml_file, type);			
 		if (PRINT_VERBOS)
 		System.out.println("readRPGObject : " + type.getSimpleName() + " : " + set + "(" + set.id + ")");
 		return set;

@@ -106,7 +106,7 @@ public class Quest extends RPGObject implements NamedObject
 	}
 	
 	@Override
-	public void onReadComplete(RPGObject object, String xmlFile) 
+	public void onReadComplete(RPGObject object) 
 	{
 		if (accept_condition == null) {
 			accept_condition = new QuestCondition();
@@ -126,7 +126,7 @@ public class Quest extends RPGObject implements NamedObject
 	}
 	
 	@Override
-	public void onWriteBefore(RPGObject object, String xmlFile) {}
+	public void onWriteBefore(RPGObject object) {}
 	
 //	----------------------------------------------------------------------------------------------------------------
 	

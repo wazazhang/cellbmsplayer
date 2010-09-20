@@ -3,12 +3,12 @@ package com.g2d.studio.quest.group;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.util.Vector;
 
 import com.g2d.studio.ManagerForm;
 import com.g2d.studio.Studio;
 import com.g2d.studio.Studio.ProgressForm;
+import com.g2d.studio.io.File;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.swing.G2DWindowToolBar;
 
@@ -29,8 +29,8 @@ public class QuestGroupManager extends ManagerForm implements ActionListener
 		tool_bar 			= new G2DWindowToolBar(this);
 		this.add(tool_bar, BorderLayout.NORTH);
 		
-		quest_group_dir		= new File(studio.project_save_path, "questgroups");
-		quest_group_list	= new File(quest_group_dir, "questgroups.list");
+		quest_group_dir		= studio.project_save_path.getChildFile("questgroups");
+		quest_group_list	= quest_group_dir.getChildFile("questgroups.list");
 		quest_group_view	= new QuestGroupTreeView("任务编组管理器", quest_group_list);
 		this.add(quest_group_view, BorderLayout.CENTER);
 		

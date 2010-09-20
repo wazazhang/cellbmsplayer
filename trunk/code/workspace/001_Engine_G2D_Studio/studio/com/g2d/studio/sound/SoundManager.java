@@ -3,7 +3,6 @@ package com.g2d.studio.sound;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -13,17 +12,18 @@ import javax.swing.JToolBar;
 
 import com.g2d.studio.Config;
 import com.g2d.studio.ManagerForm;
+import com.g2d.studio.ManagerFormList;
 import com.g2d.studio.Studio;
 import com.g2d.studio.Studio.ProgressForm;
+import com.g2d.studio.io.File;
 import com.g2d.studio.res.Res;
+import com.g2d.studio.swing.G2DList;
 
-public class SoundManager extends ManagerForm implements ActionListener
+public class SoundManager extends ManagerFormList<SoundFile> implements ActionListener
 {
 	private static final long serialVersionUID = 1L;
 	
 	com.cell.sound.SoundManager sound_system = Studio.getInstance().getSoundSystem();
-
-	Vector<SoundFile> sound_files = new Vector<SoundFile>();
 	
 	SoundList sound_list;
 	
@@ -32,7 +32,10 @@ public class SoundManager extends ManagerForm implements ActionListener
 	
 	public SoundManager(Studio studio, ProgressForm progress) 
 	{
-		super(studio, progress, "声音编辑器", Res.icons_bar[3]);
+		super(studio, progress, "声音编辑器", Res.icons_bar[3],
+				Studio.getInstance().root_sound_path,
+				Studio.getInstance().project_save_path.getChildFile("sounds/sound.list")
+				);
 
 		{
 			JToolBar play_bar = new JToolBar();
@@ -43,43 +46,36 @@ public class SoundManager extends ManagerForm implements ActionListener
 			
 			this.add(play_bar, BorderLayout.NORTH);		
 		}
-
-		{
-			File sound_dir	= Studio.getInstance().root_sound_path;
-			File files[]	= sound_dir.listFiles();
-			progress.setMaximum("", files.length);
-			for (int i=0; i<files.length; i++) {
-				File file = files[i];
-				if (file.getName().endsWith(Config.SOUND_SUFFIX)) {
-					SoundFile sound = new SoundFile(
-							file.getName().substring(0, file.getName().length() - Config.SOUND_SUFFIX.length()));
-					sound_files.add(sound);
-				}
-				progress.setValue("", i);
-			}
-			
-			sound_list = new SoundList(getSounds());
-			sound_list.setVisibleRowCount(sound_files.size()/10+1);
-			sound_list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-			this.add(new JScrollPane(sound_list), BorderLayout.CENTER);
-
-		}
-
-		saveAll();
 	}
 	
 	public Vector<SoundFile> getSounds() {
-		return sound_files;
+		return super.getNodes();
 	}
 	
 	public SoundFile getSound(String sound_name) {
-		for (SoundFile sound : sound_files) {
-			if (sound.sound_file_name.equals(sound_name)) {
-				return sound;
-			}
+		return super.getNode(sound_name);
+	}
+	
+	@Override
+	protected G2DList<SoundFile> createList(Vector<SoundFile> files) {
+		sound_list = new SoundList(getSounds());
+		return sound_list;
+	}
+	
+	@Override
+	protected SoundFile createNode(File file) {
+		if (file.getName().endsWith(Config.SOUND_SUFFIX)) {
+			return new SoundFile(
+					file.getName().substring(0, file.getName().length() - Config.SOUND_SUFFIX.length()));
 		}
 		return null;
 	}
+	
+	@Override
+	protected String getSaveListName(SoundFile node) {
+		return node.getListName();
+	}
+	
 	
 	
 	@Override
@@ -91,15 +87,4 @@ public class SoundManager extends ManagerForm implements ActionListener
 		}
 	}
 	
-	public void saveAll() 
-	{
-		File save_dir = new File(Studio.getInstance().project_save_path.getPath() + File.separatorChar +"sounds");
-		save_dir.mkdirs();
-		StringBuffer sb = new StringBuffer();
-		for (SoundFile icon : sound_files) {
-			sb.append(icon.getListName()+"\n");
-		}
-		File save_file = new File(save_dir, "sound.list");
-		com.cell.io.CFile.writeText(save_file, sb.toString(), "UTF-8");
-	}
 }

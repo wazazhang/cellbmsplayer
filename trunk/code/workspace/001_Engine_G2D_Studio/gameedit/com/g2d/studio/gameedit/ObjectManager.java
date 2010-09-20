@@ -1,6 +1,5 @@
 package com.g2d.studio.gameedit;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -29,6 +28,7 @@ import com.g2d.studio.gameedit.template.XLSShopItem;
 import com.g2d.studio.gameedit.template.XLSSkill;
 import com.g2d.studio.gameedit.template.XLSTemplateNode;
 import com.g2d.studio.gameedit.template.XLSUnit;
+import com.g2d.studio.io.File;
 import com.g2d.studio.res.Res;
 
 public class ObjectManager
@@ -44,8 +44,8 @@ public class ObjectManager
 	
 	public ObjectManager(Studio studio) 
 	{
-		this.objects_dir 		= new File(Studio.getInstance().project_save_path.getPath() + File.separatorChar +"objects").getPath();
-		this.player_xls_columns	= XLSColumns.getXLSColumns(studio.xls_tplayer);
+		this.objects_dir 		= Studio.getInstance().project_save_path.getChildFile("objects").getPath();
+		this.player_xls_columns	= XLSColumns.getXLSColumns(studio.xls_tplayer.getInputStream());
 	}
 	
 	/**
@@ -124,7 +124,7 @@ public class ObjectManager
 	
 	static File toListFile(String objects_dir, Class<?>	data_type) {
 		String name = data_type.getSimpleName().toLowerCase();
-		return new File(objects_dir, name + ".obj/" + name + ".list");
+		return Studio.getInstance().getIO().createFile(objects_dir, name + ".obj/" + name + ".list");
 	}
 	
 	/**

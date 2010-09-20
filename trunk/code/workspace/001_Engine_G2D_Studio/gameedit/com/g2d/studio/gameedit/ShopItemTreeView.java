@@ -1,11 +1,11 @@
 package com.g2d.studio.gameedit;
 
-import java.io.File;
 
 import com.cell.rpg.template.TShopItem;
 import com.g2d.studio.Studio.ProgressForm;
 import com.g2d.studio.gameedit.entity.ObjectGroup;
 import com.g2d.studio.gameedit.template.XLSShopItem;
+import com.g2d.studio.io.File;
 import com.g2d.studio.swing.G2DTree;
 
 @SuppressWarnings("serial")
