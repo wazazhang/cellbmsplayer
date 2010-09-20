@@ -39,7 +39,6 @@ public class SceneSprite extends MoveableUnit implements CellSetResource.LoadSpr
 	transient protected CellSetResource			set_resource;
 	transient protected CellSetResource.SpriteSet 	set_sprite;
 	
-	protected String 	set_resource_name;
 	protected String 	set_sprite_id;
 	protected int		cur_anim;
 	
@@ -87,7 +86,6 @@ public class SceneSprite extends MoveableUnit implements CellSetResource.LoadSpr
 	{
 		set_resource 		= set;
 		set_sprite 			= set.getSetSprite(spriteID);
-		set_resource_name 	= set_resource.Name;
 		set_sprite_id 		= set_sprite.Name;
 		
 		if (csprite == null) {
@@ -102,7 +100,6 @@ public class SceneSprite extends MoveableUnit implements CellSetResource.LoadSpr
 	{
 		set_resource 		= set;
 		set_sprite 			= set.getSetSprite(spriteID);
-		set_resource_name 	= set_resource.Name;
 		set_sprite_id 		= set_sprite.Name;
 		
 //		if (csprite == null) {
@@ -117,7 +114,6 @@ public class SceneSprite extends MoveableUnit implements CellSetResource.LoadSpr
 	{
 		set_resource 		= obj.set_resource;
 		set_sprite 			= obj.set_sprite;
-		set_resource_name 	= set_resource.Name;
 		set_sprite_id 		= set_sprite.Name;
 		
 		if (obj.csprite != null) {
@@ -147,7 +143,6 @@ public class SceneSprite extends MoveableUnit implements CellSetResource.LoadSpr
 		spr.scale_y			= this.scale_y;
 		spr.rotate			= this.rotate;
 				
-		spr.set_resource_name 	= this.set_resource_name;
 		spr.set_sprite_id 		= this.set_sprite_id;
 		
 		return spr;

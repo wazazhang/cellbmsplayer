@@ -48,7 +48,7 @@ public class CellSetResource
 	final public String				Path;
 	final public String				PathDir;
 	final public String				PathName;
-	final public String				Name;
+//	final public String				Name;
 
 	transient public Hashtable<String, ImagesSet>		ImgTable;
 	transient public Hashtable<String, SpriteSet>		SprTable;
@@ -65,40 +65,31 @@ public class CellSetResource
 	
 	public CellSetResource(String file) throws Exception
 	{
-		this(file, file, null);
+		this(file, null);
+	}
+	
+	public CellSetResource(File file, ThreadPoolService loading_service) throws Exception
+	{
+		this(file.getPath(), loading_service);
 	}
 	
 	public CellSetResource(String file, ThreadPoolService loading_service) throws Exception
 	{
-		this(file, file, loading_service);
-	}
-
-	public CellSetResource(File file, String name, ThreadPoolService loading_service) throws Exception
-	{
-		this(file.getPath().replace('\\', '/'), file.getPath().replace('\\', '/'), loading_service);
-	}
-	
-	public CellSetResource(String file, String name, ThreadPoolService loading_service) throws Exception
-	{
+		file = file.replace('\\', '/');
 		this.Path				= file;
 		this.PathDir 			= file.substring(0, file.lastIndexOf("/")+1);
-		this.PathName			= file.substring(file.lastIndexOf("/")+1);
-		
-		this.Name 				= name;
-		
-		this.resource_manager	= new MarkedHashtable();
-		
-		this.loading_service	= loading_service;
-		
-//		System.out.println("read set : " + Path);
-		
+		this.PathName			= file.substring(PathDir.length());
+
 		// 读入基础属性
 		byte[] conf_data = loadRes(PathName);
 		if (conf_data == null) {
 			throw new FileNotFoundException(Path);
 		}
+
+		this.loading_service	= loading_service;
+		this.resource_manager	= new MarkedHashtable();
 		
-		String conf = new String(conf_data);
+		String conf = new String(conf_data, CIO.ENCODING);
 		PropertyGroup Config = new PropertyGroup(conf, "=");
 
 		
