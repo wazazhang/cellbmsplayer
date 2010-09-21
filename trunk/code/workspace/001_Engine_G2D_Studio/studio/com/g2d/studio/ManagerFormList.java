@@ -32,14 +32,14 @@ public abstract class ManagerFormList<T extends G2DListItem> extends ManagerForm
 			Studio studio, 
 			ProgressForm progress, String title, 
 			BufferedImage icon, 
-			File res_root, File save_list_file) 
+			File res_root, 
+			File save_list_file) 
 	{
 		super(studio, progress, title, icon);
 		
 		this.save_list_file = save_list_file;
 		
-		File sound_dir		= Studio.getInstance().root_sound_path;
-		File files[]		= sound_dir.listFiles();
+		File files[]		= res_root.listFiles();
 		
 		progress.setMaximum("", files.length);
 		for (int i=0; i<files.length; i++) {
