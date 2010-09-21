@@ -74,6 +74,10 @@ public class TriggerGenerator implements Serializable, Comparator<String>, Abili
 		return ret;
 	}
 
+	public ArrayList<TriggerInstance> getBindedTriggers() {
+		return new ArrayList<TriggerInstance>(binded_triggers.values());
+	}
+	
 	public ArrayList<String> getTriggerNames() {
 		return new ArrayList<String>(binded_triggers.keySet());
 	}
