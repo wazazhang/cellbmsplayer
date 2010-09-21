@@ -84,6 +84,9 @@ public class Quest extends RPGObject implements NamedObject
 	@Property({"临时任务","任务做完后删除状态，该类型任务不能作为任务前置条件"})
 	public boolean				is_transient_quest	= false;
 	
+	@Property({"隐藏任务", "接了/完成任务时不会提示玩家，也不会出现在玩家的已接/完成任务列表中"})
+	public boolean				is_hidden_quest		= false;
+	
 //	----------------------------------------------------------------------------------------------------------------
 	public Quest(Integer id, String name) {
 		super(id.toString());
