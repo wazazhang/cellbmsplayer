@@ -26,7 +26,7 @@ abstract public class SceneTrigger implements Serializable, Comparator<Class<?>>
 	
 	private String 	tree_path;
 	
-	private boolean	enable = true;
+//	private boolean	enable = true;
 	
 	public String	comment = "comment here ....";
 	
@@ -55,13 +55,13 @@ abstract public class SceneTrigger implements Serializable, Comparator<Class<?>>
 		return this;
 	}
 
-	public void setEnable(boolean enable) {
-		this.enable = enable;
-	}
-	
-	public boolean isEnable() {
-		return this.enable;
-	}
+//	public void setEnable(boolean enable) {
+//		this.enable = enable;
+//	}
+//	
+//	public boolean isEnable() {
+//		return this.enable;
+//	}
 	
 	
 	public String getName() {
