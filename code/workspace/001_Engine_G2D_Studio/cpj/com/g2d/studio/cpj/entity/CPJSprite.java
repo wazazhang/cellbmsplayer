@@ -2,7 +2,6 @@ package com.g2d.studio.cpj.entity;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
 
 import com.cell.gfx.game.CCD;
 import com.cell.gfx.game.CSprite;
@@ -11,6 +10,7 @@ import com.g2d.Tools;
 import com.g2d.cell.CellSprite;
 import com.g2d.cell.CellSetResource.SpriteSet;
 import com.g2d.studio.cpj.CPJResourceType;
+import com.g2d.studio.io.File;
 import com.g2d.studio.res.Res;
 
 
@@ -44,7 +44,7 @@ public class CPJSprite extends CPJObject<SpriteSet>
 	public BufferedImage getSnapShoot() {
 		if (snapshoot==null) {
 			try {
-				File file = new File(parent.getCPJDir()+"/icon_" + name + ".png");
+				File file = parent.getCPJDir().getChildFile("icon_" + name + ".png");
 //				File file = new File(parent.getCPJDir()+"/icon.png");
 				if (file.exists()) {
 					snapshoot = Tools.readImage(file.getPath());
