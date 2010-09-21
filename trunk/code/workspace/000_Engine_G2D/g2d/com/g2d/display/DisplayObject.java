@@ -476,7 +476,9 @@ public abstract class DisplayObject implements ImageObserver, Vector
 				}
 				if (testCatchMouse(g)) {
 					catched_mouse = true;
-					getStage().setMousePickedObject(this);
+					Stage stage = getStage();
+					if (stage != null)
+						stage.setMousePickedObject(this);
 				} else {
 					catched_mouse = false;
 				}
