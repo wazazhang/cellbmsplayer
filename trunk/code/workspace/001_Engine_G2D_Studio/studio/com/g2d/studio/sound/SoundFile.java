@@ -37,7 +37,7 @@ public class SoundFile implements G2DListItem
 	
 	public StaticSoundPlayer createSoundPlayer()
 	{
-		String file = Studio.getInstance().root_sound_path + "/" + sound_file_name + Config.SOUND_SUFFIX;
+		String file = Studio.getInstance().root_sound_path.getPath() + "/" + sound_file_name + Config.SOUND_SUFFIX;
 //		System.out.println(file);
 		StaticSoundPlayer sound_player = new StaticSoundPlayer(file);
 		return sound_player;
