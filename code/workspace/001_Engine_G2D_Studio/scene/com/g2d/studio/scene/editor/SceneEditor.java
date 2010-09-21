@@ -641,7 +641,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener, Window
 			
 			updateLocateCamera(catch_mouse, worldx, worldy);
 			
-//			getWorld().sort();
+			getWorld().sort();
 
 		}
 
