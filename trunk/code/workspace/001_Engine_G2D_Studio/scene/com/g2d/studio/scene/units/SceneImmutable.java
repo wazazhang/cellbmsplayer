@@ -14,6 +14,8 @@ import javax.swing.JList;
 
 import com.cell.gfx.game.CSprite;
 import com.cell.rpg.scene.Immutable;
+import com.cell.rpg.scene.SceneUnit;
+import com.cell.rpg.scene.ability.ActorTransport;
 import com.g2d.cell.CellSetResource;
 import com.g2d.cell.CellSetResource.SpriteSet;
 import com.g2d.cell.game.SceneSprite;
@@ -31,6 +33,7 @@ import com.g2d.studio.scene.editor.SceneAbilityAdapters;
 import com.g2d.studio.scene.editor.SceneEditor;
 import com.g2d.studio.scene.editor.SceneUnitMenu;
 import com.g2d.studio.scene.editor.SceneUnitTagEditor;
+import com.g2d.studio.scene.entity.SceneNode;
 import com.g2d.util.Drawing;
 
 public class SceneImmutable extends SceneSprite implements SceneUnitTag<Immutable>
@@ -42,6 +45,9 @@ public class SceneImmutable extends SceneSprite implements SceneUnitTag<Immutabl
 	final public CPJSprite		cpj_spr;
 	
 	Rectangle					snap_shape = new Rectangle(-2, -2, 4, 4);
+
+	private SceneNode 			next_scene;
+	private SceneUnit 			next_transport;
 	
 //	--------------------------------------------------------------------------------------------------------
 	
@@ -210,6 +216,37 @@ public class SceneImmutable extends SceneSprite implements SceneUnitTag<Immutabl
 				
 				if (editor.getSelectedPage().isSelectedType(getClass())) 
 				{
+					ActorTransport tp = getUnit().getAbility(ActorTransport.class);
+					if (tp != null) {
+						if (next_scene == null || !next_scene.getID().equals(tp.next_scene_id)) {
+							next_scene = Studio.getInstance().getSceneManager().getSceneNode(tp.next_scene_id);
+							next_transport = null;
+						}
+						if (next_scene != null) {
+							if (next_transport == null || !next_transport.getName().equals(tp.next_scene_object_id)) {
+								for (SceneUnit su : next_scene.getData().scene_units) {
+									if (su.name.equals(tp.next_scene_object_id)) {
+										next_transport = su;
+										break;
+									}
+								}
+							}
+							g.setColor(Color.WHITE);
+							Drawing.drawStringBorder(g, 
+									"传送到 : " + next_scene.getListName(), 
+									0, local_bounds.y-40, 
+									Drawing.TEXT_ANCHOR_HCENTER | Drawing.TEXT_ANCHOR_TOP);
+							if (next_transport != null) {
+								Drawing.drawStringBorder(g, 
+										"" + next_transport.getName(), 
+										0, local_bounds.y-20, 
+										Drawing.TEXT_ANCHOR_HCENTER | Drawing.TEXT_ANCHOR_TOP);
+							}
+						}
+						
+						
+					}
+					
 					// 选择了该精灵
 					if (editor.getSelectedUnit() == this) {
 						drawTouchRange(g);
