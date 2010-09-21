@@ -536,7 +536,7 @@ public class Studio extends AbstractFrame
 			this.setSize(Res.img_splash.getWidth(), Res.img_splash.getHeight()+40);
 //			this.setAlwaysOnTop(true);
 			AbstractFrame.setCenter(this);
-
+			
 			setIconImage(Res.icon_edit);
 			
 			progress.setStringPainted(true);

@@ -1,6 +1,5 @@
 package com.cell.rpg.xls;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
@@ -34,9 +33,9 @@ public class XLSColumns extends LinkedHashMap<String, String> implements Seriali
 	 * @param xls_file
 	 * @return
 	 */
-	public static XLSColumns getXLSColumns(File path)
+	public static XLSColumns getXLSColumns(String path)
 	{
-		InputStream is = CIO.loadStream(path.getPath());
+		InputStream is = CIO.loadStream(path);
 		return getXLSColumns(is);
 	}
 	
