@@ -13,8 +13,6 @@ public interface AbstractSession
 	
 	public boolean			disconnect(boolean force);
 	
-	
-	
 	public long 			getSentMessageCount() ;
 	public long 			getReceivedMessageCount () ;
 	public long 			getSentBytes();

@@ -32,6 +32,15 @@ public class PoolNetService extends BasicNetService
 	}
 	
 	@Override
+	public void dispose() {
+		for (ServerSession session : sessions) {
+			if (session != null) {
+				session.dispose();
+			}
+		}
+	}
+	
+	@Override
 	public void close(boolean force) {
 		for (ServerSession session : sessions) {
 			if (session != null) {

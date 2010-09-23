@@ -39,7 +39,8 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 	IoConnector 			Connector;
 	NetPackageCodec 		Codec;
 	ServerSessionListener 	Listener;
-	final boolean			smooth_close;
+	
+	final CleanTask			clean_task;
 	
 	public ServerSessionImpl() {
 		this(Thread.currentThread().getContextClassLoader(), null);
@@ -60,7 +61,31 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 		Connector 	= new NioSocketConnector();
 		Connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(Codec));
 		Connector.setHandler(this);
-		this.smooth_close = smooth_close;
+		
+		this.clean_task = new CleanTask();
+		if (smooth_close) {
+			Runtime.getRuntime().addShutdownHook(clean_task);
+		}
+	}
+	
+	@Override
+	public void dispose() {
+		Runtime.getRuntime().removeShutdownHook(clean_task);
+		try {
+			if (isConnected()) {
+				disconnect(true);
+			}
+			Connector.dispose();
+		} catch (Exception err) {
+			log.error(err.getMessage(), err);
+		}
+	}
+
+	
+	@Override
+	protected void finalize() throws Throwable {
+		super.finalize();
+		dispose();
 	}
 	
 	public boolean connect(String host, int port, ServerSessionListener listener) throws IOException {
@@ -81,10 +106,8 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 				}
 				IoSession io_session = future1.getSession();
 				if (io_session != null && io_session.isConnected()) {
-					session_ref.set(io_session);
-					if (smooth_close) {
-						Runtime.getRuntime().addShutdownHook(new CleanTask(io_session));
-					}
+					this.session_ref.set(io_session);
+					this.clean_task.set(io_session);
 					return true;
 				} else {
 					log.error("not connect : " + address.toString());
@@ -100,6 +123,7 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 		IoSession io_session = null;
 		synchronized (session_ref) {
 			io_session = session_ref.getAndSet(null);
+			clean_task.set(null);
 		}
 		if (io_session != null) {
 			io_session.close(force);
@@ -180,6 +204,7 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 	
 	public void sessionClosed(IoSession session) throws Exception {
 		Listener.disconnected(this, true, "sessionClosed");
+		clean_task.set(null);
 	}
 	
 	public void messageReceived(final IoSession iosession, final Object message) throws Exception 
@@ -273,22 +298,26 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 	
 	private static class CleanTask extends Thread
 	{
-		final IoSession session;
-		public CleanTask(IoSession session) {
+		private IoSession session;
+		
+		private synchronized void set(IoSession session) {
 			this.session = session;
 		}
+		
 		public void run() {
-			String info; 
-			try {
-				info = session.toString();
-			} catch (Throwable err){
-				info = err.getMessage();
-			}
-			System.out.println("Clear session : " + info);
-			try {
-				session.close(false);
-			} catch (Exception e) {
-				e.printStackTrace();
+			if (session != null) {
+				String info; 
+				try {
+					info = session.toString();
+				} catch (Throwable err){
+					info = err.getMessage();
+				}
+				System.out.println("Clear session : " + info);
+				try {
+					session.close(false);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
