@@ -109,7 +109,17 @@ public class SceneGraphViewer extends AbstractDialog
 			}
 			for (SceneFrame sf : all_nodes.values()) {
 				for (LinkInfo link : sf.node.next_links.values()) {
-					sf.addNext(all_nodes.get(link.next_scene_id), link);
+					SceneFrame next_sf = all_nodes.get(link.next_scene_id);
+					if (next_sf != null) {
+						sf.addNext(next_sf, link);
+					} else {
+						System.err.println(
+								"场景["+sf.node.scene_name+"("+sf.node.scene_id+")"+"]" +
+								"传送点["+link.this_scene_obj_name+"] \t-> " + 
+								"场景[("+link.next_scene_id+")"+"]" +
+								"传送点["+link.next_scene_obj_name+"] \t" + 
+								 " 不存在！");
+					}
 				}
 			}
 			path_finder		= new SceneGraphAstar(sg);
@@ -231,12 +241,12 @@ public class SceneGraphViewer extends AbstractDialog
 				if (snode.getIcon(false) == null) {
 					snode.getIcon(true);
 				}
-				if (snode.getIcon(false) != null) {
+				if (snode.getIcon(false) != null && 
+					snode.getIcon(false).getImage() != null) {
 					this.snapshot		= snode.getIcon(false).getImage();
 				} else {
 					this.snapshot		= Tools.createImage(80, 60);
 				}
-				
 				
 				this.setLocation(node.x, node.y);
 				this.setSize(
