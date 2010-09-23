@@ -65,6 +65,12 @@ public class ThreadPool implements ThreadPoolService
 		return gameThreadPool;
 	}
 	
+	@Override
+	protected void finalize() throws Throwable {
+		super.finalize();
+		shutdownNow();
+	}
+	
 	public ScheduledThreadPoolExecutor getScheduledExecutor() 
 	{
 		return gameScheduledThreadPool;
