@@ -1,12 +1,17 @@
 package com.cell.sound.openal_impl;
 
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.cell.sound.IPlayer;
 
 import net.java.games.joal.AL;
 
 public abstract class JALSource implements IPlayer
 {
+	static Logger log = Logger.getLogger(JALSource.class.getName());
+	
 	final AL	al;
 	int[]		source;
 	
@@ -25,7 +30,7 @@ public abstract class JALSource implements IPlayer
 				this.source = source;
 			}
 
-			System.out.println(
+			log.log(Level.FINE,
 			"SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS\n" +
 			"S Create sound : " + source[0] + " : " + this + "\n"+
 			"SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
@@ -51,7 +56,7 @@ public abstract class JALSource implements IPlayer
 	synchronized public void dispose() {
 		if (source != null) {
 			try {
-				System.out.println(
+				log.log(Level.FINE,
 						"SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS\n" +
 						"S Dispose sound : " + source[0] + " : " + this + "\n"+
 						"SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
