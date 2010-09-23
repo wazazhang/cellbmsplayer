@@ -1640,16 +1640,18 @@ public class CellSetResource
 		}
 		
 		public void render(IGraphics g, int Index, int PosX, int PosY) {
-			if (images[Index] != null) {
-				g.drawImage(images[Index], PosX, PosY, 0);
+			IImage buff = images[Index];
+			if (buff != null) {
+				g.drawImage(buff, PosX, PosY, 0);
 			}else{
 				drawLoading(g, PosX, PosY, img.ClipsW[Index], img.ClipsH[Index]);
 			}
 		}
 
 		public void render(IGraphics g, int Index, int PosX, int PosY, int Style) {
-			if (images[Index] != null) {
-				g.drawImage(images[Index], PosX, PosY, Style);
+			IImage buff = images[Index];
+			if (buff != null) {
+				g.drawImage(buff, PosX, PosY, Style);
 			}else{
 				drawLoading(g, PosX, PosY, img.ClipsW[Index], img.ClipsH[Index]);
 			}
@@ -1674,9 +1676,10 @@ public class CellSetResource
 		}
 		
 		public int getPixel(int index, int x, int y){
-			if (images[index] != null) {
+			IImage buff = images[index];
+			if (buff != null) {
 				int[] rgb = new int[1];
-				images[index].getRGB(rgb, 0, 1, x, y, 1, 1);
+				buff.getRGB(rgb, 0, 1, x, y, 1, 1);
 				return rgb[0];
 			}
 			return 0;
