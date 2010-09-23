@@ -7,6 +7,8 @@ import com.net.MessageHeader;
 
 public interface ServerSession extends AbstractSession
 {
+	public void		dispose();
+	
 	public boolean	send(MessageHeader message);
 	
 	public boolean	connect(String host, int port, long timeout, ServerSessionListener listener) throws IOException;

@@ -86,6 +86,8 @@ public abstract class BasicNetService
 	 * @param message
 	 */
 	abstract public void send(MessageHeader message) ;
+
+	abstract public void dispose();
 	
 //	----------------------------------------------------------------------------------------------------------------------------
 

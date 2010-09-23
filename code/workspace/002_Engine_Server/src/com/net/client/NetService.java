@@ -98,7 +98,7 @@ public class NetService extends BasicNetService
 		}
     	return false;
     }
-    
+	
 	/**
 	 * 断开链接
 	 * @param force 是否立即断开
@@ -106,6 +106,11 @@ public class NetService extends BasicNetService
 	@Override
 	public void close(boolean force) {
     	Session.disconnect(force);
+	}
+	
+	@Override
+	public void dispose() {
+		Session.dispose();
 	}
 	
 	/**
@@ -123,7 +128,6 @@ public class NetService extends BasicNetService
 	final private void printNotConnectError() {
 		log.error("session is not connect, please call connect(String host, String port) first !");
 	}
-	
 	
 	
 	
