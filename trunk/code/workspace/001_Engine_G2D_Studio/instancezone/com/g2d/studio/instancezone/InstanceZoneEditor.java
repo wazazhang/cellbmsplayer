@@ -59,6 +59,7 @@ public class InstanceZoneEditor extends ObjectViewer<InstanceZoneNode> implement
 	JToolBar				toolbar 				= new JToolBar();
 	JButton					btn_triggers_package	= new JButton(new ImageIcon(Res.icon_action));
 	JButton					btn_add_scene			= new JButton(new ImageIcon(Res.icon_res_1));
+	JButton					btn_reset_locations		= new JButton(new ImageIcon(Res.icon_layer));
 	
 	PageDiscussion			page_discussion;
 	PageScenes				page_scenes;
@@ -79,6 +80,11 @@ public class InstanceZoneEditor extends ObjectViewer<InstanceZoneNode> implement
 		this.btn_add_scene.addActionListener(this);
 		this.btn_add_scene.setToolTipText("添加场景");
 		this.toolbar.add(btn_add_scene);
+		
+		this.btn_reset_locations.addActionListener(this);
+		this.btn_reset_locations.setToolTipText("重置场景位置");
+		this.toolbar.add(btn_reset_locations);
+		
 		
 		this.toolbar.setFloatable(false);
 		this.add(toolbar, BorderLayout.NORTH);
@@ -111,6 +117,9 @@ public class InstanceZoneEditor extends ObjectViewer<InstanceZoneNode> implement
 			if (node != null) {
 				page_scenes.addScene(new BindedScene(node.getData()));
 			}
+		}
+		else if (e.getSource() == btn_reset_locations) {
+			page_scenes.resetLocations();
 		}
 	}
 	
@@ -171,6 +180,26 @@ public class InstanceZoneEditor extends ObjectViewer<InstanceZoneNode> implement
 			}
 		}
 		
+		private void resetLocations() {
+			for (SceneItem si : scenes.values()) {
+				int fx = si.getX();
+				int fy = si.getY();
+				if (fx < -si.getWidth() / 2) {
+					fx = -si.getWidth() / 2;
+				} else if (fx > getWidth() - si.getWidth() / 2) {
+					fx = getWidth() - si.getWidth() / 2;
+				}
+				if (fy < -si.getHeight() / 2) {
+					fy = -si.getHeight() / 2;
+				} else if (fy > getHeight() - si.getHeight() / 2) {
+					fy = getHeight() - si.getHeight() / 2;
+				}
+				if (fx != si.getX() || fy != si.getY()) {
+					si.setLocation(fx, fy);
+				}
+			}
+		}
+		
 		@Override
 		protected void paintChildren(Graphics g)
 		{
@@ -178,24 +207,7 @@ public class InstanceZoneEditor extends ObjectViewer<InstanceZoneNode> implement
 			g2d.setStroke(new BasicStroke(4));
 			
 			g.setColor(Color.GREEN);
-			for (SceneItem si : scenes.values()) 
-			{
-				int fx = si.getX();
-				int fy = si.getY();
-				if (fx < -si.getWidth()/2) {
-					fx = -si.getWidth()/2;
-				} else if (fx > getWidth()-si.getWidth()/2) {
-					fx = getWidth()-si.getWidth()/2;
-				}
-				if (fy < -si.getHeight()/2) {
-					fy = -si.getHeight()/2;
-				} else if (fy > getHeight()-si.getHeight()/2) {
-					fy = getHeight()-si.getHeight()/2;
-				}
-				if (fx != si.getX() || fy != si.getY()) {
-					si.setLocation(fx, fy);
-				}
-				
+			for (SceneItem si : scenes.values()) {
 				si.drawLink(g2d, scenes);
 			}
 			
@@ -252,12 +264,17 @@ public class InstanceZoneEditor extends ObjectViewer<InstanceZoneNode> implement
 				int sw = 120;
 				int sh = 100;
 				if (node != null) {
-					Image img = node.getIcon(false).getImage();
-					if (img != null) {
-						this.icon = Tools.combianImage(sw, sh, img);
+					if (node.getIcon(false)!=null) {
+						Image img = node.getIcon(false).getImage();
+						if (img != null) {
+							this.icon = Tools.combianImage(sw, sh, img);
+						} else {
+							this.icon = Tools.createImage(sw, sh);
+						}
 					} else {
 						this.icon = Tools.createImage(sw, sh);
 					}
+					
 					super.setSize(icon.getWidth(), icon.getHeight());
 					JLabel label = new JLabel(new ImageIcon(icon));
 					super.add(label);
