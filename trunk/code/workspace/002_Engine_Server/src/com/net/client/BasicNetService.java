@@ -151,13 +151,13 @@ public abstract class BasicNetService
      * 强制移除所有等待中的请求
      * @param type
      */
-    final public void removeRequestByType(Class<?> type){
+	final public void clearRequests() {
 		synchronized (WaitingListeners) {
-			for (Integer pnum : WaitingListeners.keySet()) {
+			for (Integer pnum : new ArrayList<Integer>(WaitingListeners.keySet())) {
 				WaitingListeners.remove(pnum);
 			}
 		}
-    }
+	}
 
 //	-------------------------------------------------------------------------------------------------------------
     
