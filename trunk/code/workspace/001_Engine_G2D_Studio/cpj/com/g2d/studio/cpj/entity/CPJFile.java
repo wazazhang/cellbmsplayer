@@ -267,6 +267,9 @@ public class CPJFile extends G2DTreeNode<CPJObject<?>>
 					tm.reload(CPJFile.this);
 				}catch (Exception err){}
 				try{
+					Studio.getInstance().getCPJResourceManager().saveAll();
+				}catch (Exception err){err.printStackTrace();}
+				try{
 					Studio.getInstance().getObjectManager().resetAllResources();
 					Studio.getInstance().getSceneManager().resetAllResources();
 				}catch (Exception err){err.printStackTrace();}
