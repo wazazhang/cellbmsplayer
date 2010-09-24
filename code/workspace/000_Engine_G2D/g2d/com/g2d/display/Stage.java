@@ -2,6 +2,7 @@ package com.g2d.display;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.event.FocusEvent;
 import java.text.AttributedString;
 
@@ -24,11 +25,6 @@ public abstract class Stage extends DisplayObjectContainer
 
 //	transition
 	/** 切换场景时用的贞数 */
-	private int 						transition_max_time			= 10;
-	transient private boolean 			is_transition_in 		= true;
-	transient private int 				transition_in_timer		= 0;
-	transient private boolean 			is_transition_out		= false;
-	transient private int 				transition_out_timer	= 0;
 	
 //	tip
 //	transient private TextTip			default_tip;
@@ -36,6 +32,8 @@ public abstract class Stage extends DisplayObjectContainer
 //	transient private String			next_tip_text;
 //	transient private AttributedString	next_tip_atext;
 
+	private StageTransition				current_transition			= new DefaultStageTransition();
+	
 //	picked object
 	/**当前控件内，最后被鼠标捕获到的单位*/
 	transient private DisplayObject		mouse_picked_object;
@@ -63,10 +61,6 @@ public abstract class Stage extends DisplayObjectContainer
 	protected Stage() 
 	{
 		debug 					= false;
-		is_transition_in 		= true;
-		transition_in_timer		= 0;
-		is_transition_out		= false;
-		transition_out_timer	= 0;
 	}
 	
 	/***
@@ -79,38 +73,43 @@ public abstract class Stage extends DisplayObjectContainer
 	}
 
 //	---------------------------------------------------------------------------------------------------------------
-
-	final public void setTransitionMaxTime(int time) {
-		transition_max_time = Math.max(1, time);
+//
+	
+	final public void setTransition(StageTransition transition) {
+		this.current_transition = transition;
 	}
 	
 	final public void startTransitionIn() {
-		if (!is_transition_in) {
-			is_transition_in = true;
-			transition_in_timer = 0;
-//			System.out.println("startTransitionOut");
+		if (current_transition!=null) {
+			current_transition.startTransitionIn();
 		}
 	}
 	
 	final public void startTransitionOut() {
-		if (!is_transition_out) {
-			is_transition_out = true;
-			transition_out_timer = 0;
-//			System.out.println("startTransitionOut");
+		if (current_transition!=null) {
+			current_transition.startTransitionOut();
 		}
 	}
 	
-	
 	final public boolean isTransition() {
-		return is_transition_out || is_transition_in;
+		if (current_transition != null) {
+			return current_transition.isTransitionIn() || current_transition.isTransitionOut();
+		}
+		return false;
 	}
 
 	final public boolean isTransitionIn() {
-		return is_transition_in;
+		if (current_transition != null) {
+			return current_transition.isTransitionIn();
+		}
+		return false;
 	}
 
 	final public boolean isTransitionOut() {
-		return is_transition_out;
+		if (current_transition != null) {
+			return current_transition.isTransitionOut();	
+		}
+		return false;
 	}
 
 //	public void setCursorG2D(CursorG2D cursor) {
@@ -164,52 +163,58 @@ public abstract class Stage extends DisplayObjectContainer
 		
 		super.onRender(g);
 		
-		if (getRoot().isMouseDown(MouseEvent.BUTTON_LEFT)) {
-			if (mouse_picked_object instanceof UIObject) {
-				last_mouse_down_object = (UIObject)mouse_picked_object;
-				if (last_mouse_down_object.enable_drag_drop) {
-					last_mouse_down_pos = new TVector(mouse_x, mouse_y);
-				}
-			}
-		}
-		
-		if (getRoot().isMouseHold(MouseEvent.BUTTON_LEFT)) {
-			if (last_mouse_down_pos != null && last_mouse_down_object != null) {
-				if (MathVector.getDistance(
-						last_mouse_down_pos.x, 
-						last_mouse_down_pos.y, 
-						mouse_x, mouse_y) > Math.abs(drag_drop_start_length)) {
-					try {
-						startDragDrop(last_mouse_down_object);
-					} finally {
-						last_mouse_down_object = null;
-						last_mouse_down_pos = null;
+		{
+			if (getRoot().isMouseDown(MouseEvent.BUTTON_LEFT)) {
+				if (mouse_picked_object instanceof UIObject) {
+					last_mouse_down_object = (UIObject)mouse_picked_object;
+					if (last_mouse_down_object.enable_drag_drop) {
+						last_mouse_down_pos = new TVector(mouse_x, mouse_y);
 					}
 				}
 			}
-		} else {
-			last_mouse_down_object = null;
-			last_mouse_down_pos = null;
-			if (mouse_drag_drop_object!=null) {
-				stopDragDrop();
+			if (getRoot().isMouseHold(MouseEvent.BUTTON_LEFT)) {
+				if (last_mouse_down_pos != null && last_mouse_down_object != null) {
+					if (MathVector.getDistance(
+							last_mouse_down_pos.x, 
+							last_mouse_down_pos.y, 
+							mouse_x, mouse_y) > Math.abs(drag_drop_start_length)) {
+						try {
+							startDragDrop(last_mouse_down_object);
+						} finally {
+							last_mouse_down_object = null;
+							last_mouse_down_pos = null;
+						}
+					}
+				}
+			} else {
+				last_mouse_down_object = null;
+				last_mouse_down_pos = null;
+				if (mouse_drag_drop_object!=null) {
+					stopDragDrop();
+				}
+			}
+			
+			last_mouse_picked_object = mouse_picked_object;
+			mouse_picked_object = null;
+			
+			if (mouse_drag_drop_object != null) {
+				renderDragged(g);
+			} else {
+				renderTip(g);
 			}
 		}
 		
-
-		last_mouse_picked_object = mouse_picked_object;
-		mouse_picked_object = null;
-		
-		if (mouse_drag_drop_object!=null){
-			renderDragged(g);
-		}else{
-			renderTip(g);
-		}
-		
-		renderTransition(g);
+		if (isTransition()) 
+		{
+			renderTransition(g);
+		} 
 	}
 
-	private void renderDragged(Graphics2D g) 
-	{
+	private void renderTransition(Graphics2D g) {
+		current_transition.render(g, local_bounds);
+	}
+	
+	private void renderDragged(Graphics2D g) {
 		mouse_drag_drop_object.onRenderDragDrop(this, g);
 	}
 	
@@ -249,36 +254,6 @@ public abstract class Stage extends DisplayObjectContainer
 //		}
 	}
 	
-	private void renderTransition(Graphics2D g)
-	{
-		// default is alpha transition
-		if (is_transition_in) 
-		{
-			g.setColor(new Color(0,0,0, 1 - transition_in_timer / (float)transition_max_time));
-			g.fill(local_bounds);
-			
-			if (transition_in_timer==0) {
-				renderTransitionSplash(g);
-			}
-			
-			transition_in_timer ++;
-
-			if (transition_in_timer>transition_max_time) {
-				is_transition_in = false;
-			}
-		}
-		else if (is_transition_out) 
-		{
-			g.setColor(new Color(0,0,0, transition_out_timer / (float)transition_max_time));
-			g.fill(local_bounds);
-			
-			transition_out_timer ++;
-			
-			if (transition_out_timer>transition_max_time) {
-				is_transition_out = false;
-			}
-		}
-	}
 
 	private void startDragDrop(UIObject obj) {
 //		if (mouse_drag_drop_object == null) {
@@ -322,19 +297,11 @@ public abstract class Stage extends DisplayObjectContainer
 		stopDragDrop();
 	}
 	
-	protected void renderTransitionSplash(Graphics2D g) {
-		
-	}
+	public void renderLostFocus(Graphics2D g) {}
 	
-	public void renderLostFocus(Graphics2D g){
-		
-	}
+	public void onFocusGained(FocusEvent e) {}
 	
-	public void onFocusGained(FocusEvent e) {
-	}
-	
-	public void onFocusLost(FocusEvent e) {
-	}
+	public void onFocusLost(FocusEvent e) {}
 	
 	/**
 	 * 监听客户端窗口关闭按钮
@@ -428,5 +395,68 @@ public abstract class Stage extends DisplayObjectContainer
 	
 	final public InteractiveObject getDraggedObject() {
 		return mouse_drag_drop_object;
+	}
+	
+	public static class DefaultStageTransition implements StageTransition
+	{
+		private int 				transition_max_time		= 10;
+		private int 				transition_timer		= 0;
+		
+		private boolean 			is_transition_in 		= true;
+		private boolean 			is_transition_out		= false;
+
+		public DefaultStageTransition() {
+			startTransitionIn();
+		}
+		
+		public void setTransitionMaxTime(int time) {
+			transition_max_time = Math.max(1, time);
+		}
+		
+		public void startTransitionIn() {
+			is_transition_in 	= true;
+			is_transition_out 	= false;
+			transition_timer 	= 0;
+		}
+		
+		public void startTransitionOut() {
+			is_transition_in 	= false;
+			is_transition_out 	= true;
+			transition_timer 	= 0;
+		}
+		
+		public boolean isTransition() {
+			return is_transition_out || is_transition_in;
+		}
+
+		public boolean isTransitionIn() {
+			return is_transition_in;
+		}
+
+		public boolean isTransitionOut() {
+			return is_transition_out;
+		}
+
+		@Override
+		public void render(Graphics2D g, Rectangle bounds)
+		{
+			float alpha = 0;
+			
+			if (is_transition_in) {
+				alpha = 1 - transition_timer / (float) transition_max_time;
+			} else if (is_transition_out) {
+				alpha = transition_timer / (float) transition_max_time;
+			}
+			alpha = Math.max(alpha, 0);
+			alpha = Math.min(alpha, 1);
+			g.setColor(new Color(0,0,0, alpha));
+			g.fill(bounds);
+			
+			if (transition_timer > transition_max_time) {
+				is_transition_in	= false;
+				is_transition_out	= false;
+			}
+			transition_timer ++;
+		}
 	}
 }
