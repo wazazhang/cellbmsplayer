@@ -414,15 +414,19 @@ public abstract class Stage extends DisplayObjectContainer
 		}
 		
 		public void startTransitionIn() {
-			is_transition_in 	= true;
-			is_transition_out 	= false;
-			transition_timer 	= 0;
+			if (!is_transition_in) {
+				is_transition_in 	= true;
+				is_transition_out 	= false;
+				transition_timer 	= 0;
+			}
 		}
 		
 		public void startTransitionOut() {
-			is_transition_in 	= false;
-			is_transition_out 	= true;
-			transition_timer 	= 0;
+			if (!is_transition_out) {
+				is_transition_in 	= false;
+				is_transition_out 	= true;
+				transition_timer 	= 0;
+			}
 		}
 		
 		public boolean isTransition() {
