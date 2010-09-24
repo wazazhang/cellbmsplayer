@@ -98,6 +98,10 @@ public abstract class Stage extends DisplayObjectContainer
 		return false;
 	}
 
+	/**
+	 * 是否正在生成，进入当前屏幕
+	 * @return
+	 */
 	final public boolean isTransitionIn() {
 		if (current_transition != null) {
 			return current_transition.isTransitionIn();
@@ -105,6 +109,10 @@ public abstract class Stage extends DisplayObjectContainer
 		return false;
 	}
 
+	/**
+	 * 是否正在消亡，将切换到下一屏幕
+	 * @return
+	 */
 	final public boolean isTransitionOut() {
 		if (current_transition != null) {
 			return current_transition.isTransitionOut();	
