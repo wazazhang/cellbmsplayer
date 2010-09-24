@@ -117,7 +117,7 @@ public class CPJResourceManager extends ManagerForm implements MouseListener
 		
 		this.add(table, BorderLayout.CENTER);
 		
-//		saveAll();
+		saveAll();
 	}
 	
 	public <T extends CPJObject<?>> CPJIndex<T> getNodeIndex(T node)
