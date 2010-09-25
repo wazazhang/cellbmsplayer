@@ -192,10 +192,22 @@ public abstract class Config
 		}
 	}
 	
+	/**
+	 * 保存文档
+	 * @param config_class
+	 * @return
+	 */
 	static public String toProperties(Class<? extends Config> config_class) {
 		return toProperties(null, config_class, 32);
 	}
 	
+	/**
+	 * 保存文档
+	 * @param instance
+	 * @param config_class
+	 * @param name_width
+	 * @return
+	 */
 	static public String toProperties(Config instance, Class<? extends Config> config_class, int name_width) 
 	{
 		StringBuilder sb = new StringBuilder();
@@ -255,4 +267,7 @@ public abstract class Config
 		}
 		return sb.toString();
 	}
+	
+//	----------------------------------------------------------------------------------------------------------------
+
 }
