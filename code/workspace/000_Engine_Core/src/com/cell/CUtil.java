@@ -244,24 +244,42 @@ public class CUtil extends CObject
 	
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	public static <T> String arrayToString(List<T> array, String separator, String end) {
+		if (array == null) return "null";
+		StringBuffer sb = new StringBuffer();
+		int count = array.size();
+		for (int i = 0; i < count; i++) {
+			if (i != count - 1) {
+				sb.append(array.get(i) + separator);
+			} else {
+				sb.append(array.get(i) + end);
+			}
+		}
+		return sb.toString();
+	}
+	
+	public static<T> String arrayToString(T[] array, String separator, String end){
+		if (array == null) return "null";
+		StringBuffer sb = new StringBuffer();
+		int count = array.length;
+		for (int i = 0; i < count; i++) {
+			if (i != count - 1) {
+				sb.append(array[i] + separator);
+			} else {
+				sb.append(array[i] + end);
+			}
+		}
+		return sb.toString();
+	}
+
 	public static<T> String arrayToString(List<T> array, String separator){
-		if (array==null) return "null";
-		StringBuffer sb = new StringBuffer();
-		for (T o : array) {
-			sb.append(o+separator);
-		}
-		return sb.toString();
+		return arrayToString(array, separator, separator);
 	}
 	
-	public static<T> String arrayToString(T[] array, String separator){
-		if (array==null) return "null";
-		StringBuffer sb = new StringBuffer();
-		for (T o : array) {
-			sb.append(o+separator);
-		}
-		return sb.toString();
+	public static <T> String arrayToString(T[] array, String separator) {
+		return arrayToString(array, separator, separator);
 	}
-	
+
 	public static<T> String arrayToString(List<T> array){
 		return arrayToString(array, ",");
 	}
@@ -269,7 +287,9 @@ public class CUtil extends CObject
 	public static<T> String arrayToString(T[] array){
 		return arrayToString(array, ",");
 	}
-	
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	public static String arrayToString(byte[] array){
 		if (array==null) return "null";
 		StringBuffer sb = new StringBuffer();
