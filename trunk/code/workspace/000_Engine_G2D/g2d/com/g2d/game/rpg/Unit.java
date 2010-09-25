@@ -15,6 +15,9 @@ public abstract class Unit extends Sprite
 
 	private Object				identify;
 
+//	/** 是否只在camera范围内可视 */
+//	public boolean		is_visible_camera_only	= true;
+	
 //	------------------------------------------------------------------------------------------------------------------------------------
 
 	public boolean setID(SceneMap world, Object new_id) {
@@ -69,7 +72,18 @@ public abstract class Unit extends Sprite
 		return owner_scene;
 	}
 
+	@Override
+	public void update() {
+		super.update();
+		if (is_visible_camera_only() && getOwnerScene() != null && !isInCamera()) {
+			this.visible = false;
+		} else {
+			this.visible = true;
+		}
+	}
 	
-	
+	protected boolean is_visible_camera_only() {
+		return true;
+	}
 
 }

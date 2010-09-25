@@ -27,8 +27,6 @@ public abstract class MoveableUnit extends Unit
 	@Property("是否被阻挡")
 	public boolean		move_blockade 			= false;
 
-	/** 是否只在camera范围内可视 */
-	public boolean		is_visible_camera_only	= true;
 	
 //	------------------------------------------------------------------------------------------------------------------------------------
 
@@ -199,14 +197,6 @@ public abstract class MoveableUnit extends Unit
 				}
 			}
 		}
-		
-		if (is_visible_camera_only && getOwnerScene()!=null && !isInCamera()) {
-			this.visible = false;
-		}else{
-			this.visible = true;
-		}
-		
-			
 	}
 	
 	
