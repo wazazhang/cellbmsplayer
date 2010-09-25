@@ -44,7 +44,6 @@ public class StreamSoundPlayer implements IStreamPlayer
 		return bgm_player.isPlaying();
 	}
 
-	
 	@Override
 	public void stop() {
 		this.bgm_player.stop();
@@ -60,8 +59,16 @@ public class StreamSoundPlayer implements IStreamPlayer
 	
 	
 	@Override
-	public void setVolumn(float value) {
-		this.bgm_player.setVolumn(value);
+	public void setVolume(float value) {
+		this.bgm_player.setVolume(value);
+	}
+
+	@Override
+	public float getVolume() {
+		if (this.bgm_player!=null) {
+			return this.bgm_player.getVolume();
+		}
+		return 0;
 	}
 	
 	public void dispose() {
