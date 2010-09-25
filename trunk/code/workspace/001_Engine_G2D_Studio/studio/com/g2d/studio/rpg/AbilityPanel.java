@@ -234,6 +234,7 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 			super(owner);
 			super.setTitle("添加能力到 : " + abilities);
 			super.setLayout(new BorderLayout());
+			super.setSize(800, 700);
 			this.setIconImage(Res.icon_edit);
 			{
 				Class<?>[] types_data = abilities.getSubAbilityTypes();
@@ -241,6 +242,7 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 				combo_abilities = new JComboBox(types_data);
 				combo_abilities.setRenderer(this);
 				combo_abilities.addActionListener(this);
+				combo_abilities.setMaximumRowCount(40);
 				this.add(combo_abilities, BorderLayout.NORTH);
 			}
 			{

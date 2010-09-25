@@ -10,6 +10,7 @@ import com.cell.reflect.Parser;
 import com.cell.rpg.ability.AbstractAbility;
 import com.cell.rpg.item.anno.ItemPersistenceField;
 import com.cell.rpg.item.anno.ItemType;
+import com.g2d.annotation.Property;
 
 /**
  * 描述一个道具属性模板，子类必须标注签名{@link ItemType}，子类也必须有默认构造函数，
@@ -28,18 +29,21 @@ public abstract class ItemPropertyTemplate extends AbstractAbility
 	private transient Field[]	save_fields = null;
 	
 	@Override
-	final public boolean isMultiField() {
+	final public boolean isMultiField() 
+	{
 		return false;
 	}
 	
-	final public Integer getSaveType() {
+	final public Integer getSaveType() 
+	{
 		if (save_type == null) {
 			save_type = getType(getClass());
 		}
 		return save_type;
 	}
 	
-	final public Field[] getSaveFields() {
+	final public Field[] getSaveFields() 
+	{
 		if (save_fields == null) {
 			ArrayList<Field> fields = new ArrayList<Field>();
 			for (Field field : getClass().getDeclaredFields()) {
@@ -76,7 +80,8 @@ public abstract class ItemPropertyTemplate extends AbstractAbility
 	 * @return
 	 * @throws Exception
 	 */
-	protected Object createFieldData(Field field) throws Exception {
+	protected Object createFieldData(Field field) throws Exception
+	{
 		Object data = field.get(this);
 		if (data instanceof ArgTemplate<?>) {
 			return ((ArgTemplate<?>)data).getValue();
@@ -120,26 +125,32 @@ public abstract class ItemPropertyTemplate extends AbstractAbility
 		private T arg_create_max;
 		
 		@SuppressWarnings("unchecked")
-		public ArgTemplate(T dmin, T dmax) {
+		public ArgTemplate(T dmin, T dmax) 
+		{
 			this.value_type = (Class<T>)dmin.getClass();
 			this.arg_create_min = dmin;
 			this.arg_create_max = dmax;
 		}
-		public ArgTemplate(T value) {
+		public ArgTemplate(T value) 
+		{
 			this(value, value);
 		}
 		
-		public T getArgCreateMax() {
+		public T getArgCreateMax() 
+		{
 			return arg_create_max;
 		}
-		public T getArgCreateMin() {
+		public T getArgCreateMin()
+		{
 			return arg_create_min;
 		}
-		public Class<T> getArgType() {
+		public Class<T> getArgType() 
+		{
 			return value_type;
 		}
 		
-		public T getValue() {
+		public T getValue() 
+		{
 			return Parser.castNumber(CUtil.getRandom(
 					RANDOM, 
 					arg_create_min.doubleValue(),
@@ -148,11 +159,13 @@ public abstract class ItemPropertyTemplate extends AbstractAbility
 		}
 	
 		@Override
-		public String toString() {
+		public String toString() 
+		{
 			return arg_create_min + " - " + arg_create_max + " ("+value_type.getSimpleName()+")";
 		}
 		
-		public boolean fromString(String text) throws Exception {
+		public boolean fromString(String text) throws Exception 
+		{
 			String[] lr = CUtil.splitString(text, "-");
 			T tmin = Parser.stringToObject(lr[0].trim(), value_type);
 			T tmax = Parser.stringToObject(lr[1].trim(), value_type);
@@ -169,7 +182,8 @@ public abstract class ItemPropertyTemplate extends AbstractAbility
 	
 //	-----------------------------------------------------------------------------------
 
-	public static Integer getType(Class<?> cls) {
+	public static Integer getType(Class<?> cls) 
+	{
 		ItemType type = cls.getAnnotation(ItemType.class);
 		if (type != null) {
 			return type.value();
