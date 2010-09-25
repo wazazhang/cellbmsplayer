@@ -31,11 +31,13 @@ public class StaticSoundPlayer implements IPlayer
 		this.player.dispose();
 		this.sound.dispose();
 	}
-	
-//	@Override
-//	public ISound getSound() {
-//		return sound;
-//	}
+
+	@Override
+	public void setVolumn(float value) {
+		if (this.player!=null) {
+			this.player.setVolumn(value);
+		}
+	}
 	
 	@Override
 	public boolean isPlaying() {

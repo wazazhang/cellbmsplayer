@@ -14,6 +14,8 @@ import net.java.games.sound3d.Source;
 
 public class JALPlayer extends JALSource implements IStreamPlayer
 {
+	int size = 0;
+	
 	JALPlayer(AL al) throws Exception
 	{
 		super(al);
@@ -33,8 +35,6 @@ public class JALPlayer extends JALSource implements IStreamPlayer
 		}
 	}
 
-	int size = 0;
-	
 	@Override
 	synchronized public void queue(ISound sound) 
 	{

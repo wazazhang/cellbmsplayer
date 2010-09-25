@@ -8,7 +8,7 @@ import com.cell.sound.IStreamPlayer;
 import com.cell.sound.SoundInfo;
 import com.cell.sound.SoundManager;
 
-public class StreamSoundPlayer
+public class StreamSoundPlayer implements IStreamPlayer
 {
 	private	SoundInfo			bgm_info;
 	private	IStreamPlayer		bgm_player;
@@ -42,6 +42,26 @@ public class StreamSoundPlayer
 	
 	public boolean isPlaying() {
 		return bgm_player.isPlaying();
+	}
+
+	
+	@Override
+	public void stop() {
+		this.bgm_player.stop();
+	}
+	@Override
+	public void setSound(ISound sound) {
+		this.bgm_player.setSound(sound);
+	}
+	@Override
+	public void queue(ISound sound) {
+		this.bgm_player.queue(sound);
+	}
+	
+	
+	@Override
+	public void setVolumn(float value) {
+		this.bgm_player.setVolumn(value);
 	}
 	
 	public void dispose() {
@@ -88,6 +108,7 @@ public class StreamSoundPlayer
 			}
 		}
 	}
+
 	
 
 }
