@@ -27,6 +27,8 @@ import com.g2d.Version;
 import com.g2d.annotation.Property;
 import com.g2d.display.event.Event;
 
+
+
 public abstract class DisplayObjectContainer extends DisplayObject
 {
 	private static final long serialVersionUID = Version.VersionG2D;
@@ -385,6 +387,52 @@ public abstract class DisplayObjectContainer extends DisplayObject
 			return true;
 		}
 		return false;
+	}
+	
+	public <T extends DisplayObject> ArrayList<DisplayObject> removeChild(Class<T> cls)
+	{
+		ArrayList<DisplayObject> ret = null;
+		
+		for ( DisplayObject obj : elements_set.values() )
+		{
+			if ( (obj.getClass() == cls) && this.removeChild(obj) )
+			{
+				if (ret == null)
+					ret = new ArrayList<DisplayObject>();
+				
+				ret.add(obj);
+			}
+		}
+		
+		if (always_top_elements != null)
+		{
+			for ( DisplayObject obj : always_top_elements )
+			{
+				if ( (obj.getClass() == cls) && this.removeChild(obj) )
+				{
+					if (ret == null)
+						ret = new ArrayList<DisplayObject>();
+					
+					ret.add(obj);
+				}			
+			}
+		}
+		
+		if (always_bottom_elements != null)
+		{
+			for ( DisplayObject obj : always_bottom_elements )
+			{
+				if ( (obj.getClass() == cls) && this.removeChild(obj) )
+				{
+					if (ret == null)
+						ret = new ArrayList<DisplayObject>();
+					
+					ret.add(obj);
+				}			
+			}
+		}
+		
+		return ret;
 	}
 
 	final public boolean addChild(DisplayObject child, boolean immediately){
