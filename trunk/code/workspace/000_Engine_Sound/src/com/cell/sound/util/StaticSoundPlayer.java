@@ -33,10 +33,18 @@ public class StaticSoundPlayer implements IPlayer
 	}
 
 	@Override
-	public void setVolumn(float value) {
+	public void setVolume(float value) {
 		if (this.player!=null) {
-			this.player.setVolumn(value);
+			this.player.setVolume(value);
 		}
+	}
+
+	@Override
+	public float getVolume() {
+		if (this.player!=null) {
+			return this.player.getVolume();
+		}
+		return 0;
 	}
 	
 	@Override

@@ -254,8 +254,15 @@ public class JALSoundManager extends SoundManager
 
 	public void setVolume(float volume) {
 		al.alListenerf(AL.AL_GAIN, volume);
+		checkError(al);
 	}
-
+	public float getVolume() {
+		float[] ret = new float[1];
+		al.alGetListenerf(AL.AL_GAIN, ret, 0);
+		checkError(al);
+		return ret[0];
+	}
+	
 	public SoundInfo createSoundInfo(String resource, InputStream is) {
 		try {
 			String name = resource.toLowerCase();

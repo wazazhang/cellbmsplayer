@@ -70,12 +70,24 @@ public abstract class JALSource implements IPlayer
 	}
 
 	@Override
-	synchronized public void setVolumn(float value) {
+	synchronized public void setVolume(float value) {
 		if (source != null) {
 			value = Math.min(1f, value);
 			value = Math.max(0f, value);
 			al.alSourcef(source[0], AL.AL_GAIN, value);
 			JALSoundManager.checkError(al);
+		}
+	}
+	
+	@Override
+	public float getVolume() {
+		if (source != null) {
+			float[] ret = new float[1];
+			al.alGetSourcef(source[0], AL.AL_GAIN, ret, 0);
+			JALSoundManager.checkError(al);
+			return ret[0];
+		} else {
+			return 0;
 		}
 	}
 	

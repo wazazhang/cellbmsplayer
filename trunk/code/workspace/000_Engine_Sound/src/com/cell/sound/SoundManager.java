@@ -24,6 +24,7 @@ public abstract class SoundManager
 //	-----------------------------------------------------------------------------------------------------------
 	
 	abstract public void		setVolume(float volume);
+	abstract public float		getVolume();
 	
 	abstract public SoundInfo	createSoundInfo(String resource, InputStream is);
 	

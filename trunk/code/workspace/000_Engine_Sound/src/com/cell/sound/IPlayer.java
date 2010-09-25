@@ -16,7 +16,9 @@ public interface IPlayer
 	
 	public void		setSound(ISound sound);
 	
-	public void		setVolumn(float value);
+	public void		setVolume(float value);
+	
+	public float	getVolume();
 	
 //	public ISound	getSound();
 }
