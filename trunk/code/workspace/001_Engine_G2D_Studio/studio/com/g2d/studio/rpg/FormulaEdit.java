@@ -56,6 +56,7 @@ import com.g2d.studio.gameedit.dynamic.DEffect;
 import com.g2d.studio.gameedit.template.XLSItem;
 import com.g2d.studio.gameedit.template.XLSSkill;
 import com.g2d.studio.gameedit.template.XLSUnit;
+import com.g2d.studio.item.property.ItemPropertySavedTypeSelectComboBox;
 import com.g2d.studio.quest.QuestSelectCellEditComboBox;
 import com.g2d.studio.scene.editor.SceneListCellEditInteger;
 import com.g2d.util.AbstractDialog;
@@ -299,8 +300,8 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 		ObjectSelectCellEditInteger<DAvatar>	combo_avatar	= new ObjectSelectCellEditInteger<DAvatar>(DAvatar.class);
 		ObjectSelectCellEditInteger<DEffect>	combo_effect	= new ObjectSelectCellEditInteger<DEffect>(DEffect.class);
 		QuestSelectCellEditComboBox				combo_quest		= new QuestSelectCellEditComboBox();
-//		QuestItemSelectCellEditComboBox			combo_quest_item= new QuestItemSelectCellEditComboBox();
 		SceneListCellEditInteger				combo_scene		= new SceneListCellEditInteger();
+		ItemPropertySavedTypeSelectComboBox		combo_itypes	= new ItemPropertySavedTypeSelectComboBox(null);
 		
 		PropertyCellEdit<Integer>				id_value;
 		
@@ -325,18 +326,18 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 			this.remove(combo_avatar);
 			this.remove(combo_effect);
 			this.remove(combo_quest);
-//			this.remove(combo_quest_item);
 			this.remove(combo_scene);
+			this.remove(combo_itypes);
 			
 			switch(type) {
-			case TUNIT_ID:			id_value = combo_unit;		break;
-			case TTEMPLATE_ITEM_ID:	id_value = combo_titem;		break;
-			case TSKILL_ID:			id_value = combo_skill;		break;
-			case TAVATAR_ID:		id_value = combo_avatar;	break;
-			case TEFFECT_ID:		id_value = combo_effect;	break;
-			case QUEST_ID:			id_value = combo_quest;		break;
-//			case QUEST_ITEM_ID:		id_value = combo_quest_item;break;
-			case SCENE_ID:			id_value = combo_scene;		break;
+			case TUNIT_ID:					id_value = combo_unit;		break;
+			case TTEMPLATE_ITEM_ID:			id_value = combo_titem;		break;
+			case TSKILL_ID:					id_value = combo_skill;		break;
+			case TAVATAR_ID:				id_value = combo_avatar;	break;
+			case TEFFECT_ID:				id_value = combo_effect;	break;
+			case QUEST_ID:					id_value = combo_quest;		break;
+			case SCENE_ID:					id_value = combo_scene;		break;
+			case ITEM_PROPERTY_SAVED_TYPE:	id_value = combo_itypes;	break;
 			}
 			
 			super.add((Component)id_value, BorderLayout.SOUTH);

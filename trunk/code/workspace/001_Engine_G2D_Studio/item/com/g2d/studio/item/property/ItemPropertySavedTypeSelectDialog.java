@@ -55,19 +55,28 @@ implements PropertyCellEdit<Integer>
 	}
 
 	static G2DList<G2DListItemData<ItemType>> createG2DList(Integer dv) {
+		Vector<G2DListItemData<ItemType>> items = createG2DListData();
+		G2DList<G2DListItemData<ItemType>> list = new G2DList<G2DListItemData<ItemType>>(items);
+		if (dv != null) {
+			G2DListItemData<ItemType> default_value = null;
+			for (G2DListItemData<ItemType> item : items) {
+				if (dv == item.getData().value()) {
+					default_value = item;
+				}
+			}
+			list.setSelectedValue(default_value, true);
+		}
+		return list;
+	}
+	
+	static Vector<G2DListItemData<ItemType>> createG2DListData() {
 		Vector<G2DListItemData<ItemType>> items = new Vector<G2DListItemData<ItemType>>();
-		G2DListItemData<ItemType> default_value = null;
 		for (Class<?> t : ItemPropertyTypes.getItemPropertyTypesList()) {
 			ItemType it = t.getAnnotation(ItemType.class);
 			G2DListItemData<ItemType> item = new G2DListItemData<ItemType>(
 					it, AbstractAbility.getEditName(t));
 			items.add(item);
-			if (dv == it.value()) {
-				default_value = item;
-			}
 		}
-		G2DList<G2DListItemData<ItemType>> list = new G2DList<G2DListItemData<ItemType>>(items);
-		list.setSelectedValue(default_value, true);
-		return list;
+		return items;
 	}
 }

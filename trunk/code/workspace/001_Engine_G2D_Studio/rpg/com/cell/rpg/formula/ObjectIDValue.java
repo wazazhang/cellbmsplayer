@@ -36,7 +36,7 @@ public class ObjectIDValue extends AbstractValue
 		
 		SCENE_ID					("场景ID"),
 		
-//		ITEM_PROPERTY_SAVED_TYPE	("道具属性类型"),
+		ITEM_PROPERTY_SAVED_TYPE	("道具属性类型"),
 		;
 		
 		final String text;
