@@ -25,16 +25,18 @@ public class ObjectIDValue extends AbstractValue
 	
 	public static enum ObjectType
 	{
-		TUNIT_ID			("单位ID"),
-		TTEMPLATE_ITEM_ID	("道具模板ID"),
-		TSKILL_ID			("技能ID"),
-		TAVATAR_ID			("AvatarID"),
-		TEFFECT_ID			("效果ID"),
+		TUNIT_ID					("单位ID"),
+		TTEMPLATE_ITEM_ID			("道具模板ID"),
+		TSKILL_ID					("技能ID"),
+		TAVATAR_ID					("AvatarID"),
+		TEFFECT_ID					("效果ID"),
 		
-		QUEST_ID			("任务ID"),
-//		QUEST_ITEM_ID		("任务条件/奖励ID"),
+		QUEST_ID					("任务ID"),
+//		QUEST_ITEM_ID				("任务条件/奖励ID"),
 		
-		SCENE_ID			("场景ID"),
+		SCENE_ID					("场景ID"),
+		
+//		ITEM_PROPERTY_SAVED_TYPE	("道具属性类型"),
 		;
 		
 		final String text;

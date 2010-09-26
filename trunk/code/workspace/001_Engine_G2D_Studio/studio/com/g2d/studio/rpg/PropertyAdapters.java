@@ -5,7 +5,10 @@ import java.lang.reflect.Field;
 
 import javax.swing.table.DefaultTableCellRenderer;
 
+import com.cell.rpg.ability.AbstractAbility;
 import com.cell.rpg.anno.PropertyAdapter;
+import com.cell.rpg.item.ItemProperties;
+import com.cell.rpg.item.ItemPropertyTypes;
 import com.g2d.editor.property.CellEditAdapter;
 import com.g2d.editor.property.ObjectPropertyEdit;
 import com.g2d.editor.property.PropertyCellEdit;
@@ -18,6 +21,8 @@ import com.g2d.studio.gameedit.template.XLSItem;
 import com.g2d.studio.gameedit.template.XLSSkill;
 import com.g2d.studio.gameedit.template.XLSTemplateNode;
 import com.g2d.studio.gameedit.template.XLSUnit;
+import com.g2d.studio.item.property.ItemPropertySavedTypeSelectDialog;
+import com.g2d.studio.item.property.ItemPropertySelectDialog;
 import com.g2d.studio.quest.QuestNode;
 import com.g2d.studio.quest.QuestSelectCellEdit;
 import com.g2d.studio.scene.editor.SceneListCellEditInteger;
@@ -52,7 +57,8 @@ public class PropertyAdapters
 					case ITEM_LIST_ID:
 						return new ObjectSelectCellEditInteger<DItemList>(DItemList.class, fieldValue);
 					case QUEST_ID:
-						QuestSelectCellEdit dialog = new QuestSelectCellEdit(owner.getComponent(), false,
+						QuestSelectCellEdit dialog = new QuestSelectCellEdit(
+								owner.getComponent(), false,
 								(Integer)fieldValue);
 						dialog.showDialog();
 						return dialog;
@@ -62,6 +68,12 @@ public class PropertyAdapters
 						return new SceneListCellEditInteger();
 					case AVATAR_ID:
 						return new ObjectSelectCellEditInteger<DAvatar>(DAvatar.class, fieldValue);
+					case ITEM_PROPERTY_SAVED_TYPE:
+						ItemPropertySavedTypeSelectDialog dialog2 = new ItemPropertySavedTypeSelectDialog(
+								owner.getComponent(), 
+								(Integer)fieldValue);
+						dialog2.showDialog();
+						return dialog2;
 					}
 				}
 			}catch(Exception err){
@@ -141,7 +153,14 @@ public class PropertyAdapters
 						}
 						break;
 					}
-						
+					case ITEM_PROPERTY_SAVED_TYPE: {
+						Class<?> type = ItemPropertyTypes.getItemPropertyType((Integer) fieldValue);
+						if (type != null) {
+							src.setText(AbstractAbility.getEditName(type));
+							src.setIcon(null);
+						}
+						break;
+					}
 					}
 				}
 			} catch (Exception err) {

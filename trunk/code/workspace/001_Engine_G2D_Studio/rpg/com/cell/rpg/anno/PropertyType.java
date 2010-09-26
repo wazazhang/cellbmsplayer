@@ -10,6 +10,7 @@ public enum PropertyType
 	SCENE_ID,
 	SKILL_ID,
 	AVATAR_ID,
+	ITEM_PROPERTY_SAVED_TYPE,
 	;
 	
 	
