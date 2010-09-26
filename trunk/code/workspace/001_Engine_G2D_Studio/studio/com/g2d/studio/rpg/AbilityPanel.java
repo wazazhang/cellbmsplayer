@@ -3,6 +3,7 @@ package com.g2d.studio.rpg;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,8 +13,11 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Vector;
 
 import javax.swing.DefaultListCellRenderer;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -23,6 +27,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
 import javax.swing.ListCellRenderer;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import com.cell.CUtil;
@@ -34,6 +40,8 @@ import com.g2d.editor.property.ObjectPropertyForm;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.res.Res;
+import com.g2d.studio.swing.G2DList;
+import com.g2d.studio.swing.G2DListItem;
 import com.g2d.util.AbstractDialog;
 
 
@@ -41,10 +49,13 @@ import com.g2d.util.AbstractDialog;
  * @author WAZA
  * 可编辑多个能力的面板
  */
+@SuppressWarnings("serial")
 public class AbilityPanel extends JPanel implements MouseListener, ActionListener
 {
 	private static final long serialVersionUID = 1L;
 
+	private static HashMap<Class<?>, Class<?>> last_add_ability = new HashMap<Class<?>, Class<?>>();
+	
 	// properties	
 	final Abilities		abilities;
 	final ArrayList<CellEditAdapter<?>> 
@@ -219,35 +230,61 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 	 * 添加能力时弹出的框
 	 * @author WAZA
 	 */
-	final class AddAbilityForm extends AbstractDialog implements ListCellRenderer, ActionListener, Comparator<Class<?>>
+	final class AddAbilityForm extends AbstractDialog implements 
+	ListCellRenderer, 
+	ActionListener, 
+	Comparator<Class<?>>,
+	ListSelectionListener
 	{
 		private static final long serialVersionUID = 1L;
-		
-		JComboBox		combo_abilities;
-		JButton			btn_add			= new JButton("确定");
-		JButton			btn_cancel		= new JButton("取消");
-		JPanel			pan_property	= new JPanel();
-		AbstractAbility	current_ability;
+
+		//		JComboBox		combo_abilities;
+		G2DList<AddAbilityItem> list_abilities;
+		JButton					btn_add				= new JButton("确定");
+		JButton					btn_cancel			= new JButton("取消");
+		JPanel					pan_property		= new JPanel();
+		AbstractAbility			current_ability;
 		
 		public AddAbilityForm(Component owner)
 		{
 			super(owner);
 			super.setTitle("添加能力到 : " + abilities);
 			super.setLayout(new BorderLayout());
-			super.setSize(800, 700);
+			super.setSize(900, 600);
 			this.setIconImage(Res.icon_edit);
+			
+			JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+			this.add(split, BorderLayout.CENTER);
 			{
-				Class<?>[] types_data = abilities.getSubAbilityTypes();
+				Class<?>[] 	types_data 	= abilities.getSubAbilityTypes();
+				Class<?> 	last_add 	= last_add_ability.get(abilities.getClass());				
 				Arrays.sort(types_data, this);
-				combo_abilities = new JComboBox(types_data);
-				combo_abilities.setRenderer(this);
-				combo_abilities.addActionListener(this);
-				combo_abilities.setMaximumRowCount(40);
-				this.add(combo_abilities, BorderLayout.NORTH);
+				Vector<AddAbilityItem> 	types 		= new Vector<AddAbilityItem>(types_data.length);
+				AddAbilityItem			last_type 	= null;
+				for (Class<?> td : types_data) {
+					AddAbilityItem aai = new AddAbilityItem(td);
+					types.add(aai);
+					if (td == last_add) {
+						last_type = aai;
+					}
+				}
+				list_abilities = new G2DList<AddAbilityItem>(types);
+				list_abilities.addListSelectionListener(this);
+				split.setLeftComponent(new JScrollPane(list_abilities));
+				if (last_type != null) {
+					list_abilities.setSelectedValue(last_type, true);
+				}
+
+//				combo_abilities = new JComboBox(types_data);
+//				combo_abilities.setRenderer(this);
+//				combo_abilities.addActionListener(this);
+//				combo_abilities.setMaximumRowCount(40);
+//				this.add(combo_abilities, BorderLayout.NORTH);
 			}
 			{
 				pan_property.setLayout(new BorderLayout());
-				this.add(pan_property, BorderLayout.CENTER);
+				pan_property.setMinimumSize(new Dimension(getWidth()/2, 400));
+				split.setRightComponent(pan_property);
 			}
 			{
 				JPanel south = new JPanel(new FlowLayout());
@@ -262,21 +299,26 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 				
 				this.add(south, BorderLayout.SOUTH);
 			}
-			combo_abilities.setSelectedIndex(0);
+			
+			super.setCenter();
 		}
 		
 		@Override
-		public int compare(Class<?> o1, Class<?> o2) {
-			return CUtil.getStringCompare().compare(AbstractAbility.getEditName(o2), AbstractAbility.getEditName(o1));
+		public void valueChanged(ListSelectionEvent e) {
+			AddAbilityItem selected = list_abilities.getSelectedItem();
+			if (selected != null) {
+				setAbilityClass(selected.data);
+				last_add_ability.put(abilities.getClass(), selected.data);	
+			}
 		}
 		
-		@SuppressWarnings("unchecked")
 		public void actionPerformed(ActionEvent e) {
-			if (e.getSource() == combo_abilities) {
-				Class<? extends AbstractAbility> ability_cls = (Class<? extends AbstractAbility>)combo_abilities.getSelectedItem();
-				setAbilityClass(ability_cls);
-			} 
-			else if (e.getSource() == btn_add) {
+//			if (e.getSource() == combo_abilities) {
+//				Class<? extends AbstractAbility> ability_cls = 
+//					(Class<? extends AbstractAbility>)combo_abilities.getSelectedItem();
+//				setAbilityClass(ability_cls);
+//			} 
+			if (e.getSource() == btn_add) {
 				try{
 					AbilityPanel.this.addAbility(current_ability);
 					AddAbilityForm.this.setVisible(false);
@@ -303,7 +345,11 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 			Class<? extends AbstractAbility> ability_cls = (Class<? extends AbstractAbility>)value;
 			return new JLabel(AbstractAbility.getEditName(ability_cls));
 		}
-		
+
+		@Override
+		public int compare(Class<?> o1, Class<?> o2) {
+			return CUtil.getStringCompare().compare(AbstractAbility.getEditName(o2), AbstractAbility.getEditName(o1));
+		}
 		
 		public void setAbilityClass(Class<? extends AbstractAbility> cls) 
 		{
@@ -322,6 +368,32 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 				btn_add.setForeground(Color.BLACK);
 				btn_add.setEnabled(true);
 				btn_add.setText("确定");
+			}
+		}
+		
+		
+
+		class AddAbilityItem extends JLabel implements G2DListItem
+		{
+			Class<? extends AbstractAbility> data;
+			
+			@SuppressWarnings("unchecked")
+			public AddAbilityItem(Class<?> data)
+			{
+				this.data = (Class<? extends AbstractAbility>)data;
+				this.setText(getListName());
+			}
+			@Override
+			public Component getListComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+				return null;
+			}
+			@Override
+			public ImageIcon getListIcon(boolean update) {
+				return null;
+			}
+			@Override
+			public String getListName() {
+				return AbstractAbility.getEditName(data);
 			}
 		}
 		
