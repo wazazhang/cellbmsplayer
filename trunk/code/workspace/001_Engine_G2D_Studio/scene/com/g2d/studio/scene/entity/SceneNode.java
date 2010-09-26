@@ -1,7 +1,10 @@
 package com.g2d.studio.scene.entity;
 
 import java.awt.Component;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.ImageIcon;
 import javax.swing.JList;
@@ -18,9 +21,9 @@ import com.g2d.studio.scene.editor.SceneEditor;
 
 final public class SceneNode extends DynamicNode<Scene>
 {
-	final private	CPJIndex<CPJWorld>	world_index;
-	transient		CPJWorld			world_display;
-//	transient		SceneEditor			world_editor;
+	final private	CPJIndex<CPJWorld>				world_index;
+	transient		CPJWorld						world_display;
+	transient		AtomicReference<SceneEditor>	world_editor = new AtomicReference<SceneEditor>();
 	
 	
 	public SceneNode(IDynamicIDFactory<?> factory, String name, CPJIndex<CPJWorld> world_index) {
@@ -101,10 +104,19 @@ final public class SceneNode extends DynamicNode<Scene>
 	}
 	
 	public SceneEditor getSceneEditor() {
-//		if (world_editor==null) {
-//			world_editor = new SceneEditor(this);
-//		}
-		return new SceneEditor(this);
+		synchronized (world_editor) {
+			if (world_editor.get() == null) {
+				SceneEditor se = new SceneEditor(this);
+				se.addWindowListener(new WindowAdapter() {
+					@Override
+					public void windowClosed(WindowEvent e) {
+						world_editor.set(null);
+					}
+				});
+				world_editor.set(se);
+			}
+			return world_editor.get();
+		}
 	}
 	
 	@Override
