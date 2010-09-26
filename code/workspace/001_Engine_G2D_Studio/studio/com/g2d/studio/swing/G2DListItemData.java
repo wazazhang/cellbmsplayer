@@ -25,6 +25,7 @@ public class G2DListItemData<T> implements G2DListItem
 			boolean isSelected, boolean cellHasFocus) {
 		return null;
 	}
+	
 	@Override
 	public ImageIcon getListIcon(boolean update) {
 		return null;
@@ -34,8 +35,14 @@ public class G2DListItemData<T> implements G2DListItem
 	public String getListName() {
 		return name;
 	}
+	
+	@Override
+	public String toString() {
+		return getListName();
+	}
 
 	public T getData() {
 		return data;
 	}
+	
 }
