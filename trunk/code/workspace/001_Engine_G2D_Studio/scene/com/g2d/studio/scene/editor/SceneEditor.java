@@ -247,6 +247,9 @@ public class SceneEditor extends AbstractFrame implements ActionListener, Window
 		this.add(status_bar, BorderLayout.SOUTH);
 		
 		refreshAll();
+		
+
+		System.out.println("Open Scene Editor : " + scene_node.getName());
 	}
 	
 	public SceneNode getSceneNode() {
