@@ -373,24 +373,25 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 		
 		
 
-		class AddAbilityItem extends JLabel implements G2DListItem
+		class AddAbilityItem implements G2DListItem
 		{
 			Class<? extends AbstractAbility> data;
 			
 			@SuppressWarnings("unchecked")
-			public AddAbilityItem(Class<?> data)
-			{
-				this.data = (Class<? extends AbstractAbility>)data;
-				this.setText(getListName());
+			public AddAbilityItem(Class<?> data) {
+				this.data = (Class<? extends AbstractAbility>) data;
 			}
+			
 			@Override
 			public Component getListComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 				return null;
 			}
+			
 			@Override
 			public ImageIcon getListIcon(boolean update) {
 				return null;
 			}
+			
 			@Override
 			public String getListName() {
 				return AbstractAbility.getEditName(data);
