@@ -256,6 +256,11 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 			JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 			this.add(split, BorderLayout.CENTER);
 			{
+				pan_property.setLayout(new BorderLayout());
+				pan_property.setMinimumSize(new Dimension(getWidth()/2, 400));
+				split.setRightComponent(pan_property);
+			}
+			{
 				Class<?>[] 	types_data 	= abilities.getSubAbilityTypes();
 				Class<?> 	last_add 	= last_add_ability.get(abilities.getClass());				
 				Arrays.sort(types_data, this);
@@ -272,6 +277,7 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 				list_abilities.addListSelectionListener(this);
 				split.setLeftComponent(new JScrollPane(list_abilities));
 				if (last_type != null) {
+					setAbilityClass(last_type.data);
 					list_abilities.setSelectedValue(last_type, true);
 				}
 
@@ -280,11 +286,6 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 //				combo_abilities.addActionListener(this);
 //				combo_abilities.setMaximumRowCount(40);
 //				this.add(combo_abilities, BorderLayout.NORTH);
-			}
-			{
-				pan_property.setLayout(new BorderLayout());
-				pan_property.setMinimumSize(new Dimension(getWidth()/2, 400));
-				split.setRightComponent(pan_property);
 			}
 			{
 				JPanel south = new JPanel(new FlowLayout());
