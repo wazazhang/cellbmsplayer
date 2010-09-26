@@ -114,6 +114,7 @@ final public class SceneNode extends DynamicNode<Scene>
 					}
 				});
 				world_editor.set(se);
+			} else {
 			}
 			return world_editor.get();
 		}
