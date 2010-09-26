@@ -1,6 +1,8 @@
 package com.g2d.studio.item.property;
 
 import java.awt.Component;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -77,6 +79,14 @@ implements PropertyCellEdit<Integer>
 					it, AbstractAbility.getEditName(t));
 			items.add(item);
 		}
+		Collections.sort(items, new Comparator<G2DListItemData<ItemType>>(){
+			@Override
+			public int compare(
+					G2DListItemData<ItemType> o1,
+					G2DListItemData<ItemType> o2) {
+				return o1.getData().value() - o2.getData().value();
+			}
+		});
 		return items;
 	}
 }
