@@ -293,7 +293,7 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 						"</p>");
 				sb.append("<p>" + 
 						"<font color=\"#0000ff\">" +
-						(node.getData().is_instance_zone?"副本 ":("G" + node.getData().group)) +
+						(node.getData().is_instance_zone ? "副本" : "") + ("G" + node.getData().group) +
 						"</font> " +
 						"<font color=\"#808080\">" + "资源(" + node.getResourceName()+")"  + "</font>" +
 						"</p>");
