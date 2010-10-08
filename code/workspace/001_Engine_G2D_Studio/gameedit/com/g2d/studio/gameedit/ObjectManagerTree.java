@@ -28,7 +28,8 @@ public class ObjectManagerTree<T extends ObjectNode<D>, D extends RPGObject> ext
 	}
 	
 	@Override
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent e) 
+	{
 		if (e.getSource() == toolbar.save) {
 			try {
 				saveAll();
@@ -39,7 +40,8 @@ public class ObjectManagerTree<T extends ObjectNode<D>, D extends RPGObject> ext
 	}
 
 	@Override
-	public void saveAll() throws Throwable {
+	public void saveAll() throws Throwable 
+	{
 		tree_view.saveAll();
 		System.out.println(tree_view.data_type.getSimpleName() + " : save all");
 	}
