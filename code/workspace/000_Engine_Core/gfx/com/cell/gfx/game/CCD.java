@@ -60,6 +60,22 @@ public class CCD extends CObject implements Serializable
 		return Y2 - Y1 + 1;
 	}
 	
+	/**
+	 * 得到外包矩形中心点和渲染中心点的偏移
+	 * @return
+	 */
+	public int getMedianY() {
+		return -(getHeight() / 2 - (Y1 + getHeight()));
+	}
+	
+	/**
+	 * 得到外包矩形中心点和渲染中心点的偏移
+	 * @return
+	 */
+	public int getMedianX() {
+		return -(getWidth() / 2 - (X1 + getWidth()));
+	}
+	
 	public void render(IGraphics g, int px, int py, int color) {
 		if ( Mask == 0) return;
 		g.setColor(color);
