@@ -13,6 +13,7 @@ import com.cell.rpg.template.TemplateNode;
 import com.cell.rpg.xls.XLSColumns;
 import com.cell.rpg.xls.XLSFullRow;
 import com.g2d.studio.Studio.ProgressForm;
+import com.g2d.studio.gameedit.entity.IProgress;
 import com.g2d.studio.gameedit.entity.ObjectGroup;
 import com.g2d.studio.gameedit.template.XLSTemplateNode;
 import com.g2d.studio.io.File;
@@ -65,6 +66,47 @@ extends ObjectTreeView<T, D>
 	}
 	
 	
+//	-----------------------------------------------------------------------------------------------------------------------------------	
+	
+	@Override
+	public void refresh(IProgress progress)
+	{
+		super.refresh(progress);
+		
+		Collection<XLSFullRow> list = XLSFullRow.getXLSRows(xls_file.getInputStream(), xls_file.getName(), XLSFullRow.class);
+		
+		if (progress != null)
+			progress.setMaximum("refresh xls rows: ", list.size());
+		
+		int i = 0;
+		
+		for (XLSFullRow row : list) 
+		{
+			xls_row_map.put(row.id, row);
+			
+			if (progress != null)
+				progress.setValue("refresh xls rows: "+row.id, ++i);
+		}
+		
+		if (progress != null)
+			progress.setMaximum("refreshing node: ", xls_row_map.size());
+		
+		i = 0;
+		
+		for (XLSFullRow row : xls_row_map.values()) {
+			if (getNode(Integer.parseInt(row.id))==null) {
+				T node = createObjectFromRow(row.id, null);
+				if (node != null) {
+					addNode(getTreeRoot(), node);
+				}
+			}
+			
+			if (progress != null)
+				progress.setValue("refreshing node: "+row.id, ++i);
+		}
+		
+		progress.setValue("", 0);
+	}
 	
 //	-----------------------------------------------------------------------------------------------------------------------------------
 	

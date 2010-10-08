@@ -46,6 +46,7 @@ import com.g2d.studio.cell.gameedit.Builder;
 import com.g2d.studio.cpj.CPJResourceManager;
 import com.g2d.studio.gameedit.ObjectManager;
 import com.g2d.studio.gameedit.ObjectManagerTree;
+import com.g2d.studio.gameedit.entity.IProgress;
 import com.g2d.studio.icon.IconManager;
 import com.g2d.studio.instancezone.InstanceZonesManager;
 import com.g2d.studio.io.File;
@@ -523,7 +524,7 @@ public class Studio extends AbstractFrame
 		}
 	}
 	
-	public class ProgressForm extends JWindow
+	public class ProgressForm extends JWindow implements IProgress
 	{
 		private static final long serialVersionUID = 1L;
 		private JProgressBar progress = new JProgressBar();
@@ -566,15 +567,31 @@ public class Studio extends AbstractFrame
 			lbl_title.setText(title);
 		}
 		
-		public void setMaximum(String prefix, int total) {
+		@Override
+		public void setMaximum(String prefix, int total) 
+		{
 			progress.setMaximum(total);			
 			progress.setValue(0);
 			progress.setString(prefix + " " + (progress.getValue())+"/"+progress.getMaximum());
 		}
 		
-		public void setValue(String prefix, int n) {
+		@Override
+		public void setValue(String prefix, int n) 
+		{
 			progress.setValue(n);
 			progress.setString(prefix + " " + (progress.getValue()+1)+"/"+progress.getMaximum());
+		}
+		
+		@Override
+		public int getMaximum()
+		{
+			return progress.getMaximum();
+		}
+		
+		@Override
+		public int getValue()
+		{
+			return progress.getValue();
 		}
 		
 //		public void increment() {

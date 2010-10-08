@@ -50,6 +50,7 @@ public class Res
 //	icons
 	static public BufferedImage icons_bar[]			= clipImage("/com/g2d/studio/res/icons_bar.png", 10, 1);
 	static public BufferedImage icons_tool_bar[]	= clipImage("/com/g2d/studio/res/icons_tool_bar.png", 3, 1);
+	static public BufferedImage icon_refresh		= Tools.readImage("/com/g2d/studio/res/icon_refresh.png");
 
 //	---------------------------------------------------------------------------------------------------------------
 //	images

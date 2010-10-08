@@ -15,6 +15,7 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreePath;
 import com.cell.rpg.RPGObject;
 import com.cell.util.IDFactoryInteger;
+import com.g2d.studio.gameedit.entity.IProgress;
 import com.g2d.studio.gameedit.entity.ObjectGroup;
 import com.g2d.studio.gameedit.entity.ObjectNode;
 import com.g2d.studio.swing.G2DTree;
@@ -122,6 +123,12 @@ extends JSplitPane implements TreeSelectionListener, ChangeListener
 
 	final public String getTitle() {
 		return getTreeRoot().getName();
+	}
+	
+	public void refresh(IProgress progress)
+	{
+		// TODO
+		// do nothing
 	}
 	
 //	-----------------------------------------------------------------------------------------------------------------------

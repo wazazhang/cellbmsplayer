@@ -1,25 +1,40 @@
 package com.g2d.studio.gameedit;
 
+import java.awt.BorderLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 
 import javax.swing.JButton;
+import javax.swing.JProgressBar;
 
 import com.cell.rpg.template.TItem;
 import com.g2d.Tools;
 import com.g2d.studio.Studio;
 import com.g2d.studio.Studio.ProgressForm;
 import com.g2d.studio.gameedit.dynamic.DItemList;
+import com.g2d.studio.gameedit.entity.IProgress;
 import com.g2d.studio.gameedit.template.XLSItem;
+import com.g2d.studio.res.Res;
 
 @SuppressWarnings("serial")
 public class XLSItemManagerTree extends ObjectManagerTree<XLSItem, TItem>
 {
-	private JButton 				open_item_list;
-	private ObjectManagerTree<?, ?>	itemlist_form;
+	private JButton 				btn_open_item_list_;
 	
-	public XLSItemManagerTree(Studio studio, ProgressForm progress, Image icon, ObjectTreeView<XLSItem, TItem> tree_view) {
+	private JButton					btn_refresh_;
+	
+	private JProgressBar			progress_bar_ = new JProgressBar();
+	
+	
+	private ObjectManagerTree<?, ?>	itemlist_form;
+		
+	
+	public XLSItemManagerTree(Studio studio, ProgressForm progress, Image icon, ObjectTreeView<XLSItem, TItem> tree_view) 
+	{
 		super(studio, progress, icon, tree_view);
+		
+		progress_bar_.setStringPainted(true);
+		this.add(progress_bar_, BorderLayout.SOUTH);
 	}
 	
 	
@@ -29,17 +44,23 @@ public class XLSItemManagerTree extends ObjectManagerTree<XLSItem, TItem>
 	{
 		super.initToolbars(manager);
 		
-		open_item_list	= new JButton();
-		itemlist_form	= manager.getPageForm(DItemList.class);
+		
+		btn_refresh_ = new JButton();
+		btn_refresh_.setToolTipText("刷新");
+		btn_refresh_.setIcon(Tools.createIcon(Res.icon_refresh));
+		btn_refresh_.addActionListener(this);
+		toolbar.add(btn_refresh_);
+		
+		
 		toolbar.addSeparator();
+		
+		btn_open_item_list_	= new JButton();
+		itemlist_form	= manager.getPageForm(DItemList.class);		
 		{
-			open_item_list.setText(
-					itemlist_form.getTitle());
-			open_item_list.setToolTipText(
-					"打开\""+itemlist_form.getTitle()+"\"");
-			open_item_list.setIcon(
-					Tools.createIcon(itemlist_form.getIconImage()));
-			open_item_list.addActionListener(this);
+			btn_open_item_list_.setText(itemlist_form.getTitle());
+			btn_open_item_list_.setToolTipText("打开\""+itemlist_form.getTitle()+"\"");
+			btn_open_item_list_.setIcon(Tools.createIcon(itemlist_form.getIconImage()));
+			btn_open_item_list_.addActionListener(this);
 			
 			int dw = 200, dh = 50;
 			itemlist_form.setLocation(
@@ -49,14 +70,55 @@ public class XLSItemManagerTree extends ObjectManagerTree<XLSItem, TItem>
 					itemlist_form.getWidth()- dw, 
 					itemlist_form.getHeight()-dh);
 		}
-		toolbar.add(open_item_list);
+		toolbar.add(btn_open_item_list_);
 	}	
 	
 	
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == open_item_list) {
+	public void actionPerformed(ActionEvent e) 
+	{
+		Object source = e.getSource();
+		
+		if (source == btn_open_item_list_) 
+		{
 			itemlist_form.setVisible(true);
-		} else {
+		} 
+		else if (source == btn_refresh_)
+		{
+			this.tree_view.refresh(
+					new IProgress() 
+					{
+						@Override
+						public void setValue(String prefix, int value) 
+						{
+							progress_bar_.setValue(value);
+							progress_bar_.setString(prefix + " " + (progress_bar_.getValue())+"/"+progress_bar_.getMaximum());
+//							progress_bar_.repaint();
+						}
+						
+						@Override
+						public void setMaximum(String prefix, int total) 
+						{
+							progress_bar_.setMaximum(total);
+							progress_bar_.setValue(0);
+							progress_bar_.setString(prefix + " " + (progress_bar_.getValue())+"/"+progress_bar_.getMaximum());
+						}
+						
+						@Override
+						public int getValue() 
+						{
+							return progress_bar_.getValue();
+						}
+						
+						@Override
+						public int getMaximum() 
+						{
+							return progress_bar_.getMaximum();
+						}
+					}
+				);
+		}
+		else 
+		{
 			super.actionPerformed(e);
 		}
 	}
