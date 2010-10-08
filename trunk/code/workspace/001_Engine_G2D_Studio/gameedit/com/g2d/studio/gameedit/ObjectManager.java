@@ -60,30 +60,26 @@ public class ObjectManager
 			// XLSUnit
 			ObjectTreeViewTemplateXLS<XLSUnit, TUnit> view = new ObjectTreeViewTemplateXLS<XLSUnit, TUnit>(
 					"单位模板", XLSUnit.class, TUnit.class, objects_dir, studio.xls_tunit, progress);
-			ObjectManagerTree<XLSUnit, TUnit> form = new ObjectManagerTree<XLSUnit, TUnit>(
-					studio, progress, Res.icon_hd, view);
+			XLSUnitManagerTree form = new XLSUnitManagerTree(studio, progress, Res.icon_hd, view);
 			managers.put(view.node_type, form);
 			this.unit_xls_columns = view.xls_columns;
 		}{
 			// XLSItem
 			ObjectTreeViewTemplateXLS<XLSItem, TItem> view = new ObjectTreeViewTemplateXLS<XLSItem, TItem>(
 					"道具模板", XLSItem.class, TItem.class, objects_dir, studio.xls_titem, progress);
-			XLSItemManagerTree form = new XLSItemManagerTree(
-					studio, progress, Res.icon_res_4, view);
+			XLSItemManagerTree form = new XLSItemManagerTree(studio, progress, Res.icon_res_4, view);
 			managers.put(view.node_type, form);
 		}{	
 			// XLSSkill
 			ObjectTreeViewTemplateXLS<XLSSkill, TSkill> tree_skills_view = new SkillTreeView(
 					"技能模板", objects_dir, studio.xls_tskill, progress);
-			ObjectManagerTree<XLSSkill, TSkill>	form_skills_view = new ObjectManagerTree<XLSSkill, TSkill>(
-					studio, progress, Res.icon_res_3, tree_skills_view);
+			XLSSkillManagerTree	form_skills_view = new XLSSkillManagerTree(studio, progress, Res.icon_res_3, tree_skills_view);
 			managers.put(tree_skills_view.node_type, form_skills_view);
 		}{	
 			// XLSShopItem
 			ShopItemTreeView tree_shopitems_view = new ShopItemTreeView(
 					"商品模板", objects_dir, studio.xls_tshopitem, progress);
-			XLSShopItemManagerTree form_shopitems_view = new XLSShopItemManagerTree(
-					studio, progress, Res.icon_res_7, tree_shopitems_view);
+			XLSShopItemManagerTree form_shopitems_view = new XLSShopItemManagerTree(studio, progress, Res.icon_res_7, tree_shopitems_view);
 			managers.put(tree_shopitems_view.node_type, form_shopitems_view);
 		}{
 		// ------------ dynamic ------------ //

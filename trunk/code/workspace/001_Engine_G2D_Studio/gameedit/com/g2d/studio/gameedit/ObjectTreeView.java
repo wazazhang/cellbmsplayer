@@ -95,6 +95,20 @@ extends JSplitPane implements TreeSelectionListener, ChangeListener
 		}
 	}
 	
+	final public void removeNode(ObjectGroup<T, D> root, T node)
+	{
+		Integer intID = node.getIntID();
+		
+		synchronized(node_index) 
+		{
+			if ( (node_index.get(intID)==node) && (node_index.killID(intID) == node) )
+			{
+				root.remove(node);
+				getTree().reload(root);
+			}
+		}		
+	}
+	
 	final public T getNode(int id) {
 		synchronized(node_index) {
 			return node_index.get(id);

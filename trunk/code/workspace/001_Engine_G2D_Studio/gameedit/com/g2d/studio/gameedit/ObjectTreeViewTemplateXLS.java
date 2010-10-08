@@ -71,41 +71,56 @@ extends ObjectTreeView<T, D>
 	@Override
 	public void refresh(IProgress progress)
 	{
-		super.refresh(progress);
+		super.refresh(progress);		
 		
 		Collection<XLSFullRow> list = XLSFullRow.getXLSRows(xls_file.getInputStream(), xls_file.getName(), XLSFullRow.class);
 		
-		if (progress != null)
-			progress.setMaximum("refresh xls rows: ", list.size());
+		if ( (list == null) || list.isEmpty() )
+			return;
+		
+		Map<String, XLSFullRow> tmp_xls_row_map = new TreeMap<String, XLSFullRow>();
+		
+		int progressMaximum = list.size() / 200;
+		
+		progress.setMaximum("refresh xls rows: ", progressMaximum);
 		
 		int i = 0;
 		
 		for (XLSFullRow row : list) 
 		{
 			xls_row_map.put(row.id, row);
+			tmp_xls_row_map.put(row.id, row);
 			
-			if (progress != null)
-				progress.setValue("refresh xls rows: "+row.id, ++i);
+			progress.setValue("refresh xls rows: "+row.id, ++i/200);
 		}
 		
-		if (progress != null)
-			progress.setMaximum("refreshing node: ", xls_row_map.size());
+		
+		
+		progressMaximum = xls_row_map.size() / 200;
+		
+		progress.setMaximum("refreshing node: ", progressMaximum);
 		
 		i = 0;
 		
 		for (XLSFullRow row : xls_row_map.values()) {
-			if (getNode(Integer.parseInt(row.id))==null) {
-				T node = createObjectFromRow(row.id, null);
+			T node = getNode(Integer.parseInt(row.id));
+			if (node==null) {
+				node = createObjectFromRow(row.id, null);
 				if (node != null) {
 					addNode(getTreeRoot(), node);
 				}
+			} else {
+				if (!tmp_xls_row_map.containsKey(row.id)){
+					removeNode(getTreeRoot(), node);
+				}					
 			}
 			
-			if (progress != null)
-				progress.setValue("refreshing node: "+row.id, ++i);
+			progress.setValue("refreshing node: "+row.id, ++i/200);
 		}
 		
-		progress.setValue("", 0);
+		xls_row_map = tmp_xls_row_map;
+		
+		progress.setValue("refresh completed, (total " + xls_row_map.size() + ")  ", progressMaximum);
 	}
 	
 //	-----------------------------------------------------------------------------------------------------------------------------------
