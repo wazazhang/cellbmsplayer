@@ -38,13 +38,14 @@ public class TalkManager extends ManagerFormList<TalkFile>
 	protected G2DList<TalkFile> createList(Vector<TalkFile> files) {
 		return new TalkList(files);
 	}
-	
+	@Override
+	protected String asNodeName(File file) {
+		return file.getName().substring(0, file.getName().length() - Config.TALK_SUFFIX.length());
+	}
 	@Override
 	protected TalkFile createNode(File file) {
 		if (file.getName().endsWith(Config.TALK_SUFFIX)) {
-			return new TalkFile(
-					file.getName().substring(0, file.getName().length() - Config.TALK_SUFFIX.length()), 
-					file);
+			return new TalkFile(asNodeName(file), file);
 		}
 		return null;
 	}
