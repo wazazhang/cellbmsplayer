@@ -35,8 +35,14 @@ public abstract class ManagerFormList<T extends G2DListItem> extends ManagerForm
 	final protected G2DWindowToolBar	tool_bar 		= new G2DWindowToolBar(this);
 	
 	final protected JButton				btn_refresh 	= new JButton(Tools.createIcon(Res.icon_refresh));
-	final protected JButton				btn_view		= new JButton(Tools.createIcon(Res.icon_refresh));
+	final protected JButton				btn_view		= new JButton(Tools.createIcon(Res.icon_event));
 
+	int view_index = 0;
+	int[] view_modes = new int[]{
+		JList.HORIZONTAL_WRAP,
+		JList.VERTICAL,
+		JList.VERTICAL_WRAP,
+	};
 	
 	public ManagerFormList(
 			Studio studio, 
@@ -61,13 +67,20 @@ public abstract class ManagerFormList<T extends G2DListItem> extends ManagerForm
 			progress.setValue("", i);
 		}
 
+		this.btn_refresh.setToolTipText("刷新");
 		this.btn_refresh.addActionListener(this);
+		
+		this.btn_view.setToolTipText("查看");
+		this.btn_view.addActionListener(this);
+		
 		this.tool_bar.add(btn_refresh);
+		this.tool_bar.add(btn_view);
+		
 		this.add(tool_bar, BorderLayout.NORTH);		
 		
-		list = createList(this.files);
-		list.setVisibleRowCount(this.files.size()/10+1);
-		list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+		this.list = createList(this.files);
+		this.list.setVisibleRowCount(this.files.size()/10+1);
+		this.list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
 		this.add(new JScrollPane(list), BorderLayout.CENTER);
 		
 		saveAll();
@@ -80,6 +93,11 @@ public abstract class ManagerFormList<T extends G2DListItem> extends ManagerForm
 		}
 		else if (e.getSource() == btn_refresh) {
 			refresh();
+		}
+		else if (e.getSource() == btn_view) {
+			view_index ++;
+			view_index %= view_modes.length;
+			this.list.setLayoutOrientation(view_modes[view_index]);
 		}
 	}
 	
