@@ -7,34 +7,32 @@ import com.net.MessageHeader;
 
 public interface Channel 
 {
-	public int getID();
+	public int 						getID();
 	
-	public Iterator<ClientSession> getSessions();
+	public Iterator<ClientSession> 	getSessions();
 	
-	public int getSessionCount();
+	public int 						getSessionCount();
 	
-	public boolean hasSessions();
+	public boolean 					hasSessions();
 	
-	public boolean hasSession(ClientSession session);
+	public boolean 					hasSession(ClientSession session);
 	
-	public boolean join(ClientSession session);
+	public boolean 					join(ClientSession session);
+		
+	public boolean 					leave(ClientSession session);
+			
+	public int 						leaveAll();
 	
-//	public int join(Set<ClientSession> sessions);
+	public int 						send(MessageHeader message);
 	
-	public boolean leave(ClientSession session);
+	public int 						send(ClientSession sender, MessageHeader message);
 	
-//	public int leave(Set<ClientSession> sessions);
+	public int 						send(ClientSession sender, MessageHeader request, MessageHeader response);
+		
+	public Server					getServer();
 	
-	public int leaveAll();
+	public ChannelListener 			getChannelListener();
 	
-	public int send(MessageHeader message);
-	
-	public int send(ClientSession sender, MessageHeader message);
-	
-	public int send(ClientSession sender, MessageHeader request, MessageHeader response);
-	
-	public Server	getServer();
-	
-	public ChannelListener getChannelListener();
+	public void						dispose();
 	
 }

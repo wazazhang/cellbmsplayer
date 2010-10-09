@@ -16,19 +16,27 @@ import com.net.server.Server;
 
 public class ChannelImpl implements Channel
 {
-	final ChannelListener 	Listener;
+	final ChannelListener 		Listener;
 	
-	final int 				ID;
+	final int 					ID;
 	
-	final AbstractServer	server;
+	final AbstractServer		server;
 	
 	final ConcurrentHashMap<ClientSession, ClientSessionImpl>
-							sessions = new ConcurrentHashMap<ClientSession, ClientSessionImpl>();
+								sessions = new ConcurrentHashMap<ClientSession, ClientSessionImpl>();
 	
-	ChannelImpl(ChannelListener listener, int id, AbstractServer server) {
-		this.Listener	= listener;
-		this.ID 		= id;
-		this.server 	= server;
+	final ChannelManagerImpl	channel_manager;;
+	
+	ChannelImpl(ChannelListener listener, int id, AbstractServer server, ChannelManagerImpl cm) {
+		this.Listener			= listener;
+		this.ID 				= id;
+		this.server 			= server;
+		this.channel_manager	= cm;
+	}
+	
+	@Override
+	public void dispose() {
+		channel_manager.removeChannel(getID());
 	}
 	
 	public int getID() {

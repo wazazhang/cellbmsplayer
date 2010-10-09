@@ -19,7 +19,7 @@ public class ChannelManagerImpl implements ChannelManager
 	}
 	
 	public Channel createChannel(int id, ChannelListener listener) {
-		ChannelImpl channel = new ChannelImpl(listener, id, server);
+		ChannelImpl channel = new ChannelImpl(listener, id, server, this);
 		Channel ret = Channels.putIfAbsent(id, channel);
 		if (ret == null) {
 			return channel;
