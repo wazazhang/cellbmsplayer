@@ -69,6 +69,8 @@ public abstract class ManagerFormList<T extends G2DListItem> extends ManagerForm
 		list.setVisibleRowCount(this.files.size()/10+1);
 		list.setLayoutOrientation(JList.HORIZONTAL_WRAP);
 		this.add(new JScrollPane(list), BorderLayout.CENTER);
+		
+		saveAll();
 	}
 
 	@Override
