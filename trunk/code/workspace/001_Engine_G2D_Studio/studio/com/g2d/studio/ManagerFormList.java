@@ -32,9 +32,10 @@ public abstract class ManagerFormList<T extends G2DListItem> extends ManagerForm
 	final protected File 		save_list_file;
 	final protected File 		res_root;
 	
-	final protected G2DWindowToolBar 	tool_bar = new G2DWindowToolBar(this);
+	final protected G2DWindowToolBar	tool_bar 		= new G2DWindowToolBar(this);
 	
-	final protected JButton		btn_refresh = new JButton(Tools.createIcon(Res.icon_refresh));
+	final protected JButton				btn_refresh 	= new JButton(Tools.createIcon(Res.icon_refresh));
+	final protected JButton				btn_view		= new JButton(Tools.createIcon(Res.icon_refresh));
 
 	
 	public ManagerFormList(
@@ -128,7 +129,7 @@ public abstract class ManagerFormList<T extends G2DListItem> extends ManagerForm
 	{
 		StringBuffer sb = new StringBuffer();
 		for (T icon : files) {
-			sb.append(icon.getListName()+"\n");
+			sb.append(getSaveListName(icon)+"\n");
 		}
 		save_list_file.writeUTF(sb.toString());
 	}
