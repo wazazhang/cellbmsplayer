@@ -38,13 +38,13 @@ public class SoundManager extends ManagerFormList<SoundFile> implements ActionLi
 				);
 
 		{
-			JToolBar play_bar = new JToolBar();
+			
 			btn_play.addActionListener(this);
 			btn_stop.addActionListener(this);
-			play_bar.add(btn_play);
-			play_bar.add(btn_stop);
+			tool_bar.addSeparator();
+			tool_bar.add(btn_play);
+			tool_bar.add(btn_stop);
 			
-			this.add(play_bar, BorderLayout.NORTH);		
 		}
 	}
 	
@@ -61,12 +61,16 @@ public class SoundManager extends ManagerFormList<SoundFile> implements ActionLi
 		sound_list = new SoundList(getSounds());
 		return sound_list;
 	}
+
+	@Override
+	protected String asNodeName(File file) {
+		return file.getName().substring(0, file.getName().length() - Config.SOUND_SUFFIX.length());
+	}
 	
 	@Override
 	protected SoundFile createNode(File file) {
 		if (file.getName().endsWith(Config.SOUND_SUFFIX)) {
-			return new SoundFile(
-					file.getName().substring(0, file.getName().length() - Config.SOUND_SUFFIX.length()));
+			return new SoundFile(asNodeName(file));
 		}
 		return null;
 	}
@@ -75,8 +79,6 @@ public class SoundManager extends ManagerFormList<SoundFile> implements ActionLi
 	protected String getSaveListName(SoundFile node) {
 		return node.getListName();
 	}
-	
-	
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {

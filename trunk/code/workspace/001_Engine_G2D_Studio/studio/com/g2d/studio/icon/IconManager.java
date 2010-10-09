@@ -37,13 +37,14 @@ public class IconManager extends ManagerFormList<IconFile>
 	protected G2DList<IconFile> createList(Vector<IconFile> files) {
 		return new IconList(files);
 	}
-	
+	@Override
+	protected String asNodeName(File file) {
+		return file.getName().substring(0, file.getName().length() - Config.ICON_SUFFIX.length());
+	}
 	@Override
 	protected IconFile createNode(File file) {
 		if (file.getName().endsWith(Config.ICON_SUFFIX)) {
-			return new IconFile(
-					file.getName().substring(0, file.getName().length() - Config.ICON_SUFFIX.length()), 
-					file);
+			return new IconFile(asNodeName(file), file);
 		}
 		return null;
 	}
