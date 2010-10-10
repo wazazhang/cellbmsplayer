@@ -19,7 +19,7 @@ import com.g2d.studio.io.File;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.swing.G2DList;
 
-public class SoundManager extends ManagerFormList<SoundFile> implements ActionListener
+public class SoundManager extends ManagerFormList<SoundFile>
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -36,15 +36,21 @@ public class SoundManager extends ManagerFormList<SoundFile> implements ActionLi
 				Studio.getInstance().root_sound_path,
 				Studio.getInstance().project_save_path.getChildFile("sounds/sound.list")
 				);
-
-		{
-			
-			btn_play.addActionListener(this);
-			btn_stop.addActionListener(this);
-			tool_bar.addSeparator();
-			tool_bar.add(btn_play);
-			tool_bar.add(btn_stop);
-			
+		btn_play.addActionListener(this);
+		btn_stop.addActionListener(this);
+		tool_bar.addSeparator();
+		tool_bar.add(btn_play);
+		tool_bar.add(btn_stop);
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btn_play) {
+			sound_list.playSelected();
+		} else if (e.getSource() == btn_stop) {
+			sound_list.stopSelected();
+		} else {
+			super.actionPerformed(e);
 		}
 	}
 	
@@ -79,14 +85,6 @@ public class SoundManager extends ManagerFormList<SoundFile> implements ActionLi
 	protected String getSaveListName(SoundFile node) {
 		return node.getListName();
 	}
-	
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == btn_play) {
-			sound_list.playSelected();
-		} else if (e.getSource() == btn_stop) {
-			sound_list.stopSelected();
-		}
-	}
+
 	
 }
