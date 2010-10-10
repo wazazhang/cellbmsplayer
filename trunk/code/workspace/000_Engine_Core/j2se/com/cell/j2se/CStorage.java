@@ -41,7 +41,7 @@ public class CStorage implements IStorage
 					}
 				}
 				
-				rms_file = new File(base + Separator + "CStorage" + Separator + gamename);
+				rms_file = new File(base + Separator + ".cstorage" + Separator + gamename);
 			}
 			
 //			if (!rms_file.exists()) {
