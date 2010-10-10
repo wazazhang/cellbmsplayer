@@ -70,7 +70,7 @@ public class SimpleFrame extends JFrame implements Runnable, WindowListener, Com
 	{
 		while (!canvas.isExit())
 		{
-			canvas.repaint_game();
+			canvas.getComponent().repaint();
 			
 			try {
 				if (is_show_game){

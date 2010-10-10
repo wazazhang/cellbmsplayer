@@ -107,7 +107,7 @@ public class DisplayObjectPanel extends JPanel implements Runnable, ComponentLis
 		while (service != null) {
 			try {
 				if (isVisible()) {
-					canvas.getCanvasAdapter().repaint_game();
+					canvas.repaint();
 					Thread.sleep(canvas.getCanvasAdapter().getFrameDelay());
 				} else {
 					Thread.sleep(1000);

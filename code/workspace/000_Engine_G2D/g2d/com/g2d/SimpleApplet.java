@@ -54,7 +54,7 @@ public class SimpleApplet extends JApplet implements Runnable
 	{
 		while (!canvas.isExit())
 		{
-			canvas.repaint_game();
+			canvas.getComponent().repaint();
 			
 			try {
 				Thread.sleep(canvas.getFrameDelay());

@@ -111,7 +111,7 @@ public abstract class DisplayObjectViewer<D extends DisplayObject> extends Abstr
 			{
 				if (view_object!=null && isVisible())
 				{
-					canvas.getCanvasAdapter().repaint_game();
+					canvas.repaint();
 					Thread.sleep(canvas.getCanvasAdapter().getFrameDelay());
 				}
 				else
@@ -129,7 +129,7 @@ public abstract class DisplayObjectViewer<D extends DisplayObject> extends Abstr
 		}
 
 		try {
-			canvas.getCanvasAdapter().repaint_game();
+			canvas.repaint();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
