@@ -183,7 +183,7 @@ public interface Canvas
 	public int getFPS();
 	
 	
-	public void repaint_game();
+//	public void repaint_game();
 	
 //	--------------------------------------------------------------------------------
 //	control and input

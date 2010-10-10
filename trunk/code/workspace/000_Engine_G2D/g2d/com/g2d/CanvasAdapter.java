@@ -522,9 +522,9 @@ FocusListener
 	}
 	
 
-	public void repaint_game() {
-		component.repaint(0, 0, 0, getWidth(), getHeight());
-	}
+//	public void repaint_game() {
+//		component.repaint(0, 0, 0, getWidth(), getHeight());
+//	}
 	
 	public void update(GraphicsConfiguration gc) 
 	{
