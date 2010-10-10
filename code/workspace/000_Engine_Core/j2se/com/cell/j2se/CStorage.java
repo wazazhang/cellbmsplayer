@@ -26,7 +26,7 @@ public class CStorage implements IStorage
 			
 			if (home_dir.exists())
 			{
-				rms_file = new File(usrHome + Separator + "CStorage" + Separator + gamename);
+				rms_file = new File(usrHome + Separator + ".cstorage" + Separator + gamename);
 			}
 			else
 			{
