@@ -18,6 +18,7 @@ import com.cell.rpg.res.ResourceSet.SceneSet;
 import com.cell.rpg.res.ResourceSet.SpriteSet;
 import com.cell.rpg.scene.Scene;
 import com.cell.rpg.scene.graph.SceneGraph;
+import com.cell.rpg.scene.instance.InstanceZone;
 import com.cell.rpg.template.TAvatar;
 import com.cell.rpg.template.TEffect;
 import com.cell.rpg.template.TItem;
@@ -69,6 +70,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 	protected Hashtable<Integer, Quest> 			quests;
 	protected Hashtable<Integer, QuestGroup> 		questgroups;
 	protected Hashtable<Integer, Scene>				scenes;
+	protected Hashtable<Integer, InstanceZone>		instance_zones;
 
 	protected Hashtable<Integer, String> 			names_item_properties;
 	protected Hashtable<Integer, String>			names_tunits;
@@ -82,6 +84,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 	protected Hashtable<Integer, String> 			names_quests;
 	protected Hashtable<Integer, String> 			names_questgroups;
 	protected Hashtable<Integer, String>			names_scenes;
+	protected Hashtable<Integer, String>			names_instance_zones;
 	
 	
 	// icons , sounds, talks
@@ -162,6 +165,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 		questgroups		= readRPGObjects(save_dir + "/questgroups/questgroups.list",			QuestGroup.class);
 		
 		scenes			= readRPGObjects(save_dir + "/scenes/scene.list", 						Scene.class);
+		instance_zones	= readRPGObjects(save_dir + "/instance_zones/zones.list", 				InstanceZone.class);
 	}
 	
 	final protected void initAllXmlNames()  throws Exception
@@ -180,6 +184,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 		names_quests			= readRPGObjectNames(save_dir + "/quests/name_quest.list");
 		names_questgroups		= readRPGObjectNames(save_dir + "/questgroups/name_questgroups.list");
 		names_scenes			= readRPGObjectNames(save_dir + "/scenes/name_scene.list");
+		names_instance_zones	= readRPGObjectNames(save_dir + "/instance_zones/name_zones.list");
 	}
 	
 	final protected void initIcons()
@@ -605,6 +610,23 @@ public abstract class ResourceManager extends CellSetResourceManager
 	public SceneGraph createSceneGraph() {
 		return new SceneGraph(scenes.values());
 	}
+	
+	
+	
+
+	public InstanceZone getInstanceZone(int id) {
+		return instance_zones.get(id);
+	}
+
+	public String getInstanceZoneName(int id) {
+		return names_instance_zones.get(id);
+	}
+	
+	public Hashtable<Integer, InstanceZone> getAllInstanceZone() {
+		return new Hashtable<Integer, InstanceZone>(instance_zones);
+	}
+	
+	
 	
 //	--------------------------------------------------------------------------------------------------------------------
 //	EditResources
