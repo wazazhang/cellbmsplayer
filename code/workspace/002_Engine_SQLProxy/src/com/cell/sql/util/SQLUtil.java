@@ -51,6 +51,9 @@ public class SQLUtil
 	 */
 	public static Serializable binToBlob(byte[] data) throws Exception
 	{
+		if (data == null || data.length == 0) {
+			return null;
+		}
 		ByteArrayInputStream	bais	= new ByteArrayInputStream(data);
 		ObjectInputStream		ois		= new ObjectInputStream(bais);
 		try{
