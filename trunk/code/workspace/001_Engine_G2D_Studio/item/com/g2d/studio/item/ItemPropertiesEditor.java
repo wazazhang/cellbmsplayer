@@ -13,6 +13,7 @@ import com.g2d.editor.property.CellEditAdapter;
 import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.ObjectViewer;
 import com.g2d.studio.rpg.ItemFormulaEdit;
+import com.g2d.studio.rpg.ItemRateColletionEdit;
 
 public class ItemPropertiesEditor extends ObjectViewer<ItemPropertiesNode> implements ActionListener
 {	
@@ -46,6 +47,7 @@ public class ItemPropertiesEditor extends ObjectViewer<ItemPropertiesNode> imple
 					ItemPropertyTypes.getItemPropertyManager().getAllAdapters());
 			ret.add(new ItemPropertiesAdapter.ValueRangeAdapter());
 			ret.add(new ItemFormulaEdit.ItemFormulaAdapter());
+			ret.add(new ItemRateColletionEdit.ItemRateCollectionAdapter());
 			return ret.toArray(new CellEditAdapter<?>[ret.size()]);
 		} else {
 			return new CellEditAdapter<?>[]{

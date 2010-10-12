@@ -103,7 +103,17 @@ extends JSplitPane implements TreeSelectionListener, ChangeListener
 		{
 			if ( (node_index.get(intID)==node) && (node_index.killID(intID) == node) )
 			{
-				root.remove(node);
+				if (root.isNodeChild(node))
+				{
+					try
+					{
+						root.remove(node);
+					}
+					catch (Exception exp)
+					{
+						exp.printStackTrace();
+					}
+				}
 				getTree().reload(root);
 			}
 		}		
