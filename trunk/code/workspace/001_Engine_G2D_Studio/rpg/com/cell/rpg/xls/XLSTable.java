@@ -68,14 +68,17 @@ public class XLSTable<V extends SQLTableRow<?>>
 //									System.out.println(sql_column.name + "=" + value);
 								}else{
 									throw new NullPointerException(
-											"format error with column ( " + sql_column.name + " = \""+ v +"\" ) at row " + r + " sheet " + rs.getName());
+											"format error at" +
+											" column [" + sql_column.name + " = \""+ v +"\"]" +
+											" row [" + r + "]" +
+											" sheet [" + rs.getName()+"]");
 								}
 							}
 						}
 						values.add(instance);
 					}
 					catch (Exception e) {
-						System.err.println("read error at row " + r + " sheet " + rs.getName());
+						System.err.println("read error at row [" + r + "] sheet [" + rs.getName()+"]");
 						throw e;
 					}
 				}
