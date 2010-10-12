@@ -389,6 +389,17 @@ public class QuestItem extends RPGObject implements NamedObject
 		@Property("目标值")
 		public AbstractValue		dst_value	= new Value(1);
 	}
+
+	@Property("[结果] 设置单位属性")
+	final public static class CallUnitMethod extends Result
+	{
+		private static final long serialVersionUID = 1L;
+		@Property("原单位属性")
+		public TriggerUnitProperty	src_value	= new TriggerUnitProperty();
+
+		@Property("目标值")
+		public AbstractValue		dst_value	= new Value(1);
+	}
 	
 //	----------------------------------------------------------------------------
 //	Quest PET
