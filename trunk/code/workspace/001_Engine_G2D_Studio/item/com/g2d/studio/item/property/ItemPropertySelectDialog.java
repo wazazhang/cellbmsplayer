@@ -15,9 +15,12 @@ public class ItemPropertySelectDialog extends G2DListSelectDialog<ItemPropertyNo
 {
 	JLabel cell_edit_component = new JLabel();
 	
-	public ItemPropertySelectDialog(Component owner, ItemPropertyNode dv) {
+	public ItemPropertySelectDialog(Component owner, ItemPropertyNode dv) 
+	{
 		super(owner, new ItemPropertyList(), dv);
 		getList().setLayoutOrientation(G2DList.VERTICAL);
+		
+		this.setSize(600, 700);
 	}
 	
 	@Override
