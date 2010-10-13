@@ -33,6 +33,16 @@ public class Pair<K, V> implements Serializable, Map.Entry<K, V>
 	}
 
 	/**
+	 * @param key the key to set
+	 */
+	public V set(K key, V value) {
+		V old = this.value;
+		this.key = key;
+		this.value = value;
+		return old;
+	}
+
+	/**
 	 * @return the value
 	 */
 	public V getValue() {
