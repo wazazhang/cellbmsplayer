@@ -31,7 +31,7 @@ import com.g2d.studio.swing.G2DListItem;
 import com.g2d.util.AbstractOptionDialog;
 
 @SuppressWarnings("serial")
-public class ItemRateColletionEdit extends AbstractOptionDialog<ItemRateCollection> implements PropertyCellEdit<ItemRateCollection>
+public class ItemRateCollectionEdit extends AbstractOptionDialog<ItemRateCollection> implements PropertyCellEdit<ItemRateCollection>
 {
 	final private ItemRateCollection edit_data;
 
@@ -41,7 +41,7 @@ public class ItemRateColletionEdit extends AbstractOptionDialog<ItemRateCollecti
 	
 //	--------------------------------------------------------------------------------------------------------------
 	
-	public ItemRateColletionEdit(Component owner, ItemRateCollection src_data) 
+	public ItemRateCollectionEdit(Component owner, ItemRateCollection src_data) 
 	{
 		super(owner);
 		super.setTitle(ItemRateCollection.getEditName(ItemRateCollection.class));
@@ -187,10 +187,10 @@ public class ItemRateColletionEdit extends AbstractOptionDialog<ItemRateCollecti
 			ObjectSelectDialog<XLSItem> dialog = new ObjectSelectDialog<XLSItem>(this, XLSItem.class, 1);
 			dialog.setSize(
 					200, 
-					ItemRateColletionEdit.this.getHeight());
+					ItemRateCollectionEdit.this.getHeight());
 			dialog.setLocation(
-					ItemRateColletionEdit.this.getX() + ItemRateColletionEdit.this.getWidth(), 
-					ItemRateColletionEdit.this.getY());
+					ItemRateCollectionEdit.this.getX() + ItemRateCollectionEdit.this.getWidth(), 
+					ItemRateCollectionEdit.this.getY());
 			XLSItem item = dialog.showDialog();
 			if (item != null) {
 				ListItemData data = new ListItemData(item, 1, 0);
@@ -310,7 +310,7 @@ public class ItemRateColletionEdit extends AbstractOptionDialog<ItemRateCollecti
 		{
 			if (ItemRateCollection.class.isAssignableFrom(field.getType())) 
 			{
-				ItemRateColletionEdit dialog = new ItemRateColletionEdit(owner.getComponent(), (ItemRateCollection)fieldValue);
+				ItemRateCollectionEdit dialog = new ItemRateCollectionEdit(owner.getComponent(), (ItemRateCollection)fieldValue);
 				dialog.showDialog();
 				return dialog;
 			}
