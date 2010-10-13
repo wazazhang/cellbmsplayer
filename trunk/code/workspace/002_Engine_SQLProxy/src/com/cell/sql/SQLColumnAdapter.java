@@ -232,13 +232,12 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 		sb = null;
 	}
 
-	final protected R select(K primary_key, Connection conn) throws SQLException
+	final protected R select(K primary_key, Connection conn) throws Exception
 	{
-		Statement statement = conn.createStatement();
+		R row = newRow();
 		
+		Statement statement = conn.createStatement();
 		try {
-			R row = newRow();
-			
 			StringBuffer sb = new StringBuffer("SELECT * FROM ");
 			sb.append(table_name);
 			sb.append(" WHERE ");
@@ -255,10 +254,8 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 			} finally {
 				result.close();
 			}
-		} catch (SQLException e) {
-			throw e;
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw e;
 		} finally{
 			statement.close();
 		}
@@ -274,12 +271,12 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 	 * @return
 	 * @throws SQLException
 	 */
-	final protected ArrayList<R> selectAll(Connection conn) throws SQLException
+	final protected ArrayList<R> selectAll(Connection conn) throws Exception
 	{
 		return query(conn, "SELECT * FROM " + table_name + " ;");
 	}
 	
-	final protected ArrayList<R> query(Connection conn, String sql) throws SQLException
+	final protected ArrayList<R> query(Connection conn, String sql) throws Exception
 	{
 		ArrayList<R> 	ret 		= new ArrayList<R>();
 		Statement		statement 	= conn.createStatement();
@@ -292,10 +289,8 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 					e.printStackTrace();
 				}
 			}
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			throw e;
-		}  catch (Exception e) {
-			log.error(e.getMessage(), e);
 		} finally {
 			try {
 				result.close();
