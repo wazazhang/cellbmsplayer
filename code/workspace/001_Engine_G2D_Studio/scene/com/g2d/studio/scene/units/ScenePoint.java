@@ -19,6 +19,7 @@ import javax.swing.JList;
 import com.cell.math.MathVector;
 import com.cell.rpg.scene.Point;
 import com.g2d.annotation.Property;
+import com.g2d.cell.game.Scene.WorldMap;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.ui.Menu;
 import com.g2d.editor.DisplayObjectEditor;
@@ -106,12 +107,15 @@ public class ScenePoint extends com.g2d.game.rpg.Unit implements SceneUnitTag<Po
 	public void removed(DisplayObjectContainer parent) {
 		super.removed(parent);
 		try{
-			synchronized(next_nodes) {
-				for (ScenePoint p : editor.getGameScene().getWorld().getChildsSubClass(ScenePoint.class)) {
-					if (p.next_nodes.contains(this)) {
-						p.next_nodes.remove(this);
+			if (parent instanceof WorldMap) {
+				synchronized(next_nodes) {
+					for (ScenePoint p : editor.getGameScene().getWorld().getChildsSubClass(ScenePoint.class)) {
+						if (p.next_nodes.contains(this)) {
+							p.next_nodes.remove(this);
+						}
 					}
 				}
+				System.out.println("removed point clear next_nodes !");
 			}
 		}catch(Exception err){
 			err.printStackTrace();
