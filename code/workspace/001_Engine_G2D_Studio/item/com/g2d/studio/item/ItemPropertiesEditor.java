@@ -50,6 +50,7 @@ public class ItemPropertiesEditor extends ObjectViewer<ItemPropertiesNode> imple
 			ret.add(new ItemFormulaEdit.ItemFormulaAdapter());
 			ret.add(new ItemRateCollectionEdit.ItemRateCollectionAdapter());
 			ret.add(new ItemCountCollectionEdit.ItemCountCollectionAdapter());
+			ret.add(new XLSItemSelectCellEdit.XLSItemSelectAdapter());
 			return ret.toArray(new CellEditAdapter<?>[ret.size()]);
 		} else {
 			return new CellEditAdapter<?>[]{

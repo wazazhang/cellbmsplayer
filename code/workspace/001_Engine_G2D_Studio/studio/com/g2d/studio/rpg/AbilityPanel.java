@@ -86,7 +86,8 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 		{
 			// left center
 			{
-				this.list_cur_ability.setListData(abilities.getAbilities());
+				AbstractAbility[] ability_datas = abilities.getAbilities();
+				this.list_cur_ability.setListData((ability_datas==null)? new AbstractAbility[0] : ability_datas);
 				this.list_cur_ability.addMouseListener(this);
 				this.list_cur_ability.setCellRenderer(new ListRender());
 				left.add(new JScrollPane(list_cur_ability), BorderLayout.CENTER);

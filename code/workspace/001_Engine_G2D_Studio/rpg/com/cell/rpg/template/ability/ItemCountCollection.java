@@ -15,6 +15,9 @@ public class ItemCountCollection extends AbstractAbility
 	
 	@Property("道具<ID,数量>列表")
 	public Vector<Pair<Integer, Integer>> items_ = new Vector<Pair<Integer, Integer>>();
+	
+	@Property("道具名字列表")
+	public Vector<String> item_names_ = new Vector<String>();
 		
 
 	public ItemCountCollection() {}
