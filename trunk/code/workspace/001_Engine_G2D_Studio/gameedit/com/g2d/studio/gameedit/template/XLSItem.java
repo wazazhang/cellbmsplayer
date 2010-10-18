@@ -51,7 +51,10 @@ final public class XLSItem  extends XLSTemplateNode<TItem>
 		}
 		return Tools.createIcon(Tools.combianImage(20, 20, Res.icon_error));
 	}
-	
-	
+
+	public String getItemName() 
+	{
+		return getXLSRow().desc;
+	}	
 	
 }

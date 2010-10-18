@@ -78,6 +78,7 @@ public class ItemCountCollectionEdit extends AbstractOptionDialog<ItemCountColle
 	public ItemCountCollection getValue()
 	{
 		edit_data.items_ = pnl_items_.getItems();
+		edit_data.item_names_ = pnl_items_.getItemNames();
 		
 		return edit_data;
 	}
@@ -133,6 +134,15 @@ public class ItemCountCollectionEdit extends AbstractOptionDialog<ItemCountColle
 			}
 			return ret;
 		}
+		
+		public Vector<String> getItemNames() 
+		{
+			Vector<String> ret = new Vector<String>(list_data.size());
+			for (ListItemData data : list_data) {
+				ret.add(data.item_.getItemName());
+			}
+			return ret;
+		}		
 		
 		@Override
 		public void actionPerformed(ActionEvent e) 

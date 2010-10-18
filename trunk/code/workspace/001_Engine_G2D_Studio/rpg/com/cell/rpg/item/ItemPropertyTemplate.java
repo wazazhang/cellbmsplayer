@@ -29,9 +29,9 @@ public abstract class ItemPropertyTemplate extends AbstractAbility
 	private transient Field[]	save_fields = null;
 	
 	@Override
-	final public boolean isMultiField() 
+	public boolean isMultiField() 
 	{
-		return false;
+		return true;
 	}
 	
 	final public Integer getSaveType() 
