@@ -118,6 +118,8 @@ public class JSManager
 				if (end >= 0) {
 					i = end;
 					String import_cmd	= script.substring(start, end + 1);		
+					import_cmd = import_cmd.replace('"', ' ');
+					import_cmd = import_cmd.trim();
 					if (!libs.containsKey(import_cmd)) {
 						String lib_js = null;
 						System.out.println("js : " + import_cmd);
