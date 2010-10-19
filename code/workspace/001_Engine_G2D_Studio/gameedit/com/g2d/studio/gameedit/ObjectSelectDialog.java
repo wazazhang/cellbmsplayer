@@ -44,6 +44,12 @@ public class ObjectSelectDialog<T extends ObjectNode<?>> extends AbstractOptionD
 	}
 	
 	@Override
+	protected Object[] getUserObjects()
+	{
+		return list.getSelectedItems();
+	}
+	
+	@Override
 	public T getValue() {
 		return getUserObject();
 	}

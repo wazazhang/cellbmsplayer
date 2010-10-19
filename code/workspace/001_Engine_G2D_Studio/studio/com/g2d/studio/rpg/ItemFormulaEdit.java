@@ -74,6 +74,14 @@ public class ItemFormulaEdit extends AbstractOptionDialog<ItemFormula> implement
 	}
 	
 	@Override
+	protected Object[] getUserObjects()
+	{
+		Object[] objs = new Object[1];				
+		objs[0] = getUserObject();				
+		return objs;
+	}	
+	
+	@Override
 	public Component getComponent(ObjectPropertyEdit panel) {
 		ItemFormula data = getValue();
 		cell_edit.setText(data.toString());
