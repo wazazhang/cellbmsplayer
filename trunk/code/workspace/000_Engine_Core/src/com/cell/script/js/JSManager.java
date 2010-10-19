@@ -126,8 +126,8 @@ public class JSManager
 							while (import_path.startsWith("/")) {
 								import_path = import_path.substring(1);
 							}
-							import_path = import_cmd.replace('"', ' ');
-							import_path = import_cmd.trim();
+							import_path = import_path.replace('"', ' ');
+							import_path = import_path.trim();
 							if (!readed_path.contains(import_path)) {
 								readed_path.add(import_path);
 								lib_js = readString(root + "/" + import_path);
