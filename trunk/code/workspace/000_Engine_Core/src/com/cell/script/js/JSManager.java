@@ -118,8 +118,6 @@ public class JSManager
 				if (end >= 0) {
 					i = end;
 					String import_cmd	= script.substring(start, end + 1);		
-					import_cmd = import_cmd.replace('"', ' ');
-					import_cmd = import_cmd.trim();
 					if (!libs.containsKey(import_cmd)) {
 						String lib_js = null;
 						System.out.println("js : " + import_cmd);
@@ -128,6 +126,8 @@ public class JSManager
 							while (import_path.startsWith("/")) {
 								import_path = import_path.substring(1);
 							}
+							import_path = import_cmd.replace('"', ' ');
+							import_path = import_cmd.trim();
 							if (!readed_path.contains(import_path)) {
 								readed_path.add(import_path);
 								lib_js = readString(root + "/" + import_path);
