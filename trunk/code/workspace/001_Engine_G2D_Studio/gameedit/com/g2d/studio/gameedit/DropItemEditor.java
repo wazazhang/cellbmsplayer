@@ -265,6 +265,14 @@ public class DropItemEditor extends AbstractDialog implements PropertyCellEdit<D
 			}
 			return null;
 		}
+		
+		@Override
+		protected Object[] getUserObjects()
+		{
+			Object[] objs = new Object[1];				
+			objs[0] = getUserObject();				
+			return objs;
+		}	
 
 	}
 	

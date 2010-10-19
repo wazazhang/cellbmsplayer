@@ -39,6 +39,15 @@ public class G2DList<T extends G2DListItem> extends JList
 		return null;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public Object[] getSelectedItems()
+	{
+		try{
+			return super.getSelectedValues();
+		}catch(Exception err){}
+		return null;
+	}	
+	
 	class ListRender extends DefaultListCellRenderer implements ListCellRenderer
 	{
 		private static final long serialVersionUID = 1L;

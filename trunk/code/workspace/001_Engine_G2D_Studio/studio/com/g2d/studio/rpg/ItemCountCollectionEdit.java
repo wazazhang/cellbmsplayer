@@ -68,6 +68,16 @@ public class ItemCountCollectionEdit extends AbstractOptionDialog<ItemCountColle
 	}
 	
 	@Override
+	protected Object[] getUserObjects()
+	{
+		Object[] objs = new Object[1];
+		
+		objs[0] = getValue();
+		
+		return objs;
+	}
+	
+	@Override
 	public Component getComponent(ObjectPropertyEdit panel) {
 		ItemCountCollection data = getValue();
 		cell_edit.setText(data.toString());
@@ -158,11 +168,16 @@ public class ItemCountCollectionEdit extends AbstractOptionDialog<ItemCountColle
 
 		private void doDel() 
 		{
-			ListItemData item = lst_abilities_.getSelectedItem();
-			if (item != null) {
-				this.list_data.remove(item);
-				this.lst_abilities_.setListData(list_data);
-				this.lst_abilities_.repaint();
+			Object[] items = lst_abilities_.getSelectedItems();
+			
+			if (items != null)
+			{
+				for ( Object item : items )
+				{
+					this.list_data.remove(item);
+					this.lst_abilities_.setListData(list_data);
+					this.lst_abilities_.repaint();
+				}
 			}
 		}
 		
@@ -173,31 +188,50 @@ public class ItemCountCollectionEdit extends AbstractOptionDialog<ItemCountColle
 			dialog.setLocation(
 					ItemCountCollectionEdit.this.getX() + ItemCountCollectionEdit.this.getWidth(), 
 					ItemCountCollectionEdit.this.getY());
-			XLSItem item = dialog.showDialog();
-			if (item != null) {
-				ListItemData data = new ListItemData(item, 1);
-				this.list_data.add(data);
-				this.lst_abilities_.setListData(list_data);
-				this.lst_abilities_.repaint();
+			Object[] items = dialog.showDialog2();
+			if (items != null) {
+				for ( Object item : items )
+				{
+					if (item instanceof XLSItem)
+					{
+						ListItemData data = new ListItemData((XLSItem)item, 1);
+						this.list_data.add(data);
+						this.lst_abilities_.setListData(list_data);
+						this.lst_abilities_.repaint();
+					}
+				}
 			}
 		}
 		
 		private void doSetCount() 
 		{
-			ListItemData item = lst_abilities_.getSelectedItem();
-			if (item != null) {
-				String value = JOptionPane.showInputDialog(this, "设置数量", item.count_);
-				try{
-					if (value != null) {
+			Object[] items = lst_abilities_.getSelectedItems();
+						
+			if (items != null) 
+			{
+				String value = JOptionPane.showInputDialog(this, "设置数量", ((ListItemData)items[0]).count_);
+				try
+				{
+					if (value != null)
+					{
 						int count = Integer.parseInt(value);
-						if (count < 1) {
+						
+						if (count < 1) 
+						{
 							JOptionPane.showMessageDialog(this, "输入错误！必须大于 1");
-						} else {
-							item.count_ = count;
-							this.lst_abilities_.repaint();
+						} 
+						else
+						{
+							for ( Object item : items )
+							{
+								((ListItemData)item).count_ = count;
+								this.lst_abilities_.repaint();
+							}
 						}
 					}
-				} catch (Exception err){
+				} 
+				catch (Exception err)
+				{
 					JOptionPane.showMessageDialog(this, "输入错误！");
 				}
 			}

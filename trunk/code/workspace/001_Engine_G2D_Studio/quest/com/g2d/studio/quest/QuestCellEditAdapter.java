@@ -550,6 +550,14 @@ public class QuestCellEditAdapter {
 			src.time_value = Parser.castNumber(combo_time_value.getValue(), Long.class);
 			return src;
 		}
+		
+		@Override
+		protected Object[] getUserObjects()
+		{
+			Object[] objs = new Object[1];				
+			objs[0] = getUserObject();				
+			return objs;
+		}		
 	}
 
 //	-------------------------------------------------------------------------------------------------------------------------
