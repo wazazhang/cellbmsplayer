@@ -486,7 +486,7 @@ public abstract class BasicNetService
 	private class Request implements Runnable
 	{
 		final MessageHeader 				Message;
-		final ArrayList<WaitingListener> 	Listener;
+		final WaitingListener[]				Listeners;
 		final long 							SendTimeOut;
 		MessageHeader						Response;
 		
@@ -499,12 +499,7 @@ public abstract class BasicNetService
 	    	
 			this.Message 		= msg;
 			this.SendTimeOut 	= timeout > 0 ? timeout : 0;
-			this.Listener 		= new ArrayList<WaitingListener>(listeners.length);
-			for (WaitingListener l : listeners) {
-				if (l != null) {
-					this.Listener.add(l);
-				}
-			}
+			this.Listeners 		= listeners;
 		}
 		
 		public void run () 
@@ -534,13 +529,13 @@ public abstract class BasicNetService
 					notify();
 				}
 			}
-			for (WaitingListener wait : Listener) {
+			for (WaitingListener wait : Listeners) {
 				wait.response(BasicNetService.this, Message, response);
 			}
 		}
 		
 		private void timeout() {
-			for (WaitingListener wait : Listener) {
+			for (WaitingListener wait : Listeners) {
 				wait.timeout(BasicNetService.this, Message, Message.DynamicSendTime);
 			}
 		}
