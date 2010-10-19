@@ -529,6 +529,14 @@ public class ObjectPropertyRowPanel<T> extends BaseObjectPropertyPanel
 		}
 		
 		@Override
+		protected Object[] getUserObjects()
+		{
+			Object[] objs = new Object[1];				
+			objs[0] = getUserObject();				
+			return objs;
+		}
+		
+		@Override
 		public ArrayList<Object> showDialog() {
 			try{
 				ArrayList<Object> datas = super.showDialog();
