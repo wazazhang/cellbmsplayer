@@ -48,7 +48,15 @@ public abstract class AbstractOptionDialog<T> extends AbstractDialog implements 
 		return selected_object;
 	}
 	
+	public Object[] showDialog2()
+	{
+		super.setVisible(true);
+		return getUserObjects();		
+	}
+	
 	abstract protected T getUserObject();
+	
+	abstract protected Object[] getUserObjects();
 	
 	abstract protected boolean checkOK() ;
 	
