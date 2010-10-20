@@ -28,6 +28,8 @@ import java.util.Hashtable;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.cell.security.MD5;
 
@@ -42,6 +44,7 @@ import com.cell.security.MD5;
  */
 public class CIO extends CObject
 {
+	private static Logger			log						= Logger.getLogger("CIO");
 	private static int				url_loading_time_out	= 20000; //ms
 	private static int				url_loading_retry_count	= 5;
 	private static AtomicLong		loaded_bytes			= new AtomicLong(0);
@@ -148,12 +151,16 @@ public class CIO extends CObject
 				if (data != null) {
 					return data;
 				}
+			} else {
+//				log.log(Level.WARNING, "file not found : " + path);
 			}
 
 			// load from jar
 			data = readStream(getAppBridge().getResource(path));
 			if (data != null) {
 				return data;
+			} else {
+//				log.log(Level.WARNING, "file not found : " + path);
 			}
 
 		} catch(Exception err) {
@@ -266,7 +273,11 @@ public class CIO extends CObject
 	
 	public static String readAllText(String file, String encoding)
 	{
-		return stringDecode(CIO.loadData(file), encoding);
+		byte[] data = CIO.loadData(file);
+		if (data != null) {
+			return stringDecode(data, encoding);
+		}
+		return null;
 	}
 	
 	public static String[] readAllLine(String file)
