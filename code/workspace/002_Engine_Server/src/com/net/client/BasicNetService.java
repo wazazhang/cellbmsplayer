@@ -530,13 +530,17 @@ public abstract class BasicNetService
 				}
 			}
 			for (WaitingListener wait : Listeners) {
-				wait.response(BasicNetService.this, Message, response);
+				if (wait != null) {
+					wait.response(BasicNetService.this, Message, response);
+				}
 			}
 		}
 		
 		private void timeout() {
 			for (WaitingListener wait : Listeners) {
-				wait.timeout(BasicNetService.this, Message, Message.DynamicSendTime);
+				if (wait != null) {
+					wait.timeout(BasicNetService.this, Message, Message.DynamicSendTime);
+				}
 			}
 		}
 		
