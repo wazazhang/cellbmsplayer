@@ -163,7 +163,7 @@ public class CIO extends CObject
 //				log.log(Level.WARNING, "file not found : " + path);
 			}
 
-		} catch(Exception err) {
+		} catch(Throwable err) {
 			System.err.println(path);
 			err.printStackTrace();
 		}
