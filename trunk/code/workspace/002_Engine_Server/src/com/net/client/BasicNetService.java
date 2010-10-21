@@ -45,8 +45,8 @@ public abstract class BasicNetService
 									notifies_map 				= new ConcurrentHashMap<Class<?>, Vector<NotifyListener<?>>>();
 	final private Vector<Pair<Class<?>, NotifyListener<?>>> 
 									adding_notifies			= new Vector<Pair<Class<?>, NotifyListener<?>>>();
-	final private Vector<Pair<Class<?>, NotifyListener<?>>> 
-									removing_notifies		= new Vector<Pair<Class<?>, NotifyListener<?>>>();
+//	final private Vector<Pair<Class<?>, NotifyListener<?>>> 
+//									removing_notifies		= new Vector<Pair<Class<?>, NotifyListener<?>>>();
 	//
 	
 	
@@ -186,8 +186,11 @@ public abstract class BasicNetService
 	 * @param listener
 	 */
 	final public void unregistNotifyListener(Class<? extends MessageHeader> message_type, NotifyListener<?> listener) {
-		synchronized (removing_notifies) {
-			removing_notifies.add(new Pair<Class<?>, NotifyListener<?>>(message_type, listener));
+		synchronized (notifies_lock){
+			Vector<NotifyListener<?>> notifys = notifies_map.get(message_type);
+			if (notifys != null) {
+				notifys.remove(listener);
+			}
 		}
 	}
 	
@@ -313,17 +316,6 @@ public abstract class BasicNetService
 						notifys.add(pair.getValue());
 					}
 					adding_notifies.clear();
-				}
-			}
-			synchronized (removing_notifies) {
-				if (!removing_notifies.isEmpty()) {
-					for (Pair<Class<?>, NotifyListener<?>> pair : removing_notifies) {
-						Vector<NotifyListener<?>> notifys = notifies_map.get(pair.getKey());
-						if (notifys != null) {
-							notifys.remove(pair.getValue());
-						}
-					}
-					removing_notifies.clear();
 				}
 			}
 			
