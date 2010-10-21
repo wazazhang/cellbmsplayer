@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
@@ -41,10 +42,10 @@ public abstract class BasicNetService
 	
 	// notifiers
 	final private ReentrantLock		notifies_lock			= new ReentrantLock();
-	final private ConcurrentHashMap<Class<?>, Vector<NotifyListener<?>>> 
-									notifies_map 				= new ConcurrentHashMap<Class<?>, Vector<NotifyListener<?>>>();
-	final private Vector<Pair<Class<?>, NotifyListener<?>>> 
-									adding_notifies			= new Vector<Pair<Class<?>, NotifyListener<?>>>();
+	final private ConcurrentHashMap<Class<?>, HashSet<NotifyListener<?>>> 
+									notifies_map 				= new ConcurrentHashMap<Class<?>, HashSet<NotifyListener<?>>>();
+//	final private Vector<Pair<Class<?>, NotifyListener<?>>> 
+//									adding_notifies			= new Vector<Pair<Class<?>, NotifyListener<?>>>();
 //	final private Vector<Pair<Class<?>, NotifyListener<?>>> 
 //									removing_notifies		= new Vector<Pair<Class<?>, NotifyListener<?>>>();
 	//
@@ -174,8 +175,13 @@ public abstract class BasicNetService
 	 * @param listener
 	 */
 	final public void registNotifyListener(Class<? extends MessageHeader> message_type, NotifyListener<?> listener) {
-		synchronized (adding_notifies) {
-			adding_notifies.add(new Pair<Class<?>, NotifyListener<?>>(message_type, listener));
+		synchronized (notifies_lock) {
+			HashSet<NotifyListener<?>> notifys = notifies_map.get(message_type);
+			if (notifys == null) {
+				notifys = new HashSet<NotifyListener<?>>();
+				notifies_map.put(message_type, notifys);
+			}
+			notifys.add(listener);
 		}
 		cleanUnhandledMessages();
 	}
@@ -187,7 +193,7 @@ public abstract class BasicNetService
 	 */
 	final public void unregistNotifyListener(Class<? extends MessageHeader> message_type, NotifyListener<?> listener) {
 		synchronized (notifies_lock){
-			Vector<NotifyListener<?>> notifys = notifies_map.get(message_type);
+			HashSet<NotifyListener<?>> notifys = notifies_map.get(message_type);
 			if (notifys != null) {
 				notifys.remove(listener);
 			}
@@ -305,21 +311,7 @@ public abstract class BasicNetService
 	{
 		synchronized (notifies_lock)
 		{
-			synchronized (adding_notifies) {
-				if (!adding_notifies.isEmpty()) {
-					for (Pair<Class<?>, NotifyListener<?>> pair : adding_notifies) {
-						Vector<NotifyListener<?>> notifys = notifies_map.get(pair.getKey());
-						if (notifys == null) {
-							notifys = new Vector<NotifyListener<?>>();
-							notifies_map.put(pair.getKey(), notifys);
-						}
-						notifys.add(pair.getValue());
-					}
-					adding_notifies.clear();
-				}
-			}
-			
-			Vector<NotifyListener<?>> notifys = notifies_map.get(message.getClass());
+			HashSet<NotifyListener<?>> notifys = notifies_map.get(message.getClass());
 			if (notifys != null && !notifys.isEmpty()) {
 				for (NotifyListener notify : notifys) {
 					notify.notify(this, message);
