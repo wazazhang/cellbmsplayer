@@ -67,15 +67,15 @@ public class ItemCountCollectionEdit extends AbstractOptionDialog<ItemCountColle
 		return getValue();
 	}
 	
-	@Override
-	protected Object[] getUserObjects()
-	{
-		Object[] objs = new Object[1];
-		
-		objs[0] = getValue();
-		
-		return objs;
-	}
+//	@Override
+//	protected Object[] getUserObjects()
+//	{
+//		Object[] objs = new Object[1];
+//		
+//		objs[0] = getValue();
+//		
+//		return objs;
+//	}
 	
 	@Override
 	public Component getComponent(ObjectPropertyEdit panel) {

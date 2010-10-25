@@ -48,13 +48,13 @@ public class SelectEventDialog extends AbstractOptionDialog<Class<? extends Even
 		return list.getValue();
 	}
 	
-	@Override
-	protected Object[] getUserObjects()
-	{
-		Object[] objs = new Object[1];				
-		objs[0] = getUserObject();				
-		return objs;
-	}	
+//	@Override
+//	protected Object[] getUserObjects()
+//	{
+//		Object[] objs = new Object[1];				
+//		objs[0] = getUserObject();				
+//		return objs;
+//	}	
 	
 	 static public class SelectEventCombobox extends JComboBox implements PropertyCellEdit<Class<? extends Event>>
 	 {

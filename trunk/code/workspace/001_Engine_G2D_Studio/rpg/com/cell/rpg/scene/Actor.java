@@ -1,5 +1,6 @@
 package com.cell.rpg.scene;
 
+import com.cell.rpg.instance.zones.ability.InstanceZoneUnitVisible;
 import com.cell.rpg.quest.ability.QuestAccepter;
 import com.cell.rpg.quest.ability.QuestPublisher;
 import com.cell.rpg.scene.ability.ActorAuctioneer;
@@ -53,6 +54,7 @@ public class Actor extends SceneSprite
 				ActorPathStart.class,
 				ActorQuestDropItem.class,
 				ActorFlag.class,
+				InstanceZoneUnitVisible.class,
 			};
 	}
 	

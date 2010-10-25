@@ -9,6 +9,7 @@ import com.cell.rpg.ability.AbstractAbility;
 import com.cell.rpg.anno.PropertyAdapter;
 import com.cell.rpg.item.ItemProperties;
 import com.cell.rpg.item.ItemPropertyTypes;
+import com.cell.rpg.struct.ScriptCode;
 import com.g2d.editor.property.CellEditAdapter;
 import com.g2d.editor.property.ObjectPropertyEdit;
 import com.g2d.editor.property.PropertyCellEdit;
@@ -180,4 +181,49 @@ public class PropertyAdapters
 		}
 	}
 	
+	
+	public static class ScriptCodeAdapter implements CellEditAdapter<ScriptCode>
+	{
+		@Override
+		public Class<ScriptCode> getType() {
+			return ScriptCode.class;
+		}
+		
+		@Override
+		public boolean fieldChanged(
+				Object editObject,
+				Object fieldValue,
+				Field field) {
+			return false;
+		}
+
+		@Override
+		public PropertyCellEdit<?> getCellEdit(ObjectPropertyEdit owner,
+				Object editObject, Object fieldValue, Field field) {
+
+			return null;
+		}
+
+		@Override
+		public Component getCellRender(ObjectPropertyEdit owner,
+				Object editObject, Object fieldValue, Field field,
+				DefaultTableCellRenderer src) {
+
+			return null;
+		}
+
+		@Override
+		public String getCellText(Object editObject, Field field,
+				Object fieldSrcValue) {
+			return null;
+		}
+
+		@Override
+		public Object getCellValue(Object editObject,
+				PropertyCellEdit<?> fieldEdit, Field field, Object fieldSrcValue) {
+			return null;
+		}
+
+		
+	}
 }

@@ -2,6 +2,8 @@ package com.cell.rpg.scene;
 
 import java.util.ArrayList;
 
+import com.cell.rpg.instance.zones.ability.InstanceZoneUnitVisible;
+
 public class Point extends SceneUnit
 {	
 	public int 		color;
@@ -18,7 +20,8 @@ public class Point extends SceneUnit
 
 	public Class<?>[] getSubAbilityTypes()
 	{
-		return new Class<?>[]{};
+		return new Class<?>[]{
+				InstanceZoneUnitVisible.class,};
 	}
 	
 	@Override
