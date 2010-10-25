@@ -53,16 +53,22 @@ extends ObjectTreeView<T, D>
 			progress.setValue(title, i++);
 		}
 		getTreeRoot().loadList();
+		boolean new_xls_row = false;
 		for (XLSFullRow row : xls_row_map.values()) {
 			if (getNode(Integer.parseInt(row.id))==null) {
 				T node = createObjectFromRow(row.id, null);
 				if (node != null) {
 					addNode(getTreeRoot(), node);
+					new_xls_row = true;
+					System.out.println("find new xls row data : " + node.getID() + " : " + node.getName());
 				}
 			}
 		}
 		reload();
 		getTree().setDragEnabled(true);
+		if (new_xls_row) {
+			saveAll();
+		}
 	}
 	
 	
