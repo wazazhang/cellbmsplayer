@@ -1,9 +1,12 @@
 package com.g2d.studio.rpg;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.lang.reflect.Field;
 
 import javax.swing.CellEditor;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.table.DefaultTableCellRenderer;
 
@@ -14,12 +17,21 @@ import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.util.AbstractDialog;
 import com.g2d.util.AbstractOptionDialog;
 
+@SuppressWarnings("serial")
 public class ScriptCodeEditor extends AbstractOptionDialog<ScriptCode> implements PropertyCellEdit<ScriptCode>
 {
-	JTextPane text_pane = new JTextPane();
+	JTextPane 	text_pane 	= new JTextPane();
 
-	public ScriptCodeEditor() {
-		// TODO Auto-generated constructor stub
+	JLabel		label		= new JLabel();
+	
+	public ScriptCodeEditor(ScriptCode old) 
+	{
+		super.setTitle(ScriptCode.class.getCanonicalName());
+		super.add(new JScrollPane(text_pane), BorderLayout.CENTER);
+		
+		if (old != null) {
+			text_pane.setText(old.script+"");
+		}
 	}
 	
 	@Override
@@ -29,23 +41,20 @@ public class ScriptCodeEditor extends AbstractOptionDialog<ScriptCode> implement
 	
 	@Override
 	public Component getComponent(ObjectPropertyEdit panel) {
-		// TODO Auto-generated method stub
-		return null;
+		label.setText(text_pane.getText());
+		return label;
 	}
 
 	@Override
 	protected ScriptCode getUserObject() {
-		return null;
-	}
-
-	protected Object[] getUserObjects() {
-		return null;
+		ScriptCode data = new ScriptCode();
+		data.script = text_pane.getText();
+		return data;
 	}
 
 	@Override
 	public ScriptCode getValue() {
-		// TODO Auto-generated method stub
-		return null;
+		return selected_object;
 	}
 	
 }

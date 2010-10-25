@@ -3,6 +3,7 @@ package com.g2d.studio.rpg;
 import java.awt.Component;
 import java.lang.reflect.Field;
 
+import javax.activation.FileDataSource;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import com.cell.rpg.ability.AbstractAbility;
@@ -182,11 +183,11 @@ public class PropertyAdapters
 	}
 	
 	
-	public static class ScriptCodeAdapter implements CellEditAdapter<ScriptCode>
+	public static class ScriptCodeAdapter implements CellEditAdapter<Object>
 	{
 		@Override
-		public Class<ScriptCode> getType() {
-			return ScriptCode.class;
+		public Class<Object> getType() {
+			return Object.class;
 		}
 		
 		@Override
@@ -200,7 +201,11 @@ public class PropertyAdapters
 		@Override
 		public PropertyCellEdit<?> getCellEdit(ObjectPropertyEdit owner,
 				Object editObject, Object fieldValue, Field field) {
-
+			if (ScriptCode.class.isAssignableFrom(field.getType())) {
+				ScriptCodeEditor editor = new ScriptCodeEditor((ScriptCode)fieldValue);
+				editor.showDialog();
+				return editor;
+			}
 			return null;
 		}
 
@@ -208,7 +213,6 @@ public class PropertyAdapters
 		public Component getCellRender(ObjectPropertyEdit owner,
 				Object editObject, Object fieldValue, Field field,
 				DefaultTableCellRenderer src) {
-
 			return null;
 		}
 
