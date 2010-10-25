@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,6 +25,7 @@ import com.cell.rpg.scene.script.anno.EventMethod;
 import com.cell.rpg.scene.script.anno.EventParam;
 import com.cell.rpg.scene.script.anno.EventType;
 import com.cell.rpg.scene.script.trigger.Event;
+import com.cell.rpg.struct.ScriptCode;
 import com.g2d.studio.Studio;
 
 public abstract class SceneScriptManager 
@@ -186,5 +188,11 @@ public abstract class SceneScriptManager
 			err.printStackTrace();
 		}
 	}
+
+//	-----------------------------------------------------------------------------------------------------------------------
 	
+	public boolean checkScriptCode(ScriptCode code, HashMap<String, Object> vars) throws Exception {
+		
+		return false;
+	}
 }

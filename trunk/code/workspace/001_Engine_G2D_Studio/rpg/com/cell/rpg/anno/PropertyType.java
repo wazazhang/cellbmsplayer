@@ -11,6 +11,7 @@ public enum PropertyType
 	SKILL_ID,
 	AVATAR_ID,
 	ITEM_PROPERTY_SAVED_TYPE,
+	INSTANCE_ZONE_ID,
 	;
 	
 	

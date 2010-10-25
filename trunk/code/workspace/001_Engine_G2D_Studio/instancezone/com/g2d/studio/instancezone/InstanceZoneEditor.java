@@ -29,6 +29,7 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 import javax.swing.JToolBar;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
@@ -64,7 +65,7 @@ public class InstanceZoneEditor extends ObjectViewer<InstanceZoneNode> implement
 	PageDiscussion			page_discussion;
 	PageScenes				page_scenes;
 	PageTriggers			page_triggers;
-	
+	PageDatas				page_datas;
 	
 //	-------------------------------------------------------------------------------------
 	
@@ -97,11 +98,14 @@ public class InstanceZoneEditor extends ObjectViewer<InstanceZoneNode> implement
 
 		this.page_discussion 		= new PageDiscussion();
 		this.page_scenes 			= new PageScenes();
+		this.page_datas				= new PageDatas();
 		this.page_triggers 			= new PageTriggers();
+		
 		table.addTab("介绍", 		page_discussion);
 		table.addTab("属性", 		page_object_panel);
 		table.addTab("能力", 		page_abilities);
 		table.addTab("场景", 		page_scenes);
+		table.addTab("副本变量", 		page_datas);
 		table.addTab("绑定的触发器", 	page_triggers);
 	}
 
@@ -366,6 +370,15 @@ public class InstanceZoneEditor extends ObjectViewer<InstanceZoneNode> implement
 					com.cell.rpg.scene.script.entity.InstanceZone.class);
 		}
 	}
+//	-------------------------------------------------------------------------------------
+
+	class PageDatas extends InstanceZoneDataTable
+	{
+		public PageDatas() {
+			super(getData().getData());
+		}
+	}
+	
 //	-------------------------------------------------------------------------------------
 	public class DialogTriggers extends AbstractDialog
 	{

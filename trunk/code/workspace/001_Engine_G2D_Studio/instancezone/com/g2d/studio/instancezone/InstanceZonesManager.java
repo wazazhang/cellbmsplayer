@@ -65,6 +65,13 @@ public class InstanceZonesManager extends ManagerForm implements ActionListener
 		return g2d_tree.getNode(id);
 	}
 	
+	public InstanceZoneNode getNode(Integer id) {
+		if (id != null) {
+			return g2d_tree.getNode(id);
+		}
+		return null;
+	}
+	
 	@Override
 	public void saveAll() throws Throwable {
 		for (InstanceZoneNode node : getNodes()) {

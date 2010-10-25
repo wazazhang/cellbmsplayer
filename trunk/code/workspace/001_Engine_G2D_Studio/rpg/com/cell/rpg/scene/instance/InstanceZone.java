@@ -39,7 +39,7 @@ public class InstanceZone extends RPGObject implements NamedObject, TriggersPack
 
 	private HashMap<Integer, BindedScene> scenes	= new HashMap<Integer, BindedScene>();
 	
-	private Data				data				= new Data();
+	private Data				data_map				= new Data();
 	
 //	-------------------------------------------------------------------------------
 	
@@ -60,13 +60,13 @@ public class InstanceZone extends RPGObject implements NamedObject, TriggersPack
 		if (scenes == null) {
 			scenes = new HashMap<Integer, BindedScene>();
 		}
-		if (data == null) {
-			data = new Data();
+		if (data_map == null) {
+			data_map = new Data();
 		}
 	}
 	
 	public Data getData() {
-		return data;
+		return data_map;
 	}
 	
 	public int getIntID() {

@@ -1,7 +1,7 @@
 package com.cell.rpg.instance.zones.ability;
 
 import com.cell.rpg.ability.AbstractAbility;
-import com.cell.rpg.struct.ScriptCode;
+import com.cell.rpg.struct.InstanceZoneScriptCode;
 import com.g2d.annotation.Property;
 
 
@@ -12,7 +12,7 @@ public class InstanceZoneUnitVisible extends AbstractAbility
 
 	/** 掉落道具列表ID */
 	@Property("脚本")
-	public ScriptCode		dst_value		= new ScriptCode();
+	public InstanceZoneScriptCode		dst_value		= new InstanceZoneScriptCode();
 
 	@Override
 	final public boolean isMultiField() {
