@@ -11,8 +11,6 @@ import java.awt.Stroke;
 import java.awt.geom.AffineTransform;
 import java.util.Vector;
 
-import sun.awt.image.ImageWatched.Link;
-
 import com.cell.CMath;
 import com.cell.util.TypedHashtable;
 import com.cell.util.event.EventListeners;

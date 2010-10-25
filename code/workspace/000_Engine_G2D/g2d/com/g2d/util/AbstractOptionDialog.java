@@ -48,15 +48,33 @@ public abstract class AbstractOptionDialog<T> extends AbstractDialog implements 
 		return selected_object;
 	}
 	
-	public Object[] showDialog2()
+
+
+//	
+//	想要返回多个结果，只需要将T声明为数组或集合。
+	static class Dialog2 extends AbstractOptionDialog<Object[]>
 	{
-		super.setVisible(true);
-		return getUserObjects();		
+		private static final long serialVersionUID = 1L;
+		
+		@Override
+		protected boolean checkOK() {
+			return false;
+		}
+		
+		@Override
+		protected Object[] getUserObject() {
+			return null;
+		}
 	}
+//	想要返回多个结果，只需要将T声明为数组或集合。
+//	public Object[] showDialog2()
+//	{
+//		super.setVisible(true);
+//		return getUserObjects();		
+//	}
+//	abstract protected Object[] getUserObjects();
 	
 	abstract protected T getUserObject();
-	
-	abstract protected Object[] getUserObjects();
 	
 	abstract protected boolean checkOK() ;
 	
