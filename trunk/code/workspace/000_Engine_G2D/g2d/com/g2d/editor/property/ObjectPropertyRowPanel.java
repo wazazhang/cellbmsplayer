@@ -528,13 +528,13 @@ public class ObjectPropertyRowPanel<T> extends BaseObjectPropertyPanel
 					row_datas);
 		}
 		
-		@Override
-		protected Object[] getUserObjects()
-		{
-			Object[] objs = new Object[1];				
-			objs[0] = getUserObject();				
-			return objs;
-		}
+//		@Override
+//		protected Object[] getUserObjects()
+//		{
+//			Object[] objs = new Object[1];				
+//			objs[0] = getUserObject();				
+//			return objs;
+//		}
 		
 		@Override
 		public ArrayList<Object> showDialog() {
