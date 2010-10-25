@@ -42,8 +42,16 @@ public class ObjectSelectDialog<T extends ObjectNode<?>> extends AbstractOptionD
 	protected T getUserObject() {
 		return list.getSelectedItem();
 	}
-	
-	@Override
+
+	public Object[] showDialog2()
+	{
+		super.setVisible(true);
+		return getUserObjects();		
+	}
+
+//	protected Object[] getUserObjects();
+//	
+//	@Override
 	protected Object[] getUserObjects()
 	{
 		return list.getSelectedItems();

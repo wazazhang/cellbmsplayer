@@ -878,13 +878,13 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 			return (SyntheticMethod)method_panel.getMethod(srcValue);
 		}
 		
-		@Override
-		protected Object[] getUserObjects()
-		{
-			Object[] objs = new Object[1];				
-			objs[0] = getUserObject();				
-			return objs;
-		}		
+//		@Override
+//		protected Object[] getUserObjects()
+//		{
+//			Object[] objs = new Object[1];				
+//			objs[0] = getUserObject();				
+//			return objs;
+//		}		
 	}
 
 //	----------------------------------------------------------------------------------------------------------

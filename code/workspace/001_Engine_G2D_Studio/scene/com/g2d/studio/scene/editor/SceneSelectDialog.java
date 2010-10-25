@@ -77,13 +77,13 @@ public class SceneSelectDialog extends AbstractOptionDialog<SceneNode> implement
 		return null;
 	}
 	
-	@Override
-	protected Object[] getUserObjects()
-	{
-		Object[] objs = new Object[1];				
-		objs[0] = getUserObject();				
-		return objs;
-	}	
+//	@Override
+//	protected Object[] getUserObjects()
+//	{
+//		Object[] objs = new Object[1];				
+//		objs[0] = getUserObject();				
+//		return objs;
+//	}	
 	
 	@Override
 	public Component getComponent(ObjectPropertyEdit panel) {

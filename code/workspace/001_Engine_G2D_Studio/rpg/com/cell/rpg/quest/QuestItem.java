@@ -11,6 +11,7 @@ import com.cell.rpg.quest.formula.TriggerUnitMethod;
 import com.cell.rpg.quest.formula.TriggerUnitProperty;
 import com.cell.rpg.struct.BooleanCondition;
 import com.cell.rpg.struct.Comparison;
+import com.cell.rpg.struct.ScriptCode;
 import com.g2d.annotation.Property;
 
 /**
@@ -84,6 +85,8 @@ public class QuestItem extends RPGObject implements NamedObject
 					TagOneMoreUnitMethodComparison.class,
 					TagUnitGroupCountComparison.class,
 					TagTeamPlayerCountComparison.class,
+					
+					TagInstanceZoneValueComparison.class,
 				};
 		} else {
 			return new Class<?>[]{
@@ -99,6 +102,7 @@ public class QuestItem extends RPGObject implements NamedObject
 					DropQuestServant.class,
 					
 					DropQuest.class,
+					AwardInstanceZoneValueSet.class,
 				};
 		}
 	}
@@ -296,6 +300,17 @@ public class QuestItem extends RPGObject implements NamedObject
 		public AbstractValue		dst_value		= new Value(1);
 	}
 	
+	
+	@Property({"[副本任务条件] 副本变量条件脚本"})
+	public static class TagInstanceZoneValueComparison extends Tag
+	{
+		private static final long serialVersionUID = 1L;
+
+		@Property("脚本")
+		public ScriptCode		dst_value		= new ScriptCode();
+	}
+
+//	--------------------------------------------------------------------------------------
 //	--------------------------------------------------------------------------------------
 	
 	public static abstract class Result extends QuestItemAbility
@@ -445,5 +460,15 @@ public class QuestItem extends RPGObject implements NamedObject
 		public Integer			quest_id				= -1;
 	}	
 //	----------------------------------------------------------------------------
+
 	
+	@Property({"[副本任务结果] 副本变量设置脚本"})
+	public static class AwardInstanceZoneValueSet extends Result
+	{
+		private static final long serialVersionUID = 1L;
+
+		@Property("脚本")
+		public ScriptCode		dst_value		= new ScriptCode();
+	}
+
 }

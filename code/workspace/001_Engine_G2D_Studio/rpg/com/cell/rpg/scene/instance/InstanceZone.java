@@ -6,6 +6,7 @@ import java.util.HashSet;
 
 import com.cell.rpg.NamedObject;
 import com.cell.rpg.RPGObject;
+import com.cell.rpg.instance.zones.Data;
 import com.cell.rpg.scene.Scene;
 import com.cell.rpg.scene.TriggerGenerator;
 import com.cell.rpg.scene.Triggers;
@@ -38,6 +39,8 @@ public class InstanceZone extends RPGObject implements NamedObject, TriggersPack
 
 	private HashMap<Integer, BindedScene> scenes	= new HashMap<Integer, BindedScene>();
 	
+	private Data				data				= new Data();
+	
 //	-------------------------------------------------------------------------------
 	
 	public InstanceZone(int id) {
@@ -55,8 +58,15 @@ public class InstanceZone extends RPGObject implements NamedObject, TriggersPack
 			binded_triggers = new TriggerGenerator();
 		}
 		if (scenes == null) {
-			scenes	= new HashMap<Integer, BindedScene>();
+			scenes = new HashMap<Integer, BindedScene>();
 		}
+		if (data == null) {
+			data = new Data();
+		}
+	}
+	
+	public Data getData() {
+		return data;
 	}
 	
 	public int getIntID() {

@@ -1,6 +1,7 @@
 package com.cell.rpg.scene;
 
 import com.cell.rpg.display.UnitNode;
+import com.cell.rpg.instance.zones.ability.InstanceZoneUnitVisible;
 import com.cell.rpg.scene.ability.ActorTransport;
 import com.cell.rpg.scene.ability.ImmutableDisplay;
 
@@ -23,6 +24,7 @@ public class Immutable extends SceneSprite
 		return new Class<?>[]{				
 				ActorTransport.class,
 				ImmutableDisplay.class,
+				InstanceZoneUnitVisible.class,
 		};
 	}
 

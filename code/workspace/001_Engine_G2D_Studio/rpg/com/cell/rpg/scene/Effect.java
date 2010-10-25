@@ -1,5 +1,7 @@
 package com.cell.rpg.scene;
 
+import com.cell.rpg.instance.zones.ability.InstanceZoneUnitVisible;
+
 public class Effect extends SceneUnit
 {
 	final public int	template_effect_id;
@@ -12,7 +14,8 @@ public class Effect extends SceneUnit
 
 	public Class<?>[] getSubAbilityTypes()
 	{
-		return new Class<?>[]{};
+		return new Class<?>[]{
+				InstanceZoneUnitVisible.class,};
 	}	
 	
 	@Override

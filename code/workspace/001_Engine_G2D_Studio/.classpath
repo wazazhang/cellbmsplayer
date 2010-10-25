@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="com/cell/rpg/struct/DateUtil.java|com/cell/rpg/item/ItemPropertyData.java" kind="src" path="rpg"/>
+	<classpathentry excluding="com/cell/rpg/struct/DateUtil.java|com/cell/rpg/item/ItemPropertyData.java|com/cell/rpg/instance/zones/Event.java" kind="src" path="rpg"/>
 	<classpathentry kind="src" path="cpj"/>
 	<classpathentry kind="src" path="item"/>
 	<classpathentry excluding="com/g2d/studio/gameedit/QuestItemTreeView.java|com/g2d/studio/gameedit/dynamic/DQuestItem.java" kind="src" path="gameedit"/>
