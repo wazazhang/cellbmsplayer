@@ -5,6 +5,8 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collection;
+import java.util.HashMap;
 
 import javax.swing.JButton;
 import javax.swing.JList;
@@ -17,12 +19,24 @@ public abstract class G2DListSelectDialog<T extends G2DListItem>  extends Abstra
 {
 	private static final long serialVersionUID = 1L;
 	
+	private static HashMap<Class<?>, Object> histroy_selected = new HashMap<Class<?>, Object>();
+	
 	G2DList<T> list;
 	
 	JButton ok 		= new JButton("确定");
 	JButton cancel 	= new JButton("取消");
 	
 	T object;
+	
+	public G2DListSelectDialog(Component owner, Collection<T> items, T default_value)
+	{
+		this(owner, new G2DList<T>(items), default_value);
+	}
+	
+	public G2DListSelectDialog(Component owner, T[] items, T default_value)
+	{
+		this(owner, new G2DList<T>(items), default_value);
+	}
 	
 	public G2DListSelectDialog(Component owner, G2DList<T> list, T default_value)
 	{
@@ -52,8 +66,17 @@ public abstract class G2DListSelectDialog<T extends G2DListItem>  extends Abstra
 		
 		if (default_value != null) {
 			list.setSelectedValue(default_value, true);
+		} else {
+			Object obj = histroy_selected.get(getClass());
+			if (obj != null) {
+				try {
+					list.setSelectedValue(obj, true);
+				} catch (Exception err){}
+			}
 		}
 	}
+	
+	
 	
 	protected G2DList<T> getList(){
 		return this.list;
@@ -68,6 +91,7 @@ public abstract class G2DListSelectDialog<T extends G2DListItem>  extends Abstra
 		if (e.getSource() == ok) {
 			if (checkOK()) {
 				object = list.getSelectedItem();
+				histroy_selected.put(getClass(), object);
 				this.setVisible(false);
 			}
 		} else if (e.getSource() == cancel) {

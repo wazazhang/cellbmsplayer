@@ -11,7 +11,7 @@ import com.cell.rpg.quest.formula.TriggerUnitMethod;
 import com.cell.rpg.quest.formula.TriggerUnitProperty;
 import com.cell.rpg.struct.BooleanCondition;
 import com.cell.rpg.struct.Comparison;
-import com.cell.rpg.struct.ScriptCode;
+import com.cell.rpg.struct.InstanceZoneScriptCode;
 import com.g2d.annotation.Property;
 
 /**
@@ -307,7 +307,7 @@ public class QuestItem extends RPGObject implements NamedObject
 		private static final long serialVersionUID = 1L;
 
 		@Property("脚本")
-		public ScriptCode		dst_value		= new ScriptCode();
+		public InstanceZoneScriptCode		dst_value		= new InstanceZoneScriptCode();
 	}
 
 //	--------------------------------------------------------------------------------------
@@ -468,7 +468,7 @@ public class QuestItem extends RPGObject implements NamedObject
 		private static final long serialVersionUID = 1L;
 
 		@Property("脚本")
-		public ScriptCode		dst_value		= new ScriptCode();
+		public InstanceZoneScriptCode		dst_value		= new InstanceZoneScriptCode();
 	}
 
 }

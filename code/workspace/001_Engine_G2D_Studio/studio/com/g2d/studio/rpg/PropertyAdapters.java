@@ -10,12 +10,13 @@ import com.cell.rpg.ability.AbstractAbility;
 import com.cell.rpg.anno.PropertyAdapter;
 import com.cell.rpg.item.ItemProperties;
 import com.cell.rpg.item.ItemPropertyTypes;
-import com.cell.rpg.struct.ScriptCode;
+import com.cell.rpg.struct.InstanceZoneScriptCode;
 import com.g2d.editor.property.CellEditAdapter;
 import com.g2d.editor.property.ObjectPropertyEdit;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.ObjectSelectCellEditInteger;
+import com.g2d.studio.gameedit.ObjectSelectDialog;
 import com.g2d.studio.gameedit.dynamic.DAvatar;
 import com.g2d.studio.gameedit.dynamic.DItemList;
 import com.g2d.studio.gameedit.dynamic.DynamicNode;
@@ -23,6 +24,9 @@ import com.g2d.studio.gameedit.template.XLSItem;
 import com.g2d.studio.gameedit.template.XLSSkill;
 import com.g2d.studio.gameedit.template.XLSTemplateNode;
 import com.g2d.studio.gameedit.template.XLSUnit;
+import com.g2d.studio.instancezone.InstanceZoneNode;
+import com.g2d.studio.instancezone.InstanceZoneSelectDialog;
+import com.g2d.studio.instancezone.InstanceZoneScriptCodeEditor;
 import com.g2d.studio.item.property.ItemPropertySavedTypeSelectDialog;
 import com.g2d.studio.item.property.ItemPropertySelectDialog;
 import com.g2d.studio.quest.QuestNode;
@@ -76,6 +80,12 @@ public class PropertyAdapters
 								(Integer)fieldValue);
 						dialog2.showDialog();
 						return dialog2;
+					case INSTANCE_ZONE_ID:
+						InstanceZoneSelectDialog dialog3 = new InstanceZoneSelectDialog(
+								owner.getComponent(), 
+								(Integer)fieldValue);
+						dialog3.showDialog();
+						return dialog3;
 					}
 				}
 			}catch(Exception err){
@@ -163,6 +173,14 @@ public class PropertyAdapters
 						}
 						break;
 					}
+					case INSTANCE_ZONE_ID: {
+						InstanceZoneNode node = Studio.getInstance().getInstanceZoneManager().getNode((Integer) fieldValue);
+						if (node != null) {
+							src.setText(node.getName());
+							src.setIcon(node.getIcon(false));
+						}
+						break;
+					}
 					}
 				}
 			} catch (Exception err) {
@@ -183,7 +201,7 @@ public class PropertyAdapters
 	}
 	
 	
-	public static class ScriptCodeAdapter implements CellEditAdapter<Object>
+	public static class InstanceZoneScriptCodeAdapter implements CellEditAdapter<Object>
 	{
 		@Override
 		public Class<Object> getType() {
@@ -201,8 +219,8 @@ public class PropertyAdapters
 		@Override
 		public PropertyCellEdit<?> getCellEdit(ObjectPropertyEdit owner,
 				Object editObject, Object fieldValue, Field field) {
-			if (ScriptCode.class.isAssignableFrom(field.getType())) {
-				ScriptCodeEditor editor = new ScriptCodeEditor((ScriptCode)fieldValue);
+			if (InstanceZoneScriptCode.class.isAssignableFrom(field.getType())) {
+				InstanceZoneScriptCodeEditor editor = new InstanceZoneScriptCodeEditor((InstanceZoneScriptCode)fieldValue);
 				editor.showDialog();
 				return editor;
 			}
@@ -213,6 +231,11 @@ public class PropertyAdapters
 		public Component getCellRender(ObjectPropertyEdit owner,
 				Object editObject, Object fieldValue, Field field,
 				DefaultTableCellRenderer src) {
+			if (InstanceZoneScriptCode.class.isAssignableFrom(field.getType())) {
+				String title = InstanceZoneScriptCodeEditor.getTitle((InstanceZoneScriptCode)fieldValue);
+				src.setText(title);
+				return src;
+			}
 			return null;
 		}
 
