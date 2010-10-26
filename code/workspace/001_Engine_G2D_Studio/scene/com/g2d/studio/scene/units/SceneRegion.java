@@ -14,6 +14,8 @@ import java.util.Vector;
 import javax.swing.ImageIcon;
 import javax.swing.JList;
 
+import com.cell.rpg.instance.zones.ability.InstanceZoneUnitKillAction;
+import com.cell.rpg.instance.zones.ability.InstanceZoneUnitVisible;
 import com.cell.rpg.quest.ability.QuestAccepter;
 import com.cell.rpg.quest.ability.QuestPublisher;
 import com.cell.rpg.scene.Region;
@@ -33,6 +35,7 @@ import com.g2d.studio.scene.editor.SceneEditor;
 import com.g2d.studio.scene.editor.SceneUnitMenu;
 import com.g2d.studio.scene.editor.SceneUnitTagEditor;
 import com.g2d.studio.scene.effect.AbilityEffectInfos;
+import com.g2d.util.Drawing;
 
 
 @Property("一个范围，通常用于触发事件")
@@ -269,6 +272,7 @@ public class SceneRegion extends com.g2d.game.rpg.Unit implements SceneUnitTag<R
 				g.setComposite(composite);
 				this.enable = false;
 			}
+			Util.drawScript(g, editor, this);
 		}
 	
 	}

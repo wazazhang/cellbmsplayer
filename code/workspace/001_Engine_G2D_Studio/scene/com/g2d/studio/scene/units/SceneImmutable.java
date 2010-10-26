@@ -13,6 +13,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JList;
 
 import com.cell.gfx.game.CSprite;
+import com.cell.rpg.instance.zones.ability.InstanceZoneUnitKillAction;
+import com.cell.rpg.instance.zones.ability.InstanceZoneUnitVisible;
 import com.cell.rpg.scene.Immutable;
 import com.cell.rpg.scene.SceneUnit;
 import com.cell.rpg.scene.ability.ActorTransport;
@@ -272,7 +274,8 @@ public class SceneImmutable extends SceneSprite implements SceneUnitTag<Immutabl
 			
 			} finally {
 				g.setStroke(popObject(Stroke.class));
-			}
+			}	
+			Util.drawScript(g, editor, this);
 		}
 	}
 	

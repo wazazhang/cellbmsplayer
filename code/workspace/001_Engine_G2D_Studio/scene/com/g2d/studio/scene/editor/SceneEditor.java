@@ -122,7 +122,8 @@ public class SceneEditor extends AbstractFrame implements ActionListener, Window
 	private JToggleButton		tool_play_bgm	= new JToggleButton(Tools.createIcon(Res.icons_bar[3]));
 	private JButton				tool_mask_alpha	= new JButton("MA");
 	private JButton				tool_mask_color	= new JButton("MC");
-	
+	private JToggleButton		tool_show_sc	= new JToggleButton("sc");
+
 	private JTabbedPane			unit_page;
 	private JToolBar			status_bar		= new JToolBar();
 	private JLabel				status_rule		= new JLabel("尺子");
@@ -182,6 +183,9 @@ public class SceneEditor extends AbstractFrame implements ActionListener, Window
 				tool_show_grid.setToolTipText("显示碰撞");
 				tool_show_grid.addActionListener(this);
 				tool_bar.add(tool_show_grid);
+				
+				tool_show_sc.setToolTipText("显示脚本能力");
+				tool_bar.add(tool_show_sc);
 				
 				tool_mask_alpha.setToolTipText("改变MASK透明度");
 				tool_mask_color.setToolTipText("改变MASK颜色");
@@ -555,6 +559,9 @@ public class SceneEditor extends AbstractFrame implements ActionListener, Window
 		return (SceneUnitTagAdapter<?,?>)unit_page.getSelectedComponent();
 	}
 
+	public boolean isShowScript() {
+		return tool_show_sc.isSelected();
+	}
 
 //	-----------------------------------------------------------------------------------------------------------------------------
 	

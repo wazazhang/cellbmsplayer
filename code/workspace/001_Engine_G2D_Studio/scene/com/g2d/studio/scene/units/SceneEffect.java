@@ -12,6 +12,8 @@ import java.util.Vector;
 import javax.swing.ImageIcon;
 import javax.swing.JList;
 
+import com.cell.rpg.instance.zones.ability.InstanceZoneUnitKillAction;
+import com.cell.rpg.instance.zones.ability.InstanceZoneUnitVisible;
 import com.cell.rpg.particle.ParticleAppearanceType.DisplayNodeImage;
 import com.cell.rpg.particle.ParticleAppearanceType.DisplayNodeSprite;
 import com.cell.rpg.scene.Effect;
@@ -37,6 +39,7 @@ import com.g2d.studio.scene.editor.SceneAbilityAdapters;
 import com.g2d.studio.scene.editor.SceneEditor;
 import com.g2d.studio.scene.editor.SceneUnitMenu;
 import com.g2d.studio.scene.editor.SceneUnitTagEditor;
+import com.g2d.util.Drawing;
 
 
 @Property("一个在场景中渲染的特效")
@@ -215,7 +218,6 @@ public class SceneEffect extends com.g2d.game.rpg.Unit implements SceneUnitTag<E
 				}
 			}
 		}
-		
 	}
 	
 	@Override
@@ -273,6 +275,7 @@ public class SceneEffect extends com.g2d.game.rpg.Unit implements SceneUnitTag<E
 			} else {
 				this.enable = false;
 			}
+			Util.drawScript(g, editor, this);
 		}
 	
 	}

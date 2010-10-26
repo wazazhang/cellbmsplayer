@@ -17,6 +17,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JList;
 
 import com.cell.math.MathVector;
+import com.cell.rpg.instance.zones.ability.InstanceZoneUnitKillAction;
+import com.cell.rpg.instance.zones.ability.InstanceZoneUnitVisible;
 import com.cell.rpg.scene.Point;
 import com.g2d.annotation.Property;
 import com.g2d.cell.game.Scene.WorldMap;
@@ -32,6 +34,7 @@ import com.g2d.studio.scene.editor.SceneAbilityAdapters;
 import com.g2d.studio.scene.editor.SceneEditor;
 import com.g2d.studio.scene.editor.SceneUnitMenu;
 import com.g2d.studio.scene.editor.SceneUnitTagEditor;
+import com.g2d.util.Drawing;
 
 
 @Property("一个点，通常用于路点")
@@ -271,6 +274,7 @@ public class ScenePoint extends com.g2d.game.rpg.Unit implements SceneUnitTag<Po
 				g.setComposite(composite);
 				this.enable = false;
 			}
+			Util.drawScript(g, editor, this);
 		}
 	}
 	
