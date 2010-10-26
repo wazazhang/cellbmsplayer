@@ -292,8 +292,7 @@ public class SceneEffect extends com.g2d.game.rpg.Unit implements SceneUnitTag<E
 	
 	@Override
 	public Tip getTip() {
-		tip.setText(Util.getTip(editor, this));
-		return tip;
+		return Util.getTip(editor, this, tip);
 	}
 	
 	@Override

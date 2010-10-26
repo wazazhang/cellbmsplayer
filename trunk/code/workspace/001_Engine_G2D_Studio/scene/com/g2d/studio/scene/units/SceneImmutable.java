@@ -303,9 +303,9 @@ public class SceneImmutable extends SceneSprite implements SceneUnitTag<Immutabl
 
 	@Override
 	public Tip getTip() {
-		tip.setText(Util.getTip(editor, this));
-		return tip;
+		return Util.getTip(editor, this, tip);
 	}
+	
 //	-----------------------------------------------------------------------------------------------------------
 	
 	@Override

@@ -299,9 +299,9 @@ public class ScenePoint extends com.g2d.game.rpg.Unit implements SceneUnitTag<Po
 
 	@Override
 	public Tip getTip() {
-		tip.setText(Util.getTip(editor, this));
-		return tip;
+		return Util.getTip(editor, this, tip);
 	}
+	
 //	@Override
 //	public DisplayObjectEditor<?> createEditorForm() 
 //	{
