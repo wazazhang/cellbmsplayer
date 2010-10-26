@@ -27,7 +27,7 @@ public class Util
 				} else {
 					g.setColor(Color.YELLOW);
 				}
-				Drawing.drawStringBorder(g, count+"", 
+				Drawing.drawStringBorder(g, count+"能力", 
 						rect.x, rect.y, rect.width, rect.height, 
 						Drawing.TEXT_ANCHOR_HCENTER | Drawing.TEXT_ANCHOR_TOP);
 			}
