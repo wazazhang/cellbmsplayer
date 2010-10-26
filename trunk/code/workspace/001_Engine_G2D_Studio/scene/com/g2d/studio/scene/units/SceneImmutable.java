@@ -22,6 +22,8 @@ import com.g2d.cell.CellSetResource;
 import com.g2d.cell.CellSetResource.SpriteSet;
 import com.g2d.cell.game.SceneSprite;
 import com.g2d.display.DisplayObjectContainer;
+import com.g2d.display.TextTip;
+import com.g2d.display.Tip;
 import com.g2d.display.ui.Menu;
 import com.g2d.editor.DisplayObjectEditor;
 import com.g2d.game.rpg.Unit;
@@ -50,7 +52,9 @@ public class SceneImmutable extends SceneSprite implements SceneUnitTag<Immutabl
 
 	private SceneNode 			next_scene;
 	private SceneUnit 			next_transport;
-	
+
+	TextTip tip = new TextTip();
+
 //	--------------------------------------------------------------------------------------------------------
 	
 	/**
@@ -297,6 +301,11 @@ public class SceneImmutable extends SceneSprite implements SceneUnitTag<Immutabl
 		return getID()+"";
 	}
 
+	@Override
+	public Tip getTip() {
+		tip.setText(Util.getTip(editor, this));
+		return tip;
+	}
 //	-----------------------------------------------------------------------------------------------------------
 	
 	@Override

@@ -23,6 +23,8 @@ import com.cell.rpg.scene.Point;
 import com.g2d.annotation.Property;
 import com.g2d.cell.game.Scene.WorldMap;
 import com.g2d.display.DisplayObjectContainer;
+import com.g2d.display.TextTip;
+import com.g2d.display.Tip;
 import com.g2d.display.ui.Menu;
 import com.g2d.editor.DisplayObjectEditor;
 import com.g2d.studio.Version;
@@ -49,6 +51,8 @@ public class ScenePoint extends com.g2d.game.rpg.Unit implements SceneUnitTag<Po
 	@Property("color")
 	Color 						color 		= new Color(0xffffff00, true);
 	Rectangle 					snap_shape 	= new Rectangle(-1, -1, 2, 2);
+
+	TextTip tip = new TextTip();
 
 //	--------------------------------------------------------------------------------------------------------
 	
@@ -293,6 +297,11 @@ public class ScenePoint extends com.g2d.game.rpg.Unit implements SceneUnitTag<Po
 		return getID()+"";
 	}
 
+	@Override
+	public Tip getTip() {
+		tip.setText(Util.getTip(editor, this));
+		return tip;
+	}
 //	@Override
 //	public DisplayObjectEditor<?> createEditorForm() 
 //	{

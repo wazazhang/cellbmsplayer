@@ -37,6 +37,8 @@ import com.g2d.cell.CellSetResource;
 import com.g2d.cell.CellSetResource.SpriteSet;
 import com.g2d.cell.game.SceneSprite;
 import com.g2d.display.DisplayObjectContainer;
+import com.g2d.display.TextTip;
+import com.g2d.display.Tip;
 import com.g2d.display.ui.Menu;
 import com.g2d.editor.DisplayObjectEditor;
 import com.g2d.game.rpg.Unit;
@@ -66,6 +68,8 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 	final Actor					actor;
 	final public XLSUnit		xls_unit;
 
+	TextTip tip = new TextTip();
+	
 	Rectangle					snap_shape = new Rectangle(-2, -2, 4, 4);
 	AbilityEffectInfos<Actor>	effects = new AbilityEffectInfos<Actor>(
 			new Class<?>[]{
@@ -345,6 +349,12 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 	@Override
 	public String toString() {
 		return getID()+"";
+	}
+	
+	@Override
+	public Tip getTip() {
+		tip.setText(Util.getTip(editor, this));
+		return tip;
 	}
 	
 //	-----------------------------------------------------------------------------------------------------------
