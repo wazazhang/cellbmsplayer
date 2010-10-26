@@ -3,6 +3,7 @@ package com.g2d.studio;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FileDialog;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
@@ -11,6 +12,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
+import java.util.Enumeration;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -21,6 +23,7 @@ import javax.swing.JProgressBar;
 import javax.swing.JToolBar;
 import javax.swing.JWindow;
 import javax.swing.UIManager;
+import javax.swing.plaf.FontUIResource;
 
 import com.cell.CIO;
 import com.cell.CObject;
@@ -161,6 +164,20 @@ public class Studio extends AbstractFrame
 		try {
 			UILayoutManager.setInstance(new UILayoutManager());
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+		} catch (Exception err) {
+			err.printStackTrace();
+		}
+		try {
+			Font font = new Font(Config.DEFAULT_FONT, getFont().getSize(), getFont().getStyle());
+			this.setFont(font);
+			FontUIResource fontRes = new FontUIResource(font);
+		    for(Enumeration<?> keys = UIManager.getDefaults().keys(); keys.hasMoreElements();){
+		        Object key = keys.nextElement();
+		        Object value = UIManager.get(key);
+		        if(value instanceof FontUIResource) {
+		            UIManager.put(key, fontRes);
+		        }
+		    }
 		} catch (Exception err) {
 			err.printStackTrace();
 		}

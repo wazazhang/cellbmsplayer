@@ -54,4 +54,7 @@ public class Data implements Serializable, Iterable<Entry<String, Object>>
 		return values.size();
 	}
 	
+	public HashMap<String, Object> asMap() {
+		return new HashMap<String, Object>(values);
+	}
 }
