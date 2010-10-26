@@ -21,6 +21,8 @@ import com.cell.rpg.scene.script.entity.SceneUnit;
 import com.g2d.annotation.Property;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.Sprite;
+import com.g2d.display.TextTip;
+import com.g2d.display.Tip;
 import com.g2d.display.particle.Layer;
 import com.g2d.display.particle.ParticleDisplay;
 import com.g2d.display.ui.Menu;
@@ -55,7 +57,9 @@ public class SceneEffect extends com.g2d.game.rpg.Unit implements SceneUnitTag<E
 	Sprite 					particle_layers = new Sprite();
 
 	public int 				high;
-	
+
+	TextTip tip = new TextTip();
+
 //	--------------------------------------------------------------------------------------------------------
 	
 	public SceneEffect(SceneEditor editor, int x, int y, int hight, DEffect deffect) 
@@ -284,6 +288,12 @@ public class SceneEffect extends com.g2d.game.rpg.Unit implements SceneUnitTag<E
 	public String toString() 
 	{
 		return getID()+"";
+	}
+	
+	@Override
+	public Tip getTip() {
+		tip.setText(Util.getTip(editor, this));
+		return tip;
 	}
 	
 	@Override
