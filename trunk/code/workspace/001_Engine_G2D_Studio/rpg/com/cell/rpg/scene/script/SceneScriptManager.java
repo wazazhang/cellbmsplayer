@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import com.cell.CIO;
@@ -191,8 +192,7 @@ public abstract class SceneScriptManager
 
 //	-----------------------------------------------------------------------------------------------------------------------
 	
-	public boolean checkScriptCode(ScriptCode code, HashMap<String, Object> vars) throws Exception {
-		
-		return false;
+	public boolean checkScriptCode(String code, Map<String, Object> vars) throws Exception {
+		throw new Exception("没有编译器");
 	}
 }
