@@ -60,6 +60,7 @@ final public class DShopItemList extends DynamicNode<TShopItemList>
 	
 	@Override
 	public ObjectViewer<?> getEditComponent() {
+		onOpenEdit();
 		if (edit_component == null) {
 			edit_component = new ShopItemListViewer();
 		}

@@ -45,6 +45,7 @@ final public class XLSShopItem extends XLSTemplateNode<TShopItem>
 	}
 
 	public ObjectViewer<?> getEditComponent(){
+		onOpenEdit();
 		getXLSItem();
 		if (edit_component == null) {
 			edit_component = new XLSObjectViewer<XLSShopItem>(this);

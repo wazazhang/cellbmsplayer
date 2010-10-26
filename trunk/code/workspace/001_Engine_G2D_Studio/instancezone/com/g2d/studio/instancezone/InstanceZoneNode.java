@@ -63,6 +63,7 @@ final public class InstanceZoneNode extends DynamicNode<InstanceZone>
 	
 	@Override
 	public InstanceZoneEditor getEditComponent() {
+		onOpenEdit();
 //		if (edit_component == null) {
 			edit_component = new InstanceZoneEditor(this);
 //		}

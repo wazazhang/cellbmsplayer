@@ -145,6 +145,7 @@ final public class DAvatar extends DynamicNode<TAvatar>
 	
 	@Override
 	public ObjectViewer<?> getEditComponent() {
+		onOpenEdit();
 		if (edit_component==null) {
 			edit_component = new AvatarViewer();
 		}

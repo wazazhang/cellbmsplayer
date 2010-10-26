@@ -79,6 +79,7 @@ public class QuestNode extends DynamicNode<Quest>
 	
 	@Override
 	public ObjectViewer<?> getEditComponent() {
+		onOpenEdit();
 		if (edit_component == null) {
 			edit_component = new QuestEditor(this);
 		}

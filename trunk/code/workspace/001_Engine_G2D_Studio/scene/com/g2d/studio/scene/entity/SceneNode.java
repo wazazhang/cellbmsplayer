@@ -104,6 +104,7 @@ final public class SceneNode extends DynamicNode<Scene>
 	}
 	
 	public SceneEditor getSceneEditor() {
+		onOpenEdit();
 		synchronized (world_editor) {
 			if (world_editor.get() == null) {
 				SceneEditor se = new SceneEditor(this);
