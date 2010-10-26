@@ -32,12 +32,6 @@ import com.g2d.studio.Studio;
 public abstract class SceneScriptManager 
 {
 	/**
-	 * 得到所有事件类型。
-	 * @return
-	 */
-	abstract public Collection<Class<? extends Event>> getEvents();
-	
-	/**
 	 * 根据触发者类型，获取该触发者支持的事件类型
 	 * @param trigger_type
 	 * @return
@@ -88,111 +82,51 @@ public abstract class SceneScriptManager
 
 //	-----------------------------------------------------------------------------------------------------------------------
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-//	-----------------------------------------------------------------------------------------------------------------------
+
+	/**
+	 * 得到所有事件类型。
+	 * @return
+	 */
+	abstract public Collection<Class<? extends Event>> getEvents();
 	
 	/**
-	 * 创建脚本模板
+	 * 创建脚本模板（编辑器用）
 	 * @param event_type
 	 * @return
 	 */
-	public String createTemplateScript(		
-			TriggersPackage 		pak, 
-			Class<? extends Event> 	event_type, 
-			SceneTriggerScriptable 	sts) 
-	{
-		EventType et = event_type.getAnnotation(EventType.class);
-		StringBuilder sb = new StringBuilder();
-		String ets = "";
-		for (Class<?> param : et.trigger_type()) {
-			ets += param.getSimpleName() + ";";
-		}
-		sb.append(
-				"/*******************************************************************************\n"+
-				" Comment         : " + et.comment() + "\n" +
-				" Create On       : " + CObject.timeToString(System.currentTimeMillis()) + "\n" +
-				" Event Class     : " + event_type.getName() + "\n" +
-				" Trigger Objects : " + ets + "\n"+
-				" *******************************************************************************/\n");
-		sb.append("\n");
-		for (Method method : getEventMethods(event_type)) {
-			sb.append("/**\n");
-			EventMethod em = method.getAnnotation(EventMethod.class);
-			sb.append(" * " + CUtil.arrayToString(em.value(), ";") + "\n");
-			Annotation	params_ats[][]	= method.getParameterAnnotations();
-			Class<?> 	params[] 		= method.getParameterTypes();
-			for (int i = 0; i < params.length; i++) {
-				sb.append(" * arg" + i + " \t- " + params[i].getSimpleName() + ";");
-				for (Annotation at : params_ats[i]) {
-					if (at.annotationType() == EventParam.class) {
-						EventParam ep = (EventParam)at;
-						sb.append(CUtil.arrayToString(ep.value(), ";"));
-					}
-				}
-				sb.append("\n");
-			}
-			sb.append(" */\n");
-			String args ="";
-			for (int i = 0; i < params.length; i++) {
-				args += "arg"+i;//params[i].getSimpleName();
-				if (i < params.length - 1) {
-					args += ", ";
-				}
-			}
-			if (method.getReturnType() != Void.TYPE) {
-				sb.append("var " + method.getName() + " = function(" + args + ")\n");
-			} else {
-				sb.append("function " + method.getName() + "(" + args + ")\n");
-			}
-			sb.append("{\n");
-			sb.append("	// TODO\n");
-			sb.append("	\n");
-			sb.append("}\n");
-			sb.append("\n");
-		}
-		
-		return sb.toString();
-	}
+	abstract public String createTemplateScript(
+			TriggersPackage pak,
+			Class<? extends Event> event_type,
+			SceneTriggerScriptable sts);
+
+	/**
+	 * 读取脚本（编辑器用）
+	 * @param pak
+	 * @param root
+	 * @param sts
+	 * @return
+	 */
+	abstract public String 	loadTriggers(
+			TriggersPackage pak, 
+			String root, 
+			SceneTriggerScriptable sts) ;
+	
+	/**
+	 * 存储脚本（编辑器用）
+	 * @param pak
+	 * @param root
+	 * @param sts
+	 * @param script
+	 */
+	abstract public void 	saveTriggers(
+			TriggersPackage pak,
+			String root, 
+			SceneTriggerScriptable sts,
+			String script) ;
 
 //	-----------------------------------------------------------------------------------------------------------------------
 	
-	public String loadTriggers(TriggersPackage pak, String root, SceneTriggerScriptable sts) {
-		try {
-			String path = root + "/scene_script/"+pak.getClass().getSimpleName().toLowerCase();
-			InputStream sf = CIO.getInputStream(path + "/" + sts.getName() + ".js");
-			if (sf != null) {
-				return CIO.stringDecode(CIO.readStream(sf), CObject.ENCODING);
-			}
-		} catch (Exception err) {
-			err.printStackTrace();
-		}
-		return null;
-	}
-	
-	public void saveTriggers(TriggersPackage pak, String root, SceneTriggerScriptable sts, String script) {
-		try {
-			File path = new File(root, "/scene_script/"+pak.getClass().getSimpleName().toLowerCase());
-			if (!path.exists()) {
-				path.mkdirs();
-			}
-			File sf = new File(path, sts.getName() + ".js");
-			CFile.writeText(sf, script, CObject.ENCODING);
-		} catch (Exception err) {
-			err.printStackTrace();
-		}
-	}
-
-//	-----------------------------------------------------------------------------------------------------------------------
-	
-	public boolean checkScriptCode(String code, Map<String, Object> vars) throws Exception {
+	public boolean checkScriptCode(ScriptCode code, Map<String, Object> vars) throws Exception {
 		throw new Exception("没有编译器");
 	}
 }

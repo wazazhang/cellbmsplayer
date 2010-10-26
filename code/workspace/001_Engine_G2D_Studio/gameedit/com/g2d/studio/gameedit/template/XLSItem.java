@@ -28,6 +28,7 @@ final public class XLSItem  extends XLSTemplateNode<TItem>
 	}
 	
 	public ObjectViewer<?> getEditComponent(){
+		onOpenEdit();
 		if (edit_component==null) {
 			edit_component = new XLSObjectViewer<XLSItem>(this, 
 					new ObjectAdapters.ItemPropertiesSelectAdapter());

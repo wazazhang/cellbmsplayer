@@ -59,6 +59,7 @@ final public class DEffect extends DynamicNode<TEffect>
 	
 	@Override
 	public ObjectViewer<?> getEditComponent() {
+		onOpenEdit();
 		if (edit_component == null) {
 			edit_component = new EffectViewer();
 		}

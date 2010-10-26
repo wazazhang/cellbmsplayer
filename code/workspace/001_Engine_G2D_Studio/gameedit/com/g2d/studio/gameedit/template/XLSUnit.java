@@ -70,6 +70,7 @@ final public class XLSUnit extends XLSTemplateNode<TUnit>
 	}
 
 	public ObjectViewer<?> getEditComponent(){
+		onOpenEdit();
 		if (edit_component==null) {
 			edit_component = new NPCObjectViewer();
 		}

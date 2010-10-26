@@ -12,7 +12,7 @@ import com.g2d.studio.swing.G2DTreeNode;
 
 public abstract class ObjectNode<T extends RPGObject> extends G2DTreeNode<ObjectNode<?>> implements G2DListItem
 {
-	transient protected ObjectViewer<?> edit_component;
+	transient protected ObjectViewer<?>		edit_component;
 	
 	public ObjectNode() {}
 
@@ -21,7 +21,7 @@ public abstract class ObjectNode<T extends RPGObject> extends G2DTreeNode<Object
 	public abstract T getData();
 
 	public abstract int getIntID() ;
-	
+
 	
 //	----------------------------------------------------------------------------------------
 	
@@ -48,6 +48,7 @@ public abstract class ObjectNode<T extends RPGObject> extends G2DTreeNode<Object
 	public boolean getAllowsChildren() {
 		return false;
 	}
+
 	
 	public ObjectViewer<?> getEditComponent(){
 		return edit_component;
@@ -65,4 +66,9 @@ public abstract class ObjectNode<T extends RPGObject> extends G2DTreeNode<Object
 	public String getListName() {
 		return getName();
 	}
+
+	public void onOpenEdit() {
+		
+	}
+
 }

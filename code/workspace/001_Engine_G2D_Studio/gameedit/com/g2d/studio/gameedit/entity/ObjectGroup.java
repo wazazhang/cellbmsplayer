@@ -62,7 +62,7 @@ public abstract class ObjectGroup<T extends ObjectNode<D>, D extends RPGObject> 
 		StringBuffer all_names = new StringBuffer();
 		Vector<T> nodes = G2DTree.getNodesSubClass(this, node_type);
 		for (T node : nodes) {
-			try{
+			try {
 				File xml_file = Studio.getInstance().getIO().createFile(
 						list_file.getParentFile(), node.getID()+_XML);
 				String xml = RPGObjectMap.writeNode(xml_file.getPath(), node.getData());

@@ -61,6 +61,7 @@ final public class DQuestGroup extends DynamicNode<QuestGroup>
 	
 	@Override
 	public ObjectViewer<?> getEditComponent() {
+		onOpenEdit();
 		if (edit_component == null) {
 			edit_component = new QuestGroupViewer();
 		}

@@ -42,15 +42,16 @@ PropertyCellEdit<InstanceZoneScriptCode>
 	JToolBar			tool_bar		= new JToolBar();
 	JButton				btn_change_zone	= new JButton("改变副本数据");
 	JButton				btn_build		= new JButton("编译");
-	
-	JSplitPane			center 			= new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 
+	JPanel				center			= new JPanel(new BorderLayout());
+	
+	JSplitPane			split_lr 		= new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 	JToolBar			left_bar		= new JToolBar();
 	JList				var_list		= new JList();
-
-	JToolBar			right_bar		= new JToolBar();
-	JLabel				build_state		= new JLabel();
 	JTextPane 			text_pane 		= new JTextPane();
+	
+	JToolBar			state_bar		= new JToolBar();
+	JLabel				build_state		= new JLabel();
 	
 //	-------------------------------------------------------------------------------------------
 	JLabel				label			= new JLabel();
@@ -61,7 +62,7 @@ PropertyCellEdit<InstanceZoneScriptCode>
 	{
 		this.resetTitle(old);
 		
-		{
+		{	
 			tool_bar		.setFloatable(false);
 			tool_bar		.add(btn_change_zone);
 			tool_bar		.addSeparator();
@@ -101,17 +102,21 @@ PropertyCellEdit<InstanceZoneScriptCode>
 			
 			left.add(left_bar, BorderLayout.NORTH);
 			left.add(new JScrollPane(var_list), BorderLayout.CENTER);
-			center.setLeftComponent(left);
+			split_lr.setLeftComponent(left);
+	
+			JPanel right = new JPanel(new BorderLayout());
+			right.add(new JScrollPane(text_pane), BorderLayout.CENTER);
+			split_lr.setRightComponent(right);
+			
+			center.add(split_lr, BorderLayout.CENTER);
 		}
 		{
-			JPanel right = new JPanel(new BorderLayout());
-			right_bar.add(build_state);
-			right.add(right_bar, BorderLayout.NORTH);
-			right.add(new JScrollPane(text_pane), BorderLayout.CENTER);
-			center.setRightComponent(right);
+			state_bar.add(build_state);
+			center.add(state_bar, BorderLayout.SOUTH);
 		}
-		
 		super.add(center, BorderLayout.CENTER);
+		
+	
 		
 		if (old != null) {
 			text_pane.setText(old.script+"");
@@ -133,7 +138,7 @@ PropertyCellEdit<InstanceZoneScriptCode>
 				if (zone != null) {
 					HashMap<String, Object> data_map = zone.getData().getData().asMap();
 					if (Studio.getInstance().getSceneScriptManager().checkScriptCode(
-							text_pane.getText(), 
+							getUserObject(), 
 							data_map
 							)) {
 						build_state.setText("<html><body><font color=\"#00ff00\">succeed</font></body></html>");
@@ -143,7 +148,7 @@ PropertyCellEdit<InstanceZoneScriptCode>
 				}
 			} catch (Exception err) {
 				err.printStackTrace();
-				build_state.setText("<html><body><font color=\"#ff0000\">err.getMessage()</font></body></html>");
+				build_state.setText("<html><body><font color=\"#ff0000\">"+err.getMessage()+"</font></body></html>");
 			}
 		}
 	}

@@ -167,6 +167,7 @@ extends JSplitPane implements TreeSelectionListener, ChangeListener
 				tb_index = old_viewer.table.getSelectedIndex();
 			}
 			T node = node_type.cast(e.getPath().getLastPathComponent());
+			node.onOpenEdit();
 			ObjectViewer<?> new_viewer = node.getEditComponent();
 			if (new_viewer!=null) {
 				new_viewer.table.setSelectedIndex(tb_index);

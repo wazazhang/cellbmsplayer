@@ -27,6 +27,7 @@ final public class XLSSkill extends XLSTemplateNode<TSkill>
 	}
 
 	public ObjectViewer<?> getEditComponent(){
+		onOpenEdit();
 		if (edit_component==null) {
 //			edit_component = new SkillObjectViewer();
 			edit_component = new SkillViewer(this);

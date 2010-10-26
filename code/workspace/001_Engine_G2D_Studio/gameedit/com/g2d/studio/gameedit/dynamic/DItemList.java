@@ -60,6 +60,7 @@ final public class DItemList extends DynamicNode<TItemList>
 	
 	@Override
 	public ObjectViewer<?> getEditComponent() {
+		onOpenEdit();
 		if (edit_component == null) {
 			edit_component = new ItemListViewer();
 		}
