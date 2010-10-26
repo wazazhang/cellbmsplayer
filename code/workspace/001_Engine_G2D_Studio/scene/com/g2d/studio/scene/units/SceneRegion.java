@@ -298,9 +298,9 @@ public class SceneRegion extends com.g2d.game.rpg.Unit implements SceneUnitTag<R
 
 	@Override
 	public Tip getTip() {
-		tip.setText(Util.getTip(editor, this));
-		return tip;
+		return Util.getTip(editor, this, tip);
 	}
+	
 	
 	@Override
 	public DisplayObjectEditor<?> getEditorForm() {

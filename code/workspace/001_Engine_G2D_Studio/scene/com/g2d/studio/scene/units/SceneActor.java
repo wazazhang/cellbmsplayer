@@ -353,8 +353,7 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 	
 	@Override
 	public Tip getTip() {
-		tip.setText(Util.getTip(editor, this));
-		return tip;
+		return Util.getTip(editor, this, tip);
 	}
 	
 //	-----------------------------------------------------------------------------------------------------------

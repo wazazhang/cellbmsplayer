@@ -122,7 +122,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener, Window
 	private JToggleButton		tool_play_bgm	= new JToggleButton(Tools.createIcon(Res.icons_bar[3]));
 	private JButton				tool_mask_alpha	= new JButton("MA");
 	private JButton				tool_mask_color	= new JButton("MC");
-	private JToggleButton		tool_show_sc	= new JToggleButton(Tools.createIcon(Res.icon_event));
+	private JToggleButton		tool_show_sc	= new JToggleButton("a");
 
 	private JTabbedPane			unit_page;
 	private JToolBar			status_bar		= new JToolBar();
