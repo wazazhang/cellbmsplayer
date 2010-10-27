@@ -220,7 +220,9 @@ public class PropertyAdapters
 		public PropertyCellEdit<?> getCellEdit(ObjectPropertyEdit owner,
 				Object editObject, Object fieldValue, Field field) {
 			if (InstanceZoneScriptCode.class.isAssignableFrom(field.getType())) {
-				InstanceZoneScriptCodeEditor editor = new InstanceZoneScriptCodeEditor((InstanceZoneScriptCode)fieldValue);
+				InstanceZoneScriptCodeEditor editor = new InstanceZoneScriptCodeEditor(
+						owner.getComponent(),
+						(InstanceZoneScriptCode)fieldValue);
 				editor.showDialog();
 				return editor;
 			}
