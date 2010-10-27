@@ -168,16 +168,16 @@ public class Studio extends AbstractFrame
 			err.printStackTrace();
 		}
 		try {
-			Font font = new Font(Config.DEFAULT_FONT, getFont().getSize(), getFont().getStyle());
+			Font font = new Font(Config.DEFAULT_FONT, Font.PLAIN, Config.DEFAULT_FONT_SIZE);
 			this.setFont(font);
-			FontUIResource fontRes = new FontUIResource(font);
-		    for(Enumeration<?> keys = UIManager.getDefaults().keys(); keys.hasMoreElements();){
-		        Object key = keys.nextElement();
-		        Object value = UIManager.get(key);
-		        if(value instanceof FontUIResource) {
-		            UIManager.put(key, fontRes);
-		        }
-		    }
+//			FontUIResource fontRes = new FontUIResource(font);
+//		    for(Enumeration<?> keys = UIManager.getDefaults().keys(); keys.hasMoreElements();){
+//		        Object key = keys.nextElement();
+//		        Object value = UIManager.get(key);
+//		        if(value instanceof FontUIResource) {
+//		            UIManager.put(key, fontRes);
+//		        }
+//		    }
 		} catch (Exception err) {
 			err.printStackTrace();
 		}

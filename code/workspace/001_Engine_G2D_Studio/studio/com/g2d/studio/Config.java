@@ -49,6 +49,7 @@ public class Config extends com.cell.util.Config
 	public static Integer DEFAULT_FPS				= 30;
 	public static Integer DEFAULT_BACK_COLOR		= 0xffff00ff;
 	public static String  DEFAULT_FONT				= "宋体";
+	public static Integer DEFAULT_FONT_SIZE			= 12;
 	
 //	--------------------------------------------------------------------------------------------------------
 //	(插件类)

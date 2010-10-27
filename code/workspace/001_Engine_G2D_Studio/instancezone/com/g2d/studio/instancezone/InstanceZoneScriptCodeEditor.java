@@ -58,8 +58,9 @@ PropertyCellEdit<InstanceZoneScriptCode>
 //	-------------------------------------------------------------------------------------------
 	
 	
-	public InstanceZoneScriptCodeEditor(InstanceZoneScriptCode old) 
+	public InstanceZoneScriptCodeEditor(Component owner, InstanceZoneScriptCode old) 
 	{
+		super(owner);
 		this.resetTitle(old);
 		
 		{	

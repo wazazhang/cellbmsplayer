@@ -104,6 +104,8 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 				bpan.add(btn_self);
 				left.add(bpan, BorderLayout.NORTH);
 			}
+			left.setMinimumSize(new Dimension(200,200));
+			left.setPreferredSize(new Dimension(200,200));
 			split.setLeftComponent(left);
 		}
 		// right
@@ -276,12 +278,13 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 				}
 				list_abilities = new G2DList<AddAbilityItem>(types);
 				list_abilities.addListSelectionListener(this);
-				split.setLeftComponent(new JScrollPane(list_abilities));
+				JScrollPane pan = new JScrollPane(list_abilities);
+				pan.setMinimumSize(new Dimension(200,200));
+				split.setLeftComponent(pan);
 				if (last_type != null) {
 					setAbilityClass(last_type.data);
 					list_abilities.setSelectedValue(last_type, true);
 				}
-
 //				combo_abilities = new JComboBox(types_data);
 //				combo_abilities.setRenderer(this);
 //				combo_abilities.addActionListener(this);

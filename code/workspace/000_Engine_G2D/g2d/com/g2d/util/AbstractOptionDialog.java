@@ -36,6 +36,7 @@ public abstract class AbstractOptionDialog<T> extends AbstractDialog implements 
 	}
 	
 	private void init() {
+		super.setAlwaysOnTop(true);
 		ok.addActionListener(this);
 		cancel.addActionListener(this);
 		south.add(ok);
