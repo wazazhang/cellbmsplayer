@@ -194,11 +194,19 @@ public abstract class MoveableUnit extends Unit
 						move_target_y = path.Next.Y;
 					}
 					path = path.Next;
+					
+					if (path == null)
+					{
+						this.onMoveStopped();
+					}
 				}
 			}
 		}
 	}
 	
 	
+	public abstract void onMoveStopped();
 	
-}
+}; // class
+
+
