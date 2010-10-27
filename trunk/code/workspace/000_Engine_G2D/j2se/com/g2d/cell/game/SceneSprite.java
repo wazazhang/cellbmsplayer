@@ -223,9 +223,13 @@ public class SceneSprite extends MoveableUnit implements CellSetResource.LoadSpr
 			g.drawString("loading...", 0, 0);
 		}
 	}
-	
 
-	
+	@Override
+	public void onMoveStopped() 
+	{
+		// do nothing 
+		
+	}
 	
 	
 }
