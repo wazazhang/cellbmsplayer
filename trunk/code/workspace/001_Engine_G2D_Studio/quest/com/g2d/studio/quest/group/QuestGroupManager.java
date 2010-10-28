@@ -6,17 +6,16 @@ import java.awt.event.ActionListener;
 import java.util.Vector;
 
 import com.g2d.studio.ManagerForm;
+import com.g2d.studio.ManagerFormDynamic;
 import com.g2d.studio.Studio;
 import com.g2d.studio.Studio.ProgressForm;
 import com.g2d.studio.io.File;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.swing.G2DWindowToolBar;
 
-public class QuestGroupManager extends ManagerForm implements ActionListener
+public class QuestGroupManager extends ManagerFormDynamic
 {
 	private static final long serialVersionUID = 1L;
-	
-	G2DWindowToolBar	tool_bar;
 	
 	File 				quest_group_dir;
 	File 				quest_group_list;
@@ -26,9 +25,6 @@ public class QuestGroupManager extends ManagerForm implements ActionListener
 	{
 		super(studio, progress, "任务编组管理器", Res.icon_quest_group);
 
-		tool_bar 			= new G2DWindowToolBar(this);
-		this.add(tool_bar, BorderLayout.NORTH);
-		
 		quest_group_dir		= studio.project_save_path.getChildFile("questgroups");
 		quest_group_list	= quest_group_dir.getChildFile("questgroups.list");
 		quest_group_view	= new QuestGroupTreeView("任务编组管理器", quest_group_list);
@@ -39,19 +35,12 @@ public class QuestGroupManager extends ManagerForm implements ActionListener
 	}
 	
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == tool_bar.save) {
-			try {
-				this.saveAll();
-			} catch (Throwable e1) {
-				e1.printStackTrace();
-			}
-		}
-	}
-	
-	@Override
 	public void saveAll() throws Throwable {
 		quest_group_view.saveAll();
+	}
+	@Override
+	public void saveSingle() throws Throwable {
+		quest_group_view.saveSingle();
 	}
 	
 	public Vector<DQuestGroup> getQuestGroups() {

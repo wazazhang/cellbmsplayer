@@ -50,10 +50,10 @@ public class XLSUnitManagerTree extends ObjectManagerTree<XLSUnit, TUnit>
 		btn_refresh_.setToolTipText("刷新");
 		btn_refresh_.setIcon(Tools.createIcon(Res.icon_refresh));
 		btn_refresh_.addActionListener(this);
-		toolbar.add(btn_refresh_);
+		tool_bar.add(btn_refresh_);
 		
 		
-		toolbar.addSeparator();
+		tool_bar.addSeparator();
 	}	
 	
 	

@@ -65,7 +65,13 @@ final public class DEffect extends DynamicNode<TEffect>
 		}
 		return edit_component;
 	}
-	
+	@Override
+	public void onSave() {
+		super.onSave();
+		if (edit_component instanceof EffectViewer) {
+			((EffectViewer)edit_component).editor.getData();
+		}
+	}
 //	----------------------------------------------------------------------------------------------------------------------
 	public class EffectMenu extends DynamicNodeMenu
 	{
@@ -105,11 +111,15 @@ final public class DEffect extends DynamicNode<TEffect>
 	{
 		private static final long serialVersionUID = 1L;
 		
-		public EffectViewer() {
+		EffectEditor editor;
+		
+		public EffectViewer() 
+		{
 			super(DEffect.this);
+			editor = new EffectEditor(getData());
 			table.remove(page_object_panel);
 			table.remove(page_abilities);
-			table.addTab("粒子编辑器", new EffectEditor(getData()));
+			table.addTab("粒子编辑器", editor);
 		}
 		
 		@Override

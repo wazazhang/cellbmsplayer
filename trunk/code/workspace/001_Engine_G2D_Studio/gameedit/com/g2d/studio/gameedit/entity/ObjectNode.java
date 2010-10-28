@@ -70,5 +70,7 @@ public abstract class ObjectNode<T extends RPGObject> extends G2DTreeNode<Object
 	public void onOpenEdit() {
 		
 	}
-
+	public void onSave() {
+		
+	}
 }

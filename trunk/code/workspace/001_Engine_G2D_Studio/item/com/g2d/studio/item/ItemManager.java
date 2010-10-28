@@ -9,26 +9,23 @@ import com.cell.rpg.item.ItemPropertyManager;
 import com.cell.rpg.item.ItemPropertyTypes;
 import com.g2d.studio.Config;
 import com.g2d.studio.ManagerForm;
+import com.g2d.studio.ManagerFormDynamic;
 import com.g2d.studio.Studio;
 import com.g2d.studio.Studio.ProgressForm;
 import com.g2d.studio.io.File;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.swing.G2DWindowToolBar;
 
-public class ItemManager extends ManagerForm implements ActionListener
+public class ItemManager extends ManagerFormDynamic
 {
 	private static final long serialVersionUID = 1L;
 
-	G2DWindowToolBar 		toolbar		= new G2DWindowToolBar(this);
-	
 	ItemPropertiesTreeView	tree_view;
 	
 	public ItemManager(Studio studio, ProgressForm progress) 
 	{
 		super(studio, progress, "道具/技能能力管理器", Res.icons_bar[5]);
-		
-		this.add(toolbar, BorderLayout.NORTH);
-
+	
 		try {
 			Class<?> properties_type = Class.forName(Config.DYNAMIC_ITEM_PROPERTY_MANAGER_CLASS);
 			ItemPropertyManager manager = (ItemPropertyManager)properties_type.newInstance();
@@ -52,26 +49,15 @@ public class ItemManager extends ManagerForm implements ActionListener
 	
 	public void saveAll() throws Throwable
 	{
-		System.out.println(getClass().getSimpleName() + " : save all");
 		this.tree_view.saveAll();
 		
 	}
-	
+	@Override
+	public void saveSingle() throws Throwable {
+		this.tree_view.saveSingle();
+	}
 //	-------------------------------------------------------------------------------------------------------------------------------
 	
-
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == toolbar.save) {
-			try {
-				saveAll();
-			} catch (Throwable e1) {
-				e1.printStackTrace();
-			}
-		}
-	}
-
 
 //	-------------------------------------------------------------------------------------------------------------------------------
 	

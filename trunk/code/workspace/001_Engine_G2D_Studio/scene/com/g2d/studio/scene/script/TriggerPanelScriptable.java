@@ -48,7 +48,7 @@ public class TriggerPanelScriptable extends TriggerPanel<SceneTriggerScriptable>
 implements ActionListener, AncestorListener, KeyListener, PropertyChangeListener
 {
 	TextEditor			script_text = new TextEditor();
-	G2DWindowToolBar	tool_g2d	= new G2DWindowToolBar(this, true, true, true);
+	G2DWindowToolBar	tool_g2d	= new G2DWindowToolBar(this, true, true, true, false);
 	JLabel				lbl			= new JLabel();
 	
 	String				last_script;

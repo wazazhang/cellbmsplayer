@@ -11,17 +11,16 @@ import com.cell.rpg.quest.formula.TriggerUnitMethod;
 import com.g2d.Tools;
 import com.g2d.studio.Config;
 import com.g2d.studio.ManagerForm;
+import com.g2d.studio.ManagerFormDynamic;
 import com.g2d.studio.Studio;
 import com.g2d.studio.Studio.ProgressForm;
 import com.g2d.studio.io.File;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.swing.G2DWindowToolBar;
 
-public class QuestManager extends ManagerForm implements ActionListener
+public class QuestManager extends ManagerFormDynamic
 {
 	private static final long serialVersionUID = 1L;
-	
-	G2DWindowToolBar 		tool_bar;
 	
 	QuestTreeView 			tree_view;
 
@@ -34,9 +33,6 @@ public class QuestManager extends ManagerForm implements ActionListener
 		super(studio, progress, "任务管理器", Res.icon_quest);
 
 		initDynamicClasses();
-		
-		tool_bar 		= new G2DWindowToolBar(this);
-		this.add(tool_bar, BorderLayout.NORTH);
 
 		btn_quest_group.setText("任务编组");
 		btn_quest_group.setIcon(Tools.createIcon(Res.icon_quest_group));
@@ -106,17 +102,15 @@ public class QuestManager extends ManagerForm implements ActionListener
 	public void saveAll() throws Throwable {
 		tree_view.saveAll();
 	}
+	@Override
+	public void saveSingle() throws Throwable {
+		tree_view.saveSingle();
+	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == tool_bar.save) {
-			try {
-				this.saveAll();
-			} catch (Throwable e1) {
-				e1.printStackTrace();
-			}
-		}
-		else if (e.getSource() == btn_quest_group) {
+		super.actionPerformed(e);
+		if (e.getSource() == btn_quest_group) {
 			Studio.getInstance().getQuestGroupManager().setVisible(true);
 		}
 	}
