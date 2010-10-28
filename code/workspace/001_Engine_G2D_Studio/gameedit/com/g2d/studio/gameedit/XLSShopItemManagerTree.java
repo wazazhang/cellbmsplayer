@@ -48,14 +48,14 @@ public class XLSShopItemManagerTree extends ObjectManagerTree<XLSShopItem, TShop
 		btn_refresh_.setToolTipText("刷新");
 		btn_refresh_.setIcon(Tools.createIcon(Res.icon_refresh));
 		btn_refresh_.addActionListener(this);
-		toolbar.add(btn_refresh_);
+		tool_bar.add(btn_refresh_);
 		
 		
-		toolbar.addSeparator();		
+		tool_bar.addSeparator();		
 		
 		btn_open_item_list_	= new JButton();
 		itemlist_form	= manager.getPageForm(DShopItemList.class);
-		toolbar.addSeparator();
+		tool_bar.addSeparator();
 		{
 			btn_open_item_list_.setText(
 					itemlist_form.getTitle());
@@ -73,7 +73,7 @@ public class XLSShopItemManagerTree extends ObjectManagerTree<XLSShopItem, TShop
 					itemlist_form.getWidth()- dw, 
 					itemlist_form.getHeight()-dh);
 		}
-		toolbar.add(btn_open_item_list_);
+		tool_bar.add(btn_open_item_list_);
 	}	
 	
 	

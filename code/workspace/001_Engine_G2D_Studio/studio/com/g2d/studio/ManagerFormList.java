@@ -153,5 +153,7 @@ public abstract class ManagerFormList<T extends G2DListItem> extends ManagerForm
 		}
 		save_list_file.writeUTF(sb.toString());
 	}
-
+	
+	@Override
+	public void saveSingle() throws Throwable {}
 }

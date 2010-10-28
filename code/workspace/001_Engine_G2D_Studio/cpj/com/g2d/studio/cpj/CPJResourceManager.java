@@ -277,7 +277,10 @@ public class CPJResourceManager extends ManagerForm implements MouseListener
 		save_dir.getChildFile("scene_list.list").writeUTF(scene_list);
 
 	}
-
+	
+	@Override
+	public void saveSingle() throws Throwable {}
+	
 //	----------------------------------------------------------------------------------------------------------------------------
 	
 	class RootMenu extends JPopupMenu implements ActionListener

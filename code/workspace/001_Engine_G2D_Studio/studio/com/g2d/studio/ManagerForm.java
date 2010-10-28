@@ -25,4 +25,8 @@ public abstract class ManagerForm extends JFrame
 	}
 	
 	abstract public void saveAll() throws Throwable;
+	
+	abstract public void saveSingle() throws Throwable;
+	
+	
 }

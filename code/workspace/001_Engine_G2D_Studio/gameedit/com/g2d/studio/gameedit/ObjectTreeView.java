@@ -12,6 +12,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreePath;
 import com.cell.rpg.RPGObject;
 import com.cell.util.IDFactoryInteger;
@@ -82,8 +83,18 @@ extends JSplitPane implements TreeSelectionListener, ChangeListener
 
 	final public void saveAll() {
 		tree_root.saveList();
+		System.out.println(data_type.getSimpleName() + " : save all");
 	}
-
+	
+	final public T saveSingle() {
+		T node = getSelected();
+		if (node != null) {
+			tree_root.saveSingle(node);
+			System.out.println(data_type.getSimpleName() + " : save single : " + node.getListName());
+		}
+		return node;
+	}
+	
 //	-----------------------------------------------------------------------------------------------------------------------
 	
 	final public void addNode(ObjectGroup<T, D> root, T node) {
@@ -124,7 +135,15 @@ extends JSplitPane implements TreeSelectionListener, ChangeListener
 			return node_index.get(id);
 		}
 	}
-
+	final public T getSelected() {
+		synchronized(node_index) {
+			MutableTreeNode node = g2d_tree.getSelectedNode();
+			if (node_type.isInstance(node)) {
+				return node_type.cast(node);
+			}
+		}
+		return null;
+	}
 	final public Vector<T> getAllObject() {
 		synchronized(node_index) {
 			return G2DTree.getNodesSubClass(tree_root, node_type);

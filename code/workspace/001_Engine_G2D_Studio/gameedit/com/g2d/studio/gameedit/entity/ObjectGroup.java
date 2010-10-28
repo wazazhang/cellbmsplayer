@@ -54,41 +54,60 @@ public abstract class ObjectGroup<T extends ObjectNode<D>, D extends RPGObject> 
 	
 	public void saveList()
 	{
-		File name_list_file = Studio.getInstance().getIO().createFile(
-				list_file.getParentFile(), 
-				"name_" + list_file.getName());
+		toListFile();
 		
-		StringBuffer all_objects = new StringBuffer();
-		StringBuffer all_names = new StringBuffer();
 		Vector<T> nodes = G2DTree.getNodesSubClass(this, node_type);
 		for (T node : nodes) {
 			try {
+				node.onSave();
 				File xml_file = Studio.getInstance().getIO().createFile(
 						list_file.getParentFile(), node.getID()+_XML);
 				String xml = RPGObjectMap.writeNode(xml_file.getPath(), node.getData());
 				if (xml != null){
 					xml_file.writeBytes(CIO.stringEncode(xml, CIO.ENCODING));
-					all_objects.append(toPathString(node, "/") + node.getID() + _XML + "\n");
-				}
-				if (node.getData() instanceof NamedObject) {
-					all_names.append("("+node.getData().id+")"+((NamedObject)node.getData()).getName()+"\n");
 				}
 			} catch (Exception err) {
 				err.printStackTrace();
 			}
 		}
+	}
+
+	public void saveSingle(T snode)
+	{
+		toListFile();
 		try {
+			snode.onSave();
+			File xml_file = Studio.getInstance().getIO().createFile(
+					list_file.getParentFile(), snode.getID()+_XML);
+			String xml = RPGObjectMap.writeNode(xml_file.getPath(), snode.getData());
+			if (xml != null){
+				xml_file.writeBytes(CIO.stringEncode(xml, CIO.ENCODING));
+			}
+		} catch (Exception err) {
+			err.printStackTrace();
+		}
+	}
+	
+	private void toListFile()
+	{
+		try {
+			File name_list_file	= Studio.getInstance().getIO().createFile(
+					list_file.getParentFile(), "name_" + list_file.getName());
+			StringBuffer 	all_objects 	= new StringBuffer();
+			StringBuffer 	all_names 		= new StringBuffer();
+			Vector<T> 		nodes 			= G2DTree.getNodesSubClass(this, node_type);
+			for (T node : nodes) {
+				all_objects.append(toPathString(node, "/") + node.getID() + _XML + "\n");
+				if (node.getData() instanceof NamedObject) {
+					all_names.append("("+node.getData().id+")"+((NamedObject)node.getData()).getName()+"\n");
+				}
+			}
 			list_file.writeBytes(CIO.stringEncode(all_objects.toString(), CIO.ENCODING));
+			if (NamedObject.class.isAssignableFrom(data_type)) {
+				name_list_file.writeBytes(CIO.stringEncode(all_names.toString(), CIO.ENCODING));
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-		
-		if (NamedObject.class.isAssignableFrom(data_type)) {
-			try {
-				name_list_file.writeBytes(CIO.stringEncode(all_names.toString(), CIO.ENCODING));
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 		}
 	}
 	
