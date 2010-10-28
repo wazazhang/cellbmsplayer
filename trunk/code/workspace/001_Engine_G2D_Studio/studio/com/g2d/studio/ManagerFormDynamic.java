@@ -4,14 +4,17 @@ import java.awt.BorderLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.Vector;
 
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
 
 import com.g2d.Tools;
 import com.g2d.studio.Studio.ProgressForm;
@@ -32,6 +35,11 @@ public abstract class ManagerFormDynamic extends ManagerForm implements ActionLi
 	public ManagerFormDynamic(Studio studio, ProgressForm progress, String title, Image icon) 
 	{
 		super(studio, progress, title, icon);
+		this.tool_bar.save_s.setToolTipText("保存所选 Ctrl + S");
+		this.tool_bar.save_s.registerKeyboardAction(
+				this, 
+				KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_MASK), 
+				JComponent.WHEN_IN_FOCUSED_WINDOW);  
 		this.add(tool_bar, BorderLayout.NORTH);		
 	}
 
