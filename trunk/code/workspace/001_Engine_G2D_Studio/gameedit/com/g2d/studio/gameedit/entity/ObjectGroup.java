@@ -74,17 +74,19 @@ public abstract class ObjectGroup<T extends ObjectNode<D>, D extends RPGObject> 
 
 	public void saveSingle(T snode)
 	{
-		toListFile();
-		try {
-			snode.onSave();
-			File xml_file = Studio.getInstance().getIO().createFile(
-					list_file.getParentFile(), snode.getID()+_XML);
-			String xml = RPGObjectMap.writeNode(xml_file.getPath(), snode.getData());
-			if (xml != null){
-				xml_file.writeBytes(CIO.stringEncode(xml, CIO.ENCODING));
+		if (snode != null) {
+			toListFile();
+			try {
+				snode.onSave();
+				File xml_file = Studio.getInstance().getIO().createFile(
+						list_file.getParentFile(), snode.getID()+_XML);
+				String xml = RPGObjectMap.writeNode(xml_file.getPath(), snode.getData());
+				if (xml != null){
+					xml_file.writeBytes(CIO.stringEncode(xml, CIO.ENCODING));
+				}
+			} catch (Exception err) {
+				err.printStackTrace();
 			}
-		} catch (Exception err) {
-			err.printStackTrace();
 		}
 	}
 	
