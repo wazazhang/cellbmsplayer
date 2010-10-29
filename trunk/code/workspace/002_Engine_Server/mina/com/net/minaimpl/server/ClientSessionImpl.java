@@ -33,7 +33,11 @@ public class ClientSessionImpl implements ClientSession
 	public Server getServer() {
 		return Server;
 	}
-	
+	@Override
+	protected void finalize() throws Throwable {
+		super.finalize();
+//		System.out.println("finalize ClientSessionImpl : " + getID());
+	}
 	public IoSession getIoSession() {
 		return Session;
 	}
