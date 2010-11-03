@@ -6,6 +6,7 @@ import java.lang.reflect.Field;
 import javax.activation.FileDataSource;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import com.cell.reflect.Parser;
 import com.cell.rpg.ability.AbstractAbility;
 import com.cell.rpg.anno.PropertyAdapter;
 import com.cell.rpg.item.ItemProperties;
@@ -28,10 +29,9 @@ import com.g2d.studio.instancezone.InstanceZoneNode;
 import com.g2d.studio.instancezone.InstanceZoneSelectDialog;
 import com.g2d.studio.instancezone.InstanceZoneScriptCodeEditor;
 import com.g2d.studio.item.property.ItemPropertySavedTypeSelectDialog;
-import com.g2d.studio.item.property.ItemPropertySelectDialog;
 import com.g2d.studio.quest.QuestNode;
 import com.g2d.studio.quest.QuestSelectCellEdit;
-import com.g2d.studio.scene.editor.SceneListCellEditInteger;
+import com.g2d.studio.scene.editor.SceneSelectDialog;
 import com.g2d.studio.scene.entity.SceneNode;
 
 public class PropertyAdapters
@@ -71,7 +71,9 @@ public class PropertyAdapters
 					case SKILL_ID:
 						return new ObjectSelectCellEditInteger<XLSSkill>(XLSSkill.class, fieldValue);
 					case SCENE_ID:
-						return new SceneListCellEditInteger();
+						SceneSelectDialog dialog4 = new SceneSelectDialog(owner.getComponent(), Parser.castNumber(fieldValue, Integer.class));
+						dialog4.showDialog();
+						return dialog4;
 					case AVATAR_ID:
 						return new ObjectSelectCellEditInteger<DAvatar>(DAvatar.class, fieldValue);
 					case ITEM_PROPERTY_SAVED_TYPE:

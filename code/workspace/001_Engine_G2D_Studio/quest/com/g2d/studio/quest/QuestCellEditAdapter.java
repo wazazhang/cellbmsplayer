@@ -51,10 +51,9 @@ import com.g2d.studio.quest.items.QuestItemNode;
 import com.g2d.studio.quest.items.QuestItemSelectCellEdit;
 import com.g2d.studio.rpg.FormulaEdit;
 import com.g2d.studio.rpg.AbilityPanel.AbilityCellEditAdapter;
-import com.g2d.studio.scene.editor.SceneListCellEdit;
+import com.g2d.studio.scene.editor.SceneSelectDialogString;
 import com.g2d.studio.scene.editor.SceneUnitListCellEdit;
 import com.g2d.studio.scene.entity.SceneNode;
-import com.g2d.studio.scene.units.SceneImmutable;
 import com.g2d.util.AbstractDialog;
 import com.g2d.util.AbstractOptionDialog;
 
@@ -404,7 +403,9 @@ public class QuestCellEditAdapter {
 		public PropertyCellEdit<?> getCellEdit(ObjectPropertyEdit owner,
 			Object editObject, Object fieldValue, Field field) {
 			if (field.getName().equals("scene_id")){
-				return new SceneListCellEdit(fieldValue);
+				SceneSelectDialogString dialog = new SceneSelectDialogString(owner.getComponent(), (String)fieldValue);
+				dialog.showDialog();
+				return dialog;
 			}
 			else if (field.getName().equals("scene_object_id")){
 				AwardTeleport tp = (AwardTeleport)editObject;

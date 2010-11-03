@@ -4,7 +4,7 @@
 	<classpathentry kind="src" path="cpj"/>
 	<classpathentry kind="src" path="item"/>
 	<classpathentry excluding="com/g2d/studio/gameedit/QuestItemTreeView.java|com/g2d/studio/gameedit/dynamic/DQuestItem.java" kind="src" path="gameedit"/>
-	<classpathentry excluding="com/g2d/studio/scene/swing/|com/g2d/studio/scene/FormSceneViewer.java|com/g2d/studio/scene/script/TriggerGenerateTreeNode.java" kind="src" path="scene"/>
+	<classpathentry excluding="com/g2d/studio/scene/swing/|com/g2d/studio/scene/FormSceneViewer.java|com/g2d/studio/scene/script/TriggerGenerateTreeNode.java|com/g2d/studio/scene/editor/SceneListCellEdit.java" kind="src" path="scene"/>
 	<classpathentry kind="src" path="instancezone"/>
 	<classpathentry excluding="com/g2d/studio/quest/items/QuestItemManager.java" kind="src" path="quest"/>
 	<classpathentry kind="src" path="particles"/>

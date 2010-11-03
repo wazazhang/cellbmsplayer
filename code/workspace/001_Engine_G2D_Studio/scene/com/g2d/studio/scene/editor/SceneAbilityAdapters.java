@@ -117,7 +117,9 @@ public class SceneAbilityAdapters
 				Object editObject, 
 				Object fieldValue, Field field) {
 			if (field.getName().equals("next_scene_id")){
-				return new SceneListCellEdit(fieldValue);
+				SceneSelectDialogString dialog = new SceneSelectDialogString(owner.getComponent(), (String)fieldValue);
+				dialog.showDialog();
+				return dialog;
 			}
 			else if (field.getName().equals("next_scene_object_id")){
 				ActorTransport tp = (ActorTransport)editObject;
