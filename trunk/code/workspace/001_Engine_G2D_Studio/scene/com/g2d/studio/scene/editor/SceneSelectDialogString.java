@@ -18,27 +18,27 @@ import com.g2d.studio.swing.G2DList;
 import com.g2d.studio.swing.G2DListItem;
 import com.g2d.util.AbstractOptionDialog;
 
-public class SceneSelectDialog extends AbstractOptionDialog<SceneNode> implements PropertyCellEdit<Integer>
+public class SceneSelectDialogString extends AbstractOptionDialog<SceneNode> implements PropertyCellEdit<String>
 {
-	static int last_selected_scene_id;
+	static String last_selected_scene_id;
 	
 	JLabel cell_edit_comp = new JLabel();
 	
 	G2DList<SceneItem> scene_panel = new G2DList<SceneItem>();
 	
-	public SceneSelectDialog(Component comp) {
+	public SceneSelectDialogString(Component comp) {
 		this(comp, last_selected_scene_id);
 	}
 	
-	public SceneSelectDialog(Component comp, Integer default_scene) {
+	public SceneSelectDialogString(Component comp, String default_scene) {
 		this(comp, default_scene, false);
 	}
 	
-	public SceneSelectDialog(Component comp, boolean only_zone) {
+	public SceneSelectDialogString(Component comp, boolean only_zone) {
 		this(comp, last_selected_scene_id, only_zone);
 	}
 	
-	public SceneSelectDialog(Component comp, Integer default_scene, boolean only_zone) {
+	public SceneSelectDialogString(Component comp, String default_scene, boolean only_zone) {
 		super(comp);
 		super.setTitle("选择一个场景");
 		super.setSize(700, 400);
@@ -49,7 +49,7 @@ public class SceneSelectDialog extends AbstractOptionDialog<SceneNode> implement
 				SceneItem item = new SceneItem(sn);
 				items.add(item);
 				if (default_scene != null && 
-					default_scene.equals(item.node.getIntID())) {
+					default_scene.equals(item.node.getIntID()+"")) {
 					selected = item;
 				}
 			}
@@ -95,10 +95,10 @@ public class SceneSelectDialog extends AbstractOptionDialog<SceneNode> implement
 	}
 	
 	@Override
-	public Integer getValue() {
+	public String getValue() {
 		SceneNode node = getUserObject();
 		if (node != null) {
-			return node.getIntID();
+			return node.getIntID()+"";
 		}
 		return null;
 	}
