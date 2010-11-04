@@ -277,6 +277,8 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 
 	class SceneTree extends G2DTree
 	{
+		private static final long serialVersionUID = 1L;
+
 		public SceneTree(SceneGroup root) {
 			super(root);
 		}
@@ -290,6 +292,7 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 				sb.append("<html><body>");
 				sb.append("<p>" + node.getData().getName() + 
 						"(<font color=\"#ff0000\">" + node.getData().getIntID()  + "</font>" + ")" +
+						" <font color=\"#0000ff\">" + node.getData().getAbilitiesCount() + "能力</font>" +
 						"</p>");
 				sb.append("<p>" + 
 						"<font color=\"#0000ff\">" +
@@ -302,7 +305,6 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 			}
 			return super.convertValueToText(value, selected, expanded, leaf, row, hasFocus);
 		}
-		
 	}
 	
 	class TreeMouseAdapter extends MouseAdapter
