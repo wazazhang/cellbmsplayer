@@ -144,7 +144,8 @@ public class SceneEditor extends AbstractFrame implements ActionListener, Window
 		super.setSize(AbstractFrame.getScreenWidth()-Studio.getInstance().getWidth(), Studio.getInstance().getHeight());
 		super.setLocation(Studio.getInstance().getX()+Studio.getInstance().getWidth(), Studio.getInstance().getY());
 		super.setIconImage(Res.icon_edit);
-		super.setTitle("场景 : " + scene.getName() + " (" + scene.getID() + ")");
+		super.setTitle("场景 : " + scene.getName() + " (" + scene.getID() + ") : " + 
+				scene.getData().getAbilitiesCount()+"能力");
 		
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		
@@ -394,6 +395,9 @@ public class SceneEditor extends AbstractFrame implements ActionListener, Window
 	@Override
 	public void actionPerformed(ActionEvent e)
 	{
+		super.setTitle("场景 : " + scene_node.getName() + " (" + scene_node.getID() + ") : " + 
+				scene_node.getData().getAbilitiesCount()+"能力");
+		
 		if (e.getSource() == tool_bar.save) {
 			save();
 			Studio.getInstance().getSceneManager().saveScene(scene_node);

@@ -237,7 +237,37 @@ public class Tools
 	static public BufferedImage toAlpha(BufferedImage src, float alpha, int rgb)
 	{
 		rgb = 0x00ffffff & rgb;
+
+		int a ;
+		int w = src.getWidth();
+		int h = src.getHeight();
 		
+		for (int x = w - 1; x >= 0; x--) {
+			for (int y = h - 1; y >= 0; y--) {
+				
+				a = src.getRGB(x, y) & 0xff000000;
+				if (a != 0) {
+					a = a >>> 24;
+					a = ((int) (a * alpha)) << 24;
+					src.setRGB(x, y, a | rgb);
+				}
+			}
+		}
+		
+		return src;
+	}
+	
+	/**
+	 * 将一个图片所有不透明的部分，都设置成指定的颜色和ALPHA值
+	 * @param src
+	 * @param alpha
+	 * @param rgb
+	 * @return 返回原图
+	 */
+	static public BufferedImage toColor(BufferedImage src, float alpha, int rgb)
+	{
+		rgb = 0x00ffffff & rgb;
+
 		int a ;
 		int w = src.getWidth();
 		int h = src.getHeight();

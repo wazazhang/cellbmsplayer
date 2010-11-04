@@ -27,11 +27,11 @@ public class Form extends Window
 	protected ButtonClose btn_close = new ButtonClose();
 	public int close_border_size = 4;
 
-	@Property("title")
-	public String title;
+//	@Property("title")
+//	public String title;
 
-	@Property("title_y")
-	public int title_y = 4;
+//	@Property("title_y")
+//	public int title_y = 4;
 	
 //	--------------------------------------------------------------------------------------------------------------------------
 
@@ -41,9 +41,9 @@ public class Form extends Window
 	}
 
 	
-	public void setTitle(String title) {
-		this.title = title;
-	}
+//	public void setTitle(String title) {
+//		this.title = title;
+//	}
 	
 	public void setCloseEnable(boolean enable) {
 		btn_close.visible = enable;
@@ -74,15 +74,16 @@ public class Form extends Window
 	public void render(Graphics2D g)
 	{
 		super.render(g);
-		
-		if (title!=null) {
-			g.setColor(Color.WHITE);
-			Drawing.drawStringShadow(g, title, getWidth()/2, title_y,
-					Drawing.TEXT_ANCHOR_HCENTER | Drawing.TEXT_ANCHOR_TOP);
-		}
+//		drawTitle(g);
 	}
 	
-	
+//	protected void drawTitle(Graphics2D g) {
+//		if (title!=null) {
+//			g.setColor(Color.WHITE);
+//			Drawing.drawStringShadow(g, title, getWidth()/2, title_y,
+//					Drawing.TEXT_ANCHOR_HCENTER | Drawing.TEXT_ANCHOR_TOP);
+//		}
+//	}
 	
 //	--------------------------------------------------------------------------------------------------------------------------
 	
