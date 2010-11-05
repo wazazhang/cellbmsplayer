@@ -72,11 +72,11 @@ public class NetService extends BasicNetService
 	 * 重新链接到主机
 	 * @return
 	 */
-	public boolean reconnect() 
+	public boolean reconnect(Long timeout) 
 	{
 		if (!Session.isConnected()) {
 			try {
-				Session.connect(ServerHost, ServerPort, getSessionListener());
+				Session.connect(ServerHost, ServerPort, timeout, getSessionListener());
 				return true;
 			} catch (Exception e) {
 				e.printStackTrace();
