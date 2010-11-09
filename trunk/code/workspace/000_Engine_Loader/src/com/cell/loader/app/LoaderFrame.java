@@ -127,6 +127,8 @@ public abstract class LoaderFrame extends JFrame implements WindowListener, Load
 				fis.read(data);
 				fis.close();
 				String text = new String(data, "UTF-8");
+				text = text.replaceAll("^\n", "");
+				text = text.replaceAll("^\r\n", "");
 				String[] lines = text.split("\n");
 				for (String line : lines) {
 					try{
