@@ -1,4 +1,4 @@
-package com.cell.loader;
+package com.cell.loader.app;
 
 import java.applet.AppletContext;
 import java.applet.AppletStub;
@@ -31,7 +31,11 @@ import javax.swing.JFrame;
 
 import com.cell.classloader.jcl.CC;
 import com.cell.classloader.jcl.JarClassLoader;
-import com.cell.loader.AppletLoader.AppletStubAdapter;
+import com.cell.loader.LoadTask;
+import com.cell.loader.MD5;
+import com.cell.loader.PaintTask;
+import com.cell.loader.LoadTask.LoadTaskListener;
+
 
 /**
  * 

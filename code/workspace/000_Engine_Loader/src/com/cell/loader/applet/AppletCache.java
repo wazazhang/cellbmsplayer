@@ -1,4 +1,4 @@
-package com.cell.loader;
+package com.cell.loader.applet;
 
 import netscape.javascript.*;
 import java.util.Vector;
@@ -22,7 +22,7 @@ import java.util.Vector;
 	<PARAM name="load_retry_count"		value="5">
 	<PARAM name="load_timeout"			value="10000">
  */
-public class CacheAppletLoader extends JarAppletLoader
+public class AppletCache extends LoaderApplet
 {
 	private static final long serialVersionUID = 1L;
 	

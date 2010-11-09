@@ -1,4 +1,4 @@
-package com.cell.loader;
+package com.cell.loader.applet;
 import java.applet.AppletContext;
 import java.applet.AppletStub;
 import java.awt.Component;
@@ -21,6 +21,7 @@ import sun.plugin2.applet.JNLP2ClassLoader;
 
 import com.cell.classloader.jcl.CC;
 import com.cell.classloader.jcl.JarClassLoader;
+import com.cell.loader.LoadTask;
 import com.cell.loader.LoadTask.LoadTaskListener;
 
 
@@ -32,7 +33,6 @@ import com.cell.loader.LoadTask.LoadTaskListener;
 	<PARAM name="l_jars"				value="lordol.jar,lordolres.jar">
 	<PARAM name="l_applet"				value="lord.LordApplet">
 	<PARAM name="l_font"				value="System">
-	<PARAM name="l_natives"				value="OpenGL32,OpenAL32,warp_openal,joal_native">
 	<PARAM name="l_decode"				value="true">
 		
 	<PARAM name="img_bg"				value="bg.png">
@@ -47,7 +47,7 @@ import com.cell.loader.LoadTask.LoadTaskListener;
 	<PARAM name="load_retry_count"		value="5">
 	<PARAM name="load_timeout"			value="10000">
  */
-public class AppletLoader extends JarAppletLoader
+public class AppletLauncher extends LoaderApplet
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -122,22 +122,22 @@ public class AppletLoader extends JarAppletLoader
 	class AppletStubAdapter implements AppletStub
 	{
 		public void appletResize(int width, int height) {
-			AppletLoader.this.resize(width, height);
+			AppletLauncher.this.resize(width, height);
 		}
 		public AppletContext getAppletContext() {
-			return AppletLoader.this.getAppletContext();
+			return AppletLauncher.this.getAppletContext();
 		}
 		public URL getCodeBase() {
-			return AppletLoader.this.getCodeBase();
+			return AppletLauncher.this.getCodeBase();
 		}
 		public URL getDocumentBase() {
-			return AppletLoader.this.getDocumentBase();
+			return AppletLauncher.this.getDocumentBase();
 		}
 		public String getParameter(String name) {
-			return AppletLoader.this.getParameter(name);
+			return AppletLauncher.this.getParameter(name);
 		}
 		public boolean isActive() {
-			return AppletLoader.this.isActive();
+			return AppletLauncher.this.isActive();
 		}
 	}
 
