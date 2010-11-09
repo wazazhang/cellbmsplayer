@@ -72,8 +72,8 @@ public class FrameUpdater extends LoaderFrame
 			Process process = Runtime.getRuntime().exec(l_app, l_envp, getRootDir());
 			System.out.println(process);
 			this.setVisible(false);
-			process.waitFor();
-			System.out.println(process.exitValue());
+//			process.waitFor();
+//			System.out.println(process.exitValue());
 		}
 		new Thread(){
 			public void run() {
