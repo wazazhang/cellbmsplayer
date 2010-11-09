@@ -68,7 +68,7 @@ public class FrameUpdater extends LoaderFrame
 	{
 		if (this.l_app != null) {
 			System.out.println(l_app);
-			Process process = Runtime.getRuntime().exec("javac");
+			Process process = Runtime.getRuntime().exec(l_app, l_envp, getRootDir());
 			process.waitFor();
 			System.out.println(process.exitValue());
 		}
