@@ -19,6 +19,7 @@ update_path			=http://game.lordol.com/lordol_xc_test/update.val
 ignore_list			=loader.jar,lordol_res.jar,lordol_ressk.jar,lordol_j2se_ui_sk.jar
 l_app				=game.exe
 l_font				=宋体
+l_envp				=envp
 
 [image]
 img_bg				=bg.png
