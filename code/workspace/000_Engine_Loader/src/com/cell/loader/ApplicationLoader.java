@@ -39,8 +39,10 @@ import com.cell.loader.AppletLoader.AppletStubAdapter;
 update_path			=http://game.lordol.com/lordol_xc_test/update.val
 ignore_list			=loader.jar,lordol_res.jar,lordol_ressk.jar,lordol_j2se_ui_sk.jar
 l_main				=orc.g2d.Main
+l_args				=xxx,xxx,xxx
 l_font				=宋体
 l_natives			=OpenGL32.dll,OpenAL32.dll,warp_openal.dll
+l_decode			=true
 
 [image]
 img_bg				=bg.png
@@ -68,8 +70,10 @@ public class ApplicationLoader extends JFrame implements WindowListener, LoadTas
 	String			ignore_list;
 	String 			l_main;
 	String			l_font;
+	String			l_decode;
+	ArrayList<String>	l_args = new ArrayList<String>();
 	ArrayList<String>	l_natives = new ArrayList<String>();
-
+	
 	String			img_bg;
 	String			img_loading_f;
 	String			img_loading_s;
@@ -154,6 +158,7 @@ public class ApplicationLoader extends JFrame implements WindowListener, LoadTas
 					ignore_list			= update_ini.get("ignore_list");
 					l_main				= update_ini.get("l_main");
 					l_font				= update_ini.get("l_font");
+					l_decode			= update_ini.get("l_decode");
 					
 					//[image]
 					img_bg				= update_ini.get("img_bg");
@@ -176,11 +181,21 @@ public class ApplicationLoader extends JFrame implements WindowListener, LoadTas
 					load_timeout		= 10000;
 					}
 					
+					
+					try{
+						String args = update_ini.get("l_args");
+						if (args!=null) {
+							for (String n : args.split(",")) {
+								l_args.add(n.trim());
+							}
+						}
+					} catch (Exception err) {}
+					
 					try{
 						String natives = update_ini.get("l_natives");
 						if (natives!=null) {
 							for (String n : natives.split(",")) {
-								l_natives.add(n);
+								l_natives.add(n.trim());
 							}
 						}
 					} catch (Exception err) {}
@@ -195,6 +210,12 @@ public class ApplicationLoader extends JFrame implements WindowListener, LoadTas
 				{
 					String[] ignores = ignore_list.split(",");
 					for (String ignore : ignores) {
+						while (ignore.startsWith(".")) {
+							ignore = ignore.substring(1);
+						}
+						while (ignore.contains("\\")) {
+							ignore = ignore.replace('\\', '/');
+						}
 						ignore_jar_files.put(ignore.trim(), ignore.trim());
 					}
 				}
@@ -359,12 +380,23 @@ public class ApplicationLoader extends JFrame implements WindowListener, LoadTas
 		}
 		try
 		{
+			String suffix = file_name;
+			while (suffix.contains("\\")) {
+				suffix = suffix.replace('\\', '/');
+			}
+			for (String ig : ignore_jar_files.keySet()) {
+				if (suffix.endsWith(ig)) {
+					return;
+				}
+			}
 			File local_file = new File(file_name);
+			if (!local_file.getParentFile().exists()) {
+				local_file.getParentFile().mkdirs();
+			}
 			FileOutputStream fos = new FileOutputStream(local_file);
 			fos.write(data);
 			fos.flush();
 			fos.close();
-			
 			System.out.println("downloaded and save to local file ! " + file_name);
 		}
 		catch (Exception e) 
@@ -398,10 +430,17 @@ public class ApplicationLoader extends JFrame implements WindowListener, LoadTas
 			}
 			
 			datas.addAll(local_jar_files.values());
-			
+			boolean decode = true;
+			try {
+				if (l_decode != null) {
+					decode = Boolean.parseBoolean(l_decode);
+				}
+			} catch (Exception err) {
+				decode = true;
+			}
 			ClassLoader		old_class_loader	= Thread.currentThread().getContextClassLoader();
 			JarClassLoader	jar_class_loader	= JarClassLoader.createJarClassLoader(
-					old_class_loader, datas, dk, true);
+					old_class_loader, datas, dk, true, decode);
 			Thread.currentThread().setContextClassLoader(jar_class_loader);
 			System.out.println("Class loader changed : " + 
 					old_class_loader.getClass().getName() + " -> " + 
@@ -415,7 +454,7 @@ public class ApplicationLoader extends JFrame implements WindowListener, LoadTas
 				System.out.println("launch main game !");
 				
 				// 运行主类的main方法
-				JarClassLoader.callMethod(mainclass, "main", new String[]{});
+				JarClassLoader.callMain(mainclass, l_args.toArray(new String[l_args.size()]));
 				
 				main_obj = mainclass;
 				

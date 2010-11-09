@@ -33,7 +33,8 @@ import com.cell.loader.LoadTask.LoadTaskListener;
 	<PARAM name="l_applet"				value="lord.LordApplet">
 	<PARAM name="l_font"				value="System">
 	<PARAM name="l_natives"				value="OpenGL32,OpenAL32,warp_openal,joal_native">
-	
+	<PARAM name="l_decode"				value="true">
+		
 	<PARAM name="img_bg"				value="bg.png">
 	<PARAM name="img_loading_f"			value="loading_f.png">
 	<PARAM name="img_loading_s" 		value="loading_s.png">
@@ -51,6 +52,7 @@ public class AppletLoader extends JarAppletLoader
 	private static final long serialVersionUID = 1L;
 	
 	String 			l_applet;
+	String			l_decode;
 	Object 			applet_obj;
 	JApplet 		applet_game = null;
 
@@ -61,15 +63,23 @@ public class AppletLoader extends JarAppletLoader
 	{
 		l_applet	= getParameter("l_applet");
 		dk			= LoadTask.getVK(getClass().getResourceAsStream("vk.enc"));
-
+		l_decode	= getParameter("l_decode");
 	}
 	
 	@Override
 	protected void onTaskOver(Vector<byte[]> datas) throws Exception 
 	{
+		boolean decode = true;
+		try {
+			if (l_decode != null) {
+				decode = Boolean.parseBoolean(l_decode);
+			}
+		} catch (Exception err) {
+			decode = true;
+		}
 		ClassLoader			old_class_loader	= Thread.currentThread().getContextClassLoader();
 		JarClassLoader		jar_class_loader	= JarClassLoader.createJarClassLoader(
-				old_class_loader, datas, dk, true);
+				old_class_loader, datas, dk, true, decode);
 		Thread.currentThread().setContextClassLoader(jar_class_loader);
 		System.out.println("Class loader changed : " + 
 				old_class_loader.getClass().getName() + " -> " + 

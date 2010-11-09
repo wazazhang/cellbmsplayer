@@ -76,14 +76,15 @@ public class JarClassLoader extends ClassLoader
 			ClassLoader		root_class_loader,
 			Vector<byte[]> 	resources,
 			String 			key,
-			boolean 		is_sign_class)
+			boolean 		is_sign_class,
+			boolean			decode)
 	{
 		try{
 			JarClassLoader classloader = new JarClassLoader(
 					root_class_loader,
 					resources, 
 					key, 
-					is_sign_class);
+					is_sign_class, decode);
 			return classloader;
 		} catch(Throwable err) {
 			err.printStackTrace();
@@ -151,12 +152,10 @@ public class JarClassLoader extends ClassLoader
 	 * @param methodName
 	 * @param args
 	 */
-	final static public void callMethod(Class<?> clz, String methodName, String[] args)
+	final static public void callMain(Class<?> clz, String[] args)
 	{
-		Class<?>[] arg = new Class<?>[1];
-		arg[0] = args.getClass();
 		try {
-			Method method = clz.getMethod(methodName, arg);
+			Method method = clz.getMethod("main", String[].class);
 			Object[] inArg = new Object[1];
 			inArg[0] = args;
 			method.invoke(clz, inArg);
@@ -200,11 +199,13 @@ public class JarClassLoader extends ClassLoader
 			ClassLoader		class_loader,
 			Vector<byte[]> 	resources,
 			String 			key,
-			boolean 		is_sign_class) throws Throwable
+			boolean 		is_sign_class, 
+			boolean			decode) throws Throwable
 	{
 //		super(class_loader);
-		
-		resources = dds(resources, key);
+		if (decode) {
+			resources = dds(resources, key);
+		}
 
 		HashMap<String, byte[]> natives		= new HashMap<String, byte[]>();
 		
