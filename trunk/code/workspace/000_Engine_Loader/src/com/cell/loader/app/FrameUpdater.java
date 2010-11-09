@@ -18,8 +18,9 @@ import com.cell.loader.LoadTask;
 update_path			=http://game.lordol.com/lordol_xc_test/update.val
 ignore_list			=loader.jar,lordol_res.jar,lordol_ressk.jar,lordol_j2se_ui_sk.jar
 l_app				=game.exe
-l_font				=宋体
+l_app_working_dir	=.
 l_envp				=envp
+l_font				=宋体
 
 [image]
 img_bg				=bg.png
@@ -43,6 +44,7 @@ public class FrameUpdater extends LoaderFrame
 	private static final long serialVersionUID = 1L;
 	
 	String l_app;
+	String l_app_working_dir;
 	String l_envp[];
 	
 	
@@ -54,14 +56,18 @@ public class FrameUpdater extends LoaderFrame
 	@Override
 	protected void onTaskInit(Map<String, String> update_ini)
 	{
-		this.l_app	= update_ini.get("l_app");
-		
+		this.l_app				= update_ini.get("l_app");
+		this.l_app_working_dir	= update_ini.get("l_app_working_dir");	
+		if (l_app_working_dir == null) {
+			l_app_working_dir = ".";
+		}
 		try{
-			String envp = update_ini.get("l_envp");
+			String envp 		= update_ini.get("l_envp");
 			if (envp != null) {
 				l_envp = envp.split(",");
 			}
 		} catch (Exception err) {}
+	
 	}
 	
 	@Override
@@ -69,7 +75,7 @@ public class FrameUpdater extends LoaderFrame
 	{
 		if (this.l_app != null) {
 			System.out.println(l_app);
-			Process process = Runtime.getRuntime().exec(l_app, l_envp, getRootDir());
+			Process process = Runtime.getRuntime().exec(l_app, l_envp, new File(l_app_working_dir));
 			System.out.println(process);
 			this.setVisible(false);
 //			process.waitFor();

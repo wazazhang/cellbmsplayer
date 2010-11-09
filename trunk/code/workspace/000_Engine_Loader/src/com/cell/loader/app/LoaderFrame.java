@@ -205,6 +205,9 @@ public abstract class LoaderFrame extends JFrame implements WindowListener, Load
 					int frameWidth	= bg.getWidth(null)  + (getInsets().left+getInsets().right);
 					int frameHeight	= bg.getHeight(null) + (getInsets().top+getInsets().bottom);
 					this.setSize(frameWidth, frameHeight);
+					if (font != null) {
+						this.setFont(new Font(l_font, getFont().getStyle(), getFont().getSize()));
+					}
 					this.setLocation(
 							Toolkit.getDefaultToolkit().getScreenSize().width/2 - getWidth()/2,
 							Toolkit.getDefaultToolkit().getScreenSize().height/2 - getHeight()/2);
@@ -433,6 +436,7 @@ public abstract class LoaderFrame extends JFrame implements WindowListener, Load
 			onTaskOver(datas);
 			is_complete	= true;
 			paint_task 	= null;
+			this.remove(paint_canvas);
 		} catch (Throwable e) {
 			e.printStackTrace();
 			paint_task.setState(l_text_error + " : " + e.getMessage());
@@ -446,7 +450,7 @@ public abstract class LoaderFrame extends JFrame implements WindowListener, Load
 		paint_task.setState(l_text_error + " : " + cause.getMessage());
 	}
 	
-	class PaintCanvas extends Canvas
+	private class PaintCanvas extends Canvas
 	{
 		@Override
 		public void update(Graphics g) {
