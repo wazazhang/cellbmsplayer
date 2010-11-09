@@ -1,4 +1,4 @@
-package com.cell.loader;
+package com.cell.loader.applet;
 import java.applet.AppletContext;
 import java.applet.AppletStub;
 import java.awt.Component;
@@ -21,8 +21,10 @@ import sun.plugin2.applet.JNLP2ClassLoader;
 
 import com.cell.classloader.jcl.CC;
 import com.cell.classloader.jcl.JarClassLoader;
-import com.cell.loader.AppletLoader.AppletStubAdapter;
+import com.cell.loader.LoadTask;
+import com.cell.loader.PaintTask;
 import com.cell.loader.LoadTask.LoadTaskListener;
+import com.cell.loader.applet.AppletLauncher.AppletStubAdapter;
 
 
 
@@ -33,7 +35,6 @@ import com.cell.loader.LoadTask.LoadTaskListener;
 	<PARAM name="l_jars"				value="lordol.jar,lordolres.jar">
 	<PARAM name="l_applet"				value="lord.LordApplet">
 	<PARAM name="l_font"				value="System">
-	<PARAM name="l_natives"				value="OpenGL32,OpenAL32,warp_openal,joal_native">
 	
 	<PARAM name="img_bg"				value="bg.png">
 	<PARAM name="img_loading_f"			value="loading_f.png">
@@ -47,7 +48,7 @@ import com.cell.loader.LoadTask.LoadTaskListener;
 	<PARAM name="load_retry_count"		value="5">
 	<PARAM name="load_timeout"			value="10000">
  */
-public abstract class JarAppletLoader extends JApplet implements LoadTaskListener
+public abstract class LoaderApplet extends JApplet implements LoadTaskListener
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -196,18 +197,13 @@ public abstract class JarAppletLoader extends JApplet implements LoadTaskListene
 		paint_task.exit();
 		
 		this.validate();
-		
-		try
-		{
+		try {
 			onTaskOver(datas);
 			paint_task = null;
-		}
-		catch (Throwable e)
-		{
+		} catch (Throwable e) {
 			e.printStackTrace();
 			paint_task.setState(l_text_error + " : " + e.getMessage());
 		}
-		
 		this.validate();
 	
 	}

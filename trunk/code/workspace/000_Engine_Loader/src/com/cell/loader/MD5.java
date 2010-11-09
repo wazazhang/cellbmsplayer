@@ -14,7 +14,7 @@ import java.security.MessageDigest;
  * MD5 ("abcdefghijklmnopqrstuvwxyz") = c3fcd3d76192e4007dfb496cca67e13b
  * 
  */
-class MD5 
+public class MD5 
 {
 	// 用来将字节转换成 16 进制表示的字符
 	final static char hexDigits[] = { 
@@ -23,11 +23,11 @@ class MD5
 			'8', '9', 'a', 'b', 
 			'c', 'd', 'e', 'f' };
 	
-    static String getMD5(String str) {
+    public static String getMD5(String str) {
     	return getMD5(str.getBytes());
     }
     
-    static String getMD5(String str, String encode) {
+    public static String getMD5(String str, String encode) {
     	try {
 			return getMD5(str.getBytes(encode));
 		} catch (UnsupportedEncodingException e) {
@@ -37,7 +37,7 @@ class MD5
     }
     
     
-	static String getMD5(byte[] source)
+    public static String getMD5(byte[] source)
 	{
 		String s = null;
 
