@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Desktop;
 import java.awt.Toolkit;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -110,16 +111,13 @@ public class FramePage extends LoaderFrame
 			super(new BorderLayout());
 			try
 			{
-				URL url = null;
-				if (path.startsWith("http://")) {
-					url = new URL(path);
-				} else {
-					File file = new File(path);
-					if (file.exists()) {
-						url = new URL("file:///"+file.getCanonicalPath());
-					}
-				}
-				html_page = new JEditorPane(url);
+				FileInputStream fis = new FileInputStream(path);
+				byte[] data = new byte[fis.available()];
+				fis.read(data);
+				fis.close();
+				String text = new String(data, "UTF-8");
+				
+				html_page = new JEditorPane("text/html", text);
 				html_page.setFont(FramePage.this.getFont());
 				html_page.setEditable(false); // 请把editorPane设置为只读，不然显示就不整齐
 				html_page.addHyperlinkListener(this);
