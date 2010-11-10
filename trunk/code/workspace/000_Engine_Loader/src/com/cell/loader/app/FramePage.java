@@ -6,6 +6,7 @@ import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -111,15 +112,19 @@ public class FramePage extends LoaderFrame
 			super(new BorderLayout());
 			try
 			{
-				FileInputStream fis = new FileInputStream(path);
+				File file = new File(path);
+				FileInputStream fis = new FileInputStream(file);
 				byte[] data = new byte[fis.available()];
 				fis.read(data);
 				fis.close();
 				String text = new String(data, "UTF-8");
 				
-				html_page = new JEditorPane("text/html", text);
-				html_page.setFont(FramePage.this.getFont());
+				html_page = new JEditorPane();
 				html_page.setEditable(false); // 请把editorPane设置为只读，不然显示就不整齐
+				html_page.setPage("file:///"+file.getAbsolutePath());
+				html_page.setFont(FramePage.this.getFont());
+//				html_page.setContentType("text/html");
+				html_page.setText(text);
 				html_page.addHyperlinkListener(this);
 				JScrollPane scroll = new JScrollPane(html_page);
 				this.add(scroll, BorderLayout.CENTER);
