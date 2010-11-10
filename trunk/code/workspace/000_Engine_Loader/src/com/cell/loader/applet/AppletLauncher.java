@@ -140,12 +140,4 @@ public class AppletLauncher extends LoaderApplet
 			return AppletLauncher.this.isActive();
 		}
 	}
-
-	
-	
-	public void paint(Graphics g) {
-		if (applet_game == null) {
-			super.paint(g);
-		}
-	}
 }
