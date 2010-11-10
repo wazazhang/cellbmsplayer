@@ -112,7 +112,7 @@ public abstract class LoaderFrame extends JFrame implements WindowListener, Load
 		this.paint_canvas = new PaintCanvas();
 		this.add(paint_canvas);
 		this.setTitle("check for update");
-
+		this.setResizable(false);
 		try
 		{
 			paint_task = new PaintTask(paint_canvas);
