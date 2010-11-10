@@ -119,10 +119,11 @@ public class FramePage extends LoaderFrame
 				fis.close();
 				String text = new String(data, "UTF-8");
 				
+				URL url = new URL("file:///"+file.getAbsolutePath());
 				html_page = new JEditorPane();
 				html_page.setEditable(false); // 请把editorPane设置为只读，不然显示就不整齐
-				html_page.setPage("file:///"+file.getAbsolutePath());
-				html_page.setFont(FramePage.this.getFont());
+				html_page.setPage(url);
+//				html_page.setFont(FramePage.this.getFont());
 //				html_page.setContentType("text/html");
 				html_page.setText(text);
 				html_page.addHyperlinkListener(this);
