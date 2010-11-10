@@ -123,8 +123,12 @@ public class ApplicationLoader extends JFrame implements WindowListener, LoadTas
 			}
 			public void paint(Graphics g){
 				if (main_obj == null) {
-					if (paint_task != null)
-						paint_task.repaint((Graphics2D)g);
+					if (paint_task != null) {
+						Image buffer = paint_task.repaint(((Graphics2D)g).getDeviceConfiguration());
+						if (buffer != null) {
+							g.drawImage(buffer, 0, 0, getWidth(), getHeight(), null);
+						}
+					}
 				}
 			}
 		};

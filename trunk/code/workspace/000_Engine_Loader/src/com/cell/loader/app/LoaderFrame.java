@@ -458,8 +458,12 @@ public abstract class LoaderFrame extends JFrame implements WindowListener, Load
 		}
 		public void paint(Graphics g){
 			if (!is_complete) {
-				if (paint_task != null)
-					paint_task.repaint((Graphics2D)g);
+				if (paint_task != null) {
+					Image buffer = paint_task.repaint(((Graphics2D)g).getDeviceConfiguration());
+					if (buffer != null) {
+						g.drawImage(buffer, 0, 0, getWidth(), getHeight(), null);
+					}
+				}
 			}
 		}
 	}
