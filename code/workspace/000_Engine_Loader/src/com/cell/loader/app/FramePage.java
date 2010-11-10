@@ -112,14 +112,20 @@ public class FramePage extends LoaderFrame
 			super(new BorderLayout());
 			try
 			{
-				File file = new File(path);
+				URL url = null;
+				if (path.startsWith("http://")) {
+					url = new URL(path);
+				} else {
+					File file = new File(path);
+					url = new URL("file:///"+file.getAbsolutePath());
+				}
+				
 //				FileInputStream fis = new FileInputStream(file);
 //				byte[] data = new byte[fis.available()];
 //				fis.read(data);
 //				fis.close();
 //				String text = new String(data, "UTF-8");
-//				
-				URL url = new URL("file:///"+file.getAbsolutePath());
+				
 				html_page = new JEditorPane();
 				html_page.setEditable(false); // 请把editorPane设置为只读，不然显示就不整齐
 //				html_page.setContentType("text/html; charset=UTF-8");
