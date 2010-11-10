@@ -113,19 +113,19 @@ public class FramePage extends LoaderFrame
 			try
 			{
 				File file = new File(path);
-				FileInputStream fis = new FileInputStream(file);
-				byte[] data = new byte[fis.available()];
-				fis.read(data);
-				fis.close();
-				String text = new String(data, "UTF-8");
-				
+//				FileInputStream fis = new FileInputStream(file);
+//				byte[] data = new byte[fis.available()];
+//				fis.read(data);
+//				fis.close();
+//				String text = new String(data, "UTF-8");
+//				
 				URL url = new URL("file:///"+file.getAbsolutePath());
 				html_page = new JEditorPane();
 				html_page.setEditable(false); // 请把editorPane设置为只读，不然显示就不整齐
+//				html_page.setContentType("text/html; charset=UTF-8");
 				html_page.setPage(url);
 //				html_page.setFont(FramePage.this.getFont());
-//				html_page.setContentType("text/html");
-				html_page.setText(text);
+//				html_page.setText(text);
 				html_page.addHyperlinkListener(this);
 				JScrollPane scroll = new JScrollPane(html_page);
 				this.add(scroll, BorderLayout.CENTER);
