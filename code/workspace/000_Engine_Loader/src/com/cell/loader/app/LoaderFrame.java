@@ -206,7 +206,11 @@ public abstract class LoaderFrame extends JFrame implements WindowListener, Load
 					int frameHeight	= bg.getHeight(null) + (getInsets().top+getInsets().bottom);
 					this.setSize(frameWidth, frameHeight);
 					if (font != null) {
-						this.setFont(new Font(l_font, getFont().getStyle(), getFont().getSize()));
+						if (getFont()!=null) {
+							this.setFont(new Font(l_font, getFont().getStyle(), getFont().getSize()));
+						} else {
+							this.setFont(font);
+						}
 					}
 					this.setLocation(
 							Toolkit.getDefaultToolkit().getScreenSize().width/2 - getWidth()/2,
