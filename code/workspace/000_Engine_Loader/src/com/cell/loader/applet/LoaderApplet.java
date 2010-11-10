@@ -1,6 +1,8 @@
 package com.cell.loader.applet;
 import java.applet.AppletContext;
 import java.applet.AppletStub;
+import java.awt.BorderLayout;
+import java.awt.Canvas;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -73,7 +75,8 @@ public abstract class LoaderApplet extends JApplet implements LoadTaskListener
 		
 	private PaintTask 		paint_task;
 	private LoadTask 		load_task;
-
+	private PaintCanvas		paint_canvas;
+	
 	final protected String getParameter(String name, String default_value) {
 		String ret = super.getParameter(name);
 		if (ret==null) {
@@ -86,9 +89,14 @@ public abstract class LoaderApplet extends JApplet implements LoadTaskListener
 	{
 		try
 		{
-			paint_task = new PaintTask(this);
+			this.setLayout(new BorderLayout());
 			
-			root_dir 			= new URL(getCodeBase().toString());
+			this.paint_canvas	= new PaintCanvas();
+			this.add(paint_canvas);
+			
+			this.paint_task		= new PaintTask(paint_canvas);
+			
+			this.root_dir		= new URL(getCodeBase().toString());
 			
 			// init applet parameter
 			{
@@ -198,6 +206,7 @@ public abstract class LoaderApplet extends JApplet implements LoadTaskListener
 		
 		this.validate();
 		try {
+			this.remove(paint_canvas);
 			onTaskOver(datas);
 			paint_task = null;
 		} catch (Throwable e) {
@@ -217,12 +226,23 @@ public abstract class LoaderApplet extends JApplet implements LoadTaskListener
 
 	abstract protected void onTaskInit();
 	
-
-	public void paint(Graphics g)
+	private class PaintCanvas extends Canvas
 	{
-		if (paint_task != null)
-			paint_task.repaint((Graphics2D)g);
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public void update(Graphics g) {
+			this.paint(g);
+		}
+		
+		public void paint(Graphics g)
+		{
+			if (paint_task != null)
+				paint_task.repaint((Graphics2D)g);
+		}
 	}
+	
+
 	
 	
 }

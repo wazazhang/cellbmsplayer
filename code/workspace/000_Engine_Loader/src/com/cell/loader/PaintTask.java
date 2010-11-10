@@ -120,9 +120,11 @@ public class PaintTask extends Thread
 	{
 		try 
 		{
-			if (buffer != null && 
-				buffer.getWidth() == getWidth() && 
-				buffer.getHeight() == getHeight())
+			if (buffer == null || buffer.getWidth() != getWidth() || buffer.getHeight() != getHeight()) {
+				buffer = dg.getDeviceConfiguration().createCompatibleImage(getWidth(), getHeight());
+			}
+			
+			if (buffer != null)
 			{
 				Graphics2D g = buffer.createGraphics();
 				
@@ -132,14 +134,11 @@ public class PaintTask extends Thread
 				
 				paint(g);
 
-				dg.drawImage(buffer, 0, 0, null);
-				
 				g.dispose();
+				
+				dg.drawImage(buffer, 0, 0, null);
 			}
-			else
-			{
-				buffer = dg.getDeviceConfiguration().createCompatibleImage(getWidth(), getHeight());
-			}
+			
 		} catch (Exception er) {
 			er.printStackTrace();
 		}

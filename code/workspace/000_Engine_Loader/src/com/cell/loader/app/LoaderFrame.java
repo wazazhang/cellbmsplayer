@@ -433,10 +433,10 @@ public abstract class LoaderFrame extends JFrame implements WindowListener, Load
 
 		this.validate();
 		try {
+			this.remove(paint_canvas);
 			onTaskOver(datas);
 			is_complete	= true;
 			paint_task 	= null;
-			this.remove(paint_canvas);
 		} catch (Throwable e) {
 			e.printStackTrace();
 			paint_task.setState(l_text_error + " : " + e.getMessage());
