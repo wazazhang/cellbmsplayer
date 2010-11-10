@@ -8,6 +8,7 @@ import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.Image;
 import java.awt.RenderingHints;
+import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 
@@ -116,12 +117,12 @@ public class PaintTask extends Thread
 		return paint_component.getHeight();
 	}
 	
-	public void repaint(Graphics2D dg)
+	public Image repaint(GraphicsConfiguration gc)
 	{
 		try 
 		{
 			if (buffer == null || buffer.getWidth() != getWidth() || buffer.getHeight() != getHeight()) {
-				buffer = dg.getDeviceConfiguration().createCompatibleImage(getWidth(), getHeight());
+				buffer = gc.createCompatibleImage(getWidth(), getHeight(), Transparency.TRANSLUCENT);
 			}
 			
 			if (buffer != null)
@@ -135,13 +136,13 @@ public class PaintTask extends Thread
 				paint(g);
 
 				g.dispose();
-				
-				dg.drawImage(buffer, 0, 0, null);
 			}
 			
 		} catch (Exception er) {
 			er.printStackTrace();
 		}
+		
+		return buffer;
 	}
 	
 	private void paint(Graphics g)
