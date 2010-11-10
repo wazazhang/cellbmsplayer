@@ -11,6 +11,7 @@ import java.awt.RenderingHints;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
+import java.awt.image.VolatileImage;
 
 public class PaintTask extends Thread
 {
@@ -35,9 +36,9 @@ public class PaintTask extends Thread
 	private int ProgressCurS = 0;
 	private int ProgressCurV = 0;
 	
-	BufferedImage	buffer;
+	private Image	buffer;
 	
-	private long Timer = 0;
+	private long 	Timer = 0;
 	
 	private boolean exit = false;
 	
@@ -121,21 +122,18 @@ public class PaintTask extends Thread
 	{
 		try 
 		{
-			if (buffer == null || buffer.getWidth() != getWidth() || buffer.getHeight() != getHeight()) {
-				buffer = gc.createCompatibleImage(getWidth(), getHeight(), Transparency.TRANSLUCENT);
+			if (buffer == null || buffer.getWidth(null) != getWidth() || buffer.getHeight(null) != getHeight()) {
+				buffer = gc.createCompatibleVolatileImage(getWidth(), getHeight(), Transparency.TRANSLUCENT);
 			}
 			
 			if (buffer != null)
 			{
-				Graphics2D g = buffer.createGraphics();
-				
-				g.setRenderingHint(
-						RenderingHints.KEY_TEXT_ANTIALIASING, 
-						RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-				
-				paint(g);
-
-				g.dispose();
+				Graphics2D g = ((VolatileImage)buffer).createGraphics();
+				try {
+					paint(g);
+				} finally {
+					g.dispose();
+				}
 			}
 			
 		} catch (Exception er) {
@@ -145,8 +143,12 @@ public class PaintTask extends Thread
 		return buffer;
 	}
 	
-	private void paint(Graphics g)
+	private void paint(Graphics2D g)
 	{
+		g.setRenderingHint(
+				RenderingHints.KEY_TEXT_ANTIALIASING, 
+				RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		
 		float rate = 0;
 		
 		if (ProgressMax>0) 
