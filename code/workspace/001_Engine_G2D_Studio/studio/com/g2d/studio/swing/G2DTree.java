@@ -1,14 +1,21 @@
 package com.g2d.studio.swing;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.Window;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -16,9 +23,15 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -28,6 +41,10 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
+
+import com.g2d.util.AbstractDialog;
+import com.g2d.util.AbstractOptionDialog;
+import com.g2d.util.AbstractOptionFrame;
 
 
 public class G2DTree extends JTree implements G2DDragDropListener<G2DTree>
@@ -51,7 +68,7 @@ public class G2DTree extends JTree implements G2DDragDropListener<G2DTree>
 		this.setCellRenderer(new TreeRender());
 		this.addMouseListener(new TreeMouseListener());
 		this.addTreeSelectionListener(new TreeSelect());
-		
+		this.addKeyListener(new TreeKeyListener());
 		{
 //			drag_source = new DragSource();
 //			drag_source.addDragSourceListener(drag_adapter);
@@ -104,6 +121,12 @@ public class G2DTree extends JTree implements G2DDragDropListener<G2DTree>
 	}
 	public void removeDragDropListener(G2DDragDropListener<G2DTree> listener) {
 		drag_drop_listeners.remove(listener);
+	}
+
+	protected SearchDialog openSearchDialog() {
+		SearchDialog dialog = new SearchDialog(this);
+		dialog.setVisible(true);
+		return dialog;
 	}
 	
 	protected void onSelectChanged(TreeNode node) {
@@ -239,7 +262,14 @@ public class G2DTree extends JTree implements G2DDragDropListener<G2DTree>
 	}
 	
 //	----------------------------------------------------------------------------------------------------------------------------
-
+	
+	static public Vector<TreeNode> getNodes(TreeNode root)
+	{
+		Vector<TreeNode> ret = new Vector<TreeNode>();
+		getNodesSubClass(root, TreeNode.class, ret);
+		return ret;
+	}
+	
 	static public<T extends TreeNode> Vector<T> getNodesSubClass(TreeNode root, Class<T> type)
 	{
 		Vector<T> ret = new Vector<T>();
@@ -404,6 +434,21 @@ public class G2DTree extends JTree implements G2DDragDropListener<G2DTree>
 		}
 	}
 	
+	protected class TreeKeyListener extends KeyAdapter
+	{
+		SearchDialog sd = null;
+		@Override
+		public void keyPressed(KeyEvent e) {
+			if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_F) {
+				if (sd != null) {
+					sd.setVisible(true);
+				} else {
+					sd = openSearchDialog();
+				}
+			}
+		}
+	}
+	
 	protected class TreeMouseListener extends MouseAdapter
 	{
 		@Override
@@ -525,6 +570,80 @@ public class G2DTree extends JTree implements G2DDragDropListener<G2DTree>
 	
 	}
 	
+	@SuppressWarnings("serial")
+	public static class SearchDialog extends AbstractOptionFrame
+	{
+		private static String history_text = "";
+		
+		private G2DTree tree;
+		
+		protected JPanel		center 		= new JPanel(null);
+		
+		protected JLabel		lbl_as_name	= new JLabel("名字");
+		protected JTextField 	txt_as_name	= new JTextField(history_text);
+		
+		public SearchDialog(G2DTree tree) 
+		{
+			super.setTitle("查找 "+tree.getRoot());
+			super.setSize(320, 120);
+			super.setAlwaysOnTop(true);		
+			this.setCenter();
+			
+			this.tree = tree;
+			this.ok.setText("查找");
+			this.add(center, BorderLayout.CENTER);
+			{
+				lbl_as_name.setBounds(10, 10, 50,  30);
+				txt_as_name.setBounds(62, 12, 200, 30);
+				
+				center.add(lbl_as_name);
+				center.add(txt_as_name);
+			}
+		}
+		
+		public G2DTree getTree() {
+			return tree;
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (e.getSource() == super.ok) {
+				TreeNode node = getUserObject();
+				if (node != null) {
+					TreePath path = tree.createTreePath(node);
+					tree.expand(node);
+					tree.setSelectionPath(path);
+					tree.scrollPathToVisible(path);
+				}
+			} else {
+				super.actionPerformed(e);
+			}
+		}
 
+		protected TreeNode getUserObject() {
+			history_text = txt_as_name.getText();
+			
+			if (!txt_as_name.getText().isEmpty()) {
+				TreeNode current = tree.getSelectedNode();
+				if (current == tree.getRoot()) {
+					current = null;
+				}
+				for (TreeNode node : getNodes(tree.getRoot())) {
+					if (current != null) {
+						if (node == current) {
+							current = null;
+						}
+					} else {
+						Pattern pattern = Pattern.compile(txt_as_name.getText());
+						Matcher matcher_name = pattern.matcher(node.toString());
+						if(matcher_name.find()){
+							return node;
+						}
+					}
+				}
+			}
+			return null;
+		}
+	}
 	
 }
