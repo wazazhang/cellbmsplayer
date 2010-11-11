@@ -1,6 +1,7 @@
 package com.g2d.studio.swing;
 
 import java.awt.Component;
+import java.awt.Rectangle;
 import java.util.Collection;
 import java.util.Vector;
 
@@ -30,6 +31,25 @@ public class G2DList<T extends G2DListItem> extends JList
 	}
 	
 	
+	@Override
+	public void setSelectedValue(Object anObject, boolean shouldScroll) {
+		super.setSelectedValue(anObject, shouldScroll);
+//		if (shouldScroll) {
+//			int index = getSelectedIndex();
+//			Rectangle rect = getCellBounds(index, index);
+//			System.out.println("getSelectedIndex = " + index);	
+//			System.out.println(getSize());	
+//			
+//			System.out.println(rect);
+//			int bw = getWidth() / rect.width;
+//			if (bw > 0) {
+//				rect.y = rect.y / bw;
+//			}
+//			System.out.println(rect);
+//			scrollRectToVisible(rect);
+//		}
+	}
+	
 	@SuppressWarnings("unchecked")
 	public T getSelectedItem()
 	{
@@ -39,7 +59,6 @@ public class G2DList<T extends G2DListItem> extends JList
 		return null;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public Object[] getSelectedItems()
 	{
 		try{
@@ -70,10 +89,11 @@ public class G2DList<T extends G2DListItem> extends JList
 				G2DListItem item = (G2DListItem) value;
 				Component comp = item.getListComponent(list, value, index, isSelected, cellHasFocus);
 				if (comp != null) {
+					comp.setSize(render.getSize());
 					return comp;
 				} else {
-					this.setIcon(item.getListIcon(false));
-					this.setText(item.getListName());
+					render.setIcon(item.getListIcon(false));
+					render.setText(item.getListName());
 				}
 			}
 			

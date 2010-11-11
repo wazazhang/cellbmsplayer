@@ -46,6 +46,7 @@ public abstract class G2DListSelectDialog<T extends G2DListItem>  extends Abstra
 		super.setCenter();
 		
 		this.list = list;
+		this.list.setSize(getSize());
 		this.list.setLayoutOrientation(JList.HORIZONTAL_WRAP);		
 		this.list.setVisibleRowCount(0);
 		this.add(new JScrollPane(list), BorderLayout.CENTER);
@@ -105,9 +106,11 @@ public abstract class G2DListSelectDialog<T extends G2DListItem>  extends Abstra
 	}
 	
 	public T showDialog() {		
-		Object old = list.getSelectedValue();
-		list.clearSelection();
-		list.setSelectedValue(old, true);
+//		this.list.setSize(getSize());
+//		this.list.repaint();
+//		Object old = list.getSelectedValue();
+//		list.clearSelection();
+//		list.setSelectedValue(old, true);
 		super.setVisible(true);
 		return object;
 	}
