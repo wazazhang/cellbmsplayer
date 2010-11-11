@@ -5,6 +5,8 @@ import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -59,9 +61,9 @@ public class DropItemEditor extends AbstractDialog implements PropertyCellEdit<D
 		{
 			JPanel bp = new JPanel(new FlowLayout());
 			bp.add(ok);
-			bp.add(value_add);
-			bp.add(value_edt);
 			bp.add(value_del);
+			bp.add(value_edt);
+			bp.add(value_add);
 			this.add(bp, BorderLayout.SOUTH);
 			
 			value_add.addActionListener(this);
@@ -81,17 +83,27 @@ public class DropItemEditor extends AbstractDialog implements PropertyCellEdit<D
 	
 	protected void resetList(Node edit_node)
 	{
+		double max = 100;
+		
+		if (edit_node != null) {
+			max -= edit_node.value.drop_rate_percent;
+		}
+		
 		double total_percent = 0;
+		
 		if (!node_list.isEmpty()) {
 			for (Node e : node_list) {
-				total_percent += e.value.drop_rate_percent;
+				if (!e.equals(edit_node)) {
+					total_percent += e.value.drop_rate_percent;
+				}
 			}
-			if (total_percent > 100) {
-				double div = (double)((100 - total_percent) / (node_list.size() - (edit_node==null?0:1)));
+			if (total_percent > max) {
+				double div = max / total_percent;
 				for (Node e : node_list) {
 					if (!e.equals(edit_node)) {
-						e.value.drop_rate_percent += div;
+						e.value.drop_rate_percent *= div;
 						e.value.drop_rate_percent = Math.round(e.value.drop_rate_percent * 10000) / 10000;
+						e.value.drop_rate_percent = Math.max(0, e.value.drop_rate_percent);
 					}
 				}
 			}
@@ -137,6 +149,7 @@ public class DropItemEditor extends AbstractDialog implements PropertyCellEdit<D
 			if (node != null) {
 				node_list.add(node);
 				resetList(node);
+				value_list.setSelectedValue(node, true);
 			}
 		}
 		else if (e.getSource() == value_edt) {
@@ -197,11 +210,12 @@ public class DropItemEditor extends AbstractDialog implements PropertyCellEdit<D
 		}
 	}
 	
-	class EditNodeDialog extends AbstractOptionDialog<Node>
+	class EditNodeDialog extends AbstractOptionDialog<Node> implements MouseListener
 	{
 		private static final long serialVersionUID = 1L;
-		
-		ObjectSelectList<XLSItem> 	item_list 	= new ObjectSelectList<XLSItem>(XLSItem.class, 10);
+
+//		ObjectSelectList<XLSItem> 	item_list 	= new ObjectSelectList<XLSItem>(XLSItem.class, 10);
+		G2DList<XLSItem>			item_list	= new G2DList<XLSItem>();
 		JSpinner					percent		= new JSpinner(new SpinnerNumberModel(100.d, 0.d, 100.d, 1.d));
 		Node						edit_node	= null;
 		
@@ -217,26 +231,31 @@ public class DropItemEditor extends AbstractDialog implements PropertyCellEdit<D
 
 			this.edit_node = node;
 			
+			this.item_list.setListData(Studio.getInstance().getObjectManager().getObjects(XLSItem.class));
+			
 			if (edit_node != null) {
-				item_list.setSelectedUnit(edit_node.item);
+				item_list.setSelectedValue(edit_node.item, true);
 				percent.setValue(edit_node.value.drop_rate_percent);
 			} else {
 				percent.setValue(100.d / (node_list.size()+1));
 			}
+			
+			
 			
 			JPanel num_panel = new JPanel(new BorderLayout());
 			num_panel.add(percent, BorderLayout.CENTER);
 			num_panel.add(new JLabel("百分比"), BorderLayout.WEST);
 			
 			this.add(num_panel, BorderLayout.NORTH);
-			this.add(item_list, BorderLayout.CENTER);
-			
+			this.add(new JScrollPane(item_list), BorderLayout.CENTER);
+
+			item_list.addMouseListener(this);
 			
 		}
-		
+
 		@Override
 		protected boolean checkOK() {
-			XLSItem titem = item_list.getSelectedUnit();
+			XLSItem titem = item_list.getSelectedItem();
 			if (titem==null) {
 				JOptionPane.showMessageDialog(this, "未选择道具类型！");
 				return false;
@@ -247,7 +266,7 @@ public class DropItemEditor extends AbstractDialog implements PropertyCellEdit<D
 		@Override
 		protected Node getUserObject() {
 			try{
-				XLSItem titem = item_list.getSelectedUnit();
+				XLSItem titem = item_list.getSelectedItem();
 				if (titem!=null) {
 					Number perc = (Number)percent.getValue();
 					DropItemNode value = new DropItemNode(titem.getIntID(), perc.floatValue());
@@ -266,13 +285,21 @@ public class DropItemEditor extends AbstractDialog implements PropertyCellEdit<D
 			return null;
 		}
 		
-//		@Override
-//		protected Object[] getUserObjects()
-//		{
-//			Object[] objs = new Object[1];				
-//			objs[0] = getUserObject();				
-//			return objs;
-//		}	
+		public void mouseClicked(MouseEvent e) {
+			if (e.getClickCount() == 2) {
+				Node node = getUserObject();
+				if (node != null) {
+					node_list.add(node);
+					resetList(node);
+					value_list.setSelectedValue(node, true);
+				}
+			}
+		}
+		public void mouseEntered(MouseEvent e) {}
+		public void mouseExited(MouseEvent e) {}
+		public void mousePressed(MouseEvent e) {}
+		public void mouseReleased(MouseEvent e) {}
+		
 
 	}
 	

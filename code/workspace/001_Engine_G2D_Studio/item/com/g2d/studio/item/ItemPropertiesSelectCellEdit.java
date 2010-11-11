@@ -48,7 +48,7 @@ public class ItemPropertiesSelectCellEdit extends G2DListSelectDialog<ItemProper
 	{
 		public ItemPropertiesList() {
 			super(Studio.getInstance().getItemManager().getAllNodes());
-			super.setLayoutOrientation(JList.VERTICAL);
+//			super.setLayoutOrientation(JList.VERTICAL);
 		}
 	}
 }

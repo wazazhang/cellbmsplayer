@@ -57,11 +57,20 @@ public class PropertyAdapters
 				if (adapter != null) {
 					switch (adapter.value()) {
 					case UNIT_ID: 
-						return new ObjectSelectCellEditInteger<XLSUnit>(XLSUnit.class, fieldValue);
+						ObjectSelectCellEditInteger<XLSUnit> ud = new ObjectSelectCellEditInteger<XLSUnit>(
+								owner.getComponent(), XLSUnit.class, fieldValue);
+						ud.showDialog();
+						return ud;
 					case ITEM_ID: 
-						return new ObjectSelectCellEditInteger<XLSItem>(XLSItem.class, fieldValue);
+						ObjectSelectCellEditInteger<XLSItem> id = new ObjectSelectCellEditInteger<XLSItem>(
+								owner.getComponent(), XLSItem.class, fieldValue);
+						id.showDialog();
+						return id;
 					case ITEM_LIST_ID:
-						return new ObjectSelectCellEditInteger<DItemList>(DItemList.class, fieldValue);
+						ObjectSelectCellEditInteger<DItemList> ild = new ObjectSelectCellEditInteger<DItemList>(
+								owner.getComponent(), DItemList.class, fieldValue);
+						ild.showDialog();
+						return ild;
 					case QUEST_ID:
 						QuestSelectCellEdit dialog = new QuestSelectCellEdit(
 								owner.getComponent(), false,
@@ -69,13 +78,20 @@ public class PropertyAdapters
 						dialog.showDialog();
 						return dialog;
 					case SKILL_ID:
-						return new ObjectSelectCellEditInteger<XLSSkill>(XLSSkill.class, fieldValue);
+						ObjectSelectCellEditInteger<XLSSkill> skd = new ObjectSelectCellEditInteger<XLSSkill>(
+								owner.getComponent(), XLSSkill.class, fieldValue);
+						skd.showDialog();
+						return skd;
 					case SCENE_ID:
-						SceneSelectDialog dialog4 = new SceneSelectDialog(owner.getComponent(), Parser.castNumber(fieldValue, Integer.class));
+						SceneSelectDialog dialog4 = new SceneSelectDialog(
+								owner.getComponent(), Parser.castNumber(fieldValue, Integer.class));
 						dialog4.showDialog();
 						return dialog4;
 					case AVATAR_ID:
-						return new ObjectSelectCellEditInteger<DAvatar>(DAvatar.class, fieldValue);
+						ObjectSelectCellEditInteger<DAvatar> ad = new ObjectSelectCellEditInteger<DAvatar>(
+								owner.getComponent(), DAvatar.class, fieldValue);
+						ad.showDialog();
+						return ad;
 					case ITEM_PROPERTY_SAVED_TYPE:
 						ItemPropertySavedTypeSelectDialog dialog2 = new ItemPropertySavedTypeSelectDialog(
 								owner.getComponent(), 

@@ -87,6 +87,9 @@ public class Quest extends RPGObject implements NamedObject
 	@Property({"隐藏任务", "接了/完成任务时不会提示玩家，也不会出现在玩家的已接/完成任务列表中"})
 	public boolean				is_hidden_quest		= false;
 	
+	@Property({"主动可接受任务", "在可接受的情况下会出现在玩家的可接受任务列表中"})
+	public boolean				is_positive_acceptable_quest = false;
+	
 //	----------------------------------------------------------------------------------------------------------------
 	public Quest(Integer id, String name) {
 		super(id.toString());

@@ -11,42 +11,22 @@ import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.entity.ObjectNode;
 
 
-public class ObjectSelectCellEditInteger<T extends ObjectNode<?>> extends JComboBox implements PropertyCellEdit<Integer>
+@SuppressWarnings("serial")
+public class ObjectSelectCellEditInteger<T extends ObjectNode<?>> extends ObjectSelectDialogInteger<T> implements PropertyCellEdit<Integer>
 {
-	private static final long serialVersionUID = 1L;
-
-	ObjectPropertyEdit panel;
-	
-	public ObjectSelectCellEditInteger(Class<T> object_type) 
+	public ObjectSelectCellEditInteger(Component owner, Class<T> object_type) 
 	{
-		this(object_type, null);
+		this(owner, object_type, null);
 	}
 	
-	public ObjectSelectCellEditInteger(Class<T> object_type, Object selected) 
+	public ObjectSelectCellEditInteger(Component owner, Class<T> object_type, Object selected) 
 	{
-		this(object_type, null, null);
+		this(owner, object_type, null, null);
 	}
 	
-	public ObjectSelectCellEditInteger(Class<T> object_type, Object selected, ObjectSelectCellEditFillter<T> filter) 
+	public ObjectSelectCellEditInteger(Component owner, Class<T> object_type, Object selected, ObjectSelectFilter<T> filter) 
 	{
-		super(ObjectSelectCellEdit.getObjects(object_type, filter));
-		if (selected != null) {
-			super.setSelectedItem(selected);
-		}
+		super(owner, object_type, 4, selected, filter);
 	}
-	
-	public Component getComponent(ObjectPropertyEdit panel) {		
-		this.panel = panel;
-		return this;
-	}
-	
-	public Integer getValue() {
-		Object item = getSelectedItem();
-		if (item instanceof ObjectNode<?>) {
-			return ((ObjectNode<?>) item).getIntID();
-		}
-		return null;
-	}
-
 	
 }

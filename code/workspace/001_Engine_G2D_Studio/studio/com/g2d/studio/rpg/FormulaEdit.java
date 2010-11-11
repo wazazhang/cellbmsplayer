@@ -50,6 +50,7 @@ import com.g2d.editor.property.ObjectPropertyEdit;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.ObjectSelectCellEditInteger;
+import com.g2d.studio.gameedit.ObjectSelectComboInteger;
 import com.g2d.studio.gameedit.XLSColumnSelectCellEdit;
 import com.g2d.studio.gameedit.dynamic.DAvatar;
 import com.g2d.studio.gameedit.dynamic.DEffect;
@@ -294,11 +295,11 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 	{
 		ListEnumEdit<ObjectType> combo_obj_type = new ListEnumEdit<ObjectType>(ObjectType.class);
 		
-		ObjectSelectCellEditInteger<XLSUnit>	combo_unit		= new ObjectSelectCellEditInteger<XLSUnit>(XLSUnit.class);
-		ObjectSelectCellEditInteger<XLSItem>	combo_titem		= new ObjectSelectCellEditInteger<XLSItem>(XLSItem.class);
-		ObjectSelectCellEditInteger<XLSSkill>	combo_skill		= new ObjectSelectCellEditInteger<XLSSkill>(XLSSkill.class);
-		ObjectSelectCellEditInteger<DAvatar>	combo_avatar	= new ObjectSelectCellEditInteger<DAvatar>(DAvatar.class);
-		ObjectSelectCellEditInteger<DEffect>	combo_effect	= new ObjectSelectCellEditInteger<DEffect>(DEffect.class);
+		ObjectSelectComboInteger<XLSUnit>		combo_unit		= new ObjectSelectComboInteger<XLSUnit>(XLSUnit.class);
+		ObjectSelectComboInteger<XLSItem>		combo_titem		= new ObjectSelectComboInteger<XLSItem>(XLSItem.class);
+		ObjectSelectComboInteger<XLSSkill>		combo_skill		= new ObjectSelectComboInteger<XLSSkill>(XLSSkill.class);
+		ObjectSelectComboInteger<DAvatar>		combo_avatar	= new ObjectSelectComboInteger<DAvatar>(DAvatar.class);
+		ObjectSelectComboInteger<DEffect>		combo_effect	= new ObjectSelectComboInteger<DEffect>(DEffect.class);
 		QuestSelectCellEditComboBox				combo_quest		= new QuestSelectCellEditComboBox();
 		SceneListCellEditInteger				combo_scene		= new SceneListCellEditInteger();
 		ItemPropertySavedTypeSelectComboBox		combo_itypes	= new ItemPropertySavedTypeSelectComboBox(null);
