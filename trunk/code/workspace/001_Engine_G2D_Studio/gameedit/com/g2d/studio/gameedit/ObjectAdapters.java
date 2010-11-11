@@ -46,7 +46,10 @@ public class ObjectAdapters
 				Object editObject, 
 				Object fieldValue, Field field) {
 			if (field.getName().equals("template_unit_id")){
-				return new ObjectSelectCellEdit<XLSUnit>(XLSUnit.class);
+				ObjectSelectCellEdit<XLSUnit> dialog = new ObjectSelectCellEdit<XLSUnit>(
+						owner.getComponent(), XLSUnit.class, fieldValue);
+				dialog.showDialog();
+				return dialog;
 			}
 			return null;
 		}
@@ -143,11 +146,9 @@ public class ObjectAdapters
 		public PropertyCellEdit<?> getCellEdit(ObjectPropertyEdit owner, Object editObject, Object fieldValue, Field field) {
 			if (field.getName().equals("item_list_id")) {
 				ObjectSelectCellEditInteger<DItemList> item_list = 
-					new ObjectSelectCellEditInteger<DItemList>(DItemList.class);
-				if (item_list!=null) {
-					item_list.setSelectedItem(fieldValue);
-					return item_list;
-				}
+					new ObjectSelectCellEditInteger<DItemList>(owner.getComponent(), DItemList.class, fieldValue);
+				item_list.showDialog();
+				return item_list;
 			}
 			return null;
 		}
@@ -191,12 +192,10 @@ public class ObjectAdapters
 		@Override
 		public PropertyCellEdit<?> getCellEdit(ObjectPropertyEdit owner, Object editObject, Object fieldValue, Field field) {
 			if (field.getName().equals("shopitem_list_id")) {
-				ObjectSelectCellEditInteger<DShopItemList> item_list = 
-					new ObjectSelectCellEditInteger<DShopItemList>(DShopItemList.class);
-				if (item_list!=null) {
-					item_list.setSelectedItem(fieldValue);
-					return item_list;
-				}
+				ObjectSelectCellEditInteger<DShopItemList> item_list = new ObjectSelectCellEditInteger<DShopItemList>(
+						owner.getComponent(), DShopItemList.class, fieldValue);
+				item_list.showDialog();
+				return item_list;
 			}
 			return null;
 		}
@@ -247,7 +246,7 @@ public class ObjectAdapters
 							owner.getComponent(), 
 							Studio.getInstance().getItemManager().getNode((Integer)fieldValue)
 							);
-					edit.setValue((Integer)fieldValue);
+//					edit.setValue((Integer)fieldValue);
 					edit.showDialog();
 					return edit;
 				}
@@ -295,9 +294,10 @@ public class ObjectAdapters
 				Object editObject, 
 				Object fieldValue, Field field) {
 			if (field.getName().equals("shop_item_id")){
-				ObjectSelectCellEditInteger<XLSShopItem> item = new ObjectSelectCellEditInteger<XLSShopItem>(XLSShopItem.class);
+				ObjectSelectCellEditInteger<XLSShopItem> item = new ObjectSelectCellEditInteger<XLSShopItem>(
+						owner.getComponent(), XLSShopItem.class, fieldValue);
 				if (item!=null) {
-					item.setSelectedItem(fieldValue);
+					item.showDialog();
 					return item;
 				}
 			}

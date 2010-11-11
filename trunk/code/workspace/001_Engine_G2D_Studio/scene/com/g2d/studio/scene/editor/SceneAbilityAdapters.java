@@ -33,7 +33,7 @@ import com.g2d.editor.property.ObjectPropertyEdit;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.ObjectSelectCellEdit;
-import com.g2d.studio.gameedit.ObjectSelectCellEditFillter;
+import com.g2d.studio.gameedit.ObjectSelectFilter;
 import com.g2d.studio.gameedit.ObjectSelectDialog;
 import com.g2d.studio.gameedit.template.XLSSkill;
 import com.g2d.studio.gameedit.template.XLSUnit;
@@ -220,7 +220,10 @@ public class SceneAbilityAdapters
 				Object editObject, 
 				Object fieldValue, Field field) {
 			if (field.getName().equals("template_unit_id")){
-				return new ObjectSelectCellEdit<XLSUnit>(XLSUnit.class);
+				ObjectSelectCellEdit<XLSUnit> ret = new ObjectSelectCellEdit<XLSUnit>(
+						owner.getComponent(), XLSUnit.class);
+				ret.showDialog();
+				return ret;
 			}
 			return null;
 		}
@@ -255,7 +258,7 @@ public class SceneAbilityAdapters
 	 */
 	public static class RegionSpawnCollectionNodeAdapter
 	extends AbilityCellEditAdapter<CollectionSpawn> 
-	implements ObjectSelectCellEditFillter<XLSUnit>
+	implements ObjectSelectFilter<XLSUnit>
 	{
 		@Override
 		public Class<CollectionSpawn> getType() {
@@ -276,7 +279,10 @@ public class SceneAbilityAdapters
 				Object editObject, 
 				Object fieldValue, Field field) {
 			if (field.getName().equals("template_unit_id")){
-				return new ObjectSelectCellEdit<XLSUnit>(XLSUnit.class, this);
+				ObjectSelectCellEdit<XLSUnit> ret = new ObjectSelectCellEdit<XLSUnit>(
+						owner.getComponent(), XLSUnit.class, fieldValue, this);
+				ret.showDialog();
+				return ret;
 			}
 			return null;
 		}

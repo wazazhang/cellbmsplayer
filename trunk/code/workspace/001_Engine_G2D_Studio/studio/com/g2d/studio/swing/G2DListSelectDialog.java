@@ -67,11 +67,13 @@ public abstract class G2DListSelectDialog<T extends G2DListItem>  extends Abstra
 		if (default_value != null) {
 			list.setSelectedValue(default_value, true);
 		} else {
-			Object obj = histroy_selected.get(getClass());
-			if (obj != null) {
-				try {
+			try {
+				Object tobj = list.getModel().getElementAt(0);
+				Object obj = histroy_selected.get(tobj.getClass());
+				if (obj != null) {
 					list.setSelectedValue(obj, true);
-				} catch (Exception err){}
+				}
+			} catch (Exception err) {
 			}
 		}
 	}
@@ -91,7 +93,9 @@ public abstract class G2DListSelectDialog<T extends G2DListItem>  extends Abstra
 		if (e.getSource() == ok) {
 			if (checkOK()) {
 				object = list.getSelectedItem();
-				histroy_selected.put(getClass(), object);
+				if (object != null) {
+					histroy_selected.put(object.getClass(), object);
+				}
 				this.setVisible(false);
 			}
 		} else if (e.getSource() == cancel) {
@@ -100,7 +104,10 @@ public abstract class G2DListSelectDialog<T extends G2DListItem>  extends Abstra
 		}
 	}
 	
-	public T showDialog() {
+	public T showDialog() {		
+		Object old = list.getSelectedValue();
+		list.clearSelection();
+		list.setSelectedValue(old, true);
 		super.setVisible(true);
 		return object;
 	}

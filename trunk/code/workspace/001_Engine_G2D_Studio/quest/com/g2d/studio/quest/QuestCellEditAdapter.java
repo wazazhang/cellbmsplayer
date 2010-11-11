@@ -163,7 +163,9 @@ public class QuestCellEditAdapter {
 		@Override
 		public PropertyCellEdit<?> getCellEdit(ObjectPropertyEdit owner, Object editObject, Object fieldValue, Field field) {
 			if (field.getName().equals("kill_unit_id")) {
-				ObjectSelectCellEditInteger<XLSUnit> edit = new ObjectSelectCellEditInteger<XLSUnit>(XLSUnit.class);
+				ObjectSelectCellEditInteger<XLSUnit> edit = new ObjectSelectCellEditInteger<XLSUnit>(
+						owner.getComponent(), XLSUnit.class, fieldValue);
+				edit.showDialog();
 				return edit;
 			}
 			return null;
@@ -199,7 +201,9 @@ public class QuestCellEditAdapter {
 		public PropertyCellEdit<?> getCellEdit(ObjectPropertyEdit owner,
 			Object editObject, Object fieldValue, Field field) {
 			if (field.getName().equals("titem_index")) {
-				ObjectSelectCellEditInteger<XLSItem> item_edit = new ObjectSelectCellEditInteger<XLSItem>(XLSItem.class);
+				ObjectSelectCellEditInteger<XLSItem> item_edit = new ObjectSelectCellEditInteger<XLSItem>(
+						owner.getComponent(), XLSItem.class, fieldValue);
+				item_edit.showDialog();
 				return item_edit;
 			}
 			return null;
@@ -333,7 +337,9 @@ public class QuestCellEditAdapter {
 		public PropertyCellEdit<?> getCellEdit(ObjectPropertyEdit owner,
 			Object editObject, Object fieldValue, Field field) {
 			if (field.getName().equals("titem_index")) {
-				ObjectSelectCellEditInteger<XLSItem> item_edit = new ObjectSelectCellEditInteger<XLSItem>(XLSItem.class);
+				ObjectSelectCellEditInteger<XLSItem> item_edit = new ObjectSelectCellEditInteger<XLSItem>(
+						owner.getComponent(), XLSItem.class, fieldValue);
+				item_edit.showDialog();
 				return item_edit;
 			}
 			return null;
@@ -368,7 +374,9 @@ public class QuestCellEditAdapter {
 		public PropertyCellEdit<?> getCellEdit(ObjectPropertyEdit owner,
 			Object editObject, Object fieldValue, Field field) {
 			if (field.getName().equals("titem_index")) {
-				ObjectSelectCellEditInteger<XLSItem> item_edit = new ObjectSelectCellEditInteger<XLSItem>(XLSItem.class);
+				ObjectSelectCellEditInteger<XLSItem> item_edit = new ObjectSelectCellEditInteger<XLSItem>(
+						owner.getComponent(), XLSItem.class, fieldValue);
+				item_edit.showDialog();
 				return item_edit;
 			}
 			return null;
@@ -450,7 +458,9 @@ public class QuestCellEditAdapter {
 		public PropertyCellEdit<?> getCellEdit(ObjectPropertyEdit owner,
 			Object editObject, Object fieldValue, Field field) {
 			if (field.getName().equals("unit_id")) {
-				ObjectSelectCellEditInteger<XLSUnit> edit = new ObjectSelectCellEditInteger<XLSUnit>(XLSUnit.class);
+				ObjectSelectCellEditInteger<XLSUnit> edit = new ObjectSelectCellEditInteger<XLSUnit>(
+						owner.getComponent(), XLSUnit.class, fieldValue);
+				edit.showDialog();
 				return edit;
 			}
 			return null;
