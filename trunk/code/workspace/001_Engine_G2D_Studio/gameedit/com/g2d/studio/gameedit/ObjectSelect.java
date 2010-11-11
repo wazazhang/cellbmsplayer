@@ -106,6 +106,20 @@ public class ObjectSelect<T extends ObjectNode<?>> extends AbstractOptionDialog<
 	}
 	
 	
+	@Override
+	public T showDialog() {
+		new Thread(){
+			public void run() {
+				try {
+					Thread.sleep(100);
+					int index = list.getSelectedIndex();
+					list.scrollRectToVisible(list.getCellBounds(index, index));
+				} catch (Exception err) {}
+			}
+		}.start();
+		return super.showDialog();
+	}
+	
 	public static<T extends ObjectNode<?>> Vector<T> getObjects(Class<T> object_type, ObjectSelectFilter<T> filter)
 	{
 		Vector<T> src = Studio.getInstance().getObjectManager().getObjects(object_type);

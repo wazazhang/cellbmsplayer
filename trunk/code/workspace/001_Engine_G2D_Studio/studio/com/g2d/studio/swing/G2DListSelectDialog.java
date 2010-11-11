@@ -106,11 +106,15 @@ public abstract class G2DListSelectDialog<T extends G2DListItem>  extends Abstra
 	}
 	
 	public T showDialog() {		
-//		this.list.setSize(getSize());
-//		this.list.repaint();
-//		Object old = list.getSelectedValue();
-//		list.clearSelection();
-//		list.setSelectedValue(old, true);
+		new Thread(){
+			public void run() {
+				try {
+					Thread.sleep(100);
+					int index = list.getSelectedIndex();
+					list.scrollRectToVisible(list.getCellBounds(index, index));
+				} catch (Exception err) {}
+			}
+		}.start();
 		super.setVisible(true);
 		return object;
 	}
