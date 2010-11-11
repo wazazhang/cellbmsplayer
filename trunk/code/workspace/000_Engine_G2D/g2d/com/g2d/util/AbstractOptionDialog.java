@@ -42,6 +42,7 @@ public abstract class AbstractOptionDialog<T> extends AbstractDialog implements 
 		south.add(ok);
 		south.add(cancel);
 		this.add(south, BorderLayout.SOUTH);
+		ok.setDefaultCapable(true);
 	}
 	
 	public T showDialog(){
