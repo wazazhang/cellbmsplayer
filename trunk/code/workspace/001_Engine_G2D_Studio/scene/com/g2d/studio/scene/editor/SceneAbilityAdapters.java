@@ -3,8 +3,11 @@ package com.g2d.studio.scene.editor;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -356,8 +359,8 @@ public class SceneAbilityAdapters
 		{
 			private static final long serialVersionUID = 1L;
 
-			Vector<XLSSkill> 	list_data 	= new Vector<XLSSkill>();
-			G2DList<XLSSkill> 	list 		= new G2DList<XLSSkill>();
+			LinkedHashSet<XLSSkill>	list_data 	= new LinkedHashSet<XLSSkill>();
+			G2DList<XLSSkill> 		list 		= new G2DList<XLSSkill>();
 			
 			JButton btn_add_skill = new JButton("添加");
 			JButton btn_del_skill = new JButton("删除");
@@ -379,7 +382,7 @@ public class SceneAbilityAdapters
 						}
 					}
 				}
-				list.setListData(list_data);
+				list.setListData(list_data.toArray());
 				
 				super.add(new JScrollPane(list), BorderLayout.CENTER);
 			}
@@ -409,20 +412,35 @@ public class SceneAbilityAdapters
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (e.getSource() == btn_add_skill) {
-					ObjectSelectDialog<XLSSkill> dialog = new ObjectSelectDialog<XLSSkill>(this, XLSSkill.class, 10);
+					final ObjectSelectDialog<XLSSkill> dialog = new ObjectSelectDialog<XLSSkill>(this, XLSSkill.class, 10);
 					dialog.setSize(200, 400);
 					dialog.setLocation(getX()+getWidth(), getY());
+					dialog.getList().addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseClicked(MouseEvent e) {
+							if (e.getClickCount() == 2) {
+								XLSSkill skill = dialog.getList().getSelectedItem();
+								if (skill != null) {
+									list_data.add(skill);
+									list.setListData(list_data.toArray());
+									list.setSelectedValue(skill, true);
+									list.repaint();
+								}
+							}
+						}
+					});
 					XLSSkill skill = dialog.showDialog();
 					if (skill != null) {
 						list_data.add(skill);
-						list.setListData(list_data);
+						list.setListData(list_data.toArray());
+						list.setSelectedValue(skill, true);
 						list.repaint();
 					}
 				} else if (e.getSource() == btn_del_skill) {
 					XLSSkill item = list.getSelectedItem();
 					if (item != null) {
 						list_data.remove(item);
-						list.setListData(list_data);
+						list.setListData(list_data.toArray());
 						list.repaint();
 					}
 				} else {

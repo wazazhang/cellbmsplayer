@@ -87,6 +87,9 @@ public class ObjectSelect<T extends ObjectNode<?>> extends AbstractOptionDialog<
 		}
 	}
 	
+	public G2DList<T> getList() {
+		return list;
+	}
 	
 	@Override
 	protected T getUserObject() {
