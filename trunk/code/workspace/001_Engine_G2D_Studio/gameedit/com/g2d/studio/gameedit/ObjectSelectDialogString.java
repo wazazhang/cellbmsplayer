@@ -30,7 +30,7 @@ public class ObjectSelectDialogString<T extends ObjectNode<?>> extends ObjectSel
 	
 	@Override
 	public String getValue() {
-		T obj = getUserObject();
+		T obj = getSelectedObject();
 		if (obj != null) {
 			return obj.getID();
 		}

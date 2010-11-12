@@ -42,6 +42,6 @@ public class ObjectSelectDialog<T extends ObjectNode<?>> extends ObjectSelect<T>
 	
 	@Override
 	public T getValue() {
-		return getUserObject();
+		return getSelectedObject();
 	}
 }

@@ -874,7 +874,7 @@ public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<Abst
 		}
 		
 		@Override
-		protected SyntheticMethod getUserObject() {
+		protected SyntheticMethod getUserObject(ActionEvent e) {
 			SyntheticMethod srcValue = new SyntheticMethod();
 			return (SyntheticMethod)method_panel.getMethod(srcValue);
 		}

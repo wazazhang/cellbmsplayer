@@ -44,7 +44,7 @@ public class SelectEventDialog extends AbstractOptionDialog<Class<? extends Even
 	}
 	
 	@Override
-	protected Class<? extends Event> getUserObject() { 
+	protected Class<? extends Event> getUserObject(ActionEvent e) { 
 		return list.getValue();
 	}
 	

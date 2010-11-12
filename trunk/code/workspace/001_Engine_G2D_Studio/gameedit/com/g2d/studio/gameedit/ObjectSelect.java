@@ -2,6 +2,7 @@ package com.g2d.studio.gameedit;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import java.util.Vector;
 
@@ -92,16 +93,17 @@ public class ObjectSelect<T extends ObjectNode<?>> extends AbstractOptionDialog<
 	}
 	
 	@Override
-	protected T getUserObject() {
+	protected T getUserObject(ActionEvent e) {
 		T obj = list.getSelectedItem();
-		if (obj != null) {
+		if (obj != null) {		
+			cell_edit_component.setText(obj.getName());
+			cell_edit_component.setIcon(obj.getIcon(false));
 			last_selected_map.put(obj.getClass(), obj);
 		}
 		return obj;
 	}
 
 	public Component getComponent(ObjectPropertyEdit panel) {
-		cell_edit_component.setText(getUserObject()+"");
 		return cell_edit_component;
 	}
 	

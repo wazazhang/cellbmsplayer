@@ -69,8 +69,12 @@ public class ItemFormulaEdit extends AbstractOptionDialog<ItemFormula> implement
 	}
 	
 	@Override
-	protected ItemFormula getUserObject() {
-		return getValue();
+	protected ItemFormula getUserObject(ActionEvent e) {
+		edit_data.src_items_id.clear();
+		edit_data.src_items_id.putAll(src.getValue());
+		edit_data.dst_items_id.clear();
+		edit_data.dst_items_id.putAll(dst.getValue());
+		return edit_data;
 	}
 	
 //	@Override
@@ -83,7 +87,7 @@ public class ItemFormulaEdit extends AbstractOptionDialog<ItemFormula> implement
 	
 	@Override
 	public Component getComponent(ObjectPropertyEdit panel) {
-		ItemFormula data = getValue();
+		ItemFormula data = getSelectedObject();
 		cell_edit.setText(data.toString());
 		return cell_edit;
 	}
@@ -91,13 +95,7 @@ public class ItemFormulaEdit extends AbstractOptionDialog<ItemFormula> implement
 	@Override
 	public ItemFormula getValue()
 	{
-		edit_data.src_items_id.clear();
-		edit_data.src_items_id.putAll(src.getValue());
-		
-		edit_data.dst_items_id.clear();
-		edit_data.dst_items_id.putAll(dst.getValue());
-		
-		return edit_data;
+		return getSelectedObject();
 	}
 	
 	

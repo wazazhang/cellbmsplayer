@@ -86,7 +86,7 @@ public abstract class G2DListSelectDialog<T extends G2DListItem>  extends Abstra
 	}
 	
 	public T getSelectedObject() {
-		return list.getSelectedItem();
+		return object;
 	}
 	
 	@Override

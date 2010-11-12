@@ -20,7 +20,7 @@ public abstract class AbstractOptionDialog<T> extends AbstractDialog implements 
 {
 	private static final long serialVersionUID = 1L;
 	
-	protected T 		selected_object = null;
+	private T 			selected_object = null;
 	
 	protected JPanel	south 	= new JPanel(new FlowLayout());
 	protected JButton 	ok 		= new JButton("确定");
@@ -50,8 +50,38 @@ public abstract class AbstractOptionDialog<T> extends AbstractDialog implements 
 		return selected_object;
 	}
 	
+	/**
+	 * 获得最终结果
+	 * @return
+	 */
+	public T getSelectedObject() {
+		return selected_object;
+	}
 
+	/**
+	 * 当按下OK时，返回什么样的最终结果
+	 * @param e
+	 * @return
+	 */
+	abstract protected T getUserObject(ActionEvent e);
+	
+	abstract protected boolean checkOK() ;
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == ok) {
+			if (checkOK()) {			
+				selected_object = getUserObject(e);
+				this.setVisible(false);
+			}
+		}
+		else if (e.getSource() == cancel) {
+			selected_object = null;
+			this.setVisible(false);
+		}
+	}
 
+//	-------------------------------------------------------------------------------------------------------------
 //	
 //	想要返回多个结果，只需要将T声明为数组或集合。
 	static class Dialog2 extends AbstractOptionDialog<Object[]>
@@ -64,7 +94,7 @@ public abstract class AbstractOptionDialog<T> extends AbstractDialog implements 
 		}
 		
 		@Override
-		protected Object[] getUserObject() {
+		protected Object[] getUserObject(ActionEvent e) {
 			return null;
 		}
 	}
@@ -75,23 +105,5 @@ public abstract class AbstractOptionDialog<T> extends AbstractDialog implements 
 //		return getUserObjects();		
 //	}
 //	abstract protected Object[] getUserObjects();
-	
-	abstract protected T getUserObject();
-	
-	abstract protected boolean checkOK() ;
-	
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == ok) {
-			if (checkOK()) {			
-				selected_object = getUserObject();
-				this.setVisible(false);
-			}
-		}
-		else if (e.getSource() == cancel) {
-			selected_object = null;
-			this.setVisible(false);
-		}
-	}
 	
 }

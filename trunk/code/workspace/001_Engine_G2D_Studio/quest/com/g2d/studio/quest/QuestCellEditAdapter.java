@@ -552,11 +552,11 @@ public class QuestCellEditAdapter {
 		
 		@Override
 		public TimeObject getValue() {
-			return src;
+			return getSelectedObject();
 		}
 		
 		@Override
-		protected TimeObject getUserObject() {
+		protected TimeObject getUserObject(ActionEvent e) {
 			src.time_unit = combo_time_unit.getValue();
 			src.time_value = Parser.castNumber(combo_time_value.getValue(), Long.class);
 			return src;

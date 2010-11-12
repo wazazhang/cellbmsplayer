@@ -388,8 +388,12 @@ public class SceneAbilityAdapters
 			}
 			
 			@Override
-			protected ArrayList<Integer> getUserObject() {
-				return getValue();
+			protected ArrayList<Integer> getUserObject(ActionEvent e) {
+				ArrayList<Integer> ret = new ArrayList<Integer>(list_data.size());
+				for (XLSSkill data : list_data) {
+					ret.add(data.getIntID());
+				}
+				return ret;
 			}
 			
 //			@Override
@@ -402,11 +406,7 @@ public class SceneAbilityAdapters
 
 			@Override
 			public ArrayList<Integer> getValue() {
-				ArrayList<Integer> ret = new ArrayList<Integer>(list_data.size());
-				for (XLSSkill data : list_data) {
-					ret.add(data.getIntID());
-				}
-				return ret;
+				return getSelectedObject();
 			}
 
 			@Override

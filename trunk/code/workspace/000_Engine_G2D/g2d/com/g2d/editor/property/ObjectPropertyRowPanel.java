@@ -521,7 +521,7 @@ public class ObjectPropertyRowPanel<T> extends BaseObjectPropertyPanel
 		}
 		
 		@Override
-		protected ArrayList<Object> getUserObject() {
+		protected ArrayList<Object> getUserObject(ActionEvent e) {
 			return filler.getValues(
 					ObjectPropertyRowPanel.this,
 					column_field, 

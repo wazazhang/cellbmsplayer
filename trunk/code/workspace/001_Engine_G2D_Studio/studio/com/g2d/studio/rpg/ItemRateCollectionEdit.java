@@ -62,8 +62,11 @@ public class ItemRateCollectionEdit extends AbstractOptionDialog<ItemRateCollect
 	}
 	
 	@Override
-	protected ItemRateCollection getUserObject() {
-		return getValue();
+	protected ItemRateCollection getUserObject(ActionEvent e) {
+		edit_data.item_ids_ = pnl_items_.getItemIDs();
+		edit_data.item_counts_ = pnl_items_.getItemCounts();
+		edit_data.item_rates_ = pnl_items_.getItemRates();
+		return edit_data;
 	}
 	
 //	@Override
@@ -82,13 +85,8 @@ public class ItemRateCollectionEdit extends AbstractOptionDialog<ItemRateCollect
 	}
 	
 	@Override
-	public ItemRateCollection getValue()
-	{
-		edit_data.item_ids_ = pnl_items_.getItemIDs();
-		edit_data.item_counts_ = pnl_items_.getItemCounts();
-		edit_data.item_rates_ = pnl_items_.getItemRates();
-		
-		return edit_data;
+	public ItemRateCollection getValue() {
+		return getSelectedObject();
 	}
 	
 	

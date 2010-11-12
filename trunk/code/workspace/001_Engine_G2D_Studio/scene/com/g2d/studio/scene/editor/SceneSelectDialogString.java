@@ -2,6 +2,7 @@ package com.g2d.studio.scene.editor;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.event.ActionEvent;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -69,7 +70,7 @@ public class SceneSelectDialogString extends AbstractOptionDialog<SceneNode> imp
 	}
 	
 	@Override
-	protected SceneNode getUserObject() {
+	protected SceneNode getUserObject(ActionEvent e) {
 		SceneItem item = scene_panel.getSelectedItem();
 		if (item != null) {
 			return item.node;
@@ -87,7 +88,7 @@ public class SceneSelectDialogString extends AbstractOptionDialog<SceneNode> imp
 	
 	@Override
 	public Component getComponent(ObjectPropertyEdit panel) {
-		SceneNode node = getUserObject();
+		SceneNode node = getSelectedObject();
 		if (node != null) {
 			cell_edit_comp.setText(node.getListName());
 		}
@@ -96,7 +97,7 @@ public class SceneSelectDialogString extends AbstractOptionDialog<SceneNode> imp
 	
 	@Override
 	public String getValue() {
-		SceneNode node = getUserObject();
+		SceneNode node = getSelectedObject();
 		if (node != null) {
 			return node.getIntID()+"";
 		}
