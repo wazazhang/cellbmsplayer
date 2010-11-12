@@ -13,4 +13,9 @@ public class QuestTrigger extends AbstractAbility
 	public boolean isMultiField() {
 		return true;
 	}
+	
+	@Override
+	public String toString() {
+		return super.toString() + ":" + quest_id;
+	}
 }
