@@ -78,6 +78,9 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 	JButton layer_copy	= new JButton("复制层");
 	JButton layer_del	= new JButton("删除层");
 	
+	JButton layer_up	= new JButton("向上");
+	JButton layer_down	= new JButton("向下");
+	
 	JButton refresh		= new JButton("刷新");
 	JButton show		= new JButton("查看");
 	
@@ -94,18 +97,25 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 		{
 			JToolBar bar = new JToolBar();
 			
-			bar.add(layer_add);
-			bar.add(layer_copy);
-			bar.add(layer_del);
+			bar.add	(layer_add);
+			bar.add	(layer_copy);
+			bar.add	(layer_del);
 			bar.addSeparator();
-			bar.add(refresh);
-			bar.add(show);
+			bar.add	(layer_up);
+			bar.add	(layer_down);
+			bar.addSeparator();
+			bar.add	(refresh);
+			bar.add	(show);
 			
-			layer_add.addActionListener(this);
-			layer_copy.addActionListener(this);
-			layer_del.addActionListener(this);
-			refresh.addActionListener(this);
-			show.addActionListener(this);
+			layer_add	.addActionListener(this);
+			layer_copy	.addActionListener(this);
+			layer_del	.addActionListener(this);
+			
+			refresh		.addActionListener(this);
+			show		.addActionListener(this);
+			
+			layer_up	.addActionListener(this);
+			layer_down	.addActionListener(this);
 			
 			layers.addListSelectionListener(this);
 			layers.setMinimumSize(new Dimension(400, 400));
@@ -149,6 +159,26 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 		layers.repaint();
 	}
 		
+	private void swapLayer(int direct) {
+		Object obj = layers.getSelectedValue();
+		if (obj instanceof LayerEdit) {
+			LayerEdit right = (LayerEdit)obj;
+			int si = layer_list.indexOf(right);
+			if (si >= 0) {
+				if (direct < 0 && si > 0) {
+					Collections.swap(layer_list, si, si-1);
+					effect.particles.swap(si, si-1);
+					layers.setSelectedIndex(si-1);
+				} else if (direct > 0 && si < layer_list.size() - 1) {
+					Collections.swap(layer_list, si, si+1);
+					effect.particles.swap(si, si+1);
+					layers.setSelectedIndex(si+1);
+				}
+			}
+		}
+		layers.repaint();
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) 
 	{
@@ -195,7 +225,14 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 			ParticleViewer viewer = new ParticleViewer(this);
 			viewer.setVisible(true);
 		}
-		
+		else if (e.getSource() == layer_up)
+		{
+			swapLayer(-1);
+		}	
+		else if (e.getSource() == layer_down)
+		{
+			swapLayer(1);
+		}
 		layers.repaint();
 		
 	}
