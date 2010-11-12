@@ -16,6 +16,6 @@ public class QuestTrigger extends AbstractAbility
 	
 	@Override
 	public String toString() {
-		return super.toString() + ":" + quest_id;
+		return super.toString();
 	}
 }
