@@ -19,7 +19,7 @@ import javax.swing.KeyStroke;
 
 
 
-public abstract class AbstractOptionFrame extends AbstractFrame implements ActionListener, KeyListener
+public abstract class AbstractOptionFrame extends AbstractFrame implements ActionListener
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -36,7 +36,6 @@ public abstract class AbstractOptionFrame extends AbstractFrame implements Actio
 		this.add(south, BorderLayout.SOUTH);
 		
 		getRootPane().setDefaultButton(ok);
-		getRootPane().addKeyListener(this);
 		
 		KeyStroke ks = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
 		cancel.registerKeyboardAction(this, "cancel", ks, JComponent.WHEN_IN_FOCUSED_WINDOW);
@@ -50,18 +49,4 @@ public abstract class AbstractOptionFrame extends AbstractFrame implements Actio
 		}  
 	}
 
-	@Override
-	public void keyPressed(KeyEvent e) {
-		if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-			this.setVisible(false);
-		}
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {}
-
-	@Override
-	public void keyTyped(KeyEvent e) {}
-
-	
 }
