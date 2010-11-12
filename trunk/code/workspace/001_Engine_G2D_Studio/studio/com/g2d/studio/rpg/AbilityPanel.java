@@ -90,7 +90,9 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 				this.list_cur_ability.setListData((ability_datas==null)? new AbstractAbility[0] : ability_datas);
 				this.list_cur_ability.addMouseListener(this);
 				this.list_cur_ability.setCellRenderer(new ListRender());
-				left.add(new JScrollPane(list_cur_ability), BorderLayout.CENTER);
+				JScrollPane scroll = new JScrollPane(list_cur_ability);
+				scroll.setMaximumSize(new Dimension(250,200));
+				left.add(scroll, BorderLayout.CENTER);
 			}
 			// top tool bar
 			{
@@ -104,9 +106,10 @@ public class AbilityPanel extends JPanel implements MouseListener, ActionListene
 				bpan.add(btn_self);
 				left.add(bpan, BorderLayout.NORTH);
 			}
-			left.setMinimumSize(new Dimension(200,200));
-			left.setPreferredSize(new Dimension(200,200));
+			left.setMinimumSize(new Dimension(250,200));
+			left.setPreferredSize(new Dimension(250,200));
 			split.setLeftComponent(left);
+			
 		}
 		// right
 		{

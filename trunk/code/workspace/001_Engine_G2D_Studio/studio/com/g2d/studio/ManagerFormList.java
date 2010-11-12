@@ -5,6 +5,7 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.util.HashSet;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -101,22 +102,36 @@ public abstract class ManagerFormList<T extends G2DListItem> extends ManagerForm
 		}
 	}
 	
-	public void refresh() {
-		Vector<T> added 	= new Vector<T>();
-		Vector<T> removed 	= new Vector<T>();
-		File files[]		= res_root.listFiles();
+	public void refresh() 
+	{
+		Vector<T> 		added	= new Vector<T>();
+		Vector<T> 		removed	= new Vector<T>();
+		File 			files[]	= res_root.listFiles();
+		HashSet<T>		current = new HashSet<T>(files.length);	
+		
 		for (int i = 0; i < files.length; i++) {
 			File file = files[i];
-			T node = getNode(asNodeName(file));
+			String name = asNodeName(file);
+			T node = getNode(name);
 			if (node == null) {
 				node = createNode(file);
 				if (node != null) {
 					added.add(node);
 				}
 			}
+			if (node != null) {
+				current.add(node);
+			}
 		}
-		if (!added.isEmpty()) {
+		for (T node : getNodes()){
+			if (!current.contains(node)) {
+				removed.add(node);
+			}
+		}
+
+		if (!added.isEmpty() || !removed.isEmpty()) {
 			this.files.addAll(added);
+			this.files.removeAll(removed);
 			this.list.setListData(this.files);
 			this.list.repaint();
 			saveAll();
