@@ -13,12 +13,14 @@ import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,11 +30,14 @@ import java.util.regex.Pattern;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JTree;
+import javax.swing.KeyStroke;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -42,7 +47,9 @@ import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
+import com.g2d.studio.res.Res;
 import com.g2d.util.AbstractDialog;
+import com.g2d.util.AbstractFrame;
 import com.g2d.util.AbstractOptionDialog;
 import com.g2d.util.AbstractOptionFrame;
 
@@ -440,11 +447,12 @@ public class G2DTree extends JTree implements G2DDragDropListener<G2DTree>
 		@Override
 		public void keyPressed(KeyEvent e) {
 			if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_F) {
-				if (sd != null) {
-					sd.setVisible(true);
-				} else {
-					sd = openSearchDialog();
-				}
+//				if (sd != null) {
+//					sd.setVisible(true);
+//				} else {
+//					sd = 
+					openSearchDialog();
+//				}
 			}
 		}
 	}
@@ -571,34 +579,68 @@ public class G2DTree extends JTree implements G2DDragDropListener<G2DTree>
 	}
 	
 	@SuppressWarnings("serial")
-	public static class SearchDialog extends AbstractOptionFrame
+	public static class SearchDialog extends AbstractFrame implements ActionListener
 	{
 		private static String history_text = "";
 		
-		private G2DTree tree;
-		
+		private G2DTree 		tree;
+
+//		--------------------------------------------------------------------------------------------
 		protected JPanel		center 		= new JPanel(null);
 		
-		protected JLabel		lbl_as_name	= new JLabel("名字");
+		protected JLabel		lbl_as_name	= new JLabel("表达式");
 		protected JTextField 	txt_as_name	= new JTextField(history_text);
+		
+//		--------------------------------------------------------------------------------------------
+		protected JButton 		next 		= new JButton("下一个");	
+		protected JButton 		prew		= new JButton("上一个");		
+		protected JButton 		cancel 		= new JButton("取消");
+//		--------------------------------------------------------------------------------------------
+	
 		
 		public SearchDialog(G2DTree tree) 
 		{
+			super.setAlwaysOnTop(true);
+			super.setIconImage(Res.icon_edit);
 			super.setTitle("查找 "+tree.getRoot());
-			super.setSize(320, 120);
-			super.setAlwaysOnTop(true);		
-			this.setCenter();
+			super.setSize(320, 160);
 			
+			this.setCenter();
 			this.tree = tree;
-			this.ok.setText("查找");
-			this.add(center, BorderLayout.CENTER);
+			
+			add(center, BorderLayout.CENTER);
 			{
-				lbl_as_name.setBounds(10, 10, 50,  30);
-				txt_as_name.setBounds(62, 12, 200, 30);
+				lbl_as_name	.setBounds(10, 10, 50,  30);
+				txt_as_name	.setBounds(62, 12, getWidth()-20-52, 30);
 				
-				center.add(lbl_as_name);
-				center.add(txt_as_name);
+				center		.add(lbl_as_name);
+				center		.add(txt_as_name);
+				
+				prew		.addActionListener(this);
+				next		.addActionListener(this);
+				cancel		.addActionListener(this);
+
+				next		.setBounds(getWidth()-110, 50, 100,  30);
+				prew		.setBounds(getWidth()-218, 50, 100,  30);
+				cancel		.setBounds(getWidth()-110, 90, 100,  30);
+				
+				next		.setToolTipText("Enter");
+				prew		.setToolTipText("Shift+Enter");
+				
+				center		.add(prew);
+				center		.add(next);
+				center		.add(cancel);
+				
+				KeyStroke ks1 = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
+				cancel.registerKeyboardAction(this, "cancel", ks1, JComponent.WHEN_IN_FOCUSED_WINDOW);
+				
+				KeyStroke ks2 = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, java.awt.event.InputEvent.SHIFT_MASK);
+				prew.registerKeyboardAction(this, "prew", ks2, JComponent.WHEN_IN_FOCUSED_WINDOW);
+				
+				KeyStroke ks3 = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
+				next.registerKeyboardAction(this, "next", ks3, JComponent.WHEN_IN_FOCUSED_WINDOW);
 			}
+			
 		}
 		
 		public G2DTree getTree() {
@@ -607,43 +649,75 @@ public class G2DTree extends JTree implements G2DDragDropListener<G2DTree>
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if (e.getSource() == super.ok) {
-				TreeNode node = getUserObject();
+			if (e.getSource() == next) {
+				TreeNode node = getUserObject(false);
 				if (node != null) {
 					TreePath path = tree.createTreePath(node);
 					tree.expand(node);
 					tree.setSelectionPath(path);
 					tree.scrollPathToVisible(path);
 				}
-			} else {
-				super.actionPerformed(e);
+			}  
+			else if (e.getSource() == prew) {
+				TreeNode node = getUserObject(true);
+				if (node != null) {
+					TreePath path = tree.createTreePath(node);
+					tree.expand(node);
+					tree.setSelectionPath(path);
+					tree.scrollPathToVisible(path);
+				}
+			}
+			else if (e.getSource() == cancel) {
+				this.setVisible(false);
 			}
 		}
 
-		protected TreeNode getUserObject() {
-			history_text = txt_as_name.getText();
-			
-			if (!txt_as_name.getText().isEmpty()) {
-				TreeNode current = tree.getSelectedNode();
-				if (current == tree.getRoot()) {
-					current = null;
-				}
-				for (TreeNode node : getNodes(tree.getRoot())) {
-					if (current != null) {
-						if (node == current) {
-							current = null;
-						}
-					} else {
-						Pattern pattern = Pattern.compile(txt_as_name.getText());
-						Matcher matcher_name = pattern.matcher(node.toString());
-						if(matcher_name.find()){
-							return node;
+		protected TreeNode getUserObject(boolean reverse)
+		{
+			try {
+				history_text = txt_as_name.getText();
+				if (!txt_as_name.getText().isEmpty()) 
+				{
+					Pattern pattern = Pattern.compile(txt_as_name.getText());
+					
+					TreeNode current = tree.getSelectedNode();
+					if (current == tree.getRoot()) {
+						current = null;
+					}
+					
+					Vector<TreeNode> nodes = getNodes(tree.getRoot());
+					
+					if (reverse) {
+						Collections.reverse(nodes);
+					}
+					
+					for (TreeNode node : nodes) {
+						if (current != null) {
+							if (node == current) {
+								current = null;
+							}
+						} else {
+							String text = node.toString();
+							if (node instanceof G2DTreeNode<?>) {
+								text = ((G2DTreeNode<?>)node).getName();
+							}
+							if (node instanceof G2DTreeNodeGroup<?>) {
+								text = ((G2DTreeNodeGroup<?>)node).getName();
+							}
+							Matcher matcher_name = pattern.matcher(text);
+							if(matcher_name.find()){
+								System.out.println(text);
+								return node;
+							}
 						}
 					}
 				}
+			} catch (Exception err) {
+				err.printStackTrace();
 			}
 			return null;
 		}
+
 	}
 	
 }
