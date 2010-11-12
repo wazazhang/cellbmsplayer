@@ -30,11 +30,11 @@ public class ObjectSelectDialogInteger<T extends ObjectNode<?>> extends ObjectSe
 	
 	@Override
 	public Integer getValue() {
-		T obj = getUserObject();
+		T obj = getSelectedObject();
 		if (obj != null) {
 			return obj.getIntID();
 		}
-		return 0;
+		return null;
 	}
 	
 }

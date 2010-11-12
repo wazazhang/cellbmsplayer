@@ -264,8 +264,8 @@ public class DropItemEditor extends AbstractDialog implements PropertyCellEdit<D
 		}
 		
 		@Override
-		protected Node getUserObject() {
-			try{
+		protected Node getUserObject(ActionEvent e) {
+			try {
 				XLSItem titem = item_list.getSelectedItem();
 				if (titem!=null) {
 					Number perc = (Number)percent.getValue();
@@ -279,7 +279,7 @@ public class DropItemEditor extends AbstractDialog implements PropertyCellEdit<D
 						return node;
 					}
 				}
-			}catch(Exception er){
+			} catch (Exception er) {
 				er.printStackTrace();
 			}
 			return null;
@@ -287,7 +287,7 @@ public class DropItemEditor extends AbstractDialog implements PropertyCellEdit<D
 		
 		public void mouseClicked(MouseEvent e) {
 			if (e.getClickCount() == 2) {
-				Node node = getUserObject();
+				Node node = getUserObject(null);
 				if (node != null) {
 					node_list.add(node);
 					resetList(node);

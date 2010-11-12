@@ -251,7 +251,7 @@ public class InstanceZoneDataTable extends JPanel implements ActionListener
 			return false;
 		}
 		@Override
-		protected Entry<String, Object> getUserObject() {
+		protected Entry<String, Object> getUserObject(ActionEvent e) {
 			Entry<String, Object> ret = new PairEntry<String, Object>(var_name.getText(), var_value.getText());
 			if (var_type.getValue() == Type.NUMBER) {
 				Double value = Double.parseDouble(var_value.getText());

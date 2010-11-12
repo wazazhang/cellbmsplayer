@@ -130,7 +130,7 @@ PropertyCellEdit<InstanceZoneScriptCode>
 		if (e.getSource() == btn_change_zone) {
 			zone = new InstanceZoneSelectDialog(this, null).showDialog();
 			if (zone != null) {
-				InstanceZoneScriptCode data = getUserObject();
+				InstanceZoneScriptCode data = getUserObject(null);
 				resetTitle(data);
 			}
 		}
@@ -139,7 +139,7 @@ PropertyCellEdit<InstanceZoneScriptCode>
 				if (zone != null) {
 					HashMap<String, Object> data_map = zone.getData().getData().asMap();
 					if (Studio.getInstance().getSceneScriptManager().checkScriptCode(
-							getUserObject(), 
+							getUserObject(null), 
 							data_map
 							)) {
 						build_state.setText("<html><body><font color=\"#00ff00\">succeed</font></body></html>");
@@ -195,7 +195,7 @@ PropertyCellEdit<InstanceZoneScriptCode>
 	}
 
 	@Override
-	protected InstanceZoneScriptCode getUserObject() {
+	protected InstanceZoneScriptCode getUserObject(ActionEvent e) {
 		InstanceZoneScriptCode data = new InstanceZoneScriptCode();
 		data.script = text_pane.getText();
 		if (zone != null) {
@@ -206,7 +206,7 @@ PropertyCellEdit<InstanceZoneScriptCode>
 
 	@Override
 	public InstanceZoneScriptCode getValue() {
-		return selected_object;
+		return getSelectedObject();
 	}
 	
 }

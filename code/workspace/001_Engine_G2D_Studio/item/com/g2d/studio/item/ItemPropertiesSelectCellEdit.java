@@ -41,7 +41,7 @@ public class ItemPropertiesSelectCellEdit extends G2DListSelectDialog<ItemProper
 		if (node != null) {
 			return node.getIntID();
 		}
-		return -1;
+		return null;
 	}
 	
 	static class ItemPropertiesList extends G2DList<ItemPropertiesNode>

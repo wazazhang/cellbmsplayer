@@ -63,8 +63,10 @@ public class ItemCountCollectionEdit extends AbstractOptionDialog<ItemCountColle
 	}
 	
 	@Override
-	protected ItemCountCollection getUserObject() {
-		return getValue();
+	protected ItemCountCollection getUserObject(ActionEvent e) {
+		edit_data.items_ = pnl_items_.getItems();
+		edit_data.item_names_ = pnl_items_.getItemNames();
+		return edit_data;
 	}
 	
 //	@Override
@@ -79,18 +81,14 @@ public class ItemCountCollectionEdit extends AbstractOptionDialog<ItemCountColle
 	
 	@Override
 	public Component getComponent(ObjectPropertyEdit panel) {
-		ItemCountCollection data = getValue();
+		ItemCountCollection data = getSelectedObject();
 		cell_edit.setText(data.toString());
 		return cell_edit;
 	}
 	
 	@Override
-	public ItemCountCollection getValue()
-	{
-		edit_data.items_ = pnl_items_.getItems();
-		edit_data.item_names_ = pnl_items_.getItemNames();
-		
-		return edit_data;
+	public ItemCountCollection getValue() {
+		return getSelectedObject();
 	}
 	
 	
