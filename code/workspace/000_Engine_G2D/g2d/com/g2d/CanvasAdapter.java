@@ -760,6 +760,36 @@ FocusListener
 		return false;
 	}
 	
+	private static final int[] KEYCODES_4_TEMP = new int[]{};
+	
+	/**
+	 * 检测当前帧被按下的键的个数
+	 * @return
+	 */
+	synchronized public int getDownKeyCount()
+	{
+		if (isPickedKeyInputer(KEYCODES_4_TEMP))
+			return 0;
+		
+		int count = keystate_query_down.size();
+		
+		return count;
+	}
+	
+	/**
+	 * 检测当前帧被松开的键的个数
+	 * @return
+	 */
+	synchronized public int getUpKeyCount()
+	{
+		if (isPickedKeyInputer(KEYCODES_4_TEMP))
+			return 0;		
+		
+		int count = keystate_query_up.size();
+		
+		return count;
+	}
+	
 	/**
 	 *  检测当前帧鼠标有没有被按住
 	 * @param button
