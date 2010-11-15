@@ -210,6 +210,18 @@ public interface Canvas
 	public boolean isKeyUp(int ... keycode);
 	
 	/**
+	 * 检测当前帧被按下的键的个数
+	 * @return
+	 */
+	public int getDownKeyCount();
+	
+	/**
+	 * 检测当前帧被松开的键的个数
+	 * @return
+	 */
+	public int getUpKeyCount();
+	
+	/**
 	 *  检测当前帧鼠标有没有被按住
 	 * @param button
 	 * @return
