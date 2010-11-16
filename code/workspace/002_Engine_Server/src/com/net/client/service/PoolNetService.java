@@ -1,4 +1,4 @@
-package com.net.client;
+package com.net.client.service;
 
 import java.io.IOException;
 import java.util.concurrent.locks.ReentrantLock;
@@ -6,6 +6,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import com.cell.CUtil;
 import com.cell.util.concurrent.ThreadPool;
 import com.net.MessageHeader;
+import com.net.client.ServerSession;
 
 /**
  * 有固定数量链接的服务

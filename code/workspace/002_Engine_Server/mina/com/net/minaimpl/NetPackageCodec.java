@@ -31,12 +31,15 @@ import com.net.ExternalizableFactory;
 import com.net.ExternalizableMessage;
 import com.net.MessageHeader;
 import com.net.NetDataOutput;
+import com.net.Protocol;
 
 
 public class NetPackageCodec extends MessageHeaderCodec
 {
 	private static final Logger _log = LoggerFactory.getLogger(NetPackageCodec.class.getName());
 
+	
+	
 	class NetPackageDecoder extends CumulativeProtocolDecoder 
 	{
 		@Override
@@ -92,42 +95,43 @@ public class NetPackageCodec extends MessageHeaderCodec
 	    			// 如果有足够的数据
 	    			if (in.remaining() >= message_size) 
 	    			{
-	    				int		ChannelID 			= in.getInt();		// 4
-    					long	ChannelSesseionID	= in.getLong();		// 8
-    					long	SesseionID 			= in.getLong();		// 8
-    					short	Protocol 			= in.getShort();	// 2
-    					int		PacketNumber		= in.getInt();		// 4
-	    				byte	TransmissionType	= in.get();			// 1
-
 	    				// 清空当前的解包状态
 	    				session.removeAttribute(SessionAttributeKey.STATUS_DECODING_PROTOCOL);
 	    				
-	    				final MessageHeader message;
+	    				ProtocolImpl p = ProtocolPool.getInstance().createProtocol();
+	    				p.DynamicReceiveTime		= System.currentTimeMillis();
+
+    					p.Protocol 					= in.get();			// 1
+    					p.SessionID 				= in.getLong();		// 8
+    					p.PacketNumber				= in.getInt();		// 4
+    					
+    					switch (p.Protocol) {
+	    				case Protocol.PROTOCOL_CHANNEL_JOIN_S2C:
+	    				case Protocol.PROTOCOL_CHANNEL_LEAVE_S2C:
+	    				case Protocol.PROTOCOL_CHANNEL_MESSAGE:
+	    					p.ChannelID 			= in.getInt();		// 4
+	    					p.ChannelSesseionID		= in.getLong();		// 8
+	    					break;
+	    				}
+    					
+    					p.transmission_type			= in.get();			// 1
+    					
 	    				// 解出包包含的二进制消息
-	    				switch(TransmissionType) {
-						case TRANSMISSION_TYPE_SERIALIZABLE:
-		    				message = (MessageHeader)in.getObject(class_loader);
+	    				switch(p.transmission_type) {
+						case ProtocolImpl.TRANSMISSION_TYPE_SERIALIZABLE:
+		    				p.message = (MessageHeader)in.getObject(class_loader);
+		    				p.message.PacketNumber = p.PacketNumber;
 							break;
-						case TRANSMISSION_TYPE_EXTERNALIZABLE:
-							message = ext_factory.createMessage(in.getInt());	// ext 4
-							ExternalizableMessage ext = (ExternalizableMessage)message;
+						case ProtocolImpl.TRANSMISSION_TYPE_EXTERNALIZABLE:
+							p.message = ext_factory.createMessage(in.getInt());	// ext 4
+							p.message.PacketNumber = p.PacketNumber;
+							ExternalizableMessage ext = (ExternalizableMessage)p.message;
 							ext.readExternal(new NetDataInputImpl(in));
 							break;
-						default:
-							throw new NullPointerException("");
 						}
-	    				
-	    				message.ChannelID 			= ChannelID;
-	    				message.ChannelSesseionID	= ChannelSesseionID;
-	    				message.SessionID 			= SesseionID;
-	    				message.Protocol 			= Protocol;
-	    				message.PacketNumber		= PacketNumber;
 
-	    				
-	    				message.DynamicReceiveTime	= System.currentTimeMillis();
-	    				
 	    				// 告诉 Protocol Handler 有消息被接收到
-	    				out.write(message);
+	    				out.write(p);
 	    				
 	    				//System.out.println("decoded <- " + session.getRemoteAddress() + " : " + protocol);
 
@@ -175,51 +179,66 @@ public class NetPackageCodec extends MessageHeaderCodec
     	{
     		try
     		{
-    			MessageHeader header = (MessageHeader)message;
-
-    			IoBuffer buffer = IoBuffer.allocate(MessageHeader.PACKAGE_DEFAULT_SIZE);
+    			ProtocolImpl p = (ProtocolImpl)message;
+				p.DynamicSendTime		= System.currentTimeMillis();
+    			if (p.message != null) {
+    				p.PacketNumber 		= p.message.PacketNumber;
+    			}
+    			
+    			IoBuffer buffer = IoBuffer.allocate(PACKAGE_DEFAULT_SIZE);
     			buffer.setAutoExpand(true);
+    			
     			
     			int oldposition = buffer.position();
     			{
 	    			// fixed data region
     				{
-		    			buffer.put(protocol_start);					// 4
-		    			buffer.putInt(protocol_fixed_size);			// 4
+		    			buffer.put			(protocol_start);		// 4
+		    			buffer.putInt		(protocol_fixed_size);	// 4
     				}
     				
 	    			// message data region
     				int cur = buffer.position();
 	    			{
-						buffer.putInt(header.ChannelID);			// 4
-						buffer.putLong(header.ChannelSesseionID);	// 8
-						buffer.putLong(header.SessionID);			// 8
-						buffer.putShort(header.Protocol);			// 2
-						buffer.putInt(header.PacketNumber);			// 4
+						buffer.put			(p.Protocol);			// 1
+						buffer.putLong		(p.SessionID);			// 8
+						buffer.putInt		(p.PacketNumber);		// 4
 						
-						if (header instanceof ExternalizableMessage) {
-							buffer.put(TRANSMISSION_TYPE_EXTERNALIZABLE);	// 1
-							buffer.putInt(ext_factory.getType(header));		// ext 4
-							ExternalizableMessage ext = (ExternalizableMessage)header;
+						switch (p.Protocol) {
+	    				case Protocol.PROTOCOL_CHANNEL_JOIN_S2C:
+	    				case Protocol.PROTOCOL_CHANNEL_LEAVE_S2C:
+	    				case Protocol.PROTOCOL_CHANNEL_MESSAGE:
+							buffer.putInt	(p.ChannelID);			// 4
+							buffer.putLong	(p.ChannelSesseionID);	// 8
+							break;
+						}
+						
+						if (p.message instanceof ExternalizableMessage) {
+							buffer.put		(ProtocolImpl.TRANSMISSION_TYPE_EXTERNALIZABLE);	// 1
+							buffer.putInt	(ext_factory.getType(p.message));	// ext 4
+							ExternalizableMessage ext = (ExternalizableMessage)p.message;
 							ext.writeExternal(new NetDataOutputImpl(buffer));
-						} else {
-							buffer.put(TRANSMISSION_TYPE_SERIALIZABLE);		// 1
-							buffer.putObject(header);
+						} 
+						else if (p.message instanceof Serializable) {
+							buffer.put		(ProtocolImpl.TRANSMISSION_TYPE_SERIALIZABLE);		// 1
+							buffer.putObject(p.message);
+						}
+						else {
+							buffer.put		(ProtocolImpl.TRANSMISSION_TYPE_UNKNOW);			// 1
 						}
 	    			}
 	    			buffer.putInt(4, protocol_fixed_size + (buffer.position() - cur));
 	    		}
     			TotalSentBytes += (buffer.position() - oldposition);
+
+    			p.DynamicSendTime = System.currentTimeMillis();
     			
     			buffer.shrink();
     			
     			buffer.flip();
     			out.write(buffer);
     			
-    			header.DynamicSendTime = System.currentTimeMillis();
-    			
     			//System.out.println("encoded -> " + session.getRemoteAddress() + " : " + protocol);
-    		    
 				SendedMessageCount ++;
         	}
     		catch(Throwable err) 

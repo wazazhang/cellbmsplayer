@@ -1,4 +1,4 @@
-package com.net.client;
+package com.net.client.service;
 
 import com.net.MessageHeader;
 

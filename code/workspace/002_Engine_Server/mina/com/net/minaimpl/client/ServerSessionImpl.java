@@ -21,11 +21,13 @@ import org.slf4j.LoggerFactory;
 
 import com.net.ExternalizableFactory;
 import com.net.MessageHeader;
+import com.net.Protocol;
 import com.net.client.ServerSession;
 import com.net.client.ServerSessionListener;
 import com.net.minaimpl.NetPackageCodec;
+import com.net.minaimpl.ProtocolImpl;
+import com.net.minaimpl.ProtocolPool;
 import com.net.minaimpl.SystemMessages;
-import com.net.minaimpl.SystemMessages.SystemMessageS2C;
 
 
 public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession 
@@ -151,8 +153,12 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 	public boolean send(MessageHeader message) {
 		if (isConnected()) {
 			IoSession io_session = session_ref.get();
-			message.Protocol = MessageHeader.PROTOCOL_SESSION_MESSAGE;
-			io_session.write(message);
+			if (io_session != null) {
+				ProtocolImpl p 	= ProtocolPool.getInstance().createProtocol();
+				p.Protocol 		= ProtocolImpl.PROTOCOL_SESSION_MESSAGE;
+				p.message		= message;
+				io_session.write(p);
+			}
 			return true;
 		} else {
 			log.error("server not connected !");
@@ -164,10 +170,12 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 		if (isConnected()) {
 			IoSession io_session = session_ref.get();
 			if (io_session != null) {
-				message.Protocol			= MessageHeader.PROTOCOL_CHANNEL_MESSAGE;
-				message.ChannelID			= channel.getID();
-				message.ChannelSesseionID	= getID();
-				io_session.write(message);
+				ProtocolImpl p = ProtocolPool.getInstance().createProtocol();
+				p.Protocol			= ProtocolImpl.PROTOCOL_CHANNEL_MESSAGE;
+				p.ChannelID			= channel.getID();
+				p.ChannelSesseionID	= getID();
+				p.message			= message;
+				io_session.write(p);
 			}
 		}
 	}
@@ -209,35 +217,38 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 	
 	public void messageReceived(final IoSession iosession, final Object message) throws Exception 
 	{
-		if (message instanceof MessageHeader) 
+		if (message instanceof Protocol) 
 		{
-			MessageHeader header = (MessageHeader)message;
+			Protocol header = (Protocol)message;
 			try
 			{
-				if (header.Protocol == MessageHeader.PROTOCOL_CHANNEL_MESSAGE) {
-					if (header instanceof SystemMessageS2C) {
-						SystemMessageS2C sys = (SystemMessageS2C) header;
-						if (sys.event == SystemMessages.EVENT_CHANNEL_JOIN_S2C) {
-							channels.put(header.ChannelID, new ClientChannelImpl(this, header.ChannelID));
-						} else if (sys.event == SystemMessages.EVENT_CHANNEL_LEAVE_S2C) {
-							ClientChannelImpl channel = channels.get(header.ChannelID);
-							if (channel != null) {
-								Listener.leftChannel(channel);
-								channels.remove(header.ChannelID);
-							}
-						}
-					} else {
-						ClientChannelImpl channel = channels.get(header.ChannelID);
-						Listener.receivedChannelMessage(channel, header);
+				switch (header.getProtocol())
+				{
+				case Protocol.PROTOCOL_SESSION_MESSAGE:{
+					Listener.receivedMessage(this, header, header.getMessage());
+					break;
+				}
+				case Protocol.PROTOCOL_CHANNEL_MESSAGE: {
+					ClientChannelImpl channel = channels.get(header.getChannelID());
+					Listener.receivedChannelMessage(channel, header, header.getMessage());
+					break;
+				}
+				case Protocol.PROTOCOL_CHANNEL_JOIN_S2C:{
+					channels.put(header.getChannelID(), new ClientChannelImpl(this, header.getChannelID()));
+					break;
+				}
+				case Protocol.PROTOCOL_CHANNEL_LEAVE_S2C:{
+					ClientChannelImpl channel = channels.get(header.getChannelID());
+					if (channel != null) {
+						Listener.leftChannel(channel);
+						channels.remove(header.getChannelID());
 					}
-				} 
-				else if (header.Protocol == MessageHeader.PROTOCOL_SESSION_MESSAGE) {
-					Listener.receivedMessage(this, header);
-				} 
-				else {
-					log.error("messageReceived" +
-							" : unknow protocol(" + Integer.toString(header.Protocol, 16) + ")" +
-							" : " + "data : " + header);
+					break;
+				}
+				default:
+					log.error("messageReceived : " +
+							"unknow protocol(" + Integer.toString(header.getProtocol(), 16) + ")" + " : " +
+							"data : " + header);
 				}
 			}
 			catch (Exception e) 
@@ -255,10 +266,10 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 	@Override
 	public void messageSent(IoSession session, Object message) throws Exception 
 	{
-		if (message instanceof MessageHeader) {
-			MessageHeader header = (MessageHeader) message;
+		if (message instanceof Protocol) {
+			Protocol header = (Protocol) message;
 			try {
-				Listener.sentMessage(this, header);
+				Listener.sentMessage(this, header, header.getMessage());
 			} catch (Exception e) {
 				log.error("messageSent : bad protocol : " + header);
 				e.printStackTrace();

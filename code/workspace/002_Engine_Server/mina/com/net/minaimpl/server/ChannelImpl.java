@@ -7,6 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 import com.net.MessageHeader;
+import com.net.Protocol;
 import com.net.minaimpl.SystemMessages;
 import com.net.minaimpl.SystemMessages.*;
 import com.net.server.Channel;
@@ -64,7 +65,7 @@ public class ChannelImpl implements Channel
 			ClientSessionImpl impl = (ClientSessionImpl)session;
 			ClientSession old = sessions.putIfAbsent(session, impl);
 			if (old == null) {
-				broadcast(impl, new SystemMessageS2C(SystemMessages.EVENT_CHANNEL_JOIN_S2C), 0);
+				broadcast(impl, Protocol.PROTOCOL_CHANNEL_JOIN_S2C);
 				Listener.sessionJoined(this, session);
 				return true;
 			}
@@ -75,7 +76,7 @@ public class ChannelImpl implements Channel
 	public boolean leave(ClientSession session) {
 		ClientSessionImpl old = sessions.remove(session);
 		if (old != null) {
-			broadcast(old, new SystemMessageS2C(SystemMessages.EVENT_CHANNEL_LEAVE_S2C), 0);
+			broadcast(old, Protocol.PROTOCOL_CHANNEL_LEAVE_S2C);
 			Listener.sessionLeaved(this, session);
 			return true;
 		}
@@ -99,7 +100,18 @@ public class ChannelImpl implements Channel
 		int  count = 0;
 		for (Iterator<ClientSessionImpl> it = sessions.values().iterator(); it.hasNext(); ) {
 			ClientSessionImpl session = it.next();
-			server.write(session.Session, message, MessageHeader.PROTOCOL_CHANNEL_MESSAGE, getID(), sender_id, packnum);
+			server.write(session.Session, message, Protocol.PROTOCOL_CHANNEL_MESSAGE, getID(), sender_id, packnum);
+		}
+		return count;
+	}
+	
+	int broadcast(ClientSession sender, byte protocol)
+	{
+		long sender_id = (sender != null ? sender.getID() : 0);
+		int  count = 0;
+		for (Iterator<ClientSessionImpl> it = sessions.values().iterator(); it.hasNext(); ) {
+			ClientSessionImpl session = it.next();
+			server.write(session.Session, null, protocol, getID(), sender_id, 0);
 		}
 		return count;
 	}

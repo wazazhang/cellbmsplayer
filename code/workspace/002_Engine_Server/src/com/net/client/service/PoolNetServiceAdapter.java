@@ -1,4 +1,7 @@
-package com.net.client;
+package com.net.client.service;
+
+import com.net.client.ServerSession;
+import com.net.client.ServerSessionListener;
 
 
 public abstract interface PoolNetServiceAdapter

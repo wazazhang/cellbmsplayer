@@ -1,4 +1,4 @@
-package com.net.client;
+package com.net.client.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -7,10 +7,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Vector;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.slf4j.Logger;
@@ -20,6 +23,10 @@ import com.cell.CObject;
 import com.cell.util.Pair;
 import com.cell.util.concurrent.ThreadPool;
 import com.net.MessageHeader;
+import com.net.Protocol;
+import com.net.client.ClientChannel;
+import com.net.client.ServerSession;
+import com.net.client.ServerSessionListener;
 
 
 /**
@@ -39,20 +46,20 @@ public abstract class BasicNetService
 	final private ConcurrentHashMap<Integer, Request> 
 									WaitingListeners 		= new ConcurrentHashMap<Integer, Request>();
 
+//	---------------------------------------------------------------------------------------------------------------
+//	notifiers
+	final private ReentrantLock		notifies_lock	= new ReentrantLock();
 	
-	// notifiers
-	final private ReentrantLock		notifies_lock			= new ReentrantLock();
 	final private ConcurrentHashMap<Class<?>, HashSet<NotifyListener<?>>> 
-									notifies_map 				= new ConcurrentHashMap<Class<?>, HashSet<NotifyListener<?>>>();
-//	final private Vector<Pair<Class<?>, NotifyListener<?>>> 
-//									adding_notifies			= new Vector<Pair<Class<?>, NotifyListener<?>>>();
-//	final private Vector<Pair<Class<?>, NotifyListener<?>>> 
-//									removing_notifies		= new Vector<Pair<Class<?>, NotifyListener<?>>>();
-	//
+									notifies_map	= new ConcurrentHashMap<Class<?>, HashSet<NotifyListener<?>>>();
 	
 	
-	final private ConcurrentLinkedQueue<MessageHeader>
-									UnhandledMessages 		= new ConcurrentLinkedQueue<MessageHeader>();
+	final private ConcurrentHashMap<Protocol, MessageHeader>
+									UnhandledMessages 		= new ConcurrentHashMap<Protocol, MessageHeader>();
+	
+
+//	---------------------------------------------------------------------------------------------------------------
+	
 	
 	private long					LastCleanRequestTime 	= System.currentTimeMillis();
 
@@ -61,6 +68,7 @@ public abstract class BasicNetService
 	final private ThreadPool		thread_pool;
 	
 	final protected Logger 			log;
+	
 	
 //	---------------------------------------------------------------------------------------------------------------------------------
 
@@ -112,8 +120,7 @@ public abstract class BasicNetService
      * @param listeners
      * @return
      */
-    @SuppressWarnings("unchecked")
-	final public<T extends MessageHeader> T sendRequest(MessageHeader message, long timeout, WaitingListener ... listeners)
+	final public AtomicReference<MessageHeader> sendRequest(MessageHeader message, long timeout, WaitingListener<?, ?> ... listeners)
     {
     	if (System.currentTimeMillis() - LastCleanRequestTime > DropRequestTimeOut) {        	
     		LastCleanRequestTime = System.currentTimeMillis();
@@ -123,19 +130,12 @@ public abstract class BasicNetService
 		Request request = new Request(message, timeout, listeners);
     	WaitingListeners.put(request.Message.PacketNumber, request);
 
-    	for (WaitingListener l : listeners) {
+    	for (WaitingListener<?,?> l : listeners) {
     		onListeningRequest(message, l);
     	}
 		request.run();
 		
-		if (request.Response != null) {
-			try{
-				return (T)request.Response;
-			}catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		return null;
+		return request;
 	}
     
     /**
@@ -143,9 +143,8 @@ public abstract class BasicNetService
      * @param message
      * @param listeners
      */
-    @SuppressWarnings("unchecked")
-    final public void sendRequest(MessageHeader message, WaitingListener ... listeners) {
-    	sendRequest(message, 0, listeners);
+    final public AtomicReference<MessageHeader> sendRequest(MessageHeader message, WaitingListener<?,?> ... listeners) {
+    	return sendRequest(message, 0, listeners);
 	}
     
     /**
@@ -162,8 +161,39 @@ public abstract class BasicNetService
 
 //	-------------------------------------------------------------------------------------------------------------
     
-	final public void runCleanTask(ThreadPool tp) {
-		tp.schedule(new CleanTask(), DropRequestTimeOut);
+	AtomicReference<ScheduledFuture<?>> schedule_clean_task				= new AtomicReference<ScheduledFuture<?>>();
+	AtomicReference<ScheduledFuture<?>> schedule_clean_task_fix_rate	= new AtomicReference<ScheduledFuture<?>>();
+	
+	final public ScheduledFuture<?> scheduleCleanTask(ThreadPool tp, long time_ms) {
+		synchronized (schedule_clean_task) {
+			ScheduledFuture<?> old = schedule_clean_task.get();
+			if (old != null) {
+				old.cancel(false);
+			}
+			schedule_clean_task.set(tp.schedule(new Runnable() {
+				@Override
+				public void run() {
+					cleanRequestAndNotify();
+				}
+			}, time_ms));
+			return schedule_clean_task.get();
+		}
+	}
+	
+	final public ScheduledFuture<?> scheduleCleanTaskFixRate(ThreadPool tp, int period_ms) {
+		synchronized (schedule_clean_task_fix_rate) {
+			ScheduledFuture<?> old = schedule_clean_task_fix_rate.get();
+			if (old != null) {
+				old.cancel(false);
+			}
+			schedule_clean_task_fix_rate.set(tp.scheduleAtFixedRate(new Runnable() {
+				@Override
+				public void run() {
+					cleanRequestAndNotify();
+				}
+			}, period_ms, period_ms));
+			return schedule_clean_task_fix_rate.get();
+		}
 	}
 	
 //	----------------------------------------------------------------------------------------------------------------------------
@@ -183,7 +213,23 @@ public abstract class BasicNetService
 			}
 			notifys.add(listener);
 		}
-		cleanUnhandledMessages();
+		if (!UnhandledMessages.isEmpty()) {
+			ArrayList<Protocol> removed = null;
+			for (Entry<Protocol, MessageHeader> unotify : UnhandledMessages.entrySet()) {
+				if (tryReceivedNotify(unotify.getValue())) {
+					if (removed == null) {
+						removed = new ArrayList<Protocol>(UnhandledMessages.size());
+					}
+					removed.add(unotify.getKey());
+				}
+			}
+			if (removed != null) {
+				for (Protocol unotify : removed) {
+					UnhandledMessages.remove(unotify);
+					log.info("drop a unhandled notify : " + unotify);
+				}
+			}
+		}
 	}
 	
 	/**
@@ -213,7 +259,7 @@ public abstract class BasicNetService
 //  -------------------------------------------------------------------------------------------------------------
   
     /**
-     * 立刻清理所有未响应的请求
+     * 立刻清理所有未响应的请求和囤积的未知消息
      */
     final public void cleanRequestAndNotify() 
     {
@@ -233,50 +279,32 @@ public abstract class BasicNetService
     		log.error(err.getMessage(), err);
     	}
     	
-		try{
+		try {
 			if (!UnhandledMessages.isEmpty()) {
-    			ArrayList<MessageHeader> removed = null;
-    			for (MessageHeader unotify : UnhandledMessages) {
-    				if (System.currentTimeMillis() - unotify.DynamicReceiveTime > DropRequestTimeOut) {
-    					if (removed == null) {
-    						removed = new ArrayList<MessageHeader>(UnhandledMessages.size());
-    					}
-    					removed.add(unotify);
-    					log.info("drop a unhandled notify : " + unotify);
-    				}
-    			}
-    			if (removed!=null) {
-    				UnhandledMessages.removeAll(removed);
-    			}
-			}
-		}catch (Exception err){
-    		log.error(err.getMessage(), err);
-    	}
-    }
-    
-	
-    final public void cleanUnhandledMessages()
-    {	
-    	if (!UnhandledMessages.isEmpty()) {
-			ArrayList<MessageHeader> removed = null;
-			for (MessageHeader unotify : UnhandledMessages) {
-				if (tryReceivedNotify(unotify)) {
-					if (removed == null) {
-						removed = new ArrayList<MessageHeader>(UnhandledMessages.size());
+				ArrayList<Protocol> removed = null;
+				for (Protocol unotify : UnhandledMessages.keySet()) {
+					if (System.currentTimeMillis() - unotify.getReceivedTime() > DropRequestTimeOut) {
+						if (removed == null) {
+							removed = new ArrayList<Protocol>(UnhandledMessages.size());
+						}
+						removed.add(unotify);
 					}
-					removed.add(unotify);
-//					log.info("pop a unhandled notify : " + unotify);
+				}
+				if (removed != null) {
+					for (Protocol unotify : removed) {
+						UnhandledMessages.remove(unotify);
+						log.info("drop a unhandled notify : " + unotify);
+					}
 				}
 			}
-			if (removed!=null) {
-				UnhandledMessages.removeAll(removed);
-			}
+		} catch (Exception err) {
+			log.error(err.getMessage(), err);
 		}
     }
     
 //    -------------------------------------------------------------------------------------------------------------------
     
-	final private void processReceiveSessionMessage(ServerSession session, MessageHeader message) {
+	final private void processReceiveSessionMessage(ServerSession session, Protocol protocol, MessageHeader message) {
 		try {
 			onReceivedMessage(session, message);
 		} catch (Exception err) {
@@ -284,14 +312,14 @@ public abstract class BasicNetService
 		}
 		if (tryReceivedNotify(message)) {
 			return;
-		} else if (tryReceivedResponse(message)) {
+		} else if (tryReceivedResponse(protocol, message)) {
 			return;
-		} else if (!tryPushUnhandledNotify(message)) {
+		} else if (!tryPushUnhandledNotify(protocol, message)) {
 			log.error("handle no listener message : " + message);
 		}
 	}
 	
-	final private void processReceiveChannelMessage(ServerSession session, MessageHeader message) {
+	final private void processReceiveChannelMessage(ServerSession session, Protocol protocol, MessageHeader message) {
 		try {
 			onReceivedMessage(session, message);
 		} catch (Exception err) {
@@ -299,7 +327,7 @@ public abstract class BasicNetService
 		}
 		if (tryReceivedNotify(message)) {
 			return;
-		} else if (!tryPushUnhandledNotify(message)) {
+		} else if (!tryPushUnhandledNotify(protocol, message)) {
 			log.error("handle no listener channel message : " + message);
 		}
 	}
@@ -322,20 +350,20 @@ public abstract class BasicNetService
     	return false;
 	}
 	
-	final private boolean tryReceivedResponse(MessageHeader message)
+	final private boolean tryReceivedResponse(Protocol protocol, MessageHeader message)
 	{
 		Request request = WaitingListeners.remove(message.PacketNumber);
     	if (request != null) {
-    		request.messageResponsed(message);    	
+    		request.messageResponsed(protocol, message);    	
     		return true;
     	}
     	return false;
 	}
 	
-	final private boolean tryPushUnhandledNotify(MessageHeader message)
+	final private boolean tryPushUnhandledNotify(Protocol protocol, MessageHeader message)
 	{
 		if (message.PacketNumber == 0) {
-			UnhandledMessages.add(message);
+			UnhandledMessages.put(protocol, message);
 			return true;
 		}
     	return false;
@@ -369,8 +397,16 @@ public abstract class BasicNetService
 	    public void disconnected(ServerSession session, boolean graceful, String reason) {
 	    	log.info("disconnected : " + graceful + " : " + reason);
 			onDisconnected(session, graceful, reason);
+			ScheduledFuture<?> old_1 = schedule_clean_task_fix_rate.getAndSet(null);
+			ScheduledFuture<?> old_2 = schedule_clean_task.getAndSet(null);
+			if (old_1 != null) {
+				old_1.cancel(false);
+			}
+			if (old_2 != null) {
+				old_2.cancel(false);
+			}
 			if (thread_pool != null) {
-				thread_pool.executeTask(new CleanTask());
+				scheduleCleanTask(thread_pool, DropRequestTimeOut);
 			}
 	    }
 	    
@@ -384,40 +420,34 @@ public abstract class BasicNetService
 	        onLeftChannel(channel);	
 	    }
 	    
-	    public void receivedMessage(ServerSession session, MessageHeader message)
+	    public void receivedMessage(ServerSession session, Protocol protocol, MessageHeader message)
 	    {
 			if (message != null) {
 				if (thread_pool!=null) {
-					thread_pool.executeTask(new ReceiveTask(session, message));
+					thread_pool.executeTask(new ReceiveTask(session, protocol, message));
 				} else {
-					processReceiveSessionMessage(session, message);
+					processReceiveSessionMessage(session, protocol, message);
 				}
 			} else {
 				log.error("handle null message !");
 			}
-			if (thread_pool != null) {
-				thread_pool.executeTask(new CleanTask());
-			}
 	    }
 	    
-	    public void receivedChannelMessage(ClientChannel channel, MessageHeader message)
+	    public void receivedChannelMessage(ClientChannel channel, Protocol protocol, MessageHeader message)
 	    {
 			if (message != null) {
 				if (thread_pool!=null) {
-					thread_pool.executeTask(new ReceiveChannelTask(channel.getSession(), message));
+					thread_pool.executeTask(new ReceiveChannelTask(channel.getSession(), protocol, message));
 				} else {
-					processReceiveChannelMessage(channel.getSession(), message);
+					processReceiveChannelMessage(channel.getSession(), protocol, message);
 				}
 			} else {
 				log.error("handle null channel message !");
 			}
-			if (thread_pool != null) {
-				thread_pool.executeTask(new CleanTask());
-			}
 		}
 	    
 	    @Override
-	    public void sentMessage(ServerSession session, MessageHeader message) {
+	    public void sentMessage(ServerSession session, Protocol protocol, MessageHeader message) {
 	    	onSentMessage(session, message);
 	    }
 	    
@@ -425,16 +455,18 @@ public abstract class BasicNetService
 		{
 			final MessageHeader message;
 			final ServerSession session;
+			final Protocol protocol;
 			
-			public ReceiveTask(ServerSession session, MessageHeader message) {
+			public ReceiveTask(ServerSession session, Protocol protocol, MessageHeader message) {
 				this.message = message;
 				this.session = session;
+				this.protocol = protocol;
 			}
 			
 			@Override
 			public void run() {
 				try {
-					processReceiveSessionMessage(session, message);
+					processReceiveSessionMessage(session, protocol, message);
 				} catch (Throwable err) {
 					err.printStackTrace();
 				}
@@ -445,16 +477,18 @@ public abstract class BasicNetService
 		{
 			final MessageHeader message;
 			final ServerSession session;
+			final Protocol 		protocol;
 			
-			public ReceiveChannelTask(ServerSession session, MessageHeader message) {
+			public ReceiveChannelTask(ServerSession session, Protocol protocol, MessageHeader message) {
 				this.message = message;
 				this.session = session;
+				this.protocol = protocol;
 			}
 			
 			@Override
 			public void run() {
 				try {
-					processReceiveChannelMessage(session, message);
+					processReceiveChannelMessage(session, protocol, message);
 				} catch (Throwable err) {
 					err.printStackTrace();
 				}
@@ -467,23 +501,20 @@ public abstract class BasicNetService
 
 //	-------------------------------------------------------------------------------------------------
 	
-	private class CleanTask implements Runnable
-	{
-		@Override
-		public void run() {
-			cleanRequestAndNotify() ;
-		}
-	}
+	
 	
 //	-------------------------------------------------------------------------------------------------
 	
 	@SuppressWarnings("unchecked")
-	private class Request implements Runnable
+	private class Request extends AtomicReference<MessageHeader> implements Runnable
 	{
+		private static final long 			serialVersionUID = 1L;
+		
 		final MessageHeader 				Message;
 		final WaitingListener[]				Listeners;
 		final long 							SendTimeOut;
-		MessageHeader						Response;
+		
+		long								SendTime;
 		
 		private Request(MessageHeader msg, long timeout, WaitingListener ... listeners)
 		{
@@ -502,6 +533,7 @@ public abstract class BasicNetService
 //			System.out.println("request " + this);
 			if (SendTimeOut > 0) {
 				synchronized (this) {
+					SendTime = System.currentTimeMillis();
 					send(Message);
 					try {
 						wait(SendTimeOut);
@@ -514,11 +546,10 @@ public abstract class BasicNetService
 			}
 		}
 		
-		private void messageResponsed(MessageHeader response) 
+		private void messageResponsed(Protocol protocol, MessageHeader response) 
 		{
-//			System.out.println("response " + this);
-			Response = response;
-			request_response_ping.set((int)(response.DynamicReceiveTime - Message.DynamicSendTime));
+			set(response);
+			request_response_ping.set((int)(System.currentTimeMillis() - SendTime));
 			if (SendTimeOut > 0) {
 				synchronized (this){
 					notify();
@@ -534,25 +565,13 @@ public abstract class BasicNetService
 		private void timeout() {
 			for (WaitingListener wait : Listeners) {
 				if (wait != null) {
-					wait.timeout(BasicNetService.this, Message, Message.DynamicSendTime);
+					wait.timeout(BasicNetService.this, Message, SendTime);
 				}
 			}
 		}
-		
-//		private void removeWaitingListener(Class<?> type) {
-//			synchronized (Listener){
-//				for (int i=Listener.size()-1; i>=0; --i) {
-//					WaitingListener l = Listener.get(i);
-//					if (type.isInstance(l)) {
-//						Listener.remove(i);
-//						log.info("removeWaitingListener : " + l);
-//					}
-//				}
-//			}
-//		}
-		
+				
 		protected boolean isDroped() {
-			return System.currentTimeMillis() - Message.DynamicSendTime > DropRequestTimeOut;
+			return SendTime + SendTimeOut + DropRequestTimeOut < System.currentTimeMillis();
 		}
 		
 		public String toString() {

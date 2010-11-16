@@ -15,8 +15,8 @@ import com.cell.j2se.awt.ConsoleFrame;
 import com.cell.j2se.awt.ConsoleFrame.ConsoleListener;
 
 import com.net.MessageHeader;
-import com.net.client.NetService;
-import com.net.client.WaitingListener;
+import com.net.client.service.NetService;
+import com.net.client.service.WaitingListener;
 import com.net.minaimpl.client.ServerSessionImpl;
 import com.net.minaimpl.monitor.ServerMonitor;
 import com.net.minaimpl.server.ServerImpl;
