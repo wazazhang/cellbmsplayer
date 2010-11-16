@@ -212,7 +212,7 @@ public class ServerImpl extends AbstractServer
 					break;
 					
 				case Protocol.PROTOCOL_SESSION_MESSAGE:
-					client.Listener.receivedMessage(client, header.getMessage());
+					client.Listener.receivedMessage(client, header, header.getMessage());
 					break;
 					
 //				case Protocol.PROTOCOL_CHANNEL_JOIN_S2C:
@@ -239,7 +239,7 @@ public class ServerImpl extends AbstractServer
 			ClientSessionImpl client = getBindSession(session);
 			if (client != null && client.Listener != null) {
 				Protocol header = (Protocol) message;
-//				client.Listener.sentMessage(client, header.getMessage());
+				client.Listener.sentMessage(client, header, header.getMessage());
 			}
 		} else {
 			log.error("bad message type : " + session + " : " + message);
