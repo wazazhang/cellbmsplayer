@@ -157,7 +157,8 @@ public class ServerImpl extends AbstractServer
 	
 	public void broadcast(MessageHeader message){
 		ProtocolImpl p = ProtocolPool.getInstance().createProtocol();
-		p.Protocol = Protocol.PROTOCOL_SESSION_MESSAGE;
+		p.Protocol	= Protocol.PROTOCOL_SESSION_MESSAGE;
+		p.message	= message;
 		Acceptor.broadcast(p);
 	}
 	
