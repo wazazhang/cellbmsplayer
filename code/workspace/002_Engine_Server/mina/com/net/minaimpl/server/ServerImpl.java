@@ -239,7 +239,6 @@ public class ServerImpl extends AbstractServer
 					break;
 					
 				case MessageHeader.PROTOCOL_SESSION_MESSAGE:
-					// 默认给系统消息回馈
 					client.Listener.receivedMessage(client, header);
 					break;
 					
