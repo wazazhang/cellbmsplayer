@@ -38,6 +38,8 @@ public class EchoServer extends ServerImpl implements ServerListener
 			EchoMessage msg = (EchoMessage)message;
 			session.send(msg);
 		}
+		@Override
+		public void sentMessage(ClientSession session, MessageHeader message) {}
 	}
 	
 	

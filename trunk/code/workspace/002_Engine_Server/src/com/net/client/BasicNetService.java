@@ -276,9 +276,9 @@ public abstract class BasicNetService
     
 //    -------------------------------------------------------------------------------------------------------------------
     
-	final private void processReceiveSessionMessage(MessageHeader message) {
+	final private void processReceiveSessionMessage(ServerSession session, MessageHeader message) {
 		try {
-			onReceivedMessage(message);
+			onReceivedMessage(session, message);
 		} catch (Exception err) {
 			log.error(err.getMessage(), err);
 		}
@@ -291,9 +291,9 @@ public abstract class BasicNetService
 		}
 	}
 	
-	final private void processReceiveChannelMessage(MessageHeader message) {
+	final private void processReceiveChannelMessage(ServerSession session, MessageHeader message) {
 		try {
-			onReceivedMessage(message);
+			onReceivedMessage(session, message);
 		} catch (Exception err) {
 			log.error(err.getMessage(), err);
 		}
@@ -349,11 +349,13 @@ public abstract class BasicNetService
 	
 	protected void onDisconnected(ServerSession session, boolean graceful, String reason) {}
 
-	protected void onJoinedChannel(ServerSession session, ClientChannel channel) {}
+	protected void onJoinedChannel(ClientChannel channel) {}
     
 	protected void onLeftChannel(ClientChannel channel) {}
   
-	protected void onReceivedMessage(MessageHeader message){}
+	protected void onReceivedMessage(ServerSession session, MessageHeader message){}
+	
+	protected void onSentMessage(ServerSession session, MessageHeader message){}
 //	----------------------------------------------------------------------------------------------------------------------------
 	
 
@@ -372,9 +374,9 @@ public abstract class BasicNetService
 			}
 	    }
 	    
-	    public void joinedChannel(ServerSession session, ClientChannel channel) {
+	    public void joinedChannel(ClientChannel channel) {
 	    	log.info("joined channel : \"" + channel.getID() + "\"");
-			onJoinedChannel(session, channel);
+			onJoinedChannel(channel);
 	    }
 
 	    public void leftChannel(ClientChannel channel) {
@@ -386,9 +388,9 @@ public abstract class BasicNetService
 	    {
 			if (message != null) {
 				if (thread_pool!=null) {
-					thread_pool.executeTask(new ReceiveTask(message));
+					thread_pool.executeTask(new ReceiveTask(session, message));
 				} else {
-					processReceiveSessionMessage(message);
+					processReceiveSessionMessage(session, message);
 				}
 			} else {
 				log.error("handle null message !");
@@ -402,9 +404,9 @@ public abstract class BasicNetService
 	    {
 			if (message != null) {
 				if (thread_pool!=null) {
-					thread_pool.executeTask(new ReceiveChannelTask(message));
+					thread_pool.executeTask(new ReceiveChannelTask(channel.getSession(), message));
 				} else {
-					processReceiveChannelMessage(message);
+					processReceiveChannelMessage(channel.getSession(), message);
 				}
 			} else {
 				log.error("handle null channel message !");
@@ -414,18 +416,25 @@ public abstract class BasicNetService
 			}
 		}
 	    
+	    @Override
+	    public void sentMessage(ServerSession session, MessageHeader message) {
+	    	onSentMessage(session, message);
+	    }
+	    
 		private class ReceiveTask implements Runnable
 		{
 			final MessageHeader message;
+			final ServerSession session;
 			
-			public ReceiveTask(MessageHeader message) {
+			public ReceiveTask(ServerSession session, MessageHeader message) {
 				this.message = message;
+				this.session = session;
 			}
 			
 			@Override
 			public void run() {
 				try {
-					processReceiveSessionMessage(message);
+					processReceiveSessionMessage(session, message);
 				} catch (Throwable err) {
 					err.printStackTrace();
 				}
@@ -435,15 +444,17 @@ public abstract class BasicNetService
 		private class ReceiveChannelTask implements Runnable
 		{
 			final MessageHeader message;
-
-			public ReceiveChannelTask(MessageHeader message) {
+			final ServerSession session;
+			
+			public ReceiveChannelTask(ServerSession session, MessageHeader message) {
 				this.message = message;
+				this.session = session;
 			}
 			
 			@Override
 			public void run() {
 				try {
-					processReceiveChannelMessage(message);
+					processReceiveChannelMessage(session, message);
 				} catch (Throwable err) {
 					err.printStackTrace();
 				}

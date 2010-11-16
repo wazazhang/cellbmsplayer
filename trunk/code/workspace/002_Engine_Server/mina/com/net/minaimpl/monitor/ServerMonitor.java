@@ -213,7 +213,7 @@ public class ServerMonitor extends JFrame implements ActionListener, ServerSessi
 	public void disconnected(ServerSession session, boolean graceful, String reason) {
 		System.out.println("disconnected : " + Session);
 	}
-	public void joinedChannel(ServerSession session, ClientChannel channel) {
+	public void joinedChannel(ClientChannel channel) {
 		System.out.println("joinedChannel : " + channel);
 	}
 	public void leftChannel(ClientChannel channel) {
@@ -229,6 +229,12 @@ public class ServerMonitor extends JFrame implements ActionListener, ServerSessi
 		if (message instanceof SystemMessages.ServerStatusResponseS2C) {
 			CurrentServerStatus = (SystemMessages.ServerStatusResponseS2C)message;
 		}
+	}
+
+	@Override
+	public void sentMessage(ServerSession session, MessageHeader message) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	class PaintCanvas extends Canvas implements Runnable
