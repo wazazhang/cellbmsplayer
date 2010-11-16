@@ -94,6 +94,6 @@ public class ProtocolImpl implements com.net.Protocol
 	
 	@Override
 	public String toString() {
-		return "["+Integer.toHexString(Protocol)+"] : " + message;
+		return "[0x"+Integer.toHexString(Protocol)+"] : " + message;
 	}
 }
