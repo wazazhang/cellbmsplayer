@@ -252,6 +252,22 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 		}
 	}
 	
+	@Override
+	public void messageSent(IoSession session, Object message) throws Exception 
+	{
+		if (message instanceof MessageHeader) {
+			MessageHeader header = (MessageHeader) message;
+			try {
+				Listener.sentMessage(this, header);
+			} catch (Exception e) {
+				log.error("messageSent : bad protocol : " + header);
+				e.printStackTrace();
+			}
+		} else {
+			log.error("messageSent : bad message type : " + message);
+		}
+	}
+	
 	public IoSession getIoSession() {
 		return session_ref.get();
 	}

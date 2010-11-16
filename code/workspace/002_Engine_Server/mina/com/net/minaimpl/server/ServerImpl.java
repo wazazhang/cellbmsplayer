@@ -240,12 +240,7 @@ public class ServerImpl extends AbstractServer
 					
 				case MessageHeader.PROTOCOL_SESSION_MESSAGE:
 					// 默认给系统消息回馈
-					if (message instanceof ServerStatusRequestC2S) {
-						client.send(header, new ServerStatusResponseS2C(this));
-					}
-					else {
-						client.Listener.receivedMessage(client, header);
-					}
+					client.Listener.receivedMessage(client, header);
 					break;
 					
 				default:
