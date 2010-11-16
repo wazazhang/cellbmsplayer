@@ -192,11 +192,25 @@ public class CSprite extends CUnit implements Serializable
 	public IImage getFrameImage(int anim,int frame,int sub){
 		return animates.getFrameImage(FrameAnimate[anim][frame], sub);
 	}
+	
 	public int getFrameImageX(int anim,int frame,int sub){
 		return animates.getFrameX(FrameAnimate[anim][frame], sub);
 	}
+	
 	public int getFrameImageY(int anim,int frame,int sub){
 		return animates.getFrameY(FrameAnimate[anim][frame], sub);
+	}
+	
+	public int getFrameImageWidth(int anim, int frame, int sub) {
+		return animates.getFrameW(FrameAnimate[anim][frame], sub);
+	}
+	
+	public int getFrameImageHeight(int anim, int frame, int sub) {
+		return animates.getFrameH(FrameAnimate[anim][frame], sub);
+	}
+	
+	public byte getFrameImageTransform(int anim, int frame, int sub) {
+		return animates.getFrameTransform(FrameAnimate[anim][frame], sub);
 	}
 	
 	public IImage getCurrentImage(int sub){
