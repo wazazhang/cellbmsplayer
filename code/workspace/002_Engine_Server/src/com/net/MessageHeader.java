@@ -33,7 +33,7 @@ public abstract class MessageHeader implements Serializable
 	/**频道发送者的SessionID, ipv4*/
 	transient public long		ChannelSesseionID;
 	
-	/**可以同时包含连接的IP地址和端口号以及所在的服务器端的频段号, ipv4*/
+	/**该链接对于服务器的唯一ID*/
 	transient public long 		SessionID;
 	
 	/**消息类型*/
