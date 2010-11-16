@@ -12,16 +12,19 @@ public interface ClientSessionListener
 	
 	/**
 	 * 监听客户端发送过来的数据包
+	 * @param session
+	 * @param protocol 
 	 * @param message
 	 */
-	public void receivedMessage(ClientSession session, MessageHeader message);
+	public void receivedMessage(ClientSession session, Protocol protocol, MessageHeader message);
 	
 	
-//	/**
-//	 * 服务器向客户端发送已完成
-//	 * @param session
-//	 * @param message
-//	 */
-//	public void sentMessage(ClientSession session, MessageHeader message);
+	/**
+	 * 服务器向客户端发送已完成
+	 * @param session
+	 * @param protocol
+	 * @param message
+	 */
+	public void sentMessage(ClientSession session, Protocol protocol, MessageHeader message);
 
 }
