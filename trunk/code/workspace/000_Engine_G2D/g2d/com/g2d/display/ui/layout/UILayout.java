@@ -10,6 +10,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
 
+import sun.awt.image.ImageWatched.Link;
+
 import com.cell.DObject;
 import com.cell.gfx.IImage;
 import com.cell.j2se.CImage;
@@ -86,13 +88,35 @@ public class UILayout extends DObject
 
 //	------------------------------------------------------------------------------------------------------------------------------
 
-	
 	public UILayout(){}
 	
+	/**
+	 * @see {@link setImages(BufferedImage[], ImageStyle)}
+	 */
+	public UILayout(BufferedImage[] images, ImageStyle style){
+		setImages(images, style);
+	}
+	
+	/**
+	 * @see {@link setImages(Image, ImageStyle, int)}
+	 */
+	public UILayout(Image src, ImageStyle style, int clipsize){
+		setImages(src, style, clipsize, clipsize>>1);
+	}
+
+	/**
+	 * @see {@link setImages(Image, ImageStyle, int, int)}
+	 */
+	public UILayout(Image src, ImageStyle style, int clipsize, int bordersize){
+		setImages(src, style, clipsize, bordersize);
+	}
+
 	public UILayout(UILayout set){
 		this.set(set);
 	}
-	
+
+//	------------------------------------------------------------------------------------------------------------------------------
+
 	public TexturePaint getBorderT() {
 		return BorderT;
 	}
