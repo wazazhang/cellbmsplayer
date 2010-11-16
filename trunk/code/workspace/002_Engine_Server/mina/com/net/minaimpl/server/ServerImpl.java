@@ -21,7 +21,6 @@ import com.net.server.ServerListener;
 public class ServerImpl extends AbstractServer
 {
 	final private ChannelManager	channel_manager;
-	final ReentrantReadWriteLock	session_rw_lock	= new ReentrantReadWriteLock();
 
 //	----------------------------------------------------------------------------------------------------------------------
 	
@@ -96,84 +95,71 @@ public class ServerImpl extends AbstractServer
 	
 	private ClientSessionImpl getBindSession(IoSession session)
 	{
-		session_rw_lock.readLock().lock();
-		try {
-			Object obj = session.getAttribute(SessionAttributeKey.CLIENT_SESSION);
-			if (obj instanceof ClientSessionImpl) {
-				return (ClientSessionImpl) obj;
-			}
-		} finally {
-			session_rw_lock.readLock().unlock();
+		return (ClientSessionImpl)session.getAttribute(SessionAttributeKey.CLIENT_SESSION);
+	}
+	
+	class SessionIterator implements Iterator<ClientSession>
+	{
+		public SessionIterator() {
+			Acceptor.getManagedSessions().containsKey(SessionAttributeKey.CLIENT_SESSION);
 		}
-		return null;
+		
+		@Override
+		public boolean hasNext() {
+			// TODO Auto-generated method stub
+			return false;
+		}
+		@Override
+		public ClientSession next() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		@Override
+		public void remove() {
+			// TODO Auto-generated method stub
+			
+		}
+		
 	}
 	
 	
 	public Iterator<ClientSession> getSessions() {
-		session_rw_lock.readLock().lock();
-		try{
-			ArrayList<ClientSession> sessions = new ArrayList<ClientSession>(Acceptor.getManagedSessionCount());
-			for (IoSession session : Acceptor.getManagedSessions().values()){
-				ClientSessionImpl client = getBindSession(session);
-				if (client!=null){
-					sessions.add(client);
-				}
+		ArrayList<ClientSession> sessions = new ArrayList<ClientSession>(Acceptor.getManagedSessionCount());
+		for (IoSession session : Acceptor.getManagedSessions().values()) {
+			ClientSessionImpl client = getBindSession(session);
+			if (client != null) {
+				sessions.add(client);
 			}
-			return sessions.iterator();
-		} finally {
-			session_rw_lock.readLock().unlock();
 		}
+		return sessions.iterator();
 	}
 	
 	public ClientSession getSession(long sessionID) {
-		session_rw_lock.readLock().lock();
-		try{
-			IoSession session = Acceptor.getManagedSessions().get(sessionID);
-			ClientSessionImpl client = getBindSession(session);
-			if (client!=null){
-				return client;
-			}
-			return null;
-		} finally {
-			session_rw_lock.readLock().unlock();
-		}
+		IoSession session = Acceptor.getManagedSessions().get(sessionID);
+		ClientSessionImpl client = getBindSession(session);
+		return client;
 	}
 	
 	public ClientSession getSession(Object object){
-		session_rw_lock.readLock().lock();
-		try{
-			for (IoSession session : Acceptor.getManagedSessions().values()){
-				ClientSessionImpl client = getBindSession(session);
-				if (object.equals(client)) {
-					return client;
-				}
+		for (IoSession session : Acceptor.getManagedSessions().values()){
+			ClientSessionImpl client = getBindSession(session);
+			if (object.equals(client)) {
+				return client;
 			}
-			return null;
-		} finally {
-			session_rw_lock.readLock().unlock();
 		}
+		return null;
 	}
 	
 	public boolean hasSession(ClientSession session) {
-		session_rw_lock.readLock().lock();
-		try{
-			return Acceptor.getManagedSessions().containsKey(session.getID());
-		} finally {
-			session_rw_lock.readLock().unlock();
-		}
+		return Acceptor.getManagedSessions().containsKey(session.getID());
 	}
 	
 	public int getSessionCount() {
-		session_rw_lock.readLock().lock();
-		try{
-			return Acceptor.getManagedSessionCount();
-		} finally {
-			session_rw_lock.readLock().unlock();
-		}
+		return Acceptor.getManagedSessionCount();
 	}
 	
 	public void broadcast(MessageHeader message){
-		message.Protocol 		= MessageHeader.PROTOCOL_SESSION_MESSAGE;
+		message.Protocol = MessageHeader.PROTOCOL_SESSION_MESSAGE;
 		Acceptor.broadcast(message);
 	}
 	
@@ -182,19 +168,13 @@ public class ServerImpl extends AbstractServer
 	public void sessionOpened(IoSession session) throws Exception {
 		log.debug("sessionOpened : " + session);
 		ClientSessionImpl client = new ClientSessionImpl(session, this);
-		session_rw_lock.writeLock().lock();
-		try{
-			session.setAttribute(SessionAttributeKey.CLIENT_SESSION, client);
-		} finally {
-			session_rw_lock.writeLock().unlock();
-		}
+		session.setAttribute(SessionAttributeKey.CLIENT_SESSION, client);
 		client.setListener(SrvListener.connected(client));
 	}
 	
 	public void sessionClosed(IoSession session) throws Exception {
 		log.debug("sessionClosed : " + session);
-		ClientSessionImpl client = getBindSession(session);
-		session.removeAttribute(SessionAttributeKey.CLIENT_SESSION);
+		ClientSessionImpl client = (ClientSessionImpl)session.removeAttribute(SessionAttributeKey.CLIENT_SESSION);
 		if (client != null) {
 			try {
 				Iterator<Channel> channels = channel_manager.getChannels();
@@ -216,16 +196,11 @@ public class ServerImpl extends AbstractServer
 	
 	public void messageReceived(final IoSession session, final Object message) throws Exception 
 	{
-		ClientSessionImpl client = getBindSession(session);
-		if (client == null) {
-			log.error("client is expire : " + session);
-			return;
-		}
-		
 		//System.out.println(Thread.currentThread().getName() + " messageReceived");
 		if (message instanceof MessageHeader)
 		{
-			if (client.Listener != null)
+			ClientSessionImpl client = getBindSession(session);
+			if (client != null && client.Listener != null)
 			{
 				MessageHeader header = (MessageHeader)message;
 				
@@ -254,6 +229,18 @@ public class ServerImpl extends AbstractServer
 		
 	}
 	
-	
+	@Override
+	public void messageSent(IoSession session, Object message) throws Exception 
+	{
+		if (message instanceof MessageHeader) {
+			ClientSessionImpl client = getBindSession(session);
+			if (client != null && client.Listener != null) {
+				MessageHeader header = (MessageHeader) message;
+				client.Listener.sentMessage(client, header);
+			}
+		} else {
+			log.error("bad message type : " + session + " : " + message);
+		}
+	}
 	
 }
