@@ -1,6 +1,7 @@
 package com.net.server;
 
 import com.net.MessageHeader;
+import com.net.Protocol;
 
 public interface ClientSessionListener
 {
@@ -16,11 +17,11 @@ public interface ClientSessionListener
 	public void receivedMessage(ClientSession session, MessageHeader message);
 	
 	
-	/**
-	 * 服务器向客户端发送已完成
-	 * @param session
-	 * @param message
-	 */
-	public void sentMessage(ClientSession session, MessageHeader message);
+//	/**
+//	 * 服务器向客户端发送已完成
+//	 * @param session
+//	 * @param message
+//	 */
+//	public void sentMessage(ClientSession session, MessageHeader message);
 
 }

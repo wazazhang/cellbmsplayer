@@ -15,8 +15,9 @@ import com.cell.j2se.awt.ConsoleFrame;
 import com.cell.j2se.awt.ConsoleFrame.ConsoleListener;
 
 import com.net.MessageHeader;
-import com.net.client.NetService;
-import com.net.client.WaitingListener;
+import com.net.client.service.NetService;
+import com.net.client.service.WaitingListener;
+import com.net.minaimpl.SystemMessages;
 import com.net.minaimpl.client.ServerSessionImpl;
 import com.net.minaimpl.monitor.ServerMonitor;
 import com.net.minaimpl.server.ServerImpl;
@@ -35,10 +36,11 @@ public class EchoServer extends ServerImpl implements ServerListener
 		
 		//接收到一个null message,将data+1回馈给发送者
 		public void receivedMessage(ClientSession session, MessageHeader message) {
-			EchoMessage msg = (EchoMessage)message;
-			session.send(msg);
+			if (message instanceof SystemMessages.ServerStatusRequestC2S) {
+				session.send(new SystemMessages.ServerStatusResponseS2C((ServerImpl)session.getServer()));
+			}
+			session.send(message);
 		}
-		@Override
 		public void sentMessage(ClientSession session, MessageHeader message) {}
 	}
 	
@@ -75,6 +77,7 @@ public class EchoServer extends ServerImpl implements ServerListener
 			
 		} catch (Exception ex) {
 			ex.printStackTrace();
+			System.exit(1);
 		}
 	}
 	

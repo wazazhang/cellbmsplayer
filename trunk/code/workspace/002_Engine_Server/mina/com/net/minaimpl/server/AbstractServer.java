@@ -20,6 +20,8 @@ import org.slf4j.LoggerFactory;
 import com.net.ExternalizableFactory;
 import com.net.MessageHeader;
 import com.net.minaimpl.NetPackageCodec;
+import com.net.minaimpl.ProtocolImpl;
+import com.net.minaimpl.ProtocolPool;
 import com.net.minaimpl.SessionAttributeKey;
 import com.net.minaimpl.SystemMessages;
 import com.net.minaimpl.SystemMessages.*;
@@ -149,20 +151,22 @@ public abstract class AbstractServer extends IoHandlerAdapter implements Server
 //	-----------------------------------------------------------------------------------------------------------------------
 	
 	protected void write(
-			IoSession session, 
-			MessageHeader message,
-			short	protocol, 
-			int		channel_id, 
-			long	channel_sender_id,
-			int		packnumber)
+			IoSession 		session, 
+			MessageHeader 	message,
+			byte			protocol, 
+			int				channel_id, 
+			long			channel_sender_id,
+			int				packnumber)
 	{
 		if (session.isConnected()) {
-			message.SessionID			= session.getId();
-			message.ChannelID			= channel_id;
-			message.ChannelSesseionID	= channel_sender_id;
-			message.Protocol			= protocol;
-			message.PacketNumber		= packnumber;
-			session.write(message);
+			ProtocolImpl p = ProtocolPool.getInstance().createProtocol();
+			p.SessionID			= session.getId();
+			p.Protocol			= protocol;
+			p.PacketNumber		= packnumber;
+			p.message			= message;			
+			p.ChannelID			= channel_id;
+			p.ChannelSesseionID	= channel_sender_id;
+			session.write(p);
 		}
 	}
 	

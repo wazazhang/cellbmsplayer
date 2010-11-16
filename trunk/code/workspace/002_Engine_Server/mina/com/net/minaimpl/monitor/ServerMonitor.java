@@ -22,6 +22,7 @@ import com.cell.util.concurrent.ThreadPool;
 import com.g2d.util.Tracker;
 import com.g2d.util.Util;
 import com.net.MessageHeader;
+import com.net.Protocol;
 import com.net.client.ClientChannel;
 import com.net.client.ServerSession;
 import com.net.client.ServerSessionListener;
@@ -97,46 +98,46 @@ public class ServerMonitor extends JFrame implements ActionListener, ServerSessi
 		this.validate();
 	
 		
-		 try {
-			SystemTray = java.awt.SystemTray.getSystemTray();
-			TrayIcon = new java.awt.TrayIcon(Toolkit.getDefaultToolkit()
-					.getImage(SystemTray.getClass().getResource("/eat/server/ss_icon.png")));
-			TrayMenu = new PopupMenu();
-			
-			// 定义托盘图标的图片
-			TrayIcon.setToolTip("Chat Server");
-			
-			// 为托盘添加右键菜单
-			TrayIcon.setPopupMenu(TrayMenu);
-			TrayMenu.add("show");
-			TrayMenu.add("exit");
-			TrayMenu.addActionListener(new ActionListener(){
-				public void actionPerformed(ActionEvent e) {
-					if (e.getActionCommand().equals("show")){
-						ServerMonitor.this.setVisible(true);
-					}else if (e.getActionCommand().equals("exit")) {
-						ServerMonitor.this.exit();
-					}
-				}
-			});
-			
-			// 定义托盘图标的鼠标事件
-			TrayIcon.addMouseListener(new MouseListener() {
-				public void mouseClicked(MouseEvent e) {
-					if (e.getButton() == MouseEvent.BUTTON1) {
-						ServerMonitor.this.setVisible(true);
-					}
-				}
-				public void mouseEntered(MouseEvent e) {}
-				public void mouseExited(MouseEvent e) {}
-				public void mousePressed(MouseEvent e) {}
-				public void mouseReleased(MouseEvent e) {}
-			});
-			SystemTray.add(TrayIcon);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		 try {
+//			SystemTray = java.awt.SystemTray.getSystemTray();
+//			TrayIcon = new java.awt.TrayIcon(Toolkit.getDefaultToolkit()
+//					.getImage(SystemTray.getClass().getResource("/eat/server/ss_icon.png")));
+//			TrayMenu = new PopupMenu();
+//			
+//			// 定义托盘图标的图片
+//			TrayIcon.setToolTip("Chat Server");
+//			
+//			// 为托盘添加右键菜单
+//			TrayIcon.setPopupMenu(TrayMenu);
+//			TrayMenu.add("show");
+//			TrayMenu.add("exit");
+//			TrayMenu.addActionListener(new ActionListener(){
+//				public void actionPerformed(ActionEvent e) {
+//					if (e.getActionCommand().equals("show")){
+//						ServerMonitor.this.setVisible(true);
+//					}else if (e.getActionCommand().equals("exit")) {
+//						ServerMonitor.this.exit();
+//					}
+//				}
+//			});
+//			
+//			// 定义托盘图标的鼠标事件
+//			TrayIcon.addMouseListener(new MouseListener() {
+//				public void mouseClicked(MouseEvent e) {
+//					if (e.getButton() == MouseEvent.BUTTON1) {
+//						ServerMonitor.this.setVisible(true);
+//					}
+//				}
+//				public void mouseEntered(MouseEvent e) {}
+//				public void mouseExited(MouseEvent e) {}
+//				public void mousePressed(MouseEvent e) {}
+//				public void mouseReleased(MouseEvent e) {}
+//			});
+//			SystemTray.add(TrayIcon);
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 		
 		try{
 			
@@ -219,24 +220,23 @@ public class ServerMonitor extends JFrame implements ActionListener, ServerSessi
 	public void leftChannel(ClientChannel channel) {
 		System.out.println("leftChannel : " + channel);
 	}
-	public void receivedMessage(ServerSession session, MessageHeader message) {
+	public void receivedMessage(ServerSession session, Protocol protocol, MessageHeader message) {
 //		System.out.println("receivedMessage : " + message);
 		if (message instanceof SystemMessages.ServerStatusResponseS2C) {
 			CurrentServerStatus = (SystemMessages.ServerStatusResponseS2C)message;
 		}
 	}
-	public void receivedChannelMessage(ClientChannel channel, MessageHeader message) {
+	@Override
+	public void receivedChannelMessage(ClientChannel channel, Protocol protocol, MessageHeader message) {
 		if (message instanceof SystemMessages.ServerStatusResponseS2C) {
 			CurrentServerStatus = (SystemMessages.ServerStatusResponseS2C)message;
 		}
 	}
-
 	@Override
-	public void sentMessage(ServerSession session, MessageHeader message) {
+	public void sentMessage(ServerSession session, Protocol protocol, MessageHeader message) {
 		// TODO Auto-generated method stub
 		
 	}
-	
 	class PaintCanvas extends Canvas implements Runnable
 	{
 		private static final long serialVersionUID = 1L;

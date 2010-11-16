@@ -1,4 +1,4 @@
-package com.net.client;
+package com.net.client.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import com.cell.CObject;
 import com.cell.util.concurrent.ThreadPool;
 import com.net.MessageHeader;
+import com.net.client.ServerSession;
 
 
 public class NetService extends BasicNetService

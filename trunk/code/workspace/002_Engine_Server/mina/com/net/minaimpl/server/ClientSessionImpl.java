@@ -2,17 +2,13 @@ package com.net.minaimpl.server;
 
 import java.net.SocketAddress;
 import java.util.Set;
-import java.util.concurrent.Future;
 
 import org.apache.mina.core.session.IoSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.cell.util.concurrent.ThreadPool;
 import com.net.MessageHeader;
-import com.net.minaimpl.SystemMessages;
-import com.net.minaimpl.SystemMessages.SystemMessageS2C;
-import com.net.server.Channel;
+import com.net.Protocol;
 import com.net.server.ClientSession;
 import com.net.server.ClientSessionListener;
 import com.net.server.Server;
@@ -92,16 +88,17 @@ public class ClientSessionImpl implements ClientSession
 	public boolean send(MessageHeader message) {
 		Server.write(Session, 
 				message, 
-				MessageHeader.PROTOCOL_SESSION_MESSAGE, 
+				Protocol.PROTOCOL_SESSION_MESSAGE, 
 				0, 0, 0);
 		return true;
 	}
 	
 	
 	public void send(MessageHeader request, MessageHeader response){
+		response.PacketNumber = request.PacketNumber;
 		Server.write(Session, 
 				response, 
-				MessageHeader.PROTOCOL_SESSION_MESSAGE, 
+				Protocol.PROTOCOL_SESSION_MESSAGE, 
 				0, 0, request.PacketNumber);
 	}
 	

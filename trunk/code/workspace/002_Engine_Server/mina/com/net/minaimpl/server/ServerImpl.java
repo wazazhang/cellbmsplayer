@@ -2,20 +2,17 @@ package com.net.minaimpl.server;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-
-import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
 
 import com.net.ExternalizableFactory;
 import com.net.MessageHeader;
+import com.net.Protocol;
+import com.net.minaimpl.ProtocolImpl;
+import com.net.minaimpl.ProtocolPool;
 import com.net.minaimpl.SessionAttributeKey;
-import com.net.minaimpl.SystemMessages.ServerStatusRequestC2S;
-import com.net.minaimpl.SystemMessages.ServerStatusResponseS2C;
 import com.net.server.Channel;
 import com.net.server.ChannelManager;
 import com.net.server.ClientSession;
-import com.net.server.ServerListener;
 
 
 public class ServerImpl extends AbstractServer
@@ -159,8 +156,9 @@ public class ServerImpl extends AbstractServer
 	}
 	
 	public void broadcast(MessageHeader message){
-		message.Protocol = MessageHeader.PROTOCOL_SESSION_MESSAGE;
-		Acceptor.broadcast(message);
+		ProtocolImpl p = ProtocolPool.getInstance().createProtocol();
+		p.Protocol = Protocol.PROTOCOL_SESSION_MESSAGE;
+		Acceptor.broadcast(p);
 	}
 	
 //	-----------------------------------------------------------------------------------------------------------------------
@@ -197,25 +195,30 @@ public class ServerImpl extends AbstractServer
 	public void messageReceived(final IoSession session, final Object message) throws Exception 
 	{
 		//System.out.println(Thread.currentThread().getName() + " messageReceived");
-		if (message instanceof MessageHeader)
+		if (message instanceof Protocol)
 		{
 			ClientSessionImpl client = getBindSession(session);
 			if (client != null && client.Listener != null)
 			{
-				MessageHeader header = (MessageHeader)message;
+				Protocol header = (Protocol)message;
 				
-				switch (header.Protocol)
+				switch (header.getProtocol())
 				{
-				case MessageHeader.PROTOCOL_CHANNEL_MESSAGE:
-					ChannelImpl channel = (ChannelImpl)channel_manager.getChannel(header.ChannelID);
+				case Protocol.PROTOCOL_CHANNEL_MESSAGE:
+					ChannelImpl channel = (ChannelImpl)channel_manager.getChannel(header.getChannelID());
 					if (channel != null) {
-						channel.getChannelListener().receivedMessage(channel, client, header);
+						channel.getChannelListener().receivedMessage(channel, client, header.getMessage());
 					}
 					break;
 					
-				case MessageHeader.PROTOCOL_SESSION_MESSAGE:
-					client.Listener.receivedMessage(client, header);
+				case Protocol.PROTOCOL_SESSION_MESSAGE:
+					client.Listener.receivedMessage(client, header.getMessage());
 					break;
+					
+//				case Protocol.PROTOCOL_CHANNEL_JOIN_S2C:
+//					break;
+//				case Protocol.PROTOCOL_CHANNEL_LEAVE_S2C:
+//					break;
 					
 				default:
 					log.error("unknow message : " + session + " : " + message);
@@ -232,11 +235,11 @@ public class ServerImpl extends AbstractServer
 	@Override
 	public void messageSent(IoSession session, Object message) throws Exception 
 	{
-		if (message instanceof MessageHeader) {
+		if (message instanceof Protocol) {
 			ClientSessionImpl client = getBindSession(session);
 			if (client != null && client.Listener != null) {
-				MessageHeader header = (MessageHeader) message;
-				client.Listener.sentMessage(client, header);
+				Protocol header = (Protocol) message;
+//				client.Listener.sentMessage(client, header.getMessage());
 			}
 		} else {
 			log.error("bad message type : " + session + " : " + message);

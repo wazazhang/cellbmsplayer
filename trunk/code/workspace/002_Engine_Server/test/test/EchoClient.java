@@ -5,9 +5,9 @@ import java.io.InputStreamReader;
 
 import com.cell.util.concurrent.ThreadPool;
 import com.net.MessageHeader;
-import com.net.client.BasicNetService;
-import com.net.client.NetService;
-import com.net.client.WaitingListener;
+import com.net.client.service.BasicNetService;
+import com.net.client.service.NetService;
+import com.net.client.service.WaitingListener;
 import com.net.minaimpl.client.ServerSessionImpl;
 import com.net.minaimpl.monitor.ClientMonitor;
 
@@ -26,17 +26,21 @@ public class EchoClient
 			ClientMonitor monitor = new ClientMonitor(session);
 			monitor.setVisible(true);
 			
-			BufferedReader read = new BufferedReader(new InputStreamReader(System.in));
+			final BufferedReader read = new BufferedReader(new InputStreamReader(System.in));
 			
 			textInput("") ;
-			while (true) {
-				try {
-					String cmd = read.readLine();
-					textInput(cmd);
-				} catch (Exception e) {
-					e.printStackTrace();
+			new Thread(){
+				public void run() {
+					while (true) {
+						try {
+							String cmd = read.readLine();
+							textInput(cmd);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
 				}
-			}
+			}.start();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -94,8 +98,12 @@ public class EchoClient
 					try {
 						EchoMessage msg = new EchoMessage();
 						client.sendRequest(msg, 1, new WaitingListener<MessageHeader, MessageHeader>() {
-							public void response(BasicNetService service, MessageHeader request, MessageHeader response) {}
-							public void timeout(BasicNetService service, MessageHeader request, long time) {}
+							public void response(BasicNetService service, MessageHeader request, MessageHeader response) {
+								System.out.println("response : " + response);
+							}
+							public void timeout(BasicNetService service, MessageHeader request, long time) {
+								System.out.println("timeout : " + request);
+							}
 						});
 					} catch (Exception e) {
 						e.printStackTrace();

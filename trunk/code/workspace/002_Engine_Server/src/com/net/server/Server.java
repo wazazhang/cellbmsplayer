@@ -8,24 +8,32 @@ import com.net.MessageHeader;
 public interface Server 
 {
 	 
-	public void open(int port, ServerListener listener) throws IOException ;
+	public void 					open(int port, ServerListener listener) throws IOException ;
 	
-	public void close() throws IOException;
-	
-	public void broadcast(MessageHeader message);
+	public void 					close() throws IOException;
 	
 	
-	public long getSentMessageCount() ;
-	public long getReceivedMessageCount () ;
-	public long getSentBytes();
-	public long getReceivedBytes();
 	
-	public int getSessionCount();
-	public boolean hasSession(ClientSession session);
-	public ClientSession getSession(long sessionID);
-	public ClientSession getSession(Object object);
-	public Iterator<ClientSession> getSessions();
+	public void						broadcast(MessageHeader message);
 	
-	public ChannelManager getChannelManager();
+	
+	
+	public long 					getSentMessageCount() ;
+	
+	public long 					getReceivedMessageCount ();
+	
+	public long 					getSentBytes();
+	
+	public long 					getReceivedBytes();
+	
+	public int 						getSessionCount();
+	
+	public boolean 					hasSession(ClientSession session);
+	
+	public ClientSession 			getSession(long sessionID);
+	
+	public Iterator<ClientSession> 	getSessions();
+	
+	public ChannelManager 			getChannelManager();
 
 }

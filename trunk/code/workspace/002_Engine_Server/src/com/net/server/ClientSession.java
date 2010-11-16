@@ -8,12 +8,13 @@ public interface ClientSession extends AbstractSession
 {
 	public String 					getName();
 
-	public void 					send(MessageHeader request, MessageHeader response);
-	
 	public Server					getServer();
 	
 	public ClientSessionListener	getListener();
 	
 	public boolean					send(MessageHeader message);
+	
+	public void 					send(MessageHeader request, MessageHeader response);
+	
 	
 }

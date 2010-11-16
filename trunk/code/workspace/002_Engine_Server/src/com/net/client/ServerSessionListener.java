@@ -1,6 +1,7 @@
 package com.net.client;
 
 import com.net.MessageHeader;
+import com.net.Protocol;
 
 
 public interface ServerSessionListener
@@ -11,17 +12,22 @@ public interface ServerSessionListener
 	public void disconnected(ServerSession session, boolean graceful, String reason);
 
 	
-	public void sentMessage(ServerSession session, MessageHeader message);
-
 	
     public void joinedChannel(ClientChannel channel) ;
 	
     public void leftChannel(ClientChannel channel);
  
+    
+    
+
+	public void sentMessage(ServerSession session, Protocol protocol, MessageHeader message);
+
 	
-	public void receivedMessage(ServerSession session, MessageHeader message);
 	
-    public void receivedChannelMessage(ClientChannel channel, MessageHeader message);
+	public void receivedMessage(ServerSession session, Protocol protocol, MessageHeader message);
+	
+	
+    public void receivedChannelMessage(ClientChannel channel, Protocol protocol, MessageHeader message);
         
 
 }

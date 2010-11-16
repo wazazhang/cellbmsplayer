@@ -8,20 +8,16 @@ import com.net.minaimpl.server.ServerImpl;
 
 public interface SystemMessages 
 {
-	/** 当前Session加入频道的事件 */
-	final public static byte	EVENT_CHANNEL_JOIN_S2C			= 0x50;
-	/** 当前Session离开频道的事件 */
-	final public static byte	EVENT_CHANNEL_LEAVE_S2C			= 0x51;
 
 	
-	public static class SystemMessageS2C extends MessageHeader
-	{	
-		private static final long serialVersionUID = 1L;
-		final public byte event;
-		public SystemMessageS2C(byte event) {
-			this.event = event;
-		}
-	}
+//	public static class SystemMessageS2C extends MessageHeader
+//	{	
+//		private static final long serialVersionUID = 1L;
+//		final public byte event;
+//		public SystemMessageS2C(byte event) {
+//			this.event = event;
+//		}
+//	}
 	
 	
 	public static class ServerStatusRequestC2S extends MessageHeader

@@ -9,10 +9,7 @@ import com.net.ExternalizableMessage;
 
 public abstract class MessageHeaderCodec implements ProtocolCodecFactory
 {
-	/** 标识为 {@link Serializable} 方式序列化 */
-	final public static byte	TRANSMISSION_TYPE_SERIALIZABLE		= 0;
-	/** 标识为 {@link ExternalizableMessage} 方式序列化，即以纯手工序列化/反序列化 */
-	final public static byte	TRANSMISSION_TYPE_EXTERNALIZABLE	= 1;
+	public static int 				PACKAGE_DEFAULT_SIZE					= 2048;
 	
 //	-----------------------------------------------------------------------------------------
 	
@@ -20,8 +17,6 @@ public abstract class MessageHeaderCodec implements ProtocolCodecFactory
 	final protected static byte		protocol_start[] 		= new byte[] { 2, 0, 0, 6, };
 	// 消息头固定尺寸
 	final protected static int		protocol_fixed_size 	= 4 + 4;
-	// 消息传送固定尺寸
-	final protected static int		header_fixed_size 		= 4 + 8 + 8 + 2 + 4 + 1;
 
 	final protected static byte[]	zerodata				= new byte[0];
 
