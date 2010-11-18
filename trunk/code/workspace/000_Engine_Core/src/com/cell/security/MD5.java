@@ -164,6 +164,28 @@ public class MD5
   
 //	------------------------------------------------------------------------------------------------------------------------------
  
+    private static boolean processFilter(
+    		File	file,
+    		Pattern filter, 
+    		boolean filter_include) 
+    {
+    	if (filter != null) {
+			Matcher matcher_name = filter.matcher(file.getPath());
+			if (matcher_name.find()) {
+				if (!filter_include) {
+					System.out.println("ignore: " + file.getPath());
+					return false;
+				}
+			} else if (file.isFile()) {
+				if (filter_include) {	
+					System.out.println("ignore: " + file.getPath());
+					return false;
+				}
+			}
+		}
+    	return true;
+    }
+    
     private static void processSrcText(
     		String srcText, 
     		File dstFile, 
@@ -198,17 +220,8 @@ public class MD5
 				if (files[l].isHidden() || files[l].isDirectory() || files[l].equals(dstFile)){
 					continue;
 				}
-				if (filter != null) {
-					Matcher matcher_name = filter.matcher(files[l].getPath());
-					if (matcher_name.find()) {
-						if (!filter_include) {
-							continue;
-						}
-					} else {
-						if (filter_include) {
-							continue;
-						}
-					}
+				if (!processFilter(files[l], filter, filter_include)) {
+					continue;
 				}
 				FileInputStream fis = new FileInputStream(files[l]);
 				byte[] data = CIO.readStream(fis);
@@ -239,7 +252,7 @@ public class MD5
     {
 		if (!srcDir.exists())
 		{
-			System.err.println("src file is not exist!");
+			System.err.println("src dir is not exist!");
 		}
 		else if (srcDir.isDirectory()) 
 		{
@@ -250,17 +263,8 @@ public class MD5
 				if (files[l].isHidden()){
 					continue;
 				}
-				if (filter != null) {
-					Matcher matcher_name = filter.matcher(files[l].getPath());
-					if (matcher_name.find()) {
-						if (!filter_include) {
-							continue;
-						}
-					} else {
-						if (filter_include) {
-							continue;
-						}
-					}
+				if (!processFilter(files[l], filter, filter_include)) {
+					continue;
 				}
 				if (files[l].isDirectory()) {
 					processSrcDir(files[l], dstFile, CoverType, IsOutputSrc, filter, filter_include, output);
