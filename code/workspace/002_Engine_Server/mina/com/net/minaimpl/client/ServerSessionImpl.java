@@ -229,19 +229,30 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 					break;
 				}
 				case Protocol.PROTOCOL_CHANNEL_MESSAGE: {
-					ClientChannelImpl channel = channels.get(header.getChannelID());
+					ClientChannelImpl channel = null;
+					synchronized (channels) {
+						channel = channels.get(header.getChannelID());
+						if (channel == null) {
+							channel = new ClientChannelImpl(this, header.getChannelID());
+							channels.putIfAbsent(header.getChannelID(), channel);
+						}
+					}
 					Listener.receivedChannelMessage(channel, header, header.getMessage());
 					break;
 				}
 				case Protocol.PROTOCOL_CHANNEL_JOIN_S2C:{
-					channels.put(header.getChannelID(), new ClientChannelImpl(this, header.getChannelID()));
+					synchronized (channels) {
+						channels.put(header.getChannelID(), new ClientChannelImpl(this, header.getChannelID()));
+					}
 					break;
 				}
 				case Protocol.PROTOCOL_CHANNEL_LEAVE_S2C:{
-					ClientChannelImpl channel = channels.get(header.getChannelID());
-					if (channel != null) {
-						Listener.leftChannel(channel);
-						channels.remove(header.getChannelID());
+					synchronized (channels) {
+						ClientChannelImpl channel = channels.get(header.getChannelID());
+						if (channel != null) {
+							Listener.leftChannel(channel);
+							channels.remove(header.getChannelID());
+						}
 					}
 					break;
 				}
