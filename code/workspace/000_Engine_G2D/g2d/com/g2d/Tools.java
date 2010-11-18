@@ -383,7 +383,7 @@ public class Tools
 			BufferedImage buf = gc.createCompatibleImage(image.getWidth(), image.getHeight(), Transparency.TRANSLUCENT);
 			Graphics2D g = (Graphics2D)buf.createGraphics();
 			IGraphics ig = new CGraphics(g);
-			ig.drawImage(image, 0, 0, 0);
+			ig.drawImage(image, 0, 0, 0, IGraphics.BLEND_MODE_NONE, 1.0f);
 			g.dispose();
 			return buf;
 		}

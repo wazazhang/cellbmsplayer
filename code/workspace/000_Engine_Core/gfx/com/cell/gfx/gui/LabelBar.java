@@ -151,10 +151,10 @@ public class LabelBar extends Item
 	public void renderIcon(IGraphics g, int x, int y){
 		if(Icon!=null){
 			if (IsIconCenter){
-				g.drawImage(Icon, x +(W-Icon.getWidth())/2, y+(H-Icon.getHeight())/2, 0);
+				g.drawImage(Icon, x +(W-Icon.getWidth())/2, y+(H-Icon.getHeight())/2, 0, IGraphics.BLEND_MODE_NONE, 1.0f);
 			}
 			else{
-				g.drawImage(Icon, x +(H-Icon.getWidth())/2, y+(H-Icon.getHeight())/2, 0);
+				g.drawImage(Icon, x +(H-Icon.getWidth())/2, y+(H-Icon.getHeight())/2, 0, IGraphics.BLEND_MODE_NONE, 1.0f);
 			}
 		}
 	}

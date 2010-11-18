@@ -167,6 +167,7 @@ public class CWorldMini extends CObject {
 							(CameraY)*CH/World.getMap().CellH,
 							W, H, 
 							0,
+							IGraphics.BLEND_MODE_NONE, 1.0f,
 							x, y);
 				}
 				if(ShowSpr){
@@ -208,7 +209,7 @@ public class CWorldMini extends CObject {
 					
 					for(int bx=0;bx<=dbx-sbx;bx++){
 						for(int by=0;by<=dby-sby;by++){
-							g.drawImage(Buffer, x + bx*WTW-sx, y + by*WTH-sy, 0);
+							g.drawImage(Buffer, x + bx*WTW-sx, y + by*WTH-sy, 0, IGraphics.BLEND_MODE_NONE, 1.0f);
 						}
 					}
 				}

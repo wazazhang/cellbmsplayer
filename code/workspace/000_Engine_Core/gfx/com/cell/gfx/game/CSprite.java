@@ -1259,6 +1259,28 @@ public class CSprite extends CUnit implements Serializable
 		}
 	}
 	
+	public void render(IGraphics g,int x,int y, int blend_mode, float blend_alpha) {
+		if (OnScreen){
+				animates.render(g,FrameAnimate[CurAnimate][CurFrame],x,y, blend_mode, blend_alpha);
+//#ifdef _DEBUG
+			if (IsDebug && Active){
+				collides.render(g,FrameCDMap[CurAnimate][CurFrame],x,y,0xff00ff00);
+				collides.render(g,FrameCDAtk[CurAnimate][CurFrame],x,y,0xffff0000);
+				collides.render(g,FrameCDDef[CurAnimate][CurFrame],x,y,0xff0000ff);
+				collides.render(g,FrameCDExt[CurAnimate][CurFrame],x,y,0xffffffff);
+
+				g.setColor(0xffffffff);
+				g.drawLine(x-8, y, x+8, y);
+				g.drawLine(x, y-8, x, y+8);
+				
+				g.setColor(0xffff00ff);
+				g.drawLine(x-8, y+Priority, x+8, y+Priority);
+				g.drawLine(x, y-8+Priority, x, y+8+Priority);
+			}
+//#endif
+		}
+	}	
+	
 	public void render(IGraphics g,int x,int y, int anim, int frame) {
 		if (OnScreen){
 				animates.render(g,FrameAnimate[anim][frame],x,y);
@@ -1280,6 +1302,28 @@ public class CSprite extends CUnit implements Serializable
 //#endif
 		}
 	}
+	
+	public void render(IGraphics g,int x,int y, int anim, int frame, int blend_mode, float blend_alpha) {
+		if (OnScreen){
+				animates.render(g,FrameAnimate[anim][frame],x,y, blend_mode, blend_alpha);
+//#ifdef _DEBUG
+			if (IsDebug && Active){
+				collides.render(g,FrameCDMap[anim][frame],x,y,0xff00ff00);
+				collides.render(g,FrameCDAtk[anim][frame],x,y,0xffff0000);
+				collides.render(g,FrameCDDef[anim][frame],x,y,0xff0000ff);
+				collides.render(g,FrameCDExt[anim][frame],x,y,0xffffffff);
+				
+				g.setColor(0xffffffff);
+				g.drawLine(x-8, y, x+8, y);
+				g.drawLine(x, y-8, x, y+8);
+				
+				g.setColor(0xffff00ff);
+				g.drawLine(x-8, y+Priority, x+8, y+Priority);
+				g.drawLine(x, y-8+Priority, x, y+8+Priority);
+			}
+//#endif
+		}
+	}	
 	
 
 

@@ -1642,16 +1642,16 @@ public class CellSetResource
 		public void render(IGraphics g, int Index, int PosX, int PosY) {
 			IImage buff = images[Index];
 			if (buff != null) {
-				g.drawImage(buff, PosX, PosY, 0);
+				g.drawImage(buff, PosX, PosY, 0, IGraphics.BLEND_MODE_NONE, 1.0f);
 			}else{
 				drawLoading(g, PosX, PosY, img.ClipsW[Index], img.ClipsH[Index]);
 			}
 		}
 
-		public void render(IGraphics g, int Index, int PosX, int PosY, int Style) {
+		public void render(IGraphics g, int Index, int PosX, int PosY, int Style, int blend_mode, float blend_alpha) {
 			IImage buff = images[Index];
 			if (buff != null) {
-				g.drawImage(buff, PosX, PosY, Style);
+				g.drawImage(buff, PosX, PosY, Style, blend_mode, blend_alpha);
 			}else{
 				drawLoading(g, PosX, PosY, img.ClipsW[Index], img.ClipsH[Index]);
 			}

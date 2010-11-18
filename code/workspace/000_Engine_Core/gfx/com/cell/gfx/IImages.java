@@ -31,6 +31,6 @@ public interface IImages {
 
 	public void render(IGraphics g, int Index, int PosX, int PosY);
 
-	public void render(IGraphics g, int Index, int PosX, int PosY, int Style) ;
+	public void render(IGraphics g, int Index, int PosX, int PosY, int Style, int blend_mode, float blend_alpha) ;
 
 }

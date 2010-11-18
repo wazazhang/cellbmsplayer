@@ -15,20 +15,66 @@ public interface IGraphics
     public static final int TRANS_MIRROR_ROT90 = 7;
     public static final int TRANS_MIRROR_ROT180 = 1;
     public static final int TRANS_MIRROR_ROT270 = 4;
+    
+    public static final int BLEND_MODE_NONE = 0;
+    public static final int BLEND_MODE_AVERAGE = 1;
+    public static final int BLEND_MODE_MULTIPLY = 2;
+    public static final int BLEND_MODE_SCREEN = 3;
+    public static final int BLEND_MODE_DARKEN = 4;
+    public static final int BLEND_MODE_LIGHTEN = 5;
+    public static final int BLEND_MODE_OVERLAY = 6;
+    public static final int BLEND_MODE_HARD_LIGHT = 7;
+    public static final int BLEND_MODE_SOFT_LIGHT = 8;
+    public static final int BLEND_MODE_DIFFERENCE = 9;
+    public static final int BLEND_MODE_NEGATION = 10;
+    public static final int BLEND_MODE_EXCLUSION = 11;
+    public static final int BLEND_MODE_COLOR_DODGE = 12;
+    public static final int BLEND_MODE_INVERSE_COLOR_DODGE = 13;
+    public static final int BLEND_MODE_SOFT_DODGE = 14;
+    public static final int BLEND_MODE_COLOR_BURN = 15;
+    public static final int BLEND_MODE_INVERSE_COLOR_BURN = 16;
+    public static final int BLEND_MODE_SOFT_BURN = 17;
+    public static final int BLEND_MODE_REFLECT = 18;
+    public static final int BLEND_MODE_GLOW = 19;
+    public static final int BLEND_MODE_FREEZE = 20;
+    public static final int BLEND_MODE_HEAT = 21;
+    public static final int BLEND_MODE_ADD = 22;
+    public static final int BLEND_MODE_SUBTRACT = 23;
+    public static final int BLEND_MODE_STAMP = 24;
+    public static final int BLEND_MODE_RED = 25;
+    public static final int BLEND_MODE_GREEN = 26;
+    public static final int BLEND_MODE_BLUE = 27;
+    public static final int BLEND_MODE_HUE = 28;
+    public static final int BLEND_MODE_SATURATION = 29;
+    public static final int BLEND_MODE_COLOR = 30;
+    public static final int BLEND_MODE_LUMINOSITY = 31;
+    
+    public static final int BLEND_MODE_ALPHA_CLEAR = 101;
+    public static final int BLEND_MODE_ALPHA_DST = 102;
+    public static final int BLEND_MODE_ALPHA_DST_ATOP = 103;
+    public static final int BLEND_MODE_ALPHA_DST_IN = 104;
+    public static final int BLEND_MODE_ALPHA_DST_OUT = 105;
+    public static final int BLEND_MODE_ALPHA_DST_OVER = 106;
+    public static final int BLEND_MODE_ALPHA_SRC = 107;
+    public static final int BLEND_MODE_ALPHA_SRC_ATOP = 108;
+    public static final int BLEND_MODE_ALPHA_SRC_IN = 109;
+    public static final int BLEND_MODE_ALPHA_SRC_OUT = 110;
+    public static final int BLEND_MODE_ALPHA_SRC_OVER = 111;
+    public static final int BLEND_MODE_ALPHA_XOR = 112;
 	
     public void dispose();
     
 	public void drawArc(int x, int y, int width, int height, int startAngle, int arcAngle); 
 	
-	public void drawImage(IImage img, int x, int y, int transform); 
+	public void drawImage(IImage img, int x, int y, int transform, int blend_mode, float blend_alpha); 
 	
 	//public void drawImage(IImage img, int x, int y, int w, int h, int transform); 
 	
-	public void drawRoundImage(IImage img, int x, int y, int widht, int height, int transform); 
+	public void drawRoundImage(IImage img, int x, int y, int widht, int height, int transform, int blend_mode, float blend_alpha); 
 	
 	public void drawLine(int x1, int y1, int x2, int y2); 
 	public void drawRect(int x, int y, int width, int height); 
-	public void drawRegion(IImage src, int x_src, int y_src, int width, int height, int transform, int x_dest, int y_dest); 
+	public void drawRegion(IImage src, int x_src, int y_src, int width, int height, int transform, int blend_mode, float blend_alpha, int x_dest, int y_dest); 
 	public void drawRGB(int[] rgbData, int offset, int scanlength, int x, int y, int width, int height, boolean processAlpha); 
 	public void drawString(String str, int x, int y); 
 	
