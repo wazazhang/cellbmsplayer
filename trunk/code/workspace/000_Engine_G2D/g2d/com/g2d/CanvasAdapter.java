@@ -771,7 +771,7 @@ FocusListener
 		if (isPickedKeyInputer(KEYCODES_4_TEMP))
 			return 0;
 		
-		int count = keystate_query_down.size();
+		int count = keystate.size();
 		
 		return count;
 	}
