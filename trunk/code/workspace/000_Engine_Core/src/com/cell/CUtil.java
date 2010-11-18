@@ -7,6 +7,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.EnumSet;
@@ -1438,6 +1439,29 @@ public class CUtil extends CObject
     		}
     	}
     	return src;
+    }
+    
+    /**
+     * 将等宽字符向左对齐，并且长度维持在 length
+     * @param src
+     * @param length
+     * @return
+     */
+    public static String snapStringRL(Object[] left, Object[] right, char blank, String split) 
+    {
+    	int lc = 0;
+    	for (Object o : left) {
+    		lc = Math.max(lc, o.toString().length());
+    	}
+    	StringBuilder sb = new StringBuilder();
+    	for (int i=0; i<left.length; i++) {
+    		int lb = lc - left[i].toString().length();
+    		for (int b=0; b<lb; b++) {
+    			sb.append(blank);
+    		}
+    		sb.append(left[i] + split + right[i] + "\n");
+    	}
+    	return sb.toString();
     }
     
 //--------------------------------------------------------------------------------------------------------    
