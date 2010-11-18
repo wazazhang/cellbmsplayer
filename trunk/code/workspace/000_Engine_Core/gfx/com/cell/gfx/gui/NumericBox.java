@@ -203,7 +203,7 @@ public class NumericBox extends LabelBar
 		
 		if (IconKeyAdd != null)
 		{
-			g.drawImage(IconKeyAdd, x, y, 0);
+			g.drawImage(IconKeyAdd, x, y, 0, IGraphics.BLEND_MODE_NONE, 1.0f);
 		}
 		else
 		{
@@ -213,7 +213,7 @@ public class NumericBox extends LabelBar
 		
 		if (IconKeySub != null)
 		{
-			g.drawImage(IconKeySub, x + W - IconKeySub.getWidth(), y, IImage.TRANS_H);
+			g.drawImage(IconKeySub, x + W - IconKeySub.getWidth(), y, IImage.TRANS_H, IGraphics.BLEND_MODE_NONE, 1.0f);
 		}
 		else
 		{

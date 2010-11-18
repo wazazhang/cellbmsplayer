@@ -175,14 +175,16 @@ public class CMap extends CUnit implements Serializable
 				Tiles.renderSingle(g, MatrixTile[cellY][cellX], x, y);
 			}
 			else
-			{
-				Tiles.images.render(g,Tiles.STileID[Tiles.Frames[MatrixTile[cellY][cellX]][0]], x , y , Tiles.SFlip[Tiles.Frames[MatrixTile[cellY][cellX]][0]]);
+			{                                      
+				int idx = Tiles.Frames[MatrixTile[cellY][cellX]][0];
+				Tiles.images.render(g,Tiles.STileID[idx], x , y , Tiles.SFlip[idx], Tiles.SBlendMode[idx], Tiles.SBlendAlpha[idx]);
 			}
 		}
 		else
 		{
 			int index = AnimateTimer%Tiles.Frames[-MatrixTile[cellY][cellX]].length;
-			Tiles.images.render(g,Tiles.STileID[Tiles.Frames[-MatrixTile[cellY][cellX]][index]], x , y , Tiles.SFlip[Tiles.Frames[-MatrixTile[cellY][cellX]][index]]);
+			int idx = Tiles.Frames[-MatrixTile[cellY][cellX]][index];
+			Tiles.images.render(g,Tiles.STileID[idx], x , y , Tiles.SFlip[idx], Tiles.SBlendMode[idx], Tiles.SBlendAlpha[idx]);
 		}
 		
 //#ifdef _DEBUG

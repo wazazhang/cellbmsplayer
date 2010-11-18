@@ -346,7 +346,7 @@ public class ScrollBar extends CObject
 
 			// draw bg
 			if (BackImage != null) {
-				g.drawRoundImage(BackImage, Back.x, Back.y, Back.width, Back.height, 0);
+				g.drawRoundImage(BackImage, Back.x, Back.y, Back.width, Back.height, 0, IGraphics.BLEND_MODE_NONE, 1.0f);
 			} else {
 				g.setColor(BackColor);
 				g.fillRect(x, y, w, h);
@@ -356,8 +356,8 @@ public class ScrollBar extends CObject
 			
 			// draw bg head and tail
 			if(BackImageH!=null && BackImageT!=null){
-				g.drawRoundImage(BackImageH, Head.x, Head.y, Head.width, Head.height, 0);
-				g.drawRoundImage(BackImageT, Tail.x, Tail.y, Tail.width, Tail.height, 0);
+				g.drawRoundImage(BackImageH, Head.x, Head.y, Head.width, Head.height, 0, IGraphics.BLEND_MODE_NONE, 1.0f);
+				g.drawRoundImage(BackImageT, Tail.x, Tail.y, Tail.width, Tail.height, 0, IGraphics.BLEND_MODE_NONE, 1.0f);
 			} else {
 				g.setColor(ForeColor);
 				g.fillRect(Head.x, Head.y, Head.width, Head.height);//
@@ -387,17 +387,19 @@ public class ScrollBar extends CObject
 							Strip.x + ForeImageH.getWidth(), 
 							Strip.y, 
 							Strip.width - ForeImageH.getWidth() - ForeImageT.getWidth(),
-							Strip.height, 0);
-					g.drawImage(ForeImageH, Strip.x, Strip.y, 0);
-					g.drawImage(ForeImageT, Strip.x + Strip.width - ForeImageT.getWidth(), Strip.y, 0);
+							Strip.height, 0,
+							IGraphics.BLEND_MODE_NONE, 1.0f);
+					g.drawImage(ForeImageH, Strip.x, Strip.y, 0, IGraphics.BLEND_MODE_NONE, 1.0f);
+					g.drawImage(ForeImageT, Strip.x + Strip.width - ForeImageT.getWidth(), Strip.y, 0, IGraphics.BLEND_MODE_NONE, 1.0f);
 				}else{
 					g.drawRoundImage(ForeImage, 
 							Strip.x, 
 							Strip.y + ForeImageH.getHeight(), 
 							Strip.width,
-							Strip.height - ForeImageH.getHeight() - ForeImageT.getHeight(), 0);
-					g.drawImage(ForeImageH, Strip.x, Strip.y, 0);
-					g.drawImage(ForeImageT, Strip.x, Strip.y + Strip.height - ForeImageT.getHeight(), 0);
+							Strip.height - ForeImageH.getHeight() - ForeImageT.getHeight(), 0,
+							IGraphics.BLEND_MODE_NONE, 1.0f);
+					g.drawImage(ForeImageH, Strip.x, Strip.y, 0, IGraphics.BLEND_MODE_NONE, 1.0f);
+					g.drawImage(ForeImageT, Strip.x, Strip.y + Strip.height - ForeImageT.getHeight(), 0, IGraphics.BLEND_MODE_NONE, 1.0f);
 				}
 			} else {
 				g.setColor(ForeColor);

@@ -1,6 +1,7 @@
 package com.cell.j2se;
 
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -19,6 +20,8 @@ import com.cell.CMath;
 import com.cell.gfx.AScreen;
 import com.cell.gfx.IGraphics;
 import com.cell.gfx.IImage;
+import com.cell.j2se.AlphaComposite.AlphaBlendMode;
+import com.cell.j2se.BlendComposite.BlendingMode;
 
 /**
  * 仅支持图片绘制
@@ -53,8 +56,17 @@ public class CGraphicsImage implements IGraphics
 	}
 	
 
-	final  public void drawRoundImage(IImage src, int x, int y, int width, int height, int transform) 
+	final  public void drawRoundImage(IImage src, int x, int y, int width, int height, int transform, int blend_mode, float blend_alpha) 
 	{
+		Composite saved_composite = m_graphics2d.getComposite();   
+		
+		if (blend_mode != IGraphics.BLEND_MODE_NONE)
+		{
+			Composite toset_composite = this.getCompositeFrom(blend_mode, blend_alpha);			
+			if (toset_composite != null)
+				m_graphics2d.setComposite(toset_composite);
+		}	
+		
 		Image img = src.getSrc();
 
 		Rectangle rect = m_graphics2d.getClipBounds();
@@ -74,6 +86,8 @@ public class CGraphicsImage implements IGraphics
 		}
 
 		m_graphics2d.setClip(rect);
+		
+		m_graphics2d.setComposite(saved_composite);		
 	}
 
 	final  public  int getClipX() 
@@ -154,9 +168,18 @@ public class CGraphicsImage implements IGraphics
 	}
 	
 
-	final  public  void drawImage(IImage src, int x, int y, int transform) 
+	final  public  void drawImage(IImage src, int x, int y, int transform, int blend_mode, float blend_alpha) 
 	{
-        Image img = src.getSrc();
+		Composite saved_composite = m_graphics2d.getComposite();   
+		
+		if (blend_mode != IGraphics.BLEND_MODE_NONE)
+		{
+			Composite toset_composite = this.getCompositeFrom(blend_mode, blend_alpha);			
+			if (toset_composite != null)
+				m_graphics2d.setComposite(toset_composite);
+		}      
+		
+		Image img = src.getSrc();
         
         if (transform == 0)
         {
@@ -172,11 +195,22 @@ public class CGraphicsImage implements IGraphics
 
 		}
         
+		m_graphics2d.setComposite(saved_composite);        
+        
         AScreen.FrameImageDrawed++;
 	}
 	
-	final  public void drawRegion(IImage src, int x_src, int y_src, int width, int height, int transform, int x_dst, int y_dst)
+	final  public void drawRegion(IImage src, int x_src, int y_src, int width, int height, int transform, int blend_mode, float blend_alpha, int x_dst, int y_dst)
     {
+		Composite saved_composite = m_graphics2d.getComposite();   
+		
+		if (blend_mode != IGraphics.BLEND_MODE_NONE)
+		{
+			Composite toset_composite = this.getCompositeFrom(blend_mode, blend_alpha);			
+			if (toset_composite != null)
+				m_graphics2d.setComposite(toset_composite);
+		}		
+		
 		Image img = src.getSrc();
 
 		AffineTransform savedT = m_graphics2d.getTransform();
@@ -184,6 +218,9 @@ public class CGraphicsImage implements IGraphics
 		transform(transform, width, height);
 		m_graphics2d.drawImage(img, 0, 0, width, height, x_src, y_src, x_src + width, y_src + height, null);
 		m_graphics2d.setTransform(savedT);
+		
+		m_graphics2d.setComposite(saved_composite); 		
+		
 		AScreen.FrameImageDrawed++;
 
 	}
@@ -229,5 +266,28 @@ public class CGraphicsImage implements IGraphics
 	public String[] getStringLines(String text, int w, int[] out_para){return new String[]{};}
 	public StringLayer createStringLayer(String src){return null;}
 	public StringLayer createStringLayer(String src, StringAttribute[] attributes){return null;}
+	
+	
+	protected final Composite getCompositeFrom(int blend_mode, float blend_alpha)
+	{
+		Composite composite = null;
+		
+		if (blend_mode != IGraphics.BLEND_MODE_NONE)
+		{
+			if (blend_mode < IGraphics.BLEND_MODE_ALPHA_CLEAR)
+			{
+				BlendingMode mode = BlendingMode.values()[blend_mode];
+				composite = BlendComposite.getInstance(mode, blend_alpha);
+			}
+			else
+			{
+				AlphaBlendMode mode = AlphaBlendMode.values()[blend_mode-IGraphics.BLEND_MODE_ALPHA_CLEAR];
+				if (mode != null)
+					composite = java.awt.AlphaComposite.getInstance(mode.getValue(), blend_alpha);
+			}
+		}
+		
+		return composite;
+	}	
 	
 }

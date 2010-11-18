@@ -157,6 +157,7 @@ public class CImages extends CObject implements IImages {
 					TileW[Index], //
 					TileH[Index], //
 					TRANS_TABLE[0], //
+					IGraphics.BLEND_MODE_NONE, 1.0f,
 					PosX,//
 					PosY
 					);
@@ -169,7 +170,7 @@ public class CImages extends CObject implements IImages {
 	 * override ����
 	 * @see com.cell.gfx.IImages#render(javax.microedition.lcdui.Graphics, int, int, int, int)
 	 */
-	public void render(IGraphics g, int Index, int PosX, int PosY, int Style) {
+	public void render(IGraphics g, int Index, int PosX, int PosY, int Style, int blend_mode, float blend_alpha) {
 		if( TileW[Index]!=0 && TileH[Index]!=0) {
 			g.drawRegion(
 					srcImage,
@@ -178,6 +179,7 @@ public class CImages extends CObject implements IImages {
 					TileW[Index], //
 					TileH[Index], //
 					TRANS_TABLE[Style], //
+					blend_mode, blend_alpha,
 					PosX,//
 					PosY
 					);

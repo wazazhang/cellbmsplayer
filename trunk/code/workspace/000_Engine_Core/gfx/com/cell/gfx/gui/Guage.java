@@ -237,14 +237,15 @@ public class Guage extends LabelBar
 					g.setColor(StripColor);
 					g.fillRect(sx, sy, w, sh);
 				}else{
-					g.drawRoundImage(StripImage, sx, sy, w, sh, 0);
+					g.drawRoundImage(StripImage, sx, sy, w, sh, 0, IGraphics.BLEND_MODE_NONE, 1.0f);
 				}
 				
 				if(IsCanDrag && StripBar!=null){
 					g.drawImage(StripBar, 
 							sx+w-StripBar.getWidth()/2, 
 							y+(H-StripBar.getHeight())/2,
-							0);
+							0,
+							IGraphics.BLEND_MODE_NONE, 1.0f);
 				}
 			}else{
 				switch(Layout){

@@ -178,7 +178,8 @@ public class CTiles extends CObject implements IImages {
 					Tiles[Index], //
 					PosX,//
 					PosY,
-					0
+					0,
+					IGraphics.BLEND_MODE_NONE, 1.0f
 			);
 		} else {
 //			println("Null Tile at " + Index);
@@ -189,13 +190,13 @@ public class CTiles extends CObject implements IImages {
 	 * override ����
 	 * @see com.cell.gfx.morefuntek.cell.IImages#render(javax.microedition.lcdui.Graphics, int, int, int, int)
 	 */
-	public void render(IGraphics g, int Index, int PosX, int PosY, int Style) {
+	public void render(IGraphics g, int Index, int PosX, int PosY, int Style, int blend_mode, float blend_alpha) {
 		if(Tiles[Index]!=null){
 			g.drawImage(//
 					Tiles[Index], //
 					PosX,//
 					PosY,
-					Style
+					Style, blend_mode, blend_alpha
 			);
 		} else {
 //			println("Null Tile at " + Index);

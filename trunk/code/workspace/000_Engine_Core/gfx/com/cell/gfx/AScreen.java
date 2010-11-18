@@ -343,12 +343,13 @@ abstract public class AScreen extends CObject
 						TransitionImage, 
 						SCREEN_HCENTER - TransitionImage.getWidth()/2,
 						SCREEN_VCENTER - TransitionImage.getHeight()/2,
-						0);
+						0,
+						IGraphics.BLEND_MODE_NONE, 1.0f);
 				if (TransitionTagImage!=null)
 				{
 					int x = SCREEN_HCENTER - TransitionTagImage.getWidth()/2;
 					int y = SCREEN_VCENTER - TransitionImage.getHeight()/2+ 180;
-					g.drawImage(TransitionTagImage, x, y, 0);
+					g.drawImage(TransitionTagImage, x, y, 0, IGraphics.BLEND_MODE_NONE, 1.0f);
 					if (TipText!=null&&TipText.length>0){
 						drawString(g, TipText[tipIndex],
 								SCREEN_WIDTH/2 - g.getStringWidth(TipText[tipIndex])/2 , 
