@@ -1,5 +1,7 @@
 package com.cell.loader;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -102,16 +104,34 @@ public class LoadTask extends Thread
 	
 	public static String getVK(InputStream is)
 	{
-		try{
+		try {
 			byte[] vk_data = new byte[is.available()];
 			is.read(vk_data);
 			is.close();
 			return new String(new CC("gametiler").dd(CC.h2b(new String(vk_data))));
-		}catch(Exception err){
+		} catch (Exception err) {
 			return null;
 		}
 	}
 
+	public static byte[] load(String path) throws Exception
+	{
+		URL url = new URL(path);
+		URLConnection c = openURL(url);
+		return loadURL(c);
+	}
+	
+	public static byte[] load(File file) throws Exception
+	{
+		FileInputStream fis = new FileInputStream(file);
+		try {
+			byte[] data = new byte[fis.available()];
+			fis.read(data);
+			return data;
+		} finally {
+			fis.close();
+		}
+	}
 	
 //	-------------------------------------------------------------------------------------------------------------------------------
 	
