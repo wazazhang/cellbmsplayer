@@ -4,6 +4,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.Collections;
+import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.swing.tree.TreeNode;
 
 import com.cell.CIO;
 import com.cell.CObject;
@@ -56,9 +62,287 @@ public class MD5
 		}
 	}
 	
+	
 //	------------------------------------------------------------------------------------------------------------------------------
 
+	// 用来将字节转换成 16 进制表示的字符
+	final static char hexDigits[] = { 
+			'0', '1', '2', '3', 
+			'4', '5', '6', '7',
+			'8', '9', 'a', 'b', 
+			'c', 'd', 'e', 'f' };
+	
+	private static String md5(byte[] source)
+	{
+		String s = null;
 
+		try
+		{
+			java.security.MessageDigest md = java.security.MessageDigest .getInstance("MD5");
+			
+			md.update(source);
+			byte tmp[] = md.digest(); // MD5 的计算结果是一个 128 位的长整数，
+			// 用字节表示就是 16 个字节
+			char str[] = new char[16 * 2]; // 每个字节用 16 进制表示的话，使用两个字符，
+			// 所以表示成 16 进制需要 32 个字符
+			int k = 0; // 表示转换结果中对应的字符位置
+			for (int i = 0; i < 16; i++) { // 从第一个字节开始，对 MD5 的每一个字节
+				// 转换成 16 进制字符的转换
+				byte byte0 = tmp[i]; // 取第 i 个字节
+				str[k++] = hexDigits[byte0 >>> 4 & 0xf]; // 取字节中高 4 位的数字转换,
+				// >>> 为逻辑右移，将符号位一起右移
+				str[k++] = hexDigits[byte0 & 0xf]; // 取字节中低 4 位的数字转换
+			}
+			
+			s = new String(str); // 换后的结果转换为字符串
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return s;
+	
+	}
+	
+	public static String getMD5(byte[] source)
+	{
+		return md5(source);
+	}
+	
+    public static String getMD5(String str) {
+    	return md5(str.getBytes());
+    }
+    
+    public static String getMD5(String str, String encode) {
+    	try {
+			return md5(str.getBytes(encode));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return null;
+    }
+    
+    
+    private static String md6(byte[] source)
+    {
+    	String str = md5(source);
+    	
+    	if (str!=null) 
+    	{
+    		String str_ret = "";
+    		int count = str.length();
+    		if (count == 32) {
+    			for (int i = 0; i < count; i += 2) {
+    				str_ret += str.charAt(i);
+    			}
+    			for (int i = 1; i < count; i += 2) {
+    				str_ret += str.charAt(i);
+    			}
+    		} 
+    		return str_ret;
+    	}
+    	
+    	return str;
+    }
+    
+	public static String getMD6(byte[] source){
+		return md6(source);
+	}
+	
+    public static String getMD6(String str) {
+    	return md6(str.getBytes());
+    }
+    
+    public static String getMD6(String str, String encode) {
+    	try {
+			return md6(str.getBytes(encode));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return null;
+    
+    }
+  
+//	------------------------------------------------------------------------------------------------------------------------------
+ 
+    private static void processSrcText(
+    		String srcText, 
+    		File dstFile, 
+    		int CoverType,
+    		boolean IsOutputSrc, 
+    		StringBuilder output) throws Exception
+    {
+    	String dst = getMDX(srcText, CoverType) + (IsOutputSrc ? " : " + srcText : "");
+		System.out.println(dst);
+		output.append(dst + "\n");
+    }
+    
+    private static void processSrcFile(
+    		File srcFile, 
+    		File dstFile, 
+    		int CoverType,
+    		boolean IsOutputSrc, 
+    		Pattern filter, 
+    		boolean filter_include,
+    		StringBuilder output) throws Exception
+    {
+		if (!srcFile.exists())
+		{
+			System.err.println("src file is not exist!");
+		}
+		else if (srcFile.isDirectory()) 
+		{
+			File[] files = srcFile.listFiles();
+			
+			for (int l=0; l<files.length; l++)
+			{
+				if (files[l].isHidden() || files[l].isDirectory() || files[l].equals(dstFile)){
+					continue;
+				}
+				if (filter != null) {
+					Matcher matcher_name = filter.matcher(files[l].getPath());
+					if (matcher_name.find()) {
+						if (!filter_include) {
+							continue;
+						}
+					} else {
+						if (filter_include) {
+							continue;
+						}
+					}
+				}
+				FileInputStream fis = new FileInputStream(files[l]);
+				byte[] data = CIO.readStream(fis);
+				String dst = MD5.getMDX(data, CoverType) + (IsOutputSrc ? " : " + files[l].getPath() : "");
+				System.out.println(dst);
+				output.append(dst + "\n");
+			}
+		}
+		else
+		{
+			FileInputStream fis = new FileInputStream(srcFile);
+			byte[] data = CIO.readStream(fis);
+			String dst = getMDX(data, CoverType) + (IsOutputSrc ? " : " + srcFile.getPath() : "");
+			System.out.println(dst);
+			output.append(dst + "\n");
+		}
+	
+    }
+    
+    private static void processSrcDir(
+    		File srcDir, 
+    		File dstFile, 
+    		int CoverType,
+    		boolean IsOutputSrc,  
+    		Pattern filter, 
+    		boolean filter_include,
+    		StringBuilder output) throws Exception
+    {
+		if (!srcDir.exists())
+		{
+			System.err.println("src file is not exist!");
+		}
+		else if (srcDir.isDirectory()) 
+		{
+			File[] files = srcDir.listFiles();
+			
+			for (int l=0; l<files.length; l++)
+			{
+				if (files[l].isHidden()){
+					continue;
+				}
+				if (filter != null) {
+					Matcher matcher_name = filter.matcher(files[l].getPath());
+					if (matcher_name.find()) {
+						if (!filter_include) {
+							continue;
+						}
+					} else {
+						if (filter_include) {
+							continue;
+						}
+					}
+				}
+				if (files[l].isDirectory()) {
+					processSrcDir(files[l], dstFile, CoverType, IsOutputSrc, filter, filter_include, output);
+					continue;
+				} else {
+					FileInputStream fis = new FileInputStream(files[l]);
+					byte[] data = CIO.readStream(fis);
+					String dst = MD5.getMDX(data, CoverType) + (IsOutputSrc ? " : " + files[l].getPath() : "");
+					System.out.println(dst);
+					output.append(dst + "\n");
+				}
+			}
+		}
+    }
+    
+    private static void processSrcTextFile(
+    		File srcTextFile, 
+    		File dstFile, 
+    		int CoverType,
+    		boolean IsOutputSrc, 
+    		StringBuilder output, 
+    		String srcTextFileEncoding) throws Exception
+    {
+		if (!srcTextFile.exists()) 
+		{
+			System.err.println("src textfile is not exist!");
+		}
+		else if (srcTextFile.isDirectory())
+		{
+			System.err.println("src textfile can not be a directory!!");
+		}
+		else 
+		{
+			FileInputStream fis = new FileInputStream(srcTextFile);
+			byte[] data = CIO.readStream(fis);
+			String text = null;
+			if (srcTextFileEncoding!=null) {
+				text = new String(data, srcTextFileEncoding);
+			}else{
+				text = new String(data);
+			}
+			String[] lines = text.split("\n");
+			
+			for (int l=0; l<lines.length; l++)
+			{
+				String src = lines[l].trim();
+				String dst = getMDX(src, CoverType)+(IsOutputSrc ? " : " + src : "");
+				System.out.println(dst);
+				output.append(dst + "\n");
+			}
+		}
+	
+    }
+    
+    private static void processDstFile(
+    		File dstFile, 
+    		String dstEncoding, 
+    		boolean dstAppend,
+    		StringBuilder output) throws Exception
+    {
+
+		if (dstFile.exists()==false) {
+			dstFile.createNewFile();
+			dstAppend = false;
+		}
+		
+		FileOutputStream fos = new FileOutputStream(dstFile, dstAppend);
+		
+		try {
+			if (dstEncoding == null) {
+				fos.write(output.toString().getBytes());
+			} else {
+				fos.write(output.toString().getBytes(dstEncoding));
+			}
+			fos.flush();
+		} catch (Exception err) {
+			err.printStackTrace();
+		} finally {
+			fos.close();
+		}
+    }
+    
 	public static void main(String args[]) 
     {
 		try {
@@ -111,6 +395,9 @@ public class MD5
 				"-srcFile:<文件名>\n" +
 				"	输入文件,如果为目录的话,将计算该目录下每个文件的md5值\n\n" +
 				
+				"-srcDir:<文件夹>\n" +
+				"	输入文件夹,并递归。\n\n" +
+				
 				"-dstFile:<输出文件名>\n" +
 				"	输出文件名,将输出文本文件\n\n" +
 				
@@ -119,6 +406,10 @@ public class MD5
 				
 				"-dstEnc:<编码方式>\n" +
 				"	输出文件的编码方式\n\n" +
+				
+				"-filter:<过滤器，+(-)正则表达式>\n" +
+				"	+代表包含(默认)，-代表不包含。比如:-\\*+.svn(排除所有.svn目录)\n" +
+				"	(该项只有在递归或枚举文件夹时有效)\n\n" +
 				"";
 			
 			
@@ -126,17 +417,22 @@ public class MD5
 			{
 				if (args.length > 1 && args[0].startsWith("--"))
 				{
-					int CoverType		= 0;
-					boolean IsOutputSrc	= false;
+					int CoverType				= 0;
+					boolean IsOutputSrc			= false;
 					
-					String	srcText		= null;
-					File	srcFile		= null;
-					File	srcTextFile	= null;
+					String	srcText				= null;
+					File	srcFile				= null;
+					File	srcDir				= null;
+					File	srcTextFile			= null;
 					String	srcTextFileEncoding	= null;
 					
-					File 	dstFile		= null;
-					boolean	dstAppend	= false;
-					String	dstEncoding	= null;
+					File 	dstFile				= null;
+					boolean	dstAppend			= false;
+					String	dstEncoding			= null;
+
+					Pattern	filter				= null;
+					boolean filter_include 		= true;
+					
 					
 					for (int i=0; i<args.length; i++) 
 					{
@@ -156,6 +452,11 @@ public class MD5
 						else if (args[i].toLowerCase().startsWith("-srcfile:")){
 							srcFile = new File(args[i].substring("-srcfile:".length()));
 						}
+						else if (args[i].toLowerCase().startsWith("-srcdir:")){
+							srcDir = new File(args[i].substring("-srcdir:".length()));
+						}
+						
+						
 						else if (args[i].toLowerCase().startsWith("-srctextfile:")){
 							srcTextFile = new File(args[i].substring("-srctextfile:".length()));
 						}
@@ -172,105 +473,47 @@ public class MD5
 						else if (args[i].toLowerCase().startsWith("-dstenc:")){
 							dstEncoding = args[i].substring("-dstenc:".length());
 						}
+						else if (args[i].toLowerCase().startsWith("-filter:")){
+							String ft = args[i].substring("-filter:".length()).trim();
+							if (ft.startsWith("-")) {
+								ft = ft.substring(1);
+								filter_include = false;
+					    	} else if (ft.startsWith("+")) {
+					    		ft = ft.substring(1);
+					    		filter_include = true;
+					    	}
+							filter = Pattern.compile(ft);
+						}
+						
 					}
 					
 					// process
 					{
-						String output = "";
+						StringBuilder output = new StringBuilder();
 						
 						if (srcText!=null) 
 						{
-							String dst = getMDX(srcText, CoverType) + (IsOutputSrc ? " : " + srcText : "");
-							System.out.println(dst);
-							output += dst + "\n";
+							processSrcText(srcText, dstFile, CoverType, IsOutputSrc, output);
 						}
 						
 						if (srcFile!=null) 
 						{
-							if (!srcFile.exists())
-							{
-								System.err.println("src file is not exist!");
-							}
-							else if (srcFile.isDirectory()) 
-							{
-								File[] files = srcFile.listFiles();
-								
-								for (int l=0; l<files.length; l++)
-								{
-									if (files[l].isHidden() || files[l].isDirectory() || files[l].equals(dstFile)){
-										continue;
-									}
-									FileInputStream fis = new FileInputStream(files[l]);
-									byte[] data = CIO.readStream(fis);
-									String dst = MD5.getMDX(data, CoverType) + (IsOutputSrc ? " : " + files[l].getPath() : "");
-									System.out.println(dst);
-									output += dst + "\n";
-								}
-							}
-							else
-							{
-								FileInputStream fis = new FileInputStream(srcFile);
-								byte[] data = CIO.readStream(fis);
-								String dst = getMDX(data, CoverType) + (IsOutputSrc ? " : " + srcFile.getPath() : "");
-								System.out.println(dst);
-								output += dst + "\n";
-							}
+							processSrcFile(srcFile, dstFile, CoverType, IsOutputSrc, filter, filter_include, output);
+						}
+						
+						if (srcDir != null) 
+						{
+							processSrcDir(srcDir, dstFile, CoverType, IsOutputSrc, filter, filter_include, output);
 						}
 						
 						if (srcTextFile!=null) 
 						{
-							if (!srcTextFile.exists()) 
-							{
-								System.err.println("src textfile is not exist!");
-							}
-							else if (srcTextFile.isDirectory())
-							{
-								System.err.println("src textfile can not be a directory!!");
-							}
-							else 
-							{
-								FileInputStream fis = new FileInputStream(srcTextFile);
-								byte[] data = CIO.readStream(fis);
-								String text = null;
-								if (srcTextFileEncoding!=null) {
-									text = new String(data, srcTextFileEncoding);
-								}else{
-									text = new String(data);
-								}
-								String[] lines = text.split("\n");
-								
-								for (int l=0; l<lines.length; l++)
-								{
-									String src = lines[l].trim();
-									String dst = getMDX(src, CoverType)+(IsOutputSrc ? " : " + src : "");
-									System.out.println(dst);
-									output += dst + "\n";
-								}
-							}
+							processSrcTextFile(srcTextFile, dstFile, CoverType, IsOutputSrc, output, srcTextFileEncoding);
 						}
 						
 						if (dstFile!=null) 
 						{
-							if (dstFile.exists()==false) {
-								dstFile.createNewFile();
-								dstAppend = false;
-							}
-							
-							FileOutputStream fos = new FileOutputStream(dstFile, dstAppend);
-							
-							try {
-								if (dstEncoding == null) {
-									fos.write(output.getBytes());
-								} else {
-									fos.write(output.getBytes(dstEncoding));
-								}
-								fos.flush();
-							} catch (Exception err) {
-								err.printStackTrace();
-							} finally {
-								fos.close();
-							}
-							
+							processDstFile(dstFile, dstEncoding, dstAppend, output);
 						}
 						
 						
@@ -494,105 +737,5 @@ public class MD5
 
 	}
 
-	
-//	------------------------------------------------------------------------------------------------------------------------------
-
-	// 用来将字节转换成 16 进制表示的字符
-	final static char hexDigits[] = { 
-			'0', '1', '2', '3', 
-			'4', '5', '6', '7',
-			'8', '9', 'a', 'b', 
-			'c', 'd', 'e', 'f' };
-	
-	private static String md5(byte[] source)
-	{
-		String s = null;
-
-		try
-		{
-			java.security.MessageDigest md = java.security.MessageDigest .getInstance("MD5");
-			
-			md.update(source);
-			byte tmp[] = md.digest(); // MD5 的计算结果是一个 128 位的长整数，
-			// 用字节表示就是 16 个字节
-			char str[] = new char[16 * 2]; // 每个字节用 16 进制表示的话，使用两个字符，
-			// 所以表示成 16 进制需要 32 个字符
-			int k = 0; // 表示转换结果中对应的字符位置
-			for (int i = 0; i < 16; i++) { // 从第一个字节开始，对 MD5 的每一个字节
-				// 转换成 16 进制字符的转换
-				byte byte0 = tmp[i]; // 取第 i 个字节
-				str[k++] = hexDigits[byte0 >>> 4 & 0xf]; // 取字节中高 4 位的数字转换,
-				// >>> 为逻辑右移，将符号位一起右移
-				str[k++] = hexDigits[byte0 & 0xf]; // 取字节中低 4 位的数字转换
-			}
-			
-			s = new String(str); // 换后的结果转换为字符串
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return s;
-	
-	}
-	
-	public static String getMD5(byte[] source)
-	{
-		return md5(source);
-	}
-	
-    public static String getMD5(String str) {
-    	return md5(str.getBytes());
-    }
-    
-    public static String getMD5(String str, String encode) {
-    	try {
-			return md5(str.getBytes(encode));
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		return null;
-    }
-    
-    
-    private static String md6(byte[] source)
-    {
-    	String str = md5(source);
-    	
-    	if (str!=null) 
-    	{
-    		String str_ret = "";
-    		int count = str.length();
-    		if (count == 32) {
-    			for (int i = 0; i < count; i += 2) {
-    				str_ret += str.charAt(i);
-    			}
-    			for (int i = 1; i < count; i += 2) {
-    				str_ret += str.charAt(i);
-    			}
-    		} 
-    		return str_ret;
-    	}
-    	
-    	return str;
-    }
-    
-	public static String getMD6(byte[] source){
-		return md6(source);
-	}
-	
-    public static String getMD6(String str) {
-    	return md6(str.getBytes());
-    }
-    
-    public static String getMD6(String str, String encode) {
-    	try {
-			return md6(str.getBytes(encode));
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		return null;
-    
-    }
-	
 }
 
