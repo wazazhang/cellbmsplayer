@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Vector;
 import java.util.regex.Matcher;
@@ -13,6 +14,8 @@ import javax.swing.tree.TreeNode;
 
 import com.cell.CIO;
 import com.cell.CObject;
+import com.cell.CUtil;
+import com.cell.util.Pair;
 
 
 /**
@@ -163,37 +166,64 @@ public class MD5
     }
   
 //	------------------------------------------------------------------------------------------------------------------------------
+
+//	------------------------------------------------------------------------------------------------------------------------------
  
+    private static int processed_files = 0;
+    private static int ignored_files = 0;
+    
     private static boolean processFilter(
     		File	file,
-    		Pattern filter, 
-    		boolean filter_include) 
+    		ArrayList<Pattern> filters_add, 
+    		ArrayList<Pattern> filters_dec) 
     {
-    	if (filter != null) {
-			Matcher matcher_name = filter.matcher(file.getPath());
-			if (matcher_name.find()) {
-				if (!filter_include) {
-					System.out.println("ignore: " + file.getPath());
-					return false;
+    	String fname = file.getPath().replaceAll("\\\\", "/");
+		if (filters_dec != null) {
+    		// 判断所有需要排除的
+    		for (Pattern ft : filters_dec) {
+    			if (ft.matcher(fname).find()) {
+//    				System.out.println("ignore: " + file.getPath());
+    				ignored_files ++;
+        			return false;
+    			}
+    		}
+		}
+		if (filters_add != null && !filters_add.isEmpty()) {
+			// 判断所有需要包含的
+    		for (Pattern ft : filters_add) {
+    			if (ft.matcher(fname).find()) {
+					return true;
 				}
-			} else if (file.isFile()) {
-				if (filter_include) {	
-					System.out.println("ignore: " + file.getPath());
-					return false;
-				}
-			}
+    		}
+//			System.out.println("ignore: " + file.getPath());    		
+    		ignored_files ++;
+    		return false;
 		}
     	return true;
+    }
+
+    private static String processVerbos(int verbos, int size, long date, String name) {
+    	String dst = "";
+    	if ((verbos & VERBOS_FLAG_FILE_SIZE) != 0) {
+			dst += " : " + CUtil.snapStringRightSize(size+"", 10, ' ');
+		}
+		if ((verbos & VERBOS_FLAG_FILE_DATE) != 0) {
+			dst += " : " + CUtil.snapStringRightSize(date+"", 13, ' ');
+		}
+		if ((verbos & VERBOS_FLAG_FILE_NAME) != 0) {
+			dst += " : " + name + "\t";
+		}
+		return dst;
     }
     
     private static void processSrcText(
     		String srcText, 
     		File dstFile, 
     		int CoverType,
-    		boolean IsOutputSrc, 
+    		int verbos,
     		StringBuilder output) throws Exception
     {
-    	String dst = getMDX(srcText, CoverType) + (IsOutputSrc ? " : " + srcText : "");
+    	String dst = getMDX(srcText, CoverType) + ((verbos&VERBOS_FLAG_FILE_NAME)!=0 ? " : " + srcText : "");
 		System.out.println(dst);
 		output.append(dst + "\n");
     }
@@ -202,9 +232,9 @@ public class MD5
     		File srcFile, 
     		File dstFile, 
     		int CoverType,
-    		boolean IsOutputSrc, 
-    		Pattern filter, 
-    		boolean filter_include,
+    		int verbos,
+    		ArrayList<Pattern> filters_add, 
+    		ArrayList<Pattern> filters_dec, 
     		StringBuilder output) throws Exception
     {
 		if (!srcFile.exists())
@@ -220,34 +250,39 @@ public class MD5
 				if (files[l].isHidden() || files[l].isDirectory() || files[l].equals(dstFile)){
 					continue;
 				}
-				if (!processFilter(files[l], filter, filter_include)) {
-					continue;
+				else {
+					if (!processFilter(files[l], filters_add, filters_dec)) {
+						continue;
+					}
+					FileInputStream fis = new FileInputStream(files[l]);
+					byte[] data = CIO.readStream(fis);
+					String dst = MD5.getMDX(data, CoverType);
+					dst += processVerbos(verbos, data.length, files[l].lastModified(), files[l].getPath());
+					System.out.println(dst);
+					output.append(dst + "\n");
 				}
-				FileInputStream fis = new FileInputStream(files[l]);
-				byte[] data = CIO.readStream(fis);
-				String dst = MD5.getMDX(data, CoverType) + (IsOutputSrc ? " : " + files[l].getPath() : "");
-				System.out.println(dst);
-				output.append(dst + "\n");
 			}
 		}
 		else
 		{
 			FileInputStream fis = new FileInputStream(srcFile);
 			byte[] data = CIO.readStream(fis);
-			String dst = getMDX(data, CoverType) + (IsOutputSrc ? " : " + srcFile.getPath() : "");
+			String dst = getMDX(data, CoverType);// + (IsOutputSrc ? " : " + srcFile.getPath() : "");
+			dst += processVerbos(verbos, data.length, srcFile.lastModified(), srcFile.getPath());
 			System.out.println(dst);
 			output.append(dst + "\n");
+		    processed_files ++;
 		}
-	
+
     }
     
     private static void processSrcDir(
     		File srcDir, 
     		File dstFile, 
     		int CoverType,
-    		boolean IsOutputSrc,  
-    		Pattern filter, 
-    		boolean filter_include,
+    		int verbos,
+    		ArrayList<Pattern> filters_add, 
+    		ArrayList<Pattern> filters_dec, 
     		StringBuilder output) throws Exception
     {
 		if (!srcDir.exists())
@@ -263,18 +298,20 @@ public class MD5
 				if (files[l].isHidden()){
 					continue;
 				}
-				if (!processFilter(files[l], filter, filter_include)) {
-					continue;
-				}
 				if (files[l].isDirectory()) {
-					processSrcDir(files[l], dstFile, CoverType, IsOutputSrc, filter, filter_include, output);
+					processSrcDir(files[l], dstFile, CoverType, verbos, filters_add, filters_dec, output);
 					continue;
 				} else {
+					if (!processFilter(files[l], filters_add, filters_dec)) {
+						continue;
+					}
 					FileInputStream fis = new FileInputStream(files[l]);
 					byte[] data = CIO.readStream(fis);
-					String dst = MD5.getMDX(data, CoverType) + (IsOutputSrc ? " : " + files[l].getPath() : "");
+					String dst = MD5.getMDX(data, CoverType);
+					dst += processVerbos(verbos, data.length, files[l].lastModified(), files[l].getPath());
 					System.out.println(dst);
 					output.append(dst + "\n");
+				    processed_files ++;
 				}
 			}
 		}
@@ -284,7 +321,7 @@ public class MD5
     		File srcTextFile, 
     		File dstFile, 
     		int CoverType,
-    		boolean IsOutputSrc, 
+    		int verbos,
     		StringBuilder output, 
     		String srcTextFileEncoding) throws Exception
     {
@@ -311,9 +348,11 @@ public class MD5
 			for (int l=0; l<lines.length; l++)
 			{
 				String src = lines[l].trim();
-				String dst = getMDX(src, CoverType)+(IsOutputSrc ? " : " + src : "");
+				String dst = getMDX(src, CoverType);
+				dst += processVerbos(verbos&VERBOS_FLAG_FILE_NAME, 0, 0, src);
 				System.out.println(dst);
 				output.append(dst + "\n");
+			    processed_files ++;
 			}
 		}
 	
@@ -349,397 +388,425 @@ public class MD5
     
 	public static void main(String args[]) 
     {
+		String usage = 
+			"***********************************************************************\n" +
+			"* Old functions                                                       *\n" +
+			"***********************************************************************\n" +
+			"-md5(-md6)(:v)\n" +
+			" output type md5 or md6.\n" +
+			" :v 是否在最后显示原,例如:\n" +
+			" 输出的字符为\"103a813a4961ceaeebe1af7866a2d124 : ./reg2.png\"那么\".reg2.png\"为原\n" +
+			" 如果不加:v,那么输出格式为\"103a813a4961ceaeebe1af7866a2d124\"\n" +
+			"\n" + 
+			"-md5(-md6)(:v) -txt:<字符串>\n" +
+			" 输入字符串,输出该字符串的md5(md6)值\n" +
+			"\n" +
+			"-md5(-md6)(:v) -f:<文件名>\n" +
+			" 输入二进制文件,输出该文件的md5(md6)值\n" +
+			"\n" +
+			"-md5(-md6)(:v) -fn:<文本文件名> (-enc:<可选,文本编码,默认为ASCII>) (-fout:<可选,输出到文件,默认到控制台>)\n" +
+			" 输入文本文件,输出文本文件的每行的md5(md6)值\n" +
+			"\n" + 
+			"-md5(-md6)(:v) -dir:<文件夹名> (-fout:<可选,输出到文件,默认到控制台>)\n" +
+			" 输入一个文件夹,输出该文件夹内所有文件的md5(md6)值\n" +
+			" 忽略文件夹和输出文件和隐藏文件\n" +
+			"\n" +
+			"-md5(-md6)(:v) -cmp:<文件(文件夹)名> (-fout:<可选,输出到文件,默认到控制台>)\n" +
+			" 输入一个文件(文件夹),输出一个md5(md6)值,一般用于比较2个文件(文件夹)内容是否相等\n" +
+			"\n" + 
+		
+			"***********************************************************************\n" +
+			"* New functions  所有方法将全局忽略输出文件和隐藏文件                          *\n" +
+			"***********************************************************************\n" +
+			"--md5(--md6)\n" +
+			"	使用md5或md6方式\n\n" +
+			
+			"-verbos[:s][:d]\n" +
+			"	是否连同原一起输出\n" +
+			"	假如源是一个文件名，可选[:s]文件尺寸，可选[:d]文件日期；比如-verbos:sd\n\n" +
+			
+			"-srcText:<字符串>\n" +
+			"	输入字符串\n\n" +
+			
+			"-srcTextFile:<文件名>\n" +
+			"	输入文本文件,计算每行的md5值\n\n" +
+			
+			"-srcTextFileEnc:<编码方式>\n" +
+			"	输入文件的编码方式\n\n" +
+			
+			"-srcFile:<文件名>\n" +
+			"	输入文件,如果为目录的话,将计算该目录下每个文件的md5值\n\n" +
+			
+			"-srcDir:<文件夹>\n" +
+			"	输入文件夹,并递归。\n\n" +
+			
+			"-dstFile:<输出文件名>\n" +
+			"	输出文件名,将输出文本文件\n\n" +
+			
+			"-dstAppend\n" +
+			"	是否附加到输出文件的末尾\n\n" +
+			
+			"-dstEnc:<编码方式>\n" +
+			"	输出文件的编码方式\n\n" +
+			
+			"-filter:<过滤器，+(-)正则表达式>\n" +
+			"	+代表包含(默认)，-代表不包含。比如:-\\*+.svn(排除所有.svn目录)\n" +
+			"	多项时用 ; 分隔，比如:+.png;+.jpg\n" +
+			"	(该项只有在递归或枚举文件夹时有效)\n\n" +
+			"";
+		
+		
 		try {
-			
-			String usage = 
-				"***********************************************************************\n" +
-				"* Old functions                                                       *\n" +
-				"***********************************************************************\n" +
-				"-md5(-md6)(:v)\n" +
-				" output type md5 or md6.\n" +
-				" :v 是否在最后显示原,例如:\n" +
-				" 输出的字符为\"103a813a4961ceaeebe1af7866a2d124 : ./reg2.png\"那么\".reg2.png\"为原\n" +
-				" 如果不加:v,那么输出格式为\"103a813a4961ceaeebe1af7866a2d124\"\n" +
-				"\n" + 
-				"-md5(-md6)(:v) -txt:<字符串>\n" +
-				" 输入字符串,输出该字符串的md5(md6)值\n" +
-				"\n" +
-				"-md5(-md6)(:v) -f:<文件名>\n" +
-				" 输入二进制文件,输出该文件的md5(md6)值\n" +
-				"\n" +
-				"-md5(-md6)(:v) -fn:<文本文件名> (-enc:<可选,文本编码,默认为ASCII>) (-fout:<可选,输出到文件,默认到控制台>)\n" +
-				" 输入文本文件,输出文本文件的每行的md5(md6)值\n" +
-				"\n" + 
-				"-md5(-md6)(:v) -dir:<文件夹名> (-fout:<可选,输出到文件,默认到控制台>)\n" +
-				" 输入一个文件夹,输出该文件夹内所有文件的md5(md6)值\n" +
-				" 忽略文件夹和输出文件和隐藏文件\n" +
-				"\n" +
-				"-md5(-md6)(:v) -cmp:<文件(文件夹)名> (-fout:<可选,输出到文件,默认到控制台>)\n" +
-				" 输入一个文件(文件夹),输出一个md5(md6)值,一般用于比较2个文件(文件夹)内容是否相等\n" +
-				"\n" + 
-				
-				"***********************************************************************\n" +
-				"* New functions  所有方法将全局忽略输出文件和隐藏文件                          *\n" +
-				"***********************************************************************\n" +
-				"--md5(--md6)\n" +
-				"	使用md5或md6方式\n\n" +
-				
-				"-verbos\n" +
-				"	是否连同原一起输出\n\n" +
-				
-				"-srcText:<字符串>\n" +
-				"	输入字符串\n\n" +
-				
-				"-srcTextFile:<文件名>\n" +
-				"	输入文本文件,计算每行的md5值\n\n" +
-				
-				"-srcTextFileEnc:<编码方式>\n" +
-				"	输入文件的编码方式\n\n" +
-				
-				"-srcFile:<文件名>\n" +
-				"	输入文件,如果为目录的话,将计算该目录下每个文件的md5值\n\n" +
-				
-				"-srcDir:<文件夹>\n" +
-				"	输入文件夹,并递归。\n\n" +
-				
-				"-dstFile:<输出文件名>\n" +
-				"	输出文件名,将输出文本文件\n\n" +
-				
-				"-dstAppend\n" +
-				"	是否附加到输出文件的末尾\n\n" +
-				
-				"-dstEnc:<编码方式>\n" +
-				"	输出文件的编码方式\n\n" +
-				
-				"-filter:<过滤器，+(-)正则表达式>\n" +
-				"	+代表包含(默认)，-代表不包含。比如:-\\*+.svn(排除所有.svn目录)\n" +
-				"	(该项只有在递归或枚举文件夹时有效)\n\n" +
-				"";
-			
-			
-			if (args != null) 
-			{
-				if (args.length > 1 && args[0].startsWith("--"))
-				{
-					int CoverType				= 0;
-					boolean IsOutputSrc			= false;
-					
-					String	srcText				= null;
-					File	srcFile				= null;
-					File	srcDir				= null;
-					File	srcTextFile			= null;
-					String	srcTextFileEncoding	= null;
-					
-					File 	dstFile				= null;
-					boolean	dstAppend			= false;
-					String	dstEncoding			= null;
-
-					Pattern	filter				= null;
-					boolean filter_include 		= true;
-					
-					
-					for (int i=0; i<args.length; i++) 
-					{
-						if (args[i].toLowerCase().startsWith("--md5")){
-							CoverType = COVERT_TYPE_MD5;
-						}
-						else if (args[i].toLowerCase().startsWith("--md6")) {
-							CoverType = COVERT_TYPE_MD6;
-						}
-						else if (args[i].toLowerCase().startsWith("-verbos")){
-							IsOutputSrc = true;
-						}
-						
-						else if (args[i].toLowerCase().startsWith("-srctext:")){
-							srcText = args[i].substring("-srctext:".length());
-						}
-						else if (args[i].toLowerCase().startsWith("-srcfile:")){
-							srcFile = new File(args[i].substring("-srcfile:".length()));
-						}
-						else if (args[i].toLowerCase().startsWith("-srcdir:")){
-							srcDir = new File(args[i].substring("-srcdir:".length()));
-						}
-						
-						
-						else if (args[i].toLowerCase().startsWith("-srctextfile:")){
-							srcTextFile = new File(args[i].substring("-srctextfile:".length()));
-						}
-						else if (args[i].toLowerCase().startsWith("-srctextfileenc:")){
-							srcTextFileEncoding = args[i].substring("-srctextfileenc:".length());
-						}
-						
-						else if (args[i].toLowerCase().startsWith("-dstfile:")){
-							dstFile = new File(args[i].substring("-dstfile:".length()));
-						}
-						else if (args[i].toLowerCase().startsWith("-dstappend")){
-							dstAppend = true;
-						}
-						else if (args[i].toLowerCase().startsWith("-dstenc:")){
-							dstEncoding = args[i].substring("-dstenc:".length());
-						}
-						else if (args[i].toLowerCase().startsWith("-filter:")){
-							String ft = args[i].substring("-filter:".length()).trim();
-							if (ft.startsWith("-")) {
-								ft = ft.substring(1);
-								filter_include = false;
-					    	} else if (ft.startsWith("+")) {
-					    		ft = ft.substring(1);
-					    		filter_include = true;
-					    	}
-							filter = Pattern.compile(ft);
-						}
-						
-					}
-					
-					// process
-					{
-						StringBuilder output = new StringBuilder();
-						
-						if (srcText!=null) 
-						{
-							processSrcText(srcText, dstFile, CoverType, IsOutputSrc, output);
-						}
-						
-						if (srcFile!=null) 
-						{
-							processSrcFile(srcFile, dstFile, CoverType, IsOutputSrc, filter, filter_include, output);
-						}
-						
-						if (srcDir != null) 
-						{
-							processSrcDir(srcDir, dstFile, CoverType, IsOutputSrc, filter, filter_include, output);
-						}
-						
-						if (srcTextFile!=null) 
-						{
-							processSrcTextFile(srcTextFile, dstFile, CoverType, IsOutputSrc, output, srcTextFileEncoding);
-						}
-						
-						if (dstFile!=null) 
-						{
-							processDstFile(dstFile, dstEncoding, dstAppend, output);
-						}
-						
-						
-					}
-					
+			if (args != null) {
+				if (args.length > 1 && args[0].startsWith("--")) {
+					mainNew(args);
+					System.out.println(
+							CUtil.snapStringRL(
+									new Object[]{processed_files, ignored_files}, 
+									new Object[]{"processed ",    "ignored "}, 
+									' ', " : "));
+					return;
+				} else if (args.length > 1 && args[0].length() >= "-md5".length()) {
+					mainOld(args);
 					return;
 				}
-				
-				
-				
-				
-				
-				
-				else if (args.length > 1 && args[0].length()>="-md5".length())
-				{
-					boolean isShowSrc = false;
-					if (args[0].length()>"-md5:".length()) {
-						String p = args[0].substring("-md5:".length());
-						if (p.startsWith("v")) isShowSrc = true;
-					}
-					
-					if (args[1].startsWith("-txt:")) 
-					{
-						String src = args[1].substring("-txt:".length());
-						
-						if (args[0].startsWith("-md5")) {
-							System.out.println(MD5.getMD5(src)
-									+(isShowSrc ? " : " + src : "")
-									);
-						} else {
-							System.out.println(MD5.getMD5cyc(src)
-									+(isShowSrc ? " : " + src : "")
-									);
-						}
-						return;
-					} 
-					else if (args[1].startsWith("-f:")) 
-					{
-						File file = new File(args[1].substring("-f:".length()));
-						FileInputStream fs = new FileInputStream(file);
-						byte[] data = CIO.readStream(fs);
+			}
+			System.out.println(usage);
+		} catch (Throwable err) {
+			err.printStackTrace();
+			System.out.println(usage);
+		}
+	}
 
-						if (args[0].startsWith("-md5")) {
-							System.out.println(MD5.getMD5(data) + (isShowSrc ? " : " + file.getPath() : ""));
-						} else {
-							System.out.println(MD5.getMD5cyc(data) + (isShowSrc ? " : " + file.getPath() : ""));
-						}
-						return;
-					} 
-					else if (args[1].startsWith("-fn:"))
-					{
-						File file = new File(args[1].substring("-fn:".length()));
-						FileInputStream fs = new FileInputStream(file);
-						byte[] data = CIO.readStream(fs);
-						
-						String str = "";
-						String enc = null;
-						
-						if (args.length > 2 && args[2].startsWith("-enc:")){
-							enc = args[2].substring("-enc:".length());
-							str = new String(data, enc);
-						}else{
-							str = new String(data);
-						}
-						
-						String[] lines = str.split("\n");
-						
-						String outputs = "";
-						
-						for (int l=0; l<lines.length; l++)
-						{
-							String src = lines[l].trim();
-							String dst = "";
-							if (args[0].startsWith("-md5")) {
-								dst = MD5.getMD5(src)+(isShowSrc ? " : " + src : "");
-							} else {
-								dst = MD5.getMD5cyc(src)+(isShowSrc ? " : " + src : "");
-							}
-							System.out.println(dst);
-							outputs += dst + "\n";
-						}
-						
-						String outfile = null;
-						if ((enc!=null && args.length > 3 && args[3].startsWith("-fout:"))){
-							outfile = args[3].substring("-fout:".length());
-						}
-						else if ((enc==null && args.length > 2 && args[2].startsWith("-fout:"))){
-							outfile = args[2].substring("-fout:".length());
-						}
-						if (outfile!=null) {
-							File fout = new File(outfile);
-							fout.createNewFile();
-							FileOutputStream fos = new FileOutputStream(fout);
-							if (enc==null){
-								fos.write(outputs.getBytes());
-							}else{
-								fos.write(outputs.getBytes(enc));
-							}
-							fos.flush();
-							fos.close();
-						}
-						
-						return;
-					}
-					else if (args[1].startsWith("-dir:"))
-					{
-						File dir = new File(args[1].substring("-dir:".length()));
-						File[] files = dir.listFiles();
-						
-						File fout = null;
-						if (args.length > 2 && args[2].startsWith("-fout:")){
-							fout = new File(args[2].substring("-fout:".length()));
-						}
-						
-						String outputs = "";
-						
-						for (int l=0; l<files.length; l++)
-						{
-							if (files[l].isHidden() || files[l].isDirectory() || files[l].equals(fout)){
-								continue;
-							}
-							
-							FileInputStream fs = new FileInputStream(files[l]);
-							byte[] data = CIO.readStream(fs);
-							
-							String dst = "";
-							if (args[0].startsWith("-md5")) {
-								dst = MD5.getMD5(data)+(isShowSrc ? " : " + files[l].getPath() : "");
-							} else {
-								dst = MD5.getMD5cyc(data)+(isShowSrc ? " : " + files[l].getPath() : "");
-							}
-							System.out.println(dst);
-							outputs += dst + "\n";
-						}
-						
-						if (fout!=null) {
-							fout.createNewFile();
-							FileOutputStream fos = new FileOutputStream(fout);
-							fos.write(outputs.getBytes());
-							fos.flush();
-							fos.close();
-						}
-						
-						return;
-						
-					}
-					
-					else if (args[1].startsWith("-cmp:"))
-					{
-						File cmp = new File(args[1].substring("-cmp:".length()));
-						
-						File fout = null;
-						if (args.length > 2 && args[2].startsWith("-fout:")){
-							fout = new File(args[2].substring("-fout:".length()));
-						}
-						
-						String outputs = "";
-						
-						if (cmp.isDirectory())
-						{
-							File[] files = cmp.listFiles();
-							
-							for (int l=0; l<files.length; l++)
-							{
-								if (files[l].isHidden() || files[l].isDirectory() || files[l].equals(fout)){
-									continue;
-								}
-								
-								FileInputStream fs = new FileInputStream(files[l]);
-								byte[] data = CIO.readStream(fs);
-								
-								if (args[0].startsWith("-md5")) {
-									outputs += MD5.getMD5(data);
-								} else {
-									outputs += MD5.getMD5cyc(data);
-								}
-							}
-							
-							if (args[0].startsWith("-md5")) {
-								outputs = MD5.getMD5(outputs);
-							} else {
-								outputs = MD5.getMD5cyc(outputs);
-							}
-						}
-						else 
-						{
-							FileInputStream fs = new FileInputStream(cmp);
-							byte[] data = CIO.readStream(fs);
-
-							if (args[0].startsWith("-md5")) {
-								outputs += MD5.getMD5(data);
-							} else {
-								outputs += MD5.getMD5cyc(data);
-							}
-						}
-						
-						outputs += (isShowSrc ? " : " + cmp.getPath() : "");
-						
-						System.out.println(outputs);
-						
-						if (fout!=null) {
-							fout.createNewFile();
-							FileOutputStream fos = new FileOutputStream(fout);
-							fos.write(outputs.getBytes());
-							fos.flush();
-							fos.close();
-						}
-						
-						return;
-						
-					}
+	static final public int VERBOS_FLAG_FILE_NAME = 1;
+	static final public int VERBOS_FLAG_FILE_SIZE = 2;
+	static final public int VERBOS_FLAG_FILE_DATE = 4;
+	
+	private static void mainNew(String args[]) throws Exception
+	{
+		int CoverType				= 0;
+		
+		int 	verbos				= 0;
+		
+		String	srcText				= null;
+		File	srcFile				= null;
+		File	srcDir				= null;
+		File	srcTextFile			= null;
+		String	srcTextFileEncoding	= null;
+		
+		File 	dstFile				= null;
+		boolean	dstAppend			= false;
+		String	dstEncoding			= null;
+		
+		ArrayList<Pattern> filters_add = null;
+		ArrayList<Pattern> filters_dec = null;
+		
+		for (int i=0; i<args.length; i++) 
+		{
+			if (args[i].toLowerCase().startsWith("--md5")){
+				CoverType = COVERT_TYPE_MD5;
+			}
+			else if (args[i].toLowerCase().startsWith("--md6")) {
+				CoverType = COVERT_TYPE_MD6;
+			}
+			else if (args[i].toLowerCase().startsWith("-verbos")){
+				verbos = VERBOS_FLAG_FILE_NAME;
+				String append = args[i].substring("-verbos".length());
+				if (append.contains("s")) {
+					verbos |= VERBOS_FLAG_FILE_SIZE;
+				}
+				if (append.contains("d")) {
+					verbos |= VERBOS_FLAG_FILE_DATE;
 				}
 			}
 			
-			System.out.println(usage);
+			else if (args[i].toLowerCase().startsWith("-srctext:")){
+				srcText = args[i].substring("-srctext:".length());
+			}
+			else if (args[i].toLowerCase().startsWith("-srcfile:")){
+				srcFile = new File(args[i].substring("-srcfile:".length()));
+			}
+			else if (args[i].toLowerCase().startsWith("-srcdir:")){
+				srcDir = new File(args[i].substring("-srcdir:".length()));
+			}
 			
 			
-		} catch (Exception err) {
-			err.printStackTrace();
+			else if (args[i].toLowerCase().startsWith("-srctextfile:")){
+				srcTextFile = new File(args[i].substring("-srctextfile:".length()));
+			}
+			else if (args[i].toLowerCase().startsWith("-srctextfileenc:")){
+				srcTextFileEncoding = args[i].substring("-srctextfileenc:".length());
+			}
+			
+			else if (args[i].toLowerCase().startsWith("-dstfile:")){
+				dstFile = new File(args[i].substring("-dstfile:".length()));
+			}
+			else if (args[i].toLowerCase().startsWith("-dstappend")){
+				dstAppend = true;
+			}
+			else if (args[i].toLowerCase().startsWith("-dstenc:")){
+				dstEncoding = args[i].substring("-dstenc:".length());
+			}
+			else if (args[i].toLowerCase().startsWith("-filter:")){
+				String[] fts = args[i].substring("-filter:".length()).trim().split(";");
+				filters_add = new ArrayList<Pattern>();
+				filters_dec = new ArrayList<Pattern>();
+				for (String ft : fts) {
+					if (ft.startsWith("-")) {
+						ft = ft.substring(1);
+						filters_dec.add(Pattern.compile(ft));
+						System.out.println("find dec filter : " + ft);
+			    	} else if (ft.startsWith("+")) {
+			    		ft = ft.substring(1);
+			    		filters_add.add(Pattern.compile(ft));
+						System.out.println("find add filter : " + ft);
+			    	} else {
+			    		ft = ft.substring(1);
+			    		filters_add.add(Pattern.compile(ft));
+						System.out.println("find add filter : " + ft);
+			    	}
+				}
+			}
+			
 		}
-
+		
+		// process
+		{
+			StringBuilder output = new StringBuilder();
+			
+			if (srcText!=null) 
+			{
+				processSrcText(srcText, dstFile, CoverType, verbos, output);
+			}
+			
+			if (srcFile!=null) 
+			{
+				processSrcFile(srcFile, dstFile, CoverType, verbos, filters_add, filters_dec, output);
+			}
+			
+			if (srcDir != null) 
+			{
+				processSrcDir(srcDir, dstFile, CoverType, verbos, filters_add, filters_dec, output);
+			}
+			
+			if (srcTextFile!=null) 
+			{
+				processSrcTextFile(srcTextFile, dstFile, CoverType, verbos, output, srcTextFileEncoding);
+			}
+			
+			if (dstFile!=null) 
+			{
+				processDstFile(dstFile, dstEncoding, dstAppend, output);
+			}
+			
+			
+		}
+		
+		return;
+	
 	}
+	
+	private static void mainOld(String[] args) throws Exception
+	{
 
+		boolean isShowSrc = false;
+		if (args[0].length()>"-md5:".length()) {
+			String p = args[0].substring("-md5:".length());
+			if (p.startsWith("v")) isShowSrc = true;
+		}
+		
+		if (args[1].startsWith("-txt:")) 
+		{
+			String src = args[1].substring("-txt:".length());
+			
+			if (args[0].startsWith("-md5")) {
+				System.out.println(MD5.getMD5(src)
+						+(isShowSrc ? " : " + src : "")
+						);
+			} else {
+				System.out.println(MD5.getMD5cyc(src)
+						+(isShowSrc ? " : " + src : "")
+						);
+			}
+			return;
+		} 
+		else if (args[1].startsWith("-f:")) 
+		{
+			File file = new File(args[1].substring("-f:".length()));
+			FileInputStream fs = new FileInputStream(file);
+			byte[] data = CIO.readStream(fs);
+
+			if (args[0].startsWith("-md5")) {
+				System.out.println(MD5.getMD5(data) + (isShowSrc ? " : " + file.getPath() : ""));
+			} else {
+				System.out.println(MD5.getMD5cyc(data) + (isShowSrc ? " : " + file.getPath() : ""));
+			}
+			return;
+		} 
+		else if (args[1].startsWith("-fn:"))
+		{
+			File file = new File(args[1].substring("-fn:".length()));
+			FileInputStream fs = new FileInputStream(file);
+			byte[] data = CIO.readStream(fs);
+			
+			String str = "";
+			String enc = null;
+			
+			if (args.length > 2 && args[2].startsWith("-enc:")){
+				enc = args[2].substring("-enc:".length());
+				str = new String(data, enc);
+			}else{
+				str = new String(data);
+			}
+			
+			String[] lines = str.split("\n");
+			
+			String outputs = "";
+			
+			for (int l=0; l<lines.length; l++)
+			{
+				String src = lines[l].trim();
+				String dst = "";
+				if (args[0].startsWith("-md5")) {
+					dst = MD5.getMD5(src)+(isShowSrc ? " : " + src : "");
+				} else {
+					dst = MD5.getMD5cyc(src)+(isShowSrc ? " : " + src : "");
+				}
+				System.out.println(dst);
+				outputs += dst + "\n";
+			}
+			
+			String outfile = null;
+			if ((enc!=null && args.length > 3 && args[3].startsWith("-fout:"))){
+				outfile = args[3].substring("-fout:".length());
+			}
+			else if ((enc==null && args.length > 2 && args[2].startsWith("-fout:"))){
+				outfile = args[2].substring("-fout:".length());
+			}
+			if (outfile!=null) {
+				File fout = new File(outfile);
+				fout.createNewFile();
+				FileOutputStream fos = new FileOutputStream(fout);
+				if (enc==null){
+					fos.write(outputs.getBytes());
+				}else{
+					fos.write(outputs.getBytes(enc));
+				}
+				fos.flush();
+				fos.close();
+			}
+			
+			return;
+		}
+		else if (args[1].startsWith("-dir:"))
+		{
+			File dir = new File(args[1].substring("-dir:".length()));
+			File[] files = dir.listFiles();
+			
+			File fout = null;
+			if (args.length > 2 && args[2].startsWith("-fout:")){
+				fout = new File(args[2].substring("-fout:".length()));
+			}
+			
+			String outputs = "";
+			
+			for (int l=0; l<files.length; l++)
+			{
+				if (files[l].isHidden() || files[l].isDirectory() || files[l].equals(fout)){
+					continue;
+				}
+				
+				FileInputStream fs = new FileInputStream(files[l]);
+				byte[] data = CIO.readStream(fs);
+				
+				String dst = "";
+				if (args[0].startsWith("-md5")) {
+					dst = MD5.getMD5(data)+(isShowSrc ? " : " + files[l].getPath() : "");
+				} else {
+					dst = MD5.getMD5cyc(data)+(isShowSrc ? " : " + files[l].getPath() : "");
+				}
+				System.out.println(dst);
+				outputs += dst + "\n";
+			}
+			
+			if (fout!=null) {
+				fout.createNewFile();
+				FileOutputStream fos = new FileOutputStream(fout);
+				fos.write(outputs.getBytes());
+				fos.flush();
+				fos.close();
+			}
+			
+			return;
+			
+		}
+		
+		else if (args[1].startsWith("-cmp:"))
+		{
+			File cmp = new File(args[1].substring("-cmp:".length()));
+			
+			File fout = null;
+			if (args.length > 2 && args[2].startsWith("-fout:")){
+				fout = new File(args[2].substring("-fout:".length()));
+			}
+			
+			String outputs = "";
+			
+			if (cmp.isDirectory())
+			{
+				File[] files = cmp.listFiles();
+				
+				for (int l=0; l<files.length; l++)
+				{
+					if (files[l].isHidden() || files[l].isDirectory() || files[l].equals(fout)){
+						continue;
+					}
+					
+					FileInputStream fs = new FileInputStream(files[l]);
+					byte[] data = CIO.readStream(fs);
+					
+					if (args[0].startsWith("-md5")) {
+						outputs += MD5.getMD5(data);
+					} else {
+						outputs += MD5.getMD5cyc(data);
+					}
+				}
+				
+				if (args[0].startsWith("-md5")) {
+					outputs = MD5.getMD5(outputs);
+				} else {
+					outputs = MD5.getMD5cyc(outputs);
+				}
+			}
+			else 
+			{
+				FileInputStream fs = new FileInputStream(cmp);
+				byte[] data = CIO.readStream(fs);
+
+				if (args[0].startsWith("-md5")) {
+					outputs += MD5.getMD5(data);
+				} else {
+					outputs += MD5.getMD5cyc(data);
+				}
+			}
+			
+			outputs += (isShowSrc ? " : " + cmp.getPath() : "");
+			
+			System.out.println(outputs);
+			
+			if (fout!=null) {
+				fout.createNewFile();
+				FileOutputStream fos = new FileOutputStream(fout);
+				fos.write(outputs.getBytes());
+				fos.flush();
+				fos.close();
+			}
+			
+			return;
+			
+		}
+	
+	}
+	
 }
 
