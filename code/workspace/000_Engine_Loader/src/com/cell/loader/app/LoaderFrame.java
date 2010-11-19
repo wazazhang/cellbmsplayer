@@ -117,6 +117,10 @@ public abstract class LoaderFrame extends JFrame implements WindowListener, Load
 		this.setLocation(
 				Toolkit.getDefaultToolkit().getScreenSize().width/2 - getWidth()/2,
 				Toolkit.getDefaultToolkit().getScreenSize().height/2 - getHeight()/2);
+		try {
+			InputStream is = getClass().getResourceAsStream("/com/cell/loader/app/icon.png");
+			this.setIconImage(ImageIO.read(is));
+		} catch (Exception err) {}
 		
 		this.paint_canvas = new PaintCanvas();
 		this.add(paint_canvas);
