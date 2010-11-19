@@ -67,4 +67,31 @@ public interface IImage {
 	final static public int MODE_FILE	= 3;
 	
 	public int setMode(int mode);
+	
+	// there is two color models
+	// one is direct color, each pixel represent a color which has argb information
+	// the other one is index color, each pixel is the index in a table which store the actual colors
+	final static public int COLOR_MODEL_DIRECT = 0;
+	final static public int COLOR_MODEL_INDEX = 1;
+	
+	/**
+	 * get the color model of the image
+	 * @return color model
+	 */
+	public int getColorModel();
+	
+	/**
+	 * if the color model of image is model index, means it has a palette
+	 * @return get the palette if it exists
+	 */
+	public IPalette getPalette();
+	
+	/**
+	 * if the color model of image is model index, set a new palette
+	 * @param palette
+	 */
+	public void setPalette(IPalette palette);
 }
+
+
+

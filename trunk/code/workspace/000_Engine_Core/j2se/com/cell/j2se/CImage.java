@@ -8,7 +8,10 @@ import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.IndexColorModel;
 import java.awt.image.VolatileImage;
+import java.awt.image.WritableRaster;
 import java.io.InputStream;
 
 import javax.imageio.ImageIO;
@@ -16,6 +19,7 @@ import javax.imageio.ImageIO;
 import com.cell.CObject;
 import com.cell.gfx.IGraphics;
 import com.cell.gfx.IImage;
+import com.cell.gfx.IPalette;
 
 
 public class CImage implements IImage 
@@ -63,13 +67,22 @@ public class CImage implements IImage
 	{
 		try
 		{
-			m_image = gc.createCompatibleImage(
-					src.getWidth(null), 
-					src.getHeight(null), 
-					Transparency.TRANSLUCENT);
-			Graphics2D g = m_image.createGraphics();
-			g.drawImage(src, 0, 0, null);
-			g.dispose();
+			if ( (src instanceof BufferedImage) && (((BufferedImage)src).getColorModel() instanceof IndexColorModel) )
+			{
+				BufferedImage srci = (BufferedImage)src;
+				m_image = new BufferedImage(srci.getColorModel(), srci.getRaster(), srci.isAlphaPremultiplied(), null);
+			}
+			else
+			{
+				m_image = gc.createCompatibleImage(
+						src.getWidth(null), 
+						src.getHeight(null), 
+						Transparency.TRANSLUCENT);
+				
+				Graphics2D g = m_image.createGraphics();
+				g.drawImage(src, 0, 0, null);
+				g.dispose();				
+			}
 			
 //			v_image = gc.createCompatibleVolatileImage(
 //					src.getWidth(null), 
@@ -139,17 +152,28 @@ public class CImage implements IImage
 	{
 		try
 		{
-			BufferedImage buf = gc.createCompatibleImage(
-					newWidth, 
-					newHeight, 
-					Transparency.TRANSLUCENT);
-
+			BufferedImage buf = null;
+			
+			ColorModel color_model = m_image.getColorModel();
+			
+			if (color_model instanceof IndexColorModel)
+			{
+				buf = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_BYTE_INDEXED, (IndexColorModel)color_model);			
+			}
+			else
+			{			
+				buf = gc.createCompatibleImage(
+						newWidth, 
+						newHeight, 
+						Transparency.TRANSLUCENT);
+			}
+			
 			Graphics2D g = buf.createGraphics();
 			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
 			g.drawImage(m_image, 0, 0, newWidth, newHeight, null);
 			g.dispose();
-			return new CImage(buf);
+			return new CImage(buf);				
 		}
 		catch(Exception err)
 		{
@@ -183,4 +207,103 @@ public class CImage implements IImage
 	{
 		return mode;
 	}
+	
+	
+	/**
+	 * get the color model of the image
+	 * @return color model
+	 */
+	public int getColorModel()
+	{
+		ColorModel color_model = m_image.getColorModel();
+		
+		if (color_model instanceof IndexColorModel)
+			return COLOR_MODEL_INDEX;
+		
+		return COLOR_MODEL_DIRECT;
+	}
+	
+	/**
+	 * if the color model of image is model index, means it has a palette
+	 * @return get the palette if it exists
+	 */
+	public IPalette getPalette()
+	{
+		ColorModel color_model = m_image.getColorModel();
+		
+		if (color_model instanceof IndexColorModel)
+		{
+			IndexColorModel model = (IndexColorModel)color_model;
+			
+			int size = model.getMapSize();
+			
+			byte[] ra = new byte[size];
+			byte[] ga = new byte[size];
+			byte[] ba = new byte[size];
+			byte[] alphaa = new byte[size];
+			model.getReds(ra);
+			model.getGreens(ga);
+			model.getBlues(ba);
+			model.getAlphas(alphaa);
+			
+			int transparent_color_index = -1;
+			
+			byte[] data = new byte[256*3];
+			for ( int i=0, j=0; (i<size)&&(j<data.length); ++i )
+			{
+				data[j++] = ra[i];
+				data[j++] = ga[i];
+				data[j++] = ba[i];
+				if (alphaa[i] == 0)
+					transparent_color_index = i;
+			}
+			
+			return new CPalette(data, (short)size, (short)transparent_color_index);
+		}	
+		
+		return null;
+	}
+	
+	/**
+	 * if the color model of image is model index, set a new palette
+	 * @param palette
+	 * @return get the old palette
+	 */
+	public void setPalette(IPalette palette)
+	{
+		if (palette != null)
+		{
+			try
+			{
+				byte[] colors = palette.getIndexColors();
+				int color_count = palette.getIndexColorCount();
+				int transparent_color_index = palette.getTransparentColorIndex();
+				byte[] ra = new byte[color_count];
+				byte[] ga = new byte[color_count];
+				byte[] ba = new byte[color_count];
+				byte[] ralpha = new byte[color_count];
+				
+				for ( int i=0,j=0; (i<colors.length)&&(j<color_count); i+=3,++j )
+				{
+					ra[j] = colors[i];
+					ga[j] = colors[i+1];
+					ba[j] = colors[i+2];
+					ralpha[j] = (byte)((j==transparent_color_index)? 0 : 255);
+				}
+				
+				IndexColorModel icm = new IndexColorModel(8, color_count, ra, ga, ba, ralpha);
+				
+				WritableRaster raster = m_image.getRaster();
+				
+				BufferedImage new_image = new BufferedImage(icm, raster, icm.isAlphaPremultiplied(), null);
+				m_image = new_image;
+			}
+			catch (Exception exp)
+			{
+				exp.printStackTrace();
+			}
+		}
+	}
+	
+	
 }
