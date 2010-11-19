@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
@@ -94,15 +95,17 @@ public class UpdatePanel extends JPanel
 			if (info_background != null) {
 				g2d.drawImage(info_background, 0, 0, null);
 			}
-			Rectangle rect = new Rectangle(10, getHeight()-14, getWidth()-20, 4);
+			Rectangle rect = new Rectangle(10, getHeight()-14, getWidth()-20, 8);
 			g2d.setColor(Color.GRAY);
 			g2d.fill(rect);		
 			rect.width = (int)(task_percent * (float)rect.width);
 			g2d.setColor(Color.WHITE);
 			g2d.fill(rect);
 			if (state != null) {
-				g2d.setColor(Color.BLACK);
+				g2d.setColor(Color.GRAY);
 				g2d.drawString(state, rect.x, rect.y-g2d.getFont().getSize());
+				g2d.setColor(Color.BLACK);
+				g2d.drawString(state, rect.x-1, rect.y-g2d.getFont().getSize()-1);
 			}
 		}
 		
