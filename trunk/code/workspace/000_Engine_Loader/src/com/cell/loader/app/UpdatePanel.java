@@ -1,11 +1,21 @@
 package com.cell.loader.app;
 
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Rectangle;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.JPanel;
 
 import com.cell.loader.LoadTask;
+import com.cell.loader.MD5;
 
 
 /**
@@ -27,56 +37,239 @@ fec02be0d29b155679271230114b9867 : 36507      : .\avatar\item_000103\output\item
 c35f33c56d2934b98803197a828995ce : 2307       : .\avatar\item_000103\output\item_000103.png	<br>
  * @author WAZA
  */
-public abstract class UpdatePanel extends JPanel
+public class UpdatePanel extends JPanel
 {
 	private static final long serialVersionUID = 1L;
+
+	public String 	info_on_checking 		= "检查文件";
+	public String	info_on_downloading 	= "下载文件";
+	public Image	info_background			= null;
 	
-	String	remote_file;
+//	--------------------------------------------------------------------------
+	final private String	remote_root;
+	final private String	remote_file;
+	final private File		local_root;
+	final private File		local_file;
+	private UpdateListener	update_over;
+	private UpdateTask		task;
+//	--------------------------------------------------------------------------
 	
-	File	local_root;
-	
-	public UpdatePanel(String remote_val_file, File local_root)
+	public UpdatePanel(String remote_val_file, String local_file, String remote_root, String local_root, UpdateListener update_over)
 	{
+		this.remote_root	= remote_root;
+		this.remote_file	= remote_val_file;
 		
+		this.local_root		= new File(local_root);
+		this.local_file		= new File(local_file);
 		
+		this.update_over	= update_over;
+		
+		this.task			= new UpdateTask();
+		
+		new Thread(task).start();
 	}
 	
-	HashMap<String, RemoteValFile> getRemoteValList(String remote_file) throws Exception
+	private class UpdateTask implements Runnable
 	{
-		return getValList(LoadTask.load(remote_file));
-	}
-	
-	HashMap<String, RemoteValFile> getLocalValList(String local_file) throws Exception
-	{
-		return getValList(LoadTask.load(new File(local_file)));
-	}
-	
-	HashMap<String, RemoteValFile> getValList(byte[] data) throws Exception
-	{
-		String text = new String(data, "UTF-8");
-		String[] lines = text.split("\n");
-		HashMap<String, RemoteValFile> ret = new HashMap<String, RemoteValFile>(lines.length);
-		for (String line : lines) {
-			try {
-				String[] kv = line.split(":", 3);
-				RemoteValFile vf = new RemoteValFile(kv[0].trim(), Integer.parseInt(kv[1].trim()), kv[2].trim());
-				ret.put(vf.path, vf);
-			} catch (Exception e) {
+		ArrayList<UpdateValFile>	update_list = new ArrayList<UpdateValFile>();
+
+		private float				task_percent = 0f;
+		private String				state = "";
+		
+		private byte[] 				remote_data;
+		private byte[]				local_data;
+		
+		@Override
+		public void run()
+		{
+			checkLocalFiles();
+			downloadFiles();
+			System.out.println("cache local file : " + remote_file + " -> " + local_file);
+			LoadTask.save(local_file, remote_data);
+			update_over.updateOver(UpdatePanel.this);
+		}
+		
+		public void paint(Graphics2D g2d) 
+		{
+			if (info_background != null) {
+				g2d.drawImage(info_background, 0, 0, null);
+			}
+			Rectangle rect = new Rectangle(10, getHeight()-14, getWidth()-20, 4);
+			g2d.setColor(Color.GRAY);
+			g2d.fill(rect);		
+			rect.width = (int)(task_percent * (float)rect.width);
+			g2d.setColor(Color.WHITE);
+			g2d.fill(rect);
+			if (state != null) {
+				g2d.setColor(Color.BLACK);
+				g2d.drawString(state, rect.x, rect.y-g2d.getFont().getSize());
 			}
 		}
-		return ret;
+		
+		private void checkLocalFiles()
+		{
+			try 
+			{
+				this.remote_data = LoadTask.load(remote_file);
+				this.local_data  = LoadTask.load(local_file);
+				HashMap<String, UpdateValFile> remote_list	= getValList(remote_data);
+				HashMap<String, UpdateValFile> local_list	= getValList(local_data);
+				int max = remote_list.size();
+				int index = 0;
+				for (String file : remote_list.keySet()) {
+					state = info_on_checking + " : " + index + "/" + max + " : " + file;
+					UpdateValFile remote_val	= remote_list.get(file);
+					UpdateValFile local_val		= local_list.get(file);
+					try {
+						if (local_val != null && local_val.equals(remote_val)) {
+							continue;
+						}
+						if (checkLocalFile(remote_val)) {
+							System.out.println("local file ok : " + remote_val);
+							continue;
+						}
+						update_list.add(remote_val);
+						System.out.println("append update file : " + remote_val);
+					} catch (Throwable t) {
+						System.err.println("error : " + file);
+						t.printStackTrace();
+					} finally {
+						task_percent = (float)index++ / (float)max;
+						repaint();
+					}
+				}
+			} catch (Throwable err) {
+				err.printStackTrace();
+			}
+			
+		}
+		
+		private void downloadFiles() 
+		{
+			try
+			{
+				System.out.println("start download new files " + update_list.size());
+				int max = update_list.size();
+				int index = 0;
+				for (UpdateValFile remote_val : update_list) {
+					state = info_on_downloading + " : " + index + "/" + max + " : " + remote_val.path;
+					try {
+						byte[] rdata = LoadTask.load(remote_root + remote_val.path);
+						if (rdata != null) {
+							File lfile = new File(local_root, remote_val.path);
+							if (!lfile.exists()) {
+								lfile.getParentFile().mkdirs();
+							}
+							System.err.println("cache local file : " + remote_val);
+							LoadTask.save(lfile, rdata);
+						}
+					} catch (Throwable t) {
+						System.err.println("error : " + remote_val);
+						t.printStackTrace();
+					} finally {
+						task_percent = (float)index++ / (float)max;
+						repaint();
+					}
+				}
+			} catch (Throwable err) {
+				err.printStackTrace();
+			}
+		}
+		
+	
+	}
+
+//	--------------------------------------------------------------------------------------------------------
+	
+	@Override
+	public void paint(Graphics g) {
+		super.paint(g);
+		task.paint((Graphics2D)g);
 	}
 	
-	static class RemoteValFile
+//	--------------------------------------------------------------------------------------------------------
+	
+	private HashMap<String, UpdateValFile> getValList(byte[] data) throws Exception
+	{
+		if (data != null) {
+			String text = new String(data, "UTF-8");
+			String[] lines = text.split("\n");
+			HashMap<String, UpdateValFile> ret = new HashMap<String, UpdateValFile>(lines.length);
+			for (String line : lines) {
+				try {
+					String[] kv = line.split(":", 3);
+					UpdateValFile vf = new UpdateValFile(kv[0].trim(), Integer.parseInt(kv[1].trim()), kv[2].trim());
+					ret.put(vf.path, vf);
+				} catch (Exception e) {
+				}
+			}
+			return ret;
+		} else {
+			return new HashMap<String, UpdateValFile>(0);
+		}
+	}
+	
+	private boolean checkLocalFile(UpdateValFile remote_val) {
+		File real_local_file = new File(local_root, remote_val.path);
+		if (!real_local_file.exists()) {
+			return false;
+		}
+		byte[] data = LoadTask.load(real_local_file);
+		if (data == null) {
+			return false;
+		}
+		if (data.length != remote_val.size) {
+			return false;
+		}
+		if (!remote_val.md5.equals(MD5.getMD5(data))) {
+			return false;
+		}
+		return true;
+	}
+	
+//	--------------------------------------------------------------------------------------------------------
+	
+	static class UpdateValFile
 	{
 		final String 	md5;
 		final int		size;
 		final String	path;
 
-		public RemoteValFile(String md5, int size, String path) {
+		public UpdateValFile(String md5, int size, String path) {
+			while (path.contains("\\")) {
+				path = path.replaceAll("\\\\", "/");
+			}
+			while (path.startsWith(".")) {
+				path = path.substring(1);
+			}
+			while (path.startsWith("/")) {
+				path = path.substring(1);
+			}
 			this.md5 = md5;
 			this.size = size;
-			this.path = path;
+			this.path = "/" + path;
+		}
+		@Override
+		public boolean equals(Object obj) {
+			if (obj instanceof UpdateValFile) {
+				return md5.equals(((UpdateValFile) obj).md5);
+			}
+			return false;
+		}
+		@Override
+		public String toString() {
+			return md5 + " : " + path + " (" + size + " bytes)";
 		}
 	}
+
+//	--------------------------------------------------------------------------------------------------------
+	
+	public static interface UpdateListener
+	{
+		
+		
+		public void updateOver(UpdatePanel panel);
+	}
+	
 }
+
