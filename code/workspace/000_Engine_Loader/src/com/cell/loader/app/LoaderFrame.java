@@ -57,6 +57,7 @@ l_text_loading		=更新文件中...
 l_text_initializing	=初始化中...
 l_text_error		=更新错误!
 l_text_check		=检查更新中...
+l_text_complete		=完成
 
 [net]
 load_retry_count	=5
@@ -78,11 +79,12 @@ public abstract class LoaderFrame extends JFrame implements WindowListener, Load
 	private String			img_loading_s;
 	private String			img_loading_b;
 	
-	private String 			l_text_loading;
-	private String 			l_text_initializing;
-	private String 			l_text_error;
-	private String 			l_text_check;
-
+	protected String 		l_text_loading;
+	protected String 		l_text_initializing;
+	protected String 		l_text_error;
+	protected String 		l_text_check;
+	protected String		l_text_complete;
+	
 	private int				load_retry_count	=5;
 	private int				load_timeout		=10000;
 	
@@ -100,6 +102,13 @@ public abstract class LoaderFrame extends JFrame implements WindowListener, Load
 							ignore_jar_files	= new LinkedHashMap<String, String>();
 	
 	private boolean			is_complete = false;
+	
+	
+	protected Image bg;
+	protected Image loading_f;
+	protected Image loading_s;
+	protected Image loading_b;
+	protected Font font;
 	
 	public LoaderFrame(String update_ini_file)
 	{
@@ -157,6 +166,7 @@ public abstract class LoaderFrame extends JFrame implements WindowListener, Load
 					l_text_initializing	= update_ini.get("l_text_initializing");
 					l_text_error		= update_ini.get("l_text_error");
 					l_text_check		= update_ini.get("l_text_check");
+					l_text_complete		= update_ini.get("l_text_complete");
 					
 					//[net]
 					try{
@@ -194,11 +204,11 @@ public abstract class LoaderFrame extends JFrame implements WindowListener, Load
 				{
 					System.out.println("loading images !");
 					
-					Image	bg 			= ImageIO.read(new File(img_bg));
-					Image	loading_f	= ImageIO.read(new File(img_loading_f));
-					Image	loading_s 	= ImageIO.read(new File(img_loading_s));
-					Image	loading_b 	= ImageIO.read(new File(img_loading_b));
-					Font	font 		= new Font(l_font, Font.PLAIN, 14);
+					bg 			= ImageIO.read(new File(img_bg));
+					loading_f	= ImageIO.read(new File(img_loading_f));
+					loading_s 	= ImageIO.read(new File(img_loading_s));
+					loading_b 	= ImageIO.read(new File(img_loading_b));
+					font 		= new Font(l_font, Font.PLAIN, 14);
 					paint_task.setPaintUnit(bg, loading_f, loading_s, loading_b, font);
 					paint_canvas.repaint();
 					
@@ -435,6 +445,7 @@ public abstract class LoaderFrame extends JFrame implements WindowListener, Load
 		paint_task.setState(l_text_initializing);
 		paint_task.exit();
 
+		
 		this.validate();
 		try {
 			this.remove(paint_canvas);

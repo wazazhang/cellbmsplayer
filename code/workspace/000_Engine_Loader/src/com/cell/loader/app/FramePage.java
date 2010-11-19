@@ -2,6 +2,7 @@ package com.cell.loader.app;
 
 import java.awt.BorderLayout;
 import java.awt.Desktop;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,12 +14,15 @@ import java.net.URL;
 import java.util.Map;
 import java.util.Vector;
 
+import javax.imageio.ImageIO;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.text.html.HTMLFrameHyperlinkEvent;
+
+import com.cell.loader.app.UpdatePanel.UpdateListener;
 
 /**
  * 
@@ -30,7 +34,6 @@ l_app_working_dir	=.
 l_font				=宋体
 l_envp				=envp
 
-	
 [image]
 img_bg				=bg.png
 img_loading_f		=loading_f.png
@@ -42,13 +45,23 @@ l_text_loading		=更新文件中...
 l_text_initializing	=初始化中...
 l_text_error		=更新错误!
 l_text_check		=检查更新中...
+l_text_complete		=完成
 
 [net]
 load_retry_count	=5
 load_timeout		=10000
 
+[update]
+u_remote_path		=http://game.lordol.com/lordol_xc_test/update_res.val
+u_remote_root		=http://game.lordol.com/lordol_xc_test/
+u_local_path		=./update_res.val
+u_local_root		=..
+u_info_checking		=检查文件
+u_info_downloading	=下载文件
+u_info_back			=bg.png
 
 
+<p>
 <a 	href="l_app=client.exe ./ws_tw_sh/client.properties" target="ws_tw_sh">
 		[吞食]上海测试地址
 </a>
@@ -64,6 +77,13 @@ public class FramePage extends LoaderFrame
 	String l_envp[];
 	String l_app_working_dir;
 	
+	String u_remote_path;
+	String u_remote_root;
+	String u_local_path;
+	String u_local_root;
+	String u_info_checking;
+	String u_info_downloading;
+	Image  u_info_back;
 	
 	public FramePage(String update_ini_file)
 	{
@@ -84,25 +104,65 @@ public class FramePage extends LoaderFrame
 				l_envp = envp.split(",");
 			}
 		} catch (Exception err) {}
+		
+		this.u_remote_path	= update_ini.get("u_remote_path");
+		this.u_remote_root	= update_ini.get("u_remote_root");
+		this.u_local_path	= update_ini.get("u_local_path");
+		this.u_local_root	= update_ini.get("u_local_root");
+		
+		this.u_info_checking	= update_ini.get("u_info_checking");
+		this.u_info_downloading	= update_ini.get("u_info_downloading");
+		try {
+			this.u_info_back = ImageIO.read(new File(update_ini.get("u_info_back")));
+		} catch (Exception err) {}
 	}
 	
 	@Override
 	protected void onTaskOver(Vector<byte[]> datas) throws Exception 
 	{
-		if (this.l_document != null) {
-			System.out.println(l_document);
-		}
-		new Thread(){
-			public void run() {
-				if (l_document != null) {
-					DocumentPage page = new DocumentPage(l_document);
-					add(page);
-					validate();
-				}
+		FramePage.this.setTitle(l_text_check);
+		
+		if (this.u_local_path != null &&
+			this.u_local_root != null && 
+			this.u_remote_path != null && 
+			this.u_remote_root != null) {
+			UpdatePanel panel = new UpdatePanel(u_remote_path, u_local_path, u_remote_root, u_local_root, new StartPage());
+			if (this.u_info_checking != null) {
+				panel.info_on_checking = this.u_info_checking;
 			}
-		}.start();
+			if (this.u_info_downloading != null) {
+				panel.info_on_downloading = this.u_info_downloading;
+			}
+			if (this.u_info_back != null) {
+				panel.info_background = this.u_info_back;
+			} else {
+				panel.info_background = this.bg;
+			}
+			this.add(panel);
+		} else {
+			new Thread(new StartPage()).start();
+		}
 	}
 
+	class StartPage implements Runnable, UpdatePanel.UpdateListener
+	{
+		@Override
+		public void updateOver(UpdatePanel panel) {
+			FramePage.this.remove(panel);
+			new Thread(this).start();
+		}
+		@Override
+		public void run() {
+			FramePage.this.setTitle(l_text_complete);
+			if (l_document != null) {
+				System.out.println("init start page : " + l_document);
+				DocumentPage page = new DocumentPage(l_document);
+				add(page);
+				validate();
+			}
+		}
+	}
+	
 	class DocumentPage extends JPanel implements HyperlinkListener
 	{
 		JEditorPane html_page ;

@@ -2,6 +2,7 @@ package com.cell.loader;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -11,6 +12,7 @@ import java.net.URLConnection;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Vector;
+import java.util.concurrent.atomic.AtomicReference;
 
 import com.cell.classloader.jcl.CC;
 
@@ -113,23 +115,91 @@ public class LoadTask extends Thread
 			return null;
 		}
 	}
-
-	public static byte[] load(String path) throws Exception
-	{
-		URL url = new URL(path);
-		URLConnection c = openURL(url);
-		return loadURL(c);
+	
+	public static byte[] load(String path, AtomicReference<Float> percent) {
+		URL url = null;
+		try {
+			url = new URL(path);
+		} catch (Exception err) {
+		}
+		if (url != null) {
+			try {
+				URLConnection c = openURL(url);
+				for (int i=0; i<LoadRetryTime; i++) {
+					InputStream	is = null;
+					try
+					{
+						is = c.getInputStream();
+						int len = c.getContentLength();
+						byte[] data = new byte[len];
+						
+						if (len > 0) {
+							int actual = 0;
+							int bytesread = 0;
+							while ((bytesread != len) && (actual != -1)) {
+								actual = is.read(data, bytesread, len - bytesread);
+								bytesread += actual;
+								if (percent != null) {
+									percent.set((float)bytesread / (float)len);
+								}
+							}
+						}
+						return data;
+					}
+					catch (Throwable e) {
+						e.printStackTrace();
+						System.err.println("loadURL error, retry " + (i+1) + "/" + LoadRetryTime);
+					}
+					finally {
+						try {
+							if (is != null) {
+								is.close();
+							}
+						} catch (Exception err) {
+						}
+					}
+				}
+				System.err.println("loadURL error : " + c.getURL().getPath());
+			} catch (Exception err) {
+			}
+		}
+		return null;
 	}
 	
-	public static byte[] load(File file) throws Exception
+	public static byte[] load(String path)
 	{
-		FileInputStream fis = new FileInputStream(file);
+		return load(path, null);
+	}
+	
+	public static byte[] load(File file)
+	{
+		if (file.exists()) {
+			try {
+				FileInputStream fis = new FileInputStream(file);
+				try {
+					byte[] data = new byte[fis.available()];
+					fis.read(data);
+					return data;
+				} finally {
+					fis.close();
+				}
+			} catch (Exception err) {
+			}
+		}
+		return null;
+	}
+	
+	public static void save(File file, byte[] data) {
 		try {
-			byte[] data = new byte[fis.available()];
-			fis.read(data);
-			return data;
-		} finally {
-			fis.close();
+			FileOutputStream fos = new FileOutputStream(file);
+			try {
+				fos.write(data);
+				fos.flush();
+			} finally {
+				fos.close();
+			}
+		} catch (Throwable err) {
+			err.printStackTrace();
 		}
 	}
 	
