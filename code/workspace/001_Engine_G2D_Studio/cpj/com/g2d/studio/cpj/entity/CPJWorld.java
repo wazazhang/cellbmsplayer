@@ -55,6 +55,8 @@ public class CPJWorld extends CPJObject<WorldSet>
 						snapshoot = Tools.combianImage(80, (int)(snapshoot.getHeight()*rate), snapshoot);
 						scene_snapshoot = snapshoot;
 					}  
+				} else {
+					System.err.println(snap_file + " not exist !");
 				}
 			}catch(Exception err){
 				System.err.println(err.getMessage());
