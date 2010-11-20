@@ -150,13 +150,20 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 		return false;
 	}
 	
+	@Override
 	public boolean send(MessageHeader message) {
+		return sendRequest(0, message);
+	}
+	
+	@Override
+	public boolean sendRequest(int pnum, MessageHeader message) {
 		if (isConnected()) {
 			IoSession io_session = session_ref.get();
 			if (io_session != null) {
 				ProtocolImpl p 	= ProtocolPool.getInstance().createProtocol();
 				p.Protocol 		= ProtocolImpl.PROTOCOL_SESSION_MESSAGE;
 				p.message		= message;
+				p.PacketNumber	= pnum;
 				io_session.write(p);
 			}
 			return true;

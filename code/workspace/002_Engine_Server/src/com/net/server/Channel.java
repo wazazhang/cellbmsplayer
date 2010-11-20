@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.net.MessageHeader;
+import com.net.Protocol;
 
 public interface Channel 
 {
@@ -27,7 +28,7 @@ public interface Channel
 	
 	public int 						send(ClientSession sender, MessageHeader message);
 	
-	public int 						send(ClientSession sender, MessageHeader request, MessageHeader response);
+	public int 						send(ClientSession sender, Protocol request, MessageHeader response);
 		
 	public Server					getServer();
 	

@@ -90,24 +90,12 @@ public abstract class BasicNetService
 	 */
 	abstract public void close(boolean force) ;
 
-	/**
-	 * 直接发送，没有监听器
-	 * @param message
-	 */
-	abstract public void send(MessageHeader message) ;
-
 	abstract public void dispose();
 	
 //	----------------------------------------------------------------------------------------------------------------------------
 
-	/**
-	 * 得到网络交互延迟时间
-	 * @return
-	 */
-	final public int getPing() {
-		return request_response_ping.get();
-	}
-	
+	abstract protected ServerSession getSession();
+
 //	----------------------------------------------------------------------------------------------------------------------------
 	
 //	----------------------------------------------------------------------------------------------------------------------------
@@ -128,7 +116,7 @@ public abstract class BasicNetService
     	}
     	
 		Request request = new Request(message, timeout, listeners);
-    	WaitingListeners.put(request.Message.PacketNumber, request);
+    	WaitingListeners.put(request.getPacketNumber(), request);
 
     	for (WaitingListener<?,?> l : listeners) {
     		onListeningRequest(message, l);
@@ -159,6 +147,14 @@ public abstract class BasicNetService
 		}
 	}
 
+	/**
+	 * 得到网络交互延迟时间
+	 * @return
+	 */
+	final public int getPing() {
+		return request_response_ping.get();
+	}
+	
 //	-------------------------------------------------------------------------------------------------------------
     
 	AtomicReference<ScheduledFuture<?>> schedule_clean_task				= new AtomicReference<ScheduledFuture<?>>();
@@ -271,7 +267,7 @@ public abstract class BasicNetService
     			if (req != null && req.isDroped()) {
     				WaitingListeners.remove(pnum);
     				req.timeout();
-    				log.error("drop a timeout request : " + req.Message.PacketNumber + " : " + req.toString());
+    				log.error("drop a timeout request : " + req);
     			}
     		}
     	}
@@ -352,7 +348,7 @@ public abstract class BasicNetService
 	
 	final private boolean tryReceivedResponse(Protocol protocol, MessageHeader message)
 	{
-		Request request = WaitingListeners.remove(message.PacketNumber);
+		Request request = WaitingListeners.remove(protocol.getPacketNumber());
     	if (request != null) {
     		request.messageResponsed(protocol, message);    	
     		return true;
@@ -362,7 +358,7 @@ public abstract class BasicNetService
 	
 	final private boolean tryPushUnhandledNotify(Protocol protocol, MessageHeader message)
 	{
-		if (message.PacketNumber == 0) {
+		if (protocol.getPacketNumber() == 0) {
 			UnhandledMessages.put(protocol, message);
 			return true;
 		}
@@ -513,7 +509,7 @@ public abstract class BasicNetService
 		final MessageHeader 				Message;
 		final WaitingListener[]				Listeners;
 		final long 							SendTimeOut;
-		
+		final int							PacketNumber;
 		long								SendTime;
 		
 		private Request(MessageHeader msg, long timeout, WaitingListener ... listeners)
@@ -521,11 +517,14 @@ public abstract class BasicNetService
 			if (SendedPacks.get() == 0) {
 				SendedPacks.incrementAndGet();
 			}
-			msg.PacketNumber 	= SendedPacks.getAndIncrement();
-	    	
+			this.PacketNumber 	= SendedPacks.getAndIncrement();
 			this.Message 		= msg;
 			this.SendTimeOut 	= timeout > 0 ? timeout : 0;
 			this.Listeners 		= listeners;
+		}
+		
+		public int getPacketNumber() {
+			return PacketNumber;
 		}
 		
 		public void run () 
@@ -534,7 +533,7 @@ public abstract class BasicNetService
 			if (SendTimeOut > 0) {
 				synchronized (this) {
 					SendTime = System.currentTimeMillis();
-					send(Message);
+					getSession().sendRequest(PacketNumber, Message);
 					try {
 						wait(SendTimeOut);
 					} catch (InterruptedException e) {
@@ -542,7 +541,7 @@ public abstract class BasicNetService
 					}
 				}
 			} else {
-				send(Message);
+				getSession().sendRequest(PacketNumber, Message);
 			}
 		}
 		
@@ -575,7 +574,7 @@ public abstract class BasicNetService
 		}
 		
 		public String toString() {
-			return "Request : Message=" + Message;
+			return "Request [" + getPacketNumber() + "] " + Message;
 		}
 		
 	}

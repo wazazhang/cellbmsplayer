@@ -124,8 +124,8 @@ public class ChannelImpl implements Channel
 		return broadcast(sender, message, 0);
 	}
 	
-	public int send(ClientSession sender, MessageHeader request, MessageHeader response) {
-		return broadcast(sender, response, request.PacketNumber);
+	public int send(ClientSession sender, Protocol request, MessageHeader response) {
+		return broadcast(sender, response, request.getPacketNumber());
 	}
 	
 	public ChannelListener getChannelListener() {

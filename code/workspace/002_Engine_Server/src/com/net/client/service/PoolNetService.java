@@ -61,9 +61,5 @@ public class PoolNetService extends BasicNetService
 		return null;
 	}
 	
-	public void send(MessageHeader message) {
-		ServerSession session = getSession();
-		session.send(message);
-	}
 	
 }

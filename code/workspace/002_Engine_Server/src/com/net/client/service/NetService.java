@@ -114,18 +114,6 @@ public class NetService extends BasicNetService
 		Session.dispose();
 	}
 	
-	/**
-	 * 直接发送，没有监听器
-	 * @param message
-	 */
-	public void send(MessageHeader message) {
-    	if (Session.isConnected()) {
-    		Session.send(message);
-		}else{
-			printNotConnectError();
-		}
-    }
-
 	final private void printNotConnectError() {
 		log.error("session is not connect, please call connect(String host, String port) first !");
 	}
