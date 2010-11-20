@@ -6,12 +6,16 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import javax.swing.JPanel;
 
@@ -55,7 +59,12 @@ public class UpdatePanel extends JPanel
 	private UpdateTask		task;
 //	--------------------------------------------------------------------------
 	
-	public UpdatePanel(String remote_val_file, String local_file, String remote_root, String local_root, UpdateListener update_over)
+	public UpdatePanel(
+			String remote_val_file,
+			String local_file, 
+			String remote_root, 
+			String local_root,
+			UpdateListener update_over)
 	{
 		this.remote_root	= remote_root;
 		this.remote_file	= remote_val_file;
@@ -69,120 +78,6 @@ public class UpdatePanel extends JPanel
 		
 		new Thread(task).start();
 	}
-	
-	private class UpdateTask implements Runnable
-	{
-		ArrayList<UpdateValFile>	update_list = new ArrayList<UpdateValFile>();
-
-		private float				task_percent = 0f;
-		private String				state = "";
-		
-		private byte[] 				remote_data;
-		private byte[]				local_data;
-		
-		@Override
-		public void run()
-		{
-			checkLocalFiles();
-			downloadFiles();
-			System.out.println("cache local file : " + remote_file + " -> " + local_file);
-			LoadTask.save(local_file, remote_data);
-			update_over.updateOver(UpdatePanel.this);
-		}
-		
-		public void paint(Graphics2D g2d) 
-		{
-			if (info_background != null) {
-				g2d.drawImage(info_background, 0, 0, null);
-			}
-			Rectangle rect = new Rectangle(10, getHeight()-14, getWidth()-20, 8);
-			g2d.setColor(Color.GRAY);
-			g2d.fill(rect);		
-			rect.width = (int)(task_percent * (float)rect.width);
-			g2d.setColor(Color.WHITE);
-			g2d.fill(rect);
-			if (state != null) {
-				g2d.setColor(Color.GRAY);
-				g2d.drawString(state, rect.x, rect.y-g2d.getFont().getSize());
-				g2d.setColor(Color.BLACK);
-				g2d.drawString(state, rect.x-1, rect.y-g2d.getFont().getSize()-1);
-			}
-		}
-		
-		private void checkLocalFiles()
-		{
-			try 
-			{
-				this.remote_data = LoadTask.load(remote_file);
-				this.local_data  = LoadTask.load(local_file);
-				HashMap<String, UpdateValFile> remote_list	= getValList(remote_data);
-				HashMap<String, UpdateValFile> local_list	= getValList(local_data);
-				int max = remote_list.size();
-				int index = 0;
-				for (String file : remote_list.keySet()) {
-					state = info_on_checking + " : " + index + "/" + max + " : " + file;
-					UpdateValFile remote_val	= remote_list.get(file);
-					UpdateValFile local_val		= local_list.get(file);
-					try {
-						if (local_val != null && local_val.equals(remote_val)) {
-							continue;
-						}
-						if (checkLocalFile(remote_val)) {
-							System.out.println("local file ok : " + remote_val);
-							continue;
-						}
-						update_list.add(remote_val);
-						System.out.println("append update file : " + remote_val);
-					} catch (Throwable t) {
-						System.err.println("error : " + file);
-						t.printStackTrace();
-					} finally {
-						task_percent = (float)index++ / (float)max;
-						repaint();
-					}
-				}
-			} catch (Throwable err) {
-				err.printStackTrace();
-			}
-			
-		}
-		
-		private void downloadFiles() 
-		{
-			try
-			{
-				System.out.println("start download new files " + update_list.size());
-				int max = update_list.size();
-				int index = 0;
-				for (UpdateValFile remote_val : update_list) {
-					state = info_on_downloading + " : " + index + "/" + max + " : " + remote_val.path;
-					try {
-						byte[] rdata = LoadTask.load(remote_root + remote_val.path);
-						if (rdata != null) {
-							File lfile = new File(local_root, remote_val.path);
-							if (!lfile.exists()) {
-								lfile.getParentFile().mkdirs();
-							}
-							System.err.println("cache local file : " + remote_val);
-							LoadTask.save(lfile, rdata);
-						}
-					} catch (Throwable t) {
-						System.err.println("error : " + remote_val);
-						t.printStackTrace();
-					} finally {
-						task_percent = (float)index++ / (float)max;
-						repaint();
-					}
-				}
-			} catch (Throwable err) {
-				err.printStackTrace();
-			}
-		}
-		
-	
-	}
-
-//	--------------------------------------------------------------------------------------------------------
 	
 	@Override
 	public void paint(Graphics g) {
@@ -217,6 +112,9 @@ public class UpdatePanel extends JPanel
 		if (!real_local_file.exists()) {
 			return false;
 		}
+		if (real_local_file.length() != remote_val.size) {
+			return false;
+		}
 		byte[] data = LoadTask.load(real_local_file);
 		if (data == null) {
 			return false;
@@ -229,7 +127,166 @@ public class UpdatePanel extends JPanel
 		}
 		return true;
 	}
+
+//	--------------------------------------------------------------------------------------------------------
 	
+	private class UpdateTask implements Runnable, LoadTask.LoadListener
+	{
+		ArrayList<UpdateValFile>	update_list = new ArrayList<UpdateValFile>();
+
+		private float 				task_percent = 0f;
+		
+		private String				state = "";
+		
+		private byte[] 				remote_data;
+		private byte[]				local_data;
+		
+		@Override
+		public void loading(String path, float percent) {
+			if (path.equals(remote_file)) {
+				task_percent = percent;
+			}
+			repaint();
+		}
+		
+		@Override
+		public void run()
+		{
+			getRemoteFile();
+			
+			checkLocalFiles();
+			
+			downloadFiles();
+			
+			System.out.println("cache local file : " + remote_file + " -> " + local_file);
+			LoadTask.save(local_file, remote_data);
+			update_over.updateOver(UpdatePanel.this);
+		}
+		
+		public void paint(Graphics2D g2d) 
+		{
+			if (info_background != null) {
+				g2d.drawImage(info_background, 0, 0, null);
+			}
+			Rectangle rect = new Rectangle(10, getHeight()-14, getWidth()-20, 5);
+			g2d.setColor(Color.GRAY);
+			g2d.fill(rect);		
+			rect.width = (int)(task_percent * (float)rect.width);
+			g2d.setColor(Color.WHITE);
+			g2d.fill(rect);
+			if (state != null) {
+				g2d.setColor(Color.GRAY);
+				g2d.drawString(state, rect.x, rect.y-g2d.getFont().getSize());
+				g2d.setColor(Color.BLACK);
+				g2d.drawString(state, rect.x-1, rect.y-g2d.getFont().getSize()-1);
+			}
+		}
+		
+		private void getRemoteFile() 
+		{
+			try 
+			{
+				this.state = info_on_checking;
+				System.out.println("read remote file : " + remote_file);
+				this.remote_data = LoadTask.load(remote_file, this);
+				if (remote_file.endsWith(".zip")) {
+					ByteArrayOutputStream unzip_data = new ByteArrayOutputStream();
+					byte[] buffer = new byte[8192];
+					ZipInputStream zip = new ZipInputStream(new ByteArrayInputStream(remote_data));
+					for (ZipEntry entry = zip.getNextEntry(); entry != null; entry = zip.getNextEntry()) {
+						int size = 0;
+						while (zip.available() > 0) {
+							size = zip.read(buffer);
+							if (size > 0) {
+								unzip_data.write(buffer, 0, size);
+							}
+						}
+						System.out.println("unzip remote file : " + entry.getName());
+					}
+					this.remote_data = unzip_data.toByteArray();
+				}
+				System.out.println("read local file : " + local_file.getAbsolutePath());
+				this.local_data  = LoadTask.load(local_file);
+			}
+			catch (Throwable err) {
+				err.printStackTrace();
+				this.state = info_on_checking + " : " + err.getMessage();
+			}
+		}
+		
+		private void checkLocalFiles()
+		{
+			try 
+			{
+				HashMap<String, UpdateValFile> remote_list	= getValList(remote_data);
+				HashMap<String, UpdateValFile> local_list	= getValList(local_data);
+				int max = remote_list.size();
+				int index = 0;
+				for (String file : remote_list.keySet()) {
+					this.state = info_on_checking + " : " + index + "/" + max + " : " + file;
+					UpdateValFile remote_val	= remote_list.get(file);
+					UpdateValFile local_val		= local_list.get(file);
+					try {
+						if (local_val != null && local_val.equals(remote_val)) {
+							continue;
+						}
+						if (checkLocalFile(remote_val)) {
+							System.out.println("local file ok : " + remote_val);
+							continue;
+						}
+						update_list.add(remote_val);
+						System.out.println("append update file : " + remote_val);
+					} catch (Throwable t) {
+						System.err.println("error : " + file);
+						t.printStackTrace();
+					} finally {
+						task_percent = ((float)index++ / (float)max);
+						repaint();
+					}
+				}
+			} catch (Throwable err) {
+				err.printStackTrace();
+				this.state = info_on_checking + " : " + err.getMessage();
+			}
+			
+		}
+		
+		private void downloadFiles() 
+		{
+			try
+			{
+				System.out.println("start download new files " + update_list.size());
+				int max = update_list.size();
+				int index = 0;
+				for (UpdateValFile remote_val : update_list) {
+					this.state = info_on_downloading + " : " + index + "/" + max + " : " + remote_val.path;
+					try {
+						byte[] rdata = LoadTask.load(remote_root + remote_val.path);
+						if (rdata != null) {
+							File lfile = new File(local_root, remote_val.path);
+							if (!lfile.exists()) {
+								lfile.getParentFile().mkdirs();
+							}
+							System.err.println("cache local file : " + remote_val);
+							LoadTask.save(lfile, rdata);
+						}
+					} catch (Throwable t) {
+						System.err.println("error : " + remote_val);
+						t.printStackTrace();
+					} finally {
+						task_percent = ((float)index++ / (float)max);
+						repaint();
+					}
+				}
+			} catch (Throwable err) {
+				err.printStackTrace();
+				this.state = info_on_downloading + " : " + err.getMessage();
+			}
+		}
+		
+	
+	}
+
 //	--------------------------------------------------------------------------------------------------------
 	
 	static class UpdateValFile

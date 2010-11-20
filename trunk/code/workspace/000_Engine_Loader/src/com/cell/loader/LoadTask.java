@@ -33,6 +33,11 @@ public class LoadTask extends Thread
 		public void loadError(Throwable cause);
 	}
 	
+	public static interface LoadListener
+	{
+		public void loading(String path, float percent);
+	}
+	
 //	-------------------------------------------------------------------------------------------------------------------------------
 
 	public static int LoadRetryTime		= 5;
@@ -116,7 +121,7 @@ public class LoadTask extends Thread
 		}
 	}
 	
-	public static byte[] load(String path, AtomicReference<Float> percent) {
+	public static byte[] load(String path, LoadListener percent) {
 		URL url = null;
 		try {
 			url = new URL(path);
@@ -140,7 +145,7 @@ public class LoadTask extends Thread
 								actual = is.read(data, bytesread, len - bytesread);
 								bytesread += actual;
 								if (percent != null) {
-									percent.set((float)bytesread / (float)len);
+									percent.loading(path, (float)bytesread / (float)len);
 								}
 							}
 						}
