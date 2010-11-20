@@ -94,7 +94,7 @@ public class ClientSessionImpl implements ClientSession
 	}
 	
 	
-	public void send(Protocol request, MessageHeader response){
+	public void sendResponse(Protocol request, MessageHeader response){
 		Server.write(Session, 
 				response, 
 				Protocol.PROTOCOL_SESSION_MESSAGE, 
