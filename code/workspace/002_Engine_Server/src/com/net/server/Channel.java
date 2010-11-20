@@ -28,7 +28,7 @@ public interface Channel
 	
 	public int 						send(ClientSession sender, MessageHeader message);
 	
-	public int 						send(ClientSession sender, Protocol request, MessageHeader response);
+	public int 						sendResponse(ClientSession sender, Protocol request, MessageHeader response);
 		
 	public Server					getServer();
 	
