@@ -389,7 +389,7 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 				JOptionPane.showMessageDialog(this, "场景名字不能为空！");
 				return false;
 			}
-			if (getSelectedObject()==null) {
+			if (getList().getSelectedItem()==null) {
 				JOptionPane.showMessageDialog(this, "还未选择场景对应的资源！");
 				return false;
 			}

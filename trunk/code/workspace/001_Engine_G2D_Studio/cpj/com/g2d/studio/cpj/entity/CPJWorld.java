@@ -47,13 +47,15 @@ public class CPJWorld extends CPJObject<WorldSet>
 		if (snapshoot==null) {
 			try{
 				File snap_file = Studio.getInstance().getIO().createFile(parent.getCPJDir(), name + ".png");
-				byte[] data = snap_file.readBytes();
-				if (data != null) {
-					snapshoot = Tools.readImage(new ByteArrayInputStream(data));
-					float rate = 80f / (float)snapshoot.getWidth();
-					snapshoot = Tools.combianImage(80, (int)(snapshoot.getHeight()*rate), snapshoot);
-					scene_snapshoot = snapshoot;
-				}  
+				if (snap_file.exists()) {
+					byte[] data = snap_file.readBytes();
+					if (data != null) {
+						snapshoot = Tools.readImage(new ByteArrayInputStream(data));
+						float rate = 80f / (float)snapshoot.getWidth();
+						snapshoot = Tools.combianImage(80, (int)(snapshoot.getHeight()*rate), snapshoot);
+						scene_snapshoot = snapshoot;
+					}  
+				}
 			}catch(Exception err){
 				System.err.println(err.getMessage());
 			}
