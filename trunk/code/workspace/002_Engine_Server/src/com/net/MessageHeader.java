@@ -15,8 +15,8 @@ public abstract class MessageHeader implements Serializable
 
 //	------------------------------------------------------------------------------------------
 	
-	/**匹配Request和Response的值，如果为0，则代表为Notify*/
-	transient public int		PacketNumber	= 0;
+//	/**匹配Request和Response的值，如果为0，则代表为Notify*/
+//	transient public int		PacketNumber	= 0;
 
 //	------------------------------------------------------------------------------------------
 	

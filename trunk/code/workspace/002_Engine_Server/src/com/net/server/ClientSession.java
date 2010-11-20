@@ -2,6 +2,7 @@ package com.net.server;
 
 import com.net.AbstractSession;
 import com.net.MessageHeader;
+import com.net.Protocol;
 
 
 public interface ClientSession extends AbstractSession
@@ -14,7 +15,7 @@ public interface ClientSession extends AbstractSession
 	
 	public boolean					send(MessageHeader message);
 	
-	public void 					send(MessageHeader request, MessageHeader response);
+	public void 					send(Protocol request, MessageHeader response);
 	
 	
 }

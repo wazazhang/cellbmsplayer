@@ -120,11 +120,9 @@ public class NetPackageCodec extends MessageHeaderCodec
 	    				switch(p.transmission_type) {
 						case ProtocolImpl.TRANSMISSION_TYPE_SERIALIZABLE:
 		    				p.message = (MessageHeader)in.getObject(class_loader);
-		    				p.message.PacketNumber = p.PacketNumber;
 							break;
 						case ProtocolImpl.TRANSMISSION_TYPE_EXTERNALIZABLE:
 							p.message = ext_factory.createMessage(in.getInt());	// ext 4
-							p.message.PacketNumber = p.PacketNumber;
 							ExternalizableMessage ext = (ExternalizableMessage)p.message;
 							ext.readExternal(new NetDataInputImpl(in));
 							break;
@@ -180,10 +178,7 @@ public class NetPackageCodec extends MessageHeaderCodec
     		try
     		{
     			ProtocolImpl p = (ProtocolImpl)message;
-				p.DynamicSendTime		= System.currentTimeMillis();
-    			if (p.message != null) {
-    				p.PacketNumber 		= p.message.PacketNumber;
-    			}
+				p.DynamicSendTime = System.currentTimeMillis();
     			
     			IoBuffer buffer = IoBuffer.allocate(PACKAGE_DEFAULT_SIZE);
     			buffer.setAutoExpand(true);

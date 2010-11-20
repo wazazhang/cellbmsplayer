@@ -94,12 +94,11 @@ public class ClientSessionImpl implements ClientSession
 	}
 	
 	
-	public void send(MessageHeader request, MessageHeader response){
-		response.PacketNumber = request.PacketNumber;
+	public void send(Protocol request, MessageHeader response){
 		Server.write(Session, 
 				response, 
 				Protocol.PROTOCOL_SESSION_MESSAGE, 
-				0, 0, request.PacketNumber);
+				0, 0, request.getPacketNumber());
 	}
 	
 	
