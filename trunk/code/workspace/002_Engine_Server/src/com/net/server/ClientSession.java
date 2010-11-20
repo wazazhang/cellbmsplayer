@@ -15,7 +15,7 @@ public interface ClientSession extends AbstractSession
 	
 	public boolean					send(MessageHeader message);
 	
-	public void 					send(Protocol request, MessageHeader response);
+	public void 					sendResponse(Protocol request, MessageHeader response);
 	
 	
 }
