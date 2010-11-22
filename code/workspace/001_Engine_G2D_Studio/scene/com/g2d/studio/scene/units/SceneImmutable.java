@@ -12,6 +12,7 @@ import java.util.Vector;
 import javax.swing.ImageIcon;
 import javax.swing.JList;
 
+import com.cell.gameedit.SetResource;
 import com.cell.gameedit.object.SpriteSet;
 import com.cell.gfx.game.CSprite;
 import com.cell.rpg.instance.zones.ability.InstanceZoneUnitKillAction;
@@ -131,7 +132,7 @@ public class SceneImmutable extends SceneSprite implements SceneUnitTag<Immutabl
 	}
 	
 	@Override
-	public void loaded(CellSetResource set, CSprite cspr, SpriteSet spr) {
+	public void loaded(SetResource set, CSprite cspr, SpriteSet spr) {
 		super.loaded(set, cspr, spr);
 		this.getSprite().setCurrentAnimate(cur_anim);
 	}
