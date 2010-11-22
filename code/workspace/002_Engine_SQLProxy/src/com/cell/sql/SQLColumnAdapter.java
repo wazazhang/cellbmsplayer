@@ -1,6 +1,5 @@
 package com.cell.sql;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,16 +8,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.Stack;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +19,6 @@ import com.cell.CUtil.StringCompare;
 import com.cell.reflect.Fields;
 import com.cell.sql.anno.SQLField;
 import com.cell.sql.anno.SQLTable;
-import com.cell.sql.util.SQLUtil;
 
 /**
  * 数据库表和实体的关系

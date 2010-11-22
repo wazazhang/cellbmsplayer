@@ -1,12 +1,6 @@
 package com.cell.sql;
 
-import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.concurrent.ConcurrentHashMap;
-
 import com.cell.reflect.FieldGroup;
-import com.cell.sql.anno.SQLField;
 
 /**
  * 用来描述多个字段的组合，该字段包含的字段将存储为表的字段，

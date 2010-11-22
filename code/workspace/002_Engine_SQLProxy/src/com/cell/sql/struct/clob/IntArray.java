@@ -1,26 +1,19 @@
 package com.cell.sql.struct.clob;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
 import java.util.Vector;
 
-import com.cell.CUtil;
-import com.cell.io.BigIODeserialize;
-import com.cell.io.BigIOSerialize;
 import com.cell.io.TextDeserialize;
 import com.cell.io.TextSerialize;
 import com.cell.sql.SQLStructCLOB;
 
 public class IntArray extends Vector<Integer> implements SQLStructCLOB
 {
+	private static final long serialVersionUID = 1L;
+
 	public IntArray() {}
 	
 	public IntArray(int len) {

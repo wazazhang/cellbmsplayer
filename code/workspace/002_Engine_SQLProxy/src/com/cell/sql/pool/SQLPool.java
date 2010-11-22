@@ -2,25 +2,11 @@ package com.cell.sql.pool;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.Properties;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import com.cell.CObject;
-import com.cell.j2se.CAppBridge;
-import com.cell.j2se.CStorage;
-import com.cell.util.concurrent.RWLockObject;
 import com.cell.util.concurrent.ThreadPool;
 
 

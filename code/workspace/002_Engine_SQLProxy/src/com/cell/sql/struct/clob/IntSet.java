@@ -12,7 +12,8 @@ import com.cell.sql.SQLStructCLOB;
 
 public class IntSet extends HashSet<Integer> implements SQLStructCLOB
 {
-	
+	private static final long serialVersionUID = 1L;
+
 	public IntSet() {}
 	
 	public IntSet(int len) {
