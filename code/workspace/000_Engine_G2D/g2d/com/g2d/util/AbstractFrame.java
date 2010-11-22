@@ -1,6 +1,5 @@
 package com.g2d.util;
 
-import java.awt.Frame;
 import java.awt.Toolkit;
 import java.awt.Window;
 

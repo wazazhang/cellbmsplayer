@@ -1,15 +1,10 @@
 package com.g2d.editor.property;
 
 import java.awt.Component;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.EnumSet;
 import java.util.Vector;
 
 import javax.swing.JComboBox;
-
-import com.g2d.editor.property.ObjectPropertyPanel;
-import com.g2d.editor.property.PropertyCellEdit;
 
 /**
  * 将枚举值列举在ComboBox中

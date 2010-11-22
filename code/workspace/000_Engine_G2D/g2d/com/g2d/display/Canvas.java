@@ -6,7 +6,6 @@ import java.awt.Container;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.Window;
-import java.text.AttributedString;
 
 
 public interface Canvas

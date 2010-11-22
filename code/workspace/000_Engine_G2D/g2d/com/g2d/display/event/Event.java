@@ -1,8 +1,5 @@
 package com.g2d.display.event;
 
-import java.io.Serializable;
-
-import com.g2d.Version;
 
 public class Event<T>// implements Serializable
 {

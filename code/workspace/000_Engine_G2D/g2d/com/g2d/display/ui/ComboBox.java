@@ -5,14 +5,12 @@ import java.awt.Graphics2D;
 import java.util.Collection;
 import java.util.Vector;
 
-import com.g2d.Tools;
 import com.g2d.Version;
 import com.g2d.annotation.Property;
 import com.g2d.display.DisplayObject;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.event.EventListener;
 import com.g2d.display.event.MouseEvent;
-import com.g2d.display.ui.layout.UILayout;
 import com.g2d.util.Drawing;
 
 /**

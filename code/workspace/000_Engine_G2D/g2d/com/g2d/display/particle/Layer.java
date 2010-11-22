@@ -1,6 +1,5 @@
 package com.g2d.display.particle;
 
-import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;

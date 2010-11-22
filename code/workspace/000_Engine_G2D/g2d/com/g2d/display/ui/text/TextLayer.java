@@ -3,7 +3,6 @@ package com.g2d.display.ui.text;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
-import java.awt.font.TextLayout;
 import java.awt.image.BufferedImage;
 import java.text.AttributedString;
 

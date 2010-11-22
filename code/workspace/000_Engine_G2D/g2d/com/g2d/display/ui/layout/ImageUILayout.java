@@ -1,10 +1,7 @@
 package com.g2d.display.ui.layout;
 
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 
-import com.cell.util.MarkedHashtable;
-import com.g2d.Tools;
 import com.g2d.Version;
 
 public class ImageUILayout extends UILayout 

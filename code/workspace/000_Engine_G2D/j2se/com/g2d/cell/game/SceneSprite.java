@@ -2,42 +2,31 @@ package com.g2d.cell.game;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.geom.Line2D;
 import java.awt.image.BufferedImage;
 
-import com.cell.CMath;
-import com.cell.game.ai.pathfind.AstarManhattan;
-import com.cell.game.ai.pathfind.AstarManhattan.WayPoint;
+import com.cell.gameedit.SetResource;
+import com.cell.gameedit.SetResource.LoadSpriteListener;
 import com.cell.gameedit.object.SpriteSet;
-import com.cell.gfx.IImage;
 import com.cell.gfx.game.CSprite;
 import com.cell.j2se.CGraphics;
 import com.g2d.Tools;
 import com.g2d.Version;
-import com.g2d.cell.CellSetResource;
-import com.g2d.cell.CellSetResourceManager;
-import com.g2d.display.DisplayObject;
-import com.g2d.display.DisplayObjectContainer;
-import com.g2d.display.DisplayShape;
-import com.g2d.display.Sprite;
 import com.g2d.game.rpg.MoveableUnit;
 import com.g2d.util.Drawing;
-import com.g2d.util.Util;
 
 /**
  * @author WAZA
  * 支持网络缓冲的动态精灵
  */
-public class SceneSprite extends MoveableUnit implements CellSetResource.LoadSpriteListener
+public class SceneSprite extends MoveableUnit implements LoadSpriteListener
 {
 	private static final long serialVersionUID = Version.VersionG2D;
 //	------------------------------------------------------------------------------------------------------------------------------------
 //	resource
 	
-	transient protected CSprite 				csprite;
-	transient protected CellSetResource			set_resource;
-	transient protected SpriteSet 				set_sprite;
+	transient protected CSprite 			csprite;
+	transient protected SetResource			set_resource;
+	transient protected SpriteSet 			set_sprite;
 	
 	protected String 	set_sprite_id;
 	protected int		cur_anim;
@@ -72,7 +61,7 @@ public class SceneSprite extends MoveableUnit implements CellSetResource.LoadSpr
 		
 	}
 	
-	public SceneSprite(CellSetResource set, String spriteID)
+	public SceneSprite(SetResource set, String spriteID)
 	{
 		init(set, spriteID);
 	}
@@ -82,7 +71,7 @@ public class SceneSprite extends MoveableUnit implements CellSetResource.LoadSpr
 		init(obj);
 	}
 	
-	protected void init(CellSetResource set, String spriteID)
+	protected void init(SetResource set, String spriteID)
 	{
 		set_resource 		= set;
 		set_sprite 			= set.getSetSprite(spriteID);
@@ -96,7 +85,7 @@ public class SceneSprite extends MoveableUnit implements CellSetResource.LoadSpr
 		
 	}
 	
-	public void init_async(CellSetResource set, String spriteID)
+	public void init_async(SetResource set, String spriteID)
 	{
 		set_resource 		= set;
 		set_sprite 			= set.getSetSprite(spriteID);
@@ -149,7 +138,7 @@ public class SceneSprite extends MoveableUnit implements CellSetResource.LoadSpr
 	}
 	
 	
-	public CellSetResource		getSetResource(){
+	public SetResource getSetResource() {
 		return set_resource;
 	}
 	
@@ -184,7 +173,7 @@ public class SceneSprite extends MoveableUnit implements CellSetResource.LoadSpr
 //	------------------------------------------------------------------------------------------------------------------------------------
 //	resource
 	
-	public void loaded(CellSetResource set, CSprite cspr, SpriteSet spr) {
+	public void loaded(SetResource set, CSprite cspr, SpriteSet spr) {
 //		System.out.println("loaded : " + spr.SprID);
 		setSprite(cspr) ;
 	}

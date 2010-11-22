@@ -9,30 +9,13 @@ import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Dimension2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
-import java.io.Externalizable;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectOutput;
-import java.io.ObjectStreamException;
-import java.io.Serializable;
-import java.lang.annotation.Documented;
-import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Stack;
 
 import com.cell.CMath;
-import com.cell.DObject;
 import com.cell.math.Vector;
-import com.cell.util.MarkedHashtable;
-import com.g2d.Tools;
 import com.g2d.Version;
-import com.g2d.annotation.Property;
-import com.g2d.display.ui.UIComponent;
-import com.g2d.editor.DisplayObjectEditor;
-import com.g2d.editor.UIComponentEditor;
 
 
 /**

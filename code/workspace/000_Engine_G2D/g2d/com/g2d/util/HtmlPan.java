@@ -1,23 +1,18 @@
 package com.g2d.util;
 
-import java.awt.BorderLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.io.IOException;
 
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLFrameHyperlinkEvent;
 
-import com.cell.CObject;
 import com.cell.gfx.AScreen;
 import com.g2d.display.ui.layout.UILayout;
 

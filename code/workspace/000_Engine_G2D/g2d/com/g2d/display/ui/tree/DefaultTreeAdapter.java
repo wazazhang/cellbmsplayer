@@ -2,14 +2,9 @@ package com.g2d.display.ui.tree;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 
-import com.g2d.Version;
-import com.g2d.annotation.Property;
 import com.g2d.display.event.MouseEvent;
-import com.g2d.display.ui.Label;
 import com.g2d.display.ui.TreeView;
 import com.g2d.display.ui.UIComponent;
 import com.g2d.util.Drawing;

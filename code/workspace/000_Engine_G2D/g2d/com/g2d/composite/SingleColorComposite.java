@@ -1,19 +1,13 @@
 package com.g2d.composite;
 
-import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Composite;
 import java.awt.CompositeContext;
-import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
-
-import sun.awt.image.BufImgSurfaceData;
-import sun.java2d.SurfaceData;
-import sun.java2d.loops.Blit;
 
 /**
  * 将不透明部分渲染为同一颜色

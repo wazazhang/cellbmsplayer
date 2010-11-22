@@ -1,12 +1,10 @@
 package com.g2d.display.ui;
 
 
-import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
 import com.cell.CMath;
-import com.g2d.Tools;
 import com.g2d.Version;
 import com.g2d.display.DisplayObject;
 import com.g2d.display.DisplayObjectContainer;

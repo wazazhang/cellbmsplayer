@@ -1,6 +1,5 @@
 package com.g2d.display.ui;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.geom.AffineTransform;
@@ -8,7 +7,6 @@ import java.awt.geom.AffineTransform;
 import com.g2d.Tools;
 import com.g2d.Version;
 import com.g2d.display.ui.layout.UILayout;
-import com.g2d.util.Drawing;
 
 public class ImageButton extends BaseButton implements Runnable
 {

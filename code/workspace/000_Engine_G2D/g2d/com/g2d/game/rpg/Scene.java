@@ -2,13 +2,10 @@ package com.g2d.game.rpg;
 
 import java.awt.Graphics2D;
 
-import com.cell.exception.NotImplementedException;
-
 import com.g2d.Version;
 import com.g2d.display.DisplayObject;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.InteractiveObject;
-import com.g2d.display.ui.UIComponent;
 
 public class Scene extends InteractiveObject 
 {

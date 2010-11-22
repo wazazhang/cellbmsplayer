@@ -1,16 +1,11 @@
 package com.g2d.display.ui;
 
-import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.RenderingHints;
 
 import com.g2d.Version;
-import com.g2d.annotation.Property;
 import com.g2d.display.event.MouseEvent;
 import com.g2d.display.ui.layout.UILayout;
-import com.g2d.util.Drawing;
 
 
 public abstract class ToggleButton extends BaseButton 

@@ -1,12 +1,8 @@
 package com.g2d.editor;
 
 import java.awt.Component;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 
 import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
@@ -14,7 +10,6 @@ import javax.swing.JTabbedPane;
 
 import com.g2d.Version;
 import com.g2d.display.DisplayObject;
-import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.util.AbstractFrame;
 
 public class DisplayObjectEditor<V extends DisplayObject> extends AbstractFrame

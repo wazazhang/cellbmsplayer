@@ -1,18 +1,12 @@
 package com.g2d.display;
 
 import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.Composite;
 import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Shape;
-import java.awt.geom.AffineTransform;
 
 import com.cell.math.MathVector;
 import com.cell.math.TVector;
 import com.cell.math.Vector;
 import com.g2d.Version;
-import com.g2d.annotation.Property;
 
 public class Sprite extends InteractiveObject implements Vector
 {

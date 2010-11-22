@@ -1,12 +1,9 @@
 package com.g2d.cell.game.ui;
 
-import java.awt.Rectangle;
-
 import com.g2d.cell.game.Scene;
 import com.g2d.display.ui.Container;
 import com.g2d.display.ui.Panel;
 import com.g2d.display.ui.ScrollBar;
-
 import com.g2d.editor.UIComponentEditor;
 
 public class ScenePanel extends Container

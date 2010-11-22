@@ -3,6 +3,7 @@ package com.g2d.cell;
 import java.awt.font.GraphicAttribute;
 
 import com.cell.CUtil;
+import com.cell.gameedit.SetResource;
 import com.cell.gfx.game.CSprite;
 import com.g2d.Tools;
 import com.g2d.display.ui.text.Instruction;
@@ -31,7 +32,7 @@ public class CellTextBuilderAdapter implements TextBuilderAdapter
 			}
 			case SPRITE: {
 				String[] ss = CUtil.splitString(value, "@");
-				CellSetResource res = res_manager.getSet(ss[0]);
+				SetResource res = res_manager.getSet(ss[0]);
 				CSprite sprite = res.getSprite(ss[1]);
 				int animate = Integer.parseInt(ss[2]);
 				return new GraphicsAttributeSprite(sprite, animate);

@@ -3,13 +3,10 @@ package com.g2d.display.ui;
 import java.awt.Graphics2D;
 import java.util.Vector;
 
-import com.g2d.Tools;
 import com.g2d.Version;
 import com.g2d.display.DisplayObject;
-import com.g2d.display.event.EventListener;
 import com.g2d.display.event.MouseEvent;
 import com.g2d.display.ui.layout.UILayout;
-import com.g2d.editor.UIComponentEditor;
 
 public abstract class PageSelect<P extends com.g2d.display.ui.PageSelect.Page> extends UIComponent
 {

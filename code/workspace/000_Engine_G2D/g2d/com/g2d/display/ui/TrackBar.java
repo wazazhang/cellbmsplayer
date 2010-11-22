@@ -2,7 +2,6 @@ package com.g2d.display.ui;
 
 import java.awt.Graphics2D;
 
-import com.g2d.Tools;
 import com.g2d.Version;
 import com.g2d.annotation.Property;
 import com.g2d.display.DisplayObject;

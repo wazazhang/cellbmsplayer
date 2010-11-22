@@ -2,7 +2,6 @@ package com.g2d.display.ui.layout;
 
 import java.util.Vector;
 
-import com.g2d.display.DisplayObject;
 import com.g2d.display.ui.UIComponent;
 
 /**

@@ -10,16 +10,13 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.cell.CMath;
 import com.cell.game.ai.pathfind.AstarManhattan;
 import com.cell.game.ai.pathfind.AstarManhattanMap;
 import com.cell.game.ai.pathfind.AstarManhattan.WayPoint;
-
 import com.g2d.display.DisplayObject;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.util.Drawing;

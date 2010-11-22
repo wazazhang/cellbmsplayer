@@ -1,9 +1,6 @@
 package com.g2d.game.rpg;
 
 import com.cell.CMath;
-import com.g2d.annotation.Property;
-import com.g2d.display.DisplayObject;
-import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.Sprite;
 
 public abstract class Unit extends Sprite

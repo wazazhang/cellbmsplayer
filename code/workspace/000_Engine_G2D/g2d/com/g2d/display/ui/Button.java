@@ -5,7 +5,6 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 
 import com.g2d.Version;
-import com.g2d.annotation.Property;
 import com.g2d.util.Drawing;
 
 /**

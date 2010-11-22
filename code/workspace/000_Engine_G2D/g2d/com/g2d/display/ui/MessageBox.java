@@ -8,11 +8,8 @@ import java.util.Vector;
 import com.cell.sound.Sound;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.event.EventListener;
-import com.g2d.display.event.KeyListener;
 import com.g2d.display.ui.event.ActionEvent;
 import com.g2d.display.ui.event.ActionListener;
-import com.g2d.display.ui.text.TextAttribute;
-import com.g2d.display.ui.text.MultiTextLayout.AttributedSegment;
 
 public class MessageBox extends Form implements ActionListener
 {

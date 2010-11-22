@@ -15,25 +15,19 @@ import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.Transparency;
-import java.awt.color.ColorSpace;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.awt.image.ColorConvertOp;
 import java.io.File;
 import java.io.InputStream;
-import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
-import java.text.CharacterIterator;
 import java.util.Random;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-
-import sun.awt.image.ImageWatched.Link;
 
 import com.cell.CIO;
 import com.cell.gfx.IGraphics;
@@ -41,9 +35,6 @@ import com.cell.gfx.IImage;
 import com.cell.gfx.game.CCD;
 import com.cell.gfx.game.CSprite;
 import com.cell.j2se.CGraphics;
-import com.cell.math.MathVector;
-import com.cell.math.TVector;
-import com.cell.math.Vector;
 import com.g2d.display.AnimateCursor;
 import com.g2d.display.ui.text.TextBuilder;
 

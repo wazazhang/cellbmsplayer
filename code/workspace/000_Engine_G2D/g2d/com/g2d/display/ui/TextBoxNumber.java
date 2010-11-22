@@ -1,6 +1,5 @@
 package com.g2d.display.ui;
 
-import com.g2d.display.ui.TextBoxSingle;
 
 abstract public class TextBoxNumber<T extends Number> extends TextBoxSingle
 {

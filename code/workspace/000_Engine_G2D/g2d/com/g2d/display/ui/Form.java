@@ -1,21 +1,12 @@
 package com.g2d.display.ui;
 
 
-import java.awt.AlphaComposite;
-import java.awt.Color;
-import java.awt.Composite;
 import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
-import java.io.Serializable;
 
 import com.g2d.Version;
-import com.g2d.annotation.Property;
-import com.g2d.display.DisplayObject;
-import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.event.MouseEvent;
 import com.g2d.editor.FormEditor;
 import com.g2d.editor.UIComponentEditor;
-import com.g2d.util.Drawing;
 
 
 public class Form extends Window
