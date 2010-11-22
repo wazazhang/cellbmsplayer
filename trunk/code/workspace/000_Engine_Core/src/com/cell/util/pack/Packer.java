@@ -33,29 +33,33 @@ public class Packer
 //	
 //	
 //	
-//	public static void main(String[] args)
-//	{
-//		try {
-//			File file = new File("C:\\Documents and Settings\\WAZA\\桌面\\test\\a.txt");
-//		
-//			byte[] data = CFile.readData(file);
-//			
-//			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//			ZipOutputStream zos = new ZipOutputStream(baos);
-//			zos.setComment("");
-//			zos.setLevel(9);
-//			zos.setMethod(ZipOutputStream.DEFLATED);
-//			ZipEntry e = new ZipEntry("a.txt");
-//			e.setTime(0);
-//			zos.putNextEntry(e);
-//			zos.write(data);
-//			zos.close();
-//			
-//			CFile.wirteData(new File(file.getParentFile(), System.currentTimeMillis() + ".pak"), baos.toByteArray());
-//			
-//		} catch (Exception err) {
-//			err.printStackTrace();
-//		}
-//	}
-//	
+	public static void main(String[] args)
+	{
+		try {
+			File file = new File("C:\\Documents and Settings\\WAZA\\桌面\\test\\a.txt");
+		
+			byte[] data = CFile.readData(file);
+			
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ZipOutputStream zos = new ZipOutputStream(baos);
+			zos.setComment("");
+			zos.setLevel(9);
+			zos.setMethod(ZipOutputStream.DEFLATED);
+			{
+				ZipEntry e = new ZipEntry("a.txt");
+//				e.setCompressedSize(data.length);
+//				e.setSize(data.length);
+				e.setTime(0);
+				zos.putNextEntry(e);
+			}
+			zos.write(data);
+			zos.close();
+			
+			CFile.wirteData(new File(file.getParentFile(), System.currentTimeMillis() + ".pak"), baos.toByteArray());
+			
+		} catch (Exception err) {
+			err.printStackTrace();
+		}
+	}
+	
 }

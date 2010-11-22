@@ -185,28 +185,32 @@ abstract public class SetResource
 		return getSprite(spr, images);
 	}
 
-	synchronized
-	final public AtomicReference<CSprite> getSpriteAsync(String key)
+	synchronized 
+	final public AtomicReference<CSprite> getSpriteAsync(String key, LoadSpriteListener ... listener)
 	{
 		SpriteSet spr = SprTable.get(key);
 		if (spr != null) {
-			AtomicReference<CSprite> ret = new AtomicReference<CSprite>(null);
+			AtomicReference<CSprite> ret = new AtomicReference<CSprite>();
 			CSprite obj = resource_manager.get("SPR_"+key, CSprite.class);
 			if (obj != null) {
-				ret.set(new CSprite(obj));
+				CSprite cspr = new CSprite(obj);
+				ret.set(cspr);
+				for (LoadSpriteListener l : listener) {
+					l.loaded(this, cspr, spr);
+				}
 			} else {
+				LoadSpriteTask task = new LoadSpriteTask(spr, ret, listener);
 				if (loading_service != null) {
-					loading_service.executeTask(new LoadSpriteTask(spr, ret));
+					loading_service.executeTask(task);
 				} else {
-					new Thread(new LoadSpriteTask(spr, ret), "get-sprite-" + key).start();
+					new Thread(task, "get-sprite-" + key).start();
 				}
 			}
 			return ret;
 		} else {
-			return null;
+			throw new NullPointerException("sprite not found : " + key);
 		}
 	}
-
 	
 //	--------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -358,36 +362,44 @@ abstract public class SetResource
 
 
 //	-------------------------------------------------------------------------------------
+	
 
-
+	
+	
+	public static interface LoadSpriteListener
+	{
+		public void loaded(SetResource set, CSprite cspr, SpriteSet spr);
+	}
 	
 	protected class LoadSpriteTask implements Runnable
 	{
-		final AtomicReference<CSprite> listener;
+		final LoadSpriteListener[] listener;
 		
 		final SpriteSet spr;
 		
-		public LoadSpriteTask(SpriteSet spr, AtomicReference<CSprite> listener) {
+		final AtomicReference<CSprite> ref;
+		
+		public LoadSpriteTask(
+				SpriteSet spr, 
+				AtomicReference<CSprite> ref,
+				LoadSpriteListener ... listener) {
 			this.spr		= spr;
 			this.listener 	= listener;
+			this.ref		= ref;
 		}
 		
 		public void run() {
-			synchronized (listener) {
-				try {
-//					System.out.println("start load spr : " + spr.SprID);
-					CSprite cspr = getSprite(spr);
-					listener.set(cspr);
-				} catch (Throwable e) {
-					e.printStackTrace();
+			try {
+				CSprite cspr = getSprite(spr);
+				ref.set(cspr);
+				for (LoadSpriteListener l : listener) {
+					l.loaded(SetResource.this, cspr, spr);
 				}
+			} catch (Throwable e) {
+				e.printStackTrace();
 			}
 		}
 	}
-	
-//	-------------------------------------------------------------------------------------
-	
-	
 	
 	
 }
