@@ -3,12 +3,12 @@ package com.g2d.studio.cpj.entity;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
+import com.cell.gameedit.object.SpriteSet;
 import com.cell.gfx.game.CCD;
 import com.cell.gfx.game.CSprite;
 import com.cell.j2se.CGraphics;
 import com.g2d.Tools;
 import com.g2d.cell.CellSprite;
-import com.g2d.cell.CellSetResource.SpriteSet;
 import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.io.File;
 import com.g2d.studio.res.Res;

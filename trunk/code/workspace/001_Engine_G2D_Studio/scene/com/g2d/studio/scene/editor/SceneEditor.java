@@ -42,6 +42,7 @@ import javax.swing.event.AncestorListener;
 
 import com.cell.CObject;
 import com.cell.CUtil;
+import com.cell.gameedit.object.WorldSet.SpriteObject;
 import com.cell.gfx.game.CCD;
 import com.cell.gfx.game.CSprite;
 import com.cell.j2se.CGraphics;
@@ -57,7 +58,7 @@ import com.cell.sound.util.StaticSoundPlayer;
 import com.g2d.Tools;
 import com.g2d.cell.CellSetResource;
 import com.g2d.cell.CellSprite;
-import com.g2d.cell.CellSetResource.WorldSet.SpriteObject;
+
 import com.g2d.cell.game.Scene;
 import com.g2d.cell.game.ui.ScenePanel;
 import com.g2d.display.DisplayObject;
@@ -787,7 +788,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener, Window
 			}
 			@Override
 			public synchronized void loaded(CellSetResource set, CSprite cspr,
-					com.g2d.cell.CellSetResource.SpriteSet spr) {
+					com.cell.gameedit.object.SpriteSet spr) {
 				super.loaded(set, cspr, spr);
 				this.is_png = !spr.ImagesName.startsWith("jpg");
 				if (spr.ImagesName.startsWith("jpg")) {

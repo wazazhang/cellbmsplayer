@@ -1,9 +1,9 @@
 package com.g2d.studio.cell.gameedit;
 
 
+import com.cell.gameedit.StreamTiles;
+import com.cell.gameedit.object.ImagesSet;
 import com.cell.rpg.res.Resource;
-import com.g2d.cell.CellSetResource.ImagesSet;
-import com.g2d.cell.CellSetResource.StreamTiles;
 import com.g2d.studio.io.File;
 
 public abstract class Builder 

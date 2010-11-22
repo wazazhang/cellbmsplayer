@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 import com.cell.CMath;
 import com.cell.game.ai.pathfind.AstarManhattan;
 import com.cell.game.ai.pathfind.AstarManhattan.WayPoint;
+import com.cell.gameedit.object.SpriteSet;
 import com.cell.gfx.IImage;
 import com.cell.gfx.game.CSprite;
 import com.cell.j2se.CGraphics;
@@ -16,7 +17,6 @@ import com.g2d.Tools;
 import com.g2d.Version;
 import com.g2d.cell.CellSetResource;
 import com.g2d.cell.CellSetResourceManager;
-import com.g2d.cell.CellSetResource.SpriteSet;
 import com.g2d.display.DisplayObject;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.DisplayShape;
@@ -37,7 +37,7 @@ public class SceneSprite extends MoveableUnit implements CellSetResource.LoadSpr
 	
 	transient protected CSprite 				csprite;
 	transient protected CellSetResource			set_resource;
-	transient protected CellSetResource.SpriteSet 	set_sprite;
+	transient protected SpriteSet 				set_sprite;
 	
 	protected String 	set_sprite_id;
 	protected int		cur_anim;
@@ -153,7 +153,7 @@ public class SceneSprite extends MoveableUnit implements CellSetResource.LoadSpr
 		return set_resource;
 	}
 	
-	public CellSetResource.SpriteSet 	getSetSprite() {
+	public SpriteSet 	getSetSprite() {
 		return set_sprite;
 	}
 	

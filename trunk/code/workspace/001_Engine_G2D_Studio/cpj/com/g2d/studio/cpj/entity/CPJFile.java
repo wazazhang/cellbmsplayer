@@ -13,9 +13,8 @@ import javax.swing.JPopupMenu;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeModel;
 
+import com.cell.gameedit.object.WorldSet;
 import com.g2d.Tools;
-import com.g2d.cell.CellSetResource.SpriteSet;
-import com.g2d.cell.CellSetResource.WorldSet;
 import com.g2d.studio.Studio;
 import com.g2d.studio.StudioResource;
 import com.g2d.studio.cell.gameedit.Builder;
@@ -109,7 +108,7 @@ public class CPJFile extends G2DTreeNode<CPJObject<?>>
 
 	//
 	private CPJSprite loadSprite(String name, CPJResourceType res_type) {
-		SpriteSet set = set_resource.getSetSprite(name);
+		com.cell.gameedit.object.SpriteSet set = set_resource.getSetSprite(name);
 		CPJSprite ret = sprites.get(name);
 		if (ret == null) {
 			try{

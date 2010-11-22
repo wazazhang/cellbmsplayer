@@ -6,16 +6,17 @@ import java.awt.image.BufferedImage;
 import javax.swing.ImageIcon;
 import javax.swing.JList;
 
+import com.cell.gameedit.SetObject;
 import com.g2d.Tools;
-import com.g2d.cell.CellSetResource.CellSetObject;
 import com.g2d.display.DisplayObject;
 import com.g2d.studio.cpj.CPJIndex;
 import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.swing.G2DListItem;
 import com.g2d.studio.swing.G2DTreeNode;
 
-public abstract class CPJObject <T extends CellSetObject> extends G2DTreeNode<CPJObject<?>> implements G2DListItem
+public abstract class CPJObject <T extends SetObject> extends G2DTreeNode<CPJObject<?>> implements G2DListItem
 {
+	private static final long serialVersionUID = 1L;
 	final public CPJFile			parent;
 	final public String				name;
 	final public CPJResourceType 	res_type;
