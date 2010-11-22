@@ -12,7 +12,9 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
+import java.util.Map.Entry;
 
 import com.cell.reflect.Parser;
 
@@ -1424,7 +1426,18 @@ public class CUtil extends CObject
     
     
 //--------------------------------------------------------------------------------------------------------    
-
+   
+    /**
+     * 将等宽字符向左对齐，并且长度维持在 length
+     * @param src
+     * @param length
+     * @return
+     */
+    public static String snapStringRightSize(Object src, int length, char blank) 
+    {
+    	return snapStringRightSize(src.toString(), length, blank);
+    }
+    
     /**
      * 将等宽字符向左对齐，并且长度维持在 length
      * @param src
@@ -1460,6 +1473,29 @@ public class CUtil extends CObject
     			sb.append(blank);
     		}
     		sb.append(left[i] + split + right[i] + "\n");
+    	}
+    	return sb.toString();
+    }
+    
+    /**
+     * 将等宽字符向左对齐，并且长度维持在 length
+     * @param src
+     * @param length
+     * @return
+     */
+    public static String snapStringRL(Map<?,?> map, char blank, String split) 
+    {
+    	int lc = 0;
+    	for (Object o : map.keySet()) {
+    		lc = Math.max(lc, o.toString().length());
+    	}
+    	StringBuilder sb = new StringBuilder();
+    	for (Entry<?,?> e : map.entrySet()) {
+    		int lb = lc - e.getKey().toString().length();
+    		for (int b=0; b<lb; b++) {
+    			sb.append(blank);
+    		}
+    		sb.append(e.getKey() + split + e.getValue() + "\n");
     	}
     	return sb.toString();
     }
