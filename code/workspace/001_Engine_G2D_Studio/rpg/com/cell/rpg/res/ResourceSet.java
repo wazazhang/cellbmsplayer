@@ -2,11 +2,11 @@ package com.cell.rpg.res;
 
 import java.io.Serializable;
 
+import com.cell.gameedit.SetObject;
 import com.g2d.cell.CellSetResource;
-import com.g2d.cell.CellSetResource.CellSetObject;
 
 
-public abstract class ResourceSet<T extends CellSetObject> implements Serializable
+public abstract class ResourceSet<T extends SetObject> implements Serializable
 {
 	private static final long serialVersionUID = 1L;
 
@@ -56,7 +56,7 @@ public abstract class ResourceSet<T extends CellSetObject> implements Serializab
 	
 //	--------------------------------------------------------------------------------------------------------------------
 
-	public static class ImagesSet extends ResourceSet<CellSetResource.ImagesSet>
+	public static class ImagesSet extends ResourceSet<com.cell.gameedit.object.ImagesSet>
 	{
 		private static final long serialVersionUID = 1L;
 		
@@ -68,7 +68,7 @@ public abstract class ResourceSet<T extends CellSetObject> implements Serializab
 		}
 		
 		@Override
-		protected CellSetResource.ImagesSet loadSetObject(ResourceManager manager) throws Exception {
+		protected com.cell.gameedit.object.ImagesSet loadSetObject(ResourceManager manager) throws Exception {
 
 			return null;
 		}
@@ -79,7 +79,7 @@ public abstract class ResourceSet<T extends CellSetObject> implements Serializab
 	
 	
 	/** 将编辑器导出的output文件里的场景信息的描述 */
-	public static class SceneSet extends ResourceSet<CellSetResource.WorldSet>
+	public static class SceneSet extends ResourceSet<com.cell.gameedit.object.WorldSet>
 	{
 		private static final long serialVersionUID = 1L;
 		
@@ -91,7 +91,7 @@ public abstract class ResourceSet<T extends CellSetObject> implements Serializab
 		}
 		
 		@Override
-		protected CellSetResource.WorldSet loadSetObject(ResourceManager manager) throws Exception {
+		protected com.cell.gameedit.object.WorldSet loadSetObject(ResourceManager manager) throws Exception {
 			return getSetResource(manager).WorldTable.get(set_name);
 		}
 		
@@ -100,7 +100,7 @@ public abstract class ResourceSet<T extends CellSetObject> implements Serializab
 	
 //	--------------------------------------------------------------------------------------------------------------------
 	
-	public static class SpriteSet extends ResourceSet<CellSetResource.SpriteSet>
+	public static class SpriteSet extends ResourceSet<com.cell.gameedit.object.SpriteSet>
 	{
 		private static final long serialVersionUID = 1L;
 
@@ -112,7 +112,7 @@ public abstract class ResourceSet<T extends CellSetObject> implements Serializab
 		}
 		
 		@Override
-		protected CellSetResource.SpriteSet loadSetObject(ResourceManager manager) throws Exception {
+		protected com.cell.gameedit.object.SpriteSet loadSetObject(ResourceManager manager) throws Exception {
 			return getSetResource(manager).SprTable.get(set_name);
 		}
 		

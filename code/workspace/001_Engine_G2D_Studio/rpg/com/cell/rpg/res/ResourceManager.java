@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import com.cell.CIO;
 import com.cell.CUtil;
+import com.cell.gameedit.StreamTiles;
 import com.cell.gfx.IImage;
 import com.cell.gfx.game.CSprite;
 import com.cell.rpg.RPGObject;
@@ -436,13 +437,13 @@ public abstract class ResourceManager extends CellSetResourceManager
 		return new Vector<SpriteSet>(all_effect_set.values());
 	}
 
-	public CellSetResource.StreamTiles getEffectImages(String cpj_project_name, String cpj_sprite_name) {
+	public StreamTiles getEffectImages(String cpj_project_name, String cpj_sprite_name) {
 		try
 		{
 			SpriteSet					effect_set	= getEffectSet(cpj_project_name, cpj_sprite_name);
 			CellSetResource				resource 	= effect_set.getSetResource(this);
-			CellSetResource.SpriteSet 	spr_set 	= effect_set.getSetObject(this);
-			CellSetResource.StreamTiles	images		= resource.getImages(spr_set.ImagesName);
+			com.cell.gameedit.object.SpriteSet 	spr_set 	= effect_set.getSetObject(this);
+			StreamTiles	images		= resource.getImages(spr_set.ImagesName);
 			return images;
 		} catch (Exception err) {
 			err.printStackTrace();
@@ -454,7 +455,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 	{
 		try
 		{
-			CellSetResource.StreamTiles	images		= getEffectImages(cpj_project_name, cpj_sprite_name);
+			StreamTiles	images		= getEffectImages(cpj_project_name, cpj_sprite_name);
 			IImage						image		= images.getImage(index);
 			return Tools.createImage(image);
 		} catch (Exception err) {
@@ -468,7 +469,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 		{
 			SpriteSet					effect_set	= getEffectSet(cpj_project_name, cpj_sprite_name);
 			CellSetResource				resource 	= effect_set.getSetResource(this);
-			CellSetResource.SpriteSet 	spr_set 	= effect_set.getSetObject(this);
+			com.cell.gameedit.object.SpriteSet 	spr_set 	= effect_set.getSetObject(this);
 			CSprite						sprite		= resource.getSprite(spr_set);
 			return sprite;
 		} catch (Exception err) {

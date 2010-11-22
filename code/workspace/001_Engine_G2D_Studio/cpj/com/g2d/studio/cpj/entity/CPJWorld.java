@@ -8,8 +8,8 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageOutputStream;
 
+import com.cell.gameedit.object.WorldSet;
 import com.g2d.Tools;
-import com.g2d.cell.CellSetResource.WorldSet;
 import com.g2d.cell.game.Scene;
 import com.g2d.studio.Studio;
 import com.g2d.studio.cpj.CPJResourceType;

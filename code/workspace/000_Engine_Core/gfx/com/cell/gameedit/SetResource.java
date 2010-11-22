@@ -1,0 +1,393 @@
+package com.cell.gameedit;
+
+
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.Serializable;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
+
+import com.cell.CIO;
+import com.cell.CUtil;
+
+import com.cell.gameedit.object.*;
+
+import com.cell.gfx.IGraphics;
+import com.cell.gfx.IImage;
+import com.cell.gfx.IImages;
+import com.cell.gfx.game.CAnimates;
+import com.cell.gfx.game.CCD;
+import com.cell.gfx.game.CCollides;
+import com.cell.gfx.game.CMap;
+import com.cell.gfx.game.CSprite;
+import com.cell.gfx.game.CWayPoint;
+import com.cell.io.TextDeserialize;
+import com.cell.j2se.CGraphics;
+import com.cell.j2se.CImage;
+import com.cell.util.MarkedHashtable;
+import com.cell.util.PropertyGroup;
+import com.cell.util.concurrent.ThreadPoolService;
+
+/**
+ * 对应output.properties的资源文件
+ * @author WAZA
+ */
+abstract public class SetResource
+{
+//	-------------------------------------------------------------------------------------
+	
+	final public Hashtable<String, ImagesSet>		ImgTable;
+	final public Hashtable<String, SpriteSet>		SprTable;
+	final public Hashtable<String, MapSet>			MapTable;
+	final public Hashtable<String, WorldSet>		WorldTable;
+	final public Hashtable<String, TableSet>		TableGroups;
+
+	final protected Output							output_adapter;
+	
+	final protected	MarkedHashtable 				resource_manager;
+	final protected	ThreadPoolService				loading_service;
+	
+//	-------------------------------------------------------------------------------------
+	
+	public SetResource(Output adapter, ThreadPoolService loading_service) throws Exception
+	{
+		this.output_adapter		= adapter;
+		this.loading_service	= loading_service;
+		this.resource_manager	= new MarkedHashtable();
+		
+		this.ImgTable 			= output_adapter.getImgTable();
+		this.SprTable 			= output_adapter.getSprTable();
+		this.MapTable 			= output_adapter.getMapTable();
+		this.WorldTable			= output_adapter.getWorldTable();
+		this.TableGroups		= output_adapter.getTableGroups();
+	}
+	
+	public Output getOutput() {
+		return output_adapter;
+	}
+	
+	public void dispose() {
+		for (Object obj : resource_manager.values()) {
+			if (obj instanceof StreamTiles) {
+				((StreamTiles) obj).unloadAllImages();
+			}
+		}
+	}
+	
+//	-------------------------------------------------------------------------------------------------------------------------------
+//	Resources
+//	-------------------------------------------------------------------------------------------------------------------------------
+
+	/**
+	 * 同步获取图片方法<br>
+	 * 如果有特殊需要，可以重载此方法
+	 * @param img
+	 * @return
+	 * @throws IOException
+	 */
+	protected StreamTiles getLocalImage(ImagesSet img) throws IOException {
+		StreamTiles tiles = new StreamTiles(img, this);
+		return tiles;
+	}
+	
+	/**
+	 * 异步获取图片方法<br>
+	 * 如果有特殊需要，可以重载此方法
+	 * @param img
+	 * @return
+	 * @throws IOException
+	 */
+	protected StreamTiles getStreamImage(ImagesSet img) throws IOException {
+		StreamTiles tiles = new StreamTiles(img, this);
+		return tiles;
+	}
+	
+//	-------------------------------------------------------------------------------------------------------------------------------
+
+	synchronized
+	final public StreamTiles getImages(ImagesSet img) 
+	{
+		StreamTiles stuff = resource_manager.get("IMG_" + img.Index, StreamTiles.class);
+		if (stuff != null) {
+			if (!stuff.isLoaded()) {
+				if (loading_service != null) {
+					loading_service.executeTask(stuff);
+				} else {
+					stuff.run();
+				}
+			}
+			return stuff;
+		}
+
+		try {
+			if (loading_service != null) {
+				stuff = getStreamImage(img);
+				loading_service.executeTask(stuff);
+			} else {
+				stuff = getLocalImage(img);
+				stuff.run();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		resource_manager.put("IMG_" + img.Index, stuff);
+		
+		return stuff;
+	}
+	
+	
+	synchronized
+	final public StreamTiles getImages(String key){
+		ImagesSet img = ImgTable.get(key);
+		return getImages(img);
+			
+	}
+	
+//	-------------------------------------------------------------------------------------------------------------------------------
+	
+	synchronized
+	final public CSprite getSprite(SpriteSet spr){
+		IImages tiles = getImages(spr.ImagesName);
+		return getSprite(spr, tiles);
+	}
+	
+	synchronized
+	final public CSprite getSprite(SpriteSet spr, IImages tiles)
+	{
+		CSprite cspr = resource_manager.get("SPR_"+spr.Index, CSprite.class);
+		if (cspr != null) {
+			return new CSprite(cspr);
+		}
+		cspr = output_adapter.createSpriteFromSet(spr, tiles);
+		resource_manager.put("SPR_"+spr.Index, cspr);
+		return new CSprite(cspr);
+	}
+	
+	synchronized
+	final public CSprite getSprite(String key){
+		SpriteSet spr = SprTable.get(key);
+		return getSprite(spr);
+	}
+	
+	synchronized
+	final public CSprite getSprite(String key, IImages images){
+		SpriteSet spr = SprTable.get(key);
+		return getSprite(spr, images);
+	}
+
+	synchronized
+	final public AtomicReference<CSprite> getSpriteAsync(String key)
+	{
+		SpriteSet spr = SprTable.get(key);
+		if (spr != null) {
+			AtomicReference<CSprite> ret = new AtomicReference<CSprite>(null);
+			CSprite obj = resource_manager.get("SPR_"+key, CSprite.class);
+			if (obj != null) {
+				ret.set(new CSprite(obj));
+			} else {
+				if (loading_service != null) {
+					loading_service.executeTask(new LoadSpriteTask(spr, ret));
+				} else {
+					new Thread(new LoadSpriteTask(spr, ret), "get-sprite-" + key).start();
+				}
+			}
+			return ret;
+		} else {
+			return null;
+		}
+	}
+
+	
+//	--------------------------------------------------------------------------------------------------------------------------------------------------
+
+	//
+	synchronized
+	final public CWayPoint[] getWorldWayPoints(String key)
+	{
+		CWayPoint[] points = resource_manager.get("WPS_"+key, CWayPoint[].class);
+		if (points != null) {
+			return points;
+		}
+		WorldSet world = WorldTable.get(key);
+		points = output_adapter.createWayPointsFromSet(world.WayPoints);
+		resource_manager.put("WPS_"+key, points);
+		return points;
+	}
+	
+	synchronized
+	final public CCD[] getWorldRegions(String key)
+	{
+		CCD[] regions = resource_manager.get("WRS_"+key, CCD[].class);
+		if (regions != null) {
+			return regions;
+		}
+		WorldSet world = WorldTable.get(key);
+		regions = output_adapter.createRegionsFromSet(world.Regions);
+		resource_manager.put("WRS_"+key, regions);
+		return regions;
+	}
+
+//	-------------------------------------------------------------------------------------------------------------------------------
+//	Set Object in <setfile>.properties
+//	-------------------------------------------------------------------------------------------------------------------------------
+
+	
+	
+	final public WorldSet getSetWorld(String key) {
+		return WorldTable.get(key);
+	}
+
+	final public SpriteSet getSetSprite(String key) {
+		return SprTable.get(key);
+	}
+
+	final public MapSet getSetMap(String key) {
+		return MapTable.get(key);
+	}
+
+	final public ImagesSet getSetImages(String key) {
+		return ImgTable.get(key);
+	}
+	
+	final public TableSet getTableGroup(String key) {
+		return TableGroups.get(key);
+	}
+	
+	final public<T extends SetObject> T getSetObject(Class<T> cls, String key)
+	{
+		SetObject ret = null;
+		if (ImagesSet.class.isAssignableFrom(cls)) {
+			ret = ImgTable.get(key);
+		}
+		else if (SpriteSet.class.isAssignableFrom(cls)) {
+			ret = SprTable.get(key);
+		}
+		else if (MapSet.class.isAssignableFrom(cls)) {
+			ret = MapTable.get(key);
+		}
+		else if (WorldSet.class.isAssignableFrom(cls)) {
+			ret = WorldTable.get(key);
+		}
+		else if (TableSet.class.isAssignableFrom(cls)) {
+			ret = TableGroups.get(key);
+		}
+		if (ret!=null) {
+			return cls.cast(ret);
+		}
+		return null;
+	}
+	
+//	--------------------------------------------------------------------------------------------------------------------------------------------------
+//	utils
+//	--------------------------------------------------------------------------------------------------------------------------------------------------
+	synchronized
+	final public void initAllResource(SetLoading progress)
+	{
+		// images 
+		{
+			int count = ImgTable.size();
+			int index = 0;
+			Enumeration<ImagesSet> imgs = ImgTable.elements();
+			while (imgs.hasMoreElements()) {
+				ImagesSet ts = imgs.nextElement();
+				IImages images = getImages(ts);
+				if (progress!=null) {
+					progress.progress(this, images, index, count);
+				}
+				index ++;
+			}
+		}
+		
+		// sprites
+		{
+			int count = SprTable.size();
+			int index = 0;
+			Enumeration<SpriteSet> sprs = SprTable.elements();
+			while (sprs.hasMoreElements()) {
+				SpriteSet ss = sprs.nextElement();
+				CSprite sprite = getSprite(ss);
+				if (progress!=null) {
+					progress.progress(this, sprite, index, count);
+				}
+				index ++;
+			}
+		}
+		
+		// worlds
+		{
+			int count = WorldTable.size();
+			int index = 0;
+			Enumeration<WorldSet> worlds = WorldTable.elements();
+			while (worlds.hasMoreElements()) {
+				WorldSet ws = worlds.nextElement();
+				CWayPoint[] points = getWorldWayPoints(ws.Name);
+				CCD[] regions = getWorldRegions(ws.Name);
+				if (progress!=null) {
+					progress.progress(this, points, index, count);
+					progress.progress(this, regions, index, count);
+				}
+				index ++;
+			}
+		}
+	}
+	
+	synchronized
+	final public boolean isStreamingImages(String images_name) {
+		ImagesSet img = ImgTable.get(images_name);
+		if (img!=null) {
+			StreamTiles tiles = resource_manager.get("IMG_" + img.Index, StreamTiles.class);
+			if (tiles!=null) {
+				return !tiles.isLoaded();
+			}
+		}
+		return false;
+	}
+	
+	
+	
+
+
+//	-------------------------------------------------------------------------------------
+
+
+	
+	protected class LoadSpriteTask implements Runnable
+	{
+		final AtomicReference<CSprite> listener;
+		
+		final SpriteSet spr;
+		
+		public LoadSpriteTask(SpriteSet spr, AtomicReference<CSprite> listener) {
+			this.spr		= spr;
+			this.listener 	= listener;
+		}
+		
+		public void run() {
+			synchronized (listener) {
+				try {
+//					System.out.println("start load spr : " + spr.SprID);
+					CSprite cspr = getSprite(spr);
+					listener.set(cspr);
+				} catch (Throwable e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+//	-------------------------------------------------------------------------------------
+	
+	
+	
+	
+}

@@ -16,6 +16,9 @@ import javax.imageio.ImageIO;
 
 import com.cell.CIO;
 import com.cell.CUtil;
+import com.cell.gameedit.StreamTiles;
+import com.cell.gameedit.object.ImagesSet;
+import com.cell.gameedit.output.OutputProperties;
 import com.cell.gfx.IGraphics;
 import com.cell.io.BigIODeserialize;
 import com.cell.io.BigIOSerialize;
@@ -27,8 +30,6 @@ import com.cell.util.Pair;
 import com.cell.util.zip.ZipUtil;
 import com.g2d.Tools;
 import com.g2d.cell.CellGameEditWrap;
-import com.g2d.cell.CellSetResource.ImagesSet;
-import com.g2d.cell.CellSetResource.StreamTiles;
 import com.g2d.studio.Config;
 import com.g2d.studio.io.file.FileIO;
 
@@ -339,7 +340,7 @@ public class EatBuilder extends Builder
 			try{
 				for (int i=0; i<images.length; i++){
 					if (img.ClipsW[i]>0 && img.ClipsH[i]>0){
-						byte[] idata = set.loadRes("set/"+img.Name+"/"+i+"."+img.Name);
+						byte[] idata = set.getOutput().loadRes("set/"+img.Name+"/"+i+"."+img.Name);
 						images[i] = new CImage(new ByteArrayInputStream(idata));
 					}
 				}
@@ -351,11 +352,11 @@ public class EatBuilder extends Builder
 		}
 		
 		protected boolean loadZipImages() {
-			boolean is_png_mask = set.Path.endsWith("scene.properties");
+			boolean is_png_mask = ((OutputProperties)set.getOutput()).path.endsWith("scene.properties");
 			if (is_png_mask) {
 				is_png_mask = img.Name.startsWith("png");
 			}
-			byte[] zipdata = set.loadRes(img.Name+".zip");
+			byte[] zipdata = set.getOutput().loadRes(img.Name+".zip");
 			if (zipdata != null) {
 				Map<String, ByteArrayInputStream> files = ZipUtil.unPackFile(new ByteArrayInputStream(zipdata));
 				for (int i = 0; i < images.length; i++) {

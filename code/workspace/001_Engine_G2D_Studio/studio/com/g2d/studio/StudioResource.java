@@ -3,6 +3,8 @@ package com.g2d.studio;
 import java.io.IOException;
 import java.util.Enumeration;
 
+import com.cell.gameedit.StreamTiles;
+import com.cell.gameedit.object.ImagesSet;
 import com.cell.gfx.IImages;
 import com.cell.rpg.res.Resource;
 import com.g2d.studio.cell.gameedit.Builder;
