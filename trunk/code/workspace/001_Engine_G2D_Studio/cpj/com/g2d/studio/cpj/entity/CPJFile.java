@@ -18,6 +18,7 @@ import com.g2d.Tools;
 import com.g2d.studio.Studio;
 import com.g2d.studio.StudioResource;
 import com.g2d.studio.cell.gameedit.Builder;
+import com.g2d.studio.cell.gameedit.EatBuilder;
 import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.io.File;
 import com.g2d.studio.res.Res;
@@ -64,27 +65,27 @@ public class CPJFile extends G2DTreeNode<CPJObject<?>>
 	}
 
 	/**
-	 * get output.properties
 	 * @return
 	 */
-	public String getResourcePath() {
-		File output_file	= getOutputFile(cpj_file);
-		if (output_file!=null && output_file.exists())  {
-			String output_properties = 
-				res_root + "/" + 
-				cpj_file.getParentFile().getName() + "/" + 
-				output_file.getParentFile().getName() + "/" +
-				output_file.getName();
-			return output_properties;
-		}
-		else{
-			String output_properties = 
-				res_root + "/" + 
-				cpj_file.getParentFile().getName() + "/" +
-				"null/" +
-				"null";
-			return output_properties;
-		}
+	public String getCPJPath() {
+		return res_root + "/" + cpj_file.getParentFile().getName() + "/" + cpj_file.getName();
+//		File output_file	= getOutputFile(cpj_file);
+//		if (output_file!=null && output_file.exists())  {
+//			String output_properties = 
+//				res_root + "/" + 
+//				cpj_file.getParentFile().getName() + "/" + 
+//				output_file.getParentFile().getName() + "/" +
+//				output_file.getName();
+//			return output_properties;
+//		}
+//		else{
+//			String output_properties = 
+//				res_root + "/" + 
+//				cpj_file.getParentFile().getName() + "/" +
+//				"null/" +
+//				"null";
+//			return output_properties;
+//		}
 	}
 	
 	@Override
@@ -187,12 +188,10 @@ public class CPJFile extends G2DTreeNode<CPJObject<?>>
 
 	public void refresh() throws Throwable
 	{
-		File output_file	= getOutputFile(cpj_file);
-
-		if (output_file!=null && output_file.exists()) 
+		if (cpj_file != null && cpj_file.exists())
 		{
 			try {
-				set_resource = new StudioResource(output_file);
+				set_resource = EatBuilder.getInstance().createResource(cpj_file);
 				switch (res_type) {
 				case ACTOR:	
 				case AVATAR:
@@ -280,28 +279,32 @@ public class CPJFile extends G2DTreeNode<CPJObject<?>>
 	
 //	------------------------------------------------------------------------------------------------------------------------------
 	
+
 	/**
-	public static String ROOT_SCENE					= "scene";<br>
-	public static String RES_SCENE_					= "scene_";<br>
-	public static String RES_SCENE_OUTPUT			= "output/scene.properties";<br>
-	@see {@link Config}
-	*/
-	public static ArrayList<CPJFile> listFile (String root, String res_root, CPJResourceType res_type, String prefix)
+	 * @param root			g2d resource root
+	 * @param res_root 		avatar
+	 * @param res_type		sprite
+	 * @param prefix		item_xxxxxx
+	 * @param cpj_file		item.cpj
+	 * @return
+	 */
+	public static ArrayList<CPJFile> listFile (
+			String root, 
+			String res_root, 
+			CPJResourceType res_type)
 	{
 //		res_prefix = res_prefix.toLowerCase();
 		ArrayList<CPJFile> ret = new ArrayList<CPJFile>();
 		try{
 			File root_file = Studio.getInstance().getIO().createFile(root, res_root);
 			for (File file : root_file.listFiles()) {
-				if (file.getName().startsWith(prefix)) {
-					File cpj = getCPJFile(file);
-					if (cpj != null) {
-						try{
-							ret.add(new CPJFile(cpj, res_type));
-						} catch(Throwable err){
-							System.err.println("init cpj file error : " + cpj.getPath());
-							err.printStackTrace();
-						}
+				File cpj = Builder.getInstance().getCPJFile(file, res_type);
+				if (cpj != null && cpj.exists()) {
+					try{
+						ret.add(new CPJFile(cpj, res_type));
+					} catch(Throwable err){
+						System.err.println("init cpj file error : " + cpj.getPath());
+						err.printStackTrace();
 					}
 				}
 			}
@@ -311,41 +314,15 @@ public class CPJFile extends G2DTreeNode<CPJObject<?>>
 		return ret;
 	}
 	
-	private static File getOutputFile(File cpj_file)
-	{
-		try{
-			String cpj_file_name = cpj_file.getName().toLowerCase().replace("cpj", "");
-			File o = cpj_file.getParentFile().getChildFile("output").getChildFile(cpj_file_name+"properties");
-//			System.out.println(o.getPath());
-			return o;
-			
-//			for (File output : cpj_file.getParentFile().listFiles()) {
-//				if (output.getName().toLowerCase().equals("output")) {
-//					for (File o : output.listFiles()) {
-//						String output_name = o.getName().toLowerCase();
-//						if (output_name.startsWith(cpj_file_name) && 
-//							output_name.endsWith(".properties")) {
-//							return o;
-//						}
-//					}
-//				}
-//			}
+	public static File getCPJFile(File file, CPJResourceType res_type) {
+		if (file.getName().startsWith("item_")) {
+			File cpj = file.getChildFile("item.cpj");
+			if (cpj.exists()) {
+				return cpj;
+			}
 		}
-		catch(Exception err){}
 		return null;
 	}
 	
-	private static File getCPJFile(File cpj_root) 
-	{
-		try{		
-			for (File f : cpj_root.listFiles()) {
-				if (f.getName().toLowerCase().endsWith(".cpj")) {
-					return f;
-				}
-			}
-		} catch (Exception err) {
-		}
-		return null;
-	}
 }
 

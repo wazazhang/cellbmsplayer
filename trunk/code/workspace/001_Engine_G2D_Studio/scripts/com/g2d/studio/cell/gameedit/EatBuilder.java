@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.ZipEntry;
@@ -20,6 +21,7 @@ import com.cell.gameedit.StreamTiles;
 import com.cell.gameedit.object.ImagesSet;
 import com.cell.gameedit.output.OutputProperties;
 import com.cell.gfx.IGraphics;
+import com.cell.gfx.IImages;
 import com.cell.io.BigIODeserialize;
 import com.cell.io.BigIOSerialize;
 import com.cell.io.CFile;
@@ -31,6 +33,8 @@ import com.cell.util.zip.ZipUtil;
 import com.g2d.Tools;
 import com.g2d.cell.CellGameEditWrap;
 import com.g2d.studio.Config;
+import com.g2d.studio.StudioResource;
+import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.io.file.FileIO;
 
 
@@ -294,10 +298,83 @@ public class EatBuilder extends Builder
 		return script_file;
 	}
 
+//	-------------------------------------------------------------------------------------------------------------------
+	
 	@Override
-	public StreamTiles createResource(ImagesSet img, Resource resource) {
-		return new StreamTypeTiles(img, resource);
+	public StudioResource createResource(com.g2d.studio.io.File cpj_file) {
+		try {
+			return new EatResource(getOutputFile(cpj_file));
+		} catch (Exception err) {
+			err.printStackTrace();
+		}
+		return null;
 	}
+	
+	@Override
+	public com.g2d.studio.io.File getCPJFile(
+			com.g2d.studio.io.File file,
+			CPJResourceType resType) 
+	{
+		switch (resType) {
+		case ACTOR:
+			if (file.getName().startsWith("actor_")) {
+				return file.getChildFile("actor.cpj");
+			}
+			break;
+		case AVATAR:
+			if (file.getName().startsWith("item_")) {
+				return file.getChildFile("item.cpj");
+			}
+			break;
+		case EFFECT:
+			if (file.getName().startsWith("effect_")) {
+				return file.getChildFile("effect.cpj");
+			}
+			break;
+		case WORLD:
+			if (file.getName().startsWith("scene_")) {
+				return file.getChildFile("scene.cpj");
+			}
+			break;
+		}
+		return null;
+	}
+	
+	private static com.g2d.studio.io.File getOutputFile(com.g2d.studio.io.File cpj_file)
+	{
+		try{
+			String cpj_file_name = cpj_file.getName().toLowerCase().replace("cpj", "");
+			com.g2d.studio.io.File o = cpj_file.getParentFile().getChildFile("output").getChildFile(
+					cpj_file_name+"properties");
+			return o;
+		} catch(Exception err){}
+		return null;
+	}
+	
+//	-----------------------------------------------------------------------------------------------------------
+	
+	public class EatResource extends StudioResource
+	{
+		public EatResource(com.g2d.studio.io.File output) throws Exception {
+			super(new OutputProperties(output.getPath()), output.getPath());
+		}
+		
+		@Override
+		protected StreamTiles getLocalImage(ImagesSet img) throws IOException {
+			StreamTiles tiles = new StreamTypeTiles(img, this);
+			return tiles;
+		}
+		
+		@Override
+		protected StreamTiles getStreamImage(ImagesSet img) throws IOException {
+			StreamTiles tiles = new StreamTypeTiles(img, this);
+			return tiles;
+		}
+
+		
+
+	}
+
 
 	/**
 	 * 根据图片组名字确定读入jpg或png
@@ -305,7 +382,7 @@ public class EatBuilder extends Builder
 	 */
 	public static class StreamTypeTiles extends StreamTiles
 	{
-		public StreamTypeTiles(ImagesSet img, Resource resource) {
+		public StreamTypeTiles(ImagesSet img, StudioResource resource) {
 			super(img, resource);
 		}
 		

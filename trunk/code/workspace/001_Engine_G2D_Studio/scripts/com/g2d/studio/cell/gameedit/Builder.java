@@ -1,9 +1,7 @@
 package com.g2d.studio.cell.gameedit;
 
-
-import com.cell.gameedit.StreamTiles;
-import com.cell.gameedit.object.ImagesSet;
-import com.cell.rpg.res.Resource;
+import com.g2d.studio.StudioResource;
+import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.io.File;
 
 public abstract class Builder 
@@ -14,7 +12,9 @@ public abstract class Builder
 	
 	public abstract Process buildScene(File cpj_file_name);
 	
-	public abstract StreamTiles createResource(ImagesSet img, Resource resource);
+	public abstract StudioResource createResource(com.g2d.studio.io.File cpj_file);
+	
+	public abstract com.g2d.studio.io.File getCPJFile(com.g2d.studio.io.File file, CPJResourceType res_type);
 	
 //	public abstract void saveBuildSpriteBat(File cpj_file_name);
 //

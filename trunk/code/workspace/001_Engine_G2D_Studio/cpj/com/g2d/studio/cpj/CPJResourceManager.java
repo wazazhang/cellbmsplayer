@@ -53,8 +53,8 @@ public class CPJResourceManager extends ManagerForm implements MouseListener
 		// actors
 		{
 			unit_root = new DefaultMutableTreeNode("单位模板");
-			ArrayList<CPJFile> files = CPJFile.listFile(path, Config.RES_ACTOR_ROOT, 
-					CPJResourceType.ACTOR, "actor_");
+			ArrayList<CPJFile> files = CPJFile.listFile(path, 
+					Config.RES_ACTOR_ROOT, CPJResourceType.ACTOR);
 			progress.setMaximum("", files.size());
 			for (int i=0; i<files.size(); i++) {
 				unit_root.add(files.get(i));
@@ -69,8 +69,8 @@ public class CPJResourceManager extends ManagerForm implements MouseListener
 		// avatars
 		{
 			avatar_root = new DefaultMutableTreeNode("AVATAR模板");
-			ArrayList<CPJFile> files = CPJFile.listFile(path, Config.RES_AVATAR_ROOT, 
-					CPJResourceType.AVATAR, "item_");
+			ArrayList<CPJFile> files = CPJFile.listFile(path, 
+					Config.RES_AVATAR_ROOT, CPJResourceType.AVATAR);
 			progress.setMaximum("", files.size());
 			for (int i=0; i<files.size(); i++) {
 				avatar_root.add(files.get(i));
@@ -85,8 +85,8 @@ public class CPJResourceManager extends ManagerForm implements MouseListener
 		// effect
 		{
 			effect_root = new DefaultMutableTreeNode("特效模板");
-			ArrayList<CPJFile> files = CPJFile.listFile(path, Config.RES_EFFECT_ROOT, 
-					CPJResourceType.EFFECT, "effect_");
+			ArrayList<CPJFile> files = CPJFile.listFile(path, 
+					Config.RES_EFFECT_ROOT, CPJResourceType.EFFECT);
 			progress.setMaximum("", files.size());
 			for (int i=0; i<files.size(); i++) {
 				effect_root.add(files.get(i));
@@ -101,8 +101,8 @@ public class CPJResourceManager extends ManagerForm implements MouseListener
 		// scenes
 		{
 			scene_root = new DefaultMutableTreeNode("场景模板");
-			ArrayList<CPJFile> files = CPJFile.listFile(path, Config.RES_SCENE_ROOT, 
-					CPJResourceType.WORLD, "scene_");
+			ArrayList<CPJFile> files = CPJFile.listFile(path,
+					Config.RES_SCENE_ROOT, CPJResourceType.WORLD);
 			progress.setMaximum("", files.size());
 			for (int i=0; i<files.size(); i++) {
 				scene_root.add(files.get(i));
@@ -252,7 +252,7 @@ public class CPJResourceManager extends ManagerForm implements MouseListener
 		StringBuffer list = new StringBuffer();
 		for (CPJObject<?> spr : objs){
 			list.append(
-					spr.parent.getResourcePath() + ";" +
+					spr.parent.getCPJPath() + ";" +
 					spr.parent.getName() + ";" + 
 					spr.getName() + ";" + 
 					"\n");

@@ -42,6 +42,7 @@ import javax.swing.event.AncestorListener;
 
 import com.cell.CObject;
 import com.cell.CUtil;
+import com.cell.gameedit.SetResource;
 import com.cell.gameedit.object.WorldSet.SpriteObject;
 import com.cell.gfx.game.CCD;
 import com.cell.gfx.game.CSprite;
@@ -765,12 +766,12 @@ public class SceneEditor extends AbstractFrame implements ActionListener, Window
 		
 		class EatWorldMap extends WorldMap
 		{
-			public EatWorldMap(CellSetResource resource, String worldname) {
+			public EatWorldMap(SetResource resource, String worldname) {
 				super(SceneContainer.this, resource, resource.WorldTable.get(worldname));
 			}
 			
 			@Override
-			protected Unit createWorldObject(CellSetResource set, SpriteObject worldSet) {
+			protected Unit createWorldObject(SetResource set, SpriteObject worldSet) {
 				return new EatWorldObject(set, worldSet);
 			}
 			
@@ -783,11 +784,11 @@ public class SceneEditor extends AbstractFrame implements ActionListener, Window
 			float old_alpha = 0;
 			BufferedImage mask;
 			
-			public EatWorldObject(CellSetResource set, SpriteObject worldSet) {
+			public EatWorldObject(SetResource set, SpriteObject worldSet) {
 				super(set, worldSet);
 			}
 			@Override
-			public synchronized void loaded(CellSetResource set, CSprite cspr,
+			public synchronized void loaded(SetResource set, CSprite cspr,
 					com.cell.gameedit.object.SpriteSet spr) {
 				super.loaded(set, cspr, spr);
 				this.is_png = !spr.ImagesName.startsWith("jpg");
