@@ -1,29 +1,18 @@
 package com.g2d.display;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
-import java.awt.Stroke;
 import java.awt.geom.AffineTransform;
 import java.util.Vector;
 
-import com.cell.CMath;
-import com.g2d.display.event.Event;
 import com.g2d.display.event.EventListener;
-import com.g2d.display.event.KeyEvent;
-import com.g2d.display.event.KeyListener;
 import com.g2d.display.event.MouseDragDropAccepter;
 import com.g2d.display.event.MouseDragDropListener;
 import com.g2d.display.event.MouseDragResizeListener;
-import com.g2d.display.event.MouseEvent;
-import com.g2d.display.event.MouseListener;
 import com.g2d.display.event.MouseMoveEvent;
-import com.g2d.display.event.MouseWheelEvent;
-import com.g2d.display.event.MouseWheelListener;
 
 /**
  * 一般为一个矩形的显示单位

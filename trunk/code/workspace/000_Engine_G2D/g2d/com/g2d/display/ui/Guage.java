@@ -6,7 +6,6 @@ import java.awt.Image;
 
 import com.g2d.Tools;
 import com.g2d.Version;
-import com.g2d.annotation.Property;
 import com.g2d.display.ui.layout.UILayout;
 import com.g2d.util.Drawing;
 

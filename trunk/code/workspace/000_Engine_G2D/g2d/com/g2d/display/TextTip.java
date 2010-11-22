@@ -6,12 +6,10 @@ import java.awt.Composite;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.text.AttributedString;
 
 import com.g2d.Tools;
-import com.g2d.Version;
 import com.g2d.display.ui.layout.UILayout;
 import com.g2d.display.ui.text.MultiTextLayout;
 

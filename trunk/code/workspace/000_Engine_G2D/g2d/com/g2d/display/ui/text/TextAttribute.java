@@ -1,6 +1,5 @@
 package com.g2d.display.ui.text;
 
-import java.awt.RenderingHints;
 import java.text.AttributedCharacterIterator.Attribute;
 
 public class TextAttribute extends Attribute

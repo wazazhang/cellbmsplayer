@@ -1,14 +1,10 @@
 package com.g2d.display.ui;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.util.Vector;
 
 import com.g2d.Version;
 import com.g2d.display.DisplayObject;
 import com.g2d.display.event.MouseWheelEvent;
-import com.g2d.display.ui.DropDownList.DropDownListContainer;
 import com.g2d.display.ui.layout.UILayout;
 
 public class Panel extends UIComponent

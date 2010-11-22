@@ -1,34 +1,18 @@
 package com.g2d.display;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Composite;
-import java.awt.Dimension;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.Shape;
-import java.awt.Stroke;
-import java.awt.geom.AffineTransform;
 import java.util.Vector;
 
-import com.cell.CMath;
-import com.cell.util.TypedHashtable;
-import com.cell.util.event.EventListeners;
 import com.g2d.Version;
-import com.g2d.annotation.Property;
 import com.g2d.display.event.Event;
 import com.g2d.display.event.EventListener;
 import com.g2d.display.event.KeyEvent;
 import com.g2d.display.event.KeyListener;
-import com.g2d.display.event.MouseDragDropAccepter;
-import com.g2d.display.event.MouseDragDropListener;
-import com.g2d.display.event.MouseDragResizeListener;
 import com.g2d.display.event.MouseEvent;
 import com.g2d.display.event.MouseListener;
 import com.g2d.display.event.MouseMoveEvent;
 import com.g2d.display.event.MouseWheelEvent;
 import com.g2d.display.event.MouseWheelListener;
-import com.g2d.display.ui.text.TextBuilder;
 
 /**
  * InteractiveObject 二要素<br>

@@ -6,8 +6,6 @@ import java.awt.Image;
 import java.awt.Paint;
 import java.awt.Rectangle;
 import java.awt.Shape;
-import java.awt.TexturePaint;
-import java.awt.geom.Rectangle2D;
 
 import com.g2d.display.ui.text.MultiTextLayout;
 

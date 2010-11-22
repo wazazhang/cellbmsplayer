@@ -1,6 +1,7 @@
 package com.g2d.display.ui.layout;
 
-import com.g2d.display.ui.*;
+import com.g2d.display.ui.Container;
+import com.g2d.display.ui.UIComponent;
 
 public abstract class ContainerLayout 
 {

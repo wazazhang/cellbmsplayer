@@ -11,17 +11,13 @@ import java.awt.event.MouseListener;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.EventObject;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import javax.swing.AbstractCellEditor;
 import javax.swing.DefaultCellEditor;
 import javax.swing.Icon;
-import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -35,7 +31,6 @@ import javax.swing.table.TableColumn;
 import com.cell.CIO;
 import com.cell.reflect.Parser;
 import com.cell.util.Pair;
-import com.g2d.util.AbstractDialog;
 import com.g2d.util.AbstractOptionDialog;
 
 /**

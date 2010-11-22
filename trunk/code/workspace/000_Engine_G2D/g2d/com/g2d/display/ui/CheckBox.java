@@ -1,21 +1,17 @@
 package com.g2d.display.ui;
 
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Vector;
 
 import com.g2d.Tools;
 import com.g2d.Version;
-import com.g2d.annotation.Property;
 import com.g2d.display.AnimateCursor;
 import com.g2d.display.event.EventListener;
 import com.g2d.display.event.MouseEvent;
 import com.g2d.display.ui.CheckBox.CheckBoxGroup.Mode;
-import com.g2d.display.ui.ComboBox.ComboxListener;
 import com.g2d.util.Drawing;
 
 public class CheckBox extends UIComponent 

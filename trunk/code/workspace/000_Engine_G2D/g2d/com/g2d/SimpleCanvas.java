@@ -1,55 +1,10 @@
 package com.g2d;
 
 import java.awt.Component;
-import java.awt.Container;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GraphicsConfiguration;
 import java.awt.Image;
-import java.awt.KeyboardFocusManager;
 import java.awt.Panel;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.awt.Toolkit;
-import java.awt.Transparency;
-import java.awt.Window;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.awt.image.BufferedImage;
-import java.text.AttributedString;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Vector;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
-import javax.swing.JApplet;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JWindow;
-
-import com.cell.CObject;
-import com.g2d.Tools;
-import com.g2d.Version;
-import com.g2d.display.AnimateCursor;
-import com.g2d.display.Stage;
-import com.g2d.display.event.Event;
-import com.g2d.editor.DisplayObjectEditor;
 
 final public class SimpleCanvas extends Panel implements CanvasContainer
 {

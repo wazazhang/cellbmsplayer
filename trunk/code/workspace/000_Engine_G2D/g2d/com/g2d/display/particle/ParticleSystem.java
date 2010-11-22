@@ -3,7 +3,6 @@ package com.g2d.display.particle;
 import java.awt.Graphics2D;
 
 import com.g2d.display.DisplayObjectContainer;
-import com.g2d.display.Sprite;
 
 public abstract class ParticleSystem extends DisplayObjectContainer 
 {

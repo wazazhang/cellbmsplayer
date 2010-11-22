@@ -4,17 +4,14 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.FocusEvent;
-import java.text.AttributedString;
 
 import com.cell.math.MathVector;
 import com.cell.math.TVector;
-import com.g2d.Tools;
 import com.g2d.Version;
 import com.g2d.display.event.Event;
 import com.g2d.display.event.MouseDragDropAccepter;
 import com.g2d.display.event.MouseDragDropListener;
 import com.g2d.display.event.MouseEvent;
-import com.g2d.display.ui.text.TextBuilder;
 
 
 

@@ -3,7 +3,6 @@ package com.g2d.editor.property;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;

@@ -1,19 +1,14 @@
 package com.g2d.cell;
 
-import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.image.BufferedImage;
 
-import com.cell.gfx.game.CCD;
 import com.cell.gfx.game.CSprite;
 import com.cell.j2se.CGraphics;
 import com.g2d.Tools;
 import com.g2d.Version;
 import com.g2d.display.AnimateCursor;
 import com.g2d.display.Sprite;
-import com.g2d.util.Drawing;
 
 public class CellSprite extends Sprite
 {

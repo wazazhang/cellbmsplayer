@@ -24,7 +24,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import com.g2d.display.ui.Container;
-import com.g2d.display.ui.Form;
 import com.g2d.display.ui.UIComponent;
 
 

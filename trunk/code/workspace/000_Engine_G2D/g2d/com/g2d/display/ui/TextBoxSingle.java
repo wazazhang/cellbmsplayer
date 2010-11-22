@@ -7,7 +7,6 @@ import java.awt.Shape;
 import java.awt.font.ShapeGraphicAttribute;
 import java.awt.font.TextAttribute;
 import java.awt.geom.Ellipse2D;
-import java.io.Serializable;
 
 import com.g2d.Version;
 import com.g2d.annotation.Property;

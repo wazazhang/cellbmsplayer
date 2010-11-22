@@ -3,18 +3,15 @@ package com.g2d.display.ui;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
 
-import com.g2d.Tools;
 import com.g2d.Version;
 import com.g2d.annotation.Property;
 import com.g2d.display.DisplayObject;
 import com.g2d.display.event.EventListener;
 import com.g2d.display.event.MouseEvent;
-import com.g2d.editor.UIComponentEditor;
 import com.g2d.util.Drawing;
 
 public class ListView extends UIComponent 

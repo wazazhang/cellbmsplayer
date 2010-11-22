@@ -4,8 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 
-import sun.font.EAttribute;
-
 import com.g2d.annotation.Property;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.event.MouseEvent;

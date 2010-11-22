@@ -5,22 +5,16 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.awt.event.MouseEvent;
 import java.util.concurrent.locks.ReentrantLock;
 
 import javax.swing.JPanel;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 
-import com.g2d.CanvasAdapter;
 import com.g2d.SimpleCanvasNoInternal;
-import com.g2d.Version;
 import com.g2d.display.Canvas;
-import com.g2d.display.DisplayObject;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.Stage;
-
-import com.g2d.util.AbstractFrame;
 
 public class DisplayObjectPanel extends JPanel implements Runnable, ComponentListener, AncestorListener
 {

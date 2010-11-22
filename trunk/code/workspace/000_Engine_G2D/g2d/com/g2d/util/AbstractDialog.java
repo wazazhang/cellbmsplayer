@@ -5,7 +5,6 @@ import java.awt.Container;
 import java.awt.Toolkit;
 import java.awt.Window;
 
-import javax.swing.JComponent;
 import javax.swing.JDialog;
 
 

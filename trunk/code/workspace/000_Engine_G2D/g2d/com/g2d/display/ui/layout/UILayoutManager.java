@@ -5,7 +5,6 @@ import java.awt.Image;
 import java.util.Hashtable;
 
 import com.g2d.Tools;
-import com.g2d.display.Tip;
 import com.g2d.display.ui.BaseButton;
 import com.g2d.display.ui.Button;
 import com.g2d.display.ui.CheckBox;
@@ -17,7 +16,6 @@ import com.g2d.display.ui.ImageButton;
 import com.g2d.display.ui.Label;
 import com.g2d.display.ui.MessageBox;
 import com.g2d.display.ui.PageSelect;
-import com.g2d.display.ui.PageSelectPanel;
 import com.g2d.display.ui.Pan;
 import com.g2d.display.ui.Panel;
 import com.g2d.display.ui.RichButton;

@@ -1,22 +1,12 @@
 package com.g2d.display.ui;
 
 import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.font.TextAttribute;
-import java.io.IOException;
 import java.io.Serializable;
 import java.text.AttributedString;
 
-import com.g2d.Tools;
 import com.g2d.Version;
-import com.g2d.annotation.Property;
-import com.g2d.display.event.KeyEvent;
-import com.g2d.display.event.MouseEvent;
-import com.g2d.display.event.MouseMoveEvent;
-import com.g2d.display.event.MouseWheelEvent;
 import com.g2d.display.ui.text.MultiTextLayout;
 
 

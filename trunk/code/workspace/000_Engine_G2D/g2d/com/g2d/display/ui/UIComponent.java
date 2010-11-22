@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.text.AttributedString;
-import java.util.Hashtable;
 import java.util.Vector;
 
 import com.cell.sound.Sound;

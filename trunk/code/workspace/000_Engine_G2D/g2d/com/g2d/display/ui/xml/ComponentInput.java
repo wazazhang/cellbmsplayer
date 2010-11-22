@@ -8,13 +8,10 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.cell.CIO;
-import com.g2d.Tools;
-import com.g2d.display.ui.Container;
 import com.g2d.display.ui.UIComponent;
 
 public class ComponentInput 

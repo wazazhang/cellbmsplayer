@@ -1,35 +1,17 @@
 package com.g2d.cell.game;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.Shape;
-import java.awt.geom.Line2D;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Vector;
 
-import com.cell.CMath;
-import com.cell.game.ai.pathfind.AstarManhattanMap;
+import com.cell.gameedit.SetResource;
 import com.cell.gameedit.object.SpriteSet;
 import com.cell.gameedit.object.WorldSet;
-import com.cell.gfx.game.CCD;
 import com.cell.gfx.game.CSprite;
-import com.cell.gfx.game.CWayPoint;
 import com.cell.j2se.CGraphics;
 import com.g2d.Tools;
-import com.g2d.Version;
-import com.g2d.cell.CellSetResource;
-import com.g2d.cell.CellSetResourceManager;
-import com.g2d.display.DisplayObject;
-import com.g2d.display.DisplayObjectContainer;
-import com.g2d.display.DisplayShape;
-import com.g2d.display.InteractiveObject;
 import com.g2d.game.rpg.Unit;
-import com.g2d.util.Drawing;
 
 public class Scene extends com.g2d.game.rpg.Scene 
 {
@@ -41,7 +23,7 @@ public class Scene extends com.g2d.game.rpg.Scene
 	}
 	
 	@SuppressWarnings("deprecation")
-	public Scene(CellSetResource resource, String worldname) 	{
+	public Scene(SetResource resource, String worldname) 	{
 		addChild(new WorldMap(this, resource, resource.WorldTable.get(worldname)));
 	}
 	
@@ -52,10 +34,10 @@ public class Scene extends com.g2d.game.rpg.Scene
 
 	public static class WorldMap extends com.g2d.game.rpg.SceneMap
 	{
-		final protected CellSetResource			set_resource;
+		final protected SetResource			set_resource;
 		final protected WorldSet	set_world;
 
-		public WorldMap(Scene scene, CellSetResource resource, WorldSet set_world) 
+		public WorldMap(Scene scene, SetResource resource, WorldSet set_world) 
 		{
 			super(scene, 
 					set_world.GridW, 
@@ -88,11 +70,11 @@ public class Scene extends com.g2d.game.rpg.Scene
 		 * @param world_set
 		 * @return
 		 */
-		protected Unit createWorldObject(CellSetResource set, WorldSet.SpriteObject world_set) {
+		protected Unit createWorldObject(SetResource set, WorldSet.SpriteObject world_set) {
 			return new WorldObject(set, world_set);
 		}
 		
-		final public CellSetResource getSetResource(){
+		final public SetResource getSetResource(){
 			return set_resource;
 		}
 		
@@ -156,7 +138,7 @@ public class Scene extends com.g2d.game.rpg.Scene
 	{
 		final protected WorldSet.SpriteObject 		set_world_sprite;
 		
-		public WorldObject(CellSetResource set, WorldSet.SpriteObject world_set) 
+		public WorldObject(SetResource set, WorldSet.SpriteObject world_set) 
 		{
 			synchronized(this) {
 				super.init(set, world_set.SprID);
@@ -166,7 +148,7 @@ public class Scene extends com.g2d.game.rpg.Scene
 		}
 		
 		@Override
-		public void loaded(CellSetResource set, CSprite cspr, SpriteSet spr) {
+		public void loaded(SetResource set, CSprite cspr, SpriteSet spr) {
 			synchronized(this) {
 				super.loaded(set, cspr, spr);
 				while (set_world_sprite==null) {}

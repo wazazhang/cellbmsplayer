@@ -6,7 +6,6 @@ import java.awt.geom.Line2D;
 import com.cell.CMath;
 import com.cell.game.ai.pathfind.AstarManhattan;
 import com.cell.game.ai.pathfind.AstarManhattan.WayPoint;
-
 import com.g2d.Version;
 import com.g2d.annotation.Property;
 import com.g2d.display.DisplayObject;

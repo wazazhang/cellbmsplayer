@@ -6,10 +6,7 @@ import java.awt.Image;
 import java.awt.Paint;
 import java.awt.Rectangle;
 import java.awt.TexturePaint;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.io.Serializable;
-
 
 import com.cell.DObject;
 import com.cell.gfx.IImage;
@@ -469,7 +466,7 @@ public class UILayout extends DObject
 	{
 		int bl = BorderTL.getImage().getWidth();
 		int br = BorderTR.getImage().getWidth();
-		//画血条时可能会用到，当血条长度小于左右块长度�?
+		//画血条时可能会用到，当血条长度小于左右块长度�?
 		if (bl + br >= W) {
 			float clip_scale = W / (float)(bl + br);
 			int wl = (int)(bl*clip_scale);
@@ -489,7 +486,7 @@ public class UILayout extends DObject
 	{
 		int bt = BorderTL.getImage().getHeight();
 		int bb = BorderBL.getImage().getHeight();
-		//画血条时可能会用到，当血条长度小于左右块长度�?
+		//画血条时可能会用到，当血条长度小于左右块长度�?
 		if (bt + bb >= H) {
 			float clip_scale = H / (float)(bt + bb);
 			int ht = (int)(bt*clip_scale);

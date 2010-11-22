@@ -2,16 +2,11 @@ package com.g2d.display.ui.text;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Rectangle;
-import java.awt.TexturePaint;
-import java.awt.font.ImageGraphicAttribute;
 import java.awt.font.TextAttribute;
-import java.awt.image.BufferedImage;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
 import java.text.CharacterIterator;
 import java.text.AttributedCharacterIterator.Attribute;
-import java.util.EnumSet;
 import java.util.Hashtable;
 import java.util.Stack;
 import java.util.Vector;
@@ -19,12 +14,6 @@ import java.util.Vector;
 import com.cell.CUtil;
 import com.cell.script.objective.IObjectiveFactory;
 import com.cell.script.objective.Objective;
-import com.cell.util.EnumManager;
-import com.cell.util.EnumManager.ValueEnum;
-import com.g2d.Tools;
-import com.g2d.cell.CellSetResourceManager;
-import com.g2d.display.ui.text.ga.GraphicsAttributeImage;
-import com.g2d.display.ui.text.ga.GraphicsAttributeSprite;
 
 /** 
  * 通过在字符串中嵌入代码，构造样式文本。<br>
