@@ -20,7 +20,7 @@ import com.cell.util.Pair;
 
 public class ZipUtil 
 {
-	static public ByteArrayOutputStream packFiles(ArrayList<File> files)
+	static public ByteArrayOutputStream packFiles(ArrayList<File> files, long time)
 	{
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ZipOutputStream zip_out = new ZipOutputStream(baos);
@@ -29,6 +29,7 @@ public class ZipUtil
 				byte[] data = CFile.readData(file);
 				if (data != null) {
 					ZipEntry entry = new ZipEntry(file.getName());
+					entry.setTime(time);
 					try{
 						zip_out.putNextEntry(entry);
 						zip_out.write(data);
@@ -45,7 +46,7 @@ public class ZipUtil
 		return baos;
 	}
 	
-	static public ByteArrayOutputStream packFile(File file)
+	static public ByteArrayOutputStream packFile(File file, long time)
 	{
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ZipOutputStream zip_out = new ZipOutputStream(baos);
@@ -53,6 +54,7 @@ public class ZipUtil
 			byte[] data = CFile.readData(file);
 			if (data != null) {
 				ZipEntry entry = new ZipEntry(file.getName());
+				entry.setTime(time);
 				try{
 					zip_out.putNextEntry(entry);
 					zip_out.write(data);
@@ -68,7 +70,7 @@ public class ZipUtil
 		return baos;
 	}
 
-	static public ByteArrayOutputStream packStreams(ArrayList<Pair<InputStream, String>> files)
+	static public ByteArrayOutputStream packStreams(ArrayList<Pair<InputStream, String>> files, long time)
 	{
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ZipOutputStream zip_out = new ZipOutputStream(baos);
@@ -77,6 +79,7 @@ public class ZipUtil
 				byte[] data = CIO.readStream(file.getKey());
 				if (data != null) {
 					ZipEntry entry = new ZipEntry(file.getValue());
+					entry.setTime(time);
 					try{
 						zip_out.putNextEntry(entry);
 						zip_out.write(data);
@@ -93,7 +96,7 @@ public class ZipUtil
 		return baos;
 	}
 	
-	static public ByteArrayOutputStream packStream(InputStream is, String name)
+	static public ByteArrayOutputStream packStream(InputStream is, String name, long time)
 	{
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ZipOutputStream zip_out = new ZipOutputStream(baos);
@@ -101,6 +104,7 @@ public class ZipUtil
 			byte[] data = CIO.readStream(is);
 			if (data != null) {
 				ZipEntry entry = new ZipEntry(name);
+				entry.setTime(time);
 				try{
 					zip_out.putNextEntry(entry);
 					zip_out.write(data);
