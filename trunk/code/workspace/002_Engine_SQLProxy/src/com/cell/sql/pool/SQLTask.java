@@ -1,14 +1,8 @@
 package com.cell.sql.pool;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-
-import org.logicalcobwebs.concurrent.LinkedNode;
-
-import com.mysql.jdbc.ResultSetMetaData;
 
 public abstract class SQLTask implements Runnable
 {

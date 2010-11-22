@@ -7,28 +7,14 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
-import java.lang.reflect.Field;
 
 import com.cell.classloader.jcl.JavaCompiler;
 import com.cell.persistance.PersistanceManager;
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.converters.Converter;
-import com.thoughtworks.xstream.converters.ConverterLookup;
-import com.thoughtworks.xstream.converters.ConverterRegistry;
-import com.thoughtworks.xstream.converters.MarshallingContext;
-import com.thoughtworks.xstream.converters.SingleValueConverter;
-import com.thoughtworks.xstream.converters.UnmarshallingContext;
-import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
-import com.thoughtworks.xstream.converters.reflection.ReflectionProvider.Visitor;
 import com.thoughtworks.xstream.core.DefaultConverterLookup;
 import com.thoughtworks.xstream.core.util.CompositeClassLoader;
-import com.thoughtworks.xstream.io.HierarchicalStreamDriver;
-import com.thoughtworks.xstream.io.HierarchicalStreamReader;
-import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.io.xml.XppDriver;
-import com.thoughtworks.xstream.mapper.Mapper;
 import com.thoughtworks.xstream.mapper.MapperWrapper;
-import com.thoughtworks.xstream.mapper.Mapper.ImplicitCollectionMapping;
 
 public class XStreamAdapter extends PersistanceManager
 {
@@ -79,6 +65,7 @@ public class XStreamAdapter extends PersistanceManager
 			super(next);
 		}
 		
+		@SuppressWarnings("unchecked")
 		public boolean shouldSerializeMember(Class definedIn, String fieldName) {
 			if(definedIn != Object.class){
 				return super.shouldSerializeMember(definedIn, fieldName);
