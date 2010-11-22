@@ -237,6 +237,7 @@ public class EatBuilder extends Builder
 				for (Pair<ByteArrayOutputStream, String> pak : packs) {
 					ZipEntry entry = new ZipEntry(pak.getValue());
 					try{
+						entry.setTime(0);
 						zip_out.putNextEntry(entry);
 						zip_out.write(pak.getKey().toByteArray());
 //						System.out.println(pak.getValue());
@@ -271,7 +272,7 @@ public class EatBuilder extends Builder
 				}
 			}
 			if (!packs.isEmpty()) {
-				ByteArrayOutputStream baos = ZipUtil.packFiles(packs);
+				ByteArrayOutputStream baos = ZipUtil.packFiles(packs, 0);
 				CFile.wirteData(out, baos.toByteArray());
 				baos.close();
 				return out;
