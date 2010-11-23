@@ -150,6 +150,8 @@ public class EatBuilder extends Builder
 	{
 		try
 		{
+			saveSceneThumb(cpj_file_name, "thumb.jpg");
+			
 			deleteIfExists(new File(cpj_file_name.getParentFile(), "_script"));
 			deleteIfExists(new File(cpj_file_name.getParentFile(), "scene_jpg_thumb.conf"));
 			deleteIfExists(new File(cpj_file_name.getParentFile(), "png.jpg"));
@@ -159,26 +161,11 @@ public class EatBuilder extends Builder
 			
 			if (output.exists())
 			{
-				LinkedHashMap<String, byte[]> output_pack = new LinkedHashMap<String, byte[]>();
-				
 				deleteIfExists(new File(output, "jpg.png"));
 				deleteIfExists(new File(output, "png.png"));
 				deleteIfExists(new File(output, "scene_graph.conf"));
 				deleteIfExists(new File(output, "scene_jpg.conf"));
 				deleteIfExists(new File(output, "scene_png.conf"));
-				
-				File output_properties = new File(output, cpj_file_name.getName().replaceAll(".cpj", ".properties"));
-				output_pack.put("output/"+output_properties.getName(), CFile.readData(output_properties));
-				
-				if (!is_scene) {
-					pakFiles(cpj_file_name.getParentFile(), "icon_\\w+.png", null, "", output_pack);
-					pakFiles(output, ".png", null, "output/", output_pack);
-				} else {
-					byte[] thumb_data = saveSceneThumb(cpj_file_name, "thumb.jpg");
-					if (thumb_data != null) {
-						output_pack.put("thumb.jpg", thumb_data);
-					}
-				}
 				
 				File set = new File(output, "set");
 				if (set.exists())
@@ -186,7 +173,7 @@ public class EatBuilder extends Builder
 					{
 						File jpg	= new File(set, "jpg");
 						if (jpg.exists() && jpg.isDirectory()) {
-							pakFiles(jpg, ".jpg", new File(output, "jpg.zip"), "output/jpg/", output_pack);
+							pakFiles(jpg, ".jpg", new File(output, "jpg.zip"));
 							CFile.deleteFiles(jpg, ".png");
 							CFile.deleteFiles(jpg, ".jpg");
 						}
@@ -194,9 +181,9 @@ public class EatBuilder extends Builder
 						File png	= new File(set, "png");
 						if (png.exists() && png.isDirectory()) {
 							if (is_scene) {
-								pakPngMasks	(png, ".png", new File(output, "png.zip"), "output/png/", output_pack);
+								pakPngMasks	(png, ".png", new File(output, "png.zip"));
 							} else {
-								pakFiles	(png, ".png", new File(output, "png.zip"), "output/png/", output_pack);
+								pakFiles	(png, ".png", new File(output, "png.zip"));
 							}
 							CFile.deleteFiles(png, ".jpg");
 							CFile.deleteFiles(png, ".png");
@@ -205,7 +192,7 @@ public class EatBuilder extends Builder
 					deleteIfExists(set);
 				}
 				
-				outputZipPack(cpj_file_name, output_pack);
+				outputZipPack(cpj_file_name);
 			}
 			
 		}
@@ -214,21 +201,23 @@ public class EatBuilder extends Builder
 		}
 	}
 
-	void outputZipPack(File cpj_file_name, LinkedHashMap<String, byte[]> pak_entrys)
+	void outputZipPack(File cpj_file_name)
 	{
 		ByteArrayOutputStream pak_baos = new ByteArrayOutputStream();
 		ZipOutputStream pak_zip = new ZipOutputStream(pak_baos);
 		try {
-			for (Entry<String, byte[]> e : pak_entrys.entrySet()) {
-				ZipEntry ze = new ZipEntry(e.getKey());
-				ze.setTime(0);
-				try {
-					pak_zip.putNextEntry(ze);
-					pak_zip.write(e.getValue());
-				} catch (Exception err) {
-					err.printStackTrace();
-				}
-			}
+//			for (Entry<String, byte[]> e : pak_entrys.entrySet()) {
+//				ZipEntry ze = new ZipEntry(e.getKey());
+//				ze.setTime(0);
+//				try {
+//					pak_zip.putNextEntry(ze);
+//					pak_zip.write(e.getValue());
+//				} catch (Exception err) {
+//					err.printStackTrace();
+//				}
+//			}
+			
+			
 		} catch (Exception err) {
 			err.printStackTrace();
 		} finally {
@@ -310,7 +299,7 @@ public class EatBuilder extends Builder
 		return packs;
 	}
 	
-	private File pakPngMasks(File dir, String suffix, File out, String pak_root, LinkedHashMap<String, byte[]> pak_entrys) {
+	private File pakPngMasks(File dir, String suffix, File out) {
 		try {
 			ArrayList<Pair<ByteArrayOutputStream, String>> packs = converPngMasks(dir, suffix);
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -322,8 +311,6 @@ public class EatBuilder extends Builder
 						entry.setTime(0);
 						zip_out.putNextEntry(entry);
 						zip_out.write(pak.getKey().toByteArray());
-//						System.out.println(pak.getValue());
-						pak_entrys.put(pak_root + "/" + pak.getValue(), pak.getKey().toByteArray());
 					} catch(Exception err){
 						err.printStackTrace();
 					}
@@ -345,7 +332,7 @@ public class EatBuilder extends Builder
 	
 	}
 	
-	private File pakFiles(File dir, String regex, File out, String pak_root, LinkedHashMap<String, byte[]> pak_entrys)
+	private File pakFiles(File dir, String regex, File out)
 	{
 		try 
 		{
@@ -371,7 +358,6 @@ public class EatBuilder extends Builder
 							try{
 								zip_out.putNextEntry(entry);
 								zip_out.write(data);
-								pak_entrys.put(pak_root + file.getName(), data);
 							} catch(Exception err){
 								err.printStackTrace();
 							}
