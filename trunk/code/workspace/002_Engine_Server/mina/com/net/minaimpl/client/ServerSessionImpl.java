@@ -271,7 +271,7 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 			}
 			catch (Exception e) 
 			{
-				log.error("messageReceived : bad protocol : " + header);
+				log.error("messageReceived : message process error : " + header);
 				e.printStackTrace();
 			}
 		}
