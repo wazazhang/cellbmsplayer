@@ -6,19 +6,42 @@ import com.g2d.studio.io.File;
 
 public abstract class Builder 
 {
+	/**
+	 * 打开编辑器编辑
+	 * @param cpj_file
+	 * @return
+	 */
 	public abstract Process openCellGameEdit(File cpj_file);
 	
+	/**
+	 * 导出精灵文件
+	 * @param cpj_file_name
+	 * @return
+	 */
 	public abstract Process buildSprite(File cpj_file_name);
 	
+	/**
+	 * 导出场景文件
+	 * @param cpj_file_name
+	 * @return
+	 */
 	public abstract Process buildScene(File cpj_file_name);
 	
+	/**
+	 * 创建资源实体
+	 * @param cpj_file
+	 * @return
+	 */
 	public abstract StudioResource createResource(com.g2d.studio.io.File cpj_file);
 	
+	/**
+	 * 检查此目录下是否包含资源文件
+	 * @param file
+	 * @param res_type
+	 * @return
+	 */
 	public abstract com.g2d.studio.io.File getCPJFile(com.g2d.studio.io.File file, CPJResourceType res_type);
 	
-//	public abstract void saveBuildSpriteBat(File cpj_file_name);
-//
-//	public abstract void saveBuildSceneBat(File cpj_file_name);
 	
 //	----------------------------------------------------------------------------------------------------------
 	

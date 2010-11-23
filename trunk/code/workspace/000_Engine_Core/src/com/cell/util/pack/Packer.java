@@ -72,7 +72,7 @@ public class Packer
 				}
 				zos.finish();
 				zos.close();
-				CFile.wirteData(dst_file, baos.toByteArray());
+				CFile.writeData(dst_file, baos.toByteArray());
 			
 				System.out.println("save to : " + dst_file);
 				

@@ -21,6 +21,7 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.text.AttributedString;
@@ -34,6 +35,7 @@ import com.cell.gfx.IGraphics;
 import com.cell.gfx.IImage;
 import com.cell.gfx.game.CCD;
 import com.cell.gfx.game.CSprite;
+import com.cell.io.CFile;
 import com.cell.j2se.CGraphics;
 import com.g2d.display.AnimateCursor;
 import com.g2d.display.ui.text.TextBuilder;
@@ -565,26 +567,26 @@ public class Tools
 
 //	--------------------------------------------------------------------------------
 	
-	static public void writeImage(String file, Image image)
+	static public byte[] writeImage(String file, Image image)
 	{
 		if (file.endsWith(".jpg")) {
-			writeImage(file, "jpg", image);
+			return writeImage(file, "jpg", image);
 		} 
 		else if (file.endsWith(".png")) {
-			writeImage(file, "png", image);
+			return writeImage(file, "png", image);
 		} 
 		else if (file.endsWith(".bmp")) {
-			writeImage(file, "bmp", image);
+			return writeImage(file, "bmp", image);
 		} 
 		else if (file.endsWith(".gif")) {
-			writeImage(file, "gif", image);
+			return writeImage(file, "gif", image);
 		}
 		else {
-			writeImage(file, "png", image);
+			return writeImage(file, "png", image);
 		}
 	}
 	
-	static public void writeImage(String file, String format, Image image)
+	static public byte[] writeImage(String file, String format, Image image)
 	{
 		try {
 			BufferedImage buf = null;
@@ -593,10 +595,15 @@ public class Tools
 			} else {
 				buf = cloneImage(image);
 			}
-			ImageIO.write(buf, format, new File(file));
+			ByteArrayOutputStream baos = new ByteArrayOutputStream(10240);
+			ImageIO.write(buf, format, baos);
+			byte[] data = baos.toByteArray();
+			CFile.writeData(new File(file), data);
+			return data;
 		} catch (Exception err) {
 			System.err.println(file);
 			err.printStackTrace();
+			return null;
 		}
 	}
 	

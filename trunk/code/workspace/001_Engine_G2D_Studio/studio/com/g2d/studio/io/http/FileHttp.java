@@ -144,7 +144,7 @@ public class FileHttp implements IO
     	}
     	@Override
     	public void writeBytes(byte[] data) {
-    		CFile.wirteData(local_file, data);
+    		CFile.writeData(local_file, data);
     	}
     	
     	@Override

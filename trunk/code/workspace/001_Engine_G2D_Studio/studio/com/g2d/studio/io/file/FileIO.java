@@ -68,7 +68,7 @@ public class FileIO implements IO
     		if (file.getParentFile().exists()) {
     			file.getParentFile().mkdirs();
     		}
-    		CFile.wirteData(file, data);
+    		CFile.writeData(file, data);
     	}
     	
     	@Override
