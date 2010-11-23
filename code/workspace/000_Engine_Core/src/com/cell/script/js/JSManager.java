@@ -41,6 +41,23 @@ public class JSManager
 	}
 	
 //	-----------------------------------------------------------------------------------------------
+
+	/**
+	 * 直接执行脚本
+	 * @param script
+	 * @return
+	 */
+	public Object eval(String script) {
+		try {
+			// 创建虚拟机
+			ScriptEngine vm_engine = vm_sem.getEngineByName(script_name);
+			// 执行脚本
+			return vm_engine.eval(script);
+		} catch (Exception err) {
+			err.printStackTrace();
+			return null;
+		}
+	}
 	
 	/**
 	 * 创建一个脚本接口
@@ -168,8 +185,6 @@ public class JSManager
 			vm_engine.eval(script);
 		}
 	}
-	
-	
 	
 	
 }
