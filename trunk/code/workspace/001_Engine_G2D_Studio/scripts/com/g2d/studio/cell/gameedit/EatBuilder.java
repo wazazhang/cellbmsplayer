@@ -201,7 +201,7 @@ public class EatBuilder extends Builder
 		}
 	}
 
-	void outputZipPack(File cpj_file_name)
+	void outputZipPack(File cpj_file_name, boolean is_scene)
 	{
 		ByteArrayOutputStream pak_baos = new ByteArrayOutputStream();
 		ZipOutputStream pak_zip = new ZipOutputStream(pak_baos);
