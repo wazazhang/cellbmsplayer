@@ -192,7 +192,7 @@ public class EatBuilder extends Builder
 					deleteIfExists(set);
 				}
 				
-				outputZipPack(cpj_file_name);
+				outputZipPack(cpj_file_name, is_scene);
 			}
 			
 		}
