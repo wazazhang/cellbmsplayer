@@ -74,7 +74,7 @@ public class CFile
 	}
 	
 	
-	public static void wirteData(java.io.File file, byte[] data)
+	public static void writeData(java.io.File file, byte[] data)
 	{
 		try{
 			if (!file.getParentFile().exists()) {
@@ -100,7 +100,7 @@ public class CFile
 	public static void copyFile(java.io.File src, java.io.File dst)
 	{
 		byte[] data = readData(src);
-		wirteData(dst, data);
+		writeData(dst, data);
 	}
 	
 	
