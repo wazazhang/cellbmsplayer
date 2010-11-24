@@ -3,6 +3,8 @@ package com.cell.script.js;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.script.Compilable;
 import javax.script.CompiledScript;
@@ -17,9 +19,11 @@ import com.cell.CUtil;
 
 public class JSManager
 {
-	final protected String script_name;
+	final protected String 					script_name;
 
-	final protected ScriptEngineManager vm_sem;
+	final protected ScriptEngineManager 	vm_sem;
+	
+	final protected Logger 					log = Logger.getLogger(getClass().getCanonicalName());
 	
 //	-----------------------------------------------------------------------------------------------
 
@@ -54,7 +58,7 @@ public class JSManager
 			// 执行脚本
 			return vm_engine.eval(script);
 		} catch (Exception err) {
-			err.printStackTrace();
+			log.log(Level.WARNING, err.getMessage(), err);
 			return null;
 		}
 	}
@@ -70,7 +74,7 @@ public class JSManager
 	{
 		String script 	= readString(path);
 		String root   	= CUtil.replaceString(path, "\\", "/");
-		root 			= root.substring(0, path.lastIndexOf('/'));			
+		root 			= root.substring(0, root.lastIndexOf('/'));			
 		return getInterface(script, root, type);
 	}
 
@@ -87,7 +91,7 @@ public class JSManager
 		try {
 			// 创建虚拟机
 			ScriptEngine vm_engine = vm_sem.getEngineByName(script_name);
-			System.out.println("create script engine : " + script_name + " : " + vm_engine);
+			log.log(Level.FINE, "create script engine : " + script_name + " : " + vm_engine);
 			// 执行脚本
 			script = importScript(vm_engine, root, script);
 			eval(vm_engine, script);
@@ -97,7 +101,7 @@ public class JSManager
 			T adapter = vm_inv.getInterface(type);
 			return adapter;
 		} catch (Exception err) {
-			err.printStackTrace();
+			log.log(Level.WARNING, err.getMessage(), err);
 		}
 		return null;
 	}
@@ -137,7 +141,7 @@ public class JSManager
 					String import_cmd	= script.substring(start, end + 1);		
 					if (!libs.containsKey(import_cmd)) {
 						String lib_js = null;
-						System.out.println("js : " + import_cmd);
+						log.log(Level.FINE, "js import : " + import_cmd);
 						try {
 							String import_path = import_cmd.substring(import_cmd.indexOf('(') + 1, import_cmd.indexOf(')')).trim();
 							while (import_path.startsWith("/")) {
@@ -151,12 +155,11 @@ public class JSManager
 								if (lib_js != null) {
 									eval(vm_engine, lib_js);
 								} else {
-									System.err.println("js : error load : " + import_cmd);
+									log.log(Level.WARNING, "js : error load : " + import_cmd);
 								}
 							}
 						} catch (Exception err) {
-							System.err.println("js : error load : " + import_cmd);
-							err.printStackTrace();
+							log.log(Level.WARNING, "js : error load : " + import_cmd, err);
 						} finally {
 							libs.put(import_cmd, lib_js);
 						}

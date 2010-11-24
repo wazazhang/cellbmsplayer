@@ -655,7 +655,7 @@ public class Studio extends AbstractFrame
 					new CAppBridge(
 					Studio.class.getClassLoader(), 
 					Studio.class));
-				Config.load(Config.class, args[0]);
+				Config.load(args[0]);
 
 				IO io = null;
 				if (args.length > 1 && args[0].startsWith("http")) {

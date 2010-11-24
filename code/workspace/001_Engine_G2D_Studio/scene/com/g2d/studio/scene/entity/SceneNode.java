@@ -48,6 +48,7 @@ final public class SceneNode extends DynamicNode<Scene>
 			this.bind_data.scene_node.height	= res_world.getSetObject().Height;
 			System.out.println("load a scene : " + scene.name + "   (" + scene.id + ")");
 		} catch(Exception err) {
+			err.printStackTrace();
 			throw new RuntimeException("场景\""+scene.name+"("+scene.id+")\"读取错误！", err);
 		}
 	}

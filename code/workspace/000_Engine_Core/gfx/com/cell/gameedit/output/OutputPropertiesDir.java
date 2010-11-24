@@ -45,92 +45,26 @@ import com.cell.util.concurrent.ThreadPoolService;
  * 如何将编辑器资源解析成单位
  * @author WAZA
  */
-abstract public class OutputProperties implements Output
+public class OutputPropertiesDir extends OutputProperties
 {
-	final public String path;
+	final public String root;
+	final public String file_name;
 	
-	final Hashtable<String, ImagesSet>		ImgTable 		= new Hashtable<String, ImagesSet>();
-	final Hashtable<String, SpriteSet>		SprTable 		= new Hashtable<String, SpriteSet>();
-	final Hashtable<String, MapSet>			MapTable 		= new Hashtable<String, MapSet>();
-	final Hashtable<String, WorldSet>			WorldTable		= new Hashtable<String, WorldSet>();
-	final Hashtable<String, TableSet>			TableGroups		= new Hashtable<String, TableSet>();
-	
-	public OutputProperties(String path, PropertyGroup Config) throws Exception {
-		this.path = path.replace('\\', '/');
-		init(Config);
-	}
-
-	public OutputProperties(String path) {
-		this.path = path.replace('\\', '/');
-	}
-	
-	protected void init(PropertyGroup Config) throws Exception
+	public OutputPropertiesDir(String file) throws Exception
 	{
-		// 解吸所有对象
-		int ImagesCount 	= Config.getInteger("ImagesCount", 0);
-		int SpriteCount 	= Config.getInteger("SpriteCount", 0);
-		int MapCount 		= Config.getInteger("MapCount", 0);
-		int WorldCount 		= Config.getInteger("WorldCount", 0);
-		int TableGroupCount	= Config.getInteger("TableGroupCount", 0);
-
-		for (int i=0; i<ImagesCount; i++){
-			ImagesSet img = createImageSet(
-					Config.getString("Images_" + i), 
-					Config.getString("Images_" + i + "_tiles"));
-			ImgTable.put(img.Name, img);
-		}
-
-		for (int i = 0; i < SpriteCount; i++) {
-			SpriteSet spr = createSpriteSet(
-					Config.getString("Sprite_" + i),
-					Config.getString("Sprite_" + i + "_parts"),
-					Config.getString("Sprite_" + i + "_frames"),
-					Config.getString("Sprite_" + i + "_cds"),
-					Config.getString("Sprite_" + i + "_cd_frames"),
-					Config.getString("Sprite_" + i + "_frame_counts"),
-					Config.getString("Sprite_" + i + "_frame_name"),
-					Config.getString("Sprite_" + i + "_frame_animate"),
-					Config.getString("Sprite_" + i + "_frame_cd_map"),
-					Config.getString("Sprite_" + i + "_frame_cd_atk"),
-					Config.getString("Sprite_" + i + "_frame_cd_def"),
-					Config.getString("Sprite_" + i + "_frame_cd_ext")
-			);
-			SprTable.put(spr.Name, spr);
-		}
+		super(file);
+		this.root 			= path.substring(0, path.lastIndexOf("/")+1);
+		this.file_name		= path.substring(root.length());
 		
-		
-		for (int i = 0; i < MapCount; i++) {
-			MapSet map = createMapSet(
-					Config.getString("Map_" + i),
-					Config.getString("Map_" + i + "_parts"),
-					Config.getString("Map_" + i + "_frames"),
-					Config.getString("Map_" + i + "_cds"),
-					Config.getString("Map_" + i + "_tile_matrix"),
-					Config.getString("Map_" + i + "_cd_matrix")
-			);
-			MapTable.put(map.Name, map);
+		// 读入基础属性
+		byte[] conf_data = loadRes(file_name);
+		if (conf_data == null) {
+			throw new FileNotFoundException(path);
 		}
+		String conf = new String(conf_data, CIO.ENCODING);
+		PropertyGroup config = new PropertyGroup(conf, "=");
 		
-		for (int i = 0; i < WorldCount; i++) {
-			WorldSet world = createWorldSet(
-					Config.getString("World_" + i),
-					Config.getString("World_" + i + "_maps"),
-					Config.getString("World_" + i + "_sprs"),
-					Config.getString("World_" + i + "_waypoints"),
-					Config.getString("World_" + i + "_waypoint_link"),
-					Config.getString("World_" + i + "_regions"),
-					Config.getString("World_" + i + "_data"),
-					Config.getString("World_" + i + "_terrain")
-			);
-			WorldTable.put(world.Name, world);
-		}
-		
-		for (int i = 0; i < TableGroupCount; i++) {
-			TableSet tg = createTableSet(
-					Config.getString("TG_" + i), Config);
-			TableGroups.put(tg.Name, tg);
-		}
-	
+		super.init(config);
 	}
 	
 	@Override
@@ -432,6 +366,21 @@ abstract public class OutputProperties implements Output
 	
 	
 //	-------------------------------------------------------------------------------------
+	
+	/**
+	 * 读取本目录资源
+	 * @param path
+	 * @return
+	 */
+	final public byte[] loadRes(String path)
+	{
+		byte[] data = CIO.loadData(root + path);
+		if (data == null) {
+			System.err.println("SetResource : read error : " + root + path);
+		} 
+		return data;
+	}
+
 	
 //	-------------------------------------------------------------------------------------
 //	Images_<IMAGES INDEX>		=<IMAGES INDEX>,<NAME>,<COUNT>

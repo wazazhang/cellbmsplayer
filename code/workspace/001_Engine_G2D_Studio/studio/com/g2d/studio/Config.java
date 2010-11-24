@@ -83,24 +83,42 @@ public class Config extends com.cell.util.Config
 //	--------------------------------------------------------------------------------------------------------
 	
 	/**执行Builder的类*/
-	public static String BUILDER_CLASS				= "com.g2d.studio.cell.gameedit.EatBuilder";
-	
+	public static String BUILDER_CLASS					= "com.g2d.studio.cell.gameedit.EatBuilder";
+
+
 	/**CellGameEdit可执行文件*/
-	public static String CELL_GAME_EDIT_CMD			= "CellGameEdit.exe";
+	public static String CELL_GAME_EDIT_CMD				= "CellGameEdit.exe";
 	
 	/**保存的导出精灵批处理<br>
 	 * {file}变量为cpj文件*/
-	public static String CELL_BUILD_SPRITE_CMD		= 
-		"@java -classpath \"g2dstudio.jar\" com.g2d.studio.cell.gameedit.EatBuilder \"{file}\" \"sprite\" \"project.g2d\"";
+	public static String CELL_BUILD_SPRITE_CMD = 
+		"@java -classpath \"g2dstudio.jar\" com.g2d.studio.cell.gameedit.EatBuilder \".\\{file}\" \"sprite\" \"project.g2d\"";
 	
 	/**保存的导出场景批处理<br>
 	 * {file}变量为cpj文件*/
-	public static String CELL_BUILD_SCENE_CMD		= 
-		"@java -classpath \"g2dstudio.jar\" com.g2d.studio.cell.gameedit.EatBuilder \"{file}\" \"scene\" \"project.g2d\"";	
+	public static String CELL_BUILD_SCENE_CMD = 
+		"@java -classpath \"g2dstudio.jar\" com.g2d.studio.cell.gameedit.EatBuilder \".\\{file}\" \"scene\" \"project.g2d\"";	
 
+	/** 原图创建缩略图的比率 */
 	public static Float	 CELL_BUILD_SCENE_THUMB_SCALE	= 0.1f;
 
-//	--------------------------------------------------------------------------------------------------------
+	/** 导出后的批处理程序 */
+	@ConfigField("导出后的批处理程序")
+	public static String  CELL_BUILD_EXTERNAL_SCRIPT_FILE	= ".\\build_external_script.js";
 
+	
 //	--------------------------------------------------------------------------------------------------------
+//
+//	--------------------------------------------------------------------------------------------------------
+	static private String path;
+	static private String root;
+	static public void load(String file) {
+		path = file.replace('\\', '/');
+		root = path.substring(0, path.lastIndexOf("/")+1);
+		load(Config.class, file);
+	}
+	static public String getRoot() {
+		return root;
+	}
+	
 }
