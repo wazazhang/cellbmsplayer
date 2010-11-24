@@ -167,9 +167,11 @@ public class BuildProcess
 	{
 		File 	root_dir	= new File(dir, root);
 		Pattern	pattern		= Pattern.compile(regex);
-		for (File file : root_dir.listFiles()) {
-			if (file.isFile() && pattern.matcher(file.getName()).find()) {
-				packs.put(entry_prefix + file.getName(), CFile.readData(file));
+		if (root_dir.exists() && root_dir.isDirectory()) {
+			for (File file : root_dir.listFiles()) {
+				if (file.isFile() && pattern.matcher(file.getName()).find()) {
+					packs.put(entry_prefix + file.getName(), CFile.readData(file));
+				}
 			}
 		}
 		return this;
@@ -305,17 +307,19 @@ public class BuildProcess
 	{
 		File 	root_dir	= new File(dir, root);
 		Pattern	pattern		= Pattern.compile(regex);
-		for (File file : root_dir.listFiles()) {
-			if (file.isFile() && pattern.matcher(file.getName()).find()) {
-				try {
-					byte[] data = CFile.readData(file);
-					BufferedImage bi = Tools.readImage(new ByteArrayInputStream(data));
-					if (bi != null) {
-						data = Tools.encodeImageMask(bi);
-						packs.put(entry_prefix + file.getName(), data);
+		if (root_dir.exists() && root_dir.isDirectory()) {
+			for (File file : root_dir.listFiles()) {
+				if (file.isFile() && pattern.matcher(file.getName()).find()) {
+					try {
+						byte[] data = CFile.readData(file);
+						BufferedImage bi = Tools.readImage(new ByteArrayInputStream(data));
+						if (bi != null) {
+							data = Tools.encodeImageMask(bi);
+							packs.put(entry_prefix + file.getName(), data);
+						}
+					} catch (Throwable tx) {
+						tx.printStackTrace();
 					}
-				} catch (Throwable tx) {
-					tx.printStackTrace();
 				}
 			}
 		}

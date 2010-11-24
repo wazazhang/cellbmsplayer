@@ -16,16 +16,18 @@ public abstract class Builder
 	/**
 	 * 导出精灵文件
 	 * @param cpj_file_name
+	 * @param ignore_on_exist 只有在资源不存在时，才执行。一般用在新加的资源。
 	 * @return
 	 */
-	public abstract void buildSprite(File cpj_file_name);
+	public abstract void buildSprite(File cpj_file_name, boolean ignore_on_exist);
 	
 	/**
 	 * 导出场景文件
 	 * @param cpj_file_name
+	 * @param ignore_on_exist 只有在资源不存在时，才执行。一般用在新加的资源。
 	 * @return
 	 */
-	public abstract void buildScene(File cpj_file_name);
+	public abstract void buildScene(File cpj_file_name, boolean ignore_on_exist);
 	
 	/**
 	 * 创建资源实体
