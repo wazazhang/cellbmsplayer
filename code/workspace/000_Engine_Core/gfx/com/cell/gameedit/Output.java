@@ -17,6 +17,7 @@ import com.cell.gfx.game.CCD;
 import com.cell.gfx.game.CMap;
 import com.cell.gfx.game.CSprite;
 import com.cell.gfx.game.CWayPoint;
+import com.sun.org.apache.bcel.internal.classfile.Code;
 
 
 /**
@@ -29,7 +30,7 @@ public interface Output
 	 * @param name child name
 	 * @return
 	 */
-	public byte[] loadRes(String name);
+	public byte[]		loadRes(String name);
 	
 	
 	public Hashtable<String, ImagesSet>		getImgTable();
@@ -51,7 +52,10 @@ public interface Output
 	public CCD[] 		createRegionsFromSet(Vector<RegionObject> regions);
 
 
-	
+	/**
+	 * call by {@link SetResource}.dispose()
+	 */
+	public void 		dispose();
 
 	
 }

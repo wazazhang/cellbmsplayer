@@ -68,6 +68,9 @@ public class OutputPropertiesDir extends OutputProperties
 	}
 	
 	@Override
+	public void dispose() {}
+	
+	@Override
 	public Hashtable<String, ImagesSet> getImgTable() {
 		return ImgTable;
 	}

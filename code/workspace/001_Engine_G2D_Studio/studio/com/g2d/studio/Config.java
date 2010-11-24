@@ -104,7 +104,7 @@ public class Config extends com.cell.util.Config
 
 	/** 导出后的批处理程序 */
 	@ConfigField("导出后的批处理程序")
-	public static String  CELL_BUILD_EXTERNAL_SCRIPT_FILE	= ".\\build_external_script.js";
+	public static String  CELL_BUILD_OUTPUT_SCRIPT_FILE	= ".\\build_output_script.js";
 
 	
 //	--------------------------------------------------------------------------------------------------------
