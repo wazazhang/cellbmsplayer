@@ -679,7 +679,7 @@ public class EatBuilder extends Builder
 									set.getOutput().loadRes(img.Name+"/"+i+".png"), 0));
 						} else {
 							images[i] = new CImage(Tools.readImage(new ByteArrayInputStream(
-									set.getOutput().loadRes(img.Name+"/"+i+".png"))));
+									set.getOutput().loadRes(img.Name+"/"+i+"."+img.Name))));
 						}
 					} catch (Exception err) {
 //						err.printStackTrace();
