@@ -740,5 +740,6 @@ public class EatBuilder extends Builder
 				builder.buildSprite(io.createFile(new File(arg_0).getCanonicalPath()));
 			}
 		}
+		System.exit(0);
 	}
 }
