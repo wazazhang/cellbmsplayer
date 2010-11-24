@@ -103,11 +103,17 @@ public class EatBuilder extends Builder
 				);
 	}
 	
-	public void buildSprite(com.g2d.studio.io.File cpj_file)
+	public void buildSprite(com.g2d.studio.io.File cpj_file, boolean ignore_on_exist)
 	{
-		System.out.println("build sprite : " + cpj_file.getPath());
 		File cpj_file_name = getLocalFile(cpj_file);
+		if (ignore_on_exist) {
+			if (checkOutputExists(cpj_file_name)) {
+				System.out.println("ignore : " + cpj_file_name);
+				return;
+			}
+		}
 		try {
+			System.out.println("build sprite : " + cpj_file.getPath());
 			File output_properties = copyScript(cpj_file_name, "output.properties");
 			Process process = CellGameEditWrap.openCellGameEdit(Config.CELL_GAME_EDIT_CMD, cpj_file_name, 
 					output_properties.getPath());
@@ -121,11 +127,17 @@ public class EatBuilder extends Builder
 		}
 	}
 	
-	public void buildScene(com.g2d.studio.io.File cpj_file)
+	public void buildScene(com.g2d.studio.io.File cpj_file, boolean ignore_on_exist)
 	{
-		System.out.println("build scene : " + cpj_file.getPath());
 		File cpj_file_name = getLocalFile(cpj_file);
+		if (ignore_on_exist) {
+			if (checkOutputExists(cpj_file_name)) {
+				System.out.println("ignore : " + cpj_file_name);
+				return;
+			}
+		}
 		try {
+			System.out.println("build scene : " + cpj_file.getPath());
 			File output_properties		= copyScript(cpj_file_name,	"output.properties");
 			File scene_jpg_script		= copyScript(cpj_file_name,	"scene_jpg.script");
 			File scene_jpg_thumb_script	= copyScript(cpj_file_name,	"scene_jpg_thumb.script");
@@ -162,6 +174,30 @@ public class EatBuilder extends Builder
 //	---------------------------------------------------------------------------------------------------------------------------
 //
 //	---------------------------------------------------------------------------------------------------------------------------
+
+	protected boolean checkOutputExists(File cpj_file_name) {
+		try {
+			File scfile = new File(
+					Config.getRoot() + "/" +
+					Config.CELL_BUILD_OUTPUT_SCRIPT_FILE).getCanonicalFile();
+			
+			if (scfile.exists()) 
+			{
+				BuildExternalScript script = external_script_manager.getInterface(
+						scfile.getCanonicalPath(), 
+						BuildExternalScript.class);
+				if (script != null)
+				{
+					File dir = cpj_file_name.getParentFile().getCanonicalFile();
+					BuildProcess bp = new BuildProcess(dir);
+					return script.checkOutputExists(bp, dir, cpj_file_name.getCanonicalFile());
+				}
+			}
+		} catch (Throwable ex) {
+			ex.printStackTrace();
+		}
+		return true;
+	}
 	
 	protected void output(File cpj_file_name, boolean is_scene) 
 	{
@@ -735,9 +771,9 @@ public class EatBuilder extends Builder
 			Config.load(arg_2);
 			FileIO io = new FileIO();
 			if (arg_1.equals("scene")) {
-				builder.buildScene(io.createFile(new File(arg_0).getCanonicalPath()));
+				builder.buildScene(io.createFile(new File(arg_0).getCanonicalPath()), false);
 			} else {
-				builder.buildSprite(io.createFile(new File(arg_0).getCanonicalPath()));
+				builder.buildSprite(io.createFile(new File(arg_0).getCanonicalPath()), false);
 			}
 		}
 		System.exit(0);

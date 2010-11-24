@@ -209,17 +209,17 @@ public class CPJFile extends G2DTreeNode<CPJObject<?>>
 		}
 	}
 	
-	public void rebuild()
+	public void rebuild(boolean ignore_on_exist)
 	{
 		if (cpj_file.exists()) {
 			switch (res_type) {
 			case ACTOR:	
 			case AVATAR:
 			case EFFECT:
-				Builder.getInstance().buildSprite(cpj_file);
+				Builder.getInstance().buildSprite(cpj_file, ignore_on_exist);
 				break;
 			case WORLD:
-				Builder.getInstance().buildScene(cpj_file);
+				Builder.getInstance().buildScene(cpj_file, ignore_on_exist);
 				break;
 			}
 		}
@@ -254,7 +254,7 @@ public class CPJFile extends G2DTreeNode<CPJObject<?>>
 			if (e.getSource() == item_open_cell_game_editor) {
 				openEdit();
 			} else if (e.getSource() == item_rebuild_objects) {
-				rebuild();
+				rebuild(false);
 				try {
 					refresh();
 				} catch (Throwable e1) {

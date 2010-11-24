@@ -1,6 +1,7 @@
 package com.g2d.studio.cpj;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -9,13 +10,18 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Vector;
 
+import javax.swing.JButton;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JProgressBar;
+import javax.swing.JRootPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
+import com.cell.CObject;
 import com.g2d.Tools;
 import com.g2d.studio.Config;
 import com.g2d.studio.ManagerForm;
@@ -29,6 +35,7 @@ import com.g2d.studio.io.File;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.swing.G2DTree;
 import com.g2d.studio.swing.G2DTreeNode;
+import com.g2d.util.AbstractDialog;
 
 public class CPJResourceManager extends ManagerForm implements MouseListener
 {
@@ -291,15 +298,19 @@ public class CPJResourceManager extends ManagerForm implements MouseListener
 		DefaultMutableTreeNode root;
 		
 		JMenuItem	refresh_all		= new JMenuItem("刷新所有");
-		JMenuItem	build_all		= new JMenuItem("编译所有");
+		JMenuItem	build_new		= new JMenuItem("编译新加的");
+		JMenuItem	build_all		= new JMenuItem("重编译所有");
 		
 		public RootMenu(G2DTree tree, DefaultMutableTreeNode root) {
 			this.tree = tree;
 			this.root = root;
-			refresh_all.addActionListener(this);
-			build_all.addActionListener(this);
-			this.add(refresh_all);
-			this.add(build_all);
+			refresh_all	.addActionListener(this);
+			build_new	.addActionListener(this);
+			build_all	.addActionListener(this);
+			this.add	(refresh_all);
+			this.add	(build_new);
+			this.addSeparator();
+			this.add	(build_all);
 		}
 		
 		@Override
@@ -319,15 +330,11 @@ public class CPJResourceManager extends ManagerForm implements MouseListener
 				}
 				tree.reload(root);
 			}
+			else if (e.getSource() == build_new) {
+				new BuildResourceTask(root.children(), true).start();
+			}
 			else if (e.getSource() == build_all) {
-				Enumeration<?> childs = root.children();
-				while (childs.hasMoreElements()) {
-					Object obj = childs.nextElement();
-					if (obj instanceof CPJFile) {
-						CPJFile file = (CPJFile)obj;
-						file.rebuild();
-					}
-				}
+				new BuildResourceTask(root.children(), false).start();
 			}
 		}
 	}
@@ -336,7 +343,106 @@ public class CPJResourceManager extends ManagerForm implements MouseListener
 
 //	----------------------------------------------------------------------------------------------------------------------------
 	
-	
+	class BuildResourceTask extends AbstractDialog implements ActionListener
+	{
+		private static final long serialVersionUID = 1L;
+		
+		BuilderThread	thread;
+		
+		boolean			ignore_on_exists = false;
+		
+		JButton			terminate = new JButton("终止");
+		
+		JProgressBar	progress = new JProgressBar();
+		
+		public BuildResourceTask(Enumeration<?> childs, boolean ignore_on_exists) 
+		{
+			super(CPJResourceManager.this);
+			super.setSize(500, 90);
+			super.setLayout(new BorderLayout());
+			super.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+			super.getRootPane().setWindowDecorationStyle(JRootPane.NONE);
+			
+			progress.setStringPainted(true);
+			super.add(progress, BorderLayout.CENTER);
+			
+			JPanel south = new JPanel(new FlowLayout());
+			terminate.addActionListener(this);
+			south.add(terminate);
+			super.add(south, BorderLayout.SOUTH);
+
+			this.ignore_on_exists = ignore_on_exists;
+			this.thread = new BuilderThread(childs);
+		}
+		
+		public void start() {
+			this.thread.start();
+			setVisible(true);
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (e.getSource() == terminate) {
+				thread.exit();
+				this.dispose();
+			}
+		}
+		
+		class BuilderThread extends Thread
+		{
+			boolean exit = false;
+			
+			Enumeration<?> childs;
+			
+			public BuilderThread(Enumeration<?> childs)
+			{
+				this.childs = childs;
+			}
+			
+			public void exit()
+			{
+				exit = true;
+				try {
+					this.join(60000);
+					if (this.isAlive()) {
+						this.interrupt();
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			
+			@Override
+			public void run() 
+			{
+				ArrayList<CPJFile> cpjs = new ArrayList<CPJFile>();
+				while (childs.hasMoreElements()) {
+					Object obj = childs.nextElement();
+					if (obj instanceof CPJFile) {
+						cpjs.add((CPJFile)obj);
+					}
+				}
+				long start_time = System.currentTimeMillis();
+				progress.setMaximum(cpjs.size());
+				int n = 0;
+				for (CPJFile cpj : cpjs) {
+					setTitle("rebuild : " + cpj.getCPJPath());
+					if (!exit) {
+						cpj.rebuild(ignore_on_exists);
+						progress.setValue(n);
+						progress.setString((progress.getValue() + 1) + "/" + progress.getMaximum());
+					} else {
+						break;
+					}
+					n++;
+				}
+				setTitle("总共用时: " + CObject.timesliceToStringHour(System.currentTimeMillis()-start_time));
+				terminate.setText("关闭");
+				setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+			}
+		}
+		
+	}
 	
 	
 	
