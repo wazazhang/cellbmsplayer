@@ -49,6 +49,7 @@ abstract public class StudioResource extends CellSetResource
 						stiles.unloadAllImages();
 					}
 				}
+				dispose();
 			}
 		}
 	}
