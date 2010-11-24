@@ -61,9 +61,13 @@ public class BuildProcess
 			} else {
 				WaitProcessTask task = new WaitProcessTask(p, timeout);
 				task.start();
-				synchronized (task) {
+				try {
 					p.waitFor();
-					task.notifyAll();
+					Thread.yield();
+				} finally {
+					synchronized (task) {
+						task.notifyAll();
+					}
 				}
 			}
 			byte[] out = CIO.readStream(p.getInputStream());
@@ -91,13 +95,13 @@ public class BuildProcess
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				try {
-					int exitcode = p.exitValue();
-//					System.out.println("exit code = " + exitcode);
-				} catch (Exception err) {
-					System.err.println("强制结束进程 ");
-					p.destroy();
-				}
+			}
+			try {
+				int exitcode = p.exitValue();
+//				System.out.println("exit code = " + exitcode);
+			} catch (Exception err) {
+				System.err.println("强制结束进程 ");
+				p.destroy();
 			}
 		}
 	}
