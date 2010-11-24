@@ -44,14 +44,61 @@ public class BuildProcess
 	 * @return
 	 */
 	public Object exec(String cmd) {
+		return exec(cmd, 0);
+	}
+	
+	/**
+	 * 执行操作系统指令
+	 * @param cmd
+	 * @param timeout
+	 * @return
+	 */
+	public Object exec(String cmd, int timeout) {
 		try {	
 			Process p = Runtime.getRuntime().exec(cmd, CUtil.getEnv(), dir);
-			p.waitFor();
+			if (timeout == 0) {
+				p.waitFor();
+			} else {
+				WaitProcessTask task = new WaitProcessTask(p, timeout);
+				task.start();
+				synchronized (task) {
+					p.waitFor();
+					task.notifyAll();
+				}
+			}
 			byte[] out = CIO.readStream(p.getInputStream());
 			return (new String(out));
 		} catch (Exception err) {
 			err.printStackTrace();
 			return null;
+		}
+	}
+	
+	private class WaitProcessTask extends Thread
+	{
+		final Process p;
+		final int timeout;
+		public WaitProcessTask(Process p, int timeout) {
+			this.p = p;
+			this.timeout = timeout;
+		}
+		
+		@Override
+		public void run() {
+			synchronized (this) {
+				try {
+					wait(timeout);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				try {
+					int exitcode = p.exitValue();
+//					System.out.println("exit code = " + exitcode);
+				} catch (Exception err) {
+					System.err.println("强制结束进程 ");
+					p.destroy();
+				}
+			}
 		}
 	}
 	
