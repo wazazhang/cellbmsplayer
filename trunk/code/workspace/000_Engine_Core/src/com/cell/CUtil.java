@@ -769,6 +769,7 @@ public class CUtil extends CObject
 	}
 	
 	
+
 	//-------------------------------------------------------------------------------------------------------------
 	
 	static StringCompare default_string_compare = new StringCompare();
@@ -2227,4 +2228,17 @@ public class CUtil extends CObject
 //	
 //	--------------------------------------------------------------------------------------------------------------------------
 
+	/**
+	 * 字符串数组，其中每个元素的环境变量的设置格式为 name=value；如果子进程应该继承当前进程的环境，或该参数为 null。
+	 * @return
+	 */
+	public static String[] getEnv() {
+		Map<String, String> map = System.getenv();
+		String[] ev = new String[map.size()];
+		int index = 0;
+		for (Entry<String, String> e : map.entrySet()) {
+			ev[index++] = e.getKey() + "=" + e.getValue();
+		}
+		return ev;
+	}
 }

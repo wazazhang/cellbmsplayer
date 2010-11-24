@@ -101,7 +101,6 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 					progress.setValue("", i++);
 				}
 			}
-			this.g2d_tree.reload();
 		}
 		this.g2d_tree.addMouseListener(new TreeMouseAdapter());
 		JScrollPane scroll = new JScrollPane(g2d_tree);
@@ -121,9 +120,8 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 			this.add(tool_bar, BorderLayout.NORTH);
 		}
 		g2d_tree.setDragEnabled(true);
-		
-		
 		getAllScenes();
+		this.g2d_tree.reload();
 	}
 
 	public InstanceZonesManager getInstanceZonesManager() {

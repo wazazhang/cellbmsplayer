@@ -8,6 +8,7 @@ import com.cell.gameedit.Output;
 import com.cell.gameedit.SetResource;
 import com.cell.gameedit.object.SpriteSet;
 import com.cell.gameedit.output.OutputProperties;
+import com.cell.gameedit.output.OutputPropertiesDir;
 import com.cell.gfx.game.CSprite;
 import com.cell.util.concurrent.ThreadPoolService;
 
@@ -33,7 +34,7 @@ public class CellSetResource extends SetResource
 	
 	public CellSetResource(String file, ThreadPoolService loading_service) throws Exception
 	{
-		super(new OutputProperties(file), loading_service);
+		super(new OutputPropertiesDir(file), loading_service);
 		this.Path = ((OutputProperties) getOutput()).path;
 	}
 	

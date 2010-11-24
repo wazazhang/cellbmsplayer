@@ -11,21 +11,21 @@ public abstract class Builder
 	 * @param cpj_file
 	 * @return
 	 */
-	public abstract Process openCellGameEdit(File cpj_file);
+	public abstract void openCellGameEdit(File cpj_file);
 	
 	/**
 	 * 导出精灵文件
 	 * @param cpj_file_name
 	 * @return
 	 */
-	public abstract Process buildSprite(File cpj_file_name);
+	public abstract void buildSprite(File cpj_file_name);
 	
 	/**
 	 * 导出场景文件
 	 * @param cpj_file_name
 	 * @return
 	 */
-	public abstract Process buildScene(File cpj_file_name);
+	public abstract void buildScene(File cpj_file_name);
 	
 	/**
 	 * 创建资源实体

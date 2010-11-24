@@ -25,7 +25,11 @@ import com.cell.gfx.game.CWayPoint;
  */
 public interface Output
 {
-	public byte[] loadRes(String path);
+	/**
+	 * @param name child name
+	 * @return
+	 */
+	public byte[] loadRes(String name);
 	
 	
 	public Hashtable<String, ImagesSet>		getImgTable();
