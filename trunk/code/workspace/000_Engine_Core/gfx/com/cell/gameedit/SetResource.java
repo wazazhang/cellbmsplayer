@@ -81,6 +81,7 @@ abstract public class SetResource
 				((StreamTiles) obj).unloadAllImages();
 			}
 		}
+		output_adapter.dispose();
 	}
 	
 //	-------------------------------------------------------------------------------------------------------------------------------

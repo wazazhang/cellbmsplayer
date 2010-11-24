@@ -21,6 +21,7 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
@@ -35,8 +36,11 @@ import com.cell.gfx.IGraphics;
 import com.cell.gfx.IImage;
 import com.cell.gfx.game.CCD;
 import com.cell.gfx.game.CSprite;
+import com.cell.io.BigIODeserialize;
+import com.cell.io.BigIOSerialize;
 import com.cell.io.CFile;
 import com.cell.j2se.CGraphics;
+import com.cell.util.Pair;
 import com.g2d.display.AnimateCursor;
 import com.g2d.display.ui.text.TextBuilder;
 
@@ -690,7 +694,78 @@ public class Tools
 	
 	
 	
+	/**
+	 * 将图片中不透明部分输出成1位信息
+	 * @param bi
+	 * @return
+	 */
+	public static byte[] encodeImageMask(BufferedImage bi)
+	{
+		if (bi != null) {
+			try {
+				int [] rgb = new int[bi.getWidth() * bi.getHeight()];
+				bi.getRGB(0, 0, bi.getWidth(), bi.getHeight(), rgb, 0, bi.getWidth());
+				ByteArrayOutputStream baos = new ByteArrayOutputStream(rgb.length / 8 + 10);
+				BigIOSerialize.putInt(baos, bi.getWidth());
+				BigIOSerialize.putInt(baos, bi.getHeight());
+				for (int i = 0; i < rgb.length; i+=8) {
+					byte state = 0;
+					for (int s = 0; s < 8; s ++) {
+						int index = i + s;
+						if (index < rgb.length && ((rgb[index] & 0xff000000) != 0)) {
+							state += (0x01 << s);
+						}
+					}
+					BigIOSerialize.putByte(baos, state);
+				}
+				return baos.toByteArray();
+			} catch (Throwable tx) {
+				tx.printStackTrace();
+			}
+		}
+		return null;
+	}
 	
+
+	/**
+	 * @see encodeImageMask(BufferedImage bi)
+	 * @param bi
+	 * @return
+	 */
+	public static BufferedImage decodeImageMask(byte[] data, int rgb) 
+	{
+		if (data != null)
+		{
+			try 
+			{
+				ByteArrayInputStream idata = new ByteArrayInputStream(data);
+				
+				int width	= BigIODeserialize.getInt(idata);
+				int height	= BigIODeserialize.getInt(idata);
+				BufferedImage buffer = Tools.createImage(width, height);
+				int len = width * height;
+				for (int i = 0; i < len; i++) {
+					byte state = BigIODeserialize.getByte(idata);
+					for (int s = 0; s < 8; s++) {
+						int index = i * 8 + s;
+						int x = index % width;
+						int y = index / width;
+						int b = ((0x00ff & state) >> s) & 0x01;
+						if (b != 0) {
+							if (x < width && y < height) {
+								buffer.setRGB(x, y, 0xff000000 | rgb);
+							}
+						}
+					}
+				}
+				return buffer;
+			} catch (Exception err) {
+				err.printStackTrace();
+			}
+		}
+		
+		return null;
+	}
 	
 	
 	

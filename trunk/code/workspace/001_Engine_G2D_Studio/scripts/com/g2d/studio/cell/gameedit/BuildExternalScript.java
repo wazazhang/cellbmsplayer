@@ -6,6 +6,9 @@ import com.cell.CIO;
 
 public interface BuildExternalScript 
 {
-	public void start(BuildProcess p, File dir, String cpj_file_name);
+	
+	
+	
+	public void output(BuildProcess p, File dir, File cpj_file_name);
 	
 }
