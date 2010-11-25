@@ -17,7 +17,6 @@ import com.cell.gfx.game.CCD;
 import com.cell.gfx.game.CMap;
 import com.cell.gfx.game.CSprite;
 import com.cell.gfx.game.CWayPoint;
-import com.sun.org.apache.bcel.internal.classfile.Code;
 
 
 /**
