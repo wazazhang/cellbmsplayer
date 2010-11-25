@@ -2,6 +2,7 @@ package com.cell.rpg.particle;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
 
@@ -44,13 +45,13 @@ public enum ParticleAppearanceType
 		/** CPJ图片组图片编号*/
 		public int		cpj_image_id;
 
-		private transient BufferedImage image;
+		private transient Image image;
 		
-		public void setImage(BufferedImage src) {
+		public void setImage(Image src) {
 			this.image = src;
 		}
 		
-		public BufferedImage getImage() {
+		public Image getImage() {
 			return image;
 		}
 		
@@ -61,7 +62,7 @@ public enum ParticleAppearanceType
 		@Override
 		public void render(Graphics2D g, Layer layer) {
 			if (getImage() != null) {
-				g.drawImage(getImage(), -getImage().getWidth() >> 1, -getImage().getHeight() >> 1, null);
+				g.drawImage(getImage(), -getImage().getWidth(null) >> 1, -getImage().getHeight(null) >> 1, null);
 			} else {
 				g.setColor(Color.WHITE);
 				g.drawArc(-2, -2, 4, 4, 0, 360);

@@ -28,7 +28,10 @@ public class CImage implements IImage
 	static GraphicsDevice 			gd	= ge.getDefaultScreenDevice();
 	static GraphicsConfiguration	gc	= gd.getDefaultConfiguration();
 
-	private BufferedImage m_image;
+	private BufferedImage	m_image;
+	
+	private WritableRaster	m_src_index_color_raster;
+	private ColorModel		m_src_index_color_model;
 	
 //	private VolatileImage v_image;
 	
@@ -70,9 +73,11 @@ public class CImage implements IImage
 			if ( (src instanceof BufferedImage) && (((BufferedImage)src).getColorModel() instanceof IndexColorModel) )
 			{
 				BufferedImage srci = (BufferedImage)src;
-				m_image = new BufferedImage(srci.getColorModel(), srci.getRaster(), srci.isAlphaPremultiplied(), null);
+				m_src_index_color_raster	= srci.getRaster();
+				m_src_index_color_model		= srci.getColorModel();
+//				m_src_index_color_image = new BufferedImage(srci.getColorModel(), srci.getRaster(), srci.isAlphaPremultiplied(), null);
 			}
-			else
+			
 			{
 				m_image = gc.createCompatibleImage(
 						src.getWidth(null), 
@@ -215,12 +220,11 @@ public class CImage implements IImage
 	 */
 	public int getColorModel()
 	{
-		ColorModel color_model = m_image.getColorModel();
-		
-		if (color_model instanceof IndexColorModel)
+		if (m_src_index_color_model != null) {
 			return COLOR_MODEL_INDEX;
-		
-		return COLOR_MODEL_DIRECT;
+		} else {
+			return COLOR_MODEL_DIRECT;
+		}
 	}
 	
 	/**
@@ -229,38 +233,40 @@ public class CImage implements IImage
 	 */
 	public IPalette getPalette()
 	{
-		ColorModel color_model = m_image.getColorModel();
-		
-		if (color_model instanceof IndexColorModel)
+		if (m_src_index_color_model != null)
 		{
-			IndexColorModel model = (IndexColorModel)color_model;
+			ColorModel color_model = m_src_index_color_model;
 			
-			int size = model.getMapSize();
-			
-			byte[] ra = new byte[size];
-			byte[] ga = new byte[size];
-			byte[] ba = new byte[size];
-			byte[] alphaa = new byte[size];
-			model.getReds(ra);
-			model.getGreens(ga);
-			model.getBlues(ba);
-			model.getAlphas(alphaa);
-			
-			int transparent_color_index = -1;
-			
-			byte[] data = new byte[256*3];
-			for ( int i=0, j=0; (i<size)&&(j<data.length); ++i )
+			if (color_model instanceof IndexColorModel)
 			{
-				data[j++] = ra[i];
-				data[j++] = ga[i];
-				data[j++] = ba[i];
-				if (alphaa[i] == 0)
-					transparent_color_index = i;
-			}
-			
-			return new CPalette(data, (short)size, (short)transparent_color_index);
-		}	
-		
+				IndexColorModel model = (IndexColorModel)color_model;
+				
+				int size = model.getMapSize();
+				
+				byte[] ra = new byte[size];
+				byte[] ga = new byte[size];
+				byte[] ba = new byte[size];
+				byte[] alphaa = new byte[size];
+				model.getReds(ra);
+				model.getGreens(ga);
+				model.getBlues(ba);
+				model.getAlphas(alphaa);
+				
+				int transparent_color_index = -1;
+				
+				byte[] data = new byte[256*3];
+				for ( int i=0, j=0; (i<size)&&(j<data.length); ++i )
+				{
+					data[j++] = ra[i];
+					data[j++] = ga[i];
+					data[j++] = ba[i];
+					if (alphaa[i] == 0)
+						transparent_color_index = i;
+				}
+				
+				return new CPalette(data, (short)size, (short)transparent_color_index);
+			}	
+		}
 		return null;
 	}
 	
@@ -271,6 +277,10 @@ public class CImage implements IImage
 	 */
 	public void setPalette(IPalette palette)
 	{
+		if (m_src_index_color_raster == null) {
+			throw new IllegalStateException("this image is not support index color model !");
+		}
+		
 		if (palette != null)
 		{
 			try
@@ -293,10 +303,9 @@ public class CImage implements IImage
 				
 				IndexColorModel icm = new IndexColorModel(8, color_count, ra, ga, ba, ralpha);
 				
-				WritableRaster raster = m_image.getRaster();
+				BufferedImage new_image = new BufferedImage(icm, m_src_index_color_raster, icm.isAlphaPremultiplied(), null);
 				
-				BufferedImage new_image = new BufferedImage(icm, raster, icm.isAlphaPremultiplied(), null);
-				m_image = new_image;
+				m_image = createBuffer(new_image);
 			}
 			catch (Exception exp)
 			{
