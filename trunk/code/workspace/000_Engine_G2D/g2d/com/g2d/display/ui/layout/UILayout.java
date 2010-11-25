@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage;
 
 import com.cell.DObject;
 import com.cell.gfx.IImage;
-import com.cell.j2se.CImage;
+//import com.cell.j2se.CImage; // TODO 这里import这个？
 import com.g2d.Tools;
 import com.g2d.Version;
 import com.g2d.util.Drawing;
@@ -224,10 +224,11 @@ public class UILayout extends DObject
 				BorderBL 	= Tools.subImage(src, 0, H - B, L, B);
 				BorderB 	= Tools.subImage(src, L, H - B, W - L - R, B);
 				BorderBR 	= Tools.subImage(src, W - R, H - B, R, B);
-				IImage m = new CImage(src).newInstance();
-				int rgb[] = new int[1];
-				m.getRGB(rgb, 0, 1, R, T, 1, 1);
-				BackColor = new Color(rgb[0]);
+//				IImage m = new CImage(src).newInstance();
+//				int rgb[] = new int[1];
+//				m.getRGB(rgb, 0, 1, R, T, 1, 1);
+//				BackColor = new Color(rgb[0]);
+				BackColor	= new Color(src.getRGB(R, T));
 				break;
 				
 			case IMAGE_STYLE_H_012:
