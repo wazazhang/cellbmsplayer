@@ -1,14 +1,69 @@
-﻿/**
-getDir()
-exec(String)
-deleteIfExists(String)
-getEntrys(String, String, String)
-pakEntrys(Map<String, byte[]>, String)
-pakFiles(String, String, String, String)
-saveImageThumb(String, String, float)
-convertImageMaskEntrys(Map<String, byte[]>)
-*/
+﻿/*********************************************************************************
+ * BuildProcess
+ * 类所用可用的方法
+ *********************************************************************************
+ *
+ * 得到当前工作目录
+ * public File getDir()
+ * 
+ * 执行操作系统指令
+ * public Object exec(String cmd) 
+ * 
+ * 执行操作系统指令，并等待超时
+ * public Object exec(String cmd, int timeout)
+ * 
+ * 删除文件或整个目录
+ * public BuildProcess deleteIfExists(String child_file) 
+ * 
+ * 工作目录中。获得该目录下所有子文件信息
+ * public LinkedHashMap<String, byte[]> getEntrys(String root, String regex, String entry_prefix)
+ * 
+ * 工作目录中。获得该目录下所有子文件信息
+ * public BuildProcess getEntrys(String root, String regex, String entry_prefix, Map<String, byte[]> packs)
+ * 
+ * 将所有entry打包成zip格式
+ * public File pakEntrys(Map<String, byte[]> entrys, String out) 
+ * 
+ * 工作目录中。将该目录下符合的文件都打包，自定义子文件的前缀
+ * public File pakFiles(String root, String regex, String out, String prefix)
+ * 
+ * 工作目录中。导出一份缩略图
+ * public BuildProcess saveImageThumb(String src_file, String dst_file, float scale)
+ * 
+ * 转换图片成MASK信息
+ * public BuildProcess convertImageMaskEntrys(Map<String, byte[]> packs)
+ * 
+ * 工作目录中。获得该目录下所有子文件信息，并转换成ImageMask
+ * public BuildProcess getImageMaskEntrys(String root, String regex, String entry_prefix, Map<String, byte[]> packs)
+ * 
+ * 工作目录中。将该目录下符合的文件都打包，自定义子文件的前缀
+ * public File pakImageMaskFiles(String root, String regex, String out, String prefix)
+ * 
+ */
 
+/*********************************************************************************
+ * interface implements
+ * public boolean checkOutputExists(BuildProcess p, File dir, File cpj_file_name)
+ * 检查以前是否已经存在导出资源
+ *********************************************************************************/
+function checkOutputExists(p, dir, cpj_file_name)
+{
+	var output_properties = java.io.File(dir, "output\\" + cpj_file_name.getName().replace(".cpj", ".properties"));
+	if (!output_properties.exists()) {
+		return false;
+	}
+	var output_pak = java.io.File(dir, "..\\" + dir.getName()+".pak");
+	if (!output_pak.exists()) {
+		return false;
+	}
+	return true;
+}
+
+/*********************************************************************************
+ * interface implements
+ * public void 	output(BuildProcess p, File dir, File cpj_file_name)
+ * 导出资源
+ *********************************************************************************/
 function output(p, dir, cpj_file_name)
 {
 
@@ -21,7 +76,10 @@ function output(p, dir, cpj_file_name)
 	clean(p);
 }
 
-/**压缩图片*/
+//-----------------------------------------------------------------------------------------
+/**
+ * 压缩图片
+ */
 function convertImage(p, dir, cpj_file_name)
 {
 	convert = java.io.File(

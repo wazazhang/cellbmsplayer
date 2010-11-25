@@ -48,7 +48,7 @@ public class BuildProcess
 	}
 	
 	/**
-	 * 执行操作系统指令
+	 * 执行操作系统指令，并等待超时
 	 * @param cmd
 	 * @param timeout
 	 * @return
