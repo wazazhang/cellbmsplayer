@@ -151,7 +151,7 @@ public class ZipUtil
 	}
 	
 	static public byte[] readBytes(ZipInputStream is) throws IOException {
-		ByteArrayOutputStream data = new ByteArrayOutputStream(is.available());
+		ByteArrayOutputStream data = new ByteArrayOutputStream(8192);
 		byte[] buffer = new byte[8192];
 		int size;
 		while (is.available() > 0) {
