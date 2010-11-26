@@ -24,19 +24,19 @@ public class ThreadPool implements ThreadPoolService
     private ShutDownHook					shutdown_hook	= new ShutDownHook();
 	private boolean 						shutdown		= false;
 
-	
 	public ThreadPool(
 			String pool_name,
 			int scheduled_corePoolSize, 
 			int threadpool_corePoolSize,
-            int threadpool_maximumPoolSize)
+            int threadpool_maximumPoolSize, 
+            int priority)
 	{
 		this.name = pool_name;
 
 		if (scheduled_corePoolSize>0) {
 			gameScheduledThreadPool = new ScheduledThreadPoolExecutor(
 					scheduled_corePoolSize, 
-					new PriorityThreadFactory(name + " Scheduled ThreadPool", Thread.NORM_PRIORITY));
+					new PriorityThreadFactory(name + " Scheduled ThreadPool", priority));
 		}
 		
 		if (threadpool_corePoolSize>0) {
@@ -46,12 +46,27 @@ public class ThreadPool implements ThreadPoolService
 			        5L, 
 			        TimeUnit.SECONDS,
 			        new LinkedBlockingQueue<Runnable>(),
-			        new PriorityThreadFactory(name + " ThreadPool", Thread.NORM_PRIORITY));
+			        new PriorityThreadFactory(name + " ThreadPool", priority));
 		}
 
 		Runtime.getRuntime().addShutdownHook(shutdown_hook);
 	}
+	
+	public ThreadPool(
+			String pool_name,
+			int scheduled_corePoolSize, 
+			int threadpool_corePoolSize,
+            int threadpool_maximumPoolSize)
+	{
+		this(pool_name, 
+				scheduled_corePoolSize,
+				threadpool_corePoolSize, 
+				threadpool_maximumPoolSize,
+				Thread.NORM_PRIORITY);
+	}
     
+	
+	
 	public ThreadPool(String pool_name)
 	{
 		this(pool_name,
