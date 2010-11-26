@@ -634,9 +634,8 @@ public abstract class ResourceManager extends CellSetResourceManager
 //	--------------------------------------------------------------------------------------------------------------------
 	private static void EditResources_____________________________________________________(){}
 	
-	public BufferedImage getIcon(String index)
-	{
-		return all_icons.get(index).get();
+	public AtomicReference<BufferedImage> getIcon(String index) {
+		return all_icons.get(index);
 	}
 	
 	public ISound getSound(String index)
