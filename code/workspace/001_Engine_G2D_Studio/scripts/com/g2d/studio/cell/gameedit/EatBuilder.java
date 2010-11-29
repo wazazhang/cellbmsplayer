@@ -113,12 +113,21 @@ public class EatBuilder extends Builder
 			}
 		}
 		try {
-			System.out.println("build sprite : " + cpj_file.getPath());
+			System.out.print("build sprite : " + cpj_file.getPath());
 			File output_properties = copyScript(cpj_file_name, "output.properties");
-			Process process = CellGameEditWrap.openCellGameEdit(Config.CELL_GAME_EDIT_CMD, cpj_file_name, 
+			Process process = CellGameEditWrap.openCellGameEdit(Config.CELL_GAME_OUTPUT_CMD, cpj_file_name, 
 					output_properties.getPath());
-			process.waitFor();
-			process.destroy();
+			WaitProcessTask task = new WaitProcessTask(process, Config.CELL_BUILD_WAIT_TIMEOUT_MS);
+			task.start();
+			try {
+				process.waitFor();
+				Thread.yield();
+			} finally {
+				synchronized (task) {
+					task.notifyAll();
+				}
+			}
+			System.out.println(" : done !");
 			output(cpj_file_name, false);
 		} catch (Throwable e) {
 			e.printStackTrace();
@@ -137,20 +146,28 @@ public class EatBuilder extends Builder
 			}
 		}
 		try {
-			System.out.println("build scene : " + cpj_file.getPath());
+			System.out.print("build scene : " + cpj_file.getPath());
 			File output_properties		= copyScript(cpj_file_name,	"output.properties");
 			File scene_jpg_script		= copyScript(cpj_file_name,	"scene_jpg.script");
 			File scene_jpg_thumb_script	= copyScript(cpj_file_name,	"scene_jpg_thumb.script");
 			File scene_png_script		= copyScript(cpj_file_name,	"scene_png.script");
-			
-			Process process = CellGameEditWrap.openCellGameEdit(Config.CELL_GAME_EDIT_CMD, cpj_file_name, 
+			Process process = CellGameEditWrap.openCellGameEdit(Config.CELL_GAME_OUTPUT_CMD, cpj_file_name, 
 					output_properties.getPath(), 
 					scene_jpg_script.getPath(),
 					scene_jpg_thumb_script.getPath(),
 					scene_png_script.getPath()
-					);
-			process.waitFor();
-			process.destroy();
+					);	
+			WaitProcessTask task = new WaitProcessTask(process, Config.CELL_BUILD_WAIT_TIMEOUT_MS);
+			task.start();
+			try {
+				process.waitFor();
+				Thread.yield();
+			} finally {
+				synchronized (task) {
+					task.notifyAll();
+				}
+			}
+			System.out.println(" : done !");
 			output(cpj_file_name, true);
 		} catch (Throwable e) {
 			e.printStackTrace();
