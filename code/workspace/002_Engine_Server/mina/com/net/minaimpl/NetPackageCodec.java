@@ -160,7 +160,7 @@ public class NetPackageCodec extends MessageHeaderCodec
         		
         		// 当解包时发生错误，则
         		// 返回true代表这次解包已完成,清空状态并准备下一次解包
-        		return true;
+        		throw new Exception(err);
         	}
 	    	
     	}
