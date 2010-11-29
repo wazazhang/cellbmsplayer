@@ -362,6 +362,7 @@ public class CPJResourceManager extends ManagerForm implements MouseListener
 			super.setLayout(new BorderLayout());
 			super.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 			super.getRootPane().setWindowDecorationStyle(JRootPane.NONE);
+			super.setAlwaysOnTop(false);
 			
 			progress.setStringPainted(true);
 			super.add(progress, BorderLayout.CENTER);
