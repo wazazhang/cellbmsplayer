@@ -240,6 +240,7 @@ public class NetPackageCodec extends MessageHeaderCodec
     		{
     			_log.error(err.getMessage() + "\nencode error : " + session + " :\n" + message + "", err);
         		//err.printStackTrace();
+    			throw new Exception(err);
         	}
     	}
     }
