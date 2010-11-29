@@ -56,18 +56,14 @@ public class BuildProcess
 	public Object exec(String cmd, int timeout) {
 		try {	
 			Process p = Runtime.getRuntime().exec(cmd, CUtil.getEnv(), dir);
-			if (timeout == 0) {
+			WaitProcessTask task = new WaitProcessTask(p, Math.max(timeout, 60000));
+			task.start();
+			try {
 				p.waitFor();
-			} else {
-				WaitProcessTask task = new WaitProcessTask(p, timeout);
-				task.start();
-				try {
-					p.waitFor();
-					Thread.yield();
-				} finally {
-					synchronized (task) {
-						task.notifyAll();
-					}
+				Thread.yield();
+			} finally {
+				synchronized (task) {
+					task.notifyAll();
 				}
 			}
 			byte[] out = CIO.readStream(p.getInputStream());
@@ -78,33 +74,7 @@ public class BuildProcess
 		}
 	}
 	
-	private class WaitProcessTask extends Thread
-	{
-		final Process p;
-		final int timeout;
-		public WaitProcessTask(Process p, int timeout) {
-			this.p = p;
-			this.timeout = timeout;
-		}
-		
-		@Override
-		public void run() {
-			synchronized (this) {
-				try {
-					wait(timeout);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-			try {
-				int exitcode = p.exitValue();
-//				System.out.println("exit code = " + exitcode);
-			} catch (Exception err) {
-				System.err.println("强制结束进程 ");
-				p.destroy();
-			}
-		}
-	}
+	
 	
 	/**
 	 * 删除文件或整个目录

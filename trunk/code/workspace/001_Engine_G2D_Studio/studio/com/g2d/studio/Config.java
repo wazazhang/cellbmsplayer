@@ -88,6 +88,9 @@ public class Config extends com.cell.util.Config
 
 	/**CellGameEdit可执行文件*/
 	public static String CELL_GAME_EDIT_CMD				= "CellGameEdit.exe";
+
+	/**CellGameOutput可执行文件*/
+	public static String CELL_GAME_OUTPUT_CMD			= "CellGameOutput.exe";
 	
 	/**保存的导出精灵批处理<br>
 	 * {file}变量为cpj文件*/
@@ -106,6 +109,8 @@ public class Config extends com.cell.util.Config
 	@ConfigField("导出后的批处理程序")
 	public static String  CELL_BUILD_OUTPUT_SCRIPT_FILE	= ".\\build_output_script.js";
 
+	/** 编译指令等待时间，防止线程被卡住 */
+	public static Integer CELL_BUILD_WAIT_TIMEOUT_MS	= 60000;
 	
 //	--------------------------------------------------------------------------------------------------------
 //
