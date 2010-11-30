@@ -63,6 +63,11 @@ final public class SimpleCanvasNoInternal extends Canvas implements CanvasContai
 //	--------------------------------------------------------------------------------
 	
 	@Override
+	public Component getContainer() {
+		return this;
+	}	
+	
+	@Override
 	public Component getComponent() {
 		return this;
 	}
