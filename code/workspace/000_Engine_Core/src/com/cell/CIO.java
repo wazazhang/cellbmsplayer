@@ -15,6 +15,7 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -199,7 +200,9 @@ public class CIO extends CObject
 				} else {
 					return null;
 				}
-			} catch (IOException err) {
+			} catch (SocketTimeoutException err) {
+				System.out.println("timeout retry load url data : " + url);
+			}  catch (IOException err) {
 				err.printStackTrace();
 				System.out.println("retry load url data : " + url);
 			} finally {
