@@ -127,8 +127,8 @@ public class EatBuilder extends Builder
 					task.notifyAll();
 				}
 			}
-			System.out.println(" : done !");
 			output(cpj_file_name, false);
+			System.out.println(" : done !");
 		} catch (Throwable e) {
 			e.printStackTrace();
 		} finally {
@@ -167,8 +167,8 @@ public class EatBuilder extends Builder
 					task.notifyAll();
 				}
 			}
-			System.out.println(" : done !");
 			output(cpj_file_name, true);
+			System.out.println(" : done !");
 		} catch (Throwable e) {
 			e.printStackTrace();
 		} finally {
