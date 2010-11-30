@@ -424,6 +424,7 @@ public class CIO extends CObject
 				int count = inputstream.read(b, off, len);
 				if (count >= 0) {
 					readed.addAndGet(count);
+					loaded_bytes.addAndGet(count);
 				}
 				return count;
 			}
@@ -505,7 +506,7 @@ public class CIO extends CObject
 						break;
 					}
 				}
-				loaded_bytes.addAndGet(data.length);
+//				loaded_bytes.addAndGet(data.length);
 				available = is.available();
 			} while (available > 0);
 			return baos.toByteArray();
