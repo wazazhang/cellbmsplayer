@@ -5,6 +5,8 @@ import java.awt.Graphics;
 
 public interface CanvasContainer 
 {
+	Component getContainer();
+	
 	Component getComponent();
 	
 	void superPaint(Graphics g);

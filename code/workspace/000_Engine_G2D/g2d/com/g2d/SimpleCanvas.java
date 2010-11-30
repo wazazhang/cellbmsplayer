@@ -60,6 +60,11 @@ final public class SimpleCanvas extends Panel implements CanvasContainer
 //	--------------------------------------------------------------------------------
 	
 	@Override
+	public Component getContainer() {
+		return this;
+	}	
+	
+	@Override
 	public Component getComponent() {
 		return this;
 	}

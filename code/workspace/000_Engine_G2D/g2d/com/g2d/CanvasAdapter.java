@@ -45,6 +45,7 @@ FocusListener
 //	--------------------------------------------------------------------------------
 	
 	final private CanvasContainer		parent;
+	final private Component				container_;
 	final private Component 			component;
 
 	private Applet						owner_applet;
@@ -132,6 +133,7 @@ FocusListener
 	{
 //		super(null, true);
 		parent			= container;
+		container_		= container.getContainer();
 		component		= container.getComponent();
 		
 		stageWidth		= stage_width;
@@ -420,26 +422,26 @@ FocusListener
 	 * @param frame
 	 */
 	public void setInternalFrame(Component frame) 
-	{
-		if (component instanceof Container)
-		{
+	{			
+		if (container_ instanceof Container)
+		{			
 			if (internal_frame!=null) {
-				((Container)component).remove(internal_frame);
+				((Container)container_).remove(internal_frame);
 			}
 			
 			internal_frame = frame;
 			
 			if (internal_frame!=null) {
-				((Container)component).add(internal_frame);
+				((Container)container_).add(internal_frame);
 //				internal_frame.requestFocus();
 				System.out.println("setInternalFrame : " + internal_frame.getClass().getName());
-				component.requestFocus();
+				container_.requestFocus();
 			}
 			
 		}
 		else
 		{
-			System.err.println("setInternalFrame : \"" + component.getClass().getName() + "\" is not a container ! ");
+			System.err.println("setInternalFrame : \"" + container_.getClass().getName() + "\" is not a container ! ");
 			throw new NotImplementedException();
 		}
 		
