@@ -230,7 +230,6 @@ public abstract class BasicNetService
 			if (removed != null) {
 				for (Protocol unotify : removed) {
 					UnhandledMessages.remove(unotify);
-					log.info("drop a unhandled notify : " + unotify);
 				}
 			}
 		}
