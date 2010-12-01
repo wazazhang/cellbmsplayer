@@ -16,6 +16,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Vector;
 import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -649,7 +650,7 @@ public class EatBuilder extends Builder
 		}
 		
 		@Override
-		public byte[] loadRes(String name) {
+		public byte[] loadRes(String name, AtomicReference<Float> percent) {
 			if (resources == null) {
 				initPakFiles();
 			}
@@ -729,10 +730,10 @@ public class EatBuilder extends Builder
 					try {
 						if (is_png_mask) {
 							images[i] = new CImage(Tools.decodeImageMask(
-									set.getOutput().loadRes(img.Name+"/"+i+".png"), 0));
+									set.getOutput().loadRes(img.Name+"/"+i+".png", null), 0));
 						} else {
 							images[i] = new CImage(Tools.readImage(new ByteArrayInputStream(
-									set.getOutput().loadRes(img.Name+"/"+i+"."+img.Name))));
+									set.getOutput().loadRes(img.Name+"/"+i+"."+img.Name, null))));
 						}
 					} catch (Exception err) {
 //						err.printStackTrace();
@@ -745,7 +746,7 @@ public class EatBuilder extends Builder
 		
 		protected boolean loadZipImages() {
 			boolean is_png_mask = img.Name.startsWith("png");
-			byte[] zipdata = set.getOutput().loadRes(img.Name+".zip");
+			byte[] zipdata = set.getOutput().loadRes(img.Name+".zip", null);
 			if (zipdata != null) {
 				Map<String, ByteArrayInputStream> files = ZipUtil.unPackFile(new ByteArrayInputStream(zipdata));
 				for (int i = 0; i < images.length; i++) {
