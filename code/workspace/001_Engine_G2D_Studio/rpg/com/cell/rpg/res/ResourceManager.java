@@ -1,6 +1,7 @@
 package com.cell.rpg.res;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicReference;
@@ -139,53 +140,103 @@ public abstract class ResourceManager extends CellSetResourceManager
 
 	abstract protected ThreadPoolService getLoadingService() ;
 	
-	final protected void initAllSet() throws Exception
-	{
-		all_scene_set	= readSets(save_dir + "/resources/scene_list.list",		SceneSet.class);
-		all_actor_set	= readSets(save_dir + "/resources/actor_list.list",		SpriteSet.class);
-		all_avatar_set	= readSets(save_dir + "/resources/avatar_list.list",	SpriteSet.class);
-		all_effect_set	= readSets(save_dir + "/resources/effect_list.list",	SpriteSet.class);
+	
+	final protected void initAllSet() throws Exception{
+		initAllSet(new AtomicReference<Float>(0f));
 	}
+	
+	final protected void initAllSet(AtomicReference<Float> percent) throws Exception
+	{
+		all_scene_set	= readSets(save_dir + "/resources/scene_list.list",		SceneSet.class,		percent, 0 , 4);
+		all_actor_set	= readSets(save_dir + "/resources/actor_list.list",		SpriteSet.class,	percent, 1 , 4);
+		all_avatar_set	= readSets(save_dir + "/resources/avatar_list.list",	SpriteSet.class,	percent, 2 , 4);
+		all_effect_set	= readSets(save_dir + "/resources/effect_list.list",	SpriteSet.class,	percent, 3 , 4);
+	}
+	
 	
 	final protected void initAllXml(String persistance_manager)  throws Exception
 	{
-		RPGObjectMap.setPersistanceManagerDriver(persistance_manager);
+		initAllXml(persistance_manager, new AtomicReference<Float>(0f));
+	}
 	
-		item_properties = readRPGObjects(save_dir + "/item_properties/item_properties.list",	ItemProperties.class);
+	final protected void initAllXml(String persistance_manager, AtomicReference<Float> percent)  throws Exception
+	{
+		RPGObjectMap.setPersistanceManagerDriver(persistance_manager);
 		
-		tunits			= readTemplateObjects(TUnit.class);
-		titems			= readTemplateObjects(TItem.class);
-		tshopitems		= readTemplateObjects(TShopItem.class);
-		tavatars		= readTemplateObjects(TAvatar.class);
-		tskills			= readTemplateObjects(TSkill.class);
-		teffects		= readTemplateObjects(TEffect.class);
-		titemlists		= readTemplateObjects(TItemList.class);
-		tshopitemlists	= readTemplateObjects(TShopItemList.class);
+		item_properties = readRPGObjects(ItemProperties.class,	percent, 0,  13);
 		
-		quests			= readRPGObjects(save_dir + "/quests/quest.list",						Quest.class);
-		questgroups		= readRPGObjects(save_dir + "/questgroups/questgroups.list",			QuestGroup.class);
+		tunits			= readRPGObjects(TUnit.class,			percent, 1,  13);
+		titems			= readRPGObjects(TItem.class,			percent, 2,  13);
+		tshopitems		= readRPGObjects(TShopItem.class,		percent, 3,  13);
+		tavatars		= readRPGObjects(TAvatar.class,			percent, 4,  13);
+		tskills			= readRPGObjects(TSkill.class,			percent, 5,  13);
+		teffects		= readRPGObjects(TEffect.class,			percent, 6,  13);
+		titemlists		= readRPGObjects(TItemList.class,		percent, 7,  13);
+		tshopitemlists	= readRPGObjects(TShopItemList.class,	percent, 8,  13);
 		
-		scenes			= readRPGObjects(save_dir + "/scenes/scene.list", 						Scene.class);
-		instance_zones	= readRPGObjects(save_dir + "/instance_zones/zones.list", 				InstanceZone.class);
+		quests			= readRPGObjects(Quest.class,			percent, 9,  13);
+		questgroups		= readRPGObjects(QuestGroup.class,		percent, 10, 13);
+		
+		scenes			= readRPGObjects(Scene.class,			percent, 11, 13);
+		instance_zones	= readRPGObjects(InstanceZone.class,	percent, 12, 13);
 	}
 	
 	final protected void initAllXmlNames()  throws Exception
 	{
-		names_item_properties	= readRPGObjectNames(save_dir + "/item_properties/name_item_properties.list");
+		initAllXmlNames(new AtomicReference<Float>(0f));
+	}
+	
+	final protected void initAllXmlNames(AtomicReference<Float> percent)  throws Exception
+	{
+		percent.set(0f);
+		float factor = 1f / 13f; 
 		
-		names_tunits			= readRPGObjectNames(toNameListFile(TUnit.class));
-		names_titems			= readRPGObjectNames(toNameListFile(TItem.class));
-		names_tshopitems		= readRPGObjectNames(toNameListFile(TShopItem.class));
-		names_tavatars			= readRPGObjectNames(toNameListFile(TAvatar.class));
-		names_tskills			= readRPGObjectNames(toNameListFile(TSkill.class));
-		names_teffects			= readRPGObjectNames(toNameListFile(TEffect.class));
-		names_titemlists		= readRPGObjectNames(toNameListFile(TItemList.class));
-		names_tshopitemlists	= readRPGObjectNames(toNameListFile(TShopItemList.class));
+		names_item_properties	= readRPGObjectNames(ItemProperties.class);
+		percent.set(1 * factor);
 		
-		names_quests			= readRPGObjectNames(save_dir + "/quests/name_quest.list");
-		names_questgroups		= readRPGObjectNames(save_dir + "/questgroups/name_questgroups.list");
-		names_scenes			= readRPGObjectNames(save_dir + "/scenes/name_scene.list");
-		names_instance_zones	= readRPGObjectNames(save_dir + "/instance_zones/name_zones.list");
+		names_tunits			= readRPGObjectNames(TUnit.class);
+		percent.set(2 * factor);
+		names_titems			= readRPGObjectNames(TItem.class);
+		percent.set(3 * factor);
+		names_tshopitems		= readRPGObjectNames(TShopItem.class);
+		percent.set(4 * factor);
+		names_tavatars			= readRPGObjectNames(TAvatar.class);
+		percent.set(5 * factor);
+		names_tskills			= readRPGObjectNames(TSkill.class);
+		percent.set(6 * factor);
+		names_teffects			= readRPGObjectNames(TEffect.class);
+		percent.set(7 * factor);
+		names_titemlists		= readRPGObjectNames(TItemList.class);
+		percent.set(8 * factor);
+		names_tshopitemlists	= readRPGObjectNames(TShopItemList.class);
+		percent.set(9 * factor);
+		
+		names_quests			= readRPGObjectNames(Quest.class);
+		percent.set(10 * factor);
+		names_questgroups		= readRPGObjectNames(QuestGroup.class);
+		percent.set(11 * factor);
+		names_scenes			= readRPGObjectNames(Scene.class);
+		percent.set(12 * factor);
+		names_instance_zones	= readRPGObjectNames(InstanceZone.class);
+		percent.set(13 * factor);
+	}
+	
+	public static class WrapperPercent
+	{
+		final AtomicReference<Float> 				src;
+		final ArrayList<AtomicReference<Float>> 	subs;
+		
+		public WrapperPercent(AtomicReference<Float> src, int size) {
+			this.src	= src;
+			this.subs	= new ArrayList<AtomicReference<Float>>(size);
+			for (int i=0; i<size; i++) {
+				this.subs.add(new AtomicReference<Float>());
+			}
+		}
+		
+		private void set(float percent) {
+			
+		}
 	}
 	
 	final protected void initIcons()
@@ -207,8 +258,15 @@ public abstract class ResourceManager extends CellSetResourceManager
 
 	abstract protected CellSetResource createSet(String path) throws Exception;
 	
-	final protected <T extends ResourceSet<?>> Hashtable<String, T> readSets(String file, Class<T> type) throws Exception
-	{
+	final protected <T extends ResourceSet<?>> Hashtable<String, T> readSets(
+			String file, 
+			Class<T> type, 
+			AtomicReference<Float> percent, int step, int total
+			) throws Exception
+	{		
+		float init = (float)step / (float)total;
+		percent.set(init);
+
 		System.out.println("list resource : " + file);
 		
 		Hashtable<String, T> table = new Hashtable<String, T>();
@@ -232,6 +290,8 @@ public abstract class ResourceManager extends CellSetResourceManager
 			System.out.println("\tget " + type.getSimpleName() + " : " + cpj_name + "(" + obj_name + ")");
 			
 			table.put(set.getID(), set);
+			
+			percent.set(init  + ((float)i / (float)res_list.length) / total);
 		}
 		
 		System.out.println("size : " + table.size());
@@ -305,8 +365,59 @@ public abstract class ResourceManager extends CellSetResourceManager
 		return table;
 	}
 
-	final protected Hashtable<Integer, String> readRPGObjectNames(String list_file) throws Exception
+//	--------------------------------------------------------------------------------------------------------------------------------------
+	
+	public <T extends RPGObject>  String toListFile(Class<T> type) 
 	{
+		if (type.equals(ItemProperties.class)) {
+			return save_dir + "/item_properties/item_properties.list";
+		}
+		else if (type.equals(Quest.class)) {
+			return save_dir + "/quests/quest.list";					
+		}
+		else if (type.equals(QuestGroup.class)) {
+			return save_dir + "/questgroups/questgroups.list";					
+		}
+		else if (type.equals(Scene.class)) {
+			return save_dir + "/scenes/scene.list";					
+		}
+		else if (type.equals(InstanceZone.class)) {
+			return save_dir + "/instance_zones/zones.list";					
+		}
+		else {
+			String type_name = type.getSimpleName().toLowerCase();
+			return save_dir + "/objects/" + type_name + ".obj" + "/" + type_name + ".list";
+		}
+	}
+	
+	public <T extends RPGObject>  String toNameListFile(Class<T> type) 
+	{
+		if (type.equals(ItemProperties.class)) {
+			return save_dir + "/item_properties/name_item_properties.list";
+		}
+		else if (type.equals(Quest.class)) {
+			return save_dir + "/quests/name_quest.list";					
+		}
+		else if (type.equals(QuestGroup.class)) {
+			return save_dir + "/questgroups/name_questgroups.list";					
+		}
+		else if (type.equals(Scene.class)) {
+			return save_dir + "/scenes/name_scene.list";					
+		}
+		else if (type.equals(InstanceZone.class)) {
+			return save_dir + "/instance_zones/name_zones.list";					
+		}
+		else {
+			String type_name = type.getSimpleName().toLowerCase();
+			return save_dir + "/objects/" + type_name + ".obj" + "/name_" + type_name + ".list";
+		}
+	}
+	
+
+	final protected <T extends RPGObject> Hashtable<Integer, String> readRPGObjectNames(Class<T> type) throws Exception
+	{
+		String list_file = toNameListFile(type);
+		
 		System.out.println("list rpg object names : " + list_file);
 
 		Hashtable<Integer, String> table = new Hashtable<Integer, String>();
@@ -328,29 +439,16 @@ public abstract class ResourceManager extends CellSetResourceManager
 		return table;
 	}
 	
-	final public <T extends RPGObject>  String toListFile(Class<T> type) 
-	{
-		String type_name = type.getSimpleName().toLowerCase();
-		return save_dir + 
-		"/objects/" + type_name + ".obj" + 
-		"/" + type_name + ".list";
-	}
 	
-	final public <T extends RPGObject>  String toNameListFile(Class<T> type) 
-	{
-		String type_name = type.getSimpleName().toLowerCase();
-		return save_dir + 
-		"/objects/" + type_name + ".obj" + 
-		"/name_" + type_name + ".list";
-	}
-	
-	final protected <T extends RPGObject> Hashtable<Integer, T> readTemplateObjects(Class<T> type) throws Exception
-	{
-		return readRPGObjects(toListFile(type), type);
-	}
-	
-	final protected <T extends RPGObject> Hashtable<Integer, T> readRPGObjects(String list_file, Class<T> type) throws Exception
-	{		
+	final protected <T extends RPGObject> Hashtable<Integer, T> readRPGObjects(
+			Class<T> type, 
+			AtomicReference<Float> percent, int step, int total) throws Exception
+	{	
+		float init = (float)step / (float)total;
+		percent.set(init);
+		
+		String list_file = toListFile(type);
+		
 		System.out.println("list rpg objects : " + list_file);
 		
 		String tdir = CIO.getPathDir(list_file);
@@ -375,6 +473,8 @@ public abstract class ResourceManager extends CellSetResourceManager
 			System.out.println("\tget " + type.getSimpleName() + " : " + set + "(" + set.id + ")");
 
 			table.put(Integer.parseInt(set.id), set);
+			
+			percent.set(init  + ((float)i / (float)res_list.length) / total);
 		}
 		
 		System.out.println("size : " + table.size());
