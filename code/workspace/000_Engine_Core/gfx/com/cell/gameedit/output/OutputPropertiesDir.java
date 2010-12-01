@@ -14,6 +14,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 import com.cell.CIO;
 import com.cell.CUtil;
@@ -57,7 +58,7 @@ public class OutputPropertiesDir extends OutputProperties
 		this.file_name		= path.substring(root.length());
 		
 		// 读入基础属性
-		byte[] conf_data = loadRes(file_name);
+		byte[] conf_data = loadRes(file_name, null);
 		if (conf_data == null) {
 			throw new FileNotFoundException(path);
 		}
@@ -375,7 +376,7 @@ public class OutputPropertiesDir extends OutputProperties
 	 * @param path
 	 * @return
 	 */
-	final public byte[] loadRes(String path)
+	public byte[] loadRes(String path, AtomicReference<Float> percent)
 	{
 		byte[] data = CIO.loadData(root + path);
 		if (data == null) {

@@ -35,7 +35,7 @@ public class StreamTiles implements IImages, Runnable
 	 */
 	protected void initImages()
 	{
-		byte[] idata = set.output_adapter.loadRes(img.getName()+".png");
+		byte[] idata = set.output_adapter.loadRes(img.getName()+".png", null);
 		CImage src = new CImage(new ByteArrayInputStream(idata));
 		for (int i=0; i<images.length; i++){
 			if (img.getClipW(i)>0 && img.getClipH(i)>0){

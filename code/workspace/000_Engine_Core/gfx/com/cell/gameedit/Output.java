@@ -3,6 +3,7 @@ package com.cell.gameedit;
 
 import java.util.Hashtable;
 import java.util.Vector;
+import java.util.concurrent.atomic.AtomicReference;
 
 import com.cell.gameedit.object.ImagesSet;
 import com.cell.gameedit.object.MapSet;
@@ -29,7 +30,7 @@ public interface Output
 	 * @param name child name
 	 * @return
 	 */
-	public byte[]		loadRes(String name);
+	public byte[]		loadRes(String name, AtomicReference<Float> percent);
 	
 	
 	public Hashtable<String, ImagesSet>		getImgTable();
