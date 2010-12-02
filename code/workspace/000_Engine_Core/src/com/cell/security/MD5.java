@@ -1,4 +1,4 @@
-﻿package com.cell.security;
+package com.cell.security;
 
 import java.io.File;
 import java.io.FileInputStream;

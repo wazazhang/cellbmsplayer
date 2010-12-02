@@ -1,4 +1,3 @@
-﻿
 package com.cell.gfx.game;
 
 
@@ -1187,7 +1186,6 @@ public class CSprite extends CUnit implements Serializable
 	
 	
 	/**
-	 * 按时序连续播放动画
 	 */
 	public void playDemo(){
 		int anim = getCurrentAnimate();

@@ -1,4 +1,4 @@
-﻿package com.cell.gfx.game;
+package com.cell.gfx.game;
 
 import java.io.Serializable;
 
