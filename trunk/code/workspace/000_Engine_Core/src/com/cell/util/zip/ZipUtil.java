@@ -183,7 +183,7 @@ public class ZipUtil
 				File src = new File(args[args.length-2]).getCanonicalFile();
 				File out = new File(args[args.length-3]).getCanonicalFile();
 				Pattern parttern = Pattern.compile(args[args.length-1]);
-				zipFiles(src, out, parttern);
+				zipFiles(src, out, parttern, commands.containsKey("-verbos"));
 			} 
 			else if (args[0].equals("E")) 
 			{
@@ -215,7 +215,7 @@ public class ZipUtil
 	 * @param parttern
 	 * @throws Exception
 	 */
-	static public void zipFiles(File src, File out, Pattern parttern) throws Exception
+	static public void zipFiles(File src, File out, Pattern parttern, boolean verbos) throws Exception
 	{
 		src = src.getCanonicalFile();
 		out = out.getCanonicalFile();
@@ -226,7 +226,7 @@ public class ZipUtil
 			root = src.getParentFile().getCanonicalPath();
 		}
 		LinkedHashMap<String, byte[]> entrys = new LinkedHashMap<String, byte[]>();
-		zipFiles(src, parttern, root, entrys);
+		zipFiles(src, parttern, root, entrys, verbos);
 		if (!entrys.isEmpty()) {				
 			out.createNewFile();
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -242,20 +242,20 @@ public class ZipUtil
 		}
 	}
 	
-	static public void zipFiles(File src, Pattern regex, String root, LinkedHashMap<String, byte[]> entrys) throws Exception
+	static public void zipFiles(File src, Pattern regex, String root, LinkedHashMap<String, byte[]> entrys, boolean verbos) throws Exception
 	{
 		if (src.isFile()) {
 			if (regex.matcher(src.getName()).find()) {
-				pushFileEntry(src, root, entrys);
+				pushFileEntry(src, root, entrys, verbos);
 			}
 		} else if(src.isDirectory()) {
 			for (File sub : src.listFiles()) {
-				zipFiles(sub, regex, root, entrys);
+				zipFiles(sub, regex, root, entrys, verbos);
 			}
 		}
 	}
 	
-	static private void pushFileEntry(File src, String root, LinkedHashMap<String, byte[]> entrys) throws Exception
+	static private void pushFileEntry(File src, String root, LinkedHashMap<String, byte[]> entrys, boolean verbos) throws Exception
 	{
 		String name = src.getCanonicalPath();
 		name = CUtil.replaceString(name, root, "", 1);
@@ -265,6 +265,8 @@ public class ZipUtil
 		}
 		byte[] data = CFile.readData(src);
 		entrys.put(name, data);
-//		System.out.println("put : " + CUtil.snapStringRightSize(data.length + "(bytes)", 22, ' ') + " "+  name);
+		if (verbos) {
+			System.out.println("put : " + CUtil.snapStringRightSize(data.length + "(bytes)", 22, ' ') + " "+  name);
+		}
 	}
 }
