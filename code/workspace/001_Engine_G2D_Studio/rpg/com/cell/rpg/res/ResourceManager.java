@@ -1,12 +1,15 @@
 package com.cell.rpg.res;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.cell.CIO;
+import com.cell.CObject;
 import com.cell.CUtil;
 import com.cell.gameedit.StreamTiles;
 import com.cell.gfx.IImage;
@@ -49,7 +52,6 @@ public abstract class ResourceManager extends CellSetResourceManager
 //	--------------------------------------------------------------------------------------------------------------------
 	
 	final public String res_root;
-	final public String save_dir;
 	
 	
 	// res objects
@@ -99,29 +101,22 @@ public abstract class ResourceManager extends CellSetResourceManager
 	/**
 	 * 子类自定义初始化什么
 	 * @param res_root
-	 * @param icon_root
-	 * @param sound_root
 	 * @throws Exception
 	 */
-	public ResourceManager(
-			String res_root, 
-			String save_name) throws Exception
+	public ResourceManager(String res_root) throws Exception
 	{
 		this.res_root	= res_root;
-		this.save_dir	= res_root + "/" + save_name;
 	}
 
 	public ResourceManager(
 			String persistance_manager, 
 			String res_root, 
-			String save_name,
 			boolean init_set,
 			boolean init_xml,
 			boolean init_icon,
 			boolean init_sound)  throws Exception
 	{
 		this.res_root	= res_root;
-		this.save_dir	= res_root + "/" + save_name;
 		
 		if (init_set) 
 			initAllSet();
@@ -138,19 +133,75 @@ public abstract class ResourceManager extends CellSetResourceManager
 	
 //	--------------------------------------------------------------------------------------------------------------------
 
+//	--------------------------------------------------------------------------------------------------------------------
+
 	abstract protected ThreadPoolService getLoadingService() ;
 	
+	abstract protected CellSetResource createSet(String path) throws Exception;
+
+	@Override
+	public CellSetResource getSet(String path) throws Exception {
+		return super.getSet(path);
+	}
 	
+	protected byte[] getResource(String sub_file_name) {
+		byte[] data = CIO.loadData(res_root+sub_file_name);
+		if (data == null) {
+			System.err.println(sub_file_name);
+		}
+		return data;
+	}
+
+	protected String readAllText(String path)
+	{
+		return readAllText(path, CObject.getEncoding());
+	}
+	
+	protected String readAllText(String path, String encoding)
+	{
+		byte[] data = getResource(path);
+		if (data != null) {
+			return CIO.stringDecode(data, encoding);
+		}
+		return null;
+	}
+
+	protected String[] readAllLine(String path) {
+		return readAllLine(path, CObject.getEncoding());
+	}
+	
+	protected String[] readAllLine(String path, String encoding)
+	{
+		try {
+			String src = readAllText(path, encoding);
+			String[] ret = CUtil.splitString(src, "\n");
+			for (int i = ret.length - 1; i >= 0; i--) {
+				int ld = ret[i].lastIndexOf('\r');
+				if (ld >= 0) {
+					ret[i] = ret[i].substring(0, ld);
+				}
+			}
+			return ret;
+		} catch (Exception err) {
+			err.printStackTrace();
+			return new String[] { "" };
+		}
+	}
+
+//	--------------------------------------------------------------------------------------------------------------------
+
+//	--------------------------------------------------------------------------------------------------------------------
+
 	final protected void initAllSet() throws Exception{
 		initAllSet(new AtomicReference<Float>(0f));
 	}
-	
+
 	final protected void initAllSet(AtomicReference<Float> percent) throws Exception
 	{
-		all_scene_set	= readSets(save_dir + "/resources/scene_list.list",		SceneSet.class,		percent, 0 , 4);
-		all_actor_set	= readSets(save_dir + "/resources/actor_list.list",		SpriteSet.class,	percent, 1 , 4);
-		all_avatar_set	= readSets(save_dir + "/resources/avatar_list.list",	SpriteSet.class,	percent, 2 , 4);
-		all_effect_set	= readSets(save_dir + "/resources/effect_list.list",	SpriteSet.class,	percent, 3 , 4);
+		all_scene_set	= readSets("/project.g2d.save/resources/scene_list.list",	SceneSet.class,		percent, 0 , 4);
+		all_actor_set	= readSets("/project.g2d.save/resources/actor_list.list",	SpriteSet.class,	percent, 1 , 4);
+		all_avatar_set	= readSets("/project.g2d.save/resources/avatar_list.list",	SpriteSet.class,	percent, 2 , 4);
+		all_effect_set	= readSets("/project.g2d.save/resources/effect_list.list",	SpriteSet.class,	percent, 3 , 4);
 	}
 	
 	
@@ -241,22 +292,21 @@ public abstract class ResourceManager extends CellSetResourceManager
 	
 	final protected void initIcons()
 	{
-		all_icons	= readIcons(save_dir + "/icons/icon.list" );
+		all_icons		= readIcons("/project.g2d.save/icons/icon.list" );
 	}
 	
 	final protected void initSounds()
 	{
-		all_sounds	= readSounds(save_dir + "/sounds/sound.list" );
+		all_sounds		= readSounds("/project.g2d.save/sounds/sound.list" );
 	}
 	
 	final protected void initNpcTalks() 
 	{
-		all_npc_talks = readNpcTalks(save_dir + "/talks/talks.list" );
+		all_npc_talks 	= readNpcTalks("/project.g2d.save/talks/talks.list" );
 	}
 	
 //	--------------------------------------------------------------------------------------------------------------------
 
-	abstract protected CellSetResource createSet(String path) throws Exception;
 	
 	final protected <T extends ResourceSet<?>> Hashtable<String, T> readSets(
 			String file, 
@@ -271,7 +321,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 		
 		Hashtable<String, T> table = new Hashtable<String, T>();
 		
-		String[] res_list = CIO.readAllLine(file, "UTF-8");
+		String[] res_list = readAllLine(file, "UTF-8");
 		
 		for (int i=0; i<res_list.length; i++)
 		{
@@ -305,7 +355,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 
 		Hashtable<String, AtomicReference<BufferedImage>> table = new Hashtable<String, AtomicReference<BufferedImage>>();
 		
-		String[] res_list = CIO.readAllLine(icon_list, "UTF-8");
+		String[] res_list = readAllLine(icon_list, "UTF-8");
 		
 		for (int i=0; i<res_list.length; i++)
 		{
@@ -331,7 +381,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 
 		Hashtable<String, AtomicReference<ISound>> table = new Hashtable<String, AtomicReference<ISound>>();
 		
-		String[] res_list = CIO.readAllLine(sound_list, "UTF-8");
+		String[] res_list = readAllLine(sound_list, "UTF-8");
 		
 		for (int i=0; i<res_list.length; i++)
 		{
@@ -351,7 +401,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 
 		Hashtable<String, AtomicReference<String>> table = new Hashtable<String, AtomicReference<String>>();
 		
-		String[] res_list = CIO.readAllLine(talklist, "UTF-8");
+		String[] res_list = readAllLine(talklist, "UTF-8");
 		
 		for (int i=0; i<res_list.length; i++)
 		{
@@ -370,46 +420,46 @@ public abstract class ResourceManager extends CellSetResourceManager
 	public <T extends RPGObject>  String toListFile(Class<T> type) 
 	{
 		if (type.equals(ItemProperties.class)) {
-			return save_dir + "/item_properties/item_properties.list";
+			return "/project.g2d.save/item_properties/item_properties.list";
 		}
 		else if (type.equals(Quest.class)) {
-			return save_dir + "/quests/quest.list";					
+			return "/project.g2d.save/quests/quest.list";					
 		}
 		else if (type.equals(QuestGroup.class)) {
-			return save_dir + "/questgroups/questgroups.list";					
+			return "/project.g2d.save/questgroups/questgroups.list";					
 		}
 		else if (type.equals(Scene.class)) {
-			return save_dir + "/scenes/scene.list";					
+			return "/project.g2d.save/scenes/scene.list";					
 		}
 		else if (type.equals(InstanceZone.class)) {
-			return save_dir + "/instance_zones/zones.list";					
+			return "/project.g2d.save/instance_zones/zones.list";					
 		}
 		else {
 			String type_name = type.getSimpleName().toLowerCase();
-			return save_dir + "/objects/" + type_name + ".obj" + "/" + type_name + ".list";
+			return "/project.g2d.save/objects/" + type_name + ".obj" + "/" + type_name + ".list";
 		}
 	}
 	
 	public <T extends RPGObject>  String toNameListFile(Class<T> type) 
 	{
 		if (type.equals(ItemProperties.class)) {
-			return save_dir + "/item_properties/name_item_properties.list";
+			return "/project.g2d.save/item_properties/name_item_properties.list";
 		}
 		else if (type.equals(Quest.class)) {
-			return save_dir + "/quests/name_quest.list";					
+			return "/project.g2d.save/quests/name_quest.list";					
 		}
 		else if (type.equals(QuestGroup.class)) {
-			return save_dir + "/questgroups/name_questgroups.list";					
+			return "/project.g2d.save/questgroups/name_questgroups.list";					
 		}
 		else if (type.equals(Scene.class)) {
-			return save_dir + "/scenes/name_scene.list";					
+			return "/project.g2d.save/scenes/name_scene.list";					
 		}
 		else if (type.equals(InstanceZone.class)) {
-			return save_dir + "/instance_zones/name_zones.list";					
+			return "/project.g2d.save/instance_zones/name_zones.list";					
 		}
 		else {
 			String type_name = type.getSimpleName().toLowerCase();
-			return save_dir + "/objects/" + type_name + ".obj" + "/name_" + type_name + ".list";
+			return "/project.g2d.save/objects/" + type_name + ".obj" + "/name_" + type_name + ".list";
 		}
 	}
 	
@@ -422,7 +472,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 
 		Hashtable<Integer, String> table = new Hashtable<Integer, String>();
 		
-		String[] res_list = CIO.readAllLine(list_file, "UTF-8");
+		String[] res_list = readAllLine(list_file, "UTF-8");
 		
 		for (String line : res_list) {
 			line = line.trim();
@@ -451,11 +501,13 @@ public abstract class ResourceManager extends CellSetResourceManager
 		
 		System.out.println("list rpg objects : " + list_file);
 		
-		String tdir = CIO.getPathDir(list_file);
-
+		String tdir = list_file;
+		tdir		= tdir.replace('\\', '/');
+		tdir		= tdir.substring(0, tdir.lastIndexOf("/"));
+		
 		Hashtable<Integer, T> table = new Hashtable<Integer, T>();
 		
-		String[] res_list = CIO.readAllLine(list_file, "UTF-8");
+		String[] res_list = readAllLine(list_file, "UTF-8");
 		
 		for (int i=0; i<res_list.length; i++)
 		{
@@ -467,7 +519,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 			
 			String xml_file = tdir +"/"+ res_list[i];
 			
-			T set = RPGObjectMap.readNode(CIO.getInputStream(xml_file), xml_file, type);
+			T set = RPGObjectMap.readNode(new ByteArrayInputStream(getResource(xml_file)), xml_file, type);
 			set.loadTreePath(this, display_list);
 			if (PRINT_VERBOS)
 			System.out.println("\tget " + type.getSimpleName() + " : " + set + "(" + set.id + ")");
@@ -483,13 +535,13 @@ public abstract class ResourceManager extends CellSetResourceManager
 	}
 
 	
-	final public <T extends RPGObject> T readRPGObject(String xml_file, Class<T> type) 
-	{
-		T set = RPGObjectMap.readNode(CIO.getInputStream(xml_file), xml_file, type);			
-		if (PRINT_VERBOS)
-		System.out.println("readRPGObject : " + type.getSimpleName() + " : " + set + "(" + set.id + ")");
-		return set;
-	}
+//	final public <T extends RPGObject> T readRPGObject(String xml_file, Class<T> type) 
+//	{
+//		T set = RPGObjectMap.readNode(new ByteArrayInputStream(getResource(xml_file)), xml_file, type);			
+//		if (PRINT_VERBOS)
+//		System.out.println("readRPGObject : " + type.getSimpleName() + " : " + set + "(" + set.id + ")");
+//		return set;
+//	}
 
 //	--------------------------------------------------------------------------------------------------------------------
 //	SetResources
@@ -748,23 +800,4 @@ public abstract class ResourceManager extends CellSetResourceManager
 		return all_npc_talks.get(index).get();
 	}
 
-//	--------------------------------------------------------------------------------------------------------------------
-//	Name List
-//	--------------------------------------------------------------------------------------------------------------------
-	
-//	public Resource getEffectResource(String cpj_project_name) {
-//		try {
-//			Resource resource = getSet(res_root + "/" + "" + cpj_project_name);
-//			return resource;
-//		} catch (Throwable e) {
-//			e.printStackTrace();
-//		}
-//		return null;
-//	}
-	
-	public static void main(String[] args)
-	{
-		System.out.println(CIO.readAllText("http://game.lordol.com/eatworld/project.g2d.save/questgroups/questgroups.list"));
-	}
-	
 }
