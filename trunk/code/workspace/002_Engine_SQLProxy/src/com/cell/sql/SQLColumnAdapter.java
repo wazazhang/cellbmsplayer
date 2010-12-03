@@ -18,6 +18,7 @@ import com.cell.CUtil.ICompare;
 import com.cell.CUtil.StringCompare;
 import com.cell.reflect.Fields;
 import com.cell.sql.anno.SQLField;
+import com.cell.sql.anno.SQLGroupField;
 import com.cell.sql.anno.SQLTable;
 
 /**
@@ -572,24 +573,36 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 		{
 			fields_stack.push(field);
 			
-			// 得到SQLFieldGroup子复合类型
-			try
+			SQLField sql_field_anno = field.getAnnotation(SQLField.class);
+			
+			if (sql_field_anno != null)
 			{
-				field.getType().asSubclass(SQLFieldGroup.class);
-				// 递归
-				getSQLColumns(
-						field.getType(),
-						full_columns_list, 
-						fields_stack
-						);
+				full_columns_list.add(new SQLColumn(sql_field_anno, fields_stack));
 			}
-			catch (Exception e) 
-			{
-				// 得到SQLField字段
-				SQLField anno = field.getAnnotation(SQLField.class);
-				if (anno != null)
+			else
+			{			
+				// 得到SQLFieldGroup子复合类型
+				SQLGroupField sql_group_field_anno = field.getAnnotation(SQLGroupField.class);
+				
+				if (sql_group_field_anno != null)
 				{
-					full_columns_list.add(new SQLColumn(anno, fields_stack));
+					// 得到SQLFieldGroup子复合类型
+					try
+					{
+						field.getType().asSubclass(SQLFieldGroup.class);
+						// 递归
+						getSQLColumns(field.getType(), full_columns_list, fields_stack);
+					}
+					catch (Exception e) 
+					{
+//						// 得到SQLField字段
+//						SQLField anno = field.getAnnotation(SQLField.class);
+//						if (anno != null)
+//							full_columns_list.add(new SQLColumn(anno, fields_stack));
+
+						// 必须是annotation SQLGroupField的且是SQLFieldGroup子类的才可以继续处理内部表结构
+						e.printStackTrace();
+					}
 				}
 			}
 			

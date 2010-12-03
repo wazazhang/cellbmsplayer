@@ -9,6 +9,7 @@ import com.cell.sql.SQLFieldGroup;
 
 
 /**
+ * 表示该字段是SQL类型
  * 如果该成员是一个{@link SQLFieldGroup}，则对该成员生成的表结构加以处理。
  * @author WAZA
  */
