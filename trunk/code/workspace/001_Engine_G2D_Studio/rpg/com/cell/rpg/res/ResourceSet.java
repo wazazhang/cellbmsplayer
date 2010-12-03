@@ -14,7 +14,7 @@ public abstract class ResourceSet<T extends SetObject> implements Serializable
 	
 	final public String		cpj_name;
 	final public String		set_name;
-	final public String		resource_path; // output/xxx.properties
+	final public String		resource_path; // avatar/item_xxxx/output/xxx.properties
 	
 	transient private T		set_object;
 
