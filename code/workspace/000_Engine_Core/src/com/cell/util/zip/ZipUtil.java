@@ -8,13 +8,17 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Vector;
+import java.util.Map.Entry;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import com.cell.CIO;
+import com.cell.CUtil;
 import com.cell.io.CFile;
 import com.cell.util.Pair;
 
@@ -161,5 +165,106 @@ public class ZipUtil
 			}
 		}
 		return data.toByteArray();
+	}
+	
+	static public void main(String[] args)
+	{
+		try
+		{
+			HashMap<String, String> commands = new HashMap<String, String>(args.length);
+			for (String cmd : args) {
+				if (cmd.startsWith("-")) {
+					commands.put(cmd.trim(), cmd.trim());
+				}
+			}
+			
+			if (args[0].equals("A")) 
+			{
+				File src = new File(args[args.length-2]).getCanonicalFile();
+				File out = new File(args[args.length-3]).getCanonicalFile();
+				Pattern parttern = Pattern.compile(args[args.length-1]);
+				zipFiles(src, out, parttern);
+			} 
+			else if (args[0].equals("E")) 
+			{
+				printUsage();
+			}
+			else
+			{
+				printUsage();
+			}
+		} 
+		catch (Exception err) {
+			err.printStackTrace();
+			printUsage();
+		}
+	}
+	
+	static private void printUsage()
+	{
+		String usage = 
+			"A [-开关] <输出文件> <输入文件> [文件匹配正则表达式]\n" +
+			"	开关 -R - 连同子文件夹\n";
+		System.out.println(usage);
+	}
+	
+	/**
+	 * 将src所有符合标准的文件都压缩到out
+	 * @param src
+	 * @param out
+	 * @param parttern
+	 * @throws Exception
+	 */
+	static public void zipFiles(File src, File out, Pattern parttern) throws Exception
+	{
+		src = src.getCanonicalFile();
+		out = out.getCanonicalFile();
+		String root = "";
+		if (src.isDirectory()) {
+			root = src.getCanonicalPath();
+		} else if (src.isFile()) {
+			root = src.getParentFile().getCanonicalPath();
+		}
+		LinkedHashMap<String, byte[]> entrys = new LinkedHashMap<String, byte[]>();
+		zipFiles(src, parttern, root, entrys);
+		if (!entrys.isEmpty()) {				
+			out.createNewFile();
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ZipOutputStream zos = new ZipOutputStream(baos);
+			for (Entry<String, byte[]> e : entrys.entrySet()) {
+				ZipEntry ze = new ZipEntry(e.getKey());
+				ze.setTime(0);
+				zos.putNextEntry(ze);
+				zos.write(e.getValue());
+			}
+			zos.close();
+			CFile.writeData(out, baos.toByteArray());
+		}
+	}
+	
+	static public void zipFiles(File src, Pattern regex, String root, LinkedHashMap<String, byte[]> entrys) throws Exception
+	{
+		if (src.isFile()) {
+			if (regex.matcher(src.getName()).find()) {
+				pushFileEntry(src, root, entrys);
+			}
+		} else if(src.isDirectory()) {
+			for (File sub : src.listFiles()) {
+				zipFiles(sub, regex, root, entrys);
+			}
+		}
+	}
+	
+	static private void pushFileEntry(File src, String root, LinkedHashMap<String, byte[]> entrys) throws Exception
+	{
+		String name = src.getCanonicalPath();
+		name = CUtil.replaceString(name, root, "", 1);
+		name = name.replaceAll("\\\\", "/");
+		while (name.startsWith("/")) {
+			name = name.substring(1);
+		}
+		byte[] data = CFile.readData(src);
+		entrys.put(name, data);
+//		System.out.println("put : " + CUtil.snapStringRightSize(data.length + "(bytes)", 22, ' ') + " "+  name);
 	}
 }

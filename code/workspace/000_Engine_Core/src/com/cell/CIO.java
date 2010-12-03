@@ -219,8 +219,7 @@ public class CIO extends CObject
 		
 		return null;
 	}
-//	------------------------------------------------------------------------------------------------------------------------
-	
+
 	public static ByteArrayInputStream loadStream(String path) {
 		byte[] data = loadData(path);
 		if (data != null) {
@@ -230,6 +229,8 @@ public class CIO extends CObject
 		}
 		return null;
 	}
+
+//	------------------------------------------------------------------------------------------------------------------------
 	
 	public static String stringDecode(byte[] data, String encoding) {
 		ByteBuffer bb = ByteBuffer.wrap(data);
@@ -276,9 +277,11 @@ public class CIO extends CObject
 	
 	public static String readAllText(String file, String encoding)
 	{
-		byte[] data = CIO.loadData(file);
-		if (data != null) {
-			return stringDecode(data, encoding);
+		InputStream is = getInputStream(file);
+		if (is != null) {
+			return readAllText(is, encoding);
+		} else {
+			System.err.println(file);
 		}
 		return null;
 	}
@@ -290,22 +293,52 @@ public class CIO extends CObject
 	
 	public static String[] readAllLine(String file, String encoding)
 	{
-		try{
-			String src = readAllText(file, encoding);
+		InputStream is = getInputStream(file);
+		if (is != null) {
+			return readAllLine(is, encoding);
+		} else {
+			System.err.println(file);
+			return new String[] { "" };
+		}
+	}
+
+	public static String readAllText(InputStream is)
+	{
+		return readAllText(is, CObject.getEncoding());
+	}
+	
+	public static String readAllText(InputStream is, String encoding)
+	{
+		byte[] data = CIO.readStream(is);
+		if (data != null) {
+			return stringDecode(data, encoding);
+		}
+		return null;
+	}
+
+	public static String[] readAllLine(InputStream is) {
+		return readAllLine(is, CObject.getEncoding());
+	}
+	
+	public static String[] readAllLine(InputStream is, String encoding)
+	{
+		try {
+			String src = readAllText(is, encoding);
 			String[] ret = CUtil.splitString(src, "\n");
-			for(int i=ret.length-1;i>=0;i--){
+			for (int i = ret.length - 1; i >= 0; i--) {
 				int ld = ret[i].lastIndexOf('\r');
-				if(ld>=0){
-					ret[i] = ret[i].substring(0,ld);
+				if (ld >= 0) {
+					ret[i] = ret[i].substring(0, ld);
 				}
 			}
 			return ret;
-		}catch(Exception err){
-			System.err.println(file);
+		} catch (Exception err) {
 			err.printStackTrace();
-			return new String[]{""};
+			return new String[] { "" };
 		}
 	}
+	
+//	------------------------------------------------------------------------------------------------------------------------
 	
 	@SuppressWarnings("unchecked")
 	public static<T> T cloneObject(T src)
