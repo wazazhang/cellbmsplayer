@@ -108,7 +108,17 @@ public abstract class Config
 	{
 		HashMap<Field, Object> map = new HashMap<Field, Object>();
 		
+		StringBuilder sb = new StringBuilder();
+		toCommetLine(sb, "#", 100);
+		sb.append("### " + config_class.getName() + "\n");
+		ConfigType class_sign = config_class.getAnnotation(ConfigType.class);
+		if (class_sign != null) {
+			toCommet(sb, class_sign.value());
+		}
+		toCommetLine(sb, "#", 100);
+		System.out.print(sb);
 		System.out.println("loading config \"" + config_class.getName() + "\"");
+		
 		
 		try
 		{
@@ -137,6 +147,18 @@ public abstract class Config
 					}
 					if (verbos)
 					{
+						ConfigField field_sign = field.getAnnotation(ConfigField.class);
+
+						if (field_sign != null) 
+						{
+							for (String fs : field_sign.value()) {
+								String[] splits = CUtil.splitString(fs, "\n");
+								for (String s : splits) {
+									System.out.println("\t### " + s.trim());
+								}
+							}
+						}
+						
 						if (v == null)
 						{
 								System.out.println("\t"+ //
