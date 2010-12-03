@@ -55,6 +55,12 @@ public class CFile
 		writeText(file, text, CObject.ENCODING);
 	}
 	
+	public static void copy(java.io.File src, java.io.File dst) 
+	{
+		byte[] data = readData(src);
+		writeData(dst, data);
+	}
+	
 	public static byte[] readData(java.io.File file)
 	{
 		byte[] data = null;
