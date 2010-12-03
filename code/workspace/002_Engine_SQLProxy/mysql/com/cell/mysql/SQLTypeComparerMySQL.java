@@ -101,8 +101,8 @@ public class SQLTypeComparerMySQL implements SQLTypeComparer
 		case Types.REAL: 		return "float";
 		case Types.DOUBLE: 		return "double";
 		case Types.VARCHAR: 	return "varchar";
-		case Types.BLOB: 		return "blob";
-		case Types.CLOB: 		return "text";
+		case Types.BLOB: 		return "longblob";
+		case Types.CLOB: 		return "longtext";
 		case Types.TIME: 		return "time";
 		case Types.TIMESTAMP:	return "timestamp";
 		}
