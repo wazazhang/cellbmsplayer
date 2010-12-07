@@ -148,6 +148,12 @@ public interface Canvas
 	 */
 	public void setInternalFrame(Component frame) ;
 	
+	/**
+	 * 当前在低级stage中显示的高级ui
+	 * @return
+	 */
+	public Component getInternalFrame();
+	
 //	--------------------------------------------------------------------------------
 //	update and transition
 

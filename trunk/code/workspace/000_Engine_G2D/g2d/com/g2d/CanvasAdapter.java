@@ -446,6 +446,16 @@ FocusListener
 		}
 		
 	}
+	
+	/**
+	 * 当前在低级stage中显示的高级ui
+	 * @return
+	 */	
+	public Component getInternalFrame()
+	{
+		return internal_frame;
+	}
+	
 //	--------------------------------------------------------------------------------
 //	update and transition
 
