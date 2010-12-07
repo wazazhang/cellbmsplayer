@@ -64,7 +64,7 @@ abstract public class OutputProperties implements Output
 		this.path = path.replace('\\', '/');
 	}
 	
-	protected void init(PropertyGroup Config) throws Exception
+	final protected void init(PropertyGroup Config) throws Exception
 	{
 		// 解吸所有对象
 		int ImagesCount 	= Config.getInteger("ImagesCount", 0);
@@ -134,27 +134,27 @@ abstract public class OutputProperties implements Output
 	}
 	
 	@Override
-	public Hashtable<String, ImagesSet> getImgTable() {
+	final public Hashtable<String, ImagesSet> getImgTable() {
 		return ImgTable;
 	}
 	
 	@Override
-	public Hashtable<String, MapSet> getMapTable() {
+	final public Hashtable<String, MapSet> getMapTable() {
 		return MapTable;
 	}
 	
 	@Override
-	public Hashtable<String,SpriteSet> getSprTable() {
+	final public Hashtable<String,SpriteSet> getSprTable() {
 		return SprTable;
 	}
 	
 	@Override
-	public Hashtable<String, TableSet> getTableGroups() {
+	final public Hashtable<String, TableSet> getTableGroups() {
 		return TableGroups;
 	}
 	
 	@Override
-	public Hashtable<String, WorldSet> getWorldTable() {
+	final public Hashtable<String, WorldSet> getWorldTable() {
 		return WorldTable;
 	}
 	
@@ -164,7 +164,7 @@ abstract public class OutputProperties implements Output
 	 * input "{1234},{5678}"
 	 * return [1234][5678]
 	 */
-	protected static String[] getArray2D(String text)
+	final protected static String[] getArray2D(String text)
 	{
 		text = text.replace('{', ' ');
 		String[] texts = CUtil.splitString(text, "},");
@@ -180,7 +180,7 @@ abstract public class OutputProperties implements Output
 	 * @param text
 	 * @return
 	 */
-	static String[] getArray1D(String text)
+	final static String[] getArray1D(String text)
 	{
 		StringReader reader = new StringReader(text);
 		ArrayList<String> list = new ArrayList<String>();
@@ -197,7 +197,7 @@ abstract public class OutputProperties implements Output
 
 //	--------------------------------------------------------------------------------------------------------------
 	
-	public IImages createImagesFromSet(ImagesSet img, IImage image, IImages stuff)
+	final public IImages createImagesFromSet(ImagesSet img, IImage image, IImages stuff)
 	{
 		try{
 			if (img != null)
@@ -227,7 +227,7 @@ abstract public class OutputProperties implements Output
 	
 //	########################################################################################################################
 
-	public CMap createMapFromSet(MapSet tmap, IImages tiles, boolean isAnimate, boolean isCyc)
+	final public CMap createMapFromSet(MapSet tmap, IImages tiles, boolean isAnimate, boolean isCyc)
 	{
 
 		CMap ret = null;
@@ -322,7 +322,7 @@ abstract public class OutputProperties implements Output
 	
 //	########################################################################################################################
 	
-	public CSprite createSpriteFromSet(SpriteSet tsprite, IImages tiles){
+	final public CSprite createSpriteFromSet(SpriteSet tsprite, IImages tiles){
 		
 		CSprite ret = null;
 			 
@@ -394,7 +394,7 @@ abstract public class OutputProperties implements Output
 	
 //	########################################################################################################################
 
-	public CWayPoint[] createWayPointsFromSet(Vector<WaypointObject> waypoints)
+	final public CWayPoint[] createWayPointsFromSet(Vector<WaypointObject> waypoints)
 	{
 		CWayPoint wayPoints[] = new CWayPoint[waypoints.size()];
 		for (int i = waypoints.size() - 1; i >= 0; --i) {
@@ -416,7 +416,7 @@ abstract public class OutputProperties implements Output
 	}
 	
 	
-	public CCD[] createRegionsFromSet(Vector<RegionObject> regions)
+	final public CCD[] createRegionsFromSet(Vector<RegionObject> regions)
 	{
 		CCD cds[] = new CCD[regions.size()];
 		for (int i = regions.size() - 1; i >= 0; --i) {
@@ -436,7 +436,7 @@ abstract public class OutputProperties implements Output
 //	-------------------------------------------------------------------------------------
 //	Images_<IMAGES INDEX>		=<IMAGES INDEX>,<NAME>,<COUNT>
 //	Images_<IMAGES INDEX>_tiles	=#<CLIP>{<INDEX>,<X>,<Y>,<W>,<H>,<DATA>,},#<END CLIP>
-	ImagesSet createImageSet(String images, String tiles) 
+	final ImagesSet createImageSet(String images, String tiles) 
 	{
 		String[] args0 = CUtil.splitString(images, ",");
 		
@@ -474,7 +474,7 @@ abstract public class OutputProperties implements Output
 //	Sprite_<SPR INDEX>_frame_cd_atk		=<FRAME CD ATK>
 //	Sprite_<SPR INDEX>_frame_cd_def		=<FRAME CD DEF>
 //	Sprite_<SPR INDEX>_frame_cd_ext		=<FRAME CD EXT>
-	SpriteSet createSpriteSet(String spr, 
+	final SpriteSet createSpriteSet(String spr, 
 			String _parts, 
 			String _frames,
 			String _cds, 
@@ -610,7 +610,7 @@ abstract public class OutputProperties implements Output
 //	Map_<MAP INDEX>_cds			=#<CD PART>{<INDEX>,<TYPE>,<MASK>,<X1>,<Y1>,<X2>,<Y2>,<W>,<H>},#<END CD PART>
 //	Map_<MAP INDEX>_tile_matrix	=<TILE MATRIX>
 //	Map_<MAP INDEX>_cd_matrix	=<FLAG MATRIX>
-	MapSet createMapSet(
+	final MapSet createMapSet(
 			String map, 
 			String _parts,
 			String _frames,
@@ -716,7 +716,7 @@ abstract public class OutputProperties implements Output
 //	World_<WORLD INDEX>_data			=<DATA>
 //	World_<WORLD INDEX>_terrain			=<TERRAIN>
 
-	WorldSet createWorldSet(String world, 
+	final WorldSet createWorldSet(String world, 
 				String _maps,
 				String _sprs, 
 				String _waypoints, 
@@ -845,7 +845,7 @@ abstract public class OutputProperties implements Output
 //	#<END TABLE GROUP>
 //	#<END COMMAND>
 
-	TableSet createTableSet(String table_group, PropertyGroup cfg) throws IOException
+	final TableSet createTableSet(String table_group, PropertyGroup cfg) throws IOException
 	{
 		String[] args = CUtil.splitString(table_group, ",", 4);
 		TableSet set = new TableSet(Integer.parseInt(args[0]), args[2]);
