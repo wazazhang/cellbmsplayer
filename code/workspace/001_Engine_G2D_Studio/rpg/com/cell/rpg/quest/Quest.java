@@ -129,6 +129,9 @@ public class Quest extends RPGObject implements NamedObject
 		if (discard_action == null) {
 			discard_action = new QuestActionSingle();
 		}
+		if (quest_flags == null) {
+			quest_flags = new QuestFlags();
+		}
 	}
 	
 	@Override
