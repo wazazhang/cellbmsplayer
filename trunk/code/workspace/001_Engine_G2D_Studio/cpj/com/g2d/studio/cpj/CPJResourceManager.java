@@ -188,6 +188,20 @@ public class CPJResourceManager extends ManagerForm implements MouseListener
 		return null;
 	}
 	
+	public DefaultMutableTreeNode getRoot(CPJResourceType index) {
+		switch (index) {
+		case ACTOR:
+			return unit_root;
+		case EFFECT:
+			return effect_root;
+		case WORLD:
+			return scene_root;
+		case AVATAR:
+			return avatar_root;
+		}
+		return null;
+	}
+	
 //	----------------------------------------------------------------------------------------------------------------------------
 	
 //	public CPJSpriteViewer getSpriteViewer() {
