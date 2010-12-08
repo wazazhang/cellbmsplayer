@@ -270,6 +270,11 @@ public class G2DTree extends JTree implements G2DDragDropListener<G2DTree>
 	
 //	----------------------------------------------------------------------------------------------------------------------------
 	
+	/**
+	 * 获取所有叶子节点
+	 * @param root
+	 * @return
+	 */
 	static public Vector<TreeNode> getNodes(TreeNode root)
 	{
 		Vector<TreeNode> ret = new Vector<TreeNode>();
@@ -277,6 +282,11 @@ public class G2DTree extends JTree implements G2DDragDropListener<G2DTree>
 		return ret;
 	}
 	
+	/**
+	 * 获取所有叶子节点
+	 * @param root
+	 * @return
+	 */
 	static public<T extends TreeNode> Vector<T> getNodesSubClass(TreeNode root, Class<T> type)
 	{
 		Vector<T> ret = new Vector<T>();
@@ -284,6 +294,11 @@ public class G2DTree extends JTree implements G2DDragDropListener<G2DTree>
 		return ret;
 	}
 	
+	/**
+	 * 获取所有叶子节点
+	 * @param root
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	static public<T extends TreeNode> void getNodesSubClass(TreeNode root, Class<T> type, Vector<T> list)
 	{
@@ -713,7 +728,7 @@ public class G2DTree extends JTree implements G2DDragDropListener<G2DTree>
 					}
 				}
 			} catch (Exception err) {
-				err.printStackTrace();
+//				err.printStackTrace();
 			}
 			return null;
 		}
