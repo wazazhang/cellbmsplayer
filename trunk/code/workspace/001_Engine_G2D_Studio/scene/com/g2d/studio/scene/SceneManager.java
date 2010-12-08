@@ -18,6 +18,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import com.cell.CIO;
@@ -337,11 +338,14 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 	{
 		private static final long serialVersionUID = 1L;
 
-		JMenuItem add_scene = new JMenuItem("添加场景");
+		JMenuItem add_scene 		= new JMenuItem("添加场景");
+		JMenuItem set_world_group 	= new JMenuItem("设置世界分组");
 		
 		public RootMenu(SceneGroup root) {
 			super(root, SceneManager.this, SceneManager.this.g2d_tree);
 			add_scene.addActionListener(this);
+			set_world_group.addActionListener(this);
+			add(set_world_group);
 			add(add_scene);
 		}
 		
@@ -360,8 +364,23 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 					addScene(node, (SceneGroup)root);
 				}
 			}
+			else if (e.getSource() == set_world_group) {
+				String value = JOptionPane.showInputDialog(SceneManager.this, "设置世界分组", 0);
+				if (value != null) {
+					try {
+						Integer gid = Integer.parseInt(value.trim());
+						for (SceneNode tn : G2DTree.getNodesSubClass(root, SceneNode.class)) {
+							tn.getData().group = gid;
+						}
+						g2d_tree.repaint();
+					} catch (Exception err) {
+						JOptionPane.showMessageDialog(SceneManager.this, err.getMessage());
+					}
+				}
+			}
 		}
 	}
+	
 	
 	class AddSceneDialog extends CPJResourceSelectDialog<CPJWorld>
 	{
