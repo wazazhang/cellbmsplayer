@@ -325,9 +325,9 @@ public class SelectUnitTool1 extends SelectUnitTool
 			label.setText(title+":");
 			
 			JToolBar tool_bar = new JToolBar();
-			tool_bar.add(label);
-			tool_bar.addSeparator();
 			tool_bar.add(refresh);
+			tool_bar.addSeparator();
+			tool_bar.add(label);
 			refresh.addActionListener(this);
 			progress.setStringPainted(true);
 			scroll_pan.getVerticalScrollBar().setUnitIncrement(icon_size);
