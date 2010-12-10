@@ -13,6 +13,8 @@ import javax.media.opengl.glu.GLUquadric;
 import com.g3d.jogl.test.Imaging;
 import com.g3d.jogl.test.Pyramid;
 import com.g3d.jogl.test.SolarSystem;
+import com.g3d.jogl.test.TextLayer;
+import com.g3d.jogl.test.TextureImage;
 import com.sun.opengl.util.Animator;
 import com.sun.opengl.util.FPSAnimator;
 import com.sun.opengl.util.GLUT;
@@ -65,8 +67,9 @@ public class GameCanvas extends GLCanvas implements GLEventListener
 //	
 //	---------------------------------------------------------------------------------------------------------------
 
-    Imaging imaging = new Imaging("/com/g3d/jogl/test/image.png");
-    
+    Imaging 		imaging = new Imaging("/com/g3d/jogl/test/image.png");
+    TextureImage 	timaging;
+    TextLayer		text;
     public void init(GLAutoDrawable drawable) 
     {
     	w = drawable.getWidth();
@@ -75,13 +78,20 @@ public class GameCanvas extends GLCanvas implements GLEventListener
         GL gl = drawable.getGL();
         glu = new GLU();
         glut = new GLUT();
-        
-//        gl.glShadeModel(GL.GL_SMOOTH);
+
+		gl.glShadeModel(GL.GL_SMOOTH);
         gl.glClearColor(0.0f,0.0f,0.0f,0.0f);
         gl.glClearDepth(1.0f);												// Depth Buffer Setup
 //    	gl.glEnable(GL.GL_DEPTH_TEST);										// Enables Depth Testing
 //    	gl.glDepthFunc(GL.GL_LEQUAL);										// The Type Of Depth Test To Do
 //    	gl.glHint(GL.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST);			// Really Nice Perspective Calculations
+        
+        imaging = new Imaging("/com/g3d/jogl/test/image.png");
+        
+        timaging = new TextureImage(gl);
+		timaging.init("/com/g3d/jogl/test/image.png");
+		
+		text = new TextLayer();
 	}
 
     public void display(GLAutoDrawable drawable) 
@@ -90,28 +100,49 @@ public class GameCanvas extends GLCanvas implements GLEventListener
         
         w = drawable.getWidth();
         h = drawable.getHeight();
-        
-        gl.glClear(GL.GL_COLOR_BUFFER_BIT|GL.GL_DEPTH_BUFFER_BIT);			// Clear the colour and depth buffer
-          
+
         gl.glViewport(0, 0, w, h);											// Reset The Current Viewport
-        
         gl.glMatrixMode(GL.GL_PROJECTION);									// Select The Projection Matrix
         gl.glLoadIdentity();												// Reset The Projection Matrix
-    	
-        glu.gluPerspective(45.0f,(float)w/(float)h,0.1f,100.0f);			// Calculate The Aspect Ratio Of The Window
-
-        gl.glMatrixMode(GL.GL_MODELVIEW);									// Select The Modelview Matrix
+//		glu.gluPerspective(45.0f,(float)w/(float)h,0.1f,100.0f);			// Calculate The Aspect Ratio Of The Window
+        gl.glMatrixMode(GL.GL_MODELVIEW);	
         gl.glLoadIdentity();												// Reset The Modelview Matrix     
 
+        gl.glClear(GL.GL_COLOR_BUFFER_BIT|GL.GL_DEPTH_BUFFER_BIT);			// Clear the colour and depth buffer
+
+        gl.glScalef(1, -1, 1);
+        gl.glOrtho(0, w, 0, h, -1, 1);
         
+//		gl.glBlendFunc(GL.GL_ONE_MINUS_SRC_COLOR, GL.GL_ONE_MINUS_SRC_ALPHA);
+//		gl.glBlendFunc(GL.GL_SRC_COLOR, GL.GL_SRC_COLOR);
+//		gl.glBlendFunc(GL.GL_ONE, GL.GL_SRC_ALPHA);
+//		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE);
+//		gl.glBlendFunc(GL.GL_ONE , GL.GL_ZERO ); // 源色将覆盖目标色。
+//		gl.glBlendFunc(GL.GL_ZERO , GL.GL_ONE ); // 目标色将覆盖源色。 
+		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA); // 是最常使用的。
+//		gl.glBlendFunc(GL.GL_SRC_ALPHA_SATURATE, GL.GL_ONE);
+
+    	gl.glEnable(GL.GL_BLEND);
+        gl.glDisable(GL.GL_DEPTH_TEST);			
+//		gl.glDepthMask(false); 
         
-        for (int i=0; i<1000; i++) {
-//        	int x = (int)(w * Math.random());
-//        	int y = (int)(h * Math.random());
-        	int x = (int)(main_timer % w);
-        	int y = (int)(main_timer % h);
-            imaging.draw(gl, x, y);
+    	text.draw(gl, 200, 200);
+
+//		gl.glColor4f(1.0f, 1.0f, 1.0f, 1f);
+    	int x = 0;
+    	int y = 0;
+        for (int i=0; i<100; i++) {
+        	timaging.draw(x, y);
+        	if (x < w) {
+            	x += timaging.getWidth();
+        	} else {
+        		x = 0;
+        		y += timaging.getHeight()/2;
+        	} 
         }
+        
+    	text.draw(gl, 100, 100);
+
         
         main_timer ++;
         long curtime = System.currentTimeMillis();
@@ -126,17 +157,15 @@ public class GameCanvas extends GLCanvas implements GLEventListener
     {
 		GL gl = drawable.getGL();
         
-        w2 = drawable.getWidth();
-        h2 = drawable.getHeight();
+        w = drawable.getWidth();
+        h = drawable.getHeight();
         
-        gl.glMatrixMode(GL.GL_MODELVIEW);
-        gl.glLoadIdentity();
-        
-        // perspective view
-        gl.glViewport(10, 10, w-20, h-20);
-        gl.glMatrixMode(GL.GL_PROJECTION);
-        gl.glLoadIdentity();
-        glu.gluPerspective(45.0f,(float)w/(float)h,0.1f,100.0f);
+        gl.glViewport(0, 0, w, h);											// Reset The Current Viewport
+        gl.glMatrixMode(GL.GL_PROJECTION);									// Select The Projection Matrix
+        gl.glLoadIdentity();												// Reset The Projection Matrix
+//		glu.gluPerspective(45.0f,(float)w/(float)h,0.1f,100.0f);			// Calculate The Aspect Ratio Of The Window
+        gl.glMatrixMode(GL.GL_MODELVIEW);	
+        gl.glLoadIdentity();												// Reset The Modelview Matrix     
     }
 
     public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) 
