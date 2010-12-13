@@ -76,10 +76,7 @@ abstract public class SetResource
 	 * @return
 	 * @throws IOException
 	 */
-	protected StreamTiles getLocalImage(ImagesSet img) throws IOException {
-		StreamTiles tiles = new StreamTiles(img, this);
-		return tiles;
-	}
+	abstract protected StreamTiles getLocalImage(ImagesSet img) throws IOException ;
 	
 	/**
 	 * 异步获取图片方法<br>
@@ -88,10 +85,7 @@ abstract public class SetResource
 	 * @return
 	 * @throws IOException
 	 */
-	protected StreamTiles getStreamImage(ImagesSet img) throws IOException {
-		StreamTiles tiles = new StreamTiles(img, this);
-		return tiles;
-	}
+	abstract protected StreamTiles getStreamImage(ImagesSet img) throws IOException ;
 	
 //	-------------------------------------------------------------------------------------------------------------------------------
 
