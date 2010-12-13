@@ -7,16 +7,15 @@ import com.cell.gameedit.object.ImagesSet;
 import com.cell.gfx.IGraphics;
 import com.cell.gfx.IImage;
 import com.cell.gfx.IImages;
-import com.cell.j2se.CImage;
 
 
 /**
  * @author WAZA
  * 支持网络缓冲的图片组
  */
-public class StreamTiles implements IImages, Runnable
+public abstract class StreamTiles implements IImages, Runnable
 {
-	final protected SetResource	set;
+	final protected SetResource		set;
 	final protected ImagesSet		img;
 	final protected IImage[]		images;
 	
@@ -25,7 +24,7 @@ public class StreamTiles implements IImages, Runnable
 	
 	public StreamTiles(ImagesSet img, SetResource res) {
 		this.set	= res;
-		this.images	= new CImage[img.getCount()];
+		this.images	= new IImage[img.getCount()];
 		this.img	= img;
 	}
 	
@@ -33,16 +32,16 @@ public class StreamTiles implements IImages, Runnable
 	 * 子类可以覆盖为自己的加载图片方法，注意，该方法已获得
 	 * CellSetResource， StreamTiles 的锁
 	 */
-	protected void initImages()
-	{
-		byte[] idata = set.output_adapter.loadRes(img.getName()+".png", null);
-		CImage src = new CImage(new ByteArrayInputStream(idata));
-		for (int i=0; i<images.length; i++){
-			if (img.getClipW(i)>0 && img.getClipH(i)>0){
-				images[i] = src.subImage(img.getClipX(i), img.getClipY(i), img.getClipW(i), img.getClipH(i));
-			}
-		}
-	}
+	abstract protected void initImages();
+//	{
+//		byte[] idata = set.output_adapter.loadRes(img.getName()+".png", null);
+//		CImage src = new CImage(new ByteArrayInputStream(idata));
+//		for (int i=0; i<images.length; i++){
+//			if (img.getClipW(i)>0 && img.getClipH(i)>0){
+//				images[i] = src.subImage(img.getClipX(i), img.getClipY(i), img.getClipW(i), img.getClipH(i));
+//			}
+//		}
+//	}
 	
 	final public boolean isLoaded() {
 		return is_loaded.get();

@@ -35,8 +35,6 @@ import com.cell.gfx.game.CMap;
 import com.cell.gfx.game.CSprite;
 import com.cell.gfx.game.CWayPoint;
 import com.cell.io.TextDeserialize;
-import com.cell.j2se.CGraphics;
-import com.cell.j2se.CImage;
 import com.cell.util.MarkedHashtable;
 import com.cell.util.PropertyGroup;
 import com.cell.util.concurrent.ThreadPoolService;
