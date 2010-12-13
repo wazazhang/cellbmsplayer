@@ -21,7 +21,7 @@ public abstract class Window extends Container
 	@Property("always_in_screen")
 	public boolean	always_in_screen	= false;
 	
-	public boolean IsTransitionComplete = false;
+	private boolean IsTransitionComplete = false;
 
 	/**
 	 * 是否只允许一个该类型的控件
@@ -148,6 +148,11 @@ public abstract class Window extends Container
 	
 //	--------------------------------------------------------------------------------------------------------------------------
 	
+	public boolean isTransitionComplete() {
+		return IsTransitionComplete;
+	}
+
+
 	public static abstract class FormTransition implements Serializable
 	{
 		private static final long serialVersionUID = Version.VersionG2D;
@@ -220,13 +225,12 @@ public abstract class Window extends Container
 		public void transition(Window form){
 			time ++;
 			time_rate = time / (double)duration;
-			
 			if (time < duration){
 				form.enable = false;
-				form.IsTransitionComplete = false;
+				form.IsTransitionComplete = (false);
 			}else{
 				form.enable = true;
-				form.IsTransitionComplete = true;
+				form.IsTransitionComplete = (true);
 				form.onTransitionComplete(this);
 			}
 		}
