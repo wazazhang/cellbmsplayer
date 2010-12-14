@@ -5,7 +5,6 @@
 	<classpathentry kind="src" path="xstream"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/000_Engine_Core"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/000_Engine_G2D"/>
 	<classpathentry kind="lib" path="/000_Engine_Core/lib/slf4j-api-1.5.2.jar"/>
 	<classpathentry kind="lib" path="/000_Engine_Core/lib/slf4j-simple-1.5.0.jar"/>
 	<classpathentry kind="lib" path="/000_Engine_Core/lib/mysql-connector-java-5.1.7/mysql-connector-java-5.1.7-bin.jar"/>
