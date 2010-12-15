@@ -7,10 +7,6 @@ import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Sequence;
 import javax.sound.midi.Sequencer;
 
-import com.cell.CIO;
-import com.cell.CObject;
-import com.cell.j2se.CAppBridge;
-import com.cell.j2se.CStorage;
 
 public class Midi 
 {
@@ -47,14 +43,14 @@ public class Midi
 	}
 	
 	
-	public static void main(String[] args) throws Throwable
-	{
-		CAppBridge.init();
-		
-		new Midi(CIO.loadStream("/com/cell/midi/skycity.mid")).start();
-		
-		Thread.sleep(10000);
-	}
+//	public static void main(String[] args) throws Throwable
+//	{
+//		CAppBridge.init();
+//		
+//		new Midi(CIO.loadStream("/com/cell/midi/skycity.mid")).start();
+//		
+//		Thread.sleep(10000);
+//	}
 	
 	
 	
