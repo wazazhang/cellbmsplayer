@@ -213,11 +213,11 @@ public class AwtGraphics2D extends Graphics2D
 	}
 
 	final public void clipRect(int x, int y, int width, int height) {
-		g2d.clipRect(x, y, width, height);
+		g2d.setClip(x, y, width, height);
 	}
 	
 	final public void setClip(int x, int y, int width, int height) {
-		g2d.clipRect(x, y, width, height);
+		g2d.setClip(x, y, width, height);
 	}
 	
 	@Override
