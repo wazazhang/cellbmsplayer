@@ -147,22 +147,25 @@ public class AwtEngine extends Engine
 //	--------------------------------------------------------------------------------------------------------------------------
 	
 
-	public static Cursor createCustomCursor(java.awt.image.BufferedImage cursor, Point hotSpot, String name)
+	public static Cursor createCustomCursor(java.awt.Image cursor, Point hotSpot, String name)
 	{
+		AwtImage buff = new AwtImage(cursor);
+		
 		Dimension bestCursorSize = Toolkit.getDefaultToolkit().getBestCursorSize(
-				cursor.getWidth(), 
-				cursor.getHeight());
+				buff.getWidth(), 
+				buff.getHeight());
 
-		if (cursor.getWidth() > bestCursorSize.width ||
-			cursor.getHeight() > bestCursorSize.height ) 
+		if (buff.getWidth() > bestCursorSize.width ||
+			buff.getHeight() > bestCursorSize.height ) 
 		{
-			java.awt.image.BufferedImage bufferedImage = (java.awt.image.BufferedImage)cursor.getScaledInstance(
-					bestCursorSize.width, 
-					bestCursorSize.height, 
-					java.awt.image.BufferedImage.SCALE_SMOOTH);
+			buff = new AwtImage(
+					buff.getSrc().getScaledInstance(
+							bestCursorSize.width, 
+							bestCursorSize.height,
+							java.awt.image.BufferedImage.SCALE_SMOOTH));
 			
 			return Toolkit.getDefaultToolkit().createCustomCursor(
-					bufferedImage,
+					buff.getSrc(),
 					new Point(
 					(int)(hotSpot.getX() * bestCursorSize.width / cursor.getWidth(null)),
 					(int)(hotSpot.getY() * bestCursorSize.height/ cursor.getHeight(null))

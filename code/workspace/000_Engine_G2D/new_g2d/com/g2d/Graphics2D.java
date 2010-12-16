@@ -126,6 +126,14 @@ public abstract class Graphics2D implements IGraphics
 	
 	abstract public void 			drawArc(int x, int y, int width, int height, int startAngle, int arcAngle);
 	abstract public void 			fillArc(int x, int y, int width, int height, int startAngle, int arcAngle);
+
+	public void drawOval(int x, int y, int width, int height) {
+		drawArc(x, y, width, height, 0, 360);
+	}
+
+	public void fillOval(int x, int y, int width, int height) {
+		fillArc(x, y, width, height, 0, 360);
+	}
 	
 	abstract public void 			drawPolyline(int xPoints[], int yPoints[], int nPoints);
 	abstract public void 			drawPolygon(int xPoints[], int yPoints[], int nPoints);

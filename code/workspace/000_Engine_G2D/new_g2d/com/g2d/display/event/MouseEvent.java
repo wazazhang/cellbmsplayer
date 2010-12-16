@@ -21,9 +21,11 @@ public class MouseEvent extends Event<InteractiveObject>
 	final public int 							mouseDownCount;
 	final public int 							type;
 	final public int 							mouseButton;
+	final public int							clickCount;
 	
-	public MouseEvent(int button, int type) {
+	public MouseEvent(int button, int click_count, int type) {
 //		superEvent = event;
+		this.clickCount = click_count;
 		mouseButton = button;
 		this.type = type;
 		if (type == EVENT_MOUSE_DOWN) {

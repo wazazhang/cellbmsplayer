@@ -116,7 +116,8 @@ public class AwtFont implements com.g2d.Font
 		
 		public InnerReplaceMent(GraphicAttribute ga) {
 			super(ga.getAlignment());
-			rect.setBounds(ga.getBounds().x, ga.getBounds().y, ga.getBounds().width, ga.getBounds().height);
+			this.ga = ga;
+			this.rect.setBounds(ga.getBounds().x, ga.getBounds().y, ga.getBounds().width, ga.getBounds().height);
 		}
 		
 		@Override
