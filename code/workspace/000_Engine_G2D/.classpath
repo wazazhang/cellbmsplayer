@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="com/g2d/cell/rpg/|com/g2d/cell/CellGraphics.java|com/g2d/cell/CellImage.java|java/awt/" kind="src" path="g2d"/>
-	<classpathentry excluding="com/g2d/cell/rpg/|com/g2d/cell/CellGraphics.java|com/g2d/cell/CellImage.java" kind="src" path="j2se"/>
+	<classpathentry kind="src" path="new_g2d"/>
+	<classpathentry kind="src" path="new_java2d_impl"/>
+	<classpathentry kind="src" path="new_jogl_impl"/>
+	<classpathentry kind="src" path="new_test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/000_Engine_Core"/>
 	<classpathentry kind="output" path="bin"/>
