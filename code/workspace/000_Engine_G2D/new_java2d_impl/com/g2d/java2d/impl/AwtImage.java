@@ -347,4 +347,8 @@ public class AwtImage implements com.g2d.BufferedImage
 	public void setRGB(int x, int y, int argb) {
 		m_image.setRGB(x, y, argb);
 	}
+	@Override
+	public com.g2d.BufferedImage getScaledInstance(int w, int h) {
+		return new AwtImage(m_image.getScaledInstance(w, h, java.awt.image.BufferedImage.SCALE_FAST));
+	}
 }
