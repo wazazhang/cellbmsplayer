@@ -28,7 +28,7 @@ public class AwtFont implements com.g2d.Font
 	public Rectangle getStringBounds(String src, Graphics2D g) {
 		java.awt.Graphics2D g2d = ((AwtGraphics2D)g).g2d;
 		java.awt.geom.Rectangle2D rect = font.getStringBounds(src, g2d.getFontRenderContext());
-		return new Rectangle((int)rect.getX(), (int)rect.getY(), (int)rect.getWidth(), (int)rect.getHeight());
+		return new Rectangle(0, 0, (int)rect.getWidth(), (int)rect.getHeight());
 	}
 	
 	@Override
