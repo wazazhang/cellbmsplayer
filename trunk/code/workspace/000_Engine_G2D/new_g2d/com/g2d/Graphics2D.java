@@ -88,17 +88,14 @@ public abstract class Graphics2D implements IGraphics
 
 	
 	abstract public void 			setComposite(Composite comp);
-	abstract public Composite 		getComposite();
 	abstract public void			pushComposite();
 	abstract public void			popComposite();
 	
 	
 	abstract public void 			setPaint(Paint paint);
-	abstract public Paint 			getPaint();
 	abstract public void			pushPaint();
 	abstract public void			popPaint();
 	
-	abstract public Stroke 			getStroke();
 	abstract public void 			setStroke(Stroke s);
 	abstract public void			pushStroke();
 	abstract public void			popStroke();

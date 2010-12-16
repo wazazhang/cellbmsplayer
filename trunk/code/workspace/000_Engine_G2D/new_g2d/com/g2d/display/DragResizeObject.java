@@ -125,7 +125,7 @@ public class DragResizeObject
 		if (start_drag_direct != DragResizeObject.DRAG_DIRECT_CENTER)		
 		{
 			g.pushClip();
-			Stroke old_stroke = g.getStroke();
+			g.pushStroke();
 			try {
 				Rectangle start_rect = start_drag_bounds;			
 				g.setClip(start_rect.x, start_rect.y, start_rect.width+1, start_rect.height+1);
@@ -133,7 +133,7 @@ public class DragResizeObject
 				g.setStroke(new BasicStroke(border_size));
 				g.drawRect(start_rect);
 			} finally {
-				g.setStroke(old_stroke);
+				g.popStroke();
 				g.popClip();
 			}
 		}
