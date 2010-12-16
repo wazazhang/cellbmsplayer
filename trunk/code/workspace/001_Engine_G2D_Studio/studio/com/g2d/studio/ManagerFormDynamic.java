@@ -16,7 +16,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 
-import com.g2d.Tools;
 import com.g2d.studio.Studio.ProgressForm;
 import com.g2d.studio.io.File;
 import com.g2d.studio.res.Res;
@@ -25,7 +24,10 @@ import com.g2d.studio.sound.SoundList;
 import com.g2d.studio.swing.G2DList;
 import com.g2d.studio.swing.G2DListItem;
 import com.g2d.studio.swing.G2DWindowToolBar;
-import com.g2d.util.AbstractFrame;
+
+import com.g2d.awt.util.*;
+
+
 
 @SuppressWarnings("serial")
 public abstract class ManagerFormDynamic extends ManagerForm implements ActionListener

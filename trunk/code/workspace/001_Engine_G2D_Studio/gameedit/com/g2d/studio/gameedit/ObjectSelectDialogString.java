@@ -12,7 +12,6 @@ import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.entity.ObjectNode;
 import com.g2d.studio.swing.G2DList;
-import com.g2d.util.AbstractOptionDialog;
 
 public class ObjectSelectDialogString<T extends ObjectNode<?>> extends ObjectSelect<T> implements PropertyCellEdit<String>
 {

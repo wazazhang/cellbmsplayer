@@ -24,8 +24,9 @@ import com.cell.CIO;
 import com.cell.CObject;
 import com.cell.CUtil;
 import com.cell.io.CFile;
-import com.cell.j2se.CAppBridge;
-import com.cell.j2se.CStorage;
+
+import com.g2d.awt.util.*;
+
 import com.cell.net.http.HttpPost;
 import com.cell.net.http.HttpQuery;
 import com.cell.net.http.HttpRequester;

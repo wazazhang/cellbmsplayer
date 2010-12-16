@@ -8,11 +8,11 @@ import javax.swing.JTree;
 import javax.swing.tree.TreeNode;
 
 import com.cell.rpg.item.ItemProperties;
+import com.g2d.awt.util.AbstractDialog;
 import com.g2d.studio.gameedit.ObjectViewer;
 import com.g2d.studio.gameedit.dynamic.DynamicNode;
 import com.g2d.studio.gameedit.dynamic.IDynamicIDFactory;
 import com.g2d.studio.swing.G2DTreeNodeGroup.NodeMenu;
-import com.g2d.util.AbstractDialog;
 
 public class ItemPropertiesNode extends DynamicNode<ItemProperties>
 {

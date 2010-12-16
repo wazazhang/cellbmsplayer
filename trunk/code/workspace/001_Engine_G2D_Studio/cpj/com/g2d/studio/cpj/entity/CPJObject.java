@@ -7,7 +7,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JList;
 
 import com.cell.gameedit.SetObject;
-import com.g2d.Tools;
+import com.g2d.awt.util.*;
+
 import com.g2d.display.DisplayObject;
 import com.g2d.studio.cpj.CPJIndex;
 import com.g2d.studio.cpj.CPJResourceType;
@@ -32,7 +33,7 @@ public abstract class CPJObject <T extends SetObject> extends G2DTreeNode<CPJObj
 		this.set_object	= parent.getSetResource().getSetObject(type, name);
 	}
 	
-	abstract public DisplayObject getDisplayObject();
+//	abstract public DisplayObject createDisplayObject();
 
 	public<O extends CPJObject<?>> CPJIndex<O> getCPJIndex(CPJResourceType type)
 	{

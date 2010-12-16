@@ -2,7 +2,7 @@ package com.cell.rpg.item;
 
 import java.util.Set;
 
-import com.g2d.editor.property.CellEditAdapter;
+import com.g2d.editor.property.PropertyEditor;
 
 public interface ItemPropertyManager {
 
@@ -16,5 +16,5 @@ public interface ItemPropertyManager {
 	 * 得到扩展的属性类型适配器
 	 * @return
 	 */
-	public Set<CellEditAdapter<?>>		getAllAdapters();
+	public Set<PropertyEditor<?>>		getAllAdapters();
 }

@@ -12,7 +12,7 @@ import javax.swing.tree.TreeNode;
 import com.cell.rpg.quest.Quest;
 import com.cell.rpg.quest.QuestItem;
 import com.cell.util.IDFactoryInteger;
-import com.g2d.Tools;
+import com.g2d.awt.util.*;
 import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.ObjectViewer;
 import com.g2d.studio.gameedit.dynamic.DynamicNode;
@@ -22,7 +22,6 @@ import com.g2d.studio.quest.items.QuestItemNode;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.swing.G2DList;
 import com.g2d.studio.swing.G2DTreeNodeGroup.NodeMenu;
-import com.g2d.util.AbstractDialog;
 
 public class QuestNode extends DynamicNode<Quest>
 {

@@ -9,7 +9,7 @@ import javax.imageio.ImageIO;
 import javax.imageio.stream.ImageOutputStream;
 
 import com.cell.gameedit.object.WorldSet;
-import com.g2d.Tools;
+import com.g2d.awt.util.Tools;
 import com.g2d.cell.game.Scene;
 import com.g2d.studio.Studio;
 import com.g2d.studio.cpj.CPJResourceType;
@@ -25,14 +25,14 @@ public class CPJWorld extends CPJObject<WorldSet>
 		super(parent, name, WorldSet.class, CPJResourceType.WORLD);
 	}
 	
-	@Override
-	public Scene getDisplayObject() {
-//		if (scene==null) {
-//			scene = new Scene(parent.getSetResource(), name);
-//		}
-//		return scene;
-		return null;
-	}
+//	@Override
+//	public Scene createDisplayObject() {
+////		if (scene==null) {
+////			scene = new Scene(parent.getSetResource(), name);
+////		}
+////		return scene;
+//		return null;
+//	}
 	
 	@Override
 	public void setSetObject(WorldSet obj) {

@@ -18,7 +18,7 @@ import com.g2d.studio.quest.QuestNode.QuestItemManager;
 import com.g2d.studio.swing.G2DTree;
 import com.g2d.studio.swing.G2DTreeNodeGroup;
 import com.g2d.studio.swing.G2DTreeNodeGroup.GroupMenu;
-import com.g2d.util.AbstractDialog;
+import com.g2d.awt.util.*;
 
 public class QuestItemTree extends G2DTree
 {

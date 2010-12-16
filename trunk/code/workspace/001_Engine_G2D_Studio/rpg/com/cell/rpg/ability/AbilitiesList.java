@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.cell.rpg.RPGConfig;
-import com.g2d.studio.rpg.AbilityPanel;
 
 /**
  * 一组能力的集合，如果子类实现该接口，则在

@@ -54,8 +54,7 @@ import com.g2d.studio.rpg.AbilityPanel.AbilityCellEditAdapter;
 import com.g2d.studio.scene.editor.SceneSelectDialogString;
 import com.g2d.studio.scene.editor.SceneUnitListCellEdit;
 import com.g2d.studio.scene.entity.SceneNode;
-import com.g2d.util.AbstractDialog;
-import com.g2d.util.AbstractOptionDialog;
+import com.g2d.awt.util.*;
 
 public class QuestCellEditAdapter {
 

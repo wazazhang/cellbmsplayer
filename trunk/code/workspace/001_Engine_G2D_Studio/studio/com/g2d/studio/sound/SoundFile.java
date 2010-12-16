@@ -6,7 +6,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JList;
 
 import com.cell.sound.util.StaticSoundPlayer;
-import com.g2d.Tools;
+import com.g2d.awt.util.Tools;
 import com.g2d.studio.Config;
 import com.g2d.studio.Studio;
 import com.g2d.studio.res.Res;

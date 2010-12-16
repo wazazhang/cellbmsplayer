@@ -9,14 +9,14 @@ import javax.swing.JTree;
 import javax.swing.tree.TreeNode;
 
 import com.cell.rpg.quest.QuestItem;
-import com.g2d.Tools;
+import com.g2d.awt.util.*;
 import com.g2d.studio.gameedit.ObjectViewer;
 import com.g2d.studio.gameedit.dynamic.DynamicNode;
 import com.g2d.studio.gameedit.dynamic.IDynamicIDFactory;
 import com.g2d.studio.quest.QuestNode;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.swing.G2DTreeNodeGroup.NodeMenu;
-import com.g2d.util.AbstractDialog;
+import com.g2d.awt.util.*;
 
 public class QuestItemNode extends DynamicNode<QuestItem>
 {

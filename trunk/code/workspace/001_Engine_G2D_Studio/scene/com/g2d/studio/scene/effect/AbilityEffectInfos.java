@@ -1,10 +1,10 @@
 package com.g2d.studio.scene.effect;
 
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Vector;
 
 import com.cell.rpg.scene.SceneUnit;
+import com.g2d.BufferedImage;
 import com.g2d.studio.scene.units.SceneUnitTag;
 
 public class AbilityEffectInfos<T extends SceneUnit> {

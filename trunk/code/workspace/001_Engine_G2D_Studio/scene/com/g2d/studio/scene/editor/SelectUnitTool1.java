@@ -26,7 +26,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 
-import com.g2d.Tools;
+import com.g2d.awt.util.Tools;
 import com.g2d.studio.Studio;
 import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.cpj.entity.CPJSprite;
@@ -36,7 +36,6 @@ import com.g2d.studio.res.Res;
 import com.g2d.studio.swing.G2DTree;
 import com.g2d.studio.swing.G2DTreeNode;
 import com.g2d.studio.swing.G2DTreeNodeGroup;
-import com.g2d.util.AbstractFrame;
 
 @SuppressWarnings("serial")
 public class SelectUnitTool1 extends SelectUnitTool
@@ -105,7 +104,8 @@ public class SelectUnitTool1 extends SelectUnitTool
 							btn.setLocation(i%wc * w, i/wc * h);
 							btn.setSize(w, h);
 							if (tunit.getCPJSprite()!=null) {
-								btn.setIcon(Tools.createIcon(Tools.combianImage(w-4, h-4, tunit.getCPJSprite().getSnapShoot())));
+								btn.setIcon(Tools.createIcon(
+										Tools.combianImage(w-4, h-4, tunit.getCPJSprite().getSnapShoot())));
 								btn.addActionListener(XLSUnitPanel.this);
 								map.put(btn, tunit);
 							}
@@ -141,7 +141,7 @@ public class SelectUnitTool1 extends SelectUnitTool
 		@Override
 		public void onSelected(XLSUnit spr) {
 			spr.getCPJSprite();
-			spr.getCPJSprite().getDisplayObject();
+//			spr.getCPJSprite().getDisplayObject();
 		}
 	}
 	
@@ -229,7 +229,7 @@ public class SelectUnitTool1 extends SelectUnitTool
 		
 		@Override
 		public void onSelected(CPJSprite spr) {
-			spr.getDisplayObject();
+//			spr.getDisplayObject();
 		}
 	}
 	

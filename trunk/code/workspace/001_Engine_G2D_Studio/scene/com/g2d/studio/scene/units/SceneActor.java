@@ -1,13 +1,6 @@
 package com.g2d.studio.scene.units;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.Component;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.Shape;
-import java.awt.Stroke;
-import java.awt.image.BufferedImage;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -35,6 +28,7 @@ import com.cell.rpg.scene.ability.ActorTalk;
 import com.cell.rpg.scene.ability.ActorTransport;
 import com.cell.rpg.scene.script.trigger.Event;
 import com.g2d.annotation.Property;
+import com.g2d.awt.util.Tools;
 import com.g2d.cell.CellSetResource;
 import com.g2d.cell.game.SceneSprite;
 import com.g2d.display.DisplayObjectContainer;
@@ -43,6 +37,8 @@ import com.g2d.display.Tip;
 import com.g2d.display.ui.Menu;
 import com.g2d.editor.DisplayObjectEditor;
 import com.g2d.game.rpg.Unit;
+import com.g2d.geom.Rectangle;
+import com.g2d.geom.Shape;
 import com.g2d.studio.Studio;
 import com.g2d.studio.Version;
 import com.g2d.studio.gameedit.ObjectAdapters;
@@ -55,6 +51,10 @@ import com.g2d.studio.scene.editor.SceneUnitMenu;
 import com.g2d.studio.scene.editor.SceneUnitTagEditor;
 import com.g2d.studio.scene.effect.AbilityEffectInfos;
 import com.g2d.util.Drawing;
+import com.g2d.BufferedImage;
+import com.g2d.Color;
+import com.g2d.Graphics2D;
+import com.g2d.Stroke;
 
 /**
  * @author WAZA
@@ -90,20 +90,20 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 					ActorPathStart.class,
 					},
 			new  BufferedImage[]{
-					Res.img_quest_info,
-					Res.img_quest_info2,
+					Tools.wrap_g2d(Res.img_quest_info),
+					Tools.wrap_g2d(Res.img_quest_info2),
 					
-					Res.img_talk,
-					Res.img_npc_bank,
-					Res.img_sell_item,
-					Res.img_mail,
-					Res.img_skill_trainer,
-					Res.img_job_trainer,
-					Res.img_sell_item,
-					Res.img_transport,
+					Tools.wrap_g2d(Res.img_talk),
+					Tools.wrap_g2d(Res.img_npc_bank),
+					Tools.wrap_g2d(Res.img_sell_item),
+					Tools.wrap_g2d(Res.img_mail),
+					Tools.wrap_g2d(Res.img_skill_trainer),
+					Tools.wrap_g2d(Res.img_job_trainer),
+					Tools.wrap_g2d(Res.img_sell_item),
+					Tools.wrap_g2d(Res.img_transport),
 					
-					Res.img_item_info,
-					Res.icon_camera,
+					Tools.wrap_g2d(Res.img_item_info),
+					Tools.wrap_g2d(Res.icon_camera),
 			}		
 	);
 
@@ -142,7 +142,7 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 			this.xls_unit = Studio.getInstance().getObjectManager().getObject(
 					XLSUnit.class, 
 					actor.template_unit_id);
-			this.xls_unit.getCPJSprite().getDisplayObject();
+//			this.xls_unit.getCPJSprite().createDisplayObject();
 			this.cur_anim = actor.animate;
 			this.setID(
 					editor.getGameScene().getWorld(), 
@@ -262,6 +262,10 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 		effects.updateActor(this);
 	}
 	
+
+	BufferedImage img_script = Tools.wrap_g2d(Res.img_script);
+	
+	
 	@Override
 	protected void renderAfter(Graphics2D g) 
 	{
@@ -272,12 +276,12 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 		if (editor != null) 
 		{
 			if (getUnit().getBindedTriggers().getTriggerCount() > 0) {
-				g.drawImage(Res.img_script, -Res.img_script.getWidth()/2, local_bounds.y, null);
+				g.drawImage(img_script, -img_script.getWidth()/2, local_bounds.y);
 			}
 			pushObject(g.getStroke());
 			try
 			{
-				g.setStroke(new BasicStroke(2));
+				g.setStroke(new com.g2d.BasicStroke(2));
 				
 				if (editor.getSelectedPage().isSelectedType(getClass())) 
 				{
@@ -337,7 +341,7 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 					actor.look_range<<1, 
 					actor.look_range<<1,
 					0, 360);
-			g.setColor(new Color((int)(Color.YELLOW.getRGB() & 0x7fffffff), true));
+			g.setColor(new Color((int)(Color.YELLOW.getARGB() & 0x7fffffff)));
 			g.fillArc(
 					-actor.look_range, 
 					-actor.look_range, 
@@ -381,7 +385,8 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 	@Override
 	public Component getListComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 		return null;
-	}	
+	}
+	
 	@Override
 	public ImageIcon getListIcon(boolean update) {
 		return null;

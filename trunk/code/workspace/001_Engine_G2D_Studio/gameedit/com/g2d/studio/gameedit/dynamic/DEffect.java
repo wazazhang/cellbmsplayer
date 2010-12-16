@@ -10,7 +10,7 @@ import javax.swing.JTree;
 
 import com.cell.CIO;
 import com.cell.rpg.template.TEffect;
-import com.g2d.Tools;
+import com.g2d.awt.util.Tools;
 import com.g2d.display.particle.Layer;
 import com.g2d.studio.gameedit.EffectEditor;
 import com.g2d.studio.gameedit.EffectTreeView;

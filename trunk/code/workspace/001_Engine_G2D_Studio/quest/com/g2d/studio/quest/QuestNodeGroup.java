@@ -10,7 +10,7 @@ import javax.swing.JTree;
 import com.cell.rpg.quest.Quest;
 import com.g2d.studio.gameedit.entity.ObjectGroup;
 import com.g2d.studio.swing.G2DTreeNodeGroup;
-import com.g2d.util.AbstractDialog;
+import com.g2d.awt.util.*;
 
 public class QuestNodeGroup extends ObjectGroup<QuestNode, Quest>
 {

@@ -15,7 +15,9 @@ import com.g2d.editor.property.CellEditAdapter;
 import com.g2d.editor.property.ObjectPropertyEdit;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.res.Res;
-import com.g2d.util.AbstractDialog;
+
+import com.g2d.awt.util.*;
+
 
 
 /**

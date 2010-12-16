@@ -22,7 +22,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
 import com.cell.CObject;
-import com.g2d.Tools;
+import com.g2d.awt.util.*;
 import com.g2d.studio.Config;
 import com.g2d.studio.ManagerForm;
 import com.g2d.studio.Studio;
@@ -35,7 +35,7 @@ import com.g2d.studio.io.File;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.swing.G2DTree;
 import com.g2d.studio.swing.G2DTreeNode;
-import com.g2d.util.AbstractDialog;
+import com.g2d.awt.util.AbstractDialog;
 
 public class CPJResourceManager extends ManagerForm implements MouseListener
 {

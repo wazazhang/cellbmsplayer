@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JTree;
 
 import com.cell.rpg.template.TAvatar;
+import com.g2d.awt.util.AbstractDialog;
 import com.g2d.studio.Studio;
 import com.g2d.studio.cpj.CPJResourceSelectDialog;
 import com.g2d.studio.cpj.CPJResourceType;
@@ -20,7 +21,6 @@ import com.g2d.studio.gameedit.dynamic.DAvatar;
 import com.g2d.studio.gameedit.entity.ObjectGroup;
 import com.g2d.studio.swing.G2DTreeNodeGroup;
 import com.g2d.studio.swing.G2DTreeNodeGroup.GroupMenu;
-import com.g2d.util.AbstractDialog;
 
 public class AvatarTreeView extends ObjectTreeViewTemplateDynamic<DAvatar, TAvatar>
 {

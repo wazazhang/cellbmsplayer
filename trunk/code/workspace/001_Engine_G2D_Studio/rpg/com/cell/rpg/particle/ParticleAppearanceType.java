@@ -1,14 +1,12 @@
 package com.cell.rpg.particle;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.io.Serializable;
 
 import com.cell.CMath;
 import com.cell.gfx.game.CSprite;
-import com.cell.j2se.CGraphicsImage;
+import com.g2d.Color;
+import com.g2d.Graphics2D;
+import com.g2d.Image;
 import com.g2d.display.particle.Layer;
 import com.g2d.display.particle.ParticleAppearance;
 
@@ -62,7 +60,7 @@ public enum ParticleAppearanceType
 		@Override
 		public void render(Graphics2D g, Layer layer) {
 			if (getImage() != null) {
-				g.drawImage(getImage(), -getImage().getWidth(null) >> 1, -getImage().getHeight(null) >> 1, null);
+				g.drawImage(getImage(), -getImage().getWidth() >> 1, -getImage().getHeight() >> 1);
 			} else {
 				g.setColor(Color.WHITE);
 				g.drawArc(-2, -2, 4, 4, 0, 360);
@@ -100,10 +98,9 @@ public enum ParticleAppearanceType
 		@Override
 		public void render(Graphics2D g, Layer layer) {
 			if (sprite != null) {
-				CGraphicsImage cg = new CGraphicsImage(g);
 				int anim = CMath.cycNum(sprite_anim, 0, sprite.getAnimateCount());
 				int fram = CMath.cycNum(st_current_timer, 0, sprite.getFrameCount(anim));
-				sprite.render(cg, 0, 0, anim, fram);
+				sprite.render(g, 0, 0, anim, fram);
 				st_current_timer ++;
 			} else {
 				g.setColor(Color.WHITE);

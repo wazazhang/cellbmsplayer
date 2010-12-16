@@ -6,18 +6,15 @@ import java.awt.image.BufferedImage;
 import com.cell.gameedit.object.SpriteSet;
 import com.cell.gfx.game.CCD;
 import com.cell.gfx.game.CSprite;
-import com.cell.j2se.CGraphics;
-import com.g2d.Tools;
 import com.g2d.cell.CellSprite;
 import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.io.File;
 import com.g2d.studio.res.Res;
+import com.g2d.awt.util.*;
 
 
 public class CPJSprite extends CPJObject<SpriteSet>
-{
-	CellSprite	cell_sprite;
-	
+{	
 	public CPJSprite(CPJFile parent, String name, CPJResourceType res_type) {
 		super(parent, name, SpriteSet.class, res_type);
 //		System.out.println("read a cpj sprite : " + name);
@@ -26,17 +23,18 @@ public class CPJSprite extends CPJObject<SpriteSet>
 	@Override
 	public void setSetObject(SpriteSet obj) {
 		super.setSetObject(obj);
-		cell_sprite = null;
+	}
+
+	public CSprite createCSprite() {
+		parent.getSetResource().initAllStreamImages();
+		CSprite cspr = parent.getSetResource().getSprite(name);
+		return cspr;
 	}
 	
-	@Override
-	public CellSprite getDisplayObject() {
-		if (cell_sprite==null) {
-			parent.getSetResource().initAllStreamImages();
-			CSprite cspr = parent.getSetResource().getSprite(name);
-			cell_sprite = new CellSprite(cspr);					
-			cell_sprite.user_data = parent.getName()+"/" + name;
-		}
+	public CellSprite createCellSprite() {
+		CSprite cspr = createCSprite();
+		CellSprite cell_sprite = new CellSprite(cspr);					
+		cell_sprite.user_data = parent.getName()+"/" + name;
 		return cell_sprite;
 	}
 	
@@ -69,7 +67,7 @@ public class CPJSprite extends CPJObject<SpriteSet>
 									if (bounds.getWidth() > 0 && bounds.getHeight() > 0) {
 										BufferedImage 	img		= Tools.createImage(bounds.getWidth(), bounds.getHeight());
 										Graphics2D		g2d		= img.createGraphics();
-										spr.render(new CGraphics(g2d), -bounds.X1, -bounds.Y1, i, j);
+										spr.render(Tools.wrap(g2d), -bounds.X1, -bounds.Y1, i, j);
 										g2d.dispose();
 										snapshoot = Tools.combianImage(32, 32, img);
 									}

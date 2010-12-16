@@ -1,14 +1,11 @@
 package com.g2d.studio.scene.units;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
+
 import java.awt.Component;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.Shape;
-import java.awt.Stroke;
+import java.io.InputStream;
 import java.util.Vector;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JList;
 
@@ -20,6 +17,12 @@ import com.cell.rpg.instance.zones.ability.InstanceZoneUnitVisible;
 import com.cell.rpg.scene.Immutable;
 import com.cell.rpg.scene.SceneUnit;
 import com.cell.rpg.scene.ability.ActorTransport;
+import com.g2d.BasicStroke;
+import com.g2d.BufferedImage;
+import com.g2d.Color;
+import com.g2d.Graphics2D;
+import com.g2d.Stroke;
+import com.g2d.awt.util.Tools;
 import com.g2d.cell.CellSetResource;
 import com.g2d.cell.game.SceneSprite;
 import com.g2d.display.DisplayObjectContainer;
@@ -28,6 +31,8 @@ import com.g2d.display.Tip;
 import com.g2d.display.ui.Menu;
 import com.g2d.editor.DisplayObjectEditor;
 import com.g2d.game.rpg.Unit;
+import com.g2d.geom.Rectangle;
+import com.g2d.geom.Shape;
 import com.g2d.studio.Studio;
 import com.g2d.studio.Version;
 import com.g2d.studio.cpj.CPJIndex;
@@ -92,7 +97,7 @@ public class SceneImmutable extends SceneSprite implements SceneUnitTag<Immutabl
 						CPJResourceType.ACTOR, 
 						spr.getDisplayNode().cpj_project_name,
 						spr.getDisplayNode().cpj_object_id);
-			index.getObject().getDisplayObject();
+//			index.getObject().createDisplayObject();
 
 			this.cpj_spr = CPJSprite.class.cast(index.getObject());
 			this.cur_anim = spr.animate;
@@ -205,6 +210,8 @@ public class SceneImmutable extends SceneSprite implements SceneUnitTag<Immutabl
 		}
 		
 	}
+
+	BufferedImage img_script = Tools.wrap_g2d(Res.img_script);
 	
 	@Override
 	protected void renderAfter(Graphics2D g) 
@@ -214,7 +221,7 @@ public class SceneImmutable extends SceneSprite implements SceneUnitTag<Immutabl
 		if (editor != null) 
 		{	
 			if (getUnit().getBindedTriggers().getTriggerCount() > 0) {
-				g.drawImage(Res.img_script, -Res.img_script.getWidth()/2, local_bounds.y, null);
+				g.drawImage(img_script, -img_script.getWidth()/2, local_bounds.y);
 			}
 			pushObject(g.getStroke());
 			try
@@ -336,4 +343,21 @@ public class SceneImmutable extends SceneSprite implements SceneUnitTag<Immutabl
 	}
 	@Override
 	public void onHideFrom() {}
+
+	public static java.awt.image.BufferedImage converImage(InputStream is) throws Exception
+	{
+		String text = "http://www.abc.com";
+		java.awt.image.BufferedImage image = ImageIO.read(is);
+		java.awt.Graphics2D g2d = image.createGraphics();
+		try {
+			g2d.setColor(java.awt.Color.WHITE);
+			java.awt.geom.Rectangle2D rect = g2d.getFont().getStringBounds(text, g2d.getFontRenderContext());
+			g2d.drawString(text, 
+					(int)(image.getWidth()  -rect.getWidth()  -rect.getX()), 
+					(int)(image.getHeight() -rect.getHeight() -rect.getY()));
+		} finally {
+			g2d.dispose();
+		}
+		return image;
+	}
 }

@@ -15,11 +15,10 @@ import com.cell.CUtil;
 import com.cell.rpg.scene.script.Scriptable;
 import com.cell.rpg.scene.script.anno.EventType;
 import com.cell.rpg.scene.script.trigger.Event;
+import com.g2d.awt.util.AbstractOptionDialog;
 import com.g2d.editor.property.ObjectPropertyEdit;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.Studio;
-import com.g2d.util.AbstractDialog;
-import com.g2d.util.AbstractOptionDialog;
 
 @SuppressWarnings("serial")
 public class SelectEventDialog extends AbstractOptionDialog<Class<? extends Event>>

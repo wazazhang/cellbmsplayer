@@ -20,6 +20,7 @@ import javax.swing.JToolBar;
 import javax.swing.table.DefaultTableCellRenderer;
 
 import com.cell.rpg.template.ability.ItemRateCollection;
+import com.g2d.awt.util.AbstractOptionDialog;
 import com.g2d.editor.property.CellEditAdapter;
 import com.g2d.editor.property.ObjectPropertyEdit;
 import com.g2d.editor.property.PropertyCellEdit;
@@ -28,7 +29,6 @@ import com.g2d.studio.gameedit.ObjectSelectDialog;
 import com.g2d.studio.gameedit.template.XLSItem;
 import com.g2d.studio.swing.G2DList;
 import com.g2d.studio.swing.G2DListItem;
-import com.g2d.util.AbstractOptionDialog;
 
 @SuppressWarnings("serial")
 public class ItemRateCollectionEdit extends AbstractOptionDialog<ItemRateCollection> implements PropertyCellEdit<ItemRateCollection>

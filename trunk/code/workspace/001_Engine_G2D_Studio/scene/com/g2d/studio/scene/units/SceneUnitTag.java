@@ -1,16 +1,16 @@
 package com.g2d.studio.scene.units;
 
-import java.awt.Color;
-import java.awt.Shape;
 import java.util.Vector;
 
 import com.cell.rpg.instance.zones.ability.InstanceZoneUnitKillAction;
 import com.cell.rpg.instance.zones.ability.InstanceZoneUnitVisible;
 import com.cell.rpg.scene.SceneUnit;
 import com.cell.rpg.scene.script.trigger.Event;
+import com.g2d.Color;
 import com.g2d.display.ui.Menu;
 import com.g2d.editor.DisplayObjectEditor;
 import com.g2d.game.rpg.Unit;
+import com.g2d.geom.Shape;
 import com.g2d.studio.swing.G2DListItem;
 import com.g2d.util.Drawing;
 

@@ -10,7 +10,7 @@ import javax.swing.JTree;
 
 import com.cell.CIO;
 import com.cell.rpg.template.TShopItemList;
-import com.g2d.Tools;
+import com.g2d.awt.util.Tools;
 import com.g2d.studio.gameedit.ObjectAdapters;
 import com.g2d.studio.gameedit.ObjectViewer;
 import com.g2d.studio.gameedit.ShopItemListTreeView;

@@ -6,11 +6,13 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.event.MouseEvent;
 
-import com.g2d.display.Canvas;
+import com.g2d.Canvas;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.Stage;
 import com.g2d.display.particle.Layer;
+import com.g2d.display.particle.ParticleData;
 import com.g2d.display.particle.ParticleDisplay;
+import com.g2d.geom.AffineTransform;
 import com.g2d.studio.gameedit.EffectEditor;
 
 public class ParticleStage extends Stage
@@ -53,25 +55,25 @@ public class ParticleStage extends Stage
 		}
 	}
 
-	public void render(java.awt.Graphics2D g) 
+	public void render(com.g2d.Graphics2D g) 
 	{
-		g.setColor(back_color);
+		g.setColor(back_color.getRGB());
 		g.fill(local_bounds);
 		
 		if (is_show_cross) {
-			g.setColor(Color.GRAY);
+			g.setColor(com.g2d.Color.GRAY);
 			g.drawLine(0, particle.getY(), getWidth(), particle.getY());
 			g.drawLine(particle.getX(), 0, particle.getX(), getHeight());
 		}
 	}
 	
 	@Override
-	protected void renderAfter(Graphics2D g)
+	protected void renderAfter(com.g2d.Graphics2D g)
 	{
 		if (is_show_spawn_region) {
-			g.setColor(Color.WHITE);
+			g.setColor(com.g2d.Color.WHITE);
 			for (Layer layer : particle.getData()) {
-				Shape shape = ParticleDisplay.getOriginShape(layer);
+				com.g2d.geom.Shape shape = ParticleDisplay.getOriginShape(layer);
 				double tx = particle.x;
 				double ty = particle.y;
 				try{
@@ -84,8 +86,8 @@ public class ParticleStage extends Stage
 		}
 		
 		if (is_show_spawn_bounds) {
-			g.setColor(Color.YELLOW);
-			Rectangle rect = ParticleDisplay.getOriginBounds(particle.getData());
+			g.setColor(com.g2d.Color.YELLOW);
+			com.g2d.geom.Rectangle rect = ParticleDisplay.getOriginBounds(particle.getData());
 			double tx = particle.x;
 			double ty = particle.y;
 			try{
@@ -96,5 +98,6 @@ public class ParticleStage extends Stage
 			}
 		}
 	}
+
 	
 }

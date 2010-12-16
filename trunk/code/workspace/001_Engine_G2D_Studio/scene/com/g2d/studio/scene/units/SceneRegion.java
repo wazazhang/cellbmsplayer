@@ -1,13 +1,7 @@
 package com.g2d.studio.scene.units;
 
-import java.awt.Color;
 import java.awt.Component;
-import java.awt.Composite;
-import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.Shape;
-import java.awt.image.BufferedImage;
+
 import java.io.IOException;
 import java.util.Vector;
 
@@ -19,8 +13,13 @@ import com.cell.rpg.instance.zones.ability.InstanceZoneUnitVisible;
 import com.cell.rpg.quest.ability.QuestAccepter;
 import com.cell.rpg.quest.ability.QuestPublisher;
 import com.cell.rpg.scene.Region;
+import com.g2d.AnimateCursor;
+import com.g2d.BufferedImage;
+import com.g2d.Color;
+import com.g2d.Composite;
+import com.g2d.Graphics2D;
 import com.g2d.annotation.Property;
-import com.g2d.display.AnimateCursor;
+import com.g2d.awt.util.Tools;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.DragResizeObject;
 import com.g2d.display.TextTip;
@@ -29,6 +28,9 @@ import com.g2d.display.event.MouseMoveEvent;
 import com.g2d.display.ui.Menu;
 import com.g2d.editor.DisplayObjectEditor;
 import com.g2d.game.rpg.Unit;
+import com.g2d.geom.Dimension;
+import com.g2d.geom.Rectangle;
+import com.g2d.geom.Shape;
 import com.g2d.studio.Version;
 import com.g2d.studio.quest.QuestCellEditAdapter;
 import com.g2d.studio.res.Res;
@@ -49,7 +51,7 @@ public class SceneRegion extends com.g2d.game.rpg.Unit implements SceneUnitTag<R
 	final public Region 		region;
 	
 	@Property("color")
-	public Color 				color = new Color(0x8000ff00, true);
+	public Color 				color = new Color(0x8000ff00);
 
 	private DragResizeObject	drag_resize;
 	
@@ -58,9 +60,9 @@ public class SceneRegion extends com.g2d.game.rpg.Unit implements SceneUnitTag<R
 					QuestPublisher.class,
 					QuestAccepter.class,
 					},
-			new  BufferedImage[]{
-					Res.img_quest_info,
-					Res.img_quest_info2,
+			new  com.g2d.BufferedImage[]{
+					Tools.wrap_g2d(Res.img_quest_info),
+					Tools.wrap_g2d(Res.img_quest_info2),
 			}		
 	);
 	TextTip tip = new TextTip();
@@ -92,7 +94,7 @@ public class SceneRegion extends com.g2d.game.rpg.Unit implements SceneUnitTag<R
 					region.x,
 					region.y);
 			this.color = new Color(
-					region.color, true);
+					region.color);
 			this.alpha = 
 					region.alpha;
 			this.setSize(
@@ -110,7 +112,7 @@ public class SceneRegion extends com.g2d.game.rpg.Unit implements SceneUnitTag<R
 		region.name			= getID() + "";
 		region.x			= getX();
 		region.y			= getY();
-		region.color		= color.getRGB();
+		region.color		= color.getARGB();
 		region.alpha		= alpha;
 		region.width		= getWidth();
 		region.height		= getHeight();
@@ -238,6 +240,8 @@ public class SceneRegion extends com.g2d.game.rpg.Unit implements SceneUnitTag<R
 		effects.updateActor(this);
 	}
 
+	BufferedImage img_script = Tools.wrap_g2d(Res.img_script);
+	
 	@Override
 	protected void renderAfter(Graphics2D g) 
 	{
@@ -252,7 +256,7 @@ public class SceneRegion extends com.g2d.game.rpg.Unit implements SceneUnitTag<R
 		if (editor!=null)
 		{
 			if (getUnit().getBindedTriggers().getTriggerCount() > 0) {
-				g.drawImage(Res.img_script, 0, 0, null);
+				g.drawImage(img_script, 0, 0);
 			}
 			if (editor.getSelectedPage().isSelectedType(getClass())) {
 				g.setColor(color);
@@ -269,11 +273,9 @@ public class SceneRegion extends com.g2d.game.rpg.Unit implements SceneUnitTag<R
 				}
 				this.enable = editor.isToolSelect();
 			} else {
-				Composite composite = g.getComposite();
 				setAlpha(g, alpha * 0.5f);
 				g.setColor(color);
 				g.fill(local_bounds);
-				g.setComposite(composite);
 				this.enable = false;
 			}
 			Util.drawScript(g, editor, this);

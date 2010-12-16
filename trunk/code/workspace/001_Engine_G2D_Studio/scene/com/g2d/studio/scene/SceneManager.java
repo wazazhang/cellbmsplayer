@@ -67,7 +67,7 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 	final public SceneTree			g2d_tree;
 	
 	final private G2DWindowToolBar	tool_bar			= new G2DWindowToolBar(this);
-	final private JButton			tool_scene_graph 	= new JButton(Tools.createIcon(Res.icon_scene_graph));
+	final private JButton			tool_scene_graph 	= new JButton(com.g2d.awt.util.Tools.createIcon(Res.icon_scene_graph));
 	final private JButton			tool_instance_zones;
 	
 	final private InstanceZonesManager	instance_zones;

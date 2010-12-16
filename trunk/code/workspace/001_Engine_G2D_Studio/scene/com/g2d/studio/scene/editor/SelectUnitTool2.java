@@ -26,7 +26,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 
-import com.g2d.Tools;
 import com.g2d.studio.Studio;
 import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.cpj.entity.CPJSprite;
@@ -36,7 +35,6 @@ import com.g2d.studio.res.Res;
 import com.g2d.studio.swing.G2DTree;
 import com.g2d.studio.swing.G2DTreeNode;
 import com.g2d.studio.swing.G2DTreeNodeGroup;
-import com.g2d.util.AbstractFrame;
 
 @SuppressWarnings("serial")
 public class SelectUnitTool2 extends SelectUnitTool
@@ -73,7 +71,7 @@ public class SelectUnitTool2 extends SelectUnitTool
 		@Override
 		protected void onSelected(XLSUnit spr) {
 			spr.getCPJSprite();
-			spr.getCPJSprite().getDisplayObject();
+//			spr.getCPJSprite().getDisplayObject();
 		}
 		
 		@Override
@@ -111,7 +109,7 @@ public class SelectUnitTool2 extends SelectUnitTool
 		
 		@Override
 		protected void onSelected(CPJSprite spr) {
-			spr.getDisplayObject();
+//			spr.getDisplayObject();
 		}
 		
 		@Override

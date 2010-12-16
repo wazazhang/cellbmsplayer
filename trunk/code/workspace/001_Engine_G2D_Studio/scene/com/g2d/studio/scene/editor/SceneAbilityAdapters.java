@@ -31,6 +31,7 @@ import com.cell.rpg.scene.ability.IActorAbility;
 import com.cell.rpg.scene.ability.RegionSpawnNPC.NPCSpawn;
 import com.cell.rpg.scene.ability.RegionSpawnTrezuro.CollectionSpawn;
 import com.cell.rpg.template.ability.UnitItemCollection;
+import com.g2d.awt.util.AbstractOptionDialog;
 import com.g2d.editor.property.CellEditAdapter;
 import com.g2d.editor.property.ObjectPropertyEdit;
 import com.g2d.editor.property.PropertyCellEdit;
@@ -52,7 +53,6 @@ import com.g2d.studio.sound.SoundSelectDialog;
 import com.g2d.studio.swing.G2DList;
 import com.g2d.studio.talks.TalkFile;
 import com.g2d.studio.talks.TalkSelectDialog;
-import com.g2d.util.AbstractOptionDialog;
 
 public class SceneAbilityAdapters
 {

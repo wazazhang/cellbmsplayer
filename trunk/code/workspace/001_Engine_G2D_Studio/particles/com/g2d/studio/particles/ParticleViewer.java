@@ -61,7 +61,7 @@ public class ParticleViewer extends JFrame implements ActionListener
 			btn_change_color.addActionListener(this);
 		}
 		
-		display_object_panel	= new DisplayObjectPanel(new DisplayObjectPanel.ObjectStage(Color.GREEN));
+		display_object_panel	= new DisplayObjectPanel(new DisplayObjectPanel.ObjectStage(com.g2d.Color.GREEN));
 		display_object_panel.getCanvas().setFPS(Config.DEFAULT_FPS);
 		
 		add(display_object_panel, BorderLayout.CENTER);

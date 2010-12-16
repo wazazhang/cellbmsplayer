@@ -1,8 +1,5 @@
 package com.g2d.studio.scene.units;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.text.AttributedString;
 import java.util.ArrayList;
 
@@ -10,9 +7,12 @@ import com.cell.rpg.ability.AbstractAbility;
 import com.cell.rpg.instance.zones.ability.InstanceZoneUnitKillAction;
 import com.cell.rpg.instance.zones.ability.InstanceZoneUnitVisible;
 import com.cell.rpg.scene.SceneUnit;
+import com.g2d.Color;
+import com.g2d.Graphics2D;
 import com.g2d.display.TextTip;
-import com.g2d.display.ui.text.TextBuilder;
+import com.g2d.geom.Rectangle;
 import com.g2d.studio.scene.editor.SceneEditor;
+import com.g2d.text.TextBuilder;
 import com.g2d.util.Drawing;
 
 public class Util 

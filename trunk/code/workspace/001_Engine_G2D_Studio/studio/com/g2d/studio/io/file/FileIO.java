@@ -11,8 +11,6 @@ import java.util.ArrayList;
 import com.cell.CIO;
 import com.cell.CObject;
 import com.cell.io.CFile;
-import com.cell.j2se.CAppBridge;
-import com.cell.j2se.CStorage;
 import com.g2d.studio.Config;
 import com.g2d.studio.io.File;
 import com.g2d.studio.io.IO;

@@ -30,6 +30,7 @@ import com.cell.CObject;
 import com.cell.io.CFile;
 import com.cell.j2se.CAppBridge;
 import com.cell.j2se.CStorage;
+
 import com.cell.rpg.RPGConfig;
 import com.cell.rpg.io.RPGObjectMap;
 import com.cell.rpg.scene.script.SceneScriptManager;
@@ -41,10 +42,9 @@ import com.cell.sound.openal_impl.JALSoundManager;
 import com.cell.sound.util.StaticSoundPlayer;
 import com.cell.sql.SQMTypeManager;
 import com.cell.util.concurrent.ThreadPool;
-import com.g2d.Tools;
-import com.g2d.display.ui.layout.UILayoutManager.SimpleLayoutManager;
-import com.g2d.display.ui.text.MultiTextLayout;
-import com.g2d.display.ui.text.TextBuilder;
+
+
+import com.g2d.Engine;
 import com.g2d.studio.cell.gameedit.Builder;
 import com.g2d.studio.cpj.CPJResourceManager;
 import com.g2d.studio.gameedit.ObjectManager;
@@ -63,9 +63,13 @@ import com.g2d.studio.res.Res;
 import com.g2d.studio.scene.SceneManager;
 import com.g2d.studio.sound.SoundManager;
 import com.g2d.studio.talks.TalkManager;
-import com.g2d.util.AbstractFrame;
-import com.g2d.util.Drawing;
-import com.g2d.util.Util;
+import com.g2d.text.MultiTextLayout;
+
+import com.g2d.awt.util.*;
+import com.g2d.display.ui.layout.UILayoutManager.SimpleLayoutManager;
+import com.g2d.java2d.impl.AwtEngine;
+
+
 
 public class Studio extends AbstractFrame
 {
@@ -562,18 +566,11 @@ public class Studio extends AbstractFrame
 			lbl_title 	= new JLabel("初始化中...");
 			BufferedImage back_image = Tools.cloneImage(Res.img_splash);
 			try {
-				MultiTextLayout text = new MultiTextLayout();
-				text.appendText(TextBuilder.buildScript(
-						"[anti:1]" + Version.getFullVersion() + ""
-				));
-				text.is_read_only = true;
-				text.is_show_caret = false;
-				text.setWidth(getWidth()-2);
 				Graphics2D g2d = back_image.createGraphics();
-				Drawing.drawStringShwdow(g2d, text, 1, 1, getWidth()-2, getHeight()-2, 0);
+				Drawing.drawStringBorder(g2d, Version.getFullVersion() + "", 10, 10, getWidth()-2, getHeight()-2, 0);
 				g2d.dispose();
 			} catch (Throwable ex) {}
-			back 		= new JLabel(Tools.createIcon(back_image));
+			back = new JLabel(Tools.createIcon(back_image));
 			 
 			this.add(lbl_title, BorderLayout.NORTH);
 			this.add(back, BorderLayout.CENTER);
@@ -656,7 +653,8 @@ public class Studio extends AbstractFrame
 					Studio.class.getClassLoader(), 
 					Studio.class));
 				Config.load(args[0]);
-
+				new AwtEngine();
+				
 				IO io = null;
 				if (args.length > 1 && args[0].startsWith("http")) {
 					io = new FileHttp(args);

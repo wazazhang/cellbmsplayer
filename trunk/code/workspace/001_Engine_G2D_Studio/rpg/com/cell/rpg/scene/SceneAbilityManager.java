@@ -2,7 +2,7 @@ package com.cell.rpg.scene;
 
 import java.util.Set;
 
-import com.g2d.editor.property.CellEditAdapter;
+import com.g2d.editor.property.PropertyEditor;
 
 public abstract class SceneAbilityManager
 {
@@ -18,5 +18,5 @@ public abstract class SceneAbilityManager
 	
 	abstract public Set<Class<?>> 			getAllTypes();
 	
-	abstract public Set<CellEditAdapter<?>>	getEditAdapters();
+	abstract public Set<PropertyEditor<?>>	getEditAdapters();
 }

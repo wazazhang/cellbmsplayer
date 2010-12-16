@@ -8,7 +8,7 @@ import java.util.Vector;
 import javax.swing.JButton;
 
 import com.cell.rpg.quest.formula.TriggerUnitMethod;
-import com.g2d.Tools;
+import com.g2d.awt.util.*;
 import com.g2d.studio.Config;
 import com.g2d.studio.ManagerForm;
 import com.g2d.studio.ManagerFormDynamic;
