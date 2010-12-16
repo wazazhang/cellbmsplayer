@@ -6,7 +6,7 @@ import com.cell.rpg.template.TItem;
 import com.cell.rpg.template.TemplateNode;
 import com.cell.rpg.xls.XLSFile;
 import com.cell.rpg.xls.XLSFullRow;
-import com.g2d.Tools;
+import com.g2d.awt.util.Tools;
 import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.ObjectAdapters;
 import com.g2d.studio.gameedit.ObjectViewer;

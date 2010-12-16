@@ -1,14 +1,7 @@
 package com.g2d.studio.scene;
 
-import java.awt.BasicStroke;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Stroke;
-import java.awt.event.MouseEvent;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -20,21 +13,28 @@ import com.cell.rpg.scene.graph.SceneGraphAstar;
 import com.cell.rpg.scene.graph.SceneGraphNode;
 import com.cell.rpg.scene.graph.SceneGraphNode.LinkInfo;
 import com.cell.util.Pair;
-import com.g2d.Tools;
+import com.g2d.BasicStroke;
+import com.g2d.Color;
+import com.g2d.Graphics2D;
+import com.g2d.Image;
+import com.g2d.Stroke;
+import com.g2d.awt.util.*;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.Sprite;
 import com.g2d.display.Stage;
 import com.g2d.display.TextTip;
 import com.g2d.display.Tip;
+import com.g2d.display.event.MouseEvent;
 import com.g2d.display.ui.Menu;
 import com.g2d.display.ui.Panel;
 import com.g2d.editor.DisplayObjectPanel;
+import com.g2d.geom.Point2D;
 import com.g2d.studio.Config;
 import com.g2d.studio.Studio;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.scene.entity.SceneNode;
-import com.g2d.util.AbstractDialog;
 import com.g2d.util.Drawing;
+
 
 public class SceneGraphViewer extends AbstractDialog
 {
@@ -49,7 +49,7 @@ public class SceneGraphViewer extends AbstractDialog
 		super.setSize(Studio.getInstance().getIconManager().getSize());
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.display_object_panel = new DisplayObjectPanel(
-				new DisplayObjectPanel.ObjectStage(new Color(Config.DEFAULT_BACK_COLOR, false)));
+				new DisplayObjectPanel.ObjectStage(new Color(Config.DEFAULT_BACK_COLOR)));
 		this.add(display_object_panel, BorderLayout.CENTER);
 		
 		refreshSceneGraph(Studio.getInstance().getSceneManager().createSceneGraph());
@@ -243,18 +243,18 @@ public class SceneGraphViewer extends AbstractDialog
 				}
 				if (snode.getIcon(false) != null && 
 					snode.getIcon(false).getImage() != null) {
-					this.snapshot		= snode.getIcon(false).getImage();
+					this.snapshot		= Tools.wrap_g2d(snode.getIcon(false).getImage());
 				} else {
-					this.snapshot		= Tools.createImage(80, 60);
+					this.snapshot		= com.g2d.Tools.createImage(80, 60);
 				}
 				
 				this.setLocation(node.x, node.y);
 				this.setSize(
-						snapshot.getWidth(this) + 24, 
-						snapshot.getHeight(this) + 24);
+						snapshot.getWidth() + 24, 
+						snapshot.getHeight() + 24);
 
-				this.scalex			= snapshot.getWidth(this) / node.width;
-				this.scaley			= snapshot.getHeight(this) / node.height;
+				this.scalex			= snapshot.getWidth() / node.width;
+				this.scaley			= snapshot.getHeight() / node.height;
 
 				this.enable 		= true;
 				this.enable_input	= true;
@@ -330,8 +330,7 @@ public class SceneGraphViewer extends AbstractDialog
 				{
 					g.drawImage(snapshot, 
 							local_bounds.x + 2, 
-							local_bounds.y + 2, 
-							null);
+							local_bounds.y + 2);
 				}
 				// draw next link
 				{
@@ -388,7 +387,7 @@ public class SceneGraphViewer extends AbstractDialog
 			
 			@Override
 			protected void onMouseClick(com.g2d.display.event.MouseEvent event) {
-				if (event.mouseButton == MouseEvent.BUTTON3) {
+				if (event.mouseButton == MouseEvent.BUTTON_RIGHT) {
 					new SceneMenu().show(getParent(), (int)x+getMouseX(), (int)y+getMouseY());
 				}
 			}

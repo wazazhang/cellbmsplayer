@@ -9,7 +9,8 @@ import java.io.ObjectOutput;
 import javax.swing.JButton;
 import javax.swing.JToolBar;
 
-import com.g2d.Tools;
+import com.g2d.awt.util.*;
+
 import com.g2d.studio.res.Res;
 
 

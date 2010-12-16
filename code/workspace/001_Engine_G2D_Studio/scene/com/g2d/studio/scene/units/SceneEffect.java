@@ -1,10 +1,6 @@
 package com.g2d.studio.scene.units;
 
-import java.awt.Color;
 import java.awt.Component;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.Shape;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.Vector;
@@ -18,7 +14,11 @@ import com.cell.rpg.particle.ParticleAppearanceType.DisplayNodeImage;
 import com.cell.rpg.particle.ParticleAppearanceType.DisplayNodeSprite;
 import com.cell.rpg.scene.Effect;
 import com.cell.rpg.scene.script.entity.SceneUnit;
+import com.g2d.BufferedImage;
+import com.g2d.Color;
+import com.g2d.Graphics2D;
 import com.g2d.annotation.Property;
+import com.g2d.awt.util.Tools;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.Sprite;
 import com.g2d.display.TextTip;
@@ -28,6 +28,8 @@ import com.g2d.display.particle.ParticleDisplay;
 import com.g2d.display.ui.Menu;
 import com.g2d.editor.DisplayObjectEditor;
 import com.g2d.game.rpg.Unit;
+import com.g2d.geom.Rectangle;
+import com.g2d.geom.Shape;
 import com.g2d.studio.Studio;
 import com.g2d.studio.Version;
 import com.g2d.studio.cpj.CPJIndex;
@@ -161,7 +163,7 @@ public class SceneEffect extends com.g2d.game.rpg.Unit implements SceneUnitTag<E
 								image.cpj_sprite_name, 
 								image.cpj_image_id
 								);
-						image.setImage(tile_image.getEffectImage());
+						image.setImage(Tools.wrap_g2d(tile_image.getEffectImage()));
 					}
 				}
 				else if (layer.appearance instanceof DisplayNodeSprite) {
@@ -174,7 +176,7 @@ public class SceneEffect extends com.g2d.game.rpg.Unit implements SceneUnitTag<E
 						if (index != null) {
 							CPJSprite spr = Studio.getInstance().getCPJResourceManager().getNode(index);
 							if (spr != null) {
-								sprite.sprite = spr.getDisplayObject().cspr;
+								sprite.sprite = spr.createCSprite();
 							}
 						}
 					}
@@ -224,6 +226,8 @@ public class SceneEffect extends com.g2d.game.rpg.Unit implements SceneUnitTag<E
 		}
 	}
 	
+	BufferedImage img_script = Tools.wrap_g2d(Res.img_script);
+	
 	@Override
 	protected void renderAfter(Graphics2D g) 
 	{
@@ -232,7 +236,7 @@ public class SceneEffect extends com.g2d.game.rpg.Unit implements SceneUnitTag<E
 		if (editor!=null)
 		{
 			if (getUnit().getBindedTriggers().getTriggerCount() > 0) {
-				g.drawImage(Res.img_script, -Res.img_script.getWidth()/2, 0, null);
+				g.drawImage(img_script, -img_script.getWidth()/2, 0);
 			}
 			if (editor.getSelectedPage().isSelectedType(getClass())) 
 			{

@@ -17,7 +17,7 @@ import com.g2d.studio.Studio;
 import com.g2d.studio.scene.entity.SceneNode;
 import com.g2d.studio.swing.G2DList;
 import com.g2d.studio.swing.G2DListItem;
-import com.g2d.util.AbstractOptionDialog;
+import com.g2d.awt.util.*;
 
 public class SceneSelectDialogString extends AbstractOptionDialog<SceneNode> implements PropertyCellEdit<String>
 {

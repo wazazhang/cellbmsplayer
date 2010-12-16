@@ -1,14 +1,8 @@
 package com.g2d.studio.scene.editor;
 
+
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
-import java.awt.Composite;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -17,12 +11,10 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.Vector;
 
@@ -46,8 +38,6 @@ import com.cell.gameedit.SetResource;
 import com.cell.gameedit.object.WorldSet.SpriteObject;
 import com.cell.gfx.game.CCD;
 import com.cell.gfx.game.CSprite;
-import com.cell.j2se.CGraphics;
-import com.cell.j2se.CGraphicsImage;
 import com.cell.rpg.scene.Actor;
 import com.cell.rpg.scene.Region;
 import com.cell.rpg.scene.SceneAbilityManager;
@@ -56,7 +46,13 @@ import com.cell.rpg.scene.SceneTriggerScriptable;
 import com.cell.rpg.scene.SceneUnit;
 import com.cell.rpg.scene.TriggerGenerator;
 import com.cell.sound.util.StaticSoundPlayer;
-import com.g2d.Tools;
+import com.cell.util.Pair;
+
+import com.g2d.BufferedImage;
+import com.g2d.Color;
+import com.g2d.Graphics2D;
+import com.g2d.awt.util.AbstractFrame;
+import com.g2d.awt.util.Tools;
 import com.g2d.cell.CellSetResource;
 import com.g2d.cell.CellSprite;
 
@@ -69,10 +65,16 @@ import com.g2d.display.ui.Menu;
 import com.g2d.editor.DisplayObjectEditor;
 import com.g2d.editor.DisplayObjectPanel;
 import com.g2d.editor.property.CellEditAdapter;
+import com.g2d.editor.property.PropertyEditor;
 import com.g2d.game.rpg.Unit;
+import com.g2d.geom.AffineTransform;
+import com.g2d.geom.Point;
+import com.g2d.geom.Point2D;
+import com.g2d.geom.Rectangle;
 import com.g2d.studio.Config;
 import com.g2d.studio.Studio;
 import com.g2d.studio.StudioResource;
+import com.g2d.studio.cpj.entity.CPJSprite;
 import com.g2d.studio.cpj.entity.CPJWorld;
 import com.g2d.studio.gameedit.dynamic.DEffect;
 import com.g2d.studio.res.Res;
@@ -89,7 +91,6 @@ import com.g2d.studio.scene.units.SceneRegion;
 import com.g2d.studio.scene.units.SceneUnitTag;
 import com.g2d.studio.sound.SoundFile;
 import com.g2d.studio.swing.G2DWindowToolBar;
-import com.g2d.util.AbstractFrame;
 import com.g2d.util.Drawing;
 
 @SuppressWarnings("serial")
@@ -116,15 +117,15 @@ public class SceneEditor extends AbstractFrame implements ActionListener, Window
 //	ui
 	
 	private G2DWindowToolBar	tool_bar;
-	private JToggleButton		tool_selector	= new JToggleButton(Tools.createIcon(Res.icons_bar[0]), true);
-	private JToggleButton		tool_addactor	= new JToggleButton(Tools.createIcon(Res.icons_bar[8]));
-	private JToggleButton		tool_show_grid	= new JToggleButton(Tools.createIcon(Res.icon_grid));	
-	private JButton				tool_edit_prop	= new JButton(Tools.createIcon(Res.icons_bar[1]));
-	private JButton				tool_triggers	= new JButton(Tools.createIcon(Res.icon_action));
-	private JToggleButton		tool_play_bgm	= new JToggleButton(Tools.createIcon(Res.icons_bar[3]));
-	private JButton				tool_mask_alpha	= new JButton("MA");
-	private JButton				tool_mask_color	= new JButton("MC");
-	private JToggleButton		tool_show_sc	= new JToggleButton("a");
+	private JToggleButton		tool_selector	= new JToggleButton	(Tools.createIcon(Res.icons_bar[0]), true);
+	private JToggleButton		tool_addactor	= new JToggleButton	(Tools.createIcon(Res.icons_bar[8]));
+	private JToggleButton		tool_show_grid	= new JToggleButton	(Tools.createIcon(Res.icon_grid));	
+	private JButton				tool_edit_prop	= new JButton		(Tools.createIcon(Res.icons_bar[1]));
+	private JButton				tool_triggers	= new JButton		(Tools.createIcon(Res.icon_action));
+	private JToggleButton		tool_play_bgm	= new JToggleButton	(Tools.createIcon(Res.icons_bar[3]));
+	private JButton				tool_mask_alpha	= new JButton		("MA");
+	private JButton				tool_mask_color	= new JButton		("MC");
+	private JToggleButton		tool_show_sc	= new JToggleButton	("a");
 
 	private JTabbedPane			unit_page;
 	private JToolBar			status_bar		= new JToolBar();
@@ -328,17 +329,17 @@ public class SceneEditor extends AbstractFrame implements ActionListener, Window
 		try {
 			if (scene_node.getWorldDisplay() != null &&
 				scene_node.getWorldDisplay().scene_snapshoot == null) {
-				BufferedImage icon = scene_container.getWorld().createMiniMap(
+				com.g2d.BufferedImage icon = scene_container.getWorld().createMiniMap(
 						scene_container.getWorld().getWidth(),
 						scene_container.getWorld().getHeight());
-				scene_node.saveSnapshot(icon);
+				scene_node.saveSnapshot(Tools.unwrap(icon));
 			}
 		} catch (Throwable ex) {
 			ex.printStackTrace();
 		}
 	}
 	
-	
+
 	@SuppressWarnings("unchecked")
 	public ArrayList<SceneUnit> getRuntimeUnits() {
 		Vector<SceneUnitTag> list = scene_container.getWorld()
@@ -414,7 +415,12 @@ public class SceneEditor extends AbstractFrame implements ActionListener, Window
 			};
 			SceneAbilityManager sam = SceneAbilityManager.getManager();
 			if (sam != null) {
-				Set<CellEditAdapter<?>>	sa = sam.getEditAdapters();
+				Set<CellEditAdapter<?>>	sa = new LinkedHashSet<CellEditAdapter<?>>();
+				for (PropertyEditor<?> p : sam.getEditAdapters()) {
+					if (p instanceof CellEditAdapter<?>) {
+						sa.add((CellEditAdapter<?>)p);
+					}
+				}
 				if (sa != null) {
 					CellEditAdapter<?> append[] = new CellEditAdapter<?>[sa.size()];
 					append = sa.toArray(append);
@@ -617,6 +623,11 @@ public class SceneEditor extends AbstractFrame implements ActionListener, Window
 			this.enable_input				= true;
 			this.getWorld().runtime_sort 	= false;
 		}
+
+		@Override
+		protected boolean enable_click_focus() {
+			return true;
+		}
 		
 		@Override
 		protected void onCameraChanged(double cx, double cy, double cw, double ch) {
@@ -632,10 +643,10 @@ public class SceneEditor extends AbstractFrame implements ActionListener, Window
 		@Override
 		protected void renderAfter(Graphics2D g)
 		{
-			AffineTransform trans = g.getTransform();
+			g.pushTransform();
 			// 添加单位时显示在鼠标上的单位
 			renderAddUnitObject(g);
-			g.setTransform(trans);
+			g.popTransform();
 			
 			g.setColor(Color.WHITE);
 			Drawing.drawStringBorder(g, "FPS="+getRoot().getFPS(), 1, 1, 0);
@@ -707,7 +718,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener, Window
 			{
 				if (getSelectedUnit()!=null && pre_right_pos!=null) {
 					if ((pre_right_pos.x == getMouseX() && pre_right_pos.y == getMouseY())) {
-						if (getSelectedUnit().getGameUnit().isHitMouse()) {
+						if (getSelectedUnit().getGameUnit().isCatchedMouse()) {
 							try{
 								Menu menu = ((SceneUnitTag<?>)getSelectedUnit()).getEditMenu();
 								menu.show(scene_panel, getMouseX(), getMouseY());
@@ -810,18 +821,18 @@ public class SceneEditor extends AbstractFrame implements ActionListener, Window
 					}
 					CCD cd = csprite.getFrameBounds();
 					if (mask == null) {
-						mask = Tools.createImage(cd.getWidth(), cd.getHeight());
+						mask = com.g2d.Tools.createImage(cd.getWidth(), cd.getHeight());
 						Graphics2D g2d = mask.createGraphics();
-						csprite.render(new CGraphicsImage(g2d), -cd.X1, -cd.Y1);
+						csprite.render(g2d, -cd.X1, -cd.Y1);
 						g2d.dispose();
 						if (is_png) {
-							mask = Tools.createAlpha(mask,
+							mask = com.g2d.Tools.createAlpha(mask,
 									default_mask_alpha, 
 									default_mask_color);
 						}
 					}
 					if (mask != null) {
-						g.drawImage(mask, cd.X1, cd.Y1, this);
+						g.drawImage(mask, cd.X1, cd.Y1);
 					}
 				}
 			}
@@ -835,33 +846,33 @@ public class SceneEditor extends AbstractFrame implements ActionListener, Window
 	{
 		private static final long serialVersionUID = 1L;
 		
-		BufferedImage				snapshot;
+		java.awt.image.BufferedImage snapshot;
 		
 		public SceneMiniMap() 
 		{			
-			this.setMinimumSize(new Dimension(200, 200));
+			this.setMinimumSize(new java.awt.Dimension(200, 200));
 			this.addMouseMotionListener(this);
 			this.addMouseListener(this);
 		}
 		
 		@Override
-		public void update(Graphics g) {
+		public void update(java.awt.Graphics g) {
 			paint(g);
 		}
 		
 		@Override
-		public void paint(Graphics sg)
+		public void paint(java.awt.Graphics sg)
 		{
-			Graphics2D g = (Graphics2D)sg;
+			java.awt.Graphics2D g = (java.awt.Graphics2D)sg;
 
 			double rate_x = ((double)getWidth()) / scene_container.getWorld().getWidth();
 			double rate_y = ((double)getHeight())/ scene_container.getWorld().getHeight();
 			// draw bg
 			if (snapshot == null || snapshot.getWidth() != getWidth() || snapshot.getHeight() != getHeight()){
-				snapshot = scene_container.getWorld().createMiniMap(getWidth(), getHeight());
-				Graphics2D mg = (Graphics2D)snapshot.getGraphics();
+				snapshot = Tools.unwrap(scene_container.getWorld().createMiniMap(getWidth(), getHeight()));
+				java.awt.Graphics2D mg = (java.awt.Graphics2D)snapshot.getGraphics();
 				Tools.setAlpha(mg, 0.3f);
-				mg.setColor(Color.BLACK);
+				mg.setColor(java.awt.Color.BLACK);
 				mg.fillRect(0, 0, getWidth(), getHeight());
 				mg.dispose();
 //				System.out.println("create snapshot !");
@@ -875,19 +886,20 @@ public class SceneEditor extends AbstractFrame implements ActionListener, Window
 						double ty = (u.getGameUnit().y * rate_y);
 						g.translate(tx, ty);
 						if (getSelectedUnit() != u) {
-							g.setColor(u.getSnapColor());
+							g.setColor(new java.awt.Color(u.getSnapColor().getARGB(), true));
 						} else {
-							g.setColor(Color.WHITE);
+							g.setColor(java.awt.Color.WHITE);
 						}
-						g.fill(u.getSnapShape());
+						Rectangle rect = u.getSnapShape().getBounds();
+						g.fillRect(rect.x, rect.y, rect.width, rect.height);
 						g.translate(-tx, -ty);
 					}
 				}
 			}
 			// draw camera shape
 			{
-				Color camera_bounds_color = Color.WHITE;
-				Rectangle2D.Double camera_bounds = new Rectangle2D.Double(
+				java.awt.Color camera_bounds_color = java.awt.Color.WHITE;
+				java.awt.geom.Rectangle2D.Double camera_bounds = new java.awt.geom.Rectangle2D.Double(
 						scene_container.getCameraX() * rate_x,
 						scene_container.getCameraY() * rate_y,
 						scene_container.getCameraWidth() * rate_x,
@@ -1016,6 +1028,8 @@ public class SceneEditor extends AbstractFrame implements ActionListener, Window
 	{
 		private static final long serialVersionUID = 1L;
 		
+		private Pair<CPJSprite, CellSprite> selected_sprite = new Pair<CPJSprite, CellSprite>();
+
 		public SceneActorAdapter() {
 			super(SceneActor.class);
 		}
@@ -1056,7 +1070,12 @@ public class SceneEditor extends AbstractFrame implements ActionListener, Window
 		public CellSprite getToolSprite() {
 			if (SelectUnitTool.getUnitTool().isVisible()) {
 				if (getSelectedPage() == this && SelectUnitTool.getUnitTool().getSelectedUnit() != null) {
-					return SelectUnitTool.getUnitTool().getSelectedUnit().getCPJSprite().getDisplayObject();
+					CPJSprite cpj = SelectUnitTool.getUnitTool().getSelectedUnit().getCPJSprite();
+					if (cpj != selected_sprite.getKey()) {
+						selected_sprite.setKey(cpj);
+						selected_sprite.setValue(cpj.createCellSprite());
+					}
+					return selected_sprite.getValue();
 				}
 			}
 			return null;
@@ -1124,6 +1143,8 @@ public class SceneEditor extends AbstractFrame implements ActionListener, Window
 	{
 		private static final long serialVersionUID = 1L;
 		
+		private Pair<CPJSprite, CellSprite> selected_sprite = new Pair<CPJSprite, CellSprite>();
+		
 		public SceneImmutableAdapter() {
 			super(SceneImmutable.class);
 		}
@@ -1164,7 +1185,12 @@ public class SceneEditor extends AbstractFrame implements ActionListener, Window
 		public CellSprite getToolSprite() {
 			if (SelectUnitTool.getUnitTool().isVisible()) {
 				if (getSelectedPage() == this && SelectUnitTool.getUnitTool().getSelectedSpr() != null) {
-					return SelectUnitTool.getUnitTool().getSelectedSpr().getDisplayObject();
+					CPJSprite cpj = SelectUnitTool.getUnitTool().getSelectedSpr();
+					if (cpj != selected_sprite.getKey()) {
+						selected_sprite.setKey(cpj);
+						selected_sprite.setValue(cpj.createCellSprite());
+					}
+					return selected_sprite.getValue();
 				}
 			}
 			return null;
@@ -1313,7 +1339,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener, Window
 				int sy = Math.min(add_region_sp.y, add_region_dp.y);
 				int sw = Math.abs(add_region_sp.x- add_region_dp.x);
 				int sh = Math.abs(add_region_sp.y- add_region_dp.y);
-				g.setColor(new Color(0x8000ff00,true));
+				g.setColor(new Color(0x8000ff00));
 				g.fillRect(sx, sy, sw, sh);
 				g.translate(+scene.getCameraX(), +scene.getCameraY());
 			}

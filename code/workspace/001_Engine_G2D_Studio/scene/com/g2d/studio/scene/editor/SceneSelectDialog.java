@@ -11,13 +11,13 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import com.g2d.awt.util.AbstractOptionDialog;
 import com.g2d.editor.property.ObjectPropertyEdit;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.Studio;
 import com.g2d.studio.scene.entity.SceneNode;
 import com.g2d.studio.swing.G2DList;
 import com.g2d.studio.swing.G2DListItem;
-import com.g2d.util.AbstractOptionDialog;
 
 public class SceneSelectDialog extends AbstractOptionDialog<SceneNode> implements PropertyCellEdit<Integer>
 {

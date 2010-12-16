@@ -18,7 +18,6 @@ import com.cell.rpg.scene.script.trigger.Event;
 import com.g2d.studio.Studio;
 import com.g2d.studio.swing.G2DTree;
 import com.g2d.studio.swing.G2DTreeNode;
-import com.g2d.util.TextEditor;
 
 @SuppressWarnings("serial")
 public class TriggerPanelEditable extends TriggerPanel<SceneTriggerEditable>

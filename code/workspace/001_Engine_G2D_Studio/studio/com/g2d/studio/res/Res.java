@@ -4,7 +4,9 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 
 import com.cell.CIO;
-import com.g2d.Tools;
+
+import com.g2d.awt.util.*;
+
 
 public class Res 
 {

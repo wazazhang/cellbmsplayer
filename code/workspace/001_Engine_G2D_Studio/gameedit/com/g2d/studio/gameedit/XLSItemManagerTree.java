@@ -8,7 +8,7 @@ import javax.swing.JButton;
 import javax.swing.JProgressBar;
 
 import com.cell.rpg.template.TItem;
-import com.g2d.Tools;
+import com.g2d.awt.util.Tools;
 import com.g2d.studio.Studio;
 import com.g2d.studio.Studio.ProgressForm;
 import com.g2d.studio.gameedit.dynamic.DItemList;

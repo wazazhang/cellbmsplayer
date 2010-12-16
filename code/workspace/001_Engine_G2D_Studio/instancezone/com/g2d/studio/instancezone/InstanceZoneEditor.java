@@ -40,7 +40,6 @@ import com.cell.rpg.scene.SceneUnit;
 import com.cell.rpg.scene.ability.ActorTransport;
 import com.cell.rpg.scene.instance.InstanceZone;
 import com.cell.rpg.scene.instance.InstanceZone.BindedScene;
-import com.g2d.Tools;
 import com.g2d.studio.Config;
 import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.ObjectViewer;
@@ -51,8 +50,8 @@ import com.g2d.studio.scene.editor.SceneSelectDialog;
 import com.g2d.studio.scene.entity.SceneNode;
 import com.g2d.studio.scene.script.TriggerGeneratorPanel;
 import com.g2d.studio.scene.script.TriggersEditor;
-import com.g2d.util.AbstractDialog;
-import com.g2d.util.TextEditor;
+import com.g2d.awt.util.*;
+
 
 @SuppressWarnings("serial")
 public class InstanceZoneEditor extends ObjectViewer<InstanceZoneNode> implements ActionListener, AncestorListener

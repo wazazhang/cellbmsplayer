@@ -5,7 +5,8 @@ import java.awt.Image;
 import javax.swing.JFrame;
 
 import com.g2d.studio.Studio.ProgressForm;
-import com.g2d.util.AbstractFrame;
+
+import com.g2d.awt.util.*;
 
 public abstract class ManagerForm extends JFrame
 {

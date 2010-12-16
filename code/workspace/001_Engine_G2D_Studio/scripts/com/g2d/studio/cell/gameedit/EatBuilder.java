@@ -51,8 +51,9 @@ import com.cell.script.js.JSManager;
 import com.cell.util.Pair;
 import com.cell.util.PropertyGroup;
 import com.cell.util.zip.ZipUtil;
-import com.g2d.Tools;
+import com.g2d.Engine;
 import com.g2d.cell.CellGameEditWrap;
+import com.g2d.cell.CellStreamTiles;
 import com.g2d.studio.Config;
 import com.g2d.studio.Studio;
 import com.g2d.studio.StudioResource;
@@ -403,7 +404,7 @@ public class EatBuilder extends Builder
 	 * 根据图片组名字确定读入jpg或png
 	 * @author WAZA
 	 */
-	static class OutputDirTiles extends StreamTiles
+	static class OutputDirTiles extends CellStreamTiles
 	{
 		public OutputDirTiles(ImagesSet img, StudioResource resource) {
 			super(img, resource);
@@ -445,11 +446,11 @@ public class EatBuilder extends Builder
 				if (img.ClipsW[i] > 0 && img.ClipsH[i] > 0) {
 					try {
 						if (is_png_mask) {
-							images[i] = new CImage(Tools.decodeImageMask(
-									set.getOutput().loadRes(img.Name+"/"+i+".png", null), 0));
+							images[i] = com.g2d.Tools.decodeImageMask(
+									set.getOutput().loadRes(img.Name+"/"+i+".png", null), 0);
 						} else {
-							images[i] = new CImage(Tools.readImage(new ByteArrayInputStream(
-									set.getOutput().loadRes(img.Name+"/"+i+"."+img.Name, null))));
+							images[i] = Engine.getEngine().createImage(new ByteArrayInputStream(
+									set.getOutput().loadRes(img.Name+"/"+i+"."+img.Name, null)));
 						}
 					} catch (Exception err) {
 //						err.printStackTrace();
@@ -470,9 +471,9 @@ public class EatBuilder extends Builder
 						ByteArrayInputStream idata = files.get(i+"."+img.Name);
 						try { 
 							if (is_png_mask) {
-								images[i] = new CImage(Tools.decodeImageMask(CIO.readStream(idata), 0));
+								images[i] = com.g2d.Tools.decodeImageMask(CIO.readStream(idata), 0);
 							} else {
-								images[i] = new CImage(Tools.readImage(idata));
+								images[i] = Engine.getEngine().createImage(idata);
 							}
 						} catch (Exception err) {
 //							err.printStackTrace();
@@ -535,7 +536,7 @@ public class EatBuilder extends Builder
 		
 		if (args.length > 0)
 		{
-			CAppBridge.init();
+			
 			EatBuilder builder = (EatBuilder)Builder.setBuilder(EatBuilder.class.getName());
 		
 			if (args.length == 1) 

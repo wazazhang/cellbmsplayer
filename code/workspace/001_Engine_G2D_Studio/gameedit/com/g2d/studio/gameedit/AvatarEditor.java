@@ -7,6 +7,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -20,6 +22,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 
 import com.cell.CUtil;
+import com.g2d.awt.util.*;
 import com.g2d.cell.CellSprite;
 import com.g2d.display.Sprite;
 import com.g2d.display.event.MouseWheelEvent;
@@ -31,8 +34,6 @@ import com.g2d.studio.cpj.CPJResourceSelectDialog;
 import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.cpj.entity.CPJSprite;
 import com.g2d.studio.gameedit.dynamic.DAvatar;
-import com.g2d.util.AbstractFrame;
-import com.g2d.util.Drawing;
 
 
 @SuppressWarnings("serial")
@@ -40,35 +41,34 @@ public class AvatarEditor extends AbstractFrame
 {
 	final AvatarSplit split = new AvatarSplit();
 	
-	public AvatarEditor() {
+	public AvatarEditor(DAvatar avatar) {
 		super.setSize(500, 500);
 		super.add(split);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		this.split.setAvatar(avatar);
+		this.split.stage_view.start();
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				split.stage_view.stop();
+			}
+		});
 	}
 	
-	public void setAvatar(DAvatar avatar) {
-		split.setAvatar(avatar);
-	}
 	
-	public CPJIndex<CPJSprite> getSelectedPart() {
+	private CPJIndex<CPJSprite> getSelectedPart() {
 		return split.getSelectedPart();
 	}
 	
-	public CellSprite getSelectedSprite() {
+	private CellSprite getSelectedSprite() {
 		return split.getSelectedSprite();
-	}
-	
-	@Override
-	public void setVisible(boolean aFlag) {
-		super.setVisible(aFlag);
-		split.start(aFlag);
 	}
 	
 	class AvatarSplit extends JSplitPane implements ActionListener
 	{
 		ReentrantLock 		lock 			= new ReentrantLock();
 		DisplayObjectPanel	stage_view 		= new DisplayObjectPanel(
-				new DisplayObjectPanel.ObjectStage(new Color(Config.DEFAULT_BACK_COLOR, false)));
+				new DisplayObjectPanel.ObjectStage(new com.g2d.Color(Config.DEFAULT_BACK_COLOR)));
 		AvatarSprite		avatar_group	= new AvatarSprite();
 		DAvatar 			current_avatar;
 		
@@ -92,7 +92,7 @@ public class AvatarEditor extends AbstractFrame
 				right.add(stage_view);
 				stage_view.getStage().addChild(avatar_group);
 				stage_view.getCanvas().setFPS(Config.DEFAULT_FPS);
-				stage_view.getCanvas().getParent().addMouseListener(new MouseAdapter() {
+				stage_view.getSimpleCanvas().addMouseListener(new MouseAdapter() {
 					@Override
 					public void mousePressed(MouseEvent e) {
 						part_list.clearSelection();
@@ -117,7 +117,7 @@ public class AvatarEditor extends AbstractFrame
 			}
 		}
 	
-		public void setAvatar(DAvatar avatar)
+		private void setAvatar(DAvatar avatar)
 		{
 			synchronized(lock)
 			{
@@ -134,17 +134,7 @@ public class AvatarEditor extends AbstractFrame
 			this.repaint();
 		}
 		
-		public void start(boolean aFlag) {
-			if (aFlag) {
-				stage_view.start();
-			} else {
-				stage_view.stop();
-				synchronized(lock) {
-					this.current_avatar = null;
-					this.avatar_group.clear();
-				}
-			}
-		}
+		
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -182,7 +172,7 @@ public class AvatarEditor extends AbstractFrame
 		}
 		
 		@SuppressWarnings("unchecked")
-		public CPJIndex<CPJSprite> getSelectedPart() {
+		private CPJIndex<CPJSprite> getSelectedPart() {
 			Object key = part_list.getSelectedValue();
 			try{
 				return (CPJIndex<CPJSprite>)key;
@@ -190,7 +180,7 @@ public class AvatarEditor extends AbstractFrame
 			return null;
 		}
 		
-		public CellSprite getSelectedSprite() {
+		private CellSprite getSelectedSprite() {
 			Object key = part_list.getSelectedValue();
 			CellSprite selected = key == null ? null : avatar_group.avatar_map.get(key);
 			return selected;
@@ -216,14 +206,14 @@ public class AvatarEditor extends AbstractFrame
 		public void setBody(CPJIndex<CPJSprite>	body_index) {
 			if (body_index!=null) {
 				CPJSprite body = Studio.getInstance().getCPJResourceManager().getNode(body_index);
-				body_spr = body.getDisplayObject();
+				body_spr = body.createCellSprite();
 				addChild(body_spr);
 			}
 		}
 		
 		public void addPart(CPJIndex<CPJSprite> index) {
 			CPJSprite spr = Studio.getInstance().getCPJResourceManager().getNode(index);
-			CellSprite cspr = spr.getDisplayObject();
+			CellSprite cspr = spr.createCellSprite();
 			addChild(cspr);
 			avatar_map.put(index, cspr);
 		}
@@ -247,7 +237,7 @@ public class AvatarEditor extends AbstractFrame
 		}
 		
 		@Override
-		public void render(Graphics2D g) 
+		public void render(com.g2d.Graphics2D g) 
 		{
 			body_spr.getSprite().setCurrentAnimate(current_animate);
 			body_spr.getSprite().nextCycFrame();
@@ -291,14 +281,14 @@ public class AvatarEditor extends AbstractFrame
 				}
 				
 				if (error) {
-					g.setColor(Color.RED);
+					g.setColor(com.g2d.Color.RED);
 				} else if (selected == cspr) {
-					g.setColor(Color.WHITE);
+					g.setColor(com.g2d.Color.WHITE);
 				} else {
-					g.setColor(Color.GREEN);
+					g.setColor(com.g2d.Color.GREEN);
 				}
 				
-				Drawing.drawStringBorder(g, 
+				com.g2d.util.Drawing.drawStringBorder(g, 
 						CUtil.snapStringRightSize("资源:" + cspr.user_data, 20, ' ') + "   " +
 						CUtil.snapStringRightSize("动画:" + anim+"/"+animc, 10, ' ') + "   " +
 						CUtil.snapStringRightSize("帧:" + fram+"/"+framc, 10, ' ')   + "   " + 

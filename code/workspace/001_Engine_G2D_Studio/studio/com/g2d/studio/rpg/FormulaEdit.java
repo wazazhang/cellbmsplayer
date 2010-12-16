@@ -45,6 +45,8 @@ import com.cell.rpg.quest.formula.TriggerUnitProperty;
 import com.cell.rpg.quest.formula.QuestStateProperty.QuestStateField;
 import com.cell.util.Pair;
 import com.g2d.annotation.Property;
+import com.g2d.awt.util.AbstractDialog;
+import com.g2d.awt.util.AbstractOptionDialog;
 import com.g2d.editor.property.ListEnumEdit;
 import com.g2d.editor.property.ObjectPropertyEdit;
 import com.g2d.editor.property.PropertyCellEdit;
@@ -60,8 +62,6 @@ import com.g2d.studio.gameedit.template.XLSUnit;
 import com.g2d.studio.item.property.ItemPropertySavedTypeSelectComboBox;
 import com.g2d.studio.quest.QuestSelectCellEditComboBox;
 import com.g2d.studio.scene.editor.SceneListCellEditInteger;
-import com.g2d.util.AbstractDialog;
-import com.g2d.util.AbstractOptionDialog;
 
 public class FormulaEdit extends AbstractDialog implements PropertyCellEdit<AbstractValue>, ItemListener, ActionListener
 {

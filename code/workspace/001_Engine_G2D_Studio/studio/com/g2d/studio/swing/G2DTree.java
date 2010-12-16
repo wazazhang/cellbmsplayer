@@ -48,10 +48,7 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import com.g2d.studio.res.Res;
-import com.g2d.util.AbstractDialog;
-import com.g2d.util.AbstractFrame;
-import com.g2d.util.AbstractOptionDialog;
-import com.g2d.util.AbstractOptionFrame;
+import com.g2d.awt.util.*;
 
 
 public class G2DTree extends JTree implements G2DDragDropListener<G2DTree>

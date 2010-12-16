@@ -24,13 +24,12 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import com.cell.rpg.scene.script.SceneScriptManager;
 import com.cell.rpg.struct.InstanceZoneScriptCode;
+import com.g2d.awt.util.AbstractOptionDialog;
 import com.g2d.editor.property.CellEditAdapter;
 import com.g2d.editor.property.ObjectPropertyEdit;
 import com.g2d.editor.property.PropertyCellEdit;
 import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.ObjectSelectCellEditInteger;
-import com.g2d.util.AbstractDialog;
-import com.g2d.util.AbstractOptionDialog;
 
 @SuppressWarnings("serial")
 public class InstanceZoneScriptCodeEditor extends AbstractOptionDialog<InstanceZoneScriptCode> implements 

@@ -15,7 +15,6 @@ import javax.swing.JToolBar;
 import com.cell.io.CFile;
 import com.cell.rpg.RPGObject;
 import com.cell.rpg.io.RPGSerializationListener;
-import com.g2d.Tools;
 import com.g2d.studio.Config;
 import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.ObjectViewer;
@@ -24,8 +23,8 @@ import com.g2d.studio.quest.events.QuestEventView;
 import com.g2d.studio.quest.items.QuestItemView;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.swing.G2DWindowToolBar;
-import com.g2d.util.AbstractFrame;
-import com.g2d.util.TextEditor;
+import com.g2d.awt.util.*;
+
 
 public class QuestEditor extends ObjectViewer<QuestNode> implements RPGSerializationListener, ActionListener
 {	

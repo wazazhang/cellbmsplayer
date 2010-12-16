@@ -26,7 +26,7 @@ import com.cell.util.PairEntry;
 import com.g2d.editor.property.ListEnumEdit;
 import com.g2d.editor.property.BaseObjectPropertyPanel.NullEditor;
 import com.g2d.studio.Studio;
-import com.g2d.util.AbstractOptionDialog;
+import com.g2d.awt.util.*;
 
 @SuppressWarnings("serial")
 public class InstanceZoneDataTable extends JPanel implements ActionListener

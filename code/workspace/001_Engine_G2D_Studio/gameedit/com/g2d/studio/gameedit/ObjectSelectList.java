@@ -14,7 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
 
-import com.g2d.Tools;
+import com.g2d.awt.util.Tools;
 import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.entity.ObjectNode;
 

@@ -1,13 +1,7 @@
 package com.g2d.studio.scene.units;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.Component;
-import java.awt.Composite;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.Shape;
-import java.awt.Stroke;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -20,13 +14,22 @@ import com.cell.math.MathVector;
 import com.cell.rpg.instance.zones.ability.InstanceZoneUnitKillAction;
 import com.cell.rpg.instance.zones.ability.InstanceZoneUnitVisible;
 import com.cell.rpg.scene.Point;
+import com.g2d.BasicStroke;
+import com.g2d.BufferedImage;
+import com.g2d.Color;
+import com.g2d.Composite;
+import com.g2d.Graphics2D;
+import com.g2d.Stroke;
 import com.g2d.annotation.Property;
+import com.g2d.awt.util.Tools;
 import com.g2d.cell.game.Scene.WorldMap;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.TextTip;
 import com.g2d.display.Tip;
 import com.g2d.display.ui.Menu;
 import com.g2d.editor.DisplayObjectEditor;
+import com.g2d.geom.Rectangle;
+import com.g2d.geom.Shape;
 import com.g2d.studio.Version;
 import com.g2d.studio.gameedit.ObjectAdapters;
 import com.g2d.studio.quest.QuestCellEditAdapter;
@@ -49,7 +52,7 @@ public class ScenePoint extends com.g2d.game.rpg.Unit implements SceneUnitTag<Po
 	final HashSet<ScenePoint>	next_nodes 	= new HashSet<ScenePoint>();
 	
 	@Property("color")
-	Color 						color 		= new Color(0xffffff00, true);
+	Color 						color 		= new Color(0xffffff00);
 	Rectangle 					snap_shape 	= new Rectangle(-1, -1, 2, 2);
 
 	TextTip tip = new TextTip();
@@ -77,7 +80,7 @@ public class ScenePoint extends com.g2d.game.rpg.Unit implements SceneUnitTag<Po
 					point.x,
 					point.y);
 			this.color = new Color(
-					point.color, true);
+					point.color);
 			this.alpha = point.alpha;
 		}
 		if (!editor.getGameScene().getWorld().addChild(this)){
@@ -91,7 +94,7 @@ public class ScenePoint extends com.g2d.game.rpg.Unit implements SceneUnitTag<Po
 		point.name		= getID() + "";
 		point.x			= getX();
 		point.y			= getY();
-		point.color		= color.getRGB();
+		point.color		= color.getARGB();
 		point.alpha		= alpha;
 		return point;
 	}
@@ -216,6 +219,8 @@ public class ScenePoint extends com.g2d.game.rpg.Unit implements SceneUnitTag<Po
 	}
 	
 //	--------------------------------------------------------------------------------------------------------
+
+	BufferedImage img_script = Tools.wrap_g2d(Res.img_script);
 	
 	@Override
 	protected void renderAfter(Graphics2D g) 
@@ -225,7 +230,7 @@ public class ScenePoint extends com.g2d.game.rpg.Unit implements SceneUnitTag<Po
 		if (editor!=null) 
 		{
 			if (getUnit().getBindedTriggers().getTriggerCount() > 0) {
-				g.drawImage(Res.img_script, 0, 0, null);
+				g.drawImage(img_script, 0, 0);
 			}
 			if (editor.getSelectedPage().isSelectedType(getClass())) 
 			{
@@ -237,8 +242,8 @@ public class ScenePoint extends com.g2d.game.rpg.Unit implements SceneUnitTag<Po
 				}
 				if (!next_nodes.isEmpty()) {
 					synchronized(next_nodes) {
-						pushObject(g.getComposite());
-						pushObject(g.getStroke());
+						g.pushComposite();
+						g.popComposite();
 						setAlpha(g, talpha);
 						g.setStroke(new BasicStroke(2));
 						int[] tx3 = new int[]{-4,-20,-20};
@@ -255,7 +260,7 @@ public class ScenePoint extends com.g2d.game.rpg.Unit implements SceneUnitTag<Po
 							g.translate(-nx, -ny);
 						}
 						g.setStroke(popObject(Stroke.class));
-						g.setComposite(popObject(Composite.class));
+						g.setAlpha(popObject(Float.class));
 					}
 				}
 				g.fill(local_bounds);
@@ -271,11 +276,9 @@ public class ScenePoint extends com.g2d.game.rpg.Unit implements SceneUnitTag<Po
 				}
 				this.enable = editor.isToolSelect();
 			} else {
-				Composite composite = g.getComposite();
 				setAlpha(g, alpha * 0.5f);
 				g.setColor(color);
 				g.fill(local_bounds);
-				g.setComposite(composite);
 				this.enable = false;
 			}
 			Util.drawScript(g, editor, this);

@@ -23,10 +23,10 @@ import com.cell.rpg.scene.SceneTrigger;
 import com.cell.rpg.scene.TriggersPackage;
 import com.cell.rpg.scene.script.anno.EventType;
 import com.cell.rpg.scene.script.trigger.Event;
+import com.g2d.awt.util.TextEditor;
 import com.g2d.studio.res.Res;
 import com.g2d.studio.swing.G2DTree;
 import com.g2d.studio.swing.G2DTreeNode;
-import com.g2d.util.TextEditor;
 
 @SuppressWarnings("serial")
 public abstract class TriggerPanel<T extends SceneTrigger> extends JPanel implements AncestorListener

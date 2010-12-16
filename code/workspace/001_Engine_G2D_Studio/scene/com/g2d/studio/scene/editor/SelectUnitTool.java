@@ -27,6 +27,7 @@ import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 
 import com.g2d.Tools;
+import com.g2d.awt.util.AbstractFrame;
 import com.g2d.studio.Studio;
 import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.cpj.entity.CPJSprite;
@@ -36,10 +37,9 @@ import com.g2d.studio.res.Res;
 import com.g2d.studio.swing.G2DTree;
 import com.g2d.studio.swing.G2DTreeNode;
 import com.g2d.studio.swing.G2DTreeNodeGroup;
-import com.g2d.util.AbstractFrame;
 
 @SuppressWarnings("serial")
-public abstract class SelectUnitTool extends AbstractFrame// implements ActionListener
+public abstract class SelectUnitTool extends AbstractFrame
 {
 	private static final long serialVersionUID = 1L;
 	

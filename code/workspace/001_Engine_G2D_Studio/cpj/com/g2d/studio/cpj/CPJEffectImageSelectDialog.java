@@ -21,13 +21,14 @@ import javax.swing.event.ListSelectionListener;
 
 import com.cell.gfx.IImage;
 import com.cell.gfx.IImages;
-import com.g2d.Tools;
+
 import com.g2d.studio.Studio;
 import com.g2d.studio.cpj.entity.CPJFile;
 import com.g2d.studio.cpj.entity.CPJSprite;
 import com.g2d.studio.swing.G2DList;
 import com.g2d.studio.swing.G2DListItem;
-import com.g2d.util.AbstractDialog;
+import com.g2d.awt.util.AbstractDialog;
+import com.g2d.awt.util.Tools;
 
 public class CPJEffectImageSelectDialog extends AbstractDialog implements ActionListener, ListSelectionListener
 {

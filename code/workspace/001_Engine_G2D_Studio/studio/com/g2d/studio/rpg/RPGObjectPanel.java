@@ -12,6 +12,7 @@ import com.cell.CUtil;
 import com.cell.rpg.RPGObject;
 import com.cell.rpg.quest.Quest;
 import com.cell.rpg.template.TemplateNode;
+import com.g2d.awt.util.AbstractDialog;
 import com.g2d.editor.property.CellEditAdapter;
 import com.g2d.editor.property.ObjectPropertyEdit;
 import com.g2d.editor.property.ObjectPropertyPanel;
@@ -20,7 +21,6 @@ import com.g2d.studio.Studio;
 import com.g2d.studio.icon.IconFile;
 import com.g2d.studio.icon.IconSelectCellEdit;
 import com.g2d.studio.scene.editor.SceneAbilityAdapters;
-import com.g2d.util.AbstractDialog;
 
 public class RPGObjectPanel extends JPanel
 {

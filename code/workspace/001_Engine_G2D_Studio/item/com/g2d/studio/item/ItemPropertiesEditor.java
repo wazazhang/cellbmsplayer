@@ -10,6 +10,7 @@ import javax.swing.JToolBar;
 
 import com.cell.rpg.item.ItemPropertyTypes;
 import com.g2d.editor.property.CellEditAdapter;
+import com.g2d.editor.property.PropertyEditor;
 import com.g2d.studio.Studio;
 import com.g2d.studio.gameedit.ObjectViewer;
 import com.g2d.studio.rpg.ItemCountCollectionEdit;
@@ -44,8 +45,12 @@ public class ItemPropertiesEditor extends ObjectViewer<ItemPropertiesNode> imple
 	private static CellEditAdapter<?>[] getAdapters() {
 		if (ItemPropertyTypes.getItemPropertyManager() != null && 
 			ItemPropertyTypes.getItemPropertyManager().getAllAdapters() != null) {
-			HashSet<CellEditAdapter<?>> ret = new HashSet<CellEditAdapter<?>>(
-					ItemPropertyTypes.getItemPropertyManager().getAllAdapters());
+			HashSet<CellEditAdapter<?>> ret = new HashSet<CellEditAdapter<?>>();
+			for (PropertyEditor<?> p : ItemPropertyTypes.getItemPropertyManager().getAllAdapters()) {
+				if (p instanceof CellEditAdapter<?>) {
+					ret.add((CellEditAdapter<?>)p);
+				}
+			}
 			ret.add(new ItemPropertiesAdapter.ValueRangeAdapter());
 			ret.add(new ItemFormulaEdit.ItemFormulaAdapter());
 			ret.add(new ItemRateCollectionEdit.ItemRateCollectionAdapter());

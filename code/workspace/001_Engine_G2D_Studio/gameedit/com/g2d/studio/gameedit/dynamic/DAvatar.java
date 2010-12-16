@@ -12,7 +12,7 @@ import javax.swing.JTabbedPane;
 import com.cell.rpg.display.Node;
 import com.cell.rpg.display.UnitNode;
 import com.cell.rpg.template.TAvatar;
-import com.g2d.Tools;
+import com.g2d.awt.util.Tools;
 import com.g2d.studio.cpj.CPJIndex;
 import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.cpj.entity.CPJSprite;
@@ -179,8 +179,7 @@ final public class DAvatar extends DynamicNode<TAvatar>
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (e.getSource() == btn_open_viewer) {
-					AvatarEditor editor = new AvatarEditor();
-					editor.setAvatar(DAvatar.this);
+					AvatarEditor editor = new AvatarEditor(DAvatar.this);
 					editor.setCenter();
 					editor.setVisible(true);
 				}

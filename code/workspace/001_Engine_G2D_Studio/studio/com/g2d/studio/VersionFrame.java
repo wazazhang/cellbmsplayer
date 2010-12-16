@@ -1,6 +1,7 @@
 package com.g2d.studio;
 
-import com.g2d.util.AbstractDialog;
+import com.g2d.awt.util.*;
+
 
 @SuppressWarnings("serial")
 public class VersionFrame extends AbstractDialog

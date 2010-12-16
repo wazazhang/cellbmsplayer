@@ -18,7 +18,7 @@ import com.cell.CUtil;
 import com.cell.io.BigIOSerialize;
 import com.cell.io.CFile;
 import com.cell.util.Pair;
-import com.g2d.Tools;
+import com.g2d.awt.util.Tools;
 import com.g2d.studio.Config;
 
 public class BuildProcess 

@@ -13,7 +13,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import com.g2d.util.AbstractDialog;
+import com.g2d.awt.util.*;
 
 public abstract class G2DListSelectDialog<T extends G2DListItem>  extends AbstractDialog implements ActionListener
 {

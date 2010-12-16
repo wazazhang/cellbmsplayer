@@ -1,8 +1,8 @@
 package com.g2d.studio.scene.effect;
 
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 
+import com.g2d.BufferedImage;
+import com.g2d.Graphics2D;
 import com.g2d.cell.game.SceneSprite;
 import com.g2d.display.Sprite;
 import com.g2d.studio.scene.units.SceneUnitTag;
@@ -47,7 +47,7 @@ public class AbilityEffectInfo extends Sprite
 		if (getParent() instanceof SceneSprite) {
 			setLocation(0, getParent().local_bounds.y);
 		}
-		g.drawImage(image, local_bounds.x, local_bounds.y, this);
+		g.drawImage(image, local_bounds.x, local_bounds.y);
 	}
 	
 }

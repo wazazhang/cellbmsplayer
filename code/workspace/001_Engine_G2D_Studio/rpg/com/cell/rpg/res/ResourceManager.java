@@ -1,6 +1,5 @@
 package com.cell.rpg.res;
 
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -34,6 +33,7 @@ import com.cell.rpg.template.TSkill;
 import com.cell.rpg.template.TUnit;
 import com.cell.sound.ISound;
 import com.cell.util.concurrent.ThreadPoolService;
+import com.g2d.BufferedImage;
 import com.g2d.Tools;
 import com.g2d.cell.CellSetResource;
 import com.g2d.cell.CellSetResourceManager;
@@ -607,8 +607,8 @@ public abstract class ResourceManager extends CellSetResourceManager
 	{
 		try
 		{
-			StreamTiles	images		= getEffectImages(cpj_project_name, cpj_sprite_name);
-			IImage						image		= images.getImage(index);
+			StreamTiles images = getEffectImages(cpj_project_name, cpj_sprite_name);
+			IImage image = images.getImage(index);
 			return Tools.createImage(image);
 		} catch (Exception err) {
 			err.printStackTrace();

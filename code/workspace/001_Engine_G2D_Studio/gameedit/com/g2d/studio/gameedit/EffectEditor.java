@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
@@ -37,8 +38,8 @@ import com.cell.rpg.particle.ParticleAppearanceType;
 import com.cell.rpg.particle.ParticleAppearanceType.DisplayNodeImage;
 import com.cell.rpg.particle.ParticleAppearanceType.DisplayNodeSprite;
 import com.cell.rpg.template.TEffect;
-import com.g2d.Tools;
 import com.g2d.annotation.Property;
+import com.g2d.awt.util.Tools;
 import com.g2d.display.particle.Layer;
 import com.g2d.display.particle.OriginShape;
 import com.g2d.display.particle.ParticleAffect;
@@ -400,10 +401,11 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 						appearance.cpj_image_id		= ret.index;
 						appearance.cpj_project_name	= ret.parent_name;
 						appearance.cpj_sprite_name	= ret.sprite_name;
-						appearance.setImage(ret.getEffectImage());
+						BufferedImage buff			= ret.getEffectImage();
+						appearance.setImage(Tools.wrap_g2d(buff));
 						layer.appearance = appearance;
 						if (appearance.getImage() != null) {
-							image_view.setIcon(Tools.createIcon(appearance.getImage()));
+							image_view.setIcon(Tools.createIcon(buff));
 						}
 					}
 				}
@@ -421,9 +423,10 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 								appearance.cpj_project_name,
 								appearance.cpj_sprite_name,
 								appearance.cpj_image_id);
-						appearance.setImage(ret.getEffectImage());
+						BufferedImage buff = ret.getEffectImage();
+						appearance.setImage(Tools.wrap_g2d(buff));
 						if (appearance.getImage() != null) {
-							image_view.setIcon(Tools.createIcon(appearance.getImage()));
+							image_view.setIcon(Tools.createIcon(buff));
 						}
 					}
 				}
@@ -467,7 +470,7 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 						}
 						appearance.cpj_project_name	= spr.parent.name;
 						appearance.cpj_sprite_name	= spr.name;
-						appearance.sprite			= spr.getDisplayObject().cspr;
+						appearance.sprite			= spr.createCSprite();
 						layer.appearance = appearance;
 						
 						sprite_anim_v.setModel(new SpinnerNumberModel(0, 0, appearance.sprite.getAnimateCount()-1, 1));
@@ -494,7 +497,7 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 						if (index != null) {
 							CPJSprite spr = Studio.getInstance().getCPJResourceManager().getNode(index);
 							if (spr != null) {
-								appearance.sprite			= spr.getDisplayObject().cspr;
+								appearance.sprite = spr.createCSprite();
 								sprite_anim_v.setModel(new SpinnerNumberModel(0, 0, appearance.sprite.getAnimateCount()-1, 1));
 								sprite_anim_v.setValue(appearance.sprite_anim);
 								sprite_anim_max.setText(

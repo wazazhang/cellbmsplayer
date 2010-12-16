@@ -23,9 +23,8 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.ListCellRenderer;
 
+import com.g2d.awt.util.AbstractDialog;
 import com.g2d.studio.res.Res;
-import com.g2d.util.AbstractDialog;
-import com.g2d.util.AbstractFrame;
 
 public class G2DList<T extends G2DListItem> extends JList
 {

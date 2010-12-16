@@ -4,14 +4,10 @@ import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import com.cell.CUtil;
-import com.cell.rpg.scene.script.SceneScriptManager;
-import com.cell.rpg.scene.script.Scriptable;
-import com.cell.rpg.scene.script.anno.EventType;
 import com.cell.rpg.scene.script.trigger.Event;
 
 /**
