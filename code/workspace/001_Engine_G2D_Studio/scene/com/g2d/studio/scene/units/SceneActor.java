@@ -278,7 +278,7 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 			if (getUnit().getBindedTriggers().getTriggerCount() > 0) {
 				g.drawImage(img_script, -img_script.getWidth()/2, local_bounds.y);
 			}
-			pushObject(g.getStroke());
+			g.pushStroke();
 			try
 			{
 				g.setStroke(new com.g2d.BasicStroke(2));
@@ -310,7 +310,7 @@ public class SceneActor extends SceneSprite implements SceneUnitTag<Actor>
 				}
 				
 			} finally {
-				g.setStroke(popObject(Stroke.class));
+				g.popStroke();
 			}
 			
 			Util.drawScript(g, editor, this);
