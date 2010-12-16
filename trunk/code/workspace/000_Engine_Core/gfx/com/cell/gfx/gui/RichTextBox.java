@@ -12,9 +12,6 @@ import com.cell.gfx.IInputListener;
 import com.cell.gfx.IGraphics.StringAttribute;
 import com.cell.gfx.IGraphics.StringLayer;
 import com.cell.gfx.IGraphics.StringAttribute.Attribute;
-import com.cell.gfx.gui.Form;
-import com.cell.gfx.gui.Item;
-import com.cell.gfx.gui.RichTextBox.Scripts.Instruction;
 import com.cell.script.objective.IObjectiveFactory;
 import com.cell.script.objective.Objective;
 
@@ -763,10 +760,7 @@ public class RichTextBox extends Item implements IInputListener
 	
 	public void render(IGraphics g, int x, int y) 
 	{
-		int cx = g.getClipX();
-		int cy = g.getClipY();
-		int cw = g.getClipWidth();
-		int ch = g.getClipHeight();
+		g.pushClip();
     	
 		if(Lable==null)return;
 		
@@ -801,7 +795,7 @@ public class RichTextBox extends Item implements IInputListener
 		
 		renderMultiText(g, x, y);
 		
-		g.setClip(cx,cy,cw,ch);
+		g.popClip();
 		
 	}
 	

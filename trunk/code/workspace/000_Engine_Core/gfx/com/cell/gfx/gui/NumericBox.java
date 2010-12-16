@@ -3,7 +3,6 @@ package com.cell.gfx.gui;
 import com.cell.CMath;
 import com.cell.gfx.IGraphics;
 import com.cell.gfx.IImage;
-import com.cell.gfx.IInputListener;
 
 public class NumericBox extends LabelBar 
 {

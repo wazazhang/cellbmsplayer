@@ -1,10 +1,8 @@
 package com.cell.gfx.gui;
 
-import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import com.cell.CMath;
 import com.cell.gfx.IGraphics;
 
 public class Menu extends Form 

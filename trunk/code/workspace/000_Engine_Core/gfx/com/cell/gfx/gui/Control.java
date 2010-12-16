@@ -1,10 +1,7 @@
 package com.cell.gfx.gui;
 
-import java.util.Hashtable;
-
 import com.cell.CUtil;
 import com.cell.gfx.AScreen;
-import com.cell.gfx.IGraphics;
 import com.cell.location.IStringCovert;
 import com.cell.util.MarkedHashtable;
 

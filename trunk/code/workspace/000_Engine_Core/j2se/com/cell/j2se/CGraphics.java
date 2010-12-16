@@ -15,6 +15,7 @@ import java.awt.image.BufferedImage;
 import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
 import java.util.ArrayList;
+import java.util.Stack;
 import java.util.Vector;
 
 import com.cell.CMath;
@@ -128,7 +129,7 @@ public class CGraphics implements IGraphics
 				m_graphics2d.setComposite(toset_composite);
 		}
 		
-		Image img = src.getSrc();
+		Image img = ((CImage)src).getSrc();
 
 		Rectangle rect = m_graphics2d.getClipBounds();
 
@@ -151,6 +152,18 @@ public class CGraphics implements IGraphics
 		m_graphics2d.setComposite(saved_composite);
 	}
 
+	private Stack<java.awt.Shape> stack_clip = new Stack<java.awt.Shape>();
+
+	@Override
+	public void pushClip() {
+		stack_clip.push(m_graphics2d.getClip());
+	}
+	
+	@Override
+	public void popClip() {
+		m_graphics2d.setClip(stack_clip.pop());
+	}
+	
 	final  public  int getClipX() 
 	{
 		Rectangle b = m_graphics2d.getClipBounds();
@@ -240,7 +253,7 @@ public class CGraphics implements IGraphics
 				m_graphics2d.setComposite(toset_composite);
 		}
      
-		Image img = src.getSrc();
+		Image img = ((CImage)src).getSrc();
         
         if (transform == 0)
         {      	 
@@ -271,7 +284,7 @@ public class CGraphics implements IGraphics
 				m_graphics2d.setComposite(toset_composite);
 		}
 		
-		Image img = src.getSrc();
+		Image img = ((CImage)src).getSrc();
 
 		AffineTransform savedT = m_graphics2d.getTransform();
 		m_graphics2d.translate(x_dst, y_dst);

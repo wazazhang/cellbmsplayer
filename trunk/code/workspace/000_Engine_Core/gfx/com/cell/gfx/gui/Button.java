@@ -5,10 +5,6 @@ import java.util.Vector;
 
 import com.cell.gfx.IGraphics;
 import com.cell.gfx.IImage;
-import com.cell.gfx.IInputListener;
-import com.cell.gfx.gui.Command;
-import com.cell.gfx.gui.Form;
-import com.cell.gfx.gui.LabelBar;
 
 public class Button extends LabelBar 
 {
@@ -191,10 +187,7 @@ public class Button extends LabelBar
 		
 		//super.render(g, x, y);
 		{
-			int cx = g.getClipX();
-			int cy = g.getClipY();
-			int cw = g.getClipWidth();
-			int ch = g.getClipHeight();
+			g.pushClip();
 			g.clipRect(x , y , W + 1, H + 1);
 			
 			// back
@@ -210,7 +203,7 @@ public class Button extends LabelBar
 				renderIcon(g, x, y);
 			}
 			
-			g.setClip(cx,cy,cw,ch);
+			g.popClip();
 		}
 		
 		UserRect = rect;

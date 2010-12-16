@@ -7,8 +7,6 @@ import com.cell.CMath;
 import com.cell.CObject;
 import com.cell.gfx.IGraphics;
 import com.cell.gfx.IImage;
-import com.cell.gfx.game.CCD;
-import com.cell.gfx.gui.Item;
 
 public class ScrollBar extends CObject
 {
@@ -317,10 +315,7 @@ public class ScrollBar extends CObject
 	{
 		if(!IsVisible)return ;
 		
-		int cx = g.getClipX();
-		int cy = g.getClipY();
-		int cw = g.getClipWidth();
-		int ch = g.getClipHeight();
+		g.pushClip();
     	
 		X = x;
 		Y = y;
@@ -407,7 +402,7 @@ public class ScrollBar extends CObject
 			}
 		}
 		
-		g.setClip(cx,cy,cw,ch);
+		g.popClip();
 	
 		
 	}

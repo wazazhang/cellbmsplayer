@@ -1,6 +1,5 @@
 package com.cell.gfx.gui;
 
-import com.cell.CObject;
 import com.cell.gfx.IGraphics;
 
 /**

@@ -1,13 +1,8 @@
 package com.cell.gameedit.object;
 
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.Vector;
 
-import com.cell.CUtil;
 import com.cell.gameedit.SetObject;
-import com.cell.io.TextDeserialize;
-import com.cell.util.PropertyGroup;
 
 public class TableSet implements SetObject
 {

@@ -424,10 +424,7 @@ public class CCamera extends CUnit {
 	public void render(IGraphics g) {
 		if (!Visible)return;
 		
-		int cx = g.getClipX();
-		int cy = g.getClipY();
-		int cw = g.getClipWidth();
-		int ch = g.getClipHeight();
+		g.pushClip();
     	g.clipRect(WindowX,WindowY,WindowW,WindowH);
     	
 		if (IsBackBuffer)
@@ -502,7 +499,7 @@ public class CCamera extends CUnit {
 			}
 		}
 		
-		g.setClip(cx,cy,cw,ch);
+		g.popClip();
 	}
 
 	

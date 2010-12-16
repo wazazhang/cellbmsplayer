@@ -1,18 +1,9 @@
 package com.cell.gfx.gui;
 
-import java.awt.Color;
-import java.awt.font.TextAttribute;
-import java.text.AttributedString;
-import java.util.Vector;
-
 import com.cell.CMath;
-import com.cell.gfx.AScreen;
 import com.cell.gfx.GfxUtil;
 import com.cell.gfx.IGraphics;
 import com.cell.gfx.IInputListener;
-import com.cell.gfx.gui.Form;
-import com.cell.gfx.gui.Item;
-import com.cell.script.objective.Objective;
 
 public class TextBox extends Item implements IInputListener
 {
@@ -909,10 +900,7 @@ public class TextBox extends Item implements IInputListener
 	
 	public void render(IGraphics g, int x, int y) 
 	{
-		int cx = g.getClipX();
-		int cy = g.getClipY();
-		int cw = g.getClipWidth();
-		int ch = g.getClipHeight();
+		g.pushClip();
     	
 		if(Lable==null)return;
 		
@@ -950,7 +938,7 @@ public class TextBox extends Item implements IInputListener
 		
 		
 		
-		g.setClip(cx,cy,cw,ch);
+		g.popClip();
 		
 		if (FontName!=null){
 			g.setFont(prevFontName, prevFontSize);

@@ -3,9 +3,6 @@ package com.cell.gfx.gui;
 
 import com.cell.gfx.IGraphics;
 import com.cell.gfx.IImage;
-import com.cell.gfx.IInputListener;
-import com.cell.gfx.gui.Form;
-import com.cell.gfx.gui.Item;
 
 public class LabelBar extends Item 
 {
@@ -162,10 +159,7 @@ public class LabelBar extends Item
 	
 	public void render(IGraphics g, int x, int y)
 	{
-		int cx = g.getClipX();
-		int cy = g.getClipY();
-		int cw = g.getClipWidth();
-		int ch = g.getClipHeight();
+		g.pushClip();
 		g.clipRect(x , y , W + 1, H + 1);
 		
 		// back
@@ -177,7 +171,7 @@ public class LabelBar extends Item
 		// icon
 		renderIcon(g, x, y);
 		
-		g.setClip(cx,cy,cw,ch);
+		g.popClip();
 	}
 
 //	----------------------------------------------------------------------------------------------------------------

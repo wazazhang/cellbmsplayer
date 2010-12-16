@@ -2,7 +2,7 @@ package com.cell.gfx;
 
 
 
-import com.cell.*;
+import com.cell.CObject;
 
 
 public class CImages extends CObject implements IImages {

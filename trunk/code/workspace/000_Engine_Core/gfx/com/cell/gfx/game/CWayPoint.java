@@ -4,7 +4,6 @@ package com.cell.gfx.game;
 import java.io.Serializable;
 import java.util.Vector;
 
-
 import com.cell.CObject;
 import com.cell.gfx.IGraphics;
 

@@ -1,8 +1,6 @@
 package com.cell.gameedit.object;
 
-import com.cell.CUtil;
 import com.cell.gameedit.SetObject;
-import com.cell.gfx.game.CCD;
 
 
 public class MapSet implements SetObject

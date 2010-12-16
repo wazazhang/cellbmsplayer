@@ -6,7 +6,6 @@ import java.util.Vector;
 
 import com.cell.CObject;
 import com.cell.CUtil;
-import com.cell.IAppBridge;
 
 
 /**
@@ -1142,25 +1141,14 @@ abstract public class AScreen extends CObject
 	
 //	------------------------------------------------------------------------------------------------------
 //	paint refer
-	
-	static private Stack<int[]> ClipStack = new Stack<int[]>();
-	
-	static public int[] popClip(IGraphics g) {
-		if(ClipStack.size()>0){
-			int[] clip = ClipStack.pop();
-			g.setClip(clip[0],clip[1],clip[2],clip[3]);
-			return clip;
-		}
-		return null;
+		
+	static public void popClip(IGraphics g) {
+		g.popClip();
 	}
 
 	static public void pushClip(IGraphics g, int x, int y, int w, int h) {
-		int cx = g.getClipX();
-		int cy = g.getClipY();
-		int cw = g.getClipWidth();
-		int ch = g.getClipHeight();
 		g.setClip(x, y, w, h);
-		ClipStack.push(new int[]{cx, cy, cw, ch});
+		g.pushClip();
 	}
 
 	

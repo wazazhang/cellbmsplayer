@@ -4,7 +4,6 @@ package com.cell.gfx.game;
 import java.util.Hashtable;
 import java.util.Vector;
 
-
 import com.cell.CMath;
 import com.cell.CObject;
 import com.cell.CUtil;
@@ -255,10 +254,7 @@ public class CWorld extends CObject
 	{
 		if(!IsVisible)return ;
 		
-		int cx = g.getClipX();
-		int cy = g.getClipY();
-		int cw = g.getClipWidth();
-		int ch = g.getClipHeight();
+		g.pushClip();
     	g.clipRect(Camera.WindowX,Camera.WindowY,Camera.getWidth(),Camera.getHeight());
     	
     	int cpx = -Camera.X+Camera.WindowX;
@@ -274,7 +270,7 @@ public class CWorld extends CObject
 		
 		renderLight(g, cpx, cpy, cx2, cy2);
 		
-		g.setClip(cx,cy,cw,ch);
+		g.popClip();
 		
 	}
 	
