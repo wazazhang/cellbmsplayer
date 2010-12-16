@@ -26,6 +26,7 @@ import com.g2d.Font;
 import com.g2d.Graphics2D;
 import com.g2d.Image;
 import com.g2d.Paint;
+import com.g2d.RadialGradientPaint;
 import com.g2d.Stroke;
 import com.g2d.geom.AffineTransform;
 import com.g2d.geom.Ellipse;
@@ -50,7 +51,6 @@ public class AwtGraphics2D extends Graphics2D
 	private Font				cur_font;
 	private int					cur_font_h;
 	private AffineTransform		cur_trans;
-	private Stroke				cur_stroke;
 	
 	private Stack<java.awt.Shape> 					stack_clip 		= new Stack<java.awt.Shape>();
 	private Stack<java.awt.Composite> 				stack_comp 		= new Stack<java.awt.Composite>();
@@ -65,7 +65,6 @@ public class AwtGraphics2D extends Graphics2D
 		this.cur_color		= new Color(g2d.getColor().getRGB());
 		this.cur_font		= new AwtFont(g2d.getFont());
 		this.cur_font_h 	= g2d.getFontMetrics().getHeight();
-		this.cur_stroke	= new BasicStroke(1);
 		double[] flatmatrix = new double[6];
 		g2d.getTransform().getMatrix(flatmatrix);
 		this.cur_trans		= new AffineTransform(flatmatrix);
@@ -87,11 +86,7 @@ public class AwtGraphics2D extends Graphics2D
 	public void setComposite(Composite comp) {
 		
 	}
-
-	public Composite getComposite() {
-		return null;
-	}
-
+	
 	@Override
 	public void pushComposite() {
 		stack_comp.push(g2d.getComposite());
@@ -108,15 +103,26 @@ public class AwtGraphics2D extends Graphics2D
 //	-------------------------------------------------------------------------------------------------------------------------
 	
 	public void setPaint(Paint paint) {
+		if (paint instanceof RadialGradientPaint) {
+			RadialGradientPaint gp = (RadialGradientPaint)paint;
+			java.awt.Color[] colors = new java.awt.Color[gp.getColors().length];
+			for (int i=0; i<colors.length; i++) {
+				colors[i] = new java.awt.Color(gp.getColors()[i].getARGB(), true);
+			}
+			g2d.setPaint(new java.awt.RadialGradientPaint(
+					(float)gp.getPoint().getX(), 
+					(float)gp.getPoint().getY(),
+					gp.getRadius(),
+					gp.getFractions(),
+					colors
+			));
+		}
 	}
-
-	public Paint getPaint() {
-		return null;
-	}
-
+	
 	public void pushPaint() {
 		stack_paint.push(g2d.getPaint());
 	}
+	
 	public void popPaint() {
 		g2d.setPaint(stack_paint.pop());
 	}
@@ -126,14 +132,9 @@ public class AwtGraphics2D extends Graphics2D
 //	-------------------------------------------------------------------------------------------------------------------------
 	
 	public void setStroke(Stroke s) {
-		cur_stroke = s;
 		if (s instanceof BasicStroke) {
 			g2d.setStroke(new java.awt.BasicStroke(((BasicStroke)s).getSize()));
 		}
-	}
-
-	public Stroke getStroke() {
-		return cur_stroke;
 	}
 
 	public void pushStroke() {

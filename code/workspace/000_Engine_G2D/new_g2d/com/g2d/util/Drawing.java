@@ -13,27 +13,27 @@ public class Drawing
 {
 	final static public void fillPaintRect(Graphics2D g, Paint paint, int x, int y, int width, int height) 
 	{
-		Paint op = g.getPaint();
+		g.pushPaint();
 		g.translate(x, y);
 		try {
 			g.setPaint(paint);
 			g.fillRect(0, 0, width, height);
 		} finally {
 			g.translate(-x, -y);
-			g.setPaint(op);
+			g.popPaint();
 		}
 	}	
 	
 	final static public void fillPaint(Graphics2D g, Paint paint, int x, int y, Shape shape) 
 	{
-		Paint op = g.getPaint();
+		g.pushPaint();
 		g.translate(x, y);
 		try {
 			g.setPaint(paint);
 			g.fill(shape);
 		} finally {
 			g.translate(-x, -y);
-			g.setPaint(op);
+			g.popPaint();
 		}
 	}
 	

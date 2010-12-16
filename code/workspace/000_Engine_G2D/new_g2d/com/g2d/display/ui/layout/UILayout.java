@@ -339,7 +339,7 @@ public class UILayout extends DObject
 	{
 		if (blank) return;
 		
-		Paint old_paint = g.getPaint();
+		g.pushPaint();
 		g.translate(x, y);
 		try {
 			switch(Style)
@@ -367,7 +367,7 @@ public class UILayout extends DObject
 				break;
 			}
 		} finally {
-			g.setPaint(old_paint);
+			g.popPaint();
 			g.translate(-x, -y);
 		}
 	}
