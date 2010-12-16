@@ -1,7 +1,7 @@
 package com.g2d.util;
 
-import java.awt.Color;
-import java.awt.Graphics;
+import com.g2d.Color;
+import com.g2d.Graphics2D;
 
 public class Tracker
 {
@@ -59,7 +59,7 @@ public class Tracker
 		return HistoryMax;
 	}
 	
-	protected void drawMap(Graphics g, int x, int y, int w, int h) 
+	protected void drawMap(Graphics2D g, int x, int y, int w, int h) 
 	{
 		int[][] points = new int[track.length][2];
 		
@@ -80,18 +80,18 @@ public class Tracker
 		}
 	}
 	
-	protected void drawInfo(Graphics g, String infohead, int x, int y)
+	protected void drawInfo(Graphics2D g, String infohead, int x, int y)
 	{
 		g.drawString(infohead + getLastValue(), x, y);
 	}
 	
-	synchronized public void drawMap(Graphics g, Color lineColor, int x, int y, int w, int h)
+	synchronized public void drawMap(Graphics2D g, Color lineColor, int x, int y, int w, int h)
 	{
 		g.setColor(lineColor);
 		drawMap(g, x+1, y+1, w-2, h - 2 - 20);
 	}
 	
-	synchronized public void drawGrap(Graphics g, Color boardColor, Color lineColor, String infohead, int x, int y, int w, int h) 
+	synchronized public void drawGrap(Graphics2D g, Color boardColor, Color lineColor, String infohead, int x, int y, int w, int h) 
 	{
 		g.setColor(lineColor);
 		drawMap(g, x+1, y+1, w-2, h - 2 - 20);
@@ -126,7 +126,7 @@ public class Tracker
 			prewValue = value;
 		}
 		
-		protected void drawInfo(Graphics g, String infohead, int x, int y)
+		protected void drawInfo(Graphics2D g, String infohead, int x, int y)
 		{
 			int val = (int)(getLastValue() * 100);
 			int ved = val % 100;

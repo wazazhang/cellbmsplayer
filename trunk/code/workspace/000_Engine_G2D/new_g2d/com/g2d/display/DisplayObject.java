@@ -275,6 +275,13 @@ public abstract class DisplayObject implements Vector
 		return screen_y + y;
 	}
 	
+	final public Rectangle getScreenBounds(){
+		Rectangle rect = new Rectangle(local_bounds);
+		rect.x += local_bounds.x;
+		rect.y += local_bounds.y;
+		return rect;
+	}
+	
 //	-------------------------------------------------------------
 
 	/**表示鼠标是否在local_bounds内*/

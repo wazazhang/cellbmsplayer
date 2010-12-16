@@ -4,6 +4,25 @@ import com.g2d.geom.Rectangle;
 
 public interface Font
 {
+    /**
+     * The plain style constant.
+     */
+    public static final int STYLE_PLAIN       = 0;
+
+    /**
+     * The bold style constant.  This can be combined with the other style
+     * constants (except PLAIN) for mixed styles.
+     */
+    public static final int STYLE_BOLD        = 1;
+
+    /**
+     * The italicized style constant.  This can be combined with the other
+     * style constants (except PLAIN) for mixed styles.
+     */
+    public static final int STYLE_ITALIC      = 2;
+    
+    
+    
 	public String getName() ;
 	
 	public int getSize();

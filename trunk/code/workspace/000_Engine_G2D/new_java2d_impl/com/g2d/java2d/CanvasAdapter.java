@@ -614,15 +614,18 @@ FocusListener
 	synchronized public void keyPressed(KeyEvent e) {
 		keystate_down.put(e.getKeyCode(), e);
 		keystate.put(e.getKeyCode(), e);
-		poolEvent(new com.g2d.display.event.KeyEvent(e, com.g2d.display.event.KeyEvent.EVENT_KEY_DOWN));
+		poolEvent(new com.g2d.display.event.KeyEvent(
+				e, com.g2d.display.event.KeyEvent.EVENT_KEY_DOWN));
 	}
 	synchronized public void keyReleased(KeyEvent e) {
 		keystate_up.put(e.getKeyCode(), e);
 		keystate.remove(e.getKeyCode());
-		poolEvent(new com.g2d.display.event.KeyEvent(e, com.g2d.display.event.KeyEvent.EVENT_KEY_UP));
+		poolEvent(new com.g2d.display.event.KeyEvent(
+				e, com.g2d.display.event.KeyEvent.EVENT_KEY_UP));
 	}
 	synchronized public void keyTyped(KeyEvent e) {
-		poolEvent(new com.g2d.display.event.KeyEvent(e, com.g2d.display.event.KeyEvent.EVENT_KEY_TYPED));
+		poolEvent(new com.g2d.display.event.KeyEvent(
+				e, com.g2d.display.event.KeyEvent.EVENT_KEY_TYPED));
 	}
 	
 	// mouse events
@@ -652,7 +655,8 @@ FocusListener
 		mousestate.put(e.getButton(), e);
 		mousestate_prev_down_time.put(e.getButton(), System.currentTimeMillis());
 		mousestate_prev_down_pos.put(e.getButton(), e);
-		poolEvent(new com.g2d.display.event.MouseEvent(e.getButton(), com.g2d.display.event.MouseEvent.EVENT_MOUSE_DOWN));
+		poolEvent(new com.g2d.display.event.MouseEvent(
+				e.getButton(), e.getClickCount(), com.g2d.display.event.MouseEvent.EVENT_MOUSE_DOWN));
 //		System.out.println(e);
 	}
 	synchronized public void mouseReleased(MouseEvent e) {
@@ -661,7 +665,8 @@ FocusListener
 		fixMouse() ;
 		mousestate_up.put(e.getButton(), e);
 		mousestate.remove(e.getButton());
-		poolEvent(new com.g2d.display.event.MouseEvent(e.getButton(), com.g2d.display.event.MouseEvent.EVENT_MOUSE_UP));
+		poolEvent(new com.g2d.display.event.MouseEvent(
+				e.getButton(), e.getClickCount(), com.g2d.display.event.MouseEvent.EVENT_MOUSE_UP));
 		//System.out.println(e);
 	}
 	synchronized public void mouseDragged(MouseEvent e) {
@@ -685,7 +690,8 @@ FocusListener
 		}else if (e.getWheelRotation()<0) {
 			mousewheel.put(-1, e);
 		}
-		poolEvent(new com.g2d.display.event.MouseWheelEvent(e.getButton(), e.getWheelRotation()));
+		poolEvent(new com.g2d.display.event.MouseWheelEvent(
+				e.getButton(), e.getWheelRotation()));
 		//System.out.println(e);
 	}
 	

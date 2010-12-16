@@ -5,7 +5,7 @@ public class MouseWheelEvent extends MouseEvent
 	final public int scrollDirection;
 	
 	public MouseWheelEvent(int button, int scroll_direct) {
-		super(button, EVENT_MOUSE_WHEELD);
+		super(button, 0, EVENT_MOUSE_WHEELD);
 		scrollDirection = scroll_direct;
 	}
 	

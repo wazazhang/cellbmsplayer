@@ -9,7 +9,7 @@ public class MouseMoveEvent extends MouseEvent
 	
 	
 	public MouseMoveEvent(int button, int startDragX, int startDragY) {
-		super(button, EVENT_MOUSE_DRAGGED);
+		super(button, 0, EVENT_MOUSE_DRAGGED);
 		mouseDownStartX = startDragX;
 		mouseDownStartY = startDragY;
 	}
