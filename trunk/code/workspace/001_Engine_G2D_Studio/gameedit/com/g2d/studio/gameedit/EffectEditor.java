@@ -425,7 +425,7 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 								appearance.cpj_image_id);
 						BufferedImage buff = ret.getEffectImage();
 						appearance.setImage(Tools.wrap_g2d(buff));
-						if (appearance.getImage() != null) {
+						if (buff != null) {
 							image_view.setIcon(Tools.createIcon(buff));
 						}
 					}
