@@ -1,20 +1,12 @@
 package com.cell.gfx.gui;
 
 
-import java.util.Hashtable;
 import java.util.Vector;
 
 import com.cell.CMath;
-import com.cell.gfx.AScreen;
 import com.cell.gfx.IGraphics;
 import com.cell.gfx.IImage;
 import com.cell.gfx.game.CCD;
-import com.cell.gfx.gui.Command;
-import com.cell.gfx.gui.FormListener;
-import com.cell.gfx.gui.Item;
-import com.cell.gfx.gui.LabelBar;
-import com.cell.gfx.gui.ScrollBar;
-import com.cell.gfx.gui.edit.FormConfig;
 
 /**
  * @author 张翼飞
@@ -637,10 +629,7 @@ public class Form extends Control
 	public void notifyRender(IGraphics g) 
 	{
 		
-		int cx = g.getClipX();
-		int cy = g.getClipY();
-		int cw = g.getClipWidth();
-		int ch = g.getClipHeight();
+		g.pushClip();
 		
 		if(isFormTransition())
 		{
@@ -747,7 +736,7 @@ public class Form extends Control
 			
 		}
 		
-		g.setClip(cx,cy,cw,ch);
+		g.popClip();
 		
 		if(Form.isPointerHold() && DragedItem != null )
 		{

@@ -1,7 +1,5 @@
 package com.cell.gfx;
 
-import java.awt.Image;
-import java.awt.image.BufferedImage;
 
 public interface IImage {
 
@@ -39,7 +37,7 @@ public interface IImage {
 	
 	public IImage resize(int newWidth, int newHeight);
 	
-	public Image getSrc() ;
+//	public Image getSrc() ;
 	
 //	public void setAlphaLevel(int value){
 //		

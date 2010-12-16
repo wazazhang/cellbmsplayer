@@ -1,11 +1,8 @@
 package com.cell.gfx.gui;
 
-import java.util.Collection;
 import java.util.Hashtable;
-import java.util.Set;
 import java.util.Vector;
 
-import com.cell.gfx.IGraphics;
 import com.cell.gfx.IImage;
 
 public class Command

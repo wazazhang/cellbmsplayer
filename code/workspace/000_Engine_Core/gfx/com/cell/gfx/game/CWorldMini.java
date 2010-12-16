@@ -4,7 +4,6 @@ package com.cell.gfx.game;
 
 import com.cell.CMath;
 import com.cell.CObject;
-import com.cell.gfx.AScreen;
 import com.cell.gfx.IGraphics;
 import com.cell.gfx.IImage;
 import com.cell.gfx.IImages;
@@ -148,10 +147,7 @@ public class CWorldMini extends CObject {
 	
 	public void render(IGraphics g,int x,int y){
 		try{
-			int cx = g.getClipX();
-			int cy = g.getClipY();
-			int cw = g.getClipWidth();
-			int ch = g.getClipHeight();
+			g.pushClip();
 	    	g.setClip(x,y,W,H);
 	    	
 	    	if(!World.getMap().IsCyc){
@@ -236,7 +232,7 @@ public class CWorldMini extends CObject {
 				}
 	    	}
 	    	
-	    	g.setClip(cx,cy,cw,ch);
+	    	g.popClip();
 	    	
 		}catch(RuntimeException e){
 		}

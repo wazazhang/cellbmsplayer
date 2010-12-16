@@ -1,18 +1,8 @@
 package com.cell.gfx.gui;
 
-import java.awt.Color;
-import java.awt.font.TextAttribute;
-import java.text.AttributedString;
-import java.util.Vector;
-
-import com.cell.CMath;
-import com.cell.gfx.AScreen;
 import com.cell.gfx.GfxUtil;
 import com.cell.gfx.IGraphics;
 import com.cell.gfx.IInputListener;
-import com.cell.gfx.gui.Form;
-import com.cell.gfx.gui.Item;
-import com.cell.script.objective.Objective;
 
 public class TextBoxSingle extends Item implements IInputListener
 {
@@ -408,10 +398,7 @@ public class TextBoxSingle extends Item implements IInputListener
 	
 	public void render(IGraphics g, int x, int y) 
 	{
-		int cx = g.getClipX();
-		int cy = g.getClipY();
-		int cw = g.getClipWidth();
-		int ch = g.getClipHeight();
+		g.pushClip();
     	
 		if(Lable==null)return;
 		
@@ -422,7 +409,7 @@ public class TextBoxSingle extends Item implements IInputListener
 		g.clipRect(x+UserRect.BorderSize, y, W-UserRect.BorderSize*2, H);
 		renderSingleText(g, x+UserRect.BorderSize, y, W-UserRect.BorderSize*2, H);
 		
-		g.setClip(cx,cy,cw,ch);
+		g.popClip();
 		
 	}
 	

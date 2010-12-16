@@ -3,8 +3,6 @@ package com.cell.gfx;
 import java.util.Collection;
 import java.util.Vector;
 
-import com.cell.gfx.IGraphics.StringAttribute;
-
 public class GfxUtil {
 
 	static public String trimAttributedString(String text, Vector<IGraphics.StringAttribute> attrs)

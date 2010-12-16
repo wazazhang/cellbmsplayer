@@ -1,7 +1,5 @@
 package com.cell.gameedit.object;
 
-import java.io.Serializable;
-
 import com.cell.gameedit.SetObject;
 
 public class ImagesSet implements SetObject

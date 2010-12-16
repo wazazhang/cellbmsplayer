@@ -8,7 +8,6 @@ import java.util.Vector;
 import com.cell.CIO;
 import com.cell.CObject;
 import com.cell.CUtil;
-import com.cell.game.ai.pathfind.AstarManhattan.WayPoint;
 import com.cell.gfx.AScreen;
 import com.cell.gfx.CImages;
 import com.cell.gfx.IImage;

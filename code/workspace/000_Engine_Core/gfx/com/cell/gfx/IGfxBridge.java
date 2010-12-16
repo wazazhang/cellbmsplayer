@@ -1,9 +1,6 @@
 package com.cell.gfx;
 
 import java.io.InputStream;
-import java.util.Collection;
-
-import com.cell.gfx.IImage;
 
 
 public interface IGfxBridge 

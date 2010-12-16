@@ -62,8 +62,11 @@ public interface IGraphics
     public static final int BLEND_MODE_ALPHA_SRC_OVER = 111;
     public static final int BLEND_MODE_ALPHA_XOR = 112;
 	
-    public void dispose();
-    
+    public void 					dispose();
+
+	abstract public void 			pushClip();
+	abstract public void 			popClip();
+	
 	public void drawArc(int x, int y, int width, int height, int startAngle, int arcAngle); 
 	
 	public void drawImage(IImage img, int x, int y, int transform, int blend_mode, float blend_alpha); 
@@ -75,7 +78,7 @@ public interface IGraphics
 	public void drawLine(int x1, int y1, int x2, int y2); 
 	public void drawRect(int x, int y, int width, int height); 
 	public void drawRegion(IImage src, int x_src, int y_src, int width, int height, int transform, int blend_mode, float blend_alpha, int x_dest, int y_dest); 
-	public void drawRGB(int[] rgbData, int offset, int scanlength, int x, int y, int width, int height, boolean processAlpha); 
+//	public void drawRGB(int[] rgbData, int offset, int scanlength, int x, int y, int width, int height, boolean processAlpha); 
 	public void drawString(String str, int x, int y); 
 	
 	public void fillArc(int x, int y, int width, int height, int startAngle, int arcAngle); 
@@ -86,11 +89,11 @@ public interface IGraphics
 	public int getStringWidth(String src);
 	public int getStringHeight();
 	
+
 	public int getClipHeight(); 
 	public int getClipWidth(); 
 	public int getClipX(); 
 	public int getClipY(); 
-	
 	public void setClip(int x, int y, int width, int height); 
 	public void clipRect(int x, int y, int width, int height);
 	

@@ -1,6 +1,5 @@
 package com.cell.gameedit;
 
-import java.io.ByteArrayInputStream;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.cell.gameedit.object.ImagesSet;

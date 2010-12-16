@@ -1,6 +1,5 @@
 package com.cell.gfx.game;
 
-import com.cell.CMath;
 
 public class CLight extends CUnit
 {

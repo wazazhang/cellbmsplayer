@@ -102,10 +102,7 @@ class CMapLightCamera extends CCamera
 	{
 		if (!Visible)return;
 		
-		int cx = g.getClipX();
-		int cy = g.getClipY();
-		int cw = g.getClipWidth();
-		int ch = g.getClipHeight();
+		g.pushClip();
     	g.clipRect(WindowX,WindowY,WindowW,WindowH);
     	
     	{
@@ -130,7 +127,7 @@ class CMapLightCamera extends CCamera
 				}
 			}
     	}
-		g.setClip(cx,cy,cw,ch);
+		g.popClip();
 	}
 	
 }

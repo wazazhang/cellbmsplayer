@@ -1,7 +1,6 @@
 package com.cell.gfx.game;
 
 
-import com.cell.gfx.CImages;
 import com.cell.gfx.IGraphics;
 import com.cell.gfx.IImage;
 import com.cell.gfx.IImages;

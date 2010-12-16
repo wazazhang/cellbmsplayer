@@ -1,9 +1,9 @@
 package com.cell.gfx.game;
 
+import java.util.Hashtable;
+
 import com.cell.CObject;
 import com.cell.gfx.IImages;
-
-import java.util.Hashtable;
 
 public class ResourceManager extends CObject 
 {

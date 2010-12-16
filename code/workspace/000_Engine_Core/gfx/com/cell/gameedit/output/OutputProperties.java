@@ -1,30 +1,21 @@
 package com.cell.gameedit.output;
 
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.Serializable;
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
-import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.cell.CIO;
 import com.cell.CUtil;
 import com.cell.gameedit.Output;
-import com.cell.gameedit.SetObject;
-import com.cell.gameedit.SetResource;
-
-import com.cell.gameedit.object.*;
-import com.cell.gameedit.object.WorldSet.*;
-
-import com.cell.gfx.IGraphics;
+import com.cell.gameedit.object.ImagesSet;
+import com.cell.gameedit.object.MapSet;
+import com.cell.gameedit.object.SpriteSet;
+import com.cell.gameedit.object.TableSet;
+import com.cell.gameedit.object.WorldSet;
+import com.cell.gameedit.object.WorldSet.RegionObject;
+import com.cell.gameedit.object.WorldSet.WaypointObject;
 import com.cell.gfx.IImage;
 import com.cell.gfx.IImages;
 import com.cell.gfx.game.CAnimates;
@@ -34,9 +25,7 @@ import com.cell.gfx.game.CMap;
 import com.cell.gfx.game.CSprite;
 import com.cell.gfx.game.CWayPoint;
 import com.cell.io.TextDeserialize;
-import com.cell.util.MarkedHashtable;
 import com.cell.util.PropertyGroup;
-import com.cell.util.concurrent.ThreadPoolService;
 
 
 /**

@@ -6,12 +6,8 @@ import java.util.Collection;
 
 import com.cell.gfx.AScreen;
 import com.cell.gfx.IGraphics;
-import com.cell.gfx.IImage;
-import com.cell.gfx.IInputListener;
 import com.cell.gfx.IGraphics.StringAttribute;
 import com.cell.gfx.IGraphics.StringLayer;
-import com.cell.gfx.gui.Form;
-import com.cell.gfx.gui.Item;
 import com.cell.gfx.gui.RichTextBox.Scripts;
 
 public class LabelRollBar extends Item 
@@ -132,10 +128,7 @@ public class LabelRollBar extends Item
 	
 	public void render(IGraphics g, int x, int y)
 	{
-		int cx = g.getClipX();
-		int cy = g.getClipY();
-		int cw = g.getClipWidth();
-		int ch = g.getClipHeight();
+		g.pushClip();
 		g.clipRect(x , y , W + 1, H + 1);
 		
 		// back
@@ -145,7 +138,7 @@ public class LabelRollBar extends Item
 		// text
 		renderText(g, x, y);
 		
-		g.setClip(cx,cy,cw,ch);
+		g.popClip();
 	}
 
 //	----------------------------------------------------------------------------------------------------------------
