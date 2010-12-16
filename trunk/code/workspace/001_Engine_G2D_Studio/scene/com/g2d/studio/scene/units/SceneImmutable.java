@@ -223,7 +223,7 @@ public class SceneImmutable extends SceneSprite implements SceneUnitTag<Immutabl
 			if (getUnit().getBindedTriggers().getTriggerCount() > 0) {
 				g.drawImage(img_script, -img_script.getWidth()/2, local_bounds.y);
 			}
-			pushObject(g.getStroke());
+			g.pushStroke();
 			try
 			{
 				g.setStroke(new BasicStroke(2));
@@ -285,7 +285,7 @@ public class SceneImmutable extends SceneSprite implements SceneUnitTag<Immutabl
 				}
 			
 			} finally {
-				g.setStroke(popObject(Stroke.class));
+				g.popStroke();
 			}	
 			Util.drawScript(g, editor, this);
 		}

@@ -349,7 +349,7 @@ public class SceneGraphViewer extends AbstractDialog
 			
 			private void drawNextLink(Graphics2D g, Color high_color, Color base_color)
 			{
-				Stroke stroke = g.getStroke();
+				g.pushStroke();
 				try{
 					BasicStroke bs = new BasicStroke(3);
 					for (Pair<LinkTP, Pair<SceneFrame, LinkTP>> next : nexts) {
@@ -363,7 +363,7 @@ public class SceneGraphViewer extends AbstractDialog
 								g.setStroke(bs);
 							} else {
 								g.setColor(base_color);
-								g.setStroke(stroke);
+								g.setStroke(bs);
 							}
 							g.drawLine(sx, sy, dx, dy);
 						} catch (Exception err) {
@@ -375,7 +375,7 @@ public class SceneGraphViewer extends AbstractDialog
 						}
 					}
 				}finally{
-					g.setStroke(stroke);
+					g.popStroke();
 				}
 			}
 
