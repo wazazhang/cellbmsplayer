@@ -1,6 +1,7 @@
 package com.g2d;
 
 import java.text.AttributedCharacterIterator;
+import java.text.AttributedString;
 
 import com.cell.gfx.IGraphics;
 import com.cell.gfx.IImage;
@@ -142,8 +143,8 @@ public abstract class Graphics2D implements IGraphics
 	abstract public void			drawChars(char data[], int offset, int length, int x, int y);
 	abstract public void 			drawString(String str, int x, int y);
 	abstract public void 			drawString(String str, float x, float y);
-	abstract public void 			drawString(AttributedCharacterIterator iterator, int x, int y);
-	abstract public void 			drawString(AttributedCharacterIterator iterator, float x, float y);
+	abstract public void 			drawString(AttributedString atext, int x, int y);
+	abstract public void 			drawString(AttributedString atext, float x, float y);
 
 
 	

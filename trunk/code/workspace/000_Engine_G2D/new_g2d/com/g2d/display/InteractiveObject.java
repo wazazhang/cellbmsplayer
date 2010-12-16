@@ -182,9 +182,9 @@ public abstract class InteractiveObject extends DisplayObjectContainer
 						return processMouseWheelEvent((MouseWheelEvent) event);
 					} else if (event instanceof MouseEvent) {
 						boolean ret = processMouseEvent((MouseEvent) event);
-						if (ret) {
-							System.out.println("f object = " + toString());
-						}
+//						if (ret) {
+//							System.out.println("f object = " + toString());
+//						}
 						return ret;
 					} else if (event instanceof KeyEvent) {
 						return processKeyEvent((KeyEvent) event);

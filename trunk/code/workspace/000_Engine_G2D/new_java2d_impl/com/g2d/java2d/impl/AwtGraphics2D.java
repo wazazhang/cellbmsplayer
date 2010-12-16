@@ -61,7 +61,7 @@ public class AwtGraphics2D extends Graphics2D
 
 	public AwtGraphics2D(java.awt.Graphics2D g2d)
 	{
-		this.g2d 		= g2d;
+		this.g2d 			= g2d;
 		this.cur_color		= new Color(g2d.getColor().getRGB());
 		this.cur_font		= new AwtFont(g2d.getFont());
 		this.cur_font_h 	= g2d.getFontMetrics().getHeight();
@@ -416,15 +416,17 @@ public class AwtGraphics2D extends Graphics2D
 		java.awt.geom.Rectangle2D rect = g2d.getFont().getStringBounds(str, g2d.getFontRenderContext());
 		g2d.drawString(str, (float)(x-rect.getX()), (float)(y - rect.getY()));
 	}
-	public void drawString(AttributedCharacterIterator iterator, int x, int y) {
-		java.awt.geom.Rectangle2D rect = g2d.getFont().getStringBounds(iterator, 
-				iterator.getBeginIndex(), iterator.getEndIndex(), g2d.getFontRenderContext());
-		g2d.drawString(iterator, (int)(x-rect.getX()), (int)(y - rect.getY()));
+	public void drawString(AttributedString atext, int x, int y) {
+		drawString(atext, (float)x, (float)y);
 	}
-	public void drawString(AttributedCharacterIterator iterator, float x, float y) {
-		java.awt.geom.Rectangle2D rect = g2d.getFont().getStringBounds(iterator, 
-				iterator.getBeginIndex(), iterator.getEndIndex(), g2d.getFontRenderContext());
-		g2d.drawString(iterator, (float)(x-rect.getX()), (float)(y - rect.getY()));
+	public void drawString(AttributedString atext, float x, float y) {
+		AwtFont.decode(atext);
+		AttributedCharacterIterator it = atext.getIterator();
+		int begin = it.getBeginIndex();
+		java.awt.geom.Rectangle2D rect = g2d.getFont().getStringBounds(it, 
+				it.getBeginIndex(), it.getEndIndex(), g2d.getFontRenderContext());
+		it.setIndex(begin);
+		g2d.drawString(it, (float)(x-rect.getX()), (float)(y - rect.getY()));
 	}
 
 //	-------------------------------------------------------------------------------------------------------------------------
