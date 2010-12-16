@@ -7,7 +7,6 @@
 
 package com.g2d.geom;
 
-import java.awt.geom.Point2D;
 
 /**
  * A point representing a location in {@code (x,y)} coordinate space,
