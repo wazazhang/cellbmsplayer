@@ -85,7 +85,7 @@ public class AwtCanvas extends CanvasAdapter
 //	--------------------------------------------------------------------------------
 //	game
 	
-	void destory_vm_buffer() {
+	protected void destory_vm_buffer() {
 		if (vm_buffer != null) {
 			vm_buffer.flush();
 			vm_buffer = null;
@@ -93,9 +93,10 @@ public class AwtCanvas extends CanvasAdapter
 		}
 	}
 	
-	void create_vm_buffer(GraphicsConfiguration gc) {
-		vm_buffer = gc.createCompatibleVolatileImage(getStageWidth(), getStageHeight(), Transparency.OPAQUE);
+	protected VolatileImage create_vm_buffer(GraphicsConfiguration gc) {
+		VolatileImage vm_buffer = gc.createCompatibleVolatileImage(getStageWidth(), getStageHeight(), Transparency.OPAQUE);
 		System.out.println("CanvasAdapter : create_vm_buffer");
+		return vm_buffer;
 	}
 	
 	@Override
@@ -111,10 +112,10 @@ public class AwtCanvas extends CanvasAdapter
 		GraphicsConfiguration gc = AwtEngine.getEngine().getGC();
 		
 		if (vm_buffer == null) {
-			create_vm_buffer(gc);
+			vm_buffer = create_vm_buffer(gc);
 		} else if (vm_buffer.validate(gc) == VolatileImage.IMAGE_INCOMPATIBLE) {
 			destory_vm_buffer();
-			create_vm_buffer(gc);
+			vm_buffer = create_vm_buffer(gc);
 		}
 		
 		nextCursor = null;

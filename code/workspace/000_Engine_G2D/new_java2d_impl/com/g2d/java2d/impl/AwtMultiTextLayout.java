@@ -1238,9 +1238,9 @@ public class AwtMultiTextLayout extends MultiTextLayout
 			
 			if (text.length()>0)
 			{
-				AttributedCharacterIterator it = change.atext.getIterator();
 				attr_text = new AttributedString(text);
-				int i=0, e=1;
+				int i = 0, e = 1;
+				AttributedCharacterIterator it = change.atext.getIterator();
 				for (char c = it.first(); c != CharacterIterator.DONE; c = it.next()) 
 				{
 					Map<Attribute,Object> map = it.getAttributes();
@@ -1256,13 +1256,12 @@ public class AwtMultiTextLayout extends MultiTextLayout
 					if (size != null && size.intValue() != font.getSize()) {
 						font = new Font(font.getName(), 0, size.intValue());
 					}
-					
 					attr_text.addAttribute(TextAttribute.FONT, font, i, e);
 					attr_text.addAttributes(map, i, e);
 					i++;
 					e++;
 				}
-				
+				AwtFont.decode(attr_text);
 				java.awt.Graphics2D g = ((AwtGraphics2D)g2d).g2d;
 				
 				Object prew_rh = g.getRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING);
