@@ -67,10 +67,6 @@ public interface Canvas
 	
 	public int getStageHeight() ;
 	
-	public int getWidth();
-	
-	public int getHeight();
-		
 	public Stage getStage() ;
 	
 //	--------------------------------------------------------------------------------
