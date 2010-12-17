@@ -70,15 +70,16 @@ public class TestShape extends Sprite
 				scale_x -= 0.1f;
 				scale_y -= 0.1f;
 			}
-		}	rotate += 0.1f;
+		}	
+		rotate += 0.1f;
 	}
 	
 	@Override
 	public void render(Graphics2D g) 
 	{
 		g.drawImage(image, local_bounds.x, local_bounds.y);
-		g.setColor(Color.GREEN);
-		g.draw(local_bounds);
+//		g.setColor(Color.GREEN);
+//		g.draw(local_bounds);
 	}
 	
 	public class Copper extends Sprite 
