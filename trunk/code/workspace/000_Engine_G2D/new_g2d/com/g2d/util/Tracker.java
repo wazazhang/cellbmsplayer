@@ -96,7 +96,7 @@ public class Tracker
 		g.setColor(lineColor);
 		drawMap(g, x+1, y+1, w-2, h - 2 - 20);
 		
-		drawInfo(g, infohead, x+2, y + h - 4);
+		drawInfo(g, infohead, x+2, y + h - 20);
 		
 		g.setColor(boardColor);
 		g.drawRect(x, y, w-1, h-1);

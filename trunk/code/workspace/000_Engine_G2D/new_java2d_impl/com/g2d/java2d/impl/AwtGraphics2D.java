@@ -50,7 +50,6 @@ public class AwtGraphics2D extends Graphics2D
 	private Color				cur_color;
 	private Font				cur_font;
 	private int					cur_font_h;
-	private AffineTransform		cur_trans;
 	
 	private Stack<java.awt.Shape> 					stack_clip 		= new Stack<java.awt.Shape>();
 	private Stack<java.awt.Composite> 				stack_comp 		= new Stack<java.awt.Composite>();
@@ -65,9 +64,6 @@ public class AwtGraphics2D extends Graphics2D
 		this.cur_color		= new Color(g2d.getColor().getRGB());
 		this.cur_font		= new AwtFont(g2d.getFont());
 		this.cur_font_h 	= g2d.getFontMetrics().getHeight();
-		double[] flatmatrix = new double[6];
-		g2d.getTransform().getMatrix(flatmatrix);
-		this.cur_trans		= new AffineTransform(flatmatrix);
 	}
 	
 	public java.awt.Graphics2D getG2d() {
@@ -490,27 +486,21 @@ public class AwtGraphics2D extends Graphics2D
 //	-------------------------------------------------------------------------------------------------------------------------
 
 	public void translate(int x, int y) {
-		cur_trans.translate(x, y);
 		g2d.translate(x, y);
 	}
 	public void translate(double tx, double ty) {
-		cur_trans.translate(tx, ty);
 		g2d.translate(tx, ty);
 	}
 	public void rotate(double theta) {
-		cur_trans.rotate(theta);
 		g2d.rotate(theta);
 	}
 	public void rotate(double theta, double x, double y) {
-		cur_trans.rotate(theta, x, y);
 		g2d.rotate(theta, x, y);
 	}
 	public void scale(double sx, double sy) {	
-		cur_trans.scale(sx, sy);
 		g2d.scale(sx, sy);
 	}
 	public void shear(double shx, double shy) {
-		cur_trans.shear(shx, shy);
 		g2d.shear(shx, shy);
 	}
 	
@@ -571,20 +561,20 @@ public class AwtGraphics2D extends Graphics2D
 	{
 		java.awt.Composite composite = null;
 		
-		if (blend_mode != IGraphics.BLEND_MODE_NONE)
-		{
-			if (blend_mode < IGraphics.BLEND_MODE_ALPHA_CLEAR)
-			{
-				BlendingMode mode = BlendingMode.values()[blend_mode];
-				composite = BlendComposite.getInstance(mode, blend_alpha);
-			}
-			else
-			{
-				AlphaBlendMode mode = AlphaBlendMode.values()[blend_mode-IGraphics.BLEND_MODE_ALPHA_CLEAR];
-				if (mode != null)
-					composite = java.awt.AlphaComposite.getInstance(mode.getValue(), blend_alpha);
-			}
-		}
+//		if (blend_mode != IGraphics.BLEND_MODE_NONE)
+//		{
+//			if (blend_mode < IGraphics.BLEND_MODE_ALPHA_CLEAR)
+//			{
+//				BlendingMode mode = BlendingMode.values()[blend_mode];
+//				composite = BlendComposite.getInstance(mode, blend_alpha);
+//			}
+//			else
+//			{
+//				AlphaBlendMode mode = AlphaBlendMode.values()[blend_mode-IGraphics.BLEND_MODE_ALPHA_CLEAR];
+//				if (mode != null)
+//					composite = java.awt.AlphaComposite.getInstance(mode.getValue(), blend_alpha);
+//			}
+//		}
 		
 		return composite;
 	}
