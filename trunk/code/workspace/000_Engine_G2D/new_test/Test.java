@@ -1,4 +1,5 @@
 import java.awt.EventQueue;
+import java.awt.event.KeyEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -38,7 +39,16 @@ public class Test extends Stage
 	}
 	@Override
 	public void update() {
-	
+		if (getRoot().isKeyDown(KeyEvent.VK_1)) {
+			TestShape sp = new TestShape();
+			sp.setLocation(getMouseX(), getMouseY());
+			addChild(sp);
+		}	
+		if (getRoot().isKeyDown(KeyEvent.VK_2)) {
+			if (getChildCount()>4) {
+				removeChild(getChilds().firstElement());
+			}
+		}
 	}
 
 	@Override
@@ -46,7 +56,7 @@ public class Test extends Stage
 		g.setColor(Color.BLACK);
 		g.fill(local_bounds);
 		g.setColor(Color.WHITE);
-		g.drawString("FPS="+getRoot().getFPS(), 0, 0);
+		g.drawString("FPS="+getRoot().getFPS() + " childs=" + getChildCount(), 0, 0);
 		
 	}
 	
