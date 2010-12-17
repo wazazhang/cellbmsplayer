@@ -137,13 +137,11 @@ public class AwtImage implements com.g2d.BufferedImage
 		return m_image;
 	}
 	
-	public void createBuffer(int width, int height) 
-	{
-		m_image = createBuffer(new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB));
+	public IImage createBuffer(int width, int height) {
+		return new AwtImage(width, height);
 	}
 
-	public IImage subImage(int x, int y, int width, int height)
-	{
+	public IImage subImage(int x, int y, int width, int height) {
 		return (new AwtImage(m_image.getSubimage(x, y, width, height)));
 	}
 	
