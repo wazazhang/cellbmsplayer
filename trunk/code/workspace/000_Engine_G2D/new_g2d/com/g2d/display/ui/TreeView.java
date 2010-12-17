@@ -42,19 +42,23 @@ public class TreeView extends Container
 	
 //	------------------------------------------------------------------------------------------
 	
-	public TreeView() {
+	public TreeView() 
+	{
 		this(null, new DefaultTreeAdapter());
 	}
 
-	public TreeView(TreeNode root) {
+	public TreeView(TreeNode root) 
+	{
 		this(root, new DefaultTreeAdapter());
 	}
 	
-	public TreeView(TreeAdapter adapter) {
+	public TreeView(TreeAdapter adapter) 
+	{
 		this(null, adapter);
 	}
 	
-	public TreeView(TreeNode root, TreeAdapter adapter) {
+	public TreeView(TreeNode root, TreeAdapter adapter) 
+	{
 		this.adapter = adapter;
 		this.enable_drag = false;
 		this.enable_drag_resize = false;
@@ -62,20 +66,31 @@ public class TreeView extends Container
 	}
 	
 	@Override
-	public void setSize(int w, int h) {
+	public void setSize(int w, int h) 
+	{
 		super.setMinimumSize(w, h);
 		this.refresh();
 	}
 	
 	@Override
-	public void setMinimumSize(int width, int height) {
+	public void setMinimumSize(int width, int height) 
+	{
+		int ori_width = this.getMinimumWidth();
+		int ori_height = this.getMinimumHeight();
+		
 		super.setMinimumSize(width, height);
-		this.refresh();
+		
+		int new_width = this.getMinimumWidth();
+		int new_height = this.getMinimumHeight();
+		
+		if ( (ori_width!=new_width) || (ori_height!=new_height) )
+			this.refresh();
 	}
 	
 //	------------------------------------------------------------------------------------------
 	
-	synchronized public void setTreeRoot(TreeNode root) {
+	synchronized public void setTreeRoot(TreeNode root) 
+	{
 		this.root = root;
 		this.expaneds.clear();
 		this.nodes.clear();
@@ -84,20 +99,71 @@ public class TreeView extends Container
 		this.refresh();
 	}
 	
-	void initTreeNode(TreeNode node, int deep)
+	synchronized public boolean addChildTreeNode(TreeNode node, TreeNode addto_node)
+	{
+		if (this.nodes.containsKey(addto_node))
+		{
+			int addto_node_depth = addto_node.getDepth();
+			
+			if (addto_node_depth >= 0)
+			{
+				addto_node.addChild(node);
+				this.initTreeNode(node, addto_node_depth+1);
+				
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	synchronized public boolean addSiblingTreeNode(TreeNode node, TreeNode addto_node)
+	{
+		if (addto_node == root)
+			return false;
+		
+		if (this.nodes.containsKey(addto_node))
+		{
+			int addto_node_depth = addto_node.getDepth();
+			
+			if (addto_node_depth >= 0)
+			{
+				TreeNode parent = addto_node.getParent();
+				
+				if (this.nodes.containsKey(parent))
+				{
+					int parent_depth = parent.getDepth();
+					
+					if (parent_depth >= 0)
+					{
+						parent.insertChild(node, addto_node);
+						this.initTreeNode(node, parent_depth+1);
+						
+						return true;						
+					}
+				}
+			}
+		}
+		
+		return false;		
+	}
+	
+	protected void initTreeNode(TreeNode node, int depth)
 	{
 		UIComponent ui = adapter.getComponent(node, this) ;
 		ui.addEventListener(action_listener);
 		this.nodes.put(node, ui);
+		node.setDepth(depth);
 		if (node.getChildCount() > 0) {
 			for (int cr = 0; cr < node.getChildCount(); cr++) {
 				TreeNode cn = node.getChildAt(cr);
-				initTreeNode(cn, deep + 1);
+				initTreeNode(cn, depth + 1);
 			}
 		}
 	}
 
-	synchronized public void refresh() {
+	synchronized public void refresh() 
+	{
 		DisplayObject focus = getFocus();
 		removeChilds(nodes.values());
 		if (root != null) {
@@ -147,17 +213,20 @@ public class TreeView extends Container
 	
 //	------------------------------------------------------------------------------------------
 
-	public TreeNode getTreeRoot() {
+	public TreeNode getTreeRoot() 
+	{
 		return root;
 	}
 	
 //	------------------------------------------------------------------------------------------
 	
-	public boolean isExpanded(TreeNode node) {
+	public boolean isExpanded(TreeNode node) 
+	{
 		return expaneds.contains(node);
 	}
 	
-	public void setExpand(TreeNode node, boolean expand) {
+	public void setExpand(TreeNode node, boolean expand) 
+	{
 		if (expand) {
 			expaneds.add(node);
 		} else {
@@ -166,7 +235,8 @@ public class TreeView extends Container
 		refresh();
 	}
 
-	public void expandAll(boolean expand) {
+	public void expandAll(boolean expand) 
+	{
 		if (expand) {
 			expaneds.addAll(nodes.keySet());
 		} else {
@@ -175,7 +245,8 @@ public class TreeView extends Container
 		refresh();
 	}
 	
-	public void setDisplayRootNode(boolean show) {
+	public void setDisplayRootNode(boolean show) 
+	{
 		if (this.display_root_node != show) {
 			this.display_root_node = show;
 			refresh();
@@ -185,7 +256,8 @@ public class TreeView extends Container
 //	------------------------------------------------------------------------------------------
 	
 	@Override
-	public void addEventListener(EventListener listener) {
+	public void addEventListener(EventListener listener) 
+	{
 		super.addEventListener(listener);
 		if (listener instanceof TreeNodeListener) {
 			tree_node_listeners.add((TreeNodeListener)listener);
@@ -193,14 +265,16 @@ public class TreeView extends Container
 	}
 	
 	@Override
-	public void removeEventListener(EventListener listener) {
+	public void removeEventListener(EventListener listener) 
+	{
 		super.removeEventListener(listener);
 		if (listener instanceof TreeNodeListener) {
 			tree_node_listeners.remove((TreeNodeListener)listener);
 		}
 	}
 	
-	private TreeNode getTreeNode(UIComponent comp) {
+	private TreeNode getTreeNode(UIComponent comp) 
+	{
 		for (TreeNode tn : nodes.keySet()) {
 			UIComponent ui = nodes.get(tn);
 			if (ui == comp) {
@@ -210,9 +284,11 @@ public class TreeView extends Container
 		return null;
 	}
 	
-	class TreeNodeActionListener implements ActionListener {
+	class TreeNodeActionListener implements ActionListener 
+	{
 		@Override
-		public void itemAction(UIComponent item, ActionEvent event) {
+		public void itemAction(UIComponent item, ActionEvent event) 
+		{
 			for (TreeNodeListener tnl : tree_node_listeners) {
 				TreeNode tn = getTreeNode(item);
 				tnl.onTreeNodeClick(tn, item, TreeView.this);

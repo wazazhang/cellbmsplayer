@@ -13,6 +13,10 @@ public class DefaultTreeNode implements TreeNode
 	
 	private Object				data;
 	
+	private int					depth_ = -1;
+	
+	
+	
 	public DefaultTreeNode(Object data) {
 		this.data = data;
 	}
@@ -31,12 +35,59 @@ public class DefaultTreeNode implements TreeNode
 	}
 	
 	
-	public void addChild(TreeNode c) {
-		sub_childs.add(c);
-		if (c instanceof DefaultTreeNode) {
-			((DefaultTreeNode) c).parent = this;
+	@Override	
+	public void addChild(TreeNode node) 
+	{
+		sub_childs.add(node);
+
+		if (node instanceof DefaultTreeNode) {
+			((DefaultTreeNode) node).parent = this;
 		}
 	}
+	
+	/**
+	 * 插入在现有子节点之前
+	 * @param node 要插入的子节点
+	 * @param before 要插入到这个节点之前
+	 */
+	@Override	
+	public void insertChild(TreeNode node, TreeNode before)
+	{
+		int index = sub_childs.indexOf(before);
+		
+		if (index >= 0)
+		{		
+			sub_childs.insertElementAt(node, index);
+			
+			if (node instanceof DefaultTreeNode) {
+				((DefaultTreeNode) node).parent = this;
+			}	
+		}
+	}
+	
+	@Override	
+	public boolean removeChild(TreeNode node)
+	{
+		if (sub_childs.remove(node))
+		{
+			((DefaultTreeNode)node).parent = null;
+			
+			return true;
+		}
+		
+		return false;
+	}
+	
+	@Override	
+	public void removeAllChilds()
+	{
+		for ( TreeNode node : sub_childs )
+		{
+			((DefaultTreeNode)node).parent = null;
+		}
+		
+		sub_childs.removeAllElements();
+	}	
 	
 	@Override
 	public Collection<TreeNode> children() {
@@ -63,4 +114,16 @@ public class DefaultTreeNode implements TreeNode
 		return parent;
 	}
 
+	@Override
+	public int getDepth() 
+	{
+		return this.depth_;
+	}
+
+	@Override
+	public void setDepth(int depth) 
+	{
+		this.depth_ = depth;
+	}
+	
 }

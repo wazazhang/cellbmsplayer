@@ -34,5 +34,45 @@ public interface TreeNode extends Serializable
 	 * 返回接收者的父 TreeNode。 
 	 */
 	public TreeNode getParent();
+	
+	/**
+	 * 为该节点添加一个子节点
+	 * @param node 子节点
+	 */
+	public void addChild(TreeNode node);
+	
+	/**
+	 * 插入在现有子节点之前
+	 * @param node 要插入的子节点
+	 * @param before 要插入到这个节点之前
+	 */
+	public void insertChild(TreeNode node, TreeNode before);
+	
+	/**
+	 * 从该节点删除一个子节点
+	 * @param node 子节点
+	 */
+	public boolean removeChild(TreeNode node);
+	
+	/**
+	 * 删除所有子节点
+	 */
+	public void removeAllChilds();
+	
+	/**
+	 * 获得该树节点在树中的深度
+	 * @return <0 意味着该节点不在树中，根节点的深度为0，依次递增 
+	 * @return
+	 */
+	public int getDepth();
+	
+	/**
+	 * 设置该树节点在树中的深度，不清楚内部原理的情况下请不要手动调用
+	 * @param depth 深度值
+	 */
+	public void setDepth(int depth);
 
-}
+};
+
+
+
