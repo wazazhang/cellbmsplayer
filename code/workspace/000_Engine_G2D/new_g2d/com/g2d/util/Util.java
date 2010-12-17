@@ -81,9 +81,9 @@ public class Util
 		w -= 4;
 		h -= 4;
 		{
-			g.setColor(new Color(backcolor.getRed(), backcolor.getGreen(), backcolor.getBlue(), 0x40));
+			g.setColor(new Color(backcolor.getRed(), backcolor.getGreen(), backcolor.getBlue(), 0.25f));
 			g.fillRect(x, y, (int)(w * used / max), h);
-			g.setColor(new Color(backcolor.getRed(), backcolor.getGreen(), backcolor.getBlue(), 0x80));
+			g.setColor(new Color(backcolor.getRed(), backcolor.getGreen(), backcolor.getBlue(), 0.5f));
 			g.fillRect(x, y, (int)(w * total/ max), h);
 			if (drawText) {
 				g.setColor(textcolor);
