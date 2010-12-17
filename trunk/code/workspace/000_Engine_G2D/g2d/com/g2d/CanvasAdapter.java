@@ -157,7 +157,6 @@ FocusListener
 		component.setSize(stageWidth, stageHeight);
 		component.setMinimumSize(new Dimension(100,100));
 	
-		System.out.println("sun.java2d.noddraw=" + System.getProperty("sun.java2d.noddraw"));
 	}
 	
 	public Component getParent(){
