@@ -89,6 +89,10 @@ public class Drawing
 		g.popClip();
 	}
 	
+
+//	-----------------------------------------------------------------------------------------------------------------------------
+//	draw string
+//	-----------------------------------------------------------------------------------------------------------------------------
 	
 	final static public int TEXT_ANCHOR_LEFT 	= 0x00;
 	final static public int TEXT_ANCHOR_RIGHT 	= 0x01;
@@ -149,13 +153,64 @@ public class Drawing
 		return rect;
 	}
 	
+//	-----------------------------------------------------------------------------------------------------------------------------
+//	draw string border
+//	-----------------------------------------------------------------------------------------------------------------------------
+	
 	final static public Rectangle drawStringBorder(Graphics2D g, String src, int x, int y, int w, int h, int anchor)
 	{
 		return drawStringBorder(g, src, x, y, w, h, anchor, Color.BLACK);
 	}
 	
+	final static public Rectangle drawStringBorder(Graphics2D g, String src, int x, int y, int anchor)
+	{
+		return drawStringBorder(g, src, x, y, anchor, Color.BLACK);
+	}
+	
+	final static public Rectangle drawStringBorder(Graphics2D g, String src, int x, int y, int anchor, Color back_color)
+	{
+		if ((anchor & TEXT_ANCHOR_RIGHT) != 0) {
+			x -= 1;
+		} else if ((anchor & TEXT_ANCHOR_HCENTER) != 0) {
+		} else {
+			x += 1;
+		}
+		if ((anchor & TEXT_ANCHOR_BOTTON) != 0) {
+			y -= 1;
+		} else if ((anchor & TEXT_ANCHOR_VCENTER) != 0) {
+		} else {
+			y += 1;
+		}
+		Color c = g.getColor();
+		{
+			g.setColor(back_color);
+			drawString(g, src, x-1, y-1, anchor);
+			drawString(g, src, x-1, y-0, anchor);
+			drawString(g, src, x-1, y+1, anchor);
+			drawString(g, src, x-0, y-1, anchor);
+			drawString(g, src, x-0, y+1, anchor);
+			drawString(g, src, x+1, y-1, anchor);
+			drawString(g, src, x+1, y-0, anchor);
+			drawString(g, src, x+1, y+1, anchor);
+		}
+		g.setColor(c);
+		return drawString(g, src, x, y, anchor);
+	}
+
 	final static public Rectangle drawStringBorder(Graphics2D g, String src, int x, int y, int w, int h, int anchor, Color back_color)
 	{
+		if ((anchor & TEXT_ANCHOR_RIGHT) != 0) {
+			x -= 1;
+		} else if ((anchor & TEXT_ANCHOR_HCENTER) != 0) {
+		} else {
+			x += 1;
+		}
+		if ((anchor & TEXT_ANCHOR_BOTTON) != 0) {
+			y -= 1;
+		} else if ((anchor & TEXT_ANCHOR_VCENTER) != 0) {
+		} else {
+			y += 1;
+		}
 		Color c = g.getColor();
 		{
 			g.setColor(back_color);
@@ -172,55 +227,30 @@ public class Drawing
 		return drawString(g, src, x, y, w, h, anchor);
 	}
 	
-	final static public Rectangle drawStringShadow(Graphics2D g, String src, int x, int y, int w, int h, int anchor)
-	{
-		return drawStringShadow(g, src, x, y, w, h, anchor, Color.BLACK);
-	}
+
+//	-----------------------------------------------------------------------------------------------------------------------------
+//	draw string shadow
+//	-----------------------------------------------------------------------------------------------------------------------------
 	
-	final static public Rectangle drawStringShadow(Graphics2D g, String src, int x, int y, int w, int h, int anchor, Color back_color)
-	{
-		Color c = g.getColor();
-		
-		{
-			g.setColor(back_color);
-			drawString(g, src, x-0, y+1, w, h, anchor);
-			drawString(g, src, x+1, y+1, w, h, anchor);
-		}
-		
-		g.setColor(c);
-		return drawString(g, src, x, y, w, h, anchor);
-	}
-	
-	final static public Rectangle drawStringBorder(Graphics2D g, String src, int x, int y, int anchor)
-	{
-		return drawStringBorder(g, src, x, y, anchor, Color.BLACK);
-	}
-	
-	final static public Rectangle drawStringBorder(Graphics2D g, String src, int x, int y, int anchor, Color back_color)
-	{
-		Color c = g.getColor();
-		{
-			g.setColor(back_color);
-			drawString(g, src, x-1, y-1, anchor);
-			drawString(g, src, x-1, y-0, anchor);
-			drawString(g, src, x-1, y+1, anchor);
-			drawString(g, src, x-0, y-1, anchor);
-			drawString(g, src, x-0, y+1, anchor);
-			drawString(g, src, x+1, y-1, anchor);
-			drawString(g, src, x+1, y-0, anchor);
-			drawString(g, src, x+1, y+1, anchor);
-		}
-		g.setColor(c);
-		return drawString(g, src, x, y, anchor);
-	}
 	
 	final static public Rectangle drawStringShadow(Graphics2D g, String src, int x, int y, int anchor)
 	{
 		return drawStringShadow(g, src, x, y, anchor, Color.BLACK);
 	}
+
+	final static public Rectangle drawStringShadow(Graphics2D g, String src, int x, int y, int w, int h, int anchor)
+	{
+		return drawStringShadow(g, src, x, y, w, h, anchor, Color.BLACK);
+	}
 	
 	final static public Rectangle drawStringShadow(Graphics2D g, String src, int x, int y, int anchor, Color back_color)
 	{
+		if ((anchor & TEXT_ANCHOR_RIGHT) != 0) {
+			x -= 1;
+		}
+		if ((anchor & TEXT_ANCHOR_BOTTON) != 0) {
+			y -= 1;
+		}
 		Color c = g.getColor();
 		{
 			g.setColor(back_color);
@@ -230,7 +260,29 @@ public class Drawing
 		g.setColor(c);
 		return drawString(g, src, x, y, anchor);
 	}
+
+	final static public Rectangle drawStringShadow(Graphics2D g, String src, int x, int y, int w, int h, int anchor, Color back_color)
+	{
+		if ((anchor & TEXT_ANCHOR_RIGHT) != 0) {
+			x -= 1;
+		}
+		if ((anchor & TEXT_ANCHOR_BOTTON) != 0) {
+			y -= 1;
+		}
+		Color c = g.getColor();
+		{
+			g.setColor(back_color);
+			drawString(g, src, x-0, y+1, w, h, anchor);
+			drawString(g, src, x+1, y+1, w, h, anchor);
+		}
+		g.setColor(c);
+		return drawString(g, src, x, y, w, h, anchor);
+	}
 	
+
+//	-----------------------------------------------------------------------------------------------------------------------------
+//	draw advance string
+//	-----------------------------------------------------------------------------------------------------------------------------
 	
 	final static public void drawString(Graphics2D g, MultiTextLayout src, int x, int y, int anchor)
 	{
