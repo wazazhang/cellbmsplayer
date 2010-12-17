@@ -561,20 +561,20 @@ public class AwtGraphics2D extends Graphics2D
 	{
 		java.awt.Composite composite = null;
 		
-//		if (blend_mode != IGraphics.BLEND_MODE_NONE)
-//		{
-//			if (blend_mode < IGraphics.BLEND_MODE_ALPHA_CLEAR)
-//			{
-//				BlendingMode mode = BlendingMode.values()[blend_mode];
-//				composite = BlendComposite.getInstance(mode, blend_alpha);
-//			}
-//			else
-//			{
-//				AlphaBlendMode mode = AlphaBlendMode.values()[blend_mode-IGraphics.BLEND_MODE_ALPHA_CLEAR];
-//				if (mode != null)
-//					composite = java.awt.AlphaComposite.getInstance(mode.getValue(), blend_alpha);
-//			}
-//		}
+		if (blend_mode != IGraphics.BLEND_MODE_NONE)
+		{
+			if (blend_mode < IGraphics.BLEND_MODE_ALPHA_CLEAR)
+			{
+				BlendingMode mode = BlendingMode.values()[blend_mode];
+				composite = BlendComposite.getInstance(mode, blend_alpha);
+			}
+			else
+			{
+				AlphaBlendMode mode = AlphaBlendMode.values()[blend_mode-IGraphics.BLEND_MODE_ALPHA_CLEAR];
+				if (mode != null)
+					composite = java.awt.AlphaComposite.getInstance(mode.getValue(), blend_alpha);
+			}
+		}
 		
 		return composite;
 	}
