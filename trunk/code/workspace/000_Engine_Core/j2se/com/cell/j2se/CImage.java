@@ -143,9 +143,9 @@ public class CImage implements IImage
 	
 	
 	
-	public void createBuffer(int width, int height) 
+	public IImage createBuffer(int width, int height) 
 	{
-		m_image = createBuffer(new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB));
+		return new CImage(new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB));
 	}
 
 	public IImage subImage(int x, int y, int width, int height)

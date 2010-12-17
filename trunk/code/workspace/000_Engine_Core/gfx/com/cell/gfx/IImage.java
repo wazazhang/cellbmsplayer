@@ -33,7 +33,7 @@ public interface IImage {
 	public IImage newInstance();
 	
 	//Change size with a new surface
-	public void createBuffer(int width, int height);
+	public IImage createBuffer(int width, int height);
 	
 	public IImage resize(int newWidth, int newHeight);
 	
