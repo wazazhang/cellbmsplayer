@@ -1380,7 +1380,7 @@ public class AwtMultiTextLayout extends MultiTextLayout
 		
 		java.awt.Rectangle	selected 		= null;
 
-		BufferedImage		shadow_buffer 	= null;
+		com.g2d.BufferedImage shadow_buffer 	= null;
 		
 		TextLine(TextLayout layout, int line, FontRenderContext frc)
 		{
@@ -1419,22 +1419,22 @@ public class AwtMultiTextLayout extends MultiTextLayout
 		private void drawShadow(Graphics2D g, int shadow_x, int shadow_y, float shadow_alpha, int shadow_color)
 		{
 			if (shadow_x != 0 && shadow_y != 0) {
-//				if (render_shadow_alpha != shadow_alpha && 
-//					render_shadow_color != shadow_color) {
-//					shadow_buffer = null;
-//				}
-//				if (shadow_buffer == null) {
-//					this.shadow_buffer = com.g2d.awt.util.Tools.createImage(width, height);
-//					try {
-//						java.awt.Graphics2D g2d = shadow_buffer.createGraphics();
-//						g2d.setColor(java.awt.Color.BLACK);
-////						g2d.fillRect(0, 0, width, height);
-//						text_layout.draw(g2d, offsetx, offsety);
-//						g2d.dispose();
-//						this.shadow_buffer = com.g2d.awt.util.Tools.toAlpha(shadow_buffer, shadow_alpha, shadow_color);
-//					} catch (Throwable err) {}
-//				}
-//				((AwtGraphics2D)g).g2d.drawImage(shadow_buffer, shadow_x, shadow_y, null);
+				if (render_shadow_alpha != shadow_alpha && 
+					render_shadow_color != shadow_color) {
+					shadow_buffer = null;
+				}
+				if (shadow_buffer == null) {
+					this.shadow_buffer = new AwtImage(width, height);
+					try {
+						AwtGraphics2D g2d = (AwtGraphics2D)shadow_buffer.getGraphics();
+						g2d.setColor(Color.BLACK);
+//						g2d.fillRect(0, 0, width, height);
+						text_layout.draw(g2d.g2d, offsetx, offsety);
+						g2d.dispose();
+						this.shadow_buffer = com.g2d.Tools.toAlpha(shadow_buffer, shadow_alpha, shadow_color);
+					} catch (Throwable err) {}
+				}
+				g.drawImage(shadow_buffer, shadow_x, shadow_y);
 			} else {
 				shadow_buffer = null;
 			}
