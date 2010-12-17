@@ -1,11 +1,10 @@
 package com.g2d;
 
-import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
 
 import com.cell.gfx.IGraphics;
-import com.cell.gfx.IImage;
-import com.g2d.geom.AffineTransform;
+import com.g2d.geom.Ellipse2D;
+import com.g2d.geom.Line2D;
 import com.g2d.geom.Path2D;
 import com.g2d.geom.Polygon;
 import com.g2d.geom.Rectangle;
@@ -103,9 +102,53 @@ public abstract class Graphics2D implements IGraphics
 	
 //	---------------------------------------------------------------------------------------------------------------------------
 
+	final public void fill(Shape shape) 
+	{
+		if (shape instanceof Line2D) {
+			Line2D line = (Line2D)shape;
+			drawLine((int)line.getX1(), (int)line.getY1(), (int)line.getX2(), (int)line.getY2());
+		}
+		else if (shape instanceof Rectangle2D) {
+			Rectangle2D rect = (Rectangle2D)shape;
+			fillRect((int)rect.getX(), (int)rect.getY(), (int)rect.getWidth(), (int)rect.getHeight());
+		}
+		else if (shape instanceof Ellipse2D) {
+			Ellipse2D arc = (Ellipse2D)shape;
+			fillArc((int)arc.getX(), (int)arc.getY(), (int)arc.getWidth(), (int)arc.getHeight(), 0, 360);
+		}
+		else if (shape instanceof Polygon) {
+			Polygon poly = (Polygon)shape;
+			fillPolygon(poly.xpoints, poly.ypoints, poly.npoints);
+		}
+		else if (shape instanceof Path2D) {
+			Path2D path = (Path2D)shape;
+			fillPath(path);
+		}
+	}
 	
-	abstract public void 			fill(Shape shape);
-	abstract public void 			draw(Shape shape);
+	final public void draw(Shape shape) 
+	{
+		if (shape instanceof Line2D) {
+			Line2D line = (Line2D)shape;
+			drawLine((int)line.getX1(), (int)line.getY1(), (int)line.getX2(), (int)line.getY2());
+		}
+		else if (shape instanceof Rectangle2D) {
+			Rectangle2D rect = (Rectangle2D)shape;
+			drawRect((int)rect.getX(), (int)rect.getY(), (int)rect.getWidth(), (int)rect.getHeight());
+		}
+		else if (shape instanceof Ellipse2D) {
+			Ellipse2D arc = (Ellipse2D)shape;
+			drawArc((int)arc.getX(), (int)arc.getY(), (int)arc.getWidth(), (int)arc.getHeight(), 0, 360);
+		}
+		else if (shape instanceof Polygon) {
+			Polygon poly = (Polygon)shape;
+			drawPolygon(poly.xpoints, poly.ypoints, poly.npoints);
+		}
+		else if (shape instanceof Path2D) {
+			Path2D path = (Path2D)shape;
+			drawPath(path);
+		}
+	}
 	
 	abstract public void 			drawLine(int x1, int y1, int x2, int y2);
 	
@@ -124,11 +167,11 @@ public abstract class Graphics2D implements IGraphics
 	abstract public void 			drawArc(int x, int y, int width, int height, int startAngle, int arcAngle);
 	abstract public void 			fillArc(int x, int y, int width, int height, int startAngle, int arcAngle);
 
-	public void drawOval(int x, int y, int width, int height) {
+	final public void drawOval(int x, int y, int width, int height) {
 		drawArc(x, y, width, height, 0, 360);
 	}
 
-	public void fillOval(int x, int y, int width, int height) {
+	final public void fillOval(int x, int y, int width, int height) {
 		fillArc(x, y, width, height, 0, 360);
 	}
 	
@@ -188,5 +231,50 @@ public abstract class Graphics2D implements IGraphics
 //	--------------------------------------------------------------------------------------------
 
 
+	final protected void transform(int transform, int width, int height)
+	{
+		switch (transform) 
+		{
+		case TRANS_ROT90: {
+			translate(height, 0);
+			rotate(ANGLE_90);
+			break;
+		}
+		case TRANS_ROT180: {
+			translate(width, height);
+			rotate(Math.PI);
+			break;
+		}
+		case TRANS_ROT270: {
+			translate(0, width);
+			rotate(ANGLE_270);
+			break;
+		}
+		case TRANS_MIRROR: {
+			translate(width, 0);
+			scale(-1, 1);
+			break;
+		}
+		case TRANS_MIRROR_ROT90: {
+			translate(height, 0);
+			rotate(ANGLE_90);
+			translate(width, 0);
+			scale(-1, 1);
+			break;
+		}
+		case TRANS_MIRROR_ROT180: {
+			translate(width, 0);
+			scale(-1, 1);
+			translate(width, height);
+			rotate(Math.PI);
+			break;
+		}
+		case TRANS_MIRROR_ROT270: {
+			rotate(ANGLE_270);
+			scale(-1, 1);
+			break;
+		}
+		}
+	}
 	
 }

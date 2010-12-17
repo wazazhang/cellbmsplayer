@@ -212,14 +212,6 @@ FocusListener
 		return stageHeight;
 	}
 	
-	public int getWidth() {
-		return component.getWidth();
-	}
-	
-	public int getHeight() {
-		return component.getHeight();
-	}
-	
 	public Stage getStage() {
 		return currentStage;
 	}
@@ -269,6 +261,12 @@ FocusListener
 //	game
 //	--------------------------------------------------------------------------------------------------------------------------
 	
+	protected float getMouseSizeRateW(int stageWidth) {
+		return (float)stageWidth / getComponent().getWidth();
+	}
+	protected float getMouseSizeRateH(int stageWidth) {
+		return (float)stageHeight/ getComponent().getHeight();
+	}
 //	public void repaint_game() {
 //		component.repaint(0, 0, 0, getWidth(), getHeight());
 //	}
@@ -289,8 +287,8 @@ FocusListener
 			fixMouse() ;
 			queryKey();
 			
-			size_rate_x = (float)stageWidth / getWidth();
-			size_rate_y = (float)stageHeight/ getHeight();
+			size_rate_x = getMouseSizeRateW(stageWidth);
+			size_rate_y = getMouseSizeRateH(stageHeight);
 			
 			
 			updateStage(currentStage);

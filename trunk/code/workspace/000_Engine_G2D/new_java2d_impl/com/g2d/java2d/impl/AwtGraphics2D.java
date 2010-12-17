@@ -245,53 +245,6 @@ public class AwtGraphics2D extends Graphics2D
 //	base shape
 //	-------------------------------------------------------------------------------------------------------------------------
 	
-	public void fill(Shape shape) 
-	{
-		if (shape instanceof Line2D) {
-			Line2D line = (Line2D)shape;
-			drawLine((int)line.getX1(), (int)line.getY1(), (int)line.getX2(), (int)line.getY2());
-		}
-		else if (shape instanceof Rectangle2D) {
-			Rectangle2D rect = (Rectangle2D)shape;
-			fillRect((int)rect.getX(), (int)rect.getY(), (int)rect.getWidth(), (int)rect.getHeight());
-		}
-		else if (shape instanceof Ellipse2D) {
-			Ellipse2D arc = (Ellipse2D)shape;
-			fillArc((int)arc.getX(), (int)arc.getY(), (int)arc.getWidth(), (int)arc.getHeight(), 0, 360);
-		}
-		else if (shape instanceof Polygon) {
-			Polygon poly = (Polygon)shape;
-			fillPolygon(poly.xpoints, poly.ypoints, poly.npoints);
-		}
-		else if (shape instanceof Path2D) {
-			Path2D path = (Path2D)shape;
-			fillPath(path);
-		}
-	}
-	
-	public void draw(Shape shape) 
-	{
-		if (shape instanceof Line2D) {
-			Line2D line = (Line2D)shape;
-			drawLine((int)line.getX1(), (int)line.getY1(), (int)line.getX2(), (int)line.getY2());
-		}
-		else if (shape instanceof Rectangle2D) {
-			Rectangle2D rect = (Rectangle2D)shape;
-			drawRect((int)rect.getX(), (int)rect.getY(), (int)rect.getWidth(), (int)rect.getHeight());
-		}
-		else if (shape instanceof Ellipse2D) {
-			Ellipse2D arc = (Ellipse2D)shape;
-			drawArc((int)arc.getX(), (int)arc.getY(), (int)arc.getWidth(), (int)arc.getHeight(), 0, 360);
-		}
-		else if (shape instanceof Polygon) {
-			Polygon poly = (Polygon)shape;
-			drawPolygon(poly.xpoints, poly.ypoints, poly.npoints);
-		}
-		else if (shape instanceof Path2D) {
-			Path2D path = (Path2D)shape;
-			drawPath(path);
-		}
-	}
 	
 	public void drawLine(int x1, int y1, int x2, int y2) {
 		g2d.drawLine(x1, y1, x2, y2);
@@ -614,52 +567,6 @@ public class AwtGraphics2D extends Graphics2D
 //	
 //	-------------------------------------------------------------------------------------------------------------------------
 	
-	protected final void transform(int transform, int width, int height)
-	{
-		switch (transform) 
-		{
-		case TRANS_ROT90: {
-			g2d.translate(height, 0);
-			g2d.rotate(ANGLE_90);
-			break;
-		}
-		case TRANS_ROT180: {
-			g2d.translate(width, height);
-			g2d.rotate(Math.PI);
-			break;
-		}
-		case TRANS_ROT270: {
-			g2d.translate(0, width);
-			g2d.rotate(ANGLE_270);
-			break;
-		}
-		case TRANS_MIRROR: {
-			g2d.translate(width, 0);
-			g2d.scale(-1, 1);
-			break;
-		}
-		case TRANS_MIRROR_ROT90: {
-			g2d.translate(height, 0);
-			g2d.rotate(ANGLE_90);
-			g2d.translate(width, 0);
-			g2d.scale(-1, 1);
-			break;
-		}
-		case TRANS_MIRROR_ROT180: {
-			g2d.translate(width, 0);
-			g2d.scale(-1, 1);
-			g2d.translate(width, height);
-			g2d.rotate(Math.PI);
-			break;
-		}
-		case TRANS_MIRROR_ROT270: {
-			g2d.rotate(ANGLE_270);
-			g2d.scale(-1, 1);
-			break;
-		}
-		}
-	}
-
 	protected final java.awt.Composite getCompositeFrom(int blend_mode, float blend_alpha)
 	{
 		java.awt.Composite composite = null;
