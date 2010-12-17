@@ -112,8 +112,7 @@ public class CWorldMini extends CObject {
 	       	}
 	    	MapColor = mapColor;
 	    	
-	    	Buffer = surface;
-	    	surface.createBuffer(WTW ,WTH);
+	    	Buffer = surface.createBuffer(WTW ,WTH);
 			bg = Buffer.getIGraphics();
 			for (int by = 0; by < world.getMap().getYCount(); by++) {
 				for (int bx = 0; bx < world.getMap().getXCount(); bx++) {
