@@ -277,8 +277,8 @@ public abstract class DisplayObject implements Vector
 	
 	final public Rectangle getScreenBounds(){
 		Rectangle rect = new Rectangle(local_bounds);
-		rect.x += local_bounds.x;
-		rect.y += local_bounds.y;
+		rect.x += screen_x;
+		rect.y += screen_y;
 		return rect;
 	}
 	
