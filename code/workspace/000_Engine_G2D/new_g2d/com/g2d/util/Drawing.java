@@ -151,10 +151,14 @@ public class Drawing
 	
 	final static public Rectangle drawStringBorder(Graphics2D g, String src, int x, int y, int w, int h, int anchor)
 	{
+		return drawStringBorder(g, src, x, y, w, h, anchor, Color.BLACK);
+	}
+	
+	final static public Rectangle drawStringBorder(Graphics2D g, String src, int x, int y, int w, int h, int anchor, Color back_color)
+	{
 		Color c = g.getColor();
-		
 		{
-			g.setColor(Color.BLACK);
+			g.setColor(back_color);
 			drawString(g, src, x-1, y-1, w, h, anchor);
 			drawString(g, src, x-1, y-0, w, h, anchor);
 			drawString(g, src, x-1, y+1, w, h, anchor);
@@ -164,17 +168,21 @@ public class Drawing
 			drawString(g, src, x+1, y-0, w, h, anchor);
 			drawString(g, src, x+1, y+1, w, h, anchor);
 		}
-		
 		g.setColor(c);
 		return drawString(g, src, x, y, w, h, anchor);
 	}
 	
 	final static public Rectangle drawStringShadow(Graphics2D g, String src, int x, int y, int w, int h, int anchor)
 	{
+		return drawStringShadow(g, src, x, y, w, h, anchor, Color.BLACK);
+	}
+	
+	final static public Rectangle drawStringShadow(Graphics2D g, String src, int x, int y, int w, int h, int anchor, Color back_color)
+	{
 		Color c = g.getColor();
 		
 		{
-			g.setColor(Color.BLACK);
+			g.setColor(back_color);
 			drawString(g, src, x-0, y+1, w, h, anchor);
 			drawString(g, src, x+1, y+1, w, h, anchor);
 		}
@@ -185,10 +193,14 @@ public class Drawing
 	
 	final static public Rectangle drawStringBorder(Graphics2D g, String src, int x, int y, int anchor)
 	{
+		return drawStringBorder(g, src, x, y, anchor, Color.BLACK);
+	}
+	
+	final static public Rectangle drawStringBorder(Graphics2D g, String src, int x, int y, int anchor, Color back_color)
+	{
 		Color c = g.getColor();
-		
 		{
-			g.setColor(Color.BLACK);
+			g.setColor(back_color);
 			drawString(g, src, x-1, y-1, anchor);
 			drawString(g, src, x-1, y-0, anchor);
 			drawString(g, src, x-1, y+1, anchor);
@@ -198,40 +210,40 @@ public class Drawing
 			drawString(g, src, x+1, y-0, anchor);
 			drawString(g, src, x+1, y+1, anchor);
 		}
-		
 		g.setColor(c);
 		return drawString(g, src, x, y, anchor);
 	}
 	
 	final static public Rectangle drawStringShadow(Graphics2D g, String src, int x, int y, int anchor)
 	{
+		return drawStringShadow(g, src, x, y, anchor, Color.BLACK);
+	}
+	
+	final static public Rectangle drawStringShadow(Graphics2D g, String src, int x, int y, int anchor, Color back_color)
+	{
 		Color c = g.getColor();
-		
 		{
-			g.setColor(Color.BLACK);
+			g.setColor(back_color);
 			drawString(g, src, x-0, y+1, anchor);
 			drawString(g, src, x+1, y+1, anchor);
 		}
-		
 		g.setColor(c);
 		return drawString(g, src, x, y, anchor);
 	}
-	
-	
 	
 	
 	final static public void drawString(Graphics2D g, MultiTextLayout src, int x, int y, int anchor)
 	{
 		if ((anchor & TEXT_ANCHOR_RIGHT) != 0) {
 			x -= src.getWidth();
-		}else if ((anchor & TEXT_ANCHOR_HCENTER) != 0) {
-			x -= (src.getWidth()>>1);
+		} else if ((anchor & TEXT_ANCHOR_HCENTER) != 0) {
+			x -= (src.getWidth() >> 1);
 		}
-		
+
 		if ((anchor & TEXT_ANCHOR_BOTTON) != 0) {
 			y -= src.getHeight();
-		}else if ((anchor & TEXT_ANCHOR_VCENTER) != 0) {
-			y -= (src.getHeight()>>1);
+		} else if ((anchor & TEXT_ANCHOR_VCENTER) != 0) {
+			y -= (src.getHeight() >> 1);
 		}
 		
 		src.drawText(g, x, y);
@@ -242,14 +254,14 @@ public class Drawing
 	{
 		if ((anchor & TEXT_ANCHOR_RIGHT) != 0) {
 			x += w - src.getWidth();
-		}else if ((anchor & TEXT_ANCHOR_HCENTER) != 0) {
-			x += ((w-src.getWidth())>>1);
+		} else if ((anchor & TEXT_ANCHOR_HCENTER) != 0) {
+			x += ((w - src.getWidth()) >> 1);
 		}
-		
+
 		if ((anchor & TEXT_ANCHOR_BOTTON) != 0) {
 			y += h - src.getHeight();
-		}else if ((anchor & TEXT_ANCHOR_VCENTER) != 0) {
-			y += ((h-src.getHeight())>>1);
+		} else if ((anchor & TEXT_ANCHOR_VCENTER) != 0) {
+			y += ((h - src.getHeight()) >> 1);
 		}
 		
 		src.drawText(g, x, y, 0, 0, w, h);
@@ -259,16 +271,16 @@ public class Drawing
 	{
 		if ((anchor & TEXT_ANCHOR_RIGHT) != 0) {
 			x += w - src.getWidth();
-		}else if ((anchor & TEXT_ANCHOR_HCENTER) != 0) {
-			x += ((w-src.getWidth())>>1);
+		} else if ((anchor & TEXT_ANCHOR_HCENTER) != 0) {
+			x += ((w - src.getWidth()) >> 1);
 		}
-		
+
 		if ((anchor & TEXT_ANCHOR_BOTTON) != 0) {
 			y += h - src.getHeight();
-		}else if ((anchor & TEXT_ANCHOR_VCENTER) != 0) {
-			y += ((h-src.getHeight())>>1);
+		} else if ((anchor & TEXT_ANCHOR_VCENTER) != 0) {
+			y += ((h - src.getHeight()) >> 1);
 		}
-		
+
 		src.drawText(g, x, y, 0, 0, w, h, 1, 1, 1f, 0);
 	}
 }

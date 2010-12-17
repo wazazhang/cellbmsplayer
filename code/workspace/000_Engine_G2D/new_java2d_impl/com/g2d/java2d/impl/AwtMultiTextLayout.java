@@ -1261,7 +1261,7 @@ public class AwtMultiTextLayout extends MultiTextLayout
 					i++;
 					e++;
 				}
-				AwtFont.decode(attr_text);
+				attr_text = AwtFont.decode(attr_text);
 				java.awt.Graphics2D g = ((AwtGraphics2D)g2d).g2d;
 				
 				Object prew_rh = g.getRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING);
