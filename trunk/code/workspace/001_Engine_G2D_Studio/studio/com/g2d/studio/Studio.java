@@ -2,6 +2,7 @@ package com.g2d.studio;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.EventQueue;
 import java.awt.FileDialog;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -13,12 +14,15 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.util.Enumeration;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JProgressBar;
 import javax.swing.JToolBar;
 import javax.swing.JWindow;
@@ -636,7 +640,17 @@ public class Studio extends AbstractFrame
 //	main entry
 
 	
-	static public void main(String[] args)
+	static public void main(final String[] args)
+	{
+		EventQueue.invokeLater(new Runnable() {
+            public void run() {
+            	CAppBridge.init();
+                start(args);
+            }
+        });
+	}
+	
+	static public void start(String[] args) 
 	{
 		try
 		{
@@ -680,7 +694,5 @@ public class Studio extends AbstractFrame
 			System.exit(1);
 		}
 	}
-	
-	
 }
 

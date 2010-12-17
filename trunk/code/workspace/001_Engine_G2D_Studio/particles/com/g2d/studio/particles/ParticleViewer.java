@@ -12,7 +12,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JToolBar;
 
-import com.g2d.CompositeRule;
+import com.g2d.awt.util.CompositeRule;
 import com.g2d.editor.DisplayObjectPanel;
 import com.g2d.studio.Config;
 import com.g2d.studio.gameedit.EffectEditor;
