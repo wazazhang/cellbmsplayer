@@ -102,7 +102,7 @@ public abstract class Graphics2D implements IGraphics
 	
 //	---------------------------------------------------------------------------------------------------------------------------
 
-	final public void fill(Shape shape) 
+	public void fill(Shape shape) 
 	{
 		if (shape instanceof Line2D) {
 			Line2D line = (Line2D)shape;
@@ -126,7 +126,7 @@ public abstract class Graphics2D implements IGraphics
 		}
 	}
 	
-	final public void draw(Shape shape) 
+	public void draw(Shape shape) 
 	{
 		if (shape instanceof Line2D) {
 			Line2D line = (Line2D)shape;
