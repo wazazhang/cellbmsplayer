@@ -27,9 +27,9 @@ public class AwtAnimateCursor implements AnimateCursor
 		if (index < 0) {
 			index = 0;
 		}
-		index ++;
-		if (list.length >0 ) {
-			return list[index%list.length];
+		index++;
+		if (list.length > 0) {
+			return list[index % list.length];
 		}
 		return Cursor.getDefaultCursor();
 	}

@@ -13,7 +13,7 @@ public interface Canvas
 	 * 是否在进行文本输入
 	 * @return
 	 */
-	public boolean 	isOnTextInput();
+	public boolean 	isOnTextInput(int ... keycode);
 
 	/**
 	 * 设置默认鼠标指针图形
