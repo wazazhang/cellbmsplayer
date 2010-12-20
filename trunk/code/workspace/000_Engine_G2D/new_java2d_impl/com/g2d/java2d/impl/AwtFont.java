@@ -67,39 +67,51 @@ public class AwtFont implements com.g2d.Font
 			b = it.getIndex();
 			e = b + 1;
 			
-			Number size = (Number) it.getAttribute(TextAttribute.SIZE);
-			if (size != null) {
-				atext.addAttribute(java.awt.font.TextAttribute.SIZE, size, b, e);
-			}
-			
 			Font font = (Font) it.getAttribute(TextAttribute.FONT);
 			if (font != null) {
-				atext.addAttribute(java.awt.font.TextAttribute.FONT, ((AwtFont)(font)).getFont(), b, e);
+				atext.addAttribute(java.awt.font.TextAttribute.FONT, 
+						((AwtFont)(font)).getFont(), b, e);
+			}
+
+			Number size = (Number) it.getAttribute(TextAttribute.SIZE);
+			if (size != null) {
+				atext.addAttribute(java.awt.font.TextAttribute.SIZE, 
+						size, b, e);
+				if (font != null) {
+					AwtFont f = (AwtFont)((AwtFont)(font)).newSize(size.intValue());
+					atext.addAttribute(java.awt.font.TextAttribute.FONT, 
+							f.getFont(), b, e);
+				}
+			}
+
+			Object bold = it.getAttribute(TextAttribute.BOLD);
+			if (bold != null) {
+				atext.addAttribute(java.awt.font.TextAttribute.WEIGHT, 
+						java.awt.font.TextAttribute.WEIGHT_REGULAR, b, e);
 			}
 			
 			Color fcolor = (Color) it.getAttribute(TextAttribute.FOREGROUND);
 			if (fcolor != null) {
-				atext.addAttribute(java.awt.font.TextAttribute.FOREGROUND, new java.awt.Color(fcolor.getARGB(), true), b, e);
+				atext.addAttribute(java.awt.font.TextAttribute.FOREGROUND, 
+						new java.awt.Color(fcolor.getARGB(), true), b, e);
 			}
 			
 			Color bcolor = (Color) it.getAttribute(TextAttribute.BACKGROUND);
 			if (bcolor != null) {
-				atext.addAttribute(java.awt.font.TextAttribute.BACKGROUND, new java.awt.Color(bcolor.getARGB(), true), b, e);
-			}
-			
-			Object bold = it.getAttribute(TextAttribute.BOLD);
-			if (bold != null) {
-				atext.addAttribute(java.awt.font.TextAttribute.WEIGHT, bold, b, e);
+				atext.addAttribute(java.awt.font.TextAttribute.BACKGROUND, 
+						new java.awt.Color(bcolor.getARGB(), true), b, e);
 			}
 			
 			Object underline = it.getAttribute(TextAttribute.UNDERLINE);
-			if (bold != null) {
-				atext.addAttribute(java.awt.font.TextAttribute.UNDERLINE, underline, b, e);
+			if (underline != null) {
+				atext.addAttribute(java.awt.font.TextAttribute.UNDERLINE, 
+						java.awt.font.TextAttribute.UNDERLINE_ON, b, e);
 			}
 
 			GraphicAttribute rep = (GraphicAttribute) it.getAttribute(TextAttribute.REPLACEMENT);
 			if (rep != null) {
-				atext.addAttribute(java.awt.font.TextAttribute.CHAR_REPLACEMENT, new InnerReplaceMent(rep), b, e);
+				atext.addAttribute(java.awt.font.TextAttribute.CHAR_REPLACEMENT, 
+						new InnerReplaceMent(rep), b, e);
 			}
 			
 			
