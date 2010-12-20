@@ -44,21 +44,11 @@ public class GLGraphics2D extends Graphics2D
 	public void setComposite(Composite comp) {}
 	public void pushComposite() {}
 	public void popComposite() {}
-	@Override
-	public void popBlendMode() {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void pushBlendMode() {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public void setBlendMode(int blend, float alpha) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void popBlendMode() {}
+	public void pushBlendMode() {}
+	public void setBlendMode(int blend, float alpha) {}
+	public void setBlendMode(int blend) {}
+	
 //	-------------------------------------------------------------------------------------------------------------------------
 //	paint
 //	-------------------------------------------------------------------------------------------------------------------------
@@ -223,29 +213,20 @@ public class GLGraphics2D extends Graphics2D
 		buff.draw(gl, x, y, width, height, 0, 0, buff.getWidth(), buff.getHeight());
 		return true;
 	}
-
+	
 	public boolean drawImage(Image img, int dx1, int dy1, int dx2, int dy2, int sx1, int sy1, int sx2, int sy2) {
 		GLImage buff = (GLImage)img;
 		buff.draw(gl, dx1, dy1, dx2-dx1, dy2-dy1, sx1, sy1, dx2-dx1, dy2-dy1);
 		return true;
 	}
 
-	public void drawImage(IImage src, int x, int y, int transform,
-			int blendMode, float blendAlpha) {
-		
-	}
+	public void drawImage(IImage img, int x, int y, int w, int h, int transform) {}
+	
+	public void drawImage(IImage src, int x, int y, int transform) {}
 
-	public void drawRegion(IImage src, 
-			int xSrc, int ySrc, int width, int height, 
-			int transform, int blendMode, float blendAlpha,
-			int xDest, int yDest) {
-		
-	}
+	public void drawRegion(IImage src, int xSrc, int ySrc, int width, int height, int transform, int xDest, int yDest) {}
 
-	@Override
-	public void drawRoundImage(IImage src, int x, int y, int width, int height,
-			int transform, int blendMode, float blendAlpha) {
-	}
+	public void drawRoundImage(IImage src, int x, int y, int width, int height, int transform) {}
 
 
 //	-------------------------------------------------------------------------------------------------------------------------
@@ -305,6 +286,17 @@ public class GLGraphics2D extends Graphics2D
 		return null;
 	}
 
+//	-------------------------------------------------------------------------------------------------------------------------
+//	2 impl
+//	-------------------------------------------------------------------------------------------------------------------------
+
+	public static class GraphicsPBuffer
+	{
+		
+	}
 	
-	
+	public static class GraphicsScreen
+	{
+		
+	}
 }
