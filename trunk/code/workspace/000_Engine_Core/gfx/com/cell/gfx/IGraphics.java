@@ -64,9 +64,14 @@ public interface IGraphics
 	
     public void 					dispose();
 
+//	---------------------------------------------------------------------------------------------------------------------
+//	image
+    
+//	public void drawImage(IImage img, int x, int y, int transform, int blend_mode, float blend_alpha); 
 	public void drawImage(IImage img, int x, int y, int transform); 
-//	用setBlendMode(int blend);改变渲染模式，不需要每画一张图片就改变一次Blend
-//	否则，画100张图片相同混合方式的图片或图片，每次都new一个对象出来。一个组合精灵一帧可能有很多图片，一帧共用渲染模式。
+//	用setBlendMode();改变渲染模式，不需要每画一张图片就改变一次Blend
+//	blend只是个状态，不需要每次都设置。否则，画100张图片相同混合方式的图片或图片，每次都new一个blend对象出来。
+//	一个组合精灵一帧可能有很多图片，一帧共用渲染模式。
 	public void drawImage(IImage img, int x, int y, int w, int h, int transform); 
 //	public void drawRoundImage(IImage img, int x, int y, int widht, int height, int transform, int blend_mode, float blend_alpha); 
 //	用setBlendMode(int blend);改变渲染模式，不需要每画一张图片就改变一次Blend
@@ -74,6 +79,9 @@ public interface IGraphics
 //	用setBlendMode(int blend);改变渲染模式，不需要每画一张图片就改变一次Blend
 	public void drawRegion(IImage src, int x_src, int y_src, int width, int height, int transform, int x_dest, int y_dest); 
 
+
+//	---------------------------------------------------------------------------------------------------------------------
+//	geometry
 	
 	public void drawLine(int x1, int y1, int x2, int y2); 
 	public void drawRect(int x, int y, int width, int height); 
@@ -82,7 +90,9 @@ public interface IGraphics
 	public void fillRectAlpha(int argb, int x, int y, int width, int height); 
 	public void fillRect(int x, int y, int width, int height); 
 	public void fillTriangle(int x1, int y1, int x2, int y2, int x3, int y3); 
-	
+
+//	---------------------------------------------------------------------------------------------------------------------
+//	alpha and blend
 	
 	public float	setAlpha(float alpha);
 	public float	getAlpha();
@@ -91,30 +101,27 @@ public interface IGraphics
 	public void		pushBlendMode();
 	public void		popBlendMode();
 
+//	---------------------------------------------------------------------------------------------------------------------
+//	clipping
+	
 	public void		pushClip();
 	public void		popClip();
-	
 	public int		getClipHeight(); 
 	public int		getClipWidth(); 
 	public int		getClipX(); 
 	public int		getClipY(); 
 	public void 	setClip(int x, int y, int width, int height); 
 	public void 	clipRect(int x, int y, int width, int height);
-	
-	public void setColor(int RGB); 
-	public void setColor(int red, int green, int blue); 
 
-//	public IImage createBuffer(int argb, int width, int height);
-//	
-//	public IImage createBuffer(int width, int height);
-//	
-//	public IImage createImage(byte[] data);
-	/*
-	public void flush();
+//	---------------------------------------------------------------------------------------------------------------------
+//	color
 	
-	public void flush(int x,int y, int w, int h);
-	*/
+	public void 	setColor(int RGB); 
+	public void 	setColor(int red, int green, int blue); 
 
+//	---------------------------------------------------------------------------------------------------------------------
+//	string and fonts
+	
 	public int		getStringWidth(String src);
 	public int		getStringHeight();
 
