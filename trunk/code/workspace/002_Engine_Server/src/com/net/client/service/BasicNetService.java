@@ -163,6 +163,14 @@ public abstract class BasicNetService
 		return request_response_ping.get();
 	}
 	
+	/*
+	 * 得到底层使用的线程池
+	 */
+	final public ThreadPool getThreadPool()
+	{
+		return this.thread_pool;
+	}
+	
 //	-------------------------------------------------------------------------------------------------------------
     
 	AtomicReference<ScheduledFuture<?>> schedule_clean_task				= new AtomicReference<ScheduledFuture<?>>();

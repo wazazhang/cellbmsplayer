@@ -18,6 +18,9 @@ public class RegionSpawnTrezuro extends AbstractAbility
 	@Property("产生的单位最大数量")
 	public int spawn_unit_count;
 	
+	@Property("采集点刷新时间")
+	public int spawn_interval = 10000;
+	
 	@Property("产生的单位")
 	public CollectionTypes spawn_types = new CollectionTypes();
 
@@ -28,7 +31,7 @@ public class RegionSpawnTrezuro extends AbstractAbility
 	
 	@Override
 	public String toString() {
-		return super.toString() + " : " + " : max=" + spawn_unit_count + " : types=" + spawn_types;
+		return super.toString() + " : " + " : max=" + spawn_unit_count + " : inerval=" + spawn_interval  + " : types=" + spawn_types;
 	}
 	
 	public static class CollectionTypes extends AbilitiesList implements Serializable
