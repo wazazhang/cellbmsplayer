@@ -11,23 +11,23 @@
         </sealing>
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
-		<file path="/001_Engine_G2D_Studio/deployed/.svn/entries"/>
         <javaElement handleIdentifier="=000_Engine_Core/snd"/>
         <javaElement handleIdentifier="=002_Engine_SQLProxy/src"/>
         <javaElement handleIdentifier="=000_Engine_Core/gfx"/>
         <javaElement handleIdentifier="=001_Engine_G2D_Studio/scene"/>
+        <javaElement handleIdentifier="=000_Engine_G2D/new_g2d"/>
         <javaElement handleIdentifier="=001_Engine_G2D_Studio/rpg"/>
         <javaElement handleIdentifier="=000_Engine_Sound/src"/>
         <javaElement handleIdentifier="=001_Engine_G2D_Studio/instancezone"/>
         <javaElement handleIdentifier="=000_Engine_Sound/ogg"/>
         <javaElement handleIdentifier="=001_Engine_G2D_Studio/gameedit"/>
         <javaElement handleIdentifier="=002_Engine_SQLProxy/xstream"/>
+        <file path="/001_Engine_G2D_Studio/deployed/.svn/entries"/>
         <javaElement handleIdentifier="=001_Engine_G2D_Studio/scripts"/>
         <javaElement handleIdentifier="=001_Engine_G2D_Studio/studio"/>
+        <javaElement handleIdentifier="=000_Engine_G2D/new_java2d_impl"/>
         <javaElement handleIdentifier="=000_Engine_Core/j2se"/>
         <javaElement handleIdentifier="=002_Engine_SQLProxy/mysql"/>
-        <javaElement handleIdentifier="=000_Engine_G2D/j2se"/>
-        <javaElement handleIdentifier="=000_Engine_G2D/g2d"/>
         <javaElement handleIdentifier="=001_Engine_G2D_Studio/quest"/>
         <javaElement handleIdentifier="=000_Engine_Sound/openal"/>
         <javaElement handleIdentifier="=000_Engine_Core/src"/>
