@@ -26,6 +26,8 @@ public class InstanceZone extends RPGObject implements NamedObject, TriggersPack
 	@Property("进入此副本的最大人数")
 	public int player_count 	= 10;
 
+	@Property("进入此副本的最低玩家等级")
+	public int player_level 	= 10;
 	
 	
 //	-------------------------------------------------------------------------------
