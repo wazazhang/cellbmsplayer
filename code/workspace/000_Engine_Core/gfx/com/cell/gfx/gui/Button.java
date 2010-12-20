@@ -218,10 +218,9 @@ public class Button extends LabelBar
 	public void renderPressIcon(IGraphics g, int x, int y){
 		if(PressDownIcon!=null){
 			if (IsIconCenter){
-				g.drawImage(PressDownIcon, x +(W-PressDownIcon.getWidth())/2, y+(H-PressDownIcon.getHeight())/2, 0, IGraphics.BLEND_MODE_NONE, 1.0f);
-			}
-			else{
-				g.drawImage(PressDownIcon, x +(H-PressDownIcon.getWidth())/2, y+(H-PressDownIcon.getHeight())/2, 0, IGraphics.BLEND_MODE_NONE, 1.0f);
+				g.drawImage(PressDownIcon, x +(W-PressDownIcon.getWidth())/2, y+(H-PressDownIcon.getHeight())/2, 0);
+			} else{
+				g.drawImage(PressDownIcon, x +(H-PressDownIcon.getWidth())/2, y+(H-PressDownIcon.getHeight())/2, 0);
 			}
 		}else{
 			super.renderIcon(g, x, y);

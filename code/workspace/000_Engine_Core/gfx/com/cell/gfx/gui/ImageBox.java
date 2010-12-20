@@ -120,7 +120,7 @@ public class ImageBox extends Item
 				break;
 			}
 			
-			g.drawImage(BackImage, x+ox, y+oy, Transform, IGraphics.BLEND_MODE_NONE, 1.0f);
+			g.drawImage(BackImage, x+ox, y+oy, Transform);
 			
 		}else{
 

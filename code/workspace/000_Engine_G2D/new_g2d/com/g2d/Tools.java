@@ -228,7 +228,7 @@ public class Tools
 		{
 			BufferedImage buf = Engine.getEngine().createImage(image.getWidth(), image.getHeight());
 			Graphics2D g = (Graphics2D)buf.createGraphics();
-			g.drawImage(image, 0, 0, 0, IGraphics.BLEND_MODE_NONE, 1.0f);
+			g.drawImage(image, 0, 0, 0);
 			g.dispose();
 			return buf;
 		}

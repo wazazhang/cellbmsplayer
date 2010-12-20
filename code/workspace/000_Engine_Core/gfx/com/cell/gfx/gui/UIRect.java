@@ -143,7 +143,7 @@ public class UIRect extends CObject
 		if ( (width > 0) && (height > 0))
 		{
 			if(BackImage!=null){
-				g.drawRoundImage(BackImage, x+BorderSize, y+BorderSize, width, height, 0, IGraphics.BLEND_MODE_NONE, 1.0f);
+				g.drawRoundImage(BackImage, x+BorderSize, y+BorderSize, width, height, 0);
 			}else{
 				if(BackColor!=0){
 					if((BackColor&0xff000000)!=0xff000000){
@@ -169,39 +169,35 @@ public class UIRect extends CObject
 		}
 		else
 		{
-			g.drawImage(BorderTL, x, y, 0, IGraphics.BLEND_MODE_NONE, 1.0f);
-			g.drawImage(BorderBL, x, y+H-BorderBL.getHeight(), 0, IGraphics.BLEND_MODE_NONE, 1.0f);
-			g.drawImage(BorderTR, x+W-BorderTR.getWidth(), y, 0, IGraphics.BLEND_MODE_NONE, 1.0f);
-			g.drawImage(BorderBR, x+W-BorderBR.getWidth(), y+H-BorderBR.getHeight(), 0, IGraphics.BLEND_MODE_NONE, 1.0f);
+			g.drawImage(BorderTL, x, y, 0);
+			g.drawImage(BorderBL, x, y+H-BorderBL.getHeight(), 0);
+			g.drawImage(BorderTR, x+W-BorderTR.getWidth(), y, 0);
+			g.drawImage(BorderBR, x+W-BorderBR.getWidth(), y+H-BorderBR.getHeight(), 0);
 			
 			g.drawRoundImage(BorderL, 
 					x, 
 					y+BorderTL.getHeight(),
 					BorderL.getWidth(),
 					H-BorderTL.getHeight()-BorderBL.getHeight(), 
-					0,
-					IGraphics.BLEND_MODE_NONE, 1.0f);
+					0);
 			g.drawRoundImage(BorderR, 
 					x+W-BorderR.getWidth(), 
 					y+BorderTR.getHeight(),
 					BorderR.getWidth(),
 					H-BorderTR.getHeight()-BorderBR.getHeight(),  
-					0,
-					IGraphics.BLEND_MODE_NONE, 1.0f);
+					0);
 			g.drawRoundImage(BorderT, 
 					x+BorderTL.getWidth(), 
 					y, 
 					W-BorderTL.getWidth()-BorderTR.getWidth(),
 					BorderT.getHeight(),  //////////BorderB.getHeight() ---> BorderT.getHeight()
-					0,
-					IGraphics.BLEND_MODE_NONE, 1.0f);
+					0);
 			g.drawRoundImage(BorderB, 
 					x+BorderBL.getWidth(), 
 					y+H-BorderB.getHeight(), 
 					W-BorderBL.getWidth()-BorderBR.getWidth(),
 					BorderB.getHeight(),
-					0,
-					IGraphics.BLEND_MODE_NONE, 1.0f);		
+					0);		
 		}
 		
 	}

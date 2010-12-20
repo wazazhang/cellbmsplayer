@@ -664,8 +664,7 @@ public class Form extends Control
 						g.drawImage(CloseIcon, 
 								closex + closew/2 - CloseIcon.getWidth()/2, 
 								closey + closeh/2 - CloseIcon.getHeight()/2, 
-								0,
-								IGraphics.BLEND_MODE_NONE, 1.0f);
+								0);
 					}else{
 						g.setColor(Title.TextColor);
 						g.drawRect(closex, closey, closew, closeh);
@@ -684,8 +683,7 @@ public class Form extends Control
 					g.drawImage(HelpIcon, 
 							helpx + helpw/2 - HelpIcon.getWidth()/2, 
 							helpy + helph/2 - HelpIcon.getHeight()/2, 
-							0,
-							IGraphics.BLEND_MODE_NONE, 1.0f);
+							0);
 					
 				}
 			}

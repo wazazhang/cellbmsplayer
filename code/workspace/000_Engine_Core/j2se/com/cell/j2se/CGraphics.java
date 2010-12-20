@@ -26,7 +26,7 @@ import com.cell.j2se.AlphaComposite.AlphaBlendMode;
 import com.cell.j2se.BlendComposite.BlendingMode;
 
 
-public class CGraphics implements IGraphics 
+public class CGraphics extends CGraphicsImage
 {
 	public static Font DefaultFont;
 
@@ -34,298 +34,32 @@ public class CGraphics implements IGraphics
 	protected int	font_b;
 	protected int	font_h;
 	
-	protected Graphics2D 	m_graphics2d ;
-
-	
 	public CGraphics(Graphics2D graphics){
-		setGraphics(graphics);
+		super(graphics);
 	}
 
-	public void dispose() {
-		m_graphics2d.dispose();
-	}
-	
-	final  public void setGraphics(Graphics2D graphics)
+	protected void setGraphics(Graphics2D graphics)
 	{
 		m_graphics2d 	= graphics;
-
 		if (DefaultFont!=null){
 			setFont(DefaultFont);
 		}
 	}
 	
-	final  public Graphics2D getGraphics()
-	{
-		return m_graphics2d;
-	}
 	
-	
-	final  public  void drawArc(int arg0, int arg1, int arg2, int arg3, int arg4, int arg5) {
-		m_graphics2d.drawArc(arg0, arg1, arg2, arg3, arg4, arg5);
-	}
-
-	final  public  void drawLine(int arg0, int arg1, int arg2, int arg3) {
-		m_graphics2d.drawLine(arg0, arg1, arg2, arg3);
-	}
-
-	final  public void drawRect(int arg0, int arg1, int arg2, int arg3) {
-		m_graphics2d.drawRect(arg0, arg1, arg2-1, arg3-1);
-	}
-	
-	final  public  void drawString(String arg0, int arg1, int arg2) {
-		m_graphics2d.drawString(arg0, arg1, arg2 + font_t);
-	}
-
-	final  public  void fillArc(int arg0, int arg1, int arg2, int arg3, int arg4, int arg5) {
-		m_graphics2d.fillArc(arg0, arg1, arg2, arg3, arg4, arg5);
-	}
-
-	final  public  void fillRect(int arg0, int arg1, int arg2, int arg3) {
-		m_graphics2d.fillRect(arg0, arg1, arg2, arg3);
-	}
-	
-	final  public  void fillRectAlpha(int argb, int x, int y, int width, int height){
-		if(argb==0)return;
-		Color old = m_graphics2d.getColor();
-		m_graphics2d.setColor(new Color(argb, true));
-		m_graphics2d.fillRect(x, y, width, height);
-		m_graphics2d.setColor(old);
-	}
-	
-	
-	final  public  void fillRoundRect(int arg0, int arg1, int arg2, int arg3, int arg4, int arg5) {
-		m_graphics2d.fillRoundRect(arg0, arg1, arg2, arg3, arg4, arg5);
-	}
-
-	final  public  void fillTriangle(int arg0, int arg1, int arg2, int arg3, int arg4, int arg5) {
-		int[] x = new int[]{arg0,arg2,arg4,};
-		int[] y = new int[]{arg1,arg3,arg5,};
-		m_graphics2d.fillPolygon(x,y,3);
-	}
-
-	final  public  void setClip(int arg0, int arg1, int arg2, int arg3) {
-		m_graphics2d.setClip(arg0, arg1, arg2, arg3);
-	}
-	
-	final  public  void clipRect(int arg0, int arg1, int arg2, int arg3){
-		m_graphics2d.clipRect(arg0, arg1, arg2, arg3);
-	}
-	
-	final  public  void setColor(int arg0, int arg1, int arg2) {
-		m_graphics2d.setColor(new Color(arg0, arg1, arg2, 0xff));
-	}
-	final  public  void setColor(int arg0) {
-		m_graphics2d.setColor(new Color(arg0, true));
-	}
-
-	final  public void drawRoundImage(IImage src, int x, int y, int width, int height, int transform, int blend_mode, float blend_alpha) 
-	{
-		Composite saved_composite = m_graphics2d.getComposite();   
-		
-		if (blend_mode != IGraphics.BLEND_MODE_NONE)
-		{
-			Composite toset_composite = this.getCompositeFrom(blend_mode, blend_alpha);			
-			if (toset_composite != null)
-				m_graphics2d.setComposite(toset_composite);
-		}
-		
-		Image img = ((CImage)src).getSrc();
-
-		Rectangle rect = m_graphics2d.getClipBounds();
-
-		m_graphics2d.clipRect(x, y, width, height);
-
-		int w = src.getWidth();
-		int h = src.getHeight();
-
-		for (int dx = 0; dx < width;) {
-			for (int dy = 0; dy < height;) {
-				m_graphics2d.drawImage(img, x + dx, y + dy, null);
-				AScreen.FrameImageDrawed++;
-				dy += h;
-			}
-			dx += w;
-		}
-
-		m_graphics2d.setClip(rect);
-		
-		m_graphics2d.setComposite(saved_composite);
-	}
-
-	private Stack<java.awt.Shape> stack_clip = new Stack<java.awt.Shape>();
-
-	@Override
-	public void pushClip() {
-		stack_clip.push(m_graphics2d.getClip());
-	}
-	
-	@Override
-	public void popClip() {
-		m_graphics2d.setClip(stack_clip.pop());
-	}
-	
-	final  public  int getClipX() 
-	{
-		Rectangle b = m_graphics2d.getClipBounds();
-		if(b!=null)return b.x;
-		return 0;
-	}
-
-	
-	final  public  int getClipY() 
-	{
-		Rectangle b = m_graphics2d.getClipBounds();
-		if(b!=null)return b.y;
-		return 0;
-	}
-
-	
-	final  public  int getClipHeight() 
-	{
-		Rectangle b = m_graphics2d.getClipBounds();
-		if(b!=null)return b.height;
-		return 0;
-	}
-
-	
-	final  public  int getClipWidth() 
-	{
-		Rectangle b = m_graphics2d.getClipBounds();
-		if(b!=null)return b.width;
-		return 0;
-	}
-
-	final public void transform(int transform, int width, int height)
-	{
-		switch (transform) 
-		{
-		case TRANS_ROT90: {
-			m_graphics2d.translate(height, 0);
-			m_graphics2d.rotate(ANGLE_90);
-			break;
-		}
-		case TRANS_ROT180: {
-			m_graphics2d.translate(width, height);
-			m_graphics2d.rotate(Math.PI);
-			break;
-		}
-		case TRANS_ROT270: {
-			m_graphics2d.translate(0, width);
-			m_graphics2d.rotate(ANGLE_270);
-			break;
-		}
-		case TRANS_MIRROR: {
-			m_graphics2d.translate(width, 0);
-			m_graphics2d.scale(-1, 1);
-			break;
-		}
-		case TRANS_MIRROR_ROT90: {
-			m_graphics2d.translate(height, 0);
-			m_graphics2d.rotate(ANGLE_90);
-			m_graphics2d.translate(width, 0);
-			m_graphics2d.scale(-1, 1);
-			break;
-		}
-		case TRANS_MIRROR_ROT180: {
-			m_graphics2d.translate(width, 0);
-			m_graphics2d.scale(-1, 1);
-			m_graphics2d.translate(width, height);
-			m_graphics2d.rotate(Math.PI);
-			break;
-		}
-		case TRANS_MIRROR_ROT270: {
-			m_graphics2d.rotate(ANGLE_270);
-			m_graphics2d.scale(-1, 1);
-			break;
-		}
-		}
-	}
-	
-
-	final  public  void drawImage(IImage src, int x, int y, int transform, int blend_mode, float blend_alpha) 
-	{
-		Composite saved_composite = m_graphics2d.getComposite();   
-		
-		if (blend_mode != IGraphics.BLEND_MODE_NONE)
-		{
-			Composite toset_composite = this.getCompositeFrom(blend_mode, blend_alpha);			
-			if (toset_composite != null)
-				m_graphics2d.setComposite(toset_composite);
-		}
-     
-		Image img = ((CImage)src).getSrc();
-        
-        if (transform == 0)
-        {      	 
-        	m_graphics2d.drawImage(img, x, y, null);
-        }
-        else
-        {
-			AffineTransform savedT = m_graphics2d.getTransform();
-			m_graphics2d.translate(x, y);
-			transform(transform, src.getWidth(), src.getHeight());
-			m_graphics2d.drawImage(img, 0, 0, null);
-			m_graphics2d.setTransform(savedT);
-		}
-        
-        m_graphics2d.setComposite(saved_composite);
-        
-        AScreen.FrameImageDrawed++;
-	}
-	
-	final  public void drawRegion(IImage src, int x_src, int y_src, int width, int height, int transform, int blend_mode, float blend_alpha, int x_dst, int y_dst)
-    {
-		Composite saved_composite = m_graphics2d.getComposite();   
-		
-		if (blend_mode != IGraphics.BLEND_MODE_NONE)
-		{
-			Composite toset_composite = this.getCompositeFrom(blend_mode, blend_alpha);			
-			if (toset_composite != null)
-				m_graphics2d.setComposite(toset_composite);
-		}
-		
-		Image img = ((CImage)src).getSrc();
-
-		AffineTransform savedT = m_graphics2d.getTransform();
-		m_graphics2d.translate(x_dst, y_dst);
-		transform(transform, width, height);
-		m_graphics2d.drawImage(img, 0, 0, width, height, x_src, y_src, x_src + width, y_src + height, null);
-		m_graphics2d.setTransform(savedT);
-		
-        m_graphics2d.setComposite(saved_composite);		
-		
-		AScreen.FrameImageDrawed++;
-
-	}
-
-
-	final  public  void drawRGB(int[] rgbData, int offset, int scanlength, int x, int y, int width, int height, boolean processAlpha) 
-	{
-        if (rgbData == null){
-        	return;
-        }
-        if (width == 0 || height == 0) {
-        	return;
-        }
-
-    	BufferedImage buf = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
-		buf.setRGB(0, 0, width, height, rgbData, 0, scanlength);
-        
-        m_graphics2d.drawImage(buf, x, y, null);
-        AScreen.FrameImageDrawed++;
-    }
-    
-
-	final public  int getStringHeight() {
+	final public int getStringHeight() {
 		return font_h;
 	}
 
-	final  public  int getStringWidth(String src) {
+	final public int getStringWidth(String src) {
 		return m_graphics2d.getFontMetrics().stringWidth(src);
 	}
 
-	
-	final  public  void drawString(String str, int x, int y, int shandowColor, int shandowX, int shandowY)
+	final public void drawString(String arg0, int arg1, int arg2) {
+		m_graphics2d.drawString(arg0, arg1, arg2 + font_t);
+	}
+
+	final public  void drawString(String str, int x, int y, int shandowColor, int shandowX, int shandowY)
 	{
 		Color oldcolor = m_graphics2d.getColor();
 		m_graphics2d.setColor(new Color(shandowColor, true));
@@ -334,58 +68,49 @@ public class CGraphics implements IGraphics
 		m_graphics2d.drawString(str, x, y + font_t);
 	}
 
-	final public  void setStringAntiAllias(boolean antiallias)
-	{
-		if(antiallias){
-			m_graphics2d.setRenderingHint(
-					RenderingHints.KEY_TEXT_ANTIALIASING, 
+	final public void setStringAntiAllias(boolean antiallias) {
+		if (antiallias) {
+			m_graphics2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
 					RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		}else{
-			m_graphics2d.setRenderingHint(
-					RenderingHints.KEY_TEXT_ANTIALIASING, 
+		} else {
+			m_graphics2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
 					RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
 		}
 	}
 
-	final public  void setFont(String name, int size) 
-	{
+	final public void setFont(String name, int size) {
 		try {
 			setFont(new Font(name, Font.PLAIN, size));
 		} catch (Exception err) {
 			err.printStackTrace();
 		}
 	}
-	
-	final public  String getFontName()
-	{
+
+	final public String getFontName() {
 		return m_graphics2d.getFont().getName();
 	}
-	
-	final public  void setStringSize(int size)
-	{
+
+	final public void setStringSize(int size) {
 		setFont(m_graphics2d.getFont().getName(), size);
 	}
-	
-	final  public  int getFontSize()
-	{
+
+	final public int getFontSize() {
 		return m_graphics2d.getFont().getSize();
 	}
-	
-	final  private void setFont(Font font)
-	{
+
+	final private void setFont(Font font) {
 		m_graphics2d.setFont(font);
-		try{
+		try {
 			font_t = m_graphics2d.getFontMetrics().getAscent();
 			font_b = m_graphics2d.getFontMetrics().getDescent();
 			font_h = m_graphics2d.getFontMetrics().getHeight();
-			font_t = font_h/2 + font_t/2 - 2;
+			font_t = font_h / 2 + font_t / 2 - 2;
 			font_b = font_h - font_t;
-		}catch(Exception err){
+		} catch (Exception err) {
 			err.printStackTrace();
 			font_h = m_graphics2d.getFont().getSize();
 		}
 	}
-	
 
 	public String[] getStringLines(String text, int w, int[] out_para)
 	{
@@ -423,44 +148,6 @@ public class CGraphics implements IGraphics
 			err.printStackTrace();
 			return new String[]{"(Error !)"};
 		}
-		
-		
-//		try
-//		{
-//			// calc new text space
-//			char ret = '\n';
-//			char chars[] = text.toCharArray();
-//			int prewPos = 0;
-//			Vector<String> lines = new Vector<String>();
-//			
-//			for(int i=0;i<chars.length;i++){
-//				if(chars[i]==ret){
-//					lines.addElement(new String(chars,prewPos,i-prewPos+1));
-//					prewPos = i + 1;
-//					continue;
-//				}
-//				if (getStringWidth(new String(chars,prewPos,i-prewPos+1)) > w){
-//					lines.addElement(new String(chars,prewPos,i-prewPos+0));
-//					prewPos = i + 0;
-//					continue;
-//				}
-//				if(i==chars.length-1){
-//					lines.addElement(new String(chars,prewPos,chars.length - prewPos));
-//					break;
-//				}
-//			}
-//			
-//			String[] texts = new String[lines.size()];
-//			lines.copyInto(texts);
-//			lines = null;
-//			
-//			return texts;
-//		}
-//		catch(Exception err)
-//		{
-//			err.printStackTrace();
-//			return new String[]{"(Error !)"};
-//		}
 	}
 	
 	
@@ -514,28 +201,6 @@ public class CGraphics implements IGraphics
 			}
 		}
 		return attributes.toArray(new StringAttribute[attributes.size()]);
-	}
-	
-	protected final Composite getCompositeFrom(int blend_mode, float blend_alpha)
-	{
-		Composite composite = null;
-		
-		if (blend_mode != IGraphics.BLEND_MODE_NONE)
-		{
-			if (blend_mode < IGraphics.BLEND_MODE_ALPHA_CLEAR)
-			{
-				BlendingMode mode = BlendingMode.values()[blend_mode];
-				composite = BlendComposite.getInstance(mode, blend_alpha);
-			}
-			else
-			{
-				AlphaBlendMode mode = AlphaBlendMode.values()[blend_mode-IGraphics.BLEND_MODE_ALPHA_CLEAR];
-				if (mode != null)
-					composite = java.awt.AlphaComposite.getInstance(mode.getValue(), blend_alpha);
-			}
-		}
-		
-		return composite;
 	}
 	
 	

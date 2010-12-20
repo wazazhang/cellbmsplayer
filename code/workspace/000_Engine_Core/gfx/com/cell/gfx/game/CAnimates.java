@@ -28,8 +28,8 @@ public class CAnimates extends CGroup
 	protected short[] SH;
 	protected short[] STileID;
 	protected byte[] SFlip;
-	protected byte[] SBlendMode;
-	protected float[] SBlendAlpha;
+//	protected byte[] SBlendMode;
+//	protected float[] SBlendAlpha;
 	
 	/**
 	 * Construct Animates
@@ -43,8 +43,8 @@ public class CAnimates extends CGroup
 		
 		STileID = new short[partCount];
 		SFlip = new byte[partCount];
-		SBlendMode = new byte[partCount];
-		SBlendAlpha = new float[partCount];
+//		SBlendMode = new byte[partCount];
+//		SBlendAlpha = new float[partCount];
 		
 		SW = new short[partCount];
 		SH = new short[partCount];
@@ -94,8 +94,8 @@ public class CAnimates extends CGroup
 			SX[SubIndex] = (short) px;
 			SY[SubIndex] = (short) py;
 			SFlip[SubIndex] = (byte) trans;
-			SBlendMode[SubIndex] = IGraphics.BLEND_MODE_NONE;
-			SBlendAlpha[SubIndex] = 1.0f;
+//			SBlendMode[SubIndex] = IGraphics.BLEND_MODE_NONE;
+//			SBlendAlpha[SubIndex] = 1.0f;
 			switch(trans){
 			case IImage.TRANS_NONE:
 			case IImage.TRANS_H:
@@ -165,13 +165,13 @@ public class CAnimates extends CGroup
 		return SFlip[Frames[frame][sub]];
 	}
 	
-	public byte getFrameBlendMode(int frame, int sub) {
-		return SBlendMode[Frames[frame][sub]];		
-	}
-	
-	public float getFrameBlendAlpha(int frame, int sub) {
-		return SBlendAlpha[Frames[frame][sub]];		
-	}
+//	public byte getFrameBlendMode(int frame, int sub) {
+//		return SBlendMode[Frames[frame][sub]];		
+//	}
+//	
+//	public float getFrameBlendAlpha(int frame, int sub) {
+//		return SBlendAlpha[Frames[frame][sub]];		
+//	}
 	
 	public int[] getFrameBounds(int frame)
 	{
@@ -205,31 +205,31 @@ public class CAnimates extends CGroup
 					STileID[idx], 
 					x + SX[idx], //
 					y + SY[idx], //
-					SFlip[idx],
-					SBlendMode[idx], SBlendAlpha[idx]);
+					SFlip[idx]);
 		}
 	}
 	
-	/**
-	 * Draw one frame with specify frame id</br>
-	 * @param g	graphics surface 
-	 * @param index frame id </br>
-	 * @param x x on graphics surface</br>
-	 * @param y y on graphics surface</br>
-	 * @param blend_mode the blend mode to draw image
-	 * @param blend_alpha the blend alpha to draw image
-	 */
-	public void render(IGraphics g,int index,int x,int y, int blend_mode, float blend_alpha){
-		for(int i=Frames[index].length-1;i>=0;i--){
-			int idx = Frames[index][i];
-			images.render(g,
-					STileID[idx], 
-					x + SX[idx], //
-					y + SY[idx], //
-					SFlip[idx],
-					blend_mode, blend_alpha);
-		}
-	}	
+//	setBlendMode(int blend);改变渲染模式，不需要每画一张图片就改变一次Blend
+//	/**
+//	 * Draw one frame with specify frame id</br>
+//	 * @param g	graphics surface 
+//	 * @param index frame id </br>
+//	 * @param x x on graphics surface</br>
+//	 * @param y y on graphics surface</br>
+//	 * @param blend_mode the blend mode to draw image
+//	 * @param blend_alpha the blend alpha to draw image
+//	 */
+//	public void render(IGraphics g,int index,int x,int y, int blend_mode, float blend_alpha){
+//		for(int i=Frames[index].length-1;i>=0;i--){
+//			int idx = Frames[index][i];
+//			images.render(g,
+//					STileID[idx], 
+//					x + SX[idx], //
+//					y + SY[idx], //
+//					SFlip[idx],
+//					blend_mode, blend_alpha);
+//		}
+//	}	
 		
 	/**
 	 * Draw one part with specify frame id and part id</br>�1�7
@@ -245,31 +245,29 @@ public class CAnimates extends CGroup
 				STileID[idx], 
 				x + SX[idx], //
 				y + SY[idx], //
-				SFlip[idx],
-				SBlendMode[idx], SBlendAlpha[idx]);
-
+				SFlip[idx]);
 	}
-	
-	/**
-	 * Draw one part with specify frame id and part id</br>�1�7
-	 * @param g graphics surface 
-	 * @param index frame id </br>
-	 * @param part part id </br>
-	 * @param x x on graphics surface </br>�1�7
-	 * @param y y on graphics surface </br>
-	 * @param blend_mode the blend mode to draw image
-	 * @param blend_alpha the blend alpha to draw image 
-	 */
-	public void renderSub(IGraphics g,int index,int part,int x,int y, int blend_mode, float blend_alpha){
-		int idx = Frames[index][part];
-		images.render(g,
-				STileID[idx], 
-				x + SX[idx], //
-				y + SY[idx], //
-				SFlip[idx],
-				blend_mode, blend_alpha);
-
-	}	
+//	setBlendMode(int blend);改变渲染模式，不需要每画一张图片就改变一次Blend
+//	/**
+//	 * Draw one part with specify frame id and part id</br>�1�7
+//	 * @param g graphics surface 
+//	 * @param index frame id </br>
+//	 * @param part part id </br>
+//	 * @param x x on graphics surface </br>�1�7
+//	 * @param y y on graphics surface </br>
+//	 * @param blend_mode the blend mode to draw image
+//	 * @param blend_alpha the blend alpha to draw image 
+//	 */
+//	public void renderSub(IGraphics g,int index,int part,int x,int y, int blend_mode, float blend_alpha){
+//		int idx = Frames[index][part];
+//		images.render(g,
+//				STileID[idx], 
+//				x + SX[idx], //
+//				y + SY[idx], //
+//				SFlip[idx],
+//				blend_mode, blend_alpha);
+//
+//	}	
 	
 	/**
 	 * Draw one frame with specify frame id ignore part's coordinate, 
@@ -286,32 +284,31 @@ public class CAnimates extends CGroup
 					STileID[idx], 
 					x , //
 					y , //
-					SFlip[idx],
-					SBlendMode[idx], SBlendAlpha[idx]);
+					SFlip[idx]);
 		}
 	}
-	
-	/**
-	 * Draw one frame with specify frame id ignore part's coordinate, 
-	 * all part based zero point.</br>
-	 * @param g graphics surface
-	 * @param index frame id
-	 * @param x x on graphics surface
-	 * @param y y on graphics surface
-	 * @param blend_mode the blend mode to draw image
-	 * @param blend_alpha the blend alpha to draw image 
-	 */
-	public void renderSingle(IGraphics g,int index,int x,int y, int blend_mode, float blend_alpha){
-		for(int i=Frames[index].length-1;i>=0;i--){
-			int idx = Frames[index][i];
-			images.render(g,
-					STileID[idx], 
-					x , //
-					y , //
-					SFlip[idx],
-					blend_mode, blend_alpha);
-		}
-	}	
+//	setBlendMode(int blend);改变渲染模式，不需要每画一张图片就改变一次Blend
+//	/**
+//	 * Draw one frame with specify frame id ignore part's coordinate, 
+//	 * all part based zero point.</br>
+//	 * @param g graphics surface
+//	 * @param index frame id
+//	 * @param x x on graphics surface
+//	 * @param y y on graphics surface
+//	 * @param blend_mode the blend mode to draw image
+//	 * @param blend_alpha the blend alpha to draw image 
+//	 */
+//	public void renderSingle(IGraphics g,int index,int x,int y, int blend_mode, float blend_alpha){
+//		for(int i=Frames[index].length-1;i>=0;i--){
+//			int idx = Frames[index][i];
+//			images.render(g,
+//					STileID[idx], 
+//					x , //
+//					y , //
+//					SFlip[idx],
+//					blend_mode, blend_alpha);
+//		}
+//	}	
 	
 	/**
 	 * Draw one part with specify frame id and part id ignore part's coordinate, 
@@ -328,30 +325,29 @@ public class CAnimates extends CGroup
 				STileID[idx], 
 				x , //
 				y , //
-				SFlip[idx],
-				SBlendMode[idx], SBlendAlpha[idx]);
+				SFlip[idx]);
 
 	}
-	
-	/**
-	 * Draw one part with specify frame id and part id ignore part's coordinate, 
-	 * part based zero point.</br>
-	 * @param g graphics surface
-	 * @param index frame id
-	 * @param part part id
-	 * @param x x on graphics surface
-	 * @param y y on graphics surface
-	 * @param blend_mode the blend mode to draw image
-	 * @param blend_alpha the blend alpha to draw image 
-	 */
-	public void renderSingleSub(IGraphics g,int index,int part,int x,int y, int blend_mode, float blend_alpha){
-		int idx = Frames[index][part];
-		images.render(g,
-				STileID[idx], 
-				x , //
-				y , //
-				SFlip[idx],
-				blend_mode, blend_alpha);
-
-	}	
+//	setBlendMode(int blend);改变渲染模式，不需要每画一张图片就改变一次Blend
+//	/**
+//	 * Draw one part with specify frame id and part id ignore part's coordinate, 
+//	 * part based zero point.</br>
+//	 * @param g graphics surface
+//	 * @param index frame id
+//	 * @param part part id
+//	 * @param x x on graphics surface
+//	 * @param y y on graphics surface
+//	 * @param blend_mode the blend mode to draw image
+//	 * @param blend_alpha the blend alpha to draw image 
+//	 */
+//	public void renderSingleSub(IGraphics g,int index,int part,int x,int y, int blend_mode, float blend_alpha){
+//		int idx = Frames[index][part];
+//		images.render(g,
+//				STileID[idx], 
+//				x , //
+//				y , //
+//				SFlip[idx],
+//				blend_mode, blend_alpha);
+//
+//	}	
 }

@@ -43,12 +43,15 @@ import com.g2d.awt.util.Tools;
 import com.g2d.display.particle.Layer;
 import com.g2d.display.particle.OriginShape;
 import com.g2d.display.particle.ParticleAffect;
+import com.g2d.display.particle.ParticleAppearance;
 import com.g2d.display.particle.Layer.TimeNode;
 import com.g2d.display.particle.affects.Gravity;
 import com.g2d.display.particle.affects.Vortex;
 import com.g2d.display.particle.affects.Wander;
 import com.g2d.display.particle.affects.Wind;
 import com.g2d.editor.property.ListEnumEdit;
+import com.g2d.editor.property.ObjectPropertyDialog;
+import com.g2d.editor.property.ObjectPropertyForm;
 import com.g2d.editor.property.ObjectPropertyPanel;
 import com.g2d.studio.Studio;
 import com.g2d.studio.cpj.CPJEffectImageSelectDialog;
@@ -328,9 +331,7 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 			
 			public PageAppearance() 
 			{
-				super.setLayout(new BorderLayout());
-				
-				
+				super.setLayout(new BorderLayout());				
 				
 				panels.put(ParticleAppearanceType.IMAGE, new AppearanceImage());
 				panels.put(ParticleAppearanceType.SPRITE, new AppearanceSprite());
@@ -376,8 +377,37 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 				}
 			}
 			
+			abstract class AppearancePage extends PropertyPage implements ActionListener
+			{
+				JButton btn_property = new JButton("属性");
+				JToolBar tools = new JToolBar();
+				
+				public AppearancePage() 
+				{
+					super.setLayout(new BorderLayout());
+					super.add(tools, BorderLayout.NORTH);
+					
+					btn_property.addActionListener(this);
+					tools.add(btn_property);
+					tools.addSeparator();
+					tools.setFloatable(false);
+				}
+				
+				abstract ParticleAppearance getAppearance() ;
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if (e.getSource() == btn_property) {
+						if (getAppearance()!=null) {
+							ObjectPropertyDialog d = new ObjectPropertyDialog(this, 
+									new ObjectPropertyPanel(getAppearance()));
+							d.setVisible(true);
+						}
+					}
+				}
+			}
 			
-			class AppearanceImage extends PropertyPage implements ActionListener
+			class AppearanceImage extends AppearancePage
 			{
 				DisplayNodeImage	appearance;				
 				JButton				image_brwoser_btn	= new JButton("浏览图片");
@@ -385,27 +415,38 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 				
 				public AppearanceImage() 
 				{
-					super.setLayout(new BorderLayout());
-					super.add(image_brwoser_btn, BorderLayout.NORTH);
-					super.add(image_view, BorderLayout.CENTER);
-					image_brwoser_btn.addActionListener(this);				
+					tools.add(image_brwoser_btn);
+					
+					add(image_view, BorderLayout.CENTER);
+					image_brwoser_btn.addActionListener(this);			
+					
 				}
 				
 				@Override
-				public void actionPerformed(ActionEvent e) {
-					TileImage ret = new CPJEffectImageSelectDialog(this).showDialog();
-					if (ret != null) {
-						if (appearance == null) {
-							appearance = new DisplayNodeImage();
-						}
-						appearance.cpj_image_id		= ret.index;
-						appearance.cpj_project_name	= ret.parent_name;
-						appearance.cpj_sprite_name	= ret.sprite_name;
-						BufferedImage buff			= ret.getEffectImage();
-						appearance.setImage(Tools.wrap_g2d(buff));
-						layer.appearance = appearance;
-						if (appearance.getImage() != null) {
-							image_view.setIcon(Tools.createIcon(buff));
+				ParticleAppearance getAppearance() {
+					return appearance;
+				}
+				
+				@Override
+				public void actionPerformed(ActionEvent e) 
+				{
+					super.actionPerformed(e);
+					
+					if (e.getSource() == image_brwoser_btn) {
+						TileImage ret = new CPJEffectImageSelectDialog(this).showDialog();
+						if (ret != null) {
+							if (appearance == null) {
+								appearance = new DisplayNodeImage();
+							}
+							appearance.cpj_image_id		= ret.index;
+							appearance.cpj_project_name	= ret.parent_name;
+							appearance.cpj_sprite_name	= ret.sprite_name;
+							BufferedImage buff			= ret.getEffectImage();
+							appearance.setImage(Tools.wrap_g2d(buff));
+							layer.appearance = appearance;
+							if (appearance.getImage() != null) {
+								image_view.setIcon(Tools.createIcon(buff));
+							}
 						}
 					}
 				}
@@ -436,7 +477,7 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 			}
 			
 			
-			class AppearanceSprite extends PropertyPage implements ActionListener
+			class AppearanceSprite extends AppearancePage
 			{
 				DisplayNodeSprite	appearance;
 				
@@ -449,34 +490,44 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 				
 				public AppearanceSprite() 
 				{
-					super.setLayout(new BorderLayout());
-					super.add(image_brwoser_btn, BorderLayout.NORTH);
-					super.add(image_view, BorderLayout.CENTER);
+					tools.add(image_brwoser_btn);
+					
+					add(image_view, BorderLayout.CENTER);
 					JPanel south = new JPanel(new BorderLayout());
 					south.add(sprite_anim, BorderLayout.WEST);
 					south.add(sprite_anim_v, BorderLayout.CENTER);
 					south.add(sprite_anim_max, BorderLayout.EAST);
-					super.add(south, BorderLayout.SOUTH);
+					add(south, BorderLayout.SOUTH);
 					
 					image_brwoser_btn.addActionListener(this);				
 				}
+
+				@Override
+				ParticleAppearance getAppearance() {
+					return appearance;
+				}
 				
 				@Override
-				public void actionPerformed(ActionEvent e) {
-					CPJSprite spr = new CPJResourceSelectDialog<CPJSprite>(this, CPJResourceType.EFFECT).showDialog();
-					if (spr != null) {
-						if (appearance == null) {
-							appearance = new DisplayNodeSprite();
+				public void actionPerformed(ActionEvent e)
+				{
+					super.actionPerformed(e);
+					
+					if (e.getSource() == image_brwoser_btn) {
+						CPJSprite spr = new CPJResourceSelectDialog<CPJSprite>(this, CPJResourceType.EFFECT).showDialog();
+						if (spr != null) {
+							if (appearance == null) {
+								appearance = new DisplayNodeSprite();
+							}
+							appearance.cpj_project_name	= spr.parent.name;
+							appearance.cpj_sprite_name	= spr.name;
+							appearance.sprite			= spr.createCSprite();
+							layer.appearance = appearance;
+							
+							sprite_anim_v.setModel(new SpinnerNumberModel(0, 0, appearance.sprite.getAnimateCount()-1, 1));
+							sprite_anim_v.setValue(0);
+							sprite_anim_max.setText("最大"+(appearance.sprite.getAnimateCount()-1)+" ");
+							image_view.setIcon(Tools.createIcon(spr.getSnapShoot()));
 						}
-						appearance.cpj_project_name	= spr.parent.name;
-						appearance.cpj_sprite_name	= spr.name;
-						appearance.sprite			= spr.createCSprite();
-						layer.appearance = appearance;
-						
-						sprite_anim_v.setModel(new SpinnerNumberModel(0, 0, appearance.sprite.getAnimateCount()-1, 1));
-						sprite_anim_v.setValue(0);
-						sprite_anim_max.setText("最大"+(appearance.sprite.getAnimateCount()-1)+" ");
-						image_view.setIcon(Tools.createIcon(spr.getSnapShoot()));
 					}
 				}
 

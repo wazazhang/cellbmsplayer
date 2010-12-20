@@ -180,14 +180,14 @@ public class SelectBox extends LabelBar
 		
 		
 		if(IconKeyNext!=null){
-			g.drawImage(IconKeyNext, x, y, 0, IGraphics.BLEND_MODE_NONE, 1.0f);
+			g.drawImage(IconKeyNext, x, y, 0);
 		}else{
 			g.setColor(ColorTextKeyL);
 			g.drawString(TextKeyL, x + UserRect.BorderSize, y + (H-th)/2);
 		}
 		
 		if(IconKeyPrew!=null){
-			g.drawImage(IconKeyPrew, x + W - IconKeyPrew.getWidth(), y, IImage.TRANS_H, IGraphics.BLEND_MODE_NONE, 1.0f);
+			g.drawImage(IconKeyPrew, x + W - IconKeyPrew.getWidth(), y, IImage.TRANS_H);
 		}else{
 			g.setColor(ColorTextKeyR);
 			g.drawString(TextKeyR, x + W - UserRect.BorderSize - g.getStringWidth(TextKeyR), y + (H-th)/2);

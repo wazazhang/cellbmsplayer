@@ -64,50 +64,46 @@ public interface IGraphics
 	
     public void 					dispose();
 
-	abstract public void 			pushClip();
-	abstract public void 			popClip();
-	
-	public void drawArc(int x, int y, int width, int height, int startAngle, int arcAngle); 
-	
-	public void drawImage(IImage img, int x, int y, int transform, int blend_mode, float blend_alpha); 
-	
-	//public void drawImage(IImage img, int x, int y, int w, int h, int transform); 
-	
-	public void drawRoundImage(IImage img, int x, int y, int widht, int height, int transform, int blend_mode, float blend_alpha); 
+	public void drawImage(IImage img, int x, int y, int transform); 
+//	用setBlendMode(int blend);改变渲染模式，不需要每画一张图片就改变一次Blend
+//	否则，画100张图片相同混合方式的图片或图片，每次都new一个对象出来。一个组合精灵一帧可能有很多图片，一帧共用渲染模式。
+	public void drawImage(IImage img, int x, int y, int w, int h, int transform); 
+//	public void drawRoundImage(IImage img, int x, int y, int widht, int height, int transform, int blend_mode, float blend_alpha); 
+//	用setBlendMode(int blend);改变渲染模式，不需要每画一张图片就改变一次Blend
+	public void drawRoundImage(IImage img, int x, int y, int widht, int height, int transform); 
+//	用setBlendMode(int blend);改变渲染模式，不需要每画一张图片就改变一次Blend
+	public void drawRegion(IImage src, int x_src, int y_src, int width, int height, int transform, int x_dest, int y_dest); 
+
 	
 	public void drawLine(int x1, int y1, int x2, int y2); 
 	public void drawRect(int x, int y, int width, int height); 
-	public void drawRegion(IImage src, int x_src, int y_src, int width, int height, int transform, int blend_mode, float blend_alpha, int x_dest, int y_dest); 
-//	public void drawRGB(int[] rgbData, int offset, int scanlength, int x, int y, int width, int height, boolean processAlpha); 
-	public void drawString(String str, int x, int y); 
-	
+	public void drawArc(int x, int y, int width, int height, int startAngle, int arcAngle); 
 	public void fillArc(int x, int y, int width, int height, int startAngle, int arcAngle); 
 	public void fillRectAlpha(int argb, int x, int y, int width, int height); 
 	public void fillRect(int x, int y, int width, int height); 
 	public void fillTriangle(int x1, int y1, int x2, int y2, int x3, int y3); 
 	
-	public int getStringWidth(String src);
-	public int getStringHeight();
 	
+	public float	setAlpha(float alpha);
+	public float	getAlpha();
+	public void 	setBlendMode(int blend);
+	public void 	setBlendMode(int blend, float alpha);
+	public void		pushBlendMode();
+	public void		popBlendMode();
 
-	public int getClipHeight(); 
-	public int getClipWidth(); 
-	public int getClipX(); 
-	public int getClipY(); 
-	public void setClip(int x, int y, int width, int height); 
-	public void clipRect(int x, int y, int width, int height);
+	public void		pushClip();
+	public void		popClip();
+	
+	public int		getClipHeight(); 
+	public int		getClipWidth(); 
+	public int		getClipX(); 
+	public int		getClipY(); 
+	public void 	setClip(int x, int y, int width, int height); 
+	public void 	clipRect(int x, int y, int width, int height);
 	
 	public void setColor(int RGB); 
 	public void setColor(int red, int green, int blue); 
-	
-	public void drawString(String str, int x, int y, int shandowColor, int shandowX, int shandowY);
-	
-	public void setFont(String name, int size);
-	public String getFontName();
-	public int getFontSize();
-	
-	public void setStringAntiAllias(boolean antiallias);
-	
+
 //	public IImage createBuffer(int argb, int width, int height);
 //	
 //	public IImage createBuffer(int width, int height);
@@ -118,6 +114,19 @@ public interface IGraphics
 	
 	public void flush(int x,int y, int w, int h);
 	*/
+
+	public int		getStringWidth(String src);
+	public int		getStringHeight();
+
+	public void 	drawString(String str, int x, int y, int shandowColor, int shandowX, int shandowY);
+	public void 	drawString(String str, int x, int y); 
+
+	public void 	setFont(String name, int size);
+	public String 	getFontName();
+	public int 		getFontSize();
+	
+	public void		setStringAntiAllias(boolean antiallias);
+	
 	
 	public StringLayer createStringLayer(String src);
 	public StringLayer createStringLayer(String src, StringAttribute[] attributes);
