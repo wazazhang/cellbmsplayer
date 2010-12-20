@@ -32,6 +32,8 @@ import com.cell.exception.NotImplementedException;
 import com.g2d.AnimateCursor;
 import com.g2d.Engine;
 import com.g2d.Tools;
+import com.g2d.display.DisplayObject;
+import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.Stage;
 import com.g2d.display.event.Event;
 import com.g2d.display.event.TextInputer;
@@ -361,14 +363,6 @@ FocusListener
 //	--------------------------------------------------------------------------------
 //	control and input
 	
-	private boolean isPickedKeyInputer(int[] chars) {
-		if (getStage()!=null && getStage().getMousePickedObject() instanceof TextInputer) {
-			TextInputer inputer = (TextInputer)getStage().getMousePickedObject();
-			return inputer.isInput(chars);
-		}
-		return false;
-	}
-	
 	synchronized private void queryKey() 
 	{
 		// 用收集到的按键替换查询的按键,并清理收集到的按键,重新监测下一帧的情况
@@ -394,10 +388,18 @@ FocusListener
 	}
 	
 	@Override
-	public boolean isOnTextInput() {
-		if (getStage()!=null) {
-			if (getStage().getFocusLeaf() instanceof TextInputer) {
-				return true;
+	public boolean isOnTextInput(int ... keycode) {
+		if (getStage() != null) {
+			DisplayObject o = getStage();
+			while (o != null) {
+				if (o instanceof TextInputer) {
+					if (((TextInputer)o).isInput(keycode)) {
+						return true;
+					}
+				}
+				if (o instanceof DisplayObjectContainer) {
+					o = ((DisplayObjectContainer)o).getFocus();
+				}
 			}
 		}
 		return false;
@@ -410,9 +412,6 @@ FocusListener
 	 */
 	synchronized public boolean isKeyHold(int ... keycode) 
 	{
-		if (isPickedKeyInputer(keycode)){
-			return false;
-		}
 		for (int k : keycode) 
 			if (keystate.get(k)!=null) 
 				return true;
@@ -425,10 +424,7 @@ FocusListener
 	 * @return
 	 */
 	synchronized public boolean isKeyDown(int ... keycode)
-	{		
-		if (isPickedKeyInputer(keycode)){
-			return false;
-		}
+	{
 		for (int k : keycode) 
 			if (keystate_query_down.get(k)!=null) 
 				return true;
@@ -442,9 +438,6 @@ FocusListener
 	 */
 	synchronized public boolean isKeyUp(int ... keycode)
 	{
-		if (isPickedKeyInputer(keycode)){
-			return false;
-		}
 		for (int k : keycode) 
 			if (keystate_query_up.get(k)!=null) 
 				return true;
@@ -457,9 +450,6 @@ FocusListener
 	 */
 	synchronized public int getDownKeyCount()
 	{
-		if (isPickedKeyInputer(KEYCODES_4_TEMP))
-			return 0;
-		
 		int count = keystate.size();
 		
 		return count;
@@ -471,9 +461,6 @@ FocusListener
 	 */
 	synchronized public int getUpKeyCount()
 	{
-		if (isPickedKeyInputer(KEYCODES_4_TEMP))
-			return 0;		
-		
 		int count = keystate_query_up.size();
 		
 		return count;
@@ -610,13 +597,17 @@ FocusListener
 	
 	// key events
 	synchronized public void keyPressed(KeyEvent e) {
-		keystate_down.put(e.getKeyCode(), e);
+		if (isOnTextInput(new int[]{e.getKeyCode()})) {
+			keystate_down.put(e.getKeyCode(), e);
+		}
 		keystate.put(e.getKeyCode(), e);
 		poolEvent(new com.g2d.display.event.KeyEvent(
 				e, com.g2d.display.event.KeyEvent.EVENT_KEY_DOWN));
 	}
 	synchronized public void keyReleased(KeyEvent e) {
-		keystate_up.put(e.getKeyCode(), e);
+		if (isOnTextInput(new int[]{e.getKeyCode()})) {
+			keystate_up.put(e.getKeyCode(), e);
+		}
 		keystate.remove(e.getKeyCode());
 		poolEvent(new com.g2d.display.event.KeyEvent(
 				e, com.g2d.display.event.KeyEvent.EVENT_KEY_UP));

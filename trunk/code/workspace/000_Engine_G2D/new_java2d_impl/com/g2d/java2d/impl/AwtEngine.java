@@ -95,7 +95,7 @@ public class AwtEngine extends Engine
 			cursors[i] = createCustomCursor(
 					((AwtImage) cursor[i]).getSrc(), 
 					new Point(spot_x, spot_y), 
-					"g2d_" + name + "_i");
+					"g2d_" + name + "_" + i);
 		}
 		AwtAnimateCursor ret = new AwtAnimateCursor(cursors);
 		system_cursor.put(name, ret);
