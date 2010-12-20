@@ -90,19 +90,19 @@ public abstract class StreamTiles implements IImages, Runnable
 		return images.length;
 	}
 	
-	public void render(IGraphics g, int Index, int PosX, int PosY) {
-		IImage buff = images[Index];
-		if (buff != null) {
-			g.drawImage(buff, PosX, PosY, 0, IGraphics.BLEND_MODE_NONE, 1.0f);
-		}else{
-			drawLoading(g, PosX, PosY, img.getClipW(Index), img.getClipH(Index));
-		}
-	}
+//	public void render(IGraphics g, int Index, int PosX, int PosY) {
+//		IImage buff = images[Index];
+//		if (buff != null) {
+//			g.drawImage(buff, PosX, PosY, 0);
+//		}else{
+//			drawLoading(g, PosX, PosY, img.getClipW(Index), img.getClipH(Index));
+//		}
+//	}
 
-	public void render(IGraphics g, int Index, int PosX, int PosY, int Style, int blend_mode, float blend_alpha) {
+	public void render(IGraphics g, int Index, int PosX, int PosY, int Style) {
 		IImage buff = images[Index];
 		if (buff != null) {
-			g.drawImage(buff, PosX, PosY, Style, blend_mode, blend_alpha);
+			g.drawImage(buff, PosX, PosY, Style);
 		}else{
 			drawLoading(g, PosX, PosY, img.getClipW(Index), img.getClipH(Index));
 		}

@@ -29,8 +29,6 @@ public interface IImages {
 
 	public void addTile(int ClipX, int ClipY, int ClipWidth, int ClipHeight, int TileWidth, int TileHeight) ;
 
-	public void render(IGraphics g, int Index, int PosX, int PosY);
-
-	public void render(IGraphics g, int Index, int PosX, int PosY, int Style, int blend_mode, float blend_alpha) ;
+	public void render(IGraphics g, int Index, int PosX, int PosY, int Style);
 
 }

@@ -79,8 +79,45 @@ public class AwtGraphics2D extends Graphics2D
 //	blending
 //	-------------------------------------------------------------------------------------------------------------------------
 	
-	public void setComposite(Composite comp) {
-		
+
+	public float setAlpha(float alpha) {
+		float src_alpha = 1f;
+		java.awt.Composite com = g2d.getComposite();
+		if (com instanceof java.awt.AlphaComposite) {
+			src_alpha = ((java.awt.AlphaComposite)com).getAlpha();
+			g2d.setComposite(((java.awt.AlphaComposite)com).derive(alpha));
+		} else if (com instanceof BlendComposite) {
+			src_alpha = ((BlendComposite)com).getAlpha();
+			g2d.setComposite(((BlendComposite)com).derive(alpha));
+		}
+		return src_alpha;
+	}
+	
+	public float getAlpha() {
+		java.awt.Composite com = g2d.getComposite();
+		if (com instanceof java.awt.AlphaComposite) {
+			return ((java.awt.AlphaComposite)com).getAlpha();
+		} else if (com instanceof BlendComposite) {
+			return ((BlendComposite)com).getAlpha();
+		}
+		return 1f;
+	}
+	
+	@Override
+	public void setBlendMode(int blend) {
+		setBlendMode(blend, getAlpha());
+	}
+	
+	@Override
+	public void setBlendMode(int blend, float alpha) {
+		if (blend != IGraphics.BLEND_MODE_NONE) {
+			java.awt.Composite toset_composite = this.getCompositeFrom(blend, alpha);
+			if (toset_composite != null) {
+				g2d.setComposite(toset_composite);
+			}
+		} else {
+			g2d.setComposite(java.awt.AlphaComposite.SrcOver.derive(alpha));
+		}
 	}
 	
 	@Override
@@ -91,6 +128,15 @@ public class AwtGraphics2D extends Graphics2D
 	@Override
 	public void popComposite() {
 		g2d.setComposite(stack_comp.pop());
+	}
+
+	@Override
+	public void popBlendMode() {
+		popComposite();
+	}
+	@Override
+	public void pushBlendMode() {
+		pushComposite();
 	}
 	
 
@@ -393,46 +439,43 @@ public class AwtGraphics2D extends Graphics2D
 	public boolean drawImage(Image img, int dx1, int dy1, int dx2, int dy2, int sx1, int sy1, int sx2, int sy2) {
 		return g2d.drawImage(((AwtImage)img).getSrc(), dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2, null);
 	}
+	
 	@Override
-	public void drawImage(IImage src, int x, int y, int transform, int blendMode, float blendAlpha) 
+	public void drawImage(IImage src, int x, int y, int transform) 
 	{
-		java.awt.Composite saved_composite = g2d.getComposite();   
+		BufferedImage img = ((AwtImage) src).getSrc();
+        if (transform == 0)  {      	 
+        	g2d.drawImage(img, x, y, null);
+        }  else {
+			java.awt.geom.AffineTransform savedT = g2d.getTransform();
+			try {
+				g2d.translate(x, y);
+				transform(transform, src.getWidth(), src.getHeight());
+				g2d.drawImage(img, 0, 0, null);
+			} finally {
+				g2d.setTransform(savedT);
+			}
+		}
+	}
+	@Override
+	public void drawImage(IImage src, int x, int y, int w, int h, int transform) {
+		BufferedImage img = ((AwtImage) src).getSrc();
+		java.awt.geom.AffineTransform savedT = g2d.getTransform();
 		try {
-			if (blendMode != IGraphics.BLEND_MODE_NONE) {
-				java.awt.Composite toset_composite = getCompositeFrom(blendMode, blendAlpha);			
-				if (toset_composite != null)
-					g2d.setComposite(toset_composite);
-			}
-			BufferedImage img = ((AwtImage) src).getSrc();
-	        if (transform == 0)  {      	 
-	        	g2d.drawImage(img, x, y, null);
-	        }  else {
-				java.awt.geom.AffineTransform savedT = g2d.getTransform();
-				try {
-					g2d.translate(x, y);
-					transform(transform, src.getWidth(), src.getHeight());
-					g2d.drawImage(img, 0, 0, null);
-				} finally {
-					g2d.setTransform(savedT);
-				}
-			}
+			g2d.translate(x, y);
+			transform(transform, w, h);
+			g2d.drawImage(img, 0, 0, w, h, null);
 		} finally {
-	        g2d.setComposite(saved_composite);
+			g2d.setTransform(savedT);
 		}
 	}
 	@Override
 	public void drawRegion(IImage src, 
 			int xSrc, int ySrc, int width, int height, 
-			int transform, int blendMode, float blendAlpha, 
+			int transform, 
 			int xDest, int yDest) 
 	{
-		java.awt.Composite saved_composite = g2d.getComposite();   
-		try {
-			if (blendMode != IGraphics.BLEND_MODE_NONE) {
-				java.awt.Composite toset_composite = this.getCompositeFrom(blendMode, blendAlpha);			
-				if (toset_composite != null)
-					g2d.setComposite(toset_composite);
-			}
+		
 			BufferedImage img = ((AwtImage) src).getSrc();
 			java.awt.geom.AffineTransform savedT = g2d.getTransform();
 			try {
@@ -442,24 +485,14 @@ public class AwtGraphics2D extends Graphics2D
 			} finally {
 				g2d.setTransform(savedT);
 			}
-		} finally {
-	        g2d.setComposite(saved_composite);
-		}
+		
 	}
 
 	@Override
 	public void drawRoundImage(IImage src, int x, int y, int width, int height,
-			int transform, int blendMode, float blendAlpha) 
+			int transform) 
 	{
-		java.awt.Composite saved_composite = g2d.getComposite();   
-		try {
-			if (blendMode != IGraphics.BLEND_MODE_NONE) {
-				java.awt.Composite toset_composite = this.getCompositeFrom(
-						blendMode, blendAlpha);
-				if (toset_composite != null) {
-					g2d.setComposite(toset_composite);
-				}
-			}
+		
 			BufferedImage 		img 	= ((AwtImage)src).getSrc();
 			java.awt.Rectangle 	rect 	= g2d.getClipBounds();
 			try {
@@ -476,9 +509,7 @@ public class AwtGraphics2D extends Graphics2D
 			} finally {
 				g2d.setClip(rect);
 			}
-		} finally {
-			g2d.setComposite(saved_composite);
-		}
+	
 	}
 	
 //	-------------------------------------------------------------------------------------------------------------------------
@@ -519,24 +550,6 @@ public class AwtGraphics2D extends Graphics2D
 //	-------------------------------------------------------------------------------------------------------------------------
 //	flag
 //	-------------------------------------------------------------------------------------------------------------------------
-	
-	public float setAlpha(float alpha) {
-		java.awt.Composite com = g2d.getComposite();
-		if (com instanceof java.awt.AlphaComposite) {
-			g2d.setComposite(java.awt.AlphaComposite.getInstance(java.awt.AlphaComposite.SRC_OVER, alpha));
-			return ((java.awt.AlphaComposite)com).getAlpha();
-		}
-		return 1f;
-	}
-	
-	public float getAlpha() {
-		java.awt.Composite com = g2d.getComposite();
-		if (com instanceof java.awt.AlphaComposite) {
-			return ((java.awt.AlphaComposite)com).getAlpha();
-		}
-		return 1f;
-	}
-	
 	
 	public boolean setFontAntialiasing(boolean enable) {
 		Object old = g2d.getRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING);

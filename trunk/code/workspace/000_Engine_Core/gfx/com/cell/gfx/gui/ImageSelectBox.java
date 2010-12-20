@@ -177,14 +177,14 @@ public class ImageSelectBox extends LabelBar
 		int th = g.getStringHeight();
 		
 		if(IconKeyNext!=null){
-			g.drawImage(IconKeyNext, x, y, 0, IGraphics.BLEND_MODE_NONE, 1.0f);
+			g.drawImage(IconKeyNext, x, y, 0);
 		}else{
 			g.setColor(ColorTextKeyL);
 			g.drawString(TextKeyL, x + UserRect.BorderSize, y + (H-th)/2);
 		}
 		
 		if(IconKeyPrew!=null){
-			g.drawImage(IconKeyPrew, x + W - IconKeyPrew.getWidth(), y, IImage.TRANS_H, IGraphics.BLEND_MODE_NONE, 1.0f);
+			g.drawImage(IconKeyPrew, x + W - IconKeyPrew.getWidth(), y, IImage.TRANS_H);
 		}else{
 			g.setColor(ColorTextKeyR);
 			g.drawString(TextKeyR, x + W - UserRect.BorderSize - g.getStringWidth(TextKeyR), y + (H-th)/2);
@@ -198,7 +198,7 @@ public class ImageSelectBox extends LabelBar
 	
 	public void renderIcon(IGraphics g, int x, int y) {
 		if(Icon!=null){
-			g.drawImage(Icon, x +(W-Icon.getWidth())/2, y+(H-Icon.getHeight())/2, 0, IGraphics.BLEND_MODE_NONE, 1.0f);
+			g.drawImage(Icon, x +(W-Icon.getWidth())/2, y+(H-Icon.getHeight())/2, 0);
 		}
 		
 	}

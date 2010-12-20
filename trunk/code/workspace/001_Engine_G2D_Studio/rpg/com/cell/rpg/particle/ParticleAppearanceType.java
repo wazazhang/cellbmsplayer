@@ -7,6 +7,7 @@ import com.cell.gfx.game.CSprite;
 import com.g2d.Color;
 import com.g2d.Graphics2D;
 import com.g2d.Image;
+import com.g2d.annotation.Property;
 import com.g2d.display.particle.Layer;
 import com.g2d.display.particle.ParticleAppearance;
 
@@ -45,6 +46,9 @@ public enum ParticleAppearanceType
 
 		private transient Image image;
 		
+		@Property("混合方法")
+		public int		blend_mode = 0;
+		
 		public void setImage(Image src) {
 			this.image = src;
 		}
@@ -59,11 +63,17 @@ public enum ParticleAppearanceType
 		
 		@Override
 		public void render(Graphics2D g, Layer layer) {
-			if (getImage() != null) {
-				g.drawImage(getImage(), -getImage().getWidth() >> 1, -getImage().getHeight() >> 1);
-			} else {
-				g.setColor(Color.WHITE);
-				g.drawArc(-2, -2, 4, 4, 0, 360);
+			g.pushBlendMode();
+			try  {
+				g.setBlendMode(blend_mode);
+				if (getImage() != null) {
+					g.drawImage(getImage(), -getImage().getWidth() >> 1, -getImage().getHeight() >> 1);
+				} else {
+					g.setColor(Color.WHITE);
+					g.drawArc(-2, -2, 4, 4, 0, 360);
+				}
+			} finally {
+				g.popBlendMode();
 			}
 		}
 	}
@@ -86,6 +96,9 @@ public enum ParticleAppearanceType
 		
 		transient
 		private int		st_current_timer;
+
+		@Property("混合方法")
+		public int		blend_mode = 0;
 		
 		public DisplayNodeSprite cloneDisplay() {
 			DisplayNodeSprite ret = new DisplayNodeSprite();
@@ -97,14 +110,20 @@ public enum ParticleAppearanceType
 		
 		@Override
 		public void render(Graphics2D g, Layer layer) {
-			if (sprite != null) {
-				int anim = CMath.cycNum(sprite_anim, 0, sprite.getAnimateCount());
-				int fram = CMath.cycNum(st_current_timer, 0, sprite.getFrameCount(anim));
-				sprite.render(g, 0, 0, anim, fram);
-				st_current_timer ++;
-			} else {
-				g.setColor(Color.WHITE);
-				g.drawArc(-2, -2, 4, 4, 0, 360);
+			g.pushBlendMode();
+			try  {
+				g.setBlendMode(blend_mode);
+				if (sprite != null) {
+					int anim = CMath.cycNum(sprite_anim, 0, sprite.getAnimateCount());
+					int fram = CMath.cycNum(st_current_timer, 0, sprite.getFrameCount(anim));
+					sprite.render(g, 0, 0, anim, fram);
+					st_current_timer ++;
+				} else {
+					g.setColor(Color.WHITE);
+					g.drawArc(-2, -2, 4, 4, 0, 360);
+				}
+			} finally {
+				g.popBlendMode();
 			}
 		}
 	}

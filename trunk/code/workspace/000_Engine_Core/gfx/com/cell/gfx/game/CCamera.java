@@ -463,16 +463,16 @@ public class CCamera extends CUnit {
 			int h2 = WorldH - h1;
 			
 			if (w1 > 0 && h1 > 0) 
-				g.drawRegion(BackBuffer, vBufX, vBufY, w1, h1, 0, IGraphics.BLEND_MODE_NONE, 1.0f, WindowX + 0, WindowY + 0);
+				g.drawRegion(BackBuffer, vBufX, vBufY, w1, h1, 0, WindowX + 0, WindowY + 0);
 			
 			if (w2 > 0 && h2 > 0) 
-				g.drawRegion(BackBuffer, 0, 0, w2, h2, 0, IGraphics.BLEND_MODE_NONE, 1.0f, WindowX + w1, WindowY + h1);
+				g.drawRegion(BackBuffer, 0, 0, w2, h2, 0, WindowX + w1, WindowY + h1);
 			
 			if (w1 > 0 && h2 > 0) 
-				g.drawRegion(BackBuffer, vBufX, 0, w1, h2, 0, IGraphics.BLEND_MODE_NONE, 1.0f, WindowX + 0, WindowY + h1);
+				g.drawRegion(BackBuffer, vBufX, 0, w1, h2, 0, WindowX + 0, WindowY + h1);
 			
 			if (w2 > 0 && h1 > 0) 
-				g.drawRegion(BackBuffer, 0, vBufY, w2, h1, 0, IGraphics.BLEND_MODE_NONE, 1.0f, WindowX + w1, WindowY + 0);
+				g.drawRegion(BackBuffer, 0, vBufY, w2, h1, 0, WindowX + w1, WindowY + 0);
 			
 		}
 		else
@@ -513,7 +513,7 @@ public class CCamera extends CUnit {
 	public void renderDebugBackBuffer(IGraphics g, int x, int y, int c) {
 //#ifdef _DEBUG
 			if (IsBackBuffer){
-				g.drawImage(BackBuffer, x, y, 0, IGraphics.BLEND_MODE_NONE, 1.0f);
+				g.drawImage(BackBuffer, x, y, 0);
 				g.setColor(c);
 				int w1 = BufW-vBufX<=WorldW?BufW-vBufX:WorldW;
 				int h1 = BufH-vBufY<=WorldH?BufH-vBufY:WorldH;
