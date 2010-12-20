@@ -1,36 +1,20 @@
 package com.g2d.jogl.impl;
 
-import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
-import java.util.ArrayList;
-import java.util.Vector;
 
 import javax.media.opengl.GL;
-import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.glu.GLU;
 
-import com.cell.CMath;
-import com.cell.gfx.IGraphics;
 import com.cell.gfx.IImage;
-import com.cell.gfx.IGraphics.StringAttribute;
-import com.cell.gfx.IGraphics.StringLayer;
-import com.g2d.BasicStroke;
 import com.g2d.Color;
 import com.g2d.Composite;
 import com.g2d.Font;
 import com.g2d.Graphics2D;
 import com.g2d.Image;
 import com.g2d.Paint;
-import com.g2d.RadialGradientPaint;
 import com.g2d.Stroke;
-import com.g2d.geom.Ellipse2D;
-import com.g2d.geom.Line2D;
 import com.g2d.geom.Path2D;
-import com.g2d.geom.PathIterator;
 import com.g2d.geom.Polygon;
 import com.g2d.geom.Rectangle2D;
-import com.g2d.geom.Shape;
-import com.sun.opengl.util.GLUT;
 
 public class GLGraphics2D extends Graphics2D
 {
@@ -60,7 +44,21 @@ public class GLGraphics2D extends Graphics2D
 	public void setComposite(Composite comp) {}
 	public void pushComposite() {}
 	public void popComposite() {}
-
+	@Override
+	public void popBlendMode() {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void pushBlendMode() {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void setBlendMode(int blend, float alpha) {
+		// TODO Auto-generated method stub
+		
+	}
 //	-------------------------------------------------------------------------------------------------------------------------
 //	paint
 //	-------------------------------------------------------------------------------------------------------------------------
