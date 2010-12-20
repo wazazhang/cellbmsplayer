@@ -100,17 +100,21 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	
 	boolean onPoolEvent(com.g2d.display.event.Event<?> event) 
 	{
-		if (always_top_elements != null && !always_top_elements.isEmpty()) {
-			return always_top_elements.lastElement().onPoolEvent(event);
-		} else {
-			synchronized (elements_lock) {
-				for (int i = elements_buffer.size() - 1; i >= 0; --i) {
-					if (elements_buffer.get(i).onPoolEvent(event)) {
-						return true;
+		synchronized (this) 
+		{
+			if (always_top_elements != null && !always_top_elements.isEmpty()) {
+				return always_top_elements.lastElement().onPoolEvent(event);
+			} else {
+				synchronized (elements_lock) {
+					for (int i = elements_buffer.size() - 1; i >= 0; --i) {
+						if (elements_buffer.get(i).onPoolEvent(event)) {
+							return true;
+						}
 					}
 				}
 			}
 		}
+
 		// 如果孩子没有处理该消息则直接跳过该消息
 		return false;
 	}
@@ -145,30 +149,36 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	}
 	
 	@Override
-	final void updateAfter(DisplayObjectContainer parent) {
-		if (always_top_elements!=null && !always_top_elements.isEmpty()) {
-			ArrayList<DisplayObject> removed = null;
-			DisplayObject top = null;
-			for (DisplayObject e : always_top_elements) {
-				if (e.parent != this) {
-					if (removed == null) {
-						removed = new ArrayList<DisplayObject>(1);
+	final void updateAfter(DisplayObjectContainer parent) 
+	{
+		synchronized (this) 
+		{
+			if (always_top_elements!=null && !always_top_elements.isEmpty()) 
+			{
+				ArrayList<DisplayObject> removed = null;
+				DisplayObject top = null;
+				for (DisplayObject e : always_top_elements) {
+					if (e.parent != this) {
+						if (removed == null) {
+							removed = new ArrayList<DisplayObject>(1);
+						}
+						removed.add(e);
+					} else {
+						top = e;
 					}
-					removed.add(e);
-				} else {
-					top = e;
 				}
-			}
-			if (removed != null) {
-				always_top_elements.removeAll(removed);
-			}
-			if (top != null) {
-				focus(top);
+				if (removed != null) {
+					always_top_elements.removeAll(removed);
+				}
+				if (top != null) {
+					focus(top);
+				}
 			}
 		}
 	}
 	
-	protected void updateChilds() {
+	protected void updateChilds() 
+	{
 		for (int i = elements_buffer.size() - 1; i >= 0; --i) {
 			elements_buffer.get(i).onUpdate(this);
 		}
@@ -258,16 +268,19 @@ public abstract class DisplayObjectContainer extends DisplayObject
 
 	final public void focus(DisplayObject child)
 	{
-		if (always_top_elements != null && !always_top_elements.isEmpty()) {
-			for (DisplayObject e : always_top_elements) {
-				events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_MOVE_TOP, e));
+		synchronized (this) 
+		{
+			if (always_top_elements != null && !always_top_elements.isEmpty()) {
+				for (DisplayObject e : always_top_elements) {
+					events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_MOVE_TOP, e));
+				}
+			} else {
+				events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_MOVE_TOP, child));
 			}
-		} else {
-			events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_MOVE_TOP, child));
-		}
-		if (always_bottom_elements != null && !always_bottom_elements.isEmpty()) {
-			for (DisplayObject e : always_bottom_elements) {
-				events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_MOVE_BOT, e));
+			if (always_bottom_elements != null && !always_bottom_elements.isEmpty()) {
+				for (DisplayObject e : always_bottom_elements) {
+					events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_MOVE_BOT, e));
+				}
 			}
 		}
 	}
@@ -279,15 +292,20 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	 * always_top_elements
 	 * @param child
 	 */
-	final public void addAlwaysTopFocus(DisplayObject child) {
+	final public void addAlwaysTopFocus(DisplayObject child) 
+	{
 		if (child != null) {
 			events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_MOVE_TOP, child));
-			if (always_top_elements == null) {
-				always_top_elements = new Vector<DisplayObject>();
-				always_top_elements.add(child);
-			} else if (!always_top_elements.contains(child)) {
-				always_top_elements.add(child);
-			}
+			
+			synchronized (this) 
+			{
+				if (always_top_elements == null) {
+					always_top_elements = new Vector<DisplayObject>();
+					always_top_elements.add(child);
+				} else if (!always_top_elements.contains(child)) {
+					always_top_elements.add(child);
+				}				
+			};
 		}
 	}
 
@@ -296,50 +314,78 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	 * always_bottom_elements
 	 * @param child
 	 */
-	final public void addAlwaysBottom(DisplayObject child) {
-		if (child != null) {
-			events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_MOVE_BOT, child));
-			if (always_bottom_elements == null) {
-				always_bottom_elements = new Vector<DisplayObject>();
-				always_bottom_elements.add(child);
-			} else if (!always_bottom_elements.contains(child)) {
-				always_bottom_elements.add(child);
+	final public void addAlwaysBottom(DisplayObject child)
+	{
+		synchronized (this) 
+		{
+			if (child != null) {
+				events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_MOVE_BOT, child));
+				if (always_bottom_elements == null) {
+					always_bottom_elements = new Vector<DisplayObject>();
+					always_bottom_elements.add(child);
+				} else if (!always_bottom_elements.contains(child)) {
+					always_bottom_elements.add(child);
+				}
 			}
 		}
 	}
 	
-	final public void removeAlwaysTopFocus(DisplayObject child){
-		if (always_top_elements != null && !always_top_elements.isEmpty()) {
-			always_top_elements.remove(child);
+	final public void removeAlwaysTopFocus(DisplayObject child)
+	{
+		synchronized (this) 
+		{
+			if (always_top_elements != null && !always_top_elements.isEmpty()) {
+				always_top_elements.remove(child);
+			}
 		}
 	}
 	
-	final public void removeAlwaysBottom(DisplayObject child){
-		if (always_bottom_elements != null && !always_bottom_elements.isEmpty()) {
-			always_bottom_elements.remove(child);
+	final public void removeAlwaysBottom(DisplayObject child)
+	{
+		synchronized (this) 
+		{
+			if (always_bottom_elements != null && !always_bottom_elements.isEmpty()) {
+				always_bottom_elements.remove(child);
+			}
 		}
 	}
 	
-	final public void clearAlwaysTopFocus(){
-		always_top_elements = null;
+	final public void clearAlwaysTopFocus()
+	{
+		synchronized (this) 
+		{
+			always_top_elements = null;
+		};
 	}
 	
-	final public void clearAlwaysBottom(){
-		always_bottom_elements = null;
-	}
-	
-	final public DisplayObject getAlwaysTopFocus() {
-		if (always_top_elements != null && !always_top_elements.isEmpty()) {
-			return always_top_elements.lastElement();
+	final public void clearAlwaysBottom()
+	{
+		synchronized (this) 
+		{
+			always_bottom_elements = null;
 		}
-		return null;
 	}
 	
-	final public DisplayObject getAlwaysBottom() {
-		if (always_bottom_elements != null && !always_bottom_elements.isEmpty()) {
-			return always_bottom_elements.lastElement();
+	final public DisplayObject getAlwaysTopFocus() 
+	{
+		synchronized (this) 
+		{
+			if (always_top_elements != null && !always_top_elements.isEmpty()) {
+				return always_top_elements.lastElement();
+			}
+			return null;
 		}
-		return null;
+	}
+	
+	final public DisplayObject getAlwaysBottom() 
+	{
+		synchronized (this) 
+		{
+			if (always_bottom_elements != null && !always_bottom_elements.isEmpty()) {
+				return always_bottom_elements.lastElement();
+			}
+			return null;
+		}
 	}
 
 
@@ -361,19 +407,24 @@ public abstract class DisplayObjectContainer extends DisplayObject
 		}
 	}
 	
-	public boolean removeChild(DisplayObject child) {
-		if (child.parent == this) {
-			elements_set.remove(child);
-			child.parent = null;
-			if (always_top_elements != null) {
-				always_top_elements.remove(child);
+	public boolean removeChild(DisplayObject child) 
+	{
+		synchronized (this) 
+		{
+			if (child.parent == this) {
+				elements_set.remove(child);
+				child.parent = null;
+				if (always_top_elements != null) {
+					always_top_elements.remove(child);
+				}
+				if (always_bottom_elements != null) {
+					always_bottom_elements.remove(child);
+				}
+				events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_DELETE, child));
+				return true;
 			}
-			if (always_bottom_elements != null) {
-				always_bottom_elements.remove(child);
-			}
-			events.offer(new DisplayObjectEvent(DisplayObjectEvent.EVENT_DELETE, child));
-			return true;
 		}
+		
 		return false;
 	}
 	
@@ -381,20 +432,9 @@ public abstract class DisplayObjectContainer extends DisplayObject
 	{
 		ArrayList<DisplayObject> ret = null;
 		
-		for ( DisplayObject obj : elements_set.values() )
+		synchronized (this) 
 		{
-			if ( (obj.getClass() == cls) && this.removeChild(obj) )
-			{
-				if (ret == null)
-					ret = new ArrayList<DisplayObject>();
-				
-				ret.add(obj);
-			}
-		}
-		
-		if (always_top_elements != null)
-		{
-			for ( DisplayObject obj : always_top_elements )
+			for ( DisplayObject obj : elements_set.values() )
 			{
 				if ( (obj.getClass() == cls) && this.removeChild(obj) )
 				{
@@ -402,21 +442,35 @@ public abstract class DisplayObjectContainer extends DisplayObject
 						ret = new ArrayList<DisplayObject>();
 					
 					ret.add(obj);
-				}			
+				}
 			}
-		}
-		
-		if (always_bottom_elements != null)
-		{
-			for ( DisplayObject obj : always_bottom_elements )
+			
+			if (always_top_elements != null)
 			{
-				if ( (obj.getClass() == cls) && this.removeChild(obj) )
+				for ( DisplayObject obj : always_top_elements )
 				{
-					if (ret == null)
-						ret = new ArrayList<DisplayObject>();
-					
-					ret.add(obj);
-				}			
+					if ( (obj.getClass() == cls) && this.removeChild(obj) )
+					{
+						if (ret == null)
+							ret = new ArrayList<DisplayObject>();
+						
+						ret.add(obj);
+					}			
+				}
+			}
+			
+			if (always_bottom_elements != null)
+			{
+				for ( DisplayObject obj : always_bottom_elements )
+				{
+					if ( (obj.getClass() == cls) && this.removeChild(obj) )
+					{
+						if (ret == null)
+							ret = new ArrayList<DisplayObject>();
+						
+						ret.add(obj);
+					}			
+				}
 			}
 		}
 		

@@ -1,86 +1,256 @@
 package com.cell.reflect;
 
+import java.util.HashMap;
+
+import com.cell.util.StringUtil;
+
 public class Parser 
 {
 	final public static String PERFIX_RADIX_16 = "0x";
 	
-	@SuppressWarnings("unchecked")
-	public static <T> T stringToInteger(String str, Class<T> return_type) 
+	private static HashMap<Class, IObjectStringParser> s_parser_map_;
+	
+	private static void init()
 	{
-		try {
-			long full = 0;
-			if (str.startsWith(PERFIX_RADIX_16)) {
-				str = str.substring(PERFIX_RADIX_16.length());
-				full = Long.parseLong(str, 16);
-			} else {
-				full = Long.parseLong(str);
+		s_parser_map_ = new HashMap<Class, IObjectStringParser>();
+		
+		s_parser_map_.put(String.class, new IObjectStringParser() 
+		{
+			@Override
+			public Object parseFrom(String str) 
+			{
+				return str;
 			}
-			
-			// 基础类型
-			if (return_type.equals(Byte.class) || 
-				return_type.equals(byte.class)) {
-				return (T)new Byte((byte)(full & 0xff));
-			} 
-			if (return_type.equals(Short.class) ||
-				return_type.equals(short.class)) {
-				return (T)new Short((short)(full & 0xffff));
-			} 
-			if (return_type.equals(Integer.class) || 
-				return_type.equals(int.class)) {
-				return (T)new Integer((int)(full & 0xffffffff));
-			} 
-			if (return_type.equals(Long.class) || 
-				return_type.equals(long.class)) {
-				return (T)new Long(full);
+		});		
+		
+		s_parser_map_.put(Byte.class, new IObjectStringParser() 
+		{
+			@Override
+			public Object parseFrom(String str) 
+			{
+				long full = str.startsWith(PERFIX_RADIX_16)? 
+						Long.parseLong(str.substring(PERFIX_RADIX_16.length()), 16) : Long.parseLong(str);
+
+				return new Byte((byte)(full & 0xff));
 			}
-		} catch (Exception e) {
-		}
-		return null;
+		});
+		s_parser_map_.put(byte.class, s_parser_map_.get(Byte.class));
+		
+		s_parser_map_.put(Short.class, new IObjectStringParser() 
+		{
+			@Override
+			public Object parseFrom(String str) 
+			{
+				long full = str.startsWith(PERFIX_RADIX_16)? 
+						Long.parseLong(str.substring(PERFIX_RADIX_16.length()), 16) : Long.parseLong(str);
+
+				return new Short((short)(full & 0xffff));
+			}
+		});
+		s_parser_map_.put(short.class, s_parser_map_.get(Short.class));
+		
+		s_parser_map_.put(Integer.class, new IObjectStringParser() 
+		{
+			@Override
+			public Object parseFrom(String str) 
+			{
+				long full = str.startsWith(PERFIX_RADIX_16)? 
+						Long.parseLong(str.substring(PERFIX_RADIX_16.length()), 16) : Long.parseLong(str);
+
+				return new Integer((int)(full & 0xffffffff));
+			}
+		});
+		s_parser_map_.put(int.class, s_parser_map_.get(Integer.class));	
+		
+		s_parser_map_.put(Long.class, new IObjectStringParser() 
+		{
+			@Override
+			public Object parseFrom(String str) 
+			{
+				long full = str.startsWith(PERFIX_RADIX_16)? 
+						Long.parseLong(str.substring(PERFIX_RADIX_16.length()), 16) : Long.parseLong(str);
+
+				return new Long(full);
+			}
+		});
+		s_parser_map_.put(long.class, s_parser_map_.get(Long.class));		
+		
+		s_parser_map_.put(Float.class, new IObjectStringParser() 
+		{
+			@Override
+			public Object parseFrom(String str) 
+			{
+				return new Float(str);
+			}
+		});
+		s_parser_map_.put(float.class, s_parser_map_.get(Float.class));
+		
+		s_parser_map_.put(Double.class, new IObjectStringParser() 
+		{
+			@Override
+			public Object parseFrom(String str) 
+			{
+				return new Double(str);
+			}
+		});	
+		s_parser_map_.put(double.class, s_parser_map_.get(Double.class));
+		
+		s_parser_map_.put(Character.class, new IObjectStringParser() 
+		{
+			@Override
+			public Object parseFrom(String str) 
+			{
+				return new Character(str.charAt(0));
+			}
+		});	
+		s_parser_map_.put(char.class, s_parser_map_.get(Character.class));	
+		
+		s_parser_map_.put(Boolean.class, new IObjectStringParser() 
+		{
+			@Override
+			public Object parseFrom(String str) 
+			{
+				return new Boolean(str);
+			}
+		});	
+		s_parser_map_.put(boolean.class, s_parser_map_.get(Boolean.class));
+		
+		s_parser_map_.put(Double[].class, new IObjectStringParser() 
+		{
+			@Override
+			public Object parseFrom(String str) 
+			{
+				return StringUtil.getDoubleObjArray(str, ",");
+			}
+		});		
+	
+		s_parser_map_.put(double[].class, new IObjectStringParser() 
+		{
+			@Override
+			public Object parseFrom(String str) 
+			{
+				return StringUtil.getDoubleArray(str, ",");
+			}
+		});
+		
+		s_parser_map_.put(Float[].class, new IObjectStringParser() 
+		{
+			@Override
+			public Object parseFrom(String str) 
+			{
+				return StringUtil.getFloatObjArray(str, ",");
+			}
+		});		
+	
+		s_parser_map_.put(float[].class, new IObjectStringParser() 
+		{
+			@Override
+			public Object parseFrom(String str) 
+			{
+				return StringUtil.getFloatArray(str, ",");
+			}
+		});		
+		
+		s_parser_map_.put(Long[].class, new IObjectStringParser() 
+		{
+			@Override
+			public Object parseFrom(String str) 
+			{
+				return StringUtil.getLongObjArray(str, ",");
+			}
+		});		
+	
+		s_parser_map_.put(long[].class, new IObjectStringParser() 
+		{
+			@Override
+			public Object parseFrom(String str) 
+			{
+				return StringUtil.getLongArray(str, ",");
+			}
+		});		
+		
+		s_parser_map_.put(Integer[].class, new IObjectStringParser() 
+		{
+			@Override
+			public Object parseFrom(String str) 
+			{
+				return StringUtil.getIntegerObjArray(str, ",");
+			}
+		});		
+	
+		s_parser_map_.put(int[].class, new IObjectStringParser() 
+		{
+			@Override
+			public Object parseFrom(String str) 
+			{
+				return StringUtil.getIntegerArray(str, ",");
+			}
+		});
+		
+		s_parser_map_.put(Short[].class, new IObjectStringParser() 
+		{
+			@Override
+			public Object parseFrom(String str) 
+			{
+				return StringUtil.getShortObjArray(str, ",");
+			}
+		});		
+	
+		s_parser_map_.put(short[].class, new IObjectStringParser() 
+		{
+			@Override
+			public Object parseFrom(String str) 
+			{
+				return StringUtil.getShortArray(str, ",");
+			}
+		});
+		
+		s_parser_map_.put(Byte[].class, new IObjectStringParser() 
+		{
+			@Override
+			public Object parseFrom(String str) 
+			{
+				return StringUtil.getByteObjArray(str, ",");
+			}
+		});		
+	
+		s_parser_map_.put(byte[].class, new IObjectStringParser() 
+		{
+			@Override
+			public Object parseFrom(String str) 
+			{
+				return StringUtil.getByteArray(str, ",");
+			}
+		});		
+	};
+	
+	public static void registerObjectStringParser(Class type, IObjectStringParser parser)
+	{
+		s_parser_map_.put(type, parser);
 	}
+
 	
 	@SuppressWarnings("unchecked")
 	public static <T> T stringToObject(String str, Class<T> return_type) 
-	{
-		T t = stringToInteger(str, return_type);
-		if (t != null) {
-			return t;
-		}
-		
+	{	
 		try 
 		{
-			// 浮点
-			if (return_type.equals(Float.class) || 
-				return_type.equals(float.class)) {
-				return (T)(new Float(str));
-			} 
-			if (return_type.equals(Double.class) ||
-				return_type.equals(double.class)) {
-				return (T)(new Double(str));
-			}
+			if (s_parser_map_ == null)
+				Parser.init();
+			
+			IObjectStringParser parser = s_parser_map_.get(return_type);
+			
+			if (parser != null)
+				return (T)parser.parseFrom(str);			
 
-			// char
-			if (return_type.equals(Character.class) || 
-				return_type.equals(char.class)) {
-				return (T)(new Character(str.charAt(0)));
-			} 
-			
-			// boolean
-			if (return_type.equals(Boolean.class) || 
-				return_type.equals(boolean.class)) {
-				return (T)(new Boolean(str));
-			} 
-			
-			// 字符
-			if (return_type.equals(String.class)) {
-				return (T)(str);
-			}
 		} catch (Exception e) {
 		}
 
 		return null;
 	}
 
-	public static String objectToString(Object obj) {
+	public static String objectToString(Object obj) 
+	{
 		return obj.toString();
 	}
 	

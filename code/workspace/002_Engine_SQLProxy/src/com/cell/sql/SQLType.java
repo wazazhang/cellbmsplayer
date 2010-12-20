@@ -10,19 +10,21 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
  */
 public enum SQLType 
 {
-	BOOLEAN		(Types.BOOLEAN),
-	BYTE		(Types.TINYINT),
-	SHORT		(Types.SMALLINT),
-	INTEGER		(Types.INTEGER),
-	LONG		(Types.BIGINT),
-	FLOAT		(Types.REAL),
-	DOUBLE		(Types.DOUBLE),
-	STRING		(Types.VARCHAR),
-	STRUCT		(Types.BLOB),
-	TEXT_STRUCT	(Types.CLOB),
-	XML_STRUCT	(Types.CLOB),
-	TIME		(Types.TIME),
-	TIMESTAMP	(Types.TIMESTAMP),
+	BOOLEAN			(Types.BOOLEAN),
+	BYTE			(Types.TINYINT),
+	SHORT			(Types.SMALLINT),
+	INTEGER			(Types.INTEGER),
+	LONG			(Types.BIGINT),
+	FLOAT			(Types.REAL),
+	DOUBLE			(Types.DOUBLE),
+	STRING			(Types.VARCHAR),
+	STRUCT			(Types.BLOB),
+	TEXT_STRUCT		(Types.CLOB),
+	XML_STRUCT		(Types.CLOB),
+	TIME			(Types.TIME),
+	TIMESTAMP		(Types.TIMESTAMP),
+	
+	INTEGER_ARRAY	(Types.ARRAY),
 	;
 	
 	final public int		jdbc_type;
