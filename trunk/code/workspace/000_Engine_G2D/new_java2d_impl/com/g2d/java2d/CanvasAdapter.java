@@ -388,7 +388,7 @@ FocusListener
 	}
 	
 	@Override
-	public boolean isOnTextInput(int ... keycode) {
+	public boolean isOnTextInput(int keycode) {
 		if (getStage() != null) {
 			DisplayObject o = getStage();
 			while (o != null) {
@@ -597,7 +597,7 @@ FocusListener
 	
 	// key events
 	synchronized public void keyPressed(KeyEvent e) {
-		if (isOnTextInput(new int[]{e.getKeyCode()})) {
+		if (!isOnTextInput(e.getKeyCode())) {
 			keystate_down.put(e.getKeyCode(), e);
 		}
 		keystate.put(e.getKeyCode(), e);
@@ -605,7 +605,7 @@ FocusListener
 				e, com.g2d.display.event.KeyEvent.EVENT_KEY_DOWN));
 	}
 	synchronized public void keyReleased(KeyEvent e) {
-		if (isOnTextInput(new int[]{e.getKeyCode()})) {
+		if (!isOnTextInput(e.getKeyCode())) {
 			keystate_up.put(e.getKeyCode(), e);
 		}
 		keystate.remove(e.getKeyCode());
