@@ -138,7 +138,7 @@ public abstract class DisplayObject implements Vector
 	 * 请求在所有层次被聚焦，也就是说设置为深度遍历的第一个节点
 	 * @return
 	 */
-	final public void requestFocusedRoot()
+	public void requestFocusRoot()
 	{
 		DisplayObjectContainer p = this.parent;
 		DisplayObject c = this;
