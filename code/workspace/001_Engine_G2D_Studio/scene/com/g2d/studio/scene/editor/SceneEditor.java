@@ -416,9 +416,11 @@ public class SceneEditor extends AbstractFrame implements ActionListener, Window
 			SceneAbilityManager sam = SceneAbilityManager.getManager();
 			if (sam != null) {
 				Set<CellEditAdapter<?>>	sa = new LinkedHashSet<CellEditAdapter<?>>();
-				for (PropertyEditor<?> p : sam.getEditAdapters()) {
-					if (p instanceof CellEditAdapter<?>) {
-						sa.add((CellEditAdapter<?>)p);
+				if (sam.getEditAdapters() != null) {
+					for (PropertyEditor<?> p : sam.getEditAdapters()) {
+						if (p instanceof CellEditAdapter<?>) {
+							sa.add((CellEditAdapter<?>)p);
+						}
 					}
 				}
 				if (sa != null) {
