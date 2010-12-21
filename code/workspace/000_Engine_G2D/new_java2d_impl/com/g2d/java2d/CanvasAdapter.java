@@ -399,8 +399,9 @@ FocusListener
 				}
 				if (o instanceof DisplayObjectContainer) {
 					o = ((DisplayObjectContainer)o).getFocus();
+				} else {
+					break;
 				}
-				break;
 			}
 		}
 		return false;
