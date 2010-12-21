@@ -135,6 +135,24 @@ public abstract class DisplayObject implements Vector
 	}
 	
 	/**
+	 * 是否在当前操作系统中被聚焦
+	 * @return
+	 */
+	final public void requestFocusedRoot()
+	{
+		DisplayObjectContainer p = this.parent;
+		DisplayObject c = this;
+		while (p != null && p != c) {
+			p.focus(c);
+			c = p;
+			p = p.getParent();
+			if (p instanceof Stage) {
+				return;
+			}
+		}
+	}
+	
+	/**
 	 * 从父节点移除自己
 	 * @return
 	 */
