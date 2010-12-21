@@ -429,9 +429,53 @@ public class CUtil extends CObject
 		}
 		return dst;
 	}
-	
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	public static final byte[] toByteArray(Collection<Byte> array) {
+		if (array == null) {
+			return null;
+		}
+		return toByteArray(array.toArray(new Byte[array.size()]));
+	}
+
+	public static final byte[] toByteArray(Byte[] array) {
+		if (array == null) {
+			return null;
+		}
+		byte[] ints = new byte[array.length];
+		for (int qi = 0; qi < array.length; qi++) {
+			ints[qi] = array[qi];
+		}
+		return ints;
+	}
+
+	public static final Byte[] toByteArray(byte[] array) {
+		if (array == null) {
+			return null;
+		}
+		Byte[] ints = new Byte[array.length];
+		for (int qi = 0; qi < array.length; qi++) {
+			ints[qi] = array[qi];
+		}
+		return ints;
+	}
+
+	public static final ArrayList<Byte> toByteCollection(byte... array) {
+		ArrayList<Byte> ret = new ArrayList<Byte>(array.length);
+		for (byte i : array) {
+			ret.add(i);
+		}
+		return ret;
+	}
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	public static final int[] toIntArray(Collection<Integer> array) {
 		if (array == null) {
 			return null;
