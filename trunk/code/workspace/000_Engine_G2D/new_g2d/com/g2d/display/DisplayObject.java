@@ -143,12 +143,12 @@ public abstract class DisplayObject implements Vector
 		DisplayObjectContainer p = this.parent;
 		DisplayObject c = this;
 		while (p != null && p != c) {
-			p.focus(c);
-			c = p;
-			p = p.getParent();
+			p.focus(c);			
 			if (p instanceof Stage) {
 				return;
 			}
+			c = p;
+			p = p.getParent();
 		}
 	}
 	
