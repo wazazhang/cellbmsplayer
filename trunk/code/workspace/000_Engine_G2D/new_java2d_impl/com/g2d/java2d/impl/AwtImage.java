@@ -137,12 +137,24 @@ public class AwtImage implements com.g2d.BufferedImage
 		return m_image;
 	}
 	
-	public IImage createBuffer(int width, int height) {
+	public IImage createBuffer(int width, int height) 
+	{
 		return new AwtImage(width, height);
 	}
 
-	public IImage subImage(int x, int y, int width, int height) {
-		return (new AwtImage(m_image.getSubimage(x, y, width, height)));
+	public IImage subImage(int x, int y, int width, int height) 
+	{
+		if ( (m_src_index_color_raster != null) && (m_src_index_color_model != null) )
+		{
+			BufferedImage new_image = new BufferedImage(m_src_index_color_model, 
+					m_src_index_color_raster, m_src_index_color_model.isAlphaPremultiplied(), null);
+			
+			return (new AwtImage(new_image.getSubimage(x, y, width, height)));
+		}
+		else
+		{
+			return (new AwtImage(m_image.getSubimage(x, y, width, height)));
+		}
 	}
 	
 	public IImage resize(int newWidth, int newHeight)

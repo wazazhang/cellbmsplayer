@@ -23,13 +23,40 @@ public class CCollides extends CGroup
 	 * Construct CCD group 
 	 * @param cdCount part count </br>
 	 * 	 */
-	public CCollides(int cdCount){
-		
+	public CCollides(int cdCount)
+	{
 		SubIndex = 0;
 		SubCount = (short)cdCount;
 		cds = new CCD[cdCount];
 		
 		Frames = new short[cdCount][];
+	}
+	
+	protected CCollides()
+	{
+		
+	}
+	
+	public CCollides clone()
+	{
+		CCollides ret = new CCollides();
+		
+		ret.cds = this.cds.clone();
+		
+		// CGroup
+		ret.Frames = this.Frames.clone();
+		
+		ret.SubIndex = this.SubIndex;
+		ret.SubCount = this.SubCount;
+		
+		ret.w_left = this.w_left;
+		ret.w_top = this.w_top;
+		ret.w_bottom = this.w_bottom;
+		ret.w_right = this.w_right;
+		ret.w_width = this.w_width;
+		ret.w_height = this.w_height;		
+		
+		return ret;
 	}
 
 	/**

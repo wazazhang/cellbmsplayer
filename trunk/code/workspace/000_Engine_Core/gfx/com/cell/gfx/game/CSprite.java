@@ -177,9 +177,58 @@ public class CSprite extends CUnit implements Serializable
 	
 	public CSprite clone()
 	{
-		 CSprite spr = new CSprite(this);
-		 spr.world = this.world;
-		 return spr;
+		CAnimates animates = (CAnimates) this.animates.clone();
+
+		CCollides collides = (CCollides) this.collides.clone();
+		
+		String AnimateNames[] = this.AnimateNames.clone();
+		short FrameAnimate[][] = this.FrameAnimate.clone();
+		short FrameCDMap[][] = this.FrameCDMap.clone();
+		short FrameCDAtk[][] = this.FrameCDAtk.clone();
+		short FrameCDDef[][] = this.FrameCDDef.clone();
+		short FrameCDExt[][] = this.FrameCDExt.clone();
+		
+		CSprite spr = new CSprite(animates, collides, 
+								AnimateNames, 
+								FrameAnimate,
+								FrameCDMap, FrameCDAtk, FrameCDDef, FrameCDExt);
+		
+		spr.IsRemoved 	= this.IsRemoved;
+		
+		spr.haveSprBlock 	= this.haveSprBlock;
+		spr.haveMapBlock 	= this.haveMapBlock;
+		spr.OnScreen 		= this.OnScreen;
+		spr.Priority		= this.Priority;
+		
+		spr.movingIllegible	= this.movingIllegible;
+		
+		spr.Transform = this.Transform;
+		
+		spr.CurAnimate = this.CurAnimate;
+		spr.CurFrame = this.CurFrame;
+
+		spr.X = this.X;
+		spr.Y = this.Y;
+		
+		spr.SpeedX256 = this.SpeedX256;
+		spr.SpeedY256 = this.SpeedY256;
+		
+		spr.AccX256 = this.AccX256;
+		spr.AccY256 = this.AccY256;
+		
+		spr.DirectX = this.DirectX;
+		spr.DirectY = this.DirectY;
+
+		spr.HPos256 = this.HPos256;
+		spr.VPos256 = this.VPos256;		 
+
+		spr.world 		= this.world;
+		spr.Visible 	= this.Visible;
+		spr.Active 		= this.Active; 
+		spr.BackColor 	= this.BackColor;
+		spr.IsDebug		= this.IsDebug;
+		
+		return spr;
 	}
 	
 //	------------------------------------------------------------------------------------------

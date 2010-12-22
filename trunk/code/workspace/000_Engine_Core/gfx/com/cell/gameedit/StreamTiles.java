@@ -1,11 +1,14 @@
 package com.cell.gameedit;
 
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 import com.cell.gameedit.object.ImagesSet;
 import com.cell.gfx.IGraphics;
 import com.cell.gfx.IImage;
 import com.cell.gfx.IImages;
+import com.cell.gfx.IPalette;
 
 
 /**
@@ -18,8 +21,13 @@ public abstract class StreamTiles implements IImages, Runnable
 	final protected ImagesSet		img;
 	final protected IImage[]		images;
 	
-	private AtomicBoolean			is_loaded	= new AtomicBoolean(false);
-	private AtomicBoolean			is_loading	= new AtomicBoolean(false);
+	protected AtomicBoolean			is_loaded	= new AtomicBoolean(false);
+	protected AtomicBoolean			is_loading	= new AtomicBoolean(false);
+	
+	protected AtomicInteger			mode_ = new AtomicInteger(0);
+	
+	protected AtomicReference<IPalette>	palette_ = new AtomicReference<IPalette>(null);
+	
 	
 	public StreamTiles(ImagesSet img, SetResource res) {
 		this.set	= res;
@@ -131,8 +139,58 @@ public abstract class StreamTiles implements IImages, Runnable
 	public void		addTile(int ClipX, int ClipY, int ClipWidth, int ClipHeight, int TileWidth, int TileHeight) {}
 	
 	public void buildImages(IImage srcImage, int count) {}
-	public int setMode(int mode){return 0;}
+	
+	public int setMode(int mode)
+	{
+		int ori_mode = mode_.getAndSet(mode);
+		
+		for ( int i=0; i<images.length; ++i )
+		{
+			IImage image = images[i];
+			if (image != null)
+				image.setMode(mode);
+		}
+		
+		return ori_mode;
+	}
+	
+	public int getMode()
+	{
+		return mode_.get();
+	}
+	
+	public void setPalette(IPalette palette) 
+	{
+		palette_.set(palette);
+	
+		for ( int i=0; i<images.length; ++i )
+		{
+			IImage image = images[i];
+			if (image != null)
+				image.setPalette(palette);
+		}		
+	}
+	
+	public IPalette getPalette()
+	{
+		return palette_.get();
+	}
+
+	@Override
+	public IImages deepClone() throws CloneNotSupportedException 
+	{
+		throw new CloneNotSupportedException();
+	}
+
+	@Override
+	public IImages clone() throws CloneNotSupportedException 
+	{
+		throw new CloneNotSupportedException();
+	}
 	
 	
 	
 }
+
+
+

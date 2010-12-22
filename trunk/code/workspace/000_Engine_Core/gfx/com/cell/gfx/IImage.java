@@ -39,10 +39,6 @@ public interface IImage {
 	
 //	public Image getSrc() ;
 	
-//	public void setAlphaLevel(int value){
-//		
-//		
-//	}
 	
 	//Copy a rect scope to a new Image of the image
 	public IImage subImage(int x, int y, int width, int height);

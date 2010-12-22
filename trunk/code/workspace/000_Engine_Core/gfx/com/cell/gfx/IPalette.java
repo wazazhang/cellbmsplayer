@@ -17,6 +17,8 @@ public interface IPalette
 	
 	public byte[] getTransparentColor();
 	
+	public void dispose();
+	
 }; // interface
 
 

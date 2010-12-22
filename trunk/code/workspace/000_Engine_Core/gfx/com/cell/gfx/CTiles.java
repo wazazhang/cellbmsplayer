@@ -15,7 +15,7 @@ public class CTiles extends CObject implements IImages {
 
 	/**
 	 * override ����
-	 * @see com.cell.gfx.morefuntek.cell.IImages#buildImages(javax.microedition.lcdui.Image, int)
+	 * @see com.cell.gfx.morefuntek.cell.IImages#buildImages(IImage, int)
 	 */
 	public void buildImages(IImage srcImage, int count) {
 		if(Tiles!=null)gc();
@@ -31,6 +31,13 @@ public class CTiles extends CObject implements IImages {
 			if(Tiles[i]!=null)Tiles[i].setMode(mode);
 		}
 		return mode;
+	}
+	
+	public void setPalette(IPalette palette)
+	{
+		for ( int i=0; i<Tiles.length; ++i )
+			if (Tiles[i] != null)
+				Tiles[i].setPalette(palette);
 	}
 	
 	public void gc() {
@@ -201,5 +208,63 @@ public class CTiles extends CObject implements IImages {
 //			println("Null Tile at " + Index);
 		}
 	}
+	
+	
+	@Override
+	public IImages deepClone() 
+	{
+		CTiles new_one = new CTiles();
+		
+		new_one.Count = this.Count;
+		new_one.CurIndex = this.CurIndex;
+
+		new_one.TileImage = (this.TileImage==null)? null : this.TileImage.newInstance();
+
+		if (this.Tiles == null)
+		{
+			new_one.Tiles = null;
+		}
+		else
+		{
+			boolean hold_same = true;
+			for ( int i=0; i<this.Tiles.length; ++i )
+			{
+				if (this.Tiles[i] != this.TileImage)
+				{
+					hold_same = false;
+					break;
+				}
+			}
+			
+			if (hold_same)
+			{
+				new_one.Tiles = new IImage[this.Tiles.length];
+				for ( int i=0; i<new_one.Tiles.length; ++i )
+					new_one.Tiles[i] = new_one.TileImage;
+			}
+			else
+			{
+				new_one.Tiles = new IImage[this.Tiles.length];
+				for ( int i=0; i<new_one.Tiles.length; ++i )
+					new_one.Tiles[i] = (this.Tiles[i]==null)? null : this.Tiles[i].newInstance();				
+			}
+		}
+		
+		return new_one;
+	}
+
+	@Override
+	public IImages clone() throws CloneNotSupportedException 
+	{
+		CTiles new_one = new CTiles();
+		
+		new_one.Count = this.Count;
+		new_one.CurIndex = this.CurIndex;
+
+		new_one.TileImage = this.TileImage;
+		new_one.Tiles = (this.Tiles==null)? null : this.Tiles.clone();
+		
+		return new_one;
+	}	
 
 }

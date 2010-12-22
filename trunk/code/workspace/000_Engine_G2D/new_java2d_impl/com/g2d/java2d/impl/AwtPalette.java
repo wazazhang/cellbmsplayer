@@ -94,6 +94,13 @@ public class AwtPalette implements IPalette
 	{
 		return this.transparent_color_index_;
 	}
-
+	
+	@Override
+	public void dispose() 
+	{
+		this.data_ = null;
+		this.color_count_ = 0;
+		this.transparent_color_index_ = -1;
+	}
 };
 
