@@ -34,9 +34,15 @@ public class SimpleFrame extends JFrame implements WindowListener
 				);
 		this.setVisible(true);
 	}
+	
+	public SimpleCanvas getCanvas() {
+		return canvas;
+	}
+	
 	public void start(int fps, Class<?> state_name) {
 		 canvas.start(fps, state_name.getCanonicalName());
 	}
+	
 	public void windowOpened(WindowEvent e) {}
 	public void windowClosed(WindowEvent e) {}
 	public void windowClosing(WindowEvent e) {

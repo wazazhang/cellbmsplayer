@@ -260,14 +260,14 @@ public class Tools
 		return null;
 	}
 	
-	static public BufferedImage combianImage(int width, int height, Image ... args)
+	static public BufferedImage combianImage(int width, int height, IImage ... args)
 	{
 		try
 		{
 			BufferedImage dst = createImage(width, height);
-			Graphics2D g = (Graphics2D)dst.createGraphics();
-			for (Image img : args) {
-				g.drawImage(img, 0, 0, width, height);
+			IGraphics g = dst.getIGraphics();
+			for (IImage img : args) {
+				g.drawImage(img, 0, 0, width, height, 0);
 			}
 			g.dispose();
 			return dst;
@@ -279,7 +279,7 @@ public class Tools
 		return null;
 	}
 	
-	static public BufferedImage scaleImage(Image args, double scale)
+	static public BufferedImage scaleImage(IImage args, double scale)
 	{
 		double dw = args.getWidth() * scale;
 		double dh = args.getHeight() * scale;
