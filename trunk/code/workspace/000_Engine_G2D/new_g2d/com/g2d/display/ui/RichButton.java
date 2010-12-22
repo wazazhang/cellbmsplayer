@@ -41,6 +41,7 @@ public class RichButton extends BaseButton
 	}
 	
 	public void setText(String script) {
+		this.text		.setSingleLine(true);
 		this.text		.setText(TextBuilder.buildScript(script));
 		this.text		.setReadOnly(true);
 		this.text		.setShowCaret(false);
