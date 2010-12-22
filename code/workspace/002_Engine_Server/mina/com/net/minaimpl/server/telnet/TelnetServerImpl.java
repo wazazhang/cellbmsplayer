@@ -6,6 +6,8 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.mina.core.service.IoAcceptor;
 import org.apache.mina.core.service.IoHandlerAdapter;
@@ -17,6 +19,7 @@ import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.cell.CUtil;
 import com.net.minaimpl.SessionAttributeKey;
 
 import com.net.server.telnet.*;
@@ -79,7 +82,7 @@ public class TelnetServerImpl extends IoHandlerAdapter implements TelnetServer
 //	-----------------------------------------------------------------------------------------------------------------------
 
 	public void exceptionCaught(IoSession session, Throwable cause) throws Exception {
-		log.error(cause.getMessage() + "\n" + session, cause);
+		log.error(cause.getMessage() + "\n" + session);
 		session.close(false);
 	}
 	
@@ -201,7 +204,5 @@ public class TelnetServerImpl extends IoHandlerAdapter implements TelnetServer
 			log.error("bad message type : " + session + " : " + message);
 		}
 	}
-	
-	
 	
 }
