@@ -34,7 +34,7 @@ public class CImages extends CObject implements IImages {
 
 	/**
 	 * override ����
-	 * @see com.cell.gfx.IImages#buildImages(javax.microedition.lcdui.Image, int)
+	 * @see com.cell.gfx.IImages#buildImages(IImage, int)
 	 */
 	public void buildImages(IImage srcImage, int count) {
 		Count = count;
@@ -52,6 +52,11 @@ public class CImages extends CObject implements IImages {
 
 	public int setMode(int mode){
 		return srcImage.setMode(mode);
+	}
+	
+	public void setPalette(IPalette palette)
+	{
+		srcImage.setPalette(palette);
 	}
 
 	public IImage getImage(int index){
@@ -187,4 +192,44 @@ public class CImages extends CObject implements IImages {
 		}
 	}
 
+	@Override
+	public IImages deepClone() 
+	{
+		CImages new_one = new CImages();
+		
+		new_one.Count = this.Count;
+
+		new_one.CurIndex = this.CurIndex;
+
+		new_one.srcImage = (this.srcImage==null)? null : this.srcImage.newInstance();
+
+		new_one.TileX = (this.TileX==null)? null : this.TileX.clone();
+		new_one.TileY = (this.TileY==null)? null : this.TileY.clone();
+		new_one.TileW = (this.TileW==null)? null : this.TileW.clone();
+		new_one.TileH = (this.TileH==null)? null : this.TileH.clone();
+		
+		return new_one;
+	}
+
+	@Override
+	public IImages clone() throws CloneNotSupportedException 
+	{
+		CImages new_one = new CImages();
+		
+		new_one.Count = this.Count;
+
+		new_one.CurIndex = this.CurIndex;
+
+		new_one.srcImage = this.srcImage;
+
+		new_one.TileX = (this.TileX==null)? null : this.TileX.clone();
+		new_one.TileY = (this.TileY==null)? null : this.TileY.clone();
+		new_one.TileW = (this.TileW==null)? null : this.TileW.clone();
+		new_one.TileH = (this.TileH==null)? null : this.TileH.clone();	
+		
+		return new_one;
+	}
+
+	
+	
 }

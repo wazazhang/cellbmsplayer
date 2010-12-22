@@ -38,6 +38,7 @@ import com.cell.gameedit.output.OutputPropertiesDir;
 import com.cell.gfx.IGraphics;
 import com.cell.gfx.IImage;
 import com.cell.gfx.IImages;
+import com.cell.gfx.IPalette;
 import com.cell.gfx.game.CCD;
 import com.cell.gfx.game.CMap;
 import com.cell.gfx.game.CSprite;
@@ -452,6 +453,10 @@ public class EatBuilder extends Builder
 							images[i] = Engine.getEngine().createImage(new ByteArrayInputStream(
 									set.getOutput().loadRes(img.Name+"/"+i+"."+img.Name, null)));
 						}
+						images[i].setMode(this.getMode());
+						IPalette palette = this.getPalette();
+						if (palette != null)
+							images[i].setPalette(palette);						
 					} catch (Exception err) {
 //						err.printStackTrace();
 						System.err.println("loadPakImages \""+img.Name+"\" tile error : " + i);
@@ -475,6 +480,10 @@ public class EatBuilder extends Builder
 							} else {
 								images[i] = Engine.getEngine().createImage(idata);
 							}
+							images[i].setMode(this.getMode());
+							IPalette palette = this.getPalette();
+							if (palette != null)
+								images[i].setPalette(palette);							
 						} catch (Exception err) {
 //							err.printStackTrace();
 							System.err.println("loadZipImages \""+img.Name+"\" tile error : " + i);
