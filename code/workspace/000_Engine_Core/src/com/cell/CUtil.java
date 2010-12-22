@@ -689,6 +689,63 @@ public class CUtil extends CObject
 	}
 	
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	/**
+	 * 将字符串格式化为main入口一样的args<br>
+	 * 比如输入<br>
+	 * command /switch "d:\abc\def gh" <br>
+	 * 输出<br>
+	 * [command]<br>
+	 * [/switch]<br>
+	 * [d:\abc\def gh]<br>
+	 * @param text
+	 * @return
+	 */
+	static public String[] splitStringToArgs(String text)
+	{
+		ArrayList<String> ret = new ArrayList<String>(1);
+		
+		StringBuilder sb = new StringBuilder(text.length());
+		boolean is_lc = false;
+		for (int i = 0; i < text.length(); i++)
+		{
+			char ch = text.charAt(i);
+			switch(ch) {
+			case '\"':
+			{
+				if (!is_lc) {
+					is_lc = true;
+				} else {
+					is_lc = false;
+					if (sb.length() > 0) {
+						ret.add(sb.toString());
+						sb.setLength(0);
+					}
+				}
+				break;
+			}
+			case ' ': case '\t':
+			{
+				if (is_lc) {
+					sb.append(ch);
+				} else if (sb.length() > 0) {
+					ret.add(sb.toString());
+					sb.setLength(0);
+				}
+				break;
+			}
+			default:
+				sb.append(ch);
+			}
+		}
+		if (sb.length() > 0) {
+			ret.add(sb.toString());
+			sb.setLength(0);
+		}
+		
+		return ret.toArray(new String[ret.size()]);
+	}
+	
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	public static String getHexDump(byte[] data)
