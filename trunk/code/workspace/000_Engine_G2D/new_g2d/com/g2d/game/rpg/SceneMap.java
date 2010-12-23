@@ -212,7 +212,7 @@ public abstract class SceneMap extends DisplayObjectContainer implements AstarMa
 		
 //	---------------------------------------------------------------------------------------------------------------------------
 
-	final public boolean getFlag(int bx, int by) {
+	public boolean getFlag(int bx, int by) {
 		return testFlagBlock(grid_matrix[bx][by]);
 	}
 
