@@ -336,7 +336,7 @@ public abstract class SceneMap extends DisplayObjectContainer implements AstarMa
 							if (grid_matrix[x][y] != 0){
 								int rx = x * gridW;
 								int ry = y * gridH;
-								g.setColor(new Color(grid_matrix[x][y]));
+								g.setColor(new Color(0xff000000 | grid_matrix[x][y]));
 								g.drawRect(rx, ry, gridW, gridH);
 								g.setColor(font_color);
 								Drawing.drawString(g, x + "," + y, rx + 2, ry + 2);
