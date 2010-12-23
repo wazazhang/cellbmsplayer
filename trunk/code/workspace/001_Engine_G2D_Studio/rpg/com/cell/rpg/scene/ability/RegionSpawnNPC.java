@@ -65,6 +65,9 @@ public class RegionSpawnNPC extends AbstractAbility
 		@Property("产生百分比，即该区域在生成NPC时，生成到该类型的几率")
 		public float 		spawn_percent	= 100;
 		
+		@Property("区域生成NPC后，产生的一条信息（格式化字符串,%1%作为npc类型名字），视服务器而定该信息可能会被系统广播")
+		public	String		message;
+		
 		/** 对应actor对象名 */
 		@Property("对应actor对象名")
 		public	String		template_unit_id;
