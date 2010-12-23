@@ -4,6 +4,7 @@ package com.cell.rpg.scene;
 import com.cell.rpg.instance.zones.ability.InstanceZoneUnitVisible;
 import com.cell.rpg.quest.ability.QuestAccepter;
 import com.cell.rpg.quest.ability.QuestPublisher;
+import com.cell.rpg.scene.ability.RegionMapBlock;
 import com.cell.rpg.scene.ability.RegionPlayerEnter;
 import com.cell.rpg.scene.ability.RegionSpawnNPC;
 import com.cell.rpg.scene.ability.RegionSpawnTrezuro;
@@ -32,6 +33,7 @@ public class Region extends SceneUnit
 				RegionPlayerEnter.class,
 				RegionSpawnNPC.class,
 				RegionSpawnTrezuro.class,
+				RegionMapBlock.class,
 				QuestAccepter.class,
 				QuestPublisher.class,
 				InstanceZoneUnitVisible.class,
