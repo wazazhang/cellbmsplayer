@@ -4,6 +4,7 @@ import java.util.Vector;
 
 import com.cell.rpg.quest.Quest;
 import com.g2d.studio.Studio;
+import com.g2d.studio.Studio.ProgressForm;
 import com.g2d.studio.gameedit.ObjectTreeViewDynamic;
 import com.g2d.studio.gameedit.entity.ObjectGroup;
 import com.g2d.studio.io.File;
@@ -14,8 +15,8 @@ public class QuestTreeView extends ObjectTreeViewDynamic<QuestNode, Quest>
 {
 	private static final long serialVersionUID = 1L;
 
-	public QuestTreeView(File quest_list_file) {
-		super("任务管理器", QuestNode.class, Quest.class, quest_list_file);
+	public QuestTreeView(File quest_list_file, ProgressForm progress) {
+		super("任务管理器", QuestNode.class, Quest.class, quest_list_file, progress);
 	}
 	
 	@Override

@@ -44,7 +44,9 @@ public class IconManager extends ManagerFormList<IconFile>
 	@Override
 	protected IconFile createNode(File file) {
 		if (file.getName().endsWith(Config.ICON_SUFFIX)) {
-			return new IconFile(asNodeName(file), file);
+			IconFile icon = new IconFile(asNodeName(file), file);
+			icon.getImage();
+			return icon;
 		}
 		return null;
 	}

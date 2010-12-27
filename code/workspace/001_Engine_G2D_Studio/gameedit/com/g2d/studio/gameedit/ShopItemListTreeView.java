@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTree;
 
 import com.cell.rpg.template.TShopItemList;
+import com.g2d.studio.Studio.ProgressForm;
 import com.g2d.studio.gameedit.dynamic.DShopItemList;
 import com.g2d.studio.gameedit.entity.ObjectGroup;
 import com.g2d.studio.swing.G2DTreeNodeGroup;
@@ -17,9 +18,9 @@ public class ShopItemListTreeView extends ObjectTreeViewTemplateDynamic<DShopIte
 {
 	private static final long serialVersionUID = 1L;
 
-	public ShopItemListTreeView(String title, String objects_dir) 
+	public ShopItemListTreeView(String title, String objects_dir, ProgressForm progress) 
 	{
-		super(title, DShopItemList.class, TShopItemList.class, objects_dir);		
+		super(title, DShopItemList.class, TShopItemList.class, objects_dir, progress);		
 	}
 
 	@Override

@@ -22,7 +22,7 @@ public abstract class ManagerForm extends JFrame
 		super.setTitle(title);
 		this.studio = studio;
 		System.out.println("init : " + title + " \t: " +  getClass().getSimpleName());
-		progress.startReadBlock("初始化" + title + "...");
+		progress.startReadBlock("初始化 [" + title + "] ...");
 	}
 	
 	abstract public void saveAll() throws Throwable;

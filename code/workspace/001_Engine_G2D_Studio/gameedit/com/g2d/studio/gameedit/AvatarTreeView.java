@@ -14,6 +14,7 @@ import javax.swing.JTree;
 import com.cell.rpg.template.TAvatar;
 import com.g2d.awt.util.AbstractDialog;
 import com.g2d.studio.Studio;
+import com.g2d.studio.Studio.ProgressForm;
 import com.g2d.studio.cpj.CPJResourceSelectDialog;
 import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.cpj.entity.CPJSprite;
@@ -26,9 +27,9 @@ public class AvatarTreeView extends ObjectTreeViewTemplateDynamic<DAvatar, TAvat
 {
 	private static final long serialVersionUID = 1L;
 
-	public AvatarTreeView(String title, String objects_dir) 
+	public AvatarTreeView(String title, String objects_dir, ProgressForm progress) 
 	{
-		super(title, DAvatar.class, TAvatar.class, objects_dir);		
+		super(title, DAvatar.class, TAvatar.class, objects_dir, progress);		
 	}
 
 	@Override

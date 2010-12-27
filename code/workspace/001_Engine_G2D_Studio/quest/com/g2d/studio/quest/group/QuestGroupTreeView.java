@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTree;
 
 import com.cell.rpg.quest.QuestGroup;
+import com.g2d.studio.Studio.ProgressForm;
 import com.g2d.studio.gameedit.ObjectTreeViewDynamic;
 import com.g2d.studio.gameedit.entity.ObjectGroup;
 import com.g2d.studio.io.File;
@@ -18,9 +19,9 @@ public class QuestGroupTreeView extends ObjectTreeViewDynamic<DQuestGroup, Quest
 {
 	private static final long serialVersionUID = 1L;
 
-	public QuestGroupTreeView(String title, File list_file) 
+	public QuestGroupTreeView(String title, File list_file, ProgressForm progress) 
 	{
-		super(title, DQuestGroup.class, QuestGroup.class, list_file);		
+		super(title, DQuestGroup.class, QuestGroup.class, list_file, progress);		
 	}
 
 	@Override
