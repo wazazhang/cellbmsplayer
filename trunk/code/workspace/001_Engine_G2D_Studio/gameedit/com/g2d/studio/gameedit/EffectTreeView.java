@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTree;
 
 import com.cell.rpg.template.TEffect;
+import com.g2d.studio.Studio.ProgressForm;
 import com.g2d.studio.gameedit.dynamic.DEffect;
 import com.g2d.studio.gameedit.entity.ObjectGroup;
 import com.g2d.studio.swing.G2DTreeNodeGroup;
@@ -17,9 +18,9 @@ public class EffectTreeView extends ObjectTreeViewTemplateDynamic<DEffect, TEffe
 {
 	private static final long serialVersionUID = 1L;
 
-	public EffectTreeView(String title, String objects_dir) 
+	public EffectTreeView(String title, String objects_dir, ProgressForm progress) 
 	{
-		super(title, DEffect.class, TEffect.class, objects_dir);		
+		super(title, DEffect.class, TEffect.class, objects_dir, progress);		
 	}
 
 	@Override

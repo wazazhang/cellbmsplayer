@@ -6,6 +6,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicReference;
 
 import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
@@ -18,6 +19,7 @@ import com.g2d.awt.util.*;
 
 import com.g2d.studio.Studio;
 import com.g2d.studio.StudioResource;
+import com.g2d.studio.Studio.ProgressForm;
 import com.g2d.studio.cell.gameedit.Builder;
 import com.g2d.studio.cell.gameedit.EatBuilder;
 import com.g2d.studio.cpj.CPJResourceType;
@@ -292,22 +294,28 @@ public class CPJFile extends G2DTreeNode<CPJObject<?>>
 	public static ArrayList<CPJFile> listFile (
 			String root, 
 			String res_root, 
-			CPJResourceType res_type)
+			CPJResourceType res_type,
+			ProgressForm progress)
 	{
 //		res_prefix = res_prefix.toLowerCase();
 		ArrayList<CPJFile> ret = new ArrayList<CPJFile>();
 		try{
 			File root_file = Studio.getInstance().getIO().createFile(root, res_root);
-			for (File file : root_file.listFiles()) {
+			File[] files = root_file.listFiles();
+			progress.setMaximum(res_root, files.length);
+			int i = 0;
+			for (File file : files) {
 				File cpj = Builder.getInstance().getCPJFile(file, res_type);
 				if (cpj != null && cpj.exists()) {
-					try{
+					try {
+						progress.setValue(file.getName(), i);
 						ret.add(new CPJFile(cpj, res_type));
 					} catch(Throwable err){
 						System.err.println("init cpj file error : " + cpj.getPath());
 						err.printStackTrace();
 					}
 				}
+				i ++;
 			}
 		}catch (Exception err){
 			err.printStackTrace();

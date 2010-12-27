@@ -645,12 +645,16 @@ public class Studio extends AbstractFrame
 		EventQueue.invokeLater(new Runnable() {
             public void run() {
             	CAppBridge.init();
-                start(args);
+            	new Thread(){
+            		public void run() {
+            			start_studio(args);
+            		}
+            	}.start();
             }
         });
 	}
 	
-	static public void start(String[] args) 
+	static public void start_studio(String[] args) 
 	{
 		try
 		{

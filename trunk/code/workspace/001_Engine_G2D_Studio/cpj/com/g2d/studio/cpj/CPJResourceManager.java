@@ -61,7 +61,7 @@ public class CPJResourceManager extends ManagerForm implements MouseListener
 		{
 			unit_root = new DefaultMutableTreeNode("单位模板");
 			ArrayList<CPJFile> files = CPJFile.listFile(path, 
-					Config.RES_ACTOR_ROOT, CPJResourceType.ACTOR);
+					Config.RES_ACTOR_ROOT, CPJResourceType.ACTOR, progress);
 			progress.setMaximum("", files.size());
 			for (int i=0; i<files.size(); i++) {
 				unit_root.add(files.get(i));
@@ -77,7 +77,7 @@ public class CPJResourceManager extends ManagerForm implements MouseListener
 		{
 			avatar_root = new DefaultMutableTreeNode("AVATAR模板");
 			ArrayList<CPJFile> files = CPJFile.listFile(path, 
-					Config.RES_AVATAR_ROOT, CPJResourceType.AVATAR);
+					Config.RES_AVATAR_ROOT, CPJResourceType.AVATAR, progress);
 			progress.setMaximum("", files.size());
 			for (int i=0; i<files.size(); i++) {
 				avatar_root.add(files.get(i));
@@ -93,7 +93,7 @@ public class CPJResourceManager extends ManagerForm implements MouseListener
 		{
 			effect_root = new DefaultMutableTreeNode("特效模板");
 			ArrayList<CPJFile> files = CPJFile.listFile(path, 
-					Config.RES_EFFECT_ROOT, CPJResourceType.EFFECT);
+					Config.RES_EFFECT_ROOT, CPJResourceType.EFFECT, progress);
 			progress.setMaximum("", files.size());
 			for (int i=0; i<files.size(); i++) {
 				effect_root.add(files.get(i));
@@ -109,7 +109,7 @@ public class CPJResourceManager extends ManagerForm implements MouseListener
 		{
 			scene_root = new DefaultMutableTreeNode("场景模板");
 			ArrayList<CPJFile> files = CPJFile.listFile(path,
-					Config.RES_SCENE_ROOT, CPJResourceType.WORLD);
+					Config.RES_SCENE_ROOT, CPJResourceType.WORLD, progress);
 			progress.setMaximum("", files.size());
 			for (int i=0; i<files.size(); i++) {
 				scene_root.add(files.get(i));

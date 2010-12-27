@@ -4,6 +4,7 @@ package com.g2d.studio.instancezone;
 import java.awt.Dimension;
 
 import com.cell.rpg.scene.instance.InstanceZone;
+import com.g2d.studio.Studio.ProgressForm;
 import com.g2d.studio.gameedit.ObjectTreeViewDynamic;
 import com.g2d.studio.gameedit.entity.ObjectGroup;
 import com.g2d.studio.io.File;
@@ -14,8 +15,8 @@ public class InstanceZonesTreeView extends ObjectTreeViewDynamic<InstanceZoneNod
 {
 	private static final long serialVersionUID = 1L;
 
-	public InstanceZonesTreeView(File list_file) {
-		super("副本管理器", InstanceZoneNode.class, InstanceZone.class, list_file);
+	public InstanceZonesTreeView(File list_file, ProgressForm progress) {
+		super("副本管理器", InstanceZoneNode.class, InstanceZone.class, list_file, progress);
 		super.left.setMinimumSize(new Dimension(300, 300));
 		super.getTree().expandAll();
 	}

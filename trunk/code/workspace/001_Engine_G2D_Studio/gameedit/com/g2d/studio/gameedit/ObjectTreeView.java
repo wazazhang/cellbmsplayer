@@ -16,6 +16,7 @@ import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreePath;
 import com.cell.rpg.RPGObject;
 import com.cell.util.IDFactoryInteger;
+import com.g2d.studio.Studio.ProgressForm;
 import com.g2d.studio.gameedit.entity.IProgress;
 import com.g2d.studio.gameedit.entity.ObjectGroup;
 import com.g2d.studio.gameedit.entity.ObjectNode;
@@ -48,7 +49,8 @@ extends JSplitPane implements TreeSelectionListener, ChangeListener
 			String title, 
 			Class<T> node_type, 
 			Class<D> data_type, 
-			File list_file) 
+			File list_file,
+			ProgressForm progress) 
 	{
 		this.list_file		= list_file;
 		this.node_type		= node_type;

@@ -37,7 +37,7 @@ public class InstanceZonesManager extends ManagerFormDynamic
 		this.zones_list		= zones_dir.getChildFile("zones.list");
 		this.script_root	= Studio.getInstance().project_path;
 		
-		this.g2d_tree = new InstanceZonesTreeView(zones_list);
+		this.g2d_tree = new InstanceZonesTreeView(zones_list, progress);
 		this.add(g2d_tree, BorderLayout.CENTER);
 		
 	}

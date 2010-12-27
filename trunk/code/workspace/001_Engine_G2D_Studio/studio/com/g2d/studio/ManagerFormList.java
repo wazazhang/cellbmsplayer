@@ -49,7 +49,8 @@ public abstract class ManagerFormList<T extends G2DListItem> extends ManagerForm
 	
 	public ManagerFormList(
 			Studio studio, 
-			ProgressForm progress, String title, 
+			ProgressForm progress, 
+			String title, 
 			BufferedImage icon, 
 			File res_root, 
 			File save_list_file) 
@@ -60,14 +61,14 @@ public abstract class ManagerFormList<T extends G2DListItem> extends ManagerForm
 		this.res_root		= res_root;
 		
 		File files[]		= res_root.listFiles();
-		progress.setMaximum("", files.length);
+		progress.setMaximum(title, files.length);
 		for (int i=0; i<files.length; i++) {
 			File file = files[i];
 			T node = createNode(file);
 			if (node != null) {
 				this.files.add(node);
 			}
-			progress.setValue("", i);
+			progress.setValue(title, i);
 		}
 
 		this.btn_refresh.setToolTipText("刷新");

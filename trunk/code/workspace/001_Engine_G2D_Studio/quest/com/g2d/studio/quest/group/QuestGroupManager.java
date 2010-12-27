@@ -27,7 +27,7 @@ public class QuestGroupManager extends ManagerFormDynamic
 
 		quest_group_dir		= studio.project_save_path.getChildFile("questgroups");
 		quest_group_list	= quest_group_dir.getChildFile("questgroups.list");
-		quest_group_view	= new QuestGroupTreeView("任务编组管理器", quest_group_list);
+		quest_group_view	= new QuestGroupTreeView("任务编组管理器", quest_group_list, progress);
 		this.add(quest_group_view, BorderLayout.CENTER);
 		
 		this.setSize(getWidth()-100, getHeight()-100);

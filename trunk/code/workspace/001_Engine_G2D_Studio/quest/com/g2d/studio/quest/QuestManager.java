@@ -45,7 +45,7 @@ public class QuestManager extends ManagerFormDynamic
 		
 		File quest_dir	= studio.project_save_path.getChildFile("quests");
 		File quest_list	= quest_dir.getChildFile("quest.list");
-		tree_view 		= new QuestTreeView(quest_list);
+		tree_view 		= new QuestTreeView(quest_list, progress);
 		this.add(tree_view, BorderLayout.CENTER);
 		
 	}

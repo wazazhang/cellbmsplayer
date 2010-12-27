@@ -36,7 +36,7 @@ extends ObjectTreeView<T, D>
 			File		xls_file,
 			ProgressForm progress) 
 	{
-		super(title, node_type, data_type, ObjectManager.toListFile(objects_dir, data_type));
+		super(title, node_type, data_type, ObjectManager.toListFile(objects_dir, data_type), progress);
 		
 		this.xls_file = xls_file;
 		this.xls_row_map = new TreeMap<String, XLSFullRow>();
@@ -50,11 +50,14 @@ extends ObjectTreeView<T, D>
 		progress.setMaximum(title, list.size());
 		for (XLSFullRow row : list) {
 			xls_row_map.put(row.id, row);
-			progress.setValue(title, i++);
+			progress.setValue(row.id, i++);
 		}
-		getTreeRoot().loadList();
+		getTreeRoot().loadList(progress);
 		boolean new_xls_row = false;
-		for (XLSFullRow row : xls_row_map.values()) {
+		Collection<XLSFullRow> values = xls_row_map.values();
+		progress.setMaximum(title, values.size());
+		i = 0;
+		for (XLSFullRow row : values) {
 			if (getNode(Integer.parseInt(row.id))==null) {
 				T node = createObjectFromRow(row.id, null);
 				if (node != null) {
@@ -63,6 +66,7 @@ extends ObjectTreeView<T, D>
 					System.out.println("find new xls row data : " + node.getID() + " : " + node.getName());
 				}
 			}
+			progress.setValue(row.id, i++);
 		}
 		reload();
 		getTree().setDragEnabled(true);

@@ -35,7 +35,7 @@ public class ItemManager extends ManagerFormDynamic
 		}
 	
 		File item_properties_list_file = studio.project_save_path.getChildFile("item_properties/item_properties.list");
-		this.tree_view = new ItemPropertiesTreeView(item_properties_list_file);
+		this.tree_view = new ItemPropertiesTreeView(item_properties_list_file, progress);
 		this.add(tree_view, BorderLayout.CENTER);
 	}
 

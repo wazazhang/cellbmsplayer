@@ -86,28 +86,28 @@ public class ObjectManager
 		}{
 			// DAvatar
 			ObjectTreeViewTemplateDynamic<DAvatar, TAvatar> tree_avatars_view = new AvatarTreeView(
-					"AVATAR", objects_dir);
+					"AVATAR", objects_dir, progress);
 			ObjectManagerTree<DAvatar, TAvatar> form_avatars_view = new ObjectManagerTree<DAvatar, TAvatar>(
 					studio, progress, Res.icon_res_2, tree_avatars_view);
 			managers.put(tree_avatars_view.node_type, form_avatars_view);
 		}{	
 			// DEffect
 			ObjectTreeViewTemplateDynamic<DEffect, TEffect>	tree_effects_view = new EffectTreeView(
-					"魔法效果/特效", objects_dir);
+					"魔法效果/特效", objects_dir, progress);
 			ObjectManagerTree<DEffect, TEffect>	form_effects_view = new ObjectManagerTree<DEffect, TEffect>(
 					studio, progress, Res.icon_res_8, tree_effects_view);
 			managers.put(tree_effects_view.node_type, form_effects_view);
 		}{
 			// DItemList
 			ObjectTreeViewTemplateDynamic<DItemList, TItemList> tree_item_list_view = new ItemListTreeView(
-					"掉落道具列表", objects_dir);
+					"掉落道具列表", objects_dir, progress);
 			ObjectManagerTree<DItemList, TItemList>	form_item_list_view = new ObjectManagerTree<DItemList, TItemList>(
 					studio, progress, Res.icon_res_9, tree_item_list_view);
 			managers.put(tree_item_list_view.node_type, form_item_list_view);
 		}{
 			// DShopItemList
 			ObjectTreeViewTemplateDynamic<DShopItemList, TShopItemList> tree = new ShopItemListTreeView(
-					"售卖商品列表", objects_dir);
+					"售卖商品列表", objects_dir, progress);
 			ObjectManagerTree<DShopItemList, TShopItemList>	form = new ObjectManagerTree<DShopItemList, TShopItemList>(
 					studio, progress, Res.icon_res_9, tree);
 			managers.put(tree.node_type, form);

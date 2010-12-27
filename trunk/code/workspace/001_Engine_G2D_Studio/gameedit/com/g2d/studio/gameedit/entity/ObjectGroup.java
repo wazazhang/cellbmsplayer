@@ -11,6 +11,7 @@ import com.cell.rpg.io.RPGObjectMap;
 import com.g2d.studio.Studio;
 import com.g2d.studio.swing.G2DTree;
 import com.g2d.studio.swing.G2DTreeNodeGroup;
+import com.g2d.studio.Studio.ProgressForm;
 import com.g2d.studio.io.File;
 
 
@@ -113,16 +114,21 @@ public abstract class ObjectGroup<T extends ObjectNode<D>, D extends RPGObject> 
 		}
 	}
 	
-	public void loadList()
+	public void loadList(ProgressForm progress)
 	{
 		try{
 			if (list_file.exists()) {
 				String[] lines = CIO.readAllLine(list_file.getPath(), "UTF-8");
+				progress.setMaximum(list_file.getName(), lines.length);
+				int i = 0;
 				for (String line : lines) {
 					try{
 						loadPath(line.trim());
 					}catch(Exception e){
 						e.printStackTrace();
+					}finally{
+						progress.setValue(line, i);
+						i++;
 					}
 				}
 			}
