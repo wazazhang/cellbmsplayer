@@ -1243,20 +1243,22 @@ public class AwtMultiTextLayout extends MultiTextLayout
 				AttributedCharacterIterator it = change.atext.getIterator();
 				for (char c = it.first(); c != CharacterIterator.DONE; c = it.next()) 
 				{
-					Map<Attribute,Object> map = it.getAttributes();
-					Number 	size = (Number)map.get(TextAttribute.SIZE);
-					Font 	font = (Font)map.get(TextAttribute.FONT);
-					Integer anti = (Integer)map.get(com.g2d.font.TextAttribute.ANTIALIASING);
+					Map<Attribute,Object> 	map 	= it.getAttributes();
+					
+					Number 					size 	= (Number)      map.get(com.g2d.font.TextAttribute.SIZE);
+					com.g2d.Font 			font 	= (com.g2d.Font)map.get(com.g2d.font.TextAttribute.FONT);
+					Integer 				anti 	= (Integer)     map.get(com.g2d.font.TextAttribute.ANTIALIASING);
+					
 					if (anti != null && anti.intValue() == 1) {
 						this.render_antialiasing = true;
 					}
 					if (font == null) {
-						font = ((AwtFont)(g2d.getFont())).getFont();
+						font = ((AwtFont)(g2d.getFont()));
 					}
 					if (size != null && size.intValue() != font.getSize()) {
-						font = new Font(font.getName(), 0, size.intValue());
+						font = font.newSize(size.intValue());
 					}
-					attr_text.addAttribute(TextAttribute.FONT, font, i, e);
+					attr_text.addAttribute(com.g2d.font.TextAttribute.FONT, font, i, e);
 					attr_text.addAttributes(map, i, e);
 					i++;
 					e++;
