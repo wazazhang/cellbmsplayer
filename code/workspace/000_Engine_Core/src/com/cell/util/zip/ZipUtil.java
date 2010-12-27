@@ -162,6 +162,8 @@ public class ZipUtil
 			size = is.read(buffer);
 			if (size > 0) {
 				data.write(buffer, 0, size);
+			} else {
+				break;
 			}
 		}
 		return data.toByteArray();
