@@ -33,40 +33,30 @@ public class AwtImage implements com.g2d.BufferedImage
 		m_image = createBuffer(image);
 	}
 	
-	public AwtImage()
-	{
-		m_image = createBuffer(
-				AwtEngine.getEngine().getGC().createCompatibleImage(
-						1, 1, 
-						Transparency.TRANSLUCENT));
+	public AwtImage() {
+		m_image = createBuffer(AwtEngine.getEngine().getGC()
+				.createCompatibleImage(1, 1, Transparency.TRANSLUCENT));
 	}
-	
-	public AwtImage(String file) 
-	{
+
+	public AwtImage(String file) {
 		try {
 			m_image = createBuffer(ImageIO.read(CIO.getInputStream(file)));
 		} catch (Exception err) {
 			err.printStackTrace();
-			System.err.println("CImage.<init> :  File=" + file + " Failed !");
 		}
 	}
-	
-	public AwtImage(InputStream is)
-	{
-		try{
-			m_image = createBuffer(ImageIO.read(is));
-		}catch(Exception err){
+
+	public AwtImage(java.awt.image.BufferedImage buff) {
+		try {
+			m_image = createBuffer(buff);
+		} catch (Exception err) {
 			err.printStackTrace();
-			System.err.println("CImage.<init> : Failed !");
 		}
 	}
-	
-	public AwtImage(int w, int h)
-	{
-		m_image = createBuffer(
-				AwtEngine.getEngine().getGC().createCompatibleImage(
-				w, h, 
-				Transparency.TRANSLUCENT));
+
+	public AwtImage(int w, int h) {
+		m_image = createBuffer(AwtEngine.getEngine().getGC()
+				.createCompatibleImage(w, h, Transparency.TRANSLUCENT));
 	}
 	
 	private final BufferedImage createBuffer(Image src)

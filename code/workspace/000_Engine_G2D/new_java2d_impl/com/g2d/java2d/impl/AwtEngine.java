@@ -111,7 +111,7 @@ public class AwtEngine extends Engine
 	}
 
 	public BufferedImage createImage(InputStream is) throws IOException{
-		return new AwtImage(is);
+		return new AwtImage(ImageIO.read(is));
 	}
 
 	public void encodeImage(OutputStream out, Image src, String type) throws Exception {
