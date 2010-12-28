@@ -97,12 +97,32 @@ import com.cell.gfx.ColorUtilities;
  */
  public final class BlendComposite implements Composite 
  {
-    /**
-     * <p>A blending mode defines the compositing rule of a
-     * {@link BlendComposite}.</p>
-     *
-     * @author Romain Guy <romain.guy@mac.com>
-     */
+	 private static boolean s_use_jni_blend_fnc_ = false;
+	 
+	 static 
+	 {
+		 try
+		 {
+			 System.loadLibrary("blend_fnc");
+			 s_use_jni_blend_fnc_ = true;
+		 }
+		 catch (Throwable exp)
+		 {
+//			 exp.printStackTrace();
+			 System.err.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+			 System.err.println("java.lang.UnsatisfiedLinkError: no blend_fnc in java.library.path !!");
+			 System.err.println("use java code for blending ...");
+			 System.err.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+			 s_use_jni_blend_fnc_ = false;
+		 }
+	 }    
+	 
+	 /**
+	  * <p>A blending mode defines the compositing rule of a
+	  * {@link BlendComposite}.</p>
+	  *
+	  * @author Romain Guy <romain.guy@mac.com>
+	  */
     public enum BlendingMode 
     {
         NONE,
@@ -328,46 +348,86 @@ import com.cell.gfx.ColorUtilities;
         }
 
         public void compose(Raster src, Raster dstIn, WritableRaster dstOut) {
-            int width = Math.min(src.getWidth(), dstIn.getWidth());
+           	int width = Math.min(src.getWidth(), dstIn.getWidth());
             int height = Math.min(src.getHeight(), dstIn.getHeight());
+            
+            int size = width * height;
 
             float alpha = composite.getAlpha();
+          
+            int[] srcPixels = new int[size];
+            int[] dstPixels = new int[size];
 
-            int[] result = new int[4];
-            int[] srcPixel = new int[4];
-            int[] dstPixel = new int[4];
-            int[] srcPixels = new int[width];
-            int[] dstPixels = new int[width];
-
-            for (int y = 0; y < height; y++) {
-                src.getDataElements(0, y, width, 1, srcPixels);
-                dstIn.getDataElements(0, y, width, 1, dstPixels);
-                for (int x = 0; x < width; x++) {
-                    // pixels are stored as INT_ARGB
-                    // our arrays are [R, G, B, A]
-                    int pixel = srcPixels[x];
-                    srcPixel[0] = (pixel >> 16) & 0xFF;
-                    srcPixel[1] = (pixel >>  8) & 0xFF;
-                    srcPixel[2] = (pixel      ) & 0xFF;
-                    srcPixel[3] = (pixel >> 24) & 0xFF;
-
-                    pixel = dstPixels[x];
-                    dstPixel[0] = (pixel >> 16) & 0xFF;
-                    dstPixel[1] = (pixel >>  8) & 0xFF;
-                    dstPixel[2] = (pixel      ) & 0xFF;
-                    dstPixel[3] = (pixel >> 24) & 0xFF;
-
-                    blender.blend(srcPixel, dstPixel, result);
-
-                    // mixes the result with the opacity
-                    dstPixels[x] = ((int) (dstPixel[3] + (result[3] - dstPixel[3]) * alpha) & 0xFF) << 24 |
-                                   ((int) (dstPixel[0] + (result[0] - dstPixel[0]) * alpha) & 0xFF) << 16 |
-                                   ((int) (dstPixel[1] + (result[1] - dstPixel[1]) * alpha) & 0xFF) <<  8 |
-                                    (int) (dstPixel[2] + (result[2] - dstPixel[2]) * alpha) & 0xFF;
-                }
-                dstOut.setDataElements(0, y, width, 1, dstPixels);
+            src.getDataElements(0, 0, width, height, srcPixels);
+            dstIn.getDataElements(0, 0, width, height, dstPixels);
+            
+            if (s_use_jni_blend_fnc_)
+            {
+            	blend_cppImpl(srcPixels, dstPixels, width, height, alpha);
             }
+            else
+            {
+                int[] result = new int[4];
+                int[] srcPixel = new int[4];
+                int[] dstPixel = new int[4];
+            	
+//	            for (int y = 0; y < height; y++) {
+//	            	for (int x = 0; x < width; x++) {            		
+//	            		int idx = y*width + x;
+	            for ( int idx=0; idx<size; ++idx ) {
+	            		// pixels are stored as INT_ARGB
+	            		// our arrays are [R, G, B, A]
+	            		int pixel = srcPixels[idx];
+	            		srcPixel[0] = (pixel >> 16) & 0xFF;
+	            		srcPixel[1] = (pixel >>  8) & 0xFF;
+	            		srcPixel[2] = (pixel      ) & 0xFF;
+	            		srcPixel[3] = (pixel >> 24) & 0xFF;
+	
+	            		pixel = dstPixels[idx];
+	            		dstPixel[0] = (pixel >> 16) & 0xFF;
+	            		dstPixel[1] = (pixel >>  8) & 0xFF;
+	            		dstPixel[2] = (pixel      ) & 0xFF;
+	            		dstPixel[3] = (pixel >> 24) & 0xFF;
+	
+	            		blender.blend(srcPixel, dstPixel, result);
+	
+	            		// mixes the result with the opacity
+	            		dstPixels[idx] = ((int) (dstPixel[3] + (result[3] - dstPixel[3]) * alpha) & 0xFF) << 24 |
+	            						((int) (dstPixel[0] + (result[0] - dstPixel[0]) * alpha) & 0xFF) << 16 |
+	            						((int) (dstPixel[1] + (result[1] - dstPixel[1]) * alpha) & 0xFF) <<  8 |
+	            						(int) (dstPixel[2] + (result[2] - dstPixel[2]) * alpha) & 0xFF;
+//	            	}
+	            }
+            }
+            
+            dstOut.setDataElements(0, 0, width, height, dstPixels);
         }
+    }
+    
+    public native static void blend_cppImpl(int[] src_pixels, int[] dst_pixels, int width, int height, float alpha); 
+    
+    public static void main(String[] args) throws Throwable
+    {
+    	System.loadLibrary("blend_fnc");
+    	
+    	int[] src_pixels = new int[]{ 100, 200, 300, 400, };
+    	int[] dst_pixels = new int[]{ 500, 600, 700, 800, };
+    	
+    	for ( int src : src_pixels )
+    		System.out.println(src);
+    	System.out.println("++++++++++++++++++++++");
+    	for ( int dst : dst_pixels )
+    		System.out.println(dst);
+    	System.out.println("++++++++++++++++++++++");
+    	
+    	blend_cppImpl(src_pixels, dst_pixels, 2, 2, 0.3f);
+    	
+    	for ( int src : src_pixels )
+    		System.err.println(src);
+    	System.err.println("++++++++++++++++++++++");
+    	for ( int dst : dst_pixels )
+    		System.err.println(dst);  
+    	System.err.println("++++++++++++++++++++++");
     }
 
     private static abstract class Blender {
