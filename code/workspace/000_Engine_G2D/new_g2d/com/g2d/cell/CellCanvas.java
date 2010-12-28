@@ -1,6 +1,7 @@
 package com.g2d.cell;
 
 import com.cell.gfx.AScreen;
+import com.cell.gfx.IImage;
 import com.g2d.Graphics2D;
 import com.g2d.Image;
 import com.g2d.display.DisplayObjectContainer;
@@ -13,7 +14,7 @@ import com.g2d.display.InteractiveObject;
  */
 public class CellCanvas extends InteractiveObject
 {
-	public CellCanvas(int width, int height, Image loadingImage, String rootscreen)
+	public CellCanvas(int width, int height, IImage loadingImage, String rootscreen)
 	{
 		enable_key_input		= true;
 		enable_mouse_wheel		= true;
