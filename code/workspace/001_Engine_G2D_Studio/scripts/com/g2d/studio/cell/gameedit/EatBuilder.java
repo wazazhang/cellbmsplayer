@@ -178,7 +178,28 @@ public class EatBuilder extends Builder
 			saveBuildSceneBat(cpj_file_name);
 		}
 	}
-
+	
+	protected void buildCMD(String sc_file_path)
+	{
+		try {
+			File sc_file = new File(sc_file_path).getCanonicalFile();
+			if (sc_file.exists()) 
+			{
+				BuildScript script = external_script_manager.getInterface(
+						sc_file.getCanonicalPath(), 
+						BuildScript.class);
+				if (script != null)
+				{
+					File dir = new File(System.getProperty("user.dir")).getCanonicalFile();
+					BuildProcess bp = new BuildProcess(dir);
+					script.build(bp, dir);
+				}
+			}
+		} catch (Throwable ex) {
+			ex.printStackTrace();
+		}
+	}
+	
 	protected void saveBuildSpriteBat(File cpj_file_name) {
 		String cmd = CUtil.replaceString(Config.CELL_BUILD_SPRITE_CMD, "{file}", cpj_file_name.getName());
 		cmd = CUtil.replaceString(cmd, "\\n", "\n");
@@ -190,6 +211,8 @@ public class EatBuilder extends Builder
 		cmd = CUtil.replaceString(cmd, "\\n", "\n");
 		CFile.writeText(new File(cpj_file_name.getParentFile(), "build_scene.bat"), cmd, "UTF-8");
 	}
+	
+
 	
 //	---------------------------------------------------------------------------------------------------------------------------
 //
@@ -501,28 +524,7 @@ public class EatBuilder extends Builder
 	
 	
 //	-----------------------------------------------------------------------------------------------------------
-	
-	protected void build_cmd(String sc_file_path)
-	{
-		try {
-			File sc_file = new File(sc_file_path).getCanonicalFile();
-			if (sc_file.exists()) 
-			{
-				BuildScript script = external_script_manager.getInterface(
-						sc_file.getCanonicalPath(), 
-						BuildScript.class);
-				if (script != null)
-				{
-					File dir = new File(System.getProperty("user.dir")).getCanonicalFile();
-					BuildProcess bp = new BuildProcess(dir);
-					script.build(bp, dir);
-				}
-			}
-		} catch (Throwable ex) {
-			ex.printStackTrace();
-		}
-	}
-	
+
 	
 	public static void main(String[] args) throws IOException
 	{
@@ -551,7 +553,7 @@ public class EatBuilder extends Builder
 			if (args.length == 1) 
 			{
 				String arg_0 = args[0].toLowerCase().trim();
-				builder.build_cmd(arg_0);
+				builder.buildCMD(arg_0);
 			}
 			else if (args.length == 3) 
 			{
