@@ -18,9 +18,12 @@ import com.cell.rpg.io.RPGObjectMap;
 import com.cell.rpg.item.ItemProperties;
 import com.cell.rpg.quest.Quest;
 import com.cell.rpg.quest.QuestGroup;
+import com.cell.rpg.quest.ability.QuestAccepter;
+import com.cell.rpg.quest.ability.QuestPublisher;
 import com.cell.rpg.res.ResourceSet.SceneSet;
 import com.cell.rpg.res.ResourceSet.SpriteSet;
 import com.cell.rpg.scene.Scene;
+import com.cell.rpg.scene.SceneUnit;
 import com.cell.rpg.scene.graph.SceneGraph;
 import com.cell.rpg.scene.instance.InstanceZone;
 import com.cell.rpg.template.TAvatar;
@@ -800,4 +803,46 @@ public abstract class ResourceManager extends CellSetResourceManager
 		return all_npc_talks.get(index).get();
 	}
 
+	
+
+	protected void check() throws Exception
+	{
+		ArrayList<String> errors = new ArrayList<String>();
+		
+		for (TUnit unit : tunits.values()) {
+			checkQuest(unit, errors,
+					" unit="+unit.getName() + "("+unit.getIntID()+")");
+		}
+		
+		for (Scene s : getAllRPGScenes().values()) {
+			for (SceneUnit su : s.scene_units) {
+				checkQuest(su, errors,
+						" scene="+s.getName()+"("+s.getIntID()+")" + 
+						" unit="+su.getName());
+			}
+		}
+		
+		if (!errors.isEmpty()) {
+			StringBuilder sb = new StringBuilder();
+			for (String err : errors) {
+				sb.append(err + "\n");
+			}
+			throw new Exception("resource check failed !\n" + sb);
+		}
+	}
+	
+	protected void checkQuest(RPGObject obj, ArrayList<String> errors, String obj_info) 
+	{
+		for (QuestPublisher qp : obj.getAbilities(QuestPublisher.class)) {
+			if (getQuest(qp.quest_id) == null) {
+				errors.add("quest not found : quest_id=" + qp.quest_id + obj_info);
+			}
+		}
+		for (QuestAccepter qa : obj.getAbilities(QuestAccepter.class)) {
+			if (getQuest(qa.quest_id) == null) {
+				errors.add("quest not found : quest_id=" + qa.quest_id + obj_info);
+			}
+		}
+	}
+	
 }
