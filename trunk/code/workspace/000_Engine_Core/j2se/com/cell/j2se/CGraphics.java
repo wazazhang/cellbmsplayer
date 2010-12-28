@@ -26,7 +26,7 @@ import com.cell.j2se.AlphaComposite.AlphaBlendMode;
 import com.cell.j2se.BlendComposite.BlendingMode;
 
 
-public class CGraphics extends CGraphicsImage
+class CGraphics extends CGraphicsImage
 {
 	public static Font DefaultFont;
 
@@ -34,11 +34,11 @@ public class CGraphics extends CGraphicsImage
 	protected int	font_b;
 	protected int	font_h;
 	
-	public CGraphics(Graphics2D graphics){
+	CGraphics(Graphics2D graphics){
 		super(graphics);
 	}
 
-	protected void setGraphics(Graphics2D graphics)
+	void setGraphics(Graphics2D graphics)
 	{
 		m_graphics2d 	= graphics;
 		if (DefaultFont!=null){

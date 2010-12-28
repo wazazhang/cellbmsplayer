@@ -22,7 +22,7 @@ import com.cell.gfx.IImage;
 import com.cell.gfx.IPalette;
 
 
-public class CImage implements IImage 
+class CImage implements IImage 
 {
 	static GraphicsEnvironment 		ge	= GraphicsEnvironment.getLocalGraphicsEnvironment();
 	static GraphicsDevice 			gd	= ge.getDefaultScreenDevice();
@@ -35,17 +35,17 @@ public class CImage implements IImage
 	
 //	private VolatileImage v_image;
 	
-	public CImage(Image image)
+	CImage(Image image)
 	{
 		m_image = createBuffer(image);
 	}
 	
-	public CImage()
+	CImage()
 	{
 		m_image = createBuffer(new BufferedImage(1,1,BufferedImage.TYPE_INT_ARGB));
 	}
 	
-	public CImage(String file) 
+	CImage(String file) 
 	{
 		try{
 			m_image = createBuffer(ImageIO.read(CObject.getAppBridge().getResource(file)));
@@ -55,7 +55,7 @@ public class CImage implements IImage
 		}
 	}
 	
-	public CImage(InputStream is)
+	CImage(InputStream is)
 	{
 		try{
 			m_image = createBuffer(ImageIO.read(is));
