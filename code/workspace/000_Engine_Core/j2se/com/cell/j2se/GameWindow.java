@@ -78,7 +78,7 @@ public class GameWindow extends JFrame implements WindowListener
 			this.setResizable(false);
 			
 			if (game.getIconImage()!=null) {
-				this.setIconImage(game.getIconImage().getSrc());
+				this.setIconImage(game.getIconImage());
 			}
 			
 		}catch(Exception err){

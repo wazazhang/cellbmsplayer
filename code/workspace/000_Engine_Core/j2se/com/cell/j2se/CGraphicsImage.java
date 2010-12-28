@@ -33,11 +33,11 @@ import com.cell.j2se.CGraphics.CStringLayer;
  * 仅支持图片绘制
  * @author WAZA
  */
-public class CGraphicsImage implements IGraphics 
+class CGraphicsImage implements IGraphics 
 {
 	protected Graphics2D 	m_graphics2d ;
 	
-	public CGraphicsImage(Graphics2D graphics){
+	CGraphicsImage(Graphics2D graphics){
 		setGraphics(graphics);
 	}
 
@@ -45,7 +45,7 @@ public class CGraphicsImage implements IGraphics
 		m_graphics2d.dispose();
 	}
 
-	protected void setGraphics(Graphics2D graphics) {
+	void setGraphics(Graphics2D graphics) {
 		m_graphics2d = graphics;
 	}
 	

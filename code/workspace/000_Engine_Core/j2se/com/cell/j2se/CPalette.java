@@ -10,7 +10,7 @@ import com.cell.gfx.IPalette;
 
 
 
-public class CPalette implements IPalette 
+class CPalette implements IPalette 
 {
 	private byte[] data_;
 	
@@ -19,19 +19,19 @@ public class CPalette implements IPalette
 	private short transparent_color_index_;
 	
 	
-	public CPalette(String file)
+	CPalette(String file)
 	{
 		this.load(file);
 	}
 	
-	public CPalette(byte[] data, short color_count, short transparent_color_index)
+	CPalette(byte[] data, short color_count, short transparent_color_index)
 	{
 		this.data_ = data;
 		this.color_count_ = color_count;
 		this.transparent_color_index_ = transparent_color_index;
 	}
 	
-	public void load(String file)
+	void load(String file)
 	{
 		try
 		{

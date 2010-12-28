@@ -1,6 +1,9 @@
 package com.cell.j2se;
 
 import java.applet.Applet;
+import java.awt.image.BufferedImage;
+
+import com.cell.gfx.IImage;
 
 
 
@@ -16,9 +19,9 @@ public interface IGame
 	
 	/**Client screen title*/
 	public String getTitle();
-	public CImage getLoadingImage();
-	public CImage getCursorImage();
-	public CImage getIconImage();
+	public BufferedImage getLoadingImage();
+	public BufferedImage getCursorImage();
+	public BufferedImage getIconImage();
 	
 	/**Get root screen name*/
 	public String getRootScreenName();
