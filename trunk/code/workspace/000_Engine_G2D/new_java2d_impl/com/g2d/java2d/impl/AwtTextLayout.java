@@ -7,7 +7,7 @@ import com.g2d.geom.Rectangle;
 import com.g2d.geom.Shape;
 import com.g2d.text.TextLayout;
 
-public class AwtTextLayout implements TextLayout
+class AwtTextLayout implements TextLayout
 {
 
 	public AwtTextLayout(AttributedString text) {

@@ -26,7 +26,7 @@ import com.g2d.geom.Shape;
 import com.g2d.text.MultiTextLayout;
 import com.g2d.text.TextBuilder;
 
-public class AwtMultiTextLayout extends MultiTextLayout
+class AwtMultiTextLayout extends MultiTextLayout
 {
 	
 	final public static char CHAR_CUT			= 24;	// ctrl + x
