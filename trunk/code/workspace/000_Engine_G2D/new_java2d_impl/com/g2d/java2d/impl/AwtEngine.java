@@ -21,6 +21,7 @@ import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 
+import com.cell.gfx.IPalette;
 import com.g2d.AnimateCursor;
 import com.g2d.BufferedImage;
 import com.g2d.Canvas;
@@ -109,7 +110,12 @@ public class AwtEngine extends Engine
 	public BufferedImage createImage(int w, int h){
 		return new AwtImage(w, h);
 	}
-
+	
+	@Override
+	public IPalette createPalette(InputStream is) throws IOException{
+		return new AwtPalette(is);
+	}
+	
 	public BufferedImage createImage(InputStream is) throws IOException{
 		return new AwtImage(ImageIO.read(is));
 	}

@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.AttributedString;
 
+import com.cell.gfx.IPalette;
 import com.g2d.font.GraphicAttribute;
 import com.g2d.geom.AffineTransform;
 import com.g2d.text.Instruction;
@@ -29,6 +30,7 @@ public abstract class Engine
 	abstract public AnimateCursor 		getCursor(String name);
 	
 	
+	abstract public IPalette			createPalette(InputStream is) throws IOException;
 	
 	abstract public BufferedImage 		createImage(int w, int h);
 	

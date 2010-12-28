@@ -8,7 +8,7 @@ import com.cell.CIO;
 import com.cell.gfx.IPalette;
 
 
-public class AwtPalette implements IPalette 
+class AwtPalette implements IPalette 
 {
 	private byte[] data_;
 	
@@ -17,43 +17,28 @@ public class AwtPalette implements IPalette
 	private short transparent_color_index_;
 	
 	
-	public AwtPalette(String file)
+	AwtPalette(InputStream is) throws IOException
 	{
-		this.load(file);
+		loadACT(CIO.readStream(is));
 	}
 	
-	public AwtPalette(byte[] data, short color_count, short transparent_color_index)
+	AwtPalette(byte[] data, short color_count, short transparent_color_index)
 	{
 		this.data_ = data;
 		this.color_count_ = color_count;
 		this.transparent_color_index_ = transparent_color_index;
 	}
 	
-	public void load(String file) {
-		try {
-			if (file.endsWith(".act")) {
-				ByteArrayInputStream bais = CIO.loadStream(file);
-				if (bais != null)
-					loadACT(bais);
-			}
-		} catch (Exception exp) {
-			exp.printStackTrace();
-			this.data_ = null;
-		}
-	}
-	
-	private void loadACT(InputStream is) throws IOException
-	{
-		int size = is.available();
-		
+	private void loadACT(byte[] data) throws IOException
+	{		
 		this.data_ = new byte[256*3];
-		is.read(this.data_);
+		System.arraycopy(data, 0, data_, 0, data_.length);
 		
-		int byte1 = is.read();
-		int byte2 = is.read();
+		int byte1 = data[this.data_.length+0];
+		int byte2 = data[this.data_.length+1];
 		color_count_ = (short)(((int)byte1 << 8) | (int)byte2);
-		int byte3 = is.read();
-		int byte4 = is.read();		
+		int byte3 = data[this.data_.length+2];
+		int byte4 = data[this.data_.length+3];	
 		transparent_color_index_ = (short)(((int)byte3 << 8) | (int)byte4);
 	}
 
