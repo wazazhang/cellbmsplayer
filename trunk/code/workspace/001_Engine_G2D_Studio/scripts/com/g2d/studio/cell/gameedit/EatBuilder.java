@@ -47,7 +47,6 @@ import com.cell.io.BigIODeserialize;
 import com.cell.io.BigIOSerialize;
 import com.cell.io.CFile;
 import com.cell.j2se.CAppBridge;
-import com.cell.j2se.CImage;
 import com.cell.script.js.JSManager;
 import com.cell.util.Pair;
 import com.cell.util.PropertyGroup;

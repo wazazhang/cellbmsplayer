@@ -39,8 +39,6 @@ import com.cell.gfx.game.CSprite;
 import com.cell.io.BigIODeserialize;
 import com.cell.io.BigIOSerialize;
 import com.cell.io.CFile;
-import com.cell.j2se.CGraphics;
-import com.cell.j2se.CImage;
 import com.g2d.Engine;
 import com.g2d.java2d.impl.AwtEngine;
 import com.g2d.java2d.impl.AwtGraphics2D;
