@@ -21,12 +21,16 @@ import java.util.HashMap;
 
 import javax.imageio.ImageIO;
 
+import com.cell.exception.NotImplementedException;
+import com.cell.gfx.IGraphics;
+import com.cell.gfx.IImage;
 import com.cell.gfx.IPalette;
 import com.g2d.AnimateCursor;
 import com.g2d.BufferedImage;
 import com.g2d.Canvas;
 import com.g2d.Engine;
 import com.g2d.Font;
+import com.g2d.Graphics2D;
 import com.g2d.Image;
 import com.g2d.font.GraphicAttribute;
 import com.g2d.text.Instruction;
@@ -192,4 +196,58 @@ public class AwtEngine extends Engine
 		}
 	}
 
+	
+
+	/**
+	 * 使用java2d包装渲染系统
+	 * @param g2d
+	 * @return
+	 */
+	static public Graphics2D wrap(java.awt.Graphics2D g2d) 
+	{
+		return new AwtGraphics2D(g2d);
+	}
+
+	/**
+	 * 包装为普通界面使用的图片
+	 * @param img
+	 * @return
+	 */
+	static public com.g2d.BufferedImage wrap_awt(java.awt.Image img) 
+	{
+		return new AwtImage(img);
+	}
+	
+	/**
+	 * 将image解包为java.awt.image.BufferedImage
+	 * @param image
+	 * @return
+	 */
+	static public java.awt.image.BufferedImage unwrap(IImage image) 
+	{
+		if (image instanceof AwtImage) {
+			return ((AwtImage)image).getSrc();
+		}
+		
+		throw new NotImplementedException("can not unwrap image!");
+	}
+	
+
+	/**
+	 * 包装为渲染系统用的图片
+	 * @param img
+	 * @return
+	 */
+	static public com.g2d.BufferedImage wrap_g2d(java.awt.Image img) 
+	{
+		if (Engine.getEngine() instanceof AwtEngine) {
+			return new AwtImage(img);
+		}
+		throw new NotImplementedException("can not wrap image, no g2d engine implements!");
+	}
+	
+	static public com.g2d.Font wrap(java.awt.Font font) 
+	{
+		return new AwtFont(font);
+	}
 }

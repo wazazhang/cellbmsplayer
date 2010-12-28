@@ -31,7 +31,6 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
 import com.cell.CIO;
-import com.cell.exception.NotImplementedException;
 import com.cell.gfx.IGraphics;
 import com.cell.gfx.IImage;
 import com.cell.gfx.game.CCD;
@@ -39,10 +38,8 @@ import com.cell.gfx.game.CSprite;
 import com.cell.io.BigIODeserialize;
 import com.cell.io.BigIOSerialize;
 import com.cell.io.CFile;
-import com.g2d.Engine;
+
 import com.g2d.java2d.impl.AwtEngine;
-import com.g2d.java2d.impl.AwtGraphics2D;
-import com.g2d.java2d.impl.AwtImage;
 
 
 public class Tools
@@ -778,7 +775,7 @@ public class Tools
 	 */
 	static public IGraphics wrap(java.awt.Graphics2D g2d) 
 	{
-		return new AwtGraphics2D(g2d);
+		return AwtEngine.wrap(g2d);
 	}
 
 	/**
@@ -788,7 +785,7 @@ public class Tools
 	 */
 	static public com.g2d.BufferedImage wrap_awt(java.awt.Image img) 
 	{
-		return new AwtImage(img);
+		return AwtEngine.wrap_awt(img);
 	}
 	
 	/**
@@ -798,11 +795,7 @@ public class Tools
 	 */
 	static public java.awt.image.BufferedImage unwrap(IImage image) 
 	{
-		if (image instanceof AwtImage) {
-			return ((AwtImage)image).getSrc();
-		}
-		
-		throw new NotImplementedException("can not unwrap image!");
+		return AwtEngine.unwrap(image);
 	}
 	
 
@@ -813,10 +806,7 @@ public class Tools
 	 */
 	static public com.g2d.BufferedImage wrap_g2d(java.awt.Image img) 
 	{
-		if (Engine.getEngine() instanceof AwtEngine) {
-			return new AwtImage(img);
-		}
-		throw new NotImplementedException("can not wrap image, no g2d engine implements!");
+		return AwtEngine.wrap_g2d(img);
 	}
 	
 	

@@ -43,7 +43,7 @@ import com.g2d.java2d.impl.composite.AlphaComposite.AlphaBlendMode;
 import com.g2d.java2d.impl.composite.BlendComposite.BlendingMode;
 
 
-public class AwtGraphics2D extends Graphics2D
+class AwtGraphics2D extends Graphics2D
 {
 	final java.awt.Graphics2D	g2d;
 	

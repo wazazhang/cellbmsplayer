@@ -21,7 +21,7 @@ import com.cell.gfx.IImage;
 import com.cell.gfx.IPalette;
 
 
-public class AwtImage implements com.g2d.BufferedImage
+class AwtImage implements com.g2d.BufferedImage
 {
 	private BufferedImage	m_image;
 	
