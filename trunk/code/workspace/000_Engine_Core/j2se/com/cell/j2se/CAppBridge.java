@@ -99,7 +99,15 @@ public class CAppBridge implements IAppBridge, IGfxBridge
 	
 	public InputStream	getResource(String file) 
 	{
-		InputStream is = m_ClassLoader.getResourceAsStream(file);
+		InputStream is = null;
+		
+		if (is == null) {
+			is = Thread.currentThread().getContextClassLoader().getResourceAsStream(file);
+		}
+		
+		if (is == null) {
+			is = m_ClassLoader.getResourceAsStream(file);
+		}
 		
 		if (is == null) {
 			is = m_RootClass.getResourceAsStream(file);
@@ -109,10 +117,6 @@ public class CAppBridge implements IAppBridge, IGfxBridge
 			is = m_RootClass.getClassLoader().getResourceAsStream(file);
 		}
 		
-		if (is == null) {
-			is = Thread.currentThread().getContextClassLoader().getResourceAsStream(file);
-		}
-
 		return is;
 	}
 	
