@@ -112,6 +112,8 @@ public class NetService extends BasicNetService
 	@Override
 	public void dispose() {
 		Session.dispose();
+		
+		this.clearNotifyListeners();
 	}
 	
 	final private void printNotConnectError() {

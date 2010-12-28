@@ -25,9 +25,18 @@ public class DefaultTreeNode implements TreeNode
 		this.data = "tree node";
 	}
 	
-	public Object getData() {
-		return data;
+	@Override
+	public Object getData() 
+	{
+		return this.data;
 	}
+	
+	@Override
+	public void setData(Object data)
+	{
+		this.data = data;
+	}
+	
 	
 	@Override
 	public String toString() {

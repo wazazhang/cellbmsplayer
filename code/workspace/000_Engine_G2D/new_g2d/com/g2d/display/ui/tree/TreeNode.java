@@ -71,6 +71,16 @@ public interface TreeNode extends Serializable
 	 * @param depth 深度值
 	 */
 	public void setDepth(int depth);
+	
+	/**
+	 * 获得该树节点绑定的数据
+	 */
+	public Object getData();
+	
+	/**
+	 * 将数据绑定到该树节点
+	 */
+	public void setData(Object data);
 
 };
 

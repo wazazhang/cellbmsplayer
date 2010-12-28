@@ -100,6 +100,12 @@ public class CIO extends CObject
 
 		try
 		{
+			// load from jar
+			InputStream is = getAppBridge().getResource(path);
+			if (is != null) {
+				return is;
+			}			
+			
 			// load from url
 			try {
 				URL url = new URL(path);
@@ -110,12 +116,6 @@ public class CIO extends CObject
 			File file = new File(path);
 			if (file.exists()) {
 				return new FileInputStream(file);
-			}
-
-			// load from jar
-			InputStream is = getAppBridge().getResource(path);
-			if (is != null) {
-				return is;
 			}
 			
 		} catch(Exception err) {
@@ -136,6 +136,14 @@ public class CIO extends CObject
 		byte[] data = null;
 		try
 		{
+			// load from jar
+			data = readStream(getAppBridge().getResource(path));
+			if (data != null) {
+				return data;
+			} else {
+//				log.log(Level.WARNING, "file not found : " + path);
+			}			
+			
 			// load from url
 			try {
 				URL url = new URL(path);
@@ -152,14 +160,6 @@ public class CIO extends CObject
 				if (data != null) {
 					return data;
 				}
-			} else {
-//				log.log(Level.WARNING, "file not found : " + path);
-			}
-
-			// load from jar
-			data = readStream(getAppBridge().getResource(path));
-			if (data != null) {
-				return data;
 			} else {
 //				log.log(Level.WARNING, "file not found : " + path);
 			}

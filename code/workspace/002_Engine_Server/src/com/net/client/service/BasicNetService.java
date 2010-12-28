@@ -261,8 +261,20 @@ public abstract class BasicNetService
 	 * 清理所有用于主动监听服务器端的消息的监听器
 	 * @param message_type
 	 */
-	final public void clearNotifyListener(Class<? extends MessageHeader> message_type) {
-		notifies_map.remove(message_type);
+	final public void clearNotifyListener(Class<? extends MessageHeader> message_type) 
+	{
+		synchronized (notifies_lock)
+		{
+			notifies_map.remove(message_type);
+		}
+	}
+	
+	final public void clearNotifyListeners()
+	{
+		synchronized (notifies_lock)
+		{
+			notifies_map.clear();
+		}
 	}
 
 //	----------------------------------------------------------------------------------------------------------------------------
