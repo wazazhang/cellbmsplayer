@@ -128,6 +128,10 @@ public class JSManager
 	 */
 	protected String importScript(ScriptEngine vm_engine, String root, String script) throws ScriptException 
 	{
+		if (script == null) {
+			return null;
+		}
+		
 		HashSet<String> readed_path	= new LinkedHashSet<String>();
 		HashMap<String, String> libs = new HashMap<String, String>();
 		
