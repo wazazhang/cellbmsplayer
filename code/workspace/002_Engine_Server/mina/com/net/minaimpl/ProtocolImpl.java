@@ -7,13 +7,13 @@ import com.net.MessageHeader;
 
 public class ProtocolImpl implements com.net.Protocol
 {	
+	final public static byte	TRANSMISSION_TYPE_UNKNOW			= 0x00;
 	/** 标识为 {@link Serializable} 方式序列化 */
-	final public static byte	TRANSMISSION_TYPE_UNKNOW			= -1;
-	/** 标识为 {@link Serializable} 方式序列化 */
-	final public static byte	TRANSMISSION_TYPE_SERIALIZABLE		= 0;
+	final public static byte	TRANSMISSION_TYPE_SERIALIZABLE		= 0x01;
 	/** 标识为 {@link ExternalizableMessage} 方式序列化，即以纯手工序列化/反序列化 */
-	final public static byte	TRANSMISSION_TYPE_EXTERNALIZABLE	= 1;
-
+	final public static byte	TRANSMISSION_TYPE_EXTERNALIZABLE	= 0x02;
+	/** 标识为 {@link CompressingMessage} 方式序列化，压缩包 */
+	final public static byte	TRANSMISSION_TYPE_COMPRESSING		= 0x10;
 	
 	
 	
@@ -26,10 +26,10 @@ public class ProtocolImpl implements com.net.Protocol
 	public long 				SessionID;
 	
 	/**匹配Request和Response的值，如果为0，则代表为Notify*/
-	public int					PacketNumber	= 0;
+	public int					PacketNumber		= 0;
 	
 	/** 标识为 {@link Serializable} 方式序列化 */
-	public byte					transmission_type	= 0;
+	public byte					transmission_flag	= 0;
 	
 //	-------------------------------------------------------------------------------
 	

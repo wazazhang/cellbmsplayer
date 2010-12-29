@@ -9,7 +9,11 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.nio.ByteBuffer;
 import java.nio.charset.CharsetEncoder;
+import java.util.zip.DataFormatException;
+import java.util.zip.Deflater;
+import java.util.zip.Inflater;
 
 import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.session.IoSession;
@@ -27,6 +31,8 @@ import org.slf4j.LoggerFactory;
 
 import com.cell.CUtil;
 import com.cell.io.NIOSerialize;
+import com.cell.util.zip.ZipUtil;
+import com.net.CompressingMessage;
 import com.net.ExternalizableFactory;
 import com.net.ExternalizableMessage;
 import com.net.MessageHeader;
@@ -105,29 +111,36 @@ public class NetPackageCodec extends MessageHeaderCodec
     					p.SessionID 				= in.getLong();		// 8
     					p.PacketNumber				= in.getInt();		// 4
     					
+    					int obj_size 				= message_size - 13;
+    					
     					switch (p.Protocol) {
 	    				case Protocol.PROTOCOL_CHANNEL_JOIN_S2C:
 	    				case Protocol.PROTOCOL_CHANNEL_LEAVE_S2C:
 	    				case Protocol.PROTOCOL_CHANNEL_MESSAGE:
 	    					p.ChannelID 			= in.getInt();		// 4
 	    					p.ChannelSesseionID		= in.getLong();		// 8
+	    					obj_size -= 12;
 	    					break;
 	    				}
     					
-    					p.transmission_type			= in.get();			// 1
+    					p.transmission_flag			= in.get();			// 1
+    					obj_size -= 1;
     					
-	    				// 解出包包含的二进制消息
-	    				switch(p.transmission_type) {
-						case ProtocolImpl.TRANSMISSION_TYPE_SERIALIZABLE:
-		    				p.message = (MessageHeader)in.getObject(class_loader);
-							break;
-						case ProtocolImpl.TRANSMISSION_TYPE_EXTERNALIZABLE:
-							p.message = ext_factory.createMessage(in.getInt());	// ext 4
+    					IoBuffer obj_in = in;
+    					// 确定是否要解压缩
+    					if ((p.transmission_flag & ProtocolImpl.TRANSMISSION_TYPE_COMPRESSING) != 0) {
+    						obj_in = decompress(in, obj_size);
+    					}
+    					// 解出包包含的二进制消息
+						if ((p.transmission_flag & ProtocolImpl.TRANSMISSION_TYPE_EXTERNALIZABLE) != 0) {
+							p.message = ext_factory.createMessage(obj_in.getInt());	// ext 4
 							ExternalizableMessage ext = (ExternalizableMessage)p.message;
-							ext.readExternal(new NetDataInputImpl(in));
-							break;
+							ext.readExternal(new NetDataInputImpl(obj_in));
 						}
-
+						else if ((p.transmission_flag & ProtocolImpl.TRANSMISSION_TYPE_SERIALIZABLE) != 0) {
+ 							p.message = (MessageHeader)obj_in.getObject(class_loader);
+ 						}
+    					
 	    				// 告诉 Protocol Handler 有消息被接收到
 	    				out.write(p);
 	    				
@@ -208,18 +221,34 @@ public class NetPackageCodec extends MessageHeaderCodec
 							break;
 						}
 						
-						if (p.message instanceof ExternalizableMessage) {
-							buffer.put		(ProtocolImpl.TRANSMISSION_TYPE_EXTERNALIZABLE);	// 1
-							buffer.putInt	(ext_factory.getType(p.message));	// ext 4
-							ExternalizableMessage ext = (ExternalizableMessage)p.message;
-							ext.writeExternal(new NetDataOutputImpl(buffer));
-						} 
-						else if (p.message instanceof Serializable) {
-							buffer.put		(ProtocolImpl.TRANSMISSION_TYPE_SERIALIZABLE);		// 1
-							buffer.putObject(p.message);
+						
+						byte trans_flag = ProtocolImpl.TRANSMISSION_TYPE_UNKNOW;
+						IoBuffer obj_buff = buffer;
+						// 是否压缩
+						if (p.message instanceof CompressingMessage) {
+							obj_buff = IoBuffer.allocate(buffer.remaining()).setAutoExpand(true);
+							trans_flag |= ProtocolImpl.TRANSMISSION_TYPE_COMPRESSING;
 						}
-						else {
-							buffer.put		(ProtocolImpl.TRANSMISSION_TYPE_UNKNOW);			// 1
+						if (p.message instanceof ExternalizableMessage) {
+							trans_flag |= ProtocolImpl.TRANSMISSION_TYPE_EXTERNALIZABLE;
+						} else if (p.message instanceof Serializable) {
+							trans_flag |= ProtocolImpl.TRANSMISSION_TYPE_SERIALIZABLE;
+						}
+						buffer.put		(trans_flag);			// 1
+						{
+							if (p.message instanceof ExternalizableMessage) {
+								obj_buff.putInt		(ext_factory.getType(p.message));	// ext 4
+								((ExternalizableMessage)p.message).writeExternal(
+										new NetDataOutputImpl(obj_buff));
+							} 
+							else if (p.message instanceof Serializable) {
+								obj_buff.putObject	(p.message);
+							}
+						}
+						if (p.message instanceof CompressingMessage) {
+							obj_buff.rewind();
+							compress(obj_buff, buffer);
+							obj_buff.free();
 						}
 	    			}
 	    			buffer.putInt(4, protocol_fixed_size + (buffer.position() - cur));
@@ -245,6 +274,57 @@ public class NetPackageCodec extends MessageHeaderCodec
     	}
     }
 	
+	private static void compress(IoBuffer in, IoBuffer out) {
+		byte[] data = in.array();
+//		long start_time = System.nanoTime();
+//		int src_size = data.length;
+//		int dst_size = 0;
+		Deflater compresser = new Deflater();
+		try {
+			compresser.reset();
+			compresser.setInput(data);
+			compresser.finish();
+			byte[] buf = new byte[1024];
+			while (!compresser.finished()) {
+				int i = compresser.deflate(buf);
+//				dst_size += i;
+				out.put(buf, 0, i);
+			}
+		} finally {
+			compresser.end();
+//			System.out.println("compress" +
+//					" : ["+CUtil.getBytesSizeString(src_size)+"]->["+CUtil.getBytesSizeString(dst_size)+"]" +
+//					" : use " + (System.nanoTime() - start_time)/1000000f + " ms");
+		}
+	}
+
+	private static IoBuffer decompress(IoBuffer in, int limit) throws DataFormatException {
+		byte[] data = new byte[limit];
+		in.get(data);
+//		long start_time = System.nanoTime();
+//		int src_size = data.length;
+//		int dst_size = 0;
+		Inflater decompresser = new Inflater();
+		IoBuffer out = IoBuffer.allocate(limit).setAutoExpand(true);
+		try {
+			decompresser.reset();
+			decompresser.setInput(data);
+			byte[] buf = new byte[1024];
+			while (!decompresser.finished()) {
+				int i = decompresser.inflate(buf);
+//				dst_size += i;
+				out.put(buf, 0, i);
+			}
+			out.rewind();
+			return out;
+		} finally {
+			decompresser.end();
+//			System.out.println("decompress" +
+//					" : ["+CUtil.getBytesSizeString(src_size)+"]->["+CUtil.getBytesSizeString(dst_size)+"]" +
+//					" : use " + (System.nanoTime() - start_time)/1000000f + " ms");
+		}
+	}
+    
 //	-------------------------------------------------------------------------------------------------------------------
 
     final private ProtocolEncoder	encoder			= new NetPackageEncoder();
