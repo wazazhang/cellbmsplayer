@@ -786,7 +786,11 @@ public class CUtil extends CObject
 		return data;
 	}
 	
-
+	public static String toBytesSizeString(long bytes) 
+	{
+		return getBytesSizeString(bytes);
+	}
+	
 	public static String getBytesSizeString(long bytes)
 	{
 		long b  = bytes;
