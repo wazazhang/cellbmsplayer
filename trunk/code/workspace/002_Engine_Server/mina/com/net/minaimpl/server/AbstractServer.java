@@ -209,7 +209,9 @@ public abstract class AbstractServer extends IoHandlerAdapter implements Server
 			lines.append(" |-   ReceivedMessageCount : "+getReceivedMessageCount()+"\n");
 			lines.append(" |-              SentBytes : "+CUtil.toBytesSizeString(getSentBytes())+"\n");
 			lines.append(" |-       SentMessageCount : "+getSentMessageCount()+"\n");
-			lines.append(" |-              StartTime : "+CUtil.timeToString(getStartTime())+"\n");
+			lines.append(" |-              StartTime : "+CUtil.timeToString(getStartTime())+"\n");		
+			lines.append(" |---------------------------\n");
+
 		}
 		
 		return lines.toString();
