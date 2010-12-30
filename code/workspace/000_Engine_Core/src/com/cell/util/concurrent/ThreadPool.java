@@ -10,6 +10,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
+import com.cell.CUtil;
+
 
 public class ThreadPool implements ThreadPoolService
 {
@@ -137,34 +139,38 @@ public class ThreadPool implements ThreadPoolService
 
 	public String getStats()
 	{
-		String lines = "";
+		StringBuilder lines = new StringBuilder();
 		
 		if (gameScheduledThreadPool!=null)
 		{
-			lines += name + " Scheduled Thread Pool:"+"\n"+
-             " |-    ActiveThreads : "+gameScheduledThreadPool.getActiveCount()+"\n"+
-             " |-  getCorePoolSize : "+gameScheduledThreadPool.getCorePoolSize()+"\n"+
-             " |-         PoolSize : "+gameScheduledThreadPool.getPoolSize()+"\n"+
-             " |-  MaximumPoolSize : "+gameScheduledThreadPool.getMaximumPoolSize()+"\n"+
-             " |-   CompletedTasks : "+gameScheduledThreadPool.getCompletedTaskCount()+"\n"+
-             " |-   ScheduledTasks : "+(gameScheduledThreadPool.getTaskCount() - gameScheduledThreadPool.getCompletedTaskCount())+"\n"+
-             " | -------\n";
+		lines.append("[" + name + "] Scheduled Thread Pool:" + "\n");
+		lines.append(" |-    ActiveThreads : " + gameScheduledThreadPool.getActiveCount() + "\n");
+		lines.append(" |-     CorePoolSize : " + gameScheduledThreadPool.getCorePoolSize() + "\n");
+		lines.append(" |-         PoolSize : " + gameScheduledThreadPool.getPoolSize() + "\n");
+		lines.append(" |-  MaximumPoolSize : " + gameScheduledThreadPool.getMaximumPoolSize() + "\n");
+		lines.append(" |-   CompletedTasks : " + gameScheduledThreadPool.getCompletedTaskCount() + "\n");
+		lines.append(" |-   ScheduledTasks : "+ (gameScheduledThreadPool.getTaskCount() - gameScheduledThreadPool.getCompletedTaskCount()) + "\n");
+		lines.append(" |---------------------\n");
 		}
 		
 		if (gameThreadPool!=null)
 		{
-			lines += name + " Thread Pool:"+"\n"+
-                " |-    ActiveThreads : "+gameThreadPool.getActiveCount()+"\n"+
-                " |-  getCorePoolSize : "+gameThreadPool.getCorePoolSize()+"\n"+
-                " |-  MaximumPoolSize : "+gameThreadPool.getMaximumPoolSize()+"\n"+
-                " |-  LargestPoolSize : "+gameThreadPool.getLargestPoolSize()+"\n"+
-                " |-         PoolSize : "+gameThreadPool.getPoolSize()+"\n"+
-                " |-   CompletedTasks : "+gameThreadPool.getCompletedTaskCount()+"\n"+
-                " |-      QueuedTasks : "+gameThreadPool.getQueue().size()+"\n"+
-                " | -------\n";
+		lines.append("[" + name + "] Thread Pool:"+"\n");
+		lines.append(" |-    ActiveThreads : "+gameThreadPool.getActiveCount() + "\n");
+		lines.append(" |-     CorePoolSize : "+gameThreadPool.getCorePoolSize() + "\n");
+		lines.append(" |-  MaximumPoolSize : "+gameThreadPool.getMaximumPoolSize() + "\n");
+		lines.append(" |-  LargestPoolSize : "+gameThreadPool.getLargestPoolSize() + "\n");
+		lines.append(" |-         PoolSize : "+gameThreadPool.getPoolSize() + "\n");
+		lines.append(" |-   CompletedTasks : "+gameThreadPool.getCompletedTaskCount() + "\n");
+		lines.append(" |-      QueuedTasks : "+gameThreadPool.getQueue().size() + "\n");
+		lines.append(" |---------------------\n");
 		};
-		
-		return lines;
+		lines.append("[heap status]\n");
+		lines.append(" |-       FreeMemory : " + CUtil.toBytesSizeString(Runtime.getRuntime().freeMemory())+"\n");
+		lines.append(" |-      TotalMemory : " + CUtil.toBytesSizeString(Runtime.getRuntime().totalMemory())+"\n");
+		lines.append(" |-        MaxMemory : " + CUtil.toBytesSizeString(Runtime.getRuntime().maxMemory())+"\n");
+		lines.append(" |---------------------\n");
+		return lines.toString();
 	}
 
 
