@@ -29,6 +29,7 @@ import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLContext;
 import javax.media.opengl.glu.GLU;
 
+import com.cell.gfx.IPalette;
 import com.g2d.AnimateCursor;
 import com.g2d.BufferedImage;
 import com.g2d.Engine;
@@ -122,7 +123,12 @@ public class GLEngine extends Engine
 	public void encodeImage(OutputStream out, Image src, String type) throws Exception {
 		ImageIO.write(((GLImage)src).getSrc(), type, out);
 	}
-
+	
+	@Override
+	public IPalette createPalette(InputStream is) throws IOException {
+		return new GLPalette(is);
+	}
+	
 
 //	---------------------------------------------------------------------------------------------
 
