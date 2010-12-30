@@ -2,6 +2,7 @@ package com.net.minaimpl.server.telnet;
 
 import java.util.Set;
 
+import org.apache.mina.core.buffer.IoBuffer;
 import org.apache.mina.core.session.IoSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,6 +63,10 @@ public class TelnetSessionImpl implements TelnetSession
 		Session.write(message);
 	}
 	
+	public void sendControl(byte[] data) {
+		Session.write(IoBuffer.wrap(data));
+	}
+
 //	------------------------------------------------------------------------------
 	
 
