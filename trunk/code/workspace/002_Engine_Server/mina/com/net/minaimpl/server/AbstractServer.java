@@ -135,7 +135,7 @@ public abstract class AbstractServer extends IoHandlerAdapter implements Server
 
 
 	public void exceptionCaught(IoSession session, Throwable cause) throws Exception {
-		log.error(cause.getMessage() + "\n" + session);
+		log.error(cause.getMessage() + " : " + session, cause);
 		if (CloseOnError) {
 			session.close(false);
 		}
