@@ -320,7 +320,7 @@ public class CIO extends CObject
 		if (is != null) {
 			return readAllText(is, encoding);
 		} else {
-			System.err.println(file);
+			System.err.println("file not found : "+file);
 		}
 		return null;
 	}
