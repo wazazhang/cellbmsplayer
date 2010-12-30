@@ -246,44 +246,44 @@ public class SQLPool
 	
 //	-----------------------------------------------------------------------------------------------------------------------
 //	task executer
-	
-	public void executeTask(SQLTask r) 
-	{
-//		int taskcount = thread_pool.getExecutor().getQueue().size();
-//		
-//		// 检查是否超出高水位标
-//		if (taskcount > hight_water_mark)
-//		{
-//			thread_pool.getExecutor().remove(r);
-//		}
-//		// 检查是否超出低水位标
-//		else if (taskcount > low_water_mark)
-//		{
-//			thread_pool.getExecutor().remove(r);
-//		}
-
-		r.commited(this);
-		thread_pool.executeTask(r);
-	}
-	
-	public long getCommitedCount() {
-		return thread_pool.getExecutor().getTaskCount();
-	}
-	
-	public ThreadPoolExecutor getExecutor() {
-		return thread_pool.getExecutor();
-	}
-	
-	public void shutdown(){
-		thread_pool.shutdown();
-	}
-	
+//	
+//	public void executeTask(SQLTask r) 
+//	{
+////		int taskcount = thread_pool.getExecutor().getQueue().size();
+////		
+////		// 检查是否超出高水位标
+////		if (taskcount > hight_water_mark)
+////		{
+////			thread_pool.getExecutor().remove(r);
+////		}
+////		// 检查是否超出低水位标
+////		else if (taskcount > low_water_mark)
+////		{
+////			thread_pool.getExecutor().remove(r);
+////		}
+//
+//		r.commited(this);
+//		thread_pool.executeTask(r);
+//	}
+//	
+//	public long getCommitedCount() {
+//		return thread_pool.getExecutor().getTaskCount();
+//	}
+//	
+//	public ThreadPoolExecutor getExecutor() {
+//		return thread_pool.getExecutor();
+//	}
+//	
+//	public void shutdown(){
+//		thread_pool.shutdown();
+//	}
+//	
 //	public ScheduledThreadPoolExecutor getScheduledExecutor() {
 //		return thread_pool.getScheduledExecutor();
 //	}
-	
+//	
 //	-----------------------------------------------------------------------------------------------------------------------
-	
+//	
 //	public ScheduledFuture<?> schedule(SQLTask r, long delay){
 //		r.commited(this);
 //		return thread_pool.schedule(r, delay);
@@ -293,7 +293,7 @@ public class SQLPool
 //		r.commited(this);
 //		return thread_pool.scheduleAtFixedRate(r, initial, delay);
 //    }
-	
+//	
 //	-----------------------------------------------------------------------------------------------------------------------
 
 }

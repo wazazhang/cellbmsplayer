@@ -2,21 +2,37 @@ package com.net.minaimpl.server;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import org.apache.mina.core.IoUtil;
+import org.apache.mina.core.filterchain.DefaultIoFilterChainBuilder;
+import org.apache.mina.core.filterchain.IoFilterChain;
+import org.apache.mina.core.filterchain.IoFilterChainBuilder;
+import org.apache.mina.core.future.WriteFuture;
 import org.apache.mina.core.service.IoAcceptor;
+import org.apache.mina.core.service.IoHandler;
 import org.apache.mina.core.service.IoHandlerAdapter;
+import org.apache.mina.core.service.IoServiceListener;
+import org.apache.mina.core.service.IoServiceStatistics;
+import org.apache.mina.core.service.TransportMetadata;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
+import org.apache.mina.core.session.IoSessionConfig;
+import org.apache.mina.core.session.IoSessionDataStructureFactory;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.cell.CUtil;
 import com.net.ExternalizableFactory;
 import com.net.MessageHeader;
 import com.net.minaimpl.NetPackageCodec;
@@ -169,5 +185,37 @@ public abstract class AbstractServer extends IoHandlerAdapter implements Server
 			session.write(p);
 		}
 	}
+
+//	----------------------------------------------------------------------------------------------------------------------
 	
+	public String getStats()
+	{
+		StringBuilder lines = new StringBuilder();
+		
+		lines.append("Mina Server Implements\n");
+		{
+			lines.append(" |-                 Active : " + Acceptor.isActive() + "\n");
+			lines.append(" |-         ActivationTime : " + CUtil.timesliceToStringHour(Acceptor.getActivationTime()) + "\n");
+			lines.append(" |-                Address : ");
+			boolean first = true;
+			for (SocketAddress addr : Acceptor.getLocalAddresses()) {
+			if (first) {lines.append(addr.toString()+"\n");first = false;} else {
+			lines.append("                             " + addr.toString()+"\n");}}
+			lines.append(" |-          SessionCount  : "+getSessionCount()+"\n");
+			lines.append(" |-    ScheduledWriteBytes : "+CUtil.toBytesSizeString(Acceptor.getScheduledWriteBytes())+"\n");
+			lines.append(" |- ScheduledWriteMessages : "+Acceptor.getScheduledWriteMessages()+"\n");
+			
+			lines.append(" |-          ReceivedBytes : "+CUtil.toBytesSizeString(getReceivedBytes())+"\n");
+			lines.append(" |-   ReceivedMessageCount : "+getReceivedMessageCount()+"\n");
+			lines.append(" |-              SentBytes : "+CUtil.toBytesSizeString(getSentBytes())+"\n");
+			lines.append(" |-       SentMessageCount : "+getSentMessageCount()+"\n");
+			lines.append(" |-              StartTime : "+CUtil.timeToString(getStartTime())+"\n");
+		}
+		
+		return lines.toString();
+	}
+	
+
+
+
 }
