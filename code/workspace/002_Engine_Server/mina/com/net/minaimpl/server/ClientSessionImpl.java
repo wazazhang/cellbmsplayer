@@ -86,16 +86,15 @@ public class ClientSessionImpl implements ClientSession
 	}
 	
 	public boolean send(MessageHeader message) {
-		Server.write(Session, 
+		return Server.write(Session, 
 				message, 
 				Protocol.PROTOCOL_SESSION_MESSAGE, 
 				0, 0, 0);
-		return true;
 	}
 	
 	
-	public void sendResponse(Protocol request, MessageHeader response){
-		Server.write(Session, 
+	public boolean sendResponse(Protocol request, MessageHeader response){
+		return Server.write(Session, 
 				response, 
 				Protocol.PROTOCOL_SESSION_MESSAGE, 
 				0, 0, request.getPacketNumber());
