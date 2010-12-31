@@ -725,7 +725,7 @@ class AwtGraphics2D extends Graphics2D
 						{
 						case COLOR:
 							k = TextAttribute.FOREGROUND;
-							v = new Color((Integer) attr.Value);
+							v = new java.awt.Color((Integer) attr.Value);
 							break;
 						case FONT:
 							k = TextAttribute.FONT;
