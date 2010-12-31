@@ -1146,8 +1146,8 @@ abstract public class AScreen extends CObject
 	}
 
 	static public void pushClip(IGraphics g, int x, int y, int w, int h) {
+		g.pushClip();		
 		g.setClip(x, y, w, h);
-		g.pushClip();
 	}
 
 	
