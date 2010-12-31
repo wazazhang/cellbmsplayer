@@ -153,14 +153,18 @@ public abstract class AbstractServer extends IoHandlerAdapter implements Server
 	public void exceptionCaught(IoSession session, Throwable cause) throws Exception {
 		log.error(cause.getMessage() + " : " + session, cause);
 		if (CloseOnError) {
-			session.close(false);
+			if (session.isConnected() && !session.isClosing()) {
+				session.close(false);
+			}
 		}
 	}
 	
 	public void sessionIdle(IoSession session, IdleStatus status) throws Exception {
 		log.debug("sessionIdle : " + session + " : " + status);
 		if (CloseOnError) {
-			session.close(false);
+			if (session.isConnected() && !session.isClosing()) {
+				session.close(false);
+			}
 		}
 	}
 
