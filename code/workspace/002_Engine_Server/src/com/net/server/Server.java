@@ -10,8 +10,9 @@ public interface Server
 	 
 	public void 					open(int port, ServerListener listener) throws IOException ;
 	
-	public void 					close() throws IOException;
+//	public void 					close() throws IOException;
 	
+	public void 					dispose() throws IOException;
 	
 	
 	public void						broadcast(MessageHeader message);

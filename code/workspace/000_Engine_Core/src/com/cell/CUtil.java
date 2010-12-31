@@ -3,6 +3,7 @@ package com.cell;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Array;
@@ -1605,8 +1606,115 @@ public class CUtil extends CObject
     	}
     	return sb.toString();
     }
+
+//	--------------------------------------------------------------------------------------------------------    
+//	
+//	--------------------------------------------------------------------------------------------------------    
     
-//--------------------------------------------------------------------------------------------------------    
+    private static int STATUS_LINE_KEY_SIZE = 32;
+    
+    /**
+     * 设置左边的宽度
+	 * @see #toStatusLine(String, String, Appendable)
+	 */
+	public static void setStatusLineKeySize(int size) {
+		STATUS_LINE_KEY_SIZE = size;
+	}
+	
+	/**
+	 * <b>提供类似的输出</b>
+	 * <br>
+	 * <table>
+	 * <tr><th>key</th><th>value</th>
+	 * <tr><td>|-    ActiveThreads </td> <td>: 0</td>
+	 * <tr><td>|-     CorePoolSize </td> <td>: 20</td>
+	 * <tr><td>|-         PoolSize </td> <td>: 20</td>
+	 * <tr><td>|-  MaximumPoolSize </td> <td>: 2147483647</td>
+	 * <tr><td>|-   CompletedTasks </td> <td>: 28104</td>
+	 * <tr><td>|-   ScheduledTasks </td> <td>: 405</td>
+	 * <tr><td>|-------------------</td> <td></td>
+ 	 * </table>
+	 * @param key
+	 * @param value
+	 * @param sb
+	 * @return
+	 */
+	public static String toStatusLine(String key, String value, Appendable sb)
+    {
+    	if (key.length() < STATUS_LINE_KEY_SIZE) {
+    		char[] blank = new char[STATUS_LINE_KEY_SIZE-key.length()];
+    		Arrays.fill(blank, ' ');
+    		key = new String(blank) + key;
+    	}
+    	String ret = " |-" + key + " : " + value + "\n";
+    	if (sb != null) {
+    		try {
+    			sb.append(ret);
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
+    	}
+		return ret;
+    }
+	
+	/**
+	 * @see #toStatusLine(String, String, Appendable)
+	 * @param sb
+	 * @return
+	 */
+	public static String toStatusSeparator(Appendable sb) {
+		char[] blank = new char[STATUS_LINE_KEY_SIZE];
+		Arrays.fill(blank, '-');
+		String ret = " |-" + new String(blank) + "\n";
+    	if (sb != null) {
+    		try {
+    			sb.append(ret);
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
+    	}
+		return ret;
+	}
+	
+	/**
+	 * @see #toStatusLine(String, String, Appendable)
+	 * @param key
+	 * @param value
+	 * @param sb
+	 * @return
+	 */
+	public static String toStatusLine(Object key, Object value, Appendable sb) 
+	{
+		return toStatusLine(key+"", value+"", sb);
+	}
+	
+	/**
+	 * @see #toStatusLine(String, String, Appendable)
+	 * @param map
+	 * @param sb
+	 */
+	public static void toStatusLines(Map<?, ?> map, Appendable sb)
+    {
+    	for (Entry<?, ?> e : map.entrySet()) {
+    		toStatusLine(e.getKey(), e.getValue(), sb);
+    	}
+    }
+	
+	/**
+	 * @see #toStatusLine(String, String, Appendable)
+	 * @param map
+	 * @param sb
+	 */
+	public static String toStatusLines(Map<?, ?> map)
+    {
+		StringBuilder sb = new StringBuilder();
+    	for (Entry<?, ?> e : map.entrySet()) {
+    		toStatusLine(e.getKey(), e.getValue(), sb);
+    	}
+    	return sb.toString();
+    }
+	
+//	--------------------------------------------------------------------------------------------------------    
 
     /**
      * <summary>  
