@@ -38,4 +38,11 @@ public abstract class Node implements Serializable
 		cpj_object_id		= object_id;
 		set_object_type		= type;
 	}
+	
+	@Override
+	public String toString() {
+		return super.toString()+"{" +
+		cpj_project_name + "," +  cpj_object_id + "," + set_object_type +
+		"}";
+	}
 }
