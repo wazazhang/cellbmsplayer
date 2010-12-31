@@ -98,7 +98,7 @@ public abstract class AbstractServer extends IoHandlerAdapter implements Server
 			this.AcceptorPool = null;
 		}
 
-		if (acceptor_pool == null) {
+		if (io_processor_pool == null) {
 			this.IoProcessorPool = Executors.newCachedThreadPool();
 			io_processor_pool = this.IoProcessorPool;
 		} else {
@@ -250,11 +250,11 @@ public abstract class AbstractServer extends IoHandlerAdapter implements Server
 		CUtil.toStatusLine("StartTime",					CUtil.timeToString(getStartTime()), lines);
 		if (AcceptorPool instanceof ThreadPoolExecutor) {
 			lines.append("[AcceptorPool]\n");
-			ThreadPool.getStatus((ThreadPoolExecutor)AcceptorPool);
+			lines.append(ThreadPool.getStatus((ThreadPoolExecutor)AcceptorPool));
 		}
 		if (IoProcessorPool instanceof ThreadPoolExecutor) {
 			lines.append("[IoProcessorPool]\n");
-			ThreadPool.getStatus((ThreadPoolExecutor)IoProcessorPool);
+			lines.append(ThreadPool.getStatus((ThreadPoolExecutor)IoProcessorPool));
 		}
 		CUtil.toStatusSeparator(lines);
 		return lines.toString();
