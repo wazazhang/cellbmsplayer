@@ -73,13 +73,15 @@ public abstract class AbstractServer extends IoHandlerAdapter implements Server
 	boolean							CloseOnError = true;
 	
 //	----------------------------------------------------------------------------------------------------------------------
-
 	/**
-	 * @param cl ClassLoader
-	 * @param ef ExternalizableFactory
-	 * @param io_processor_count IO处理线程数
-	 * @param sessionWriteIdleTimeSeconds	多长时间内没有发送数据，断掉链接(秒)
-	 * @param sessionReadIdleTimeSeconds	多长时间内没有接受数据，断掉链接(秒)
+	 * @param class_loader
+	 * @param externalizable_factory
+	 * @param acceptor_pool
+	 * @param io_processor_pool
+	 * @param io_processor_count
+	 * @param sessionWriteIdleTimeSeconds 多长时间内没有发送数据，断掉链接(秒)
+	 * @param sessionReadIdleTimeSeconds  多长时间内没有接受数据，断掉链接(秒)
+	 * @param close_on_error
 	 */
 	public AbstractServer(
 			ClassLoader 			class_loader,
