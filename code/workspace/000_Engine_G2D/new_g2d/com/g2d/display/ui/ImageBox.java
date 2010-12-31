@@ -36,6 +36,11 @@ public class ImageBox extends UIComponent
 		}
 	}
 	
+	public Image getImage()
+	{
+		return background;
+	}
+	
 	@Override
 	public void render(Graphics2D g)
 	{
