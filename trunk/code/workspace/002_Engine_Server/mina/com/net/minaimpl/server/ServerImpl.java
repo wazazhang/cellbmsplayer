@@ -2,6 +2,8 @@ package com.net.minaimpl.server;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.concurrent.Executor;
+
 import org.apache.mina.core.session.IoSession;
 
 import com.net.ExternalizableFactory;
@@ -23,64 +25,70 @@ public class ServerImpl extends AbstractServer
 	
 	public ServerImpl() 
 	{
-		this(Thread.currentThread().getContextClassLoader(), 
-				null,
+		this(Thread.currentThread().getContextClassLoader(), null,
 				Runtime.getRuntime().availableProcessors() + 1, 
-				Integer.MAX_VALUE, Integer.MAX_VALUE);
+				Integer.MAX_VALUE, 
+				Integer.MAX_VALUE);
 	}
 
-	/**
-	 * @param ioProcessCount IO处理线程数
-	 * @param sessionWriteIdleTimeSeconds	多长时间内没有发送数据，断掉链接
-	 * @param sessionReadIdleTimeSeconds	多长时间内没有接受数据，断掉链接
-	 */
 	public ServerImpl(
 			int ioProcessCount, 
 			int sessionWriteIdleTimeSeconds,
 			int sessionReadIdleTimeSeconds) 
 	{
-		this(Thread.currentThread().getContextClassLoader(), 
-				null,
+		this(Thread.currentThread().getContextClassLoader(), null,
 				ioProcessCount, 
 				sessionWriteIdleTimeSeconds, 
 				sessionReadIdleTimeSeconds);
 	}
 	
-	/**
-	 * @param cl ClassLoader
-	 * @param ef ExternalizableFactory
-	 * @param ioProcessCount IO处理线程数
-	 * @param sessionWriteIdleTimeSeconds	多长时间内没有发送数据，断掉链接
-	 * @param sessionReadIdleTimeSeconds	多长时间内没有接受数据，断掉链接
-	 */
 	public ServerImpl(
-			ClassLoader 			cl,
-			ExternalizableFactory 	ef,
+			ClassLoader 			class_loader,
+			ExternalizableFactory 	externalizable_factory,
 			int 					ioProcessCount, 
 			int 					sessionWriteIdleTimeSeconds,
 			int 					sessionReadIdleTimeSeconds) 
 	{
-		super(cl, ef, ioProcessCount, sessionWriteIdleTimeSeconds, sessionReadIdleTimeSeconds);
-		this.channel_manager				= new ChannelManagerImpl(this);
-	}	
+		this(class_loader, externalizable_factory, null, null,
+				ioProcessCount, 
+				sessionWriteIdleTimeSeconds, 
+				sessionReadIdleTimeSeconds, 
+				true);
+	}
 	
-	/**
-	 * @param cl ClassLoader
-	 * @param ef ExternalizableFactory
-	 * @param ioProcessCount IO处理线程数
-	 * @param sessionWriteIdleTimeSeconds	多长时间内没有发送数据，断掉链接
-	 * @param sessionReadIdleTimeSeconds	多长时间内没有接受数据，断掉链接
-	 */
 	public ServerImpl(
-			ClassLoader 			cl,
-			ExternalizableFactory 	ef,
+			ClassLoader 			class_loader,
+			ExternalizableFactory 	externalizable_factory,
 			int 					ioProcessCount, 
 			int 					sessionWriteIdleTimeSeconds,
-			int 					sessionReadIdleTimeSeconds, 
+			int 					sessionReadIdleTimeSeconds,
 			boolean					close_on_error) 
 	{
-		super(cl, ef, ioProcessCount, sessionWriteIdleTimeSeconds, sessionReadIdleTimeSeconds, close_on_error);
-		this.channel_manager				= new ChannelManagerImpl(this);
+		this(class_loader, externalizable_factory, null, null,
+				ioProcessCount, 
+				sessionWriteIdleTimeSeconds, 
+				sessionReadIdleTimeSeconds, 
+				close_on_error);
+	}
+	
+	public ServerImpl(
+			ClassLoader 			class_loader,
+			ExternalizableFactory 	externalizable_factory,
+			Executor 				acceptor_pool,
+			Executor 				io_processor_pool,
+			int						io_processor_count,
+			int 					sessionWriteIdleTimeSeconds,
+			int 					sessionReadIdleTimeSeconds,
+			boolean					close_on_error) 
+	{
+		super(class_loader, externalizable_factory, 
+				acceptor_pool, 
+				io_processor_pool,
+				io_processor_count, 
+				sessionWriteIdleTimeSeconds, 
+				sessionReadIdleTimeSeconds, 
+				close_on_error);
+		this.channel_manager = new ChannelManagerImpl(this);
 	}	
 //	----------------------------------------------------------------------------------------------------------------------
 

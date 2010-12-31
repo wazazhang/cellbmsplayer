@@ -140,36 +140,19 @@ public class ThreadPool implements ThreadPoolService
 	public String getStats()
 	{
 		StringBuilder lines = new StringBuilder();
-		
-		if (gameScheduledThreadPool!=null)
-		{
+		if (gameScheduledThreadPool!=null) {
 		lines.append("[" + name + "] Scheduled Thread Pool:" + "\n");
-		lines.append(" |-    ActiveThreads : " + gameScheduledThreadPool.getActiveCount() + "\n");
-		lines.append(" |-     CorePoolSize : " + gameScheduledThreadPool.getCorePoolSize() + "\n");
-		lines.append(" |-         PoolSize : " + gameScheduledThreadPool.getPoolSize() + "\n");
-		lines.append(" |-  MaximumPoolSize : " + gameScheduledThreadPool.getMaximumPoolSize() + "\n");
-		lines.append(" |-   CompletedTasks : " + gameScheduledThreadPool.getCompletedTaskCount() + "\n");
-		lines.append(" |-   ScheduledTasks : "+ (gameScheduledThreadPool.getTaskCount() - gameScheduledThreadPool.getCompletedTaskCount()) + "\n");
-		lines.append(" |---------------------\n");
+		lines.append(getStatus(gameScheduledThreadPool));
+		CUtil.toStatusSeparator(lines);
 		}
-		
-		if (gameThreadPool!=null)
-		{
+		if (gameThreadPool!=null) {
 		lines.append("[" + name + "] Thread Pool:"+"\n");
-		lines.append(" |-    ActiveThreads : "+gameThreadPool.getActiveCount() + "\n");
-		lines.append(" |-     CorePoolSize : "+gameThreadPool.getCorePoolSize() + "\n");
-		lines.append(" |-  MaximumPoolSize : "+gameThreadPool.getMaximumPoolSize() + "\n");
-		lines.append(" |-  LargestPoolSize : "+gameThreadPool.getLargestPoolSize() + "\n");
-		lines.append(" |-         PoolSize : "+gameThreadPool.getPoolSize() + "\n");
-		lines.append(" |-   CompletedTasks : "+gameThreadPool.getCompletedTaskCount() + "\n");
-		lines.append(" |-      QueuedTasks : "+gameThreadPool.getQueue().size() + "\n");
-		lines.append(" |---------------------\n");
+		lines.append(getStatus(gameThreadPool));		
+		CUtil.toStatusSeparator(lines);
 		};
 		lines.append("[heap status]\n");
-		lines.append(" |-       FreeMemory : " + CUtil.toBytesSizeString(Runtime.getRuntime().freeMemory())+"\n");
-		lines.append(" |-      TotalMemory : " + CUtil.toBytesSizeString(Runtime.getRuntime().totalMemory())+"\n");
-		lines.append(" |-        MaxMemory : " + CUtil.toBytesSizeString(Runtime.getRuntime().maxMemory())+"\n");
-		lines.append(" |---------------------\n");
+		lines.append(getHeapStatus());
+		CUtil.toStatusSeparator(lines);
 		return lines.toString();
 	}
 
@@ -351,5 +334,39 @@ public class ThreadPool implements ThreadPoolService
 		}
     }
 
+//	--------------------------------------------------------------------------------------------------------
 
+	public static String getStatus(ScheduledThreadPoolExecutor tp)
+	{
+		StringBuilder lines = new StringBuilder();
+		CUtil.toStatusLine("ActiveThreads", 	tp.getActiveCount(), lines);
+		CUtil.toStatusLine("CorePoolSize", 		tp.getCorePoolSize(), lines);
+		CUtil.toStatusLine("PoolSize", 			tp.getPoolSize(), lines);
+		CUtil.toStatusLine("MaximumPoolSize", 	tp.getMaximumPoolSize(), lines);
+		CUtil.toStatusLine("CompletedTasks", 	tp.getCompletedTaskCount(), lines);
+		CUtil.toStatusLine("ScheduledTasks",	(tp.getTaskCount() - tp.getCompletedTaskCount()), lines);
+		return lines.toString();
+	}
+	
+	public static String getStatus(ThreadPoolExecutor tp)
+	{
+		StringBuilder lines = new StringBuilder();
+		CUtil.toStatusLine("ActiveThreads",		tp.getActiveCount(), lines);
+		CUtil.toStatusLine("CorePoolSize",		tp.getCorePoolSize(), lines);
+		CUtil.toStatusLine("MaximumPoolSize",	tp.getMaximumPoolSize(), lines);
+		CUtil.toStatusLine("LargestPoolSize",	tp.getLargestPoolSize(), lines);
+		CUtil.toStatusLine("PoolSize",			tp.getPoolSize(), lines);
+		CUtil.toStatusLine("CompletedTasks",	tp.getCompletedTaskCount(), lines);
+		CUtil.toStatusLine("QueuedTasks",		tp.getQueue().size(), lines);
+		return lines.toString();
+	}
+	
+	public static String getHeapStatus()
+	{
+		StringBuilder lines = new StringBuilder();
+		CUtil.toStatusLine("FreeMemory", 	CUtil.toBytesSizeString(Runtime.getRuntime().freeMemory()), lines);
+		CUtil.toStatusLine("TotalMemory", 	CUtil.toBytesSizeString(Runtime.getRuntime().totalMemory()), lines);
+		CUtil.toStatusLine("MaxMemory", 	CUtil.toBytesSizeString(Runtime.getRuntime().maxMemory()), lines);
+		return lines.toString();
+	}
 }
