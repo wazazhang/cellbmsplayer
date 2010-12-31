@@ -12,8 +12,10 @@ import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -45,6 +47,7 @@ import com.cell.CUtil;
 import com.cell.util.concurrent.ThreadPool;
 import com.net.ExternalizableFactory;
 import com.net.MessageHeader;
+import com.net.minaimpl.MinaThreadFactory;
 import com.net.minaimpl.NetPackageCodec;
 import com.net.minaimpl.ProtocolImpl;
 import com.net.minaimpl.ProtocolPool;
@@ -94,14 +97,14 @@ public abstract class AbstractServer extends IoHandlerAdapter implements Server
 			boolean					close_on_error) 
 	{
 		if (acceptor_pool == null) {
-			this.AcceptorPool = Executors.newCachedThreadPool();
+			this.AcceptorPool = Executors.newCachedThreadPool(MinaThreadFactory.getInstance());
 			acceptor_pool = this.AcceptorPool;
 		} else {
 			this.AcceptorPool = null;
 		}
 
 		if (io_processor_pool == null) {
-			this.IoProcessorPool = Executors.newCachedThreadPool();
+			this.IoProcessorPool = Executors.newCachedThreadPool(MinaThreadFactory.getInstance());
 			io_processor_pool = this.IoProcessorPool;
 		} else {
 			this.IoProcessorPool = null;
@@ -235,7 +238,7 @@ public abstract class AbstractServer extends IoHandlerAdapter implements Server
 
 //	----------------------------------------------------------------------------------------------------------------------
 
-	
+
 	
 //	----------------------------------------------------------------------------------------------------------------------
 	
