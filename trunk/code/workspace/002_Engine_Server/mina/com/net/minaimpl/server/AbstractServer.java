@@ -170,7 +170,7 @@ public abstract class AbstractServer extends IoHandlerAdapter implements Server
 
 //	-----------------------------------------------------------------------------------------------------------------------
 	
-	protected void write(
+	protected boolean write(
 			IoSession 		session, 
 			MessageHeader 	message,
 			byte			protocol, 
@@ -187,6 +187,9 @@ public abstract class AbstractServer extends IoHandlerAdapter implements Server
 			p.ChannelID			= channel_id;
 			p.ChannelSesseionID	= channel_sender_id;
 			session.write(p);
+			return true;
+		} else {
+			return false;
 		}
 	}
 
