@@ -41,6 +41,7 @@ import com.cell.gfx.game.CSprite;
 import com.cell.rpg.scene.Actor;
 import com.cell.rpg.scene.Region;
 import com.cell.rpg.scene.SceneAbilityManager;
+import com.cell.rpg.scene.SceneSprite;
 import com.cell.rpg.scene.SceneTrigger;
 import com.cell.rpg.scene.SceneTriggerScriptable;
 import com.cell.rpg.scene.SceneUnit;
@@ -292,6 +293,22 @@ public class SceneEditor extends AbstractFrame implements ActionListener, Window
 					}
 				} catch (Throwable err) {
 					err.printStackTrace();
+					System.err.println("unit " +
+							": id=" + unit.id +
+							": name=" + unit.name+
+							"");
+					if (unit instanceof Actor) {
+						Actor actor = (Actor)unit;
+						System.err.println("actor " +
+								": template_unit_id=" + actor.template_unit_id +
+								"");
+					}
+					if (unit instanceof com.cell.rpg.scene.Immutable) {
+						com.cell.rpg.scene.Immutable actor = (com.cell.rpg.scene.Immutable)unit;
+						System.err.println("immutable " +
+								": display_node=" + actor.getDisplayNode() +
+								"");
+					}
 				}
 			}
 		}
