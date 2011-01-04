@@ -32,6 +32,8 @@ public abstract class Engine
 	
 	abstract public IPalette			createPalette(InputStream is) throws IOException;
 	
+	abstract public IPalette			createPalette(byte[] data, short color_count, short transparent_color_index);
+	
 	abstract public BufferedImage 		createImage(int w, int h);
 	
 	abstract public BufferedImage 		createImage(InputStream is) throws IOException;
