@@ -248,6 +248,7 @@ public abstract class Stage extends DisplayObjectContainer
 					anchor = default_tip_anchor;
 				}
 				if (anchor != null) {
+					tip.onUpdate(this);
 					Point p = anchor.setStageLocation(this, tip,
 							interactive.getScreenX() + interactive.local_bounds.x,
 							interactive.getScreenY() + interactive.local_bounds.y,
@@ -255,7 +256,6 @@ public abstract class Stage extends DisplayObjectContainer
 							interactive.getHeight());
 					tip.setLocation(p.x, p.y);
 				}
-				tip.onUpdate(this);
 				tip.onRender(g);
 			}
 			last_cursor = interactive.getCursor();
