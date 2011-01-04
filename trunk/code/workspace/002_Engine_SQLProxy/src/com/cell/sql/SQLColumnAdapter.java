@@ -317,7 +317,7 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 		
 		if (result != ValidateResult.OK)
 		{
-			log.warn("validate error [" + table_name + "]");
+			log.warn("validate error [" + table_name + "] : " + result);
 			
 			if (result == ValidateResult.ERROR_NOT_EXIST && auto_create_struct)
 			{
