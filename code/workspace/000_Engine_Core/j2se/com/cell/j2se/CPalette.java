@@ -19,12 +19,12 @@ class CPalette implements IPalette
 	private short transparent_color_index_;
 	
 	
-	CPalette(String file)
+	public CPalette(String file)
 	{
 		this.load(file);
 	}
 	
-	CPalette(byte[] data, short color_count, short transparent_color_index)
+	public CPalette(byte[] data, short color_count, short transparent_color_index)
 	{
 		this.data_ = data;
 		this.color_count_ = color_count;
@@ -58,12 +58,20 @@ class CPalette implements IPalette
 		this.data_ = new byte[256*3];
 		is.read(this.data_);
 		
-		int byte1 = is.read();
-		int byte2 = is.read();
-		color_count_ = (short)(((int)byte1 << 8) | (int)byte2);
-		int byte3 = is.read();
-		int byte4 = is.read();		
-		transparent_color_index_ = (short)(((int)byte3 << 8) | (int)byte4);
+		if (size > 256*3)
+		{
+			int byte1 = is.read();
+			int byte2 = is.read();
+			color_count_ = (short)(((int)byte1 << 8) | (int)byte2);
+			int byte3 = is.read();
+			int byte4 = is.read();		
+			transparent_color_index_ = (short)(((int)byte3 << 8) | (int)byte4);
+		}
+		else
+		{
+			color_count_ = 256;
+			transparent_color_index_ = -1;
+		}
 	}
 
 	
@@ -82,7 +90,7 @@ class CPalette implements IPalette
 	@Override
 	public byte[] getTransparentColor() 
 	{
-		if (this.transparent_color_index_ < 256)
+		if ( (0 <= this.transparent_color_index_) && (this.transparent_color_index_ < 256) )
 		{
 			byte[] color = new byte[3];
 			
