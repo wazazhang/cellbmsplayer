@@ -6,12 +6,18 @@ import com.g2d.Graphics2D;
 
 public abstract class Tip extends DisplayObjectContainer
 {	
-	final static public int ANCHOR_LEFT 	= 0x00;
-	final static public int ANCHOR_RIGHT 	= 0x01;
-	final static public int ANCHOR_HCENTER 	= 0x02;
-	final static public int ANCHOR_TOP 		= 0x00;
-	final static public int ANCHOR_BOTTON 	= 0x10;
-	final static public int ANCHOR_VCENTER 	= 0x20;
+	final static public int ANCHOR_LEFT 	= 0x01;
+	final static public int ANCHOR_RIGHT 	= 0x02;
+	final static public int ANCHOR_HCENTER 	= 0x04;
+	final static public int ANCHOR_TOP 		= 0x10;
+	final static public int ANCHOR_BOTTON 	= 0x20;
+	final static public int ANCHOR_VCENTER 	= 0x40;
+	
+	static public int DEFAULT_ANCHOR = ANCHOR_HCENTER | ANCHOR_BOTTON;
+	
+	public Tip() {
+		setSize(10, 10);
+	}
 	
 	/**
 	 * 
@@ -24,7 +30,20 @@ public abstract class Tip extends DisplayObjectContainer
 	 */
 	protected void setStageLocation(Stage parent, int x, int y, int w, int h) 
 	{
-		anchorTo(parent, x, y, w, h, ANCHOR_RIGHT | ANCHOR_VCENTER);
+		int anchor = DEFAULT_ANCHOR;
+//		if (x > parent.getWidth()/2) {
+//			anchor &= 0xf0;
+//			anchor |= ANCHOR_LEFT;
+//		}
+//		x += 32;
+//		y += 32;
+		if (y > parent.getHeight()/2) {
+			anchor &= 0x0f;
+			anchor |= ANCHOR_TOP;
+		} else {
+			y += 16;
+		}
+		anchorTo(parent, x, y, w, h, anchor);
 	}
 	
 	protected void anchorTo(Stage parent, int x, int y, int w, int h, int anchor) {
@@ -32,13 +51,13 @@ public abstract class Tip extends DisplayObjectContainer
 		int sy = y;
 		// horizontal
 		{
-			if ((anchor | ANCHOR_HCENTER) != 0) {
+			if ((anchor & ANCHOR_HCENTER) != 0) {
 				sx = x + w/2 - getWidth()/2;
 			}
-			if ((anchor | ANCHOR_RIGHT) != 0) {
+			if ((anchor & ANCHOR_RIGHT) != 0) {
 				sx = x + w + 1;
 			}
-			if ((anchor | ANCHOR_LEFT) != 0) {
+			if ((anchor & ANCHOR_LEFT) != 0) {
 				sx = x - getWidth() - 1;
 			}
 			
@@ -54,13 +73,13 @@ public abstract class Tip extends DisplayObjectContainer
 		}
 		// vertical
 		{
-			if ((anchor | ANCHOR_VCENTER) != 0) {
+			if ((anchor & ANCHOR_VCENTER) != 0) {
 				sy = y + h/2 - getHeight()/2;
 			}
-			if ((anchor | ANCHOR_BOTTON) != 0) {
+			if ((anchor & ANCHOR_BOTTON) != 0) {
 				sy = y + h + 1;
 			}
-			if ((anchor | ANCHOR_TOP) != 0) {
+			if ((anchor & ANCHOR_TOP) != 0) {
 				sy = y - getHeight() - 1;
 			}
 			
