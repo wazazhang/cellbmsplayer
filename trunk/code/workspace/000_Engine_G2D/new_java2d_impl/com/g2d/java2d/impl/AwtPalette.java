@@ -34,12 +34,20 @@ class AwtPalette implements IPalette
 		this.data_ = new byte[256*3];
 		System.arraycopy(data, 0, data_, 0, data_.length);
 		
-		int byte1 = data[this.data_.length+0];
-		int byte2 = data[this.data_.length+1];
-		color_count_ = (short)(((int)byte1 << 8) | (int)byte2);
-		int byte3 = data[this.data_.length+2];
-		int byte4 = data[this.data_.length+3];	
-		transparent_color_index_ = (short)(((int)byte3 << 8) | (int)byte4);
+		if (data.length > 256*3)
+		{
+			int byte1 = data[this.data_.length+0];
+			int byte2 = data[this.data_.length+1];
+			color_count_ = (short)(((int)byte1 << 8) | (int)byte2);
+			int byte3 = data[this.data_.length+2];
+			int byte4 = data[this.data_.length+3];	
+			transparent_color_index_ = (short)(((int)byte3 << 8) | (int)byte4);
+		}
+		else
+		{
+			color_count_ = 256;
+			transparent_color_index_ = -1;
+		}
 	}
 
 	
@@ -58,7 +66,7 @@ class AwtPalette implements IPalette
 	@Override
 	public byte[] getTransparentColor() 
 	{
-		if (this.transparent_color_index_ < 256)
+		if ( (0 <= this.transparent_color_index_) && (this.transparent_color_index_ < 256) )
 		{
 			byte[] color = new byte[3];
 			

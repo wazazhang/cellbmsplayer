@@ -10,6 +10,7 @@ import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.IndexColorModel;
+import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
 import java.io.InputStream;
 
@@ -311,8 +312,8 @@ class AwtImage implements com.g2d.BufferedImage
 			}
 		}
 	}
-	
-//	---------------------------------------------------------------------------------------------------------------------------------
+
+//	---------------------------------------------------------------------------------------------------------------------------------	
 	
 	@Override
 	public com.g2d.Graphics2D createGraphics() {
@@ -351,4 +352,92 @@ class AwtImage implements com.g2d.BufferedImage
 	public com.g2d.BufferedImage getScaledInstance(int w, int h) {
 		return new AwtImage(m_image.getScaledInstance(w, h, java.awt.image.BufferedImage.SCALE_FAST));
 	}
+	
+	
+//	---------------------------------------------------------------------------------------------------------------------------------
+	
+	
+	public Raster getAwtRaster()
+	{
+		if (m_src_index_color_raster != null)
+			return m_src_index_color_raster;
+		
+		return m_image.getRaster();
+	}
+	
+	public void setAwtRaster(WritableRaster raster)
+	{
+		if (m_src_index_color_raster != null)
+		{
+			m_src_index_color_raster = raster;
+			
+			BufferedImage new_image = new BufferedImage(m_src_index_color_model, 
+					m_src_index_color_raster, m_src_index_color_model.isAlphaPremultiplied(), null);
+			
+			m_image = createBuffer(new_image);		
+		}
+		else
+		{		
+			m_image.setData(raster);
+		}
+	}
+	
+	public BufferedImage getAwtBufferedImage()
+	{
+		if (m_src_index_color_raster != null)
+		{
+			BufferedImage new_image = new BufferedImage(m_src_index_color_model, 
+					m_src_index_color_raster, m_src_index_color_model.isAlphaPremultiplied(), null);
+			
+			return new_image;
+		}
+		
+		return m_image;
+	}
+	
+	public void setAwtRasterPalette(WritableRaster raster, IPalette palette)
+	{
+		m_src_index_color_raster = raster;
+
+		if (palette != null)
+		{
+			try
+			{
+				byte[] colors = palette.getIndexColors();
+				int color_count = palette.getIndexColorCount();
+				int transparent_color_index = palette.getTransparentColorIndex();
+				byte[] ra = new byte[color_count];
+				byte[] ga = new byte[color_count];
+				byte[] ba = new byte[color_count];
+				byte[] ralpha = new byte[color_count];
+				
+				for ( int i=0,j=0; (i<colors.length)&&(j<color_count); i+=3,++j )
+				{
+					ra[j] = colors[i];
+					ga[j] = colors[i+1];
+					ba[j] = colors[i+2];
+					ralpha[j] = (byte)((j==transparent_color_index)? 0 : 255);
+				}
+				
+				IndexColorModel icm = new IndexColorModel(8, color_count, ra, ga, ba, ralpha);
+				
+				BufferedImage new_image = new BufferedImage(icm, m_src_index_color_raster, icm.isAlphaPremultiplied(), null);
+				
+				m_image = createBuffer(new_image);
+			}
+			catch (Exception exp)
+			{
+				exp.printStackTrace();
+			}
+		}		
+	}
+		
+//	---------------------------------------------------------------------------------------------------------------------------------
+	
+
+	
 }
+
+
+
+
