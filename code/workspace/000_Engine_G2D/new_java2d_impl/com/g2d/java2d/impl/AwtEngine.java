@@ -120,6 +120,11 @@ public class AwtEngine extends Engine
 		return new AwtPalette(is);
 	}
 	
+	@Override
+	public IPalette createPalette(byte[] data, short colorCount, short transparentColorIndex) {
+		return new AwtPalette(data, colorCount, transparentColorIndex);
+	}
+	
 	public BufferedImage createImage(InputStream is) throws IOException{
 		return new AwtImage(ImageIO.read(is));
 	}

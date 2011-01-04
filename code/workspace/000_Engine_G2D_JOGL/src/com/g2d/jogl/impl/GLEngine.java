@@ -128,7 +128,12 @@ public class GLEngine extends Engine
 	public IPalette createPalette(InputStream is) throws IOException {
 		return new GLPalette(is);
 	}
-	
+	@Override
+	public IPalette createPalette(byte[] data, short colorCount,
+			short transparentColorIndex) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 //	---------------------------------------------------------------------------------------------
 

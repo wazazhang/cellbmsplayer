@@ -22,24 +22,24 @@ import com.cell.gfx.IImage;
 import com.cell.gfx.IPalette;
 
 
-class AwtImage implements com.g2d.BufferedImage
+public class AwtImage implements com.g2d.BufferedImage
 {
 	private BufferedImage	m_image;
 	
 	private WritableRaster	m_src_index_color_raster;
 	private ColorModel		m_src_index_color_model;
 		
-	public AwtImage(Image image)
+	AwtImage(Image image)
 	{
 		m_image = createBuffer(image);
 	}
 	
-	public AwtImage() {
+	AwtImage() {
 		m_image = createBuffer(AwtEngine.getEngine().getGC()
 				.createCompatibleImage(1, 1, Transparency.TRANSLUCENT));
 	}
 
-	public AwtImage(String file) {
+	AwtImage(String file) {
 		try {
 			m_image = createBuffer(ImageIO.read(CIO.getInputStream(file)));
 		} catch (Exception err) {
@@ -47,7 +47,7 @@ class AwtImage implements com.g2d.BufferedImage
 		}
 	}
 
-	public AwtImage(java.awt.image.BufferedImage buff) {
+	AwtImage(java.awt.image.BufferedImage buff) {
 		try {
 			m_image = createBuffer(buff);
 		} catch (Exception err) {
@@ -55,7 +55,7 @@ class AwtImage implements com.g2d.BufferedImage
 		}
 	}
 
-	public AwtImage(int w, int h) {
+	AwtImage(int w, int h) {
 		m_image = createBuffer(AwtEngine.getEngine().getGC()
 				.createCompatibleImage(w, h, Transparency.TRANSLUCENT));
 	}
