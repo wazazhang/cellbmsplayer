@@ -13,7 +13,7 @@ public abstract class Tip extends DisplayObjectContainer
 	final static public int ANCHOR_BOTTON 	= 0x20;
 	final static public int ANCHOR_VCENTER 	= 0x40;
 	
-	static public int DEFAULT_ANCHOR = ANCHOR_HCENTER | ANCHOR_BOTTON;
+	static public int DEFAULT_ANCHOR = ANCHOR_RIGHT | ANCHOR_BOTTON;
 	
 	public Tip() {
 		setSize(10, 10);
