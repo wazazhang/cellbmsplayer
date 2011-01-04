@@ -17,20 +17,13 @@ public interface TipAnchor
 		final static public int ANCHOR_BOTTON 	= 0x20;
 		final static public int ANCHOR_VCENTER 	= 0x40;
 
-		public int default_anchor = ANCHOR_RIGHT | ANCHOR_BOTTON;
+		public int default_anchor = ANCHOR_RIGHT | ANCHOR_VCENTER;
 		
 		@Override
 		public Point setStageLocation(Stage stage, Tip tip, int x, int y, int w, int h) 
 		{
 			int anchor = default_anchor;
 			
-			if (y > stage.getHeight() / 2) {
-				anchor &= 0x0f;
-				anchor |= ANCHOR_TOP;
-			} else {
-				y += 16;
-			}
-
 			int sx = x;
 			int sy = y;
 			// horizontal
