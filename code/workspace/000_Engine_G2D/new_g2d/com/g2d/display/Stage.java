@@ -229,7 +229,11 @@ public abstract class Stage extends DisplayObjectContainer
 			InteractiveObject interactive = (InteractiveObject)last_mouse_picked_object;
 			Tip tip = interactive.getTip();
 			if (tip != null) {
-				tip.setLocation(this, mouse_x, mouse_y);
+				tip.setStageLocation(this, 
+						interactive.getScreenX() + interactive.local_bounds.x,
+						interactive.getScreenY() + interactive.local_bounds.y,
+						interactive.getWidth(),
+						interactive.getHeight());
 				tip.onUpdate(this);
 				tip.onRender(g);
 			}

@@ -6,26 +6,27 @@ import com.g2d.Graphics2D;
 
 public abstract class Tip extends DisplayObjectContainer
 {	
-	public static int tip_offset_x 		= 20;
-	public static int tip_offset_y 		= 20;
-	public static int tip_opposite_x 	= -4;
-	public static int tip_opposite_y 	= -4;
-	
-	public void setLocation(DisplayObjectContainer parent, int x, int y) {
-		
-		if ((x + getWidth() + tip_offset_x) > parent.getWidth()) {
-			x = x - getWidth() + tip_opposite_x;
-		} else {
-			x = x + tip_offset_x;
+	/**
+	 * 设置Tip在Stage里显示位置
+	 * @param parent
+	 * @param x
+	 * @param y
+	 * @param w
+	 * @param h
+	 */
+	protected void setStageLocation(Stage parent, int x, int y, int w, int h) 
+	{
+		int sx = x + w + 1; 
+		int sy = y;
+		if (sx + getWidth() > parent.getWidth()) {
+			sx = x - getWidth() - 1;
 		}
-		if ((y + getHeight() + tip_offset_y) > parent.getHeight()) {
-			y = y - getHeight() + tip_opposite_y;
-		} else {
-			y = y + tip_offset_y;
+		if (sy + getHeight() > parent.getHeight()) {
+			sy = parent.getHeight() - getHeight();
 		}
-		if (x < 0) x = 0;
-		if (y < 0) y = 0;
-		super.setLocation(x, y);
+		if (sx < 0) sx = 0;
+		if (sy < 0) sy = 0;
+		super.setLocation(sx, sy);
 	}
 	
 	@Override
