@@ -434,8 +434,14 @@ public abstract class Stage extends DisplayObjectContainer
 		private boolean 			is_transition_in 		= true;
 		private boolean 			is_transition_out		= false;
 
+		public Color 				color = new Color(0, 0, 0, 1f);
+		
 		public DefaultStageTransition() {
 			startTransitionIn();
+		}
+		public DefaultStageTransition(Color color) {
+			startTransitionIn();
+			this.color = color;
 		}
 		
 		public void setTransitionMaxTime(int time) {
@@ -482,8 +488,14 @@ public abstract class Stage extends DisplayObjectContainer
 			}
 			alpha = Math.max(alpha, 0);
 			alpha = Math.min(alpha, 1);
-			g.setColor(new Color(0,0,0, alpha));
-			g.fillRect(bounds);
+			g.pushComposite();
+			try{
+				g.setColor(color);
+				g.setAlpha(alpha);
+				g.fillRect(bounds);
+			} finally {
+				g.popComposite();
+			}
 			
 			if (transition_timer > transition_max_time) {
 				is_transition_in	= false;
