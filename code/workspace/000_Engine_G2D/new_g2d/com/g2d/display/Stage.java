@@ -11,6 +11,7 @@ import com.g2d.display.event.Event;
 import com.g2d.display.event.MouseDragDropAccepter;
 import com.g2d.display.event.MouseDragDropListener;
 import com.g2d.display.event.MouseEvent;
+import com.g2d.geom.Point;
 import com.g2d.geom.Rectangle;
 
 
@@ -28,6 +29,8 @@ public abstract class Stage extends DisplayObjectContainer
 //	transient private String			next_tip_text;
 //	transient private AttributedString	next_tip_atext;
 
+	private TipAnchor					default_tip_anchor			= new TipAnchor.DefaultTipAnchor();
+		
 	private StageTransition				current_transition			= new DefaultStageTransition();
 	
 //	picked object
@@ -67,7 +70,7 @@ public abstract class Stage extends DisplayObjectContainer
 	public void inited(Canvas root, Object[] args) {
 		// no args process
 	}
-
+	
 //	---------------------------------------------------------------------------------------------------------------
 //
 	
@@ -116,6 +119,17 @@ public abstract class Stage extends DisplayObjectContainer
 		return false;
 	}
 
+//	---------------------------------------------------------------------------------------------------------------
+
+	
+	final public void setDefaultTipAnchor(TipAnchor anchor) {
+		this.default_tip_anchor = anchor;
+	}
+	
+	final public TipAnchor getDefaultTipAnchor() {
+		return this.default_tip_anchor;
+	}
+	
 //	public void setCursorG2D(CursorG2D cursor) {
 //		this.cursor = cursor;
 //	}
@@ -229,11 +243,18 @@ public abstract class Stage extends DisplayObjectContainer
 			InteractiveObject interactive = (InteractiveObject)last_mouse_picked_object;
 			Tip tip = interactive.getTip();
 			if (tip != null) {
-				tip.setStageLocation(this, 
-						interactive.getScreenX() + interactive.local_bounds.x,
-						interactive.getScreenY() + interactive.local_bounds.y,
-						interactive.getWidth(),
-						interactive.getHeight());
+				TipAnchor anchor = tip.getTipAnchor();
+				if (anchor == null) {
+					anchor = default_tip_anchor;
+				}
+				if (anchor != null) {
+					Point p = anchor.setStageLocation(this, tip,
+							interactive.getScreenX() + interactive.local_bounds.x,
+							interactive.getScreenY() + interactive.local_bounds.y,
+							interactive.getWidth(),
+							interactive.getHeight());
+					tip.setLocation(p.x, p.y);
+				}
 				tip.onUpdate(this);
 				tip.onRender(g);
 			}
