@@ -1,6 +1,6 @@
 package com.g2d.studio.cell.gameedit;
 
-import java.awt.image.BufferedImage;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
