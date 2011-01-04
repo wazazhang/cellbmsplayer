@@ -49,9 +49,6 @@ public interface TipAnchor
 					sx = x - tip.getWidth() - 1;
 				}
 				if (sx < 0) {
-					sx = x + w + 1;
-				}
-				if (sx < 0) {
 					sx = 0;
 				}
 			}
@@ -69,9 +66,6 @@ public interface TipAnchor
 				
 				if (sy + tip.getHeight() > stage.getHeight()) {
 					sy = stage.getHeight() - tip.getHeight();
-				}
-				if (sy < 0) {
-					sy = y + h + 1;
 				}
 				if (sy < 0) {
 					sy = 0;
