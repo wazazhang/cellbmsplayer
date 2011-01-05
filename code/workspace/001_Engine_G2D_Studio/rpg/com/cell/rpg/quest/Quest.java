@@ -90,6 +90,9 @@ public class Quest extends RPGObject implements NamedObject
 	@Property({"主动可接受任务", "在可接受的情况下会出现在玩家的可接受任务列表中"})
 	public boolean				is_positive_acceptable_quest = false;
 	
+	@Property({"非NPC绑定任务", "即不是由NPC产生的任务"})
+	public boolean				is_not_binded_npc = false;
+
 //	----------------------------------------------------------------------------------------------------------------
 	public Quest(Integer id, String name) {
 		super(id.toString());
