@@ -3,6 +3,7 @@ package com.cell.rpg.scene.instance;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.concurrent.TimeUnit;
 
 import com.cell.rpg.NamedObject;
 import com.cell.rpg.RPGObject;
@@ -34,10 +35,12 @@ public class InstanceZone extends RPGObject implements NamedObject, TriggersPack
 	public int player_level 	= 10;
 	
 	@PropertyAdapter(PropertyType.TIME_TASK)
-	@Property({"副本的刷新时间(任务)", "每隔多长时间刷新一次副本，系统自动重置"})
+	@Property({"副本的刷新时间(任务)", "系统自动重置，该副本持续有效一定时间"})
 	public CronExpression	flush_time_task		= new CronExpression();
 	
-
+	@PropertyAdapter(PropertyType.TIME_OBJECT)
+	@Property({"副本的刷新后的持续时间", "系统自动重置，该副本持续有效一定时间"})
+	public TimeObject		flush_persistance_time = new TimeObject();
 //	-------------------------------------------------------------------------------
 	
 	@Property("副本是否可由玩家重置")
@@ -78,6 +81,8 @@ public class InstanceZone extends RPGObject implements NamedObject, TriggersPack
 		this.flush_time_task.month.setValue(true);
 		this.flush_time_task.year.setValue(true);
 		this.flush_time_task.hour.set((byte)6, false);
+//		this.flush_persistance_time.time_unit = TimeUnit.DAYS;
+//		this.flush_persistance_time.time_value = 7;
 	}
 	
 	@Override
@@ -95,6 +100,24 @@ public class InstanceZone extends RPGObject implements NamedObject, TriggersPack
 		if (data_map == null) {
 			data_map = new Data();
 		}
+		if (flush_time_task == null) {
+			this.flush_time_task = new CronExpression();
+			this.flush_time_task.day_of_month.setValue(true);
+			this.flush_time_task.day_of_week.setValue(true);
+			this.flush_time_task.week_of_month.setValue(true);
+			this.flush_time_task.month.setValue(true);
+			this.flush_time_task.year.setValue(true);
+			this.flush_time_task.hour.set((byte)6, false);
+			
+//			this.flush_persistance_time = new TimeObject();
+//			this.flush_persistance_time.time_unit = TimeUnit.DAYS;
+//			this.flush_persistance_time.time_value = 7;
+		}
+		if (reset_clean_time == null) {
+			this.reset_clean_time = new TimeObject(1, TimeUnit.HOURS);
+			this.reset_count = 2;
+		}
+		
 	}
 	
 	public Data getData() {

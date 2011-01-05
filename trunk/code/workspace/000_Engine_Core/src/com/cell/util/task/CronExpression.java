@@ -104,9 +104,10 @@ public class CronExpression implements Serializable
 			}
 			
 			if (day_of_week.getValue()) {
-				sb.append("每星期 ");
+				sb.append("每天 ");
 			} else {
 				if (week_of_month.getValue()) {
+					sb.append("每周 ");
 				} else {
 					sb.append("第"+week_of_month.getKey()+"个");
 				}
