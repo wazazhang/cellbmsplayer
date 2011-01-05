@@ -81,8 +81,8 @@ public class InstanceZone extends RPGObject implements NamedObject, TriggersPack
 		this.flush_time_task.month.setValue(true);
 		this.flush_time_task.year.setValue(true);
 		this.flush_time_task.hour.set((byte)6, false);
-//		this.flush_persistance_time.time_unit = TimeUnit.DAYS;
-//		this.flush_persistance_time.time_value = 7;
+		this.flush_persistance_time.time_unit = TimeUnit.DAYS;
+		this.flush_persistance_time.time_value = 7;
 	}
 	
 	@Override
@@ -109,9 +109,7 @@ public class InstanceZone extends RPGObject implements NamedObject, TriggersPack
 			this.flush_time_task.year.setValue(true);
 			this.flush_time_task.hour.set((byte)6, false);
 			
-//			this.flush_persistance_time = new TimeObject();
-//			this.flush_persistance_time.time_unit = TimeUnit.DAYS;
-//			this.flush_persistance_time.time_value = 7;
+			this.flush_persistance_time = new TimeObject(7, TimeUnit.DAYS);
 		}
 		if (reset_clean_time == null) {
 			this.reset_clean_time = new TimeObject(1, TimeUnit.HOURS);
