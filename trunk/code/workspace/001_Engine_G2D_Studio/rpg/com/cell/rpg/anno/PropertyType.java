@@ -12,6 +12,8 @@ public enum PropertyType
 	AVATAR_ID,
 	ITEM_PROPERTY_SAVED_TYPE,
 	INSTANCE_ZONE_ID,
+	TIME_OBJECT,
+	TIME_TASK,
 	;
 	
 	

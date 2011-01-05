@@ -8,6 +8,8 @@ import com.cell.util.DateUtil.MonthOfYear;
 
 public class CronExpression implements Serializable
 {
+	private static final long serialVersionUID = 1L;
+
 	public static enum DateType
 	{
 		DAY_OF_MONTH, 

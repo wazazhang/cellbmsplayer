@@ -1,6 +1,5 @@
 package com.cell.util;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Map;
 

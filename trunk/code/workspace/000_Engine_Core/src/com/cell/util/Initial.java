@@ -1,7 +1,5 @@
 package com.cell.util;
 
-import java.util.ArrayList;
-
 import com.cell.CUtil;
 
 /**

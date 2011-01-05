@@ -13,8 +13,8 @@ import com.g2d.studio.quest.QuestCellEditAdapter.QuestItemDropItem;
 import com.g2d.studio.quest.QuestCellEditAdapter.QuestItemTagItem;
 import com.g2d.studio.quest.QuestCellEditAdapter.QuestItemTagQuest;
 import com.g2d.studio.quest.QuestCellEditAdapter.QuestItemTagQuestItem;
-import com.g2d.studio.quest.QuestCellEditAdapter.TimeObjectAdapter;
 import com.g2d.studio.res.Res;
+import com.g2d.studio.rpg.PropertyAdapters;
 import com.g2d.studio.swing.G2DTreeNode;
 
 public class QuestEventNode extends G2DTreeNode<G2DTreeNode<?>>
@@ -54,7 +54,7 @@ public class QuestEventNode extends G2DTreeNode<G2DTreeNode<?>>
 					//
 					new AbstractValueAdapter(),
 					new QuestFestivalAdapter(),
-					new TimeObjectAdapter()
+					new PropertyAdapters.TimeObjectAdapter()
 					
 					);
 		}

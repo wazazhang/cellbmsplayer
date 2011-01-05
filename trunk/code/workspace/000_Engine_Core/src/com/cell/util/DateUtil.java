@@ -3,13 +3,14 @@ package com.cell.util;
 import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
 
-import com.cell.util.EnumManager;
 import com.cell.util.EnumManager.ValueEnum;
 
 public class DateUtil
 {
 	public static class TimeObject implements Serializable
 	{
+		private static final long serialVersionUID = 1L;
+		
 		public long 		time_value;	
 		public TimeUnit 	time_unit;
 		
@@ -20,7 +21,7 @@ public class DateUtil
 		
 		public TimeObject() {
 			this.time_value	= 1;	
-			this.time_unit	= TimeUnit.MICROSECONDS;
+			this.time_unit	= TimeUnit.HOURS;
 		}
 		
 		@Override

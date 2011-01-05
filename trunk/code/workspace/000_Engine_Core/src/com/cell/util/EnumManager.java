@@ -34,6 +34,7 @@ public class EnumManager
 		return v;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static <V extends Enum<V>> V toEnum(Class<V> cls, Object k) 
 	{
 		HashMap map = Types.get(cls);
