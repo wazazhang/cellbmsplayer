@@ -14,7 +14,7 @@ import com.g2d.studio.quest.QuestCellEditAdapter.QuestItemTagItem;
 import com.g2d.studio.quest.QuestCellEditAdapter.QuestItemTagQuest;
 import com.g2d.studio.quest.QuestCellEditAdapter.QuestItemTagQuestItem;
 import com.g2d.studio.quest.QuestCellEditAdapter.QuestItemTagQuestStateKillMonsterComparison;
-import com.g2d.studio.quest.QuestCellEditAdapter.TimeObjectAdapter;
+import com.g2d.studio.rpg.PropertyAdapters;
 
 public class QuestItemEditor extends ObjectViewer<QuestItemNode> implements RPGSerializationListener
 {
@@ -36,7 +36,7 @@ public class QuestItemEditor extends ObjectViewer<QuestItemNode> implements RPGS
 				
 				// formual
 				new AbstractValueAdapter(),
-				new TimeObjectAdapter()
+				new PropertyAdapters.TimeObjectAdapter()
 		);
 		if (node.getData().getRPGSerializationListeners() == null ||
 			node.getData().getRPGSerializationListeners().contains(this)==false) {
