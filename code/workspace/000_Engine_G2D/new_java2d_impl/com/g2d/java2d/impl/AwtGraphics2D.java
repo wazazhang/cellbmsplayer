@@ -86,10 +86,11 @@ class AwtGraphics2D extends Graphics2D
 		if (com instanceof java.awt.AlphaComposite) {
 			src_alpha = ((java.awt.AlphaComposite)com).getAlpha();
 			g2d.setComposite(((java.awt.AlphaComposite)com).derive(alpha));
-		} else if (com instanceof BlendComposite) {
-			src_alpha = ((BlendComposite)com).getAlpha();
-			g2d.setComposite(((BlendComposite)com).derive(alpha));
 		}
+//		else if (com instanceof BlendComposite) {
+//			src_alpha = ((BlendComposite)com).getAlpha();
+//			g2d.setComposite(((BlendComposite)com).derive(alpha));
+//		}
 		return src_alpha;
 	}
 	
@@ -97,9 +98,10 @@ class AwtGraphics2D extends Graphics2D
 		java.awt.Composite com = g2d.getComposite();
 		if (com instanceof java.awt.AlphaComposite) {
 			return ((java.awt.AlphaComposite)com).getAlpha();
-		} else if (com instanceof BlendComposite) {
-			return ((BlendComposite)com).getAlpha();
 		}
+//		else if (com instanceof BlendComposite) {
+//			return ((BlendComposite)com).getAlpha();
+//		}
 		return 1f;
 	}
 	
@@ -110,14 +112,14 @@ class AwtGraphics2D extends Graphics2D
 	
 	@Override
 	public void setBlendMode(int blend, float alpha) {
-		if (blend != IGraphics.BLEND_MODE_NONE) {
+//		if (blend != IGraphics.BLEND_MODE_NONE) {
 			java.awt.Composite toset_composite = this.getCompositeFrom(blend, alpha);
 			if (toset_composite != null) {
 				g2d.setComposite(toset_composite);
 			}
-		} else {
-			g2d.setComposite(java.awt.AlphaComposite.SrcOver.derive(alpha));
-		}
+//		} else {
+//			g2d.setComposite(java.awt.AlphaComposite.SrcOver.derive(alpha));
+//		}
 	}
 	
 	@Override
