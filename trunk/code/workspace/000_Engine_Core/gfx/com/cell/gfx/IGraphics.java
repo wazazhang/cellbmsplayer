@@ -75,7 +75,7 @@ public interface IGraphics
 	public void drawImage(IImage img, int x, int y, int w, int h, int transform); 
 //	public void drawRoundImage(IImage img, int x, int y, int widht, int height, int transform, int blend_mode, float blend_alpha); 
 //	用setBlendMode(int blend);改变渲染模式，不需要每画一张图片就改变一次Blend
-	public void drawRoundImage(IImage img, int x, int y, int widht, int height, int transform); 
+	public void drawRoundImage(IImage img, int x, int y, int width, int height, int transform); 
 //	用setBlendMode(int blend);改变渲染模式，不需要每画一张图片就改变一次Blend
 	public void drawRegion(IImage src, int x_src, int y_src, int width, int height, int transform, int x_dest, int y_dest); 
 

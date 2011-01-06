@@ -1,39 +1,75 @@
 package com.g2d.jogl.impl;
 
+import java.awt.RenderingHints;
+import java.awt.font.LineBreakMeasurer;
+import java.awt.font.TextAttribute;
+import java.awt.font.TextLayout;
+import java.awt.image.BufferedImage;
+import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
+import java.util.ArrayList;
+import java.util.Stack;
+import java.util.Vector;
 
 import javax.media.opengl.GL;
 
+import com.cell.CMath;
+import com.cell.gfx.IGraphics;
 import com.cell.gfx.IImage;
+import com.cell.gfx.IGraphics.StringAttribute;
+import com.cell.gfx.IGraphics.StringLayer;
+import com.g2d.BasicStroke;
 import com.g2d.Color;
 import com.g2d.Composite;
 import com.g2d.Font;
 import com.g2d.Graphics2D;
 import com.g2d.Image;
 import com.g2d.Paint;
+import com.g2d.RadialGradientPaint;
 import com.g2d.Stroke;
 import com.g2d.geom.Path2D;
+import com.g2d.geom.PathIterator;
 import com.g2d.geom.Polygon;
 import com.g2d.geom.Rectangle2D;
 
-public class GLGraphics2D extends Graphics2D
+abstract class GLGraphics2D extends Graphics2D
 {
-	final private GL gl;
+	final private GL 								gl;
+	final java.awt.Graphics2D						awt_g2d;
 	
-	private Color					cur_color;
+	private Color									cur_color;
+	private float[] 								cur_color_4f;
+	private Font									cur_font;
+	private int										cur_font_h;
 	
-	public GLGraphics2D(GL gl) 
-	{	
+	private Stack<java.awt.Shape> 					stack_clip 		= new Stack<java.awt.Shape>();
+	private Stack<java.awt.Composite> 				stack_comp 		= new Stack<java.awt.Composite>();
+	private Stack<java.awt.geom.AffineTransform> 	stack_trans		= new Stack<java.awt.geom.AffineTransform>();
+	private Stack<java.awt.Stroke> 					stack_stroke	= new Stack<java.awt.Stroke>();
+	private Stack<java.awt.Paint> 					stack_paint		= new Stack<java.awt.Paint>();
+
+
+	GLGraphics2D(GL gl, java.awt.Graphics2D awt_g2d) 
+	{
+		this.awt_g2d 		= awt_g2d;
+		this.cur_color		= new Color(awt_g2d.getColor().getRGB());
+		this.cur_font		= new GLFont(awt_g2d.getFont());
+		this.cur_font_h 	= awt_g2d.getFontMetrics().getHeight();
+		
 		this.gl = gl;
-		float[] color_4f = new float[4];
-		gl.glGetFloatv(GL.GL_COLOR, color_4f, 0);
-		this.cur_color = new Color(color_4f[0], color_4f[1], color_4f[2], color_4f[3]);
+		this.cur_color_4f	= new float[] {
+			cur_color.getRed(),
+			cur_color.getGreen(),
+			cur_color.getBlue(),
+			cur_color.getAlpha(),
+		};
+		gl.glGetFloatv(GL.GL_COLOR, cur_color_4f, 0);
 		
 	}
 	
 	@Override
 	public void dispose() {
-		
+		awt_g2d.dispose();
 	}
 	
 
@@ -73,6 +109,11 @@ public class GLGraphics2D extends Graphics2D
 		return this.cur_color;
 	}
 	public void setColor(Color c) {
+		this.cur_color_4f[0] = c.getRed();
+		this.cur_color_4f[1] = c.getGreen();
+		this.cur_color_4f[2] = c.getBlue();
+		this.cur_color_4f[3] = c.getAlpha();
+		this.gl.glGetFloatv(GL.GL_COLOR, cur_color_4f, 0);
 		this.cur_color = c;
 	}
 	
@@ -129,7 +170,6 @@ public class GLGraphics2D extends Graphics2D
 	public void shear(double shx, double shy) {
 	
 	}
-	
 	@Override
 	public void pushTransform() {
 		gl.glPushMatrix();
@@ -139,20 +179,16 @@ public class GLGraphics2D extends Graphics2D
 		gl.glPopMatrix();
 	}
 	
-	
-	
-	
-
 //	-------------------------------------------------------------------------------------------------------------------------
 //	base shape
 //	-------------------------------------------------------------------------------------------------------------------------
 	
-	
-	public void drawLine(int x1, int y1, int x2, int y2) {}
-
-	public void drawPath(Path2D path) {}
-	
-	public void fillPath(Path2D path) {}
+	public void drawLine(int x1, int y1, int x2, int y2) {
+	}
+	public void drawPath(Path2D path) {
+	}
+	public void fillPath(Path2D path) {
+	}
 	
 //	-------------------------------------------------------------------------------------------------------------------------
 //	rect
@@ -220,14 +256,27 @@ public class GLGraphics2D extends Graphics2D
 		return true;
 	}
 
-	public void drawImage(IImage img, int x, int y, int w, int h, int transform) {}
+	public void drawImage(IImage img, int x, int y, int w, int h, int transform) {
+		pushTransform();
+		transform(transform, w, h);
+		drawImage((Image)img, x, y, w, h);
+		popTransform();
+	}
 	
-	public void drawImage(IImage src, int x, int y, int transform) {}
+	public void drawImage(IImage src, int x, int y, int transform) {
+		pushTransform();
+		transform(transform, src.getWidth(), src.getHeight());
+		drawImage((Image)src, x, y);
+		popTransform();
+	}
 
-	public void drawRegion(IImage src, int xSrc, int ySrc, int width, int height, int transform, int xDest, int yDest) {}
-
-	public void drawRoundImage(IImage src, int x, int y, int width, int height, int transform) {}
-
+	public void drawRegion(IImage src, int xSrc, int ySrc, int width, int height, int transform, int xDest, int yDest) {
+		pushTransform();
+		transform(transform, width, height);
+		GLImage buff = (GLImage)src;
+		buff.draw(gl, xDest, yDest, width, height, xSrc, ySrc, width, height);
+		popTransform();
+	}
 
 //	-------------------------------------------------------------------------------------------------------------------------
 //	flag
@@ -255,19 +304,23 @@ public class GLGraphics2D extends Graphics2D
 //	-------------------------------------------------------------------------------------------------------------------------
 
 	public Font getFont() {
-		return null;
+		return cur_font;
 	}
 	
-	public void setFont(Font font) {}
+	public void setFont(Font font) {
+		this.cur_font = font;
+	}
 	
-	public void setFont(String name, int size) {}
+	public void setFont(String name, int size) {
+		this.cur_font = GLEngine.getEngine().createFont(name, 0, size);
+	}
 	
 	public int getStringHeight() {
-		return 20;
+		return cur_font_h;
 	}
 	
 	public int getStringWidth(String src) {
-		return 20;
+		return (int)awt_g2d.getFontMetrics().getStringBounds(src, awt_g2d).getWidth();
 	}
 	
 	@Override
@@ -281,8 +334,7 @@ public class GLGraphics2D extends Graphics2D
 	}
 
 	@Override
-	public StringLayer createStringLayer(String src,
-			StringAttribute[] attributes) {
+	public StringLayer createStringLayer(String src, StringAttribute[] attributes) {
 		return null;
 	}
 
@@ -290,13 +342,29 @@ public class GLGraphics2D extends Graphics2D
 //	2 impl
 //	-------------------------------------------------------------------------------------------------------------------------
 
-	public static class GraphicsPBuffer
+	static class GLGraphicsPBuffer extends GLGraphics2D
 	{
-		
+		public GLGraphicsPBuffer(GL gl, java.awt.Graphics2D g2d) {
+			super(gl, g2d);
+		}
 	}
 	
-	public static class GraphicsScreen
+	static class GLGraphicsScreen extends GLGraphics2D
 	{
-		
+		public GLGraphicsScreen(GL gl, java.awt.Graphics2D g2d) {
+			super(gl, g2d);
+		}
 	}
+	
+//	-------------------------------------------------------------------------------------------------------------------------
+//	blending
+//	-------------------------------------------------------------------------------------------------------------------------
+	
+
+	
+	
+	
+	
+	
+	
 }

@@ -490,29 +490,6 @@ class AwtGraphics2D extends Graphics2D
 		
 	}
 
-	@Override
-	public void drawRoundImage(IImage src, int x, int y, int width, int height,
-			int transform) 
-	{
-		
-			BufferedImage 		img 	= ((AwtImage)src).getSrc();
-			java.awt.Rectangle 	rect 	= g2d.getClipBounds();
-			try {
-				g2d.clipRect(x, y, width, height);
-				int w = src.getWidth();
-				int h = src.getHeight();
-				for (int dx = 0; dx < width;) {
-					for (int dy = 0; dy < height;) {
-						g2d.drawImage(img, x + dx, y + dy, null);
-						dy += h;
-					}
-					dx += w;
-				}
-			} finally {
-				g2d.setClip(rect);
-			}
-	
-	}
 	
 //	-------------------------------------------------------------------------------------------------------------------------
 //	transform

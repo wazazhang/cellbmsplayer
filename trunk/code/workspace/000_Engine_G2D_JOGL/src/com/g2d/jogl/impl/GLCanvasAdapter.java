@@ -145,7 +145,7 @@ public class GLCanvasAdapter extends com.g2d.java2d.CanvasAdapter implements GLE
 			{
 				if (currentStage!=null)
 				{
-					GLGraphics2D gl_g2d = new GLGraphics2D(gl);
+					GLGraphics2D gl_g2d = new GLGraphics2D.GLGraphicsScreen(gl, GLEngine.getEngine().getAwtG());
 					
 					currentStage.onUpdate(this, getStageWidth(), getStageHeight());
 					currentStage.onRender(gl_g2d);
