@@ -21,6 +21,7 @@ public class ItemPropertySelectDialog extends G2DListSelectDialog<ItemPropertyNo
 		getList().setLayoutOrientation(G2DList.VERTICAL);
 		
 		this.setSize(600, 700);
+		this.setCenter();
 	}
 	
 	@Override
