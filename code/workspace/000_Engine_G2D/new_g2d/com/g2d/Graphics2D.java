@@ -1,8 +1,10 @@
 package com.g2d;
 
+import java.awt.image.BufferedImage;
 import java.text.AttributedString;
 
 import com.cell.gfx.IGraphics;
+import com.cell.gfx.IImage;
 import com.g2d.geom.Ellipse2D;
 import com.g2d.geom.Line2D;
 import com.g2d.geom.Path2D;
@@ -10,6 +12,7 @@ import com.g2d.geom.Polygon;
 import com.g2d.geom.Rectangle;
 import com.g2d.geom.Rectangle2D;
 import com.g2d.geom.Shape;
+import com.g2d.java2d.impl.AwtImage;
 
 public abstract class Graphics2D implements IGraphics
 {
@@ -186,7 +189,21 @@ public abstract class Graphics2D implements IGraphics
 	abstract public boolean			drawImage(Image img, int x, int y, int width, int height);
 	abstract public boolean			drawImage(Image img, int dx1, int dy1, int dx2, int dy2, int sx1, int sy1, int sx2, int sy2);
 
-	
+	@Override
+	final public void drawRoundImage(IImage img, int x, int y, int width, int height, int transform) {
+		pushClip();
+		clipRect(x, y, width, height);
+		int w = img.getWidth();
+		int h = img.getHeight();
+		for (int dx = 0; dx < width;) {
+			for (int dy = 0; dy < height;) {
+				drawImage(img, x + dx, y + dy, 0);
+				dy += h;
+			}
+			dx += w;
+		}
+		popClip();
+	}
 
 	abstract public void			drawChars(char data[], int offset, int length, int x, int y);
 	abstract public void 			drawString(String str, int x, int y);

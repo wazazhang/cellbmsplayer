@@ -17,33 +17,39 @@ public class GLPalette implements IPalette
 	private short transparent_color_index_;
 	
 	
-	public GLPalette(InputStream is) throws IOException {
-		int size = is.available();
-
-		this.data_ = new byte[256 * 3];
-		is.read(this.data_);
-
-		int byte1 = is.read();
-		int byte2 = is.read();
-		color_count_ = (short) (((int) byte1 << 8) | (int) byte2);
-		int byte3 = is.read();
-		int byte4 = is.read();
-		transparent_color_index_ = (short) (((int) byte3 << 8) | (int) byte4);
+	GLPalette(InputStream is) throws IOException
+	{
+		loadACT(CIO.readStream(is));
 	}
 	
-	@Override
-	public void dispose() {
-		// TODO Auto-generated method stub
-		
-	}
-	public GLPalette(byte[] data, short color_count, short transparent_color_index)
+	GLPalette(byte[] data, short color_count, short transparent_color_index)
 	{
 		this.data_ = data;
 		this.color_count_ = color_count;
 		this.transparent_color_index_ = transparent_color_index;
 	}
 	
-	
+	private void loadACT(byte[] data) throws IOException
+	{		
+		this.data_ = new byte[256*3];
+		System.arraycopy(data, 0, data_, 0, data_.length);
+		
+		if (data.length > 256*3)
+		{
+			int byte1 = data[this.data_.length+0];
+			int byte2 = data[this.data_.length+1];
+			color_count_ = (short)(((int)byte1 << 8) | (int)byte2);
+			int byte3 = data[this.data_.length+2];
+			int byte4 = data[this.data_.length+3];	
+			transparent_color_index_ = (short)(((int)byte3 << 8) | (int)byte4);
+		}
+		else
+		{
+			color_count_ = 256;
+			transparent_color_index_ = -1;
+		}
+	}
+
 	
 	@Override
 	public byte[] getIndexColors() 
@@ -60,7 +66,7 @@ public class GLPalette implements IPalette
 	@Override
 	public byte[] getTransparentColor() 
 	{
-		if (this.transparent_color_index_ < 256)
+		if ( (0 <= this.transparent_color_index_) && (this.transparent_color_index_ < 256) )
 		{
 			byte[] color = new byte[3];
 			
@@ -81,6 +87,13 @@ public class GLPalette implements IPalette
 	{
 		return this.transparent_color_index_;
 	}
-
+	
+	@Override
+	public void dispose() 
+	{
+		this.data_ = null;
+		this.color_count_ = 0;
+		this.transparent_color_index_ = -1;
+	}
 };
 

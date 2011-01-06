@@ -4,6 +4,7 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import java.awt.Toolkit;
@@ -49,16 +50,32 @@ public class GLEngine extends Engine
 
 //	---------------------------------------------------------------------------------------------
 	
-	
 	private GLCapabilities						capabilities;
     private GLU 								glu;
     private GLUT 								glut;
 
+	private java.awt.GraphicsEnvironment 		awt_ge;
+	private java.awt.GraphicsDevice 			awt_gd;
+	private java.awt.GraphicsConfiguration		awt_gc;
+	private java.awt.image.BufferedImage 		awt_gc_buff;
+	private java.awt.Graphics2D					awt_gc_buff_g;
+
+    
 	private HashMap<String, GLAnimateCursor>	system_cursor;
-	
 	
 	public GLEngine() 
 	{
+		this(GraphicsEnvironment.getLocalGraphicsEnvironment());
+	}
+	
+	public GLEngine(java.awt.GraphicsEnvironment awt_ge) 
+	{
+		this.awt_ge				= awt_ge;
+		this.awt_gd				= awt_ge.getDefaultScreenDevice();
+		this.awt_gc				= awt_gd.getDefaultConfiguration();
+		this.awt_gc_buff		= awt_gc.createCompatibleImage(10, 10);
+		this.awt_gc_buff_g		= awt_gc_buff.createGraphics();
+		
 		capabilities 	= new GLCapabilities();
 		
 		// should be supported on most hardware
@@ -105,7 +122,12 @@ public class GLEngine extends Engine
 	public GLUT getGLUT() {
 		return glut;
 	}
-	
+
+	public GraphicsEnvironment		getAwtGE() {return awt_ge;}
+	public GraphicsDevice			getAwtGD() {return awt_gd;}
+	public GraphicsConfiguration	getAwtGC() {return awt_gc;}
+	public java.awt.Graphics2D		getAwtG()  {return awt_gc_buff_g;}
+
 	@Override
 	public BufferedImage createImage(InputStream is) throws IOException {
 		java.awt.image.BufferedImage src = ImageIO.read(is);
@@ -131,27 +153,26 @@ public class GLEngine extends Engine
 	@Override
 	public IPalette createPalette(byte[] data, short colorCount,
 			short transparentColorIndex) {
-		// TODO Auto-generated method stub
-		return null;
+		return new GLPalette(data, colorCount, transparentColorIndex);
 	}
 
 //	---------------------------------------------------------------------------------------------
 
-	@Override
-	public MultiTextLayout createMultiTextLayout() {
-		return null;
-	}
 
-	@Override
 	public TextLayout createTextLayout(AttributedString text) {
 		return null;
 	}
+
+	public MultiTextLayout createMultiTextLayout() {
+		return new GLMultiTextLayout();
+	}
+	
 
 //	---------------------------------------------------------------------------------------------
 
 	@Override
 	public Font createFont(String name, int style, int size) {
-		return null;
+		return new GLFont(new java.awt.Font(name, style, size));
 	}
 
 	@Override
@@ -195,7 +216,7 @@ public class GLEngine extends Engine
 
 //	---------------------------------------------------------------------------------------------
 	
-	public static java.awt.image.BufferedImage createRaster(int w, int h)
+	static java.awt.image.BufferedImage createRaster(int w, int h)
 	{
 		java.awt.image.WritableRaster raster = java.awt.image.Raster.createInterleavedRaster(
 				DataBuffer.TYPE_BYTE, w, h, 4, null);
@@ -213,7 +234,7 @@ public class GLEngine extends Engine
 	
 
 
-	public static Cursor createCustomCursor(java.awt.Image cursor, Point hotSpot, String name)
+	static Cursor createCustomCursor(java.awt.Image cursor, Point hotSpot, String name)
 	{
 		java.awt.image.BufferedImage buff = createRaster(cursor.getWidth(null), cursor.getHeight(null));
 		
