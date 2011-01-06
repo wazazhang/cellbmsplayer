@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import com.cell.CUtil;
+
 
 /**
  * 管理数据库表的抽象结构
@@ -67,15 +69,34 @@ public abstract class SQLColumnManager<K, R extends SQLTableRow<K>> extends SQLC
 			{
 				data_writeLock.lock();
 				try {
-//					query(conn, "SELECT * FROM " + table_name + " ;");
-					ArrayList<R> rows = selectAll(conn);
-					for (R row : rows) {
-						data_map.put(row.getPrimaryKey(), row);
+					int index = 0;
+					while (true) {
+						long btime = System.currentTimeMillis();
+						String sql = "SELECT * FROM " + table_name + " LIMIT " + index + "," + block_size + ";";
+						ArrayList<R> rows = query(conn, sql);
+						if (rows != null && !rows.isEmpty()) {
+							index += rows.size();
+							for (R row : rows) {
+								data_map.put(row.getPrimaryKey(), row);
+							}
+							log.info("loading [" + table_name + "] block" +
+									" : size = " + rows.size()+
+									" : last id = " + rows.get(rows.size()-1).getPrimaryKey() +
+									" : use time = " + CUtil.timesliceToStringHour((System.currentTimeMillis() - btime)));
+						} else {
+							break;
+						}
 					}
+//					ArrayList<R> rows = selectAll(conn);
+//					for (R row : rows) {
+//						data_map.put(row.getPrimaryKey(), row);
+//					}
 				} finally {
 					data_writeLock.unlock();
 				}
-				log.info("loaded  [" + table_name + "] " + size() + " rows use " + (System.currentTimeMillis() - starttime) + "ms");
+				log.info("loaded  [" + table_name + "]" +
+						" : total size = " + size() + 
+						" : use time = " + CUtil.timesliceToStringHour((System.currentTimeMillis() - starttime)));
 			}
 			else
 			{

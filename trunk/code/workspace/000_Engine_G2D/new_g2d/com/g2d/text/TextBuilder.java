@@ -4,7 +4,11 @@ import java.text.AttributedCharacterIterator;
 import java.text.AttributedString;
 import java.text.CharacterIterator;
 import java.text.AttributedCharacterIterator.Attribute;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Hashtable;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Stack;
 import java.util.Vector;
 
@@ -51,7 +55,7 @@ public class TextBuilder extends IObjectiveFactory
 	TextBuilderAdapter 									adapter;
 	AttributedString 									attributed_text;
 	Hashtable<Instruction, Stack<InstructionObjective>> CallStacks;
-	Vector<InstructionObjective> 						ObjectQueue;
+	LinkedList<InstructionObjective> 					ObjectQueue;
 
 //	-----------------------------------------------------------------------------------------------------------------------------------
 	
@@ -66,7 +70,7 @@ public class TextBuilder extends IObjectiveFactory
 		{
 			this.adapter 		= adapter;
 			this.CallStacks		= new Hashtable<Instruction, Stack<InstructionObjective>>();
-			this.ObjectQueue	= new Vector<InstructionObjective>();
+			this.ObjectQueue	= new LinkedList<InstructionObjective>();
 
 			build(script);
 			
@@ -74,6 +78,64 @@ public class TextBuilder extends IObjectiveFactory
 			{
 				try
 				{
+					LinkedList<InstructionObjective> tmp_queue = new LinkedList<InstructionObjective>();
+					
+					while (!ObjectQueue.isEmpty())
+					{
+						sortInstructionObjectives(ObjectQueue);
+						
+						InstructionObjective one_1st = ObjectQueue.removeFirst();
+						
+						boolean is_in = false;
+						
+						for (InstructionObjective item : ObjectQueue)
+						{
+							if ( ((item.AttrStart<=one_1st.AttrStart) && (one_1st.AttrEnd<item.AttrEnd))
+								|| ((item.AttrStart<one_1st.AttrStart) && (one_1st.AttrEnd<=item.AttrEnd)) ) // 如果one_1st的范围在item的范围里面
+							{
+								// 整个范围会被切成三段   [ _ [ _ ] _ ]
+								int a_start = item.AttrStart;
+								int a_end = one_1st.AttrStart;
+								int b_start = one_1st.AttrStart;
+								int b_end = one_1st.AttrEnd;
+								int c_start = one_1st.AttrEnd;
+								int c_end = item.AttrEnd;
+								
+								if (a_end != a_start)
+								{
+									InstructionObjective new_a = new InstructionObjective(item.Attr[0], item.AttrValue[0]);
+									new_a.AttrStart = a_start;
+									new_a.AttrEnd = a_end;
+									ObjectQueue.add(new_a);
+								}
+								if (b_end != b_start)
+								{
+									InstructionObjective new_b = new InstructionObjective(one_1st.Attr[0], one_1st.AttrValue[0]);
+									new_b.AttrStart = b_start;
+									new_b.AttrEnd = b_end;
+									ObjectQueue.add(new_b);
+								}
+								if (c_end != c_start)
+								{
+									InstructionObjective new_c = new InstructionObjective(item.Attr[0], item.AttrValue[0]);
+									new_c.AttrStart = c_start;
+									new_c.AttrEnd = c_end;
+									ObjectQueue.add(new_c);
+								}
+								
+								ObjectQueue.remove(item);
+								
+								is_in = true;
+								break;
+							}
+						}
+						
+						if (!is_in)
+							tmp_queue.add(one_1st);
+					}
+					
+					ObjectQueue = tmp_queue;
+					
 					attributed_text = new AttributedString(getBuildState());
 					for (InstructionObjective item : ObjectQueue) {
 						for (int i = 0; i < item.Attr.length; i++) {
@@ -122,29 +184,40 @@ public class TextBuilder extends IObjectiveFactory
 				objective = getInstructionValue(ins, key, value);
 				objective.AttrStart	= getBuildState().length();
 				objective.AttrEnd	= getBuildState().length() + 1;
-				ObjectQueue.addElement(objective);
+				ObjectQueue.add(objective);
 			} 
 			else 
 			{
 				// 该 TextAttribute对应的堆栈
 				Stack<InstructionObjective> stack = getStack(ins);
 				
-				objective = stack.isEmpty() ? null : stack.pop();
-				
-				// 如果 以前没有该类型的数据在堆栈中，则代表为数据头
-				if (objective == null)
+				// NOTE: 有开符号和闭符号的指令，如果是指令尾的话，不可能有值
+				if (value != null)
 				{
 					objective = getInstructionValue(ins, key, value);
 					objective.AttrStart	= getBuildState().length();
 					// 入栈
-					stack.push(objective);
+					stack.push(objective);					
 				}
-				else 
+				else
 				{
-					// 出栈上一个匹配值
-					objective.AttrEnd		= getBuildState().length();
-					// 添加到对象集
-					ObjectQueue.addElement(objective);
+					objective = stack.isEmpty() ? null : stack.pop();
+					
+					// 如果 以前没有该类型的指令在堆栈中，则代表为指令头					
+					if (objective == null)
+					{					
+						objective = getInstructionValue(ins, key, value);
+						objective.AttrStart	= getBuildState().length();
+						// 入栈
+						stack.push(objective);
+					}
+					else // 否则是指令尾
+					{
+						// 出栈上一个匹配值
+						objective.AttrEnd		= getBuildState().length();
+						// 添加到对象集
+						ObjectQueue.add(objective);
+					}
 				}
 			}
 			
@@ -221,6 +294,28 @@ public class TextBuilder extends IObjectiveFactory
 		}
 		
 		return null;
+	}
+	
+	final protected void sortInstructionObjectives(List<InstructionObjective> objs)
+	{
+		Collections.sort(objs, 
+				new Comparator<InstructionObjective>() 
+				{
+					@Override
+					public int compare(InstructionObjective a, InstructionObjective b) 
+					{
+						if ( (b.AttrStart<a.AttrStart) && (a.AttrEnd<=b.AttrEnd) ) // a的范围比b的范围小
+							return -1;
+						else if ( (b.AttrStart<=a.AttrStart) && (a.AttrEnd<b.AttrEnd) ) // a的范围比b的范围小
+							return -1;
+						else if ( (a.AttrStart<b.AttrStart) && (b.AttrEnd<=a.AttrEnd) ) // a的范围比b的范围大										
+							return 1;
+						else if ( (a.AttrStart<=b.AttrStart) && (b.AttrEnd<a.AttrEnd) ) // a的范围比b的范围大
+							return 1;
+						
+						return 0;
+					}						
+				});		
 	}
 	
 	final public AttributedString getAttributedText() 
