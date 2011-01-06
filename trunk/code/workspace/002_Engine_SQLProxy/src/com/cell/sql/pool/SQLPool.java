@@ -197,6 +197,7 @@ public class SQLPool
 	
 //	----------------------------------------------------------------------------------------------------------------------
 	
+	protected ReentrantLock 	lock 	= new ReentrantLock();
 	
 	/**
 	 * 从池中获得一个空闲链接，该链接调用close后会返回到池中
@@ -204,22 +205,28 @@ public class SQLPool
 	 * @throws Exception
 	 */
 	public Connection getConnection() {
+		lock.lock();
 		try {
 			Connection conn = DriverManager.getConnection(url, info);
 			return conn;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
+		} finally {
+			lock.unlock();
 		}
 	}
 
 	public Connection getConnection(String url) {
+		lock.lock();
 		try {
 			Connection conn = DriverManager.getConnection(url, info);
 			return conn;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
+		} finally {
+			lock.unlock();
 		}
 	}
 
