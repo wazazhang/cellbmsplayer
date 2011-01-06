@@ -1,6 +1,7 @@
 package com.cell.rpg.scene.instance;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.concurrent.TimeUnit;
@@ -67,8 +68,8 @@ public class InstanceZone extends RPGObject implements NamedObject, TriggersPack
 	private Data				data_map			= new Data();
 	
 //	-------------------------------------------------------------------------------
-
-	
+//	/**临时变量，此副本下一次CD时间*/
+//	transient private Date 		next_flush_time = null;
 	
 //	-------------------------------------------------------------------------------
 	
@@ -164,7 +165,21 @@ public class InstanceZone extends RPGObject implements NamedObject, TriggersPack
 
 //	-------------------------------------------------------------------------------
 	
-	
+//	/**
+//	 * 临时变量，此副本下一次CD时间
+//	 */
+//	public Date getNextFlushTime() {
+//		return next_flush_time;
+//	}
+//
+//	/**
+//	 * 临时变量，此副本下一次CD时间
+//	 */
+//	public void setNextFlushTime(Date nextFlushTime) {
+//		next_flush_time = nextFlushTime;
+//	}
+
+//	-------------------------------------------------------------------------------
 	
 	public static class BindedScene implements Serializable
 	{

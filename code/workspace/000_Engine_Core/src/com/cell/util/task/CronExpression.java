@@ -293,5 +293,4 @@ public class CronExpression implements Serializable
 
 		return sb.toString();
 	}
-	
 }
