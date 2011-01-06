@@ -49,7 +49,7 @@ public abstract class SQLColumnManager<K, R extends SQLTableRow<K>> extends SQLC
 	
 //	---------------------------------------------------------------------------------------------------------------------------------------------------------
 
-	public void loadAll(Connection conn) throws Exception
+	public void loadAll(Connection conn, int block_size) throws Exception
 	{
 		// 读入表数据
 		try
@@ -67,6 +67,7 @@ public abstract class SQLColumnManager<K, R extends SQLTableRow<K>> extends SQLC
 			{
 				data_writeLock.lock();
 				try {
+//					query(conn, "SELECT * FROM " + table_name + " ;");
 					ArrayList<R> rows = selectAll(conn);
 					for (R row : rows) {
 						data_map.put(row.getPrimaryKey(), row);
