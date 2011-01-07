@@ -43,9 +43,12 @@ public class AppletCache extends LoaderApplet
 		JSObject doc 		= (JSObject) win.getMember("document"); 
 		System.out.println("---------call window method---------");
 		System.out.println(l_method);
+		System.out.println("---------call window method---------");
+		
 		win.eval(l_method);
+
 		System.out.println("close current applet!");
-		Runtime.getRuntime().exit(0);
+//		Runtime.getRuntime().exit(0);
 	}
 
 }
