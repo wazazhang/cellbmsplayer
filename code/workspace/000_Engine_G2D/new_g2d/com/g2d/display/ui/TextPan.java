@@ -17,7 +17,12 @@ public class TextPan extends UIComponent
 	
 	/**文字颜色*/
 	public Color 						textColor			= new Color(0xffffffff);
-
+	
+	public int 						text_shadow_x		= 0;
+	public int 						text_shadow_y		= 0;
+	public float					text_shadow_alpha	= 1f;
+	public int 						text_shadow_color	= 0;
+	
 	/**文字是否抗锯齿*/
 	public boolean	enable_antialiasing	 = false;
 	
@@ -82,7 +87,11 @@ public class TextPan extends UIComponent
 		g.setColor(textColor);
 		boolean flag = g.setFontAntialiasing(enable_antialiasing);
 		try {
-			text.drawText(g, text_draw_x, text_draw_y, 0, 0, getWidth(), getHeight());
+			text.drawText(g, text_draw_x, text_draw_y, 0, 0, getWidth(), getHeight(), 
+					text_shadow_x, 
+					text_shadow_y,
+					text_shadow_alpha,
+					text_shadow_color);
 		} finally {
 			g.setFontAntialiasing(flag);
 		}
