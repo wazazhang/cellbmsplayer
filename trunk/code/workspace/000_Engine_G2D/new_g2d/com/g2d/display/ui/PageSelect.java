@@ -40,13 +40,14 @@ public abstract class PageSelect<P extends com.g2d.display.ui.PageSelect.Page> e
 	@SuppressWarnings("unchecked")
 	public void selectPage(Page page) {
 		if (page!=null && page!=selected_page) {
+			P ori_page = selected_page;			
 			if (selected_page != null) {
 //				selected_page.panel.removeFromParent();
 				super.removeChild(selected_page.getPageView());
 			}
 			selected_page = (P)page;
 			super.addChild(selected_page.getPageView());
-			onPageSelected(selected_page);
+			onPageSelected(ori_page, selected_page);
 		}
 	}
 	
@@ -89,6 +90,11 @@ public abstract class PageSelect<P extends com.g2d.display.ui.PageSelect.Page> e
 		return pages.elementAt(index);
 	}
 	
+	public int getPageIndex(P page)
+	{
+		return pages.indexOf(page);
+	}
+	
 	public void removePage(int index) {
 		removePage(getPage(index));
 	}
@@ -107,7 +113,7 @@ public abstract class PageSelect<P extends com.g2d.display.ui.PageSelect.Page> e
 		return new Vector<P>(pages);
 	}
 	
-	protected void onPageSelected(P page){}
+	protected void onPageSelected(P ori_page, P new_page){}
 	
 	
 //	----------------------------------------------------------------------------------------------------------------------------
