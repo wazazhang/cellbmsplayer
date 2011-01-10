@@ -138,7 +138,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 
 //	--------------------------------------------------------------------------------------------------------------------
 
-	abstract protected ThreadPoolService getLoadingService() ;
+//	abstract protected ThreadPoolService getLoadingService() ;
 	
 	abstract protected CellSetResource createSet(String path) throws Exception;
 

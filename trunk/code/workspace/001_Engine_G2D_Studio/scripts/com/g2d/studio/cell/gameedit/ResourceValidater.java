@@ -23,11 +23,6 @@ public class ResourceValidater extends ResourceManager
 		return new CellSetResource(path);
 	}
 	
-	@Override
-	protected ThreadPoolService getLoadingService() {
-		return null;
-	}
-	
 	
 	public static void main(String[] args) throws Exception
 	{
