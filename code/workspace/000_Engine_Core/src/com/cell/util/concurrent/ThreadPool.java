@@ -1,5 +1,6 @@
 package com.cell.util.concurrent;
 
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledFuture;
@@ -31,7 +32,9 @@ public class ThreadPool implements ThreadPoolService
 			int scheduled_corePoolSize, 
 			int threadpool_corePoolSize,
             int threadpool_maximumPoolSize, 
-            int priority)
+            int priority,
+            long keep_alive_time_sec,
+            BlockingQueue<Runnable> executor_queue)
 	{
 		this.name = pool_name;
 
@@ -45,13 +48,28 @@ public class ThreadPool implements ThreadPoolService
 			gameThreadPool = new ThreadPoolExecutor(
 					threadpool_corePoolSize, 
 					threadpool_maximumPoolSize,
-			        5L, 
+					keep_alive_time_sec, 
 			        TimeUnit.SECONDS,
-			        new LinkedBlockingQueue<Runnable>(),
+			        executor_queue,
 			        new PriorityThreadFactory(name + " ThreadPool", priority));
 		}
 
 		Runtime.getRuntime().addShutdownHook(shutdown_hook);
+	}
+	
+	public ThreadPool(
+			String pool_name,
+			int scheduled_corePoolSize, 
+			int threadpool_corePoolSize,
+            int threadpool_maximumPoolSize, 
+            int priority)
+	{
+		this(pool_name, 
+				scheduled_corePoolSize,
+				threadpool_corePoolSize, 
+				threadpool_maximumPoolSize,
+				Thread.NORM_PRIORITY,
+				60L, new LinkedBlockingQueue<Runnable>());
 	}
 	
 	public ThreadPool(
@@ -67,7 +85,6 @@ public class ThreadPool implements ThreadPoolService
 				Thread.NORM_PRIORITY);
 	}
     
-	
 	
 	public ThreadPool(String pool_name)
 	{
