@@ -56,6 +56,24 @@ public class ThreadPool implements ThreadPoolService
 
 		Runtime.getRuntime().addShutdownHook(shutdown_hook);
 	}
+
+	public ThreadPool(
+			String pool_name,
+			int scheduled_corePoolSize, 
+			int threadpool_corePoolSize,
+            int threadpool_maximumPoolSize, 
+            int priority, 
+            long keep_alive_time_sec)
+	{
+		this(pool_name, 
+				scheduled_corePoolSize,
+				threadpool_corePoolSize, 
+				threadpool_maximumPoolSize,
+				Thread.NORM_PRIORITY,
+				keep_alive_time_sec, 
+				new LinkedBlockingQueue<Runnable>());
+	}
+	
 	
 	public ThreadPool(
 			String pool_name,
