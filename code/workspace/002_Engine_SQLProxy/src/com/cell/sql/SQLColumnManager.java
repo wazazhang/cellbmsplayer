@@ -79,7 +79,7 @@ public abstract class SQLColumnManager<K, R extends SQLTableRow<K>> extends SQLC
 							for (R row : rows) {
 								data_map.put(row.getPrimaryKey(), row);
 							}
-							log.info("loading [" + table_name + "] block" +
+							log.info("loading [" + table_name + "] block\t" +
 									" : size = " + rows.size()+
 									" : last id = " + rows.get(rows.size()-1).getPrimaryKey() +
 									" : use time = " + (System.currentTimeMillis() - btime) + "(ms)");
@@ -94,7 +94,7 @@ public abstract class SQLColumnManager<K, R extends SQLTableRow<K>> extends SQLC
 				} finally {
 					data_writeLock.unlock();
 				}
-				log.info("loaded  [" + table_name + "]" +
+				log.info("loaded  [" + table_name + "]\t" +
 						" : total size = " + size() + 
 						" : use time = " + (System.currentTimeMillis() - starttime) + "(ms)");
 			}
