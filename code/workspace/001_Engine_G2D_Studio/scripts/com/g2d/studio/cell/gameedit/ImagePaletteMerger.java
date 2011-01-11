@@ -123,7 +123,7 @@ public class ImagePaletteMerger
 		// 原先是直接储存颜色值的数组变成储存调色板元素索引的数组
 		int[][] all_color_indices = all_colors;
 		
-		int new_color_index = (trans_color_index >= 0)? all_color_indices[0][trans_color_index] : -1;
+		int new_color_index = (trans_color_index >= 0)? sorted_pal_indices[all_color_indices[0][trans_color_index]] : -1;
 		
 		IPalette new_palette = Engine.getEngine().createPalette(
 				getPaletteDataByteArray(new_pal), 
