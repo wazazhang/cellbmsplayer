@@ -49,7 +49,7 @@ public class DefaultTreeAdapter implements TreeAdapter
 			
 			if (node.getChildCount() == 0) {
 				icon = icon_child;
-			} else if (tree.isExpanded(node)) {
+			} else if ( (tree != null) && tree.isExpanded(node)) {
 				icon = icon_group_close;
 			} else {
 				icon = icon_group_open;
