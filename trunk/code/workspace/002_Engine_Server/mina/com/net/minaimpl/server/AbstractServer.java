@@ -245,7 +245,7 @@ public abstract class AbstractServer extends IoHandlerAdapter implements Server
 	public String getStats()
 	{
 		StringBuilder lines = new StringBuilder();
-		lines.append("Mina Server Implements\n");
+		lines.append("[Mina Server Implements]\n");
 		CUtil.toStatusLine("Active",					Acceptor.isActive(), lines);
 		CUtil.toStatusLine("ActivationTime",			CUtil.timesliceToStringHour(Acceptor.getActivationTime()), lines);
 		CUtil.toStatusLine("Address",					Acceptor.getLocalAddresses(), lines);
