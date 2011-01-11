@@ -1,14 +1,19 @@
 package com.net.minaimpl.server;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.Executor;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.mina.core.session.IoSession;
 
+import com.cell.CUtil;
+import com.cell.util.concurrent.ThreadPool;
 import com.net.ExternalizableFactory;
 import com.net.MessageHeader;
 import com.net.Protocol;
@@ -24,8 +29,10 @@ public class ServerImpl extends AbstractServer
 {
 	final private ChannelManager		channel_manager;
 
-	protected Hashtable<Class<?>, AtomicLong>	message_received_count;
-	protected Hashtable<Class<?>, AtomicLong>	message_sent_count;
+	protected Map<Class<?>, AtomicLong>	message_received_count = 
+		new HashMap<Class<?>, AtomicLong>();
+	protected Map<Class<?>, AtomicLong>	message_sent_count = 
+		new HashMap<Class<?>, AtomicLong>();
 	
 //	----------------------------------------------------------------------------------------------------------------------
 	
@@ -254,7 +261,7 @@ public class ServerImpl extends AbstractServer
 	{
 		if (message instanceof Protocol) {
 			Protocol header = (Protocol) message;
-			recordMessageCount(message_received_count, header);
+			recordMessageCount(message_sent_count, header);
 			ClientSessionImpl client = getBindSession(session);
 			if (client != null && client.Listener != null) {
 				client.Listener.sentMessage(client, header, header.getMessage());
@@ -264,7 +271,7 @@ public class ServerImpl extends AbstractServer
 		}
 	}
 
-    protected long recordMessageCount(Hashtable<Class<?>, AtomicLong> map, Protocol msg) {
+    protected long recordMessageCount(Map<Class<?>, AtomicLong> map, Protocol msg) {
 		if (map != null && msg.getMessage() != null) {
 			synchronized (map) {
 				AtomicLong idx = map.get(msg.getMessage().getClass());
@@ -278,5 +285,26 @@ public class ServerImpl extends AbstractServer
 		return 0;
     }
 	
+
+	public String getMessageIOStats()
+	{
+		StringBuilder lines = new StringBuilder();
+		lines.append("[I/O message count]\n");
+		if (message_received_count!=null) {
+			lines.append("[Received]\n");
+			synchronized (message_received_count) {
+				CUtil.toStatusLines(80, message_received_count, lines);
+			}
+			CUtil.toStatusSeparator(lines);
+		}
+		if (message_sent_count!=null) {
+			lines.append("[Sent]\n");
+			synchronized (message_sent_count) {
+				CUtil.toStatusLines(80, message_sent_count, lines);
+			}
+			CUtil.toStatusSeparator(lines);
+		}
+		return lines.toString();
+	}
 	
 }

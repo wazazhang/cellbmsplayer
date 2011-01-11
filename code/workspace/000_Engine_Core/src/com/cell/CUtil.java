@@ -1616,6 +1616,74 @@ public class CUtil extends CObject
 //	
 //	--------------------------------------------------------------------------------------------------------    
     
+	/**
+	 * <b>提供类似的输出</b>
+	 * <br>
+	 * <table>
+	 * <tr><th>key</th><th>value</th>
+	 * <tr><td>|-    ActiveThreads </td> <td>: 0</td>
+	 * <tr><td>|-     CorePoolSize </td> <td>: 20</td>
+	 * <tr><td>|-         PoolSize </td> <td>: 20</td>
+	 * <tr><td>|-  MaximumPoolSize </td> <td>: 2147483647</td>
+	 * <tr><td>|-   CompletedTasks </td> <td>: 28104</td>
+	 * <tr><td>|-   ScheduledTasks </td> <td>: 405</td>
+	 * <tr><td>|-------------------</td> <td></td>
+ 	 * </table>
+	 * @param key
+	 * @param value
+	 * @param sb
+	 * @return
+	 */
+	public static String toStatusLine(int size, String key, String value, Appendable sb)
+    {
+    	if (key.length() < size) {
+    		char[] blank = new char[size-key.length()];
+    		Arrays.fill(blank, ' ');
+    		key = new String(blank) + key;
+    	}
+    	String ret = " |-" + key + " : " + value + "\n";
+    	if (sb != null) {
+    		try {
+    			sb.append(ret);
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
+    	}
+		return ret;
+    }
+	
+	/**
+	 * @see #toStatusLine(String, String, Appendable)
+	 * @param sb
+	 * @return
+	 */
+	public static String toStatusSeparator(int size, Appendable sb) {
+		char[] blank = new char[size];
+		Arrays.fill(blank, '-');
+		String ret = " |-" + new String(blank) + "\n";
+    	if (sb != null) {
+    		try {
+    			sb.append(ret);
+    		} catch (IOException e) {
+    			e.printStackTrace();
+    		}
+    	}
+		return ret;
+	}
+	
+	/**
+	 * @see #toStatusLine(String, String, Appendable)
+	 * @param key
+	 * @param value
+	 * @param sb
+	 * @return
+	 */
+	public static String toStatusLine(int size, Object key, Object value, Appendable sb) 
+	{
+		return toStatusLine(size, key+"", value+"", sb);
+	}
+    
+    
     private static int STATUS_LINE_KEY_SIZE = 32;
     
     /**
@@ -1646,20 +1714,7 @@ public class CUtil extends CObject
 	 */
 	public static String toStatusLine(String key, String value, Appendable sb)
     {
-    	if (key.length() < STATUS_LINE_KEY_SIZE) {
-    		char[] blank = new char[STATUS_LINE_KEY_SIZE-key.length()];
-    		Arrays.fill(blank, ' ');
-    		key = new String(blank) + key;
-    	}
-    	String ret = " |-" + key + " : " + value + "\n";
-    	if (sb != null) {
-    		try {
-    			sb.append(ret);
-    		} catch (IOException e) {
-    			e.printStackTrace();
-    		}
-    	}
-		return ret;
+		return toStatusLine(STATUS_LINE_KEY_SIZE, key, value, sb);
     }
 	
 	/**
@@ -1668,17 +1723,7 @@ public class CUtil extends CObject
 	 * @return
 	 */
 	public static String toStatusSeparator(Appendable sb) {
-		char[] blank = new char[STATUS_LINE_KEY_SIZE];
-		Arrays.fill(blank, '-');
-		String ret = " |-" + new String(blank) + "\n";
-    	if (sb != null) {
-    		try {
-    			sb.append(ret);
-    		} catch (IOException e) {
-    			e.printStackTrace();
-    		}
-    	}
-		return ret;
+		return toStatusSeparator(STATUS_LINE_KEY_SIZE, sb);
 	}
 	
 	/**
@@ -1692,6 +1737,35 @@ public class CUtil extends CObject
 	{
 		return toStatusLine(key+"", value+"", sb);
 	}
+	
+	
+	
+	/**
+	 * @see #toStatusLine(String, String, Appendable)
+	 * @param map
+	 * @param sb
+	 */
+	public static void toStatusLines(int size, Map<?, ?> map, Appendable sb)
+    {
+    	for (Entry<?, ?> e : map.entrySet()) {
+    		toStatusLine(size, e.getKey(), e.getValue(), sb);
+    	}
+    }
+	
+	/**
+	 * @see #toStatusLine(String, String, Appendable)
+	 * @param map
+	 * @param sb
+	 */
+	public static String toStatusLines(int size, Map<?, ?> map)
+    {
+		StringBuilder sb = new StringBuilder();
+    	for (Entry<?, ?> e : map.entrySet()) {
+    		toStatusLine(size, e.getKey(), e.getValue(), sb);
+    	}
+    	return sb.toString();
+    }
+	
 	
 	/**
 	 * @see #toStatusLine(String, String, Appendable)
@@ -1718,6 +1792,7 @@ public class CUtil extends CObject
     	}
     	return sb.toString();
     }
+
 	
 //	--------------------------------------------------------------------------------------------------------    
 
