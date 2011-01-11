@@ -1,8 +1,11 @@
 package com.net.minaimpl.server;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.concurrent.Executor;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.mina.core.session.IoSession;
 
@@ -19,8 +22,11 @@ import com.net.server.ClientSession;
 
 public class ServerImpl extends AbstractServer
 {
-	final private ChannelManager	channel_manager;
+	final private ChannelManager		channel_manager;
 
+	protected Hashtable<Class<?>, AtomicLong>	message_received_count;
+	protected Hashtable<Class<?>, AtomicLong>	message_sent_count;
+	
 //	----------------------------------------------------------------------------------------------------------------------
 	
 	public ServerImpl() 
@@ -206,11 +212,13 @@ public class ServerImpl extends AbstractServer
 		//System.out.println(Thread.currentThread().getName() + " messageReceived");
 		if (message instanceof Protocol)
 		{
+			Protocol header = (Protocol)message;
+			
+			recordMessageCount(message_received_count, header);
+			
 			ClientSessionImpl client = getBindSession(session);
 			if (client != null && client.Listener != null)
 			{
-				Protocol header = (Protocol)message;
-				
 				switch (header.getProtocol())
 				{
 				case Protocol.PROTOCOL_CHANNEL_MESSAGE:
@@ -245,14 +253,30 @@ public class ServerImpl extends AbstractServer
 	public void messageSent(IoSession session, Object message) throws Exception 
 	{
 		if (message instanceof Protocol) {
+			Protocol header = (Protocol) message;
+			recordMessageCount(message_received_count, header);
 			ClientSessionImpl client = getBindSession(session);
 			if (client != null && client.Listener != null) {
-				Protocol header = (Protocol) message;
 				client.Listener.sentMessage(client, header, header.getMessage());
 			}
 		} else {
 			log.error("bad message type : " + session + " : " + message);
 		}
 	}
+
+    protected long recordMessageCount(Hashtable<Class<?>, AtomicLong> map, Protocol msg) {
+		if (map != null && msg.getMessage() != null) {
+			synchronized (map) {
+				AtomicLong idx = map.get(msg.getMessage().getClass());
+				if (idx == null) {
+					idx = new AtomicLong(0);
+					map.put(msg.getMessage().getClass(), idx);
+				}
+				return idx.incrementAndGet();
+			}
+		}
+		return 0;
+    }
+	
 	
 }
