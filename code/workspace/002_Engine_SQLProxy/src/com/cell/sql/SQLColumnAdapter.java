@@ -29,13 +29,13 @@ import com.cell.sql.anno.SQLTable;
  */
 public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 {
+	final static protected Logger	log = LoggerFactory.getLogger("DB");
 //	---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	final public	Class<R> 		table_class;
 	final public	SQLTable		table_type;
 	final public	String			table_name;
 	final public	SQLColumn[]		table_columns;
-	final protected Logger			log;
 	
 //	---------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -45,7 +45,6 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 		this.table_type		= cls.getAnnotation(SQLTable.class);
 		this.table_name		= table_type.name();
 		this.table_columns	= getSQLColumns(cls);
-		this.log 			= LoggerFactory.getLogger(getClass().getSimpleName() + "[" + cls.getName() + "]");
 	}
 
 	/**
