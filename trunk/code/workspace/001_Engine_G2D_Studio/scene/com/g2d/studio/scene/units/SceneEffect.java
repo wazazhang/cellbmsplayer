@@ -168,7 +168,7 @@ public class SceneEffect extends com.g2d.game.rpg.Unit implements SceneUnitTag<E
 				}
 				else if (layer.appearance instanceof DisplayNodeSprite) {
 					DisplayNodeSprite sprite = (DisplayNodeSprite)layer.appearance;
-					if (sprite.sprite == null) {
+					if (sprite.getSprite() == null) {
 						CPJIndex<CPJSprite> index = Studio.getInstance().getCPJResourceManager().getNode(
 								CPJResourceType.EFFECT, 
 								sprite.cpj_project_name, 
@@ -176,7 +176,7 @@ public class SceneEffect extends com.g2d.game.rpg.Unit implements SceneUnitTag<E
 						if (index != null) {
 							CPJSprite spr = Studio.getInstance().getCPJResourceManager().getNode(index);
 							if (spr != null) {
-								sprite.sprite = spr.createCSprite();
+								sprite.setSprite(spr.createCSprite());
 							}
 						}
 					}
