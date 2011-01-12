@@ -175,7 +175,7 @@ abstract public class SetResource
 					l.loaded(this, cspr, spr);
 				}
 			} else {
-				LoadSpriteTask task = new LoadSpriteTask(spr, ret, listener);
+				LoadSpriteTask task = createLoadSpriteTask(spr, ret, listener);
 				if (loading_service != null) {
 					loading_service.executeTask(task);
 				} else {
@@ -187,7 +187,7 @@ abstract public class SetResource
 			throw new NullPointerException("sprite not found : " + key);
 		}
 	}
-	
+
 //	--------------------------------------------------------------------------------------------------------------------------------------------------
 
 	//
@@ -338,43 +338,55 @@ abstract public class SetResource
 
 
 //	-------------------------------------------------------------------------------------
+//	
+//	-------------------------------------------------------------------------------------
 	
 
-	
+	protected LoadSpriteTask createLoadSpriteTask(
+			SpriteSet spr, 
+			AtomicReference<CSprite> ref,
+			LoadSpriteListener[] listener) 
+	{
+		return new LoadSpriteTask(this, spr, ref, listener);
+	}
 	
 	public static interface LoadSpriteListener
 	{
 		public void loaded(SetResource set, CSprite cspr, SpriteSet spr);
 	}
 	
-	protected class LoadSpriteTask implements Runnable
+	public static class LoadSpriteTask implements Runnable
 	{
-		final LoadSpriteListener[] listener;
-		
-		final SpriteSet spr;
-		
-		final AtomicReference<CSprite> ref;
+		final protected SetResource 	res;
+		final protected SpriteSet 		spr;
+
+		final AtomicReference<CSprite> 	ref;
+		final LoadSpriteListener[] 		listener;
 		
 		public LoadSpriteTask(
+				SetResource res,
 				SpriteSet spr, 
 				AtomicReference<CSprite> ref,
-				LoadSpriteListener ... listener) {
+				LoadSpriteListener[] listener) {
+			this.res		= res;
 			this.spr		= spr;
 			this.listener 	= listener;
 			this.ref		= ref;
 		}
-		
+
+		@Override
 		public void run() {
 			try {
-				CSprite cspr = getSprite(spr);
+				CSprite cspr = res.getSprite(spr);
 				ref.set(cspr);
 				for (LoadSpriteListener l : listener) {
-					l.loaded(SetResource.this, cspr, spr);
+					l.loaded(res, cspr, spr);
 				}
 			} catch (Throwable e) {
 				e.printStackTrace();
 			}
 		}
+
 	}
 	
 	

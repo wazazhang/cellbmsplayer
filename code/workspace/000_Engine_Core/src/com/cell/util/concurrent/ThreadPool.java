@@ -41,7 +41,7 @@ public class ThreadPool implements ThreadPoolService
 		if (scheduled_corePoolSize>0) {
 			gameScheduledThreadPool = new ScheduledThreadPoolExecutor(
 					scheduled_corePoolSize, 
-					new PriorityThreadFactory(name + " Scheduled ThreadPool", priority));
+					new PriorityThreadFactory(name + " Scheduled", priority));
 		}
 		
 		if (threadpool_corePoolSize>0) {
@@ -51,7 +51,7 @@ public class ThreadPool implements ThreadPoolService
 					keep_alive_time_sec, 
 			        TimeUnit.SECONDS,
 			        executor_queue,
-			        new PriorityThreadFactory(name + " ThreadPool", priority));
+			        new PriorityThreadFactory(name + " Executor", priority));
 		}
 
 		Runtime.getRuntime().addShutdownHook(shutdown_hook);
@@ -176,12 +176,12 @@ public class ThreadPool implements ThreadPoolService
 	{
 		StringBuilder lines = new StringBuilder();
 		if (gameScheduledThreadPool!=null) {
-		lines.append("[" + name + "] Scheduled Thread Pool:" + "\n");
+		lines.append("[" + name + "] Scheduled:" + "\n");
 		lines.append(getStatus(gameScheduledThreadPool));
 		CUtil.toStatusSeparator(lines);
 		}
 		if (gameThreadPool!=null) {
-		lines.append("[" + name + "] Thread Pool:"+"\n");
+		lines.append("[" + name + "] Executor:"+"\n");
 		lines.append(getStatus(gameThreadPool));		
 		CUtil.toStatusSeparator(lines);
 		};
@@ -331,11 +331,6 @@ public class ThreadPool implements ThreadPoolService
 			t.setName(_name+"-"+_threadNumber.getAndIncrement());
 			t.setPriority(_prio);
 			return t;
-		}
-
-		public ThreadGroup getGroup()
-		{
-			return _group;
 		}
     }
     
