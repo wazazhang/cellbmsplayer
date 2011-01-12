@@ -13,7 +13,7 @@ public class GraphicsAttributeSprite extends GraphicAttribute
 	private Rectangle	frame_bounds;
     
 	public GraphicsAttributeSprite(CSprite sprite, int animate) {
-		super(GraphicsAttributeImage.BOTTOM_ALIGNMENT);
+		super(GraphicsAttributeImage.TOP_ALIGNMENT);
 		this.sprite = sprite.copy();
 		this.sprite.setCurrentAnimate(animate);
 		CCD bounds = this.sprite.getFrameBounds(animate);
