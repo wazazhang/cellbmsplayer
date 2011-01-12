@@ -44,7 +44,8 @@ public class NetPackageCodec extends MessageHeaderCodec
 {
 	private static final Logger _log = LoggerFactory.getLogger(NetPackageCodec.class.getName());
 
-	
+
+
 	
 	class NetPackageDecoder extends CumulativeProtocolDecoder 
 	{
@@ -183,6 +184,10 @@ public class NetPackageCodec extends MessageHeaderCodec
 
 	
 //	-------------------------------------------------------------------------------------------------------------------
+//	在创建缓冲区时，可以要求创建直接缓冲区，创建直接缓冲区的成本要比创建间接缓冲区高，
+//	但这可以使运行时环境直接在该缓冲区上进行较快的本机 I/O 操作。因为创建直接缓冲区所增加的成本，
+//	所以直接缓冲区只用于长生存期的缓冲区，而不用于短生存期、一次性且用完就丢弃的缓冲区。
+//	而且，只能在 ByteBuffer 这个级别上创建直接缓冲区，如果希望使用其它类型，则必须将 Buffer 转换成更具体的类型。
 	
     class NetPackageEncoder extends ProtocolEncoderAdapter
     {
@@ -193,9 +198,7 @@ public class NetPackageCodec extends MessageHeaderCodec
     			ProtocolImpl p = (ProtocolImpl)message;
 				p.DynamicSendTime = System.currentTimeMillis();
     			
-    			IoBuffer buffer = IoBuffer.allocate(PACKAGE_DEFAULT_SIZE);
-    			buffer.setAutoExpand(true);
-    			
+    			IoBuffer buffer = IoBuffer.allocate(PACKAGE_DEFAULT_SIZE, false).setAutoExpand(true);
     			
     			int oldposition = buffer.position();
     			{
@@ -226,7 +229,7 @@ public class NetPackageCodec extends MessageHeaderCodec
 						IoBuffer obj_buff = buffer;
 						// 是否压缩
 						if (p.message instanceof CompressingMessage) {
-							obj_buff = IoBuffer.allocate(buffer.remaining()).setAutoExpand(true);
+							obj_buff = IoBuffer.allocate(buffer.remaining(), false).setAutoExpand(true);
 							trans_flag |= ProtocolImpl.TRANSMISSION_TYPE_COMPRESSING;
 						}
 						if (p.message instanceof ExternalizableMessage) {
@@ -305,7 +308,7 @@ public class NetPackageCodec extends MessageHeaderCodec
 //		int src_size = data.length;
 //		int dst_size = 0;
 		Inflater decompresser = new Inflater();
-		IoBuffer out = IoBuffer.allocate(limit).setAutoExpand(true);
+		IoBuffer out = IoBuffer.allocate(limit, false).setAutoExpand(true);
 		try {
 			decompresser.reset();
 			decompresser.setInput(data);
