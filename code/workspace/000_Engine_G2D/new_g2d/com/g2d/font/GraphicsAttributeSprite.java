@@ -19,9 +19,9 @@ public class GraphicsAttributeSprite extends GraphicAttribute
 		this.cd_bounds = this.sprite.getFrameBounds(animate);
 		this.frame_bounds = new Rectangle(
 				0, 
-				-cd_bounds.Y1,
-				cd_bounds.X2, 
-				cd_bounds.Y1+cd_bounds.Y2);
+				cd_bounds.Y1,
+				cd_bounds.getWidth(), 
+				cd_bounds.getHeight());
 	}
 	
 	@Override
