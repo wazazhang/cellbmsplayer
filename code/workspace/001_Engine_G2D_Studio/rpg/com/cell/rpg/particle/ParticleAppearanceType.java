@@ -44,20 +44,20 @@ public enum ParticleAppearanceType
 		/** CPJ图片组图片编号*/
 		public int		cpj_image_id;
 
-		private transient Image image;
-		
 		@Property("混合方法")
 		public int		blend_mode = 0;
+
+		private transient Image image;
 		
 		public void setImage(Image src) {
 			this.image = src;
 		}
-		
-		public Image getImage() {
+
+		synchronized public Image getImage() {
 			return image;
 		}
-		
-		public DisplayNodeImage cloneDisplay() {
+
+		synchronized public DisplayNodeImage cloneDisplay() {
 			return this;
 		}
 		
@@ -91,15 +91,12 @@ public enum ParticleAppearanceType
 		/** 精灵动画号 */
 		public int		sprite_anim;
 		
-		transient 
-		public CSprite	sprite;
-		
-		transient
-		private int		st_current_timer;
-
 		@Property("混合方法")
 		public int		blend_mode = 0;
-		
+
+		transient private CSprite	sprite;
+		transient private int		st_current_timer;
+
 		public DisplayNodeSprite cloneDisplay() {
 			DisplayNodeSprite ret = new DisplayNodeSprite();
 			ret.st_current_timer 	= st_current_timer;
@@ -108,6 +105,14 @@ public enum ParticleAppearanceType
 			return ret;
 		}
 		
+		synchronized public void setSprite(CSprite src) {
+			this.sprite = src;
+		}
+
+		synchronized public CSprite getSprite() {
+			return sprite;
+		}
+
 		@Override
 		public void render(Graphics2D g, Layer layer) {
 			g.pushBlendMode();

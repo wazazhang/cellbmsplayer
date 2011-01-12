@@ -520,12 +520,12 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 							}
 							appearance.cpj_project_name	= spr.parent.name;
 							appearance.cpj_sprite_name	= spr.name;
-							appearance.sprite			= spr.createCSprite();
+							appearance.setSprite(spr.createCSprite());
 							layer.appearance = appearance;
 							
-							sprite_anim_v.setModel(new SpinnerNumberModel(0, 0, appearance.sprite.getAnimateCount()-1, 1));
+							sprite_anim_v.setModel(new SpinnerNumberModel(0, 0, appearance.getSprite().getAnimateCount()-1, 1));
 							sprite_anim_v.setValue(0);
-							sprite_anim_max.setText("最大"+(appearance.sprite.getAnimateCount()-1)+" ");
+							sprite_anim_max.setText("最大"+(appearance.getSprite().getAnimateCount()-1)+" ");
 							image_view.setIcon(Tools.createIcon(spr.getSnapShoot()));
 						}
 					}
@@ -548,12 +548,12 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 						if (index != null) {
 							CPJSprite spr = Studio.getInstance().getCPJResourceManager().getNode(index);
 							if (spr != null) {
-								appearance.sprite = spr.createCSprite();
-								sprite_anim_v.setModel(new SpinnerNumberModel(0, 0, appearance.sprite.getAnimateCount()-1, 1));
+								appearance.setSprite(spr.createCSprite());
+								sprite_anim_v.setModel(new SpinnerNumberModel(0, 0, appearance.getSprite().getAnimateCount()-1, 1));
 								sprite_anim_v.setValue(appearance.sprite_anim);
 								sprite_anim_max.setText(
-										" 动画数:"+(appearance.sprite.getAnimateCount()-1)+
-										" 总共帧数:" + appearance.sprite.getFrameCount(appearance.sprite_anim));
+										" 动画数:"+   (appearance.getSprite().getAnimateCount()-1)+
+										" 总共帧数:" + appearance.getSprite().getFrameCount(appearance.sprite_anim));
 								image_view.setIcon(Tools.createIcon(spr.getSnapShoot()));
 							}
 						}
