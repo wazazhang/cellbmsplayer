@@ -16,7 +16,6 @@ public class GraphicsAttributeImage extends GraphicAttribute
     
 	public GraphicsAttributeImage(String image_path) 
 	{		
-		super(GraphicsAttributeImage.TOP_ALIGNMENT);
 		fImage 			= Tools.readImage(image_path);
 		if (fImage == null) {
 			fImage = ERROR_IMAGE;
@@ -26,9 +25,12 @@ public class GraphicsAttributeImage extends GraphicAttribute
 	
 	public GraphicsAttributeImage(Image image)
 	{	
-		super(GraphicsAttributeImage.TOP_ALIGNMENT);
 		fImage 			= image;
 		fImageBounds	= new Rectangle(0, 0, fImage.getWidth(), fImage.getHeight());
+	}
+
+	public int getAlignment() {
+		return GraphicsAttributeImage.TOP_ALIGNMENT;
 	}
 	
     public float getAscent() {

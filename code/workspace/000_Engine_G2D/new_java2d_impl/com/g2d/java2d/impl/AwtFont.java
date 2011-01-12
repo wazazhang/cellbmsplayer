@@ -131,20 +131,18 @@ class AwtFont implements com.g2d.Font
 			this.ga = ga;
 			this.rect.setBounds(ga.getBounds().x, ga.getBounds().y, ga.getBounds().width, ga.getBounds().height);
 		}
-		
 		@Override
 		public void draw(java.awt.Graphics2D graphics, float x, float y) {
 			ga.draw(new AwtGraphics2D(graphics), x, y);
 		}
-		
 	    public float getAscent() {
-	        return 0;
+	        return ga.getAscent();
 	    }
 	    public float getDescent() {
-	        return rect.height;
+	        return ga.getDescent();
 	    }
 	    public float getAdvance() {
-	        return rect.width;
+	        return ga.getAdvance();
 	    }
 	    public java.awt.geom.Rectangle2D getBounds() {
 			return rect;

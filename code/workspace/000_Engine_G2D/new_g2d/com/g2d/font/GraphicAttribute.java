@@ -18,20 +18,19 @@ public abstract class GraphicAttribute
     public static final int BOTTOM_ALIGNMENT = -2;
     
     
-    private int alignment;
-    
-    public GraphicAttribute(int alignment) {
-		this.alignment = alignment;
-	}
 
 	public abstract Rectangle getBounds();
 
-
     public abstract void draw(Graphics2D graphics, float x, float y);
 
-    public int getAlignment(){
-    	return alignment;
-    }
+    public abstract int getAlignment();
 
+    /** bounds of min y */
+    public abstract float getAscent();
+    
+    /** bounds of max y */
+    public abstract float getDescent();
 
+    /** bounds of max x */
+    public abstract float getAdvance();
 }
