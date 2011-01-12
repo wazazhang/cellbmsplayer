@@ -11,25 +11,30 @@ public class GraphicsAttributeSprite extends GraphicAttribute
 {
 	private CSprite		sprite;
 	private Rectangle	frame_bounds;
-    
+	private CCD			cd_bounds;
+	
 	public GraphicsAttributeSprite(CSprite sprite, int animate) {
-		super(GraphicsAttributeImage.TOP_ALIGNMENT);
 		this.sprite = sprite.copy();
 		this.sprite.setCurrentAnimate(animate);
-		CCD bounds = this.sprite.getFrameBounds(animate);
+		this.cd_bounds = this.sprite.getFrameBounds(animate);
 		this.frame_bounds = new Rectangle(
-				bounds.X1, 
-				bounds.Y1,
-				bounds.getWidth(), 
-				bounds.getHeight());
+				0, 
+				-cd_bounds.Y1,
+				cd_bounds.X2, 
+				cd_bounds.Y1+cd_bounds.Y2);
+	}
+	
+	@Override
+	public int getAlignment() {
+		return GraphicsAttributeImage.BOTTOM_ALIGNMENT;
 	}
 	
     public float getAscent() {
-        return 0;
+        return cd_bounds.Y1;
     }
 
     public float getDescent() {
-        return frame_bounds.height;
+        return cd_bounds.Y2;
     }
 
     public float getAdvance() {
