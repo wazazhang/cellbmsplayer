@@ -9,6 +9,7 @@ import java.nio.ByteBuffer;
 
 import com.cell.CIO;
 import com.cell.CUtil;
+import com.cell.gfx.AScreen;
 import com.cell.io.CFile;
 import com.cell.sound.Decoder;
 import com.cell.sound.SoundInfo;
@@ -75,6 +76,46 @@ public class OggDecoder extends Decoder
 			}
 //			System.out.println("stream completed !");
 			Thread.sleep(500);
+		}
+	}
+	
+	
+	
+
+	class BGM implements Runnable
+	{
+		final Thread		loading;
+		String				current_name;
+		StreamSoundPlayer	current_task;
+		private boolean		is_playing;
+		public BGM(String sound_name, StreamSoundPlayer player) {
+			loading = new Thread(this, "BGM Sound service");
+			current_task = player;
+			current_name = sound_name;
+		}
+		
+		public void playBGM() {
+			loading.start();
+		}
+		
+		@Override
+		public void run() {
+			while (is_playing) {
+				try {
+					Thread.sleep(1000);
+					synchronized (this) {
+						if (current_task != null) {
+							if (current_task.update()) {
+							}
+							if (!current_task.isPlaying()) {
+								current_task.play(true);
+							}
+						}
+					}
+				} catch (Throwable ex) {
+					ex.printStackTrace();
+				}
+			}
 		}
 	}
 }
