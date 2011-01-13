@@ -150,18 +150,20 @@ public abstract class JALSource implements IPlayer
 			for (int n = 0; n < buffers.length; n++) {
 				al.alSourceUnqueueBuffers(source[0], 1, buffers, n);
 				int error_code = al.alGetError();
-				switch (error_code) {
-				case AL.AL_INVALID_VALUE:
-					JALSoundManager.logger.fine("At least one buffer can not be unqueued because it has not been processed yet.");
-					break;
-				case AL.AL_INVALID_NAME:
-					JALSoundManager.logger.warning("The specified source name is not valid.");
-					break;
-				case AL.AL_INVALID_OPERATION:
-					JALSoundManager.logger.warning("There is no current context.");
-					break;
-				default:
-					JALSoundManager.logger.warning("OpenAL error code : 0x" + Integer.toString(error_code, 16));
+				if (error_code != AL.AL_NO_ERROR) {
+					switch (error_code) {
+					case AL.AL_INVALID_VALUE:
+						JALSoundManager.logger.fine("At least one buffer can not be unqueued because it has not been processed yet.");
+						break;
+					case AL.AL_INVALID_NAME:
+						JALSoundManager.logger.warning("The specified source name is not valid.");
+						break;
+					case AL.AL_INVALID_OPERATION:
+						JALSoundManager.logger.warning("There is no current context.");
+						break;
+					default:
+						JALSoundManager.logger.warning("OpenAL error code : 0x" + Integer.toString(error_code, 16));
+					}
 				}
 			}
 			// clean all sound
