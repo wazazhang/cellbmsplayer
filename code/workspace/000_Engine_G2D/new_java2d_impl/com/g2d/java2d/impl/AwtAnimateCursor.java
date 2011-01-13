@@ -26,10 +26,12 @@ public class AwtAnimateCursor implements AnimateCursor
 	public java.awt.Cursor update() {
 		if (index < 0) {
 			index = 0;
+		} else {
+			index++;
 		}
-		index++;
 		if (list.length > 0) {
-			return list[index % list.length];
+			int i = index % list.length;
+			return list[i];
 		}
 		return Cursor.getDefaultCursor();
 	}
