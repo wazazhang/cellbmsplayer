@@ -27,6 +27,7 @@ import java.awt.image.VolatileImage;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.concurrent.atomic.AtomicReference;
 
 import com.cell.exception.NotImplementedException;
 import com.g2d.AnimateCursor;
@@ -72,7 +73,7 @@ FocusListener
 	private int							update_interval		= 0;
 
 //	private ConcurrentLinkedQueue<Event<?>>		event_queue 		= new ConcurrentLinkedQueue<Event<?>>();
-	
+	private AtomicReference<Class<?>>	last_stage_type = new AtomicReference<Class<?>>();
 	
 	private HashMap<Integer, KeyEvent> 			keystate 			= new HashMap<Integer, KeyEvent>();	// hold state
 	private HashMap<Integer, KeyEvent> 			keystate_down 		= new HashMap<Integer, KeyEvent>();	// 收集按键
@@ -217,6 +218,10 @@ FocusListener
 	public Stage getStage() {
 		return currentStage;
 	}
+
+	public Class<?> getLastStageType() {
+		return last_stage_type.get();
+	}
 	
 //	--------------------------------------------------------------------------------------------------------------------------
 //	update and transition
@@ -321,6 +326,7 @@ FocusListener
 	    		if (!currentStage.isTransition())
 	    		{
 	    			currentStage.onRemoved(this);
+	    			last_stage_type.set(currentStage.getClass());
 	    			currentStage = null;
 	    			System.gc();
 	    		}
