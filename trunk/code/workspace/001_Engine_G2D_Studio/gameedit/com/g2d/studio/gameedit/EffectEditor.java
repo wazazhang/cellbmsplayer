@@ -398,7 +398,7 @@ public class EffectEditor extends JSplitPane implements ActionListener, ListSele
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					if (e.getSource() == btn_property) {
-						if (getAppearance()!=null) {
+						if (getAppearance() != null) {
 							ObjectPropertyDialog d = new ObjectPropertyDialog(this, 
 									new ObjectPropertyPanel(getAppearance()));
 							d.setVisible(true);
