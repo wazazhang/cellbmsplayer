@@ -40,21 +40,12 @@ public abstract class StreamTiles implements IImages, Runnable
 	 * CellSetResource， StreamTiles 的锁
 	 */
 	abstract protected void initImages();
-//	{
-//		byte[] idata = set.output_adapter.loadRes(img.getName()+".png", null);
-//		CImage src = new CImage(new ByteArrayInputStream(idata));
-//		for (int i=0; i<images.length; i++){
-//			if (img.getClipW(i)>0 && img.getClipH(i)>0){
-//				images[i] = src.subImage(img.getClipX(i), img.getClipY(i), img.getClipW(i), img.getClipH(i));
-//			}
-//		}
-//	}
 	
-	final public boolean isLoaded() {
+	public boolean isLoaded() {
 		return is_loaded.get();
 	}
 	
-	final public void run() 
+	public void run() 
 	{
 		if (is_loading.getAndSet(true)) {
 			return;
@@ -73,7 +64,7 @@ public abstract class StreamTiles implements IImages, Runnable
 		}
 	}
 	
-	final public void unloadAllImages() {
+	public void unloadAllImages() {
 		synchronized (this) {
 			is_loaded.set(false);
 			for (int i = 0; i < images.length; i++) {
@@ -82,19 +73,19 @@ public abstract class StreamTiles implements IImages, Runnable
 		}
 	}
 	
-	final public IImage getImage(int index){
+	public IImage getImage(int index){
 		return images[index];
 	}
 	
-	final public int getWidth(int Index) {
+	public int getWidth(int Index) {
 		return img.getClipW(Index);
 	}
 
-	final public int getHeight(int Index) {
+	public int getHeight(int Index) {
 		return img.getClipH(Index);
 	}
 
-	final public int getCount(){
+	public int getCount(){
 		return images.length;
 	}
 	
