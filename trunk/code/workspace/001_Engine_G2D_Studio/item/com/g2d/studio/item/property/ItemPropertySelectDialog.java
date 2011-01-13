@@ -11,7 +11,8 @@ import com.g2d.studio.swing.G2DList;
 import com.g2d.studio.swing.G2DListSelectDialog;
 
 @SuppressWarnings("serial")
-public class ItemPropertySelectDialog extends G2DListSelectDialog<ItemPropertyNode> implements PropertyCellEdit<ItemPropertyTemplate>
+public class ItemPropertySelectDialog extends G2DListSelectDialog<ItemPropertyNode> 
+			implements PropertyCellEdit<ItemPropertyTemplate>
 {
 	JLabel cell_edit_component = new JLabel();
 	
