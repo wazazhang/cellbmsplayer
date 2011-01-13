@@ -42,7 +42,7 @@ public class Tools
 		for (int f = 0; f < frame_count; f++) {
 			BufferedImage buff = createImage(max_bounds.getWidth(), max_bounds.getHeight());
 			Graphics2D g2d = buff.createGraphics();
-			cspr.render(g2d, -max_bounds.X1, -max_bounds.Y1);
+			cspr.render(g2d, -max_bounds.X1, -max_bounds.Y1, anim, f);
 			g2d.dispose();
 			array[f] = buff;
 		}
