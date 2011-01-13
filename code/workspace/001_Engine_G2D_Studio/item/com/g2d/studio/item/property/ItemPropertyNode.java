@@ -27,6 +27,14 @@ public class ItemPropertyNode implements G2DListItem
 	}
 	
 	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof ItemPropertyNode) {
+			return type.equals(((ItemPropertyNode) obj).type);
+		}
+		return false;
+	}
+	
+	@Override
 	public String getListName() {
 		return AbstractAbility.getEditName(type);
 	}
