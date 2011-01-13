@@ -102,6 +102,7 @@ public enum ParticleAppearanceType
 			ret.st_current_timer 	= st_current_timer;
 			ret.sprite_anim 		= sprite_anim;
 			ret.sprite 				= sprite;
+			ret.blend_mode 			= blend_mode;
 			return ret;
 		}
 		
