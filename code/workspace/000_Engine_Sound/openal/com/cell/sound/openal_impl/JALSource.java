@@ -10,8 +10,6 @@ import net.java.games.joal.AL;
 
 public abstract class JALSource implements IPlayer
 {
-	static Logger log = Logger.getLogger(JALSource.class.getName());
-	
 	final AL	al;
 	int[]		source;
 	
@@ -30,7 +28,7 @@ public abstract class JALSource implements IPlayer
 				this.source = source;
 			}
 
-			log.log(Level.FINE,
+			JALSoundManager.logger.log(Level.FINE,
 			"SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS\n" +
 			"S Create sound : " + source[0] + " : " + this + "\n"+
 			"SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
@@ -56,10 +54,10 @@ public abstract class JALSource implements IPlayer
 	synchronized public void dispose() {
 		if (source != null) {
 			try {
-				log.log(Level.FINE,
-						"SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS\n" +
-						"S Dispose sound : " + source[0] + " : " + this + "\n"+
-						"SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
+				JALSoundManager.logger.log(Level.FINE,
+				"SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS\n" +
+				"S Dispose sound : " + source[0] + " : " + this + "\n"+
+				"SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
 				clearAllSound();
 				al.alDeleteSources(1, source, 0);
 			} finally {
@@ -151,7 +149,20 @@ public abstract class JALSource implements IPlayer
 			int[] buffers = new int[queued[0]];
 			for (int n = 0; n < buffers.length; n++) {
 				al.alSourceUnqueueBuffers(source[0], 1, buffers, n);
-				JALSoundManager.checkError(al);
+				int error_code = al.alGetError();
+				switch (error_code) {
+				case AL.AL_INVALID_VALUE:
+					JALSoundManager.logger.fine("At least one buffer can not be unqueued because it has not been processed yet.");
+					break;
+				case AL.AL_INVALID_NAME:
+					JALSoundManager.logger.warning("The specified source name is not valid.");
+					break;
+				case AL.AL_INVALID_OPERATION:
+					JALSoundManager.logger.warning("There is no current context.");
+					break;
+				default:
+					JALSoundManager.logger.warning("OpenAL error code : 0x" + Integer.toString(error_code, 16));
+				}
 			}
 			// clean all sound
 			al.alSourcei(source[0], AL.AL_BUFFER, 0);

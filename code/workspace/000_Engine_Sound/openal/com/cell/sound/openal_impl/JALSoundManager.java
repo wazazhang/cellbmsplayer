@@ -10,6 +10,7 @@ import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import net.java.games.joal.AL;
@@ -262,7 +263,9 @@ public class JALSoundManager extends SoundManager
 		checkError(al);
 		return ret[0];
 	}
-	
+	/**
+	 * suffix .wav or .ogg are supported
+	 */
 	public SoundInfo createSoundInfo(String resource, InputStream is) {
 		try {
 			String name = resource.toLowerCase();
@@ -270,6 +273,8 @@ public class JALSoundManager extends SoundManager
 				return initWav(resource, is);
 			} else if (name.endsWith(".ogg")) {
 				return initOgg(resource, is);
+			} else {
+				System.err.println("only \'.wav\' or \'.ogg\' support");
 			}
 		} catch (Throwable err) {
 			err.printStackTrace();
@@ -323,9 +328,9 @@ public class JALSoundManager extends SoundManager
 		int code = al.alGetError();
 		if (code != AL.AL_NO_ERROR) {
 			try{
-				throw new Exception("OpenAL Error code : " + code);
+				throw new Exception("OpenAL error code : 0x" + Integer.toString(code, 16));
 			}catch(Exception err) {
-				err.printStackTrace();
+				JALSoundManager.logger.log(Level.WARNING, err.getMessage(), err);
 			}
 			return true;
 		}
