@@ -14,13 +14,13 @@ import com.cell.sound.SoundInfo;
 
 public class JALSound implements ISound
 {
-	final JALSoundManager	factory;
-	final AL 				al;
-	final SoundInfo			info;
-	final ByteBuffer		bytes;
+	final private JALSoundManager	factory;
+	final private AL 				al;
+	final private SoundInfo			info;
+	final private ByteBuffer		bytes;
 	// Buffers hold sound data.
-	int[] buffer;
-	int size;
+	private int[] 					buffer;
+	private int 					size;
 	
 	JALSound(JALSoundManager factory, SoundInfo info) throws Exception
 	{
@@ -68,6 +68,17 @@ public class JALSound implements ISound
 			}
 		}
 	}
+	
+	synchronized int getBufferID() {
+		if (buffer != null) {
+			return buffer[0];
+		}
+		return 0;
+	}
+	synchronized boolean isEnable() {
+		return buffer != null;
+	}
+	
 	
 	synchronized public void dispose() 
 	{
