@@ -40,15 +40,7 @@ public class JALPlayer extends JALSource implements IStreamPlayer
 	{
 		if (source != null)
 		{
-			int[] processed = new int[1];
-			al.alGetSourcei(source[0], AL.AL_BUFFERS_PROCESSED, processed, 0);
-			JALSoundManager.checkError(al);
-			int[] buffers = new int[processed[0]];
-			for (int n = 0; n < buffers.length; n++) {
-				al.alSourceUnqueueBuffers(source[0], 1, buffers, n);
-//				System.out.println("unqueue : " + buffers[n]);
-				JALSoundManager.checkError(al);
-			}
+			clearProcessed();
 			
 			if (sound instanceof JALSound) {
 				JALSound al_sound = (JALSound) sound;

@@ -63,6 +63,7 @@ public class JALSound implements ISound
 			if (JALSoundManager.checkError(al)) {
 				al.alDeleteBuffers(1, buffer, 0);
 				if (JALSoundManager.checkError(al)) {}
+				this.buffer = null;
 				throw new Exception("Error generating OpenAL buffers : " + toString());
 			}
 		}
@@ -72,7 +73,9 @@ public class JALSound implements ISound
 	{
 		if (buffer != null) {
 			al.alDeleteBuffers(1, buffer, 0);
-			if (JALSoundManager.checkError(al)) {}
+			if (JALSoundManager.checkError(al)) {
+				System.err.println("buffer id : " + buffer[0]);
+			}
 			buffer = null;
 //			System.out.println("unbind sound !");
 		}

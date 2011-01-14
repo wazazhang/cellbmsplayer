@@ -60,6 +60,7 @@ public abstract class JALSource implements IPlayer
 				"SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
 				clearAllSound();
 				al.alDeleteSources(1, source, 0);
+				JALSoundManager.checkError(al);
 			} finally {
 				this.source = null;
 			}
@@ -136,39 +137,91 @@ public abstract class JALSource implements IPlayer
 		return true;
 	}
 	
-	protected void clearAllSound() {
+	protected void clearProcessed()
+	{
+		int[] processed = new int[1];
+		al.alGetSourcei(source[0], AL.AL_BUFFERS_PROCESSED, processed, 0);
+		JALSoundManager.checkError(al);
+		int[] buffers = new int[processed[0]];
+		for (int n = 0; n < buffers.length; n++) {
+			al.alSourceUnqueueBuffers(source[0], 1, buffers, n);
+			System.out.println("openal clearProcessed : " + buffers[n]);
+			int error_code = al.alGetError();
+			if (error_code != AL.AL_NO_ERROR) {
+				switch (error_code) {
+				case AL.AL_INVALID_VALUE:
+					JALSoundManager.logger.warning(
+							"At least one buffer can not be unqueued because it has not been processed yet.");
+					break;
+				case AL.AL_INVALID_NAME:
+					JALSoundManager.logger.warning(
+							"The specified source name is not valid.");
+					break;
+				case AL.AL_INVALID_OPERATION:
+					JALSoundManager.logger.warning(
+							"There is no current context.");
+					break;
+				default:
+					JALSoundManager.logger.warning(
+							"OpenAL error code : 0x" + Integer.toString(error_code, 16));
+				}
+			}
+		}
+	}
+	
+	protected void clearQueued() 
+	{
+		// clean all queued sound
+		int[] queued = new int[1];
+		al.alGetSourcei(source[0], AL.AL_BUFFERS_QUEUED, queued, 0);
+		JALSoundManager.checkError(al);
+		
+		int[] buffers = new int[queued[0]];
+		for (int n = 0; n < buffers.length; n++) {
+			al.alSourceUnqueueBuffers(source[0], 1, buffers, n);
+			System.out.println("openal clearQueued : " + buffers[n]);
+			int error_code = al.alGetError();
+			if (error_code != AL.AL_NO_ERROR) {
+				switch (error_code) {
+				case AL.AL_INVALID_VALUE:
+					JALSoundManager.logger.warning(
+							"At least one buffer can not be unqueued because it has not been processed yet.");
+					break;
+				case AL.AL_INVALID_NAME:
+					JALSoundManager.logger.warning(
+							"The specified source name is not valid.");
+					break;
+				case AL.AL_INVALID_OPERATION:
+					JALSoundManager.logger.warning(
+							"There is no current context.");
+					break;
+				default:
+					JALSoundManager.logger.warning(
+							"OpenAL error code : 0x" + Integer.toString(error_code, 16));
+				}
+			}
+		}
+	}
+	
+	protected void clearAllSound() 
+	{
 		if (source != null) {
 			// stop all sound
 			al.alSourceStop(source[0]);
 			JALSoundManager.checkError(al);
-			// clean all queued sound
-			int[] queued = new int[1];
-			al.alGetSourcei(source[0], AL.AL_BUFFERS_QUEUED, queued, 0);
-			JALSoundManager.checkError(al);
 			
-			int[] buffers = new int[queued[0]];
-			for (int n = 0; n < buffers.length; n++) {
-				al.alSourceUnqueueBuffers(source[0], 1, buffers, n);
-				int error_code = al.alGetError();
-				if (error_code != AL.AL_NO_ERROR) {
-					switch (error_code) {
-					case AL.AL_INVALID_VALUE:
-						JALSoundManager.logger.fine("At least one buffer can not be unqueued because it has not been processed yet.");
-						break;
-					case AL.AL_INVALID_NAME:
-						JALSoundManager.logger.warning("The specified source name is not valid.");
-						break;
-					case AL.AL_INVALID_OPERATION:
-						JALSoundManager.logger.warning("There is no current context.");
-						break;
-					default:
-						JALSoundManager.logger.warning("OpenAL error code : 0x" + Integer.toString(error_code, 16));
-					}
-				}
-			}
+			// clean all sound
+			al.alSourceRewind(source[0]);
+			JALSoundManager.checkError(al);
+
 			// clean all sound
 			al.alSourcei(source[0], AL.AL_BUFFER, 0);
-			JALSoundManager.checkError(al);
+			if (JALSoundManager.checkError(al)) {}
+			
+			clearProcessed();
+			
+			clearQueued();
+			
 		}
 	}
 	
