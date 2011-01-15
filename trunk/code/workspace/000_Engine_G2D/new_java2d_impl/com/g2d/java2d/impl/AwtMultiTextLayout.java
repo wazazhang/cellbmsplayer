@@ -35,13 +35,17 @@ class AwtMultiTextLayout extends MultiTextLayout
 	
 	final public static char CHAR_BACKSPACE		= 8;	// backspace
 	final public static char CHAR_DELETE		= 127;	// delete
+	
+//	----------------------------------------------------------------------------------------------------------------
 
+	public static int			DEFAULT_LINE_SPACE	= 2;
+	
 //	----------------------------------------------------------------------------------------------------------------
 //	显示
 	
 	private int 				width;
 	private int 				height;
-	private int 				line_space 		= 2;
+	private int 				line_space 		= DEFAULT_LINE_SPACE;
 	private String 				text 			= "";
 	private AttributedString 	attr_text;
 
@@ -81,8 +85,6 @@ class AwtMultiTextLayout extends MultiTextLayout
 	
 	Color 						selected_color = new Color(0x40ffffff);
 
-	private int					max_line_count	= 1000;
-	
 //	----------------------------------------------------------------------------------------------------------------
 //	设置用以改变状态
 	
