@@ -120,20 +120,25 @@ public class QuestItem extends RPGObject implements NamedObject
 	public static abstract class Tag extends QuestItemAbility
 	{
 		private static final long serialVersionUID = 1L;
+		
 		@Property("该标志的布尔条件(默认true)")
 		public BooleanCondition boolean_condition = BooleanCondition.TRUE;
 		
 		@Override
-		public boolean isMultiField() {
+		public boolean isMultiField() 
+		{
 			return true;
 		}
 		
-		public boolean getBooleanConditionValue() {
-			if (boolean_condition == BooleanCondition.FALSE) {
+		public boolean getBooleanConditionValue() 
+		{
+			if (boolean_condition == BooleanCondition.FALSE)
 				return false;
-			}
+
 			return true;
 		}
+		
+		public abstract String getFailedString();
 	}
 	
 	/**
@@ -152,6 +157,12 @@ public class QuestItem extends RPGObject implements NamedObject
 		public AbstractValue	titem_count			= new Value(1);
 		@Property("物品-是否消耗掉")
 		public boolean			is_expense			= true;
+		
+		@Override
+		public String getFailedString() 
+		{
+			return "依赖的物品不满足";
+		}
 	}
 	
 	/**
@@ -162,8 +173,15 @@ public class QuestItem extends RPGObject implements NamedObject
 	final public static class TagQuest extends Tag
 	{
 		private static final long serialVersionUID = 1L;
+
 		@Property("已完成的任务ID")
 		public int				quest_id	= -1;
+		
+		@Override
+		public String getFailedString() 
+		{
+			return "依赖的任务没有完成";
+		}		
 	}
 	
 	/**
@@ -179,6 +197,12 @@ public class QuestItem extends RPGObject implements NamedObject
 		
 		@Property("依赖的任务奖励ID")
 		public int				quest_item_index	= -1;
+		
+		@Override
+		public String getFailedString() 
+		{
+			return "没有依赖的任务给予的奖励";
+		}		
 	}
 	
 	/**
@@ -197,6 +221,12 @@ public class QuestItem extends RPGObject implements NamedObject
 		
 		@Property("杀死的单位数量")
 		public AbstractValue		kill_count		= new Value(1);
+		
+		@Override
+		public String getFailedString() 
+		{
+			return "杀死的敌人的数量还没有达到要求";
+		}		
 	}
 
 	/**
@@ -215,6 +245,12 @@ public class QuestItem extends RPGObject implements NamedObject
 		
 		@Property("目标值")
 		public AbstractValue		dst_value	= new Value(1);
+		
+		@Override
+		public String getFailedString() 
+		{
+			return "比较条件不满足";
+		}		
 	}
 
 //	--------------------------------------------------------------------------------------
@@ -232,7 +268,21 @@ public class QuestItem extends RPGObject implements NamedObject
 		
 		@Property("目标值")
 		public AbstractValue		dst_value	= new Value(1);
+		
+		@Override
+		public String getFailedString()
+		{
+			if (boolean_condition == BooleanCondition.TRUE)
+			{
+				return "每个"+src_value.toString()+"需要是"+comparison.toString()+dst_value.toString(); // TODO;
+			}
+			else
+			{
+				return "每个"+src_value.toString()+"不能是"+comparison.toString()+dst_value.toString(); // TODO;
+			}
+		}		
 	}
+
 	@Property("[条件] 每个单位函数")
 	public static class TagEveryUnitMethodComparison extends Tag
 	{
@@ -245,6 +295,19 @@ public class QuestItem extends RPGObject implements NamedObject
 		
 		@Property("目标值")
 		public AbstractValue		dst_value	= new Value(1);
+		
+		@Override
+		public String getFailedString()
+		{
+			if (boolean_condition == BooleanCondition.TRUE)
+			{
+				return "每个"+src_value.toString()+"需要是"+comparison.toString()+dst_value.toString(); // TODO;
+			}
+			else
+			{
+				return "每个"+src_value.toString()+"不能是"+comparison.toString()+dst_value.toString(); // TODO;
+			}
+		}		
 	}
 	
 	@Property("[条件] 至少一个单位属性")
@@ -259,6 +322,19 @@ public class QuestItem extends RPGObject implements NamedObject
 		
 		@Property("目标值")
 		public AbstractValue		dst_value	= new Value(1);
+		
+		@Override
+		public String getFailedString()
+		{
+			if (boolean_condition == BooleanCondition.TRUE)
+			{
+				return "至少一个"+src_value.toString()+"需要是"+comparison.toString()+dst_value.toString(); // TODO;
+			}
+			else
+			{
+				return "至少一个"+src_value.toString()+"不能是"+comparison.toString()+dst_value.toString(); // TODO;
+			}
+		}		
 	}
 	
 	@Property("[条件] 至少一个单位函数")
@@ -273,12 +349,26 @@ public class QuestItem extends RPGObject implements NamedObject
 		
 		@Property("目标值")
 		public AbstractValue		dst_value	= new Value(1);
+
+		@Override
+		public String getFailedString()
+		{
+			if (boolean_condition == BooleanCondition.TRUE)
+			{
+				return "至少一个"+src_value.toString()+"需要是"+comparison.toString()+dst_value.toString(); // TODO;
+			}
+			else
+			{
+				return "至少一个"+src_value.toString()+"不能是"+comparison.toString()+dst_value.toString(); // TODO;
+			}
+		}
 	}
 	
 	@Property("[条件] 单位组数量")
 	public static class TagUnitGroupCountComparison extends Tag
 	{
 		private static final long serialVersionUID = 1L;
+		
 		@Property("单位类型")
 		public TriggerUnitType 		group_unit_type	= TriggerUnitType.PET_GROUP;
 		
@@ -287,6 +377,19 @@ public class QuestItem extends RPGObject implements NamedObject
 		
 		@Property("目标值")
 		public AbstractValue		dst_value		= new Value(1);
+		
+		@Override
+		public String getFailedString() 
+		{
+			if (boolean_condition == BooleanCondition.TRUE)
+			{
+				return group_unit_type.toString()+"需要是"+comparison.toString()+dst_value.toString(); // TODO;
+			}
+			else
+			{
+				return group_unit_type.toString()+"不能是"+comparison.toString()+dst_value.toString(); // TODO;
+			}
+		}		
 	}
 	
 	@Property({"[条件] 组队人数", "0代表没组队"})
@@ -298,6 +401,19 @@ public class QuestItem extends RPGObject implements NamedObject
 		
 		@Property("目标值")
 		public AbstractValue		dst_value		= new Value(1);
+		
+		@Override
+		public String getFailedString() 
+		{
+			if (boolean_condition == BooleanCondition.TRUE)
+			{
+				return "组队人数"+"需要是"+comparison.toString()+dst_value.toString(); // TODO;
+			}
+			else
+			{
+				return "组队人数"+"不能是"+comparison.toString()+dst_value.toString(); // TODO;
+			}
+		}
 	}
 	
 	
@@ -308,6 +424,12 @@ public class QuestItem extends RPGObject implements NamedObject
 
 		@Property("脚本")
 		public InstanceZoneScriptCode		dst_value		= new InstanceZoneScriptCode();
+		
+		@Override
+		public String getFailedString() 
+		{
+			return "副本条件"+dst_value.toString()+"不满足"; // TODO
+		}		
 	}
 
 //	--------------------------------------------------------------------------------------
