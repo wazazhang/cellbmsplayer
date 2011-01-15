@@ -52,6 +52,10 @@ public class TextBoxSingle extends UIComponent
 		this.setSize(width, height);
 		this.setText(text);
 	}
+
+	public MultiTextLayout getTextLayout() {
+		return text;
+	}
 	
 	@Override
 	public AnimateCursor getCursor() {

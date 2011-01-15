@@ -76,6 +76,10 @@ public class TextBox extends UIComponent
 		this.setSize(w, h);
 	}
 	
+	public MultiTextLayout getTextLayout() {
+		return text;
+	}
+	
 	public void setEnableScrollBar(boolean vs) {
 		enable_scrollbar = vs;
 		if (!vs) {

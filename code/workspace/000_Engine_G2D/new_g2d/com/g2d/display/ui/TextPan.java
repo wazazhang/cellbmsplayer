@@ -45,6 +45,10 @@ public class TextPan extends UIComponent
 		setText(text);
 		setSize(w, h);
 	}
+
+	public MultiTextLayout getTextLayout() {
+		return text;
+	}
 	
 	public void setText(String text)
 	{
