@@ -39,6 +39,7 @@ public class JALSoundManager extends SoundManager
 	public static JALSoundManager getInstance() throws Throwable{
 		if (instance == null) {
 			instance = new JALSoundManager();
+			logger.setLevel(Level.OFF);
 		}
 		return instance;
 	}
