@@ -94,8 +94,16 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 	 */
 	final protected R fromResult(R row, ResultSet result) throws Exception
 	{
-		for (int i=0; i<table_columns.length; i++){
-			table_columns[i].setObject(row, result.getObject(table_columns[i].index));
+		for (int i = 0; i < table_columns.length; i++)
+		{
+			try {
+				table_columns[i].setObject(row, result.getObject(table_columns[i].index));
+			} catch (Exception err) {
+				log.error("[" + table_name + "] read column error !\n" +
+						"\t    id = " + row.getPrimaryKey(), 
+						"\t cause = " + err.getMessage() +
+						"", err);
+			}
 		}
 		return row;
 	}
