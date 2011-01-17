@@ -39,6 +39,13 @@ import com.g2d.text.TextLayout;
 
 public class AwtEngine extends Engine
 {
+//	----------------------------------------------------------------------------------------------------------------
+
+	public static int							DEFAULT_TEXT_LINE_SPACE	= 2;
+
+	
+//	----------------------------------------------------------------------------------------------------------------
+
 	public static AwtEngine getEngine() {
 		return (AwtEngine)instance;
 	}

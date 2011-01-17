@@ -37,15 +37,11 @@ class AwtMultiTextLayout extends MultiTextLayout
 	final public static char CHAR_DELETE		= 127;	// delete
 	
 //	----------------------------------------------------------------------------------------------------------------
-
-	public static int			DEFAULT_LINE_SPACE	= 2;
-	
-//	----------------------------------------------------------------------------------------------------------------
 //	显示
 	
 	private int 				width;
 	private int 				height;
-	private int 				line_space 		= DEFAULT_LINE_SPACE;
+	private int 				line_space 		= AwtEngine.DEFAULT_TEXT_LINE_SPACE;
 	private String 				text 			= "";
 	private AttributedString 	attr_text;
 
