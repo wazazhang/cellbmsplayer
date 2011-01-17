@@ -426,6 +426,19 @@ public class CIO extends CObject
 		return null;
 	}
 	
+	public static Object getObject(InputStream is)
+	{
+		try {
+			ObjectInputStream ois = new ObjectInputStream(is);
+			Object ret = ois.readObject();
+			ois.close();
+			return ret;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	public static String getPathDir(String file_path)
 	{
 		file_path		= file_path.replace('\\', '/');
