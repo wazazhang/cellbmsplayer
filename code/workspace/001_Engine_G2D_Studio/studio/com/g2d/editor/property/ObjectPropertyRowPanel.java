@@ -86,7 +86,8 @@ public class ObjectPropertyRowPanel<T> extends BaseObjectPropertyPanel
 		this.table 			= new FieldTable();
 		
 		this.add(new JScrollPane(table), BorderLayout.CENTER);
-		
+
+		this.addColumnFiller(new ColumnFillerAdapters.ColumnFillerClipboard());
 		this.addColumnFiller(new ColumnFillerAdapters.ColumnFillerObject());
 		this.addColumnFiller(new ColumnFillerAdapters.ColumnFillerBoolean());
 		this.addColumnFiller(new ColumnFillerAdapters.ColumnFillerString());
@@ -537,17 +538,21 @@ public class ObjectPropertyRowPanel<T> extends BaseObjectPropertyPanel
 				ArrayList<Object> datas = super.showDialog();
 				if (datas != null) {
 					for (int r = 0; r < row_datas.size(); r ++) {
-						T		row_data	= row_datas.get(r);
-						Object	field_data	= datas.get(r);
-						int 	row_index	= start_row + r;
-						if (Parser.isNumber(column_field.getType())) {
-							field_data = Parser.castNumber(field_data, column_field.getType());
-						}
-						try {
-							column_field.set(row_data, field_data);
-							table.setValueAt(field_data, row_index, column_index);
-						} catch (Exception err) {
-							err.printStackTrace();
+						if (r < datas.size()) {
+							T		row_data	= row_datas.get(r);
+							Object	field_data	= datas.get(r);
+							int 	row_index	= start_row + r;
+							if (field_data != null) {
+								if (Parser.isNumber(column_field.getType())) {
+									field_data = Parser.castNumber(field_data, column_field.getType());
+								}
+								try {
+									column_field.set(row_data, field_data);
+									table.setValueAt(field_data, row_index, column_index);
+								} catch (Exception err) {
+									err.printStackTrace();
+								}
+							}
 						}
 					}
 				}
