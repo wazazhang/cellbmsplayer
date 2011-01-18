@@ -100,7 +100,7 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 				table_columns[i].setObject(row, result.getObject(table_columns[i].index));
 			} catch (Exception err) {
 				log.error("[" + table_name + "] read column error !\n" +
-						"\t    id = " + row.getPrimaryKey(), 
+						"\t    id = " + row.getPrimaryKey() +
 						"\t cause = " + err.getMessage() +
 						"", err);
 			}
