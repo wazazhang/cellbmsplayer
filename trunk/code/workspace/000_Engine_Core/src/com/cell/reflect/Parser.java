@@ -8,11 +8,11 @@ public class Parser
 {
 	final public static String PERFIX_RADIX_16 = "0x";
 	
-	private static HashMap<Class, IObjectStringParser> s_parser_map_;
+	private static HashMap<Class<?>, IObjectStringParser> s_parser_map_;
 	
 	private static void init()
 	{
-		s_parser_map_ = new HashMap<Class, IObjectStringParser>();
+		s_parser_map_ = new HashMap<Class<?>, IObjectStringParser>();
 		
 		s_parser_map_.put(String.class, new IObjectStringParser() 
 		{
@@ -243,6 +243,11 @@ public class Parser
 			if (parser != null)
 				return (T)parser.parseFrom(str);			
 
+			if (Enum.class.isAssignableFrom(return_type)) {
+				Class<? extends Enum> ec = (Class<? extends Enum>)return_type;
+				return return_type.cast(Enum.valueOf(ec, str.trim()));
+			}
+			
 		} catch (Exception e) {
 		}
 

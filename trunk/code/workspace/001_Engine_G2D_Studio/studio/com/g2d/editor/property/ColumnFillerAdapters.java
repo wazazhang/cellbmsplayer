@@ -10,6 +10,7 @@ import java.util.Vector;
 
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
@@ -22,13 +23,63 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import com.cell.CIO;
+import com.cell.CUtil;
 import com.cell.reflect.Parser;
+import com.g2d.Engine;
 import com.g2d.editor.property.ObjectPropertyRowPanel.ColumnFiller;
 
 @SuppressWarnings("serial")
 public class ColumnFillerAdapters 
 {
+	public static class ColumnFillerClipboard extends JPanel implements ColumnFiller
+	{
+		public static String TITLE = "填充粘贴";
+				
+		private JTextArea info = new JTextArea();
+		
+		public ColumnFillerClipboard() {
+			super(new BorderLayout());
+			info.setEditable(false);
+			this.add(info, BorderLayout.CENTER);
+		}
+		
+		@Override
+		public String getCommand(Object row_data, Field columnField) {
+			String text = Engine.getEngine().getClipboardText();
+			String[] lines = CUtil.splitString(text, "\n");
+			StringBuilder sb = new StringBuilder();
+			for (String line : lines) {
+				sb.append(line.trim()+"\n");
+			}
+			info.setText(sb.toString());
+			return TITLE;
+		}
+		
+		@Override
+		public Component startFill(ObjectPropertyRowPanel<?> panel, Field columnType, ArrayList<?> rowDatas) {
+			return this;
+		}
+		
+		@Override
+		public ArrayList<Object> getValues(ObjectPropertyRowPanel<?> panel, Field columnType, ArrayList<?> rowDatas) {
+			ArrayList<Object> ret = new ArrayList<Object>(rowDatas.size());
+			try {
+				String[] lines = CUtil.splitString(info.getText(), "\n");
+				for (int i = 0; i < rowDatas.size(); i++) {
+					if (i < lines.length) {
+						ret.add(Parser.stringToObject(lines[i].trim(), columnType.getType()));
+					} else {
+						break;
+					}
+				}
+			} catch (Exception err) {	
+				err.printStackTrace();
+			}
+			return ret;
+		}
+	}
 
+	
 //	-----------------------------------------------------------------------------------------------------
 	
 
