@@ -412,24 +412,25 @@ public class CIO extends CObject
 		return null;
 	}
 	
-	public static ByteArrayOutputStream copyObject(Object src)
+	public static byte[] objectToBin(Object src)
 	{
 		try {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
 			ObjectOutputStream oos = new ObjectOutputStream(baos);
 			oos.writeObject(src);
 			oos.flush();
-			return baos;
+			oos.close();
+			return baos.toByteArray();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 	
-	public static Object getObject(InputStream is)
+	public static Object binToObject(byte[] data)
 	{
 		try {
-			ObjectInputStream ois = new ObjectInputStream(is);
+			ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(data));
 			Object ret = ois.readObject();
 			ois.close();
 			return ret;
