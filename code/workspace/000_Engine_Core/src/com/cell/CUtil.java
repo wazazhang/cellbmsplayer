@@ -10,6 +10,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.List;
@@ -1028,21 +1029,43 @@ public class CUtil extends CObject
 		return ret;
 	}
 	
-	static public Object[] link(Object[] ... arrays){
+//	static public Object[] link(Object[] ... arrays){
+//		int count = 0;
+//		for (Object[] array : arrays) {
+//			if (array!=null) count += array.length;
+//		}
+//		Object[] ret = new Object[count];
+//		count = 0;
+//		for (Object[] array : arrays) {
+//			if (array!=null) {
+//				System.arraycopy(array, 0, ret, count, array.length);
+//				 count += array.length;
+//			}
+//		}
+//		return ret;
+//	} 
+	
+	static public <T> T[] link(T[]... arrays) {
+		T[] ret = null;
 		int count = 0;
-		for (Object[] array : arrays) {
-			if (array!=null) count += array.length;
+		for (T[] array : arrays) {
+			if (array != null) {
+				count += array.length;
+				if (ret == null) {
+					ret = array;
+				}
+			}
 		}
-		Object[] ret = new Object[count];
+		ret = Arrays.copyOf(ret, count);
 		count = 0;
-		for (Object[] array : arrays) {
-			if (array!=null) {
+		for (T[] array : arrays) {
+			if (array != null) {
 				System.arraycopy(array, 0, ret, count, array.length);
-				 count += array.length;
+				count += array.length;
 			}
 		}
 		return ret;
-	} 
+	}
 	
 	static public<T> Vector<T> linkv(T[] ...arrays){
 		int count = 0;
@@ -1051,10 +1074,8 @@ public class CUtil extends CObject
 		}
 		Vector<T> retv = new Vector<T>(count);
 		for (T[] array : arrays) {
-			if (array!=null) {
-				for (T o : array) {
-					retv.addElement(o);
-				}
+			if (array != null) {
+				Collections.addAll(retv, array);
 			}
 		}
 		return retv;
