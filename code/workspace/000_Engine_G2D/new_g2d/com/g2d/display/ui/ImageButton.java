@@ -1,34 +1,72 @@
 package com.g2d.display.ui;
 
 
+import java.util.concurrent.atomic.AtomicReference;
+
 import com.g2d.BufferedImage;
 import com.g2d.Graphics2D;
 import com.g2d.Image;
 import com.g2d.Tools;
 import com.g2d.display.ui.layout.UILayout;
-import com.g2d.geom.AffineTransform;
+
+
+
 
 public class ImageButton extends BaseButton implements Runnable
 {
+	transient protected AtomicReference<Image>	loading;
 	
-	transient public Image	loading;
+	transient protected AtomicReference<Image>	background;
 	
-	transient public Image	background;
+	String image_path;
+
 	
-	String 					image_path;
-	
-	public ImageButton(String path){
+	public ImageButton(String path)
+	{
 		image_path = path;
+
 		new Thread(this).start();
 	}
-	
-	public ImageButton(Image bg){
-		background = bg;
+
+	public ImageButton(Image bg)
+	{		
+		background = new AtomicReference<Image>(bg);
 	}
 	
-	public void run() {
+	public void setBackground(AtomicReference<Image> img)
+	{
+		background = img;
+	}
+	
+	public void setBackground(Image img)
+	{
+		background = new AtomicReference<Image>(img);
+	}
+	
+	public void setLoadingImage(AtomicReference<Image> img)
+	{
+		loading = img;
+	}
+	
+	public void setLoadingImage(Image img)
+	{
+		loading = new AtomicReference<Image>(img);
+	}
+	
+	public AtomicReference<Image> getBackground()
+	{
+		return background;
+	}
+	
+	public AtomicReference<Image> getLoadingImage()
+	{
+		return loading;
+	}	
+	
+	public void run() 
+	{
 		try {
-			background = Tools.readImage(image_path);
+			background = new AtomicReference<Image>(Tools.readImage(image_path));
 			System.out.println("loadimage : "+image_path);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -38,13 +76,18 @@ public class ImageButton extends BaseButton implements Runnable
 	@Override
 	public void render(Graphics2D g)
 	{
-		if (background != null) {
-			g.drawImage(background, 0, 0, getWidth(), getHeight());
-		} else if (loading != null) {
+		Image img_2_render = null;
+		
+		if ( (background != null) && ((img_2_render=background.get())!=null) )
+		{
+			g.drawImage(img_2_render, 0, 0, getWidth(), getHeight());
+		} 
+		else if ( (loading != null) &&  ((img_2_render=loading.get())!=null) )
+		{
 			g.pushTransform();
 			g.translate(getWidth()/2, getHeight()/2);
 			g.rotate(timer / 5.f);
-			g.drawImage(loading, -loading.getWidth()/2, -loading.getHeight()/2);
+			g.drawImage(img_2_render, -img_2_render.getWidth()/2, -img_2_render.getHeight()/2);
 			g.popTransform();
 		}
 		

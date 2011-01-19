@@ -346,7 +346,7 @@ public abstract class UILayoutManager
 				((BaseButton)component).mouse_catched_mask = ImageButtonCatchedMouseMask;
 				
 				if (component instanceof ImageButton) {
-					((ImageButton)component).loading = ImageBoxLoading;
+					((ImageButton)component).setLoadingImage(ImageBoxLoading);
 				}
 				else if (component instanceof RichButton) {
 					((RichButton)component).setLayout(ButtonLayout, ButtonPressLayout); 
