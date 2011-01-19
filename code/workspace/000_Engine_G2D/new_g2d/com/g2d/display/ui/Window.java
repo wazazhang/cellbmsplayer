@@ -45,19 +45,21 @@ public abstract class Window extends Container
 	}
 	
 	public void open(DisplayObjectContainer screen) {
-		if (is_single_view) {
-			if (!screen.getChildsSubClass(getClass()).isEmpty()) {
-				return;
+		if (screen != null) {
+			if (is_single_view) {
+				if (!screen.getChildsSubClass(getClass()).isEmpty()) {
+					return;
+				}
 			}
-		}
-		this.visible = true;
-		if (!screen.contains(this)) {
-			screen.addChild(this);
-			if (transition!=null) {
-				transition.startOpen();
+			this.visible = true;
+			if (!screen.contains(this)) {
+				screen.addChild(this);
+				if (transition!=null) {
+					transition.startOpen();
+				}
+			} else {
+				screen.focus(this);
 			}
-		} else {
-			screen.focus(this);
 		}
 	}
 	
