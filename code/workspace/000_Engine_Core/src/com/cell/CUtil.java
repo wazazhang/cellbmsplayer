@@ -62,7 +62,83 @@ public class CUtil extends CObject
 		return null;
 	}
 	
-	public static void printError(String message) {
+	@SuppressWarnings("unchecked")
+	public static<T> byte[] serializeObject(T src)
+	{
+		if (src != null)
+		{	
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ObjectOutputStream oos = null;
+			try 
+			{			
+				oos = new ObjectOutputStream(baos);
+				oos.writeObject(src);
+				
+				byte[] ret = baos.toByteArray();				
+				return ret;
+			} 
+			catch (IOException e) 
+			{
+				e.printStackTrace();
+			}
+			finally
+			{				
+				try 
+				{
+					if (oos != null)
+						oos.close();
+					if (baos != null)
+						baos.close();
+				} 
+				catch (IOException e) 
+				{
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static<T> T deserializeObject(byte[] src)
+	{
+		if (src != null)
+		{	
+			ByteArrayInputStream bais = new ByteArrayInputStream(src);
+			ObjectInputStream ois = null;
+			try 
+			{			
+				ois = new ObjectInputStream(bais);
+				T ret = (T) ois.readObject();
+				
+				return ret;
+			} 
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+			finally
+			{				
+				try 
+				{
+					if (ois != null)
+						ois.close();
+					if (bais != null)
+						bais.close();
+				} 
+				catch (IOException e) 
+				{
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return null;
+	}	
+	
+	public static void printError(String message) 
+	{
 		try{
 			throw new Exception(message);
 		}catch (Exception e) {
