@@ -6,6 +6,7 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  * Data Type數據類型
+ * 添加类型，需要在SQLTypeComparer的实现层添加相应的编解码
  * @author WAZA
  */
 public enum SQLType 
@@ -23,8 +24,10 @@ public enum SQLType
 	XML_STRUCT		(Types.CLOB),
 	TIME			(Types.TIME),
 	TIMESTAMP		(Types.TIMESTAMP),
-	
-	INTEGER_ARRAY	(Types.ARRAY),
+//	用BLOB或CLOB存储数组，MySQL就不支持数组，
+//	INTEGER_ARRAY	(Types.ARRAY),
+//	FLOAT_ARRAY		(Types.ARRAY),
+//	DOUBLE_ARRAY	(Types.ARRAY),
 	;
 	
 	final public int		jdbc_type;
