@@ -1,7 +1,10 @@
 package com.cell.reflect;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 
+import com.cell.io.TextDeserialize;
 import com.cell.util.StringUtil;
 
 public class Parser 
@@ -243,10 +246,23 @@ public class Parser
 			if (parser != null)
 				return (T)parser.parseFrom(str);			
 
-			if (Enum.class.isAssignableFrom(return_type)) {
+			if (return_type.isEnum()) {
 				Class<? extends Enum> ec = (Class<? extends Enum>)return_type;
 				return return_type.cast(Enum.valueOf(ec, str.trim()));
 			}
+
+//			if (return_type.isArray()) {
+//				T type = return_type.newInstance();
+//				Arrays.copyOf(type, newLength, newType);
+//			}
+//			
+//			if (Collection.class.isAssignableFrom(return_type)) {
+//				Collection ret = (Collection)return_type.newInstance();
+//				String[] ls = str.split(",");
+//				for (String l : ls) {
+//					ret.add(stringToObject(l, return_type));
+//				}
+//			}
 			
 		} catch (Exception e) {
 		}
