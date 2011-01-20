@@ -80,15 +80,7 @@ public class SQLUtil
 		if (struct == null) {
 			return ZERO_TEXT;
 		}
-		StringWriter writer = new StringWriter(512);
-		try{
-			struct.encode(writer);
-			writer.flush();
-			String ret = writer.toString();
-			return ret;
-		}finally{
-			writer.close();
-		}
+		return struct.encode();
 	}
 	
 	/**
@@ -103,14 +95,9 @@ public class SQLUtil
 		if (data == null || data.length() == 0) {
 			return null;
 		}
-		StringReader	reader	= new StringReader(data);
-		try{
-			SQLStructCLOB	ret		= (SQLStructCLOB)clazz.newInstance();
-			ret.decode(reader);
-			return ret;
-		}finally{
-			reader.close();
-		}
+		SQLStructCLOB ret = (SQLStructCLOB) clazz.newInstance();
+		ret.decode(data);
+		return ret;
 	}
 
 	

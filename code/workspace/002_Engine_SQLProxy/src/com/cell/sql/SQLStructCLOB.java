@@ -11,7 +11,7 @@ import java.io.Writer;
  */
 public interface SQLStructCLOB
 {
-	void decode(Reader in) throws IOException;
+	void decode(String text) throws IOException;
 	
-	void encode(Writer out) throws IOException;
+	String encode() throws IOException;
 }

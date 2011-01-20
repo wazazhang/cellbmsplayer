@@ -2,6 +2,7 @@ package com.cell.rpg.xls;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,6 +13,7 @@ import jxl.Workbook;
 import com.cell.CIO;
 import com.cell.reflect.Parser;
 import com.cell.sql.SQLColumn;
+import com.cell.sql.SQLStructCLOB;
 import com.cell.sql.SQLTableManager;
 import com.cell.sql.SQLTableRow;
 
@@ -88,24 +90,31 @@ public class XLSTable<V extends SQLTableRow<?>>
 					{
 						if (row.containsKey(sql_column.name)) 
 						{
-							String v = row.get(sql_column.name);
+							String 		text	= row.get(sql_column.name);
+							
+							Class<?> 	type 	= sql_column.leaf_field.getType();
 								
-							Class<?> type = sql_column.leaf_field.getType();
-								
-							Object value = Parser.stringToObject(v, type);
-								
-							if ( (value == null) && (type == Timestamp.class) )
-								value = Timestamp.valueOf(v);
-								
-							if (value != null) {
-								sql_column.setObject(instance, value);
-//								System.out.println(sql_column.name + "=" + value);
-							}else{
-								throw new NullPointerException(
-											"format error at" +
-											" column [" + sql_column.name + " = \""+ v +"\"]" +
-											" row [" + r + "]" +
-											" sheet [" + rs.getName()+"]");
+							if (SQLStructCLOB.class.isAssignableFrom(type)) 
+							{
+								sql_column.setObject(instance, text);
+							} 
+							else 
+							{
+								Object 		value = Parser.stringToObject(text, type);
+								if ((value == null) && (type == Timestamp.class) ) {
+									value = Timestamp.valueOf(text);
+								}
+								if (value != null) {
+									sql_column.setObject(instance, value);
+//									System.out.println(sql_column.name + "=" + value);
+								}
+								else {
+									throw new NullPointerException(
+												"format error at" +
+												" column [" + sql_column.name + " = \""+ text +"\"]" +
+												" row [" + r + "]" +
+												" sheet [" + rs.getName()+"]");
+								}
 							}
 						}
 					}

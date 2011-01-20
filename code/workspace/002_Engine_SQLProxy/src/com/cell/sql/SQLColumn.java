@@ -95,7 +95,8 @@ public class SQLColumn implements ICompare<SQLColumn, SQLColumn>
 					leaf_field.getType(),
 					java_object);
 		} catch (Exception err) {
-			log.error("getObject Column field \"" + leaf_field.getName() + "@"+table+"\" error : " + err.getMessage());
+			log.error("getObject Column field \"" + leaf_field.getName() + "@"+table+"\"" +
+					" : error=" + err.getMessage());
 			throw err;
 		}
 	}
@@ -111,7 +112,9 @@ public class SQLColumn implements ICompare<SQLColumn, SQLColumn>
 								leaf_field.getType(),
 								data));
 			} catch (Exception err) {
-				log.error("setObject Column field \"" + leaf_field.getName() + "@"+table+"\" error : " + err.getMessage());
+				log.error("setObject Column field \"" + leaf_field.getName() + "@"+table+"\"" +
+						" : data="+data+
+						" : error=" + err.getMessage());
 				throw err;
 			}
 		}
