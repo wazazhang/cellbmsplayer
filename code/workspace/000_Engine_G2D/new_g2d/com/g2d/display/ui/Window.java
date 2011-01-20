@@ -1,6 +1,7 @@
 package com.g2d.display.ui;
 
 
+import com.cell.math.Vector;
 import com.g2d.Graphics2D;
 import com.g2d.display.DisplayObjectContainer;
 
@@ -44,11 +45,26 @@ public abstract class Window extends Container
 		this.transition = transition;
 	}
 	
+	/**
+	 * 如果只允许一个该类型的控件，则该方法判断已存在的窗体是否是当前窗体
+	 * @param win
+	 * @return
+	 */
+	public boolean asSameWindow(Window win) {
+		if (win.getClass().equals(this.getClass())) {
+			return true;
+		}
+		return false;
+	}
+	
 	public void open(DisplayObjectContainer screen) {
 		if (screen != null) {
 			if (is_single_view) {
-				if (!screen.getChildsSubClass(getClass()).isEmpty()) {
-					return;
+				java.util.Vector<Window> windows = screen.getChildsSubClass(Window.class);
+				for (Window win : windows) {
+					if (asSameWindow(win)) {
+						return;
+					}
 				}
 			}
 			this.visible = true;
