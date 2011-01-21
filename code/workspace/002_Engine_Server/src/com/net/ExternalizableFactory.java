@@ -8,6 +8,7 @@ import java.util.TreeSet;
 
 /**
  * 类型和 integer 的映射关系，用于 TransmissionType = TRANSMISSION_TYPE_EXTERNALIZABLE 类型的消息。
+ * 此实现中，通过类名的字符串自然排序顺序注册。
  */
 public abstract class ExternalizableFactory implements Comparator<Class<?>>
 {
