@@ -42,7 +42,7 @@ public class AstarManhattan extends AbstractAstar
 
 //	----------------------------------------------------------------------------------------------------
 	
-	final static int[][] near = new int[][]{
+	final static int[][] near_table = new int[][]{
 			{-1,-1}, { 0,-1}, { 1,-1},
 			{-1, 0}, /*{0,0}*/{ 1, 0},
 			{-1, 1}, { 0, 1}, { 1, 1}
@@ -86,7 +86,7 @@ public class AstarManhattan extends AbstractAstar
 			for (int y = 0; y < map.getYCount(); y++) {
 				for (int x = 0; x < map.getXCount(); x++) {
 					MMapNode node = all_nodes_map[y][x];
-					for (int[] np : near) {
+					for (int[] np : near_table) {
 						try{
 							int ndx = np[0];
 							int ndy = np[1];
