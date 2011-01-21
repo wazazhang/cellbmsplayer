@@ -14,6 +14,7 @@ import java.lang.annotation.Target;
 @Documented
 @Target({TYPE})
 @Retention(RetentionPolicy.RUNTIME)
+@Deprecated
 public @interface ExternalizableMessageType 
 {
 	public int value();
