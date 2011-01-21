@@ -1,8 +1,5 @@
 package com.net;
 
-import java.io.IOException;
-
-import com.net.anno.ExternalizableMessageType;
 
 
 /**

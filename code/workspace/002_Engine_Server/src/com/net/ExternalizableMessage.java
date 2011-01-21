@@ -2,13 +2,14 @@ package com.net;
 
 import java.io.IOException;
 
-import com.net.anno.ExternalizableMessageType;
 
 
 /**
- * <b>标记纯手动序列化/反序列化的对象</b><br>
- * 实现类也必须标注签名{@link ExternalizableMessageType}<br>
+ * <b>
+ * 标记纯手动序列化/反序列化的对象<br>
+ * 实现类必须注册到{@link #ExternalizableFactory}<br>
  * 实现类也必须拥有无参数公共构造函数<br>
+ * </b>
  */
 public interface ExternalizableMessage 
 {
