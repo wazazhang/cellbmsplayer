@@ -115,6 +115,7 @@ public class SQLColumn implements ICompare<SQLColumn, SQLColumn>
 				log.error("setObject Column field \"" + leaf_field.getName() + "@"+table+"\"" +
 						" : data="+data+
 						" : error=" + err.getMessage());
+				table.setField(leaf_field, null);
 				throw err;
 			}
 		}
