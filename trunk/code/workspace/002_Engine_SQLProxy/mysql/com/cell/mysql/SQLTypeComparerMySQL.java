@@ -247,7 +247,7 @@ public class SQLTypeComparerMySQL implements SQLTypeComparer
 			}
 			break;
 		}
-		return type.jdbc_type == mysql_jdbc_type;
+		return type.getJdbcType() == mysql_jdbc_type;
 	}
 
 	public Object toJavaObject(SQLType type, Class<?> type_clazz, Object sqlObject) throws Exception 
@@ -299,19 +299,20 @@ public class SQLTypeComparerMySQL implements SQLTypeComparer
 	public String getDirverTypeString(int jdbc_type) 
 	{
 		switch (jdbc_type) {
-		case Types.BOOLEAN:		return "boolean";
-		case Types.TINYINT: 	return "tinyint";
-		case Types.SMALLINT:	return "smallint";
-		case Types.INTEGER: 	return "integer";
-		case Types.BIGINT: 		return "bigint";
-		case Types.REAL: 		return "float";
-		case Types.DOUBLE: 		return "double";
-		case Types.VARCHAR: 	return "varchar";
-		case Types.BLOB: 		return "blob";
-		case Types.CLOB: 		return "text";
-		case Types.TIME: 		return "time";
-		case Types.TIMESTAMP:	return "timestamp";
-		case Types.ARRAY:		return "blob";
+		case Types.BOOLEAN:			return "boolean";
+		case Types.TINYINT: 		return "tinyint";
+		case Types.SMALLINT:		return "smallint";
+		case Types.INTEGER: 		return "integer";
+		case Types.BIGINT: 			return "bigint";
+		case Types.REAL: 			return "float";
+		case Types.DOUBLE: 			return "double";
+		case Types.VARCHAR: 		return "varchar";
+		case Types.BLOB: 			return "blob";
+		case Types.CLOB: 			return "text";
+		case Types.TIME: 			return "time";
+		case Types.TIMESTAMP:		return "timestamp";
+		case Types.ARRAY:			return "blob";
+		case Types.LONGVARBINARY:	return "longblob";
 		}
 		return null;
 	}

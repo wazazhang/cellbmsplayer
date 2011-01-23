@@ -146,7 +146,7 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 		try{
 			for (int i=0; i<columns.length; i++){
 				SQLColumn c = columns[i];
-				statement.setObject(i+1, c.getObject(row), c.anno.type().jdbc_type);
+				statement.setObject(i+1, c.getObject(row), c.anno.type().getJdbcType());
 			}
 			statement.execute();
 		}finally{
@@ -196,7 +196,7 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 				SQLColumn c = columns[i];
 				statement.setObject(i+1, 
 						c.getObject(row), 
-						c.anno.type().jdbc_type);
+						c.anno.type().getJdbcType());
 			}
 			statement.execute();
 		}finally{
@@ -394,7 +394,7 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 					String	rtypename	= metadata.getColumnTypeName(rc);
 					int		rtype		= metadata.getColumnType(rc);
 					String	ttypename	= c.anno.type().toString();
-					int		ttype		= c.anno.type().jdbc_type;
+					int		ttype		= c.anno.type().getJdbcType();
 					
 					System.err.println(
 							"Table '" + table_name + "' " +
@@ -451,7 +451,7 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 					String	rtypename	= metadata.getColumnTypeName(c.index);
 					int		rtype		= metadata.getColumnType(c.index);
 					String	ttypename	= c.anno.type().toString();
-					int		ttype		= c.anno.type().jdbc_type;
+					int		ttype		= c.anno.type().getJdbcType();
 					
 					String reson = (
 							"Table '" + table_name + "' " +
