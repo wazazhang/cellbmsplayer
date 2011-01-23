@@ -81,8 +81,8 @@ public abstract class SQLColumnManager<K, R extends SQLTableRow<K>> extends SQLC
 							}
 							log.info("loading [" + table_name + "]" +
 									" : block size = " + rows.size()+
-									" :    last id = " + rows.get(rows.size()-1).getPrimaryKey() +
-									" :   use time = " + (System.currentTimeMillis() - btime) + "(ms)");
+									" : last id = " + rows.get(rows.size()-1).getPrimaryKey() +
+									" : use time = " + (System.currentTimeMillis() - btime) + "(ms)");
 						} else {
 							break;
 						}
@@ -96,7 +96,7 @@ public abstract class SQLColumnManager<K, R extends SQLTableRow<K>> extends SQLC
 				}
 				log.info("loaded  [" + table_name + "]" +
 						" : total size = " + size() + 
-						" :   use time = " + (System.currentTimeMillis() - starttime) + "(ms)");
+						" : use time = " + (System.currentTimeMillis() - starttime) + "(ms)");
 			}
 			else
 			{

@@ -595,6 +595,16 @@ public class CUtil extends CObject
 		return ret;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public static final<T> T[] toArray(Collection<T> array, Class<T> component_type) {
+		if (array == null) {
+			return null;
+		}
+		T[] ret = (T[])Array.newInstance(component_type, array.size());
+		array.toArray(ret);
+		return ret;
+	}
+	
 	
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
