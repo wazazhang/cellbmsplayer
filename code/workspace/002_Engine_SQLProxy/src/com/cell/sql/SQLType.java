@@ -20,6 +20,7 @@ public enum SQLType
 	DOUBLE			(Types.DOUBLE),
 	STRING			(Types.VARCHAR),
 	STRUCT			(Types.BLOB),
+	BIG_STRUCT		(Types.LONGVARBINARY),
 	TEXT_STRUCT		(Types.CLOB),
 	XML_STRUCT		(Types.CLOB),
 	TIME			(Types.TIME),
@@ -30,19 +31,19 @@ public enum SQLType
 //	DOUBLE_ARRAY	(Types.ARRAY),
 	;
 	
-	final public int		jdbc_type;
-	final public String		type_name;
+	private final int		jdbc_type;
+	private final String	dirver_type_name;
 	
 //	final int length;
 	
 	private SQLType(int jdbcType) {
 		jdbc_type = jdbcType;
-		type_name = SQMTypeManager.getTypeComparer().getDirverTypeString(jdbc_type).toLowerCase();
+		dirver_type_name = SQMTypeManager.getTypeComparer().getDirverTypeString(getJdbcType()).toLowerCase();
 	}
 	
 	@Override
 	public String toString() {
-		return type_name;
+		return getDirverTypeName();
 	}
 	
 	public boolean equals(String typeName) {
@@ -52,6 +53,14 @@ public enum SQLType
 
 	public boolean typeEquals(int jdbcType) {
 		return SQMTypeManager.getTypeComparer().typeEquals(this, jdbcType);
+	}
+
+	public int getJdbcType() {
+		return jdbc_type;
+	}
+
+	public String getDirverTypeName() {
+		return dirver_type_name;
 	}
 	
 	
