@@ -20,7 +20,7 @@ public enum SQLType
 	DOUBLE			(Types.DOUBLE),
 	STRING			(Types.VARCHAR),
 	STRUCT			(Types.BLOB),
-	BIG_STRUCT		(Types.LONGVARBINARY),
+	BIG_STRUCT		(Types.BLOB),
 	TEXT_STRUCT		(Types.CLOB),
 	XML_STRUCT		(Types.CLOB),
 	TIME			(Types.TIME),
