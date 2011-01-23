@@ -222,12 +222,12 @@ import com.cell.xstream.XStreamAdapter;
  */
 public class SQLTypeComparerMySQL implements SQLTypeComparer 
 {
-	public boolean typeEquals(SQLType type, int mysql_jdbc_type) 
+	public boolean typeEquals(SQLType type, int jdbc_type) 
 	{
 		switch(type)
 		{
 		case STRUCT:
-			switch(mysql_jdbc_type){
+			switch(jdbc_type){
 			case Types.BINARY: 			return true;
 			case Types.VARBINARY: 		return true;
 			case Types.LONGVARBINARY: 	return true;
@@ -235,19 +235,19 @@ public class SQLTypeComparerMySQL implements SQLTypeComparer
 			break;
 		case TEXT_STRUCT:
 		case XML_STRUCT:
-			switch(mysql_jdbc_type){
+			switch(jdbc_type){
 			case Types.VARCHAR: 		return true;
 			case Types.LONGVARCHAR: 	return true;
 			}
 			break;
 		case BOOLEAN:
-			switch (mysql_jdbc_type) {
+			switch (jdbc_type) {
 			case Types.TINYINT: 		return true;
 			case Types.BIT:				return true;
 			}
 			break;
 		}
-		return type.getJdbcType() == mysql_jdbc_type;
+		return type.getJdbcType() == jdbc_type;
 	}
 
 	public Object toJavaObject(SQLType type, Class<?> type_clazz, Object sqlObject) throws Exception 
