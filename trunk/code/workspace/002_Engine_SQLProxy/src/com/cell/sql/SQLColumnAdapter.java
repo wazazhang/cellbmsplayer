@@ -8,6 +8,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Stack;
 
 import org.slf4j.Logger;
@@ -332,7 +333,7 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 				
 				Statement statement = conn.createStatement();
 				
-				String create = getCreateTableSQL(this, sort_field, create_comment);
+				String create = getCreateTableSQL(sort_field, create_comment);
 				System.out.println(create);
 				statement.execute(create);
 				statement.close();
@@ -467,22 +468,9 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 			{
 				for (SQLColumn c : not_exists)
 				{
-					StringBuilder add_sql = new StringBuilder();
-					add_sql.append("ALTER TABLE " + table_name + " ADD COLUMN ");
-					add_sql.append(c.name + " ");
-					add_sql.append(c.anno.type() + " ");
-					add_sql.append(c.anno.constraint());
-					String default_value = c.anno.defaultValue();
-					if (default_value != null && default_value.length() > 0) {
-						add_sql.append(" DEFAULT '" + c.anno.defaultValue() + "'");
-					}
-					String comment = c.getAllComment();
-					if (comment != null && comment.length() > 0) {
-						add_sql.append(" COMMENT '" + comment + "'");
-					}
-					add_sql.append(";");
+					String add_sql = getAlterTableAddColumnSQL(c);
 					System.out.println(add_sql);
-					statement.executeUpdate(add_sql.toString());
+					statement.executeUpdate(add_sql);
 				}
 			}
 			else
@@ -535,7 +523,8 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 	
 	
 //	---------------------------------------------------------------------------------------------------------------------------------
-
+//	alter table 'name' change 'columna' 'columnb' longblob
+//
 //	---------------------------------------------------------------------------------------------------------------------------------
 
 	static public SQLColumn[] getSQLColumns(Class<? extends SQLFieldGroup> tableClass)
@@ -620,6 +609,44 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 
 //	---------------------------------------------------------------------------------------------------------------------------------
 	
+	public String getAlterTableChangeColumnSQL(SQLColumn c)
+	{
+		StringBuilder add_sql = new StringBuilder();
+		add_sql.append("ALTER TABLE `" + this.table_name + "` CHANGE ");
+		add_sql.append("`" + c.name + "` ");
+		add_sql.append("`" + c.name + "` ");
+		add_sql.append(c.anno.type() + " ");
+		add_sql.append(c.anno.constraint());
+		String default_value = c.anno.defaultValue();
+		if (default_value != null && default_value.length() > 0) {
+			add_sql.append(" DEFAULT '" + c.anno.defaultValue() + "'");
+		}
+		String comment = c.getAllComment();
+		if (comment != null && comment.length() > 0) {
+			add_sql.append(" COMMENT '" + comment + "'");
+		}
+		add_sql.append(";");
+		return add_sql.toString();
+	}
+	
+	public String getAlterTableAddColumnSQL(SQLColumn c) 
+	{
+		StringBuilder add_sql = new StringBuilder();
+		add_sql.append("ALTER TABLE `" + this.table_name + "` ADD COLUMN ");
+		add_sql.append("`" + c.name + "` ");
+		add_sql.append(c.anno.type() + " ");
+		add_sql.append(c.anno.constraint());
+		String default_value = c.anno.defaultValue();
+		if (default_value != null && default_value.length() > 0) {
+			add_sql.append(" DEFAULT '" + c.anno.defaultValue() + "'");
+		}
+		String comment = c.getAllComment();
+		if (comment != null && comment.length() > 0) {
+			add_sql.append(" COMMENT '" + comment + "'");
+		}
+		add_sql.append(";");
+		return add_sql.toString();
+	}
 
 	/**
 	 * 获得该类型对应SQL的创建语句
@@ -627,9 +654,9 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 	 * @return
 	 * @throws SQLException
 	 */
-	public static String getCreateTableSQL(SQLColumnAdapter<?, ?> table)
+	public String getCreateTableSQL()
 	{
-		return getCreateTableSQL(table, true, true);
+		return getCreateTableSQL(true, true);
 	}
 	
 	/**
@@ -640,15 +667,17 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 	 * @return 
 	 * @throws SQLException
 	 */
-	public static String getCreateTableSQL(final SQLColumnAdapter<?, ?> table, final boolean sort_fields, boolean create_comment)
+	public String getCreateTableSQL(
+			final boolean sort_fields,
+			final boolean create_comment)
 	{
-		SQLColumn[] columnss = new SQLColumn[table.table_columns.length];
-		System.arraycopy(table.table_columns, 0, columnss, 0, columnss.length);
+		SQLColumn[] columnss = new SQLColumn[this.table_columns.length];
+		System.arraycopy(this.table_columns, 0, columnss, 0, columnss.length);
 		CUtil.sort(columnss, new ICompare<SQLColumn, SQLColumn>() {
 			StringCompare sc = new StringCompare();
 			public int compare(SQLColumn a, SQLColumn b) {
-				if (a.name.equals(table.table_type.primary_key_name())) return 1;
-				if (b.name.equals(table.table_type.primary_key_name())) return -1;
+				if (a.name.equals(table_type.primary_key_name())) return 1;
+				if (b.name.equals(table_type.primary_key_name())) return -1;
 				if (sort_fields) {
 					return sc.compare(a.name, b.name);
 				}
@@ -656,13 +685,19 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 			}
 		});
 		
-		String sql = "CREATE TABLE " + table.table_name + "(\n";
-
-		for (int i=0; i<columnss.length; i++){
+		String sql = "CREATE TABLE `" + this.table_name + "` (\n";
+		int name_max_len = 1;
+		for (int i = 0; i < columnss.length; i++) {
+			name_max_len = Math.max(columnss[i].name.length()+4, name_max_len);
+		}
+		
+		for (int i = 0; i < columnss.length; i++)
+		{
 			SQLColumn column = columnss[i];
-			sql += "\t"+
-				column.name + " " + 
-				column.anno.type();
+			
+			sql += "\t" + CUtil.snapStringRightSize(
+					"`"+ column.name + "`", name_max_len, ' ') + 
+					" " + column.anno.type();
 			
 				String constraint = column.anno.constraint();
 				if (constraint != null && constraint.length() > 0) {
@@ -682,19 +717,19 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 				sql += ",\n";
 		}
 		
-		sql += "\tPRIMARY KEY (" + table.table_type.primary_key_name() + ")";
-		if (!table.table_type.constraint().trim().isEmpty()) {
-			sql += ", " + table.table_type.constraint() + "\n";
+		sql += "\tPRIMARY KEY (" + this.table_type.primary_key_name() + ")";
+		if (!this.table_type.constraint().trim().isEmpty()) {
+			sql += ", " + this.table_type.constraint() + "\n";
 		} else {
 			sql += "\n";
 		}
 		sql += ")";
 		
-		if (!table.table_type.properties().trim().isEmpty()) {
-			sql += " " + table.table_type.properties();
+		if (!this.table_type.properties().trim().isEmpty()) {
+			sql += " " + this.table_type.properties();
 		}
-		if (create_comment && !table.table_type.comment().trim().isEmpty()) {
-			sql += " COMMENT='" + table.table_type.comment() + "'";
+		if (create_comment && !this.table_type.comment().trim().isEmpty()) {
+			sql += " COMMENT='" + this.table_type.comment() + "'";
 		}
 		sql += ";";
 		return sql;
