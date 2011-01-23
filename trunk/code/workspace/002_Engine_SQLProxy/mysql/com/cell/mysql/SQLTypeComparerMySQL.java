@@ -226,11 +226,13 @@ public class SQLTypeComparerMySQL implements SQLTypeComparer
 	{
 		switch(type)
 		{
+		case BIG_STRUCT:
 		case STRUCT:
 			switch(jdbc_type){
 			case Types.BINARY: 			return true;
 			case Types.VARBINARY: 		return true;
 			case Types.LONGVARBINARY: 	return true;
+			case Types.BLOB: 			return true;
 			}
 			break;
 		case TEXT_STRUCT:
@@ -254,6 +256,7 @@ public class SQLTypeComparerMySQL implements SQLTypeComparer
 	{
 		switch(type)
 		{
+		case BIG_STRUCT:
 		case STRUCT:
 			return SQLUtil.binToBlob((byte[])sqlObject);
 		case TEXT_STRUCT:
@@ -273,6 +276,7 @@ public class SQLTypeComparerMySQL implements SQLTypeComparer
 	{
 		switch(type)
 		{
+		case BIG_STRUCT:
 		case STRUCT:
 			return SQLUtil.blobToBin((Serializable)javaObject);
 		case TEXT_STRUCT:
