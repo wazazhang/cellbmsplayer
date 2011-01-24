@@ -5,6 +5,7 @@ import java.util.Vector;
 import com.g2d.Graphics2D;
 import com.g2d.display.DisplayObject;
 import com.g2d.display.event.MouseWheelEvent;
+import com.g2d.display.ui.layout.UILayout;
 
 public abstract class DropDownList extends UIComponent 
 {	
@@ -30,6 +31,11 @@ public abstract class DropDownList extends UIComponent
 		super.addChild(scroll);
 		
 		enable_mouse_wheel	= true;
+		
+		pan.setCustomLayout(UILayout.createBlankRect());
+//		setCustomLayout(UILayout.createBlankRect());
+		container.setCustomLayout(UILayout.createBlankRect());
+		
 	}
 	
 	public void render(Graphics2D g) 

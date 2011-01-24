@@ -9,6 +9,7 @@ import com.g2d.display.DisplayObject;
 import com.g2d.display.DisplayObjectContainer;
 import com.g2d.display.event.EventListener;
 import com.g2d.display.event.MouseEvent;
+import com.g2d.display.ui.layout.UILayout;
 import com.g2d.util.Drawing;
 
 /**
@@ -32,9 +33,11 @@ public class ComboBox extends UIComponent
 		public D 					data;
 		
 		public Item(String text) {
+			super.setCustomLayout(UILayout.createBlankRect());
 			this.text = text;
 		}
 		public Item(String text, D binddata) {
+			super.setCustomLayout(UILayout.createBlankRect());
 			this.text = text;
 			this.data = binddata;
 		}
@@ -290,7 +293,9 @@ public class ComboBox extends UIComponent
 			offsetx = ComboBox.this.getScreenX()-ComboBox.this.root_form.getScreenX();
 			offsety = ComboBox.this.getScreenY()-ComboBox.this.root_form.getScreenY() + ComboBox.this.getHeight();
 			
-			int h = Math.min(items.size()*20, ComboBox.this.getHeight()*5);
+			int h = Math.min(
+					items.size()*(ComboBox.this.getHeight()+1), 
+					ComboBox.this.getHeight()*5);
 			
 			this.setSize(
 					ComboBox.this.getWidth(), 
@@ -307,6 +312,10 @@ public class ComboBox extends UIComponent
 			}
 
 			parent.addChild(this);
+			
+			setCustomLayout(ComboBox.this.getLayout());
+			setCustomLayout(ComboBox.this.getCustomLayout());
+			
 		}
 		
 		public void update() {
