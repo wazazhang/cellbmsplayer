@@ -22,7 +22,7 @@ public interface SQLTypeComparer
 	 * @param type
 	 * @return
 	 */
-	public String getDirverTypeString(int jdbc_type);
+	public String getDirverTypeString(SQLType type);
 	
 	/**
 	 * 该驱动下Java类型到SQL类型的映射
