@@ -8,7 +8,9 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Stack;
 
 import org.slf4j.Logger;
@@ -394,7 +396,7 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 				{
 					String	rtypename	= metadata.getColumnTypeName(rc);
 					int		rtype		= metadata.getColumnType(rc);
-					String	ttypename	= c.anno.type().toString();
+					String	ttypename	= c.anno.type().getDirverTypeName();
 					int		ttype		= c.anno.type().getJdbcType();
 					
 					System.err.println(
@@ -451,7 +453,7 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 				{
 					String	rtypename	= metadata.getColumnTypeName(c.index);
 					int		rtype		= metadata.getColumnType(c.index);
-					String	ttypename	= c.anno.type().toString();
+					String	ttypename	= c.anno.type().getDirverTypeName();
 					int		ttype		= c.anno.type().getJdbcType();
 					
 					String reson = (
@@ -486,6 +488,35 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 		
 	}
 
+
+	public void syncTableColumns(Connection conn) throws SQLException
+	{
+		ValidateResult vresult = validateTable(conn);
+		
+		if (vresult == ValidateResult.OK)
+		{
+			Statement statement = conn.createStatement();
+			
+			String sql = "SELECT * FROM " + table_name + " LIMIT 0;";
+			try {
+				ResultSet 			result			= statement.executeQuery(sql);
+				ResultSetMetaData	metadata		= result.getMetaData();
+				result.close();
+				for (SQLColumn c : table_columns) {
+					String rname = metadata.getColumnTypeName(c.index).toLowerCase();
+					String tname = c.anno.type().getDirverTypeName().toLowerCase();
+					if (rname.equals(tname)) {
+						String change_sql = getAlterTableChangeColumnSQL(c);
+						System.out.println(change_sql);
+						statement.executeUpdate(change_sql);
+					}
+				}
+			} finally {
+				statement.close();
+			}
+		}
+	}
+	
 //	---------------------------------------------------------------------------------------------------------------------------------
 
 	final private static String getSplitChar(int i, int len) {
