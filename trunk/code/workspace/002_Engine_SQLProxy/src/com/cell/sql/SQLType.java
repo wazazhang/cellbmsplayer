@@ -22,7 +22,7 @@ public enum SQLType
 	STRUCT			(Types.BLOB),
 	BIG_STRUCT		(Types.BLOB),
 	TEXT_STRUCT		(Types.CLOB),
-	XML_STRUCT		(Types.CLOB),
+	XML_STRUCT		(Types.LONGVARCHAR),
 	TIME			(Types.TIME),
 	TIMESTAMP		(Types.TIMESTAMP),
 //	用BLOB或CLOB存储数组，MySQL就不支持数组，
@@ -32,13 +32,11 @@ public enum SQLType
 	;
 	
 	private final int		jdbc_type;
-	private final String	dirver_type_name;
 	
 //	final int length;
 	
 	private SQLType(int jdbcType) {
 		jdbc_type = jdbcType;
-		dirver_type_name = SQMTypeManager.getTypeComparer().getDirverTypeString(getJdbcType()).toLowerCase();
 	}
 	
 	@Override
@@ -60,7 +58,7 @@ public enum SQLType
 	}
 
 	public String getDirverTypeName() {
-		return dirver_type_name;
+		return SQMTypeManager.getTypeComparer().getDirverTypeString(this).toLowerCase();
 	}
 	
 	

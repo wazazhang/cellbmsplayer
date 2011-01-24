@@ -300,23 +300,23 @@ public class SQLTypeComparerMySQL implements SQLTypeComparer
 		return oos;
 	}
 	
-	public String getDirverTypeString(int jdbc_type) 
+	public String getDirverTypeString(SQLType type) 
 	{
-		switch (jdbc_type) {
-		case Types.BOOLEAN:			return "boolean";
-		case Types.TINYINT: 		return "tinyint";
-		case Types.SMALLINT:		return "smallint";
-		case Types.INTEGER: 		return "integer";
-		case Types.BIGINT: 			return "bigint";
-		case Types.REAL: 			return "float";
-		case Types.DOUBLE: 			return "double";
-		case Types.VARCHAR: 		return "varchar";
-		case Types.BLOB: 			return "blob";
-		case Types.CLOB: 			return "text";
-		case Types.TIME: 			return "time";
-		case Types.TIMESTAMP:		return "timestamp";
-		case Types.ARRAY:			return "blob";
-		case Types.LONGVARBINARY:	return "longblob";
+		switch (type) {
+		case BOOLEAN		:return "boolean";
+		case BYTE			:return "tinyint";
+		case SHORT			:return "smallint";
+		case INTEGER		:return "integer";
+		case LONG			:return "bigint";
+		case FLOAT			:return "float";
+		case DOUBLE			:return "double";
+		case STRING			:return "varchar";
+		case STRUCT			:return "blob";
+		case BIG_STRUCT		:return "longblob";
+		case TEXT_STRUCT	:return "text";
+		case XML_STRUCT		:return "longclob";
+		case TIME			:return "time";
+		case TIMESTAMP		:return "timestamp";
 		}
 		return null;
 	}
