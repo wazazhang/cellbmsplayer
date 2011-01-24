@@ -314,7 +314,7 @@ public class SQLTypeComparerMySQL implements SQLTypeComparer
 		case STRUCT			:return "blob";
 		case BIG_STRUCT		:return "longblob";
 		case TEXT_STRUCT	:return "text";
-		case XML_STRUCT		:return "longclob";
+		case XML_STRUCT		:return "longtext";
 		case TIME			:return "time";
 		case TIMESTAMP		:return "timestamp";
 		}
