@@ -88,11 +88,11 @@ public class XLSTable<V extends SQLTableRow<?>>
 					V instance = factory.createInstance();
 					for (SQLColumn sql_column : sql_columns) 
 					{
-						if (row.containsKey(sql_column.name)) 
+						if (row.containsKey(sql_column.getName())) 
 						{
-							String 		text	= row.get(sql_column.name);
+							String 		text	= row.get(sql_column.getName());
 							
-							Class<?> 	type 	= sql_column.leaf_field.getType();
+							Class<?> 	type 	= sql_column.getLeafField().getType();
 								
 							if (SQLStructCLOB.class.isAssignableFrom(type)) 
 							{
@@ -111,7 +111,7 @@ public class XLSTable<V extends SQLTableRow<?>>
 								else {
 									throw new NullPointerException(
 												"format error at" +
-												" column [" + sql_column.name + " = \""+ text +"\"]" +
+												" column [" + sql_column.getName() + " = \""+ text +"\"]" +
 												" row [" + r + "]" +
 												" sheet [" + rs.getName()+"]");
 								}

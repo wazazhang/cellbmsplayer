@@ -71,7 +71,7 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 	final public SQLColumn getColumn(String column_name)
 	{
 		for (SQLColumn c : table_columns) {
-			if (c.name.equals(column_name)) {
+			if (c.getName().equals(column_name)) {
 				return c;
 			}
 		}
@@ -81,7 +81,7 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 	final public SQLColumn getColumn(Field field)
 	{
 		for (SQLColumn c : table_columns) {
-			if (c.leaf_field.equals(field)) {
+			if (c.getLeafField().equals(field)) {
 				return c;
 			}
 		}
@@ -100,7 +100,7 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 		for (int i = 0; i < table_columns.length; i++)
 		{
 			try {
-				table_columns[i].setObject(row, result.getObject(table_columns[i].index));
+				table_columns[i].setObject(row, result.getObject(table_columns[i].getIndex()));
 			} catch (Exception err) {
 				log.error("[" + table_name + "] read column error !\n" +
 						"\t    id = " + row.getPrimaryKey() +
@@ -135,7 +135,7 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 		for (int i=0; i<columns.length; i++){
 			SQLColumn c = columns[i];
 			sb.append("\t"); 
-			sb.append(c.name);
+			sb.append(c.getName());
 			sb.append(getSplitChar(i, columns.length));
 		}
 		sb.append(") VALUES (\n");
@@ -149,7 +149,7 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 		try{
 			for (int i=0; i<columns.length; i++){
 				SQLColumn c = columns[i];
-				statement.setObject(i+1, c.getObject(row), c.anno.type().getJdbcType());
+				statement.setObject(i+1, c.getObject(row), c.getAnno().type().getJdbcType());
 			}
 			statement.execute();
 		}finally{
@@ -182,7 +182,7 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 		for (int i=0; i<columns.length; i++){
 			SQLColumn c = columns[i];
 			sb.append("\t"); 
-			sb.append(c.name); 
+			sb.append(c.getName()); 
 			sb.append("=?"); 
 			sb.append(getSplitChar(i, columns.length));
 		}
@@ -199,7 +199,7 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 				SQLColumn c = columns[i];
 				statement.setObject(i+1, 
 						c.getObject(row), 
-						c.anno.type().getJdbcType());
+						c.getAnno().type().getJdbcType());
 			}
 			statement.execute();
 		}finally{
@@ -374,10 +374,10 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 			// last validate
 			for (SQLColumn c : table_columns)
 			{
-				int rc = c.index;
+				int rc = c.getIndex();
 				
 				String rname = metadata.getColumnName(rc);
-				String tname = c.name;
+				String tname = c.getName();
 				
 				// 检测名字是否正确
 				if (!rname.equalsIgnoreCase(tname)) 
@@ -392,12 +392,12 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 				}
 				
 				// 检查类型是否正确
-				if (!c.anno.type().typeEquals(metadata.getColumnType(rc))) 
+				if (!c.getAnno().type().typeEquals(metadata.getColumnType(rc))) 
 				{
 					String	rtypename	= metadata.getColumnTypeName(rc);
 					int		rtype		= metadata.getColumnType(rc);
-					String	ttypename	= c.anno.type().getDirverTypeName();
-					int		ttype		= c.anno.type().getJdbcType();
+					String	ttypename	= c.getAnno().type().getDirverTypeName();
+					int		ttype		= c.getAnno().type().getJdbcType();
 					
 					System.err.println(
 							"Table '" + table_name + "' " +
@@ -451,15 +451,15 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 				} 
 				else if (rc == -2)
 				{
-					String	rtypename	= metadata.getColumnTypeName(c.index);
-					int		rtype		= metadata.getColumnType(c.index);
-					String	ttypename	= c.anno.type().getDirverTypeName();
-					int		ttype		= c.anno.type().getJdbcType();
+					String	rtypename	= metadata.getColumnTypeName(c.getIndex());
+					int		rtype		= metadata.getColumnType(c.getIndex());
+					String	ttypename	= c.getAnno().type().getDirverTypeName();
+					int		ttype		= c.getAnno().type().getJdbcType();
 					
 					String reson = (
 							"Table '" + table_name + "' " +
-							"field : " + c.name + " : type ["+rtypename+"("+rtype+")"+","+ttypename+"("+ttype+")"+"] not equal! " +
-							"at column " + c.index 
+							"field : " + c.getName() + " : type ["+rtypename+"("+rtype+")"+","+ttypename+"("+ttype+")"+"] not equal! " +
+							"at column " + c.getIndex() 
 							);
 
 					throw new SQLException(reson);
@@ -503,8 +503,8 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 				ResultSetMetaData	metadata		= result.getMetaData();
 				result.close();
 				for (SQLColumn c : table_columns) {
-					String rname = metadata.getColumnTypeName(c.index).toLowerCase();
-					String tname = c.anno.type().getDirverTypeName().toLowerCase();
+					String rname = metadata.getColumnTypeName(c.getIndex()).toLowerCase();
+					String tname = c.getAnno().type().getDirverTypeName().toLowerCase();
 					if (rname.equals(tname)) {
 						String change_sql = getAlterTableChangeColumnSQL(c);
 						System.out.println(change_sql);
@@ -534,8 +534,8 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 	 */
 	static int indexOfSQLColumn(ResultSetMetaData metadata, SQLColumn c) throws SQLException
 	{
-		String	tname	= c.name;
-		SQLType	ttype	= c.anno.type();
+		String	tname	= c.getName();
+		SQLType	ttype	= c.getAnno().type();
 		
 		for (int rc = 1; rc <= metadata.getColumnCount(); rc++) {
 			// 检测名字是否正确
@@ -644,13 +644,13 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 	{
 		StringBuilder add_sql = new StringBuilder();
 		add_sql.append("ALTER TABLE `" + this.table_name + "` CHANGE ");
-		add_sql.append("`" + c.name + "` ");
-		add_sql.append("`" + c.name + "` ");
-		add_sql.append(c.anno.type() + " ");
-		add_sql.append(c.anno.constraint());
-		String default_value = c.anno.defaultValue();
+		add_sql.append("`" + c.getName() + "` ");
+		add_sql.append("`" + c.getName() + "` ");
+		add_sql.append(c.getAnno().type() + " ");
+		add_sql.append(c.getAnno().constraint());
+		String default_value = c.getAnno().defaultValue();
 		if (default_value != null && default_value.length() > 0) {
-			add_sql.append(" DEFAULT '" + c.anno.defaultValue() + "'");
+			add_sql.append(" DEFAULT '" + c.getAnno().defaultValue() + "'");
 		}
 		String comment = c.getAllComment();
 		if (comment != null && comment.length() > 0) {
@@ -664,12 +664,12 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 	{
 		StringBuilder add_sql = new StringBuilder();
 		add_sql.append("ALTER TABLE `" + this.table_name + "` ADD COLUMN ");
-		add_sql.append("`" + c.name + "` ");
-		add_sql.append(c.anno.type() + " ");
-		add_sql.append(c.anno.constraint());
-		String default_value = c.anno.defaultValue();
+		add_sql.append("`" + c.getName() + "` ");
+		add_sql.append(c.getAnno().type() + " ");
+		add_sql.append(c.getAnno().constraint());
+		String default_value = c.getAnno().defaultValue();
 		if (default_value != null && default_value.length() > 0) {
-			add_sql.append(" DEFAULT '" + c.anno.defaultValue() + "'");
+			add_sql.append(" DEFAULT '" + c.getAnno().defaultValue() + "'");
 		}
 		String comment = c.getAllComment();
 		if (comment != null && comment.length() > 0) {
@@ -707,10 +707,10 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 		CUtil.sort(columnss, new ICompare<SQLColumn, SQLColumn>() {
 			StringCompare sc = new StringCompare();
 			public int compare(SQLColumn a, SQLColumn b) {
-				if (a.name.equals(table_type.primary_key_name())) return 1;
-				if (b.name.equals(table_type.primary_key_name())) return -1;
+				if (a.getName().equals(table_type.primary_key_name())) return 1;
+				if (b.getName().equals(table_type.primary_key_name())) return -1;
 				if (sort_fields) {
-					return sc.compare(a.name, b.name);
+					return sc.compare(a.getName(), b.getName());
 				}
 				return 0;
 			}
@@ -719,7 +719,7 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 		String sql = "CREATE TABLE `" + this.table_name + "` (\n";
 		int name_max_len = 1;
 		for (int i = 0; i < columnss.length; i++) {
-			name_max_len = Math.max(columnss[i].name.length()+4, name_max_len);
+			name_max_len = Math.max(columnss[i].getName().length()+4, name_max_len);
 		}
 		
 		for (int i = 0; i < columnss.length; i++)
@@ -727,15 +727,15 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 			SQLColumn column = columnss[i];
 			
 			sql += "\t" + CUtil.snapStringRightSize(
-					"`"+ column.name + "`", name_max_len, ' ') + 
-					" " + column.anno.type();
+					"`"+ column.getName() + "`", name_max_len, ' ') + 
+					" " + column.getAnno().type();
 			
-				String constraint = column.anno.constraint();
+				String constraint = column.getAnno().constraint();
 				if (constraint != null && constraint.length() > 0) {
 					sql += " " + constraint;
 				}
 				
-				String default_value = column.anno.defaultValue();
+				String default_value = column.getAnno().defaultValue();
 				if (default_value != null && default_value.length() > 0) {
 					sql += " DEFAULT '" + default_value + "'";
 				}

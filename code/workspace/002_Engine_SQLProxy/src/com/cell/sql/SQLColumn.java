@@ -19,40 +19,73 @@ public class SQLColumn implements ICompare<SQLColumn, SQLColumn>
 	final public static Logger 		log 		= LoggerFactory.getLogger(SQLColumn.class);
 	
 	/** 在数据库中，该列的描述 */
-	final public SQLField 				anno;
+	private final SQLField 			anno;
 	
 	/** 该字段在数据库中的名字 */
-	final public String					name;
+	private final String			name;
 
 	/**得到层次关系Field*/
-	final public ArrayList<Field> 		fields;
+	final private ArrayList<Field>	fields;
 	
 	/**得到最终数据Field*/
-	final public Field					leaf_field;
+	private final Field				leaf_field;
+	
+//	/**在层次中，是否有标注过只读*/
+//	private boolean 				is_read_only = false;
 	
 	/** 该字段在数据库中的位置 */
-	int index;
+	private int						index;
 	
 	public SQLColumn(SQLField anno, Stack<Field> fields_stack)
 	{
 		this.anno		= anno;
 		this.fields 	= new ArrayList<Field>(fields_stack);
 		this.leaf_field	= this.fields.get(fields.size()-1);
-		
+//		if (anno.readOnly()) {
+//			is_read_only = true;
+//		}
 		String name = fields.get(0).getName();
 		for (int i = 1; i < fields.size(); i++) {
-			name += "__" + fields.get(i).getName();
+			Field f = fields.get(i);
+			name += "__" + f.getName();
+//			SQLField afs = f.getAnnotation(SQLField.class);
+//			if (afs != null) {
+//				if (afs.readOnly()) {
+//					is_read_only = true;
+//				}
+//			}
+//			SQLGroupField afg = f.getAnnotation(SQLGroupField.class);
+//			if (afg != null) {
+//				if (afg.readOnly()) {
+//					is_read_only = true;
+//				}
+//			}
 		}
 		this.name		= name;
 	}
 
-	@Override
-	public String toString() {
-		return getClass().getSimpleName() + " : " + name;
+	final public int getIndex() {
+		return index;
 	}
 
-	public String getAllComment() {
-		String comment = anno.comment();
+	final public SQLField getAnno() {
+		return anno;
+	}
+
+	final public String getName() {
+		return name;
+	}
+
+	final public Field getLeafField() {
+		return leaf_field;
+	}
+	
+	final void setIndex(int i){
+		index = i;
+	}
+
+	final public String getAllComment() {
+		String comment = getAnno().comment();
 		for (int i = fields.size() - 2; i >= 0; i--) {
 			Field field = fields.get(i);
 			SQLGroupField gf = field.getAnnotation(SQLGroupField.class);
@@ -62,15 +95,16 @@ public class SQLColumn implements ICompare<SQLColumn, SQLColumn>
 		}
 		return comment;
 	}
-	
+
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() + " : " + getName();
+	}
+
 	public int compare(SQLColumn a, SQLColumn b) {
 		return b.index - a.index;
 	}
-	
-	void setIndex(int i){
-		index = i;
-	}
-	
+
 	SQLFieldGroup getLeafTable(SQLFieldGroup table) throws Exception
 	{
 		for (int i=1; i<fields.size(); i++) {
@@ -88,14 +122,14 @@ public class SQLColumn implements ICompare<SQLColumn, SQLColumn>
 	public Object getObject(SQLFieldGroup table) throws Exception
 	{
 		table = getLeafTable(table);
-		Object java_object = table.getField(leaf_field);
+		Object java_object = table.getField(getLeafField());
 		try{
 			return SQMTypeManager.getTypeComparer().toSQLObject(
-					anno.type(), 
-					leaf_field.getType(),
+					getAnno().type(), 
+					getLeafField().getType(),
 					java_object);
 		} catch (Exception err) {
-			log.error("getObject Column field \"" + leaf_field.getName() + "@"+table+"\"" +
+			log.error("getObject Column field \"" + getLeafField().getName() + "@"+table+"\"" +
 					" : error=" + err.getMessage());
 			throw err;
 		}
@@ -106,18 +140,19 @@ public class SQLColumn implements ICompare<SQLColumn, SQLColumn>
 		if (data != null) {
 			table = getLeafTable(table);
 			try{
-				table.setField(leaf_field, 
+				table.setField(getLeafField(), 
 						SQMTypeManager.getTypeComparer().toJavaObject(
-								anno.type(),
-								leaf_field.getType(),
+								getAnno().type(),
+								getLeafField().getType(),
 								data));
 			} catch (Exception err) {
-				log.error("setObject Column field \"" + leaf_field.getName() + "@"+table+"\"" +
+				log.error("setObject Column field \"" + getLeafField().getName() + "@"+table+"\"" +
 						" : data="+data+
 						" : error=" + err.getMessage());
-				table.setField(leaf_field, null);
+				table.setField(getLeafField(), null);
 				throw err;
 			}
 		}
 	}
+
 }
