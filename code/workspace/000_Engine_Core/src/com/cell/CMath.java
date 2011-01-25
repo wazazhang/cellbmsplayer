@@ -2,6 +2,8 @@
 
 package com.cell;
 
+import java.util.Collection;
+
 /**
  * util math function none float
  * 
@@ -395,4 +397,42 @@ public class CMath extends CObject{
 		return max > value && min < value ;
 	}
 	
-}
+	
+//	--------------------------------------------------------------------------------------------------
+	
+	/**
+	 * sum all of elements together in the collection
+	 */
+	public static final int accumulate(Collection<Integer> values)
+	{
+		Integer val = 0;
+		for ( Integer tmp : values )
+			val += tmp;
+		return val;
+	}
+	
+	/**
+	 * sum all of elements together in the collection
+	 */
+	public static final float accumulate(Collection<Float> values)
+	{
+		Float val = 0f;
+		for ( Float tmp : values )
+			val += tmp;
+		return val;
+	}
+	
+	/**
+	 * sum all of elements together in the collection
+	 */
+	public static final double accumulate(Collection<Double> values)
+	{
+		Double val = 0d;
+		for ( Double tmp : values )
+			val += tmp;
+		return val;
+	}	
+	
+};
+
+
