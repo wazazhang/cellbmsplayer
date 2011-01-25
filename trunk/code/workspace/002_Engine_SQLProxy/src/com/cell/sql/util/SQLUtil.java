@@ -197,7 +197,7 @@ public class SQLUtil
 		HashMap<String, SQLColumn> ret = new HashMap<String, SQLColumn>(columns.length);
 		
 		for (SQLColumn c : columns) {
-			ret.put(c.name, c);
+			ret.put(c.getName(), c);
 		}
 		
 		return ret;
