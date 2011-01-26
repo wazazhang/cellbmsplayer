@@ -33,6 +33,7 @@ import com.g2d.studio.rpg.AbilityAdapter;
 import com.g2d.studio.rpg.ItemCountCollectionEdit;
 import com.g2d.studio.rpg.ItemFormulaEdit;
 import com.g2d.studio.rpg.ItemRateCollectionEdit;
+import com.g2d.studio.rpg.PropertyAdapters;
 import com.g2d.studio.swing.G2DList;
 import com.g2d.studio.swing.G2DListItem;
 
@@ -189,6 +190,7 @@ public class SkillPropertiesEditor extends JPanel implements ActionListener
 						new AbilityAdapter(),
 						new AbilityAdapter.ObjectAdapter(),
 						new ItemPropertiesAdapter.ValueRangeAdapter(),
+						new PropertyAdapters.UnitTypeAdapter(),
 						new ItemFormulaEdit.ItemFormulaAdapter(),
 						new ItemRateCollectionEdit.ItemRateCollectionAdapter(),
 						new ItemCountCollectionEdit.ItemCountCollectionAdapter());
