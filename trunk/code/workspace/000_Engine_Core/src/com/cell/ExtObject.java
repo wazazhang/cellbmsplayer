@@ -7,6 +7,7 @@ import java.io.ObjectOutput;
 import java.io.ObjectStreamException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 import com.cell.util.MarkedHashtable;
 import com.cell.util.Pair;
@@ -56,10 +57,10 @@ public abstract class ExtObject implements Externalizable
 	{
 		MarkedHashtable	data_group = new MarkedHashtable();
 		onWrite(data_group);
-		
-		ArrayList<Pair<String, Object>> stream_data = new ArrayList<Pair<String,Object>>(data_group.size());
-		for (String key : data_group.keySet()) {
-			Object value = data_group.get(key);
+		TreeMap<String, Object> sortmap = new TreeMap<String, Object>(data_group);
+		ArrayList<Pair<String, Object>> stream_data = new ArrayList<Pair<String,Object>>(sortmap.size());
+		for (String key : sortmap.keySet()) {
+			Object value = sortmap.get(key);
 			stream_data.add(new Pair<String, Object>(key, value));
 		}
 		out.writeObject(stream_data);
