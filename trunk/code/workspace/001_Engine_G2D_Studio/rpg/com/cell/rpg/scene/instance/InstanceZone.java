@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.concurrent.TimeUnit;
 
 import com.cell.rpg.NamedObject;
@@ -63,7 +64,7 @@ public class InstanceZone extends RPGObject implements NamedObject, TriggersPack
 	
 	private TriggerGenerator	binded_triggers 	= new TriggerGenerator();
 
-	private HashMap<Integer, BindedScene> scenes	= new HashMap<Integer, BindedScene>();
+	private LinkedHashMap<Integer, BindedScene> scenes	= new LinkedHashMap<Integer, BindedScene>();
 	
 	private Data				data_map			= new Data();
 	
@@ -96,7 +97,7 @@ public class InstanceZone extends RPGObject implements NamedObject, TriggersPack
 			binded_triggers = new TriggerGenerator();
 		}
 		if (scenes == null) {
-			scenes = new HashMap<Integer, BindedScene>();
+			scenes = new LinkedHashMap<Integer, BindedScene>();
 		}
 		if (data_map == null) {
 			data_map = new Data();

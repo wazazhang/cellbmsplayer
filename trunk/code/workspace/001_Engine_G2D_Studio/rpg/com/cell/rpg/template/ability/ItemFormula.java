@@ -1,6 +1,7 @@
 package com.cell.rpg.template.ability;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import com.cell.rpg.ability.AbstractAbility;
 import com.g2d.annotation.Property;
@@ -16,11 +17,11 @@ public class ItemFormula extends AbstractAbility
 	private static final long serialVersionUID = 1L;
 	/**材料列表<道具ID, 数量>*/
 	@Property("材料列表")
-	public HashMap<Integer, Integer> src_items_id = new HashMap<Integer, Integer>();
+	public LinkedHashMap<Integer, Integer> src_items_id = new LinkedHashMap<Integer, Integer>();
 	
 	/**产生物列表<道具ID, 数量>*/
 	@Property("产生物列表")
-	public HashMap<Integer, Integer> dst_items_id = new HashMap<Integer, Integer>();
+	public LinkedHashMap<Integer, Integer> dst_items_id = new LinkedHashMap<Integer, Integer>();
 	
 	public ItemFormula() {}
 	
