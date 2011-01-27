@@ -497,8 +497,13 @@ public class QuestItem extends RPGObject implements NamedObject
 	final public static class AwardBattle extends Result
 	{
 		private static final long serialVersionUID = 1L;
+		
 		@Property("和指定单位类型战斗")
 		public Integer			unit_id			= -1;
+		
+		@Property("该单位是否为友军")
+		public boolean			is_firend;
+		
 		@Property("附加参数")
 		public String			arg				= "";
 	}
