@@ -3,6 +3,7 @@ package com.cell.rpg.res;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicReference;
@@ -56,7 +57,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 	
 	final public String res_root;
 	
-	
+	/*
 	// res objects
 	protected Hashtable<String, SceneSet>			all_scene_set;
 	protected Hashtable<String, SpriteSet>			all_actor_set;
@@ -92,12 +93,14 @@ public abstract class ResourceManager extends CellSetResourceManager
 	protected Hashtable<Integer, String> 			names_questgroups;
 	protected Hashtable<Integer, String>			names_scenes;
 	protected Hashtable<Integer, String>			names_instance_zones;
-	
+	*/
 	
 	// icons , sounds, talks
 	protected Hashtable<String, AtomicReference<BufferedImage>>	all_icons;
 	protected Hashtable<String, AtomicReference<ISound>>		all_sounds;
 	protected Hashtable<String, AtomicReference<String>>		all_npc_talks;
+	
+	final protected ResourceMetaData			meta_data;
 	
 //	--------------------------------------------------------------------------------------------------------------------
 
@@ -109,6 +112,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 	public ResourceManager(String res_root) throws Exception
 	{
 		this.res_root	= res_root;
+		this.meta_data	= new ResourceMetaData();
 	}
 
 	public ResourceManager(
@@ -120,6 +124,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 			boolean init_sound)  throws Exception
 	{
 		this.res_root	= res_root;
+		this.meta_data	= new ResourceMetaData();
 		
 		if (init_set) 
 			initAllSet();
@@ -133,6 +138,32 @@ public abstract class ResourceManager extends CellSetResourceManager
 		if (init_sound) 
 			initSounds();
 	}
+	
+	public ResourceManager(String res_root, ResourceMetaData meta)  throws Exception
+	{
+		this.res_root	= res_root;
+		this.meta_data	= meta;
+
+		if (meta_data.all_icons != null) {
+			this.all_icons = new Hashtable<String, AtomicReference<BufferedImage>>();
+			for (String name : meta_data.all_icons) {
+				all_icons.put(name, new AtomicReference<BufferedImage>());
+			}
+		}
+		if (meta_data.all_sounds != null) {
+			this.all_sounds = new Hashtable<String, AtomicReference<ISound>>();
+			for (String name : meta_data.all_sounds) {
+				all_sounds.put(name, new AtomicReference<ISound>());
+			}
+		}
+		if (meta_data.all_npc_talks != null) {
+			this.all_npc_talks = new Hashtable<String, AtomicReference<String>>();
+			for (String name : meta_data.all_npc_talks) {
+				all_npc_talks.put(name, new AtomicReference<String>());
+			}
+		}
+	}
+
 	
 //	--------------------------------------------------------------------------------------------------------------------
 
@@ -201,10 +232,10 @@ public abstract class ResourceManager extends CellSetResourceManager
 
 	final protected void initAllSet(AtomicReference<Float> percent) throws Exception
 	{
-		all_scene_set	= readSets("/project.g2d.save/resources/scene_list.list",	SceneSet.class,		percent, 0 , 4);
-		all_actor_set	= readSets("/project.g2d.save/resources/actor_list.list",	SpriteSet.class,	percent, 1 , 4);
-		all_avatar_set	= readSets("/project.g2d.save/resources/avatar_list.list",	SpriteSet.class,	percent, 2 , 4);
-		all_effect_set	= readSets("/project.g2d.save/resources/effect_list.list",	SpriteSet.class,	percent, 3 , 4);
+		meta_data.all_scene_set	= readSets("/project.g2d.save/resources/scene_list.list",	SceneSet.class,		percent, 0 , 4);
+		meta_data.all_actor_set	= readSets("/project.g2d.save/resources/actor_list.list",	SpriteSet.class,	percent, 1 , 4);
+		meta_data.all_avatar_set= readSets("/project.g2d.save/resources/avatar_list.list",	SpriteSet.class,	percent, 2 , 4);
+		meta_data.all_effect_set= readSets("/project.g2d.save/resources/effect_list.list",	SpriteSet.class,	percent, 3 , 4);
 	}
 	
 	
@@ -217,22 +248,22 @@ public abstract class ResourceManager extends CellSetResourceManager
 	{
 		RPGObjectMap.setPersistanceManagerDriver(persistance_manager);
 		
-		item_properties = readRPGObjects(ItemProperties.class,	percent, 0,  13);
+		meta_data.item_properties = readRPGObjects(ItemProperties.class,	percent, 0,  13);
 		
-		tunits			= readRPGObjects(TUnit.class,			percent, 1,  13);
-		titems			= readRPGObjects(TItem.class,			percent, 2,  13);
-		tshopitems		= readRPGObjects(TShopItem.class,		percent, 3,  13);
-		tavatars		= readRPGObjects(TAvatar.class,			percent, 4,  13);
-		tskills			= readRPGObjects(TSkill.class,			percent, 5,  13);
-		teffects		= readRPGObjects(TEffect.class,			percent, 6,  13);
-		titemlists		= readRPGObjects(TItemList.class,		percent, 7,  13);
-		tshopitemlists	= readRPGObjects(TShopItemList.class,	percent, 8,  13);
+		meta_data.tunits			= readRPGObjects(TUnit.class,			percent, 1,  13);
+		meta_data.titems			= readRPGObjects(TItem.class,			percent, 2,  13);
+		meta_data.tshopitems		= readRPGObjects(TShopItem.class,		percent, 3,  13);
+		meta_data.tavatars			= readRPGObjects(TAvatar.class,			percent, 4,  13);
+		meta_data.tskills			= readRPGObjects(TSkill.class,			percent, 5,  13);
+		meta_data.teffects			= readRPGObjects(TEffect.class,			percent, 6,  13);
+		meta_data.titemlists		= readRPGObjects(TItemList.class,		percent, 7,  13);
+		meta_data.tshopitemlists	= readRPGObjects(TShopItemList.class,	percent, 8,  13);
 		
-		quests			= readRPGObjects(Quest.class,			percent, 9,  13);
-		questgroups		= readRPGObjects(QuestGroup.class,		percent, 10, 13);
+		meta_data.quests			= readRPGObjects(Quest.class,			percent, 9,  13);
+		meta_data.questgroups		= readRPGObjects(QuestGroup.class,		percent, 10, 13);
 		
-		scenes			= readRPGObjects(Scene.class,			percent, 11, 13);
-		instance_zones	= readRPGObjects(InstanceZone.class,	percent, 12, 13);
+		meta_data.scenes			= readRPGObjects(Scene.class,			percent, 11, 13);
+		meta_data.instance_zones	= readRPGObjects(InstanceZone.class,	percent, 12, 13);
 	}
 	
 	final protected void initAllXmlNames()  throws Exception
@@ -245,33 +276,33 @@ public abstract class ResourceManager extends CellSetResourceManager
 		percent.set(0f);
 		float factor = 1f / 13f; 
 		
-		names_item_properties	= readRPGObjectNames(ItemProperties.class);
+		meta_data.names_item_properties	= readRPGObjectNames(ItemProperties.class);
 		percent.set(1 * factor);
 		
-		names_tunits			= readRPGObjectNames(TUnit.class);
+		meta_data.names_tunits			= readRPGObjectNames(TUnit.class);
 		percent.set(2 * factor);
-		names_titems			= readRPGObjectNames(TItem.class);
+		meta_data.names_titems			= readRPGObjectNames(TItem.class);
 		percent.set(3 * factor);
-		names_tshopitems		= readRPGObjectNames(TShopItem.class);
+		meta_data.names_tshopitems		= readRPGObjectNames(TShopItem.class);
 		percent.set(4 * factor);
-		names_tavatars			= readRPGObjectNames(TAvatar.class);
+		meta_data.names_tavatars		= readRPGObjectNames(TAvatar.class);
 		percent.set(5 * factor);
-		names_tskills			= readRPGObjectNames(TSkill.class);
+		meta_data.names_tskills			= readRPGObjectNames(TSkill.class);
 		percent.set(6 * factor);
-		names_teffects			= readRPGObjectNames(TEffect.class);
+		meta_data.names_teffects		= readRPGObjectNames(TEffect.class);
 		percent.set(7 * factor);
-		names_titemlists		= readRPGObjectNames(TItemList.class);
+		meta_data.names_titemlists		= readRPGObjectNames(TItemList.class);
 		percent.set(8 * factor);
-		names_tshopitemlists	= readRPGObjectNames(TShopItemList.class);
+		meta_data.names_tshopitemlists	= readRPGObjectNames(TShopItemList.class);
 		percent.set(9 * factor);
 		
-		names_quests			= readRPGObjectNames(Quest.class);
+		meta_data.names_quests			= readRPGObjectNames(Quest.class);
 		percent.set(10 * factor);
-		names_questgroups		= readRPGObjectNames(QuestGroup.class);
+		meta_data.names_questgroups		= readRPGObjectNames(QuestGroup.class);
 		percent.set(11 * factor);
-		names_scenes			= readRPGObjectNames(Scene.class);
+		meta_data.names_scenes			= readRPGObjectNames(Scene.class);
 		percent.set(12 * factor);
-		names_instance_zones	= readRPGObjectNames(InstanceZone.class);
+		meta_data.names_instance_zones	= readRPGObjectNames(InstanceZone.class);
 		percent.set(13 * factor);
 	}
 	
@@ -295,17 +326,29 @@ public abstract class ResourceManager extends CellSetResourceManager
 	
 	final protected void initIcons()
 	{
-		all_icons		= readIcons("/project.g2d.save/icons/icon.list" );
+		meta_data.all_icons = readIcons("/project.g2d.save/icons/icon.list" );
+		this.all_icons = new Hashtable<String, AtomicReference<BufferedImage>>();
+		for (String name : meta_data.all_icons) {
+			all_icons.put(name, new AtomicReference<BufferedImage>());
+		}
 	}
 	
 	final protected void initSounds()
 	{
-		all_sounds		= readSounds("/project.g2d.save/sounds/sound.list" );
+		meta_data.all_sounds	= readSounds("/project.g2d.save/sounds/sound.list" );
+		this.all_sounds = new Hashtable<String, AtomicReference<ISound>>();
+		for (String name : meta_data.all_sounds) {
+			all_sounds.put(name, new AtomicReference<ISound>());
+		}
 	}
 	
 	final protected void initNpcTalks() 
 	{
-		all_npc_talks 	= readNpcTalks("/project.g2d.save/talks/talks.list" );
+		meta_data.all_npc_talks = readNpcTalks("/project.g2d.save/talks/talks.list" );
+		this.all_npc_talks = new Hashtable<String, AtomicReference<String>>();
+		for (String name : meta_data.all_npc_talks) {
+			all_npc_talks.put(name, new AtomicReference<String>());
+		}
 	}
 	
 //	--------------------------------------------------------------------------------------------------------------------
@@ -352,11 +395,11 @@ public abstract class ResourceManager extends CellSetResourceManager
 		return table;
 	}
 
-	final protected Hashtable<String, AtomicReference<BufferedImage>> readIcons(String icon_list)
+	final protected HashSet<String> readIcons(String icon_list)
 	{
 		System.out.println("list icons : " + icon_list);
 
-		Hashtable<String, AtomicReference<BufferedImage>> table = new Hashtable<String, AtomicReference<BufferedImage>>();
+		HashSet<String> table = new HashSet<String>();
 		
 		String[] res_list = readAllLine(icon_list, "UTF-8");
 		
@@ -366,7 +409,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 			String icon_id 	= split[0];
 			String icon_w 	= split[1];
 			String icon_h 	= split[2];
-			table.put(icon_id, new AtomicReference<BufferedImage>(null));
+			table.add(icon_id);
 			
 			if (PRINT_VERBOS)
 			System.out.println("\tget icon : " + icon_id + "(" + icon_w + "x" + icon_h + ")");
@@ -378,17 +421,17 @@ public abstract class ResourceManager extends CellSetResourceManager
 	}
 
 
-	final protected Hashtable<String, AtomicReference<ISound>> readSounds(String sound_list)
+	final protected HashSet<String> readSounds(String sound_list)
 	{
 		System.out.println("list sounds : " + sound_list);
 
-		Hashtable<String, AtomicReference<ISound>> table = new Hashtable<String, AtomicReference<ISound>>();
+		HashSet<String> table = new HashSet<String>();
 		
 		String[] res_list = readAllLine(sound_list, "UTF-8");
 		
 		for (int i=0; i<res_list.length; i++)
 		{
-			table.put(res_list[i].trim(), new AtomicReference<ISound>(null));
+			table.add(res_list[i].trim());
 			if (PRINT_VERBOS)
 			System.out.println("\tget sound : " + res_list[i]);
 		}
@@ -398,17 +441,17 @@ public abstract class ResourceManager extends CellSetResourceManager
 		return table;
 	}
 	
-	final protected Hashtable<String, AtomicReference<String>> readNpcTalks(String talklist)
+	final protected HashSet<String> readNpcTalks(String talklist)
 	{
 		System.out.println("list npc talks : " + talklist);
 
-		Hashtable<String, AtomicReference<String>> table = new Hashtable<String, AtomicReference<String>>();
+		HashSet<String> table = new HashSet<String>();
 		
 		String[] res_list = readAllLine(talklist, "UTF-8");
 		
 		for (int i=0; i<res_list.length; i++)
 		{
-			table.put(res_list[i].trim(), new AtomicReference<String>(null));
+			table.add(res_list[i].trim());
 			if (PRINT_VERBOS)
 			System.out.println("\tget npc talk : " + res_list[i]);
 		}
@@ -553,43 +596,43 @@ public abstract class ResourceManager extends CellSetResourceManager
 	private static void SetResources_____________________________________________________(){}
 	
 	public SceneSet getSceneSet(String cpj_name, String obj_name) throws Exception{
-		SceneSet set = all_scene_set.get(ResourceSet.toID(cpj_name, obj_name));
+		SceneSet set = meta_data.all_scene_set.get(ResourceSet.toID(cpj_name, obj_name));
 		set.loadSetObject(this);
 		return set;
 	}
 
 	public SpriteSet getActorSet(String cpj_name, String obj_name) throws Exception{
-		SpriteSet set = all_actor_set.get(ResourceSet.toID(cpj_name, obj_name));
+		SpriteSet set = meta_data.all_actor_set.get(ResourceSet.toID(cpj_name, obj_name));
 		set.loadSetObject(this);
 		return set;
 	}
 	
 	public SpriteSet getAvatarSet(String cpj_name, String obj_name) throws Exception{
-		SpriteSet set = all_avatar_set.get(ResourceSet.toID(cpj_name, obj_name));
+		SpriteSet set = meta_data.all_avatar_set.get(ResourceSet.toID(cpj_name, obj_name));
 		set.loadSetObject(this);
 		return set;
 	}
 	
 	public SpriteSet getEffectSet(String cpj_name, String obj_name) throws Exception{
-		SpriteSet set = all_effect_set.get(ResourceSet.toID(cpj_name, obj_name));
+		SpriteSet set = meta_data.all_effect_set.get(ResourceSet.toID(cpj_name, obj_name));
 		set.loadSetObject(this);
 		return set;
 	}
 	
 	public Vector<SceneSet> getAllScenes() {
-		return new Vector<SceneSet>(all_scene_set.values());
+		return new Vector<SceneSet>(meta_data.all_scene_set.values());
 	}
 	
 	public Vector<SpriteSet> getAllActors() {
-		return new Vector<SpriteSet>(all_actor_set.values());
+		return new Vector<SpriteSet>(meta_data.all_actor_set.values());
 	}
 	
 	public Vector<SpriteSet> getAllAvatars() {
-		return new Vector<SpriteSet>(all_avatar_set.values());
+		return new Vector<SpriteSet>(meta_data.all_avatar_set.values());
 	}
 	
 	public Vector<SpriteSet> getAllEffects() {
-		return new Vector<SpriteSet>(all_effect_set.values());
+		return new Vector<SpriteSet>(meta_data.all_effect_set.values());
 	}
 
 	public StreamTiles getEffectImages(String cpj_project_name, String cpj_sprite_name) {
@@ -640,65 +683,65 @@ public abstract class ResourceManager extends CellSetResourceManager
 	private static void Templates_____________________________________________________(){}
 	
 	public TUnit getTUnit(int id) {
-		return tunits.get(id);
+		return meta_data.tunits.get(id);
 	}
 	public TItem getTItem(int id) {
-		return titems.get(id);
+		return meta_data.titems.get(id);
 	}
 	public TShopItem getTShopItem(int id) {
-		return tshopitems.get(id);
+		return meta_data.tshopitems.get(id);
 	}
 	public TAvatar getTAvatar(int id) {
-		return tavatars.get(id);
+		return meta_data.tavatars.get(id);
 	}
 	public TSkill getTSkill(int id) {
-		return tskills.get(id);
+		return meta_data.tskills.get(id);
 	}
 	public TEffect getTEffect(int id) {
-		return teffects.get(id);
+		return meta_data.teffects.get(id);
 	}
 	public TItemList getItemList(int id) {
-		return titemlists.get(id);
+		return meta_data.titemlists.get(id);
 	}
 	public TShopItemList getShopItemList(int id) {
-		return tshopitemlists.get(id);
+		return meta_data.tshopitemlists.get(id);
 	}
 	
 	
 	public String getTUnitName(int id) {
-		return names_tunits.get(id);
+		return meta_data.names_tunits.get(id);
 	}
 	public String getTItemName(int id) {
-		return names_titems.get(id);
+		return meta_data.names_titems.get(id);
 	}
 	public String getTShopItemName(int id) {
-		return names_tshopitems.get(id);
+		return meta_data.names_tshopitems.get(id);
 	}
 	public String getTAvatarName(int id) {
-		return names_tavatars.get(id);
+		return meta_data.names_tavatars.get(id);
 	}
 	public String getTSkillName(int id) {
-		return names_tskills.get(id);
+		return meta_data.names_tskills.get(id);
 	}
 	public String getTEffectName(int id) {
-		return names_teffects.get(id);
+		return meta_data.names_teffects.get(id);
 	}
 	public String getTItemListName(int id) {
-		return names_titemlists.get(id);
+		return meta_data.names_titemlists.get(id);
 	}
 	public String getTShopItemListName(int id) {
-		return names_tshopitemlists.get(id);
+		return meta_data.names_tshopitemlists.get(id);
 	}
 	
 	public Vector<TItemList> getAllItemList() {
-		return new Vector<TItemList>(titemlists.values());
+		return new Vector<TItemList>(meta_data.titemlists.values());
 	}
 	public Vector<TShopItemList> getAllShopItemList() {
-		return new Vector<TShopItemList>(tshopitemlists.values());
+		return new Vector<TShopItemList>(meta_data.tshopitemlists.values());
 	}
 
 	public Vector<TAvatar> getAllTAvatar() {
-		return new Vector<TAvatar>(tavatars.values());
+		return new Vector<TAvatar>(meta_data.tavatars.values());
 	}
 //	--------------------------------------------------------------------------------------------------------------------
 //	ItemProperties
@@ -706,15 +749,15 @@ public abstract class ResourceManager extends CellSetResourceManager
 	private static void ItemProperties_____________________________________________________(){}
 	
 	public Hashtable<Integer, ItemProperties> getAllItemProperties() {
-		return new Hashtable<Integer, ItemProperties>(item_properties);
+		return new Hashtable<Integer, ItemProperties>(meta_data.item_properties);
 	}
 
 	public ItemProperties getItemProperties(int id) {
-		return item_properties.get(id);
+		return meta_data.item_properties.get(id);
 	}
 
 	public String getItemPropertiesName(int id) {
-		return names_item_properties.get(id);
+		return meta_data.names_item_properties.get(id);
 	}
 	
 //	--------------------------------------------------------------------------------------------------------------------
@@ -723,27 +766,27 @@ public abstract class ResourceManager extends CellSetResourceManager
 	private static void Quests_____________________________________________________(){}
 	
 	public Hashtable<Integer, Quest> getAllQuests(){
-		return new Hashtable<Integer, Quest>(quests);
+		return new Hashtable<Integer, Quest>(meta_data.quests);
 	}
 
 	public Quest getQuest(int quest_id) {
-		return quests.get(quest_id);
+		return meta_data.quests.get(quest_id);
 	}
 	
 	public Hashtable<Integer, QuestGroup> getAllQuestGroups() {
-		return new Hashtable<Integer, QuestGroup>(questgroups);
+		return new Hashtable<Integer, QuestGroup>(meta_data.questgroups);
 	}
 	
 	public QuestGroup getQuestGroup(int quest_group_id) {
-		return questgroups.get(quest_group_id);
+		return meta_data.questgroups.get(quest_group_id);
 	}
 
 	public String getQuestName(int id) {
-		return names_quests.get(id);
+		return meta_data.names_quests.get(id);
 	}
 	
 	public String getQuestGroupName(int id) {
-		return names_questgroups.get(id);
+		return meta_data.names_questgroups.get(id);
 	}
 	
 //	--------------------------------------------------------------------------------------------------------------------
@@ -752,34 +795,34 @@ public abstract class ResourceManager extends CellSetResourceManager
 	private static void Scenes_____________________________________________________(){}
 	
 	public Scene getRPGScene(int id) {
-		return scenes.get(id);
+		return meta_data.scenes.get(id);
 	}
 
 	public String getRPGSceneName(int id) {
-		return names_scenes.get(id);
+		return meta_data.names_scenes.get(id);
 	}
 	
 	public Hashtable<Integer, Scene> getAllRPGScenes() {
-		return new Hashtable<Integer, Scene>(scenes);
+		return new Hashtable<Integer, Scene>(meta_data.scenes);
 	}
 	
 	public SceneGraph createSceneGraph() {
-		return new SceneGraph(scenes.values());
+		return new SceneGraph(meta_data.scenes.values());
 	}
 	
 	
 	
 
 	public InstanceZone getInstanceZone(int id) {
-		return instance_zones.get(id);
+		return meta_data.instance_zones.get(id);
 	}
 
 	public String getInstanceZoneName(int id) {
-		return names_instance_zones.get(id);
+		return meta_data.names_instance_zones.get(id);
 	}
 	
 	public Hashtable<Integer, InstanceZone> getAllInstanceZone() {
-		return new Hashtable<Integer, InstanceZone>(instance_zones);
+		return new Hashtable<Integer, InstanceZone>(meta_data.instance_zones);
 	}
 	
 	
@@ -792,14 +835,12 @@ public abstract class ResourceManager extends CellSetResourceManager
 	public AtomicReference<BufferedImage> getIcon(String index) {
 		return all_icons.get(index);
 	}
-	
-	public ISound getSound(String index)
-	{
+
+	public ISound getSound(String index) {
 		return all_sounds.get(index).get();
 	}
-	
-	public String getNpcTalk(String index)
-	{
+
+	public String getNpcTalk(String index) {
 		return all_npc_talks.get(index).get();
 	}
 
@@ -809,7 +850,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 	{
 		ArrayList<String> errors = new ArrayList<String>();
 		
-		for (TUnit unit : tunits.values()) {
+		for (TUnit unit : meta_data.tunits.values()) {
 			checkQuest(unit, errors,
 					" unit="+unit.getName() + "("+unit.getIntID()+")");
 		}

@@ -82,21 +82,21 @@ public class UILayout extends DObject
 	public UILayout(){}
 	
 	/**
-	 * @see {@link setImages(BufferedImage[], ImageStyle)}
+	 * @see {@link #setImages(BufferedImage[], ImageStyle)}
 	 */
 	public UILayout(BufferedImage[] images, ImageStyle style){
 		setImages(images, style);
 	}
 	
 	/**
-	 * @see {@link setImages(Image, ImageStyle, int)}
+	 * @see {@link #setImages(Image, ImageStyle, int)}
 	 */
 	public UILayout(BufferedImage src, ImageStyle style, int clipsize){
 		setImages(src, style, clipsize, clipsize>>1);
 	}
 
 	/**
-	 * @see {@link setImages(Image, ImageStyle, int, int)}
+	 * @see {@link #setImages(Image, ImageStyle, int, int)}
 	 */
 	public UILayout(BufferedImage src, ImageStyle style, int clipsize, int bordersize){
 		setImages(src, style, clipsize, bordersize);
@@ -256,22 +256,23 @@ public class UILayout extends DObject
 
 	/**
 	 * @param images
+	 * <pre>
+	 * Rect
 	 * 
-	 * Rect                                  </br>
-	 *                                       </br>
-	 * TopLeft----------Top---------TopRight </br>
-	 * |                                   | </br>
-	 * Left         Background         Right </br>
-	 * |                                   | </br>
-	 * BottomLeft-----Bottom-----BottomRight </br>
-	 *                                       </br>
-	 * images[0] images[1] images[2]         </br>
-	 * images[3] images[4] images[5]         </br>
-	 * images[6] images[7] images[8]         </br>
+	 * TopLeft----------Top---------TopRight 
+	 * |                                   | 
+	 * Left         Background         Right 
+	 * |                                   | 
+	 * BottomLeft-----Bottom-----BottomRight 
+	 * 
+	 * images[0] images[1] images[2]         
+	 * images[3] images[4] images[5]         
+	 * images[6] images[7] images[8]         
 	 * 
 	 * 0,1,2 可以用来横向平铺
 	 * 0,3,6 可以用来纵向平铺
 	 * 4 可以用来缩放
+	 * </pre>
 	 */
 	public void setImages(BufferedImage[] images, ImageStyle style)
 	{
