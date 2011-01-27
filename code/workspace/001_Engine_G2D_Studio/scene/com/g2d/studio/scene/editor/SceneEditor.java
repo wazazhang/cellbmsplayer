@@ -13,9 +13,11 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.Vector;
 
 import javax.swing.ButtonGroup;
@@ -326,7 +328,11 @@ public class SceneEditor extends AbstractFrame implements ActionListener, Window
 		for (SceneUnitTag tag : list) {
 			tag.onWriteReady(list);
 		}
-		Vector<SceneUnit> ret = new Vector<SceneUnit>(list.size());
+		TreeSet<SceneUnit> ret = new TreeSet<SceneUnit>(new Comparator<SceneUnit>() {
+			public int compare(SceneUnit o1, SceneUnit o2) {
+				return CUtil.getStringCompare().compare(o1.id, o2.id);
+			}
+		});
 		for (SceneUnitTag tag : list) {
 			try {
 				ret.add(tag.onWrite());
@@ -336,7 +342,7 @@ public class SceneEditor extends AbstractFrame implements ActionListener, Window
 		}
 		scene_node.getData().scene_units.clear();
 		scene_node.getData().scene_units.addAll(ret);
-		return ret;
+		return new Vector<SceneUnit>(ret);
 	}
 	
 	
