@@ -82,7 +82,8 @@ public class ItemCountCollectionEdit extends AbstractOptionDialog<ItemCountColle
 	@Override
 	public Component getComponent(ObjectPropertyEdit panel) {
 		ItemCountCollection data = getSelectedObject();
-		cell_edit.setText(data.toString());
+		if (data != null)
+			cell_edit.setText(data.toString());
 		return cell_edit;
 	}
 	

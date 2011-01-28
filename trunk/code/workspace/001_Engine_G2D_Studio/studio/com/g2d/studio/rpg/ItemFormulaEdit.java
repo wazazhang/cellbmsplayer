@@ -5,7 +5,8 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.Field;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -29,6 +30,9 @@ import com.g2d.studio.gameedit.ObjectSelectDialog;
 import com.g2d.studio.gameedit.template.XLSItem;
 import com.g2d.studio.swing.G2DList;
 import com.g2d.studio.swing.G2DListItem;
+
+
+
 
 @SuppressWarnings("serial")
 public class ItemFormulaEdit extends AbstractOptionDialog<ItemFormula> implements PropertyCellEdit<ItemFormula>
@@ -88,7 +92,8 @@ public class ItemFormulaEdit extends AbstractOptionDialog<ItemFormula> implement
 	@Override
 	public Component getComponent(ObjectPropertyEdit panel) {
 		ItemFormula data = getSelectedObject();
-		cell_edit.setText(data.toString());
+		if (data != null)
+			cell_edit.setText(data.toString());
 		return cell_edit;
 	}
 	
@@ -111,7 +116,7 @@ public class ItemFormulaEdit extends AbstractOptionDialog<ItemFormula> implement
 		JButton					set_count	= new JButton("设置数量");
 		final Vector<ListItemData> list_data;
 		
-		public ListPanel(String title, HashMap<Integer, Integer> datas)
+		public ListPanel(String title, Map<Integer, Integer> datas)
 		{
 			super(new BorderLayout());
 
@@ -142,8 +147,8 @@ public class ItemFormulaEdit extends AbstractOptionDialog<ItemFormula> implement
 			this.list.setListData(list_data);
 		}
 		
-		public HashMap<Integer, Integer> getValue() {
-			HashMap<Integer, Integer> ret = new HashMap<Integer, Integer>(list_data.size());
+		public Map<Integer, Integer> getValue() {
+			Map<Integer, Integer> ret = new LinkedHashMap<Integer, Integer>(); // list_data.size());
 			for (ListItemData data : list_data) {
 				ret.put(data.item.getIntID(), data.count);
 			}
