@@ -113,6 +113,66 @@ public class TSkill extends TemplateNode
 		}
 	}
 	
+	/**
+	 * 移动一个属性，将某个位置的属性向前（正偏移）或向后（负偏移）移动一定的偏移量
+	 * @param column 指定位置的属性
+	 * @param offset 偏移量
+	 */
+	synchronized
+	public int moveColumn(int column, int offset)
+	{
+		int total = getMaxColumn();
+		
+		if ( (0<=column) && (column<total) ) 
+		{
+			if (offset == 0)
+				return 0;
+			
+			if (offset > 0) // 向前
+			{
+				int new_index = column + offset + 1;
+				
+				if (new_index > total)
+					return -2;
+				
+				Class<? extends ItemPropertyTemplate> col_data = (Class<? extends ItemPropertyTemplate>)columns.get(column);
+				columns.add(new_index, col_data);
+				columns.remove(column);
+				
+				for (ArrayList<ItemPropertyTemplate> level : level_properties) 
+				{
+					ItemPropertyTemplate ipt = (ItemPropertyTemplate)level.get(column);
+					level.add(new_index, ipt);
+					level.remove(column);
+				}
+				
+				return 1;				
+			}
+			else // 向后
+			{
+				int new_index = column + offset;
+				
+				if (new_index < 0)
+					return -2;
+				
+				Class<? extends ItemPropertyTemplate> col_data = (Class<? extends ItemPropertyTemplate>)columns.get(column);
+				columns.add(new_index, col_data);
+				columns.remove(column+1);
+				
+				for (ArrayList<ItemPropertyTemplate> level : level_properties) 
+				{
+					ItemPropertyTemplate ipt = (ItemPropertyTemplate)level.get(column);
+					level.add(new_index, ipt);
+					level.remove(column+1);
+				}
+				
+				return 1;
+			}
+		}
+		
+		return -1;
+	}
+	
 //	----------------------------------------------------------------------------------------------------------------------------
 
 	/**

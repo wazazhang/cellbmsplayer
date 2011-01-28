@@ -1203,6 +1203,54 @@ public class CUtil extends CObject
 		return str;
 	}
 	
+	
+	//-------------------------------------------------------------------------------------------------------------
+	
+	static public String concat(String[] strs, String seperator)
+	{
+		if ( (strs != null) && (strs.length > 0) )
+		{
+			StringBuffer strbuf = new StringBuffer();
+			
+			if ( (seperator != null) && !seperator.isEmpty() )
+			{
+				for ( String str : strs )
+					strbuf.append(str).append(seperator);
+			}
+			else
+			{
+				for ( String str : strs )
+					strbuf.append(str);				
+			}
+			
+			return strbuf.toString();
+		}
+		
+		return "";
+	}
+	
+	static public String concat(Collection<String> strs, String seperator)
+	{
+		if ( (strs != null) && !strs.isEmpty() )
+		{
+			StringBuffer strbuf = new StringBuffer();
+			
+			if ( (seperator != null) && !seperator.isEmpty() )
+			{
+				for ( String str : strs )
+					strbuf.append(str).append(seperator);
+			}
+			else
+			{
+				for ( String str : strs )
+					strbuf.append(str);				
+			}
+			
+			return strbuf.toString();
+		}
+		
+		return "";		
+	}
 
 	static public String getSameCharBlock(String src, int start, char ch)
 	{

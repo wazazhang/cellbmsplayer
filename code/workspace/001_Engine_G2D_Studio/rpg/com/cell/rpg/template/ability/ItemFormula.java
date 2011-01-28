@@ -1,6 +1,6 @@
 package com.cell.rpg.template.ability;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashMap;
 
 import com.cell.rpg.ability.AbstractAbility;
@@ -26,13 +26,18 @@ public class ItemFormula extends AbstractAbility
 	public ItemFormula() {}
 	
 	@Override
-	public boolean isMultiField() {
+	public boolean isMultiField() 
+	{
 		return true;
 	}
 	
 	@Override
-	public String toString() {
+	public String toString() 
+	{
 		return super.toString() + " [" + src_items_id.size() + " -> " + dst_items_id.size() + "]";
 	}
 
-}
+}; // class ItemFormula
+
+
+

@@ -46,6 +46,8 @@ public class SkillPropertiesEditor extends JPanel implements ActionListener
 	JButton		tool_add_column	= new JButton("添加属性");
 	JButton		tool_del_column	= new JButton("删除属性");
 	JButton		tool_set_level	= new JButton("设置等级");
+	JButton		tool_set_up		= new JButton("↑");
+	JButton		tool_set_down	= new JButton("↓");
 	
 	JSplitPane	split			= new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 	JScrollPane split_left		= new JScrollPane();
@@ -62,10 +64,15 @@ public class SkillPropertiesEditor extends JPanel implements ActionListener
 			tool_add_column.addActionListener(this);
 			tool_del_column.addActionListener(this);
 			tool_set_level.addActionListener(this);
+			tool_set_up.addActionListener(this);
+			tool_set_down.addActionListener(this);
 			tools.add(tool_add_column);
 			tools.add(tool_del_column);
 			tools.addSeparator();
 			tools.add(tool_set_level);
+			tools.addSeparator();
+			tools.add(tool_set_up);
+			tools.add(tool_set_down);
 		}
 		
 		this.add(split, BorderLayout.CENTER);
@@ -80,8 +87,11 @@ public class SkillPropertiesEditor extends JPanel implements ActionListener
 //	------------------------------------------------------------------------------------------------------------------
 	
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (tool_add_column == e.getSource()) {
+	public void actionPerformed(ActionEvent e) 
+	{
+		Object source = e.getSource();
+		
+		if (tool_add_column == source) {
 			ItemPropertyNode node = new ItemPropertySelectDialog(this, null).showDialog();
 			if (node != null) {
 				ItemPropertyTemplate tt = node.getItemPropertyTemplate();
@@ -91,14 +101,14 @@ public class SkillPropertiesEditor extends JPanel implements ActionListener
 				}
 			}
 		}
-		else if (tool_del_column == e.getSource()) {
+		else if (tool_del_column == source) {
 			ColumnItem item = ((ColumnList)split_left.getViewport().getView()).getSelectedItem();
 			if (item != null) {
 				skill.getData().removeColumn(item.column);
 				refreshColumns();
 			}
 		}
-		else if (tool_set_level == e.getSource()) {
+		else if (tool_set_level == source) {
 			Object value = JOptionPane.showInputDialog(this, "输入等级数！", skill.getData().getMaxLevel());
 			if (value!=null) {
 				try {
@@ -115,9 +125,30 @@ public class SkillPropertiesEditor extends JPanel implements ActionListener
 				}
 			}
 		}
+		else if (tool_set_up == source) {
+			ColumnItem item = ((ColumnList)split_left.getViewport().getView()).getSelectedItem();
+			if (item != null) {
+				int new_index = item.column - 1;
+				if (skill.getData().moveColumn(item.column, -1) > 0) {
+					refreshColumns();
+					((ColumnList)split_left.getViewport().getView()).setSelectedIndex(new_index);
+				}
+			}			
+		}
+		else if (tool_set_down == source) {
+			ColumnItem item = ((ColumnList)split_left.getViewport().getView()).getSelectedItem();
+			if (item != null) {
+				int new_index = item.column + 1;
+				if (skill.getData().moveColumn(item.column, 1) > 0) {
+					refreshColumns();
+					((ColumnList)split_left.getViewport().getView()).setSelectedIndex(new_index);
+				}
+			}			
+		}
 	}
 
-	private void refreshColumns() {
+	private void refreshColumns() 
+	{
 		split_left.setViewportView(new ColumnList());
 	}
 	
@@ -125,7 +156,8 @@ public class SkillPropertiesEditor extends JPanel implements ActionListener
 	
 	class ColumnList extends G2DList<ColumnItem> implements ListSelectionListener
 	{
-		public ColumnList() {
+		public ColumnList() 
+		{
 			Vector<ColumnItem> list_data = new Vector<ColumnItem>(skill.getData().getMaxColumn());
 			for (int column = 0; column < skill.getData().getMaxColumn(); column++) {
 				list_data.add(new ColumnItem(column));
@@ -136,7 +168,8 @@ public class SkillPropertiesEditor extends JPanel implements ActionListener
 		}
 		
 		@Override
-		public void valueChanged(ListSelectionEvent e) {
+		public void valueChanged(ListSelectionEvent e) 
+		{
 			ColumnItem selected = getSelectedItem();
 			if (selected != null) {			
 				split.setRightComponent(selected.levels);
@@ -162,17 +195,20 @@ public class SkillPropertiesEditor extends JPanel implements ActionListener
 		}
 		
 		@Override
-		public Component getListComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+		public Component getListComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) 
+		{
 			return null;
 		}
 		
 		@Override
-		public ImageIcon getListIcon(boolean update) {
+		public ImageIcon getListIcon(boolean update) 
+		{
 			return null;
 		}
 		
 		@Override
-		public String getListName() {
+		public String getListName() 
+		{
 			return AbstractAbility.getEditName(column_type);
 		}
 
@@ -209,7 +245,8 @@ public class SkillPropertiesEditor extends JPanel implements ActionListener
 	{
 		
 		@Override
-		public String getCommand(Object row_data, Field columnField) {
+		public String getCommand(Object row_data, Field columnField) 
+		{
 			if (ArgTemplate.class.isAssignableFrom(columnField.getType())) {
 				return "填充" + ArgTemplate.class.getSimpleName();
 			}
@@ -218,14 +255,16 @@ public class SkillPropertiesEditor extends JPanel implements ActionListener
 
 		@Override
 		public Component startFill(ObjectPropertyRowPanel<?> panel,
-				Field columnType, ArrayList<?> rowDatas) {
+				Field columnType, ArrayList<?> rowDatas) 
+		{
 
 			return this;
 		}
 
 		@Override
 		public ArrayList<Object> getValues(ObjectPropertyRowPanel<?> panel,
-				Field columnType, ArrayList<?> rowDatas) {
+				Field columnType, ArrayList<?> rowDatas) 
+		{
 
 			return null;
 		}
