@@ -25,6 +25,9 @@ import java.util.Locale;
 import java.util.Random;
 import java.util.TimeZone;
 
+import com.cell.CIO.URLInputStream;
+import com.cell.io.ResInputStream;
+
 /**
  * @author WAZA
  * @since 2006-11-28
@@ -205,7 +208,12 @@ public class CObject {
 			}
 			return is;
 		}
-
+		
+		@Override
+		public ResInputStream getRemoteResource(String file, int timeout) throws IOException {
+			return null;
+		}
+		
 		public String getAppProperty(String key) {
 			return Propertys.get(key);
 		}

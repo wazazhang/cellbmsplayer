@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.net.UnknownHostException;
@@ -22,8 +23,10 @@ import java.util.Vector;
 
 import com.cell.CObject;
 import com.cell.IAppBridge;
+import com.cell.CIO.URLInputStream;
 import com.cell.gfx.IGfxBridge;
 import com.cell.gfx.IImage;
+import com.cell.io.ResInputStream;
 
 public class CAppBridge implements IAppBridge, IGfxBridge
 {
@@ -118,6 +121,11 @@ public class CAppBridge implements IAppBridge, IGfxBridge
 		}
 		
 		return is;
+	}
+	
+	@Override
+	public ResInputStream getRemoteResource(String file, int timeout) throws IOException {
+		return null;
 	}
 	
 	public String getAppProperty(String key) {
