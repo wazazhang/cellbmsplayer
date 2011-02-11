@@ -549,7 +549,7 @@ public class Studio extends AbstractFrame
 		}
 	}
 	
-	public class ProgressForm extends JWindow implements IProgress
+	public static class ProgressForm extends JWindow implements IProgress
 	{
 		private static final long serialVersionUID = 1L;
 		private JProgressBar progress = new JProgressBar();

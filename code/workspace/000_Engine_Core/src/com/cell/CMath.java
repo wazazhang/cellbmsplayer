@@ -3,6 +3,7 @@
 package com.cell;
 
 import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * util math function none float
@@ -403,35 +404,89 @@ public class CMath extends CObject{
 	/**
 	 * sum all of elements together in the collection
 	 */
-	public static final int accumulate(Collection<Integer> values)
+	@SuppressWarnings("unchecked")
+	public static final <T> T accumulate(Collection<T> values)
 	{
-		Integer val = 0;
-		for ( Integer tmp : values )
-			val += tmp;
-		return val;
+		if ( (values != null) && !values.isEmpty() )
+		{					
+			Iterator<T> it = values.iterator();
+			
+			T first = it.next();
+			
+			if (first instanceof Integer)
+			{
+				Integer val = 0;
+				for ( Integer tmp : (Collection<Integer>)values )
+					val += tmp;
+				return (T) val;
+			}
+			else if (first instanceof Float)
+			{
+				Float val = 0f;
+				for ( Float tmp : (Collection<Float>)values )
+					val += tmp;
+				return (T) val;
+			}
+			else if (first instanceof Double)
+			{
+				Double val = 0d;
+				for ( Double tmp : (Collection<Double>)values )
+					val += tmp;
+				return (T) val;
+			}
+			else if (first instanceof Long)
+			{
+				Long val = 0l;
+				for ( Long tmp : (Collection<Long>)values )
+					val += tmp;
+				return (T) val;
+			}
+			else if (first instanceof Short)
+			{
+				Integer val = 0;
+				for ( Short tmp : (Collection<Short>)values )
+					val += tmp;
+				return (T) val;
+			}
+			else if (first instanceof Byte)
+			{
+				Integer val = 0;
+				for ( Byte tmp : (Collection<Byte>)values )
+					val += tmp;
+				return (T) val;
+			}
+		}
+
+		return null;
 	}
 	
-	/**
-	 * sum all of elements together in the collection
-	 */
-	public static final float accumulate(Collection<Float> values)
-	{
-		Float val = 0f;
-		for ( Float tmp : values )
-			val += tmp;
-		return val;
-	}
+/**
+ * 下面这种编码方法不再被java7支持，也被证实了是java6及旧版本的编译器的BUG
+ * @see https://bugs.eclipse.org/bugs/show_bug.cgi?id=320514
+ * @see http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6182950	
+ */
 	
-	/**
-	 * sum all of elements together in the collection
-	 */
-	public static final double accumulate(Collection<Double> values)
-	{
-		Double val = 0d;
-		for ( Double tmp : values )
-			val += tmp;
-		return val;
-	}	
+//	/**
+//	 * sum all of elements together in the collection
+//	 */
+//	public static final float accumulate(Collection<Float> values)
+//	{
+//		Float val = 0f;
+//		for ( Float tmp : values )
+//			val += tmp;
+//		return val;
+//	}
+//	
+//	/**
+//	 * sum all of elements together in the collection
+//	 */
+//	public static final double accumulate(Collection<Double> values)
+//	{
+//		Double val = 0d;
+//		for ( Double tmp : values )
+//			val += tmp;
+//		return val;
+//	}	
 	
 };
 
