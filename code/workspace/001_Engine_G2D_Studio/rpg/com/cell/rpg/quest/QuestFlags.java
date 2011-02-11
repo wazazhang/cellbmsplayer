@@ -56,7 +56,7 @@ public class QuestFlags extends AbilitiesTypeMap
 	{
 		private static final long serialVersionUID = 1L;
 		
-		@Property("可重复的次数，0表示无限制")
+		@Property("在刷新时间内可重复的次数，0表示无限制")
 		public int			repeat_count		= 0;
 		
 		@Property("完成该任务多少时间内刷新为可做")
