@@ -645,9 +645,9 @@ public class CIO extends CObject
 							is.close();
 						} catch (IOException e) {}
 					}
-					if (c instanceof HttpURLConnection) {
-						((HttpURLConnection)c).disconnect();
-					}
+//					if (c instanceof HttpURLConnection) {
+//						((HttpURLConnection)c).disconnect();
+//					}
 				}
 			}
 			
