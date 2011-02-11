@@ -106,7 +106,8 @@ public class StringConfig extends Config
 			if (argCount != args.length) {
 				try {
 					throw new Exception(
-							"Format String Error! (argCount != args.length) K = " + key + "\n" + 
+							"Format String Error! (argCount != args.length) " +
+							"K = [" + key.FormatKey + ", " + key.FormatArgKeyStart + ", " + key.FormatArgKeyEnd + "]\n" + 
 							"\"" + src + "\" -> \"" + CUtil.arrayToString(args) + "\"");
 				}catch (Exception e) {
 					e.printStackTrace();
