@@ -32,6 +32,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.cell.io.ResInputStream;
 import com.cell.security.MD5;
 
 //import javax.microedition.lcdui.Image;
@@ -45,11 +46,13 @@ import com.cell.security.MD5;
  */
 public class CIO extends CObject
 {
-	private static Logger			log						= Logger.getLogger("CIO");
-	private static int				url_loading_time_out	= 20000; //ms
-	private static int				url_loading_retry_count	= 5;
-	private static AtomicLong		loaded_bytes			= new AtomicLong(0);
+	private static Logger					log						= Logger.getLogger("CIO");
+	private static int						url_loading_time_out	= 20000; //ms
+	private static int						url_loading_retry_count	= 5;
+	private static AtomicLong				loaded_bytes			= new AtomicLong(0);
 	
+//	------------------------------------------------------------------------------------------------------------------------
+
 
 //	------------------------------------------------------------------------------------------------------------------------
 
@@ -100,7 +103,11 @@ public class CIO extends CObject
 
 		try
 		{
-						
+			if (path.startsWith("res:")) {
+				// load from res
+				return new RemoteResInputStream(path, url_loading_time_out);
+			}
+			
 			if (path.startsWith("http:")) {
 				// load from url
 				try {
@@ -154,15 +161,28 @@ public class CIO extends CObject
 		byte[] data = null;
 		try
 		{
+			if (path.startsWith("res:")) {
+				// load from res
+				data = RemoteResInputStream.loadRemoteData(path, url_loading_time_out, url_loading_retry_count);
+				if (data != null) {
+					return data;
+				} else {
+//					log.log(Level.WARNING, "file not found : " + path);
+				}
+				return null;
+			}
+			
 			if (path.startsWith("http:")) {
 				// load from url
 				try {
 					URL url = new URL(path);
-					data = loadURLData(url, url_loading_time_out, url_loading_retry_count);
+					data = URLInputStream.loadURLData(url, url_loading_time_out, url_loading_retry_count);
 					if (data != null) {
 						return data;
+					} else {
 					}
 				} catch (MalformedURLException err) {}
+				return null;
 			}
 
 			if (path.startsWith("/")) {
@@ -189,7 +209,7 @@ public class CIO extends CObject
 			// load from url
 			try {
 				URL url = new URL(path);
-				data = loadURLData(url, url_loading_time_out, url_loading_retry_count);
+				data = URLInputStream.loadURLData(url, url_loading_time_out, url_loading_retry_count);
 				if (data != null) {
 					return data;
 				}
@@ -212,52 +232,6 @@ public class CIO extends CObject
 	
 
 
-	public static byte[] loadURLData(URL url, int timeout, int retry_count)
-	{
-		URLConnection c = null;
-		InputStream is = null;
-		for (int i = Math.max(1, retry_count); i > 0; --i) {
-			try {
-				c = url.openConnection();
-				c.setConnectTimeout(timeout);
-				c.setReadTimeout(timeout);
-				c.connect();
-				is = c.getInputStream();
-				int len = c.getContentLength();
-				if (len > 0) {
-					int actual = 0;
-					int bytesread = 0;
-					byte[] data = new byte[len];
-					while ((bytesread != len) && (actual != -1)) {
-						actual = is.read(data, bytesread, len - bytesread);
-						bytesread += actual;
-					}
-					loaded_bytes.addAndGet(data.length);
-					return data;
-				} else if (len == 0) {
-					return new byte[0];
-				} else {
-					return null;
-				}
-			} catch (SocketTimeoutException err) {
-				System.out.println("timeout retry load url data : " + url);
-			}  catch (IOException err) {
-				err.printStackTrace();
-				System.out.println("retry load url data : " + url);
-			} finally {
-				if (is != null) {
-					try {
-						is.close();
-					} catch (IOException e) {}
-				}
-				if (c instanceof HttpURLConnection) {
-					((HttpURLConnection)c).disconnect();
-				}
-			}
-		}
-		
-		return null;
-	}
 
 	public static ByteArrayInputStream loadStream(String path) {
 		byte[] data = loadData(path);
@@ -456,12 +430,114 @@ public class CIO extends CObject
 
 //	------------------------------------------------------------------------------------------------------------------------
 
+	public static class RemoteResInputStream extends InputStream
+	{
+		final private ResInputStream inputstream;
+		
+		private AtomicInteger	length;
+		private AtomicInteger	readed;			
+		
+		public RemoteResInputStream(String file, int timeout) throws IOException {
+			this.readed = new AtomicInteger(0);
+			this.inputstream = AppBridge.getRemoteResource(file, timeout);
+		}
+		
+		@Override
+		public int available() throws IOException {
+			synchronized (readed) {
+				if (length == null) {
+					length = new AtomicInteger(inputstream.getLength());
+					return length.get();
+				} else {
+					return length.get() - readed.get();
+				}
+			}
+		}
+
+		@Override
+		public int read() throws IOException {
+			synchronized (readed) {
+				int b = inputstream.read();
+				if (b >= 0) {
+					readed.incrementAndGet();
+					loaded_bytes.incrementAndGet();
+				}
+				return b;
+			}
+		}
+
+		@Override
+		public int read(byte[] b, int off, int len) throws IOException {
+			synchronized (readed) {
+				int count = inputstream.read(b, off, len);
+				if (count >= 0) {
+					readed.addAndGet(count);
+					loaded_bytes.addAndGet(count);
+				}
+				return count;
+			}
+		}
+		
+		@Override
+		public void close() throws IOException {
+			inputstream.close();
+		}
+
+		@Override
+		public void mark(int readlimit) {}
+
+		@Override
+		public boolean markSupported() {
+			return false;
+		}
+
+		private static byte[] loadRemoteData(String file, int timeout, int retry_count)
+		{
+			ResInputStream is = null;
+			for (int i = Math.max(1, retry_count); i > 0; --i) {
+				try {
+					is = AppBridge.getRemoteResource(file, timeout);
+					int len = is.getLength();
+					if (len > 0) {
+						int actual = 0;
+						int bytesread = 0;
+						byte[] data = new byte[len];
+						while ((bytesread != len) && (actual != -1)) {
+							actual = is.read(data, bytesread, len - bytesread);
+							bytesread += actual;
+						}
+						loaded_bytes.addAndGet(data.length);
+						return data;
+					} else if (len == 0) {
+						return new byte[0];
+					} else {
+						return null;
+					}
+				} catch (SocketTimeoutException err) {
+					System.err.println("timeout retry load url data : " + file);
+				}  catch (IOException err) {
+					err.printStackTrace();
+					System.err.println("retry load url data : " + file);
+				} finally {
+					if (is != null) {
+						try {
+							is.close();
+						} catch (IOException e) {}
+					}
+				}
+			}
+			
+			return null;
+		}
+		
+	}
+
 //	-----------------------------------------------------------------------------------------------------------------
 
-	public static URL getResourceURL(String resource)
-	{
-		return CObject.getAppBridge().getClassLoader().getResource(resource);
-	}
+//	private static URL getResourceURL(String resource)
+//	{
+//		return CObject.getAppBridge().getClassLoader().getResource(resource);
+//	}
 	
 	public static class URLInputStream extends InputStream
 	{
@@ -499,6 +575,7 @@ public class CIO extends CObject
 				int b = inputstream.read();
 				if (b >= 0) {
 					readed.incrementAndGet();
+					loaded_bytes.incrementAndGet();
 				}
 				return b;
 			}
@@ -529,21 +606,64 @@ public class CIO extends CObject
 			return false;
 		}
 
+
+		private static byte[] loadURLData(URL url, int timeout, int retry_count)
+		{
+			URLConnection c = null;
+			InputStream is = null;
+			for (int i = Math.max(1, retry_count); i > 0; --i) {
+				try {
+					c = url.openConnection();
+					c.setConnectTimeout(timeout);
+					c.setReadTimeout(timeout);
+					c.connect();
+					is = c.getInputStream();
+					int len = c.getContentLength();
+					if (len > 0) {
+						int actual = 0;
+						int bytesread = 0;
+						byte[] data = new byte[len];
+						while ((bytesread != len) && (actual != -1)) {
+							actual = is.read(data, bytesread, len - bytesread);
+							bytesread += actual;
+						}
+						loaded_bytes.addAndGet(data.length);
+						return data;
+					} else if (len == 0) {
+						return new byte[0];
+					} else {
+						return null;
+					}
+				} catch (SocketTimeoutException err) {
+					System.err.println("timeout retry load url data : " + url);
+				}  catch (IOException err) {
+					err.printStackTrace();
+					System.err.println("retry load url data : " + url);
+				} finally {
+					if (is != null) {
+						try {
+							is.close();
+						} catch (IOException e) {}
+					}
+					if (c instanceof HttpURLConnection) {
+						((HttpURLConnection)c).disconnect();
+					}
+				}
+			}
+			
+			return null;
+		}
 	}
 
-	public static URLInputStream getInputStream(URL url) {
-		return getInputStream(url, url_loading_time_out);
-	}
-	
-	public static URLInputStream getInputStream(URL url, int timeOut) {
-		try {
-			return new URLInputStream(url, timeOut);
-		} catch (IOException err) {
-			System.err.println(url);
-			err.printStackTrace();
-		}
-		return null;
-	}
+//	private static URLInputStream getInputStream(URL url, int timeOut) {
+//		try {
+//			return new URLInputStream(url, timeOut);
+//		} catch (IOException err) {
+//			System.err.println(url);
+//			err.printStackTrace();
+//		}
+//		return null;
+//	}
 	
 //	-----------------------------------------------------------------------------------------------------------------
 

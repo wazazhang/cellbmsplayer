@@ -126,7 +126,7 @@ public class FileHttp implements IO
 
     	@Override
     	public InputStream getInputStream() {
-			return CIO.getInputStream(remote_url);
+			return CIO.getInputStream(parent+"/"+name);
     	}
 
     	@Override
