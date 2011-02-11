@@ -403,10 +403,11 @@ public class CMath extends CObject{
 	
 	/**
 	 * sum all of elements together in the collection
+	 * NOTE: how to know the element type of the collection??
 	 */
 	@SuppressWarnings("unchecked")
-	public static final <T> T accumulate(Collection<T> values)
-	{
+	public static final <T> double accumulate(Collection<T> values)
+	{	
 		if ( (values != null) && !values.isEmpty() )
 		{					
 			Iterator<T> it = values.iterator();
@@ -418,46 +419,46 @@ public class CMath extends CObject{
 				Integer val = 0;
 				for ( Integer tmp : (Collection<Integer>)values )
 					val += tmp;
-				return (T) val;
+				return val;
 			}
 			else if (first instanceof Float)
 			{
 				Float val = 0f;
 				for ( Float tmp : (Collection<Float>)values )
 					val += tmp;
-				return (T) val;
+				return val;
 			}
 			else if (first instanceof Double)
 			{
 				Double val = 0d;
 				for ( Double tmp : (Collection<Double>)values )
 					val += tmp;
-				return (T) val;
+				return val;
 			}
 			else if (first instanceof Long)
 			{
 				Long val = 0l;
 				for ( Long tmp : (Collection<Long>)values )
 					val += tmp;
-				return (T) val;
+				return val;
 			}
 			else if (first instanceof Short)
 			{
 				Integer val = 0;
 				for ( Short tmp : (Collection<Short>)values )
 					val += tmp;
-				return (T) val;
+				return val;
 			}
 			else if (first instanceof Byte)
 			{
 				Integer val = 0;
 				for ( Byte tmp : (Collection<Byte>)values )
 					val += tmp;
-				return (T) val;
+				return val;
 			}
 		}
 
-		return null;
+		return 0;
 	}
 	
 /**
