@@ -16,6 +16,7 @@ import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
+import com.cell.CIO;
 import com.cell.CObject;
 import com.cell.gfx.IGraphics;
 import com.cell.gfx.IImage;
@@ -48,7 +49,7 @@ class CImage implements IImage
 	CImage(String file) 
 	{
 		try{
-			m_image = createBuffer(ImageIO.read(CObject.getAppBridge().getResource(file)));
+			m_image = createBuffer(ImageIO.read(CIO.getInputStream(file)));
 		}catch(Exception err){
 			err.printStackTrace();
 			System.err.println("CImage.<init> :  File="+file+" Failed !");

@@ -47,201 +47,50 @@ import com.cell.security.MD5;
 public class CIO extends CObject
 {
 	private static Logger					log						= Logger.getLogger("CIO");
-	private static int						url_loading_time_out	= 20000; //ms
-	private static int						url_loading_retry_count	= 5;
-	private static AtomicLong				loaded_bytes			= new AtomicLong(0);
 	
 //	------------------------------------------------------------------------------------------------------------------------
-
-
-//	------------------------------------------------------------------------------------------------------------------------
-
+	
 	/**
-	 * 读取一个流的所有数据到字节序。<br>
-	 * 只要InputStream里有数据，该方法都将阻塞，直到available=0，所以该方法不适合读取动态流。<br>
-	 * <b>该方法将自动关闭流。</b>
-	 * @param is
-	 * @return 
+	 * <pre>
+	 * <b>得到流用于异步动态读取</b>
+	 * 获取字符串对应的资源，可能是网络资源，也可能是本地资源或文件。
+	 * 比如: http:// ftp:// file:///
+	 * </pre>
+	 * @param path
+	 * @return
 	 */
-	public static byte[] readStream(InputStream is) {
-		if (is != null) {
-			try {
-				int available = is.available();
-				int count = 0;
-				ByteArrayOutputStream baos = new ByteArrayOutputStream(available);
-				while (available > 0) {
-					byte[] data = new byte[available];
-					int read_bytes = is.read(data);
-					if (read_bytes <= 0) {
-						break;
-					} else {
-						baos.write(data, 0, read_bytes);
-						count += read_bytes;
-						available = is.available();
-					}
-				}
-				loaded_bytes.addAndGet(baos.size());
-				return baos.toByteArray();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} finally {
-				try {
-					is.close();
-				} catch (IOException e) {
-				}
-			}
-		}
-		return null;
-	}
-
-	
-//	------------------------------------------------------------------------------------------------------------------------
-
 	public static InputStream getInputStream(String path)
 	{
-		path = path.trim();
-
-		try
-		{
-			if (path.startsWith("res:")) {
-				// load from res
-				return new RemoteResInputStream(path, url_loading_time_out);
-			}
-			
-			if (path.startsWith("http:")) {
-				// load from url
-				try {
-					URL url = new URL(path);
-					return new URLInputStream(url, url_loading_time_out);
-				} catch (MalformedURLException err) {}
-			}
-
-			if (path.startsWith("/")) {
-				// load from jar
-				InputStream is = getAppBridge().getResource(path);
-				if (is != null) {
-					return is;
-				}
-			}
-			
-			// load from file
-			File file = new File(path);
-			if (file.exists()) {
-				return new FileInputStream(file);
-			}
-			
-			// load from url
-			try {
-				URL url = new URL(path);
-				return new URLInputStream(url, url_loading_time_out);
-			} catch (MalformedURLException err) {}
-
-			// load from jar
-			InputStream is = getAppBridge().getResource(path);
-			if (is != null) {
-				return is;
-			}
-
-			
-		} catch(Exception err) {
-			System.err.println(path);
-			err.printStackTrace();
-		}
-		return null;
+		return getAppBridge().getIO().getInputStream(path);
 	}
-
 	
 	/**
-	 * @param path URL or class path or file
+	 * <pre>
+	 * <b>一次性同步读取所有资源</b>
+	 * 获取字符串对应的资源，可能是网络资源，也可能是本地资源或文件。
+	 * 比如: http:// ftp:// file:///
+	 * </pre>
+	 * @param path
 	 * @return
 	 */
 	public static byte[] loadData(String path)
 	{
-		path = path.trim();
-		byte[] data = null;
-		try
-		{
-			if (path.startsWith("res:")) {
-				// load from res
-				data = RemoteResInputStream.loadRemoteData(path, url_loading_time_out, url_loading_retry_count);
-				if (data != null) {
-					return data;
-				} else {
-//					log.log(Level.WARNING, "file not found : " + path);
-				}
-				return null;
-			}
-			
-			if (path.startsWith("http:")) {
-				// load from url
-				try {
-					URL url = new URL(path);
-					data = URLInputStream.loadURLData(url, url_loading_time_out, url_loading_retry_count);
-					if (data != null) {
-						return data;
-					} else {
-					}
-				} catch (MalformedURLException err) {}
-				return null;
-			}
-
-			if (path.startsWith("/")) {
-				// load from jar
-				data = readStream(getAppBridge().getResource(path));
-				if (data != null) {
-					return data;
-				} else {
-//					log.log(Level.WARNING, "file not found : " + path);
-				}
-			}
-			
-			// load from file
-			File file = new File(path);
-			if (file.exists()) {
-				data = readStream(new FileInputStream(file));
-				if (data != null) {
-					return data;
-				}
-			} else {
-//				log.log(Level.WARNING, "file not found : " + path);
-			}
-
-			// load from url
-			try {
-				URL url = new URL(path);
-				data = URLInputStream.loadURLData(url, url_loading_time_out, url_loading_retry_count);
-				if (data != null) {
-					return data;
-				}
-			} catch (MalformedURLException err) {}
-			
-			// load from jar
-			data = readStream(getAppBridge().getResource(path));
-			if (data != null) {
-				return data;
-			} else {
-//				log.log(Level.WARNING, "file not found : " + path);
-			}
-
-		} catch(Throwable err) {
-			System.err.println(path);
-			err.printStackTrace();
-		}
-		return data;
+		return getAppBridge().getIO().loadData(path);
 	}
-	
-
-
 
 	public static ByteArrayInputStream loadStream(String path) {
 		byte[] data = loadData(path);
 		if (data != null) {
 			return new ByteArrayInputStream(data);
-		}else{
+		} else {
 			System.err.println("CIO.loadStream : null : " + path);
 		}
 		return null;
 	}
+
+//	------------------------------------------------------------------------------------------------------------------------
+	
+//	------------------------------------------------------------------------------------------------------------------------
 
 //	------------------------------------------------------------------------------------------------------------------------
 	
@@ -428,258 +277,45 @@ public class CIO extends CObject
 		return name;
 	}
 
-//	------------------------------------------------------------------------------------------------------------------------
-
-	public static class RemoteResInputStream extends InputStream
-	{
-		final private ResInputStream inputstream;
-		
-		private AtomicInteger	length;
-		private AtomicInteger	readed;			
-		
-		public RemoteResInputStream(String file, int timeout) throws IOException {
-			this.readed = new AtomicInteger(0);
-			this.inputstream = AppBridge.getRemoteResource(file, timeout);
-		}
-		
-		@Override
-		public int available() throws IOException {
-			synchronized (readed) {
-				if (length == null) {
-					length = new AtomicInteger(inputstream.getLength());
-					return length.get();
-				} else {
-					return length.get() - readed.get();
-				}
-			}
-		}
-
-		@Override
-		public int read() throws IOException {
-			synchronized (readed) {
-				int b = inputstream.read();
-				if (b >= 0) {
-					readed.incrementAndGet();
-					loaded_bytes.incrementAndGet();
-				}
-				return b;
-			}
-		}
-
-		@Override
-		public int read(byte[] b, int off, int len) throws IOException {
-			synchronized (readed) {
-				int count = inputstream.read(b, off, len);
-				if (count >= 0) {
-					readed.addAndGet(count);
-					loaded_bytes.addAndGet(count);
-				}
-				return count;
-			}
-		}
-		
-		@Override
-		public void close() throws IOException {
-			inputstream.close();
-		}
-
-		@Override
-		public void mark(int readlimit) {}
-
-		@Override
-		public boolean markSupported() {
-			return false;
-		}
-
-		private static byte[] loadRemoteData(String file, int timeout, int retry_count)
-		{
-			ResInputStream is = null;
-			for (int i = Math.max(1, retry_count); i > 0; --i) {
-				try {
-					is = AppBridge.getRemoteResource(file, timeout);
-					int len = is.getLength();
-					if (len > 0) {
-						int actual = 0;
-						int bytesread = 0;
-						byte[] data = new byte[len];
-						while ((bytesread != len) && (actual != -1)) {
-							actual = is.read(data, bytesread, len - bytesread);
-							bytesread += actual;
-						}
-						loaded_bytes.addAndGet(data.length);
-						return data;
-					} else if (len == 0) {
-						return new byte[0];
-					} else {
-						return null;
-					}
-				} catch (SocketTimeoutException err) {
-					System.err.println("timeout retry load url data : " + file);
-				}  catch (IOException err) {
-					err.printStackTrace();
-					System.err.println("retry load url data : " + file);
-				} finally {
-					if (is != null) {
-						try {
-							is.close();
-						} catch (IOException e) {}
-					}
-				}
-			}
-			
-			return null;
-		}
-		
-	}
-
-//	-----------------------------------------------------------------------------------------------------------------
-
-//	private static URL getResourceURL(String resource)
-//	{
-//		return CObject.getAppBridge().getClassLoader().getResource(resource);
-//	}
-	
-	public static class URLInputStream extends InputStream
-	{
-		final private URLConnection	connection;
-		final private InputStream 	inputstream;
-		
-		private AtomicInteger	length;
-		private AtomicInteger	readed;			
-		
-		public URLInputStream(URL url, int timeout) throws IOException 
-		{
-			this.readed 		= new AtomicInteger(0);
-			this.connection		= url.openConnection();
-			this.connection.setConnectTimeout(timeout);
-			this.connection.setReadTimeout(timeout);
-			this.connection.connect();
-			this.inputstream	= connection.getInputStream();
-		}
-		
-		@Override
-		public int available() throws IOException {
-			synchronized (readed) {
-				if (length == null) {
-					length = new AtomicInteger(connection.getContentLength());
-					return length.get();
-				} else {
-					return length.get() - readed.get();
-				}
-			}
-		}
-
-		@Override
-		public int read() throws IOException {
-			synchronized (readed) {
-				int b = inputstream.read();
-				if (b >= 0) {
-					readed.incrementAndGet();
-					loaded_bytes.incrementAndGet();
-				}
-				return b;
-			}
-		}
-
-		@Override
-		public int read(byte[] b, int off, int len) throws IOException {
-			synchronized (readed) {
-				int count = inputstream.read(b, off, len);
-				if (count >= 0) {
-					readed.addAndGet(count);
-					loaded_bytes.addAndGet(count);
-				}
-				return count;
-			}
-		}
-		
-		@Override
-		public void close() throws IOException {
-			inputstream.close();
-		}
-
-		@Override
-		public void mark(int readlimit) {}
-
-		@Override
-		public boolean markSupported() {
-			return false;
-		}
-
-
-		private static byte[] loadURLData(URL url, int timeout, int retry_count)
-		{
-			URLConnection c = null;
-			InputStream is = null;
-			for (int i = Math.max(1, retry_count); i > 0; --i) {
-				try {
-					c = url.openConnection();
-					c.setConnectTimeout(timeout);
-					c.setReadTimeout(timeout);
-					c.connect();
-					is = c.getInputStream();
-					int len = c.getContentLength();
-					if (len > 0) {
-						int actual = 0;
-						int bytesread = 0;
-						byte[] data = new byte[len];
-						while ((bytesread != len) && (actual != -1)) {
-							actual = is.read(data, bytesread, len - bytesread);
-							bytesread += actual;
-						}
-						loaded_bytes.addAndGet(data.length);
-						return data;
-					} else if (len == 0) {
-						return new byte[0];
-					} else {
-						return null;
-					}
-				} catch (SocketTimeoutException err) {
-					System.err.println("timeout retry load url data : " + url);
-				}  catch (IOException err) {
-					err.printStackTrace();
-					System.err.println("retry load url data : " + url);
-				} finally {
-					if (is != null) {
-						try {
-							is.close();
-						} catch (IOException e) {}
-					}
-//					if (c instanceof HttpURLConnection) {
-//						((HttpURLConnection)c).disconnect();
-//					}
-				}
-			}
-			
-			return null;
-		}
-	}
-
-//	private static URLInputStream getInputStream(URL url, int timeOut) {
-//		try {
-//			return new URLInputStream(url, timeOut);
-//		} catch (IOException err) {
-//			System.err.println(url);
-//			err.printStackTrace();
-//		}
-//		return null;
-//	}
-	
 //	-----------------------------------------------------------------------------------------------------------------
 
 	/**
-	 * 只要InputStream里有数据，
-	 * 该方法都将阻塞，直到available=0，
-	 * 所以该方法不适合读取动态流。
+	 * 读取一个流的所有数据到字节序。<br>
+	 * 只要InputStream里有数据，该方法都将阻塞，直到available=0，所以该方法不适合读取动态流。<br>
+	 * <b>该方法将自动关闭流。</b>
 	 * @param is
-	 * @param 预计的进度 0~1
 	 * @return 
 	 */
-	public static byte[] readStream(InputStream is, AtomicReference<Float> percent) throws IOException
-	{
-		return readStream(is, percent, Integer.MAX_VALUE);
+	public static byte[] readStream(InputStream is) {
+		if (is != null) {
+			try {
+				int available = is.available();
+				int count = 0;
+				ByteArrayOutputStream baos = new ByteArrayOutputStream(available);
+				while (available > 0) {
+					byte[] data = new byte[available];
+					int read_bytes = is.read(data);
+					if (read_bytes <= 0) {
+						break;
+					} else {
+						baos.write(data, 0, read_bytes);
+						count += read_bytes;
+						available = is.available();
+					}
+				}
+				return baos.toByteArray();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					is.close();
+				} catch (IOException e) {
+				}
+			}
+		}
+		return null;
 	}
-	
+
 	/**
 	 * 只要InputStream里有数据，
 	 * 该方法都将阻塞，直到available=0，
@@ -719,6 +355,19 @@ public class CIO extends CObject
 		}
 		return null;
 	}
+
+	/**
+	 * 只要InputStream里有数据，
+	 * 该方法都将阻塞，直到available=0，
+	 * 所以该方法不适合读取动态流。
+	 * @param is
+	 * @param 预计的进度 0~1
+	 * @return 
+	 */
+	public static byte[] readStream(InputStream is, AtomicReference<Float> percent) throws IOException
+	{
+		return readStream(is, percent, Integer.MAX_VALUE);
+	}
 	
 //	------------------------------------------------------------------------------------------------------------------------
 
@@ -729,25 +378,26 @@ public class CIO extends CObject
 	 * @return
 	 */
 	public static long getLoadedBytes() {
-		return loaded_bytes.get();
+		return getAppBridge().getIO().getLoadedBytes();
 	}
 
 	/**读取数据的超时时间*/
 	public static void setLoadingTimeOut(int loadingTimeOut) {
-		url_loading_time_out = loadingTimeOut;
+		getAppBridge().getIO().setLoadingTimeOut(loadingTimeOut);
 	}
+	
 	/**读取数据的超时时间*/
 	public static int getLoadingTimeOut() {
-		return url_loading_time_out;
+		return getAppBridge().getIO().getLoadingTimeOut();
 	}
 
 	/**读取数据的重复次数*/
 	public static void setLoadRetryCount(int loadRetryCount) {
-		url_loading_retry_count = Math.max(1, loadRetryCount);
+		getAppBridge().getIO().setLoadRetryCount(loadRetryCount);
 	}
 	/**读取数据的重复次数*/
 	public static int getLoadRetryCount() {
-		return url_loading_retry_count;
+		return getAppBridge().getIO().getLoadRetryCount();
 	}
 
 }

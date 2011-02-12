@@ -25,7 +25,8 @@ import java.util.Locale;
 import java.util.Random;
 import java.util.TimeZone;
 
-import com.cell.CIO.URLInputStream;
+import com.cell.io.DefaultIODispatcher;
+import com.cell.io.IODispatcher;
 import com.cell.io.ResInputStream;
 
 /**
@@ -164,11 +165,26 @@ public class CObject {
 		}
 	}
 
-	static class NullAppBridge implements IAppBridge {
+	static class NullAppBridge implements IAppBridge
+	{
 		final Hashtable<String, String> Propertys = new Hashtable<String, String>();
 		final ClassLoader m_ClassLoader;
 		final Class<?> m_RootClass;
-
+		final DefaultIODispatcher io = new DefaultIODispatcher() {
+			protected InputStream getJarResource(String file) {
+				InputStream is = m_ClassLoader.getResourceAsStream(file);
+				if (is == null) {
+					is = m_RootClass.getResourceAsStream(file);
+				}
+				if (is == null) {
+					is = m_RootClass.getClassLoader().getResourceAsStream(file);
+				}
+				if (is == null) {
+					is = Thread.currentThread().getContextClassLoader().getResourceAsStream(file);
+				}
+				return is;
+			}
+		};
 		public NullAppBridge() {
 			m_ClassLoader = CObject.class.getClass().getClassLoader();
 			m_RootClass = CObject.class.getClass();
@@ -193,43 +209,21 @@ public class CObject {
 		public ClassLoader getClassLoader() {
 			return m_ClassLoader;
 		}
-
-		public InputStream getResource(String file) {
-			InputStream is = m_ClassLoader.getResourceAsStream(file);
-			if (is == null) {
-				is = m_RootClass.getResourceAsStream(file);
-			}
-			if (is == null) {
-				is = m_RootClass.getClassLoader().getResourceAsStream(file);
-			}
-			if (is == null) {
-				is = Thread.currentThread().getContextClassLoader()
-						.getResourceAsStream(file);
-			}
-			return is;
+		public IODispatcher getIO() {
+			return io;
 		}
-		
-		@Override
-		public ResInputStream getRemoteResource(String file, int timeout) throws IOException {
-			return null;
-		}
-		
 		public String getAppProperty(String key) {
 			return Propertys.get(key);
 		}
-
 		public String setAppProperty(String key, String value) {
 			return Propertys.put(key, value);
 		}
-
-		//
 		public void setClipboardText(String str) {
 			Clipboard clipboard = Toolkit.getDefaultToolkit()
 					.getSystemClipboard();
 			StringSelection text = new StringSelection(str);
 			clipboard.setContents(text, null);
 		}
-
 		public String getClipboardText() {
 			Clipboard clipboard = Toolkit.getDefaultToolkit()
 					.getSystemClipboard();
@@ -244,7 +238,6 @@ public class CObject {
 			}
 			return "";
 		}
-
 		public void openBrowser(String url) {
 			try {
 				Desktop.getDesktop().browse(new URI(url));
@@ -252,7 +245,6 @@ public class CObject {
 				e.printStackTrace();
 			}
 		}
-
 		public String getMacAddr() {
 			try {
 				return InetAddress.getLocalHost().toString();
@@ -261,7 +253,6 @@ public class CObject {
 				return System.currentTimeMillis() + "";
 			}
 		}
-
 		public int getPing(String host, int bufferSize) {
 			return -1;
 		}
