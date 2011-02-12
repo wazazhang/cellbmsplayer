@@ -9,20 +9,14 @@ import java.io.InputStream;
  */
 public interface IODispatcher 
 {
-	
-	/**
-	 * 得到流用于异步动态读取
-	 * @param path
-	 * @return
-	 */
 	public InputStream getInputStream(String path);
 	
-	/**
-	 * 一次性同步读取所有资源
-	 * @param path
-	 * @return
-	 */
-	public byte[] loadData(String path);
+//	/**
+//	 * 一次性同步读取所有资源
+//	 * @param path
+//	 * @return
+//	 */
+//	public byte[] loadData(String path);
 	
 
 	/** 获得已从CIO读取的字节数 */
