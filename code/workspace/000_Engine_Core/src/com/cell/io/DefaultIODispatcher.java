@@ -52,10 +52,10 @@ public class DefaultIODispatcher implements IODispatcher
 	 * @param timeout
 	 * @return
 	 */
-	protected LengthInputStream<?> getHTTPResource(String path) throws IOException
+	protected RemoteInputStream getHTTPResource(String path) throws IOException
 	{
 		try {
-			return new URLInputStream(new URL(path), url_loading_time_out);
+			return new RemoteHttpInputStream(new URL(path), url_loading_time_out);
 		} catch (MalformedURLException err) {
 			return null;
 		}
@@ -67,7 +67,7 @@ public class DefaultIODispatcher implements IODispatcher
 	 * @param timeout
 	 * @return
 	 */
-	protected LengthInputStream<?> getRESResource(String path) throws IOException
+	protected RemoteInputStream getRESResource(String path) throws IOException
 	{
 		return null;
 	}
@@ -78,7 +78,7 @@ public class DefaultIODispatcher implements IODispatcher
 	 * @param timeout
 	 * @return
 	 */
-	protected LengthInputStream<?> getFTPResource(String path) throws IOException
+	protected RemoteInputStream getFTPResource(String path) throws IOException
 	{
 		return null;
 	}
@@ -203,19 +203,17 @@ public class DefaultIODispatcher implements IODispatcher
 //	------------------------------------------------------------------------------------------------------------------------
 	
 
-	abstract protected class LengthInputStream<T extends InputStream> extends ResInputStream
+	abstract protected class RemoteInputStream extends InputStream
 	{
-		protected T 			src;
+		protected InputStream src;
 		
 		protected AtomicInteger	readed = new AtomicInteger(0);	
-
+		
 		@Override
 		public int available() throws IOException {
-			synchronized (readed) {
-				return getLength() - readed.get();
-			}
+			return src.available();
 		}
-
+		
 		@Override
 		public int read() throws IOException {
 			synchronized (readed) {
@@ -258,27 +256,22 @@ public class DefaultIODispatcher implements IODispatcher
 	
 //	------------------------------------------------------------------------------------------------------------------------
 
-	protected class RemoteResInputStream extends LengthInputStream<ResInputStream>
+	protected class RemoteResInputStream extends RemoteInputStream
 	{
-		public RemoteResInputStream(ResInputStream res) throws IOException {
+		public RemoteResInputStream(InputStream res) throws IOException {
 			this.src = res;
-		}
-		
-		@Override
-		public int getLength() {
-			return src.getLength();
 		}
 	}
 
 //	-----------------------------------------------------------------------------------------------------------------
 
-	protected class URLInputStream extends LengthInputStream<InputStream>
+	protected class RemoteHttpInputStream extends RemoteInputStream
 	{
 		protected URLConnection	connection;
 		
 		private AtomicInteger	length;
 		
-		public URLInputStream(URL url, int timeout) throws IOException 
+		public RemoteHttpInputStream(URL url, int timeout) throws IOException 
 		{
 			this.connection = url.openConnection();
 			this.connection.setConnectTimeout(timeout);
@@ -286,8 +279,14 @@ public class DefaultIODispatcher implements IODispatcher
 			this.connection.connect();
 			this.src = connection.getInputStream();
 		}
-		
+
 		@Override
+		public int available() throws IOException {
+			synchronized (readed) {
+				return getLength() - readed.get();
+			}
+		}
+
 		public int getLength() {
 			synchronized (readed) {
 				if (length == null) {

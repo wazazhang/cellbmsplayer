@@ -27,7 +27,6 @@ import com.cell.gfx.IGfxBridge;
 import com.cell.gfx.IImage;
 import com.cell.io.DefaultIODispatcher;
 import com.cell.io.IODispatcher;
-import com.cell.io.ResInputStream;
 
 public class CAppBridge implements IAppBridge, IGfxBridge
 {
