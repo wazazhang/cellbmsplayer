@@ -49,21 +49,31 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 	}
 	
 	public ServerSessionImpl(boolean smooth_close) {
-		this(Thread.currentThread().getContextClassLoader(), null, smooth_close);
+		this(Thread.currentThread().getContextClassLoader(), null, smooth_close, 
+				Integer.MAX_VALUE, 
+				Integer.MAX_VALUE);
 	}
 	
 	public ServerSessionImpl(ClassLoader cl, ExternalizableFactory ef) {
-		this(Thread.currentThread().getContextClassLoader(), ef, true);
+		this(Thread.currentThread().getContextClassLoader(), ef, true,
+				Integer.MAX_VALUE, 
+				Integer.MAX_VALUE);
 	}
 	
-	public ServerSessionImpl(ClassLoader cl, ExternalizableFactory ef, boolean smooth_close)
+	public ServerSessionImpl(ClassLoader cl,
+			ExternalizableFactory ef, 
+			boolean smooth_close, 
+			int write_idle_time_sec,
+			int read_idle_time_sec)
 	{
 		log			= LoggerFactory.getLogger(getClass().getName());
 		Codec		= new NetPackageCodec(cl, ef);
 		Connector 	= new NioSocketConnector();
 		Connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(Codec));
+		Connector.getSessionConfig().setReaderIdleTime(write_idle_time_sec);
+		Connector.getSessionConfig().setWriterIdleTime(read_idle_time_sec);
 		Connector.setHandler(this);
-		
+
 		this.clean_task = new CleanTask();
 		if (smooth_close) {
 			Runtime.getRuntime().addShutdownHook(clean_task);
