@@ -2,38 +2,17 @@
 package com.cell;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
-import java.util.Hashtable;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import com.cell.io.ResInputStream;
-import com.cell.security.MD5;
 
 //import javax.microedition.lcdui.Image;
 //import javax.microedition.rms.RecordStore;
@@ -86,9 +65,6 @@ public class CIO extends CObject
 			}
 			try {
 				int available = is.available();
-				if (is instanceof ResInputStream){
-					available = ((ResInputStream)is).getLength();
-				}
 				if (available > 0) {
 					int count = 0;
 					ByteArrayOutputStream baos = new ByteArrayOutputStream(available);
