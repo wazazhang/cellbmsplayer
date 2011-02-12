@@ -28,7 +28,7 @@ public class DefaultIODispatcher implements IODispatcher
 	 */
 	protected InputStream getJarResource(String path) 
 	{
-		return getClass().getClassLoader().getResourceAsStream(path);
+		return Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
 	}
 	
 	/**
@@ -117,7 +117,6 @@ public class DefaultIODispatcher implements IODispatcher
 			}
 		}
 		catch(Exception err) {
-			System.err.println(path);
 			err.printStackTrace();
 		}
 		return null;

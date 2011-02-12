@@ -180,9 +180,6 @@ public abstract class ResourceManager extends CellSetResourceManager
 	
 	protected byte[] getResource(String sub_file_name) {
 		byte[] data = CIO.loadData(res_root+sub_file_name);
-		if (data == null) {
-			System.err.println(sub_file_name);
-		}
 		return data;
 	}
 

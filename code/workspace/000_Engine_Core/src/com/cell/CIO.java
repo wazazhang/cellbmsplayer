@@ -45,9 +45,7 @@ import com.cell.security.MD5;
  * @version 1.0
  */
 public class CIO extends CObject
-{
-	private static Logger					log						= Logger.getLogger("CIO");
-	
+{	
 //	------------------------------------------------------------------------------------------------------------------------
 	
 	/**
@@ -61,7 +59,12 @@ public class CIO extends CObject
 	 */
 	public static InputStream getInputStream(String path)
 	{
-		return getAppBridge().getIO().getInputStream(path);
+		InputStream is = getAppBridge().getIO().getInputStream(path);
+		if (is == null) {
+			System.err.println("getInputStream : resource not found : " + path);
+			return null;
+		}
+		return is;
 	}
 	
 	/**
@@ -86,20 +89,22 @@ public class CIO extends CObject
 				if (is instanceof ResInputStream){
 					available = ((ResInputStream)is).getLength();
 				}
-				int count = 0;
-				ByteArrayOutputStream baos = new ByteArrayOutputStream(available);
-				while (available > 0) {
-					byte[] data = new byte[available];
-					int read_bytes = is.read(data);
-					if (read_bytes <= 0) {
-						break;
-					} else {
-						baos.write(data, 0, read_bytes);
-						count += read_bytes;
-						available = is.available();
+				if (available > 0) {
+					int count = 0;
+					ByteArrayOutputStream baos = new ByteArrayOutputStream(available);
+					while (available > 0) {
+						byte[] data = new byte[available];
+						int read_bytes = is.read(data);
+						if (read_bytes <= 0) {
+							break;
+						} else {
+							baos.write(data, 0, read_bytes);
+							count += read_bytes;
+							available = is.available();
+						}
 					}
+					return baos.toByteArray();
 				}
-				return baos.toByteArray();
 			} catch (SocketTimeoutException err) {
 				System.err.println("timeout retry load data [" + is.getClass().getSimpleName() + "] : " + path);
 			}  catch (IOException err) {
@@ -111,12 +116,8 @@ public class CIO extends CObject
 						is.close();
 					} catch (IOException e) {}
 				}
-//				if (c instanceof HttpURLConnection) {
-//					((HttpURLConnection)c).disconnect();
-//				}
 			}
 		}
-		
 		return null;
 	}
 
@@ -124,8 +125,6 @@ public class CIO extends CObject
 		byte[] data = loadData(path);
 		if (data != null) {
 			return new ByteArrayInputStream(data);
-		} else {
-			System.err.println("CIO.loadStream : null : " + path);
 		}
 		return null;
 	}
