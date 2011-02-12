@@ -23,9 +23,10 @@ import java.util.Vector;
 
 import com.cell.CObject;
 import com.cell.IAppBridge;
-import com.cell.CIO.URLInputStream;
 import com.cell.gfx.IGfxBridge;
 import com.cell.gfx.IImage;
+import com.cell.io.DefaultIODispatcher;
+import com.cell.io.IODispatcher;
 import com.cell.io.ResInputStream;
 
 public class CAppBridge implements IAppBridge, IGfxBridge
@@ -35,13 +36,15 @@ public class CAppBridge implements IAppBridge, IGfxBridge
 		CObject.initSystem(new CStorage("_default"), new CAppBridge());
 	}
 	
-	final public Hashtable<String, String>	Propertys = new Hashtable<String, String>();
+	private Hashtable<String, String>	Propertys = new Hashtable<String, String>();
 	
-	final public ClassLoader				m_ClassLoader;
+	private ClassLoader					m_ClassLoader;
 	
-	final public Class<?>					m_RootClass;
+	private Class<?>					m_RootClass;
 	
-	final public Applet						m_applet;
+	private Applet						m_applet;
+	
+	private IODispatcher				m_IO;
 	
 	public CAppBridge()
 	{
@@ -69,9 +72,12 @@ public class CAppBridge implements IAppBridge, IGfxBridge
 		
 		m_applet = applet;
 		
+		m_IO = createIO();
+		
 		System.out.println("CAppBridge init\n" +
-				"\t[" + m_ClassLoader.getClass().getName() + "]\n" +
-				"\t[" + m_RootClass.getName() + "]"
+				"\t[" + m_ClassLoader.getClass().getCanonicalName() + "]\n" +
+				"\t[" + m_RootClass.getCanonicalName() + "]" +
+				"\t[" + m_IO.getClass().getCanonicalName() + "]"
 				);
 	}
 	
@@ -90,50 +96,33 @@ public class CAppBridge implements IAppBridge, IGfxBridge
 	public Thread createServiceThread(Runnable run) {
 		return new Thread(run,"Game-Thread");
 	}
-	
-	
-	//
-
-	//
 
 	public ClassLoader getClassLoader() {
 		return m_ClassLoader;
 	}
 	
-	public InputStream	getResource(String file) 
-	{
-		InputStream is = null;
-		
-		if (is == null) {
-			is = Thread.currentThread().getContextClassLoader().getResourceAsStream(file);
-		}
-		
-		if (is == null) {
-			is = m_ClassLoader.getResourceAsStream(file);
-		}
-		
-		if (is == null) {
-			is = m_RootClass.getResourceAsStream(file);
-		}
-		
-		if (is == null) {
-			is = m_RootClass.getClassLoader().getResourceAsStream(file);
-		}
-		
-		return is;
+	/**
+	 * 子类可覆盖
+	 * @return
+	 */
+	protected IODispatcher createIO() {
+		return new CIODispatcher();
 	}
 	
 	@Override
-	public ResInputStream getRemoteResource(String file, int timeout) throws IOException {
-		return null;
+	public IODispatcher getIO() {
+		return m_IO;
 	}
-	
+
 	public String getAppProperty(String key) {
 		return Propertys.get(key);
 	}
+	
 	public String setAppProperty(String key, String value) {
 		return Propertys.put(key, value);
 	}
+
+	
 	
 //	public void addAppStateListener(IAppStateListener listener) {
 //		StateListeners.add(listener);
@@ -331,7 +320,28 @@ public class CAppBridge implements IAppBridge, IGfxBridge
         
         return retString ;
     } 
-    
+
+	protected class CIODispatcher extends DefaultIODispatcher
+	{
+		@Override
+		protected InputStream getJarResource(String file) {
+			InputStream is = null;
+			if (is == null) {
+				is = Thread.currentThread().getContextClassLoader().getResourceAsStream(file);
+			}
+			if (is == null) {
+				is = m_ClassLoader.getResourceAsStream(file);
+			}
+			if (is == null) {
+				is = m_RootClass.getResourceAsStream(file);
+			}
+			if (is == null) {
+				is = m_RootClass.getClassLoader().getResourceAsStream(file);
+			}
+			return is;
+		}
+	}
+	
     
     
     

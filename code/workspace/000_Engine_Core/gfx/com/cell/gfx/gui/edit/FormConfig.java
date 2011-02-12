@@ -11,6 +11,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.cell.CIO;
 import com.cell.CObject;
 import com.cell.CUtil;
 import com.cell.gfx.gui.Button;
@@ -34,7 +35,7 @@ public class FormConfig
 	static public boolean initForm(Form form, String file, FormListener flistener, FormConfigListener fclistener)
 	{
 		try{
-			InputStream is = CObject.getAppBridge().getResource(file);
+			InputStream is = CIO.getInputStream(file);
 			initForm(form, is, flistener, fclistener);
 			return true;
 		}catch(Exception err){

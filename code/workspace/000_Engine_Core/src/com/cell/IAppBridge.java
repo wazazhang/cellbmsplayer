@@ -3,6 +3,7 @@ package com.cell;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.cell.io.IODispatcher;
 import com.cell.io.ResInputStream;
 
 
@@ -13,9 +14,11 @@ public interface IAppBridge
 	public Thread 			createServiceThread();
 	public Thread 			createServiceThread(Runnable run);
 	
-	public InputStream		getResource(String file);
+	public IODispatcher		getIO();
 	
-	public ResInputStream	getRemoteResource(String file, int timeout) throws IOException;
+//	public InputStream		getResource(String file);
+//	
+//	public ResInputStream	getRemoteResource(String file, int timeout) throws IOException;
 	
 	public void 			setClipboardText(String str);
 	public String 			getClipboardText();
