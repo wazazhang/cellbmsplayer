@@ -3,7 +3,11 @@ package com.cell.io;
 import java.io.InputStream;
 
 /**
- * eg: res://web/ws_tw/index.properties
+ * <pre>
+ * 比如
+ * res://www.xxx.com/web/ws_tw/index.properties
+ * ftp://www.xxx.com/web/ws_tw/index.properties
+ * </pre>
  * @author WAZA
  *
  */

@@ -75,7 +75,49 @@ public class CIO extends CObject
 	 */
 	public static byte[] loadData(String path)
 	{
-		return getAppBridge().getIO().loadData(path);
+		for (int i = Math.max(1, getLoadRetryCount()); i > 0; --i) 
+		{
+			InputStream is = getInputStream(path);
+			if (is == null) {
+				return null;
+			}
+			try {
+				int available = is.available();
+				if (is instanceof ResInputStream){
+					available = ((ResInputStream)is).getLength();
+				}
+				int count = 0;
+				ByteArrayOutputStream baos = new ByteArrayOutputStream(available);
+				while (available > 0) {
+					byte[] data = new byte[available];
+					int read_bytes = is.read(data);
+					if (read_bytes <= 0) {
+						break;
+					} else {
+						baos.write(data, 0, read_bytes);
+						count += read_bytes;
+						available = is.available();
+					}
+				}
+				return baos.toByteArray();
+			} catch (SocketTimeoutException err) {
+				System.err.println("timeout retry load data [" + is.getClass().getSimpleName() + "] : " + path);
+			}  catch (IOException err) {
+				err.printStackTrace();
+				System.err.println("retry load data [" + is.getClass().getSimpleName() + "] : " + path);
+			} finally {
+				if (is != null) {
+					try {
+						is.close();
+					} catch (IOException e) {}
+				}
+//				if (c instanceof HttpURLConnection) {
+//					((HttpURLConnection)c).disconnect();
+//				}
+			}
+		}
+		
+		return null;
 	}
 
 	public static ByteArrayInputStream loadStream(String path) {

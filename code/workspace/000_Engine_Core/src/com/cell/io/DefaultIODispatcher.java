@@ -2,6 +2,7 @@ package com.cell.io;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -31,126 +32,63 @@ public class DefaultIODispatcher implements IODispatcher
 	}
 	
 	/**
-	 * 覆盖获得 res: 协议资源内容
+	 * 覆盖获得JAR包内容
+	 * @param path
+	 * @return
+	 * @throws FileNotFoundException 
+	 */
+	protected InputStream getFileResource(String path) throws FileNotFoundException
+	{
+		File file = new File(path);
+		if (file.exists()) {
+			return new FileInputStream(file);
+		}
+		return null;
+	}
+
+	/**
+	 * 覆盖获得 http:// 协议资源内容
 	 * @param path
 	 * @param timeout
 	 * @return
 	 */
-	protected ResInputStream getRemoteResource(String path) throws IOException
+	protected LengthInputStream<?> getHTTPResource(String path) throws IOException
+	{
+		try {
+			return new URLInputStream(new URL(path), url_loading_time_out);
+		} catch (MalformedURLException err) {
+			return null;
+		}
+	}
+	
+	/**
+	 * 覆盖获得 res:// 协议资源内容
+	 * @param path
+	 * @param timeout
+	 * @return
+	 */
+	protected LengthInputStream<?> getRESResource(String path) throws IOException
 	{
 		return null;
 	}
 	
 	/**
-	 * 覆盖获得 ftp: 协议资源内容
+	 * 覆盖获得 ftp:// 协议资源内容
 	 * @param path
 	 * @param timeout
 	 * @return
 	 */
-	protected InputStream getFTPResource(String path) throws IOException
+	protected LengthInputStream<?> getFTPResource(String path) throws IOException
 	{
-		return null;
-	}
-	
-
-	protected byte[] loadRemoteData(String file)
-	{
-		ResInputStream is = null;
-		for (int i = Math.max(1, url_loading_retry_count); i > 0; --i) {
-			try {
-				is = getRemoteResource(file);
-				int len = is.getLength();
-				if (len > 0) {
-					int actual = 0;
-					int bytesread = 0;
-					byte[] data = new byte[len];
-					while ((bytesread != len) && (actual != -1)) {
-						actual = is.read(data, bytesread, len - bytesread);
-						bytesread += actual;
-					}
-					loaded_bytes.addAndGet(data.length);
-					return data;
-				} else if (len == 0) {
-					return new byte[0];
-				} else {
-					return null;
-				}
-			} catch (SocketTimeoutException err) {
-				System.err.println("timeout retry load url data : " + file);
-			}  catch (IOException err) {
-				err.printStackTrace();
-				System.err.println("retry load url data : " + file);
-			} finally {
-				if (is != null) {
-					try {
-						is.close();
-					} catch (IOException e) {}
-				}
-			}
-		}
-		
 		return null;
 	}
 
-	protected byte[] loadURLData(URL url)
-	{
-		URLConnection c = null;
-		InputStream is = null;
-		for (int i = Math.max(1, url_loading_retry_count); i > 0; --i) {
-			try {
-				c = url.openConnection();
-				c.setConnectTimeout(url_loading_time_out);
-				c.setReadTimeout(url_loading_time_out);
-				c.connect();
-				is = c.getInputStream();
-				int len = c.getContentLength();
-				if (len > 0) {
-					int actual = 0;
-					int bytesread = 0;
-					byte[] data = new byte[len];
-					while ((bytesread != len) && (actual != -1)) {
-						actual = is.read(data, bytesread, len - bytesread);
-						bytesread += actual;
-					}
-					loaded_bytes.addAndGet(data.length);
-					return data;
-				} else if (len == 0) {
-					return new byte[0];
-				} else {
-					return null;
-				}
-			} catch (SocketTimeoutException err) {
-				System.err.println("timeout retry load url data : " + url);
-			}  catch (IOException err) {
-				err.printStackTrace();
-				System.err.println("retry load url data : " + url);
-			} finally {
-				if (is != null) {
-					try {
-						is.close();
-					} catch (IOException e) {}
-				}
-//				if (c instanceof HttpURLConnection) {
-//					((HttpURLConnection)c).disconnect();
-//				}
-			}
-		}
-		
-		return null;
-	}
-	
-	protected byte[] loadFTPData(String path)
-	{
-		return null;
-	}
-	
 //	-----------------------------------------------------------------------------------------------------
 	
 	@Override
 	public InputStream getInputStream(String path) 
 	{
 		path = path.trim();
-		
 		try
 		{
 			if (path.startsWith("/")) 
@@ -159,7 +97,7 @@ public class DefaultIODispatcher implements IODispatcher
 			} 
 			else if (path.startsWith("res://"))
 			{
-				return new RemoteResInputStream(getRemoteResource(path));
+				return getRESResource(path);
 			} 
 			else if (path.startsWith("ftp://")) 
 			{
@@ -167,24 +105,15 @@ public class DefaultIODispatcher implements IODispatcher
 			}
 			else if (path.startsWith("http://"))
 			{
-				try {
-					URL url = new URL(path);
-					return new URLInputStream(url, url_loading_time_out);
-				} catch (MalformedURLException err) {}
+				return getHTTPResource(path);
 			} 
 			else if (path.startsWith("file:///"))
 			{
-				File file = new File(path.substring(8));
-				if (file.exists()) {
-					return new FileInputStream(file);
-				}
+				return getFileResource(path.substring(8));
 			} 
 			else
 			{
-				File file = new File(path);
-				if (file.exists()) {
-					return new FileInputStream(file);
-				}
+				return getFileResource(path);
 			}
 		}
 		catch(Exception err) {
@@ -194,54 +123,54 @@ public class DefaultIODispatcher implements IODispatcher
 		return null;
 	}
 	
-	@Override
-	public byte[] loadData(String path)
-	{
-		path = path.trim();
-		byte[] data = null;
-		try
-		{
-			// load from jar
-			if (path.startsWith("/")) {
-				return CIO.readStream(getJarResource(path));
-			}
-			// user define resource
-			else if (path.startsWith("res://")) {
-				return loadRemoteData(path);
-			}
-			// load from http
-			else if (path.startsWith("ftp://")) {
-				return loadFTPData(path);
-			}
-			// load from http
-			else if (path.startsWith("http://")) {
-				try {
-					return loadURLData(new URL(path));
-				} catch (MalformedURLException err) {
-				}
-			}
-			// load from file
-			else if (path.startsWith("file:///"))
-			{
-				File file = new File(path.substring(8));
-				if (file.exists()) {
-					return CIO.readStream(new FileInputStream(file));
-				}
-			} 
-			// load from file
-			else {
-				File file = new File(path);
-				if (file.exists()) {
-					return CIO.readStream(new FileInputStream(file));
-				}
-			}
-		} catch(Throwable err) {
-			System.err.println(path);
-			err.printStackTrace();
-		}
-		return data;
-	
-	}
+//	@Override
+//	public byte[] loadData(String path)
+//	{
+//		path = path.trim();
+//		byte[] data = null;
+//		try
+//		{
+//			// load from jar
+//			if (path.startsWith("/")) {
+//				return CIO.readStream(getJarResource(path));
+//			}
+//			// user define resource
+//			else if (path.startsWith("res://")) {
+//				return loadRemoteData(path);
+//			}
+//			// load from http
+//			else if (path.startsWith("ftp://")) {
+//				return loadFTPData(path);
+//			}
+//			// load from http
+//			else if (path.startsWith("http://")) {
+//				try {
+//					return loadURLData(new URL(path));
+//				} catch (MalformedURLException err) {
+//				}
+//			}
+//			// load from file
+//			else if (path.startsWith("file:///"))
+//			{
+//				File file = new File(path.substring(8));
+//				if (file.exists()) {
+//					return CIO.readStream(new FileInputStream(file));
+//				}
+//			} 
+//			// load from file
+//			else {
+//				File file = new File(path);
+//				if (file.exists()) {
+//					return CIO.readStream(new FileInputStream(file));
+//				}
+//			}
+//		} catch(Throwable err) {
+//			System.err.println(path);
+//			err.printStackTrace();
+//		}
+//		return data;
+//	
+//	}
 
 	/**
 	 * 获得已从CIO读取的字节数
@@ -275,14 +204,12 @@ public class DefaultIODispatcher implements IODispatcher
 //	------------------------------------------------------------------------------------------------------------------------
 	
 
-	abstract public class LengthInputStream<T extends InputStream> extends InputStream
+	abstract protected class LengthInputStream<T extends InputStream> extends ResInputStream
 	{
 		protected T 			src;
 		
 		protected AtomicInteger	readed = new AtomicInteger(0);	
-				
-		abstract public int getLength();
-		
+
 		@Override
 		public int available() throws IOException {
 			synchronized (readed) {
@@ -332,7 +259,7 @@ public class DefaultIODispatcher implements IODispatcher
 	
 //	------------------------------------------------------------------------------------------------------------------------
 
-	public class RemoteResInputStream extends LengthInputStream<ResInputStream>
+	protected class RemoteResInputStream extends LengthInputStream<ResInputStream>
 	{
 		public RemoteResInputStream(ResInputStream res) throws IOException {
 			this.src = res;
@@ -346,7 +273,7 @@ public class DefaultIODispatcher implements IODispatcher
 
 //	-----------------------------------------------------------------------------------------------------------------
 
-	public class URLInputStream extends LengthInputStream<InputStream>
+	protected class URLInputStream extends LengthInputStream<InputStream>
 	{
 		protected URLConnection	connection;
 		
@@ -373,5 +300,8 @@ public class DefaultIODispatcher implements IODispatcher
 		
 	}
 
-	
+//	-----------------------------------------------------------------------------------------------------------------
+
+//	------------------------------------------------------------------------------------------------------------------------
+
 }
