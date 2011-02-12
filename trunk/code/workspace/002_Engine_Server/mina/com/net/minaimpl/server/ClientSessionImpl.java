@@ -76,7 +76,7 @@ public class ClientSessionImpl implements ClientSession
 		return Session.isConnected();
 	}
 
-	void setListener(ClientSessionListener listener) {
+	public void setListener(ClientSessionListener listener) {
 		Listener = listener;
 	}
 	
