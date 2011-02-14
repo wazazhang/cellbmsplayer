@@ -73,11 +73,9 @@ public class CIO extends CObject
 				err.printStackTrace();
 				System.err.println("retry load data [" + is.getClass().getSimpleName() + "] : " + path);
 			} finally {
-				if (is != null) {
-					try {
-						is.close();
-					} catch (IOException e) {}
-				}
+				try {
+					is.close();
+				} catch (IOException e) {}
 			}
 		}
 		return null;
