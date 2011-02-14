@@ -123,22 +123,18 @@ public class OggStreamSoundInfo extends SoundInfo implements Runnable
 		} catch (Throwable ex) {
 			ex.printStackTrace();
 		} finally {
-			try {
-				CIO.readStream(input);
-			} catch (Exception err) {}
-			try {
-				input.close();
-			} catch (Exception err) {}
+//			try {
+//				CIO.readStream(input);
+//			} catch (Exception err) {}
+//			try {
+//				input.close();
+//			} catch (Exception err) {}
 			this.total_size		= output.size();
 			this.is_complete	= true;			
 			this.decode_state	= null;
 //			System.out.println("done ! size = " + CUtil.getBytesSizeString(output.size()));
 		}
 	}
-	
-	
-	
-	
 	
 	class OggOutput extends ByteArrayOutputStream
 	{
