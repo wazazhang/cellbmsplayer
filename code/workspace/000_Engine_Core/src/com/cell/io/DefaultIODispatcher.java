@@ -52,7 +52,7 @@ public class DefaultIODispatcher implements IODispatcher
 	 * @param timeout
 	 * @return
 	 */
-	protected RemoteInputStream getHTTPResource(String path) throws IOException
+	protected RemoteInputStream getHttpResource(String path) throws IOException
 	{
 		try {
 			return new RemoteHttpInputStream(new URL(path), url_loading_time_out);
@@ -67,7 +67,7 @@ public class DefaultIODispatcher implements IODispatcher
 	 * @param timeout
 	 * @return
 	 */
-	protected RemoteInputStream getRESResource(String path) throws IOException
+	protected RemoteInputStream getResResource(String path) throws IOException
 	{
 		return null;
 	}
@@ -78,9 +78,13 @@ public class DefaultIODispatcher implements IODispatcher
 	 * @param timeout
 	 * @return
 	 */
-	protected RemoteInputStream getFTPResource(String path) throws IOException
+	protected RemoteInputStream getFtpResource(String path) throws IOException
 	{
-		return null;
+		try {
+			return new RemoteFtpInputStream(new URL(path), url_loading_time_out);
+		} catch (MalformedURLException err) {
+			return null;
+		}
 	}
 
 //	-----------------------------------------------------------------------------------------------------
@@ -97,15 +101,15 @@ public class DefaultIODispatcher implements IODispatcher
 			} 
 			else if (path.startsWith("res://"))
 			{
-				return getRESResource(path);
+				return getResResource(path);
 			} 
 			else if (path.startsWith("ftp://")) 
 			{
-				return getFTPResource(path);
+				return getFtpResource(path);
 			}
 			else if (path.startsWith("http://"))
 			{
-				return getHTTPResource(path);
+				return getHttpResource(path);
 			} 
 			else if (path.startsWith("file:///"))
 			{
@@ -299,6 +303,20 @@ public class DefaultIODispatcher implements IODispatcher
 	}
 
 //	-----------------------------------------------------------------------------------------------------------------
+
+	protected class RemoteFtpInputStream extends RemoteInputStream
+	{
+		protected URLConnection	connection;
+		
+		public RemoteFtpInputStream(URL url, int timeout) throws IOException 
+		{
+			this.connection = url.openConnection();
+			this.connection.setConnectTimeout(timeout);
+			this.connection.setReadTimeout(timeout);
+			this.connection.connect();
+			this.src = connection.getInputStream();
+		}
+	}
 
 //	------------------------------------------------------------------------------------------------------------------------
 
