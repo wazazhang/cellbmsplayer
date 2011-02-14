@@ -339,7 +339,10 @@ public class CIO extends CObject
 					baos.write(readed, 0, read_bytes);
 					count += read_bytes;
 					if (percent != null) {
-						percent.set(read_bytes / (float) available);
+						if (available < count) {
+							available = count + is.available();
+						}
+						percent.set(count / (float) available);
 					}
 				}
 			}
