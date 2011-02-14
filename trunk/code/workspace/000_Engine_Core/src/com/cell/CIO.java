@@ -328,10 +328,10 @@ public class CIO extends CObject
 	{
 		if (is != null) {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream(block_size);
-			int count = 0;
-			int available = is.available();
+			int count 		= 0;
+			int available	= is.available();
+			byte[] readed 	= new byte[block_size];
 			while (true) {
-				byte[] readed 	= new byte[block_size];
 				int read_bytes 	= is.read(readed);
 				if (read_bytes < 0) {
 					break;
