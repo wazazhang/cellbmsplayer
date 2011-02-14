@@ -24,7 +24,9 @@ import java.util.concurrent.atomic.AtomicReference;
  * @version 1.0
  */
 public class CIO extends CObject
-{	
+{		
+	public static int DEFAULT_READ_BLOCK_SIZE = 4096;
+
 //	------------------------------------------------------------------------------------------------------------------------
 	
 	/**
@@ -64,23 +66,7 @@ public class CIO extends CObject
 				return null;
 			}
 			try {
-				int available = is.available();
-				if (available > 0) {
-					int count = 0;
-					ByteArrayOutputStream baos = new ByteArrayOutputStream(available);
-					while (available > 0) {
-						byte[] data = new byte[available];
-						int read_bytes = is.read(data);
-						if (read_bytes <= 0) {
-							break;
-						} else {
-							baos.write(data, 0, read_bytes);
-							count += read_bytes;
-							available = is.available();
-						}
-					}
-					return baos.toByteArray();
-				}
+				return readStream(is, null, DEFAULT_READ_BLOCK_SIZE);
 			} catch (SocketTimeoutException err) {
 				System.err.println("timeout retry load data [" + is.getClass().getSimpleName() + "] : " + path);
 			}  catch (IOException err) {
@@ -255,7 +241,7 @@ public class CIO extends CObject
 	public static byte[] objectToBin(Object src)
 	{
 		try {
-			ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
+			ByteArrayOutputStream baos = new ByteArrayOutputStream(DEFAULT_READ_BLOCK_SIZE);
 			ObjectOutputStream oos = new ObjectOutputStream(baos);
 			oos.writeObject(src);
 			oos.flush();
@@ -298,44 +284,40 @@ public class CIO extends CObject
 
 	/**
 	 * 读取一个流的所有数据到字节序。<br>
-	 * 只要InputStream里有数据，该方法都将阻塞，直到available=0，所以该方法不适合读取动态流。<br>
+	 * 只要InputStream里有数据，该方法都将阻塞，直到 read < 0，所以该方法不适合读取动态流。<br>
 	 * <b>该方法将自动关闭流。</b>
 	 * @param is
 	 * @return 
 	 */
 	public static byte[] readStream(InputStream is) {
-		if (is != null) {
+		try {
+			return readStream(is, null, DEFAULT_READ_BLOCK_SIZE);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
 			try {
-				int available = is.available();
-				int count = 0;
-				ByteArrayOutputStream baos = new ByteArrayOutputStream(available);
-				while (available > 0) {
-					byte[] data = new byte[available];
-					int read_bytes = is.read(data);
-					if (read_bytes <= 0) {
-						break;
-					} else {
-						baos.write(data, 0, read_bytes);
-						count += read_bytes;
-						available = is.available();
-					}
-				}
-				return baos.toByteArray();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} finally {
-				try {
-					is.close();
-				} catch (IOException e) {
-				}
-			}
+				is.close();
+			} catch (IOException e) {}
 		}
 		return null;
 	}
 
 	/**
 	 * 只要InputStream里有数据，
-	 * 该方法都将阻塞，直到available=0，
+	 * 该方法都将阻塞，直到 read < 0，
+	 * 所以该方法不适合读取动态流。
+	 * @param is
+	 * @param 预计的进度 0~1
+	 * @return 
+	 */
+	public static byte[] readStream(InputStream is, AtomicReference<Float> percent) throws IOException
+	{
+		return readStream(is, percent, DEFAULT_READ_BLOCK_SIZE);
+	}
+
+	/**
+	 * 只要InputStream里有数据，
+	 * 该方法都将阻塞，直到 read < 0，
 	 * 所以该方法不适合读取动态流。
 	 * @param is
 	 * @param percent 预计的进度 0~1
@@ -345,47 +327,27 @@ public class CIO extends CObject
 	public static byte[] readStream(InputStream is, AtomicReference<Float> percent, int block_size) throws IOException
 	{
 		if (is != null) {
+			ByteArrayOutputStream baos = new ByteArrayOutputStream(block_size);
+			int count = 0;
 			int available = is.available();
-			ByteArrayOutputStream baos = new ByteArrayOutputStream(is.available());
-			do {
-				byte[]	data	= new byte[available];
-				int		count	= 0;
-				while (count < available) {
-					int block = Math.min(block_size, available - count);
-					int actual = is.read(data, count, block);
-					if (actual > 0) {
-						baos.write(data, count, actual);
-						count += actual;
-						percent.set(count / (float) available);
-//						try{
-//							Thread.sleep(100);
-//							System.out.println(percent.get());
-//						}catch(Exception err){}
-					} else {
-						break;
+			while (true) {
+				byte[] readed 	= new byte[block_size];
+				int read_bytes 	= is.read(readed);
+				if (read_bytes < 0) {
+					break;
+				} else {
+					baos.write(readed, 0, read_bytes);
+					count += read_bytes;
+					if (percent != null) {
+						percent.set(read_bytes / (float) available);
 					}
 				}
-//				loaded_bytes.addAndGet(data.length);
-				available = is.available();
-			} while (available > 0);
+			}
 			return baos.toByteArray();
 		}
 		return null;
 	}
 
-	/**
-	 * 只要InputStream里有数据，
-	 * 该方法都将阻塞，直到available=0，
-	 * 所以该方法不适合读取动态流。
-	 * @param is
-	 * @param 预计的进度 0~1
-	 * @return 
-	 */
-	public static byte[] readStream(InputStream is, AtomicReference<Float> percent) throws IOException
-	{
-		return readStream(is, percent, Integer.MAX_VALUE);
-	}
-	
 //	------------------------------------------------------------------------------------------------------------------------
 
 
