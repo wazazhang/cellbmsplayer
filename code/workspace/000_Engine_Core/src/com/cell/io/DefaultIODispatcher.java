@@ -211,8 +211,6 @@ public class DefaultIODispatcher implements IODispatcher
 	{
 		protected InputStream src;
 		
-		protected AtomicInteger	readed = new AtomicInteger(0);	
-		
 		@Override
 		public int available() throws IOException {
 			return src.available();
@@ -220,26 +218,20 @@ public class DefaultIODispatcher implements IODispatcher
 		
 		@Override
 		public int read() throws IOException {
-			synchronized (readed) {
-				int b = src.read();
-				if (b >= 0) {
-					readed.incrementAndGet();
-					loaded_bytes.incrementAndGet();
-				}
-				return b;
+			int b = src.read();
+			if (b > 0) {
+				loaded_bytes.incrementAndGet();
 			}
+			return b;
 		}
 
 		@Override
 		public int read(byte[] b, int off, int len) throws IOException {
-			synchronized (readed) {
-				int count = src.read(b, off, len);
-				if (count >= 0) {
-					readed.addAndGet(count);
-					loaded_bytes.addAndGet(count);
-				}
-				return count;
+			int count = src.read(b, off, len);
+			if (count > 0) {
+				loaded_bytes.addAndGet(count);
 			}
+			return count;
 		}
 		
 		@Override
@@ -273,8 +265,6 @@ public class DefaultIODispatcher implements IODispatcher
 	{
 		protected URLConnection	connection;
 		
-		private AtomicInteger	length;
-		
 		public RemoteHttpInputStream(URL url, int timeout) throws IOException 
 		{
 			this.connection = url.openConnection();
@@ -283,23 +273,6 @@ public class DefaultIODispatcher implements IODispatcher
 			this.connection.connect();
 			this.src = connection.getInputStream();
 		}
-
-		@Override
-		public int available() throws IOException {
-			synchronized (readed) {
-				return getLength() - readed.get();
-			}
-		}
-
-		public int getLength() {
-			synchronized (readed) {
-				if (length == null) {
-					length = new AtomicInteger(connection.getContentLength());
-				}
-				return length.get();
-			}
-		}
-		
 	}
 
 //	-----------------------------------------------------------------------------------------------------------------
