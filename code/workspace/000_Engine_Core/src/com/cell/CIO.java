@@ -283,7 +283,7 @@ public class CIO extends CObject
 	/**
 	 * 读取一个流的所有数据到字节序。<br>
 	 * 只要InputStream里有数据，该方法都将阻塞，直到 read < 0，所以该方法不适合读取动态流。<br>
-	 * <b>该方法将自动关闭流。</b>
+	 * <b><font color=ff0000>该方法将自动关闭流。</font></b>
 	 * @param is
 	 * @return 
 	 */
@@ -295,7 +295,7 @@ public class CIO extends CObject
 		} finally {
 			try {
 				is.close();
-			} catch (IOException e) {}
+			} catch (Exception e) {}
 		}
 		return null;
 	}
@@ -304,6 +304,7 @@ public class CIO extends CObject
 	 * 只要InputStream里有数据，
 	 * 该方法都将阻塞，直到 read < 0，
 	 * 所以该方法不适合读取动态流。
+	 * <b><font color=ff0000>该方法不会自动关闭流。</font></b>
 	 * @param is
 	 * @param 预计的进度 0~1
 	 * @return 
@@ -317,6 +318,7 @@ public class CIO extends CObject
 	 * 只要InputStream里有数据，
 	 * 该方法都将阻塞，直到 read < 0，
 	 * 所以该方法不适合读取动态流。
+	 * <b><font color=ff0000>该方法不会自动关闭流。</font></b>
 	 * @param is
 	 * @param percent 预计的进度 0~1
 	 * @param block_size 每次读取的块大小

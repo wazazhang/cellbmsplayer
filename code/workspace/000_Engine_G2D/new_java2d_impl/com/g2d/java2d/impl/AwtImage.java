@@ -12,6 +12,7 @@ import java.awt.image.ColorModel;
 import java.awt.image.IndexColorModel;
 import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
+import java.io.IOException;
 import java.io.InputStream;
 
 import javax.imageio.ImageIO;
@@ -40,10 +41,17 @@ public class AwtImage implements com.g2d.BufferedImage
 	}
 
 	AwtImage(String file) {
+		InputStream is = CIO.getInputStream(file);
 		try {
-			m_image = createBuffer(ImageIO.read(CIO.getInputStream(file)));
+			m_image = createBuffer(ImageIO.read(is));
 		} catch (Exception err) {
 			err.printStackTrace();
+		} finally {
+			try {
+				is.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

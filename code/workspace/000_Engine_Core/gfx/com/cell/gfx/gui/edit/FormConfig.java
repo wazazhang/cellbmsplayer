@@ -1,5 +1,6 @@
 package com.cell.gfx.gui.edit;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Vector;
 
@@ -34,12 +35,16 @@ public class FormConfig
 {
 	static public boolean initForm(Form form, String file, FormListener flistener, FormConfigListener fclistener)
 	{
+		InputStream is = CIO.getInputStream(file);
 		try{
-			InputStream is = CIO.getInputStream(file);
 			initForm(form, is, flistener, fclistener);
 			return true;
 		}catch(Exception err){
 			err.printStackTrace();
+		}finally{
+			try {
+				is.close();
+			} catch (IOException e) {}
 		}
 		return false;
 	}

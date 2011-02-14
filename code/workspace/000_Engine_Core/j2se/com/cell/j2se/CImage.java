@@ -12,6 +12,7 @@ import java.awt.image.ColorModel;
 import java.awt.image.IndexColorModel;
 import java.awt.image.VolatileImage;
 import java.awt.image.WritableRaster;
+import java.io.IOException;
 import java.io.InputStream;
 
 import javax.imageio.ImageIO;
@@ -48,11 +49,18 @@ class CImage implements IImage
 	
 	CImage(String file) 
 	{
+		InputStream is = CIO.getInputStream(file);
 		try{
-			m_image = createBuffer(ImageIO.read(CIO.getInputStream(file)));
+			m_image = createBuffer(ImageIO.read(is));
 		}catch(Exception err){
 			err.printStackTrace();
 			System.err.println("CImage.<init> :  File="+file+" Failed !");
+		}finally{
+			try {
+				is.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
@@ -64,7 +72,6 @@ class CImage implements IImage
 			err.printStackTrace();
 			System.err.println("CImage.<init> : Failed !");
 		}
-
 	}
 	
 	private final BufferedImage createBuffer(Image src)

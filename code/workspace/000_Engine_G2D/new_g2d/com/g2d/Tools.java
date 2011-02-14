@@ -326,8 +326,12 @@ public class Tools
 	{
 		try {
 			InputStream is = CIO.getInputStream(file);
-			BufferedImage src = Engine.getEngine().createImage(is);
-			return src;
+			try{
+				BufferedImage src = Engine.getEngine().createImage(is);
+				return src;
+			} finally {
+				is.close();
+			}
 		} catch (Exception err) {
 			System.err.println(file);
 			err.printStackTrace();
@@ -336,11 +340,13 @@ public class Tools
 	}
 	
 	
-	static public BufferedImage readImage(InputStream is)
-	{
+	static public BufferedImage readImage(InputStream is) {
 		try {
-			BufferedImage src = Engine.getEngine().createImage(is);
-			return src;
+			try {
+				BufferedImage src = Engine.getEngine().createImage(is);
+				return src;
+			} finally {
+			}
 		} catch (Exception err) {
 			err.printStackTrace();
 		}
