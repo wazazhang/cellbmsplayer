@@ -333,9 +333,7 @@ public class CIO extends CObject
 			byte[] readed 	= new byte[block_size];
 			while (true) {
 				int read_bytes 	= is.read(readed);
-				if (read_bytes <= 0) {
-					break;
-				} else {
+				if (read_bytes > 0) {
 					baos.write(readed, 0, read_bytes);
 					count += read_bytes;
 					if (percent != null) {
@@ -344,6 +342,8 @@ public class CIO extends CObject
 						}
 						percent.set(count / (float) available);
 					}
+				} else {
+					break;
 				}
 			}
 			return baos.toByteArray();
