@@ -1,32 +1,27 @@
 package com.net.client.service;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Vector;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.cell.CObject;
-import com.cell.util.Pair;
 import com.cell.util.concurrent.ThreadPool;
+import com.net.Heartbeat;
 import com.net.MessageHeader;
 import com.net.Protocol;
 import com.net.client.ClientChannel;
 import com.net.client.ServerSession;
 import com.net.client.ServerSessionListener;
+
+
+
 
 
 /**
@@ -64,6 +59,8 @@ public abstract class BasicNetService
 	private long					LastCleanRequestTime 	= System.currentTimeMillis();
 
 	private AtomicInteger			request_response_ping	= new AtomicInteger();
+	
+	private AtomicInteger			heartbeat_counter_		= new AtomicInteger();
 
 	final private ThreadPool		thread_pool;
 	
@@ -107,6 +104,29 @@ public abstract class BasicNetService
 	}
 
 //	----------------------------------------------------------------------------------------------------------------------------
+	
+	final public int getHeartbeatCount()
+	{
+		return this.heartbeat_counter_.get();
+	}
+	
+	final public AtomicReference<MessageHeader> sendHeartbeat()
+	{
+		ServerSession session = getSession();
+		
+		if (session != null)
+		{
+			Heartbeat heartbeat = new Heartbeat();			
+			
+			if (session.send(heartbeat))
+			{
+				heartbeat_counter_.incrementAndGet();
+				return new AtomicReference<MessageHeader>(heartbeat);
+			}
+		}
+		
+		return null;
+	}
 	
     /**
      * 发送并监听返回
@@ -418,7 +438,7 @@ public abstract class BasicNetService
 		}
 		
 	    public void disconnected(ServerSession session, boolean graceful, String reason) {
-	    	log.info("disconnected : " + graceful + " : " + reason);
+	    	log.info("disconnected : " + (graceful? "graceful" : "not graceful") + " : " + reason);
 			onDisconnected(session, graceful, reason);
 			ScheduledFuture<?> old_1 = schedule_clean_task_fix_rate.getAndSet(null);
 			ScheduledFuture<?> old_2 = schedule_clean_task.getAndSet(null);
