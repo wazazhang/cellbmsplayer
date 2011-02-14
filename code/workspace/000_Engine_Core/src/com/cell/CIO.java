@@ -333,7 +333,7 @@ public class CIO extends CObject
 			byte[] readed 	= new byte[block_size];
 			while (true) {
 				int read_bytes 	= is.read(readed);
-				if (read_bytes < 0) {
+				if (read_bytes <= 0) {
 					break;
 				} else {
 					baos.write(readed, 0, read_bytes);
