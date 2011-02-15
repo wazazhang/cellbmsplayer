@@ -54,7 +54,8 @@ public class KeepAlive extends KeepAliveFilter
 	}   
 	  
 	/**  
-	 * 继承于KeepAliveMessageFactory，当心跳机制启动的时候，需要该工厂类来判断和定制心跳消息  
+	 * 继承于KeepAliveMessageFactory，当心跳机制启动的时候，需要该工厂类来判断和定制心跳消息 。
+	 * 这里对于心跳，只传输1个字节，最精简心跳结构，心跳消息不能和消息头类型冲突。
 	 */  
 	static class KeepAliveMessageFactoryImpl implements KeepAliveMessageFactory
 	{   
