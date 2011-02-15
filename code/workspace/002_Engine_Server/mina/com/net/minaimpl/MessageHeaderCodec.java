@@ -13,7 +13,6 @@ public abstract class MessageHeaderCodec implements ProtocolCodecFactory
 	
 //	-----------------------------------------------------------------------------------------
 	
-	/** 心跳请求头*/
 	final public static byte[]	zerodata				= new byte[0];
 
 	/** 心跳请求头*/
