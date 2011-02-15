@@ -44,8 +44,24 @@ public class NetPackageCodec extends MessageHeaderCodec
 {
 	private static final Logger _log = LoggerFactory.getLogger(NetPackageCodec.class.getName());
 
+//	trace var
+	private long TotalSentBytes = 0;
+	private long TotalReceivedBytes = 0;
+	private long SentMessageCount = 0;
+	private long ReceivedMessageCount = 0;
 
-
+	public long getTotalSentBytes() {
+		return TotalSentBytes;
+	}
+	public long getTotalReceivedBytes() {
+		return TotalReceivedBytes;
+	}
+	public long getSentMessageCount() {
+		return SentMessageCount;
+	}
+	public long getReceivedMessageCount() {
+		return ReceivedMessageCount;
+	}
 	
 	class NetPackageDecoder extends CumulativeProtocolDecoder 
 	{
@@ -266,7 +282,7 @@ public class NetPackageCodec extends MessageHeaderCodec
     			out.write(buffer);
     			
     			//System.out.println("encoded -> " + session.getRemoteAddress() + " : " + protocol);
-				SendedMessageCount ++;
+				SentMessageCount ++;
         	}
     		catch(Throwable err) 
     		{

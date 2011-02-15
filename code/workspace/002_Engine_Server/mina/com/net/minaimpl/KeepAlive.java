@@ -10,10 +10,15 @@ import org.apache.mina.filter.keepalive.KeepAliveRequestTimeoutHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.net.ExternalizableFactory;
+
 public class KeepAlive extends KeepAliveFilter 
 {
 	private static Logger log = LoggerFactory.getLogger(KeepAlive.class);
-	
+
+	private long SentMessageCount = 0;
+	private long ReceivedMessageCount = 0;
+
 	public KeepAlive(KeepAliveMessageFactory messageFactory, int interval_sec, int timeout_sec) {   
         super(messageFactory,
         		IdleStatus.BOTH_IDLE,
@@ -28,17 +33,27 @@ public class KeepAlive extends KeepAliveFilter
         		interval_sec, timeout_sec);   
         this.setForwardEvent(false); //此消息不会继续传递，不会被业务层看见   
     }
-	 
+
+	public long getSentMessageCount() {
+		return SentMessageCount;
+	}
+	
+	public long getReceivedMessageCount() {
+		return ReceivedMessageCount;
+	}
+
     @Override
     public void messageReceived(NextFilter nextFilter, IoSession session, Object message) throws Exception {
     	super.messageReceived(nextFilter, session, message);
 //    	log.info("heart beat received");
+    	ReceivedMessageCount++;
     }
     
     @Override
     public void messageSent(NextFilter nextFilter, IoSession session, WriteRequest writeRequest) throws Exception {
     	super.messageSent(nextFilter, session, writeRequest);
 //    	log.info("heart beat sent");
+    	SentMessageCount++;
     }
     
     @Override

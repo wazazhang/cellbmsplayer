@@ -68,13 +68,13 @@ public abstract class AbstractServer extends IoHandlerAdapter implements Server
 	
 	final NetPackageCodec 			Codec;
 	final IoAcceptor 				Acceptor;
-
 	final ExecutorService 			AcceptorPool;
 	final ExecutorService 			IoProcessorPool;
 	
 	ServerListener					SrvListener;
 	long							StartTime;
 	boolean							CloseOnError = true;
+	KeepAlive						keep_alive;
 	
 //	----------------------------------------------------------------------------------------------------------------------
 	/**
@@ -123,9 +123,9 @@ public abstract class AbstractServer extends IoHandlerAdapter implements Server
 		this.Acceptor.getSessionConfig().setWriterIdleTime(sessionWriteIdleTimeSeconds);
 		this.Acceptor.setHandler(this);
 		if (keepalive_interval_sec > 0) {
-		this.Acceptor.getFilterChain().addLast("keep-alive", 
-				new KeepAlive(keepalive_interval_sec,
-						Math.min(sessionReadIdleTimeSeconds, sessionWriteIdleTimeSeconds))); //心跳  
+		this.keep_alive = new KeepAlive(keepalive_interval_sec,
+				Math.min(sessionReadIdleTimeSeconds, sessionWriteIdleTimeSeconds));
+		this.Acceptor.getFilterChain().addLast("keep-alive", keep_alive); //心跳  
 		}
 		this.Acceptor.getFilterChain().addLast("codec", 
 				new ProtocolCodecFilter(Codec));
@@ -183,7 +183,7 @@ public abstract class AbstractServer extends IoHandlerAdapter implements Server
 //	-----------------------------------------------------------------------------------------------------------------------
 
 	final public long getSentMessageCount() {
-		return Codec.getSendedMessageCount();
+		return Codec.getSentMessageCount();
 	}
 	
 	final public long getReceivedMessageCount () {
@@ -197,7 +197,19 @@ public abstract class AbstractServer extends IoHandlerAdapter implements Server
 	final public long getReceivedBytes(){
 		return Codec.getTotalReceivedBytes();
 	}
-	
+	final public long getHeartBeatReceived() {
+		if (keep_alive != null) {
+			return keep_alive.getReceivedMessageCount();
+		}
+		return 0;
+	}
+	final public long getHeartBeatSent() {
+		if (keep_alive != null) {
+			return keep_alive.getSentMessageCount();
+		}
+		return 0;
+	}
+
 //	-----------------------------------------------------------------------------------------------------------------------
 
 
