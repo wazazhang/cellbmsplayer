@@ -105,10 +105,11 @@ public abstract class BasicNetService
 
 //	----------------------------------------------------------------------------------------------------------------------------
 
-	public int getHeartbeatCount()
+	public long getHeartbeatCount()
 	{
 //		return this.heartbeat_counter_.get();
-		return 0;
+		
+		return getSession().getHeartBeatReceived() + getSession().getHeartBeatSent();
 	}
 	
 //	@Deprecated
