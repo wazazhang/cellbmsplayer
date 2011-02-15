@@ -276,6 +276,8 @@ public abstract class AbstractServer extends IoHandlerAdapter implements Server
 		CUtil.toStatusLine("ReceivedMessageCount",		getReceivedMessageCount(), lines);
 		CUtil.toStatusLine("SentBytes",					CUtil.toBytesSizeString(getSentBytes()), lines);
 		CUtil.toStatusLine("SentMessageCount",			getSentMessageCount(), lines);
+		CUtil.toStatusLine("HeartBeatSent",				getHeartBeatSent(), lines);
+		CUtil.toStatusLine("HeartBeatReceived",			getHeartBeatReceived(), lines);
 		CUtil.toStatusLine("StartTime",					CUtil.timeToString(getStartTime()), lines);
 		if (AcceptorPool instanceof ThreadPoolExecutor) {
 			lines.append("[AcceptorPool]\n");
