@@ -635,10 +635,10 @@ public abstract class ResourceManager extends CellSetResourceManager
 	public StreamTiles getEffectImages(String cpj_project_name, String cpj_sprite_name) {
 		try
 		{
-			SpriteSet					effect_set	= getEffectSet(cpj_project_name, cpj_sprite_name);
-			CellSetResource				resource 	= effect_set.getSetResource(this);
+			SpriteSet 							effect_set 	= getEffectSet(cpj_project_name, cpj_sprite_name);
+			CellSetResource 					resource 	= effect_set.getSetResource(this);
 			com.cell.gameedit.object.SpriteSet 	spr_set 	= effect_set.getSetObject(this);
-			StreamTiles	images		= resource.getImages(spr_set.ImagesName);
+			StreamTiles							images		= resource.getImages(spr_set.ImagesName);
 			return images;
 		} catch (Exception err) {
 			err.printStackTrace();
@@ -662,10 +662,10 @@ public abstract class ResourceManager extends CellSetResourceManager
 	public CSprite getEffectSprite(String cpj_project_name, String cpj_sprite_name) {
 		try
 		{
-			SpriteSet					effect_set	= getEffectSet(cpj_project_name, cpj_sprite_name);
-			CellSetResource				resource 	= effect_set.getSetResource(this);
+			SpriteSet							effect_set	= getEffectSet(cpj_project_name, cpj_sprite_name);
+			CellSetResource						resource 	= effect_set.getSetResource(this);
 			com.cell.gameedit.object.SpriteSet 	spr_set 	= effect_set.getSetObject(this);
-			CSprite						sprite		= resource.getSprite(spr_set);
+			CSprite								sprite		= resource.getSprite(spr_set);
 			return sprite;
 		} catch (Exception err) {
 			err.printStackTrace();
