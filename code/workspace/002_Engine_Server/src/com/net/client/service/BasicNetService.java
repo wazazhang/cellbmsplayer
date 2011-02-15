@@ -13,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.cell.util.concurrent.ThreadPool;
-import com.net.Heartbeat;
+//import com.net.Heartbeat;
 import com.net.MessageHeader;
 import com.net.Protocol;
 import com.net.client.ClientChannel;
@@ -60,7 +60,7 @@ public abstract class BasicNetService
 
 	private AtomicInteger			request_response_ping	= new AtomicInteger();
 	
-	private AtomicInteger			heartbeat_counter_		= new AtomicInteger();
+//	private AtomicInteger			heartbeat_counter_		= new AtomicInteger();
 
 	final private ThreadPool		thread_pool;
 	
@@ -104,27 +104,31 @@ public abstract class BasicNetService
 	}
 
 //	----------------------------------------------------------------------------------------------------------------------------
-	
+	@Deprecated
 	final public int getHeartbeatCount()
 	{
-		return this.heartbeat_counter_.get();
+//		return this.heartbeat_counter_.get();
+		return 0;
 	}
-	
+	@Deprecated
 	final public AtomicReference<MessageHeader> sendHeartbeat()
 	{
-		ServerSession session = getSession();
-		
-		if (session != null)
-		{
-			Heartbeat heartbeat = new Heartbeat();			
-			
-			if (session.send(heartbeat))
-			{
-				heartbeat_counter_.incrementAndGet();
-				return new AtomicReference<MessageHeader>(heartbeat);
-			}
-		}
-		
+//		心跳机制客户端单方面实现是不完整的，该功能已经迁移到minaimpl内部实现
+//		BasicNetService子类可以以池的形式实现，此方法也不能保证所有的session都为有效链接。
+//		详见 #com.net.minaimpl.KeepAlive
+//		ServerSession session = getSession();
+//		
+//		if (session != null)
+//		{
+//			Heartbeat heartbeat = new Heartbeat();			
+//			
+//			if (session.send(heartbeat))
+//			{
+//				heartbeat_counter_.incrementAndGet();
+//				return new AtomicReference<MessageHeader>(heartbeat);
+//			}
+//		}
+//		
 		return null;
 	}
 	

@@ -24,6 +24,7 @@ import com.net.MessageHeader;
 import com.net.Protocol;
 import com.net.client.ServerSession;
 import com.net.client.ServerSessionListener;
+import com.net.minaimpl.KeepAlive;
 import com.net.minaimpl.NetPackageCodec;
 import com.net.minaimpl.ProtocolImpl;
 import com.net.minaimpl.ProtocolPool;
@@ -51,27 +52,43 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 	public ServerSessionImpl(boolean smooth_close) {
 		this(Thread.currentThread().getContextClassLoader(), null, smooth_close, 
 				Integer.MAX_VALUE, 
-				Integer.MAX_VALUE);
+				Integer.MAX_VALUE,
+				0);
 	}
 	
 	public ServerSessionImpl(ClassLoader cl, ExternalizableFactory ef) {
 		this(Thread.currentThread().getContextClassLoader(), ef, true,
 				Integer.MAX_VALUE, 
-				Integer.MAX_VALUE);
+				Integer.MAX_VALUE,
+				0);
 	}
-	
+
+	/**
+	 * @param cl
+	 * @param ef
+	 * @param smooth_close
+	 * @param write_idle_time_sec		多长时间内没有发送数据，断掉链接(秒)
+	 * @param read_idle_time_sec		多长时间内没有接受数据，断掉链接(秒)
+	 * @param keepalive_interval_sec	心跳间隔，0表示不使用心跳机制
+	 */
 	public ServerSessionImpl(ClassLoader cl,
 			ExternalizableFactory ef, 
 			boolean smooth_close, 
 			int write_idle_time_sec,
-			int read_idle_time_sec)
+			int read_idle_time_sec, 
+			int keepalive_interval_sec)
 	{
 		log			= LoggerFactory.getLogger(getClass().getName());
 		Codec		= new NetPackageCodec(cl, ef);
 		Connector 	= new NioSocketConnector();
-		Connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(Codec));
 		Connector.getSessionConfig().setReaderIdleTime(write_idle_time_sec);
 		Connector.getSessionConfig().setWriterIdleTime(read_idle_time_sec);
+		if (keepalive_interval_sec > 0) {
+		Connector.getFilterChain().addLast("keep-alive", 
+				new KeepAlive(keepalive_interval_sec,
+						Math.min(write_idle_time_sec, read_idle_time_sec))); //心跳  
+		}
+		Connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(Codec));
 		Connector.setHandler(this);
 
 		this.clean_task = new CleanTask();
