@@ -81,8 +81,8 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 		log			= LoggerFactory.getLogger(getClass().getName());
 		Codec		= new NetPackageCodec(cl, ef);
 		Connector 	= new NioSocketConnector();
-		Connector.getSessionConfig().setReaderIdleTime(write_idle_time_sec);
-		Connector.getSessionConfig().setWriterIdleTime(read_idle_time_sec);
+		Connector.getSessionConfig().setReaderIdleTime(read_idle_time_sec);
+		Connector.getSessionConfig().setWriterIdleTime(write_idle_time_sec);
 		if (keepalive_interval_sec > 0) {
 		Connector.getFilterChain().addLast("keep-alive", 
 				new KeepAlive(keepalive_interval_sec,
