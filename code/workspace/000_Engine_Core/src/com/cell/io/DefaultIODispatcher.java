@@ -215,7 +215,6 @@ public class DefaultIODispatcher implements IODispatcher
 		public int available() throws IOException {
 			return src.available();
 		}
-		
 		@Override
 		public int read() throws IOException {
 			int b = src.read();
@@ -224,7 +223,14 @@ public class DefaultIODispatcher implements IODispatcher
 			}
 			return b;
 		}
-
+		@Override
+		public int read(byte[] b) throws IOException {
+			int count = src.read(b);
+			if (count > 0) {
+				loaded_bytes.addAndGet(count);
+			}
+			return count;
+		}
 		@Override
 		public int read(byte[] b, int off, int len) throws IOException {
 			int count = src.read(b, off, len);
@@ -233,7 +239,10 @@ public class DefaultIODispatcher implements IODispatcher
 			}
 			return count;
 		}
-		
+		@Override
+		public long skip(long n) throws IOException {
+			return src.skip(n);
+		}
 		@Override
 		public void close() throws IOException {
 			src.close();
