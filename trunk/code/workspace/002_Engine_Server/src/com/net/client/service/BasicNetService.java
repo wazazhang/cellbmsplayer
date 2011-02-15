@@ -104,15 +104,16 @@ public abstract class BasicNetService
 	}
 
 //	----------------------------------------------------------------------------------------------------------------------------
-	@Deprecated
-	final public int getHeartbeatCount()
+
+	public int getHeartbeatCount()
 	{
 //		return this.heartbeat_counter_.get();
 		return 0;
 	}
-	@Deprecated
-	final public AtomicReference<MessageHeader> sendHeartbeat()
-	{
+	
+//	@Deprecated
+//	final public AtomicReference<MessageHeader> sendHeartbeat()
+//	{
 //		心跳机制客户端单方面实现是不完整的，该功能已经迁移到minaimpl内部实现
 //		BasicNetService子类可以以池的形式实现，此方法也不能保证所有的session都为有效链接。
 //		详见 #com.net.minaimpl.KeepAlive
@@ -129,8 +130,8 @@ public abstract class BasicNetService
 //			}
 //		}
 //		
-		return null;
-	}
+//		return null;
+//	}
 	
     /**
      * 发送并监听返回

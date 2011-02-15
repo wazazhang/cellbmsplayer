@@ -42,13 +42,6 @@ public abstract class MessageHeaderCodec implements ProtocolCodecFactory
 	final protected ClassLoader				class_loader;
     final protected ExternalizableFactory	ext_factory;
     
-//	trace var
-    protected long 							TotalSentBytes 			= 0;
-    protected long 							TotalReceivedBytes 		= 0;
-    
-    protected long 							SendedMessageCount 		= 0;
-    protected long							ReceivedMessageCount 	= 0;
-
 //	-----------------------------------------------------------------------------------------
 
     public MessageHeaderCodec(ClassLoader cl, ExternalizableFactory ext_factory) 
@@ -57,19 +50,11 @@ public abstract class MessageHeaderCodec implements ProtocolCodecFactory
     	this.ext_factory	= ext_factory;
     }
 
-	public long getTotalSentBytes() {
-		return TotalSentBytes;
-	}
+	abstract public long getTotalSentBytes() ;
 
-	public long getTotalReceivedBytes() {
-		return TotalReceivedBytes;
-	}
+	abstract public long getTotalReceivedBytes() ;
 
-	public long getSendedMessageCount() {
-		return SendedMessageCount;
-	}
+	abstract public long getSentMessageCount();
 
-	public long getReceivedMessageCount() {
-		return ReceivedMessageCount;
-	}
+	abstract public long getReceivedMessageCount();
 }

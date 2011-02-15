@@ -41,9 +41,12 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 
 	IoConnector 			Connector;
 	NetPackageCodec 		Codec;
+	KeepAlive				keep_alive;
 	ServerSessionListener 	Listener;
 	
 	final CleanTask			clean_task;
+	
+	
 	
 	public ServerSessionImpl() {
 		this(Thread.currentThread().getContextClassLoader(), null);
@@ -84,9 +87,9 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 		Connector.getSessionConfig().setReaderIdleTime(read_idle_time_sec);
 		Connector.getSessionConfig().setWriterIdleTime(write_idle_time_sec);
 		if (keepalive_interval_sec > 0) {
-		Connector.getFilterChain().addLast("keep-alive", 
-				new KeepAlive(keepalive_interval_sec,
-						Math.min(write_idle_time_sec, read_idle_time_sec))); //心跳  
+		keep_alive = new KeepAlive(keepalive_interval_sec,
+				Math.min(write_idle_time_sec, read_idle_time_sec));
+		Connector.getFilterChain().addLast("keep-alive", keep_alive); //心跳  
 		}
 		Connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(Codec));
 		Connector.setHandler(this);
@@ -216,7 +219,7 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 
 //	-----------------------------------------------------------------------------------------------------------------------
 	public long getSentMessageCount() {
-		return Codec.getSendedMessageCount();
+		return Codec.getSentMessageCount();
 	}
 	
 	public long getReceivedMessageCount () {
@@ -229,6 +232,18 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 	
 	public long getReceivedBytes(){
 		return Codec.getTotalReceivedBytes();
+	}
+	public long getHeartBeatReceived() {
+		if (keep_alive != null) {
+			return keep_alive.getReceivedMessageCount();
+		}
+		return 0;
+	}
+	public long getHeartBeatSent() {
+		if (keep_alive != null) {
+			return keep_alive.getSentMessageCount();
+		}
+		return 0;
 	}
 //	-----------------------------------------------------------------------------------------------------------------------
 

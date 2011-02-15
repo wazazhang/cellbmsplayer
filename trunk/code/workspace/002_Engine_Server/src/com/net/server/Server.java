@@ -27,6 +27,12 @@ public interface Server
 	
 	public long 					getReceivedBytes();
 	
+	
+	public long						getHeartBeatSent();
+	
+	public long						getHeartBeatReceived();
+
+	
 	public int 						getSessionCount();
 	
 	public boolean 					hasSession(ClientSession session);
@@ -37,4 +43,6 @@ public interface Server
 	
 	public ChannelManager 			getChannelManager();
 
+	
+	
 }
