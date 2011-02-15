@@ -56,12 +56,20 @@ public class KeepAlive extends KeepAliveFilter
 	/**  
 	 * 继承于KeepAliveMessageFactory，当心跳机制启动的时候，需要该工厂类来判断和定制心跳消息  
 	 */  
-	static class KeepAliveMessageFactoryImpl implements KeepAliveMessageFactory {   
-	    private static final byte int_req = -1;   
-	    private static final byte int_rep = -2;    
-	    private static final IoBuffer KAMSG_REQ = IoBuffer.wrap(new byte[]{int_req});      
-	    private static final IoBuffer KAMSG_REP = IoBuffer.wrap(new byte[]{int_rep});     
-	          
+	static class KeepAliveMessageFactoryImpl implements KeepAliveMessageFactory
+	{   
+		private final byte int_req;
+		private final byte int_rep;
+		private final IoBuffer KAMSG_REQ;
+		private final IoBuffer KAMSG_REP;
+
+	    public KeepAliveMessageFactoryImpl() {
+	    	int_req = MessageHeaderCodec.heart_beat_req[0];
+			int_rep = MessageHeaderCodec.heart_beat_rep[0];
+		    KAMSG_REQ = IoBuffer.wrap(MessageHeaderCodec.heart_beat_req);      
+		    KAMSG_REP = IoBuffer.wrap(MessageHeaderCodec.heart_beat_rep);   
+		}
+	    
 	    public Object getRequest(IoSession session) {      
 	        return KAMSG_REQ.duplicate();      
 	    }      
@@ -88,7 +96,6 @@ public class KeepAlive extends KeepAliveFilter
 	        IoBuffer realMessage = (IoBuffer)message;   
 	        if(realMessage.limit() != 1)   
 	            return false;   
-	           
 	        boolean result = (realMessage.get() == int_rep);      
 	        realMessage.rewind();   
 	        return result;   
