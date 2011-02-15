@@ -41,49 +41,89 @@ public class ServerImpl extends AbstractServer
 		this(Thread.currentThread().getContextClassLoader(), null,
 				Runtime.getRuntime().availableProcessors() + 1, 
 				Integer.MAX_VALUE, 
-				Integer.MAX_VALUE);
+				Integer.MAX_VALUE, 
+				0);
 	}
 
+	/**
+	 * @param ioProcessCount
+	 * @param sessionWriteIdleTimeSeconds	多长时间内没有发送数据，断掉链接(秒)
+	 * @param sessionReadIdleTimeSeconds	多长时间内没有接受数据，断掉链接(秒)
+	 * @param keepalive_interval_sec		心跳间隔，0表示不使用心跳机制
+	 */
 	public ServerImpl(
 			int ioProcessCount, 
 			int sessionWriteIdleTimeSeconds,
-			int sessionReadIdleTimeSeconds) 
+			int sessionReadIdleTimeSeconds,
+			int keepalive_interval_sec) 
 	{
 		this(Thread.currentThread().getContextClassLoader(), null,
 				ioProcessCount, 
 				sessionWriteIdleTimeSeconds, 
-				sessionReadIdleTimeSeconds);
+				sessionReadIdleTimeSeconds,
+				keepalive_interval_sec);
 	}
 	
-	public ServerImpl(
-			ClassLoader 			class_loader,
-			ExternalizableFactory 	externalizable_factory,
-			int 					ioProcessCount, 
-			int 					sessionWriteIdleTimeSeconds,
-			int 					sessionReadIdleTimeSeconds) 
-	{
-		this(class_loader, externalizable_factory, null, null,
-				ioProcessCount, 
-				sessionWriteIdleTimeSeconds, 
-				sessionReadIdleTimeSeconds, 
-				true);
-	}
-	
+	/**
+	 * @param class_loader
+	 * @param externalizable_factory
+	 * @param ioProcessCount
+	 * @param sessionWriteIdleTimeSeconds	多长时间内没有发送数据，断掉链接(秒)
+	 * @param sessionReadIdleTimeSeconds	多长时间内没有接受数据，断掉链接(秒)
+	 * @param keepalive_interval_sec		心跳间隔，0表示不使用心跳机制
+	 */
 	public ServerImpl(
 			ClassLoader 			class_loader,
 			ExternalizableFactory 	externalizable_factory,
 			int 					ioProcessCount, 
 			int 					sessionWriteIdleTimeSeconds,
 			int 					sessionReadIdleTimeSeconds,
+			int 					keepalive_interval_sec) 
+	{
+		this(class_loader, externalizable_factory, null, null,
+				ioProcessCount, 
+				sessionWriteIdleTimeSeconds, 
+				sessionReadIdleTimeSeconds, 
+				keepalive_interval_sec, true);
+	}
+	
+	/**
+	 * @param class_loader
+	 * @param externalizable_factory
+	 * @param ioProcessCount
+	 * @param sessionWriteIdleTimeSeconds	多长时间内没有发送数据，断掉链接(秒)
+	 * @param sessionReadIdleTimeSeconds	多长时间内没有接受数据，断掉链接(秒)
+	 * @param keepalive_interval_sec		心跳间隔，0表示不使用心跳机制
+	 * @param close_on_error
+	 */
+	public ServerImpl(
+			ClassLoader 			class_loader,
+			ExternalizableFactory 	externalizable_factory,
+			int 					ioProcessCount, 
+			int 					sessionWriteIdleTimeSeconds,
+			int 					sessionReadIdleTimeSeconds,
+			int 					keepalive_interval_sec,
 			boolean					close_on_error) 
 	{
 		this(class_loader, externalizable_factory, null, null,
 				ioProcessCount, 
 				sessionWriteIdleTimeSeconds, 
 				sessionReadIdleTimeSeconds, 
+				keepalive_interval_sec, 
 				close_on_error);
 	}
 	
+	/**
+	 * @param class_loader
+	 * @param externalizable_factory
+	 * @param acceptor_pool
+	 * @param io_processor_pool
+	 * @param io_processor_count
+	 * @param sessionWriteIdleTimeSeconds	多长时间内没有发送数据，断掉链接(秒)
+	 * @param sessionReadIdleTimeSeconds	多长时间内没有接受数据，断掉链接(秒)
+	 * @param keepalive_interval_sec		心跳间隔，0表示不使用心跳机制
+	 * @param close_on_error
+	 */
 	public ServerImpl(
 			ClassLoader 			class_loader,
 			ExternalizableFactory 	externalizable_factory,
@@ -91,7 +131,8 @@ public class ServerImpl extends AbstractServer
 			Executor 				io_processor_pool,
 			int						io_processor_count,
 			int 					sessionWriteIdleTimeSeconds,
-			int 					sessionReadIdleTimeSeconds,
+			int 					sessionReadIdleTimeSeconds, 
+			int 					keepalive_interval_sec,
 			boolean					close_on_error) 
 	{
 		super(class_loader, externalizable_factory, 
@@ -100,6 +141,7 @@ public class ServerImpl extends AbstractServer
 				io_processor_count, 
 				sessionWriteIdleTimeSeconds, 
 				sessionReadIdleTimeSeconds, 
+				keepalive_interval_sec,
 				close_on_error);
 		this.channel_manager = new ChannelManagerImpl(this);
 	}	
@@ -116,29 +158,29 @@ public class ServerImpl extends AbstractServer
 		return (ClientSessionImpl)session.getAttribute(SessionAttributeKey.CLIENT_SESSION);
 	}
 	
-	class SessionIterator implements Iterator<ClientSession>
-	{
-		public SessionIterator() {
-			Acceptor.getManagedSessions().containsKey(SessionAttributeKey.CLIENT_SESSION);
-		}
-		
-		@Override
-		public boolean hasNext() {
-			// TODO Auto-generated method stub
-			return false;
-		}
-		@Override
-		public ClientSession next() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-		@Override
-		public void remove() {
-			// TODO Auto-generated method stub
-			
-		}
-		
-	}
+//	class SessionIterator implements Iterator<ClientSession>
+//	{
+//		public SessionIterator() {
+//			Acceptor.getManagedSessions().containsKey(SessionAttributeKey.CLIENT_SESSION);
+//		}
+//		
+//		@Override
+//		public boolean hasNext() {
+//			// TODO Auto-generated method stub
+//			return false;
+//		}
+//		@Override
+//		public ClientSession next() {
+//			// TODO Auto-generated method stub
+//			return null;
+//		}
+//		@Override
+//		public void remove() {
+//			// TODO Auto-generated method stub
+//			
+//		}
+//		
+//	}
 	
 	
 	public Iterator<ClientSession> getSessions() {

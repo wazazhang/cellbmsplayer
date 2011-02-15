@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="com/gt/net/server/MessageTask.java|com/gt/net/server/Task.java|com/gt/net/server/TaskManager.java|com/gt/net/server/TaskManagerJavaConcurrent.java|com/gt/net/server/MessageRouter.java|com/gt/net/server/Manager.java|TestJavaUtil.java|TestObjectPool.java|com/net/proxy/|com/net/anno/" kind="src" path="src"/>
+	<classpathentry excluding="com/gt/net/server/MessageTask.java|com/gt/net/server/Task.java|com/gt/net/server/TaskManager.java|com/gt/net/server/TaskManagerJavaConcurrent.java|com/gt/net/server/MessageRouter.java|com/gt/net/server/Manager.java|TestJavaUtil.java|TestObjectPool.java|com/net/proxy/|com/net/anno/|com/net/Heartbeat.java" kind="src" path="src"/>
 	<classpathentry excluding="com/net/minaimpl/NetPackageProtocol.java|com/net/minaimpl/server/bridge/BridgeServerR2B.java|com/net/minaimpl/proxy/|com/net/minaimpl/server/proxy/BridgeServerR2B.java|com/net/minaimpl/server/proxy/|com/net/minaimpl/server/proxy/b2c/|com/net/minaimpl/server/proxy/r2b/|com/net/minaimpl/monitor/" kind="src" path="mina"/>
 	<classpathentry kind="src" path="flash"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>

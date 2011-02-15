@@ -47,6 +47,7 @@ import com.cell.CUtil;
 import com.cell.util.concurrent.ThreadPool;
 import com.net.ExternalizableFactory;
 import com.net.MessageHeader;
+import com.net.minaimpl.KeepAlive;
 import com.net.minaimpl.MinaThreadFactory;
 import com.net.minaimpl.NetPackageCodec;
 import com.net.minaimpl.ProtocolImpl;
@@ -82,8 +83,9 @@ public abstract class AbstractServer extends IoHandlerAdapter implements Server
 	 * @param acceptor_pool
 	 * @param io_processor_pool
 	 * @param io_processor_count
-	 * @param sessionWriteIdleTimeSeconds 多长时间内没有发送数据，断掉链接(秒)
-	 * @param sessionReadIdleTimeSeconds  多长时间内没有接受数据，断掉链接(秒)
+	 * @param sessionWriteIdleTimeSeconds	多长时间内没有发送数据，断掉链接(秒)
+	 * @param sessionReadIdleTimeSeconds	多长时间内没有接受数据，断掉链接(秒)
+	 * @param keepalive_interval_sec		心跳间隔，0表示不使用心跳机制
 	 * @param close_on_error
 	 */
 	public AbstractServer(
@@ -93,7 +95,8 @@ public abstract class AbstractServer extends IoHandlerAdapter implements Server
 			Executor 				io_processor_pool,
 			int						io_processor_count,
 			int 					sessionWriteIdleTimeSeconds,
-			int 					sessionReadIdleTimeSeconds,
+			int 					sessionReadIdleTimeSeconds, 
+			int 					keepalive_interval_sec,
 			boolean					close_on_error) 
 	{
 		if (acceptor_pool == null) {
@@ -116,11 +119,16 @@ public abstract class AbstractServer extends IoHandlerAdapter implements Server
 						NioProcessor.class, 
 						io_processor_pool, 
 						io_processor_count));
-		this.Acceptor.getSessionConfig().setReaderIdleTime(sessionWriteIdleTimeSeconds);
-		this.Acceptor.getSessionConfig().setWriterIdleTime(sessionReadIdleTimeSeconds);
+		this.Acceptor.getSessionConfig().setReaderIdleTime(sessionReadIdleTimeSeconds);
+		this.Acceptor.getSessionConfig().setWriterIdleTime(sessionWriteIdleTimeSeconds);
 		this.Acceptor.setHandler(this);
-		this.Acceptor.getFilterChain().addLast("codec", new ProtocolCodecFilter(Codec));
-		
+		if (keepalive_interval_sec > 0) {
+		this.Acceptor.getFilterChain().addLast("keep-alive", 
+				new KeepAlive(keepalive_interval_sec,
+						Math.min(sessionReadIdleTimeSeconds, sessionWriteIdleTimeSeconds))); //心跳  
+		}
+		this.Acceptor.getFilterChain().addLast("codec", 
+				new ProtocolCodecFilter(Codec));
 		this.CloseOnError = close_on_error;
 	}	
 	
