@@ -16,7 +16,7 @@ import com.cell.CIO;
 
 public class DefaultIODispatcher implements IODispatcher
 {
-	private static AtomicLong loaded_bytes = new AtomicLong(0);
+	private static long loaded_bytes = 0;
 	
 	private int url_loading_time_out = 20000; // ms
 	private int url_loading_retry_count = 5;
@@ -180,7 +180,7 @@ public class DefaultIODispatcher implements IODispatcher
 	 * @return
 	 */
 	public long getLoadedBytes() {
-		return loaded_bytes.get();
+		return loaded_bytes;
 	}
 
 	/**读取数据的超时时间*/
@@ -219,7 +219,7 @@ public class DefaultIODispatcher implements IODispatcher
 		public int read() throws IOException {
 			int b = src.read();
 			if (b > 0) {
-				loaded_bytes.incrementAndGet();
+				loaded_bytes ++;
 			}
 			return b;
 		}
@@ -227,7 +227,7 @@ public class DefaultIODispatcher implements IODispatcher
 		public int read(byte[] b) throws IOException {
 			int count = src.read(b);
 			if (count > 0) {
-				loaded_bytes.addAndGet(count);
+				loaded_bytes += count;
 			}
 			return count;
 		}
@@ -235,7 +235,7 @@ public class DefaultIODispatcher implements IODispatcher
 		public int read(byte[] b, int off, int len) throws IOException {
 			int count = src.read(b, off, len);
 			if (count > 0) {
-				loaded_bytes.addAndGet(count);
+				loaded_bytes += count;
 			}
 			return count;
 		}
