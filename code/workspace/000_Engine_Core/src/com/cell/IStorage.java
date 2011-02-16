@@ -21,6 +21,8 @@ public interface IStorage
 	public int		root_save	(String name, byte[] datas);
 	public int		root_delete	(String name);
 	public byte[]	root_load	(String name);
+	public boolean	root_exist	(String name);
+	public String	root_path	(String name);
 	
 	
 	public byte[] syncReadBytesFromURL(String url, int timeOut);
