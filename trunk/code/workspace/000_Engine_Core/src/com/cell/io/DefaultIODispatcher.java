@@ -16,10 +16,10 @@ import com.cell.CIO;
 
 public class DefaultIODispatcher implements IODispatcher
 {
-	private int						url_loading_time_out	= 20000; //ms
-	private int						url_loading_retry_count	= 5;
-	private AtomicLong				loaded_bytes			= new AtomicLong(0);
-
+	private static AtomicLong loaded_bytes = new AtomicLong(0);
+	
+	private int url_loading_time_out = 20000; // ms
+	private int url_loading_retry_count = 5;
 	
 	/**
 	 * 覆盖获得JAR包内容
@@ -207,7 +207,7 @@ public class DefaultIODispatcher implements IODispatcher
 //	------------------------------------------------------------------------------------------------------------------------
 	
 
-	abstract protected class RemoteInputStream extends InputStream
+	abstract public static class RemoteInputStream extends InputStream
 	{
 		protected InputStream src;
 		
