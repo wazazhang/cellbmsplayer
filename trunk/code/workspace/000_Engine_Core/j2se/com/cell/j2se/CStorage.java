@@ -9,6 +9,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
+import com.cell.CIO;
 import com.cell.IStorage;
 import com.cell.IStorage.IReadListener;
 
@@ -234,15 +235,7 @@ public class CStorage implements IStorage
 			if (file.exists()) {
 				FileInputStream fs = new FileInputStream(file);
 				try {
-					int dataSize = fs.available();
-					int count = 0, i;
-					SaveData = new byte[dataSize];
-					while (true) {
-						i = fs.read(SaveData, count, dataSize - count);
-						if (i <= 0)
-							break;
-						count += i;
-					} 
+					SaveData = CIO.readStream(fs);
 				} finally {
 					fs.close();
 				}
@@ -278,17 +271,16 @@ public class CStorage implements IStorage
 
 	}
 	
+	@Override
+	public boolean root_exist(String name) {
+		java.io.File file = new java.io.File(getRootFilePath(name));
+		return file.exists();
+	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	@Override
+	public String root_path(String name) {
+		return rms_file.getPath() + Separator  + name;
+	}
 	
 	public int getIdCount(String name) 
 	{

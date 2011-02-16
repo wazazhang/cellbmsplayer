@@ -279,6 +279,7 @@ public class DefaultIODispatcher implements IODispatcher
 			this.connection = url.openConnection();
 			this.connection.setConnectTimeout(timeout);
 			this.connection.setReadTimeout(timeout);
+			this.connection.setRequestProperty("connection", "Keep-Alive");
 			this.connection.connect();
 			this.src = connection.getInputStream();
 		}
@@ -295,6 +296,7 @@ public class DefaultIODispatcher implements IODispatcher
 			this.connection = url.openConnection();
 			this.connection.setConnectTimeout(timeout);
 			this.connection.setReadTimeout(timeout);
+			this.connection.setRequestProperty("connection", "Keep-Alive");
 			this.connection.connect();
 			this.src = connection.getInputStream();
 		}

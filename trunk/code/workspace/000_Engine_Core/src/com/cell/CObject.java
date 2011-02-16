@@ -49,33 +49,34 @@ public class CObject {
 		public int root_delete(String name) {
 			return 0;
 		}
-
 		@Override
 		public int root_save(String name, byte[] datas) {
 			return 0;
 		}
-
+		@Override
+		public boolean root_exist(String name) {
+			return false;
+		}
 		@Override
 		public byte[] root_load(String name) {
 			return null;
 		}
-
+		@Override
+		public String root_path(String name) {
+			return null;
+		}
 		public byte[] load(String name, int id) {
 			return null;
 		}
-
 		public int save(String name, int id, byte[] datas) {
 			return FILE_FAILE;
 		}
-
 		public int delete(String name, int id) {
 			return FILE_FAILE;
 		}
-
 		public int getIdCount(String name) {
 			return 0;
 		}
-
 		public byte[] syncReadBytesFromURL(String url, int timeOut) {
 			URL Url = null;
 			try {
@@ -84,7 +85,6 @@ public class CObject {
 				e1.printStackTrace();
 				return null;
 			}
-
 			URLConnection c = null;
 			InputStream is = null;
 			try {
@@ -92,9 +92,7 @@ public class CObject {
 				c.setConnectTimeout(timeOut);
 				c.setReadTimeout(timeOut);
 				c.connect();
-
 				is = c.getInputStream();
-
 				int len = (int) c.getContentLength();
 				if (len > 0) {
 					int actual = 0;
@@ -109,7 +107,6 @@ public class CObject {
 				} else if (len == 0) {
 					return new byte[0];
 				}
-
 			} catch (IOException err) {
 				err.printStackTrace();
 			} finally {
