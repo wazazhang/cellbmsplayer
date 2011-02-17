@@ -11,6 +11,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
 import java.nio.charset.CharsetEncoder;
+import java.util.Arrays;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
@@ -88,16 +89,21 @@ public class NetPackageCodec extends MessageHeaderCodec
 	    			// 有足够的数据
 	    			if (in.remaining() >= protocol_fixed_size)
 	    			{
-						// 判断是否是有效的数据包头
-						for (int i = 0; i < protocol_start.length; ++i) {
-							byte data = in.get();
-							if (data != protocol_start[i]) {
-								in.clear();
-								// 丢弃掉非法字节//返回true代表这次解包已完成,清空状态并准备下一次解包
-								throw new IOException("bad head, drop data : " + data);
-							}
-						}
-			            
+	    				// 判断是否是有效的数据包头
+	    				byte[] head = new byte[protocol_start.length];
+	    				in.get(head);
+	    				if (!Arrays.equals(head, protocol_start)) {
+    						// 心跳包头，重置。
+	    					if (Arrays.equals(head, heart_beat_req)) {
+	    						return true;
+	    					}
+	    					if (Arrays.equals(head, heart_beat_rep)) {
+	    						return true;
+	    					}
+	    					// 丢弃掉非法字节//返回true代表这次解包已完成,清空状态并准备下一次解包
+							throw new IOException("bad head, drop data : " + CUtil.toHex(head));
+	    				}
+	    				
 			            // 生成新的状态
 						protocol_size = new Integer(in.getInt());
 						session.setAttribute(SessionAttributeKey.STATUS_DECODING_PROTOCOL, protocol_size);
@@ -179,18 +185,18 @@ public class NetPackageCodec extends MessageHeaderCodec
         	
 	    		return false;
         	}
-    		catch(Throwable err)
+    		catch(Exception err)
     		{
         		if (protocol_size != null) {
         			_log.warn("drop and clean decode state ! size = " + protocol_size);
         			session.removeAttribute(SessionAttributeKey.STATUS_DECODING_PROTOCOL);
         		}
-        		//err.printStackTrace();
-        		_log.error(err.getMessage() + " : decode error : " + session , err);
+//        		err.printStackTrace();
+//        		_log.error(err.getMessage() + " : decode error : " + session , err);
         		
         		// 当解包时发生错误，则
         		// 返回true代表这次解包已完成,清空状态并准备下一次解包
-        		throw new Exception(err);
+        		throw err;
         	}
 	    	
     	}
@@ -284,11 +290,11 @@ public class NetPackageCodec extends MessageHeaderCodec
     			//System.out.println("encoded -> " + session.getRemoteAddress() + " : " + protocol);
 				SentMessageCount ++;
         	}
-    		catch(Throwable err) 
+    		catch(Exception err) 
     		{
-    			_log.error(err.getMessage() + "\nencode error : " + session + " :\n" + message + "", err);
+    			_log.error(err.getMessage() + "\nencode error : " + session + " :\n" + message + "");
         		//err.printStackTrace();
-    			throw new Exception(err);
+    			throw err;
         	}
     	}
     }

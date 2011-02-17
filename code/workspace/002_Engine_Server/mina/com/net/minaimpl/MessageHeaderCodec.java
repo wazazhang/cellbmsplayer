@@ -16,10 +16,10 @@ public abstract class MessageHeaderCodec implements ProtocolCodecFactory
 	final public static byte[]	zerodata				= new byte[0];
 
 	/** 心跳请求头*/
-	final public static byte[] 	heart_beat_req 			= {-1};   
+	final public static byte[] 	heart_beat_req 			= {-1, 0, 0, 6};   
 	
 	/** 心跳回馈头*/
-    final public static byte[] 	heart_beat_rep 			= {-2};
+    final public static byte[] 	heart_beat_rep 			= {-2, 0, 0, 6};
 	
     /** 消息头*/
 	final public static byte[]	protocol_start 			= { 2, 0, 0, 6, };
