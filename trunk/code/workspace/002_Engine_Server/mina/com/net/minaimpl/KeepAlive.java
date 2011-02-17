@@ -70,52 +70,27 @@ public class KeepAlive extends KeepAliveFilter
 	  
 	/**  
 	 * 继承于KeepAliveMessageFactory，当心跳机制启动的时候，需要该工厂类来判断和定制心跳消息 。
-	 * 这里对于心跳，只传输1个字节，最精简心跳结构，心跳消息不能和消息头类型冲突。
+	 * 这里对于心跳，只传输4个字节，最精简心跳结构，心跳消息不能和消息头类型冲突。
 	 */  
-	static class KeepAliveMessageFactoryImpl implements KeepAliveMessageFactory
-	{   
-		private final byte int_req;
-		private final byte int_rep;
+	static class KeepAliveMessageFactoryImpl implements KeepAliveMessageFactory {
 		private final IoBuffer KAMSG_REQ;
 		private final IoBuffer KAMSG_REP;
-
-	    public KeepAliveMessageFactoryImpl() {
-	    	int_req = MessageHeaderCodec.heart_beat_req[0];
-			int_rep = MessageHeaderCodec.heart_beat_rep[0];
-		    KAMSG_REQ = IoBuffer.wrap(MessageHeaderCodec.heart_beat_req);      
-		    KAMSG_REP = IoBuffer.wrap(MessageHeaderCodec.heart_beat_rep);   
+		public KeepAliveMessageFactoryImpl() {
+			KAMSG_REQ = IoBuffer.wrap(MessageHeaderCodec.heart_beat_req);
+			KAMSG_REP = IoBuffer.wrap(MessageHeaderCodec.heart_beat_rep);
 		}
-	    
-	    public Object getRequest(IoSession session) {      
-	        return KAMSG_REQ.duplicate();      
-	    }      
-	  
-	    public Object getResponse(IoSession session, Object request) {      
-	        return KAMSG_REP.duplicate();      
-	    }      
-	  
-	    public boolean isRequest(IoSession session, Object message) {     
-	        if(!(message instanceof IoBuffer))   
-	            return false;   
-	        IoBuffer realMessage = (IoBuffer)message;   
-	        if(realMessage.limit() != 1)   
-	            return false;   
-	           
-	        boolean result = (realMessage.get() == int_req);   
-	        realMessage.rewind();   
-	        return result;   
-	    }      
-	  
-	    public boolean isResponse(IoSession session, Object message) {       
-	        if(!(message instanceof IoBuffer))   
-	            return false;   
-	        IoBuffer realMessage = (IoBuffer)message;   
-	        if(realMessage.limit() != 1)   
-	            return false;   
-	        boolean result = (realMessage.get() == int_rep);      
-	        realMessage.rewind();   
-	        return result;   
-	    }      
-	}  
+		public Object getRequest(IoSession session) {
+			return KAMSG_REQ.duplicate();
+		}
+		public Object getResponse(IoSession session, Object request) {
+			return KAMSG_REP.duplicate();
+		}
+		public boolean isRequest(IoSession session, Object message) {
+			return KAMSG_REQ.equals(message);
+		}
+		public boolean isResponse(IoSession session, Object message) {
+			return KAMSG_REP.equals(message);
+		}
+	}
 
 }

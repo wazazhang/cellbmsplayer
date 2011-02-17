@@ -9,6 +9,7 @@ import java.io.ObjectOutputStream;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -696,6 +697,40 @@ public class CUtil extends CObject
 	
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	/**
+	 * <pre>eg: src = "12" other="0000" return "1200"
+	 * @param src
+	 * @param other
+	 * @return
+	 */
+	public static String fillStringHead(String src, String other) 
+	{
+		char[] ret = other.toCharArray();
+		for (int s = 0, d = 0; s < src.length() && d < ret.length; s++, d++) {
+			ret[d] = src.charAt(s);
+		}
+		return new String(ret);
+	}
+	
+	/**
+	 * <pre>eg: src = "12" other="0000" return "0012"
+	 * @param src
+	 * @param other
+	 * @return
+	 */
+	public static String fillStringTail(String src, String other) 
+	{
+		char[] ret = other.toCharArray();
+		for (int s = src.length() - 1, d = ret.length - 1; s >= 0 && d > 0; s--, d--) {
+			ret[d] = src.charAt(s);
+		}
+		return new String(ret);
+	}
+	
+//	---------------------------------------------------------------------------------------------------------------------
+//	
+//	---------------------------------------------------------------------------------------------------------------------
+
 	private static char FormatKey = '\b';
 	
 	public static void setDefaultFormatStringKey(char key){
