@@ -109,10 +109,9 @@ public class DefaultIODispatcher implements IODispatcher
 				return cache;
 			}
 		}
-		InputStream src = conn.getInputStream();
-		return new RemoteUrlInputStream(url, src, conn, url_loading_time_out);
+		return new RemoteUrlInputStream(url, conn.getInputStream(), url_loading_time_out);
 	}
-	
+
 //	-----------------------------------------------------------------------------------------------------
 	
 	@Override
@@ -233,7 +232,7 @@ public class DefaultIODispatcher implements IODispatcher
 //	------------------------------------------------------------------------------------------------------------------------
 	
 
-	abstract public static class RemoteInputStream extends InputStream
+	abstract static public class RemoteInputStream extends InputStream
 	{
 		protected InputStream 			src;
 		private ByteArrayOutputStream	cache_stream;
@@ -318,7 +317,7 @@ public class DefaultIODispatcher implements IODispatcher
 
 //	------------------------------------------------------------------------------------------------------------------------
 
-	protected class RemoteResInputStream extends RemoteInputStream
+	static public class RemoteResInputStream extends RemoteInputStream
 	{
 		public RemoteResInputStream(InputStream res) throws IOException {
 			this.src = res;
@@ -327,21 +326,15 @@ public class DefaultIODispatcher implements IODispatcher
 
 //	-----------------------------------------------------------------------------------------------------------------
 
-	protected class RemoteUrlInputStream extends RemoteInputStream
+	static public class RemoteUrlInputStream extends RemoteInputStream
 	{
 		final protected URL				url;
 		final protected long 			last_modify_time;
-		final protected URLConnection	conn;
 		
-		public RemoteUrlInputStream(
-				URL url, 
-				InputStream is, 
-				URLConnection conn,
-				long last_modify_time) throws IOException {
-			super.src 				= is;
-			this.url				= url;
-			this.conn				= conn;
-			this.last_modify_time	= last_modify_time;
+		public RemoteUrlInputStream(URL url, InputStream is, long last_modify_time) throws IOException {
+			super.src = is;
+			this.url = url;
+			this.last_modify_time = last_modify_time;
 		}
 		
 		@Override
