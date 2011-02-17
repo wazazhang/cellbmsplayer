@@ -11,6 +11,8 @@ public interface IODispatcher
 {
 	public InputStream getInputStream(String path);
 	
+	public IOCacheService getCache();
+	
 //	/**
 //	 * 一次性同步读取所有资源
 //	 * @param path

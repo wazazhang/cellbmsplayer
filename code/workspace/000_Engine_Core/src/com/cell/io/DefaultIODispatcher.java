@@ -1,5 +1,6 @@
 package com.cell.io;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -13,6 +14,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import com.cell.CIO;
+import com.cell.exception.NotImplementedException;
+
 
 public class DefaultIODispatcher implements IODispatcher
 {
@@ -20,6 +23,11 @@ public class DefaultIODispatcher implements IODispatcher
 	
 	private int url_loading_time_out = 20000; // ms
 	private int url_loading_retry_count = 5;
+	
+	@Override
+	public IOCacheService getCache() {
+		return null;
+	}
 	
 	/**
 	 * 覆盖获得JAR包内容
@@ -52,15 +60,28 @@ public class DefaultIODispatcher implements IODispatcher
 	 * @param timeout
 	 * @return
 	 */
-	protected RemoteInputStream getHttpResource(String path) throws IOException
-	{
+	protected RemoteInputStream getHttpResource(String path) throws IOException {
 		try {
-			return new RemoteHttpInputStream(new URL(path), url_loading_time_out);
+			return getUrlResource(new URL(path));
 		} catch (MalformedURLException err) {
 			return null;
 		}
 	}
-	
+
+	/**
+	 * 覆盖获得 ftp:// 协议资源内容
+	 * @param path
+	 * @param timeout
+	 * @return
+	 */
+	protected RemoteInputStream getFtpResource(String path) throws IOException {
+		try {
+			return getUrlResource(new URL(path));
+		} catch (MalformedURLException err) {
+			return null;
+		}
+	}
+
 	/**
 	 * 覆盖获得 res:// 协议资源内容
 	 * @param path
@@ -72,21 +93,26 @@ public class DefaultIODispatcher implements IODispatcher
 		return null;
 	}
 	
-	/**
-	 * 覆盖获得 ftp:// 协议资源内容
-	 * @param path
-	 * @param timeout
-	 * @return
-	 */
-	protected RemoteInputStream getFtpResource(String path) throws IOException
+	
+	protected RemoteInputStream getUrlResource(URL url) throws IOException 
 	{
-		try {
-			return new RemoteFtpInputStream(new URL(path), url_loading_time_out);
-		} catch (MalformedURLException err) {
-			return null;
+		URLConnection conn = url.openConnection();
+		conn.setConnectTimeout(url_loading_time_out);
+		conn.setReadTimeout(url_loading_time_out);
+		conn.setRequestProperty("connection", "Keep-Alive");
+		conn.connect();
+		long last_modify_time = conn.getLastModified();
+		IOCacheService cache_service =  CIO.getAppBridge().getIO().getCache();
+		if (cache_service != null) {
+			RemoteInputStream cache = cache_service.findCache(url, last_modify_time);
+			if (cache != null) {
+				return cache;
+			}
 		}
+		InputStream src = conn.getInputStream();
+		return new RemoteUrlInputStream(url, src, conn, url_loading_time_out);
 	}
-
+	
 //	-----------------------------------------------------------------------------------------------------
 	
 	@Override
@@ -209,25 +235,52 @@ public class DefaultIODispatcher implements IODispatcher
 
 	abstract public static class RemoteInputStream extends InputStream
 	{
-		protected InputStream src;
+		protected InputStream 			src;
+		private ByteArrayOutputStream	cache_stream;
+		private boolean 				is_end = false;
+		
+		public RemoteInputStream() {
+			if (CIO.getAppBridge().getIO().getCache() != null) {
+				this.cache_stream = new ByteArrayOutputStream(CIO.DEFAULT_READ_BLOCK_SIZE);
+			}
+		}
+		
+		public ByteArrayOutputStream getCacheStream() {
+			return cache_stream;
+		}
+		
+		public boolean isEnd() {
+			return is_end;
+		}
 		
 		@Override
 		public int available() throws IOException {
 			return src.available();
 		}
+		
 		@Override
 		public int read() throws IOException {
-			int b = src.read();
-			if (b > 0) {
+			int count = src.read();
+			if (count >= 0) {
 				loaded_bytes ++;
+				if (cache_stream != null) {
+					cache_stream.write(count);
+				}
+			} else {
+				is_end = true;
 			}
-			return b;
+			return count;
 		}
 		@Override
 		public int read(byte[] b) throws IOException {
 			int count = src.read(b);
 			if (count > 0) {
 				loaded_bytes += count;
+				if (cache_stream != null) {
+					cache_stream.write(b, 0, count);
+				}
+			} else {
+				is_end = true;
 			}
 			return count;
 		}
@@ -236,29 +289,33 @@ public class DefaultIODispatcher implements IODispatcher
 			int count = src.read(b, off, len);
 			if (count > 0) {
 				loaded_bytes += count;
+				if (cache_stream != null) {
+					cache_stream.write(b, off, count);
+				}
+			} else {
+				is_end = true;
 			}
 			return count;
 		}
+		
 		@Override
 		public long skip(long n) throws IOException {
-			return src.skip(n);
+			throw new NotImplementedException();
 		}
+		
 		@Override
 		public void close() throws IOException {
 			src.close();
 		}
-
+		
 		@Override
 		public void mark(int readlimit) {}
-
 		@Override
 		public boolean markSupported() {
 			return false;
 		}
 	}
 
-	
-	
 //	------------------------------------------------------------------------------------------------------------------------
 
 	protected class RemoteResInputStream extends RemoteInputStream
@@ -270,35 +327,32 @@ public class DefaultIODispatcher implements IODispatcher
 
 //	-----------------------------------------------------------------------------------------------------------------
 
-	protected class RemoteHttpInputStream extends RemoteInputStream
+	protected class RemoteUrlInputStream extends RemoteInputStream
 	{
-		protected URLConnection	connection;
+		final protected URL				url;
+		final protected long 			last_modify_time;
+		final protected URLConnection	conn;
 		
-		public RemoteHttpInputStream(URL url, int timeout) throws IOException 
-		{
-			this.connection = url.openConnection();
-			this.connection.setConnectTimeout(timeout);
-			this.connection.setReadTimeout(timeout);
-			this.connection.setRequestProperty("connection", "Keep-Alive");
-			this.connection.connect();
-			this.src = connection.getInputStream();
+		public RemoteUrlInputStream(
+				URL url, 
+				InputStream is, 
+				URLConnection conn,
+				long last_modify_time) throws IOException {
+			super.src 				= is;
+			this.url				= url;
+			this.conn				= conn;
+			this.last_modify_time	= last_modify_time;
 		}
-	}
-
-//	-----------------------------------------------------------------------------------------------------------------
-
-	protected class RemoteFtpInputStream extends RemoteInputStream
-	{
-		protected URLConnection	connection;
 		
-		public RemoteFtpInputStream(URL url, int timeout) throws IOException 
-		{
-			this.connection = url.openConnection();
-			this.connection.setConnectTimeout(timeout);
-			this.connection.setReadTimeout(timeout);
-			this.connection.setRequestProperty("connection", "Keep-Alive");
-			this.connection.connect();
-			this.src = connection.getInputStream();
+		@Override
+		public void close() throws IOException {
+			try {
+				super.close();
+			} finally {
+				if (isEnd() && getCacheStream() != null) {
+					CIO.getAppBridge().getIO().getCache().writeCache(url, last_modify_time, getCacheStream());
+				}
+			}
 		}
 	}
 
