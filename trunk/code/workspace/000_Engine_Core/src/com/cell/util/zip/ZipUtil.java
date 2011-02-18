@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.Vector;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
@@ -124,6 +125,11 @@ public class ZipUtil
 		return baos;
 	}
 	
+	/**
+	 * 该方法将关闭刘
+	 * @param input
+	 * @return
+	 */
 	static public Map<String, ByteArrayInputStream> unPackFile(InputStream input)
 	{
 		HashMap<String, ByteArrayInputStream> inputs = new HashMap<String, ByteArrayInputStream>();
@@ -271,4 +277,25 @@ public class ZipUtil
 			System.out.println("put : " + CUtil.snapStringRightSize(data.length + "(bytes)", 22, ' ') + " "+  name);
 		}
 	}
+	
+	/**
+	 * @param is, 该方法不会关闭流
+	 * @return
+	 */
+	static public TreeMap<String, byte[]> unzipAll(InputStream is) {
+		try {
+			TreeMap<String, byte[]> ret = new TreeMap<String, byte[]>();
+			ZipInputStream zip_in = new ZipInputStream(is);
+			for (ZipEntry e = zip_in.getNextEntry(); e != null; e = zip_in.getNextEntry()) {
+				byte[] v = ZipUtil.readBytes(zip_in);
+				ret.put(e.getName(), v);
+			}
+			return ret;
+		} catch (Exception err) {
+			err.printStackTrace();
+		}
+		return null;
+	}
+	
+	
 }
