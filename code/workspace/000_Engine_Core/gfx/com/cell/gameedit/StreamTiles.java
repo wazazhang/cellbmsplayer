@@ -52,7 +52,7 @@ public abstract class StreamTiles implements IImages, Runnable
 		}
 		try {
 			if (!is_loaded.get()) {
-				synchronized (this) {
+				synchronized (is_loaded) {
 					initImages();
 					is_loaded.set(true);
 				}
@@ -65,7 +65,7 @@ public abstract class StreamTiles implements IImages, Runnable
 	}
 	
 	public void unloadAllImages() {
-		synchronized (this) {
+		synchronized (is_loaded) {
 			is_loaded.set(false);
 			for (int i = 0; i < images.length; i++) {
 				images[i] = null;
@@ -170,7 +170,7 @@ public abstract class StreamTiles implements IImages, Runnable
 	@Override
 	public IImages deepClone() throws CloneNotSupportedException 
 	{	
-		synchronized (this) {
+		synchronized (is_loaded) {
 			if (!isLoaded()) {
 				throw new CloneNotSupportedException("src images are not initialized !");
 			}
@@ -181,7 +181,7 @@ public abstract class StreamTiles implements IImages, Runnable
 	@Override
 	public IImages clone() throws CloneNotSupportedException 
 	{
-		synchronized (this) {
+		synchronized (is_loaded) {
 			if (!isLoaded()) {
 				throw new CloneNotSupportedException("src images are not initialized !");
 			}
