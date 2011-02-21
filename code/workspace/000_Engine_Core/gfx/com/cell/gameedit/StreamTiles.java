@@ -209,7 +209,11 @@ public abstract class StreamTiles implements IImages, Runnable
 			this.is_loading.set(src.is_loading.get());
 			IPalette src_p = src.palette_.get();
 			if (src_p != null) {
-				this.palette_.set(src_p.clone());
+				if (deep) {
+					this.palette_.set(src_p.clone());
+				} else {
+					this.palette_.set(src_p);
+				}
 			}
 		}
 		
