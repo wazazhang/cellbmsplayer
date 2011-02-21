@@ -29,7 +29,7 @@ public class QuestGenerator extends AbilitiesList
 	}
 	
 //	-----------------------------------------------------------------------------------
-	
+
 	/**
 	 * {"[任务类型] 系统任务", "满足条件后，立即可以做"}
 	 * @author WAZA
@@ -46,7 +46,7 @@ public class QuestGenerator extends AbilitiesList
 //	-----------------------------------------------------------------------------------
 	
 	/**
-	 * {"[任务类型] 定时任务", "每隔一定时间后，可重新做"}
+	 * {"[任务类型] 定时任务", "服务器开机后，每隔一定时间后，可重新做"}
 	 * @author WAZA
 	 */
 	@Property({"[任务触发] 定时任务", "每隔一定时间后，可重新做"})
@@ -75,7 +75,7 @@ public class QuestGenerator extends AbilitiesList
 	 * {"[任务类型] 节日任务", "在某个时间段内，重复刷新"}<br>
 	 * @author WAZA
 	 */
-	@Property({"[任务类型] 节日任务", "在某个时间段内，重复刷新"})
+	@Property({"[任务触发] 节日任务", "在某个时间段内，重复刷新"})
 	public static class Festival extends QuestGeneratorAbility
 	{
 		private static final long serialVersionUID = 1L;
@@ -90,6 +90,9 @@ public class QuestGenerator extends AbilitiesList
 		@Property("持续时间")
 		public TimeObject	persist_time	= new TimeObject(1, TimeUnit.DAYS);
 		
+		@Property("在持续时间内可重复的次数，0表示仅一次")
+		public int			repeat_count	= 0;
+
 		@Override
 		public boolean isMultiField() {
 			return true;
