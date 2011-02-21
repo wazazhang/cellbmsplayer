@@ -10,7 +10,7 @@ package com.cell.gfx;
 public interface IImages 
 {
 	
-	public int setMode(int mode);
+//	public int setMode(int mode);
 	
 	public void setPalette(IPalette palette);
 	

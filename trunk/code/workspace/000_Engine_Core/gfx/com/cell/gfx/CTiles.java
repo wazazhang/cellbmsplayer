@@ -26,12 +26,12 @@ public class CTiles extends CObject implements IImages {
 //		println("CTiles : Build Images Count="+count);
 	}
 
-	public int setMode(int mode){
-		for(int i=0;i<Tiles.length;i++){
-			if(Tiles[i]!=null)Tiles[i].setMode(mode);
-		}
-		return mode;
-	}
+//	public int setMode(int mode){
+//		for(int i=0;i<Tiles.length;i++){
+//			if(Tiles[i]!=null)Tiles[i].setMode(mode);
+//		}
+//		return mode;
+//	}
 	
 	public void setPalette(IPalette palette)
 	{

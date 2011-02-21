@@ -25,25 +25,20 @@ public class CellSetResource extends SetResource
 
 //	-------------------------------------------------------------------------------------
 	
+	public CellSetResource(File file) throws Exception
+	{
+		this(file.getPath());
+	}
+	
 	public CellSetResource(String file) throws Exception
 	{
-		this(file, null);
-	}
-	
-	public CellSetResource(File file, ThreadPoolService loading_service) throws Exception
-	{
-		this(file.getPath(), loading_service);
-	}
-	
-	public CellSetResource(String file, ThreadPoolService loading_service) throws Exception
-	{
-		super(new OutputPropertiesDir(file), loading_service);
+		super(new OutputPropertiesDir(file));
 		this.Path = ((OutputProperties) getOutput()).path;
 	}
 	
-	public CellSetResource(Output output, String path, ThreadPoolService loading_service) throws Exception
+	public CellSetResource(Output output, String path) throws Exception
 	{
-		super(output, loading_service);
+		super(output);
 		this.Path = path;
 	}
 	
@@ -54,11 +49,6 @@ public class CellSetResource extends SetResource
 	
 	public String getPath() {
 		return Path;
-	}
-	
-	@Override
-	protected StreamTiles getLocalImage(ImagesSet img) throws IOException {
-		return new CellStreamTiles(img, this);
 	}
 	
 	@Override

@@ -56,11 +56,11 @@ public interface IImage {
 	public int getHeight() ;
 	
 	
-	final static public int MODE_RAM	= 1;
-	final static public int MODE_VRAM	= 2;
-	final static public int MODE_FILE	= 3;
-	
-	public int setMode(int mode);
+//	final static public int MODE_RAM	= 1;
+//	final static public int MODE_VRAM	= 2;
+//	final static public int MODE_FILE	= 3;
+//	
+//	public int setMode(int mode);
 	
 	// there is two color models
 	// one is direct color, each pixel represent a color which has argb information

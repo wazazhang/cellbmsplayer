@@ -1,6 +1,7 @@
 package com.cell.util.concurrent;
 
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledFuture;
@@ -167,9 +168,9 @@ public class ThreadPool implements ThreadPoolService
         }
     }
 
-	public void executeTask(Runnable r)
+	public Future<?> executeTask(Runnable r)
 	{
-		gameThreadPool.execute(r);
+		return gameThreadPool.submit(r);
 	}
 
 	public String getStats()

@@ -50,9 +50,9 @@ public class CImages extends CObject implements IImages {
 //		println("CImages : Build Images Count="+count);
 	}
 
-	public int setMode(int mode){
-		return srcImage.setMode(mode);
-	}
+//	public int setMode(int mode){
+//		return srcImage.setMode(mode);
+//	}
 	
 	public void setPalette(IPalette palette)
 	{

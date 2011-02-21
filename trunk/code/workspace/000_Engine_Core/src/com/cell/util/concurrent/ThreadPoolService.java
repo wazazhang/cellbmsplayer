@@ -1,5 +1,6 @@
 package com.cell.util.concurrent;
 
+import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 
 
@@ -9,7 +10,7 @@ public interface ThreadPoolService
 	 * 异步执行一个任务
 	 * @param r
 	 */
-	public void executeTask(Runnable r);
+	public Future<?> executeTask(Runnable r);
 	
 	/**
 	 * 计划执行一个任务

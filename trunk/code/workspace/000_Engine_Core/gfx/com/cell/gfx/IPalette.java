@@ -9,15 +9,17 @@ package com.cell.gfx;
 
 public interface IPalette 
 {
-	public byte[] getIndexColors();
+	public byte[] 	getIndexColors();
 	
-	public int getIndexColorCount();
+	public int 		getIndexColorCount();
 	
-	public int getTransparentColorIndex();
+	public int 		getTransparentColorIndex();
 	
-	public byte[] getTransparentColor();
+	public byte[] 	getTransparentColor();
 	
-	public void dispose();
+	public void 	dispose();
+	
+	public IPalette clone();
 	
 }; // interface
 
