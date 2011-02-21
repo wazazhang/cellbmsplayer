@@ -58,16 +58,16 @@ public class QuestFlags extends AbilitiesTypeMap
 		
 //		@Property("在刷新时间内可重复的次数，0表示无限制")
 //		public int			repeat_count		= 0;
+		
+		@Property("完成该任务多少时间内刷新为可做")
+		public long 		refresh_time		= 1;
+		
+		@Property("时间单位")
+		public TimeUnit 	refresh_time_unit	= TimeUnit.DAYS;
 //		
-//		@Property("完成该任务多少时间内刷新为可做")
-//		public long 		refresh_time		= 1;
-//		
-//		@Property("时间单位")
-//		public TimeUnit 	refresh_time_unit	= TimeUnit.DAYS;
-//		
-//		public long getRefreshTimeMillis() {
-//			return refresh_time_unit.toMillis(refresh_time);
-//		}
+		public long getRefreshTimeMillis() {
+			return refresh_time_unit.toMillis(refresh_time);
+		}
 	}
 	
 //	-----------------------------------------------------------------------------------
