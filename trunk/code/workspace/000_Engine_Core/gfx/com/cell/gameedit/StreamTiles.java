@@ -44,6 +44,10 @@ public abstract class StreamTiles implements IImages, Runnable
 	public boolean isLoaded() {
 		return is_loaded.get();
 	}
+
+	public boolean isLoading() {
+		return is_loading.get();
+	}
 	
 	public void run() 
 	{

@@ -97,9 +97,11 @@ abstract public class SetResource
 		StreamTiles stuff = resource_manager.get("IMG_" + img.Index, StreamTiles.class);
 		if (stuff != null) {
 			if (!stuff.isLoaded()) {
-				Future<?> task = executeTask(stuff);
-				if (task == null) {
-					stuff.run();
+				if (!stuff.isLoading()) {
+					Future<?> task = executeTask(stuff);
+					if (task == null) {
+						stuff.run();
+					}
 				}
 			}
 			return stuff;
