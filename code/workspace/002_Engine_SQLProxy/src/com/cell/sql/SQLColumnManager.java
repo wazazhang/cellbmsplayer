@@ -3,6 +3,7 @@ package com.cell.sql;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -344,6 +345,21 @@ public abstract class SQLColumnManager<K, R extends SQLTableRow<K>> extends SQLC
 		} finally {
 			data_readLock.unlock();
 		}
+	}
+	
+	/**
+	 * 获取所有对象
+	 * 在不清楚对象特性之前最好不要随意使用
+	 * @return
+	 */
+	public Collection<R> getAll()
+	{
+		data_readLock.lock();
+		try {
+			return data_map.values();
+		} finally {
+			data_readLock.unlock();
+		}		
 	}
 	
 	/**
