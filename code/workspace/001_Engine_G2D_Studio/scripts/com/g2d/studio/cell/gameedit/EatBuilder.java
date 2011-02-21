@@ -342,12 +342,6 @@ public class EatBuilder extends Builder
 		}
 		
 		@Override
-		protected StreamTiles getLocalImage(ImagesSet img) throws IOException {
-			StreamTiles tiles = new OutputDirTiles(img, this);
-			return tiles;
-		}
-		
-		@Override
 		protected StreamTiles getStreamImage(ImagesSet img) throws IOException {
 			StreamTiles tiles = new OutputDirTiles(img, this);
 			return tiles;
@@ -475,7 +469,7 @@ public class EatBuilder extends Builder
 							images[i] = Engine.getEngine().createImage(new ByteArrayInputStream(
 									set.getOutput().loadRes(img.Name+"/"+i+"."+img.Name, null)));
 						}
-						images[i].setMode(this.getMode());
+//						images[i].setMode(this.getMode());
 						IPalette palette = this.getPalette();
 						if (palette != null)
 							images[i].setPalette(palette);						
@@ -502,7 +496,7 @@ public class EatBuilder extends Builder
 							} else {
 								images[i] = Engine.getEngine().createImage(idata);
 							}
-							images[i].setMode(this.getMode());
+//							images[i].setMode(this.getMode());
 							IPalette palette = this.getPalette();
 							if (palette != null)
 								images[i].setPalette(palette);							

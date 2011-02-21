@@ -21,12 +21,12 @@ public abstract class StreamTiles implements IImages, Runnable
 	final protected ImagesSet		img;
 	final protected IImage[]		images;
 	
-	protected AtomicBoolean			is_loaded	= new AtomicBoolean(false);
-	protected AtomicBoolean			is_loading	= new AtomicBoolean(false);
+	final protected AtomicBoolean	is_loaded	= new AtomicBoolean(false);
+	final protected AtomicBoolean	is_loading	= new AtomicBoolean(false);
 	
-	protected AtomicInteger			mode_ = new AtomicInteger(0);
+//	protected AtomicInteger			mode_ = new AtomicInteger(0);
 	
-	protected AtomicReference<IPalette>	palette_ = new AtomicReference<IPalette>(null);
+	final protected AtomicReference<IPalette> palette_ = new AtomicReference<IPalette>(null);
 	
 	
 	public StreamTiles(ImagesSet img, SetResource res) {
@@ -131,24 +131,24 @@ public abstract class StreamTiles implements IImages, Runnable
 	
 	public void buildImages(IImage srcImage, int count) {}
 	
-	public int setMode(int mode)
-	{
-		int ori_mode = mode_.getAndSet(mode);
-		
-		for ( int i=0; i<images.length; ++i )
-		{
-			IImage image = images[i];
-			if (image != null)
-				image.setMode(mode);
-		}
-		
-		return ori_mode;
-	}
-	
-	public int getMode()
-	{
-		return mode_.get();
-	}
+//	public int setMode(int mode)
+//	{
+//		int ori_mode = mode_.getAndSet(mode);
+//		
+//		for ( int i=0; i<images.length; ++i )
+//		{
+//			IImage image = images[i];
+//			if (image != null)
+//				image.setMode(mode);
+//		}
+//		
+//		return ori_mode;
+//	}
+//	
+//	public int getMode()
+//	{
+//		return mode_.get();
+//	}
 	
 	public void setPalette(IPalette palette) 
 	{
@@ -169,17 +169,53 @@ public abstract class StreamTiles implements IImages, Runnable
 
 	@Override
 	public IImages deepClone() throws CloneNotSupportedException 
-	{
-		throw new CloneNotSupportedException();
+	{	
+		if (!isLoaded()) {
+			throw new CloneNotSupportedException("src images are not initialized !");
+		}
+		synchronized (this) {
+			return new CloneTiles(this, true);
+		}
 	}
 
 	@Override
 	public IImages clone() throws CloneNotSupportedException 
 	{
-		throw new CloneNotSupportedException();
+		if (!isLoaded()) {
+			throw new CloneNotSupportedException("src images are not initialized !");
+		}
+		synchronized (this) {
+			return new CloneTiles(this, false);
+		}
 	}
 	
-	
+	static public class CloneTiles extends StreamTiles
+	{
+		public CloneTiles(StreamTiles src, boolean deep) 
+		{
+			super(src.img, src.set);
+			for (int i = src.images.length - 1; i >= 0; --i) {
+				if ( src.images[i] == null) {
+					this.images[i] = null;
+				} else {
+					if (deep) {
+						this.images[i] = src.images[i].newInstance();
+					} else {
+						this.images[i] = src.images[i];
+					}
+				}
+			}
+			this.is_loaded.set(src.is_loaded.get());
+			this.is_loading.set(src.is_loading.get());
+			IPalette src_p = src.palette_.get();
+			if (src_p != null) {
+				this.palette_.set(src_p.clone());
+			}
+		}
+		
+		@Override
+		protected void initImages() {}
+	}
 	
 }
 

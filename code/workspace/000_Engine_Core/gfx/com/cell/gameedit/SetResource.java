@@ -4,6 +4,8 @@ package com.cell.gameedit;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Vector;
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicReference;
 
 import com.cell.gameedit.object.ImagesSet;
@@ -35,14 +37,14 @@ abstract public class SetResource
 	final protected Output							output_adapter;
 	
 	final protected	MarkedHashtable 				resource_manager;
-	final protected	ThreadPoolService				loading_service;
+//	final protected	ThreadPoolService				loading_service;
 	
 //	-------------------------------------------------------------------------------------
 	
-	public SetResource(Output adapter, ThreadPoolService loading_service) throws Exception
+	public SetResource(Output adapter) throws Exception
 	{
 		this.output_adapter		= adapter;
-		this.loading_service	= loading_service;
+//		this.loading_service	= loading_service;
 		this.resource_manager	= new MarkedHashtable();
 		
 		this.ImgTable 			= output_adapter.getImgTable();
@@ -68,15 +70,15 @@ abstract public class SetResource
 //	-------------------------------------------------------------------------------------------------------------------------------
 //	Resources
 //	-------------------------------------------------------------------------------------------------------------------------------
-
-	/**
-	 * 同步获取图片方法<br>
-	 * 如果有特殊需要，可以重载此方法
-	 * @param img
-	 * @return
-	 * @throws IOException
-	 */
-	abstract protected StreamTiles getLocalImage(ImagesSet img) throws IOException ;
+//
+//	/**
+//	 * 同步获取图片方法<br>
+//	 * 如果有特殊需要，可以重载此方法
+//	 * @param img
+//	 * @return
+//	 * @throws IOException
+//	 */
+//	abstract protected StreamTiles getLocalImage(ImagesSet img) throws IOException ;
 	
 	/**
 	 * 异步获取图片方法<br>
@@ -95,9 +97,8 @@ abstract public class SetResource
 		StreamTiles stuff = resource_manager.get("IMG_" + img.Index, StreamTiles.class);
 		if (stuff != null) {
 			if (!stuff.isLoaded()) {
-				if (loading_service != null) {
-					loading_service.executeTask(stuff);
-				} else {
+				Future<?> task = executeTask(stuff);
+				if (task == null) {
 					stuff.run();
 				}
 			}
@@ -105,11 +106,9 @@ abstract public class SetResource
 		}
 
 		try {
-			if (loading_service != null) {
-				stuff = getStreamImage(img);
-				loading_service.executeTask(stuff);
-			} else {
-				stuff = getLocalImage(img);
+			stuff = getStreamImage(img);
+			Future<?> task = executeTask(stuff);
+			if (task == null) {
 				stuff.run();
 			}
 		} catch (IOException e) {
@@ -176,9 +175,8 @@ abstract public class SetResource
 				}
 			} else {
 				LoadSpriteTask task = createLoadSpriteTask(spr, ret, listener);
-				if (loading_service != null) {
-					loading_service.executeTask(task);
-				} else {
+				Future<?> future_task = executeTask(task);
+				if (future_task == null) {
 					new Thread(task, "get-sprite-" + key).start();
 				}
 			}
@@ -186,6 +184,17 @@ abstract public class SetResource
 		} else {
 			throw new NullPointerException("sprite not found : " + key);
 		}
+	}
+
+//	--------------------------------------------------------------------------------------------------------------------------------------------------
+	
+	/**
+	 * 异步执行一个任务
+	 * @param r
+	 * @return 返回为空表示该任务不能够异步执行，则将转为同步执行
+	 */
+	public Future<?> executeTask(Runnable r) {
+		return null;
 	}
 
 //	--------------------------------------------------------------------------------------------------------------------------------------------------

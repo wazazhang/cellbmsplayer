@@ -15,7 +15,7 @@ abstract public class StudioResource extends CellSetResource
 	boolean is_load_resource = false;
 	
 	public StudioResource(Output output, String path) throws Exception {
-		super(output, path, null);
+		super(output, path);
 	}
 	
 	

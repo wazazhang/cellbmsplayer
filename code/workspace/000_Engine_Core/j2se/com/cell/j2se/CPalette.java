@@ -3,6 +3,7 @@ package com.cell.j2se;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 
 import com.cell.CIO;
 import com.cell.gfx.IPalette;
@@ -18,7 +19,6 @@ class CPalette implements IPalette
 	
 	private short transparent_color_index_;
 	
-	
 	CPalette(String file)
 	{
 		this.load(file);
@@ -29,6 +29,18 @@ class CPalette implements IPalette
 		this.data_ = data;
 		this.color_count_ = color_count;
 		this.transparent_color_index_ = transparent_color_index;
+	}
+
+	CPalette(CPalette src)
+	{
+		this.data_ = Arrays.copyOf(src.data_, src.data_.length);
+		this.color_count_ = src.color_count_;
+		this.transparent_color_index_ = src.transparent_color_index_;
+	}
+
+	@Override
+	public IPalette clone() {
+		return new CPalette(this);
 	}
 	
 	void load(String file)

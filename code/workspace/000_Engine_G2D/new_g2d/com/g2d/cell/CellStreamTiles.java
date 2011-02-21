@@ -26,7 +26,7 @@ public class CellStreamTiles extends StreamTiles
 			for (int i=0; i<images.length; i++){
 				if (img.getClipW(i)>0 && img.getClipH(i)>0){
 					images[i] = src.subImage(img.getClipX(i), img.getClipY(i), img.getClipW(i), img.getClipH(i));
-					images[i].setMode(this.getMode());
+//					images[i].setMode(this.getMode());
 				}
 			}
 		} catch (Throwable ex) {

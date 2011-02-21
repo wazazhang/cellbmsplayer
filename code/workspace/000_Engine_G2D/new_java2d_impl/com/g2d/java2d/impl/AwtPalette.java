@@ -3,6 +3,7 @@ package com.g2d.java2d.impl;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 
 import com.cell.CIO;
 import com.cell.gfx.IPalette;
@@ -27,6 +28,14 @@ class AwtPalette implements IPalette
 		this.data_ = data;
 		this.color_count_ = color_count;
 		this.transparent_color_index_ = transparent_color_index;
+	}
+	
+	@Override
+	public IPalette clone() {
+		return new AwtPalette(
+				Arrays.copyOf(this.data_, this.data_.length), 
+				this.color_count_, 
+				this.transparent_color_index_);
 	}
 	
 	private void loadACT(byte[] data) throws IOException
