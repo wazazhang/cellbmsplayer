@@ -151,26 +151,26 @@ FocusListener
 		}
 	}
 	
-	/**
-	 * 切换场景
-	 * @param stageName
-	 * @param args 传入参数，参数会在Stage.inited(Object[] args)通知stage
-	 */
-	@SuppressWarnings("unchecked")
-	public void changeStage(String stageName, Object ... args) {
-		try {
-			this.changeStage((Class<Stage>) Class.forName(stageName), args);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+//	/**
+//	 * 切换场景
+//	 * @param stageName
+//	 * @param args 传入参数，参数会在Stage.inited(Object[] args)通知stage
+//	 */
+//	@SuppressWarnings("unchecked")
+//	public void changeStage(String stageName, Object ... args) {
+//		try {
+//			this.changeStage((Class<Stage>) Class.forName(stageName), args);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
 	
 	/**
 	 * 切换场景
 	 * @param stageClass
 	 * @param args 传入参数，参数会在Stage.inited(Object[] args)通知stage
 	 */
-	public void changeStage(Class<?> stageClass, Object ... args){
+	public void changeStage(Class<? extends Stage> stageClass, Object ... args){
 		nextStageClass = stageClass;
 		nextStageArgs = args;
 		if (currentStage!=null) {

@@ -7,6 +7,8 @@ import java.awt.event.WindowListener;
 import javax.swing.JApplet;
 import javax.swing.JFrame;
 
+import com.g2d.display.Stage;
+
 public class SimpleApplet extends JApplet
 {	
 	private SimpleCanvas canvas;
@@ -18,8 +20,8 @@ public class SimpleApplet extends JApplet
 		this.add(canvas);
 	}
 	
-	public void start(int fps, Class<?> state_name) {
-		 canvas.start(fps, state_name.getCanonicalName());
+	public void start(int fps, Class<? extends Stage> state_name) {
+		 canvas.start(fps, state_name);
 	}
 
 	public SimpleCanvas getCanvas() {

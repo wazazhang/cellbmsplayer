@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 
 
+import com.g2d.display.Stage;
 import com.g2d.java2d.impl.AwtCanvas;
 
 
@@ -75,7 +76,7 @@ final public class SimpleCanvas extends Canvas implements Runnable
 
 //	--------------------------------------------------------------------------------
     
-   synchronized public void start(int fps, String main_class) {
+   synchronized public void start(int fps, Class<? extends Stage> main_class) {
     	if (task == null) {
     		canvas.setFPS(fps);
     		canvas.changeStage(main_class);
