@@ -5,6 +5,8 @@ import com.g2d.Color;
 import com.g2d.Graphics2D;
 import com.g2d.Image;
 import com.g2d.Paint;
+import com.g2d.Tools;
+import com.g2d.display.ui.layout.UILayout;
 import com.g2d.geom.Rectangle;
 import com.g2d.geom.Shape;
 import com.g2d.text.MultiTextLayout;
@@ -335,4 +337,97 @@ public class Drawing
 
 		src.drawText(g, x, y, 0, 0, w, h, 1, 1, 1f, 0);
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/**<pre>
+	 * 将图片向外渐隐扩展显示。
+	 * 显示范围vtimer递增
+	 *   |---- keep_time ----|
+	 *   |---- cycle_time ------------|
+	 *   ^                   ^        ^
+	 *   1                   2        3
+	 * 1~2阶段：
+	 *   从原尺寸过渡到目标尺寸为（src_size -> src_size+out_size），
+	 *   alpha度从1过度到0
+	 * 2~3阶段：
+	 *   不显示
+	 * @param g
+	 * @param image
+	 * @param src_w 原尺寸
+	 * @param src_h 原尺寸
+	 * @param out_w 放大多少尺寸
+	 * @param out_h 放大多少尺寸
+	 * @param vtimer 当前时间（帧）
+	 * @param keep_time  显示保持时间（帧）
+	 * @param cycle_time 显示循环时间（帧）必须大于keep_time
+	 */
+	public static void drawImageOutShadow(
+			Graphics2D g, 
+			Image image,
+			int src_w, int src_h, 
+			int out_w, int out_h,
+			int vtimer, 
+			int keep_time, 
+			int cycle_time)
+	{
+		int dtime = vtimer % cycle_time;
+		if (dtime < keep_time) {
+			float alpha = ((float)(dtime)/(float)keep_time);
+			int tw = src_w + (int)(out_w * alpha);
+			int th = src_h + (int)(out_h * alpha);
+			g.pushComposite();
+			try {
+				Tools.setAlpha(g, 1 - alpha);
+				g.drawImage(image, (src_w-tw)>>1, (src_h-th)>>1, tw, th);
+			} finally {
+				g.popComposite();
+			}
+		}
+	}
+	
+
+	/**
+	 * @see #drawImageOutShadow(Graphics2D, Image, int, int, int, int, int, int, int)
+	 * @param g
+	 * @param image
+	 * @param src_w
+	 * @param src_h
+	 * @param out_w
+	 * @param out_h
+	 * @param vtimer
+	 * @param keep_time
+	 * @param cycle_time
+	 */
+	public static void drawUILayoutOutShadow(
+			Graphics2D g, 
+			UILayout image,
+			int src_w, int src_h, 
+			int out_w, int out_h,
+			int vtimer, 
+			int keep_time, 
+			int cycle_time)
+	{
+		int dtime = vtimer % cycle_time;
+		if (dtime < keep_time) {
+			float alpha = ((float)(dtime)/(float)keep_time);
+			int tw = src_w + (int)(out_w * alpha);
+			int th = src_h + (int)(out_h * alpha);
+			g.pushComposite();
+			try {
+				Tools.setAlpha(g, 1 - alpha);
+				image.render(g, (src_w-tw)>>1, (src_h-th)>>1, tw, th);
+			} finally {
+				g.popComposite();
+			}
+		}
+	}
+
+	
 }

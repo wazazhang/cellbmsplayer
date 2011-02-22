@@ -72,7 +72,7 @@ public class MessageBox extends Form implements ActionListener
 		
 		this.setSize(400, 200);
 		this.setCloseEnable(false);
-		this.transition.duration = 5;
+		this.transition = new SimpleScaleTransition(5);
 		this.always_in_screen = true;
 		
 		icon.setLocation(20, 20);

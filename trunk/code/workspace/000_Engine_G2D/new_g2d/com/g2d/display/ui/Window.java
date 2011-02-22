@@ -165,10 +165,9 @@ public abstract class Window extends Container
 
 	public static abstract class FormTransition
 	{
-		
-		protected int 		duration	= 10;
-		protected int 		time		= 0;
-		protected double	time_rate	= 0;
+		private int 		duration	= 10;
+		private int 		time		= 0;
+		private double		time_rate	= 0;
 		
 		private boolean 	is_open 	= true;
 		
@@ -177,6 +176,10 @@ public abstract class Window extends Container
 		}
 		
 		public FormTransition() {}
+		
+		public double getTimeRate() {
+			return time_rate;
+		}
 		
 		public void startOpen() {
 			time = 0;
@@ -258,9 +261,10 @@ public abstract class Window extends Container
 		public SimpleScaleTransition() {}
 		
 		public void transition_render(Window form, Graphics2D g){
-			int px = form.getWidth()>>1;
-			int py = form.getHeight()>>1;
+			double px = form.getWidth()>>1;
+			double py = form.getHeight()>>1;
 			g.translate(px, py);
+			double time_rate = getTimeRate();
 			if (isOpening()) {
 				g.scale(time_rate, time_rate);
 			}else{
@@ -279,6 +283,7 @@ public abstract class Window extends Container
 		public SimpleAlphaTransition() {}
 		
 		public void transition_render(Window form, Graphics2D g){
+			double time_rate = getTimeRate();
 			if (isOpening()) {
 				g.setAlpha((float)time_rate);
 			}else{
@@ -288,5 +293,27 @@ public abstract class Window extends Container
 		
 	}
 	
-	
+	public static class SimpleScaleAndAlphaTransition extends FormTransition
+	{		
+		public SimpleScaleAndAlphaTransition(int duration) {
+			super(duration);
+		}
+		public SimpleScaleAndAlphaTransition() {}
+		
+		public void transition_render(Window form, Graphics2D g){
+			double px = form.getWidth()>>1;
+			double py = form.getHeight()>>1;
+			g.translate(px, py);
+			double time_rate = getTimeRate();
+			if (isOpening()) {
+				g.scale(time_rate, time_rate);
+				g.setAlpha((float) time_rate);
+			} else {
+				g.scale(1 - time_rate, 1 - time_rate);
+				g.setAlpha(1f - (float) time_rate);
+			}
+			g.translate(-px, -py);
+		}
+		
+	}
 }
