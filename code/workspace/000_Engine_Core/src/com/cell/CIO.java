@@ -14,6 +14,8 @@ import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
 import java.util.concurrent.atomic.AtomicReference;
 
+import com.cell.io.LengthInputStream;
+
 //import javax.microedition.lcdui.Image;
 //import javax.microedition.rms.RecordStore;
 
@@ -348,6 +350,11 @@ public class CIO extends CObject
 			ByteArrayOutputStream baos = new ByteArrayOutputStream(block_size);
 			int count 		= 0;
 			int available	= is.available();
+			if (is instanceof LengthInputStream) {
+				available	= ((LengthInputStream)is).getLength();
+			} else {
+				available	= is.available();
+			}
 			byte[] readed 	= new byte[block_size];
 			while (true) {
 				int read_bytes 	= is.read(readed);
