@@ -59,6 +59,22 @@ public class CIO extends CObject
 	 */
 	public static byte[] loadData(String path)
 	{
+		return loadData(path, null, DEFAULT_READ_BLOCK_SIZE);
+	}
+	
+	/**
+	 * <pre>
+	 * <b>一次性同步读取所有资源</b>
+	 * 获取字符串对应的资源，可能是网络资源，也可能是本地资源或文件。
+	 * 比如: http:// ftp:// file:///
+	 * </pre>
+	 * @param path
+	 * @param percent
+	 * @param block_size
+	 * @return
+	 */
+	public static byte[] loadData(String path, AtomicReference<Float> percent, int block_size)
+	{
 		for (int i = Math.max(1, getLoadRetryCount()); i > 0; --i) 
 		{
 			InputStream is = getInputStream(path);
@@ -66,7 +82,7 @@ public class CIO extends CObject
 				return null;
 			}
 			try {
-				return readStream(is, null, DEFAULT_READ_BLOCK_SIZE);
+				return readStream(is, percent, block_size);
 			} catch (SocketTimeoutException err) {
 				System.err.println("timeout retry load data [" + is.getClass().getSimpleName() + "] : " + path);
 			}  catch (IOException err) {
@@ -81,6 +97,7 @@ public class CIO extends CObject
 		return null;
 	}
 
+	
 	public static ByteArrayInputStream loadStream(String path) {
 		byte[] data = loadData(path);
 		if (data != null) {
