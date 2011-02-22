@@ -6,6 +6,8 @@ import java.awt.event.WindowListener;
 
 import javax.swing.JFrame;
 
+import com.g2d.display.Stage;
+
 public class SimpleFrame extends JFrame implements WindowListener
 {	
 	private SimpleCanvas canvas;
@@ -39,8 +41,8 @@ public class SimpleFrame extends JFrame implements WindowListener
 		return canvas;
 	}
 	
-	public void start(int fps, Class<?> state_name) {
-		 canvas.start(fps, state_name.getCanonicalName());
+	public void start(int fps, Class<? extends Stage> state_name) {
+		 canvas.start(fps, state_name);
 	}
 	
 	public void windowOpened(WindowEvent e) {}
