@@ -8,6 +8,7 @@ import com.g2d.Graphics2D;
 import com.g2d.display.event.KeyEvent;
 import com.g2d.display.event.MouseEvent;
 import com.g2d.display.event.MouseMoveEvent;
+import com.g2d.display.ui.layout.UILayout;
 import com.g2d.font.GraphicAttributeShape;
 import com.g2d.font.TextAttribute;
 import com.g2d.geom.Ellipse;
@@ -140,6 +141,8 @@ public class TextBoxSingle extends UIComponent
 		
 		int caret = text.getCaretPosX();
 		
+		UILayout layout = getLayout();
+		
 		text_draw_x = layout.BorderSize;
 		text_draw_y = layout.BorderSize;
 		
@@ -163,6 +166,7 @@ public class TextBoxSingle extends UIComponent
 		g.setColor(textColor);
 		boolean flag = g.setFontAntialiasing(enable_antialiasing);
 		try {
+			UILayout layout = getLayout();
 			text.drawText(g, 
 					text_draw_x - xoffset, 
 					text_draw_y, xoffset, 
@@ -178,6 +182,7 @@ public class TextBoxSingle extends UIComponent
 		if (is_password) {
 			String show = text.getText();
 			if (!show.isEmpty()) {
+				UILayout layout = getLayout();
 				int height = getHeight() - layout.BorderSize*2;
 				Ellipse shape = new Ellipse(0, 0, height/2, height/2);
 				text.putAttribute(
