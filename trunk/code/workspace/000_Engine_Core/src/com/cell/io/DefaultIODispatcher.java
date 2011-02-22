@@ -109,7 +109,7 @@ public class DefaultIODispatcher implements IODispatcher
 				return cache;
 			}
 		}
-		return new RemoteUrlInputStream(url, conn.getInputStream(), url_loading_time_out);
+		return new URLConnectionInputStream(url, conn);
 	}
 
 //	-----------------------------------------------------------------------------------------------------
@@ -349,6 +349,36 @@ public class DefaultIODispatcher implements IODispatcher
 		}
 	}
 
+	
 //	------------------------------------------------------------------------------------------------------------------------
 
+	static public class URLConnectionInputStream extends RemoteInputStream implements LengthInputStream
+	{
+		final protected URL				url;
+		final protected long 			last_modify_time;
+		final protected int				length;
+		
+		public URLConnectionInputStream(URL url, URLConnection c) throws IOException {
+			this.url				= url;
+			this.length 			= c.getContentLength();
+			this.last_modify_time	= c.getLastModified();
+			this.src 				= c.getInputStream();
+		}
+		
+		@Override
+		public int getLength() {
+			return length;
+		}
+		
+		@Override
+		public void close() throws IOException {
+			try {
+				super.close();
+			} finally {
+				if (isEnd() && getCacheStream() != null) {
+					CIO.getAppBridge().getIO().getCache().writeCache(url, last_modify_time, getCacheStream());
+				}
+			}
+		}
+	}
 }
