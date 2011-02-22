@@ -100,7 +100,11 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 		for (int i = 0; i < table_columns.length; i++)
 		{
 			try {
-				table_columns[i].setObject(row, result.getObject(table_columns[i].getIndex()));
+				// NOTE 为什么有些地方就不能用序号??
+				String index = table_columns[i].getName();
+				Object obj = result.getObject(index);
+				table_columns[i].setObject(row, obj);
+//				table_columns[i].setObject(row, result.getObject(table_columns[i].getIndex()));
 			} catch (Exception err) {
 				log.error("[" + table_name + "] read column error !\n" +
 						"\t    id = " + row.getPrimaryKey() +
