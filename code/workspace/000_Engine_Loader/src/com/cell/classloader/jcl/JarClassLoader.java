@@ -293,16 +293,21 @@ public class JarClassLoader extends ClassLoader
 	public Class<?> findClass(String className) throws ClassNotFoundException 
 	{
 		try{
-			
 			Class clazz = this.findLoadedClass(className);
 			if (null == clazz) {
 				byte[] bytes = Classes.get(className);
-				if (is_set_ProtectionDomain) {
-					clazz = defineClass(className, bytes, 0, bytes.length, 
-							this.getClass().getProtectionDomain());
-				}else{
-					clazz = defineClass(className, bytes, 0, bytes.length);
+				if (bytes != null) {
+					if (is_set_ProtectionDomain) {
+						clazz = defineClass(className, bytes, 0, bytes.length, 
+								this.getClass().getProtectionDomain());
+					}else{
+						clazz = defineClass(className, bytes, 0, bytes.length);
+					}
 				}
+			}
+			
+			if (null == clazz) {
+				clazz = root_class_loader.loadClass(className);
 			}
 			if (null == clazz) {
 				clazz = Class.forName(className, true, root_class_loader);
