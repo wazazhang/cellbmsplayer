@@ -250,7 +250,7 @@ public class JALPlayer implements IPlayer, IStreamPlayer
 						size += al_sound.getSize();
 					}
 //					System.out.println("  queue" +
-//							" : " + al_sound.buffer[0] + 
+//							" : " + al_sound.getBufferID() + 
 //							" : " + al_sound + 
 //							" : total="+CUtil.getBytesSizeString(size));
 					
