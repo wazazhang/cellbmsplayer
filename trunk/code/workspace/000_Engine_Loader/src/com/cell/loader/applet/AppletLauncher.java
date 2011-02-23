@@ -2,6 +2,7 @@ package com.cell.loader.applet;
 import java.applet.AppletContext;
 import java.applet.AppletStub;
 import java.awt.Component;
+import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -52,40 +53,64 @@ public class AppletLauncher extends LoaderApplet
 	private static final long serialVersionUID = 1L;
 	
 	String 			l_applet;
-	String			l_decode;
+	boolean			l_decode;
 	Object 			applet_obj;
 	JApplet 		applet_game = null;
 
 	String			dk;
+	Vector<byte[]> 	loaded_datas;
 	
 	@Override
 	protected void onTaskInit()
 	{
 		l_applet	= getParameter("l_applet");
-		dk			= LoadTask.getVK(getClass().getResourceAsStream("vk.enc"));
-		l_decode	= getParameter("l_decode");
+		l_decode	= "true".equalsIgnoreCase(getParameter("l_decode"));
+		if (l_decode) {
+			dk = LoadTask.getVK(getClass().getResourceAsStream("/com/cell/loader/vk.enc"));
+		}
 	}
 	
 	@Override
 	protected void onTaskOver(Vector<byte[]> datas) throws Exception 
 	{
-		boolean decode = true;
-		try {
-			if (l_decode != null) {
-				decode = Boolean.parseBoolean(l_decode);
-			}
-		} catch (Exception err) {
-			decode = true;
-		}
+		loaded_datas = datas;
+//		EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//            	try {
+//            		launchApplet(datas);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//					System.exit(1);
+//				}
+//            }
+//        });
+//		this.repaint();
+		launchApplet(datas);
+	}
+//	@Override
+//	public void paint(Graphics g) {
+//		super.paint(g);
+//		if (loaded_datas != null) {
+//			Vector<byte[]> datas = loaded_datas;
+//			loaded_datas = null;
+//			try {
+//				launchApplet(datas);
+//			} catch (Exception err) {
+//				err.printStackTrace();
+//			}
+//		}
+//	}
+	
+	private void launchApplet(Vector<byte[]> datas) throws Exception
+	{
 		ClassLoader			old_class_loader	= Thread.currentThread().getContextClassLoader();
 		JarClassLoader		jar_class_loader	= JarClassLoader.createJarClassLoader(
-				old_class_loader, datas, dk, true, decode);
+				old_class_loader, datas, dk, true, l_decode);
 		Thread.currentThread().setContextClassLoader(jar_class_loader);
 		System.out.println("Class loader changed : " + 
 				old_class_loader.getClass().getName() + " -> " + 
 				jar_class_loader.getClass().getName());
 //		JarClassLoader.loadNatives(jar_class_loader, l_natives);
-
 		Class<?> mainclass = jar_class_loader.findClass(l_applet);
 		applet_obj = mainclass.newInstance();
 		JApplet game = null;
@@ -115,7 +140,8 @@ public class AppletLauncher extends LoaderApplet
 			System.out.println("applet added !");
 			
 			game.repaint();
-			
+		
+			this.repaint();
 		}
 	}
 	

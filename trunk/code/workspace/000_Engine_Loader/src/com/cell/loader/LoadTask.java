@@ -212,6 +212,7 @@ public class LoadTask extends Thread
 	
 	LoadTaskListener	Listener;
 	URL[]				JarFiles;
+	boolean				is_done = false;
 	
 	public LoadTask(LoadTaskListener listener, String[] jarFiles) throws MalformedURLException
 	{
@@ -225,6 +226,10 @@ public class LoadTask extends Thread
 		}
 		
 		start();
+	}
+	
+	public boolean isDone() {
+		return is_done;
 	}
 	
 	public void run() 
@@ -268,6 +273,8 @@ public class LoadTask extends Thread
 		}
 
 		System.out.println("load task thread exited !");
+		
+		is_done = true;
 	}
 	
 //	-------------------------------------------------------------------------------------------------------------------------------

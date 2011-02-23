@@ -44,6 +44,7 @@ public class PaintTask extends Thread
 	
 	public PaintTask(Component component) 
 	{
+		super(Thread.currentThread().getThreadGroup(), "PaintTask");
 		this.paint_component = component;
 	}
 	
