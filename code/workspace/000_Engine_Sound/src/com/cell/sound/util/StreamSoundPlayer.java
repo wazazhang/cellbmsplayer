@@ -24,7 +24,9 @@ public class StreamSoundPlayer implements IStreamPlayer
 		this.bgm_info 	= info;
 		this.buffers 	= new Vector<ISound>(2);
 		if (info instanceof Runnable) {
-			new Thread((Runnable)bgm_info).start();
+			Thread thread = new Thread((Runnable)bgm_info, "stream-sound");
+			thread.setDaemon(true);
+			thread.start();
 		}
 	}
 	
