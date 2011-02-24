@@ -257,7 +257,7 @@ public class MD5
 					continue;
 				}
 				else {
-					if (filters != null && !filters.find(files[l])) {
+					if (filters != null && !filters.accept(files[l])) {
 						ret.getValue().incrementAndGet();
 						continue;
 					}
@@ -312,7 +312,7 @@ public class MD5
 					processSrcDir(files[l], dstFile, CoverType, verbos, filters, ret, output);
 					continue;
 				} else {
-					if (filters != null && !filters.find(files[l])) {
+					if (filters != null && !filters.accept(files[l])) {
 						ret.getValue().incrementAndGet();
 						continue;
 					}
