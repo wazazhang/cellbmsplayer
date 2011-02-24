@@ -42,7 +42,7 @@ public class StringFilters
 	 */
 	public boolean matcher(String text) 
     {
-		if (filters_dec.isEmpty()) {
+		if (!filters_dec.isEmpty()) {
     		// 判断所有需要排除的
     		for (Pattern ft : filters_dec) {
     			if (ft.matcher(text).find()) {
