@@ -72,7 +72,7 @@ public class CAppBridge implements IAppBridge, IGfxBridge
 		m_applet = applet;
 		
 		m_IO = createIO();
-		
+		if (CObject.verbos)
 		System.out.println("CAppBridge init\n" +
 				"\t[" + m_ClassLoader.getClass().getCanonicalName() + "]\n" +
 				"\t[" + m_RootClass.getCanonicalName() + "]" +

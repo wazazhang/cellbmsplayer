@@ -272,6 +272,8 @@ public class CObject {
 
 	// -------------------------------------------------------------------------------------------------------------------------
 
+	public static boolean verbos = false;
+	
 	static public void initSystem(IStorage file, IAppBridge appBridge) {
 		initSystem(file, appBridge, Locale.getDefault());
 	}
@@ -295,7 +297,7 @@ public class CObject {
 		} catch (Exception err) {
 			err.printStackTrace();
 		}
-
+		if (verbos) 
 		System.out.println("CObject : System initialized !\n"
 				+ "\tIStorage   = " + getStorage().getClass().getName() + "\n"
 				+ "\tIAppBridge = " + getAppBridge().getClass().getName()
