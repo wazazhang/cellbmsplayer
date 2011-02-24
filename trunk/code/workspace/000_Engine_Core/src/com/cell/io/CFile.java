@@ -28,6 +28,9 @@ public class CFile
 	public static void writeText(java.io.File file, String text, String encoding)
 	{
 		try{
+			if (!file.getParentFile().exists()) {
+				file.getParentFile().mkdirs();
+			}
 			if (!file.exists()) {
 				file.createNewFile();
 			}
