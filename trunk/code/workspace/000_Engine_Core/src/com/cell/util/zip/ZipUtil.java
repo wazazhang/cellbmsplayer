@@ -231,38 +231,43 @@ public class ZipUtil
 	{
 		src = src.getCanonicalFile();
 		out = out.getCanonicalFile();
-		String root = "";
-		if (src.isDirectory()) {
-			root = src.getCanonicalPath();
-		} else if (src.isFile()) {
-			root = src.getParentFile().getCanonicalPath();
-		}
-		LinkedHashMap<String, byte[]> entrys = new LinkedHashMap<String, byte[]>();
-		zipFiles(src, pattern, root, entrys, verbos);
-		if (!entrys.isEmpty()) {				
-			out.createNewFile();
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			ZipOutputStream zos = new ZipOutputStream(baos);
-			for (Entry<String, byte[]> e : entrys.entrySet()) {
-				ZipEntry ze = new ZipEntry(e.getKey());
-				ze.setTime(0);
-				zos.putNextEntry(ze);
-				zos.write(e.getValue());
+		
+		if (!src.isHidden()) {
+			String root = "";
+			if (src.isDirectory()) {
+				root = src.getCanonicalPath();
+			} else if (src.isFile()) {
+				root = src.getParentFile().getCanonicalPath();
 			}
-			zos.close();
-			CFile.writeData(out, baos.toByteArray());
+			LinkedHashMap<String, byte[]> entrys = new LinkedHashMap<String, byte[]>();
+			zipFiles(src, pattern, root, entrys, verbos);
+			if (!entrys.isEmpty()) {				
+				out.createNewFile();
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				ZipOutputStream zos = new ZipOutputStream(baos);
+				for (Entry<String, byte[]> e : entrys.entrySet()) {
+					ZipEntry ze = new ZipEntry(e.getKey());
+					ze.setTime(0);
+					zos.putNextEntry(ze);
+					zos.write(e.getValue());
+				}
+				zos.close();
+				CFile.writeData(out, baos.toByteArray());
+			}
 		}
 	}
 	
 	static public void zipFiles(File src, StringFilters pattern, String root, LinkedHashMap<String, byte[]> entrys, boolean verbos) throws Exception
 	{
-		if (src.isFile()) {
-			if (pattern.matcher(src.getName())) {
-				pushFileEntry(src, root, entrys, verbos);
-			}
-		} else if(src.isDirectory()) {
-			for (File sub : src.listFiles()) {
-				zipFiles(sub, pattern, root, entrys, verbos);
+		if (!src.isHidden()) {
+			if (src.isFile()) {
+				if (pattern.matcher(src.getName())) {
+					pushFileEntry(src, root, entrys, verbos);
+				}
+			} else if(src.isDirectory()) {
+				for (File sub : src.listFiles()) {
+					zipFiles(sub, pattern, root, entrys, verbos);
+				}
 			}
 		}
 	}

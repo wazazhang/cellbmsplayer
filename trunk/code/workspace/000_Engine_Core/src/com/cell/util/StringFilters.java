@@ -63,6 +63,12 @@ public class StringFilters
     	return true;
     }
 	
+	public boolean matcher(File file) 
+	{
+		String fname = file.getPath();
+		return matcher(fname);
+	}
+	
 	public static String usage(String line_prefix)
 	{
 		return 
