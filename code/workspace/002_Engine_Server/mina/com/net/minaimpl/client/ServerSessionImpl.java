@@ -382,6 +382,18 @@ public class ServerSessionImpl extends IoHandlerAdapter implements ServerSession
 		}
 	}
 	
+	@Override
+	public String getLocalAddress() 
+	{
+		return session_ref.get().getLocalAddress().toString();
+	}
+
+	@Override
+	public String getRemoteAddress() 
+	{
+		return session_ref.get().getRemoteAddress().toString();
+	}	
+	
 	
 	private static class CleanTask extends Thread
 	{

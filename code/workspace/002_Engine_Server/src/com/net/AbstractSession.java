@@ -22,4 +22,17 @@ public interface AbstractSession
 	public boolean 			containsAttribute(Object key);
 	public Set<Object>		getAttributeKeys();
 	
-}
+	/**
+	 * 获取Session的本端地址
+	 */
+	public String			getLocalAddress();
+	
+	/**
+	 * 获取Session的对端地址
+	 */
+	public String			getRemoteAddress();
+
+};
+
+
+

@@ -143,6 +143,18 @@ public class ClientSessionImpl implements ClientSession
 	public long getSentMessageCount() {
 		return Session.getWrittenMessages();
 	}
+
+	@Override
+	public String getLocalAddress() 
+	{
+		return Session.getLocalAddress().toString();
+	}
+
+	@Override
+	public String getRemoteAddress() 
+	{
+		return Session.getRemoteAddress().toString();
+	}
 	
 	
 //	synchronized public void startHeartBeat(ThreadPool pool, final long heartbeat_timeout)
