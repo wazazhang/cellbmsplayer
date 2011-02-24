@@ -22,6 +22,7 @@ import com.cell.CIO;
 import com.cell.CUtil;
 import com.cell.io.CFile;
 import com.cell.util.Pair;
+import com.cell.util.StringFilters;
 
 public class ZipUtil 
 {
@@ -190,8 +191,9 @@ public class ZipUtil
 			{
 				File src = new File(args[args.length-2]).getCanonicalFile();
 				File out = new File(args[args.length-3]).getCanonicalFile();
-				Pattern parttern = Pattern.compile(args[args.length-1]);
-				zipFiles(src, out, parttern, commands.containsKey("-verbos"));
+//				Pattern parttern = Pattern.compile(args[args.length-1]);
+				StringFilters pattern = new StringFilters(args[args.length-1]);
+				zipFiles(src, out, pattern, commands.containsKey("-verbos"));
 			} 
 			else if (args[0].equals("E")) 
 			{
@@ -212,7 +214,8 @@ public class ZipUtil
 	{
 		String usage = 
 			"A [-开关] <输出文件> <输入文件> [文件匹配正则表达式]\n" +
-			"	开关 -R - 连同子文件夹\n";
+			"	[开关] -R - 连同子文件夹\n" +
+			"	[文件匹配正则表达式]\n" + StringFilters.usage();
 		System.out.println(usage);
 	}
 	
@@ -223,7 +226,7 @@ public class ZipUtil
 	 * @param parttern
 	 * @throws Exception
 	 */
-	static public void zipFiles(File src, File out, Pattern parttern, boolean verbos) throws Exception
+	static public void zipFiles(File src, File out, StringFilters pattern, boolean verbos) throws Exception
 	{
 		src = src.getCanonicalFile();
 		out = out.getCanonicalFile();
@@ -234,7 +237,7 @@ public class ZipUtil
 			root = src.getParentFile().getCanonicalPath();
 		}
 		LinkedHashMap<String, byte[]> entrys = new LinkedHashMap<String, byte[]>();
-		zipFiles(src, parttern, root, entrys, verbos);
+		zipFiles(src, pattern, root, entrys, verbos);
 		if (!entrys.isEmpty()) {				
 			out.createNewFile();
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -250,15 +253,15 @@ public class ZipUtil
 		}
 	}
 	
-	static public void zipFiles(File src, Pattern regex, String root, LinkedHashMap<String, byte[]> entrys, boolean verbos) throws Exception
+	static public void zipFiles(File src, StringFilters pattern, String root, LinkedHashMap<String, byte[]> entrys, boolean verbos) throws Exception
 	{
 		if (src.isFile()) {
-			if (regex.matcher(src.getName()).find()) {
+			if (pattern.matcher(src.getName())) {
 				pushFileEntry(src, root, entrys, verbos);
 			}
 		} else if(src.isDirectory()) {
 			for (File sub : src.listFiles()) {
-				zipFiles(sub, regex, root, entrys, verbos);
+				zipFiles(sub, pattern, root, entrys, verbos);
 			}
 		}
 	}
