@@ -27,25 +27,7 @@ public class CFile
 	
 	public static void writeText(java.io.File file, String text, String encoding)
 	{
-		try{
-			if (!file.getParentFile().exists()) {
-				file.getParentFile().mkdirs();
-			}
-			if (!file.exists()) {
-				file.createNewFile();
-			}
-			byte[] data = CIO.stringEncode(text, encoding);
-			FileOutputStream fos = new FileOutputStream(file);
-			try{
-				fos.write(data);
-			}catch (Exception e) {
-				e.printStackTrace();
-			}finally{
-				fos.close();
-			}
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
+		writeData(file, CIO.stringEncode(text, encoding));
 	}
 	
 	public static String readText(java.io.File file)
@@ -66,20 +48,20 @@ public class CFile
 	
 	public static byte[] readData(java.io.File file)
 	{
-		byte[] data = null;
-		FileInputStream fis = null;
-		try{
-			fis = new FileInputStream(file);
-			data = new byte[fis.available()];
-			fis.read(data);
-		}catch (Exception e) {
-			e.printStackTrace();
-		}finally{
-			try {
-				fis.close();
-			} catch (Exception e2) {}
+		if (file.exists()) {
+			FileInputStream fis = null;
+			try{
+				fis = new FileInputStream(file);
+				return CIO.readStream(fis);
+			}catch (Exception e) {
+				e.printStackTrace();
+			}finally{
+				try {
+					fis.close();
+				} catch (Exception e2) {}
+			}
 		}
-		return data;
+		return null;
 	}
 	
 	
