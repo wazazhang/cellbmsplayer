@@ -261,7 +261,7 @@ public class ZipUtil
 	{
 		if (!src.isHidden()) {
 			if (src.isFile()) {
-				if (pattern.matcher(src.getName())) {
+				if (pattern.find(src.getName())) {
 					pushFileEntry(src, root, entrys, verbos);
 				}
 			} else if(src.isDirectory()) {

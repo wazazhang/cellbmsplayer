@@ -40,7 +40,7 @@ public class StringFilters
 	 * @param text
 	 * @return true 符合， false 排除
 	 */
-	public boolean matcher(String text) 
+	public boolean find(String text) 
     {
 		if (!filters_dec.isEmpty()) {
     		// 判断所有需要排除的
@@ -62,10 +62,10 @@ public class StringFilters
     	return true;
     }
 	
-	public boolean matcher(File file) 
+	public boolean find(File file) 
 	{
 		String fname = file.getPath();
-		return matcher(fname);
+		return find(fname);
 	}
 	
 	public static String usage(String line_prefix)
