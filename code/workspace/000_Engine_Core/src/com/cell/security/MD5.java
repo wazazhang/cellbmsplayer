@@ -253,8 +253,7 @@ public class MD5
 					continue;
 				}
 				else {
-					String fname = files[l].getPath().replaceAll("\\\\", "/");
-					if (filters != null && !filters.matcher(fname)) {
+					if (filters != null && !filters.matcher(files[l])) {
 						ret.getValue().incrementAndGet();
 						continue;
 					}
@@ -306,8 +305,7 @@ public class MD5
 					processSrcDir(files[l], dstFile, CoverType, verbos, filters, ret, output);
 					continue;
 				} else {
-					String fname = files[l].getPath().replaceAll("\\\\", "/");
-					if (filters != null && !filters.matcher(fname)) {
+					if (filters != null && !filters.matcher(files[l])) {
 						ret.getValue().incrementAndGet();
 						continue;
 					}
