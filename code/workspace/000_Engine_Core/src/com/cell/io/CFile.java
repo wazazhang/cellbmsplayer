@@ -50,15 +50,16 @@ public class CFile
 	{
 		if (file.exists()) {
 			FileInputStream fis = null;
-			try{
+			try {
 				fis = new FileInputStream(file);
 				return CIO.readStream(fis);
-			}catch (Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
-			}finally{
+			} finally {
 				try {
 					fis.close();
-				} catch (Exception e2) {}
+				} catch (Exception e2) {
+				}
 			}
 		}
 		return null;
@@ -75,11 +76,11 @@ public class CFile
 				file.createNewFile();
 			}
 			FileOutputStream fos = new FileOutputStream(file);
-			try{
+			try {
 				fos.write(data);
-			}catch (Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
-			}finally{
+			} finally {
 				fos.close();
 			}
 		}catch (Exception e) {
