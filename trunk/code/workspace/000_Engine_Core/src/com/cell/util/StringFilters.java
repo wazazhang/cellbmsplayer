@@ -21,19 +21,18 @@ public class StringFilters
 	{
 		String[] fts = regex.trim().split(";");
 		for (String ft : fts) {
-			if (ft.startsWith("-")) {
-				ft = ft.substring(1);
-				filters_dec.add(Pattern.compile(ft));
-//				System.out.println("find dec filter : " + ft);
-	    	} else if (ft.startsWith("+")) {
-	    		ft = ft.substring(1);
-	    		filters_add.add(Pattern.compile(ft));
-//				System.out.println("find add filter : " + ft);
-	    	} else {
-	    		ft = ft.substring(1);
-	    		filters_add.add(Pattern.compile(ft));
-//				System.out.println("find add filter : " + ft);
-	    	}
+			if (!ft.isEmpty()) {
+				if (ft.startsWith("-")) {
+					ft = ft.substring(1);
+					filters_dec.add(Pattern.compile(ft));
+		    	} else if (ft.startsWith("+")) {
+		    		ft = ft.substring(1);
+		    		filters_add.add(Pattern.compile(ft));
+		    	} else {
+		    		ft = ft.substring(1);
+		    		filters_add.add(Pattern.compile(ft));
+		    	}
+			}
 		}
 	}
 	
