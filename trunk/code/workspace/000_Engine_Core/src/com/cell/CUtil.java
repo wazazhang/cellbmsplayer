@@ -1310,7 +1310,12 @@ public class CUtil extends CObject
 	 */
 	static public String replaceString(String text, String s, String d, int limit)
 	{
+		if (text.indexOf(s, 0) < 0) {
+			return text;
+		}
+		
 		int count = 0;
+		
 		StringBuffer sb = new StringBuffer();
 		
 		for (int i = 0; i < text.length(); i++)
