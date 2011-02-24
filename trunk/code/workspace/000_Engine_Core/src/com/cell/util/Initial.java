@@ -53,7 +53,7 @@ public class Initial
 //				System.out.println(section_heads[i]);
 //				sections[i].debug = true;
 				sections[i] = new Properties();
-				sections[i].comment_text = ";";
+				sections[i].comment_text = new String[]{";"};
 				sections[i].loadText(section_texts[i], "=");
 			}
 		}

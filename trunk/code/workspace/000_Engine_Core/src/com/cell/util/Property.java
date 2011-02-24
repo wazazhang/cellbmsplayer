@@ -4,7 +4,9 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Properties;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import com.cell.CIO;
 import com.cell.CObject;
@@ -44,13 +46,13 @@ import com.cell.reflect.Parser;
  *
  * @param <T>
  */
-public abstract class  Property<T>
+public abstract class Property<T>
 {
 	public static boolean debug = false;
 	
-	public String comment_text 	= "#";
+	public String[] comment_text 	= {"#", "//"};
 	
-	public String append_text 	= "+";
+	public String[] append_text 	= {"+", "\\"};
 	
 	Hashtable<String, T> Map = new Hashtable<String, T>();
 
@@ -67,12 +69,48 @@ public abstract class  Property<T>
 		loadText(text, separator);
 	}
 	
+	public java.util.Properties toJavaProperties() {
+		java.util.Properties ret = new java.util.Properties();
+		ret.putAll(Map);
+		return ret;
+	}
+	
+	public void fromJavaProperties(java.util.Properties map){
+		for (Entry<?, ?> e : map.entrySet()) {
+			putObject(e.getKey().toString(), e.getValue());
+		}
+	}
+
+	abstract public boolean putObject(String k, Object v) ;
+	
+	
+	
 	public String saveText(String separator) {
 		String table = "";
 		for (String key : Map.keySet()) {
 			table += key + separator + Parser.objectToString(Map.get(key)) + "\n";
 		}
 		return table;
+	}
+
+	// 如果是注释
+	public boolean isComment(String line) {
+		for (String comment : comment_text) {
+			if (line.startsWith(comment)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	// 如果是尾部出现 +
+	public boolean isNextAppend(String line) {
+		for (String append : append_text) {
+			if (line.endsWith(append)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public void loadText(String text, String separator)
@@ -87,32 +125,27 @@ public abstract class  Property<T>
 			{
 				try
 				{
-					if (line==null){
+					if (line == null) {
 						line = lines[i].trim();
-					}else{
+					} else {
 						line += lines[i].trim();
 					}
-					
 					// 如果是注释
-					if (line.startsWith(comment_text)){
+					if (isComment(line)){
 						line = null;
 						continue;
 					}
 					// 如果是尾部出现 +
-					else if (line.endsWith(append_text) && i < lines.length - 1) 
-					{
+					if (i < lines.length - 1 && isNextAppend(line)) {
 						line = line.substring(0, line.length()-1);
 						continue;
 					}
-					else 
-					{
-						String kv[] = line.split(separator, 2);
-						line = null;
-						if (kv.length==2){
-							putText(kv[0].trim(), kv[1].trim());
-							if (debug) {
-								System.out.println(kv[0].trim()+"="+kv[1].trim());
-							}
+					String kv[] = line.split(separator, 2);
+					line = null;
+					if (kv.length==2){
+						putText(kv[0].trim(), kv[1].trim());
+						if (debug) {
+							System.out.println(kv[0].trim()+"="+kv[1].trim());
 						}
 					}
 				}
