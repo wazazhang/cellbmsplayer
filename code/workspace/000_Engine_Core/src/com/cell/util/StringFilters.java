@@ -63,12 +63,12 @@ public class StringFilters
     	return true;
     }
 	
-	public static String usage()
+	public static String usage(String line_prefix)
 	{
 		return 
-		"	+ 代表包含(默认)，- 代表不包含。\n" +
-		"		比如:-\\*+.svn(排除所有.svn目录)\n" +
-		"	多项时用 ; 分隔。\n" +
-		"		比如:+.png;+.jpg，(只匹配.png和.jpg)";
+		line_prefix + "+ 代表包含(默认)，- 代表不包含。\n" +
+		line_prefix + "  比如:-\\*+.svn(排除所有.svn目录)\n" +
+		line_prefix + "多项时用 ; 分隔。\n" +
+		line_prefix + "  比如:+.png;+.jpg;-.bmp，(只匹配.png和.jpg，并排除.bmp)";
 	}
 }

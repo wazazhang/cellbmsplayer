@@ -215,7 +215,8 @@ public class ZipUtil
 		String usage = 
 			"A [-开关] <输出文件> <输入文件> [文件匹配正则表达式]\n" +
 			"	[开关] -R - 连同子文件夹\n" +
-			"	[文件匹配正则表达式]\n" + StringFilters.usage();
+			"	[文件匹配正则表达式]\n" + 
+			StringFilters.usage("	");
 		System.out.println(usage);
 	}
 	
