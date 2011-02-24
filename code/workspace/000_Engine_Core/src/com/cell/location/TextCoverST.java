@@ -44,8 +44,8 @@ public class TextCoverST
 			CharST = new char[0xffff];
 			CharTS = new char[0xffff];
 			java.util.Properties map = properties.toJavaProperties();
-			String string_s = map.remove("STRING_S").toString();
-			String string_t = map.remove("STRING_T").toString();
+			String string_s = map.get("STRING_S").toString();
+			String string_t = map.get("STRING_T").toString();
 			int count = Math.min(string_s.length(), string_t.length());
 			for (int i = 0; i < count; i++) {
 				char t = string_t.charAt(i);
