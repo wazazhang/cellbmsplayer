@@ -7,6 +7,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Vector;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,6 +16,7 @@ import javax.swing.tree.TreeNode;
 import com.cell.CIO;
 import com.cell.CObject;
 import com.cell.CUtil;
+import com.cell.util.StringFilters;
 import com.cell.util.Pair;
 
 
@@ -169,38 +171,38 @@ public class MD5
 
 //	------------------------------------------------------------------------------------------------------------------------------
  
-    private static int processed_files = 0;
-    private static int ignored_files = 0;
-    
-    private static boolean processFilter(
-    		File	file,
-    		ArrayList<Pattern> filters_add, 
-    		ArrayList<Pattern> filters_dec) 
-    {
-    	String fname = file.getPath().replaceAll("\\\\", "/");
-		if (filters_dec != null) {
-    		// 判断所有需要排除的
-    		for (Pattern ft : filters_dec) {
-    			if (ft.matcher(fname).find()) {
-//    				System.out.println("ignore: " + file.getPath());
-    				ignored_files ++;
-        			return false;
-    			}
-    		}
-		}
-		if (filters_add != null && !filters_add.isEmpty()) {
-			// 判断所有需要包含的
-    		for (Pattern ft : filters_add) {
-    			if (ft.matcher(fname).find()) {
-					return true;
-				}
-    		}
-//			System.out.println("ignore: " + file.getPath());    		
-    		ignored_files ++;
-    		return false;
-		}
-    	return true;
-    }
+//    private static int processed_files = 0;
+//    private static int ignored_files = 0;
+//    
+//    private static boolean processFilter(
+//    		File	file,
+//    		ArrayList<Pattern> filters_add, 
+//    		ArrayList<Pattern> filters_dec) 
+//    {
+//    	String fname = file.getPath().replaceAll("\\\\", "/");
+//		if (filters_dec != null) {
+//    		// 判断所有需要排除的
+//    		for (Pattern ft : filters_dec) {
+//    			if (ft.matcher(fname).find()) {
+////    				System.out.println("ignore: " + file.getPath());
+//    				ignored_files ++;
+//        			return false;
+//    			}
+//    		}
+//		}
+//		if (filters_add != null && !filters_add.isEmpty()) {
+//			// 判断所有需要包含的
+//    		for (Pattern ft : filters_add) {
+//    			if (ft.matcher(fname).find()) {
+//					return true;
+//				}
+//    		}
+////			System.out.println("ignore: " + file.getPath());    		
+//    		ignored_files ++;
+//    		return false;
+//		}
+//    	return true;
+//    }
 
     private static String processVerbos(int verbos, int size, long date, String name) {
     	String dst = "";
@@ -233,8 +235,8 @@ public class MD5
     		File dstFile, 
     		int CoverType,
     		int verbos,
-    		ArrayList<Pattern> filters_add, 
-    		ArrayList<Pattern> filters_dec, 
+    		StringFilters filters, 
+    		Pair<AtomicInteger, AtomicInteger> ret, 
     		StringBuilder output) throws Exception
     {
 		if (!srcFile.exists())
@@ -251,7 +253,9 @@ public class MD5
 					continue;
 				}
 				else {
-					if (!processFilter(files[l], filters_add, filters_dec)) {
+					String fname = files[l].getPath().replaceAll("\\\\", "/");
+					if (filters != null && !filters.matcher(fname)) {
+						ret.getValue().incrementAndGet();
 						continue;
 					}
 					FileInputStream fis = new FileInputStream(files[l]);
@@ -271,7 +275,7 @@ public class MD5
 			dst += processVerbos(verbos, data.length, srcFile.lastModified(), srcFile.getPath());
 			System.out.println(dst);
 			output.append(dst + "\n");
-		    processed_files ++;
+		    ret.getKey().incrementAndGet();
 		}
 
     }
@@ -281,8 +285,8 @@ public class MD5
     		File dstFile, 
     		int CoverType,
     		int verbos,
-    		ArrayList<Pattern> filters_add, 
-    		ArrayList<Pattern> filters_dec, 
+    		StringFilters filters, 
+    		Pair<AtomicInteger, AtomicInteger> ret, 
     		StringBuilder output) throws Exception
     {
 		if (!srcDir.exists())
@@ -299,10 +303,12 @@ public class MD5
 					continue;
 				}
 				if (files[l].isDirectory()) {
-					processSrcDir(files[l], dstFile, CoverType, verbos, filters_add, filters_dec, output);
+					processSrcDir(files[l], dstFile, CoverType, verbos, filters, ret, output);
 					continue;
 				} else {
-					if (!processFilter(files[l], filters_add, filters_dec)) {
+					String fname = files[l].getPath().replaceAll("\\\\", "/");
+					if (filters != null && !filters.matcher(fname)) {
+						ret.getValue().incrementAndGet();
 						continue;
 					}
 					FileInputStream fis = new FileInputStream(files[l]);
@@ -311,7 +317,7 @@ public class MD5
 					dst += processVerbos(verbos, data.length, files[l].lastModified(), files[l].getPath());
 					System.out.println(dst);
 					output.append(dst + "\n");
-				    processed_files ++;
+					ret.getKey().incrementAndGet();
 				}
 			}
 		}
@@ -323,7 +329,8 @@ public class MD5
     		int CoverType,
     		int verbos,
     		StringBuilder output, 
-    		String srcTextFileEncoding) throws Exception
+    		String srcTextFileEncoding, 
+    		Pair<AtomicInteger, AtomicInteger> ret) throws Exception
     {
 		if (!srcTextFile.exists()) 
 		{
@@ -352,7 +359,7 @@ public class MD5
 				dst += processVerbos(verbos&VERBOS_FLAG_FILE_NAME, 0, 0, src);
 				System.out.println(dst);
 				output.append(dst + "\n");
-			    processed_files ++;
+				 ret.getKey().incrementAndGet();
 			}
 		}
 	
@@ -459,10 +466,10 @@ public class MD5
 		try {
 			if (args != null) {
 				if (args.length > 1 && args[0].startsWith("--")) {
-					mainNew(args);
+					Pair<AtomicInteger, AtomicInteger> files = mainNew(args);
 					System.out.println(
 							CUtil.snapStringRL(
-									new Object[]{processed_files, ignored_files}, 
+									new Object[]{files.getKey().get(),  files.getValue().get()}, 
 									new Object[]{"processed ",    "ignored "}, 
 									' ', " : "));
 					return;
@@ -482,10 +489,12 @@ public class MD5
 	static final public int VERBOS_FLAG_FILE_SIZE = 2;
 	static final public int VERBOS_FLAG_FILE_DATE = 4;
 	
-	private static void mainNew(String args[]) throws Exception
+	private static Pair<AtomicInteger, AtomicInteger> mainNew(String args[]) throws Exception
 	{
-		int CoverType				= 0;
+		Pair<AtomicInteger, AtomicInteger> ret = new Pair<AtomicInteger, AtomicInteger>(
+				new AtomicInteger(0), new AtomicInteger(0));
 		
+		int 	CoverType			= 0;
 		int 	verbos				= 0;
 		
 		String	srcText				= null;
@@ -498,8 +507,10 @@ public class MD5
 		boolean	dstAppend			= false;
 		String	dstEncoding			= null;
 		
-		ArrayList<Pattern> filters_add = null;
-		ArrayList<Pattern> filters_dec = null;
+		StringFilters filters			= null;
+		
+//		ArrayList<Pattern> filters_add = null;
+//		ArrayList<Pattern> filters_dec = null;
 		
 		for (int i=0; i<args.length; i++) 
 		{
@@ -548,24 +559,8 @@ public class MD5
 				dstEncoding = args[i].substring("-dstenc:".length());
 			}
 			else if (args[i].toLowerCase().startsWith("-filter:")){
-				String[] fts = args[i].substring("-filter:".length()).trim().split(";");
-				filters_add = new ArrayList<Pattern>();
-				filters_dec = new ArrayList<Pattern>();
-				for (String ft : fts) {
-					if (ft.startsWith("-")) {
-						ft = ft.substring(1);
-						filters_dec.add(Pattern.compile(ft));
-						System.out.println("find dec filter : " + ft);
-			    	} else if (ft.startsWith("+")) {
-			    		ft = ft.substring(1);
-			    		filters_add.add(Pattern.compile(ft));
-						System.out.println("find add filter : " + ft);
-			    	} else {
-			    		ft = ft.substring(1);
-			    		filters_add.add(Pattern.compile(ft));
-						System.out.println("find add filter : " + ft);
-			    	}
-				}
+				String fts = args[i].substring("-filter:".length()).trim();
+				filters = new StringFilters(fts);
 			}
 			
 		}
@@ -581,28 +576,26 @@ public class MD5
 			
 			if (srcFile!=null) 
 			{
-				processSrcFile(srcFile, dstFile, CoverType, verbos, filters_add, filters_dec, output);
+				processSrcFile(srcFile, dstFile, CoverType, verbos, filters, ret, output);
 			}
 			
 			if (srcDir != null) 
 			{
-				processSrcDir(srcDir, dstFile, CoverType, verbos, filters_add, filters_dec, output);
+				processSrcDir(srcDir, dstFile, CoverType, verbos, filters, ret, output);
 			}
 			
 			if (srcTextFile!=null) 
 			{
-				processSrcTextFile(srcTextFile, dstFile, CoverType, verbos, output, srcTextFileEncoding);
+				processSrcTextFile(srcTextFile, dstFile, CoverType, verbos, output, srcTextFileEncoding, ret);
 			}
 			
 			if (dstFile!=null) 
 			{
 				processDstFile(dstFile, dstEncoding, dstAppend, output);
 			}
-			
-			
 		}
 		
-		return;
+		return ret;
 	
 	}
 	
