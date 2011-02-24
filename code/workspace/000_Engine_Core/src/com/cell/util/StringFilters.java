@@ -67,8 +67,8 @@ public class StringFilters
 	{
 		return 
 		line_prefix + "+ 代表包含(默认)，- 代表不包含。\n" +
-		line_prefix + "  比如:-\\*+.svn(排除所有.svn目录)\n" +
+		line_prefix + "	比如:-\\*+.svn(排除所有.svn目录)\n" +
 		line_prefix + "多项时用 ; 分隔。\n" +
-		line_prefix + "  比如:+.png;+.jpg;-.bmp，(只匹配.png和.jpg，并排除.bmp)";
+		line_prefix + "	比如:+.png;+.jpg;-.bmp，(只匹配.png和.jpg，并排除.bmp)";
 	}
 }

@@ -10,6 +10,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import com.cell.CIO;
+import com.cell.CObject;
 import com.cell.IStorage;
 import com.cell.IStorage.IReadListener;
 
@@ -55,9 +56,12 @@ public class CStorage implements IStorage
 			rms_file = new File("./");
 		}
 		
-		System.out.println("CStorage init\n" +
-				"\t[" + rms_file.getPath() + "]"
-				);
+		if (CObject.verbos)
+			System.out.println(
+					"CStorage init\n" + 
+					"\t[" + rms_file.getPath()+ "]");
+		
+				
 	}
 	
 
