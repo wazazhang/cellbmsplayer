@@ -243,6 +243,10 @@ public class MD5
 		{
 			System.err.println("src file is not exist!");
 		}
+		else if (srcFile.isHidden()) 
+		{
+			System.err.println("src file is hidden!");
+    	}
 		else if (srcFile.isDirectory()) 
 		{
 			File[] files = srcFile.listFiles();
@@ -291,7 +295,10 @@ public class MD5
 		if (!srcDir.exists())
 		{
 			System.err.println("src dir is not exist!");
-		}
+		}	
+		else if (srcDir.isHidden()) {
+    		
+    	}
 		else if (srcDir.isDirectory()) 
 		{
 			File[] files = srcDir.listFiles();
@@ -334,6 +341,10 @@ public class MD5
 		{
 			System.err.println("src textfile is not exist!");
 		}
+		else if (srcTextFile.isHidden()) 
+		{
+			System.err.println("src textfile is hidden!");
+    	}
 		else if (srcTextFile.isDirectory())
 		{
 			System.err.println("src textfile can not be a directory!!");
