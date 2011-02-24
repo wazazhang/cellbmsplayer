@@ -1,12 +1,17 @@
 package com.cell.util;
 
+import java.io.InputStream;
+
 import com.cell.reflect.Parser;
 
 
 public class Properties extends Property<String>
 {
 	public Properties(){}
-
+	public Properties(InputStream is){
+		load(is);
+	}
+	
 	public Properties(MarkedHashtable map){
 		super(map);
 	}

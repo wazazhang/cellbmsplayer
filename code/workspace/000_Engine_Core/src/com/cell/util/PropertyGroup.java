@@ -57,6 +57,11 @@ public class PropertyGroup extends Property<Vector<String>>
 		}
 	}
 	
+	@Override
+	public boolean putObject(String k, Object v) {
+		return put(k, v.toString());
+	}
+	
 	public String getString(String key){
 		return getSingle(key);
 	}
