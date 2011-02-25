@@ -17,11 +17,11 @@ import com.cell.CUtil;
  */
 public class BigIOSerialize extends IOutput
 {
-	protected static byte[] lock_write = new byte[]{};
+//	protected static byte[] lock_write = new byte[]{};
 	
 	public static void putString(OutputStream ostream, String string) throws IOException
 	{
-		synchronized (lock_write) 
+//		synchronized (lock_write) 
 		{
 			byte[] stringBytes = string.getBytes(CObject.getEncoding());
 			putUnsignedShort(ostream, stringBytes.length);
@@ -32,7 +32,7 @@ public class BigIOSerialize extends IOutput
 	
 	public static void putString(OutputStream ostream, String string, String charset) throws IOException
 	{
-		synchronized (lock_write)
+//		synchronized (lock_write)
 		{
 			byte[] stringBytes = string.getBytes(charset);
 			putUnsignedShort(ostream, stringBytes.length);
@@ -42,7 +42,7 @@ public class BigIOSerialize extends IOutput
 	
 	public static void putByte(OutputStream ostream, byte value) throws IOException
 	{	
-		synchronized (lock_write) 
+//		synchronized (lock_write) 
 		{
 			ostream.write((int)value);
 		}
@@ -50,7 +50,7 @@ public class BigIOSerialize extends IOutput
 	
 	public static void putUnsignedByte(OutputStream ostream, short value) throws IOException
 	{
-		synchronized (lock_write)
+//		synchronized (lock_write)
 		{
 			ostream.write(value & 0x000000FF);
 		}
@@ -58,7 +58,7 @@ public class BigIOSerialize extends IOutput
 	
 	public static void putBoolean(OutputStream ostream, boolean value) throws IOException
 	{
-		synchronized (lock_write)
+//		synchronized (lock_write)
 		{
 			ostream.write(value? 1 : 0);
 		}
@@ -66,7 +66,7 @@ public class BigIOSerialize extends IOutput
 	
 	public static void putShort(OutputStream ostream, short value) throws IOException
 	{
-		synchronized (lock_write) 
+//		synchronized (lock_write) 
 		{
 			ostream.write((value & 0x0000FF00) >> 8);
 			ostream.write((value & 0x000000FF));
@@ -75,7 +75,7 @@ public class BigIOSerialize extends IOutput
 	
 	public static void putUnsignedShort(OutputStream ostream, int value) throws IOException
 	{
-		synchronized (lock_write) 
+//		synchronized (lock_write) 
 		{
 			ostream.write((value & 0x0000FF00) >> 8);
 			ostream.write((value & 0x000000FF));
@@ -84,7 +84,7 @@ public class BigIOSerialize extends IOutput
 	
 	public static void putInt(OutputStream ostream, int value) throws IOException
 	{
-		synchronized (lock_write) 
+//		synchronized (lock_write) 
 		{
 			ostream.write((value & 0xFF000000) >> 24);
 			ostream.write((value & 0x00FF0000) >> 16);
@@ -95,7 +95,7 @@ public class BigIOSerialize extends IOutput
 	
 	public static void putUnsignedInt(OutputStream ostream, long value) throws IOException
 	{
-		synchronized (lock_write) 
+//		synchronized (lock_write) 
 		{
 			ostream.write((int)((value & 0x00000000FF000000) >> 24));
 			ostream.write((int)((value & 0x0000000000FF0000) >> 16));
@@ -106,7 +106,7 @@ public class BigIOSerialize extends IOutput
 	
 	public static void putLong(OutputStream ostream, long value) throws IOException
 	{
-		synchronized (lock_write) 
+//		synchronized (lock_write) 
 		{
 			ostream.write((int)((value & 0xFF00000000000000L) >> 56));
 			ostream.write((int)((value & 0x00FF000000000000L) >> 48));
@@ -134,7 +134,7 @@ public class BigIOSerialize extends IOutput
 	
 	public static void putStrings(OutputStream ostream, String[] value) throws IOException
 	{
-		synchronized (lock_write) 
+//		synchronized (lock_write) 
 		{
 			if (value != null)
 			{
@@ -151,7 +151,7 @@ public class BigIOSerialize extends IOutput
 	
 	public static void putStrings(OutputStream ostream, String[] value, String charset) throws IOException
 	{
-		synchronized (lock_write) 
+//		synchronized (lock_write) 
 		{
 			if (value != null)
 			{
@@ -168,7 +168,7 @@ public class BigIOSerialize extends IOutput
 	
 	public static void putBooleans(OutputStream ostream, boolean[] value) throws IOException
 	{
-		synchronized (lock_write) 
+//		synchronized (lock_write) 
 		{
 			if (value != null)
 			{
@@ -185,7 +185,7 @@ public class BigIOSerialize extends IOutput
 	
 	public static void putBytes(OutputStream ostream, byte[] value) throws IOException
 	{
-		synchronized (lock_write)
+//		synchronized (lock_write)
 		{
 			if (value != null)
 			{
@@ -202,7 +202,7 @@ public class BigIOSerialize extends IOutput
 	
 	public static void putUnsignedBytes(OutputStream ostream, short[] value) throws IOException
 	{
-		synchronized (lock_write)
+//		synchronized (lock_write)
 		{
 			if (value != null)
 			{
@@ -219,7 +219,7 @@ public class BigIOSerialize extends IOutput
 	
 	public static void putShorts(OutputStream ostream, short[] value) throws IOException
 	{
-		synchronized (lock_write) 
+//		synchronized (lock_write) 
 		{
 			if (value != null)
 			{
@@ -236,7 +236,7 @@ public class BigIOSerialize extends IOutput
 	
 	public static void putUnsignedShorts(OutputStream ostream, int[] value) throws IOException
 	{
-		synchronized (lock_write) 
+//		synchronized (lock_write) 
 		{
 			if (value != null)
 			{
@@ -253,7 +253,7 @@ public class BigIOSerialize extends IOutput
 	
 	public static void putInts(OutputStream ostream, int[] value) throws IOException
 	{
-		synchronized (lock_write) 
+//		synchronized (lock_write) 
 		{
 			if (value != null)
 			{
@@ -270,7 +270,7 @@ public class BigIOSerialize extends IOutput
 	
 	public static void putUnsignedInts(OutputStream ostream, long[] value) throws IOException
 	{
-		synchronized (lock_write) 
+//		synchronized (lock_write) 
 		{
 			if (value != null)
 			{
@@ -287,7 +287,7 @@ public class BigIOSerialize extends IOutput
 	
 	public static void putLongs(OutputStream ostream, long[] value) throws IOException
 	{
-		synchronized (lock_write) 
+//		synchronized (lock_write) 
 		{
 			if (value != null)
 			{
