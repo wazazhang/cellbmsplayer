@@ -59,6 +59,7 @@ public class AppletLauncher extends LoaderApplet
 
 	String			dk;
 	Vector<byte[]> 	loaded_datas;
+	ClassLoader		old_class_loader;
 	
 	@Override
 	protected void onTaskInit()
@@ -68,6 +69,8 @@ public class AppletLauncher extends LoaderApplet
 		if (l_decode) {
 			dk = LoadTask.getVK(getClass().getResourceAsStream("/com/cell/loader/vk.enc"));
 		}
+		old_class_loader = Thread.currentThread().getContextClassLoader();
+		System.out.println(Thread.currentThread());
 	}
 	
 	@Override
@@ -103,7 +106,6 @@ public class AppletLauncher extends LoaderApplet
 	
 	private void launchApplet(Vector<byte[]> datas) throws Exception
 	{
-		ClassLoader			old_class_loader	= Thread.currentThread().getContextClassLoader();
 		JarClassLoader		jar_class_loader	= JarClassLoader.createJarClassLoader(
 				old_class_loader, datas, dk, true, l_decode);
 		Thread.currentThread().setContextClassLoader(jar_class_loader);
@@ -126,12 +128,8 @@ public class AppletLauncher extends LoaderApplet
 			System.out.println("game applet initrilized !");
 			
 			this.resize(game.getSize());
-			
-			this.setVisible(true);
 			this.setEnabled(true);
 			this.setFocusable(true);
-			
-			
 			this.add(game);
 			this.repaint();
 			
@@ -141,7 +139,8 @@ public class AppletLauncher extends LoaderApplet
 			
 			game.repaint();
 		
-			this.repaint();
+			this.repaint();		
+			this.setVisible(true);
 		}
 	}
 	

@@ -305,7 +305,6 @@ public class JarClassLoader extends ClassLoader
 					}
 				}
 			}
-			
 			if (null == clazz) {
 				clazz = root_class_loader.loadClass(className);
 			}
@@ -339,6 +338,10 @@ public class JarClassLoader extends ClassLoader
 		if (data != null) {
 			ByteArrayInputStream bais = new ByteArrayInputStream(data);
 			return bais;
+		}
+		InputStream is = root_class_loader.getResourceAsStream(path);
+		if (is != null) {
+			return is;
 		}
 		return super.getResourceAsStream(path);
 	}
