@@ -14,7 +14,7 @@ import com.cell.CObject;
 public class NIOSerialize extends IOutput
 {
 	public static void putString(ByteBuffer buffer, String string, String charset) {
-		synchronized (buffer) {
+//		synchronized (buffer) {
 			try {
 				byte[] stringBytes = string.getBytes(charset);
 				buffer.putInt(stringBytes.length);
@@ -22,7 +22,7 @@ public class NIOSerialize extends IOutput
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
-		}
+//		}
 	}
 	public static void putString(ByteBuffer buffer, String string) {
 		putString(buffer, string, CObject.getEncoding());
@@ -30,51 +30,51 @@ public class NIOSerialize extends IOutput
 	
 	
 	public static void putByte(ByteBuffer buffer, byte value) {
-		synchronized (buffer) { 
+//		synchronized (buffer) { 
 			buffer.put(value);
-		}
+//		}
 	}
 	
 	public static void putUnsignedByte(ByteBuffer buffer, short value) {
-		synchronized (buffer) { 
+//		synchronized (buffer) { 
 			buffer.putShort(value);
-		}
+//		}
 	}
 	
 	public static void putBoolean(ByteBuffer buffer, boolean value) {
-		synchronized (buffer) { 
+//		synchronized (buffer) { 
 			buffer.put((byte)(value? 1 : 0));
-		}
+//		}
 	}
 	
 	public static void putShort(ByteBuffer buffer, short value) {
-		synchronized (buffer) { 
+//		synchronized (buffer) { 
 			buffer.putShort(value);
-		}
+//		}
 	}
 	
 	public static void putUnsignedShort(ByteBuffer buffer, int value) {
-		synchronized (buffer) { 
+//		synchronized (buffer) { 
 			buffer.putInt(value);
-		}
+//		}
 	}
 	
 	public static void putInt(ByteBuffer buffer, int value) {
-		synchronized (buffer) { 
+//		synchronized (buffer) { 
 			buffer.putInt(value);
-		}
+//		}
 	}
 	
 	public static void putUnsignedInt(ByteBuffer buffer, long value) {
-		synchronized (buffer) { 
+//		synchronized (buffer) { 
 			buffer.putLong(value);
-		}
+//		}
 	}
 	
 	public static void putLong(ByteBuffer buffer, long value) {
-		synchronized (buffer) { 
+//		synchronized (buffer) { 
 			buffer.putLong(value);
-		}
+//		}
 	}
 	public static void putFloat(ByteBuffer ostream, float value) throws IOException
 	{
@@ -89,7 +89,7 @@ public class NIOSerialize extends IOutput
 	// put array
 	
 	public static void putStrings(ByteBuffer buffer, String[] value, String charset) {
-		synchronized (buffer) { 
+//		synchronized (buffer) { 
 			if (value != null) {
 				NIOSerialize.putUnsignedInt(buffer, value.length);
 				for (int i = 0; i < value.length; ++i)
@@ -97,7 +97,7 @@ public class NIOSerialize extends IOutput
 			} else {
 				NIOSerialize.putUnsignedInt(buffer, 0);
 			}
-		}
+//		}
 	}
 	
 	public static void putStrings(ByteBuffer buffer, String[] value) {
@@ -106,7 +106,7 @@ public class NIOSerialize extends IOutput
 	
 	public static void putBooleans(ByteBuffer buffer, boolean[] value) 
 	{
-		synchronized (buffer) { 
+//		synchronized (buffer) { 
 			if (value != null)
 			{
 				NIOSerialize.putUnsignedInt(buffer, value.length);
@@ -117,12 +117,12 @@ public class NIOSerialize extends IOutput
 			{
 				NIOSerialize.putUnsignedInt(buffer, 0);
 			}
-		}
+//		}
 	}	
 	
 	public static void putBytes(ByteBuffer buffer, byte[] value) 
 	{
-		synchronized (buffer) { 
+//		synchronized (buffer) { 
 		if (value != null)
 		{
 			NIOSerialize.putUnsignedInt(buffer, value.length);
@@ -133,12 +133,12 @@ public class NIOSerialize extends IOutput
 		{
 			NIOSerialize.putUnsignedInt(buffer, 0);
 		}
-		}
+//		}
 	}	
 	
 	public static void putUnsignedBytes(ByteBuffer buffer, short[] value) 
 	{
-		synchronized (buffer) { 
+//		synchronized (buffer) { 
 		if (value != null)
 		{
 			NIOSerialize.putUnsignedInt(buffer, value.length);
@@ -149,12 +149,12 @@ public class NIOSerialize extends IOutput
 		{
 			NIOSerialize.putUnsignedInt(buffer, 0);
 		}
-		}
+//		}
 	}
 	
 	public static void putShorts(ByteBuffer buffer, short[] value) 
 	{
-		synchronized (buffer) { 
+//		synchronized (buffer) { 
 		if (value != null)
 		{
 			NIOSerialize.putUnsignedInt(buffer, value.length);
@@ -165,12 +165,12 @@ public class NIOSerialize extends IOutput
 		{
 			NIOSerialize.putUnsignedInt(buffer, 0);
 		}		
-		}
+//		}
 	}	
 	
 	public static void putUnsignedShorts(ByteBuffer buffer, int[] value) 
 	{
-		synchronized (buffer) { 
+//		synchronized (buffer) { 
 		if (value != null)
 		{
 			NIOSerialize.putUnsignedInt(buffer, value.length);
@@ -181,12 +181,12 @@ public class NIOSerialize extends IOutput
 		{
 			NIOSerialize.putUnsignedInt(buffer, 0);
 		}		
-		}
+//		}
 	}
 	
 	public static void putInts(ByteBuffer buffer, int[] value) 
 	{
-		synchronized (buffer) { 
+//		synchronized (buffer) { 
 		if (value != null)
 		{
 			NIOSerialize.putUnsignedInt(buffer, value.length);
@@ -197,12 +197,12 @@ public class NIOSerialize extends IOutput
 		{
 			NIOSerialize.putUnsignedInt(buffer, 0);
 		}		
-		}
+//		}
 	}	
 	
 	public static void putUnsignedInts(ByteBuffer buffer, long[] value) 
 	{
-		synchronized (buffer) { 
+//		synchronized (buffer) { 
 		if (value != null)
 		{
 			NIOSerialize.putUnsignedInt(buffer, value.length);
@@ -213,12 +213,12 @@ public class NIOSerialize extends IOutput
 		{
 			NIOSerialize.putUnsignedInt(buffer, 0);
 		}		
-		}
+//		}
 	}
 	
 	public static void putLongs(ByteBuffer buffer, long[] value) 
 	{
-		synchronized (buffer) { 
+//		synchronized (buffer) { 
 		if (value != null)
 		{
 			NIOSerialize.putUnsignedInt(buffer, value.length);
@@ -229,7 +229,7 @@ public class NIOSerialize extends IOutput
 		{
 			NIOSerialize.putUnsignedInt(buffer, 0);
 		}	
-		}
+//		}
 	}
 
 	

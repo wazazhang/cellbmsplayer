@@ -14,13 +14,13 @@ import com.cell.CObject;
  */
 public class LittleIODeserialize extends IInput
 {
-	private static byte[] lock_read = new byte[]{};
+//	private static byte[] lock_read = new byte[]{};
 	
 	public static final int STRING_MAX_LEN = 1024 * 100 + 1;
 	
 	public static String getString(InputStream istream) throws IOException
 	{
-		synchronized (lock_read)
+//		synchronized (lock_read)
         {
 	        int stringLen = getUnsignedShort(istream);
 	       
@@ -42,7 +42,7 @@ public class LittleIODeserialize extends IInput
 	
 	public static String getString(InputStream istream, String charset) throws IOException
 	{
-		synchronized (lock_read)
+//		synchronized (lock_read)
         {
 	        int stringLen = getUnsignedShort(istream);
 	       
@@ -66,7 +66,7 @@ public class LittleIODeserialize extends IInput
 	
 	public static byte getByte(InputStream istream) throws IOException
 	{
-		synchronized (lock_read) 
+//		synchronized (lock_read) 
 		{
 			return (byte)istream.read();
 		}
@@ -74,7 +74,7 @@ public class LittleIODeserialize extends IInput
 	
 	public static short getUnsignedByte(InputStream istream) throws IOException
 	{
-		synchronized (lock_read)
+//		synchronized (lock_read)
 		{
 			return (short)(istream.read() & 0x00FF);
         }
@@ -82,7 +82,7 @@ public class LittleIODeserialize extends IInput
 	
 	public static boolean getBoolean(InputStream istream) throws IOException
 	{
-		synchronized (lock_read)
+//		synchronized (lock_read)
 		{
 			return (istream.read() != 0);
 		}
@@ -90,7 +90,7 @@ public class LittleIODeserialize extends IInput
 	
 	public static short getShort(InputStream istream) throws IOException
 	{
-		synchronized (lock_read)
+//		synchronized (lock_read)
         {
 			int b0 = istream.read();
 			int b1 = istream.read();
@@ -100,7 +100,7 @@ public class LittleIODeserialize extends IInput
 	
 	public static int getUnsignedShort(InputStream istream) throws IOException
 	{
-		synchronized (lock_read)
+//		synchronized (lock_read)
         {
 			int b0 = istream.read();
 			int b1 = istream.read();
@@ -110,7 +110,7 @@ public class LittleIODeserialize extends IInput
 	
 	public static int getInt(InputStream istream) throws IOException
 	{
-		synchronized (lock_read)
+//		synchronized (lock_read)
         {
 			int b0 = istream.read();
 			int b1 = istream.read();
@@ -123,7 +123,7 @@ public class LittleIODeserialize extends IInput
 	
 	public static long getUnsignedInt(InputStream istream) throws IOException
 	{
-		synchronized (lock_read)
+//		synchronized (lock_read)
         {
 			long b0 = istream.read();
 			long b1 = istream.read();
@@ -136,7 +136,7 @@ public class LittleIODeserialize extends IInput
 	
 	public static long getLong(InputStream istream) throws IOException
 	{
-		synchronized (lock_read)
+//		synchronized (lock_read)
         {
 			long b0 = istream.read();
 			long b1 = istream.read();
@@ -162,7 +162,7 @@ public class LittleIODeserialize extends IInput
 	
 	public static String[] getStrings(InputStream istream) throws IOException
 	{
-		synchronized (lock_read)
+//		synchronized (lock_read)
 		{
 			int count = (int)LittleIODeserialize.getUnsignedInt(istream);
 			String[] values = new String[count];
@@ -174,7 +174,7 @@ public class LittleIODeserialize extends IInput
 	
 	public static String[] getStrings(InputStream istream, String charset) throws IOException
 	{
-		synchronized (lock_read)
+//		synchronized (lock_read)
 		{
 			int count = (int)LittleIODeserialize.getUnsignedInt(istream);
 			String[] values = new String[count];
@@ -186,7 +186,7 @@ public class LittleIODeserialize extends IInput
 	
 	public static boolean[] getBooleans(InputStream istream) throws IOException
 	{
-		synchronized (lock_read)
+//		synchronized (lock_read)
 		{
 			int count = (int)LittleIODeserialize.getUnsignedInt(istream);
 			boolean[] values = new boolean[count];
@@ -198,7 +198,7 @@ public class LittleIODeserialize extends IInput
 	
 	public static byte[] getBytes(InputStream istream) throws IOException
 	{
-		synchronized (lock_read)
+//		synchronized (lock_read)
 		{
 			int count = (int)LittleIODeserialize.getUnsignedInt(istream);
 			byte[] values = new byte[count];
@@ -210,7 +210,7 @@ public class LittleIODeserialize extends IInput
 	
 	public static short[] getUnsignedBytes(InputStream istream) throws IOException
 	{
-		synchronized (lock_read)
+//		synchronized (lock_read)
 		{
 			int count = (int)LittleIODeserialize.getUnsignedInt(istream);
 			short[] values = new short[count];
@@ -222,7 +222,7 @@ public class LittleIODeserialize extends IInput
 	
 	public static short[] getShorts(InputStream istream) throws IOException
 	{
-		synchronized (lock_read)
+//		synchronized (lock_read)
 		{
 			int count = (int)LittleIODeserialize.getUnsignedInt(istream);
 			short[] values = new short[count];
@@ -234,7 +234,7 @@ public class LittleIODeserialize extends IInput
 	
 	public static int[] getUnsignedShorts(InputStream istream) throws IOException
 	{
-		synchronized (lock_read)
+//		synchronized (lock_read)
 		{
 			int count = (int)LittleIODeserialize.getUnsignedInt(istream);
 			int[] values = new int[count];
@@ -246,7 +246,7 @@ public class LittleIODeserialize extends IInput
 	
 	public static int[] getInts(InputStream istream) throws IOException
 	{
-		synchronized (lock_read)
+//		synchronized (lock_read)
 		{
 			int count = (int)LittleIODeserialize.getUnsignedInt(istream);
 			int[] values = new int[count];
@@ -258,7 +258,7 @@ public class LittleIODeserialize extends IInput
 	
 	public static long[] getUnsignedInts(InputStream istream) throws IOException
 	{
-		synchronized (lock_read)
+//		synchronized (lock_read)
 		{
 			int count = (int)LittleIODeserialize.getUnsignedInt(istream);
 			long[] values = new long[count];
@@ -270,7 +270,7 @@ public class LittleIODeserialize extends IInput
 	
 	public static long[] getLongs(InputStream istream) throws IOException
 	{
-		synchronized (lock_read)
+//		synchronized (lock_read)
 		{
 			int count = (int)LittleIODeserialize.getUnsignedInt(istream);
 			long[] values = new long[count];

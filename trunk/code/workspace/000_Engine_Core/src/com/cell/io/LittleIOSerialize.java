@@ -17,11 +17,11 @@ import com.cell.CUtil;
  */
 public class LittleIOSerialize extends IOutput
 {
-	private static byte[] lock_write = new byte[]{};
+//	private static byte[] lock_write = new byte[]{};
 	
 	public static void putString(OutputStream ostream, String string) throws IOException
 	{
-		synchronized (lock_write) 
+//		synchronized (lock_write) 
 		{
 			byte[] stringBytes = string.getBytes(CObject.getEncoding());
 			putUnsignedShort(ostream, stringBytes.length);
@@ -32,7 +32,7 @@ public class LittleIOSerialize extends IOutput
 	
 	public static void putString(OutputStream ostream, String string, String charset) throws IOException
 	{
-		synchronized (lock_write)
+//		synchronized (lock_write)
 		{
 			byte[] stringBytes = string.getBytes(charset);
 			putUnsignedShort(ostream, stringBytes.length);
@@ -42,7 +42,7 @@ public class LittleIOSerialize extends IOutput
 	
 	public static void putByte(OutputStream ostream, byte value) throws IOException
 	{	
-		synchronized (lock_write) 
+//		synchronized (lock_write) 
 		{
 			ostream.write((int)value);
 		}
@@ -50,7 +50,7 @@ public class LittleIOSerialize extends IOutput
 	
 	public static void putUnsignedByte(OutputStream ostream, short value) throws IOException
 	{
-		synchronized (lock_write)
+//		synchronized (lock_write)
 		{
 			ostream.write(value & 0x000000FF);
 		}
@@ -58,7 +58,7 @@ public class LittleIOSerialize extends IOutput
 	
 	public static void putBoolean(OutputStream ostream, boolean value) throws IOException
 	{
-		synchronized (lock_write)
+//		synchronized (lock_write)
 		{
 			ostream.write(value? 1 : 0);
 		}
@@ -66,7 +66,7 @@ public class LittleIOSerialize extends IOutput
 	
 	public static void putShort(OutputStream ostream, short value) throws IOException
 	{
-		synchronized (lock_write) 
+//		synchronized (lock_write) 
 		{
 			ostream.write((value & 0x000000FF));
 			ostream.write((value & 0x0000FF00) >> 8);
@@ -75,7 +75,7 @@ public class LittleIOSerialize extends IOutput
 	
 	public static void putUnsignedShort(OutputStream ostream, int value) throws IOException
 	{
-		synchronized (lock_write) 
+//		synchronized (lock_write) 
 		{
 			ostream.write((value & 0x000000FF));
 			ostream.write((value & 0x0000FF00) >> 8);
@@ -84,7 +84,7 @@ public class LittleIOSerialize extends IOutput
 	
 	public static void putInt(OutputStream ostream, int value) throws IOException
 	{
-		synchronized (lock_write) 
+//		synchronized (lock_write) 
 		{
 			ostream.write((value & 0x000000FF));
 			ostream.write((value & 0x0000FF00) >> 8);
@@ -95,7 +95,7 @@ public class LittleIOSerialize extends IOutput
 	
 	public static void putUnsignedInt(OutputStream ostream, long value) throws IOException
 	{
-		synchronized (lock_write) 
+//		synchronized (lock_write) 
 		{
 			ostream.write((int)(value & 0x00000000000000FF));
 			ostream.write((int)((value & 0x000000000000FF00) >> 8));
@@ -106,7 +106,7 @@ public class LittleIOSerialize extends IOutput
 	
 	public static void putLong(OutputStream ostream, long value) throws IOException
 	{
-		synchronized (lock_write) 
+//		synchronized (lock_write) 
 		{
 			ostream.write((int)((value & 0x00000000000000FF)));
 			ostream.write((int)((value & 0x000000000000FF00) >> 8));
@@ -132,7 +132,7 @@ public class LittleIOSerialize extends IOutput
 	
 	public static void putStrings(OutputStream ostream, String[] value) throws IOException
 	{
-		synchronized (lock_write) 
+//		synchronized (lock_write) 
 		{
 			if (value != null)
 			{
@@ -149,7 +149,7 @@ public class LittleIOSerialize extends IOutput
 	
 	public static void putStrings(OutputStream ostream, String[] value, String charset) throws IOException
 	{
-		synchronized (lock_write) 
+//		synchronized (lock_write) 
 		{
 			if (value != null)
 			{
@@ -166,7 +166,7 @@ public class LittleIOSerialize extends IOutput
 	
 	public static void putBooleans(OutputStream ostream, boolean[] value) throws IOException
 	{
-		synchronized (lock_write) 
+//		synchronized (lock_write) 
 		{
 			if (value != null)
 			{
@@ -183,7 +183,7 @@ public class LittleIOSerialize extends IOutput
 	
 	public static void putBytes(OutputStream ostream, byte[] value) throws IOException
 	{
-		synchronized (lock_write)
+//		synchronized (lock_write)
 		{
 			if (value != null)
 			{
@@ -200,7 +200,7 @@ public class LittleIOSerialize extends IOutput
 	
 	public static void putUnsignedBytes(OutputStream ostream, short[] value) throws IOException
 	{
-		synchronized (lock_write)
+//		synchronized (lock_write)
 		{
 			if (value != null)
 			{
@@ -217,7 +217,7 @@ public class LittleIOSerialize extends IOutput
 	
 	public static void putShorts(OutputStream ostream, short[] value) throws IOException
 	{
-		synchronized (lock_write) 
+//		synchronized (lock_write) 
 		{
 			if (value != null)
 			{
@@ -234,7 +234,7 @@ public class LittleIOSerialize extends IOutput
 	
 	public static void putUnsignedShorts(OutputStream ostream, int[] value) throws IOException
 	{
-		synchronized (lock_write) 
+//		synchronized (lock_write) 
 		{
 			if (value != null)
 			{
@@ -251,7 +251,7 @@ public class LittleIOSerialize extends IOutput
 	
 	public static void putInts(OutputStream ostream, int[] value) throws IOException
 	{
-		synchronized (lock_write) 
+//		synchronized (lock_write) 
 		{
 			if (value != null)
 			{
@@ -268,7 +268,7 @@ public class LittleIOSerialize extends IOutput
 	
 	public static void putUnsignedInts(OutputStream ostream, long[] value) throws IOException
 	{
-		synchronized (lock_write) 
+//		synchronized (lock_write) 
 		{
 			if (value != null)
 			{
@@ -285,7 +285,7 @@ public class LittleIOSerialize extends IOutput
 	
 	public static void putLongs(OutputStream ostream, long[] value) throws IOException
 	{
-		synchronized (lock_write) 
+//		synchronized (lock_write) 
 		{
 			if (value != null)
 			{
