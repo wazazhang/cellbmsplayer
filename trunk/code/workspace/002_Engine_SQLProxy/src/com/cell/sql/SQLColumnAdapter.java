@@ -391,6 +391,7 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 		ERROR_LENGTH,
 		ERROR_NAME,
 		ERROR_TYPE,
+		ERROR_DRIVER_LIMITED,
 	}
 	
 	final public boolean validateTable(Connection conn,
@@ -437,6 +438,17 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 	 */
 	final public ValidateResult validateTable(Connection conn) throws SQLException
 	{
+		try {
+			SQMTypeManager.getTypeComparer().validateTable(
+					table_class,
+					table_type, 
+					table_name, 
+					table_columns);
+		} catch (SQLException err) {
+			log.error(err.getMessage(), err);
+			return ValidateResult.ERROR_DRIVER_LIMITED;
+		}
+		
 		ValidateResult vresult = validateAndAutoFix(conn);
 		
 		if (vresult == ValidateResult.OK)
