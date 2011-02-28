@@ -8,10 +8,10 @@ import com.cell.sql.anno.SQLField;
 
 public class NaoTimestamp implements SQLFieldGroup
 {
-	@SQLField(type=SQLType.LONG, defaultValue="'2009-08-05 13:08:06'", constraint="")
+	@SQLField(type=SQLType.LONG, default_value="'2009-08-05 13:08:06'")
 	public long militime;
 	
-	@SQLField(type=SQLType.LONG, defaultValue="0", constraint="")
+	@SQLField(type=SQLType.LONG, default_value="0")
 	public long naotime;
 	
 	

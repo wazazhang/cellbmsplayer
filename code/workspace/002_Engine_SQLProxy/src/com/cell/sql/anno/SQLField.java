@@ -18,24 +18,21 @@ import com.cell.sql.SQLType;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface SQLField 
 {
-	/**
-	 * 得到该字段对应的SQL类型
-	 * @return
-	 */
-	SQLType	type();
+	/**得到该字段对应的SQL类型*/
+	SQLType		type();
 
-	/**
-	 * 得到创建数据库时，该字段的约束，比如 NOT NULL
-	 * @return
-	 */
-	String	constraint() default "";
+	/** 0 意味无限制，使用系统默认，有的必须限制，比如STRING类型。*/
+	int			size() 				default 0;
 
-	/**
-	 * 该字段在创建数据库时的默认值
-	 * @return
-	 */
-	String	defaultValue() default "";
+	/**限定 NOT NULL */
+	boolean		not_null() 			default false;
+	
+	/**插入时自增*/
+	boolean		auto_increment()	default false;
+
+	/**该字段在创建数据库时的默认值*/
+	String		default_value()		default "";
 	
 	/** 注释 */
-	String	comment() default "";
+	String		comment()			default "";
 }

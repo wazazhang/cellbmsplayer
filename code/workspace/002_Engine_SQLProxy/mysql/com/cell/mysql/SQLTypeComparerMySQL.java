@@ -436,12 +436,20 @@ public class SQLTypeComparerMySQL implements SQLTypeComparer
 			case TIME:			row_limit_size += 3; break;
 			case TIMESTAMP:		row_limit_size += 4; break;
 			
-			case STRING:		row_limit_size += 255; break;
-			
-			case STRUCT:		row_limit_size += 768; break;
-			case BIG_STRUCT:	row_limit_size += 768; break;
-			case TEXT_STRUCT:	row_limit_size += 768; break;
-			case XML_STRUCT:	row_limit_size += 768; break;
+			case STRING:
+			default:
+				if (c.getAnno().size() > 0) {
+					row_limit_size += Math.min(768, c.getAnno().size());
+				} else {
+					row_limit_size += 768;
+				}
+				break;
+				
+//			case STRING:		row_limit_size += 255; break;
+//			case STRUCT:		row_limit_size += 768; break;
+//			case BIG_STRUCT:	row_limit_size += 768; break;
+//			case TEXT_STRUCT:	row_limit_size += 768; break;
+//			case XML_STRUCT:	row_limit_size += 768; break;
 			}
 		}
 		

@@ -737,11 +737,7 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 		add_sql.append("`" + c.getName() + "` ");
 		add_sql.append("`" + c.getName() + "` ");
 		add_sql.append(c.getAnno().type() + " ");
-		add_sql.append(c.getAnno().constraint());
-		String default_value = c.getAnno().defaultValue();
-		if (default_value != null && default_value.length() > 0) {
-			add_sql.append(" DEFAULT '" + c.getAnno().defaultValue() + "'");
-		}
+		add_sql.append(c.getConstraint());
 		String comment = c.getAllComment();
 		if (comment != null && comment.length() > 0) {
 			add_sql.append(" COMMENT '" + comment + "'");
@@ -756,10 +752,10 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 		add_sql.append("ALTER TABLE `" + this.table_name + "` ADD COLUMN ");
 		add_sql.append("`" + c.getName() + "` ");
 		add_sql.append(c.getAnno().type() + " ");
-		add_sql.append(c.getAnno().constraint());
-		String default_value = c.getAnno().defaultValue();
+		add_sql.append(c.getConstraint());
+		String default_value = c.getAnno().default_value();
 		if (default_value != null && default_value.length() > 0) {
-			add_sql.append(" DEFAULT '" + c.getAnno().defaultValue() + "'");
+			add_sql.append(" DEFAULT '" + c.getAnno().default_value() + "'");
 		}
 		String comment = c.getAllComment();
 		if (comment != null && comment.length() > 0) {
@@ -820,12 +816,12 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 					"`"+ column.getName() + "`", name_max_len, ' ') + 
 					" " + column.getAnno().type();
 			
-				String constraint = column.getAnno().constraint();
+				String constraint = column.getConstraint();
 				if (constraint != null && constraint.length() > 0) {
 					sql += " " + constraint;
 				}
 				
-				String default_value = column.getAnno().defaultValue();
+				String default_value = column.getAnno().default_value();
 				if (default_value != null && default_value.length() > 0) {
 					sql += " DEFAULT '" + default_value + "'";
 				}

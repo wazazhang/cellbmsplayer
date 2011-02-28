@@ -35,7 +35,7 @@ public class SQLColumn implements ICompare<SQLColumn, SQLColumn>
 	
 	/** 该字段在数据库中的位置 */
 	private int						index;
-	
+
 	public SQLColumn(SQLField anno, Stack<Field> fields_stack)
 	{
 		this.anno		= anno;
@@ -84,6 +84,30 @@ public class SQLColumn implements ICompare<SQLColumn, SQLColumn>
 		index = i;
 	}
 
+	public String getConstraint()
+	{
+		StringBuilder ret = new StringBuilder();
+		
+		if (getAnno().size()>0) {
+			ret.append(" (" + getAnno().size() +")");
+		}
+		
+		if (getAnno().not_null()) {
+			ret.append(" NOT NULL");
+		}
+		
+		if (getAnno().auto_increment()) {
+			ret.append(" AUTO_INCREMENT");
+		}
+		
+		String default_value = getAnno().default_value();
+		if (default_value != null && !default_value.isEmpty()) {
+			ret.append(" DEFAULT '" + getAnno().default_value() + "'");
+		}
+		
+		return ret.toString();
+	}
+	
 	final public String getAllComment() {
 		String comment = getAnno().comment();
 		for (int i = fields.size() - 2; i >= 0; i--) {
