@@ -171,9 +171,9 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 	 * @param conn
 	 * @throws Exception
 	 */
-	final protected void updateWithDB(R row, Connection conn) throws Exception
+	final protected boolean updateWithDB(R row, Connection conn) throws Exception
 	{
-		updateWithDB(row, conn, table_columns);
+		return updateWithDB(row, conn, table_columns);
 	}
 	
 	/**
@@ -181,7 +181,7 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 	 * @param conn
 	 * @throws Exception
 	 */
-	final protected void updateWithDB(R row, Connection conn, SQLColumn[] columns) throws Exception
+	final protected boolean updateWithDB(R row, Connection conn, SQLColumn[] columns) throws Exception
 	{
 		StringBuffer sb = new StringBuffer("UPDATE ");
 		sb.append(table_name);
@@ -209,11 +209,10 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 						c.getObject(row), 
 						c.getAnno().type().getJdbcType());
 			}
-			statement.execute();
+			return statement.execute();
 		}finally{
 			statement.close();
 		}
-		sb = null;
 	}
 	
 	/**
