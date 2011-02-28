@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Stack;
 
 import org.slf4j.Logger;
@@ -56,6 +58,8 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 	 * @throws Exception
 	 */
 	abstract public R newRow() throws Exception ;
+	
+	
 	
 //	---------------------------------------------------------------------------------------------------------------------------------------------------------
 	
@@ -272,21 +276,7 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 		return null;
 	}
 
-	
-	/**
-	 * 从表中读出所有对象
-	 * @param <T>
-	 * @param tableClass
-	 * @param statement
-	 * @return
-	 * @throws SQLException
-	 */
-	final protected ArrayList<R> selectAll(Connection conn) throws Exception
-	{
-		return query(conn, "SELECT * FROM " + table_name + " ;");
-	}
-	
-	final protected ArrayList<R> query(Connection conn, String sql) throws Exception
+	final protected ArrayList<R> select(Connection conn, String sql) throws Exception
 	{
 		ArrayList<R> 	ret 		= new ArrayList<R>();
 		Statement		statement 	= conn.createStatement();
@@ -313,6 +303,84 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 		
 	}
 
+	
+	/**
+	 * 从表中读出所有对象
+	 * @param <T>
+	 * @param tableClass
+	 * @param statement
+	 * @return
+	 * @throws SQLException
+	 */
+	final protected ArrayList<R> selectAll(Connection conn) throws Exception
+	{
+		return select(conn, "SELECT * FROM " + table_name + " ;");
+	}
+	
+	/**
+	 * 分块读取，要保证外部对该Iterator原子操作
+	 * @param conn
+	 * @param block_size
+	 * @return
+	 */
+	final protected Iterator<R> selectAll(Connection conn, int block_size)
+	{
+		return new SelectIterator(conn, block_size);
+	}
+	
+	private class SelectIterator implements Iterator<R>
+	{
+		final private Connection	conn;
+		final private int 			block_size;
+		final private LinkedList<R>	readed = new LinkedList<R>();
+		
+		private int 				index = 0;
+		private long 				btime = System.currentTimeMillis();
+		
+		public SelectIterator(Connection conn, int block_size) {
+			this.block_size = block_size;
+			this.conn		= conn;
+			request();
+		}
+		
+		@Override
+		public boolean hasNext() {
+			return !readed.isEmpty();
+		}
+		
+		@Override
+		public R next() {
+			R ret = readed.remove();
+			if (readed.isEmpty()) {
+				request();
+			}
+			return ret;
+		}
+		
+		synchronized private void request()
+		{
+			String sql = "SELECT * FROM " + table_name + " LIMIT " + index + "," + block_size + ";";
+			try {
+				ArrayList<R> rows = select(conn, sql);
+				if (rows != null && !rows.isEmpty()) {
+					index += rows.size();
+					log.info("loading [" + table_name + "]" +
+							" : block size = " + rows.size()+
+							" : last id = " + rows.get(rows.size()-1).getPrimaryKey() +
+							" : use time = " + (System.currentTimeMillis() - btime) + "(ms)");
+					readed.addAll(rows);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException();
+		}
+		
+	}
 //	---------------------------------------------------------------------------------------------------------------------------------------------------------
 	
 	public static enum ValidateResult
