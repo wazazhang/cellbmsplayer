@@ -238,6 +238,11 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 
 	final protected R select(K primary_key, Connection conn) throws Exception
 	{
+		return select(table_type.primary_key_name(), primary_key.toString(), conn);
+	}
+	
+	final protected R select(String field_name, String field_value, Connection conn) throws Exception
+	{
 		R row = newRow();
 		
 		Statement statement = conn.createStatement();
@@ -245,9 +250,9 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 			StringBuffer sb = new StringBuffer("SELECT * FROM ");
 			sb.append(table_name);
 			sb.append(" WHERE ");
-			sb.append(table_type.primary_key_name());
+			sb.append(field_name);
 			sb.append("='");
-			sb.append(primary_key);
+			sb.append(field_value);
 			sb.append("';");
 			
 			ResultSet result = statement.executeQuery(sb.toString());
@@ -266,6 +271,7 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 
 		return null;
 	}
+
 	
 	/**
 	 * 从表中读出所有对象
