@@ -425,31 +425,34 @@ public class SQLTypeComparerMySQL implements SQLTypeComparer
 		int 		row_limit_size = 0;
 		
 		for (SQLColumn c : table_columns) {
-			switch(c.getAnno().type()) {
+			switch(c.getAnno().type()) 
+			{
 			case BOOLEAN: 		row_limit_size += 1; break;
+			
 			case BYTE:			row_limit_size += 1; break;
 			case SHORT:			row_limit_size += 2; break;
 			case INTEGER:		row_limit_size += 4; break;
-			case LONG:			row_limit_size += 4; break;
+			case LONG:			row_limit_size += 8; break;
+			
+			case FLOAT:			row_limit_size += 4; break;
 			case DOUBLE:		row_limit_size += 8; break;
 
 			case TIME:			row_limit_size += 3; break;
 			case TIMESTAMP:		row_limit_size += 4; break;
 			
-			case STRING:
-			default:
+			case STRING:		
+			case STRUCT:		
+			case BIG_STRUCT:	
+			case TEXT_STRUCT:	
+			case XML_STRUCT:	
 				if (c.getAnno().size() > 0) {
 					row_limit_size += Math.min(768, c.getAnno().size());
 				} else {
 					row_limit_size += 768;
 				}
 				break;
-				
-//			case STRING:		row_limit_size += 255; break;
-//			case STRUCT:		row_limit_size += 768; break;
-//			case BIG_STRUCT:	row_limit_size += 768; break;
-//			case TEXT_STRUCT:	row_limit_size += 768; break;
-//			case XML_STRUCT:	row_limit_size += 768; break;
+			default:
+				throw new SQLException("unknow sql type : " + table_type.name() + " - " + c.getName() + " - " + c.getAnno().type());
 			}
 		}
 		
