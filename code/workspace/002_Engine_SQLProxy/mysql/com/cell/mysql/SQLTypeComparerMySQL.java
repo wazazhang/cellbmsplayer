@@ -457,7 +457,7 @@ public class SQLTypeComparerMySQL implements SQLTypeComparer
 		}
 		
 		if (max_limit_size < row_limit_size) {
-			throw new SQLException("row size over limited " + max_limit_size + " < " + row_limit_size);
+			throw new SQLException("row size over limit " + max_limit_size + " < " + row_limit_size);
 		}
 	}
 	
