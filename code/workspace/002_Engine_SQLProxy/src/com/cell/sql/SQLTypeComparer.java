@@ -5,6 +5,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Reader;
 import java.io.Writer;
+import java.sql.SQLException;
+
+import com.cell.sql.anno.SQLTable;
 
 public interface SQLTypeComparer
 {
@@ -57,4 +60,18 @@ public interface SQLTypeComparer
 	 * @return
 	 */
 	public ObjectInputStream	getXMLInputStream(Reader reader) throws IOException;
+	
+	/**
+	 * 表结构认证
+	 * @param table_class
+	 * @param table_type
+	 * @param table_name
+	 * @param table_columns
+	 * @return
+	 */
+	public void validateTable(
+			Class<?> table_class, 
+			SQLTable table_type,
+			String table_name,
+			SQLColumn[] table_columns) throws SQLException;
 }
