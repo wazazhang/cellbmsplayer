@@ -8,9 +8,6 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Stack;
@@ -25,6 +22,8 @@ import com.cell.reflect.Fields;
 import com.cell.sql.anno.SQLField;
 import com.cell.sql.anno.SQLGroupField;
 import com.cell.sql.anno.SQLTable;
+
+
 
 /**
  * 数据库表和实体的关系
@@ -103,11 +102,18 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 		for (int i = 0; i < table_columns.length; i++)
 		{
 			try {
-				// NOTE 为什么有些地方就不能用序号??
-				String index = table_columns[i].getName();
+				// NOTE 为什么有些地方就不能用序号获取result.getObject??
+				
+				int index = table_columns[i].getIndex();
 				Object obj = result.getObject(index);
-				table_columns[i].setObject(row, obj);
-//				table_columns[i].setObject(row, result.getObject(table_columns[i].getIndex()));
+				table_columns[i].setObject(row, obj);		
+				
+//				table_columns[i].setObject(row, result.getObject(table_columns[i].getIndex()));				
+				
+//				String name = table_columns[i].getName();
+//				Object obj = result.getObject(name);
+//				table_columns[i].setObject(row, obj);
+
 			} catch (Exception err) {
 				log.error("[" + table_name + "] read column error !\n" +
 						"\t    id = " + row.getPrimaryKey() +
@@ -235,6 +241,33 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 			statement.close();
 		}
 	}
+	
+	final public CustomResultSet query(Connection conn, String str_query) throws Exception
+	{
+		Statement statement = conn.createStatement();
+
+		try 
+		{
+			ResultSet rs = statement.executeQuery(str_query);
+
+			try 
+			{				
+				return new CustomResultSet(rs);				
+			} 
+			finally 
+			{
+				rs.close();
+			}
+		}
+		catch (Exception e) 
+		{
+			throw e;
+		}		
+		finally
+		{
+			statement.close();
+		}
+	}	
 
 	final protected R select(K primary_key, Connection conn) throws Exception
 	{
@@ -384,16 +417,23 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 	public void replaceAll(Connection conn, int block_size, ReplaceListener<R> listener) throws Exception 
 	{
 		log.info("replacing [" + table_name + "] ...");
-		long btime = System.currentTimeMillis();
+		long ttime = System.currentTimeMillis();
 		int count = 0;
 		for (Iterator<R> it = selectAll(conn, block_size); it.hasNext(); ) {
+			long btime = System.currentTimeMillis();
 			R row = it.next();
 			count ++;
+			if (count % block_size == 0) {
+				log.info("replacing [" + table_name + "]" +
+						" : block size = " + count+
+						" : last id = " + row.getPrimaryKey() +
+						" : use time = " + (System.currentTimeMillis() - btime) + "(ms)");
+			}
 			listener.replace(row);
 		}
 		log.info("replaced  [" + table_name + "]" +
 				" : total size = " + count+ 
-				" : use time = " + (System.currentTimeMillis() - btime) + "(ms)");
+				" : use time = " + (System.currentTimeMillis() - ttime) + "(ms)");
 	}
 
 	
