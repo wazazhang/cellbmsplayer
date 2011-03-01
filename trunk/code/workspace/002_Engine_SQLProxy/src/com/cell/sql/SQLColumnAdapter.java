@@ -58,10 +58,9 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 	 * @throws Exception
 	 */
 	abstract public R newRow() throws Exception ;
-	
-	
-	
+
 //	---------------------------------------------------------------------------------------------------------------------------------------------------------
+	
 	
 	final public SQLColumn[] getColumns(String ... columns_name)
 	{
@@ -373,6 +372,32 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 		}
 		
 	}
+	
+	
+
+//	---------------------------------------------------------------------------------------------------------------------------------------------------------
+	public static interface ReplaceListener<R>
+	{
+		public void replace(R row);
+	}
+	
+	public void replaceAll(Connection conn, int block_size, ReplaceListener<R> listener) throws Exception 
+	{
+		log.info("replacing [" + table_name + "] ...");
+		long btime = System.currentTimeMillis();
+		int count = 0;
+		for (Iterator<R> it = selectAll(conn, block_size); it.hasNext(); ) {
+			R row = it.next();
+			count ++;
+			listener.replace(row);
+		}
+		log.info("replaced  [" + table_name + "]" +
+				" : total size = " + count+ 
+				" : use time = " + (System.currentTimeMillis() - btime) + "(ms)");
+	}
+
+	
+	
 //	---------------------------------------------------------------------------------------------------------------------------------------------------------
 	
 	public static enum ValidateResult
