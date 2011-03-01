@@ -357,15 +357,10 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 		{
 			String sql = "SELECT * FROM " + table_name + " LIMIT " + index + "," + block_size + ";";
 			try {
-				long btime = System.currentTimeMillis();
 				ArrayList<R> rows = select(conn, sql);
 				if (rows != null && !rows.isEmpty()) {
-					index += rows.size();				
+					index += rows.size();
 					readed.addAll(rows);
-					log.info("loading [" + table_name + "]" +
-							" : block size = " + rows.size()+
-							" : last id = " + rows.get(rows.size()-1).getPrimaryKey() +
-							" : use time = " + (System.currentTimeMillis() - btime) + "(ms)");
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
