@@ -606,6 +606,16 @@ public class CUtil extends CObject
 		return ret;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public static<T> T[] newArray(Class<T> component_type, int len) {
+		T[] ret = (T[])Array.newInstance(component_type, len);
+		return ret;
+	}
+	
+	public static<T> T[] newArray(Class<T> component_type, T ... compoments) {
+		T[] ret = Arrays.copyOf(compoments, compoments.length);
+		return ret;
+	}
 	
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
