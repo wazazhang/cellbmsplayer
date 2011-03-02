@@ -64,7 +64,7 @@ public class SQLColumn implements ICompare<SQLColumn, SQLColumn>
 		this.name		= name;
 	}
 
-	final public int getIndex() {
+	final int getIndex() {
 		return index;
 	}
 
