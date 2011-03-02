@@ -35,4 +35,7 @@ public @interface SQLField
 	
 	/** 注释 */
 	String		comment()			default "";
+	
+	/**创建表时，该字段处于什么位置，数字越大越靠前，但无论如何，主键都在最前*/
+	int			index_priority()	default 0;
 }
