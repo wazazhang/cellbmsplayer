@@ -820,23 +820,14 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 		return add_sql.toString();
 	}
 
-	/**
-	 * 获得该类型对应SQL的创建语句
-	 * @param table
-	 * @return
-	 * @throws SQLException
-	 */
-	public String getCreateTableSQL()
-	{
-		return getCreateTableSQL(true, true);
-	}
+//	--------------------------------------------------------------------------------------------------------
 	
-	public static class CreateTableComparator implements Comparator<SQLColumn> 
+	public static class CreateTableColumnSorter implements Comparator<SQLColumn> 
 	{
 		final SQLTable		table_type;
 		final boolean		sort_by_name;
 		
-		public CreateTableComparator(SQLTable table_type, boolean sort_by_name) {
+		public CreateTableColumnSorter(SQLTable table_type, boolean sort_by_name) {
 			this.table_type		= table_type;
 			this.sort_by_name	= sort_by_name;
 		}
@@ -856,21 +847,21 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 		}
 	}
 	
+	
 	/**
 	 * 获得该类型对应SQL的创建语句
-	 * @param table
-	 * @param sort_fields		是否对列进行排序
+	 * @param sorter			是否对列进行排序
 	 * @param create_comment	是否产生注释信息
 	 * @return 
 	 * @throws SQLException
 	 */
 	public String getCreateTableSQL(
-			boolean sort_fields,
+			Comparator<SQLColumn> sorter,
 			boolean create_comment)
 	{
 		SQLColumn[] columnss = new SQLColumn[this.table_columns.length];
 		System.arraycopy(this.table_columns, 0, columnss, 0, columnss.length);
-		Arrays.sort(columnss, new CreateTableComparator(table_type, sort_fields));
+		Arrays.sort(columnss, sorter);
 		
 		String sql = "CREATE TABLE `" + this.table_name + "` (\n";
 		int name_max_len = 1;
@@ -915,6 +906,33 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 		}
 		sql += ";";
 		return sql;
+	
+	}
+	
+	/**
+	 * 获得该类型对应SQL的创建语句
+	 * @param table
+	 * @param sort_fields		是否对列进行默认排序
+	 * @param create_comment	是否产生注释信息
+	 * @return 
+	 * @throws SQLException
+	 */
+	public String getCreateTableSQL(
+			boolean sort_fields,
+			boolean create_comment)
+	{
+		return getCreateTableSQL(new CreateTableColumnSorter(table_type, sort_fields), create_comment);
 	}
 
+	/**
+	 * 获得该类型对应SQL的创建语句
+	 * @param table
+	 * @return
+	 * @throws SQLException
+	 */
+	public String getCreateTableSQL()
+	{
+		return getCreateTableSQL(true, true);
+	}
+	
 }
