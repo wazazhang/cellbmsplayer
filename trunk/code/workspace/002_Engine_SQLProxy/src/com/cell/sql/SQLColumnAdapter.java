@@ -8,6 +8,8 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Stack;
@@ -829,6 +831,31 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 		return getCreateTableSQL(true, true);
 	}
 	
+	public static class CreateTableComparator implements Comparator<SQLColumn> 
+	{
+		final SQLTable		table_type;
+		final boolean		sort_by_name;
+		
+		public CreateTableComparator(SQLTable table_type, boolean sort_by_name) {
+			this.table_type		= table_type;
+			this.sort_by_name	= sort_by_name;
+		}
+		
+		public int compare(SQLColumn a, SQLColumn b)
+		{
+			if (a.getName().equals(table_type.primary_key_name())) return -1;
+			if (b.getName().equals(table_type.primary_key_name())) return 1;
+			int priority = b.getAnno().index_priority() - a.getAnno().index_priority();
+			if (priority != 0) {
+				return priority;
+			}
+			if (sort_by_name) {
+				return a.getName().compareToIgnoreCase(b.getName());
+			}
+			return 0;
+		}
+	}
+	
 	/**
 	 * 获得该类型对应SQL的创建语句
 	 * @param table
@@ -838,22 +865,12 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 	 * @throws SQLException
 	 */
 	public String getCreateTableSQL(
-			final boolean sort_fields,
-			final boolean create_comment)
+			boolean sort_fields,
+			boolean create_comment)
 	{
 		SQLColumn[] columnss = new SQLColumn[this.table_columns.length];
 		System.arraycopy(this.table_columns, 0, columnss, 0, columnss.length);
-		CUtil.sort(columnss, new ICompare<SQLColumn, SQLColumn>() {
-			StringCompare sc = new StringCompare();
-			public int compare(SQLColumn a, SQLColumn b) {
-				if (a.getName().equals(table_type.primary_key_name())) return 1;
-				if (b.getName().equals(table_type.primary_key_name())) return -1;
-				if (sort_fields) {
-					return sc.compare(a.getName(), b.getName());
-				}
-				return 0;
-			}
-		});
+		Arrays.sort(columnss, new CreateTableComparator(table_type, sort_fields));
 		
 		String sql = "CREATE TABLE `" + this.table_name + "` (\n";
 		int name_max_len = 1;
