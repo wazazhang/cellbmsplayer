@@ -48,15 +48,19 @@ public class XLSColumns extends LinkedHashMap<String, String> implements Seriali
 	{
 		try {
 			Workbook	rwb		= Workbook.getWorkbook(is);
-			Sheet 		rs 		= rwb.getSheet(0);
-			int column_count 	= rs.getColumns();
-			XLSColumns ret = new XLSColumns();
-			for (int c = 1; c < column_count; c++) {
-				String cdesc	= rs.getCell(c, 0).getContents();
-				String cname	= rs.getCell(c, 1).getContents();
-				ret.put(cname, cdesc);
+			try {
+				Sheet 		rs 		= rwb.getSheet(0);
+				int column_count 	= rs.getColumns();
+				XLSColumns ret = new XLSColumns();
+				for (int c = 1; c < column_count; c++) {
+					String cdesc	= rs.getCell(c, 0).getContents();
+					String cname	= rs.getCell(c, 1).getContents();
+					ret.put(cname, cdesc);
+				}
+				return ret;
+			} finally {
+				rwb.close();
 			}
-			return ret;
 		}
 		catch (Exception e) {
 			e.printStackTrace();

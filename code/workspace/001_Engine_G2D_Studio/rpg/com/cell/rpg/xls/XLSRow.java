@@ -46,38 +46,42 @@ public class XLSRow implements Serializable
 		XLSFile			xls_file	= new XLSFile(filename);
 
 		try {
-			Workbook	rwb				= Workbook.getWorkbook(is);
-			for (Sheet rs : rwb.getSheets()) {
-				int row_count = rs.getRows();
-				int column_count = rs.getColumns();
-				for (int r = 2; r < row_count; r++) 
-				{
-					try {
-						String primary_key = rs.getCell(1, r).getContents().trim();
-						if (primary_key.length() <= 0) {
-							System.out.println("\ttable eof at row " + r + " sheet " + rs.getName());
-							break;
-						}
-						String c0 = rs.getCell(0, r).getContents().trim();
-						String c1 = rs.getCell(1, r).getContents().trim();
-						
-						if (cls.equals(XLSRow.class)) {
-							ret.add(cls.cast(new XLSRow(xls_file, c1, c0)));
-						} else if (cls.equals(XLSFullRow.class)) {
-							XLSFullRow full_row = new XLSFullRow(xls_file, c1, c0);
-							for (int c = 1; c < column_count; c++) {
-								String cdesc	= rs.getCell(c, 0).getContents();
-								String cname	= rs.getCell(c, 1).getContents();
-								String cvalue	= rs.getCell(c, r).getContents();
-								full_row.put(cname, cvalue, cdesc);
+			Workbook rwb = Workbook.getWorkbook(is);
+			try {
+				for (Sheet rs : rwb.getSheets()) {
+					int row_count = rs.getRows();
+					int column_count = rs.getColumns();
+					for (int r = 2; r < row_count; r++) 
+					{
+						try {
+							String primary_key = rs.getCell(1, r).getContents().trim();
+							if (primary_key.length() <= 0) {
+								System.out.println("\ttable eof at row " + r + " sheet " + rs.getName());
+								break;
 							}
-							ret.add(cls.cast(full_row));
+							String c0 = rs.getCell(0, r).getContents().trim();
+							String c1 = rs.getCell(1, r).getContents().trim();
+							
+							if (cls.equals(XLSRow.class)) {
+								ret.add(cls.cast(new XLSRow(xls_file, c1, c0)));
+							} else if (cls.equals(XLSFullRow.class)) {
+								XLSFullRow full_row = new XLSFullRow(xls_file, c1, c0);
+								for (int c = 1; c < column_count; c++) {
+									String cdesc	= rs.getCell(c, 0).getContents();
+									String cname	= rs.getCell(c, 1).getContents();
+									String cvalue	= rs.getCell(c, r).getContents();
+									full_row.put(cname, cvalue, cdesc);
+								}
+								ret.add(cls.cast(full_row));
+							}
 						}
-					}
-					catch (Exception e) {
-						System.err.println("read error at row " + r + " sheet " + rs.getName());
+						catch (Exception e) {
+							System.err.println("read error at row " + r + " sheet " + rs.getName());
+						}
 					}
 				}
+			} finally {
+				rwb.close();
 			}
 		}
 		catch (Exception e) {

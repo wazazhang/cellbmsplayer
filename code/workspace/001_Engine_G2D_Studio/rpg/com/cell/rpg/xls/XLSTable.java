@@ -55,79 +55,82 @@ public class XLSTable<V extends SQLTableRow<?>>
 	
 	final protected void init(InputStream is, Class<V> cls, TableFactory<V> factory) throws Exception
 	{
+	    System.out.println("Init XLSTable : table class : " + cls.getSimpleName());
+	    
 		SQLColumn[]	sql_columns		= SQLTableManager.getSQLColumns(cls);
 		Workbook	work_book		= Workbook.getWorkbook(is);
-
-	    System.out.println("Init XLSTable : table class : " + cls.getSimpleName());
-	 
-		for (Sheet rs : work_book.getSheets()) 
-		{
-		    int			row_start		= 1;
-		    int			column_start	= 1;
-		    int			row_count		= rs.getRows();
-		    int			column_count	= rs.getColumns();
-		    
-			for (int r = row_start+1; r < row_count; r++)
+		try {
+	
+			for (Sheet rs : work_book.getSheets()) 
 			{
-				try
+			    int			row_start		= 1;
+			    int			column_start	= 1;
+			    int			row_count		= rs.getRows();
+			    int			column_count	= rs.getColumns();
+			    
+				for (int r = row_start+1; r < row_count; r++)
 				{
-					HashMap<String, String> row = new HashMap<String, String>(column_count);
-					
-					String primary_key = rs.getCell(column_start, r).getContents().trim();
-					if (primary_key.length()<=0) {
-						 System.out.println("\ttable eof at row " + r + " sheet " + rs.getName());
-						break;
-					}
-					
-					for (int c = column_start; c < column_count; c++) {
-						String k = rs.getCell(c, row_start).getContents().trim();
-						String v = rs.getCell(c, r).getContents().trim();
-						row.put(k, v);
-					}
-					
-					V instance = factory.createInstance();
-					for (SQLColumn sql_column : sql_columns) 
+					try
 					{
-						if (row.containsKey(sql_column.getName())) 
+						HashMap<String, String> row = new HashMap<String, String>(column_count);
+						
+						String primary_key = rs.getCell(column_start, r).getContents().trim();
+						if (primary_key.length()<=0) {
+							 System.out.println("\ttable eof at row " + r + " sheet " + rs.getName());
+							break;
+						}
+						
+						for (int c = column_start; c < column_count; c++) {
+							String k = rs.getCell(c, row_start).getContents().trim();
+							String v = rs.getCell(c, r).getContents().trim();
+							row.put(k, v);
+						}
+						
+						V instance = factory.createInstance();
+						for (SQLColumn sql_column : sql_columns) 
 						{
-							String 		text	= row.get(sql_column.getName());
-							
-							Class<?> 	type 	= sql_column.getLeafField().getType();
+							if (row.containsKey(sql_column.getName())) 
+							{
+								String 		text	= row.get(sql_column.getName());
 								
-							if (SQLStructCLOB.class.isAssignableFrom(type)) 
-							{
-								sql_column.setObject(instance, text);
-							} 
-							else 
-							{
-								Object 		value = Parser.stringToObject(text, type);
-								if ((value == null) && (type == Timestamp.class) ) {
-									value = Timestamp.valueOf(text);
-								}
-								if (value != null) {
-									sql_column.setObject(instance, value);
-//									System.out.println(sql_column.name + "=" + value);
-								}
-								else {
-									throw new NullPointerException(
-												"format error at" +
-												" column [" + sql_column.getName() + " = \""+ text +"\"]" +
-												" row [" + r + "]" +
-												" sheet [" + rs.getName()+"]");
+								Class<?> 	type 	= sql_column.getLeafField().getType();
+									
+								if (SQLStructCLOB.class.isAssignableFrom(type)) 
+								{
+									sql_column.setObject(instance, text);
+								} 
+								else 
+								{
+									Object 		value = Parser.stringToObject(text, type);
+									if ((value == null) && (type == Timestamp.class) ) {
+										value = Timestamp.valueOf(text);
+									}
+									if (value != null) {
+										sql_column.setObject(instance, value);
+	//									System.out.println(sql_column.name + "=" + value);
+									}
+									else {
+										throw new NullPointerException(
+													"format error at" +
+													" column [" + sql_column.getName() + " = \""+ text +"\"]" +
+													" row [" + r + "]" +
+													" sheet [" + rs.getName()+"]");
+									}
 								}
 							}
 						}
+						values.add(instance);
 					}
-					values.add(instance);
+					catch (Exception e) {
+						System.err.println("read error at row [" + r + "] sheet [" + rs.getName()+"]");
+						throw e;
+					}
 				}
-				catch (Exception e) {
-					System.err.println("read error at row [" + r + "] sheet [" + rs.getName()+"]");
-					throw e;
-				}
+			
 			}
-		
+		} finally {
+			work_book.close();
 		}
-	
 
 	}
 	
