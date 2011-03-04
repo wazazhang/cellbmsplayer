@@ -71,6 +71,10 @@ public class Quest extends RPGObject implements NamedObject
 	/** "组队任务", "可以主动共享给其他玩家" */ 
 	@Property({"组队任务", "可以主动共享给其他玩家"})
 	public boolean				is_team_quest		= false;
+
+	/** "组队任务", "可以主动共享给其他玩家" */ 
+	@Property({"组队事件任务", "队长接取后，队员也将执行剧情脚本"})
+	public boolean				is_team_event_quest	= false;
 	
 	/** "玩家任务", "接了某些任务后就不能够结成组队战斗关系"*/ 
 	@Property({"玩家任务", "接了某些任务后就不能够结成组队战斗关系"})
