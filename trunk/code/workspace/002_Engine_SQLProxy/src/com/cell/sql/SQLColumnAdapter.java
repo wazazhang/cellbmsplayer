@@ -127,6 +127,29 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 	}
 	
 	/**
+	 * 从结果集中读入数据
+	 * @param result
+	 * @throws SQLException
+	 */
+	final protected R fromResultByName(R row, ResultSet result) throws Exception
+	{
+		for (int i = 0; i < table_columns.length; i++)
+		{
+			try {
+				String name = table_columns[i].getName();
+				Object obj = result.getObject(name);
+				table_columns[i].setObject(row, obj);
+			} catch (Exception err) {
+				log.error("[" + table_name + "] read column error !\n" +
+						"\t    id = " + row.getPrimaryKey() +
+						"\t cause = " + err.getMessage() +
+						"", err);
+			}
+		}
+		return row;
+	}
+	
+	/**
 	 * 执行插入指令，将一个新行插入到DB。
 	 * @param conn
 	 * @throws Exception
@@ -307,7 +330,7 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 		return null;
 	}
 
-	final protected ArrayList<R> select(Connection conn, String sql) throws Exception
+	final protected ArrayList<R> select(Connection conn, String sql, boolean allColumn) throws Exception
 	{
 		ArrayList<R> 	ret 		= new ArrayList<R>();
 		Statement		statement 	= conn.createStatement();
@@ -315,7 +338,11 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 		try {
 			while (result.next()) {
 				try {
-					ret.add(fromResult(newRow(), result));
+					if (allColumn) {
+						ret.add(fromResult(newRow(), result));
+					} else {
+						ret.add(fromResultByName(newRow(), result));
+					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -345,7 +372,7 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 	 */
 	final protected ArrayList<R> selectAll(Connection conn) throws Exception
 	{
-		return select(conn, "SELECT * FROM " + table_name + " ;");
+		return select(conn, "SELECT * FROM " + table_name + " ;", true);
 	}
 	
 	/**
@@ -391,7 +418,7 @@ public abstract class SQLColumnAdapter<K, R extends SQLTableRow<K>>
 		{
 			String sql = "SELECT * FROM " + table_name + " LIMIT " + index + "," + block_size + ";";
 			try {
-				ArrayList<R> rows = select(conn, sql);
+				ArrayList<R> rows = select(conn, sql, true);
 				if (rows != null && !rows.isEmpty()) {
 					index += rows.size();
 					readed.addAll(rows);
