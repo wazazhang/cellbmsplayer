@@ -1,7 +1,6 @@
 package com.cell.rpg.instance.zones.ability;
 
 import com.cell.rpg.ability.AbstractAbility;
-import com.cell.rpg.struct.InstanceZoneScriptCode;
 import com.g2d.annotation.Property;
 
 @Property("[副本怪物]")
