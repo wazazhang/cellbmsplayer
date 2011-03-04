@@ -7,15 +7,17 @@ import com.g2d.annotation.Property;
 
 public class TItemList extends TemplateNode 
 {
-	public TItemList(int id, String name) {
+	public TItemList(int id, String name) 
+	{
 		super(id, name);
 	}
 
 	@Override
-	public Class<?>[] getSubAbilityTypes() {
+	public Class<?>[] getSubAbilityTypes() 
+	{
 		return new Class[] {
 				UnitDropItems.class,
-		};
+			};
 	}
 	
 	/**
@@ -30,10 +32,14 @@ public class TItemList extends TemplateNode
 		@Property("产生的物品")
 		public DropItems	item_types = new DropItems();
 		
+		@Property("选中该掉落物品组的概率，[0, 10000)的万分比整数概率")
+		public int			probability = 10000;
+		
 		public UnitDropItems() {}
 		
 		@Override
-		public boolean isMultiField() {
+		public boolean isMultiField()
+		{
 			return true;
 		}
 

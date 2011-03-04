@@ -1,8 +1,6 @@
 package com.cell.rpg.template;
 
 import com.cell.rpg.display.UnitNode;
-import com.cell.rpg.instance.zones.ability.InstanceZoneUnitKillAction;
-import com.cell.rpg.instance.zones.ability.InstanceZoneUnitVisible;
 import com.cell.rpg.struct.QuestStateDisplayOR;
 import com.cell.rpg.template.ability.QuestItemDrop;
 import com.cell.rpg.template.ability.UnitAvatar;

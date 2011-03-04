@@ -50,11 +50,12 @@ public class Fields
 	}
 	
 	private static void setFields(Class<?> src_type, FieldGroup src, FieldGroup dst)
-	{
+	{		
 		for (Field field : src_type.getDeclaredFields()) {
-			if ((field.getModifiers()&Modifier.STATIC)!=0 || 
-				(field.getModifiers()&Modifier.FINAL)!=0 || 
-				(field.getModifiers()&Modifier.PRIVATE)!=0 ) {
+			int modifiers = field.getModifiers();
+			if ((modifiers&Modifier.STATIC)!=0 || 
+				(modifiers&Modifier.FINAL)!=0 || 
+				(modifiers&Modifier.PRIVATE)!=0 ) {
 				continue;
 			}
 			try{
