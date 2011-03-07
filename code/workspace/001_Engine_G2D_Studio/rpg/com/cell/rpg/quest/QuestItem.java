@@ -149,12 +149,19 @@ public class QuestItem extends RPGObject implements NamedObject
 	final public static class TagItem extends Tag
 	{
 		private static final long serialVersionUID = 1L;
+		
 		@Property("物品-类型")
 		public int				titem_index			= -1;
+		
 		@Property("比较器")
 		public Comparison 		comparison			= Comparison.EQUAL_OR_GREATER_THAN;
+		
 		@Property("物品-数量")
 		public AbstractValue	titem_count			= new Value(1);
+		
+		@Property("道具品质满足多少")
+		public AbstractValue	titem_quality		= new Value(0);
+		
 		@Property("物品-是否消耗掉")
 		public boolean			is_expense			= true;
 		
