@@ -4,6 +4,7 @@ public enum TriggerUnitType {
 
 	PLAYER			("玩家"),
 	PET_GROUP		("携带的宠物组"),
+	ACTIVE_PET		("活动的宠物"),
 	TRIGGERING_NPC	("触发的NPC"),
 	;	
 	

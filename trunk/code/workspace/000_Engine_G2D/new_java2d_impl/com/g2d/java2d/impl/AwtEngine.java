@@ -13,6 +13,7 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
+import java.awt.image.DataBuffer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -22,20 +23,20 @@ import java.util.HashMap;
 import javax.imageio.ImageIO;
 
 import com.cell.exception.NotImplementedException;
-import com.cell.gfx.IGraphics;
 import com.cell.gfx.IImage;
 import com.cell.gfx.IPalette;
 import com.g2d.AnimateCursor;
 import com.g2d.BufferedImage;
-import com.g2d.Canvas;
 import com.g2d.Engine;
 import com.g2d.Font;
 import com.g2d.Graphics2D;
 import com.g2d.Image;
-import com.g2d.font.GraphicAttribute;
-import com.g2d.text.Instruction;
 import com.g2d.text.MultiTextLayout;
 import com.g2d.text.TextLayout;
+
+
+
+
 
 public class AwtEngine extends Engine
 {
@@ -46,7 +47,8 @@ public class AwtEngine extends Engine
 	
 //	----------------------------------------------------------------------------------------------------------------
 
-	public static AwtEngine getEngine() {
+	public static AwtEngine getEngine() 
+	{
 		return (AwtEngine)instance;
 	}
 
@@ -67,8 +69,24 @@ public class AwtEngine extends Engine
 		this.ge				= ge;
 		this.gd				= ge.getDefaultScreenDevice();
 		this.gc				= gd.getDefaultConfiguration();
-		this.gc_buff		= gc.createCompatibleImage(10, 10);
-		this.gc_buff_g		= gc_buff.createGraphics();
+		
+		if (this.gc.getColorModel().getTransferType() != DataBuffer.TYPE_INT)
+		{
+			// NOTE 为了避免操作系统非32位色的显示设置的情况下，无法正确显示一些效果
+			// 这一段必须存在，可以通过提示玩家采用32位色设置使得玩家运行游戏更流畅一些
+			// 正常情况下，使用16位或者24位系统显示设置的时候，运行一些游戏或者软件是没有
+			// 直接使用32位色来的快速的，
+			
+			this.gc_buff = new java.awt.image.BufferedImage(10, 10, java.awt.image.BufferedImage.TYPE_INT_ARGB);
+			this.gc_buff_g = gc_buff.createGraphics();	
+			this.gc = this.gc_buff_g.getDeviceConfiguration();
+		}
+		else
+		{
+			this.gc_buff		= gc.createCompatibleImage(10, 10);
+			this.gc_buff_g		= gc_buff.createGraphics();
+		}
+
 		this.system_cursor	= new HashMap<String, AwtAnimateCursor>();
 		{
 		system_cursor.put("RESIZE_CURSOR_NW", 	new AwtAnimateCursor((Cursor.NW_RESIZE_CURSOR)));
