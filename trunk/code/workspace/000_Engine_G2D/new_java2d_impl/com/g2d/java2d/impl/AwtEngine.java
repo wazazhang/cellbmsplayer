@@ -2,6 +2,7 @@ package com.g2d.java2d.impl;
 
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.DisplayMode;
 import java.awt.Graphics;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
@@ -9,6 +10,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.Transparency;
+import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
@@ -87,6 +89,10 @@ public class AwtEngine extends Engine
 			this.gc_buff_g		= gc_buff.createGraphics();
 		}
 
+		System.out.println("AWT - GraphicsEnvironment   : " + ge);
+		System.out.println("AWT - GraphicsDevice        : " + gd);
+		System.out.println("AWT - GraphicsConfiguration : " + gc);
+		
 		this.system_cursor	= new HashMap<String, AwtAnimateCursor>();
 		{
 		system_cursor.put("RESIZE_CURSOR_NW", 	new AwtAnimateCursor((Cursor.NW_RESIZE_CURSOR)));
@@ -110,7 +116,17 @@ public class AwtEngine extends Engine
 	public GraphicsDevice			getGD() {return gd;}
 	public GraphicsConfiguration	getGC() {return gc;}
 	public java.awt.Graphics2D		getG()  {return gc_buff_g;}
-
+	
+	public void setFullScreen(Window window, DisplayMode mode) {
+		if (gd.isFullScreenSupported()) {
+			try {
+			    gd.setFullScreenWindow(window);
+				gd.setDisplayMode(mode);
+			} catch (Exception err) {
+			    gd.setFullScreenWindow(null);
+			}
+		}
+	}
 //	-------------------------------------------------------------------------------------------------
 //	implements 
 //	-------------------------------------------------------------------------------------------------
