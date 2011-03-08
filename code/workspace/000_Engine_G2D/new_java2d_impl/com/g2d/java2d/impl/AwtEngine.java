@@ -44,6 +44,8 @@ public class AwtEngine extends Engine
 {
 //	----------------------------------------------------------------------------------------------------------------
 
+	public static boolean 						ENABLE_BLEND = true;
+	
 	public static int							DEFAULT_TEXT_LINE_SPACE	= 2;
 
 	

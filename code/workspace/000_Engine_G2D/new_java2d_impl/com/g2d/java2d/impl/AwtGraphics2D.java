@@ -45,8 +45,6 @@ import com.g2d.java2d.impl.composite.BlendComposite.BlendingMode;
 
 class AwtGraphics2D extends Graphics2D
 {
-	public static boolean ENABLE_BLEND = true;
-	
 	final java.awt.Graphics2D	g2d;
 	
 	private Color				cur_color;
@@ -114,7 +112,7 @@ class AwtGraphics2D extends Graphics2D
 	
 	@Override
 	public void setBlendMode(int blend, float alpha) {
-		if (ENABLE_BLEND) {
+		if (AwtEngine.ENABLE_BLEND) {
 			java.awt.Composite toset_composite = this.getCompositeFrom(blend, alpha);
 			if (toset_composite != null) {
 				g2d.setComposite(toset_composite);
