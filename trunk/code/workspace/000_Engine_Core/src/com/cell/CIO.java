@@ -302,7 +302,7 @@ public class CIO extends CObject
 	/**
 	 * 读取一个流的所有数据到字节序。<br>
 	 * 只要InputStream里有数据，
-	 * 该方法都将阻塞，直到 read <= 0，所以该方法不适合读取动态流。<br>
+	 * 该方法都将阻塞，直到 read < 0，所以该方法不适合读取动态流。<br>
 	 * <b><font color=ff0000>该方法将自动关闭流。</font></b>
 	 * @param is
 	 * @return 
@@ -322,7 +322,7 @@ public class CIO extends CObject
 
 	/**
 	 * 只要InputStream里有数据，
-	 * 该方法都将阻塞，直到 read <= 0，
+	 * 该方法都将阻塞，直到 read < 0，
 	 * 所以该方法不适合读取动态流。
 	 * <b><font color=ff0000>该方法不会自动关闭流。</font></b>
 	 * @param is
@@ -336,7 +336,7 @@ public class CIO extends CObject
 
 	/**
 	 * 只要InputStream里有数据，
-	 * 该方法都将阻塞，直到 read <= 0，
+	 * 该方法都将阻塞，直到 read < 0，
 	 * 所以该方法不适合读取动态流。
 	 * <b><font color=ff0000>该方法不会自动关闭流。</font></b>
 	 * @param is

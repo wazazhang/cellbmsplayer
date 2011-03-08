@@ -98,7 +98,7 @@ public class Crypt
 			{
 				if (System.in.available() > 0) 
 				{
-					byte[] data = CIO.readStream(System.in);
+					byte[] data = CIO.readStream(System.in, null);
 					String cmd = new String(data, "UTF-8");
 					
 					String[] kv = cmd.split("\\s");
@@ -127,6 +127,7 @@ public class Crypt
 				e.printStackTrace();
 				break;
 			}
+			Thread.yield();
 		}
 		
 		
