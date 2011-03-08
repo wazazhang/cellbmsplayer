@@ -35,15 +35,8 @@ import com.cell.io.IODispatcher;
  */
 public class CObject {
 	static class NullStorage implements IStorage {
-		File rms_file;
 
-		public NullStorage() {
-			try {
-				rms_file = File.createTempFile("null", "rms");
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+		public NullStorage() {}
 
 		@Override
 		public int root_delete(String name) {
