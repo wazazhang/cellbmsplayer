@@ -376,6 +376,33 @@ public class CIO extends CObject
 		return null;
 	}
 
+	/**
+	 * 只要InputStream里有数据，
+	 * 该方法都将阻塞，直到 available <= 0，
+	 * <b><font color=ff0000>该方法不会自动关闭流。</font></b>
+	 * @param is
+	 * @return 
+	 */
+	public static byte[] readAvailable(InputStream is) throws IOException
+	{
+		if (is != null) {
+			int available	= is.available();
+			ByteArrayOutputStream baos = new ByteArrayOutputStream(available);
+			byte[] readed 	= new byte[available];
+			while (available > 0) {
+				int read_bytes 	= is.read(readed);
+				if (read_bytes >= 0) {
+					baos.write(readed, 0, read_bytes);
+					available = is.available();
+				} else {
+					break;
+				}
+			}
+			return baos.toByteArray();
+		}
+		return null;
+	}
+	
 //	------------------------------------------------------------------------------------------------------------------------
 
 

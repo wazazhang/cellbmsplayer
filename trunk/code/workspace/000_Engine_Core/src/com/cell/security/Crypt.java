@@ -1,10 +1,13 @@
 package com.cell.security;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.StringReader;
 
 import com.cell.CIO;
 import com.cell.CObject;
 import com.cell.security.MD5;
+import com.sun.corba.se.impl.ior.ByteBuffer;
 
 public class Crypt
 {
@@ -98,8 +101,7 @@ public class Crypt
 			{
 				if (System.in.available() > 0) 
 				{
-					byte[] data = CIO.readStream(System.in, null);
-					String cmd = new String(data, "UTF-8");
+					String cmd = new String(CIO.readAvailable(System.in), "UTF-8");
 					
 					String[] kv = cmd.split("\\s");
 					String src = kv[0].trim();
