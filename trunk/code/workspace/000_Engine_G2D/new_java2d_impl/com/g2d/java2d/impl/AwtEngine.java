@@ -73,7 +73,7 @@ public class AwtEngine extends Engine
 		this.ge				= ge;
 		this.gd				= ge.getDefaultScreenDevice();
 		this.gc				= gd.getDefaultConfiguration();
-		
+
 		if (this.gc.getColorModel().getTransferType() != DataBuffer.TYPE_INT)
 		{
 			// NOTE 为了避免操作系统非32位色的显示设置的情况下，无法正确显示一些效果
@@ -84,6 +84,9 @@ public class AwtEngine extends Engine
 			this.gc_buff = new java.awt.image.BufferedImage(10, 10, java.awt.image.BufferedImage.TYPE_INT_ARGB);
 			this.gc_buff_g = gc_buff.createGraphics();	
 			this.gc = this.gc_buff_g.getDeviceConfiguration();
+			if (gc == null) {
+				gc = gd.getDefaultConfiguration();
+			}
 		}
 		else
 		{
