@@ -6,6 +6,7 @@ import java.text.AttributedCharacterIterator.Attribute;
 import java.util.Hashtable;
 
 import com.cell.CMath;
+import com.cell.CObject;
 import com.g2d.AnimateCursor;
 import com.g2d.Color;
 import com.g2d.Engine;
@@ -17,6 +18,7 @@ import com.g2d.display.event.KeyEvent;
 import com.g2d.display.event.MouseEvent;
 import com.g2d.display.event.MouseMoveEvent;
 import com.g2d.display.event.MouseWheelEvent;
+import com.g2d.font.TextAttribute;
 import com.g2d.text.MultiTextLayout;
 import com.g2d.text.TextBuilder;
 import com.g2d.text.MultiTextLayout.AttributedSegment;
@@ -73,7 +75,9 @@ public class TextBox extends UIComponent
 		super.addChild(v_scrollbar);
 		
 		this.text.setText(text);
-		this.setSize(w, h);
+		this.setSize(w, h);		
+		
+		this.addClickSegmentListener(TextAttribute.LINK, new TextBox.URLClickSegmentListener());
 	}
 	
 	public MultiTextLayout getTextLayout() {
@@ -326,6 +330,11 @@ public class TextBox extends UIComponent
 		}
 	}
 	
+	public void clearClickSegmentListener()
+	{
+		this.click_segment_listeners.clear();
+	}
+	
 //	public void addClickSegmentListener(String instruction, ClickSegmentListener listener)
 //	{
 //		Instruction.getInstraction(instruction);
@@ -341,4 +350,16 @@ public class TextBox extends UIComponent
 		public void segmentClicked(MouseEvent event, TextBox textbox, AttributedSegment segment);
 	}
 	
+	public static class URLClickSegmentListener implements ClickSegmentListener
+	{
+		@Override
+		public void segmentClicked(MouseEvent event, TextBox textbox, AttributedSegment segment) {
+			if (event.type == MouseEvent.EVENT_MOUSE_DOWN) {
+				String url = segment.attribute_value + "";
+				if (url.startsWith("http://")) {
+					CObject.getAppBridge().openBrowser(url);
+				}
+			}
+		}
+	}
 }
