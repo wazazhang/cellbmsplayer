@@ -3,8 +3,8 @@ package com.cell.rpg.res;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Hashtable;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -56,51 +56,13 @@ public abstract class ResourceManager extends CellSetResourceManager
 //	--------------------------------------------------------------------------------------------------------------------
 	
 	final public String res_root;
-	
-	/*
-	// res objects
-	protected Hashtable<String, SceneSet>			all_scene_set;
-	protected Hashtable<String, SpriteSet>			all_actor_set;
-	protected Hashtable<String, SpriteSet>			all_avatar_set;
-	protected Hashtable<String, SpriteSet>			all_effect_set;
-
-	
-	// xml templates dynamic object and scenes
-	protected Hashtable<Integer, ItemProperties>	item_properties;
-	protected Hashtable<Integer, TUnit>				tunits;
-	protected Hashtable<Integer, TItem>				titems;
-	protected Hashtable<Integer, TShopItem>			tshopitems;
-	protected Hashtable<Integer, TAvatar>			tavatars;
-	protected Hashtable<Integer, TSkill>			tskills;
-	protected Hashtable<Integer, TEffect>			teffects;
-	protected Hashtable<Integer, TItemList>			titemlists;
-	protected Hashtable<Integer, TShopItemList>		tshopitemlists;
-	protected Hashtable<Integer, Quest> 			quests;
-	protected Hashtable<Integer, QuestGroup> 		questgroups;
-	protected Hashtable<Integer, Scene>				scenes;
-	protected Hashtable<Integer, InstanceZone>		instance_zones;
-
-	protected Hashtable<Integer, String> 			names_item_properties;
-	protected Hashtable<Integer, String>			names_tunits;
-	protected Hashtable<Integer, String>			names_titems;
-	protected Hashtable<Integer, String>			names_tshopitems;
-	protected Hashtable<Integer, String>			names_tavatars;
-	protected Hashtable<Integer, String>			names_tskills;
-	protected Hashtable<Integer, String>			names_teffects;
-	protected Hashtable<Integer, String>			names_titemlists;
-	protected Hashtable<Integer, String>			names_tshopitemlists;
-	protected Hashtable<Integer, String> 			names_quests;
-	protected Hashtable<Integer, String> 			names_questgroups;
-	protected Hashtable<Integer, String>			names_scenes;
-	protected Hashtable<Integer, String>			names_instance_zones;
-	*/
-	
+		
 	// icons , sounds, talks
-	protected Hashtable<String, AtomicReference<BufferedImage>>	all_icons;
-	protected Hashtable<String, AtomicReference<ISound>>		all_sounds;
-	protected Hashtable<String, AtomicReference<String>>		all_npc_talks;
+	protected LinkedHashMap<String, AtomicReference<BufferedImage>>	all_icons;
+	protected LinkedHashMap<String, AtomicReference<ISound>>		all_sounds;
+	protected LinkedHashMap<String, AtomicReference<String>>		all_npc_talks;
 	
-	final protected ResourceMetaData			meta_data;
+	final protected ResourceMetaData meta_data;
 	
 //	--------------------------------------------------------------------------------------------------------------------
 
@@ -145,19 +107,19 @@ public abstract class ResourceManager extends CellSetResourceManager
 		this.meta_data	= meta;
 
 		if (meta_data.all_icons != null) {
-			this.all_icons = new Hashtable<String, AtomicReference<BufferedImage>>();
+			this.all_icons = new LinkedHashMap<String, AtomicReference<BufferedImage>>();
 			for (String name : meta_data.all_icons) {
 				all_icons.put(name, new AtomicReference<BufferedImage>());
 			}
 		}
 		if (meta_data.all_sounds != null) {
-			this.all_sounds = new Hashtable<String, AtomicReference<ISound>>();
+			this.all_sounds = new LinkedHashMap<String, AtomicReference<ISound>>();
 			for (String name : meta_data.all_sounds) {
 				all_sounds.put(name, new AtomicReference<ISound>());
 			}
 		}
 		if (meta_data.all_npc_talks != null) {
-			this.all_npc_talks = new Hashtable<String, AtomicReference<String>>();
+			this.all_npc_talks = new LinkedHashMap<String, AtomicReference<String>>();
 			for (String name : meta_data.all_npc_talks) {
 				all_npc_talks.put(name, new AtomicReference<String>());
 			}
@@ -245,7 +207,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 	{
 		RPGObjectMap.setPersistanceManagerDriver(persistance_manager);
 		
-		meta_data.item_properties = readRPGObjects(ItemProperties.class,	percent, 0,  13);
+		meta_data.item_properties	= readRPGObjects(ItemProperties.class,	percent, 0,  13);
 		
 		meta_data.tunits			= readRPGObjects(TUnit.class,			percent, 1,  13);
 		meta_data.titems			= readRPGObjects(TItem.class,			percent, 2,  13);
@@ -324,7 +286,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 	final protected void initIcons()
 	{
 		meta_data.all_icons = readIcons("/project.g2d.save/icons/icon.list" );
-		this.all_icons = new Hashtable<String, AtomicReference<BufferedImage>>();
+		this.all_icons = new LinkedHashMap<String, AtomicReference<BufferedImage>>();
 		for (String name : meta_data.all_icons) {
 			all_icons.put(name, new AtomicReference<BufferedImage>());
 		}
@@ -333,7 +295,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 	final protected void initSounds()
 	{
 		meta_data.all_sounds	= readSounds("/project.g2d.save/sounds/sound.list" );
-		this.all_sounds = new Hashtable<String, AtomicReference<ISound>>();
+		this.all_sounds = new LinkedHashMap<String, AtomicReference<ISound>>();
 		for (String name : meta_data.all_sounds) {
 			all_sounds.put(name, new AtomicReference<ISound>());
 		}
@@ -342,7 +304,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 	final protected void initNpcTalks() 
 	{
 		meta_data.all_npc_talks = readNpcTalks("/project.g2d.save/talks/talks.list" );
-		this.all_npc_talks = new Hashtable<String, AtomicReference<String>>();
+		this.all_npc_talks = new LinkedHashMap<String, AtomicReference<String>>();
 		for (String name : meta_data.all_npc_talks) {
 			all_npc_talks.put(name, new AtomicReference<String>());
 		}
@@ -351,7 +313,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 //	--------------------------------------------------------------------------------------------------------------------
 
 	
-	final protected <T extends ResourceSet<?>> Hashtable<String, T> readSets(
+	final protected <T extends ResourceSet<?>> LinkedHashMap<String, T> readSets(
 			String file, 
 			Class<T> type, 
 			AtomicReference<Float> percent, int step, int total
@@ -362,7 +324,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 
 		System.out.println("list resource : " + file);
 		
-		Hashtable<String, T> table = new Hashtable<String, T>();
+		LinkedHashMap<String, T> table = new LinkedHashMap<String, T>();
 		
 		String[] res_list = readAllLine(file, "UTF-8");
 		
@@ -392,11 +354,11 @@ public abstract class ResourceManager extends CellSetResourceManager
 		return table;
 	}
 
-	final protected HashSet<String> readIcons(String icon_list)
+	final protected LinkedHashSet<String> readIcons(String icon_list)
 	{
 		System.out.println("list icons : " + icon_list);
 
-		HashSet<String> table = new HashSet<String>();
+		LinkedHashSet<String> table = new LinkedHashSet<String>();
 		
 		String[] res_list = readAllLine(icon_list, "UTF-8");
 		
@@ -418,11 +380,11 @@ public abstract class ResourceManager extends CellSetResourceManager
 	}
 
 
-	final protected HashSet<String> readSounds(String sound_list)
+	final protected LinkedHashSet<String> readSounds(String sound_list)
 	{
 		System.out.println("list sounds : " + sound_list);
 
-		HashSet<String> table = new HashSet<String>();
+		LinkedHashSet<String> table = new LinkedHashSet<String>();
 		
 		String[] res_list = readAllLine(sound_list, "UTF-8");
 		
@@ -438,11 +400,11 @@ public abstract class ResourceManager extends CellSetResourceManager
 		return table;
 	}
 	
-	final protected HashSet<String> readNpcTalks(String talklist)
+	final protected LinkedHashSet<String> readNpcTalks(String talklist)
 	{
 		System.out.println("list npc talks : " + talklist);
 
-		HashSet<String> table = new HashSet<String>();
+		LinkedHashSet<String> table = new LinkedHashSet<String>();
 		
 		String[] res_list = readAllLine(talklist, "UTF-8");
 		
@@ -507,13 +469,13 @@ public abstract class ResourceManager extends CellSetResourceManager
 	}
 	
 
-	final protected <T extends RPGObject> Hashtable<Integer, String> readRPGObjectNames(Class<T> type) throws Exception
+	final protected <T extends RPGObject> LinkedHashMap<Integer, String> readRPGObjectNames(Class<T> type) throws Exception
 	{
 		String list_file = toNameListFile(type);
 		
 		System.out.println("list rpg object names : " + list_file);
 
-		Hashtable<Integer, String> table = new Hashtable<Integer, String>();
+		LinkedHashMap<Integer, String> table = new LinkedHashMap<Integer, String>();
 		
 		String[] res_list = readAllLine(list_file, "UTF-8");
 		
@@ -533,7 +495,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 	}
 	
 	
-	final protected <T extends RPGObject> Hashtable<Integer, T> readRPGObjects(
+	final protected <T extends RPGObject> LinkedHashMap<Integer, T> readRPGObjects(
 			Class<T> type, 
 			AtomicReference<Float> percent, int step, int total) throws Exception
 	{	
@@ -548,7 +510,7 @@ public abstract class ResourceManager extends CellSetResourceManager
 		tdir		= tdir.replace('\\', '/');
 		tdir		= tdir.substring(0, tdir.lastIndexOf("/"));
 		
-		Hashtable<Integer, T> table = new Hashtable<Integer, T>();
+		LinkedHashMap<Integer, T> table = new LinkedHashMap<Integer, T>();
 		
 		String[] res_list = readAllLine(list_file, "UTF-8");
 		
@@ -745,8 +707,8 @@ public abstract class ResourceManager extends CellSetResourceManager
 //	--------------------------------------------------------------------------------------------------------------------
 	private static void ItemProperties_____________________________________________________(){}
 	
-	public Hashtable<Integer, ItemProperties> getAllItemProperties() {
-		return new Hashtable<Integer, ItemProperties>(meta_data.item_properties);
+	public LinkedHashMap<Integer, ItemProperties> getAllItemProperties() {
+		return new LinkedHashMap<Integer, ItemProperties>(meta_data.item_properties);
 	}
 
 	public ItemProperties getItemProperties(int id) {
@@ -762,16 +724,16 @@ public abstract class ResourceManager extends CellSetResourceManager
 //	--------------------------------------------------------------------------------------------------------------------
 	private static void Quests_____________________________________________________(){}
 	
-	public Hashtable<Integer, Quest> getAllQuests(){
-		return new Hashtable<Integer, Quest>(meta_data.quests);
+	public LinkedHashMap<Integer, Quest> getAllQuests(){
+		return new LinkedHashMap<Integer, Quest>(meta_data.quests);
 	}
 
 	public Quest getQuest(int quest_id) {
 		return meta_data.quests.get(quest_id);
 	}
 	
-	public Hashtable<Integer, QuestGroup> getAllQuestGroups() {
-		return new Hashtable<Integer, QuestGroup>(meta_data.questgroups);
+	public LinkedHashMap<Integer, QuestGroup> getAllQuestGroups() {
+		return new LinkedHashMap<Integer, QuestGroup>(meta_data.questgroups);
 	}
 	
 	public QuestGroup getQuestGroup(int quest_group_id) {
@@ -799,8 +761,8 @@ public abstract class ResourceManager extends CellSetResourceManager
 		return meta_data.names_scenes.get(id);
 	}
 	
-	public Hashtable<Integer, Scene> getAllRPGScenes() {
-		return new Hashtable<Integer, Scene>(meta_data.scenes);
+	public LinkedHashMap<Integer, Scene> getAllRPGScenes() {
+		return new LinkedHashMap<Integer, Scene>(meta_data.scenes);
 	}
 	
 	public SceneGraph createSceneGraph() {
@@ -818,8 +780,8 @@ public abstract class ResourceManager extends CellSetResourceManager
 		return meta_data.names_instance_zones.get(id);
 	}
 	
-	public Hashtable<Integer, InstanceZone> getAllInstanceZone() {
-		return new Hashtable<Integer, InstanceZone>(meta_data.instance_zones);
+	public LinkedHashMap<Integer, InstanceZone> getAllInstanceZone() {
+		return new LinkedHashMap<Integer, InstanceZone>(meta_data.instance_zones);
 	}
 	
 	
