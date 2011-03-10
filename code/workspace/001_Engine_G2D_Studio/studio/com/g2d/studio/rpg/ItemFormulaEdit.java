@@ -105,7 +105,15 @@ public class ItemFormulaEdit extends AbstractOptionDialog<ItemFormula> implement
 	
 	
 //	--------------------------------------------------------------------------------------------------------------
-	
+	class AddItemDialog extends ObjectSelectDialog<XLSItem>
+	{
+		JButton add = new JButton("添加");
+		public AddItemDialog(Component owner, int wcount) {
+			super(owner, XLSItem.class, wcount);
+			super.south.add(add);
+			add.addActionListener(this);
+		}
+	}
 	
 	class ListPanel extends JPanel implements ActionListener
 	{
@@ -158,15 +166,15 @@ public class ItemFormulaEdit extends AbstractOptionDialog<ItemFormula> implement
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() == del) {
-				doAdd();
-			} else if (e.getSource() == add) {
 				doDel();
+			} else if (e.getSource() == add) {
+				doAdd();
 			} else if (e.getSource() == set_count) {
 				doSetCount();
 			}
 		}
 
-		private void doAdd() {
+		private void doDel() {
 			ListItemData item = list.getSelectedItem();
 			if (item != null) {
 				this.list_data.remove(item);
@@ -175,8 +183,23 @@ public class ItemFormulaEdit extends AbstractOptionDialog<ItemFormula> implement
 			}
 		}
 		
-		private void doDel() {
-			ObjectSelectDialog<XLSItem> dialog = new ObjectSelectDialog<XLSItem>(this, XLSItem.class, 1);
+		private void doAdd() {
+			AddItemDialog dialog = new AddItemDialog(this, 1){
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if (e.getSource() == add) {
+						XLSItem item = super.getList().getSelectedItem();
+						if (item != null) {
+							ListItemData data = new ListItemData(item, 1);
+							ListPanel.this.list_data.add(data);
+							ListPanel.this.list.setListData(list_data);
+							ListPanel.this.list.repaint();
+						}
+					} else {
+						super.actionPerformed(e);
+					}
+				}
+			};
 			dialog.setSize(
 					200, 
 					ItemFormulaEdit.this.getHeight());
