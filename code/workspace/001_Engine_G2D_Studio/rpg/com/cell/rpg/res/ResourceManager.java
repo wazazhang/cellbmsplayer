@@ -207,14 +207,41 @@ public abstract class ResourceManager extends CellSetResourceManager
 	
 	final protected void initAllXml(String persistance_manager, AtomicReference<Float> percent)  throws Exception
 	{
+		meta_data.item_properties		= new LinkedHashMap<Integer, ItemProperties>();
+		meta_data.tunits				= new LinkedHashMap<Integer, TUnit>();
+		meta_data.titems				= new LinkedHashMap<Integer, TItem>();
+		meta_data.tshopitems			= new LinkedHashMap<Integer, TShopItem>();
+		meta_data.tavatars				= new LinkedHashMap<Integer, TAvatar>();
+		meta_data.tskills				= new LinkedHashMap<Integer, TSkill>();
+		meta_data.teffects				= new LinkedHashMap<Integer, TEffect>();
+		meta_data.titemlists			= new LinkedHashMap<Integer, TItemList>();
+		meta_data.tshopitemlists		= new LinkedHashMap<Integer, TShopItemList>();
+		meta_data.quests				= new LinkedHashMap<Integer, Quest>();
+		meta_data.questgroups			= new LinkedHashMap<Integer, QuestGroup>();
+		meta_data.scenes				= new LinkedHashMap<Integer, Scene>();
+		meta_data.instance_zones		= new LinkedHashMap<Integer, InstanceZone>();
+
+		meta_data.names_item_properties	= new LinkedHashMap<Integer, String>();
+		meta_data.names_tunits			= new LinkedHashMap<Integer, String>();
+		meta_data.names_titems			= new LinkedHashMap<Integer, String>();
+		meta_data.names_tshopitems		= new LinkedHashMap<Integer, String>();
+		meta_data.names_tavatars		= new LinkedHashMap<Integer, String>();
+		meta_data.names_tskills			= new LinkedHashMap<Integer, String>();
+		meta_data.names_teffects		= new LinkedHashMap<Integer, String>();
+		meta_data.names_titemlists		= new LinkedHashMap<Integer, String>();
+		meta_data.names_tshopitemlists	= new LinkedHashMap<Integer, String>();
+		meta_data.names_quests			= new LinkedHashMap<Integer, String>();
+		meta_data.names_questgroups		= new LinkedHashMap<Integer, String>();
+		meta_data.names_scenes			= new LinkedHashMap<Integer, String>();
+		meta_data.names_instance_zones	= new LinkedHashMap<Integer, String>();
+		
+		
 		RPGObjectMap.setPersistanceManagerDriver(persistance_manager);
 		
 		readRPGObjects(ItemProperties.class,	
 				meta_data.item_properties, meta_data.names_item_properties,	percent, 0,  13);
-		
 		readRPGObjects(TUnit.class,			
 				meta_data.tunits, meta_data.names_tunits,					percent, 1,  13);
-		
 		readRPGObjects(TItem.class, 
 				meta_data.titems, meta_data.names_titems,					percent, 2, 13);
 		
@@ -249,14 +276,26 @@ public abstract class ResourceManager extends CellSetResourceManager
 	
 	final protected void initAllXmlNames(AtomicReference<Float> percent)  throws Exception
 	{
+		meta_data.names_item_properties	= new LinkedHashMap<Integer, String>();
+		meta_data.names_tunits			= new LinkedHashMap<Integer, String>();
+		meta_data.names_titems			= new LinkedHashMap<Integer, String>();
+		meta_data.names_tshopitems		= new LinkedHashMap<Integer, String>();
+		meta_data.names_tavatars		= new LinkedHashMap<Integer, String>();
+		meta_data.names_tskills			= new LinkedHashMap<Integer, String>();
+		meta_data.names_teffects		= new LinkedHashMap<Integer, String>();
+		meta_data.names_titemlists		= new LinkedHashMap<Integer, String>();
+		meta_data.names_tshopitemlists	= new LinkedHashMap<Integer, String>();
+		meta_data.names_quests			= new LinkedHashMap<Integer, String>();
+		meta_data.names_questgroups		= new LinkedHashMap<Integer, String>();
+		meta_data.names_scenes			= new LinkedHashMap<Integer, String>();
+		meta_data.names_instance_zones	= new LinkedHashMap<Integer, String>();
+		
 		percent.set(0f);
 		
 		readRPGObjects(ItemProperties.class,	
 				null, meta_data.names_item_properties,	percent, 0,  13);
-		
 		readRPGObjects(TUnit.class,			
 				null, meta_data.names_tunits,			percent, 1,  13);
-		
 		readRPGObjects(TItem.class, 
 				null, meta_data.names_titems,			percent, 2, 13);
 		
@@ -548,40 +587,45 @@ public abstract class ResourceManager extends CellSetResourceManager
 		for (String line : res_list) 
 		{
 			line = line.trim();
-			int 	new_i 	= line.lastIndexOf("?");
-			String 	path 	= line.substring(0, new_i);
-			String 	query 	= line.substring(new_i + 1);
-			Matcher	m_id	= f_id.matcher(path); m_id.find();
-			String	id		= path.substring(m_id.start(), m_id.end()-4);
-
-			if (name_table != null)
+			int new_i 	= line.lastIndexOf("?");
+			if (new_i >=0) 
 			{
-				String[] fields = line.split("&");
-				for (String f : fields) {
-					if (f.startsWith("name=")) {
-						name_table.put(Integer.parseInt(id), f.substring(5));
+				String 	path 	= line.substring(0, new_i);
+				String 	query 	= line.substring(new_i + 1);
+				Matcher	m_id	= f_id.matcher(path); m_id.find();
+				String	id		= path.substring(m_id.start(), m_id.end()-4);
+
+				if (name_table != null)
+				{
+					String[] fields = query.split("&");
+					for (String f : fields) {
+						if (f.startsWith("name=")) {
+							name_table.put(Integer.parseInt(id), f.substring(5));
+//							System.out.println(type.getSimpleName() + " : " + id + " - " + f);
+							break;
+						}
 					}
 				}
-			}
-			
-			if (table != null)
-			{
-				String display_list = path;
-				int last_split = path.lastIndexOf("/");
-				if (last_split >= 0) {
-					path = path.substring(last_split + 1);
+				
+				if (table != null)
+				{
+					String display_list = path;
+					int last_split = path.lastIndexOf("/");
+					if (last_split >= 0) {
+						path = path.substring(last_split + 1);
+					}
+					
+					String xml_file = tdir +"/"+ path;
+					
+					T set = RPGObjectMap.readNode(new ByteArrayInputStream(getResource(xml_file)), xml_file, type);
+					set.loadTreePath(this, display_list);
+					if (PRINT_VERBOS)
+					System.out.println("\tget " + type.getSimpleName() + " : " + set + "(" + set.id + ")");
+		
+					table.put(Integer.parseInt(set.id), set);
 				}
-				
-				String xml_file = tdir +"/"+ path;
-				
-				T set = RPGObjectMap.readNode(new ByteArrayInputStream(getResource(xml_file)), xml_file, type);
-				set.loadTreePath(this, display_list);
-				if (PRINT_VERBOS)
-				System.out.println("\tget " + type.getSimpleName() + " : " + set + "(" + set.id + ")");
-	
-				table.put(Integer.parseInt(set.id), set);
 			}
-			
+
 			percent.set(init  + ((float)count / (float)res_list.length) / total);
 			count ++;
 		}
