@@ -445,33 +445,33 @@ public abstract class ResourceManager extends CellSetResourceManager
 		}
 	}
 	
-	public <T extends RPGObject>  String toNameListFile(Class<T> type) 
-	{
-		if (type.equals(ItemProperties.class)) {
-			return "/project.g2d.save/item_properties/name_item_properties.list";
-		}
-		else if (type.equals(Quest.class)) {
-			return "/project.g2d.save/quests/name_quest.list";					
-		}
-		else if (type.equals(QuestGroup.class)) {
-			return "/project.g2d.save/questgroups/name_questgroups.list";					
-		}
-		else if (type.equals(Scene.class)) {
-			return "/project.g2d.save/scenes/name_scene.list";					
-		}
-		else if (type.equals(InstanceZone.class)) {
-			return "/project.g2d.save/instance_zones/name_zones.list";					
-		}
-		else {
-			String type_name = type.getSimpleName().toLowerCase();
-			return "/project.g2d.save/objects/" + type_name + ".obj" + "/name_" + type_name + ".list";
-		}
-	}
+//	public <T extends RPGObject>  String toNameListFile(Class<T> type) 
+//	{
+//		if (type.equals(ItemProperties.class)) {
+//			return "/project.g2d.save/item_properties/name_item_properties.list";
+//		}
+//		else if (type.equals(Quest.class)) {
+//			return "/project.g2d.save/quests/name_quest.list";					
+//		}
+//		else if (type.equals(QuestGroup.class)) {
+//			return "/project.g2d.save/questgroups/name_questgroups.list";					
+//		}
+//		else if (type.equals(Scene.class)) {
+//			return "/project.g2d.save/scenes/name_scene.list";					
+//		}
+//		else if (type.equals(InstanceZone.class)) {
+//			return "/project.g2d.save/instance_zones/name_zones.list";					
+//		}
+//		else {
+//			String type_name = type.getSimpleName().toLowerCase();
+//			return "/project.g2d.save/objects/" + type_name + ".obj" + "/name_" + type_name + ".list";
+//		}
+//	}
 	
 
 	final protected <T extends RPGObject> LinkedHashMap<Integer, String> readRPGObjectNames(Class<T> type) throws Exception
 	{
-		String list_file = toNameListFile(type);
+		String list_file = toListFile(type);
 		
 		System.out.println("list rpg object names : " + list_file);
 

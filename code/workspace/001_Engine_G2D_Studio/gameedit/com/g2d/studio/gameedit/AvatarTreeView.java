@@ -111,6 +111,7 @@ public class AvatarTreeView extends ObjectTreeViewTemplateDynamic<DAvatar, TAvat
 							Studio.getInstance().getCPJResourceManager().getNodeIndex(spr));
 					if (avatar!=null) {
 						addNode(root, avatar);
+						getTree().reload(root);
 					}
 				}
 			}

@@ -89,6 +89,7 @@ final public class DShopItemList extends DynamicNode<TShopItemList>
 					TShopItemList		src		= CIO.cloneObject(DShopItemList.this.getData());
 					DShopItemList		effect	= new DShopItemList(factory, src.name+" Copy");
 					factory.addNode(root, effect);
+					factory.getTree().reload(root);
 				}
 			} 
 			else {

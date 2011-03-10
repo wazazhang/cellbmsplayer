@@ -92,6 +92,7 @@ public class EffectTreeView extends ObjectTreeViewTemplateDynamic<DEffect, TEffe
 				if (name.length()>0) {
 					DEffect effect = new DEffect(EffectTreeView.this, name);
 					addNode(root, effect);
+					getTree().reload(root);
 				} else {
 					JOptionPane.showMessageDialog(getTree(), "名字不能为空");
 				}

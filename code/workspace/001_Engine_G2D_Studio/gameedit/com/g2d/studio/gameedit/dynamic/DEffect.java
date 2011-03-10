@@ -98,6 +98,7 @@ final public class DEffect extends DynamicNode<TEffect>
 						effect.getData().particles.addLayer(layer);
 					}
 					factory.addNode(root, effect);
+					factory.getTree().reload(root);
 				}
 			} 
 			else {

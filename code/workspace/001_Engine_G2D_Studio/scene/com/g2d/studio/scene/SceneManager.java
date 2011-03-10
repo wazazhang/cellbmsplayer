@@ -38,6 +38,7 @@ import com.g2d.studio.cpj.CPJResourceSelectDialog;
 import com.g2d.studio.cpj.CPJResourceType;
 import com.g2d.studio.cpj.entity.CPJWorld;
 import com.g2d.studio.gameedit.dynamic.IDynamicIDFactory;
+import com.g2d.studio.gameedit.entity.ObjectGroup;
 import com.g2d.studio.instancezone.InstanceZonesManager;
 import com.g2d.studio.io.File;
 import com.g2d.studio.res.Res;
@@ -184,9 +185,9 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 		if (node!=null) {
 			if (id_factory.storeID(node.getIntID(), node)) {
 				root.add(node);
-				if (g2d_tree!=null) {
-					g2d_tree.reload(root);
-				}
+//				if (g2d_tree!=null) {
+//					g2d_tree.reload(root);
+//				}
 			}
 		}
 	}
@@ -238,15 +239,17 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 	public void saveSceneList() 
 	{
 		synchronized (scene_lock) {
-			StringBuffer all_scene = new StringBuffer();
-			File name_list_file = scene_list.getParentFile().getChildFile("name_" + scene_list.getName());
-			StringBuffer all_names = new StringBuffer();
-			for (SceneNode node : getAllScenes()) {
-				all_scene.append(SceneGroup.toPathString(node, "/") + node.getID() + ".xml" + "\n");
-				all_names.append("("+node.getData().id+")"+((NamedObject)node.getData()).getName()+"\n");
-			}
-			scene_list		.writeUTF(all_scene.toString());
-			name_list_file	.writeUTF(all_names.toString());
+			String list = ObjectGroup.toList(getAllScenes());
+			scene_list.writeUTF(list);
+//			StringBuffer all_scene = new StringBuffer();
+//			File name_list_file = scene_list.getParentFile().getChildFile("name_" + scene_list.getName());
+//			StringBuffer all_names = new StringBuffer();
+//			for (SceneNode node : getAllScenes()) {
+//				all_scene.append(SceneGroup.toPathString(node, "/") + node.getID() + ".xml" + "\n");
+//				all_names.append("("+node.getData().id+")"+((NamedObject)node.getData()).getName()+"\n");
+//			}
+//			scene_list		.writeUTF(all_scene.toString());
+//			name_list_file	.writeUTF(all_names.toString());
 		}
 		System.out.println("save scene list");
 	}
@@ -362,6 +365,7 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 							dialog.getSceneName(),
 							Studio.getInstance().getCPJResourceManager().getNodeIndex(world));
 					addScene(node, (SceneGroup)root);
+					g2d_tree.reload(root);
 				}
 			}
 			else if (e.getSource() == set_world_group) {

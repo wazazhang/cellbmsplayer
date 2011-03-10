@@ -73,6 +73,7 @@ public class InstanceZoneGroup extends ObjectGroup<InstanceZoneNode, InstanceZon
 				if (name != null && name.length() > 0) {
 					InstanceZoneNode node = new InstanceZoneNode(view, name);
 					view.addNode(root, node);
+					view.getTree().reload(root);
 				}
 			}
 		}

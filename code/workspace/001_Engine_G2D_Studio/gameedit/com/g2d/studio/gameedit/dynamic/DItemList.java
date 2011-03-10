@@ -89,6 +89,7 @@ final public class DItemList extends DynamicNode<TItemList>
 					TItemList		src		= CIO.cloneObject(DItemList.this.getData());
 					DItemList		effect	= new DItemList(factory, src.name+" Copy");
 					factory.addNode(root, effect);
+					factory.getTree().reload(root);
 				}
 			} 
 			else {

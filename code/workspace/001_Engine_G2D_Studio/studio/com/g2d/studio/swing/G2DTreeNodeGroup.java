@@ -108,6 +108,11 @@ public abstract class G2DTreeNodeGroup<C extends G2DTreeNode<?>> extends Default
 
 	public void loadPath(String node_path)
 	{
+		String[] id_name = CUtil.splitString(node_path, "?");
+		if (id_name.length > 1) {
+			node_path = id_name[0];
+		}
+		
 		G2DTreeNodeGroup<?> group = this;
 		String[] path = fromPathString(node_path.trim(), "/");
 		for (int i=0; i<path.length; i++) {
