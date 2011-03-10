@@ -94,21 +94,8 @@ public abstract class ObjectGroup<T extends ObjectNode<D>, D extends RPGObject> 
 	private void toListFile()
 	{
 		try {
-			File name_list_file	= Studio.getInstance().getIO().createFile(
-					list_file.getParentFile(), "name_" + list_file.getName());
-			StringBuffer 	all_objects 	= new StringBuffer();
-			StringBuffer 	all_names 		= new StringBuffer();
-			Vector<T> 		nodes 			= G2DTree.getNodesSubClass(this, node_type);
-			for (T node : nodes) {
-				all_objects.append(toPathString(node, "/") + node.getID() + _XML + "\n");
-				if (node.getData() instanceof NamedObject) {
-					all_names.append("("+node.getData().id+")"+((NamedObject)node.getData()).getName()+"\n");
-				}
-			}
-			list_file.writeBytes(CIO.stringEncode(all_objects.toString(), CIO.ENCODING));
-			if (NamedObject.class.isAssignableFrom(data_type)) {
-				name_list_file.writeBytes(CIO.stringEncode(all_names.toString(), CIO.ENCODING));
-			}
+			Vector<T> nodes = G2DTree.getNodesSubClass(this, node_type);
+			list_file.writeBytes(CIO.stringEncode(toList(nodes), CIO.ENCODING));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -122,11 +109,11 @@ public abstract class ObjectGroup<T extends ObjectNode<D>, D extends RPGObject> 
 				progress.setMaximum(list_file.getName(), lines.length);
 				int i = 0;
 				for (String line : lines) {
-					try{
+					try {
 						loadPath(line.trim());
-					}catch(Exception e){
+					} catch (Exception e) {
 						e.printStackTrace();
-					}finally{
+					} finally {
 						progress.setValue(line, i);
 						i++;
 					}
@@ -136,4 +123,32 @@ public abstract class ObjectGroup<T extends ObjectNode<D>, D extends RPGObject> 
 			err.printStackTrace();
 		}
 	}
+	
+	
+	public static<T extends ObjectNode<?>> String toList(Vector<T> nodes)
+	{
+		StringBuffer 	all_objects 	= new StringBuffer();
+		try {
+//			File name_list_file	= Studio.getInstance().getIO().createFile(
+//					list_file.getParentFile(), "name_" + list_file.getName());
+//			StringBuffer 	all_names 		= new StringBuffer();
+//			Vector<T> 		nodes 			= G2DTree.getNodesSubClass(this, node_type);
+			for (T node : nodes) {
+				String line = toPathString(node, "/") + node.getID() + _XML;
+				if (node.getData() instanceof NamedObject) {
+//					all_names.append("("+node.getData().id+")"+((NamedObject)node.getData()).getName()+"\n");
+					line += "?name=" + ((NamedObject)node.getData()).getName();
+				}
+				all_objects.append(line + "\r\n");
+			}
+//			list_file.writeBytes(CIO.stringEncode(all_objects.toString(), CIO.ENCODING));
+//			if (NamedObject.class.isAssignableFrom(data_type)) {
+//				name_list_file.writeBytes(CIO.stringEncode(all_names.toString(), CIO.ENCODING));
+//			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return all_objects.toString();
+	}
+	
 }

@@ -76,6 +76,7 @@ public class ItemPropertiesGroup extends ObjectGroup<ItemPropertiesNode, ItemPro
 				if (name!=null && name.length()>0) {
 					ItemPropertiesNode node = new ItemPropertiesNode(view, name);
 					view.addNode(root, node);
+					view.getTree().reload(root);
 				}
 			}
 		}

@@ -92,6 +92,7 @@ public class ItemListTreeView extends ObjectTreeViewTemplateDynamic<DItemList, T
 				if (name.length()>0) {
 					DItemList effect = new DItemList(ItemListTreeView.this, name);
 					addNode(root, effect);
+					getTree().reload(root);
 				} else {
 					JOptionPane.showMessageDialog(getTree(), "名字不能为空");
 				}

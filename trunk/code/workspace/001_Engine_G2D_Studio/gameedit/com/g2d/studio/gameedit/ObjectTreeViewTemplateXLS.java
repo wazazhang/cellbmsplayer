@@ -127,7 +127,7 @@ extends ObjectTreeView<T, D>
 			
 			progress.setValue("refreshing node: "+row.id, ++i/200);
 		}
-		
+		reload();
 		xls_row_map = tmp_xls_row_map;
 		
 		progress.setValue("refresh completed, (total " + xls_row_map.size() + ")  ", progressMaximum);

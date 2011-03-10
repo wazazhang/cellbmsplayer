@@ -76,6 +76,7 @@ public class QuestNodeGroup extends ObjectGroup<QuestNode, Quest>
 				if (name!=null && name.length()>0) {
 					QuestNode node = new QuestNode(view, name);
 					view.addNode(root, node);
+					view.getTree().reload(root);
 				}
 			}
 		}

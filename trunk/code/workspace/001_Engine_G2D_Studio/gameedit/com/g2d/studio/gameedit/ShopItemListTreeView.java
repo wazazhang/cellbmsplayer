@@ -92,6 +92,7 @@ public class ShopItemListTreeView extends ObjectTreeViewTemplateDynamic<DShopIte
 				if (name.length()>0) {
 					DShopItemList effect = new DShopItemList(ShopItemListTreeView.this, name);
 					addNode(root, effect);
+					getTree().reload(root);
 				} else {
 					JOptionPane.showMessageDialog(getTree(), "名字不能为空");
 				}

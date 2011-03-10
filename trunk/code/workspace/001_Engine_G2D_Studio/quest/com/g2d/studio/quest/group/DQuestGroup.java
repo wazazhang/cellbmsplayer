@@ -92,6 +92,7 @@ final public class DQuestGroup extends DynamicNode<QuestGroup>
 					QuestGroup		src		= CIO.cloneObject(DQuestGroup.this.getData());
 					DQuestGroup		group	= new DQuestGroup(factory, src.name+" Copy");
 					factory.addNode(root, group);
+					factory.getTree().reload(root);
 				}
 			}
 			else {

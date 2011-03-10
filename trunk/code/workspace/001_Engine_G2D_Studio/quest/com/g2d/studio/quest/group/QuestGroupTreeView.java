@@ -93,6 +93,7 @@ public class QuestGroupTreeView extends ObjectTreeViewDynamic<DQuestGroup, Quest
 				if (name.length()>0) {
 					DQuestGroup effect = new DQuestGroup(QuestGroupTreeView.this, name);
 					addNode(root, effect);
+					getTree().reload(root);
 				} else {
 					JOptionPane.showMessageDialog(getTree(), "名字不能为空");
 				}

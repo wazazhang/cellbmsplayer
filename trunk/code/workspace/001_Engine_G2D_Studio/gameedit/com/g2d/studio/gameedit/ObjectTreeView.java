@@ -103,7 +103,7 @@ extends JSplitPane implements TreeSelectionListener, ChangeListener
 		synchronized(node_index) {
 			if (node_index.storeID(node.getIntID(), node)) {
 				root.add(node);
-				getTree().reload(root);
+//				getTree().reload(root);
 			}
 		}
 	}
