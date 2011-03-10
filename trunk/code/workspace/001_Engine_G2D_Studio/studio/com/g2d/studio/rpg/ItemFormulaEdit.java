@@ -192,7 +192,7 @@ public class ItemFormulaEdit extends AbstractOptionDialog<ItemFormula> implement
 						if (item != null) {
 							ListItemData data = new ListItemData(item, 1);
 							ListPanel.this.list_data.add(data);
-							ListPanel.this.list.setListData(list_data);
+							ListPanel.this.list.setListData(ListPanel.this.list_data);
 							ListPanel.this.list.repaint();
 						}
 					} else {
