@@ -39,7 +39,7 @@ public class ObjectSelect<T extends ObjectNode<?>> extends AbstractOptionDialog<
 		this.list.setListData(list_data);
 		this.list.setLayoutOrientation(JList.HORIZONTAL_WRAP);		
 		this.list.setVisibleRowCount(0);
-		
+
 		super.add(new JScrollPane(list), BorderLayout.CENTER);
 		
 		if (default_value == null) {
