@@ -7,6 +7,8 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.cell.CIO;
 import com.cell.CObject;
@@ -207,22 +209,37 @@ public abstract class ResourceManager extends CellSetResourceManager
 	{
 		RPGObjectMap.setPersistanceManagerDriver(persistance_manager);
 		
-		meta_data.item_properties	= readRPGObjects(ItemProperties.class,	percent, 0,  13);
+		readRPGObjects(ItemProperties.class,	
+				meta_data.item_properties, meta_data.names_item_properties,	percent, 0,  13);
 		
-		meta_data.tunits			= readRPGObjects(TUnit.class,			percent, 1,  13);
-		meta_data.titems			= readRPGObjects(TItem.class,			percent, 2,  13);
-		meta_data.tshopitems		= readRPGObjects(TShopItem.class,		percent, 3,  13);
-		meta_data.tavatars			= readRPGObjects(TAvatar.class,			percent, 4,  13);
-		meta_data.tskills			= readRPGObjects(TSkill.class,			percent, 5,  13);
-		meta_data.teffects			= readRPGObjects(TEffect.class,			percent, 6,  13);
-		meta_data.titemlists		= readRPGObjects(TItemList.class,		percent, 7,  13);
-		meta_data.tshopitemlists	= readRPGObjects(TShopItemList.class,	percent, 8,  13);
+		readRPGObjects(TUnit.class,			
+				meta_data.tunits, meta_data.names_tunits,					percent, 1,  13);
 		
-		meta_data.quests			= readRPGObjects(Quest.class,			percent, 9,  13);
-		meta_data.questgroups		= readRPGObjects(QuestGroup.class,		percent, 10, 13);
+		readRPGObjects(TItem.class, 
+				meta_data.titems, meta_data.names_titems,					percent, 2, 13);
 		
-		meta_data.scenes			= readRPGObjects(Scene.class,			percent, 11, 13);
-		meta_data.instance_zones	= readRPGObjects(InstanceZone.class,	percent, 12, 13);
+		readRPGObjects(TShopItem.class, 
+				meta_data.tshopitems, meta_data.names_tshopitems,			percent, 3, 13);
+		readRPGObjects(TAvatar.class, 
+				meta_data.tavatars,meta_data.names_tavatars, 				percent, 4, 13);
+		readRPGObjects(TSkill.class, 
+				meta_data.tskills, meta_data.names_tskills,					percent, 5, 13);
+		readRPGObjects(TEffect.class,
+				meta_data.teffects, meta_data.names_teffects,				percent, 6, 13);
+		readRPGObjects(TItemList.class, 
+				meta_data.titemlists, meta_data.names_titemlists,			percent, 7, 13);
+		readRPGObjects(TShopItemList.class,
+				meta_data.tshopitemlists, meta_data.names_tshopitemlists, 	percent, 8, 13);
+
+		readRPGObjects(Quest.class,
+				meta_data.quests, meta_data.names_quests,					percent, 9, 13);
+		readRPGObjects(QuestGroup.class,
+				meta_data.questgroups, meta_data.names_questgroups, 		percent, 10, 13);
+
+		readRPGObjects(Scene.class,
+				meta_data.scenes, meta_data.names_scenes,					percent, 11, 13);
+		readRPGObjects(InstanceZone.class,
+				meta_data.instance_zones, meta_data.names_instance_zones, 	percent, 12, 13);
 	}
 	
 	final protected void initAllXmlNames()  throws Exception
@@ -233,36 +250,38 @@ public abstract class ResourceManager extends CellSetResourceManager
 	final protected void initAllXmlNames(AtomicReference<Float> percent)  throws Exception
 	{
 		percent.set(0f);
-		float factor = 1f / 13f; 
 		
-		meta_data.names_item_properties	= readRPGObjectNames(ItemProperties.class);
-		percent.set(1 * factor);
+		readRPGObjects(ItemProperties.class,	
+				null, meta_data.names_item_properties,	percent, 0,  13);
 		
-		meta_data.names_tunits			= readRPGObjectNames(TUnit.class);
-		percent.set(2 * factor);
-		meta_data.names_titems			= readRPGObjectNames(TItem.class);
-		percent.set(3 * factor);
-		meta_data.names_tshopitems		= readRPGObjectNames(TShopItem.class);
-		percent.set(4 * factor);
-		meta_data.names_tavatars		= readRPGObjectNames(TAvatar.class);
-		percent.set(5 * factor);
-		meta_data.names_tskills			= readRPGObjectNames(TSkill.class);
-		percent.set(6 * factor);
-		meta_data.names_teffects		= readRPGObjectNames(TEffect.class);
-		percent.set(7 * factor);
-		meta_data.names_titemlists		= readRPGObjectNames(TItemList.class);
-		percent.set(8 * factor);
-		meta_data.names_tshopitemlists	= readRPGObjectNames(TShopItemList.class);
-		percent.set(9 * factor);
+		readRPGObjects(TUnit.class,			
+				null, meta_data.names_tunits,			percent, 1,  13);
 		
-		meta_data.names_quests			= readRPGObjectNames(Quest.class);
-		percent.set(10 * factor);
-		meta_data.names_questgroups		= readRPGObjectNames(QuestGroup.class);
-		percent.set(11 * factor);
-		meta_data.names_scenes			= readRPGObjectNames(Scene.class);
-		percent.set(12 * factor);
-		meta_data.names_instance_zones	= readRPGObjectNames(InstanceZone.class);
-		percent.set(13 * factor);
+		readRPGObjects(TItem.class, 
+				null, meta_data.names_titems,			percent, 2, 13);
+		
+		readRPGObjects(TShopItem.class, 
+				null, meta_data.names_tshopitems,		percent, 3, 13);
+		readRPGObjects(TAvatar.class, 
+				null, meta_data.names_tavatars, 		percent, 4, 13);
+		readRPGObjects(TSkill.class, 
+				null, meta_data.names_tskills,			percent, 5, 13);
+		readRPGObjects(TEffect.class,
+				null, meta_data.names_teffects,			percent, 6, 13);
+		readRPGObjects(TItemList.class, 
+				null, meta_data.names_titemlists,		percent, 7, 13);
+		readRPGObjects(TShopItemList.class,
+				null, meta_data.names_tshopitemlists, 	percent, 8, 13);
+
+		readRPGObjects(Quest.class,
+				null, meta_data.names_quests,			percent, 9, 13);
+		readRPGObjects(QuestGroup.class,
+				null, meta_data.names_questgroups, 		percent, 10, 13);
+
+		readRPGObjects(Scene.class,
+				null, meta_data.names_scenes,			percent, 11, 13);
+		readRPGObjects(InstanceZone.class,
+				null, meta_data.names_instance_zones, 	percent, 12, 13);
 	}
 	
 	public static class WrapperPercent
@@ -467,37 +486,48 @@ public abstract class ResourceManager extends CellSetResourceManager
 //			return "/project.g2d.save/objects/" + type_name + ".obj" + "/name_" + type_name + ".list";
 //		}
 //	}
+//	
+//
+//	final protected <T extends RPGObject>  readRPGObjectNames(Class<T> type) throws Exception
+//	{
+//		String list_file = toListFile(type);
+//		
+//		System.out.println("list rpg object names : " + list_file);
+//
+//		LinkedHashMap<Integer, String> table = new LinkedHashMap<Integer, String>();
+//		
+//		String[] res_list = readAllLine(list_file, "UTF-8");
+//		
+//		for (String line : res_list) {
+//			line = line.trim();
+//			int new_i = line.lastIndexOf("?");
+//			line = line.substring(new_i+1);
+//			String[] fields = line.split("&");
+//			for (String f : fields) {
+//				if (f.startsWith("name=")) {
+//					table.put(Integer.parseInt(id), line.substring(br+1));
+//				}
+//			}
+////			
+////			int bl = line.indexOf("(");
+////			int br = line.indexOf(")");
+////			String id = line.substring(bl+1, br);
+////			if (br < line.length()) {
+////				table.put(Integer.parseInt(id), line.substring(br+1));
+////			} else {
+////				table.put(Integer.parseInt(id), "");
+////			}
+//		}
+//		
+//		return table;
+//	}
 	
-
-	final protected <T extends RPGObject> LinkedHashMap<Integer, String> readRPGObjectNames(Class<T> type) throws Exception
-	{
-		String list_file = toListFile(type);
-		
-		System.out.println("list rpg object names : " + list_file);
-
-		LinkedHashMap<Integer, String> table = new LinkedHashMap<Integer, String>();
-		
-		String[] res_list = readAllLine(list_file, "UTF-8");
-		
-		for (String line : res_list) {
-			line = line.trim();
-			int bl = line.indexOf("(");
-			int br = line.indexOf(")");
-			String id = line.substring(bl+1, br);
-			if (br < line.length()) {
-				table.put(Integer.parseInt(id), line.substring(br+1));
-			} else {
-				table.put(Integer.parseInt(id), "");
-			}
-		}
-		
-		return table;
-	}
 	
-	
-	final protected <T extends RPGObject> LinkedHashMap<Integer, T> readRPGObjects(
-			Class<T> type, 
-			AtomicReference<Float> percent, int step, int total) throws Exception
+	final protected <T extends RPGObject> void readRPGObjects(
+			Class<T> type, LinkedHashMap<Integer, T> table, 
+			LinkedHashMap<Integer, String> name_table,
+			AtomicReference<Float> percent, 
+			int step, int total) throws Exception
 	{	
 		float init = (float)step / (float)total;
 		percent.set(init);
@@ -510,33 +540,53 @@ public abstract class ResourceManager extends CellSetResourceManager
 		tdir		= tdir.replace('\\', '/');
 		tdir		= tdir.substring(0, tdir.lastIndexOf("/"));
 		
-		LinkedHashMap<Integer, T> table = new LinkedHashMap<Integer, T>();
-		
 		String[] res_list = readAllLine(list_file, "UTF-8");
 		
-		for (int i=0; i<res_list.length; i++)
+		Pattern f_id 	= Pattern.compile("\\d+\\.xml");
+
+		int count = 0;
+		for (String line : res_list) 
 		{
-			String display_list = res_list[i];
-			int last_split = res_list[i].lastIndexOf("/");
-			if (last_split>=0) {
-				res_list[i] = res_list[i].substring(last_split+1);
+			line = line.trim();
+			int 	new_i 	= line.lastIndexOf("?");
+			String 	path 	= line.substring(0, new_i);
+			String 	query 	= line.substring(new_i + 1);
+			Matcher	m_id	= f_id.matcher(path); m_id.find();
+			String	id		= path.substring(m_id.start(), m_id.end()-4);
+
+			if (name_table != null)
+			{
+				String[] fields = line.split("&");
+				for (String f : fields) {
+					if (f.startsWith("name=")) {
+						name_table.put(Integer.parseInt(id), f.substring(5));
+					}
+				}
 			}
 			
-			String xml_file = tdir +"/"+ res_list[i];
+			if (table != null)
+			{
+				String display_list = path;
+				int last_split = path.lastIndexOf("/");
+				if (last_split >= 0) {
+					path = path.substring(last_split + 1);
+				}
+				
+				String xml_file = tdir +"/"+ path;
+				
+				T set = RPGObjectMap.readNode(new ByteArrayInputStream(getResource(xml_file)), xml_file, type);
+				set.loadTreePath(this, display_list);
+				if (PRINT_VERBOS)
+				System.out.println("\tget " + type.getSimpleName() + " : " + set + "(" + set.id + ")");
+	
+				table.put(Integer.parseInt(set.id), set);
+			}
 			
-			T set = RPGObjectMap.readNode(new ByteArrayInputStream(getResource(xml_file)), xml_file, type);
-			set.loadTreePath(this, display_list);
-			if (PRINT_VERBOS)
-			System.out.println("\tget " + type.getSimpleName() + " : " + set + "(" + set.id + ")");
-
-			table.put(Integer.parseInt(set.id), set);
-			
-			percent.set(init  + ((float)i / (float)res_list.length) / total);
+			percent.set(init  + ((float)count / (float)res_list.length) / total);
+			count ++;
 		}
 		
-		System.out.println("size : " + table.size());
-		
-		return table;
+		System.out.println("size : " + count);
 	}
 
 	

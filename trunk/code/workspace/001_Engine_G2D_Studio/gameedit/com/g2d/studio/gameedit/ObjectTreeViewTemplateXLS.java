@@ -72,6 +72,8 @@ extends ObjectTreeView<T, D>
 		getTree().setDragEnabled(true);
 		if (new_xls_row) {
 			saveAll();
+		} else {
+			saveListFile();
 		}
 	}
 	

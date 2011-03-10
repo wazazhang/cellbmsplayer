@@ -53,9 +53,9 @@ public abstract class ObjectGroup<T extends ObjectNode<D>, D extends RPGObject> 
 		return false;
 	}
 	
-	public void saveList()
+	public void saveAll()
 	{
-		toListFile();
+		saveListFile();
 		
 		Vector<T> nodes = G2DTree.getNodesSubClass(this, node_type);
 		for (T node : nodes) {
@@ -76,7 +76,7 @@ public abstract class ObjectGroup<T extends ObjectNode<D>, D extends RPGObject> 
 	public void saveSingle(T snode)
 	{
 		if (snode != null) {
-			toListFile();
+			saveListFile();
 			try {
 				snode.onSave();
 				File xml_file = Studio.getInstance().getIO().createFile(
@@ -91,7 +91,7 @@ public abstract class ObjectGroup<T extends ObjectNode<D>, D extends RPGObject> 
 		}
 	}
 	
-	private void toListFile()
+	public void saveListFile()
 	{
 		try {
 			Vector<T> nodes = G2DTree.getNodesSubClass(this, node_type);
