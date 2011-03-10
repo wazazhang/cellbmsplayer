@@ -124,6 +124,8 @@ public class SceneManager extends JPanel implements IDynamicIDFactory<SceneNode>
 		g2d_tree.setDragEnabled(true);
 		getAllScenes();
 		this.g2d_tree.reload();
+		
+		saveSceneList();
 	}
 
 	public InstanceZonesManager getInstanceZonesManager() {
