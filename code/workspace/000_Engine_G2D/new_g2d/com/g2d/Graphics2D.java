@@ -184,9 +184,39 @@ public abstract class Graphics2D implements IGraphics
 	abstract public void 			fillPolygon(int xPoints[], int yPoints[], int nPoints);
 	abstract public void 			fillPolygon(Polygon p);
 
-	
+	/**
+	 * 绘制指定图像中当前可用的图像。图像的左上角位于该图形上下文坐标空间的 (x, y)。
+	 * @param img 要绘制的指定图像。
+	 * @param x x 坐标。
+	 * @param y y 坐标。
+	 */
 	abstract public boolean			drawImage(Image img, int x, int y);
+	/**
+	 * 绘制指定图像中已缩放到适合指定矩形内部的图像。 
+	 * 图像绘制在此图形上下文坐标空间的指定矩形内部，如果需要，则进行缩放。
+	 * @param img 要绘制的指定图像。
+	 * @param x x 坐标。
+	 * @param y y 坐标。
+	 * @param w 矩形的宽度。
+	 * @param h 矩形的高度。
+	 */
 	abstract public boolean			drawImage(Image img, int x, int y, int width, int height);
+	/**
+	 * 绘制当前可用的指定图像的指定区域，动态地缩放图像使其符合目标绘制表面的指定区域。
+	 * 此方法总是用非缩放的图像来呈现缩放的矩形，并且动态地执行所需的缩放。此操作不使用缓存的缩放图像。
+	 * 执行图像从源到目标的缩放：源矩形的第一个坐标被映射到目标矩形的第一个坐标，第二个源坐标被映射到第二个目标坐标。
+	 * 按需要缩放和翻转子图像以保持这些映射关系。 
+	 * @param img 要绘制的指定图像。
+	 * @param dx1 目标矩形第一个角的 x 坐标。
+	 * @param dy1 目标矩形第一个角的 y 坐标。
+	 * @param dx2 目标矩形第二个角的 x 坐标。
+	 * @param dy2 目标矩形第二个角的 y 坐标。
+	 * @param sx1 源矩形第一个角的 x 坐标。
+	 * @param sy1 源矩形第一个角的 y 坐标。
+	 * @param sx2 源矩形第二个角的 x 坐标。
+	 * @param sy2 源矩形第二个角的 y 坐标。
+	 * @return
+	 */
 	abstract public boolean			drawImage(Image img, int dx1, int dy1, int dx2, int dy2, int sx1, int sy1, int sx2, int sy2);
 
 	@Override
