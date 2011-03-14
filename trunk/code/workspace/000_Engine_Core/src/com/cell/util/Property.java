@@ -3,7 +3,9 @@ package com.cell.util;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.LinkedHashMap;
 import java.util.Properties;
 import java.util.Set;
 import java.util.Map.Entry;
@@ -49,10 +51,15 @@ import com.cell.reflect.Parser;
 public abstract class Property<T>
 {
 	public static boolean debug = false;
+	public static String[] comment_text 	= {"#", "//"};
+	public static String[] append_text 	= {"+", "\\"};
+	public static HashMap<String, String> replace_text 	= new HashMap<String, String>();
+	static
+	{
+		replace_text.put("\\n", "\n");
+		replace_text.put("\\t", "\t");
+	}
 	
-	public String[] comment_text 	= {"#", "//"};
-	
-	public String[] append_text 	= {"+", "\\"};
 	
 	Hashtable<String, T> Map = new Hashtable<String, T>();
 
@@ -94,7 +101,7 @@ public abstract class Property<T>
 	}
 
 	// 如果是注释
-	public boolean isComment(String line) {
+	public static boolean isComment(String line) {
 		for (String comment : comment_text) {
 			if (line.startsWith(comment)) {
 				return true;
@@ -104,13 +111,20 @@ public abstract class Property<T>
 	}
 	
 	// 如果是尾部出现 +
-	public boolean isNextAppend(String line) {
+	public static boolean isNextAppend(String line) {
 		for (String append : append_text) {
 			if (line.endsWith(append)) {
 				return true;
 			}
 		}
 		return false;
+	}
+	
+	public static String replaceValue(String value) {
+		for (Entry<String, String> e : replace_text.entrySet()) {
+			value = CUtil.replaceString(value, e.getKey(), e.getValue());
+		}
+		return value;
 	}
 	
 	public void loadText(String text, String separator)
@@ -142,10 +156,10 @@ public abstract class Property<T>
 					}
 					String kv[] = line.split(separator, 2);
 					line = null;
-					if (kv.length==2){
-						putText(kv[0].trim(), kv[1].trim());
+					if (kv.length == 2) {
+						putText(kv[0].trim(), replaceValue(kv[1].trim()));
 						if (debug) {
-							System.out.println(kv[0].trim()+"="+kv[1].trim());
+							System.out.println(kv[0].trim() + "=" + kv[1].trim());
 						}
 					}
 				}
