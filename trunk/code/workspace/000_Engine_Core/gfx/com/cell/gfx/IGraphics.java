@@ -68,17 +68,55 @@ public interface IGraphics
 //	image
     
 //	public void drawImage(IImage img, int x, int y, int transform, int blend_mode, float blend_alpha); 
+	/**
+	 * 绘制指定图像中当前可用的图像。图像的左上角位于该图形上下文坐标空间的 (x, y)。
+	 * @param img 要绘制的指定图像。
+	 * @param x x 坐标。
+	 * @param y y 坐标。
+	 * @param transform 翻转方式
+	 */
 	public void drawImage(IImage img, int x, int y, int transform); 
 //	用setBlendMode();改变渲染模式，不需要每画一张图片就改变一次Blend
 //	blend只是个状态，不需要每次都设置。否则，画100张图片相同混合方式的图片或图片，每次都new一个blend对象出来。
 //	一个组合精灵一帧可能有很多图片，一帧共用渲染模式。
+	/**
+	 * 绘制指定图像中已缩放到适合指定矩形内部的图像。 
+	 * 图像绘制在此图形上下文坐标空间的指定矩形内部，如果需要，则进行缩放。
+	 * @param img 要绘制的指定图像。
+	 * @param x x 坐标。
+	 * @param y y 坐标。
+	 * @param w 矩形的宽度。
+	 * @param h 矩形的高度。
+	 * @param transform 翻转方式
+	 */
 	public void drawImage(IImage img, int x, int y, int w, int h, int transform); 
 //	public void drawRoundImage(IImage img, int x, int y, int widht, int height, int transform, int blend_mode, float blend_alpha); 
 //	用setBlendMode(int blend);改变渲染模式，不需要每画一张图片就改变一次Blend
-	public void drawRoundImage(IImage img, int x, int y, int width, int height, int transform); 
 //	用setBlendMode(int blend);改变渲染模式，不需要每画一张图片就改变一次Blend
+	/**
+	 * 绘制指定图像中的一部分。 
+	 * @param src 要绘制的指定图像。
+	 * @param x_src 原图片部分的X位置
+	 * @param y_src 原图片部分的Y位置
+	 * @param width 原图片矩形的宽度。
+	 * @param height 原图片矩形的高度。
+	 * @param transform 翻转方式
+	 * @param x_dest 目标X坐标。
+	 * @param y_dest 目标Y坐标。
+	 */
 	public void drawRegion(IImage src, int x_src, int y_src, int width, int height, int transform, int x_dest, int y_dest); 
 
+	/**
+	 * 平铺绘制图片到指定范围。
+	 * 如果目标范围比原图片大，则按顺序平铺。
+	 * @param img 要绘制的指定图像。
+	 * @param x 目标X坐标。
+	 * @param y 目标Y坐标。
+	 * @param width 目标矩形宽度。
+	 * @param height 目标矩形高度。
+	 * @param transform 翻转方式
+	 */
+	public void drawRoundImage(IImage img, int x, int y, int width, int height, int transform); 
 
 //	---------------------------------------------------------------------------------------------------------------------
 //	geometry
