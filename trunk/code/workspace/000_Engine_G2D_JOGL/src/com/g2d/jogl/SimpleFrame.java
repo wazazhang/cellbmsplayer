@@ -18,6 +18,7 @@ import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
 import com.cell.j2se.CAppBridge;
+import com.g2d.display.Stage;
 import com.g2d.jogl.impl.GLEngine;
 
 public class SimpleFrame extends JFrame implements WindowListener
@@ -49,7 +50,7 @@ public class SimpleFrame extends JFrame implements WindowListener
 		super.setSize(frameWidth, frameHeight);
     }
 
-    public void start(int fps, Class<?> stage_cls) {
+    public void start(int fps, Class<? extends Stage> stage_cls) {
     	canvas.start(fps);
     	canvas.getCanvasAdapter().changeStage(stage_cls);
     }
