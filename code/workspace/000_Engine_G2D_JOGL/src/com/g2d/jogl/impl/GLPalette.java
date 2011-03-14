@@ -29,6 +29,11 @@ public class GLPalette implements IPalette
 		this.transparent_color_index_ = transparent_color_index;
 	}
 	
+	@Override
+	public GLPalette clone() {
+		return this;
+	}
+	
 	private void loadACT(byte[] data) throws IOException
 	{		
 		this.data_ = new byte[256*3];
