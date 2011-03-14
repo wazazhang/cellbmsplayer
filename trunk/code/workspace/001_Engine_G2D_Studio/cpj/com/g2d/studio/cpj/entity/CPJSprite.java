@@ -67,7 +67,7 @@ public class CPJSprite extends CPJObject<SpriteSet>
 									if (bounds.getWidth() > 0 && bounds.getHeight() > 0) {
 										BufferedImage 	img		= Tools.createImage(bounds.getWidth(), bounds.getHeight());
 										Graphics2D		g2d		= img.createGraphics();
-										spr.render(Tools.wrap(g2d, img), -bounds.X1, -bounds.Y1, i, j);
+										spr.render(Tools.wrap(g2d), -bounds.X1, -bounds.Y1, i, j);
 										g2d.dispose();
 										snapshoot = Tools.combianImage(32, 32, img);
 									}
