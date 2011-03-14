@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.Map.Entry;
 
 /**
  * 类型和 integer 的映射关系，用于 TransmissionType = TRANSMISSION_TYPE_EXTERNALIZABLE 类型的消息。
@@ -16,7 +17,14 @@ public abstract class ExternalizableFactory implements Comparator<Class<?>>
 	final private Map<Integer, Class<?>>	map_id_type		= new HashMap<Integer, Class<?>>();
 	final private Map<Class<?>, Integer>	map_type_id		= new HashMap<Class<?>, Integer>();
 	
-	public ExternalizableFactory() {}	
+	public ExternalizableFactory() {}
+	
+	public ExternalizableFactory(Class<?> ... classes) {
+		for (Class<?> c : classes) {
+			registClasses(c);
+		}
+		syncAll(true);
+	}	
 	
 	@Override
 	public int compare(Class<?> o1, Class<?> o2) {
@@ -36,10 +44,14 @@ public abstract class ExternalizableFactory implements Comparator<Class<?>>
 		return new TreeMap<Integer, Class<?>>(map_id_type);
 	}
 	
+	protected Map<Integer, Class<?>> syncAll() {
+		return syncAll(false) ;
+	}
+	
 	/**
 	 * 注册所有的类后，记得调用此句
 	 */
-	protected Map<Integer, Class<?>> syncAll() {
+	protected Map<Integer, Class<?>> syncAll(boolean verbos) {
 		synchronized (all_types) {
 			int index = 1;
 			map_id_type.clear();
@@ -47,10 +59,25 @@ public abstract class ExternalizableFactory implements Comparator<Class<?>>
 			for (Class<?> cls : all_types) {
 				map_id_type.put(index, cls);
 				map_type_id.put(cls, index);
+				try {
+					if (cls.getConstructor() == null) {}
+				} catch (SecurityException e1) {
+					e1.printStackTrace();
+				} catch (NoSuchMethodException e1) {
+					e1.printStackTrace();
+				}
 				index ++;
 			}
 		}
-		return getRegistTypes();
+		Map<Integer, Class<?>> regist_types = getRegistTypes();
+		if (verbos) {
+			for (Entry<Integer, Class<?>> e : regist_types.entrySet()) {
+				System.out.println("ExternalizableMessage :" +
+				" (0x" + Long.toHexString((0x100000000L + (long)e.getKey())).substring(1) + ")" +
+				" " + e.getValue().getCanonicalName());
+			}
+		}
+		return regist_types;
 	}
 	
 //	/**
