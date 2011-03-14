@@ -20,9 +20,9 @@ public class TestShape extends Sprite
 	
 	public TestShape() 
 	{
-		rotate	= Math.random();
-		scale_x	= Math.random() / 1f;
-		scale_x	= Math.random() / 1f;
+//		rotate	= Math.random();
+//		scale_x	= Math.random() / 1f;
+//		scale_x	= Math.random() / 1f;
 		
 		offset_x = CUtil.getRandom(-100, 100);
 		offset_y = CUtil.getRandom(-100, 100);
@@ -71,13 +71,16 @@ public class TestShape extends Sprite
 				scale_y -= 0.1f;
 			}
 		}	
-		rotate += 0.1f;
+//		rotate += 0.1f;
 	}
 	
 	@Override
 	public void render(Graphics2D g) 
 	{
+		g.pushBlendMode();
+		g.setBlendMode(3);
 		g.drawImage(image, local_bounds.x, local_bounds.y);
+		g.popBlendMode();
 //		g.setColor(Color.GREEN);
 //		g.draw(local_bounds);
 	}
@@ -95,7 +98,10 @@ public class TestShape extends Sprite
 		
 		@Override
 		public void render(Graphics2D g) {
-			g.drawImage(cp, local_bounds.x, local_bounds.y);
+			g.pushBlendMode();
+			g.setBlendMode(3);
+			g.drawImage(cp, local_bounds.x, local_bounds.y);		
+			g.popBlendMode();
 		}
 		
 	}
