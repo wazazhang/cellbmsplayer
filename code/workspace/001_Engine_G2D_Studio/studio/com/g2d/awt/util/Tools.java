@@ -178,7 +178,7 @@ public class Tools
 		
 		BufferedImage ret = Tools.createImage(border.getWidth(), border.getHeight());
 		Graphics2D g = (Graphics2D)ret.getGraphics();
-		cspr.render(wrap(g, ret), -border.X1, -border.Y1, anim, frame);
+		cspr.render(wrap(g), -border.X1, -border.Y1, anim, frame);
 		g.dispose();
 		
 		return ret;
@@ -376,7 +376,7 @@ public class Tools
 		{
 			BufferedImage buf = gc.createCompatibleImage(image.getWidth(), image.getHeight(), Transparency.TRANSLUCENT);
 			Graphics2D g = (Graphics2D)buf.createGraphics();
-			IGraphics ig = wrap(g, buf);
+			IGraphics ig = wrap(g);
 			ig.drawImage(image, 0, 0, 0);
 			g.dispose();
 			return buf;
@@ -395,7 +395,7 @@ public class Tools
 			CCD bounds = spr.getFrameBounds(anim, frame);
 			BufferedImage buf = gc.createCompatibleImage(bounds.getWidth(), bounds.getHeight(), Transparency.TRANSLUCENT);
 			Graphics2D g = (Graphics2D)buf.createGraphics();
-			IGraphics ig = wrap(g, buf);
+			IGraphics ig = wrap(g);
 			try {
 				spr.render(ig, -bounds.X1, -bounds.Y1, anim, frame);
 			} finally {
@@ -773,9 +773,9 @@ public class Tools
 	 * @param g2d
 	 * @return
 	 */
-	static public IGraphics wrap(java.awt.Graphics2D g2d, java.awt.Image owner) 
+	static public IGraphics wrap(java.awt.Graphics2D g2d) 
 	{
-		return AwtEngine.wrap(g2d, owner);
+		return AwtEngine.wrap(g2d);
 	}
 
 	/**
