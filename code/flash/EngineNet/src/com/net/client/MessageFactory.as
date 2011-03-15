@@ -1,4 +1,4 @@
-package com.net.message
+package com.net.client
 {
 	public class MessageFactory
 	{
