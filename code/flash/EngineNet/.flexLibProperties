@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <flexLibProperties includeAllClasses="true" version="3">
   <includeClasses>
-    <classEntry path="com.net.client.ClientSession"/>
-    <classEntry path="com.net.message.Message"/>
-    <classEntry path="com.net.message.MessageFactory"/>
-    <classEntry path="com.net.io.NetPackageCodec"/>
+    <classEntry path="com.net.client.Message"/>
+    <classEntry path="com.net.client.MessageFactory"/>
+    <classEntry path="com.net.client.ServerSessionListener"/>
+    <classEntry path="com.net.client.ServerSession"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>
