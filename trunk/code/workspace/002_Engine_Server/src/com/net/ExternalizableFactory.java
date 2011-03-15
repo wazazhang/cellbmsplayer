@@ -1,5 +1,8 @@
 package com.net;
 
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
@@ -7,24 +10,45 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.Map.Entry;
 
+import com.cell.CUtil;
+import com.net.mutual.MutualMessage;
+import com.net.mutual.MutualMessageCodec;
+
 /**
  * 类型和 integer 的映射关系，用于 TransmissionType = TRANSMISSION_TYPE_EXTERNALIZABLE 类型的消息。
  * 此实现中，通过类名的字符串自然排序顺序注册。
  */
 public abstract class ExternalizableFactory implements Comparator<Class<?>>
 {
+//	-----------------------------------------------------------------------------------------------------------
+	
 	final private TreeSet<Class<?>>			all_types		= new TreeSet<Class<?>>(this);
 	final private Map<Integer, Class<?>>	map_id_type		= new HashMap<Integer, Class<?>>();
 	final private Map<Class<?>, Integer>	map_type_id		= new HashMap<Class<?>, Integer>();
 	
-	public ExternalizableFactory() {}
+	private MutualMessageCodec mutual_codec;
 	
+//	-----------------------------------------------------------------------------------------------------------
+	
+	public ExternalizableFactory() {}
+
 	public ExternalizableFactory(Class<?> ... classes) {
-		for (Class<?> c : classes) {
-			registClasses(c);
+		this(null, classes);
+	}
+	public ExternalizableFactory(MutualMessageCodec mutual_codec) {
+		this(mutual_codec, new Class<?>[]{});
+	}
+	public ExternalizableFactory(MutualMessageCodec mutual_codec, Class<?> ... classes) {
+		this.mutual_codec = mutual_codec;
+		if (classes.length > 0) {
+			for (Class<?> c : classes) {
+				registClasses(c);
+			}
+			syncAll(true);
 		}
-		syncAll(true);
-	}	
+	}
+	
+//	-----------------------------------------------------------------------------------------------------------
 	
 	@Override
 	public int compare(Class<?> o1, Class<?> o2) {
@@ -39,11 +63,16 @@ public abstract class ExternalizableFactory implements Comparator<Class<?>>
 		Class<?> ext_type = map_id_type.get(type);
 		return (MessageHeader)ext_type.newInstance();
 	}
-	
+
 	public Map<Integer, Class<?>> getRegistTypes() {
 		return new TreeMap<Integer, Class<?>>(map_id_type);
 	}
 	
+//	-----------------------------------------------------------------------------------------------------------
+	
+	/**
+	 * 注册所有的类后，记得调用此句
+	 */
 	protected Map<Integer, Class<?>> syncAll() {
 		return syncAll(false) ;
 	}
@@ -64,7 +93,7 @@ public abstract class ExternalizableFactory implements Comparator<Class<?>>
 				} catch (SecurityException e1) {
 					e1.printStackTrace();
 				} catch (NoSuchMethodException e1) {
-					e1.printStackTrace();
+					System.err.println("ExternalizableMessage : " + e1.getMessage());
 				}
 				index ++;
 			}
@@ -72,37 +101,20 @@ public abstract class ExternalizableFactory implements Comparator<Class<?>>
 		Map<Integer, Class<?>> regist_types = getRegistTypes();
 		if (verbos) {
 			for (Entry<Integer, Class<?>> e : regist_types.entrySet()) {
-				System.out.println("ExternalizableMessage :" +
-				" (0x" + Long.toHexString((0x100000000L + (long)e.getKey())).substring(1) + ")" +
-				" " + e.getValue().getCanonicalName());
+				String info = "ExternalizableMessage :";
+				info += " (0x" + Long.toHexString((0x100000000L + (long)e.getKey())).substring(1) + ")";
+				if (MutualMessage.class.isAssignableFrom(e.getValue())) {
+					info += " (Mutual)";
+				}
+				info += " " + e.getValue().getCanonicalName();
+				System.out.println();
 			}
 		}
 		return regist_types;
 	}
 	
-//	/**
-//	 * 将标注{@link ExternalizableMessageType}的类注册到系统
-//	 * @param clazz
-//	 */
-//	public void registClass(Class<?> clazz) throws Exception {
-//		clazz.asSubclass(ExternalizableMessage.class);
-//		ExternalizableMessageType ext_type = clazz.getAnnotation(ExternalizableMessageType.class);
-//		if (ext_type == null) {
-//			throw new NotImplementedException("not Annotation ExternalizableMessageType : " + clazz);
-//		} else {
-//			Class<?> sc = type_map.get(ext_type.value());
-//			if (sc == null) {
-//				type_map.put(ext_type.value(), clazz);
-//			} else {
-//				throw new IllegalAnnotationException("duplicate Annotation ExternalizableMessageType : " +
-//						"\"" + clazz + "\"(" + ext_type.value() + ") src=\""+sc.getName()+"\"");
-//			}
-//		}
-//	}
-	
-	
 	/**
-	 * 如果该类是ExternalizableMessage，则将标注{@link ExternalizableMessageType}的类注册到系统，否则查找在此类中定义的类种类。
+	 * 如果该类是ExternalizableMessage，则将类注册到系统，否则查找在此类中定义的类种类。
 	 * @param cls
 	 */
 	public void registClasses(Class<?> cls) {
@@ -114,15 +126,18 @@ public abstract class ExternalizableFactory implements Comparator<Class<?>>
 				registClasses(sub);
 			}
 		}
-//		try {
-//			cls.asSubclass(ExternalizableMessage.class);
-//			ExternalizableMessageType ext_type = cls.getAnnotation(ExternalizableMessageType.class);
-//			if (ext_type != null) {
-//				registClass(cls);
-//			}
-//		} catch (Exception err) {}
-//		for (Class<?> sub : cls.getClasses()) {
-//			registClasses(sub);
-//		}
 	}
+
+//	-----------------------------------------------------------------------------------------------------------
+
+	/**
+	 * 负责编解码MutualMessage类型消息
+	 * @return
+	 */
+	public MutualMessageCodec getMutualCodec() {
+		return mutual_codec;
+	}
+
+//	-----------------------------------------------------------------------------------------------------------
+
 }

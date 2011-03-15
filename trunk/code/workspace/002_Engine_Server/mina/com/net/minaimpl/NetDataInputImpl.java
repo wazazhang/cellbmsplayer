@@ -11,17 +11,24 @@ import org.apache.mina.core.buffer.IoBuffer;
 import com.cell.CUtil;
 import com.cell.exception.NotImplementedException;
 import com.cell.io.ExternalizableUtil;
+import com.net.ExternalizableFactory;
 import com.net.ExternalizableMessage;
 import com.net.NetDataInput;
 
 public class NetDataInputImpl implements NetDataInput
 {	
 	final IoBuffer buffer ;
-	
-	public NetDataInputImpl(IoBuffer buffer) {
-		this.buffer = buffer;
-	}
+	final ExternalizableFactory factory;
 
+	public NetDataInputImpl(IoBuffer buffer, ExternalizableFactory factory) {
+		this.buffer = buffer;
+		this.factory = factory;
+	}
+	
+	@Override
+	public ExternalizableFactory getFactory() {
+		return factory;
+	}
 //	-----------------------------------------------------------------------------------------------
 	
 	synchronized

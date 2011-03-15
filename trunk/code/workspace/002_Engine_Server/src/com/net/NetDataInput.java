@@ -25,6 +25,7 @@ public interface NetDataInput extends DataInput
 	
 	public <T extends ExternalizableMessage> T readExternal(Class<T> type) throws IOException;
 	
+	public ExternalizableFactory getFactory();
 	
 }
 
