@@ -1,6 +1,6 @@
 package com.gt.net{
 
-	import com.gt.io.IOSerialize;
+	import com.cell.io.IOSerialize;
 	
 	import flash.errors.*;
 	import flash.events.*;
