@@ -120,8 +120,7 @@ public interface MutualMessageCodeGenerator
 				read.append("		" + f_name + " = in.readByte();\n");
 				write.append("		out.writeByte(" + f_name + ");\n");
 			}
-			else if (f_type.equals(byte[].class)) 
-			{
+			else if (f_type.equals(byte[].class)) {
 				read.append("		" + f_name + " = in.readByteArray();\n");
 				write.append("		out.writeByteArray(" + f_name + ");\n");
 			}
