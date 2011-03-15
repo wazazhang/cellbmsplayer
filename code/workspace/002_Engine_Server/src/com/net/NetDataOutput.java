@@ -24,5 +24,6 @@ public interface NetDataOutput extends DataOutput
 	public void writeObject(Object data) throws IOException;
 	
 	public<T extends ExternalizableMessage> void writeExternal(T data) throws IOException;
-
+	
+	public ExternalizableFactory getFactory();
 }

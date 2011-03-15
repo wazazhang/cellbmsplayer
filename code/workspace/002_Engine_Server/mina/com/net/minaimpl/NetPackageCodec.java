@@ -158,7 +158,7 @@ public class NetPackageCodec extends MessageHeaderCodec
 						if ((p.transmission_flag & ProtocolImpl.TRANSMISSION_TYPE_EXTERNALIZABLE) != 0) {
 							p.message = ext_factory.createMessage(obj_in.getInt());	// ext 4
 							ExternalizableMessage ext = (ExternalizableMessage)p.message;
-							ext.readExternal(new NetDataInputImpl(obj_in));
+							ext.readExternal(new NetDataInputImpl(obj_in, ext_factory));
 						}
 						else if ((p.transmission_flag & ProtocolImpl.TRANSMISSION_TYPE_SERIALIZABLE) != 0) {
  							p.message = (MessageHeader)obj_in.getObject(class_loader);
@@ -264,7 +264,7 @@ public class NetPackageCodec extends MessageHeaderCodec
 							if (p.message instanceof ExternalizableMessage) {
 								obj_buff.putInt		(ext_factory.getType(p.message));	// ext 4
 								((ExternalizableMessage)p.message).writeExternal(
-										new NetDataOutputImpl(obj_buff));
+										new NetDataOutputImpl(obj_buff, ext_factory));
 							} 
 							else if (p.message instanceof Serializable) {
 								obj_buff.putObject	(p.message);

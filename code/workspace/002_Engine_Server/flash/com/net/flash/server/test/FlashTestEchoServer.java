@@ -1,9 +1,11 @@
 package com.net.flash.server.test;
 
+import java.io.File;
 import java.io.IOException;
 
 import com.cell.CIO;
 import com.cell.CObject;
+import com.cell.io.CFile;
 import com.cell.j2se.CAppBridge;
 import com.cell.j2se.CStorage;
 import com.net.ExternalizableMessage;
@@ -50,8 +52,9 @@ public class FlashTestEchoServer extends ServerImpl implements ServerListener
 	public static void main(String[] args) throws IOException
 	{
 		try {
-			CAppBridge.init();		
-			FlashTestEchoServer server = new FlashTestEchoServer(new FlashMessageFactory(Messages.class));
+			CAppBridge.init();
+			FlashMessageFactory factory = new FlashMessageFactory(Messages.class);
+			FlashTestEchoServer server = new FlashTestEchoServer(factory);
 			int port = 19820;
 			if (args.length > 0) {
 				try {
@@ -61,6 +64,7 @@ public class FlashTestEchoServer extends ServerImpl implements ServerListener
 				}
 			}
 			server.open(port);
+			
 		} catch (Exception err) {
 			err.printStackTrace();
 			System.exit(1);
