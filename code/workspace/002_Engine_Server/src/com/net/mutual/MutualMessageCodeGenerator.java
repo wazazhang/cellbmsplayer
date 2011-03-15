@@ -105,12 +105,9 @@ public interface MutualMessageCodeGenerator
 		{
 			Class<?> 	f_type 		= f.getType();
 			String 		f_name 		= "msg." + f.getName();
-			if (ExternalizableMessage.class.isAssignableFrom(f_type)) {
-				read.append("		" + f_name + " = in.readExternal(" + f_type.getCanonicalName() + ".class);\n");
-				write.append("		out.writeExternal(" + f_name + ");\n");
-			} 
+		
 			// boolean -----------------------------------------------
-			else if (f_type.equals(boolean.class)) {
+			if (f_type.equals(boolean.class)) {
 				read.append("		" + f_name + " = in.readBoolean();\n");
 				write.append("		out.writeBoolean(" + f_name + ");\n");
 			}
@@ -191,7 +188,18 @@ public interface MutualMessageCodeGenerator
 				read.append("		" + f_name + " = in.readUTFArray();\n");
 				write.append("		out.writeUTFArray(" + f_name + ");\n");
 			}	
-			// Error ! -----------------------------------------------
+			// ExternalizableMessage -----------------------------------------------
+			else if (ExternalizableMessage.class.isAssignableFrom(f_type)) {
+				read.append("		" + f_name + " = in.readExternal(" + 
+						f_type.getCanonicalName() + ".class);\n");
+				write.append("		out.writeExternal(" + f_name + ");\n");
+			} 
+			else if (f_type.isArray()) {
+				read.append("		" + f_name + " = in.readExternalArray(" + 
+						f_type.getComponentType().getCanonicalName() + ".class);\n");
+				write.append("		out.writeExternalArray(" + f_name + ");\n");
+			} 
+			// Error -----------------------------------------------
 			else {
 				read.append("		Unsupported type : " + f_name + " " + f_type.getName() + "\n");
 				write.append("		Unsupported type : " + f_name + " " + f_type.getName() + "\n");
