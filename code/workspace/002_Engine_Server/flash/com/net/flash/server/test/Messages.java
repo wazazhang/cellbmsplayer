@@ -70,7 +70,7 @@ public class Messages
 	public static void main(String[] args)
 	{
 		CAppBridge.init();
-		FlashMessageFactory factory = new FlashMessageFactory(Messages.class);
+		FlashMessageFactory factory = new FlashMessageFactory(null, Messages.class);
 		MutualMessageCodeGeneratorJava gen_java = new MutualMessageCodeGeneratorJava(
 				CIO.readAllText("/com/net/flash/server/test/MutualMessageCodecJava.txt"));
 		CFile.writeText(new File("./flash/com/net/flash/server/test/MutualMessageCodecJava.java"), 

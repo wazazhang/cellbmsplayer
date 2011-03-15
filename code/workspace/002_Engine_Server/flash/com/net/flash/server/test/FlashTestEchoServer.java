@@ -53,7 +53,7 @@ public class FlashTestEchoServer extends ServerImpl implements ServerListener
 	{
 		try {
 			CAppBridge.init();
-			FlashMessageFactory factory = new FlashMessageFactory(Messages.class);
+			FlashMessageFactory factory = new FlashMessageFactory(new MutualMessageCodecJava(), Messages.class);
 			FlashTestEchoServer server = new FlashTestEchoServer(factory);
 			int port = 19820;
 			if (args.length > 0) {
