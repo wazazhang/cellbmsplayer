@@ -41,6 +41,7 @@ public class Messages
 	{
 		public String message;
 		public Data data;
+		public Data[] datas;
 		public EchoRequest(String message) {
 			this.message = message;
 		}
@@ -55,6 +56,7 @@ public class Messages
 	{
 		public String message;
 		public Data data;
+		public Data[] datas;
 		public EchoResponse(String message) {
 			this.message = message;
 		}

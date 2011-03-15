@@ -92,10 +92,12 @@ public class MutualMessageCodecJava implements MutualMessageCodec
 	public void read_EchoRequest(com.net.flash.server.test.Messages.EchoRequest msg, NetDataInput in) throws IOException {
 		msg.message = in.readUTF();
 		msg.data = in.readExternal(com.net.flash.server.test.Messages.Data.class);
+		msg.datas = in.readExternalArray(com.net.flash.server.test.Messages.Data.class);
 	}
 	public void write_EchoRequest(com.net.flash.server.test.Messages.EchoRequest msg, NetDataOutput out) throws IOException {
 		out.writeUTF(msg.message);
 		out.writeExternal(msg.data);
+		out.writeExternalArray(msg.datas);
 	}
 
 //	----------------------------------------------------------------------------------------------------
@@ -105,10 +107,12 @@ public class MutualMessageCodecJava implements MutualMessageCodec
 	public void read_EchoResponse(com.net.flash.server.test.Messages.EchoResponse msg, NetDataInput in) throws IOException {
 		msg.message = in.readUTF();
 		msg.data = in.readExternal(com.net.flash.server.test.Messages.Data.class);
+		msg.datas = in.readExternalArray(com.net.flash.server.test.Messages.Data.class);
 	}
 	public void write_EchoResponse(com.net.flash.server.test.Messages.EchoResponse msg, NetDataOutput out) throws IOException {
 		out.writeUTF(msg.message);
 		out.writeExternal(msg.data);
+		out.writeExternalArray(msg.datas);
 	}
 
 
