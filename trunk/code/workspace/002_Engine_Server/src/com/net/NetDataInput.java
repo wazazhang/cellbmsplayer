@@ -20,10 +20,20 @@ public interface NetDataInput extends DataInput
 	public float[] 		readFloatArray() throws IOException;
 	
 	public double[] 	readDoubleArray() throws IOException;
+
+	public String[] 	readUTFArray() throws IOException;
+
 	
+	
+	public<T extends ExternalizableMessage> 
+			T[] 		readExternalArray(Class<T> type) throws IOException;
+	
+	public <T extends ExternalizableMessage> 
+			T 			readExternal(Class<T> type) throws IOException;
+
 	public<T> T			readObject(Class<T> type) throws IOException;
-	
-	public <T extends ExternalizableMessage> T readExternal(Class<T> type) throws IOException;
+
+	public<T> T[]		readObjectArray(Class<T> type) throws IOException;
 	
 	public ExternalizableFactory getFactory();
 	

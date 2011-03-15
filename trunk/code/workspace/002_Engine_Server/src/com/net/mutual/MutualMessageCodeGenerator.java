@@ -109,46 +109,92 @@ public interface MutualMessageCodeGenerator
 				read.append("		" + f_name + " = in.readExternal(" + f_type.getCanonicalName() + ".class);\n");
 				write.append("		out.writeExternal(" + f_name + ");\n");
 			} 
-			else if (f_type.equals(byte.class) || f_type.equals(Byte.class)) {
+			// boolean -----------------------------------------------
+			else if (f_type.equals(boolean.class)) {
+				read.append("		" + f_name + " = in.readBoolean();\n");
+				write.append("		out.writeBoolean(" + f_name + ");\n");
+			}
+			else if (f_type.equals(boolean[].class)) {
+				read.append("		" + f_name + " = in.readBooleanArray();\n");
+				write.append("		out.writeBooleanArray(" + f_name + ");\n");
+			}
+			// byte -----------------------------------------------
+			else if (f_type.equals(byte.class)) {
 				read.append("		" + f_name + " = in.readByte();\n");
 				write.append("		out.writeByte(" + f_name + ");\n");
 			}
-			else if (f_type.equals(short.class) || f_type.equals(Short.class)) {
+			else if (f_type.equals(byte[].class)) 
+			{
+				read.append("		" + f_name + " = in.readByteArray();\n");
+				write.append("		out.writeByteArray(" + f_name + ");\n");
+			}
+			// short -----------------------------------------------
+			else if (f_type.equals(short.class)) {
 				read.append("		" + f_name + " = in.readShort();\n");
 				write.append("		out.writeShort(" + f_name + ");\n");
 			}
-			else if (f_type.equals(char.class) || f_type.equals(Character.class)) {
+			else if (f_type.equals(short[].class)) {
+				read.append("		" + f_name + " = in.readShortArray();\n");
+				write.append("		out.writeShortArray(" + f_name + ");\n");
+			}
+			// char -----------------------------------------------
+			else if (f_type.equals(char.class)) {
 				read.append("		" + f_name + " = in.readChar();\n");
 				write.append("		out.writeChar(" + f_name + ");\n");
 			}
-			else if (f_type.equals(int.class) || f_type.equals(Integer.class)) {
+			else if (f_type.equals(char[].class)) {
+				read.append("		" + f_name + " = in.readCharArray();\n");
+				write.append("		out.writeCharArray(" + f_name + ");\n");
+			}
+			// int -----------------------------------------------
+			else if (f_type.equals(int.class)) {
 				read.append("		" + f_name + " = in.readInt();\n");
 				write.append("		out.writeInt(" + f_name + ");\n");
 			}
-			else if (f_type.equals(long.class) || f_type.equals(Long.class)) {
+			else if (f_type.equals(int[].class)) {
+				read.append("		" + f_name + " = in.readIntArray();\n");
+				write.append("		out.writeIntArray(" + f_name + ");\n");
+			}
+			// long -----------------------------------------------
+			else if (f_type.equals(long.class)) {
 				read.append("		" + f_name + " = in.readLong();\n");
 				write.append("		out.writeLong(" + f_name + ");\n");
 			}
-			else if (f_type.equals(float.class) || f_type.equals(Float.class)) {
+			else if (f_type.equals(long[].class)) {
+				read.append("		" + f_name + " = in.readLongArray();\n");
+				write.append("		out.writeLongArray(" + f_name + ");\n");
+			}
+			// float -----------------------------------------------
+			else if (f_type.equals(float.class)) {
 				read.append("		" + f_name + " = in.readFloat();\n");
 				write.append("		out.writeFloat(" + f_name + ");\n");
 			}
-			else if (f_type.equals(double.class) || f_type.equals(Double.class)) {
+			else if (f_type.equals(float[].class)) {
+				read.append("		" + f_name + " = in.readFloatArray();\n");
+				write.append("		out.writeFloatArray(" + f_name + ");\n");
+			}
+			// double -----------------------------------------------
+			else if (f_type.equals(double.class)) {
 				read.append("		" + f_name + " = in.readDouble();\n");
 				write.append("		out.writeDouble(" + f_name + ");\n");
+			}	
+			else if (f_type.equals(double[].class)) {
+				read.append("		" + f_name + " = in.readDoubleArray();\n");
+				write.append("		out.writeDoubleArray(" + f_name + ");\n");
 			}
+			// String -----------------------------------------------
 			else if (f_type.equals(String.class)) {
 				read.append("		" + f_name + " = in.readUTF();\n");
 				write.append("		out.writeUTF(" + f_name + ");\n");
-			}
-			else if (f_type.isArray()) 
-			{
-				
-
-			}
+			}	
+			else if (f_type.equals(String[].class)) {
+				read.append("		" + f_name + " = in.readUTFArray();\n");
+				write.append("		out.writeUTFArray(" + f_name + ");\n");
+			}	
+			// Error ! -----------------------------------------------
 			else {
-				read.append("		// Unsupported type : " + f_name + " " + f_type.getName() + "\n");
-				write.append("		// Unsupported type : " + f_name + " " + f_type.getName() + "\n");
+				read.append("		Unsupported type : " + f_name + " " + f_type.getName() + "\n");
+				write.append("		Unsupported type : " + f_name + " " + f_type.getName() + "\n");
 			}
 		}
 	}

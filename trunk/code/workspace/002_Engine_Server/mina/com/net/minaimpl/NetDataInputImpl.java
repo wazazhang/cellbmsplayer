@@ -30,6 +30,12 @@ public class NetDataInputImpl implements NetDataInput
 		return factory;
 	}
 //	-----------------------------------------------------------------------------------------------
+
+	synchronized
+	public int skipBytes(int n) throws IOException {
+		buffer.skip(n);
+		return n;
+	}
 	
 	synchronized
 	public <T extends com.net.ExternalizableMessage> T readExternal(Class<T> type) throws IOException {
@@ -47,6 +53,15 @@ public class NetDataInputImpl implements NetDataInput
 	}
 
 	synchronized
+	public <T extends ExternalizableMessage> T[] readExternalArray(Class<T> type) throws IOException {
+		T[] ret = CUtil.newArray(type, buffer.getInt());
+		for (int i = 0; i < ret.length; i++) {
+			ret[i] = readExternal(type);
+		}
+		return ret;
+	}
+	
+	synchronized
 	public <T> T readObject(Class<T> type) throws IOException {
 		int size = buffer.getInt();
 		if (size > 0) {
@@ -60,6 +75,36 @@ public class NetDataInputImpl implements NetDataInput
 			}
 		}
 		return null;
+	}
+	
+	@Override
+	synchronized
+	public <T> T[] readObjectArray(Class<T> type) throws IOException {
+		T[] ret = CUtil.newArray(type, buffer.getInt());
+		for (int i = 0; i < ret.length; i++) {
+			ret[i] = readObject(type);
+		}
+		return ret;
+	}
+
+	synchronized
+	public String readUTF() throws IOException {
+		int size = buffer.getInt();
+		if (size >= 0) {		
+			byte[] data = new byte[size];
+			buffer.get(data);
+			return new String(data, CUtil.getEncoding());
+		}
+		return null;
+	}
+	
+	@Override
+	public String[] readUTFArray() throws IOException {
+		String[] ret = new String[buffer.getInt()];
+		for (int i = 0; i < ret.length; i++) {
+			ret[i] = readUTF();
+		}
+		return ret;
 	}
 	
 //	-----------------------------------------------------------------------------------------------
@@ -117,22 +162,6 @@ public class NetDataInputImpl implements NetDataInput
 		return buffer.getUnsignedShort();
 	}
 
-	synchronized
-	public String readUTF() throws IOException {
-		int size = buffer.getInt();
-		if (size >= 0) {		
-			byte[] data = new byte[size];
-			buffer.get(data);
-			return new String(data, CUtil.getEncoding());
-		}
-		return null;
-	}
-	synchronized
-	public int skipBytes(int n) throws IOException {
-		buffer.skip(n);
-		return n;
-	}
-
 //	--------------------------------------------------------------------------------------------------------------
 	synchronized
 	public boolean[] readBooleanArray() throws IOException {
@@ -166,7 +195,8 @@ public class NetDataInputImpl implements NetDataInput
 	public double[] readDoubleArray() throws IOException {
 		return ExternalizableUtil.readDoubleArray(this);
 	}
-	
+//	--------------------------------------------------------------------------------------------------------------
+
 	
 	
 }
