@@ -18,13 +18,23 @@ public class Messages
 {
 	public static class Data extends FlashMessage
 	{
-		public String	message2;
-		public byte 	d1;
-		public short 	d2;
-		public char 	d3;
-		public int	 	d4;
-		public long	 	d5;
-		public double 	d6;
+		public String		message2;
+		public boolean 		d0;
+		public byte 		d1;
+		public short 		d2;
+		public char 		d3;
+		public int	 		d4;
+		public long	 		d5;
+		public double 		d6;
+		
+		public String[]		a_message2;
+		public boolean[]	a_d0;
+		public byte[] 		a_d1;
+		public short[] 		a_d2;
+		public char[] 		a_d3;
+		public int[]	 	a_d4;
+		public long[]	 	a_d5;
+		public double[] 	a_d6;
 	}
 	
 	public static class EchoRequest extends FlashMessage

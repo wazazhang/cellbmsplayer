@@ -29,11 +29,26 @@ public class NetDataOutputImpl implements NetDataOutput
 	public ExternalizableFactory getFactory() {
 		return factory;
 	}
+
+//	-----------------------------------------------------------------------------------------------------------
+//	
 	synchronized
 	public void writeExternal(ExternalizableMessage data) throws IOException {
 		if (data != null) {
 			buffer.putInt(1);
 			data.writeExternal(this);
+		} else {
+			buffer.putInt(0);
+		}
+	}
+	
+	synchronized
+	public <T extends ExternalizableMessage> void writeExternalArray(T[] data) throws IOException {
+		if (data != null) {
+			buffer.putInt(data.length);
+			for (T d : data) {
+				writeExternal(d);
+			}
 		} else {
 			buffer.putInt(0);
 		}
@@ -48,6 +63,44 @@ public class NetDataOutputImpl implements NetDataOutput
 			buffer.putInt(0);
 		}
 	}
+
+	@Override
+	public void writeObjectArray(Object[] data) throws IOException {
+		if (data != null) {
+			buffer.putInt(data.length);
+			for (Object d : data) {
+				writeObject(d);
+			}
+		} else {
+			buffer.putInt(0);
+		}
+	}
+	
+	synchronized
+	public void writeUTF(String s) throws IOException {
+		if (s != null) {			
+			byte[] data = s.getBytes(CUtil.getEncoding());
+			buffer.putInt(data.length);
+			buffer.put(data);
+		} else {
+			buffer.putInt(0);
+		}
+	}
+
+	@Override
+	public void writeUTFArray(String[] data) throws IOException {
+		if (data != null) {
+			buffer.putInt(data.length);
+			for (String d : data) {
+				writeUTF(d);
+			}
+		} else {
+			buffer.putInt(0);
+		}
+	}
+	
+//	-----------------------------------------------------------------------------------------------------------
+//	
 	
 	synchronized
 	public void write(byte[] b, int off, int len) throws IOException {
@@ -102,16 +155,6 @@ public class NetDataOutputImpl implements NetDataOutput
 		buffer.putShort((short)v);
 	}
 	
-	synchronized
-	public void writeUTF(String s) throws IOException {
-		if (s != null) {			
-			byte[] data = s.getBytes(CUtil.getEncoding());
-			buffer.putInt(data.length);
-			buffer.put(data);
-		} else {
-			buffer.putInt(0);
-		}
-	}
 
 //	-----------------------------------------------------------------------------------------------------------
 //	

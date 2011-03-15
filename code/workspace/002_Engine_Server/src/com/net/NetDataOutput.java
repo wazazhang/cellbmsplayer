@@ -20,10 +20,19 @@ public interface NetDataOutput extends DataOutput
 	public void writeFloatArray(float[] floats) throws IOException;
 	
 	public void writeDoubleArray(double[] doubles) throws IOException;
+
+	public void writeUTFArray(String[] data) throws IOException;
+	
+	
 	
 	public void writeObject(Object data) throws IOException;
 	
+	public void writeObjectArray(Object[] data) throws IOException;
+	
 	public<T extends ExternalizableMessage> void writeExternal(T data) throws IOException;
+	
+	public<T extends ExternalizableMessage> void writeExternalArray(T[] data) throws IOException;
+	
 	
 	public ExternalizableFactory getFactory();
 }
