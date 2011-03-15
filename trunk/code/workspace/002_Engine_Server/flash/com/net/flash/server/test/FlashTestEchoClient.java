@@ -30,7 +30,7 @@ public class FlashTestEchoClient extends NetService
 	FlashTestEchoClient() {
 		super(new ServerSessionImpl(
 				CObject.getAppBridge().getClassLoader(),
-				new FlashMessageFactory(Messages.class)));
+				new FlashMessageFactory(new MutualMessageCodecJava(), Messages.class)));
 	}
 	
 	void run()

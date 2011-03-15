@@ -8,11 +8,12 @@ import com.cell.io.CFile;
 import com.net.ExternalizableFactory;
 import com.net.NetDataInput;
 import com.net.NetDataOutput;
+import com.net.mutual.MutualMessageCodec;
 
 public class FlashMessageFactory extends ExternalizableFactory
 {
-	public FlashMessageFactory(Class<?>... classes) {
-		super(classes);
+	public FlashMessageFactory(MutualMessageCodec mutual_codec, Class<?>... classes) {
+		super(mutual_codec, classes);
 	}
 
 
