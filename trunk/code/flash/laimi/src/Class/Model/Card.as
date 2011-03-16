@@ -26,7 +26,8 @@ package Class.Model
 			else if(type==4)
 				return 0xa42921;	
 			else(type==0)
-				return 0xffffff;			
+				return 0xffffff;	
+						
 		}
 		
 	}
