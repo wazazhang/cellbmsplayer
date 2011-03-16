@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="25" height="30" borderStyle="solid" 
+	 borderColor="{isSelected?0xff0000:0x000000}"
+	 backgroundColor="{card==null?0xeadda8:0x3d4a5b}" click="click()" >
+	 
+	<mx:Script>
+		<![CDATA[
+			import Class.Game;
+			import mx.controls.Alert;
+			import Class.Model.Card;
+			
+			[Bindable]
+			public var card:Card
+			[Bindable]
+			public var isSelected:Boolean = false;
+			
+			public var nextCardCpt:Card_Cpt
+			
+			
+			public function click():void
+			{
+				if(Game.gamer.selectedCard==null)
+				{
+					if(card==null)
+						return
+						
+					Game.gamer.selectedCard = this;
+					isSelected = true;
+				}
+				else
+				{
+					Game.gamer.selectedCard.isSelected = false;
+					isSelected = false;
+					 
+					var buffcard:Card = Game.gamer.selectedCard.card;
+					Game.gamer.selectedCard.card = card;
+					card = buffcard;
+					
+					Game.gamer.selectedCard = null;
+				}
+				
+			}
+		]]>
+	</mx:Script>
+	<mx:Label text="{card==null?'':card.point}" color="{card==null?0xffffff:card.Color}"
+		 horizontalCenter="0" verticalCenter="0" width="30" textAlign="center" fontWeight="bold" fontSize="16"/>
+</mx:Canvas>

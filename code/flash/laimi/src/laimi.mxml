@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" xmlns:ns1="Component.*" creationComplete="init()">
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import Class.Game;
+			
+			public function init():void
+			{
+				Game.matrix = mx;
+				Game.gamer.matrix = umx;
+				
+				Game.initGame();
+			}
+			
+			public function click():void
+			{
+				Game.gamer.getOneCardFromCardpile();
+			}
+			
+			public function click2():void
+			{
+				if(Game.check())
+				{
+					Alert.show('合法')
+				}
+				else
+				{
+					Alert.show('失败')
+				}	
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<ns1:Matrix_Cpt id="mx" y="50" borderStyle="solid" horizontalCenter="0" height="201">
+	</ns1:Matrix_Cpt>
+	<ns1:UserMatrix_Cpt id="umx" y="450"  horizontalCenter="0">
+	</ns1:UserMatrix_Cpt>
+	
+	<mx:Button x="66" y="318" label="发牌" click="click()"/>
+	<mx:Button x="66" y="348" label="检查" click="click2()"/>
+
+
+</mx:Application>
