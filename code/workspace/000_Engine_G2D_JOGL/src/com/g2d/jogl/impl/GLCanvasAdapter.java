@@ -76,7 +76,7 @@ public class GLCanvasAdapter extends com.g2d.java2d.CanvasAdapter implements GLE
         gl.glDisable(GL.GL_DEPTH_TEST);			
 //		gl.glDepthMask(false); 
         
-		update();
+		update((Graphics2D)getComponent().getGraphics());
 	}
 
 	@Override
@@ -135,7 +135,7 @@ public class GLCanvasAdapter extends com.g2d.java2d.CanvasAdapter implements GLE
 	}
 	
 	@Override
-	protected void updateStage(Stage currentStage)
+	protected void updateStage(java.awt.Graphics2D g, Stage currentStage)
 	{
 		GLAnimateCursor nextCursor = null;
 		
