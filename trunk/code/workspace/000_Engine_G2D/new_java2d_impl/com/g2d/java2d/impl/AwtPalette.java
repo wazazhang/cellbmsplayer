@@ -9,7 +9,7 @@ import com.cell.CIO;
 import com.cell.gfx.IPalette;
 
 
-class AwtPalette implements IPalette 
+public class AwtPalette implements IPalette 
 {
 	private byte[] data_;
 	
@@ -18,12 +18,12 @@ class AwtPalette implements IPalette
 	private short transparent_color_index_;
 	
 	
-	AwtPalette(InputStream is) throws IOException
+	protected AwtPalette(InputStream is) throws IOException
 	{
 		loadACT(CIO.readStream(is));
 	}
 	
-	AwtPalette(byte[] data, short color_count, short transparent_color_index)
+	protected AwtPalette(byte[] data, short color_count, short transparent_color_index)
 	{
 		this.data_ = data;
 		this.color_count_ = color_count;

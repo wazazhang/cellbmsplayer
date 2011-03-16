@@ -120,6 +120,12 @@ public class Panel extends UIComponent
 	{
 		super.update();
 
+	}
+	
+	@Override
+	protected void updateChilds() 
+	{
+
 		int sx = layout.BorderSize;
 		int sy = layout.BorderSize;
 		int sw = getWidth()-(layout.BorderSize<<1);
@@ -134,11 +140,7 @@ public class Panel extends UIComponent
 		container.setLocation(
 				-(int)scrollbar.h_scroll.getValue(), 
 				-(int)scrollbar.v_scroll.getValue());
-	}
-	
-	@Override
-	protected void updateChilds() 
-	{
+		
 		super.updateChilds();
 	}
 	

@@ -30,17 +30,17 @@ public class AwtImage implements com.g2d.BufferedImage
 	private WritableRaster	m_src_index_color_raster;
 	private ColorModel		m_src_index_color_model;
 		
-	AwtImage(Image image)
+	protected AwtImage(Image image)
 	{
 		m_image = createBuffer(image);
 	}
 	
-	AwtImage() {
+	protected AwtImage() {
 		m_image = createBuffer(AwtEngine.getEngine().getGC()
 				.createCompatibleImage(1, 1, Transparency.TRANSLUCENT));
 	}
 
-	AwtImage(String file) {
+	protected AwtImage(String file) {
 		InputStream is = CIO.getInputStream(file);
 		try {
 			m_image = createBuffer(ImageIO.read(is));
@@ -55,7 +55,7 @@ public class AwtImage implements com.g2d.BufferedImage
 		}
 	}
 
-	AwtImage(java.awt.image.BufferedImage buff) {
+	protected AwtImage(java.awt.image.BufferedImage buff) {
 		try {
 			m_image = createBuffer(buff);
 		} catch (Exception err) {
@@ -63,12 +63,12 @@ public class AwtImage implements com.g2d.BufferedImage
 		}
 	}
 
-	AwtImage(int w, int h) {
+	protected AwtImage(int w, int h) {
 		m_image = createBuffer(AwtEngine.getEngine().getGC()
 				.createCompatibleImage(w, h, Transparency.TRANSLUCENT));
 	}
 	
-	private final BufferedImage createBuffer(Image src)
+	protected BufferedImage createBuffer(Image src)
 	{
 		try
 		{

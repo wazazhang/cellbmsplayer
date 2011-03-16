@@ -114,6 +114,12 @@ public class ScrolledPan extends Container
 	{
 		super.update();
 
+	}
+
+	@Override
+	protected void updateChilds() 
+	{
+
 		int sx = layout.BorderSize;
 		int sy = layout.BorderSize;
 		int sw = getWidth()-(layout.BorderSize<<1);
@@ -131,7 +137,7 @@ public class ScrolledPan extends Container
 		view_port_view.setMinimumSize(
 				view_port.getWidth(), 
 				view_port.getHeight());
+		super.updateChilds();
 	}
-
 	
 }

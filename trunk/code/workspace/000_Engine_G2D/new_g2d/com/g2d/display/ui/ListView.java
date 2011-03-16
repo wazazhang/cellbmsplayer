@@ -184,6 +184,11 @@ public class ListView extends UIComponent
 	public void render(Graphics2D g) {
 		super.render(g);
 		
+		
+	}
+	
+	@Override
+	protected void updateChilds() {
 		panel.setLocation(0, 0);
 		panel.setSize(getWidth(), getHeight());
 		
@@ -192,9 +197,8 @@ public class ListView extends UIComponent
 				new Dimension(panel.getViewPortWidth(), panel.getViewPortHeight()), 
 				view_mode, 
 				new java.util.ArrayList<Item<?>>(panel.components));
+		super.updateChilds();
 	}
-	
-
 //	----------------------------------------------------------------------------------------------------------
 
 	class ListViewPanel extends Panel
