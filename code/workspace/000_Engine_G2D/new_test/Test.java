@@ -20,11 +20,9 @@ public class Test extends Stage
 	@Override
 	public void inited(Canvas root, Object[] args)
 	{
-		addChild(new TestShape());
-		addChild(new TestShape());
-		addChild(new TestShape());
-		addChild(new TestShape());
-		
+		for (int i = 0; i < 10; i++) {
+			addChild(new TestShape());
+		}
 	}
 	
 	@Override

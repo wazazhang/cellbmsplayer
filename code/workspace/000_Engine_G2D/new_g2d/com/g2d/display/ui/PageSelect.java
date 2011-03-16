@@ -123,6 +123,11 @@ public abstract class PageSelect<P extends com.g2d.display.ui.PageSelect.Page> e
 	{
 		super.renderAfter(g);
 		
+		
+	}
+	
+	@Override
+	protected void updateChilds() {
 		if (!pages.isEmpty())
 		{
 			int h = page_header_height;
@@ -136,8 +141,8 @@ public abstract class PageSelect<P extends com.g2d.display.ui.PageSelect.Page> e
 				x += page.getWidth();
 			}
 		}
+		super.updateChilds();
 	}
-	
 	
 	synchronized public boolean addChild(DisplayObject child) {
 		throw new IllegalStateException("can not add a custom child component in " + getClass().getName() + " !");

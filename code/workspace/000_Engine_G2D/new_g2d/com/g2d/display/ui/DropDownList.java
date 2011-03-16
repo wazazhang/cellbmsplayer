@@ -42,6 +42,12 @@ public abstract class DropDownList extends UIComponent
 	{
 		super.render(g);
 		
+		
+	
+	}
+	
+	@Override
+	protected void updateChilds() {
 		pan.setSize(
 				getWidth()-scroll.getWidth()-layout.BorderSize*2, 
 				getHeight()-layout.BorderSize*2);
@@ -58,7 +64,7 @@ public abstract class DropDownList extends UIComponent
 		scroll.setValue(scroll.getValue(), pan.getHeight());
 		
 		container.setLocation(0, -(int)scroll.getValue());
-	
+		super.updateChilds();
 	}
 	
 	protected void onMouseWheelMoved(MouseWheelEvent event) {

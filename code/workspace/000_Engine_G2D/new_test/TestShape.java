@@ -77,10 +77,10 @@ public class TestShape extends Sprite
 	@Override
 	public void render(Graphics2D g) 
 	{
-		g.pushBlendMode();
-		g.setBlendMode(3);
+//		g.pushBlendMode();
+//		g.setBlendMode(3);
 		g.drawImage(image, local_bounds.x, local_bounds.y);
-		g.popBlendMode();
+//		g.popBlendMode();
 //		g.setColor(Color.GREEN);
 //		g.draw(local_bounds);
 	}
@@ -98,10 +98,10 @@ public class TestShape extends Sprite
 		
 		@Override
 		public void render(Graphics2D g) {
-			g.pushBlendMode();
-			g.setBlendMode(3);
+//			g.pushBlendMode();
+//			g.setBlendMode(3);
 			g.drawImage(cp, local_bounds.x, local_bounds.y);		
-			g.popBlendMode();
+//			g.popBlendMode();
 		}
 		
 	}

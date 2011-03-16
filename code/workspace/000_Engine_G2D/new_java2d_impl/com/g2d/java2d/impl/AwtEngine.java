@@ -59,8 +59,7 @@ public class AwtEngine extends Engine
 	private GraphicsEnvironment 				ge;
 	private GraphicsDevice 						gd;
 	private GraphicsConfiguration				gc;
-	private java.awt.image.BufferedImage 		gc_buff;
-	private java.awt.Graphics2D					gc_buff_g;
+//	private java.awt.Graphics2D					gc_buff_g;
 	private HashMap<String, AwtAnimateCursor>	system_cursor;
 	
 	public AwtEngine() 
@@ -70,29 +69,36 @@ public class AwtEngine extends Engine
 	
 	public AwtEngine(GraphicsEnvironment ge) 
 	{
-		this.ge				= ge;
-		this.gd				= ge.getDefaultScreenDevice();
-		this.gc				= gd.getDefaultConfiguration();
+		this(ge, ge.getDefaultScreenDevice(), ge.getDefaultScreenDevice().getDefaultConfiguration());
+//		if (this.gc.getColorModel().getTransferType() != DataBuffer.TYPE_INT)
+//		{
+//			// NOTE 为了避免操作系统非32位色的显示设置的情况下，无法正确显示一些效果
+//			// 这一段必须存在，可以通过提示玩家采用32位色设置使得玩家运行游戏更流畅一些
+//			// 正常情况下，使用16位或者24位系统显示设置的时候，运行一些游戏或者软件是没有
+//			// 直接使用32位色来的快速的，
+//			
+//			this.gc_buff = new java.awt.image.BufferedImage(10, 10, java.awt.image.BufferedImage.TYPE_INT_ARGB);
+//			this.gc_buff_g = gc_buff.createGraphics();	
+//			this.gc = this.gc_buff_g.getDeviceConfiguration();
+//			if (gc == null) {
+//				gc = gd.getDefaultConfiguration();
+//			}
+//		}
+//		else
+//		{
+//			this.gc_buff		= gc.createCompatibleImage(10, 10);
+//			this.gc_buff_g		= gc_buff.createGraphics();
+//		}
+	}
 
-		if (this.gc.getColorModel().getTransferType() != DataBuffer.TYPE_INT)
-		{
-			// NOTE 为了避免操作系统非32位色的显示设置的情况下，无法正确显示一些效果
-			// 这一段必须存在，可以通过提示玩家采用32位色设置使得玩家运行游戏更流畅一些
-			// 正常情况下，使用16位或者24位系统显示设置的时候，运行一些游戏或者软件是没有
-			// 直接使用32位色来的快速的，
-			
-			this.gc_buff = new java.awt.image.BufferedImage(10, 10, java.awt.image.BufferedImage.TYPE_INT_ARGB);
-			this.gc_buff_g = gc_buff.createGraphics();	
-			this.gc = this.gc_buff_g.getDeviceConfiguration();
-			if (gc == null) {
-				gc = gd.getDefaultConfiguration();
-			}
-		}
-		else
-		{
-			this.gc_buff		= gc.createCompatibleImage(10, 10);
-			this.gc_buff_g		= gc_buff.createGraphics();
-		}
+	public AwtEngine(
+			GraphicsEnvironment ge,
+			GraphicsDevice gd,
+			GraphicsConfiguration gc)
+	{
+		this.ge = ge;
+		this.gd = gd;
+		this.gc = gc;
 
 		System.out.println("AWT - GraphicsEnvironment   : " + ge);
 		System.out.println("AWT - GraphicsDevice        : " + gd);
@@ -116,11 +122,11 @@ public class AwtEngine extends Engine
 		}
 		instance 			= this;
 	}
-
+	
 	public GraphicsEnvironment		getGE() {return ge;}
 	public GraphicsDevice			getGD() {return gd;}
 	public GraphicsConfiguration	getGC() {return gc;}
-	public java.awt.Graphics2D		getG()  {return gc_buff_g;}
+//	public java.awt.Graphics2D		getG()  {return gc_buff_g;}
 	
 	public void setFullScreen(Window window, DisplayMode mode) {
 		if (gd.isFullScreenSupported()) {

@@ -43,7 +43,7 @@ import com.g2d.java2d.impl.composite.AlphaComposite.AlphaBlendMode;
 import com.g2d.java2d.impl.composite.BlendComposite.BlendingMode;
 
 
-class AwtGraphics2D extends Graphics2D
+public class AwtGraphics2D extends Graphics2D
 {
 	final java.awt.Graphics2D	g2d;
 	
@@ -58,7 +58,7 @@ class AwtGraphics2D extends Graphics2D
 	private Stack<java.awt.Paint> 					stack_paint		= new Stack<java.awt.Paint>();
 
 
-	public AwtGraphics2D(java.awt.Graphics2D g2d)
+	protected AwtGraphics2D(java.awt.Graphics2D g2d)
 	{
 		this.g2d 			= g2d;
 		this.cur_color		= new Color(g2d.getColor().getRGB());

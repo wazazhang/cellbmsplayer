@@ -3,6 +3,7 @@ package com.g2d.java2d.impl;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.Image;
@@ -30,7 +31,9 @@ public class AwtCanvas extends CanvasAdapter
 		if (container.getFont() != null) {
 			setDefaultFont(new AwtFont(container.getFont()));
 		} else {
-			setDefaultFont(new AwtFont(AwtEngine.getEngine().getG().getFont()));
+			Graphics g = AwtEngine.getEngine().getGC().createCompatibleImage(1, 1).getGraphics();
+			setDefaultFont(new AwtFont(g.getFont()));
+			g.dispose();
 		}
 	}
 	
@@ -107,7 +110,7 @@ public class AwtCanvas extends CanvasAdapter
 	}
 	
 	@Override
-	protected void updateStage(Stage currentStage)
+	protected void updateStage(java.awt.Graphics2D g, Stage currentStage)
 	{
 		GraphicsConfiguration gc = AwtEngine.getEngine().getGC();
 		

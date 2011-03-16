@@ -56,7 +56,7 @@ final public class SimpleCanvas extends Canvas implements Runnable
 	{
 		Graphics2D g = (Graphics2D)dg;
 		
-		canvas.update();
+		canvas.update(g);
 
 		Image vm_buffer = canvas.getVMBuffer();
 		

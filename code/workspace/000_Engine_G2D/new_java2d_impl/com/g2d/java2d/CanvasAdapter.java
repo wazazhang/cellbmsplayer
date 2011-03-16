@@ -278,7 +278,7 @@ FocusListener
 //		component.repaint(0, 0, 0, getWidth(), getHeight());
 //	}
 	
-	public void update() 
+	public void update(java.awt.Graphics2D g2d) 
 	{
 //		GraphicsConfiguration gc = ((Graphics2D)g).getDeviceConfiguration();
 		
@@ -297,8 +297,7 @@ FocusListener
 			size_rate_x = getMouseSizeRateW(stageWidth);
 			size_rate_y = getMouseSizeRateH(stageHeight);
 			
-			
-			updateStage(currentStage);
+			updateStage(g2d, currentStage);
 			
 			tryChageStage();
 			
@@ -314,7 +313,7 @@ FocusListener
 	}
 	
 	 
-	protected abstract void updateStage(Stage currentStage);
+	protected abstract void updateStage(java.awt.Graphics2D g2d, Stage currentStage);
 	
 	protected void tryChageStage()
 	{
