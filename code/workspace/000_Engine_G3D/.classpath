@@ -3,6 +3,8 @@
 	<classpathentry kind="src" path="g3d"/>
 	<classpathentry kind="src" path="impl_jogl"/>
 	<classpathentry kind="src" path="BezierAnim3D/src"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
 		<accessrules>
 			<accessrule kind="discouraged" pattern="java.awt.*"/>
