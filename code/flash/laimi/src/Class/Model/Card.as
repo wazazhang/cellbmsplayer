@@ -7,7 +7,7 @@ package Class.Model
 		public var type:int;   //颜色
 		public var order:Number; //随机排序数
 		
-		
+		public var isSended:Boolean = false; //是否已经打出
 		
 		public function Card(point:int,type:int)
 		{
@@ -26,8 +26,7 @@ package Class.Model
 			else if(type==4)
 				return 0xa42921;	
 			else(type==0)
-				return 0xffffff;	
-						
+				return 0xffffff;			
 		}
 		
 	}

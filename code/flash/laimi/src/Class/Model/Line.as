@@ -11,14 +11,17 @@ package Class.Model
 		public var lineLength:int=26;
 		
 		//单列检测
-		public function Line(length:int)
+		public function Line(length:int,isplayer:Boolean)
 		{
 			lineLength = length;
 			firstCard = new Card_Cpt();
+			firstCard.isPlayerOwner = isplayer;
+			
 			var buff:Card_Cpt = firstCard;
 			for(var i:int=1;i<lineLength;i++)
 			{
 				buff.nextCardCpt = new Card_Cpt();
+				buff.nextCardCpt.isPlayerOwner = isplayer;
 				buff = buff.nextCardCpt;	
 			}
 			lastCard = buff.nextCardCpt;	
@@ -38,7 +41,6 @@ package Class.Model
 				cardcpt = cardcpt.nextCardCpt;	
 			}
 		}
-		
 		
 		public function check():Boolean
 		{
@@ -137,8 +139,13 @@ package Class.Model
 			while(percar.point==0)
 			{
 				percar = (arr.shift() as Card_Cpt).card;
+				if(percar.point==1)
+				{
+					return false;
+				}
 			}
-			var index:int=0;
+
+			var index:int=0;			
 			while(arr.length>0)
 			{
 				index++;
@@ -176,7 +183,6 @@ package Class.Model
 				{
 					return false;
 				}
-				
 				if(card.point!=0)
 				huaArray.push(card.type);
 			}

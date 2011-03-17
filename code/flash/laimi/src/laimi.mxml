@@ -9,7 +9,6 @@
 			{
 				Game.matrix = mx;
 				Game.gamer.matrix = umx;
-				
 				Game.initGame();
 			}
 			
@@ -29,7 +28,6 @@
 					Alert.show('失败')
 				}	
 			}
-			
 		]]>
 	</mx:Script>
 	
@@ -40,6 +38,4 @@
 	
 	<mx:Button x="66" y="318" label="发牌" click="click()"/>
 	<mx:Button x="66" y="348" label="检查" click="click2()"/>
-
-
 </mx:Application>

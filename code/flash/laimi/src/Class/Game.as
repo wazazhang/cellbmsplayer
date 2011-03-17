@@ -13,7 +13,8 @@ package Class
 	import mx.core.Application;
 	public class Game
 	{
-		public static var app:Application
+		public static var app:Application;
+		
 		//列数
 		public static var lineCount:int=13; 
 		
@@ -45,7 +46,7 @@ package Class
 		{
 			for(var i:int=0;i<lineCount;i++)
 			{
-				var line:Line = new Line(26)
+				var line:Line = new Line(26,false)
 				lineArray.addItem(line);
 				line.fill(i,matrix);
 			}
@@ -68,7 +69,6 @@ package Class
 					cards.addItem(card);
 				}
 			}
-			
 			card = new Card(0,0);
 			card.order = Math.random();
 			cards.addItem(card);
@@ -82,6 +82,7 @@ package Class
 			cards.refresh();
 		}
 		
+		//
 		public static function getCardFromCard():Card
 		{
 			return cards.removeItemAt(0) as Card; 
@@ -98,6 +99,35 @@ package Class
 				}
 			}
 			return true;
+		}
+		
+		//撤销
+		public static function reset():void
+		{
+			for each(var line:Line in lineArray)
+			{
+				var cardctp:Card_Cpt = line.firstCard;
+				do{
+					cardctp.card = null;
+					cardctp.card = cardctp.confimcard;
+				}
+				while(cardctp = line.lastCard);
+			}
+		}
+		
+		//提交
+		public static function submit():void
+		{
+			for each(var line:Line in lineArray)
+			{
+				var cardctp:Card_Cpt = line.firstCard;
+				do{
+					cardctp.confimcard = null;
+					cardctp.confimcard = cardctp.card;
+					cardctp.card.isSended = true;
+				}
+				while(cardctp = line.lastCard);
+			}
 		}
 	}
 }

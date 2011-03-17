@@ -10,19 +10,39 @@
 			import Class.Model.Card;
 			
 			[Bindable]
-			public var card:Card
+			public var confimcard:Card
+			
 			[Bindable]
-			public var isSelected:Boolean = false;
+			public var card:Card
 			
-			public var nextCardCpt:Card_Cpt
+			[Bindable]
+			public var isSelected:Boolean = false; 
 			
+			public var nextCardCpt:Card_Cpt;
+			public var isPlayerOwner:Boolean = false;
+			
+			public function confim():void
+			{
+				confimcard = card;
+			}
+			
+			public function reset():void
+			{
+				card = confimcard;
+			}
 			
 			public function click():void
 			{
+				//检测往回拿
+				if(isPlayerOwner&&Game.gamer.selectedCard!=null&&Game.gamer.selectedCard.card.isSended)
+				{
+					return
+				}
+				
 				if(Game.gamer.selectedCard==null)
 				{
 					if(card==null)
-						return
+						return		
 						
 					Game.gamer.selectedCard = this;
 					isSelected = true;
@@ -31,14 +51,12 @@
 				{
 					Game.gamer.selectedCard.isSelected = false;
 					isSelected = false;
-					 
 					var buffcard:Card = Game.gamer.selectedCard.card;
 					Game.gamer.selectedCard.card = card;
 					card = buffcard;
 					
 					Game.gamer.selectedCard = null;
 				}
-				
 			}
 		]]>
 	</mx:Script>
