@@ -16,25 +16,44 @@ package com.net.client.minaimpl
 	public class ServerSession implements com.net.client.ServerSession
 	{
 		/** 当前远程地址*/
-		private var serveraddr 			: String; 
+		private var serveraddr 				: String; 
 		
 		/** SOCKET套接字*/
-		private var connector 			: Socket;
+		private var connector 				: Socket;
 		
 		/** 服务器监听器*/
-		private var listener 			: ServerSessionListener;
+		private var listener 				: ServerSessionListener;
 		
 		/** 消息类型管理器*/
-		private var message_factory		: MessageFactory;
+		private var message_factory			: MessageFactory;
 		
 		/** 未解析完的数据*/
-		private var undecoded_buffer	: ByteArray;
+		private var undecoded_buffer		: ByteArray;
 		
 		/** 未解析完的包*/
-		private var uncomplete_package	: Protocol;
+		private var uncomplete_package		: ProtocolImpl;
 		
 		
-		public function ServerSession(factory : MessageFactory, listener : ServerSessionListener) 
+//		----------------------------------------------------------------------------
+
+		/** 消息头*/
+		private var		protocol_start		: int;
+		/** 心跳请求头*/
+		private var		heart_beat_req 		: int;
+		/** 心跳回馈头*/
+		private var		heart_beat_rep 		: int;
+		
+		/** 消息头固定尺寸*/
+		private const	protocol_fixed_size	: int = 4 + 4;
+		
+//		----------------------------------------------------------------------------
+		
+		
+		
+		public function ServerSession(factory : MessageFactory, listener : ServerSessionListener, 
+									  header : int = 0x02000006, 
+									  hb_req : int = 0x02000001,
+									  hb_rep : int = 0x02000002) 
 		{
 			this.message_factory = factory;
 			this.connector = new Socket();
@@ -44,6 +63,11 @@ package com.net.client.minaimpl
 			this.connector.addEventListener(SecurityErrorEvent.SECURITY_ERROR,	securityErrorHandler);
 			this.connector.addEventListener(ProgressEvent.SOCKET_DATA, 			socketDataHandler);
 			this.listener = listener;
+			
+			this.protocol_start = header;
+			this.heart_beat_req = hb_req;
+			this.heart_beat_rep = hb_rep;
+
 		}
 		
 		public function connect(host : String,  port : int) : Boolean
@@ -207,35 +231,6 @@ package com.net.client.minaimpl
 		
 //		---------------------------------------------------------------------------------------------------------
 		
-		var			PACKAGE_DEFAULT_SIZE : int			= 2048;
-		/** 心跳请求头*/
-		const 		heart_beat_req : ByteArray			= new ByteArray(); 
-		/** 心跳回馈头*/
-		const		heart_beat_rep : ByteArray 			= new ByteArray(); 
-		/** 消息头*/
-		const		protocol_start : ByteArray 			= new ByteArray(); 
-		/** 消息头固定尺寸*/
-		var			protocol_fixed_size : int 			= 4 + 4;
-		
-		
-		public function setProtocolStart(
-				header : ByteArray, 
-				hb_req : ByteArray, 
-				hb_rep : ByteArray)
-		{
-			protocol_start.clear();
-			heart_beat_req.clear();
-			heart_beat_rep.clear();
-			
-			protocol_start.writeBytes(header);
-			heart_beat_req.writeBytes(hb_req);
-			heart_beat_rep.writeBytes(hb_rep);
-			
-		//	[-1, 0, 0, 6]
-		//	[-2, 0, 0, 6]
-		// [ 2, 0, 0, 6, ];
-		}
-		
 //		-----------------------------------------------------------------------------------------
 
 		/**
@@ -244,7 +239,7 @@ package com.net.client.minaimpl
 		function decode(buffer : IDataInput) : Boolean
 		{
 			//得到上次的状态
-			var protocol : Protocol = this.uncomplete_package;
+			var protocol : ProtocolImpl = this.uncomplete_package;
 			
 			try
 			{
@@ -252,93 +247,94 @@ package com.net.client.minaimpl
 				if (protocol == null)
 				{
 					// 有足够的数据
-					if (buffer.bytesAvailable >= Protocol.HeadFixedHeaderSize)
+					if (buffer.bytesAvailable >= protocol_fixed_size)
 					{
 						// 判断是否是有效的数据包头
-						var head : ByteArray = new ByteArray();
-						buffer.readBytes(head, 0, NetPackageProtocol.MagicStart.length);
-						for (var h:int=head.length-1; h>=0; --h){
-							if (head[h] != NetPackageProtocol.MagicStart[h]){
-								// 丢弃掉非法字节
-								trace("bad head, drop data : " + head);
+						var head : int = buffer.readInt();
+						if (head != protocol_start) {
+							// 心跳包头，重置。
+							if (head == heart_beat_req) {
 								return true;
 							}
+							if (head == heart_beat_rep) {
+								return true;
+							}
+							// 丢弃掉非法字节//返回true代表这次解包已完成,清空状态并准备下一次解包
+							trace("bad head, drop data : " + head.toString(16));
+							return true;
 						}
 						
 						// 生成新的状态
-						protocol = _uncompleteProtocol = new NetPackageProtocol();
-						protocol.Size				= buffer.readInt();
-						protocol.Protocol			= buffer.readByte();
-						protocol.ChannelSize		= buffer.readInt();
-						protocol.ChannelSenderSize	= buffer.readInt();
-						protocol.MessageSize		= buffer.readInt();
+						protocol = new ProtocolImpl(buffer.readInt());
+						this.uncomplete_package = protocol;
 					}
 					else
 					{
 						// 没有足够的数据时,返回 false
+						// 返回false代表这次解包未完成,需要等待
 						return false;
 					}
+					
 				}
 				
 				// 继续解析包内容
 				if (protocol != null)
 				{
+					var message_size : int = protocol.buffer_size - protocol_fixed_size;
+					
 					// 如果有足够的数据
-					if (buffer.bytesAvailable >= protocol.Size - NetPackageProtocol.HeadFixedHeaderSize) 
+					if (buffer.bytesAvailable >= message_size) 
 					{
-						// channel name
-						if (protocol.ChannelSize > 0){
-							protocol.ChannelName = buffer.readUTFBytes(protocol.ChannelSize);
-						}
-						
-						// channel sender
-						if (protocol.ChannelSenderSize > 0){
-							protocol.ChannelSender = buffer.readUTFBytes(protocol.ChannelSenderSize);
-						}
-						
-						// message
-						if (protocol.MessageSize > 0){
-							var input : ByteArray = new ByteArray();
-							buffer.readBytes(input, 0, protocol.MessageSize);
-							var type : int = input.readInt();
-							var paknum : int = input.readInt();
-							protocol.Message = _messageManager.createMessage(type);
-							if (protocol.Message!=null) {
-								protocol.Message.Type = type;
-								protocol.Message.PacketNumber = paknum;
-								protocol.Message.deserialize(input);
-							}
-						}
-						
-						// 验证包的尺寸合法性
-						if (NetPackageProtocol.validate(protocol))
-						{
-							// 判断是否是有效的数据包尾
-							var tail : ByteArray = new ByteArray();
-							buffer.readBytes(tail, 0, NetPackageProtocol.MagicEnd.length);
-							for (var t:int=tail.length-1; t>=0; --t){
-								if (tail[t] != NetPackageProtocol.MagicEnd[t]){
-									// 丢弃掉非法字节
-									trace("bad end, drop data : " + tail + " : " + protocol.toString());
-									return true;
-								}
-							}
-							
-							recivedMessage(protocol);
-							trace("decoded <- : " + protocol.toString());
-						}
-						else
-						{
-							trace("bad protocol message : " + protocol.toString());
-						}
-						
 						// 清空当前的解包状态
-						this.uncomplete_package = null;
+						this.uncomplete_package 	= null;
 						
+						protocol.setReceivedTime			(0);
+						
+						protocol.setProtocol				(buffer.readByte());	// 1
+						protocol.setSessionID				(buffer.readInt(), 
+															 buffer.readInt());		// 8
+						protocol.setPacketNumber			(buffer.readInt());		// 4
+												
+						switch (protocol.getProtocol()) {
+						case Protocol.PROTOCOL_CHANNEL_JOIN_S2C:
+						case Protocol.PROTOCOL_CHANNEL_LEAVE_S2C:
+						case Protocol.PROTOCOL_CHANNEL_MESSAGE:
+							protocol.setChannelID			(buffer.readInt());		// 4
+							protocol.setChannelSessionID	(buffer.readInt(), 
+															 buffer.readInt());		// 8
+							break;
+						}
+						
+						var transmission_flag : int	= buffer.readByte();			// 1
+						
+						// 确定是否要解压缩
+						if ((transmission_flag & ProtocolImpl.TRANSMISSION_TYPE_COMPRESSING) != 0) {
+							trace("not supprot TRANSMISSION_TYPE_COMPRESSING");
+						}
+						// 解出包包含的二进制消息
+						if ((transmission_flag & ProtocolImpl.TRANSMISSION_TYPE_EXTERNALIZABLE) != 0) {
+							var message : Message = message_factory.createMessage(buffer.readInt());// ext 4
+							message_factory.readExternal(message, buffer);
+							protocol.setMessage(message);
+						}
+						else if ((transmission_flag & ProtocolImpl.TRANSMISSION_TYPE_SERIALIZABLE) != 0) {
+							trace("not supprot TRANSMISSION_TYPE_SERIALIZABLE");
+						}
+						
+						// 告诉 Protocol Handler 有消息被接收到
+						recivedMessage(protocol);
+						
+						//System.out.println("decoded <- " + session.getRemoteAddress() + " : " + protocol);
+						
+						//ReceivedMessageCount ++;
+						
+						// 无论如何都返回true，因为当前解包已完成
 						return true;
-					}
+					} 
 					else
 					{
+						// 没有足够的数据时,返回 false
+						// 返回false代表这次解包未完成,需要等待
 						return false;
 					}
 				}

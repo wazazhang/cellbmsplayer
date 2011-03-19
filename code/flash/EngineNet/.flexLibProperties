@@ -5,6 +5,7 @@
     <classEntry path="com.net.client.MessageFactory"/>
     <classEntry path="com.net.client.ServerSessionListener"/>
     <classEntry path="com.net.client.ServerSession"/>
+    <classEntry path="com.net.client.minaimpl.ProtocolImpl"/>
   </includeClasses>
   <includeResources/>
   <namespaceManifests/>

@@ -11,24 +11,15 @@ package com.net.client
 		/** 当前Session离开频道的事件 */
 		public static const PROTOCOL_CHANNEL_LEAVE_S2C 	: int	= 0x51;
 		
-		
-		internal var		protocol 			: int ;
-		
-		internal var  		session_id 			: Number;
-		
-		internal var		packet_number 		: int;
-		
-		internal var 		channel_id 			: int;
-		
-		internal var 		channel_session_id 	: Number;
-		
-		internal var 		sent_time 			: Number;
-		
-		internal var 		received_time 		: Number;
-		
-		internal var 		message 			: Message;
-		
-		
+		protected var		protocol 			: int ;
+		protected var  		session_id 			: Number;
+		protected var		packet_number 		: int;
+		protected var 		channel_id 			: int;
+		protected var 		channel_session_id 	: Number;
+		protected var 		sent_time 			: Number;
+		protected var 		received_time 		: Number;
+		protected var 		message 			: Message;
+
 		
 		/**消息类型*/
 		public function		getProtocol() : int {
@@ -56,7 +47,6 @@ package com.net.client
 		public function 		getChannelSesseionID() : Number{
 			return this.channel_session_id;
 		}
-		
 		
 		/**发送时间*/
 		public function 		getSentTime(): Number {
