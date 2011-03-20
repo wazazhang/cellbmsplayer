@@ -116,7 +116,7 @@ package com.net.client.minaimpl
 		
 		public function sendRequest( pnum: int, message : Message) : Boolean
 		{
-			return true;
+			return send(message);
 		}
 		
 //		---------------------------------------------------------------------------------------------------------
