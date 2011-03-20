@@ -17,23 +17,23 @@ package com.net.client
 		
 		function 		sendRequest( pnum: int, message : Message):Boolean;
 		
-		function 		connect( host : String,  port : int,  timeout : Number,  listener : ServerSessionListener) :Boolean;
+		function 		connect( host : String,  port : int,  timeout : int,  listener : ServerSessionListener) :Boolean;
 		
 		
 		
 		
 		
-		function  		getSentMessageCount():Number ;
+		function  		getSentMessageCount(): int ;
 		
-		function  		getReceivedMessageCount () :Number;
+		function  		getReceivedMessageCount () : int;
 		
-		function  		getSentBytes():Number;
+		function  		getSentBytes(): int;
 		
-		function  		getReceivedBytes():Number;
+		function  		getReceivedBytes(): int;
 		
-		function 		getHeartBeatSent():Number;
+		function 		getHeartBeatSent(): int;
 		
-		function 		getHeartBeatReceived():Number;
+		function 		getHeartBeatReceived(): int;
 		
 	}
 }

@@ -37,10 +37,10 @@ package com.net.client.minaimpl
 		function setChannelSessionID(s1 : int, s2 : int) : void {
 			this.channel_session_id = s1;
 		}
-		function setSentTime(sent_time : Number) : void {
+		function setSentTime(sent_time : Date) : void {
 			this.sent_time = sent_time;
 		}
-		function setReceivedTime(received_time : Number) : void {
+		function setReceivedTime(received_time : Date) : void {
 			this.received_time = received_time;
 		}
 		function setMessage(message : Message) : void {

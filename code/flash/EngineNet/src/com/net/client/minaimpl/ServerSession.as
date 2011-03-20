@@ -50,7 +50,7 @@ package com.net.client.minaimpl
 		
 		
 		
-		public function ServerSession(factory : MessageFactory, listener : ServerSessionListener, 
+		public function ServerSession(factory : MessageFactory,  
 									  header : int = 0x02000006, 
 									  hb_req : int = 0x02000001,
 									  hb_rep : int = 0x02000002) 
@@ -62,7 +62,6 @@ package com.net.client.minaimpl
 			this.connector.addEventListener(IOErrorEvent.IO_ERROR, 				ioErrorHandler);
 			this.connector.addEventListener(SecurityErrorEvent.SECURITY_ERROR,	securityErrorHandler);
 			this.connector.addEventListener(ProgressEvent.SOCKET_DATA, 			socketDataHandler);
-			this.listener = listener;
 			
 			this.protocol_start = header;
 			this.heart_beat_req = hb_req;
@@ -70,9 +69,10 @@ package com.net.client.minaimpl
 
 		}
 		
-		public function connect(host : String,  port : int) : Boolean
+		public function connect(host : String,  port : int, timeout:int, listener : ServerSessionListener) : Boolean
 		{
-			this.serveraddr = host + ":" + port;
+			this.serveraddr = host + ":" + port;		
+			this.listener = listener;
 			this.connector.connect(host, port);
 			return true;
 		}
@@ -101,41 +101,47 @@ package com.net.client.minaimpl
 		
 		public function send(message: Message) : Boolean
 		{
-			var protocol : Protocol = new Protocol();
-			var stream : ByteArray = encode(protocol);
+			var protocol : ProtocolImpl = new ProtocolImpl(protocol_fixed_size);
+			protocol.setMessage(message);
+			protocol.setSessionID(0,0);
+			protocol.setPacketNumber(1);
+			protocol.setProtocol(Protocol.PROTOCOL_SESSION_MESSAGE);
+			protocol.setChannelID(0);
+			protocol.setChannelSessionID(0,0);
+			var stream  : ByteArray = encode(protocol);
 			connector.writeBytes(stream);
 			connector.flush();
 			return true;
 		}
 		
-		public function sendRequest() : Boolean
+		public function sendRequest( pnum: int, message : Message) : Boolean
 		{
 			return true;
 		}
 		
 //		---------------------------------------------------------------------------------------------------------
 
-		public function getSentMessageCount():Number {
+		public function getSentMessageCount():int {
 			return 0;
 		}
 		
-		public function getReceivedMessageCount () :Number {
+		public function getReceivedMessageCount () :int {
 			return 0;
 		}
 		
-		public function getSentBytes():Number {
+		public function getSentBytes():int {
 			return 0;
 		}
 		
-		public function getReceivedBytes():Number {
+		public function getReceivedBytes():int {
 			return 0;
 		}
 		
-		public function getHeartBeatSent():Number {
+		public function getHeartBeatSent():int {
 			return 0;
 		}
 		
-		public function getHeartBeatReceived():Number {
+		public function getHeartBeatReceived():int {
 			return 0;
 		}
 		
@@ -250,7 +256,7 @@ package com.net.client.minaimpl
 					if (buffer.bytesAvailable >= protocol_fixed_size)
 					{
 						// 判断是否是有效的数据包头
-						var head : int = buffer.readInt();
+						var head : int = buffer.readInt();				// 4
 						if (head != protocol_start) {
 							// 心跳包头，重置。
 							if (head == heart_beat_req) {
@@ -265,7 +271,7 @@ package com.net.client.minaimpl
 						}
 						
 						// 生成新的状态
-						protocol = new ProtocolImpl(buffer.readInt());
+						protocol = new ProtocolImpl(buffer.readInt());	// 4
 						this.uncomplete_package = protocol;
 					}
 					else
@@ -288,7 +294,7 @@ package com.net.client.minaimpl
 						// 清空当前的解包状态
 						this.uncomplete_package 	= null;
 						
-						protocol.setReceivedTime			(0);
+						protocol.setReceivedTime			(new Date());
 						
 						protocol.setProtocol				(buffer.readByte());	// 1
 						protocol.setSessionID				(buffer.readInt(), 
@@ -353,86 +359,61 @@ package com.net.client.minaimpl
 			return true;
 		}
 		
-		
-		function encode(protocol : Protocol) : ByteArray
+		function encode( protocol : ProtocolImpl) : ByteArray
 		{
 			try
 			{
-				protocol.Size = NetPackageProtocol.HeadFixedSize;
+				protocol.setSentTime(new Date());
 				
-				var channelnamedata : ByteArray = new ByteArray();
-				var channelsenderdata : ByteArray = new ByteArray();
-				protocol.ChannelSize = 0;
-				protocol.ChannelSenderSize = 0;
-				if (protocol.Protocol == NetPackageProtocol.PROTOCOL_CHANNEL_JOIN_S2C ||
-					protocol.Protocol == NetPackageProtocol.PROTOCOL_CHANNEL_LEAVE_S2C ||
-					protocol.Protocol == NetPackageProtocol.PROTOCOL_CHANNEL_MESSAGE)
+				var buffer : ByteArray = new ByteArray();
+				
+				var oldposition : int = buffer.position;
 				{
-					if (protocol.ChannelName!=null){
-						IOSerialize.putString(channelnamedata, protocol.ChannelName);
-						protocol.Size += channelnamedata.length;
-						protocol.ChannelSize = channelnamedata.length;
+					// fixed data region
+					{
+						buffer.writeInt		(protocol_start);		// 4
+						buffer.writeInt		(protocol_fixed_size);	// 4
 					}
-					if (protocol.ChannelSender!=null){
-						IOSerialize.putString(channelsenderdata, protocol.ChannelSender);
-						protocol.Size += channelsenderdata.length;
-						protocol.ChannelSenderSize = channelsenderdata.length;
+					
+					// message data region
+					var begin_pos : int = buffer.position;
+					{
+						buffer.writeByte	(protocol.getProtocol());		// 1
+						buffer.writeInt		(0);							// 8
+						buffer.writeInt		(0);						
+						buffer.writeInt		(protocol.getPacketNumber());	// 4
+						
+						switch (protocol.getProtocol()) {
+						case Protocol.PROTOCOL_CHANNEL_JOIN_S2C:
+						case Protocol.PROTOCOL_CHANNEL_LEAVE_S2C:
+						case Protocol.PROTOCOL_CHANNEL_MESSAGE:
+							buffer.writeInt	(protocol.getChannelID());		// 4
+							buffer.writeInt	(0);							// 8
+							buffer.writeInt	(0);
+							break;
+						}
+						
+						buffer.writeByte	(ProtocolImpl.TRANSMISSION_TYPE_UNKNOW);			// 1
+						
+						buffer.writeInt		(message_factory.getType(protocol.getMessage()));	// ext 4
+						message_factory		.writeExternal(protocol.getMessage(), buffer);
 					}
+					var end_pos : int = buffer.position;
+					
+					buffer.position = 4;
+					
+					buffer.writeInt(protocol_fixed_size + (end_pos - begin_pos));
 				}
-				
-				var msgdata : ByteArray = new ByteArray();
-				if (protocol.Message != null) 
-				{
-					msgdata.writeInt(protocol.Message.Type);
-					msgdata.writeInt(protocol.Message.PacketNumber);
-					protocol.Message.serialize(msgdata);
-					protocol.Size += msgdata.length;
-					protocol.MessageSize = msgdata.length;
-				}
-				
-				var buffer: ByteArray = new ByteArray();
-				
-				// fixed data region
-				buffer.writeByte(NetPackageProtocol.MagicStart[0]);
-				buffer.writeByte(NetPackageProtocol.MagicStart[1]);
-				buffer.writeByte(NetPackageProtocol.MagicStart[2]);
-				buffer.writeByte(NetPackageProtocol.MagicStart[3]);
-				buffer.writeByte(NetPackageProtocol.MagicStart[4]);
-				buffer.writeByte(NetPackageProtocol.MagicStart[5]);
-				buffer.writeByte(NetPackageProtocol.MagicStart[6]);
-				buffer.writeByte(NetPackageProtocol.MagicStart[7]);
-				buffer.writeInt(protocol.Size);
-				buffer.writeByte(protocol.Protocol);
-				buffer.writeInt(protocol.ChannelSize);
-				buffer.writeInt(protocol.ChannelSenderSize);
-				buffer.writeInt(protocol.MessageSize);
-				
-				// appends data region
-				buffer.writeBytes(channelnamedata);
-				buffer.writeBytes(channelsenderdata);
-				buffer.writeBytes(msgdata);
-				
-				// data ends
-				buffer.writeByte(NetPackageProtocol.MagicEnd[0]);
-				buffer.writeByte(NetPackageProtocol.MagicEnd[1]);
-				buffer.writeByte(NetPackageProtocol.MagicEnd[2]);
-				buffer.writeByte(NetPackageProtocol.MagicEnd[3]);
-				buffer.writeByte(NetPackageProtocol.MagicEnd[4]);
-				buffer.writeByte(NetPackageProtocol.MagicEnd[5]);
-				buffer.writeByte(NetPackageProtocol.MagicEnd[6]);
-				buffer.writeByte(NetPackageProtocol.MagicEnd[7]);
-				
-				trace("encoded -> " + protocol.toString());
-				
+								
 				return buffer;
 			}
 			catch(err : Error) 
 			{
 				trace("encode error  : " + err + "\n" + err.getStackTrace());  		
 			}
-			
 			return null;
 		}
+		
 		
 		
 		function recivedMessage(decoded : Protocol) : void
@@ -460,6 +441,11 @@ package com.net.client.minaimpl
 			
 		}
 		
+		
+		function sentMessage(decoded : Protocol) : void
+		{
+			
+		}
 		
 	}
 	
