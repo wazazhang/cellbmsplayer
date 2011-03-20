@@ -13,7 +13,7 @@ package com.net.client.minaimpl
 	import flash.utils.Dictionary;
 	import flash.utils.IDataInput;
 	
-	public class ServerSession implements com.net.client.ServerSession
+	public class ServerSessionImpl implements com.net.client.ServerSession
 	{
 		/** 当前远程地址*/
 		private var serveraddr 				: String; 
@@ -50,7 +50,7 @@ package com.net.client.minaimpl
 		
 		
 		
-		public function ServerSession(factory : MessageFactory,  
+		public function ServerSessionImpl(factory : MessageFactory,  
 									  header : int = 0x02000006, 
 									  hb_req : int = 0x02000001,
 									  hb_rep : int = 0x02000002) 
