@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="25" height="30" borderStyle="solid" 
 	 borderColor="{isSelected?0xff0000:0x000000}"
-	 backgroundColor="{card==null?0xeadda8:0x3d4a5b}" click="click()" >
+	 backgroundColor="{(card==null||!isShow)?0xeadda8:(card.isSended?0x5d4a5b:0x3d4a5b)}" click="click()"
+	  mouseOver="mouseOver()" >
 	 
 	<mx:Script>
 		<![CDATA[
@@ -12,18 +13,35 @@
 			[Bindable]
 			public var confimcard:Card
 			
-			[Bindable]
-			public var card:Card
+			protected var _card:Card
 			
 			[Bindable]
 			public var isSelected:Boolean = false; 
 			
 			public var nextCardCpt:Card_Cpt;
+			public var preCardCpt:Card_Cpt;
+			
 			public var isPlayerOwner:Boolean = false;
+			
+			[Bindable]
+			public var isShow:Boolean = true;
 			
 			public function confim():void
 			{
 				confimcard = card;
+			}
+			
+			[Bindable]
+			public function get card():Card
+			{
+				return _card
+			}
+			public function set card(c:Card):void
+			{
+				if(c!=null)
+				c.cardUI = this;
+				
+				_card = c;
 			}
 			
 			public function reset():void
@@ -31,35 +49,207 @@
 				card = confimcard;
 			}
 			
+			public function mouseOver():void
+			{
+				//防止打出的牌往回拿
+				if(isPlayerOwner&&Game.gamer.selectedCard!=null&&Game.gamer.selectedCard.isSended)
+				{
+					return;
+				}
+				
+				if(Game.gamer.selectedArrayCard != null&&(card==null||isSelected))
+				{
+					var length:int = Game.gamer.selectedArrayCard.length;
+					var cardcpt:Card_Cpt = this;
+					
+					while(length!=0)
+					{
+						if(cardcpt==null)
+							return	
+						
+						if(cardcpt.card!=null&&!cardcpt.isSelected)
+							return
+							
+						cardcpt = cardcpt.nextCardCpt;
+						length --;	
+					}
+					
+					for each(var curcard:Card in Game.gamer.selectedArrayCard)
+					{
+						if(isPlayerOwner&&curcard.isSended)
+							return;
+					}
+					
+					cardcpt = this;
+					
+					for each(curcard in Game.gamer.selectedArrayCard)
+					{
+						if(curcard.cardUI.card==curcard)
+						{
+						curcard.cardUI.isSelected = false;
+						curcard.cardUI.card =null;
+						}
+						cardcpt.card = curcard;
+						cardcpt.isSelected = true;
+						cardcpt = cardcpt.nextCardCpt;
+					}
+					//Game.gamer.selectedArrayCard = null;
+					return;
+				}
+				
+				if(Game.gamer.selectedCard != null&&card==null)
+				{
+					Game.gamer.selectedCard.cardUI.card = null;
+					Game.gamer.selectedCard.cardUI.isSelected = false;
+					
+					card =  Game.gamer.selectedCard;
+					isSelected = true;
+				}
+			}
+			
 			public function click():void
 			{
-				//检测往回拿
-				if(isPlayerOwner&&Game.gamer.selectedCard!=null&&Game.gamer.selectedCard.card.isSended)
+				if(Game.gamer.selectedCard!=null&&Game.gamer.selectedCard!=card)
 				{
 					return
 				}
 				
+				//检测往回拿
+				if(isPlayerOwner&&Game.gamer.selectedCard!=null&&Game.gamer.selectedCard.isSended)
+				{
+					return
+				}
+				
+				if(Game.gamer.keydwon)
+				{
+					if(Game.gamer.selectedArrayCard!=null)
+						return;
+					
+					selectArrayCard();
+				}
+				else
+				{
+					selectCard();
+				}
+				
+			}
+			private function selectCard():void
+			{
+				if(Game.gamer.selectedArrayCard!=null)
+				{
+					
+					//验证
+					for each(var curcard:Card in Game.gamer.selectedArrayCard)
+					{
+						if(isPlayerOwner&&curcard.isSended)
+							return;
+					}
+					
+					for each(curcard in Game.gamer.selectedArrayCard)
+					{
+						curcard.cardUI.isSelected = false;
+					}
+					Game.gamer.selectedArrayCard = null;
+					Game.check();
+					return;
+				}	
+				
 				if(Game.gamer.selectedCard==null)
 				{
 					if(card==null)
-						return		
-						
-					Game.gamer.selectedCard = this;
+						return				
+					Game.gamer.selectedCard = card;
 					isSelected = true;
 				}
 				else
 				{
-					Game.gamer.selectedCard.isSelected = false;
+					
 					isSelected = false;
-					var buffcard:Card = Game.gamer.selectedCard.card;
-					Game.gamer.selectedCard.card = card;
+					var buffcard:Card = Game.gamer.selectedCard;
+					Game.gamer.selectedCard = card;
 					card = buffcard;
 					
+					Game.check();
 					Game.gamer.selectedCard = null;
+				}
+			}
+			private function selectArrayCard():void
+			{
+				if(Game.gamer.selectedCard!=null)
+				{
+					return
+				}
+				
+				if(nextCardCpt == null)
+				{
+					return
+				}
+				
+				if(nextCardCpt.card == null)
+				{
+					return
+				}
+				
+				if(card == null)
+				{
+					return
+				}
+				//同点
+				if(card.point == nextCardCpt.card.point&&card.type!=nextCardCpt.card.type)
+				{
+					var arr:Array = new Array()
+					var cardtype:Array = new Array();
+					
+					var buffcard:Card_Cpt = this;
+					arr.push(buffcard.card);
+					cardtype.push(buffcard.card.type)
+					buffcard.isSelected = true;
+					
+					do{
+						buffcard = buffcard.nextCardCpt;
+						
+						arr.push(buffcard.card);
+						cardtype.push(buffcard.card.type);
+						buffcard.isSelected = true;
+						
+						if(buffcard.nextCardCpt ==null)
+							break;
+						
+						if(buffcard.nextCardCpt.card ==null)
+							break;
+					}
+					while(buffcard.card.point == buffcard.nextCardCpt.card.point&&cardtype.indexOf(buffcard.nextCardCpt.card.type)==-1)
+					
+					Game.gamer.selectedArrayCard = arr;
+					return;
+				}
+				//顺子
+				if(card.point == nextCardCpt.card.point-1&&card.type==nextCardCpt.card.type)
+				{
+					arr = new Array()
+					buffcard = this;
+					arr.push(buffcard.card);
+					buffcard.isSelected = true;
+					do{
+						buffcard = buffcard.nextCardCpt;
+						
+						arr.push(buffcard.card);
+						buffcard.isSelected = true;
+						
+						if(buffcard.nextCardCpt ==null)
+							break;
+						
+						if(buffcard.nextCardCpt.card ==null)
+							break;
+					}
+					while(buffcard.card.point == buffcard.nextCardCpt.card.point-1&&buffcard.card.type==buffcard.nextCardCpt.card.type)
+					
+					Game.gamer.selectedArrayCard = arr;
+					return;
 				}
 			}
 		]]>
 	</mx:Script>
-	<mx:Label text="{card==null?'':card.point}" color="{card==null?0xffffff:card.Color}"
+	<mx:Label text="{card==null?'':card.point}" color="{card==null?0xffffff:card.Color}" visible="{isShow}"
 		 horizontalCenter="0" verticalCenter="0" width="30" textAlign="center" fontWeight="bold" fontSize="16"/>
 </mx:Canvas>

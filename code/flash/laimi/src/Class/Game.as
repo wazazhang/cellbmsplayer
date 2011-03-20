@@ -7,10 +7,13 @@ package Class
 	import Component.Card_Cpt;
 	import Component.Matrix_Cpt;
 	
+	import flash.events.KeyboardEvent;
+	
 	import mx.collections.ArrayCollection;
 	import mx.collections.Sort;
 	import mx.collections.SortField;
 	import mx.core.Application;
+	[Bindable]
 	public class Game
 	{
 		public static var app:Application;
@@ -28,7 +31,14 @@ package Class
 		public static var cards:ArrayCollection = new ArrayCollection();
 		
 		//玩家
-		public static var gamer:Player = new Player();
+		public static var gamer:Player= new Player();
+		
+		//当前合法性
+		public static var legaled:Boolean = true;
+		
+		
+		public static var cardspostion_x:int = 600;
+		public static var cardspostion_y:int = 20; 
 		
 		public function Game()
 		{
@@ -37,22 +47,47 @@ package Class
 		
 		public static function initGame():void
 		{
+			
 			initMatrix();
 			gamer.initMatrix();
 			initCard();
+			
+			Game.app.addEventListener(KeyboardEvent.KEY_DOWN,keydown);
+			Game.app.addEventListener(KeyboardEvent.KEY_UP,keyup);
+			
 		}
+		
+		public static function start():void
+		{
+			gamer.getStartCard();
+		}
+		
 		//初始矩阵
 		public static function initMatrix():void
 		{
+			var curline:Line;
 			for(var i:int=0;i<lineCount;i++)
-			{
-				var line:Line = new Line(26,false)
+			{			
+				var line:Line = new Line(26,false);
+				
+				if(curline != null)
+				{
+					curline.nextLine = line;
+				}
+				
+				curline = line;
+				
+				if(i == lineCount-1)
+				{
+					curline.nextLine = lineArray[0];
+				}
+				
 				lineArray.addItem(line);
 				line.fill(i,matrix);
 			}
 			var cardcpt:Card_Cpt = (lineArray[0] as Line).firstCard;
-			matrix.width = cardcpt.width*(lineArray[0] as Line).lineLength+2;
-			matrix.height = cardcpt.height*lineCount+2;
+			matrix.width = cardcpt.width*(lineArray[0] as Line).lineLength+4;
+			matrix.height = cardcpt.height*lineCount+4;
 		}
 		//初始牌
 		public static function initCard():void
@@ -95,10 +130,34 @@ package Class
 			{
 				if(!line.check())
 				{
+					matrix.setStyle("borderColor",0xff0000);
+					legaled = false;
 					return false
 				}
 			}
+			matrix.setStyle("borderColor",0x000000);
+			legaled = true;
 			return true;
+		}
+		
+		//确定合法性
+		public static function getSendPoint():int
+		{
+			var point:int=0;
+			for each(var line:Line in lineArray)
+			{
+				if(!line.check())
+				{
+					matrix.setStyle("borderColor",0xff0000);
+					legaled = false;
+					return 0;
+				}
+				point += line.getPoint();
+			}
+			matrix.setStyle("borderColor",0x000000);
+			legaled = true;
+			
+			return point;
 		}
 		
 		//撤销
@@ -110,8 +169,9 @@ package Class
 				do{
 					cardctp.card = null;
 					cardctp.card = cardctp.confimcard;
+					cardctp = cardctp.nextCardCpt;
 				}
-				while(cardctp = line.lastCard);
+				while(cardctp != null);
 			}
 		}
 		
@@ -124,10 +184,23 @@ package Class
 				do{
 					cardctp.confimcard = null;
 					cardctp.confimcard = cardctp.card;
-					cardctp.card.isSended = true;
+					
+					if(cardctp.card!=null)
+						cardctp.card.isSended = true;
+						
+					cardctp = cardctp.nextCardCpt;	
 				}
-				while(cardctp = line.lastCard);
+				while(cardctp != null);
 			}
+		}
+		
+		private static function keydown(event:KeyboardEvent):void
+		{
+			gamer.keydwon = true;
+		}
+		private static function keyup(event:KeyboardEvent):void
+		{
+			gamer.keydwon = false;	
 		}
 	}
 }
