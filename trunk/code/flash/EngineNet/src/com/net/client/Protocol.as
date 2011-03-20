@@ -16,8 +16,8 @@ package com.net.client
 		protected var		packet_number 		: int;
 		protected var 		channel_id 			: int;
 		protected var 		channel_session_id 	: Number;
-		protected var 		sent_time 			: Number;
-		protected var 		received_time 		: Number;
+		protected var 		sent_time 			: Date;
+		protected var 		received_time 		: Date;
 		protected var 		message 			: Message;
 
 		
@@ -49,12 +49,12 @@ package com.net.client
 		}
 		
 		/**发送时间*/
-		public function 		getSentTime(): Number {
+		public function 		getSentTime(): Date {
 			return this.sent_time;
 		}
 		
 		/**接收时间*/
-		public function 		getReceivedTime():Number {
+		public function 		getReceivedTime():Date {
 			return this.received_time;
 		}
 		
