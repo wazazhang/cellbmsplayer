@@ -7,8 +7,11 @@ package Class.Model
 	public class Line
 	{
 		public var firstCard:Card_Cpt;
-		public var lastCard:Card_Cpt;
+		//public var lastCard:Card_Cpt;
 		public var lineLength:int=26;
+		private var _lastCard:Card_Cpt;
+		public var nextLine:Line;
+		
 		
 		//单列检测
 		public function Line(length:int,isplayer:Boolean)
@@ -21,10 +24,21 @@ package Class.Model
 			for(var i:int=1;i<lineLength;i++)
 			{
 				buff.nextCardCpt = new Card_Cpt();
+				buff.nextCardCpt.preCardCpt = buff;
+				
 				buff.nextCardCpt.isPlayerOwner = isplayer;
 				buff = buff.nextCardCpt;	
 			}
-			lastCard = buff.nextCardCpt;	
+			lastCard = buff;	
+		}
+		
+		public function set lastCard(card:Card_Cpt):void
+		{
+			_lastCard = card;
+		}
+		public function get lastCard():Card_Cpt
+		{
+			return _lastCard;
 		}
 		
 		public function fill(lie:int,ct:Container):void
@@ -82,9 +96,163 @@ package Class.Model
 				curnode = curnode.nextCardCpt;
 			}
 			while(curnode!=lastCard)
-			
 			return true;
 		}
+		
+		public function getPoint():int
+		{
+			var array:Array;
+			var curnode:Card_Cpt = firstCard;
+			
+			var point:int = 0;
+			
+			do{
+
+				if(!(curnode.card != null&&!curnode.card.isSended))
+				{
+					if(array==null)
+					{
+						
+					}
+					else
+					{
+						var p:int = getZuPoint(array);
+						if(p!=0)
+						{
+							point += p;
+							array = null;
+						}
+						else
+						{
+							return 0;
+						}	
+					}
+				}
+				else
+				{
+					if(array==null)
+					{
+						array = new Array();
+						array.push(curnode);
+					}
+					else
+					{
+						array.push(curnode);
+					}	
+				}
+				
+				curnode = curnode.nextCardCpt;
+			}
+			while(curnode!=lastCard)
+			
+			return point;
+		}
+		
+		private function getZuPoint(arr:Array):int
+		{
+			if(arr.length<3)
+				return 0;
+			
+			var avicards:Array = new Array()
+			
+			
+			for(var i:int=0;i<arr.length;i++)
+			{
+				var card:Card = (arr[i] as Card_Cpt).card;
+				if(card.point!=0)
+				{
+					avicards.push(card);
+				}
+				
+				if(avicards.length==2)
+					break;
+			}		
+			
+			if(avicards.length==1)  //双鬼的时候
+				return (avicards[0] as Card).point*3;
+			
+			
+			var percard:Card = avicards[0]; 
+			var aftcard:Card = avicards[1];
+			
+			if(percard.type == aftcard.type)
+			{
+				return getSunPoint(arr);
+			}
+			else if(percard.point==aftcard.point)
+			{
+				return getTongPoint(arr);
+			}
+			else
+			{
+				return 0;
+			}
+		}
+		private function getSunPoint(arr:Array):int
+		{
+			if(arr.length>13)
+				return 0;
+			var n:int = arr.length;	
+			var percar:Card = (arr.shift() as Card_Cpt).card;
+			var firstGUST:int = 0;//数组头部的鬼牌
+			
+			while(percar.point==0)
+			{
+				firstGUST ++;
+				percar = (arr.shift() as Card_Cpt).card;
+				if(percar.point<=firstGUST)
+				{
+					return 0;
+				}
+			}
+
+			var index:int=0;			
+			while(arr.length>0)
+			{
+				index++;
+				var aftcar:Card = (arr.shift() as Card_Cpt).card;
+				if(!((percar.point==aftcar.point-index && percar.type == aftcar.type)||aftcar.point==0))
+				{
+					return 0;
+				}
+			}
+			return (percar.point-firstGUST)*n+n*(n-1)/2;  //等差数列求和公式
+		}
+		
+		
+		private function getTongPoint(arr:Array):int
+		{
+			if(arr.length>4)
+				return 0;
+				
+			var n:int = arr.length;
+			var huaArray:Array = new Array();
+		
+			var card:Card = (arr.shift() as Card_Cpt).card;
+			
+			while(card.point==0)
+			{
+				card = (arr.shift() as Card_Cpt).card;
+			}
+
+			huaArray.push(card.type);
+			var point:int = card.point;
+
+			while(arr.length>0)
+			{
+				card = (arr.shift() as Card_Cpt).card;
+				if(!((huaArray.indexOf(card.type)==-1&&card.point==point)||card.point==0))
+				{
+					return 0;
+				}
+				if(card.point!=0)
+				huaArray.push(card.type);
+
+			}
+			
+			return point*n;
+		}
+		
 		
 		//检测一个组
 		private function checkZu(arr:Array):Boolean

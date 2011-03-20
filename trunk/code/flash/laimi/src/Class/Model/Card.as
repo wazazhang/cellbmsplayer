@@ -1,5 +1,7 @@
 package Class.Model
 {
+	import Component.Card_Cpt;
+	
 	[Bindable]
 	public class Card
 	{
@@ -8,6 +10,10 @@ package Class.Model
 		public var order:Number; //随机排序数
 		
 		public var isSended:Boolean = false; //是否已经打出
+		
+		public var cardUI:Card_Cpt;  //前台展示框
+		
+		public var nextCard:Card;//用于卡片顺序添加
 		
 		public function Card(point:int,type:int)
 		{
