@@ -6,6 +6,7 @@
 	 
 	<mx:Script>
 		<![CDATA[
+			import Class.TimesCtr;
 			import Class.Game;
 			import mx.controls.Alert;
 			import Class.Model.Card;
@@ -109,16 +110,22 @@
 			
 			public function click():void
 			{
+				if(!Game.gamer.canOpearation)
+					return;
+				
+				TimesCtr.reset();
+				
 				if(Game.gamer.selectedCard!=null&&Game.gamer.selectedCard!=card)
 				{
-					return
+					return;
 				}
 				
 				//检测往回拿
 				if(isPlayerOwner&&Game.gamer.selectedCard!=null&&Game.gamer.selectedCard.isSended)
 				{
-					return
+					return;
 				}
+				
 				
 				if(Game.gamer.keydwon)
 				{

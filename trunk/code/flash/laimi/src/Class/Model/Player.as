@@ -1,15 +1,15 @@
 package Class.Model
 {
 	import Class.Game;
+	import Class.TimesCtr;
 	
 	import Component.Card_Cpt;
 	import Component.UserMatrix_Cpt;
 	
-	import flash.utils.Timer;
-	
 	import mx.collections.ArrayCollection;
 	import mx.collections.Sort;
 	import mx.collections.SortField;
+	import mx.controls.Alert;
 	import mx.effects.Move;
 	import mx.events.EffectEvent;
 	[Bindable]
@@ -21,7 +21,6 @@ package Class.Model
 		public var matrix_height:int = 4;    //用户矩阵高度
 		
 		public var cardLines:ArrayCollection = new ArrayCollection();
-		
 		public var selectedCard:Card; //选中的牌
 		public var selectedArrayCard:Array; //选中的牌组
 		
@@ -36,7 +35,7 @@ package Class.Model
 		private var startCard:int = 14; //起手牌数 	
 		
 		
-		public var canOpearation:Boolean = true;//当前是否能操作
+		public var canOpearation:Boolean = false;//当前是否能操作
 		public function Player()
 		{
 			
@@ -83,11 +82,13 @@ package Class.Model
 		
 		public function getOneCardFromCardpile():void
 		{
+			canOpearation = false;
 			getCard(Game.getCardFromCard());
 		}
 		
 		public function getStartCard():void
 		{
+			canOpearation = false;
 			for(var i:int=0;i<startCard;i++)
 			{
 				handCard.addItem(Game.getCardFromCard());
@@ -106,9 +107,9 @@ package Class.Model
 			{
 				cardcpt.card = card;
 				cardcpt.confimcard = card;
-				cardcpt = cardcpt.nextCardCpt;
 				cardcpt.isShow = false;
-				
+				cardcpt = cardcpt.nextCardCpt;
+			
 				if(precard!=null)
 				{
 					precard.nextCard = card;
@@ -138,6 +139,8 @@ package Class.Model
 					{
 						cardcpt.card = card;
 						cardcpt.confimcard = card;
+						cardcpt.isShow = false;
+						addCardMotion(card)
 						return;
 					}
 					cardcpt = cardcpt.preCardCpt
@@ -155,6 +158,21 @@ package Class.Model
 			{
 				//Alert.show("出牌不符合规则");
 				return false;
+			}
+			
+			if(isCold)
+			{
+				var sum:int = Game.getSendPoint();
+				
+				if(sum<30)
+				{
+					Alert.show('no pobing')
+					return false;
+				}
+				else
+				{
+					isCold = false;
+				}
 			}
 			Game.submit();
 			confiomCard();
@@ -343,31 +361,31 @@ package Class.Model
 			var move:Move = new Move();
 			
 			move.target = moveCard;
-			move.duration = 1000;
+			move.duration = 500;
 
 			move.xTo = card.cardUI.x;
 			move.yTo = card.cardUI.y;
 			
-			//card.cardUI.card = null;
-			
-			//var func:Function =addCardMotion;
-
 			move.addEventListener(EffectEvent.EFFECT_END,addCardMotionComplate);
 			move.play();
-			
 		}
 		protected function addCardMotionComplate(event:EffectEvent):void
 		{
 			var card:Card = ((event.target as Move).target as Card_Cpt).card;
-			
 			((event.target as Move).target as Card_Cpt).nextCardCpt.isShow = true;
-		
 		    matrix.removeChild((event.target as Move).target as Card_Cpt)
-		
-			
 			if(card.nextCard!=null)
 			{
 				addCardMotion(card.nextCard);
+			}
+			else
+			{
+				if(!Game.isStarted)
+				{
+					Game.isStarted = true;
+					TimesCtr.start();
+				}
+				canOpearation = true;
 			}
 		}
 		

@@ -13,13 +13,15 @@ package Class
 	import mx.collections.Sort;
 	import mx.collections.SortField;
 	import mx.core.Application;
+	
+	
 	[Bindable]
 	public class Game
 	{
 		public static var app:Application;
 		
 		//列数
-		public static var lineCount:int=13; 
+		public static var lineCount:int=10; 
 		
 		//列数组
 		public static var lineArray:ArrayCollection = new ArrayCollection();
@@ -36,7 +38,13 @@ package Class
 		//当前合法性
 		public static var legaled:Boolean = true;
 		
+		//是否有出牌
+		public static var haveSendCard:Boolean = false;
 		
+		//是否已经开始
+		public static var isStarted:Boolean = false;
+		
+		//牌堆坐标
 		public static var cardspostion_x:int = 600;
 		public static var cardspostion_y:int = 20; 
 		
@@ -47,14 +55,13 @@ package Class
 		
 		public static function initGame():void
 		{
-			
 			initMatrix();
 			gamer.initMatrix();
 			initCard();
+			TimesCtr.init();
 			
 			Game.app.addEventListener(KeyboardEvent.KEY_DOWN,keydown);
 			Game.app.addEventListener(KeyboardEvent.KEY_UP,keyup);
-			
 		}
 		
 		public static function start():void
@@ -89,6 +96,7 @@ package Class
 			matrix.width = cardcpt.width*(lineArray[0] as Line).lineLength+4;
 			matrix.height = cardcpt.height*lineCount+4;
 		}
+		
 		//初始牌
 		public static function initCard():void
 		{
@@ -117,7 +125,6 @@ package Class
 			cards.refresh();
 		}
 		
-		//
 		public static function getCardFromCard():Card
 		{
 			return cards.removeItemAt(0) as Card; 
@@ -126,6 +133,7 @@ package Class
 		//确定合法性
 		public static function check():Boolean
 		{
+			haveSendCard = checkHaveSendCard();
 			for each(var line:Line in lineArray)
 			{
 				if(!line.check())
@@ -140,7 +148,7 @@ package Class
 			return true;
 		}
 		
-		//确定合法性
+		//获得打出点数
 		public static function getSendPoint():int
 		{
 			var point:int=0;
@@ -156,8 +164,25 @@ package Class
 			}
 			matrix.setStyle("borderColor",0x000000);
 			legaled = true;
-			
 			return point;
+		}
+		
+		//判定是否打出
+		public static function checkHaveSendCard():Boolean
+		{
+			for each(var line:Line in lineArray)
+			{
+				var cardcpt:Card_Cpt = line.firstCard;
+				
+				while(cardcpt!=null)
+				{
+					if(cardcpt.card!=null&&!cardcpt.card.isSended)
+						return true;
+					else
+						cardcpt = cardcpt.nextCardCpt;	
+				}	
+			}
+			return false
 		}
 		
 		//撤销
