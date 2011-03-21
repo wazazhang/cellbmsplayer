@@ -6,6 +6,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import Class.TimesCtr;
 			import mx.controls.Alert;
 			import Class.Game;
 			
@@ -14,6 +15,8 @@
 				Game.app = this;
 				Game.matrix = mx;
 				Game.gamer.matrix = umx;
+				TimesCtr.optionTimeBar = optbar;
+				TimesCtr.sumTimeBar = sumbar;
 				Game.initGame();
 			}
 			public function click():void
@@ -31,4 +34,6 @@
 	</ns1:Opt_Cpt>
 	<mx:Button x="106" y="410" label="Button" click="click()"/>
 	<mx:Label x="29" y="412" text="{Game.gamer.keydwon}"/>
+	<mx:ProgressBar id="sumbar"  y="372" width="720" label="" horizontalCenter="0" mode="manual"/>
+	<mx:ProgressBar id="optbar" y="392" width="720" label="" horizontalCenter="0" mode="manual"/>
 </mx:Application>
