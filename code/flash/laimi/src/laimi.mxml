@@ -23,17 +23,14 @@
 			{
 			   Alert.show(Game.getSendPoint().toString()+'_'+Game.gamer.keydwon);
 			}
-			
 		]]>
 	</mx:Script>
 	<ns1:Matrix_Cpt id="mx" y="20" borderStyle="solid" horizontalCenter="0" height="201">
 	</ns1:Matrix_Cpt>
-	<ns1:UserMatrix_Cpt id="umx" horizontalCenter="0" bottom="6">
+	<ns1:UserMatrix_Cpt id="umx" horizontalCenter="50" top="370" height="202">
 	</ns1:UserMatrix_Cpt>
-	<ns1:Opt_Cpt horizontalCenter="0" bottom="216">
+	<ns1:Opt_Cpt horizontalCenter="0" top="380" height="32">
 	</ns1:Opt_Cpt>
-	<mx:Button x="106" y="410" label="Button" click="click()"/>
-	<mx:Label x="29" y="412" text="{Game.gamer.keydwon}"/>
-	<mx:ProgressBar id="sumbar"  y="372" width="720" label="" horizontalCenter="0" mode="manual"/>
-	<mx:ProgressBar id="optbar" y="392" width="720" label="" horizontalCenter="0" mode="manual"/>
+	<mx:ProgressBar id="sumbar" width="660" label="" height="10" horizontalCenter="0" mode="manual" top="334" labelPlacement="center"/>
+	<mx:ProgressBar id="optbar" top="354" height="10" width="660" label="" horizontalCenter="0" mode="manual" labelPlacement="center"/>
 </mx:Application>

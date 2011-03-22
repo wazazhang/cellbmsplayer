@@ -166,7 +166,7 @@ package Class.Model
 				
 				if(sum<30)
 				{
-					Alert.show('no pobing')
+					Alert.show('尚未破冰')
 					return false;
 				}
 				else
@@ -174,8 +174,10 @@ package Class.Model
 					isCold = false;
 				}
 			}
+			
 			Game.submit();
 			confiomCard();
+			Game.canSendCard = false;
 			return true;
 		}
 		
@@ -386,6 +388,7 @@ package Class.Model
 					TimesCtr.start();
 				}
 				canOpearation = true;
+				TimesCtr.start();
 			}
 		}
 		
