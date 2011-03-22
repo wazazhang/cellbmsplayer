@@ -12,6 +12,7 @@ package Class
 	import mx.collections.ArrayCollection;
 	import mx.collections.Sort;
 	import mx.collections.SortField;
+	import mx.controls.Alert;
 	import mx.core.Application;
 	
 	
@@ -43,6 +44,9 @@ package Class
 		
 		//是否已经开始
 		public static var isStarted:Boolean = false;
+		
+		//是否可以出牌
+		public static var canSendCard:Boolean = false;
 		
 		//牌堆坐标
 		public static var cardspostion_x:int = 600;
@@ -140,11 +144,15 @@ package Class
 				{
 					matrix.setStyle("borderColor",0xff0000);
 					legaled = false;
-					return false
+					canSendCard = false;
+					return false;
 				}
 			}
 			matrix.setStyle("borderColor",0x000000);
 			legaled = true;
+			
+			canSendCard = checkHaveSendCard()
+			
 			return true;
 		}
 		
@@ -221,6 +229,7 @@ package Class
 		
 		private static function keydown(event:KeyboardEvent):void
 		{
+			if(event.keyCode==16)
 			gamer.keydwon = true;
 		}
 		private static function keyup(event:KeyboardEvent):void
