@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="478" height="32" borderStyle="solid" cornerRadius="5">
+
+<mx:Script>
+	<![CDATA[
+			import Class.Game;
+			
+			public function click():void
+			{
+				Game.gamer.getOneCardFromCardpile();
+			}
+			
+			public function click3():void
+			{
+				Game.gamer.orderCard();
+			}
+			
+			public function click4():void
+			{
+				Game.gamer.reset();
+			}
+			
+			public function click5():void
+			{
+				Game.gamer.submit();
+			}
+			
+			public function click6():void
+			{
+				BT6.enabled = false;
+				BT.enabled = true;
+				BT3.enabled = true;
+				BT4.enabled = true;
+				Game.start();
+				
+			}
+	]]>
+</mx:Script>
+
+	<mx:Button  x="276" label="出牌结束" verticalCenter="0" enabled="{Game.canSendCard}" click="click5()"/>
+	<mx:Button id="BT" x="96" enabled="false" label="摸牌" verticalCenter="0" click="click()" />
+	<mx:Button id="BT3" x="156" enabled="false"  label="排序" verticalCenter="0" click="click3()" />
+	<mx:Button id="BT4" x="216" enabled="false"  label="撤销" verticalCenter="0" click="click4()"/>
+	<mx:Button id="BT6" x="10" y="3" label="开始游戏" click="click6()"/>
+	<mx:Label x="362" y="5" text="破冰:{Game.gamer.isCold?'否':'是'}"/>
+	<mx:Label x="413" text="shift:{Game.gamer.keydwon?'是':'否'}" verticalCenter="0"/>
+	
+</mx:Canvas>
