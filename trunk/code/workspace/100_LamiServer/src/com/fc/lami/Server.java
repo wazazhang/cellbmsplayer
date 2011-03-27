@@ -53,7 +53,8 @@ public class Server extends ServerImpl implements ServerListener
 		@Override
 		public void receivedMessage(ClientSession session, Protocol protocol, MessageHeader message) {
 			if (message instanceof EchoRequest) {
-				session.send(new EchoResponse("xxxxxx"));
+//				session.send(new EchoResponse("xxxxxx"));//<--这句代码发送到客户端，是不会触发客户端response监听方法的，只会触发notify方法。
+				session.sendResponse(protocol, new EchoResponse("xxxxxx"));
 			}
 		}
 		public void run() {
