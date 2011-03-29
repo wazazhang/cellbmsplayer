@@ -17,6 +17,8 @@ package com.fc.lami
 			if (msg is com.fc.lami.Messages.EchoNotify) return 1;
 			if (msg is com.fc.lami.Messages.EchoRequest) return 2;
 			if (msg is com.fc.lami.Messages.EchoResponse) return 3;
+			if (msg is com.fc.lami.Messages.GetTimeRequest) return 4;
+			if (msg is com.fc.lami.Messages.GetTimeResponse) return 5;
 
 			return 0;
 		}
@@ -28,6 +30,8 @@ package com.fc.lami
 			case 1 : return new com.fc.lami.Messages.EchoNotify;
 			case 2 : return new com.fc.lami.Messages.EchoRequest;
 			case 3 : return new com.fc.lami.Messages.EchoResponse;
+			case 4 : return new com.fc.lami.Messages.GetTimeRequest;
+			case 5 : return new com.fc.lami.Messages.GetTimeResponse;
 
 			}
 			return null;
@@ -44,6 +48,12 @@ package com.fc.lami
 		if (msg is com.fc.lami.Messages.EchoResponse) {
 			r_EchoResponse_3(com.fc.lami.Messages.EchoResponse(msg), input); return;
 		}
+		if (msg is com.fc.lami.Messages.GetTimeRequest) {
+			r_GetTimeRequest_4(com.fc.lami.Messages.GetTimeRequest(msg), input); return;
+		}
+		if (msg is com.fc.lami.Messages.GetTimeResponse) {
+			r_GetTimeResponse_5(com.fc.lami.Messages.GetTimeResponse(msg), input); return;
+		}
 
 		}
 		
@@ -57,6 +67,12 @@ package com.fc.lami
 		}
 		if (msg is com.fc.lami.Messages.EchoResponse) {
 			w_EchoResponse_3(com.fc.lami.Messages.EchoResponse(msg), output); return;
+		}
+		if (msg is com.fc.lami.Messages.GetTimeRequest) {
+			w_GetTimeRequest_4(com.fc.lami.Messages.GetTimeRequest(msg), output); return;
+		}
+		if (msg is com.fc.lami.Messages.GetTimeResponse) {
+			w_GetTimeResponse_5(com.fc.lami.Messages.GetTimeResponse(msg), output); return;
 		}
 
 		}
@@ -92,6 +108,28 @@ package com.fc.lami
 	}
 	private function w_EchoResponse_3(msg : com.fc.lami.Messages.EchoResponse, output : NetDataOutput) : void {
 		output.writeJavaUTF(msg.message);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.GetTimeRequest
+//	----------------------------------------------------------------------------------------------------
+	function new_GetTimeRequest_4() : com.fc.lami.Messages.GetTimeRequest {return new com.fc.lami.Messages.GetTimeRequest();}
+	private function r_GetTimeRequest_4(msg : com.fc.lami.Messages.GetTimeRequest, input : NetDataInput) : void {
+		msg.message = input.readJavaUTF();
+	}
+	private function w_GetTimeRequest_4(msg : com.fc.lami.Messages.GetTimeRequest, output : NetDataOutput) : void {
+		output.writeJavaUTF(msg.message);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.GetTimeResponse
+//	----------------------------------------------------------------------------------------------------
+	function new_GetTimeResponse_5() : com.fc.lami.Messages.GetTimeResponse {return new com.fc.lami.Messages.GetTimeResponse();}
+	private function r_GetTimeResponse_5(msg : com.fc.lami.Messages.GetTimeResponse, input : NetDataInput) : void {
+		msg.time = input.readJavaUTF();
+	}
+	private function w_GetTimeResponse_5(msg : com.fc.lami.Messages.GetTimeResponse, output : NetDataOutput) : void {
+		output.writeJavaUTF(msg.time);
 	}
 
 
