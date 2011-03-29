@@ -40,6 +40,35 @@ public class Messages {
 		}
 	}
 	
+	public static class GetTimeRequest extends FlashMessage
+	{
+		public String message;
+		
+		public GetTimeRequest(String message) {
+			this.message = message;
+		}
+		public GetTimeRequest() {
+		}
+		@Override
+		public String toString() {
+			return message+"";
+		}
+	}
+	
+	public static class GetTimeResponse extends FlashMessage
+	{
+		public String time;
+
+		public GetTimeResponse(String time) {
+			this.time = time;
+		}
+		public GetTimeResponse() {}
+		@Override
+		public String toString() {
+			return time+"";
+		}
+	}
+	
 	public static class EchoNotify extends FlashMessage
 	{
 		public String message;

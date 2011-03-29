@@ -1,6 +1,7 @@
 package com.fc.lami;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.concurrent.ScheduledFuture;
 
 import com.cell.CIO;
@@ -56,6 +57,10 @@ public class Server extends ServerImpl implements ServerListener
 //				session.send(new EchoResponse("xxxxxx"));//<--这句代码发送到客户端，是不会触发客户端response监听方法的，只会触发notify方法。
 				session.sendResponse(protocol, new EchoResponse("xxxxxx"));
 			}
+			else if (message instanceof GetTimeRequest) {
+				session.sendResponse(protocol, new GetTimeResponse(new Date().toString()));
+			}
+			System.out.println(message.toString());
 		}
 		public void run() {
 			
