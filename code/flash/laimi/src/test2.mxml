@@ -6,6 +6,8 @@
 			import com.fc.lami.Messages.EchoNotify;
 			import com.fc.lami.Messages.EchoRequest;
 			import com.fc.lami.Messages.EchoResponse;
+			import com.fc.lami.Messages.GetTimeRequest;
+			import com.fc.lami.Messages.GetTimeResponse;
 			import com.net.client.ClientEvent;
 			
 			import mx.controls.Alert;
@@ -51,7 +53,8 @@
 			protected function btn_send_clickHandler(event:MouseEvent):void
 			{
 				// 发送一个随意的消息
-				client.sendRequest(new EchoRequest("hello server client_response"),client_response);
+				//client.sendRequest(new EchoRequest("hello server client_response"),client_response);
+				client.sendRequest(new GetTimeRequest("1"), client_response);
 			}
 			
 			
@@ -61,8 +64,13 @@
 				if (event.getResponse() is EchoResponse) {
 					var response1 : EchoResponse = event.getResponse() as EchoResponse;
 					
-					txt_messages.text = txt_messages.text + "response : " + response1.message + "\n"
+					txt_messages.text = txt_messages.text + "response : " + response1.message + "\n";
 
+				}
+				else if (event.getResponse() is GetTimeResponse) {
+					var response2 : GetTimeResponse = event.getResponse() as GetTimeResponse;
+					
+					txt_messages.text = txt_messages.text + response2.time + "\n";
 				}
 			}
 			
