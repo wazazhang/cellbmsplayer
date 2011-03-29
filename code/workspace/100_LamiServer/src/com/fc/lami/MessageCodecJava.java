@@ -23,6 +23,12 @@ public class MessageCodecJava implements MutualMessageCodec
 		if (msg.getClass().equals(com.fc.lami.Messages.EchoResponse.class)) {
 			_r((com.fc.lami.Messages.EchoResponse)msg, in); return;
 		}
+		if (msg.getClass().equals(com.fc.lami.Messages.GetTimeRequest.class)) {
+			_r((com.fc.lami.Messages.GetTimeRequest)msg, in); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.GetTimeResponse.class)) {
+			_r((com.fc.lami.Messages.GetTimeResponse)msg, in); return;
+		}
 
 	}
 
@@ -36,6 +42,12 @@ public class MessageCodecJava implements MutualMessageCodec
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.EchoResponse.class)) {
 			_w((com.fc.lami.Messages.EchoResponse)msg, out); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.GetTimeRequest.class)) {
+			_w((com.fc.lami.Messages.GetTimeRequest)msg, out); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.GetTimeResponse.class)) {
+			_w((com.fc.lami.Messages.GetTimeResponse)msg, out); return;
 		}
 
 	}
@@ -71,6 +83,28 @@ public class MessageCodecJava implements MutualMessageCodec
 	}
 	private void _w(com.fc.lami.Messages.EchoResponse msg, NetDataOutput out) throws IOException {
 		out.writeUTF(msg.message);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.GetTimeRequest
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.GetTimeRequest new_com_fc_lami_Messages_GetTimeRequest(){return new com.fc.lami.Messages.GetTimeRequest();}
+	private void _r(com.fc.lami.Messages.GetTimeRequest msg, NetDataInput in) throws IOException {
+		msg.message = in.readUTF();
+	}
+	private void _w(com.fc.lami.Messages.GetTimeRequest msg, NetDataOutput out) throws IOException {
+		out.writeUTF(msg.message);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.GetTimeResponse
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.GetTimeResponse new_com_fc_lami_Messages_GetTimeResponse(){return new com.fc.lami.Messages.GetTimeResponse();}
+	private void _r(com.fc.lami.Messages.GetTimeResponse msg, NetDataInput in) throws IOException {
+		msg.time = in.readUTF();
+	}
+	private void _w(com.fc.lami.Messages.GetTimeResponse msg, NetDataOutput out) throws IOException {
+		out.writeUTF(msg.time);
 	}
 
 
