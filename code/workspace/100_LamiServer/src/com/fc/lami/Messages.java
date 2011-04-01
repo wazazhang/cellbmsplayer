@@ -10,6 +10,7 @@ import com.net.flash.message.FlashMessageFactory;
 import com.net.mutual.MutualMessageCodeGeneratorJava;
 
 
+
 public class Messages {
 
 	public static class EchoRequest extends FlashMessage
@@ -67,6 +68,33 @@ public class Messages {
 		public String toString() {
 			return message+"";
 		}
+	}
+	
+	public static class Room extends FlashMessage
+	{
+		public String RoomId;
+		public boolean Started;
+		public Room(String message) {
+			this.RoomId = message;
+		}
+		public Room() {}
+		
+		@Override
+		public String toString() {
+			return RoomId+"";
+		}
+	}
+	
+	public static class Player extends FlashMessage
+	{
+		public String name;
+		public Player nextPlayer;
+		//public ClientSession session;
+		public Player()
+		{
+			//this.session = session;
+		}
+		
 	}
 	
 	public static class GetTimeResponse extends FlashMessage

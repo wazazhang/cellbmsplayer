@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.concurrent.ScheduledFuture;
 
 import com.cell.CIO;
-import com.cell.CUtil;
+
 import com.cell.j2se.CAppBridge;
 import com.cell.util.concurrent.ThreadPool;
 import com.fc.lami.Messages.*;
@@ -52,15 +52,24 @@ public class Server extends ServerImpl implements ServerListener
 		@Override
 		public void sentMessage(ClientSession session, Protocol protocol, MessageHeader message) {}
 		@Override
+		
 		public void receivedMessage(ClientSession session, Protocol protocol, MessageHeader message) {
 			if (message instanceof EchoRequest) {
 //				session.send(new EchoResponse("xxxxxx"));//<--这句代码发送到客户端，是不会触发客户端response监听方法的，只会触发notify方法。
-				session.sendResponse(protocol, new EchoResponse("xxxxxx"));
+				session.sendResponse(protocol, new EchoResponse("xxxxxx"+session.getName()));
+			    broadcast(message);
 			}
+
+			if (message instanceof EchoResponse) {
+				broadcast(message);
+				
+			}
+
 			else if (message instanceof GetTimeRequest) {
 				session.sendResponse(protocol, new GetTimeResponse(new Date().toString()));
 			}
 			System.out.println(message.toString());
+
 		}
 		public void run() {
 			
