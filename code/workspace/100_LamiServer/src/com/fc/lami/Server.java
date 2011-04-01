@@ -80,7 +80,7 @@ public class Server extends ServerImpl implements ServerListener
 	{
 		try {
 			CAppBridge.init();
-			FlashMessageFactory factory = new FlashMessageFactory(new MessageCodecJava(), Messages.class);
+			MessageFactory factory = new MessageFactory();
 			Server server = new Server(factory);
 			int port = 19821;
 			if (args.length > 0) {

@@ -409,7 +409,7 @@ public class Messages {
 	public static void main(String[] args) throws IOException
 	{
 		CAppBridge.init();
-		FlashMessageFactory factory = new FlashMessageFactory(null, Messages.class, CardData.class);
+		MessageFactory factory = new MessageFactory();
 		{
 			MutualMessageCodeGeneratorJava gen_java = new MutualMessageCodeGeneratorJava(
 					"com.fc.lami",
