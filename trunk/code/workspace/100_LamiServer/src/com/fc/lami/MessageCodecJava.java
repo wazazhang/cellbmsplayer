@@ -53,6 +53,9 @@ public class MessageCodecJava implements MutualMessageCodec
 		if (msg.getClass().equals(com.fc.lami.Messages.OverResponse.class)) {
 			_r((com.fc.lami.Messages.OverResponse)msg, in); return;
 		}
+		if (msg.getClass().equals(com.fc.lami.Messages.Player.class)) {
+			_r((com.fc.lami.Messages.Player)msg, in); return;
+		}
 		if (msg.getClass().equals(com.fc.lami.Messages.ReadyNotify.class)) {
 			_r((com.fc.lami.Messages.ReadyNotify)msg, in); return;
 		}
@@ -76,6 +79,9 @@ public class MessageCodecJava implements MutualMessageCodec
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.RetakeCardResponse.class)) {
 			_r((com.fc.lami.Messages.RetakeCardResponse)msg, in); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.Room.class)) {
+			_r((com.fc.lami.Messages.Room)msg, in); return;
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.SendCardNotify.class)) {
 			_r((com.fc.lami.Messages.SendCardNotify)msg, in); return;
@@ -130,6 +136,9 @@ public class MessageCodecJava implements MutualMessageCodec
 		if (msg.getClass().equals(com.fc.lami.Messages.OverResponse.class)) {
 			_w((com.fc.lami.Messages.OverResponse)msg, out); return;
 		}
+		if (msg.getClass().equals(com.fc.lami.Messages.Player.class)) {
+			_w((com.fc.lami.Messages.Player)msg, out); return;
+		}
 		if (msg.getClass().equals(com.fc.lami.Messages.ReadyNotify.class)) {
 			_w((com.fc.lami.Messages.ReadyNotify)msg, out); return;
 		}
@@ -153,6 +162,9 @@ public class MessageCodecJava implements MutualMessageCodec
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.RetakeCardResponse.class)) {
 			_w((com.fc.lami.Messages.RetakeCardResponse)msg, out); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.Room.class)) {
+			_w((com.fc.lami.Messages.Room)msg, out); return;
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.SendCardNotify.class)) {
 			_w((com.fc.lami.Messages.SendCardNotify)msg, out); return;
@@ -322,6 +334,19 @@ public class MessageCodecJava implements MutualMessageCodec
 	}
 
 //	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.Player
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.Player new_com_fc_lami_Messages_Player(){return new com.fc.lami.Messages.Player();}
+	private void _r(com.fc.lami.Messages.Player msg, NetDataInput in) throws IOException {
+		msg.name = in.readUTF();
+		msg.nextPlayer = in.readExternal(com.fc.lami.Messages.Player.class);
+	}
+	private void _w(com.fc.lami.Messages.Player msg, NetDataOutput out) throws IOException {
+		out.writeUTF(msg.name);
+		out.writeExternal(msg.nextPlayer);
+	}
+
+//	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.ReadyNotify
 //	----------------------------------------------------------------------------------------------------
 	public com.fc.lami.Messages.ReadyNotify new_com_fc_lami_Messages_ReadyNotify(){return new com.fc.lami.Messages.ReadyNotify();}
@@ -403,6 +428,19 @@ public class MessageCodecJava implements MutualMessageCodec
 	}
 	private void _w(com.fc.lami.Messages.RetakeCardResponse msg, NetDataOutput out) throws IOException {
 		out.writeShort(msg.result);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.Room
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.Room new_com_fc_lami_Messages_Room(){return new com.fc.lami.Messages.Room();}
+	private void _r(com.fc.lami.Messages.Room msg, NetDataInput in) throws IOException {
+		msg.RoomId = in.readUTF();
+		msg.Started = in.readBoolean();
+	}
+	private void _w(com.fc.lami.Messages.Room msg, NetDataOutput out) throws IOException {
+		out.writeUTF(msg.RoomId);
+		out.writeBoolean(msg.Started);
 	}
 
 //	----------------------------------------------------------------------------------------------------
