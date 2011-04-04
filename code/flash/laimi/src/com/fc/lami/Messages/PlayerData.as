@@ -5,25 +5,25 @@ package com.fc.lami.Messages
 
 
 	/**
-	 * Java Class [24] [com.fc.lami.Messages.RetakeCardNotify]<br>
+	 * Java Class [18] [com.fc.lami.Messages.PlayerData]<br>
 	 * 此代码为自动生成。不需要在此修改。若有错误，请修改代码生成器。
 	 */
-	public class RetakeCardNotify extends Message
+	public class PlayerData extends Message
 	{
 		/** Java type is : <font color=#0000ff>int</font> */
 		public var player_id :  int;
-		/** Java type is : <font color=#0000ff>com.fc.lami.Messages.CardData[]</font> */
-		public var cards :  Array;
+		/** Java type is : <font color=#0000ff>java.lang.String</font> */
+		public var name :  String;
 
 		/**
 		 * @param player_id as <font color=#0000ff>int</font>
-		 * @param cards as <font color=#0000ff>com.fc.lami.Messages.CardData[]</font>		 */
-		public function RetakeCardNotify(
+		 * @param name as <font color=#0000ff>java.lang.String</font>		 */
+		public function PlayerData(
 			player_id :  int = 0,
-			cards :  Array = null) 
+			name :  String = null) 
 		{
 			this.player_id = player_id;
-			this.cards = cards;
+			this.name = name;
 		}
 	}
 }

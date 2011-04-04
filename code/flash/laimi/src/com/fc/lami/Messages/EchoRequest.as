@@ -5,7 +5,7 @@ package com.fc.lami.Messages
 
 
 	/**
-	 * Java Class [3] [com.fc.lami.Messages.EchoRequest]<br>
+	 * Java Class [4] [com.fc.lami.Messages.EchoRequest]<br>
 	 * 此代码为自动生成。不需要在此修改。若有错误，请修改代码生成器。
 	 */
 	public class EchoRequest extends Message

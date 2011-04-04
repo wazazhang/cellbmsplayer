@@ -1,11 +1,11 @@
-package com.fc.lami
+package com.fc.lami.Messages
 {
 	import com.net.client.Message;
 	import com.net.client.MessageFactory;
 
 
 	/**
-	 * Java Class [1] [com.fc.lami.CardData]<br>
+	 * Java Class [1] [com.fc.lami.Messages.CardData]<br>
 	 * 此代码为自动生成。不需要在此修改。若有错误，请修改代码生成器。
 	 */
 	public class CardData extends Message

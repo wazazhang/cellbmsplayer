@@ -5,20 +5,20 @@ package com.fc.lami.Messages
 
 
 	/**
-	 * Java Class [19] [com.fc.lami.Messages.ReadyNotify]<br>
+	 * Java Class [7] [com.fc.lami.Messages.EnterRoomRequest]<br>
 	 * 此代码为自动生成。不需要在此修改。若有错误，请修改代码生成器。
 	 */
-	public class ReadyNotify extends Message
+	public class EnterRoomRequest extends Message
 	{
 		/** Java type is : <font color=#0000ff>int</font> */
-		public var player_id :  int;
+		public var room_no :  int;
 
 		/**
-		 * @param player_id as <font color=#0000ff>int</font>		 */
-		public function ReadyNotify(
-			player_id :  int = 0) 
+		 * @param room_no as <font color=#0000ff>int</font>		 */
+		public function EnterRoomRequest(
+			room_no :  int = 0) 
 		{
-			this.player_id = player_id;
+			this.room_no = room_no;
 		}
 	}
 }
