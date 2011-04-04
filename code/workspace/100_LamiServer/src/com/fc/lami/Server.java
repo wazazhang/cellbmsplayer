@@ -1,6 +1,7 @@
 package com.fc.lami;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.ScheduledFuture;
 
@@ -9,6 +10,7 @@ import com.cell.CIO;
 import com.cell.j2se.CAppBridge;
 import com.cell.util.concurrent.ThreadPool;
 import com.fc.lami.Messages.*;
+import com.fc.lami.model.Room;
 import com.net.MessageHeader;
 import com.net.Protocol;
 import com.net.flash.message.FlashMessageFactory;
@@ -21,8 +23,18 @@ public class Server extends ServerImpl implements ServerListener
 {
 	ThreadPool services = new ThreadPool("Flash-Test");
 	
+	ArrayList<EchoClientSession> client_list = new ArrayList<EchoClientSession>();
+	
+	final public static int room_number = 1;
+	Room rooms[];
+	
 	public Server(FlashMessageFactory factory) {
 		super(CIO.getAppBridge().getClassLoader(), factory, 10, 600, 600, 0);
+		rooms = new Room[room_number];
+		for (int i = 0; i<room_number; i++){
+			rooms[i] = new Room();
+			services.scheduleAtFixedRate(rooms[i], 1000, 1000);
+		}
 	}
 
 	public void open(int port) throws IOException {
@@ -32,7 +44,9 @@ public class Server extends ServerImpl implements ServerListener
 	@Override
 	public ClientSessionListener connected(ClientSession session) {
 		log.info("connected " + session.getRemoteAddress());
-		return new EchoClientSession(session);
+		EchoClientSession c = new EchoClientSession(session);
+		client_list.add(c);
+		return c;
 	}
 	
 	class EchoClientSession implements ClientSessionListener, Runnable
@@ -47,6 +61,7 @@ public class Server extends ServerImpl implements ServerListener
 		@Override
 		public void disconnected(ClientSession session) {
 			log.info("disconnected " + session.getRemoteAddress());
+			client_list.remove(this);
 			this.task.cancel(false);
 		}
 		@Override
