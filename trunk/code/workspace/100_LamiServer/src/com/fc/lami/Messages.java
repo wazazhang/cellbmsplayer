@@ -6,7 +6,6 @@ import java.io.IOException;
 import com.cell.j2se.CAppBridge;
 import com.net.flash.message.FlashMessage;
 import com.net.flash.message.FlashMessageCodeGenerator;
-import com.net.flash.message.FlashMessageFactory;
 import com.net.mutual.MutualMessageCodeGeneratorJava;
 
 
@@ -70,31 +69,69 @@ public class Messages {
 		}
 	}
 	
-	public static class Room extends FlashMessage
+	
+	public static class RoomData extends FlashMessage
 	{
-		public String RoomId;
-		public boolean Started;
-		public Room(String message) {
-			this.RoomId = message;
-		}
-		public Room() {}
+		public int room_id;
+		public DeskData desks[];
+		public PlayerData players[];
+
+		public RoomData() {}
 		
 		@Override
 		public String toString() {
-			return RoomId+"";
+			return ""+room_id;
 		}
 	}
 	
-	public static class Player extends FlashMessage
+	public static class DeskData extends FlashMessage
 	{
+		public int desk_id;
+		public boolean is_started;
+		public int player_E_id;
+		public int player_W_id;
+		public int player_S_id;
+		public int player_N_id;
+		
+		public DeskData(){}
+		
+	}
+	
+	public static class PlayerData extends FlashMessage
+	{
+		public int player_id;
 		public String name;
-		public Player nextPlayer;
+//		public PlayerData nextPlayer;
 		//public ClientSession session;
-		public Player()
+		public PlayerData()
 		{
 			//this.session = session;
 		}
 		
+	}
+	
+	public static class CardData extends FlashMessage
+	{
+		/** 点数 */
+		public int point;
+		/** 颜色 */
+		public int type;
+		
+		/** 在桌面的位置 */
+		public int x;
+		public int y;
+		
+		public CardData(){
+			x = -1;
+			y = -1;
+		}
+		
+		public CardData(int point, int type){
+			this.point = point;
+			this.type = type;
+			x = -1;
+			y = -1;
+		}
 	}
 	
 	public static class GetTimeResponse extends FlashMessage
@@ -405,6 +442,71 @@ public class Messages {
 			return "RepealSendCardResponse";
 		}
 	}
+	
+	/** 进房间 */
+	public static class EnterRoomRequest extends FlashMessage
+	{
+		/** 房间号 */
+		public int room_no;
+		
+		public EnterRoomRequest(int no){
+			this.room_no = no;
+		}
+		
+		public EnterRoomRequest(){}
+		
+		@Override
+		public String toString() {
+			return "EnterRoomRequest";
+		}
+	}
+	
+	public static class EnterRoomResponse extends FlashMessage
+	{
+		final static public int ENTER_ROOM_RESULT_SUCCESS = 0;
+		final static public int ENTER_ROOM_RESULT_FAIL_ROOM_FULL = 1;
+		
+		public int result;
+		
+		public EnterRoomResponse(int result){
+			this.result = result;
+		}
+		
+		public EnterRoomResponse(){}
+		
+		@Override
+		public String toString() {
+			return "EnterRoomResponse";
+		}
+	}
+	
+	/** 有人进入房间 */
+	public static class EnterRoomNotify extends FlashMessage
+	{
+		public PlayerData player;
+		
+		public EnterRoomNotify(PlayerData player){
+			this.player = player;
+		}
+		
+		public EnterRoomNotify(){}
+		
+		@Override
+		public String toString() {
+			return "EnterRoomNotify";
+		}
+	}
+	
+	/** 出房间 */
+	
+	
+	
+	/** 进桌子 */
+
+	
+	
+	/** 出桌子 */
+	
 	
 	public static void main(String[] args) throws IOException
 	{
