@@ -5,7 +5,7 @@ package com.fc.lami.Messages
 
 
 	/**
-	 * Java Class [13] [com.fc.lami.Messages.MoveCardNotify]<br>
+	 * Java Class [25] [com.fc.lami.Messages.MoveCardNotify]<br>
 	 * 此代码为自动生成。不需要在此修改。若有错误，请修改代码生成器。
 	 */
 	public class MoveCardNotify extends Message
