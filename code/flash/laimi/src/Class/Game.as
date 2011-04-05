@@ -6,9 +6,7 @@ package Class
 	
 	import Component.Card_Cpt;
 	import Component.Matrix_Cpt;
-	
 	import flash.events.KeyboardEvent;
-	
 	import mx.collections.ArrayCollection;
 	import mx.collections.Sort;
 	import mx.collections.SortField;
@@ -22,7 +20,7 @@ package Class
 		public static var app:Application;
 		
 		//列数
-		public static var lineCount:int=10; 
+		public static var lineCount:int=7; 
 		
 		//列数组
 		public static var lineArray:ArrayCollection = new ArrayCollection();
@@ -79,7 +77,7 @@ package Class
 			var curline:Line;
 			for(var i:int=0;i<lineCount;i++)
 			{			
-				var line:Line = new Line(26,false);
+				var line:Line = new Line(20,false);
 				
 				if(curline != null)
 				{
@@ -138,6 +136,7 @@ package Class
 		public static function check():Boolean
 		{
 			haveSendCard = checkHaveSendCard();
+			
 			for each(var line:Line in lineArray)
 			{
 				if(!line.check())
@@ -151,7 +150,7 @@ package Class
 			matrix.setStyle("borderColor",0x000000);
 			legaled = true;
 			
-			canSendCard = checkHaveSendCard()
+			canSendCard = haveSendCard;
 			
 			return true;
 		}
@@ -226,6 +225,9 @@ package Class
 				while(cardctp != null);
 			}
 		}
+		
+		
+		
 		
 		private static function keydown(event:KeyboardEvent):void
 		{

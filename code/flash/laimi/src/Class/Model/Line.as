@@ -8,7 +8,7 @@ package Class.Model
 	{
 		public var firstCard:Card_Cpt;
 		//public var lastCard:Card_Cpt;
-		public var lineLength:int=26;
+		public var lineLength:int=20; 
 		private var _lastCard:Card_Cpt;
 		public var nextLine:Line;
 		

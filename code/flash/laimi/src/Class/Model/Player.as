@@ -17,7 +17,7 @@ package Class.Model
 	{
 		public var handCard:ArrayCollection = new ArrayCollection(); //当前手牌数组
 		public var matrix:UserMatrix_Cpt    //用户矩阵
-		public var matrix_length:int = 18;  //用户矩阵宽度
+		public var matrix_length:int = 14;  //用户矩阵宽度
 		public var matrix_height:int = 4;    //用户矩阵高度
 		
 		public var cardLines:ArrayCollection = new ArrayCollection();
@@ -66,14 +66,14 @@ package Class.Model
 		{
 			var top:int = 50; //距离顶部
 			var jtop:int = 10; //间隔
-			var fontx:int = 20;
+			var fontx:int = 0;
 			
 			var cardcpt:Card_Cpt = line.firstCard;
 			var y:int =top+ lie*(cardcpt.height+2);
 			
 			for(var i:int=0;i<line.lineLength;i++)
 			{
-				cardcpt.x = i*cardcpt.width+(80-lie*fontx);
+				cardcpt.x = i*cardcpt.width+(lie*fontx);
 				cardcpt.y = y;
 				matrix.addChild(cardcpt);
 				cardcpt = cardcpt.nextCardCpt;	
@@ -82,6 +82,13 @@ package Class.Model
 		
 		public function getOneCardFromCardpile():void
 		{
+			if(handCard.length==matrix_length*matrix_height)
+			{
+				Alert.show("牌数已达到上限");
+				return;
+			}
+				
+				
 			canOpearation = false;
 			getCard(Game.getCardFromCard());
 		}
@@ -109,7 +116,6 @@ package Class.Model
 				cardcpt.confimcard = card;
 				cardcpt.isShow = false;
 				cardcpt = cardcpt.nextCardCpt;
-			
 				if(precard!=null)
 				{
 					precard.nextCard = card;
@@ -136,10 +142,10 @@ package Class.Model
 				do
 				{
 					if(cardcpt.card ==null&&cardcpt.confimcard ==null)
-					{
+					{	
+						cardcpt.isShow = false;
 						cardcpt.card = card;
 						cardcpt.confimcard = card;
-						cardcpt.isShow = false;
 						addCardMotion(card)
 						return;
 					}
@@ -261,7 +267,9 @@ package Class.Model
 					continue;			
 				}
 				var line:Line = cardLines[card.type-1] as Line;
+				
 				var point:int = 12;
+				
 				var cardcpt:Card_Cpt = line.firstCard;
 				
 				while(point!=(13-card.point)) 
@@ -277,6 +285,7 @@ package Class.Model
 				else
 				{
 					cardcpt = cardcpt.nextCardCpt;
+					
 					while(point!=0) 
 					{
 						point --;
@@ -351,6 +360,7 @@ package Class.Model
 		protected function addCardMotion(card:Card):void
 		{
 			var moveCard:Card_Cpt = new Card_Cpt();
+			matrix.addChild(moveCard);
 			moveCard.isShow = true;
 			moveCard.x = Game.cardspostion_x;
 			moveCard.y = Game.cardspostion_y;
@@ -358,7 +368,7 @@ package Class.Model
 			moveCard.card.nextCard  = card.nextCard;
 			moveCard.nextCardCpt = card.cardUI;
 			
-			matrix.addChild(moveCard);
+			
 				
 			var move:Move = new Move();
 			
