@@ -5,17 +5,17 @@ package com.fc.lami.Messages
 
 
 	/**
-	 * Java Class [42] [com.fc.lami.Messages.SendCardResponse]<br>
+	 * Java Class [23] [com.fc.lami.Messages.LoginResponse]<br>
 	 * 此代码为自动生成。不需要在此修改。若有错误，请修改代码生成器。
 	 */
-	public class SendCardResponse extends Message
+	public class LoginResponse extends Message
 	{
-		/** Java type is : <font color=#0000ff>short</font> */
+		/** Java type is : <font color=#0000ff>int</font> */
 		public var result :  int;
 
 		/**
-		 * @param result as <font color=#0000ff>short</font>		 */
-		public function SendCardResponse(
+		 * @param result as <font color=#0000ff>int</font>		 */
+		public function LoginResponse(
 			result :  int = 0) 
 		{
 			this.result = result;
