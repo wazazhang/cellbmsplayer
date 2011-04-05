@@ -29,6 +29,15 @@ public class MessageCodecJava implements MutualMessageCodec
 		if (msg.getClass().equals(com.fc.lami.Messages.EchoResponse.class)) {
 			_r((com.fc.lami.Messages.EchoResponse)msg, in); return;
 		}
+		if (msg.getClass().equals(com.fc.lami.Messages.EnterDeskNotify.class)) {
+			_r((com.fc.lami.Messages.EnterDeskNotify)msg, in); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.EnterDeskRequest.class)) {
+			_r((com.fc.lami.Messages.EnterDeskRequest)msg, in); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.EnterDeskResponse.class)) {
+			_r((com.fc.lami.Messages.EnterDeskResponse)msg, in); return;
+		}
 		if (msg.getClass().equals(com.fc.lami.Messages.EnterRoomNotify.class)) {
 			_r((com.fc.lami.Messages.EnterRoomNotify)msg, in); return;
 		}
@@ -37,6 +46,15 @@ public class MessageCodecJava implements MutualMessageCodec
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.EnterRoomResponse.class)) {
 			_r((com.fc.lami.Messages.EnterRoomResponse)msg, in); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.ExitRoomNotify.class)) {
+			_r((com.fc.lami.Messages.ExitRoomNotify)msg, in); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.ExitRoomRequest.class)) {
+			_r((com.fc.lami.Messages.ExitRoomRequest)msg, in); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.ExitRoomResponse.class)) {
+			_r((com.fc.lami.Messages.ExitRoomResponse)msg, in); return;
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.GetCardRequest.class)) {
 			_r((com.fc.lami.Messages.GetCardRequest)msg, in); return;
@@ -49,6 +67,24 @@ public class MessageCodecJava implements MutualMessageCodec
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.GetTimeResponse.class)) {
 			_r((com.fc.lami.Messages.GetTimeResponse)msg, in); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.LeaveDeskNotify.class)) {
+			_r((com.fc.lami.Messages.LeaveDeskNotify)msg, in); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.LeaveDeskRequest.class)) {
+			_r((com.fc.lami.Messages.LeaveDeskRequest)msg, in); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.LeaveDeskResponse.class)) {
+			_r((com.fc.lami.Messages.LeaveDeskResponse)msg, in); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.LoginRequest.class)) {
+			_r((com.fc.lami.Messages.LoginRequest)msg, in); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.LoginResponse.class)) {
+			_r((com.fc.lami.Messages.LoginResponse)msg, in); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.LogoutRequest.class)) {
+			_r((com.fc.lami.Messages.LogoutRequest)msg, in); return;
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.MoveCardNotify.class)) {
 			_r((com.fc.lami.Messages.MoveCardNotify)msg, in); return;
@@ -124,6 +160,15 @@ public class MessageCodecJava implements MutualMessageCodec
 		if (msg.getClass().equals(com.fc.lami.Messages.EchoResponse.class)) {
 			_w((com.fc.lami.Messages.EchoResponse)msg, out); return;
 		}
+		if (msg.getClass().equals(com.fc.lami.Messages.EnterDeskNotify.class)) {
+			_w((com.fc.lami.Messages.EnterDeskNotify)msg, out); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.EnterDeskRequest.class)) {
+			_w((com.fc.lami.Messages.EnterDeskRequest)msg, out); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.EnterDeskResponse.class)) {
+			_w((com.fc.lami.Messages.EnterDeskResponse)msg, out); return;
+		}
 		if (msg.getClass().equals(com.fc.lami.Messages.EnterRoomNotify.class)) {
 			_w((com.fc.lami.Messages.EnterRoomNotify)msg, out); return;
 		}
@@ -132,6 +177,15 @@ public class MessageCodecJava implements MutualMessageCodec
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.EnterRoomResponse.class)) {
 			_w((com.fc.lami.Messages.EnterRoomResponse)msg, out); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.ExitRoomNotify.class)) {
+			_w((com.fc.lami.Messages.ExitRoomNotify)msg, out); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.ExitRoomRequest.class)) {
+			_w((com.fc.lami.Messages.ExitRoomRequest)msg, out); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.ExitRoomResponse.class)) {
+			_w((com.fc.lami.Messages.ExitRoomResponse)msg, out); return;
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.GetCardRequest.class)) {
 			_w((com.fc.lami.Messages.GetCardRequest)msg, out); return;
@@ -144,6 +198,24 @@ public class MessageCodecJava implements MutualMessageCodec
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.GetTimeResponse.class)) {
 			_w((com.fc.lami.Messages.GetTimeResponse)msg, out); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.LeaveDeskNotify.class)) {
+			_w((com.fc.lami.Messages.LeaveDeskNotify)msg, out); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.LeaveDeskRequest.class)) {
+			_w((com.fc.lami.Messages.LeaveDeskRequest)msg, out); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.LeaveDeskResponse.class)) {
+			_w((com.fc.lami.Messages.LeaveDeskResponse)msg, out); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.LoginRequest.class)) {
+			_w((com.fc.lami.Messages.LoginRequest)msg, out); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.LoginResponse.class)) {
+			_w((com.fc.lami.Messages.LoginResponse)msg, out); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.LogoutRequest.class)) {
+			_w((com.fc.lami.Messages.LogoutRequest)msg, out); return;
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.MoveCardNotify.class)) {
 			_w((com.fc.lami.Messages.MoveCardNotify)msg, out); return;
@@ -274,6 +346,39 @@ public class MessageCodecJava implements MutualMessageCodec
 	}
 
 //	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.EnterDeskNotify
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.EnterDeskNotify new_com_fc_lami_Messages_EnterDeskNotify(){return new com.fc.lami.Messages.EnterDeskNotify();}
+	private void _r(com.fc.lami.Messages.EnterDeskNotify msg, NetDataInput in) throws IOException {
+		msg.player = in.readExternal(com.fc.lami.Messages.PlayerData.class);
+	}
+	private void _w(com.fc.lami.Messages.EnterDeskNotify msg, NetDataOutput out) throws IOException {
+		out.writeExternal(msg.player);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.EnterDeskRequest
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.EnterDeskRequest new_com_fc_lami_Messages_EnterDeskRequest(){return new com.fc.lami.Messages.EnterDeskRequest();}
+	private void _r(com.fc.lami.Messages.EnterDeskRequest msg, NetDataInput in) throws IOException {
+		msg.seat = in.readInt();
+	}
+	private void _w(com.fc.lami.Messages.EnterDeskRequest msg, NetDataOutput out) throws IOException {
+		out.writeInt(msg.seat);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.EnterDeskResponse
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.EnterDeskResponse new_com_fc_lami_Messages_EnterDeskResponse(){return new com.fc.lami.Messages.EnterDeskResponse();}
+	private void _r(com.fc.lami.Messages.EnterDeskResponse msg, NetDataInput in) throws IOException {
+		msg.result = in.readInt();
+	}
+	private void _w(com.fc.lami.Messages.EnterDeskResponse msg, NetDataOutput out) throws IOException {
+		out.writeInt(msg.result);
+	}
+
+//	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.EnterRoomNotify
 //	----------------------------------------------------------------------------------------------------
 	public com.fc.lami.Messages.EnterRoomNotify new_com_fc_lami_Messages_EnterRoomNotify(){return new com.fc.lami.Messages.EnterRoomNotify();}
@@ -304,6 +409,35 @@ public class MessageCodecJava implements MutualMessageCodec
 	}
 	private void _w(com.fc.lami.Messages.EnterRoomResponse msg, NetDataOutput out) throws IOException {
 		out.writeInt(msg.result);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.ExitRoomNotify
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.ExitRoomNotify new_com_fc_lami_Messages_ExitRoomNotify(){return new com.fc.lami.Messages.ExitRoomNotify();}
+	private void _r(com.fc.lami.Messages.ExitRoomNotify msg, NetDataInput in) throws IOException {
+		msg.player = in.readExternal(com.fc.lami.Messages.PlayerData.class);
+	}
+	private void _w(com.fc.lami.Messages.ExitRoomNotify msg, NetDataOutput out) throws IOException {
+		out.writeExternal(msg.player);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.ExitRoomRequest
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.ExitRoomRequest new_com_fc_lami_Messages_ExitRoomRequest(){return new com.fc.lami.Messages.ExitRoomRequest();}
+	private void _r(com.fc.lami.Messages.ExitRoomRequest msg, NetDataInput in) throws IOException {
+	}
+	private void _w(com.fc.lami.Messages.ExitRoomRequest msg, NetDataOutput out) throws IOException {
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.ExitRoomResponse
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.ExitRoomResponse new_com_fc_lami_Messages_ExitRoomResponse(){return new com.fc.lami.Messages.ExitRoomResponse();}
+	private void _r(com.fc.lami.Messages.ExitRoomResponse msg, NetDataInput in) throws IOException {
+	}
+	private void _w(com.fc.lami.Messages.ExitRoomResponse msg, NetDataOutput out) throws IOException {
 	}
 
 //	----------------------------------------------------------------------------------------------------
@@ -346,6 +480,68 @@ public class MessageCodecJava implements MutualMessageCodec
 	}
 	private void _w(com.fc.lami.Messages.GetTimeResponse msg, NetDataOutput out) throws IOException {
 		out.writeUTF(msg.time);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.LeaveDeskNotify
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.LeaveDeskNotify new_com_fc_lami_Messages_LeaveDeskNotify(){return new com.fc.lami.Messages.LeaveDeskNotify();}
+	private void _r(com.fc.lami.Messages.LeaveDeskNotify msg, NetDataInput in) throws IOException {
+		msg.player = in.readExternal(com.fc.lami.Messages.PlayerData.class);
+	}
+	private void _w(com.fc.lami.Messages.LeaveDeskNotify msg, NetDataOutput out) throws IOException {
+		out.writeExternal(msg.player);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.LeaveDeskRequest
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.LeaveDeskRequest new_com_fc_lami_Messages_LeaveDeskRequest(){return new com.fc.lami.Messages.LeaveDeskRequest();}
+	private void _r(com.fc.lami.Messages.LeaveDeskRequest msg, NetDataInput in) throws IOException {
+	}
+	private void _w(com.fc.lami.Messages.LeaveDeskRequest msg, NetDataOutput out) throws IOException {
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.LeaveDeskResponse
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.LeaveDeskResponse new_com_fc_lami_Messages_LeaveDeskResponse(){return new com.fc.lami.Messages.LeaveDeskResponse();}
+	private void _r(com.fc.lami.Messages.LeaveDeskResponse msg, NetDataInput in) throws IOException {
+		msg.result = in.readInt();
+	}
+	private void _w(com.fc.lami.Messages.LeaveDeskResponse msg, NetDataOutput out) throws IOException {
+		out.writeInt(msg.result);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.LoginRequest
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.LoginRequest new_com_fc_lami_Messages_LoginRequest(){return new com.fc.lami.Messages.LoginRequest();}
+	private void _r(com.fc.lami.Messages.LoginRequest msg, NetDataInput in) throws IOException {
+		msg.name = in.readUTF();
+	}
+	private void _w(com.fc.lami.Messages.LoginRequest msg, NetDataOutput out) throws IOException {
+		out.writeUTF(msg.name);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.LoginResponse
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.LoginResponse new_com_fc_lami_Messages_LoginResponse(){return new com.fc.lami.Messages.LoginResponse();}
+	private void _r(com.fc.lami.Messages.LoginResponse msg, NetDataInput in) throws IOException {
+		msg.result = in.readInt();
+	}
+	private void _w(com.fc.lami.Messages.LoginResponse msg, NetDataOutput out) throws IOException {
+		out.writeInt(msg.result);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.LogoutRequest
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.LogoutRequest new_com_fc_lami_Messages_LogoutRequest(){return new com.fc.lami.Messages.LogoutRequest();}
+	private void _r(com.fc.lami.Messages.LogoutRequest msg, NetDataInput in) throws IOException {
+	}
+	private void _w(com.fc.lami.Messages.LogoutRequest msg, NetDataOutput out) throws IOException {
 	}
 
 //	----------------------------------------------------------------------------------------------------

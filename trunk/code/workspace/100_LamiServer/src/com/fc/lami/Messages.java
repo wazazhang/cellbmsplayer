@@ -443,6 +443,54 @@ public class Messages {
 		}
 	}
 	
+	/** 登录 */
+	public static class LoginRequest extends FlashMessage
+	{
+		public String name;
+		
+		public LoginRequest(String name){
+			this.name = name;
+		}
+		
+		public LoginRequest(){}
+		
+		@Override
+		public String toString() {
+			return "LoginRequest";
+		}
+	}
+	
+	public static class LoginResponse extends FlashMessage
+	{
+		final static public int LOGIN_RESULT_SUCCESS = 0;
+		final static public int LOGIN_RESULT_FAIL = 1;
+		public int result;
+		
+		public LoginResponse(int result){
+			this.result = result;
+		}
+		
+		public LoginResponse(){}
+		
+		@Override
+		public String toString(){
+			return "LoginResponse";
+		}
+	}
+	
+	public static class LogoutRequest extends FlashMessage
+	{
+		public LogoutRequest(){
+			
+		}
+		
+		@Override
+		public String toString(){
+			return "LogoutRequest";
+		}
+	}
+	
+	
 	/** 进房间 */
 	public static class EnterRoomRequest extends FlashMessage
 	{
@@ -498,15 +546,143 @@ public class Messages {
 	}
 	
 	/** 出房间 */
+	public static class ExitRoomRequest extends FlashMessage
+	{
+		public ExitRoomRequest(){}
+		
+		@Override
+		public String toString() {
+			return "ExitRoomRequest";
+		}
+	}
 	
+	public static class ExitRoomResponse extends FlashMessage
+	{
+		public ExitRoomResponse(){}
+		
+		@Override
+		public String toString() {
+			return "ExitRoomResponse";
+		}
+	}
 	
+	public static class ExitRoomNotify extends FlashMessage
+	{
+		public PlayerData player;
+		
+		public ExitRoomNotify(PlayerData pd){
+			this.player = pd;
+		}
+		
+		public ExitRoomNotify(){}
+		
+		@Override
+		public String toString() {
+			return "ExitRoomNotify";
+		}
+	}
 	
 	/** 进桌子 */
-
+	public static class EnterDeskRequest extends FlashMessage
+	{
+		final static public int SEAT_EAST = 0;
+		final static public int SEAT_WEST = 1;
+		final static public int SEAT_SOUTH = 2;
+		final static public int SEAT_NORTH = 3;
+		public int seat;
+		
+		public EnterDeskRequest(int seat){
+			this.seat = seat;
+		}
+		
+		public EnterDeskRequest(){}
+		
+		@Override
+		public String toString() {
+			return "EnterDeskRequest";
+		}
+	}
 	
+	public static class EnterDeskResponse extends FlashMessage
+	{
+		final static public int ENTER_DESK_RESULT_SUCCESS = 0;
+		final static public int ENTER_DESK_RESULT_FAIL_PLAYER_EXIST = 1;
+		
+		public int result;
+		
+		public EnterDeskResponse(int result){
+			this.result = result;
+		}
+		
+		public EnterDeskResponse(){}
+		
+		@Override
+		public String toString() {
+			return "EnterDeskResponse";
+		}
+	}
 	
-	/** 出桌子 */
+	public static class EnterDeskNotify extends FlashMessage
+	{
+		public PlayerData player;
+		
+		public EnterDeskNotify(PlayerData pd){
+			this.player = pd;
+		}
+		
+		public EnterDeskNotify(){}
+		
+		@Override
+		public String toString() {
+			return "EnterDeskNotify";
+		}
+	}
 	
+	/** 离开桌子 */
+	public static class LeaveDeskRequest extends FlashMessage
+	{
+		public LeaveDeskRequest(){}
+		
+		@Override
+		public String toString() {
+			return "LeaveDeskRequest";
+		}
+	}
+	
+	public static class LeaveDeskResponse extends FlashMessage
+	{
+		final static public int LEAVE_DESK_RESULT_SUCCESS = 0;
+		final static public int LEAVE_DESK_RESULT_FAIL_GAMING = 1;
+		
+		public int result;
+		
+		public LeaveDeskResponse(int result){
+			this.result = result;
+		}
+		
+		public LeaveDeskResponse(){}
+		
+		@Override
+		public String toString() {
+			return "LeaveDeskResponse";
+		}
+	}
+	
+	public static class LeaveDeskNotify extends FlashMessage
+	{
+		public PlayerData player;
+		
+		public LeaveDeskNotify(PlayerData pd){
+			this.player = pd;
+		}
+		
+		public LeaveDeskNotify(){}
+		
+		@Override
+		public String toString() {
+			return "LeaveDeskNotify";
+		}
+	}
 	
 	public static void main(String[] args) throws IOException
 	{
