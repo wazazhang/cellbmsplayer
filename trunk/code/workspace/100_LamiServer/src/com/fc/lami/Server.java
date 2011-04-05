@@ -66,9 +66,10 @@ public class Server extends ServerImpl implements ServerListener
 		}
 		@Override
 		public void sentMessage(ClientSession session, Protocol protocol, MessageHeader message) {}
-		@Override
 		
+		@Override
 		public void receivedMessage(ClientSession session, Protocol protocol, MessageHeader message) {
+			
 			if (message instanceof EchoRequest) {
 //				session.send(new EchoResponse("xxxxxx"));//<--这句代码发送到客户端，是不会触发客户端response监听方法的，只会触发notify方法。
 				session.sendResponse(protocol, new EchoResponse("xxxxxx"+session.getName()));
@@ -77,17 +78,29 @@ public class Server extends ServerImpl implements ServerListener
 
 			if (message instanceof EchoResponse) {
 				broadcast(message);
-				
 			}
 
 			else if (message instanceof GetTimeRequest) {
 				session.sendResponse(protocol, new GetTimeResponse(new Date().toString()));
 			}
+			//进入房间请求
+			else if(message instanceof EnterRoomRequest)
+			{
+				session.sendResponse(protocol, new EnterRoomResponse(EnterRoomResponse.ENTER_ROOM_RESULT_SUCCESS));
+				broadcast(new EnterRoomNotify());
+				
+				
+			}
+			
+			else if(message instanceof PlayerData)
+			{
+				broadcast(message);
+			}
+			
 			System.out.println(message.toString());
 
 		}
 		public void run() {
-			
 		}
 	}
 	
