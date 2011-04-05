@@ -63,7 +63,5 @@ package Class
 			oprTimer.reset();
 			oprTimer.start();
 		}	
-		
-
 	}
 }

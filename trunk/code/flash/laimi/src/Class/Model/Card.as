@@ -15,6 +15,9 @@ package Class.Model
 		
 		public var nextCard:Card;//用于卡片顺序添加
 		
+		public var comfidcard:Card;//确认卡
+		
+		
 		public function Card(point:int,type:int)
 		{
 			this.point = point;
@@ -34,6 +37,6 @@ package Class.Model
 			else(type==0)
 				return 0xffffff;			
 		}
-		
+	
 	}
 }

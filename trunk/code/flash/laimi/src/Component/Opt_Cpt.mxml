@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="478" height="32" borderStyle="solid" cornerRadius="5">
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="76" height="176" borderStyle="solid" cornerRadius="0" borderThickness="0">
 
 <mx:Script>
 	<![CDATA[
@@ -37,12 +37,12 @@
 	]]>
 </mx:Script>
 
-	<mx:Button  x="276" label="出牌结束" verticalCenter="0" enabled="{Game.canSendCard}" click="click5()"/>
-	<mx:Button id="BT" x="96" enabled="false" label="摸牌" verticalCenter="0" click="click()" />
-	<mx:Button id="BT3" x="156" enabled="false"  label="排序" verticalCenter="0" click="click3()" />
-	<mx:Button id="BT4" x="216" enabled="false"  label="撤销" verticalCenter="0" click="click4()"/>
-	<mx:Button id="BT6" x="10" y="3" label="开始游戏" click="click6()"/>
-	<mx:Label x="362" y="5" text="破冰:{Game.gamer.isCold?'否':'是'}"/>
-	<mx:Label x="413" text="shift:{Game.gamer.keydwon?'是':'否'}" verticalCenter="0"/>
+	<mx:Button  x="10" label="结束" enabled="{Game.canSendCard}" click="click5()" y="110"/>
+	<mx:Button id="BT" x="10" enabled="false" label="摸牌" click="click()"  y="30"/>
+	<mx:Button id="BT3" x="10" enabled="false"  label="排序" click="click3()"  y="56"/>
+	<mx:Button id="BT4" x="10" enabled="false"  label="撤销" click="click4()" y="83"/>
+	<mx:Button id="BT6" x="10" y="3" label="开始" click="click6()" />
+	<mx:Label x="10" y="132" text="破冰:{Game.gamer.isCold?'否':'是'}" color="white"/>
+	<mx:Label x="9" text="shift:{Game.gamer.keydwon?'是':'否'}" y="147"  color="white"/>
 	
 </mx:Canvas>

@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="25" height="30" borderStyle="solid" 
-	 borderColor="{isSelected?0xff0000:0x000000}"
-	 backgroundColor="{(card==null||!isShow)?0xeadda8:(card.isSended?0x5d4a5b:0x3d4a5b)}" click="click()"
-	  mouseOver="mouseOver()" >
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="26" height="32" borderStyle="solid" 
+		   
+	 borderColor="{isSelected?0xff0000:0x000000}" 
+	 
+	 backgroundColor="0xeadda8" click="click()"
+	 
+	 mouseOver="mouseOver()" backgroundAlpha="0.52">
 	 
 	<mx:Script>
 		<![CDATA[
-			import Class.TimesCtr;
 			import Class.Game;
-			import mx.controls.Alert;
 			import Class.Model.Card;
+			import Class.TimesCtr;
+			
+			import mx.controls.Alert;
+			import mx.states.SetStyle;
 			
 			[Bindable]
 			public var confimcard:Card
@@ -27,6 +32,21 @@
 			[Bindable]
 			public var isShow:Boolean = true;
 			
+			[Embed(source='image/a000.png')]
+			public static var im1:Class;    
+			
+			[Embed(source='image/a001.png')]
+			public static var im2:Class;    
+			
+			[Embed(source='image/a002.png')]
+			public static var im3:Class;    
+			
+			[Embed(source='image/a003.png')]
+			public static var im4:Class;    
+			
+			[Embed(source='image/a004.png')]
+			public static var im5:Class;    
+ 
 			public function confim():void
 			{
 				confimcard = card;
@@ -37,10 +57,29 @@
 			{
 				return _card
 			}
+			
 			public function set card(c:Card):void
 			{
+				//resetBg();
 				if(c!=null)
-				c.cardUI = this;
+				{
+					c.cardUI = this;
+				}
+				if(c!=null)
+				{
+					switch(c.type)
+					{
+						case 0: img0.source = im5; break;
+						case 1: img0.source = im1; break;
+						case 2: img0.source = im2; break;
+						case 3: img0.source = im3; break;
+						case 4: img0.source = im4; break;
+					}
+				}
+				else
+				{
+					img0.source = "";
+				}			
 				
 				_card = c;
 			}
@@ -172,14 +211,21 @@
 				{
 					
 					isSelected = false;
+					
+					/*
 					var buffcard:Card = Game.gamer.selectedCard;
 					Game.gamer.selectedCard = card;
 					card = buffcard;
+					*/
+					
+					card = Game.gamer.selectedCard;
 					
 					Game.check();
 					Game.gamer.selectedCard = null;
 				}
 			}
+			
+			
 			private function selectArrayCard():void
 			{
 				if(Game.gamer.selectedCard!=null)
@@ -230,6 +276,7 @@
 					Game.gamer.selectedArrayCard = arr;
 					return;
 				}
+				
 				//顺子
 				if(card.point == nextCardCpt.card.point-1&&card.type==nextCardCpt.card.type)
 				{
@@ -250,13 +297,17 @@
 							break;
 					}
 					while(buffcard.card.point == buffcard.nextCardCpt.card.point-1&&buffcard.card.type==buffcard.nextCardCpt.card.type)
-					
 					Game.gamer.selectedArrayCard = arr;
 					return;
 				}
 			}
 		]]>
 	</mx:Script>
-	<mx:Label text="{card==null?'':card.point}" color="{card==null?0xffffff:card.Color}" visible="{isShow}"
-		 horizontalCenter="0" verticalCenter="0" width="30" textAlign="center" fontWeight="bold" fontSize="16"/>
+	<mx:Image id="img0" visible="{isShow}"></mx:Image>
+	<mx:Canvas width="100%" height="100%" backgroundColor="#000000" backgroundAlpha="0.3" visible="{card==null?false:card.isSended}"></mx:Canvas>
+	<mx:Label text="{card==null?'':card.point}" color="0x000000" visible="{isShow}"
+		 horizontalCenter="0" verticalCenter="0" width="100%" textAlign="center" fontWeight="bold" fontSize="14"/>
+	
+	<mx:Label text="{confimcard==null?'':confimcard.point}" color="0x000000" visible="{isShow is Card_Cpt}"
+			  horizontalCenter="0" verticalCenter="10" width="100%" textAlign="center" fontWeight="bold" fontSize="8"/>
 </mx:Canvas>
