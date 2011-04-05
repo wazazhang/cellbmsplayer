@@ -68,7 +68,7 @@ package Class
 		
 		public static function start():void
 		{
-			gamer.getStartCard();
+			//gamer.getStartCard();
 		}
 		
 		//初始矩阵

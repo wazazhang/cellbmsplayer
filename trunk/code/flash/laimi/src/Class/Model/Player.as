@@ -93,13 +93,16 @@ package Class.Model
 			getCard(Game.getCardFromCard());
 		}
 		
-		public function getStartCard():void
+		public function getStartCard(startcards:ArrayCollection):void
 		{
 			canOpearation = false;
+			
+			handCard =  startcards;
 			for(var i:int=0;i<startCard;i++)
 			{
 				handCard.addItem(Game.getCardFromCard());
 			}
+			
 			var sort:Sort = new Sort();
 			sort.fields = [new SortField("point",false),new SortField("type",false)];
 			handCard.sort = sort;

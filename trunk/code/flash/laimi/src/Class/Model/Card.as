@@ -17,6 +17,8 @@ package Class.Model
 		
 		public var comfidcard:Card;//确认卡
 		
+		public var x:int;
+		public var y:int;
 		
 		public function Card(point:int,type:int)
 		{

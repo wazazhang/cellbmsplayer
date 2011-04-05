@@ -29,6 +29,9 @@
 			
 			public var isPlayerOwner:Boolean = false;
 			
+			public var cardX:int;
+			public var cardY:int;
+			
 			[Bindable]
 			public var isShow:Boolean = true;
 			
