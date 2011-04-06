@@ -589,9 +589,12 @@ public class Messages {
 		final static public int SEAT_WEST = 1;
 		final static public int SEAT_SOUTH = 2;
 		final static public int SEAT_NORTH = 3;
+		
+		public int desk_No;
 		public int seat;
 		
-		public EnterDeskRequest(int seat){
+		public EnterDeskRequest(int desk_No, int seat){
+			this.desk_No = desk_No;
 			this.seat = seat;
 		}
 		
@@ -607,6 +610,7 @@ public class Messages {
 	{
 		final static public int ENTER_DESK_RESULT_SUCCESS = 0;
 		final static public int ENTER_DESK_RESULT_FAIL_PLAYER_EXIST = 1;
+		final static public int ENTER_DESK_RESULT_FAIL_NOT_HAVE_ROOM = 2;
 		
 		public int result;
 		

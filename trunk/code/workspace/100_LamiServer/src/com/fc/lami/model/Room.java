@@ -1,28 +1,47 @@
 package com.fc.lami.model;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
-import com.fc.lami.Messages.DeskData;
-import com.fc.lami.Messages.PlayerData;
-import com.fc.lami.Messages.RoomData;
+import com.fc.lami.Messages.*;
 
 
 public class Room implements Runnable{
 	final static int desk_number = 50;
 	
+	public int room_No;
+	
 	public Desk desks[];
 	
-	public ArrayList<Player> player_list;
+	public HashMap<Integer, Player> player_list;
 	
-	public Room()
+	public Room(int room_No)
 	{
-		player_list = new ArrayList<Player>();
+		this.room_No = room_No;
+		player_list = new HashMap<Integer, Player>();
 		desks = new Desk[desk_number];
 		for (int i = 0; i<desk_number; i++){
 			desks[i] = new Desk(i);
 		}
 	}
 
+	public void onPlayerEnter(Player player){
+		player_list.put(player.player_id, player);
+		player.cur_room = this;
+		for (Player p : player_list.values()){
+			p.session.send(new EnterRoomNotify(player.getPlayerData()));
+		}
+	}
+	
+	public void onPlayerLeave(int pid){
+		Player player = player_list.remove(pid);
+		if (player!=null){
+			player.cur_room = null;
+			for (Player p : player_list.values()){
+				p.session.send(new ExitRoomNotify(player.getPlayerData()));
+			}
+		}
+	}
+	
 	public RoomData getRoomData(){
 		RoomData rd = new RoomData();
 		rd.desks = new DeskData[desk_number];
