@@ -1,6 +1,6 @@
 package com.fc.lami.model;
 
-import com.fc.lami.Messages.DeskData;
+import com.fc.lami.Messages.*;
 import com.net.flash.message.FlashMessage;
 
 /**
@@ -110,6 +110,21 @@ public class Desk
 			i++;
 		}
 		return playerlist;
+	}
+	
+	public void onPlayerReady(Player p){
+		if (player_E!=null){
+			player_E.session.send(new ReadyNotify(p.player_id));
+		}
+		if (player_W!=null){
+			player_W.session.send(new ReadyNotify(p.player_id));
+		}
+		if (player_S!=null){
+			player_S.session.send(new ReadyNotify(p.player_id));
+		}
+		if (player_N!=null){
+			player_N.session.send(new ReadyNotify(p.player_id));
+		}
 	}
 	
 	public void logic(){
