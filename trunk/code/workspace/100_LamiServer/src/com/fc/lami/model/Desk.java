@@ -1,5 +1,8 @@
 package com.fc.lami.model;
 
+import java.util.concurrent.ScheduledFuture;
+
+import com.cell.util.concurrent.ThreadPool;
 import com.fc.lami.Messages.*;
 import com.net.flash.message.FlashMessage;
 
@@ -21,9 +24,13 @@ public class Desk
 	
 	/** 游戏逻辑体 */
 	public Game game;
+	ThreadPool thread_pool;
+	int update_interval;
 	
-	public Desk(int id){
+	public Desk(int id, ThreadPool tp, int interval){
 		this.desk_id = id;
+		this.thread_pool = tp;
+		this.update_interval = interval;
 	}
 	
 	public Boolean setPlayerE(Player player){
@@ -127,11 +134,18 @@ public class Desk
 		}
 	}
 	
+	ScheduledFuture<?> future;
+	
 	public void logic(){
 		if (game!=null){
-			game.logic();
+			if (game.isGameOver()){
+				future.cancel(false);
+				System.out.println("desk "+desk_id +" game over");
+			}
 		}else if (isAllPlayerReady()){
 			game = new Game(this);
+			future = thread_pool.scheduleAtFixedRate(game, update_interval, update_interval);
+			System.out.println("desk "+desk_id +" game start");
 		}
 	}
 	

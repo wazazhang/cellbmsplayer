@@ -27,15 +27,15 @@ public class Server extends ServerImpl implements ServerListener
 	
 	ArrayList<EchoClientSession> client_list = new ArrayList<EchoClientSession>();
 	static int ids = 0;
-	final public static int room_number = 1;
+
 	Room rooms[];
 	
 	public Server(FlashMessageFactory factory) {
 		super(CIO.getAppBridge().getClassLoader(), factory, 10, 600, 600, 0);
+		int room_number = LamiConfig.ROOM_NUMBER;
 		rooms = new Room[room_number];
 		for (int i = 0; i<room_number; i++){
-			rooms[i] = new Room(i);
-			services.scheduleAtFixedRate(rooms[i], 1000, 1000);
+			rooms[i] = new Room(i, services, LamiConfig.THREAD_INTERVAL);
 		}
 	}
 
@@ -95,10 +95,15 @@ public class Server extends ServerImpl implements ServerListener
 			}
 			else if (message instanceof EnterRoomRequest){
 				EnterRoomRequest request = (EnterRoomRequest)message;
-				if (request.room_no<room_number){
+				if (request.room_no<rooms.length){
 					Room r = rooms[request.room_no];
-					r.onPlayerEnter(player);
-					session.sendResponse(protocol, new EnterRoomResponse(EnterRoomResponse.ENTER_ROOM_RESULT_SUCCESS));
+					if (r.onPlayerEnter(player)){
+						session.sendResponse(protocol, new EnterRoomResponse(EnterRoomResponse.ENTER_ROOM_RESULT_SUCCESS));
+					}else{
+						session.sendResponse(protocol, new EnterRoomResponse(EnterRoomResponse.ENTER_ROOM_RESULT_FAIL_ROOM_FULL));
+					}
+				}else{
+					session.sendResponse(protocol, new EnterRoomResponse(EnterRoomResponse.ENTER_ROOM_RESULT_FAIL_ROOM_NOT_EXIST));
 				}
 			}
 			else if (message instanceof ExitRoomRequest){
@@ -158,15 +163,21 @@ public class Server extends ServerImpl implements ServerListener
 		try {
 			CAppBridge.init();
 			MessageFactory factory = new MessageFactory();
-			Server server = new Server(factory);
+			
+
 			int port = 19821;
 			if (args.length > 0) {
-				try {
-					port = Integer.parseInt(args[0]);
-				} catch (Exception err) {
-					System.err.println("use default port " + port);
-				}
+				LamiConfig.load(args[0]);
+//				try {
+//					port = Integer.parseInt(args[0]);
+//				} catch (Exception err) {
+//					System.err.println("use default port " + port);
+//				}
+			}else{
+//				LamiConfig.load("F:/javap/100_LamiServer/config/config.properties");
 			}
+			Server server = new Server(factory);
+			port = LamiConfig.SERVER_PORT;
 			server.open(port);
 			
 		} catch (Exception err) {

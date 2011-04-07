@@ -513,6 +513,7 @@ public class Messages {
 	{
 		final static public int ENTER_ROOM_RESULT_SUCCESS = 0;
 		final static public int ENTER_ROOM_RESULT_FAIL_ROOM_FULL = 1;
+		final static public int ENTER_ROOM_RESULT_FAIL_ROOM_NOT_EXIST = 2;
 		
 		public int result;
 		

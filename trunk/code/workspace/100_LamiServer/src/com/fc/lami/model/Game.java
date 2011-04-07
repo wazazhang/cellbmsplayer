@@ -5,9 +5,12 @@ import java.util.ArrayList;
 import com.cell.CUtil;
 import com.fc.lami.Messages.CardData;
 
-public class Game {
+public class Game implements Runnable
+{
 	public Desk desk;
 	public Player player_list[];
+	
+	public boolean is_over = false;
 	final static public int startCard = 14;
 	ArrayList<CardData> left_cards = new ArrayList<CardData>();
 	
@@ -57,7 +60,18 @@ public class Game {
 		return left_cards.size();
 	}
 	
-	public void logic(){
+	public boolean isGameOver(){
+		return is_over;
+	}
+	
+	/** 当游戏结束时做的处理，玩家加减分，胜率什么的 */
+	public void onGameOver(){
+		//TODO
+		is_over = true;
+	}
+	
+	@Override
+	public void run(){
 		//TODO 处理超时，处理游戏是否结束
 	}
 }
