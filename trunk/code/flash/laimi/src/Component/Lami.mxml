@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"  xmlns:ns1="Component.*" width="800" height="600" backgroundImage="image/bk.png"
+		   verticalCenter="0" horizontalCenter="0">
+	
+	
+	<mx:Script>
+		<![CDATA[
+			import Class.Game;
+			import Class.Model.Player;
+			import Class.TimesCtr;
+			
+			import mx.controls.Alert;
+			
+			public function init():void
+			{
+				
+				Game.matrix = mx;
+				Game.gamer.matrix = umx;
+				TimesCtr.optionTimeBar = optbar;
+				TimesCtr.sumTimeBar = sumbar;
+				Game.initGame();
+			}
+			public function click():void
+			{
+				Alert.show(Game.getSendPoint().toString()+'_'+Game.gamer.keydwon);
+			}
+		]]>
+	</mx:Script>
+	
+	<ns1:Matrix_Cpt id="mx" y="100" borderStyle="solid" height="201" x="30">
+	</ns1:Matrix_Cpt>
+	<ns1:UserMatrix_Cpt id="umx" height="202" x="342" y="389" width="400">
+		<mx:ProgressBar id="sumbar" width="364" label="" height="10" mode="manual" labelPlacement="center" y="24" x="0"/>
+		<mx:ProgressBar id="optbar" height="10" width="364" label="" mode="manual" labelPlacement="center" x="0" y="36"/>
+	</ns1:UserMatrix_Cpt>
+	<ns1:Opt_Cpt height="177" y="411" x="704">
+	</ns1:Opt_Cpt>
+	<mx:Label x="268" y="522" text="{Game.gamer.handCard.length}" color="#FDFDFD"/>
+	
+</mx:Canvas>

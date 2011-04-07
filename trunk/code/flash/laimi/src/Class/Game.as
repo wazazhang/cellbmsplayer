@@ -61,7 +61,6 @@ package Class
 			gamer.initMatrix();
 			initCard();
 			TimesCtr.init();
-			
 			Game.app.addEventListener(KeyboardEvent.KEY_DOWN,keydown);
 			Game.app.addEventListener(KeyboardEvent.KEY_UP,keyup);
 		}

@@ -3,42 +3,31 @@
 	<mx:Style>
 		global {font-size:12px}
 	</mx:Style>
-	
 	<mx:Script>
 		<![CDATA[
 			import Class.Game;
-			import Class.Model.Player;
-			import Class.TimesCtr;
-			
-			import mx.controls.Alert;
-			
+			import Class.Server;
 			public function init():void
 			{
+				
 				Game.app = this;
-				Game.matrix = mx;
-				Game.gamer.matrix = umx;
-				TimesCtr.optionTimeBar = optbar;
-				TimesCtr.sumTimeBar = sumbar;
-				Game.initGame();
+				//gameCmt.init();
+				Server.init();
+				Server.room_cpt = rm;
+				Server.game_cpt = game;
 			}
-			public function click():void
-			{
-			   Alert.show(Game.getSendPoint().toString()+'_'+Game.gamer.keydwon);
-			}
+			
+			
 		]]>
 	</mx:Script>
-	<mx:Canvas width="800" height="600" backgroundImage="image/bk.png" verticalCenter="0" horizontalCenter="0">
-		
-		<ns1:Matrix_Cpt id="mx" y="100" borderStyle="solid" height="201" x="30">
-		</ns1:Matrix_Cpt>
-		<ns1:UserMatrix_Cpt id="umx" height="202" x="342" y="389" width="400">
-			<mx:ProgressBar id="sumbar" width="364" label="" height="10" mode="manual" labelPlacement="center" y="24" x="0"/>
-			<mx:ProgressBar id="optbar" height="10" width="364" label="" mode="manual" labelPlacement="center" x="0" y="36"/>
-		</ns1:UserMatrix_Cpt>
-		<ns1:Opt_Cpt height="177" y="411" x="704">
-		</ns1:Opt_Cpt>
-		<mx:Label x="268" y="522" text="{Game.gamer.handCard.length}" color="#FDFDFD"/>
-		
-		
-	</mx:Canvas>
+	<ns1:Login_Cpt verticalCenter="0" horizontalCenter="0">
+	</ns1:Login_Cpt>
+	<ns1:Room_Cpt id="rm" horizontalCenter="0" verticalCenter="0" visible="false">
+	</ns1:Room_Cpt>
+	<ns1:Lami id="game" horizontalCenter="0" verticalCenter="0" visible="false">
+	</ns1:Lami>
+	
+
+	
+	
 </mx:Application>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="150" height="150" borderStyle="solid" borderColor="#FEFEFE" cornerRadius="5">
+	
+	
+	<mx:Script>
+		<![CDATA[
+			import Class.Server;
+			[Bindable]
+			public var deskID:int
+			
+			
+			private function enter0():void
+			{
+				Server.enterDesk(deskID,0)
+			}
+			private function enter1():void
+			{
+				Server.enterDesk(deskID,1)
+			}
+			private function enter2():void
+			{
+				Server.enterDesk(deskID,2)
+			}
+			private function enter3():void
+			{
+				Server.enterDesk(deskID,3)
+			}
+			
+		]]>
+	</mx:Script>
+
+	<mx:Button x="57" y="10" label="北" click="enter2()"/>
+	<mx:Button x="10" y="58" label="西" click="enter1()"/>
+	<mx:Button x="98" y="58" label="东" click="enter0()"/>
+	<mx:Button x="57" y="114" label="南" click="enter3()"/>
+	<mx:Label y="60" text="第{deskID}桌" horizontalCenter="0"/>
+	
+</mx:Canvas>
