@@ -460,9 +460,11 @@ package com.fc.lami
 //	----------------------------------------------------------------------------------------------------
 	function new_EnterDeskRequest_7() : com.fc.lami.Messages.EnterDeskRequest {return new com.fc.lami.Messages.EnterDeskRequest();}
 	private function r_EnterDeskRequest_7(msg : com.fc.lami.Messages.EnterDeskRequest, input : NetDataInput) : void {
+		msg.desk_No = input.readInt();
 		msg.seat = input.readInt();
 	}
 	private function w_EnterDeskRequest_7(msg : com.fc.lami.Messages.EnterDeskRequest, output : NetDataOutput) : void {
+		output.writeInt(msg.desk_No);
 		output.writeInt(msg.seat);
 	}
 
