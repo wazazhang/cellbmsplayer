@@ -11,13 +11,18 @@ package com.fc.lami.Messages
 	public class EnterDeskRequest extends Message
 	{
 		/** Java type is : <font color=#0000ff>int</font> */
+		public var desk_No :  int;
+		/** Java type is : <font color=#0000ff>int</font> */
 		public var seat :  int;
 
 		/**
+		 * @param desk_No as <font color=#0000ff>int</font>
 		 * @param seat as <font color=#0000ff>int</font>		 */
 		public function EnterDeskRequest(
+			desk_No :  int = 0,
 			seat :  int = 0) 
 		{
+			this.desk_No = desk_No;
 			this.seat = seat;
 		}
 	}
