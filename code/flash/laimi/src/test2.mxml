@@ -107,7 +107,6 @@
 				}
 			}
 			
-			
 			protected function addInfo(str:String):void
 			{
 				txt_messages.text = txt_messages.text + str + "\n";
