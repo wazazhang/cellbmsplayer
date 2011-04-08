@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 
 import com.cell.j2se.CAppBridge;
+import com.fc.lami.model.Room;
 import com.net.flash.message.FlashMessage;
 import com.net.flash.message.FlashMessageCodeGenerator;
 import com.net.mutual.MutualMessageCodeGeneratorJava;
@@ -101,7 +102,7 @@ public class Messages {
 	{
 		public int player_id;
 		public String name;
-//		public PlayerData nextPlayer;
+		//public PlayerData nextPlayer;
 		//public ClientSession session;
 		public PlayerData()
 		{
@@ -465,6 +466,7 @@ public class Messages {
 		final static public int LOGIN_RESULT_SUCCESS = 0;
 		final static public int LOGIN_RESULT_FAIL = 1;
 		public int result;
+		public RoomData rooms[];
 		
 		public LoginResponse(int result){
 			this.result = result;
@@ -614,6 +616,7 @@ public class Messages {
 		final static public int ENTER_DESK_RESULT_FAIL_NOT_HAVE_ROOM = 2;
 		
 		public int result;
+		
 		
 		public EnterDeskResponse(int result){
 			this.result = result;

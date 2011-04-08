@@ -118,7 +118,6 @@ public class Desk
 		}
 		return playerlist;
 	}
-	
 	public void onPlayerReady(Player p){
 		if (player_E!=null){
 			player_E.session.send(new ReadyNotify(p.player_id));
@@ -148,7 +147,6 @@ public class Desk
 			System.out.println("desk "+desk_id +" game start");
 		}
 	}
-	
 	public DeskData getDeskData(){
 		DeskData dd = new DeskData();
 		dd.desk_id = this.desk_id;
