@@ -631,9 +631,11 @@ package com.fc.lami
 	function new_LoginResponse_23() : com.fc.lami.Messages.LoginResponse {return new com.fc.lami.Messages.LoginResponse();}
 	private function r_LoginResponse_23(msg : com.fc.lami.Messages.LoginResponse, input : NetDataInput) : void {
 		msg.result = input.readInt();
+		msg.rooms = input.readExternalArray();
 	}
 	private function w_LoginResponse_23(msg : com.fc.lami.Messages.LoginResponse, output : NetDataOutput) : void {
 		output.writeInt(msg.result);
+		output.writeExternalArray(msg.rooms);
 	}
 
 //	----------------------------------------------------------------------------------------------------

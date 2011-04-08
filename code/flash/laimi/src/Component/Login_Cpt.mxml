@@ -4,6 +4,10 @@
 			<![CDATA[
 				import Class.Server;
 				
+				import com.fc.lami.Messages.RoomData;
+				public var rooms:Array;
+				
+				
 				public function linkServer():void
 				{
 					bt.visible = false;
@@ -17,15 +21,21 @@
 				public function linkSunccess():void
 				{
 					lb.text = "登陆成功!请选择一个房间:"
-					rb1.visible = true;
-					rb2.visible = true;
+					cb.visible = true;
 					bt2.visible = true;
 				}
 				
 				public function enterRoom():void
 				{
-					Server.enterRoom(radiogroup1.selectedValue as int)
+					Server.enterRoom((cb.selectedItem as RoomData).room_id)
 				}
+				
+				
+				public function addRoom():void
+				{
+					
+				}
+				
 			]]>
 		</mx:Script>
 	
@@ -34,10 +44,7 @@
 		<mx:Label id="lb" text="waiting..." horizontalCenter="0" y="35" visible="false">
 		</mx:Label>
 		<mx:TextInput id="TIname" x="69" y="55" fontSize="16"/>
-	
-		<mx:RadioButtonGroup id="radiogroup1"/>
-		<mx:RadioButton id="rb1"  x="86" y="61" label="房间1" groupName="radiogroup1" visible="false" selected="true"/>
-		<mx:RadioButton id="rb2"  x="151" y="61" label="房间 2" groupName="radiogroup1" visible="false"/>
 		<mx:Button id="bt2" x="123" y="93" label="进入" visible="false" click="enterRoom()"/>
+		<mx:ComboBox  id="cb" x="69" y="136" dataProvider="rooms" labelField="room_id"></mx:ComboBox>
 		
 </mx:Canvas>

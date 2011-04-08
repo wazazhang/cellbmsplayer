@@ -12,13 +12,18 @@ package com.fc.lami.Messages
 	{
 		/** Java type is : <font color=#0000ff>int</font> */
 		public var result :  int;
+		/** Java type is : <font color=#0000ff>com.fc.lami.Messages.RoomData[]</font> */
+		public var rooms :  Array;
 
 		/**
-		 * @param result as <font color=#0000ff>int</font>		 */
+		 * @param result as <font color=#0000ff>int</font>
+		 * @param rooms as <font color=#0000ff>com.fc.lami.Messages.RoomData[]</font>		 */
 		public function LoginResponse(
-			result :  int = 0) 
+			result :  int = 0,
+			rooms :  Array = null) 
 		{
 			this.result = result;
+			this.rooms = rooms;
 		}
 	}
 }

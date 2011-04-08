@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="798" height="354" borderColor="#FAFBFB" xmlns:Component="Component.*">
+	<mx:Script>
+		<![CDATA[
+			import com.fc.lami.Messages.RoomData;
+			
+			public var room:RoomData
+			
+			public function init():void
+			{
+			//	room.
+			}
+			
+			
+			
+		]]>
+	</mx:Script>
+	
 	
 	<Component:Desk_Cpt x="10" y="10" deskID="1">
 	</Component:Desk_Cpt>
