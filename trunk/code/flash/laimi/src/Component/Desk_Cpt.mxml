@@ -5,8 +5,21 @@
 	<mx:Script>
 		<![CDATA[
 			import Class.Server;
+			
+			import com.fc.lami.Messages.DeskData;
+			import com.fc.lami.Messages.PlayerData;
+			import com.fc.lami.Messages.RoomData;
 			[Bindable]
 			public var deskID:int
+			
+			public var desk:DeskData;
+			
+	        public var player:PlayerData;
+		    
+			public var room:RoomData;
+			
+			
+			
 			
 			
 			private function enter0():void

@@ -17,6 +17,7 @@ package Class
 	import com.fc.lami.Messages.LoginRequest;
 	import com.fc.lami.Messages.LoginResponse;
 	import com.fc.lami.Messages.PlayerData;
+	import com.fc.lami.Messages.RoomData;
 	import com.net.client.ClientEvent;
 	
 	import mx.collections.ArrayCollection;
@@ -83,20 +84,27 @@ package Class
 			//响应登陆成功
 			if (res is LoginResponse) {
 				var login : LoginResponse = res as LoginResponse;
-				
 				if(login.result == 0)
 				{
+					login_cpt.rooms = login.rooms;
+					
 					login_cpt.linkSunccess();
 				}
 				return;
 			}
 			
+			
+			
 			//响应进入房间
 			if(res is EnterRoomResponse){
-				var enterRoom : EnterRoomResponse =res as EnterRoomResponse;
 				
+				var enterRoom : EnterRoomResponse =res as EnterRoomResponse;
 				if(enterRoom.result==0)
 				{
+					
+						
+						
+					
 					login_cpt.visible = false;
 					room_cpt.visible = true;
 				}
