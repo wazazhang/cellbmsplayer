@@ -85,14 +85,22 @@ public class Server extends ServerImpl implements ServerListener
 			else if (message instanceof GetTimeRequest) {
 				session.sendResponse(protocol, new GetTimeResponse(new Date().toString()));
 			}
+			//登陆请求
 			else if (message instanceof LoginRequest){
 				LoginRequest request = (LoginRequest)message;
-				session.sendResponse(protocol, new LoginResponse(LoginResponse.LOGIN_RESULT_SUCCESS));
+				LoginResponse res = new LoginResponse(LoginResponse.LOGIN_RESULT_SUCCESS);
+				res.rooms = new RoomData[rooms.length];
+				for (int i = 0; i<rooms.length; i++){
+					res.rooms[i] = rooms[i].getRoomData();
+				}
+				session.sendResponse(protocol, res);
 				this.player = new Player(session, request.name, ids++);
 			}
+			//退出请求
 			else if (message instanceof LogoutRequest){
 				disconnected(session);
 			}
+			//请入房间请求
 			else if (message instanceof EnterRoomRequest){
 				EnterRoomRequest request = (EnterRoomRequest)message;
 				if (request.room_no<rooms.length){
@@ -106,12 +114,14 @@ public class Server extends ServerImpl implements ServerListener
 					session.sendResponse(protocol, new EnterRoomResponse(EnterRoomResponse.ENTER_ROOM_RESULT_FAIL_ROOM_NOT_EXIST));
 				}
 			}
+			//退出房间
 			else if (message instanceof ExitRoomRequest){
 				if (player.cur_room!=null){
 					player.cur_room.onPlayerLeave(player.player_id);
 					session.sendResponse(protocol, new ExitRoomResponse());
 				}
 			}
+			//进入桌子请求
 			else if (message instanceof EnterDeskRequest){
 				EnterDeskRequest request = (EnterDeskRequest)message;
 				if (player.cur_room!=null){
