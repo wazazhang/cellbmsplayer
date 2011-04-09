@@ -11,6 +11,7 @@ import com.cell.j2se.CAppBridge;
 import com.cell.util.concurrent.ThreadPool;
 import com.fc.lami.Messages.*;
 import com.fc.lami.model.Desk;
+import com.fc.lami.model.Game;
 import com.fc.lami.model.Player;
 import com.fc.lami.model.Room;
 import com.net.MessageHeader;
@@ -158,6 +159,38 @@ public class Server extends ServerImpl implements ServerListener
 				if (player.cur_desk!=null){
 					player.is_ready = true;
 					player.cur_desk.onPlayerReady(player);
+				}
+			}
+			/** 把卡放到桌面上 */
+			else if (message instanceof SendCardRequest){
+				
+			}
+			/** 把卡从桌面上取回 */
+			else if (message instanceof RetakeCardRequest){
+				
+			}
+			/** 移动桌面上的牌 */
+			else if (message instanceof MoveCardRequest){
+				
+			}
+			/** 结束放牌 */
+			else if (message instanceof OverRequest){
+				Game game = player.getGame();
+				if (game!=null){
+					if (game.getCurPlayer() == player){
+						// TODO 检测打出的牌是否正确
+						game.toNextPlayer();
+					}
+				}
+			}
+			/** 摸牌 */
+			else if (message instanceof GetCardRequest){
+				Game game = player.getGame();
+				if (game!=null){
+					if (game.getCurPlayer() == player){
+						game.playerGetCard(1);
+						game.toNextPlayer();
+					}
 				}
 			}
 			System.out.println(message.toString());

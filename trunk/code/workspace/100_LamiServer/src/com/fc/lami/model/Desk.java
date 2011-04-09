@@ -4,7 +4,6 @@ import java.util.concurrent.ScheduledFuture;
 
 import com.cell.util.concurrent.ThreadPool;
 import com.fc.lami.Messages.*;
-import com.net.flash.message.FlashMessage;
 
 /**
  * 桌子
@@ -38,6 +37,15 @@ public class Desk
 			return false;
 		}
 		player_E = player;
+		if (player_W!=null){
+			player_W.session.send(new EnterDeskNotify(player.getPlayerData()));
+		}
+		if (player_S!=null){
+			player_S.session.send(new EnterDeskNotify(player.getPlayerData()));
+		}
+		if (player_N!=null){
+			player_N.session.send(new EnterDeskNotify(player.getPlayerData()));
+		}
 		return true;
 	}
 	
@@ -46,6 +54,15 @@ public class Desk
 			return false;
 		}
 		player_W = player;
+		if (player_E!=null){
+			player_E.session.send(new EnterDeskNotify(player.getPlayerData()));
+		}
+		if (player_S!=null){
+			player_S.session.send(new EnterDeskNotify(player.getPlayerData()));
+		}
+		if (player_N!=null){
+			player_N.session.send(new EnterDeskNotify(player.getPlayerData()));
+		}
 		return true;
 	}
 	
@@ -54,6 +71,15 @@ public class Desk
 			return false;
 		}
 		player_S = player;
+		if (player_E!=null){
+			player_E.session.send(new EnterDeskNotify(player.getPlayerData()));
+		}
+		if (player_W!=null){
+			player_W.session.send(new EnterDeskNotify(player.getPlayerData()));
+		}
+		if (player_N!=null){
+			player_N.session.send(new EnterDeskNotify(player.getPlayerData()));
+		}
 		return true;
 	}
 	
@@ -62,6 +88,15 @@ public class Desk
 			return false;
 		}
 		player_N = player;
+		if (player_E!=null){
+			player_E.session.send(new EnterDeskNotify(player.getPlayerData()));
+		}
+		if (player_W!=null){
+			player_W.session.send(new EnterDeskNotify(player.getPlayerData()));
+		}
+		if (player_S!=null){
+			player_S.session.send(new EnterDeskNotify(player.getPlayerData()));
+		}
 		return true;
 	}
 	
@@ -134,27 +169,32 @@ public class Desk
 	}
 	
 	ScheduledFuture<?> future;
-	
+	boolean		initing = false;
 	public void logic(){
-		if (game!=null){
-			if (game.isGameOver()){
-				future.cancel(false);
-				System.out.println("desk "+desk_id +" game over");
+		if (!initing){
+			if (game!=null){
+				if (game.isGameOver()){
+					future.cancel(false);
+					System.out.println("desk "+desk_id +" game over");
+				}
+			}else if (isAllPlayerReady()){
+				initing = true;
+				game = new Game(this);
+				future = thread_pool.scheduleAtFixedRate(game, update_interval, update_interval);
+				System.out.println("desk "+desk_id +" game start");
+				initing = false;
 			}
-		}else if (isAllPlayerReady()){
-			game = new Game(this);
-			future = thread_pool.scheduleAtFixedRate(game, update_interval, update_interval);
-			System.out.println("desk "+desk_id +" game start");
 		}
 	}
 	public DeskData getDeskData(){
 		DeskData dd = new DeskData();
 		dd.desk_id = this.desk_id;
 		dd.is_started = (this.game != null);
-		dd.player_E_id = this.player_E.player_id;
-		dd.player_N_id = this.player_N.player_id;
-		dd.player_S_id = this.player_S.player_id;
-		dd.player_W_id = this.player_W.player_id;
+		
+		dd.player_E_id = this.player_E!=null?this.player_E.player_id:-1;
+		dd.player_N_id = this.player_N!=null?this.player_N.player_id:-1;
+		dd.player_S_id = this.player_S!=null?this.player_S.player_id:-1;
+		dd.player_W_id = this.player_W!=null?this.player_W.player_id:-1;
 		
 		return dd;
 	}

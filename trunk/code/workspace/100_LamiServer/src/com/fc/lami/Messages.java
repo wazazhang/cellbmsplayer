@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 
 import com.cell.j2se.CAppBridge;
-import com.fc.lami.model.Room;
 import com.net.flash.message.FlashMessage;
 import com.net.flash.message.FlashMessageCodeGenerator;
 import com.net.mutual.MutualMessageCodeGeneratorJava;
@@ -357,6 +356,21 @@ public class Messages {
 		}
 	}
 	
+	public static class GameStartNotify extends FlashMessage
+	{
+		public CardData cards[];
+		
+		public GameStartNotify(CardData cards[]){
+			this.cards = cards;
+		}
+		
+		public GameStartNotify() {}
+		@Override
+		public String toString() {
+			return "GameStartNotify";
+		}
+	}
+	
 	/** 放牌完毕 */
 	public static class OverRequest extends FlashMessage
 	{
@@ -403,16 +417,42 @@ public class Messages {
 	/** 摸牌返回 */
 	public static class GetCardResponse extends FlashMessage
 	{
-		public CardData card;
-		
-		public GetCardResponse(CardData card){
-			this.card = card;
-		}
-		
 		public GetCardResponse() {}
 		@Override
 		public String toString() {
 			return "GetCardResponse";
+		}
+	}
+	
+	/** 获得牌通知 */
+	public static class GetCardNotify extends FlashMessage
+	{
+		public CardData cards[];
+		
+		public GetCardNotify(CardData cards[]){
+			this.cards = cards;
+		}
+		
+		public GetCardNotify() {}
+		@Override
+		public String toString() {
+			return "GetCardNotify";
+		}
+	}
+	
+	/** 牌堆数量改变通知 */
+	public static class CardStackChangeNotify extends FlashMessage
+	{
+		public int card_stack_number;
+		
+		public CardStackChangeNotify(int n){
+			this.card_stack_number = n;
+		}
+		
+		public CardStackChangeNotify() {}
+		@Override
+		public String toString() {
+			return "CardStackChangeNotify";
 		}
 	}
 	
@@ -691,6 +731,28 @@ public class Messages {
 			return "LeaveDeskNotify";
 		}
 	}
+	
+	/** 玩家回合开始通知 */
+	public static class TurnStartNotify extends FlashMessage
+	{
+		public TurnStartNotify(){}
+		@Override
+		public String toString() {
+			return "TurnStartNotify";
+		}
+	}
+	
+	/** 玩家回合结束通知 */
+	public static class TurnEndNotify extends FlashMessage
+	{
+		public TurnEndNotify(){}
+		@Override
+		public String toString() {
+			return "TurnEndNotify";
+		}
+	}
+	
+	
 	
 	public static void main(String[] args) throws IOException
 	{
