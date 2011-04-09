@@ -2,6 +2,8 @@ package Class.Model
 {
 	import Component.Card_Cpt;
 	
+	import com.fc.lami.Messages.CardData;
+	
 	[Bindable]
 	public class Card
 	{

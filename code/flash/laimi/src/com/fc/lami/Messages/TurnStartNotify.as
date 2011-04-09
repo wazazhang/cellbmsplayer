@@ -5,16 +5,16 @@ package com.fc.lami.Messages
 
 
 	/**
-	 * Java Class [31] [com.fc.lami.Messages.OverRequest]<br>
+	 * Java Class [47] [com.fc.lami.Messages.TurnStartNotify]<br>
 	 * 此代码为自动生成。不需要在此修改。若有错误，请修改代码生成器。
 	 */
-	public class OverRequest extends Message
+	public class TurnStartNotify extends Message
 	{
 
 
 		/**
 		 */
-		public function OverRequest(
+		public function TurnStartNotify(
 ) 
 		{
 

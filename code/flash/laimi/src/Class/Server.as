@@ -1,23 +1,38 @@
 package Class
 {
+	import Class.Model.Card;
+	
 	import Component.Lami;
 	import Component.Login_Cpt;
 	import Component.Room_Cpt;
 	
 	import com.fc.lami.LamiClient;
+	import com.fc.lami.Messages.CardData;
 	import com.fc.lami.Messages.EchoNotify;
 	import com.fc.lami.Messages.EchoRequest;
 	import com.fc.lami.Messages.EchoResponse;
+	import com.fc.lami.Messages.EnterDeskNotify;
 	import com.fc.lami.Messages.EnterDeskRequest;
 	import com.fc.lami.Messages.EnterDeskResponse;
+	import com.fc.lami.Messages.EnterRoomNotify;
 	import com.fc.lami.Messages.EnterRoomRequest;
 	import com.fc.lami.Messages.EnterRoomResponse;
+	import com.fc.lami.Messages.ExitRoomNotify;
+	import com.fc.lami.Messages.GameStartNotify;
+	import com.fc.lami.Messages.GetCardNotify;
+	import com.fc.lami.Messages.GetCardRequest;
+	import com.fc.lami.Messages.GetCardResponse;
 	import com.fc.lami.Messages.GetTimeRequest;
 	import com.fc.lami.Messages.GetTimeResponse;
+	import com.fc.lami.Messages.LeaveDeskNotify;
 	import com.fc.lami.Messages.LoginRequest;
 	import com.fc.lami.Messages.LoginResponse;
+	import com.fc.lami.Messages.OverRequest;
 	import com.fc.lami.Messages.PlayerData;
-	import com.fc.lami.Messages.RoomData;
+	import com.fc.lami.Messages.ReadyNotify;
+	import com.fc.lami.Messages.ReadyRequest;
+	import com.fc.lami.Messages.TurnEndNotify;
+	import com.fc.lami.Messages.TurnStartNotify;
 	import com.net.client.ClientEvent;
 	
 	import mx.collections.ArrayCollection;
@@ -75,6 +90,57 @@ package Class
 				addInfo(player.name+"进入了游戏");
 			}
 			*/
+			var ntf : Object = event.getNotify();
+			if (ntf is GetCardNotify){
+				var gcn : GetCardNotify = ntf as GetCardNotify;
+				var cards : ArrayCollection = new ArrayCollection();
+				for each(var cd:CardData in gcn.cards){
+					cards.addItem(new Card(cd.point, cd.type));
+				}
+				Game.gamer.getCards(cards);
+				Alert.show("notify : GetCardNotify");
+			}
+			else if (ntf is GameStartNotify){
+				var gsn : GameStartNotify = ntf as GameStartNotify;
+				var cards2 : ArrayCollection = new ArrayCollection();
+				for each(var cd2:CardData in gsn.cards){
+					cards2.addItem(new Card(cd2.point, cd2.type));
+				}
+				Game.gamer.getStartCard(cards2);
+				Alert.show("notify : GameStartNotify");
+			}
+			else if (ntf is EnterRoomNotify){
+				var ern : EnterRoomNotify = ntf as EnterRoomNotify;
+				Alert.show("notify : 玩家"+ern.player.name+"进入房间");
+			}
+			else if (ntf is ExitRoomNotify){
+				var exrn : EnterRoomNotify = ntf as EnterRoomNotify;
+				Alert.show("notify : 玩家"+exrn.player.name+"离开房间");
+			}
+			else if (ntf is EnterDeskNotify){
+				var edn : EnterDeskNotify = ntf as EnterDeskNotify;
+				Alert.show("notify : 玩家"+edn.player.name+"进入桌子");
+			}
+			else if (ntf is LeaveDeskNotify){
+				var ldn : LeaveDeskNotify = ntf as LeaveDeskNotify;
+				Alert.show("notify : 玩家"+ldn.player.name+"离开桌子");
+			}
+			else if (ntf is ReadyNotify){
+				var rn : ReadyNotify = ntf as ReadyNotify;
+				Alert.show("notify : 玩家"+rn.player_id+"准备好了");
+			}
+			else if (ntf is TurnStartNotify){
+				//TODO 轮到自己行动
+
+				Game.turnStart();
+				Alert.show("轮到行动");
+			}
+			else if (ntf is TurnEndNotify){
+				// TODO 自己回合结束
+				Game.turnOver();
+				Alert.show("行动结束");
+			}
+			
 		}
 		
 		protected static function client_response(event:ClientEvent):void
@@ -84,6 +150,7 @@ package Class
 			//响应登陆成功
 			if (res is LoginResponse) {
 				var login : LoginResponse = res as LoginResponse;
+				
 				if(login.result == 0)
 				{
 					login_cpt.rooms = login.rooms;
@@ -93,12 +160,10 @@ package Class
 				return;
 			}
 			
-			
-			
 			//响应进入房间
 			if(res is EnterRoomResponse){
-				
 				var enterRoom : EnterRoomResponse =res as EnterRoomResponse;
+				
 				if(enterRoom.result==0)
 				{
 					
@@ -140,6 +205,9 @@ package Class
 				
 			}
 			
+			else if (res is GetCardResponse){
+				
+			}
 			
 			/*
 			
@@ -182,7 +250,25 @@ package Class
 			client.sendRequest(new EnterDeskRequest(deskid,seat),client_response);
 		}
 		
+		public static function ready():void
+		{
+			client.sendRequest(new ReadyRequest(),client_response);
+		}
 		
+		public static function getCard():void
+		{
+			if (Game.gamer.canOpearation && !Game.gamer.isSendCard){
+				client.sendRequest(new GetCardRequest(), client_response);
+			}
+		}
+		
+		public static function submit():void
+		{
+			if (Game.gamer.isSendCard)
+			{	
+				client.sendRequest(new OverRequest(), client_response);
+			}
+		}
 		//获得服务器端得初始牌
 		public static function receiveStartCard():void
 		{
