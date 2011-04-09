@@ -5,7 +5,7 @@ package com.fc.lami.Messages
 
 
 	/**
-	 * Java Class [8] [com.fc.lami.Messages.EnterDeskResponse]<br>
+	 * Java Class [9] [com.fc.lami.Messages.EnterDeskResponse]<br>
 	 * 此代码为自动生成。不需要在此修改。若有错误，请修改代码生成器。
 	 */
 	public class EnterDeskResponse extends Message

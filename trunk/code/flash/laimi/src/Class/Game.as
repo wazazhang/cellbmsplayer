@@ -6,7 +6,9 @@ package Class
 	
 	import Component.Card_Cpt;
 	import Component.Matrix_Cpt;
+	
 	import flash.events.KeyboardEvent;
+	
 	import mx.collections.ArrayCollection;
 	import mx.collections.Sort;
 	import mx.collections.SortField;
@@ -225,8 +227,17 @@ package Class
 			}
 		}
 		
+		public static function turnStart():void
+		{
+			gamer.canOpearation = true;
+			TimesCtr.start();
+		}
 		
-		
+		public static function turnOver():void
+		{
+			gamer.canOpearation = false;
+			TimesCtr.stop();
+		}
 		
 		private static function keydown(event:KeyboardEvent):void
 		{

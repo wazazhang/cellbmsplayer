@@ -3,11 +3,13 @@
 
 <mx:Script>
 	<![CDATA[
-			import Class.Game;
+		import Class.Game;
+		import Class.Server;
 			
 			public function click():void
 			{
-				Game.gamer.getOneCardFromCardpile();
+				//Game.gamer.getOneCardFromCardpile();
+				Server.getCard();
 			}
 			
 			public function click3():void
@@ -22,7 +24,8 @@
 			
 			public function click5():void
 			{
-				Game.gamer.submit();
+				//Game.gamer.submit();
+				Server.submit();
 			}
 			
 			public function click6():void
@@ -31,8 +34,8 @@
 				BT.enabled = true;
 				BT3.enabled = true;
 				BT4.enabled = true;
-				Game.start();
-				
+				//Game.start();
+				Server.ready();
 			}
 	]]>
 </mx:Script>

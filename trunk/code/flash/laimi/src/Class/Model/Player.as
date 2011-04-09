@@ -36,6 +36,9 @@ package Class.Model
 		
 		
 		public var canOpearation:Boolean = false;//当前是否能操作
+		
+		public var isSendCard:Boolean = false;
+		
 		public function Player()
 		{
 			
@@ -98,11 +101,12 @@ package Class.Model
 			canOpearation = false;
 			
 			handCard =  startcards;
+			/*
 			for(var i:int=0;i<startCard;i++)
 			{
 				handCard.addItem(Game.getCardFromCard());
 			}
-			
+			*/
 			var sort:Sort = new Sort();
 			sort.fields = [new SortField("point",false),new SortField("type",false)];
 			handCard.sort = sort;
@@ -159,6 +163,15 @@ package Class.Model
 				cardcpt = line.lastCard;
 			}
 			while(true)
+		}
+		
+		public function getCards(cards:ArrayCollection):void
+		{
+			for each(var card:Card in cards)
+			{
+				getCard(card);
+			}
+			
 		}
 		
 		public function submit():Boolean
@@ -393,6 +406,7 @@ package Class.Model
 			{
 				addCardMotion(card.nextCard);
 			}
+			/*
 			else
 			{
 				if(!Game.isStarted)
@@ -403,6 +417,7 @@ package Class.Model
 				canOpearation = true;
 				TimesCtr.start();
 			}
+			*/
 		}
 		
 	}
