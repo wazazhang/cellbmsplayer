@@ -2,7 +2,6 @@ package com.fc.lami.model;
 
 import java.util.ArrayList;
 
-import com.fc.lami.Messages;
 import com.fc.lami.Messages.CardData;
 import com.fc.lami.Messages.PlayerData;
 import com.net.server.ClientSession;
@@ -41,5 +40,12 @@ public class Player {
 		pd.player_id = this.player_id;
 		pd.name = this.name;
 		return pd;
+	}
+	
+	public Game getGame(){
+		if (cur_desk!=null){
+			return cur_desk.game;
+		}
+		return null;
 	}
 }

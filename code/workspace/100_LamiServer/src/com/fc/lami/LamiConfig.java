@@ -21,6 +21,8 @@ public class LamiConfig extends Config{
 	@ConfigField("线程循环间隔")
 	public static Integer	THREAD_INTERVAL = 1000;
 	
+	@ConfigField("回合时间")
+	public static Integer	TURN_INTERVAL = 90000;
 	
 	public static void load(String config_file)
 	{
