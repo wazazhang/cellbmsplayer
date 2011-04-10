@@ -450,9 +450,11 @@ public class MessageCodecJava implements MutualMessageCodec
 	public com.fc.lami.Messages.EnterRoomResponse new_com_fc_lami_Messages_EnterRoomResponse(){return new com.fc.lami.Messages.EnterRoomResponse();}
 	private void _r(com.fc.lami.Messages.EnterRoomResponse msg, NetDataInput in) throws IOException {
 		msg.result = in.readInt();
+		msg.room = in.readExternal(com.fc.lami.Messages.RoomData.class);
 	}
 	private void _w(com.fc.lami.Messages.EnterRoomResponse msg, NetDataOutput out) throws IOException {
 		out.writeInt(msg.result);
+		out.writeExternal(msg.room);
 	}
 
 //	----------------------------------------------------------------------------------------------------

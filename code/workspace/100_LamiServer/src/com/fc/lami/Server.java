@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.ScheduledFuture;
-
 import com.cell.CIO;
-
 import com.cell.j2se.CAppBridge;
 import com.cell.util.concurrent.ThreadPool;
 import com.fc.lami.Messages.*;
@@ -107,10 +105,16 @@ public class Server extends ServerImpl implements ServerListener
 				if (request.room_no<rooms.length){
 					Room r = rooms[request.room_no];
 					if (r.onPlayerEnter(player)){
+						//EnterRoomResponse res = new EnterRoomResponse(EnterRoomResponse.ENTER_ROOM_RESULT_SUCCESS);
+						//res.result = EnterRoomResponse.ENTER_ROOM_RESULT_SUCCESS;
+						//res.room = r.getRoomData();
+						//session.sendResponse(protocol, res);
+						
 						session.sendResponse(protocol, new EnterRoomResponse(EnterRoomResponse.ENTER_ROOM_RESULT_SUCCESS));
 					}else{
 						session.sendResponse(protocol, new EnterRoomResponse(EnterRoomResponse.ENTER_ROOM_RESULT_FAIL_ROOM_FULL));
 					}
+					
 				}else{
 					session.sendResponse(protocol, new EnterRoomResponse(EnterRoomResponse.ENTER_ROOM_RESULT_FAIL_ROOM_NOT_EXIST));
 				}
