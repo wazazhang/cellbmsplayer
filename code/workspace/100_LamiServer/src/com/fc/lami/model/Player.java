@@ -1,6 +1,7 @@
 package com.fc.lami.model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.fc.lami.Messages.CardData;
 import com.fc.lami.Messages.PlayerData;
@@ -24,9 +25,10 @@ public class Player {
 	public Desk cur_desk;
 	
 	/** 手中的牌 */
-	public ArrayList<CardData> card_list;
- 	/** 本回合打出的牌 */
-	public ArrayList<CardData> send_list;
+	public HashMap<Integer, CardData> card_list;
+	
+	/** 是否破冰 */
+	public boolean isOpenIce;
 	
 	public Player(ClientSession session, String name, int id){
 		this.session = session;
@@ -47,5 +49,26 @@ public class Player {
 			return cur_desk.game;
 		}
 		return null;
+	}
+	
+	public CardData removeCard(CardData c){
+		if (card_list == null){
+			return null;
+		}
+		return card_list.remove(c.id);
+	}
+	
+	public CardData removeCard(int id){
+		if (card_list == null){
+			return null;
+		}
+		return card_list.remove(id);
+	}
+	
+	public void addCard(CardData c){
+		if (card_list == null){
+			card_list = new HashMap<Integer, CardData>();
+		}
+		card_list.put(c.id, c);
 	}
 }

@@ -112,25 +112,19 @@ public class Messages {
 	
 	public static class CardData extends FlashMessage
 	{
+		/** id */
+		public int id;
 		/** 点数 */
 		public int point;
 		/** 颜色 */
 		public int type;
 		
-		/** 在桌面的位置 */
-		public int x;
-		public int y;
-		
 		public CardData(){
-			x = -1;
-			y = -1;
 		}
 		
 		public CardData(int point, int type){
 			this.point = point;
 			this.type = type;
-			x = -1;
-			y = -1;
 		}
 	}
 	
@@ -151,10 +145,16 @@ public class Messages {
 	/** 把牌放到桌面上，可以一次性放多个  */
 	public static class SendCardRequest extends FlashMessage
 	{
-		public CardData cards[];
+		public int cards[];
 		
-		public SendCardRequest(CardData cards[]){
+		/** 第一张牌的坐标 */
+		public int x;
+		public int y;
+		
+		public SendCardRequest(int cards[], int x, int y){
 			this.cards = cards;
+			this.x = x;
+			this.y = y;
 		}
 		
 		public SendCardRequest() {}
@@ -168,15 +168,19 @@ public class Messages {
 	public static class SendCardResponse extends FlashMessage
 	{
 		/** 放牌成功 */
-		final static public short SEND_CARD_RESULT_SUCCESS = 0;
+		final static public int SEND_CARD_RESULT_SUCCESS = 0;
 		/** 放牌失败  该位置已经有牌 */
-		final static public short SEND_CARD_RESULT_FAIL_NOT_BLANK = 1;
+		final static public int SEND_CARD_RESULT_FAIL_NOT_BLANK = 1;
 		/** 放牌失败  用一牌把两边连起来牌组不成立时 */
-		final static public short SEND_CARD_RESULT_FAIL_NO_MATCH = 2;
+		final static public int SEND_CARD_RESULT_FAIL_NO_MATCH = 2;
+		/** 位置不对 */
+		final static public int SEND_CARD_RESULT_FAIL_LOCATION_WRONG = 3;
+		/** 没有破冰时不能和原有牌拼接 */
+		final static public int SEND_CARD_RESULT_FAIL_SPLIT = 4;
 		
-		public short result;
+		public int result;
 		
-		public SendCardResponse(short result){
+		public SendCardResponse(int result){
 			this.result = result;
 		}
 		
@@ -190,12 +194,15 @@ public class Messages {
 	/** 别的玩家放牌通知 */
 	public static class SendCardNotify extends FlashMessage
 	{
-		public CardData cards[];
 		public int player_id;
+		public CardData cards[];
+		public int x,y;
 		
-		public SendCardNotify(int player_id, CardData cards[]){
+		public SendCardNotify(int player_id, CardData cards[], int x, int y){
 			this.cards = cards;
 			this.player_id = player_id;
+			this.x = x;
+			this.y = y;
 		}
 		
 		public SendCardNotify() {}
@@ -205,13 +212,28 @@ public class Messages {
 		}
 	}
 	
+	/** 破冰通知 */
+	public static class OpenIceNotify extends FlashMessage
+	{
+		public int player_id;
+		public OpenIceNotify(int player_id){
+			this.player_id = player_id;
+		}
+		
+		public OpenIceNotify(){}
+		@Override
+		public String toString() {
+			return "BreakNotify";
+		}
+	}
+	
 	/** 取回自己本回合放出的牌 */
 	public static class RetakeCardRequest extends FlashMessage
 	{
-		public CardData cards[];
+		public int cards[];
 		
-		public RetakeCardRequest(CardData cards[]){
-			this.cards = cards;
+		public RetakeCardRequest(int[] card_ids){
+			this.cards = card_ids;
 		}
 		
 		public RetakeCardRequest() {}
@@ -225,13 +247,15 @@ public class Messages {
 	public static class RetakeCardResponse extends FlashMessage
 	{
 		/** 取牌成功 */
-		final static public short RETAKE_CARD_RESULT_SUCCESS = 0;
+		final static public int RETAKE_CARD_RESULT_SUCCESS = 0;
 		/** 取牌失败  该牌不是本回合放上去的 */
-		final static public short RETAKE_CARD_RESULT_FAIL_NOT_THIS_TURN = 1;
+		final static public int RETAKE_CARD_RESULT_FAIL_NOT_THIS_TURN = 1;
+		/** 桌面上没有这张牌 */
+		final static public int RETAKE_CARD_RESULT_FAIL_NOEXIST = 2;
 		
-		public short result;
+		public int result;
 		
-		public RetakeCardResponse(short result){
+		public RetakeCardResponse(int result){
 			this.result = result;
 		}
 		
@@ -246,11 +270,14 @@ public class Messages {
 	public static class RetakeCardNotify extends FlashMessage
 	{
 		public int player_id;
-		public CardData cards[];
+		public int x, y;
+		public int n;
 		
-		public RetakeCardNotify(int player_id, CardData cards[]){
+		public RetakeCardNotify(int player_id, int x, int y, int n){
 			this.player_id = player_id;
-			this.cards = cards;
+			this.x = x;
+			this.y = y;
+			this.n = n;
 		}
 		
 		public RetakeCardNotify() {}
@@ -263,12 +290,12 @@ public class Messages {
 	/** 移动桌面上的牌，可以多个 */
 	public static class MoveCardRequest extends FlashMessage
 	{
-		public CardData cards[];
+		public int cards[];
 		/** 新的坐标 */
 		public int nx, ny;
 		
-		public MoveCardRequest(CardData cards[], int nx, int ny){
-			this.cards = cards;
+		public MoveCardRequest(int card_ids[], int nx, int ny){
+			this.cards = card_ids;
 			this.nx = nx;
 			this.ny = ny;
 		}
@@ -284,12 +311,18 @@ public class Messages {
 	public static class MoveCardResponse extends FlashMessage
 	{
 		/** 移牌成功 */
-		final static public short MOVE_CARD_RESULT_SUCCESS = 0;
-		/** 移牌失败  破坏了已有的牌组 */
-		final static public short MOVE_CARD_RESULT_FAIL_NO_MATCH = 1;
+		final static public int MOVE_CARD_RESULT_SUCCESS = 0;
+		/** 未破冰前不能移动原有的牌 */
+		final static public int MOVE_CARD_RESULT_FAIL_CANNT_MOVE = 1;
+		/** 未破冰前移动的牌不能和桌上原有的牌拼接 */
+		final static public int MOVE_CARD_RESULT_FAIL_SPLIT = 2;
+		/** 桌面上没有这张牌 */
+		final static public int MOVE_CARD_RESULT_FAIL_CARD_NOEXIST = 3;
+		/** 位置不对 */
+		final static public int MOVE_CARD_RESULT_FAIL_LOCATION_WRONG = 4;
 		
-		public short result;
-		public MoveCardResponse(short result){
+		public int result;
+		public MoveCardResponse(int result){
 			this.result = result;
 		}
 		public MoveCardResponse() {}
@@ -302,14 +335,14 @@ public class Messages {
 	/** 别的玩家移牌通知 */
 	public static class MoveCardNotify extends FlashMessage
 	{
-		public CardData cards[];
+		public int cards[];
 		/** 新的坐标 */
 		public int nx, ny;
 		public int player_id;
 		
-		public MoveCardNotify(int player_id, CardData cards[], int nx, int ny){
+		public MoveCardNotify(int player_id, int card_ids[], int nx, int ny){
 			this.player_id = player_id;
-			this.cards = cards;
+			this.cards = card_ids;
 			this.nx = nx;
 			this.ny = ny;
 		}
@@ -328,6 +361,8 @@ public class Messages {
 		public ReadyRequest(boolean ready) {
 			isReady = ready;
 		}
+		
+		public ReadyRequest(){}
 		@Override
 		public String toString() {
 			return "ReadyRequest";
@@ -375,32 +410,32 @@ public class Messages {
 	}
 	
 	/** 放牌完毕 */
-	public static class OverRequest extends FlashMessage
+	public static class SubmitRequest extends FlashMessage
 	{
-		public OverRequest() {}
+		public SubmitRequest() {}
 		@Override
 		public String toString() {
-			return "OverRequest";
+			return "SubmitRequest";
 		}
 	}
 	
 	/** 放牌完毕返回 */
-	public static class OverResponse extends FlashMessage
+	public static class SubmitResponse extends FlashMessage
 	{
 		/** 放牌结束成功 */
-		final static public short OVER_RESULT_SUCCESS = 0;
+		final static public int OVER_RESULT_SUCCESS = 0;
 		/** 放牌结束失败，有不成立的牌组 */
-		final static public short OVER_RESULT_FAIL_CARD_COMBI_NO_MATCH = 1;
+		final static public int OVER_RESULT_FAIL_CARD_COMBI_NO_MATCH = 1;
 		/** 放牌结束失败，没有破冰 */
-		final static public short OVER_RESULT_FAIL_CARD_NOT_OPEN_ICE = 2;
+		final static public int OVER_RESULT_FAIL_CARD_NOT_OPEN_ICE = 2;
 		
-		public short result;
+		public int result;
 		
-		public OverResponse(short result){
+		public SubmitResponse(int result){
 			this.result = result;
 		}
 		
-		public OverResponse() {}
+		public SubmitResponse() {}
 		@Override
 		public String toString() {
 			return "OverResponse";
@@ -420,6 +455,18 @@ public class Messages {
 	/** 摸牌返回 */
 	public static class GetCardResponse extends FlashMessage
 	{
+		final static public int GET_CARD_RESULT_SUCCESS = 0;
+		/** 有出牌操作 */
+		final static public int GET_CARD_RESULT_FAIL_SEND_CARD = 1;
+		/** 没有轮到行动 */
+		final static public int GET_CARD_RESULT_FAIL_NOT_TURN = 2;
+		
+		public int result;
+		
+		public GetCardResponse(int result){
+			this.result = result;
+		}
+		
 		public GetCardResponse() {}
 		@Override
 		public String toString() {
@@ -470,20 +517,35 @@ public class Messages {
 		}
 	}
 	
-	/** 撤销出牌返回，包含惩罚牌 */
+	/** 撤销出牌返回 */
 	public static class RepealSendCardResponse extends FlashMessage
 	{
-		public CardData cards[];
-		
-		public RepealSendCardResponse(CardData cards[]){
-			this.cards = cards;
-		}
 		
 		public RepealSendCardResponse(){}
 		
 		@Override
 		public String toString() {
 			return "RepealSendCardResponse";
+		}
+	}
+	
+	/** 撤销出牌通知 */
+	public static class RepealSendCardNotify extends FlashMessage
+	{
+		public int player_id;
+		
+		public CardData cds[];
+		
+		public RepealSendCardNotify(int player_id, CardData cds[]){
+			this.player_id = player_id;
+			this.cds = cds;
+		}
+		
+		public RepealSendCardNotify(){}
+		
+		@Override
+		public String toString() {
+			return "RepealSendCardNotify";
 		}
 	}
 	

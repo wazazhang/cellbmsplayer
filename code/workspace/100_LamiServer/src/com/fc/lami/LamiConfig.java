@@ -24,6 +24,11 @@ public class LamiConfig extends Config{
 	@ConfigField("回合时间")
 	public static Integer	TURN_INTERVAL = 90000;
 	
+	@ConfigField("桌面牌矩阵宽")
+	public static Integer	MATRIX_WIDTH = 26;
+	@ConfigField("桌面牌矩阵高")
+	public static Integer	MATRIX_HEIGHT = 10;
+	
 	public static void load(String config_file)
 	{
 		load(LamiConfig.class, config_file);

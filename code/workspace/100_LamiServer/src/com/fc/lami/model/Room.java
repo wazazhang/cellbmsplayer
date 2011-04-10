@@ -56,6 +56,7 @@ public class Room implements Runnable{
 	
 	public RoomData getRoomData(){
 		RoomData rd = new RoomData();
+		rd.room_id = this.room_No;
 		rd.desks = new DeskData[desk_number];
 		for (int i = 0; i<desk_number; i++){
 			if (desks[i]!=null){
