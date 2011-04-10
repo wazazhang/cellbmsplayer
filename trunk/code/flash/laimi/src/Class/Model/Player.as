@@ -380,7 +380,7 @@ package Class.Model
 			moveCard.isShow = true;
 			moveCard.x = Game.cardspostion_x;
 			moveCard.y = Game.cardspostion_y;
-			moveCard.card = new Card(card.point,card.type);
+			moveCard.card = new Card(card.point,card.type, card.id);
 			moveCard.card.nextCard  = card.nextCard;
 			moveCard.nextCardCpt = card.cardUI;
 			

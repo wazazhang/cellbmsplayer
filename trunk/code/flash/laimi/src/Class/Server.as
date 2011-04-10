@@ -27,7 +27,7 @@ package Class
 	import com.fc.lami.Messages.LeaveDeskNotify;
 	import com.fc.lami.Messages.LoginRequest;
 	import com.fc.lami.Messages.LoginResponse;
-	import com.fc.lami.Messages.OverRequest;
+	import com.fc.lami.Messages.SubmitRequest;
 	import com.fc.lami.Messages.PlayerData;
 	import com.fc.lami.Messages.ReadyNotify;
 	import com.fc.lami.Messages.ReadyRequest;
@@ -95,16 +95,16 @@ package Class
 				var gcn : GetCardNotify = ntf as GetCardNotify;
 				var cards : ArrayCollection = new ArrayCollection();
 				for each(var cd:CardData in gcn.cards){
-					cards.addItem(new Card(cd.point, cd.type));
+					cards.addItem(new Card(cd.point, cd.type, cd.id));
 				}
 				Game.gamer.getCards(cards);
-				Alert.show("notify : GetCardNotify");
+				//Alert.show("notify : GetCardNotify");
 			}
 			else if (ntf is GameStartNotify){
 				var gsn : GameStartNotify = ntf as GameStartNotify;
 				var cards2 : ArrayCollection = new ArrayCollection();
 				for each(var cd2:CardData in gsn.cards){
-					cards2.addItem(new Card(cd2.point, cd2.type));
+					cards2.addItem(new Card(cd2.point, cd2.type, cd2.id));
 				}
 				Game.gamer.getStartCard(cards2);
 				Alert.show("notify : GameStartNotify");
@@ -133,12 +133,12 @@ package Class
 				//TODO 轮到自己行动
 
 				Game.turnStart();
-				Alert.show("轮到行动");
+				//Alert.show("轮到行动");
 			}
 			else if (ntf is TurnEndNotify){
 				// TODO 自己回合结束
 				Game.turnOver();
-				Alert.show("行动结束");
+				//Alert.show("行动结束");
 			}
 			
 		}
@@ -269,7 +269,7 @@ package Class
 		{
 			if (Game.gamer.isSendCard)
 			{	
-				client.sendRequest(new OverRequest(), client_response);
+				client.sendRequest(new SubmitRequest(), client_response);
 			}
 		}
 		//获得服务器端得初始牌

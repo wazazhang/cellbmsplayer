@@ -103,22 +103,23 @@ package Class
 		//初始牌
 		public static function initCard():void
 		{
+			var cid:int = 0;
 			for(var i:int=1;i<=13;i++)
 			{
 				for(var j:int=1;j<=4;j++)
 				{
-					var card:Card = new Card(i,j);
+					var card:Card = new Card(i,j, cid++);
 					card.order = Math.random();
 					cards.addItem(card);
-					card = new Card(i,j);
+					card = new Card(i,j, cid++);
 					card.order = Math.random();
 					cards.addItem(card);
 				}
 			}
-			card = new Card(0,0);
+			card = new Card(0,0, cid++);
 			card.order = Math.random();
 			cards.addItem(card);
-			card = new Card(0,0);
+			card = new Card(0,0, cid++);
 			card.order = Math.random();
 			cards.addItem(card);
 			

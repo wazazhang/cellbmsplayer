@@ -12,14 +12,16 @@ package com.fc.lami.Messages
 	[Bindable]
 	public class GetCardResponse extends Message
 	{
-
+		/** Java type is : <font color=#0000ff>int</font> */
+		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
+		public var result :  int;
 
 		/**
-		 */
+		 * @param result as <font color=#0000ff>int</font>		 */
 		public function GetCardResponse(
-) 
+			result :  int = 0) 
 		{
-
+			this.result = result;
 		}
 	}
 }
