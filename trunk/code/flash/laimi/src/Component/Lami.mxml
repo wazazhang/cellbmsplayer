@@ -32,7 +32,13 @@
 			public function ready():void
 			{
 				Server.ready(readyBt.selected);
-				//Alert.show(readyBt.selected.toString());
+				Alert.show(readyBt.selected.toString());
+			}
+			
+			
+			public function addInfo(str:String):void
+			{
+				gameinfo.text = str + "\n" +gameinfo.text ;
 			}
 			
 			

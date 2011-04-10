@@ -822,10 +822,8 @@ package com.fc.lami
 	function new_ReadyRequest_34() : com.fc.lami.Messages.ReadyRequest {return new com.fc.lami.Messages.ReadyRequest();}
 	private function r_ReadyRequest_34(msg : com.fc.lami.Messages.ReadyRequest, input : NetDataInput) : void {
 		msg.isReady = input.readBoolean();
-		msg.isReady = input.readBoolean();
 	}
 	private function w_ReadyRequest_34(msg : com.fc.lami.Messages.ReadyRequest, output : NetDataOutput) : void {
-		output.writeBoolean(msg.isReady);
 		output.writeBoolean(msg.isReady);
 	}
 

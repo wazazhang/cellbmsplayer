@@ -91,7 +91,9 @@ package Class
 			}
 			*/
 			
-			Alert.show("有广播来")
+			//Alert.show("有广播来");
+			
+			
 			var ntf : Object = event.getNotify();
 			if (ntf is GetCardNotify){
 				var gcn : GetCardNotify = ntf as GetCardNotify;
@@ -121,15 +123,27 @@ package Class
 			}
 			else if (ntf is EnterDeskNotify){
 				var edn : EnterDeskNotify = ntf as EnterDeskNotify;
-				Alert.show("notify : 玩家"+edn.player.name+"进入桌子");
+				
+				game_cpt.addInfo("玩家"+edn.player.name+"进入桌子")
+				//Alert.show("notify : 玩家"+edn.player.name+"进入桌子");
 			}
 			else if (ntf is LeaveDeskNotify){
 				var ldn : LeaveDeskNotify = ntf as LeaveDeskNotify;
-				Alert.show("notify : 玩家"+ldn.player.name+"离开桌子");
+				game_cpt.addInfo("玩家"+edn.player.name+"离开桌子")
+				//Alert.show("notify : 玩家"+ldn.player.name+"离开桌子");
 			}
 			else if (ntf is ReadyNotify){
 				var rn : ReadyNotify = ntf as ReadyNotify;
-				Alert.show("notify : 玩家"+rn.player_id+"准备好了");
+				
+				if(rn.isReady)
+				{
+					game_cpt.addInfo("玩家"+rn.player_id+"准备好了");
+				}
+				else
+				{
+					game_cpt.addInfo("玩家"+rn.player_id+"取消了准备");
+				}
+				
 			}
 			else if (ntf is TurnStartNotify){
 				//TODO 轮到自己行动
@@ -148,9 +162,6 @@ package Class
 		protected static function client_response(event:ClientEvent):void
 		{
 			var res:Object = event.getResponse()
-			
-				
-			
 				
 			//响应登陆成功
 			if (res is LoginResponse) {
