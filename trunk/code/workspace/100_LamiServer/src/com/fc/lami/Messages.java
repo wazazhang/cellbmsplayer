@@ -324,7 +324,10 @@ public class Messages {
 	/** 准备就绪请求 */
 	public static class ReadyRequest extends FlashMessage
 	{
-		public ReadyRequest() {}
+		public boolean isReady;
+		public ReadyRequest(boolean ready) {
+			isReady = ready;
+		}
 		@Override
 		public String toString() {
 			return "ReadyRequest";
