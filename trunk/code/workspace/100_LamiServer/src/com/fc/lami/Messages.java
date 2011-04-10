@@ -558,6 +558,7 @@ public class Messages {
 		final static public int ENTER_ROOM_RESULT_FAIL_ROOM_NOT_EXIST = 2;
 		
 		public int result;
+		public RoomData room;
 		
 		public EnterRoomResponse(int result){
 			this.result = result;
