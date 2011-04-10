@@ -558,9 +558,11 @@ package com.fc.lami
 	function new_EnterRoomResponse_12() : com.fc.lami.Messages.EnterRoomResponse {return new com.fc.lami.Messages.EnterRoomResponse();}
 	private function r_EnterRoomResponse_12(msg : com.fc.lami.Messages.EnterRoomResponse, input : NetDataInput) : void {
 		msg.result = input.readInt();
+		msg.room = input.readExternal() as com.fc.lami.Messages.RoomData;
 	}
 	private function w_EnterRoomResponse_12(msg : com.fc.lami.Messages.EnterRoomResponse, output : NetDataOutput) : void {
 		output.writeInt(msg.result);
+		output.writeExternal(msg.room);
 	}
 
 //	----------------------------------------------------------------------------------------------------
