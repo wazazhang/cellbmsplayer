@@ -12,12 +12,12 @@ package com.fc.lami.Messages
 	[Bindable]
 	public class SendCardResponse extends Message
 	{
-		/** Java type is : <font color=#0000ff>short</font> */
-		[JavaType(name="short", leaf_type=NetDataTypes.TYPE_SHORT)]
+		/** Java type is : <font color=#0000ff>int</font> */
+		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
 		public var result :  int;
 
 		/**
-		 * @param result as <font color=#0000ff>short</font>		 */
+		 * @param result as <font color=#0000ff>int</font>		 */
 		public function SendCardResponse(
 			result :  int = 0) 
 		{

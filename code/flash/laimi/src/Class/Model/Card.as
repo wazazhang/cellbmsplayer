@@ -7,6 +7,7 @@ package Class.Model
 	[Bindable]
 	public class Card
 	{
+		public var id:int;		// 唯一ID
 		public var point:int;  //点数(0为任意牌)
 		public var type:int;   //颜色
 		public var order:Number; //随机排序数
@@ -19,13 +20,11 @@ package Class.Model
 		
 		public var comfidcard:Card;//确认卡
 		
-		public var x:int;
-		public var y:int;
-		
-		public function Card(point:int,type:int)
+		public function Card(point:int,type:int,id:int)
 		{
 			this.point = point;
 			this.type = type;
+			this.id = id;
 		}
 		
 		public  function get Color():Number

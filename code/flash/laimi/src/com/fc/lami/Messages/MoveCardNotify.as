@@ -12,8 +12,8 @@ package com.fc.lami.Messages
 	[Bindable]
 	public class MoveCardNotify extends Message
 	{
-		/** Java type is : <font color=#0000ff>com.fc.lami.Messages.CardData[]</font> */
-		[JavaType(name="com.fc.lami.Messages.CardData[]", leaf_type=NetDataTypes.TYPE_EXTERNALIZABLE)]
+		/** Java type is : <font color=#0000ff>int[]</font> */
+		[JavaType(name="int[]", leaf_type=NetDataTypes.TYPE_INT)]
 		public var cards :  Array;
 		/** Java type is : <font color=#0000ff>int</font> */
 		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
@@ -26,7 +26,7 @@ package com.fc.lami.Messages
 		public var player_id :  int;
 
 		/**
-		 * @param cards as <font color=#0000ff>com.fc.lami.Messages.CardData[]</font>
+		 * @param cards as <font color=#0000ff>int[]</font>
 		 * @param nx as <font color=#0000ff>int</font>
 		 * @param ny as <font color=#0000ff>int</font>
 		 * @param player_id as <font color=#0000ff>int</font>		 */

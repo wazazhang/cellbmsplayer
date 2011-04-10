@@ -12,16 +12,28 @@ package com.fc.lami.Messages
 	[Bindable]
 	public class SendCardRequest extends Message
 	{
-		/** Java type is : <font color=#0000ff>com.fc.lami.Messages.CardData[]</font> */
-		[JavaType(name="com.fc.lami.Messages.CardData[]", leaf_type=NetDataTypes.TYPE_EXTERNALIZABLE)]
+		/** Java type is : <font color=#0000ff>int[]</font> */
+		[JavaType(name="int[]", leaf_type=NetDataTypes.TYPE_INT)]
 		public var cards :  Array;
+		/** Java type is : <font color=#0000ff>int</font> */
+		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
+		public var x :  int;
+		/** Java type is : <font color=#0000ff>int</font> */
+		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
+		public var y :  int;
 
 		/**
-		 * @param cards as <font color=#0000ff>com.fc.lami.Messages.CardData[]</font>		 */
+		 * @param cards as <font color=#0000ff>int[]</font>
+		 * @param x as <font color=#0000ff>int</font>
+		 * @param y as <font color=#0000ff>int</font>		 */
 		public function SendCardRequest(
-			cards :  Array = null) 
+			cards :  Array = null,
+			x :  int = 0,
+			y :  int = 0) 
 		{
 			this.cards = cards;
+			this.x = x;
+			this.y = y;
 		}
 	}
 }

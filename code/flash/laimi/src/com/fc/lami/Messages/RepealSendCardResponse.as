@@ -12,16 +12,14 @@ package com.fc.lami.Messages
 	[Bindable]
 	public class RepealSendCardResponse extends Message
 	{
-		/** Java type is : <font color=#0000ff>com.fc.lami.Messages.CardData[]</font> */
-		[JavaType(name="com.fc.lami.Messages.CardData[]", leaf_type=NetDataTypes.TYPE_EXTERNALIZABLE)]
-		public var cards :  Array;
+
 
 		/**
-		 * @param cards as <font color=#0000ff>com.fc.lami.Messages.CardData[]</font>		 */
+		 */
 		public function RepealSendCardResponse(
-			cards :  Array = null) 
+) 
 		{
-			this.cards = cards;
+
 		}
 	}
 }
