@@ -112,7 +112,7 @@ public class Game implements Runnable
 		player_list[s].session.send(new TurnEndNotify());
 		s = (s+1) % player_list.length;
 		player_list[s].session.send(new TurnStartNotify());
-		process_open_ice = false;
+		//process_open_ice = false;
 		matrix_old = null;
 		player_put.clear();
 	}
@@ -127,7 +127,7 @@ public class Game implements Runnable
 	}
 	
 	public boolean playerGetCard(){
-		if (!player_put.isEmpty() || process_open_ice){
+		if (!player_put.isEmpty() /*|| process_open_ice*/){
 			return false;
 		}
 		playerGetCard(1);
@@ -171,11 +171,11 @@ public class Game implements Runnable
 			player_list[i].session.send(new SendCardNotify(getCurPlayer().player_id, cards, x, y));
 		}
 		
-		if (!getCurPlayer().isOpenIce){
-			if (getCardPoint()>=30){
-				openIce();
-			}
-		}
+//		if (!getCurPlayer().isOpenIce){
+//			if (getCardPoint()>=30){
+//				openIce();
+//			}
+//		}
 		return SendCardResponse.SEND_CARD_RESULT_SUCCESS;
 	}
 	
@@ -217,11 +217,11 @@ public class Game implements Runnable
 			matrix[y][x+i] = cards[i];
 		}
 		
-		if (!getCurPlayer().isOpenIce){
-			if (getCardPoint()>=30){
-				openIce();
-			}
-		}
+//		if (!getCurPlayer().isOpenIce){
+//			if (getCardPoint()>=30){
+//				openIce();
+//			}
+//		}
 		return MoveCardResponse.MOVE_CARD_RESULT_SUCCESS;
 	}
 	
@@ -330,8 +330,8 @@ public class Game implements Runnable
 				}
 			}
 		}
-		// 取得两张非百搭牌
 		
+		// 取得两张非百搭牌
 		if (c2 == null){ //如果只有一张非百搭牌，则说明牌组中其他牌都是百搭牌，牌组成立
 			return true;
 		}
@@ -390,17 +390,17 @@ public class Game implements Runnable
 		return point;
 	}
 	
-	public boolean process_open_ice = false;
+	//public boolean process_open_ice = false;
 	/** 破冰 */
-	public void openIce(){
-		getCurPlayer().isOpenIce = true;
-		process_open_ice = true;
-		matrix_old = null;
-		player_put.clear();
-		for (int i = 0; i<player_list.length; i++){
-			player_list[i].session.send(new OpenIceNotify(getCurPlayer().player_id));
-		}
-	}
+//	public void openIce(){
+//		getCurPlayer().isOpenIce = true;
+//		process_open_ice = true;
+//		matrix_old = null;
+//		player_put.clear();
+//		for (int i = 0; i<player_list.length; i++){
+//			player_list[i].session.send(new OpenIceNotify(getCurPlayer().player_id));
+//		}
+//	}
 	
 	/** 撤销 */
 	public void repeal(){
@@ -423,23 +423,35 @@ public class Game implements Runnable
 	
 	/** 提交 */
 	public int submit(){
-		if (check() == false){ // 牌组不成立
-			return SubmitResponse.OVER_RESULT_FAIL_CARD_COMBI_NO_MATCH;
-		}else if(!player_put.isEmpty() && !getCurPlayer().isOpenIce){ // 没有破冰
-			return SubmitResponse.OVER_RESULT_FAIL_CARD_NOT_OPEN_ICE;
-		}else{
-			matrix_old = null;
-			player_put.clear();
-			toNextPlayer();
+		if (!getCurPlayer().isOpenIce){
+			if (getCardPoint()>=30){
+				getCurPlayer().isOpenIce = true;
+				matrix_old = null;
+				player_put.clear();
+				for (int i = 0; i<player_list.length; i++){
+					player_list[i].session.send(new OpenIceNotify(getCurPlayer().player_id));
+				}
+				toNextPlayer();
+				return SubmitResponse.SUBMIT_RESULT_SUCCESS;	// 破冰成功
+			}else{
+				return SubmitResponse.SUBMIT_RESULT_FAIL_CARD_NOT_OPEN_ICE; // 没有破冰
+			}
 		}
-		return SubmitResponse.OVER_RESULT_SUCCESS;
+		if (check() == false){ // 牌组不成立
+			return SubmitResponse.SUBMIT_RESULT_FAIL_CARD_COMBI_NO_MATCH;
+		}
+
+		matrix_old = null;
+		player_put.clear();
+		toNextPlayer();
+		return SubmitResponse.SUBMIT_RESULT_SUCCESS;
 	}
 	
 	@Override
 	public void run(){
 		//TODO 处理超时，处理游戏是否结束
 		if (System.currentTimeMillis() - turn_start_time>=LamiConfig.TURN_INTERVAL){
-			if (!player_put.isEmpty() || process_open_ice){
+			if (!player_put.isEmpty() /*|| process_open_ice*/){
 				if (check()){
 					toNextPlayer();
 				}else{

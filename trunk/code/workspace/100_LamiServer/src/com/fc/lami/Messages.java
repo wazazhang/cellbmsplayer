@@ -383,9 +383,11 @@ public class Messages {
 	public static class ReadyNotify extends FlashMessage
 	{
 		public int player_id;
+		public boolean isReady;
 		
-		public ReadyNotify(int player_id){
+		public ReadyNotify(int player_id, boolean is_ready){
 			this.player_id = player_id;
+			this.isReady = is_ready;
 		}
 		public ReadyNotify() {}
 		@Override
@@ -423,11 +425,11 @@ public class Messages {
 	public static class SubmitResponse extends FlashMessage
 	{
 		/** 放牌结束成功 */
-		final static public int OVER_RESULT_SUCCESS = 0;
+		final static public int SUBMIT_RESULT_SUCCESS = 0;
 		/** 放牌结束失败，有不成立的牌组 */
-		final static public int OVER_RESULT_FAIL_CARD_COMBI_NO_MATCH = 1;
+		final static public int SUBMIT_RESULT_FAIL_CARD_COMBI_NO_MATCH = 1;
 		/** 放牌结束失败，没有破冰 */
-		final static public int OVER_RESULT_FAIL_CARD_NOT_OPEN_ICE = 2;
+		final static public int SUBMIT_RESULT_FAIL_CARD_NOT_OPEN_ICE = 2;
 		
 		public int result;
 		

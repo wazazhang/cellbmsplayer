@@ -153,18 +153,18 @@ public class Desk
 		}
 		return playerlist;
 	}
-	public void onPlayerReady(Player p){
+	public void onPlayerReady(Player p, boolean isReady){
 		if (player_E!=null){
-			player_E.session.send(new ReadyNotify(p.player_id));
+			player_E.session.send(new ReadyNotify(p.player_id, isReady));
 		}
 		if (player_W!=null){
-			player_W.session.send(new ReadyNotify(p.player_id));
+			player_W.session.send(new ReadyNotify(p.player_id, isReady));
 		}
 		if (player_S!=null){
-			player_S.session.send(new ReadyNotify(p.player_id));
+			player_S.session.send(new ReadyNotify(p.player_id, isReady));
 		}
 		if (player_N!=null){
-			player_N.session.send(new ReadyNotify(p.player_id));
+			player_N.session.send(new ReadyNotify(p.player_id, isReady));
 		}
 	}
 	

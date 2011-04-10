@@ -162,10 +162,12 @@ public class Server extends ServerImpl implements ServerListener
 				}
 			}
 			else if (message instanceof ReadyRequest){
+				ReadyRequest req = (ReadyRequest)message;
 				if (player.cur_desk!=null){
-					player.is_ready = true;
-					player.cur_desk.onPlayerReady(player);
+					player.is_ready = req.isReady;
+					player.cur_desk.onPlayerReady(player, req.isReady);
 				}
+				session.sendResponse(protocol, new ReadyResponse());
 			}
 			/** 把卡放到桌面上 */
 			else if (message instanceof SendCardRequest){
