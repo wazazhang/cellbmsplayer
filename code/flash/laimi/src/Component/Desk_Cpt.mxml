@@ -10,8 +10,6 @@
 			import com.fc.lami.Messages.PlayerData;
 			import com.fc.lami.Messages.RoomData;
 			[Bindable]
-			public var deskID:int
-			
 			public var desk:DeskData;
 			
 	        public var player:PlayerData;
@@ -20,23 +18,21 @@
 			
 			
 			
-			
-			
 			private function enter0():void
 			{
-				Server.enterDesk(deskID,0)
+				Server.enterDesk(desk.desk_id,0)
 			}
 			private function enter1():void
 			{
-				Server.enterDesk(deskID,1)
+				Server.enterDesk(desk.desk_id,1)
 			}
 			private function enter2():void
 			{
-				Server.enterDesk(deskID,2)
+				Server.enterDesk(desk.desk_id,2)
 			}
 			private function enter3():void
 			{
-				Server.enterDesk(deskID,3)
+				Server.enterDesk(desk.desk_id,3)
 			}
 			
 		]]>
@@ -46,6 +42,6 @@
 	<mx:Button x="10" y="58" label="西" click="enter1()"/>
 	<mx:Button x="98" y="58" label="东" click="enter0()"/>
 	<mx:Button x="57" y="114" label="南" click="enter3()"/>
-	<mx:Label y="60" text="第{deskID}桌" horizontalCenter="0"/>
+	<mx:Label y="60" text="第{desk.desk_id}桌" horizontalCenter="0"/>
 	
 </mx:Canvas>
