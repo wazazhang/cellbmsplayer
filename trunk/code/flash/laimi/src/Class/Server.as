@@ -147,6 +147,9 @@ package Class
 		{
 			var res:Object = event.getResponse()
 			
+				
+			Alert.show("有消息来");
+				
 			//响应登陆成功
 			if (res is LoginResponse) {
 				var login : LoginResponse = res as LoginResponse;
@@ -164,12 +167,12 @@ package Class
 			if(res is EnterRoomResponse){
 				var enterRoom : EnterRoomResponse =res as EnterRoomResponse;
 				
+				Alert.show(enterRoom.result.toString());
+				
 				if(enterRoom.result==0)
-				{
+				{	
 					
-						
-						
-					
+					//room_cpt.init(enterRoom.room)
 					login_cpt.visible = false;
 					room_cpt.visible = true;
 				}

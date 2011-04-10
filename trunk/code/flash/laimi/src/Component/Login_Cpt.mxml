@@ -21,6 +21,7 @@
 				public function linkSunccess():void
 				{
 					lb.text = "登陆成功!请选择一个房间:"
+					cb.dataProvider = rooms
 					cb.visible = true;
 					bt2.visible = true;
 				}
@@ -45,6 +46,6 @@
 		</mx:Label>
 		<mx:TextInput id="TIname" x="69" y="55" fontSize="16"/>
 		<mx:Button id="bt2" x="123" y="93" label="进入" visible="false" click="enterRoom()"/>
-		<mx:ComboBox  id="cb" x="69" y="136" dataProvider="rooms" labelField="room_id"></mx:ComboBox>
+		<mx:ComboBox  id="cb" x="69" y="93" labelField="room_id" visible="false"></mx:ComboBox>
 		
 </mx:Canvas>

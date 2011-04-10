@@ -15,13 +15,19 @@ package com.fc.lami.Messages
 		/** Java type is : <font color=#0000ff>int</font> */
 		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
 		public var result :  int;
+		/** Java type is : <font color=#0000ff>com.fc.lami.Messages.RoomData</font> */
+		[JavaType(name="com.fc.lami.Messages.RoomData", leaf_type=NetDataTypes.TYPE_EXTERNALIZABLE)]
+		public var room :  com.fc.lami.Messages.RoomData;
 
 		/**
-		 * @param result as <font color=#0000ff>int</font>		 */
+		 * @param result as <font color=#0000ff>int</font>
+		 * @param room as <font color=#0000ff>com.fc.lami.Messages.RoomData</font>		 */
 		public function EnterRoomResponse(
-			result :  int = 0) 
+			result :  int = 0,
+			room :  com.fc.lami.Messages.RoomData = null) 
 		{
 			this.result = result;
+			this.room = room;
 		}
 	}
 }
