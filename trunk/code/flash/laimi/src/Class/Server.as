@@ -111,11 +111,11 @@ package Class
 			}
 			else if (ntf is EnterRoomNotify){
 				var ern : EnterRoomNotify = ntf as EnterRoomNotify;
-				Alert.show("notify : 玩家"+ern.player.name+"进入房间");
+				room_cpt.addRoomInfo("玩家"+ern.player.name+"进入房间")
 			}
 			else if (ntf is ExitRoomNotify){
 				var exrn : EnterRoomNotify = ntf as EnterRoomNotify;
-				Alert.show("notify : 玩家"+exrn.player.name+"离开房间");
+				room_cpt.addRoomInfo("玩家"+ern.player.name+"离开房间")
 			}
 			else if (ntf is EnterDeskNotify){
 				var edn : EnterDeskNotify = ntf as EnterDeskNotify;
@@ -148,7 +148,7 @@ package Class
 			var res:Object = event.getResponse()
 			
 				
-			Alert.show("有消息来");
+			
 				
 			//响应登陆成功
 			if (res is LoginResponse) {
@@ -167,12 +167,12 @@ package Class
 			if(res is EnterRoomResponse){
 				var enterRoom : EnterRoomResponse =res as EnterRoomResponse;
 				
-				Alert.show(enterRoom.result.toString());
+
 				
 				if(enterRoom.result==0)
 				{	
 					
-					//room_cpt.init(enterRoom.room)
+					room_cpt.init(enterRoom.room)
 					login_cpt.visible = false;
 					room_cpt.visible = true;
 				}

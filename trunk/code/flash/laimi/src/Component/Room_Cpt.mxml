@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="798" height="354" borderColor="#FAFBFB" xmlns:Component="Component.*">
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="828" height="522" borderColor="#FAFBFB" xmlns:Component="Component.*">
 	<mx:Script>
 		<![CDATA[
+			import com.fc.lami.Messages.DeskData;
 			import com.fc.lami.Messages.RoomData;
 			
 			public var room:RoomData
@@ -9,49 +10,34 @@
 			public function init(room:RoomData):void
 			{
 				//room.
+				for(var i:int=0;i<room.desks.length;i++)
+				{
+					var deskCpt:Desk_Cpt = new Desk_Cpt();
+					deskCpt.desk = room.desks[i];
+					deskCpt.y = parseInt((i/4).toString())*158+10;
+					deskCpt.x = (i%4)*158+10;
+					desks.addChild(deskCpt);
+				}
+				
 			}
 			
-			
+			public function addRoomInfo(str:String):void
+			{
+				info.text = info.text + str +"\n";
+			}
 			
 		]]>
 	</mx:Script>
 	
+	<mx:Canvas id="desks"  width="650" height="500" >
+		
+	</mx:Canvas>
 	
-	
-	
-	
-	<mx:VBox x="168" y="25" height="100%">
-	</mx:VBox>
-	
-	<mx:VBox id="vbox" 
 
-			 width="100%" 
-			 height="500"> 
-			<mx:Repeater id="imgrepeater"> 
-				
-				<Component:Desk_Cpt x="10" y="10" deskID="1">
-				</Component:Desk_Cpt>
-				<Component:Desk_Cpt x="168" y="10" deskID="2">
-				</Component:Desk_Cpt>
-				<Component:Desk_Cpt x="326" y="10" deskID="3">
-				</Component:Desk_Cpt>
-				<Component:Desk_Cpt x="484" y="10" deskID="4">
-				</Component:Desk_Cpt>
-				<Component:Desk_Cpt x="642" y="10" deskID="5">
-				</Component:Desk_Cpt>
-				
-				<Component:Desk_Cpt x="10" y="168" deskID="6">
-				</Component:Desk_Cpt>
-				<Component:Desk_Cpt x="168" y="168" deskID="7">
-				</Component:Desk_Cpt>
-				<Component:Desk_Cpt x="326" y="168" deskID="8">
-				</Component:Desk_Cpt>
-				<Component:Desk_Cpt x="484" y="168" deskID="9">
-				</Component:Desk_Cpt>
-				<Component:Desk_Cpt x="642" y="168" deskID="10">
-				</Component:Desk_Cpt>
-			</mx:Repeater> 
-	</mx:VBox> 
-
+	<mx:TextArea id="info" x="658" y="0" height="361"/>
+	
+	
+	
+	
 	
 </mx:Canvas>
