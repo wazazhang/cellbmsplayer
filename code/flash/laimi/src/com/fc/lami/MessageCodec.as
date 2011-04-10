@@ -4,7 +4,7 @@ package com.fc.lami
 	import com.net.client.Message;
 	import com.net.client.NetDataInput;
 	import com.net.client.NetDataOutput;
-	
+	import com.net.client.NetDataTypes;
 	import com.fc.lami.Messages.*;
 
 	/**
