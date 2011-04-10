@@ -15,13 +15,19 @@ package com.fc.lami.Messages
 		/** Java type is : <font color=#0000ff>int</font> */
 		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
 		public var player_id :  int;
+		/** Java type is : <font color=#0000ff>boolean</font> */
+		[JavaType(name="boolean", leaf_type=NetDataTypes.TYPE_BOOLEAN)]
+		public var isReady :  Boolean;
 
 		/**
-		 * @param player_id as <font color=#0000ff>int</font>		 */
+		 * @param player_id as <font color=#0000ff>int</font>
+		 * @param isReady as <font color=#0000ff>boolean</font>		 */
 		public function ReadyNotify(
-			player_id :  int = 0) 
+			player_id :  int = 0,
+			isReady :  Boolean = false) 
 		{
 			this.player_id = player_id;
+			this.isReady = isReady;
 		}
 	}
 }

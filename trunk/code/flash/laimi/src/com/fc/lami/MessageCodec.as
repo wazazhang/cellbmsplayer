@@ -809,9 +809,11 @@ package com.fc.lami
 	function new_ReadyNotify_33() : com.fc.lami.Messages.ReadyNotify {return new com.fc.lami.Messages.ReadyNotify();}
 	private function r_ReadyNotify_33(msg : com.fc.lami.Messages.ReadyNotify, input : NetDataInput) : void {
 		msg.player_id = input.readInt();
+		msg.isReady = input.readBoolean();
 	}
 	private function w_ReadyNotify_33(msg : com.fc.lami.Messages.ReadyNotify, output : NetDataOutput) : void {
 		output.writeInt(msg.player_id);
+		output.writeBoolean(msg.isReady);
 	}
 
 //	----------------------------------------------------------------------------------------------------
@@ -820,8 +822,10 @@ package com.fc.lami
 	function new_ReadyRequest_34() : com.fc.lami.Messages.ReadyRequest {return new com.fc.lami.Messages.ReadyRequest();}
 	private function r_ReadyRequest_34(msg : com.fc.lami.Messages.ReadyRequest, input : NetDataInput) : void {
 		msg.isReady = input.readBoolean();
+		msg.isReady = input.readBoolean();
 	}
 	private function w_ReadyRequest_34(msg : com.fc.lami.Messages.ReadyRequest, output : NetDataOutput) : void {
+		output.writeBoolean(msg.isReady);
 		output.writeBoolean(msg.isReady);
 	}
 

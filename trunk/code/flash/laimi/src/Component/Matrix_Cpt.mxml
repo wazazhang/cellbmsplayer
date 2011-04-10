@@ -2,5 +2,4 @@
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
 	width="698" height="448" borderStyle="solid"
 	 borderColor="0x000000" horizontalScrollPolicy="off" verticalScrollPolicy="off" borderThickness="2">
-
 </mx:Canvas>
