@@ -37,15 +37,7 @@ public class Desk
 			return false;
 		}
 		player_E = player;
-		if (player_W!=null){
-			player_W.session.send(new EnterDeskNotify(player.getPlayerData()));
-		}
-		if (player_S!=null){
-			player_S.session.send(new EnterDeskNotify(player.getPlayerData()));
-		}
-		if (player_N!=null){
-			player_N.session.send(new EnterDeskNotify(player.getPlayerData()));
-		}
+		onPlayerEnter(player);
 		return true;
 	}
 	
@@ -54,15 +46,7 @@ public class Desk
 			return false;
 		}
 		player_W = player;
-		if (player_E!=null){
-			player_E.session.send(new EnterDeskNotify(player.getPlayerData()));
-		}
-		if (player_S!=null){
-			player_S.session.send(new EnterDeskNotify(player.getPlayerData()));
-		}
-		if (player_N!=null){
-			player_N.session.send(new EnterDeskNotify(player.getPlayerData()));
-		}
+		onPlayerEnter(player);
 		return true;
 	}
 	
@@ -71,15 +55,7 @@ public class Desk
 			return false;
 		}
 		player_S = player;
-		if (player_E!=null){
-			player_E.session.send(new EnterDeskNotify(player.getPlayerData()));
-		}
-		if (player_W!=null){
-			player_W.session.send(new EnterDeskNotify(player.getPlayerData()));
-		}
-		if (player_N!=null){
-			player_N.session.send(new EnterDeskNotify(player.getPlayerData()));
-		}
+		onPlayerEnter(player);
 		return true;
 	}
 	
@@ -88,6 +64,11 @@ public class Desk
 			return false;
 		}
 		player_N = player;
+		onPlayerEnter(player);
+		return true;
+	}
+	
+	private void onPlayerEnter(Player player){
 		if (player_E!=null){
 			player_E.session.send(new EnterDeskNotify(player.getPlayerData()));
 		}
@@ -97,7 +78,9 @@ public class Desk
 		if (player_S!=null){
 			player_S.session.send(new EnterDeskNotify(player.getPlayerData()));
 		}
-		return true;
+		if (player_N!=null){
+			player_N.session.send(new EnterDeskNotify(player.getPlayerData()));
+		}
 	}
 	
 	public int getPlayerNumber(){
