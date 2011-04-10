@@ -10,7 +10,7 @@
 			public function init():void
 			{
 				
-				Game.app = this;
+				Game.app = game;
 				//gameCmt.init();
 				Server.init();
 				Server.room_cpt = rm;
@@ -26,8 +26,4 @@
 	</ns1:Room_Cpt>
 	<ns1:Lami id="game" horizontalCenter="0" verticalCenter="0" visible="false">
 	</ns1:Lami>
-	
-
-	
-	
 </mx:Application>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="208" height="98"  borderStyle="solid" themeColor="#FF1200">
+	<mx:Script>
+		<![CDATA[
+		   import com.fc.lami.Messages.PlayerData;
+		   
+			[Bindable]
+			public var player:PlayerData;
+			
+			
+		]]>
+	</mx:Script>
+	
+	<mx:Label x="73" y="10" text="{player==null?'空闲':player.player_id}" color="#FEFEFE"/>
+	
+</mx:Canvas>

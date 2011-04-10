@@ -7,6 +7,7 @@
 		<![CDATA[
 			import Class.Game;
 			import Class.Model.Player;
+			import Class.Server;
 			import Class.TimesCtr;
 			
 			import mx.controls.Alert;
@@ -20,14 +21,26 @@
 				TimesCtr.sumTimeBar = sumbar;
 				Game.initGame();
 			}
+			
+			
 			public function click():void
 			{
 				Alert.show(Game.getSendPoint().toString()+'_'+Game.gamer.keydwon);
 			}
+			
+			
+			public function ready():void
+			{
+				Server.ready(readyBt.selected);
+				//Alert.show(readyBt.selected.toString());
+			}
+			
+			
 		]]>
 	</mx:Script>
 	
 	<ns1:Matrix_Cpt id="mx" y="100" borderStyle="solid" height="201" x="30">
+	
 	</ns1:Matrix_Cpt>
 	<ns1:UserMatrix_Cpt id="umx" height="202" x="342" y="389" width="400">
 		<mx:ProgressBar id="sumbar" width="364" label="" height="10" mode="manual" labelPlacement="center" y="24" x="0"/>
@@ -35,6 +48,20 @@
 	</ns1:UserMatrix_Cpt>
 	<ns1:Opt_Cpt height="177" y="411" x="704">
 	</ns1:Opt_Cpt>
-	<mx:Label x="268" y="522" text="{Game.gamer.handCard.length}" color="#FDFDFD"/>
 	
+	<mx:Label x="268" y="522" text="{Game.gamer.handCard.length}" color="#FDFDFD"/>
+	<mx:TextArea id="gameinfo" x="29" y="429" width="195" height="113" backgroundAlpha="0.0" color="#FDFFFF"/>
+	
+	<mx:Canvas width="293" height="130" horizontalCenter="0" verticalCenter="0" backgroundColor="#FD8006" borderStyle="solid" cornerRadius="10" backgroundAlpha="0.82">
+		<mx:Button id="readyBt" x="110.5" y="44" toggle="true" label="准备" width="70" height="40" cornerRadius="5" fontSize="18" click="ready()"/>
+	</mx:Canvas>
+	
+	<ns1:OtherPlayer_Cpt id="nextPlayer1" x="579" y="100">
+	</ns1:OtherPlayer_Cpt>
+	
+	<ns1:OtherPlayer_Cpt id="nextPlayer2"  x="579" y="203">
+	</ns1:OtherPlayer_Cpt>
+	
+	<ns1:OtherPlayer_Cpt id="nextPlayer3" x="579" y="305">
+	</ns1:OtherPlayer_Cpt>
 </mx:Canvas>

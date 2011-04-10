@@ -34,7 +34,8 @@
 	</mx:Canvas>
 	
 
-	<mx:TextArea id="info" x="658" y="0" height="361"/>
+	<mx:TextArea id="info" x="658" y="43" height="361"/>
+	<mx:LinkButton x="658" y="11" label="退出房间" fontSize="12"/>
 	
 	
 	

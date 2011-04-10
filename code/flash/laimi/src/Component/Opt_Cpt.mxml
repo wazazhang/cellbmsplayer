@@ -35,7 +35,7 @@
 				BT3.enabled = true;
 				BT4.enabled = true;
 				//Game.start();
-				Server.ready();
+				//Server.ready();
 			}
 	]]>
 </mx:Script>

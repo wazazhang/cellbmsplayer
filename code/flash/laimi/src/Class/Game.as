@@ -5,6 +5,7 @@ package Class
 	import Class.Model.Player;
 	
 	import Component.Card_Cpt;
+	import Component.Lami;
 	import Component.Matrix_Cpt;
 	
 	import flash.events.KeyboardEvent;
@@ -19,7 +20,7 @@ package Class
 	[Bindable]
 	public class Game
 	{
-		public static var app:Application;
+		public static var app:Lami;
 		
 		//列数
 		public static var lineCount:int=7; 
@@ -248,6 +249,12 @@ package Class
 		private static function keyup(event:KeyboardEvent):void
 		{
 			gamer.keydwon = false;	
+		}
+		
+		
+		public static function addGameInfo(str:String):void
+		{
+			app.gameinfo.text = str + app.gameinfo.text + "\n";
 		}
 	}
 }

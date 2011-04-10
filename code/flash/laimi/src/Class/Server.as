@@ -27,10 +27,10 @@ package Class
 	import com.fc.lami.Messages.LeaveDeskNotify;
 	import com.fc.lami.Messages.LoginRequest;
 	import com.fc.lami.Messages.LoginResponse;
-	import com.fc.lami.Messages.SubmitRequest;
 	import com.fc.lami.Messages.PlayerData;
 	import com.fc.lami.Messages.ReadyNotify;
 	import com.fc.lami.Messages.ReadyRequest;
+	import com.fc.lami.Messages.SubmitRequest;
 	import com.fc.lami.Messages.TurnEndNotify;
 	import com.fc.lami.Messages.TurnStartNotify;
 	import com.net.client.ClientEvent;
@@ -90,6 +90,8 @@ package Class
 				addInfo(player.name+"进入了游戏");
 			}
 			*/
+			
+			Alert.show("有广播来")
 			var ntf : Object = event.getNotify();
 			if (ntf is GetCardNotify){
 				var gcn : GetCardNotify = ntf as GetCardNotify;
@@ -166,9 +168,7 @@ package Class
 			//响应进入房间
 			if(res is EnterRoomResponse){
 				var enterRoom : EnterRoomResponse =res as EnterRoomResponse;
-				
-
-				
+			    
 				if(enterRoom.result==0)
 				{	
 					
@@ -253,9 +253,9 @@ package Class
 			client.sendRequest(new EnterDeskRequest(deskid,seat),client_response);
 		}
 		
-		public static function ready():void
+		public static function ready(ready:Boolean):void
 		{
-			client.sendRequest(new ReadyRequest(),client_response);
+			client.sendRequest(new ReadyRequest(ready),client_response);
 		}
 		
 		public static function getCard():void
@@ -272,6 +272,7 @@ package Class
 				client.sendRequest(new SubmitRequest(), client_response);
 			}
 		}
+		
 		//获得服务器端得初始牌
 		public static function receiveStartCard():void
 		{
@@ -282,9 +283,6 @@ package Class
 				startCard.addItem(Game.getCardFromCard());
 			}
 			//模拟服务器拿牌
-			
-			
-			
 			Game.gamer.getStartCard(startCard);
 		}
 		
