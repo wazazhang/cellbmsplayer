@@ -64,6 +64,9 @@ public class Server extends ServerImpl implements ServerListener
 		@Override
 		public void disconnected(ClientSession session) {
 			log.info("disconnected " + session.getRemoteAddress());
+			if (player.cur_room!=null){
+				player.cur_room.onPlayerLeave(player.player_id);
+			}
 			client_list.remove(this);
 			this.task.cancel(false);
 		}
@@ -105,10 +108,9 @@ public class Server extends ServerImpl implements ServerListener
 				if (request.room_no<rooms.length){
 					Room r = rooms[request.room_no];
 					if (r.onPlayerEnter(player)){
-						//EnterRoomResponse res = new EnterRoomResponse(EnterRoomResponse.ENTER_ROOM_RESULT_SUCCESS);
-						//res.result = EnterRoomResponse.ENTER_ROOM_RESULT_SUCCESS;
-						//res.room = r.getRoomData();
-						//session.sendResponse(protocol, res);
+						EnterRoomResponse res = new EnterRoomResponse(EnterRoomResponse.ENTER_ROOM_RESULT_SUCCESS);
+						res.room = r.getRoomData();
+						session.sendResponse(protocol, res);
 						
 						session.sendResponse(protocol, new EnterRoomResponse(EnterRoomResponse.ENTER_ROOM_RESULT_SUCCESS));
 					}else{
@@ -167,24 +169,34 @@ public class Server extends ServerImpl implements ServerListener
 			}
 			/** 把卡放到桌面上 */
 			else if (message instanceof SendCardRequest){
-				
+				SendCardRequest req = (SendCardRequest)message;
+				Game game = player.getGame();
+				if (game !=null && game.getCurPlayer() == player){
+					session.sendResponse(protocol, new SendCardResponse(game.putCardToDesk(req.cards, req.x, req.y)));
+				}
 			}
 			/** 把卡从桌面上取回 */
 			else if (message instanceof RetakeCardRequest){
-				
+				RetakeCardRequest req = (RetakeCardRequest)message;
+				Game game = player.getGame();
+				if (game!=null && game.getCurPlayer() == player){
+					session.sendResponse(protocol, new RetakeCardResponse(game.takeCardFromDesk(req.cards)));
+				}
 			}
 			/** 移动桌面上的牌 */
 			else if (message instanceof MoveCardRequest){
-				
+				MoveCardRequest req = (MoveCardRequest)message;
+				Game game = player.getGame();
+				if (game !=null && game.getCurPlayer() == player){
+					session.sendResponse(protocol, new MoveCardResponse(game.MoveCard(req.cards, req.nx, req.ny)));
+				}
 			}
 			/** 结束放牌 */
-			else if (message instanceof OverRequest){
+			else if (message instanceof SubmitRequest){
 				Game game = player.getGame();
-				if (game!=null){
-					if (game.getCurPlayer() == player){
+				if (game!=null && game.getCurPlayer() == player){
 						// TODO 检测打出的牌是否正确
-						game.toNextPlayer();
-					}
+					session.sendResponse(protocol, new SubmitResponse(game.submit()));
 				}
 			}
 			/** 摸牌 */
@@ -192,8 +204,13 @@ public class Server extends ServerImpl implements ServerListener
 				Game game = player.getGame();
 				if (game!=null){
 					if (game.getCurPlayer() == player){
-						game.playerGetCard(1);
-						game.toNextPlayer();
+						if (game.playerGetCard()){
+							session.sendResponse(protocol, new GetCardResponse(GetCardResponse.GET_CARD_RESULT_SUCCESS));
+						}else{
+							session.sendResponse(protocol, new GetCardResponse(GetCardResponse.GET_CARD_RESULT_FAIL_SEND_CARD));
+						}
+					}else{
+						session.sendResponse(protocol, new GetCardResponse(GetCardResponse.GET_CARD_RESULT_FAIL_NOT_TURN));
 					}
 				}
 			}
