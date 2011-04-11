@@ -22,8 +22,10 @@
 	</mx:Script>
 	<ns1:Login_Cpt verticalCenter="0" horizontalCenter="0">
 	</ns1:Login_Cpt>
+	
 	<ns1:Room_Cpt id="rm" horizontalCenter="0" verticalCenter="0" visible="false">
 	</ns1:Room_Cpt>
+	
 	<ns1:Lami id="game" horizontalCenter="0" verticalCenter="0" visible="false">
 	</ns1:Lami>
 </mx:Application>

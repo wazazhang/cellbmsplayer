@@ -8,9 +8,14 @@
 			public var player:PlayerData;
 			
 			
+			public var nextOtherPlayer_Cpt:OtherPlayer_Cpt;
+			
+			[Bindable]
+			public var seat:String
+			
+		
 		]]>
 	</mx:Script>
-	
-	<mx:Label x="73" y="10" text="{player==null?'空闲':player.player_id}" color="#FEFEFE"/>
-	
+	<mx:Label x="73" y="10" text="{player.player_id==-1?'空闲':'ID:'+player.player_id}" color="#FEFEFE"/>
+	<mx:Label x="86" y="38" text="{seat}" color="#FEFEFE"/>
 </mx:Canvas>

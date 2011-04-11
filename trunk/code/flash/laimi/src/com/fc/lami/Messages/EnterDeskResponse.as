@@ -15,13 +15,19 @@ package com.fc.lami.Messages
 		/** Java type is : <font color=#0000ff>int</font> */
 		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
 		public var result :  int;
+		/** Java type is : <font color=#0000ff>com.fc.lami.Messages.DeskData</font> */
+		[JavaType(name="com.fc.lami.Messages.DeskData", leaf_type=NetDataTypes.TYPE_EXTERNALIZABLE)]
+		public var desk :  com.fc.lami.Messages.DeskData;
 
 		/**
-		 * @param result as <font color=#0000ff>int</font>		 */
+		 * @param result as <font color=#0000ff>int</font>
+		 * @param desk as <font color=#0000ff>com.fc.lami.Messages.DeskData</font>		 */
 		public function EnterDeskResponse(
-			result :  int = 0) 
+			result :  int = 0,
+			desk :  com.fc.lami.Messages.DeskData = null) 
 		{
 			this.result = result;
+			this.desk = desk;
 		}
 	}
 }
