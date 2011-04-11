@@ -23,7 +23,6 @@ import com.net.server.ServerListener;
 public class Server extends ServerImpl implements ServerListener
 {
 	ThreadPool services = new ThreadPool("Flash-Test");
-	
 	ArrayList<EchoClientSession> client_list = new ArrayList<EchoClientSession>();
 	static int ids = 0;
 
@@ -133,7 +132,6 @@ public class Server extends ServerImpl implements ServerListener
 				EnterDeskRequest request = (EnterDeskRequest)message;
 				if (player.cur_room!=null){
 					Desk d = player.cur_room.desks[request.desk_No];
-					
 					boolean result = false;
 					switch (request.seat){
 					case 0:
@@ -217,7 +215,6 @@ public class Server extends ServerImpl implements ServerListener
 				}
 			}
 			System.out.println(message.toString());
-
 		}
 		public void run() {
 			

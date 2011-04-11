@@ -119,6 +119,10 @@ public class Messages {
 		/** 颜色 */
 		public int type;
 		
+		public int x;
+		
+		public int y;
+		
 		public CardData(){
 		}
 		
@@ -820,7 +824,30 @@ public class Messages {
 		}
 	}
 	
-	
+	//主信息框变化广播
+	public static class MainMatrixChangeNotify extends FlashMessage
+	{
+		public CardData[] cards;
+		public MainMatrixChangeNotify(CardData[] cards){
+			this.cards = cards;
+		}
+		@Override
+		public String toString() {
+			return "MainMatrixNotify";
+		}
+	}
+	//主信息框变化请求
+	public static class MainMatrixChangeRequest extends FlashMessage
+	{
+		public CardData[] cards;
+		public MainMatrixChangeRequest(CardData[] cards){
+			this.cards = cards;
+		}
+		@Override
+		public String toString() {
+			return "MainMatrixChangeRequest";
+		}
+	}
 	
 	public static void main(String[] args) throws IOException
 	{
