@@ -4,6 +4,7 @@ import java.util.concurrent.ScheduledFuture;
 
 import com.cell.util.concurrent.ThreadPool;
 import com.fc.lami.Messages.*;
+import com.net.flash.message.FlashMessage;
 
 /**
  * 桌子
@@ -169,6 +170,7 @@ public class Desk
 			}
 		}
 	}
+	
 	public DeskData getDeskData(){
 		DeskData dd = new DeskData();
 		dd.desk_id = this.desk_id;
@@ -181,4 +183,29 @@ public class Desk
 		
 		return dd;
 	}
+	
+	//通知桌子的人
+	private void NotifyAll(FlashMessage msg)
+	{
+		if (player_E!=null){
+			player_E.session.send(msg);
+		}
+		if (player_W!=null){
+			player_W.session.send(msg);
+		}
+		if (player_S!=null){
+			player_S.session.send(msg);
+		}
+		if (player_N!=null){
+			player_N.session.send(msg);
+		}
+	}
+	
+	//通知本桌子的出牌区的变化
+	public void NotifyMatrixChange(MainMatrixChangeRequest res)
+	{
+		MainMatrixChangeNotify ntf = new MainMatrixChangeNotify(res.cards);
+		NotifyAll(ntf);
+	}
+	
 }
