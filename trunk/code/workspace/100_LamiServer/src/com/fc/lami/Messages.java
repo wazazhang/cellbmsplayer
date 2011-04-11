@@ -730,10 +730,11 @@ public class Messages {
 		final static public int ENTER_DESK_RESULT_FAIL_NOT_HAVE_ROOM = 2;
 		
 		public int result;
+		public DeskData desk;
 		
-		
-		public EnterDeskResponse(int result){
+		public EnterDeskResponse(int result,DeskData desk){
 			this.result = result;
+			this.desk = desk;
 		}
 		
 		public EnterDeskResponse(){}

@@ -148,16 +148,15 @@ public class Server extends ServerImpl implements ServerListener
 						result = d.setPlayerN(player);
 						break;
 					}
-					
 					if (result){
 						player.cur_desk = d;
-						session.sendResponse(protocol, new EnterDeskResponse(EnterDeskResponse.ENTER_DESK_RESULT_SUCCESS));
+						session.sendResponse(protocol, new EnterDeskResponse(EnterDeskResponse.ENTER_DESK_RESULT_SUCCESS,d.getDeskData()));
 					}else{
-						session.sendResponse(protocol, new EnterDeskResponse(EnterDeskResponse.ENTER_DESK_RESULT_FAIL_PLAYER_EXIST));
+						session.sendResponse(protocol, new EnterDeskResponse(EnterDeskResponse.ENTER_DESK_RESULT_FAIL_PLAYER_EXIST,null));
 					}
 				}else{
 					// TODO 要先进房间
-					session.sendResponse(protocol, new EnterDeskResponse(EnterDeskResponse.ENTER_DESK_RESULT_FAIL_NOT_HAVE_ROOM));
+					session.sendResponse(protocol, new EnterDeskResponse(EnterDeskResponse.ENTER_DESK_RESULT_FAIL_NOT_HAVE_ROOM,null));
 				}
 			}
 			else if (message instanceof ReadyRequest){
