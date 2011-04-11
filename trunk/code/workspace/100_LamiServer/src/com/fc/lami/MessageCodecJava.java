@@ -697,9 +697,11 @@ public class MessageCodecJava implements MutualMessageCodec
 	public com.fc.lami.Messages.ReadyNotify new_com_fc_lami_Messages_ReadyNotify(){return new com.fc.lami.Messages.ReadyNotify();}
 	private void _r(com.fc.lami.Messages.ReadyNotify msg, NetDataInput in) throws IOException {
 		msg.player_id = in.readInt();
+		msg.isReady = in.readBoolean();
 	}
 	private void _w(com.fc.lami.Messages.ReadyNotify msg, NetDataOutput out) throws IOException {
 		out.writeInt(msg.player_id);
+		out.writeBoolean(msg.isReady);
 	}
 
 //	----------------------------------------------------------------------------------------------------
