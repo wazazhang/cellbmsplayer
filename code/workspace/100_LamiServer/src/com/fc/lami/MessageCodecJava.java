@@ -624,10 +624,12 @@ public class MessageCodecJava implements MutualMessageCodec
 	public com.fc.lami.Messages.LoginResponse new_com_fc_lami_Messages_LoginResponse(){return new com.fc.lami.Messages.LoginResponse();}
 	private void _r(com.fc.lami.Messages.LoginResponse msg, NetDataInput in) throws IOException {
 		msg.result = in.readInt();
+		msg.player = in.readExternal(com.fc.lami.Messages.PlayerData.class);
 		msg.rooms = (com.fc.lami.Messages.RoomData[])in.readExternalArray(com.fc.lami.Messages.RoomData.class);
 	}
 	private void _w(com.fc.lami.Messages.LoginResponse msg, NetDataOutput out) throws IOException {
 		out.writeInt(msg.result);
+		out.writeExternal(msg.player);
 		out.writeExternalArray(msg.rooms);
 	}
 
@@ -643,7 +645,7 @@ public class MessageCodecJava implements MutualMessageCodec
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.MainMatrixChangeNotify
 //	----------------------------------------------------------------------------------------------------
-	public com.fc.lami.Messages.MainMatrixChangeNotify new_com_fc_lami_Messages_MainMatrixChangeNotify(){return new com.fc.lami.Messages.MainMatrixChangeNotify(null);}
+	public com.fc.lami.Messages.MainMatrixChangeNotify new_com_fc_lami_Messages_MainMatrixChangeNotify(){return new com.fc.lami.Messages.MainMatrixChangeNotify();}
 	private void _r(com.fc.lami.Messages.MainMatrixChangeNotify msg, NetDataInput in) throws IOException {
 		msg.cards = (com.fc.lami.Messages.CardData[])in.readExternalArray(com.fc.lami.Messages.CardData.class);
 	}
@@ -654,7 +656,7 @@ public class MessageCodecJava implements MutualMessageCodec
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.MainMatrixChangeRequest
 //	----------------------------------------------------------------------------------------------------
-	public com.fc.lami.Messages.MainMatrixChangeRequest new_com_fc_lami_Messages_MainMatrixChangeRequest(){return new com.fc.lami.Messages.MainMatrixChangeRequest(null);}
+	public com.fc.lami.Messages.MainMatrixChangeRequest new_com_fc_lami_Messages_MainMatrixChangeRequest(){return new com.fc.lami.Messages.MainMatrixChangeRequest();}
 	private void _r(com.fc.lami.Messages.MainMatrixChangeRequest msg, NetDataInput in) throws IOException {
 		msg.cards = (com.fc.lami.Messages.CardData[])in.readExternalArray(com.fc.lami.Messages.CardData.class);
 	}
