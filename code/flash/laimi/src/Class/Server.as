@@ -25,6 +25,8 @@ package Class
 	import com.fc.lami.Messages.GetTimeRequest;
 	import com.fc.lami.Messages.GetTimeResponse;
 	import com.fc.lami.Messages.LeaveDeskNotify;
+	import com.fc.lami.Messages.LeaveDeskRequest;
+	import com.fc.lami.Messages.LeaveDeskResponse;
 	import com.fc.lami.Messages.LoginRequest;
 	import com.fc.lami.Messages.LoginResponse;
 	import com.fc.lami.Messages.PlayerData;
@@ -38,11 +40,15 @@ package Class
 	import mx.collections.ArrayCollection;
 	import mx.controls.Alert;
 	
+	[Bindable]
 	public class Server
 	{
 		
 		protected static var client:LamiClient = new LamiClient();
-		protected static var player:PlayerData;
+		
+		
+		public static var player:PlayerData;
+		
 		public static var login_cpt:Login_Cpt;
 		public static var room_cpt:Room_Cpt;
 		public static var game_cpt:Lami;
@@ -118,19 +124,17 @@ package Class
 				room_cpt.addRoomInfo("玩家"+ern.player.name+"进入房间")
 			}
 			else if (ntf is ExitRoomNotify){
-				var exrn : EnterRoomNotify = ntf as EnterRoomNotify;
-				room_cpt.addRoomInfo("玩家"+ern.player.name+"离开房间")
+				var exrn : ExitRoomNotify = ntf as ExitRoomNotify;
+				room_cpt.addRoomInfo("玩家"+exrn.player.name+"离开房间")
 			}
 			else if (ntf is EnterDeskNotify){
 				var edn : EnterDeskNotify = ntf as EnterDeskNotify;
-				
-				game_cpt.addInfo("玩家"+edn.player.name+"进入桌子")
-				//Alert.show("notify : 玩家"+edn.player.name+"进入桌子");
+				game_cpt.addPlayer(edn.player);
 			}
 			else if (ntf is LeaveDeskNotify){
 				var ldn : LeaveDeskNotify = ntf as LeaveDeskNotify;
-				game_cpt.addInfo("玩家"+edn.player.name+"离开桌子")
-				//Alert.show("notify : 玩家"+ldn.player.name+"离开桌子");
+				game_cpt.leavePlayer(ldn.player);
+				
 			}
 			else if (ntf is ReadyNotify){
 				var rn : ReadyNotify = ntf as ReadyNotify;
@@ -169,8 +173,8 @@ package Class
 				
 				if(login.result == 0)
 				{
+					player = login.player;
 					login_cpt.rooms = login.rooms;
-					
 					login_cpt.linkSunccess();
 				}
 				return;
@@ -201,12 +205,11 @@ package Class
 			//响应进入房间
 			if(res is EnterDeskResponse){
 				var enterdesk : EnterDeskResponse =res as EnterDeskResponse;
-				
 				if(enterdesk.result==0)
 				{
 					room_cpt.visible = false;
 					game_cpt.visible = true;
-					game_cpt.init();
+					game_cpt.initDesk(enterdesk.desk);
 				}
 				else if(enterdesk.result == 1)
 				{
@@ -221,6 +224,11 @@ package Class
 			
 			else if (res is GetCardResponse){
 				
+			}
+			
+			else if (res is LeaveDeskResponse){
+				room_cpt.visible = true;
+				//game_cpt.visible = true;
 			}
 			
 			/*
@@ -263,6 +271,12 @@ package Class
 		{
 			client.sendRequest(new EnterDeskRequest(deskid,seat),client_response);
 		}
+		
+		public static function leaveDesk():void
+		{
+			client.sendRequest(new LeaveDeskRequest(),client_response);
+		}
+		
 		
 		public static function ready(ready:Boolean):void
 		{

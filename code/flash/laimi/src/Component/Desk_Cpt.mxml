@@ -39,9 +39,15 @@
 	</mx:Script>
 
 	<mx:LinkButton	 x="57" y="10" label="{desk.player_S_id==-1?'空闲':desk.player_S_id.toString()}" click="enter2()"/>
+	
 	<mx:LinkButton	 x="10" y="58" label="{desk.player_W_id==-1?'空闲':desk.player_W_id.toString()}" click="enter1()"/>
-	<mx:LinkButton	 x="98" y="58" label="{desk.player_N_id==-1?'空闲':desk.player_N_id.toString()}" click="enter0()"/>
-	<mx:LinkButton	 x="57" y="114" label="{desk.player_E_id==-1?'空闲':desk.player_E_id.toString()}" click="enter3()"/>
+	
+	<mx:LinkButton	 x="98" y="58" label="{desk.player_E_id==-1?'空闲':desk.player_E_id.toString()}" click="enter3()"/>
+	
+	<mx:LinkButton	 x="57" y="114" label="{desk.player_N_id==-1?'空闲':desk.player_N_id.toString()}" click="enter0()"/>
+	
+	
+	
 	<mx:Label y="50" text="第{desk.desk_id+1}桌" horizontalCenter="0"/>
 	<mx:Label y="78" text="{desk.is_started?'进行中':'等待中'}" horizontalCenter="0"/>
 	

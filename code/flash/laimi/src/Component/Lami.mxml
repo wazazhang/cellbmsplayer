@@ -10,16 +10,105 @@
 			import Class.Server;
 			import Class.TimesCtr;
 			
+			import com.fc.lami.Messages.DeskData;
+			import com.fc.lami.Messages.PlayerData;
+			
 			import mx.controls.Alert;
 			
+			public var desk:DeskData;
+			
+			public var player:PlayerData; //玩家
+			[Bindable]
+			public var seatID:int;
+			
+			public var nextOtherPlayer_Cpt:OtherPlayer_Cpt;
+			
+			
+			//初始游戏
 			public function init():void
 			{
-				
 				Game.matrix = mx;
 				Game.gamer.matrix = umx;
 				TimesCtr.optionTimeBar = optbar;
 				TimesCtr.sumTimeBar = sumbar;
 				Game.initGame();
+			}
+			
+			public function initDesk(desk:DeskData):void
+			{
+				init();
+				player = Server.player;
+				initSeat(desk);
+			}
+			
+			public function initSeat(desk:DeskData):void
+			{
+				nextOtherPlayer_Cpt = nextPlayer1;
+				nextPlayer1.nextOtherPlayer_Cpt = nextPlayer2;
+				nextPlayer2.nextOtherPlayer_Cpt = nextPlayer3;
+				this.desk = desk;
+				switch(player.player_id)
+				{
+					case desk.player_E_id: seatID = 3;break;
+					case desk.player_N_id: seatID = 0;break;
+					case desk.player_S_id: seatID = 2;break;
+					case desk.player_W_id: seatID = 1;break;
+				}
+				
+				var cpt:OtherPlayer_Cpt = nextOtherPlayer_Cpt;
+				
+				var index:int = seatID;
+				do{
+					index ++;
+					
+					if(index==4)
+						index = 0
+					
+					cpt.player = new PlayerData()
+					cpt.player.player_id = 	getPlayerIDbySeatID(index);	
+					cpt.seat = getDir(index);
+					cpt = cpt.nextOtherPlayer_Cpt;
+				}
+				while(cpt != null)
+				
+				
+			}
+			
+			
+			private function getPlayerIDbySeatID(seatID:int):int
+			{
+				switch(seatID)
+				{
+					case 3: return desk.player_E_id;
+					case 0: return desk.player_N_id;
+					case 2: return desk.player_S_id;
+					case 1: return desk.player_W_id;
+				}
+				return -1;
+			}
+			
+			public function getDir(seatID:int):String
+			{
+				switch(seatID)
+				{
+					case 0: return "南";
+					case 1: return "西";
+					case 2: return "北";
+					case 3: return "东";
+				}
+				
+				return "false";
+			}
+			
+			
+			public function addPlayer(player:PlayerData):void
+			{
+				addInfo("玩家"+player.name+"进入桌子");
+			}
+			
+			public function leavePlayer(player:PlayerData):void
+			{
+				addInfo("玩家"+player.name+"离开桌子");
 			}
 			
 			
@@ -32,15 +121,18 @@
 			public function ready():void
 			{
 				Server.ready(readyBt.selected);
-				Alert.show(readyBt.selected.toString());
 			}
-			
 			
 			public function addInfo(str:String):void
 			{
 				gameinfo.text = str + "\n" +gameinfo.text ;
 			}
 			
+			public function leaveDesk():void
+			{
+				this.visible = false;
+				Server.leaveDesk();
+			}
 			
 		]]>
 	</mx:Script>
@@ -48,15 +140,17 @@
 	<ns1:Matrix_Cpt id="mx" y="100" borderStyle="solid" height="201" x="30">
 	
 	</ns1:Matrix_Cpt>
+	
 	<ns1:UserMatrix_Cpt id="umx" height="202" x="342" y="389" width="400">
 		<mx:ProgressBar id="sumbar" width="364" label="" height="10" mode="manual" labelPlacement="center" y="24" x="0"/>
 		<mx:ProgressBar id="optbar" height="10" width="364" label="" mode="manual" labelPlacement="center" x="0" y="36"/>
 	</ns1:UserMatrix_Cpt>
+	
 	<ns1:Opt_Cpt height="177" y="411" x="704">
 	</ns1:Opt_Cpt>
 	
-	<mx:Label x="268" y="522" text="{Game.gamer.handCard.length}" color="#FDFDFD"/>
-	<mx:TextArea id="gameinfo" x="29" y="429" width="195" height="113" backgroundAlpha="0.0" color="#FDFFFF"/>
+	<mx:Label x="268" y="556" text="{Game.gamer.handCard.length}" color="#FDFDFD"/>
+	<mx:TextArea id="gameinfo" x="29" y="429" width="195" height="113" backgroundAlpha="0.0" color="#FDFFFF" editable="false"/>
 	
 	<mx:Canvas width="293" height="130" horizontalCenter="0" verticalCenter="0" backgroundColor="#FD8006" borderStyle="solid" cornerRadius="10" backgroundAlpha="0.82">
 		<mx:Button id="readyBt" x="110.5" y="44" toggle="true" label="准备" width="70" height="40" cornerRadius="5" fontSize="18" click="ready()"/>
@@ -70,4 +164,9 @@
 	
 	<ns1:OtherPlayer_Cpt id="nextPlayer3" x="579" y="305">
 	</ns1:OtherPlayer_Cpt>
+	
+	<mx:Label x="268" y="528" text="{getDir(seatID)+':'+ Server.player.name}" color="#FCFDFD"/>
+	
+	<mx:LinkButton x="10" y="10" label="回到大厅" color="#F9FBFC" click="leaveDesk()"/>
+	
 </mx:Canvas>
