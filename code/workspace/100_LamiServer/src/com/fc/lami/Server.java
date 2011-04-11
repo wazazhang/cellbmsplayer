@@ -1,6 +1,7 @@
 package com.fc.lami;
 
 import java.io.IOException;
+import java.rmi.dgc.Lease;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.ScheduledFuture;
@@ -159,6 +160,14 @@ public class Server extends ServerImpl implements ServerListener
 					session.sendResponse(protocol, new EnterDeskResponse(EnterDeskResponse.ENTER_DESK_RESULT_FAIL_NOT_HAVE_ROOM,null));
 				}
 			}
+			//退出桌子请求
+			else if (message instanceof LeaveDeskRequest){
+				//LeaveDeskRequest request = (LeaveDeskRequest)message;
+				player.cur_desk.leavePlayer(player);
+				session.sendResponse(protocol, new LeaveDeskResponse());
+			}
+			
+			
 			else if (message instanceof ReadyRequest){
 				ReadyRequest req = (ReadyRequest)message;
 				if (player.cur_desk!=null){
