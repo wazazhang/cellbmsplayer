@@ -1,5 +1,6 @@
 package com.fc.lami.model;
 
+import java.rmi.dgc.Lease;
 import java.util.concurrent.ScheduledFuture;
 
 import com.cell.util.concurrent.ThreadPool;
@@ -182,6 +183,29 @@ public class Desk
 		dd.player_W_id = this.player_W!=null?this.player_W.player_id:-1;
 		
 		return dd;
+	}
+	
+	
+	public void leavePlayer(Player player){
+		
+		if(player_E == player)
+		{
+			player_E = null;
+		}
+		else if(player_W == player)
+		{
+			player_W = null;
+		}
+		else if(player_S == player)
+		{
+			player_S = null;
+		}
+		else if(player_N == player)
+		{
+			player_N = null;
+		}
+		LeaveDeskNotify ntf = new LeaveDeskNotify(player.getPlayerData());
+		NotifyAll(ntf);
 	}
 	
 	//通知桌子的人
