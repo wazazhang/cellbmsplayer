@@ -643,7 +643,7 @@ public class MessageCodecJava implements MutualMessageCodec
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.MainMatrixChangeNotify
 //	----------------------------------------------------------------------------------------------------
-	public com.fc.lami.Messages.MainMatrixChangeNotify new_com_fc_lami_Messages_MainMatrixChangeNotify(){return new com.fc.lami.Messages.MainMatrixChangeNotify();}
+	public com.fc.lami.Messages.MainMatrixChangeNotify new_com_fc_lami_Messages_MainMatrixChangeNotify(){return new com.fc.lami.Messages.MainMatrixChangeNotify(null);}
 	private void _r(com.fc.lami.Messages.MainMatrixChangeNotify msg, NetDataInput in) throws IOException {
 		msg.cards = (com.fc.lami.Messages.CardData[])in.readExternalArray(com.fc.lami.Messages.CardData.class);
 	}
@@ -654,7 +654,7 @@ public class MessageCodecJava implements MutualMessageCodec
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.MainMatrixChangeRequest
 //	----------------------------------------------------------------------------------------------------
-	public com.fc.lami.Messages.MainMatrixChangeRequest new_com_fc_lami_Messages_MainMatrixChangeRequest(){return new com.fc.lami.Messages.MainMatrixChangeRequest();}
+	public com.fc.lami.Messages.MainMatrixChangeRequest new_com_fc_lami_Messages_MainMatrixChangeRequest(){return new com.fc.lami.Messages.MainMatrixChangeRequest(null);}
 	private void _r(com.fc.lami.Messages.MainMatrixChangeRequest msg, NetDataInput in) throws IOException {
 		msg.cards = (com.fc.lami.Messages.CardData[])in.readExternalArray(com.fc.lami.Messages.CardData.class);
 	}
