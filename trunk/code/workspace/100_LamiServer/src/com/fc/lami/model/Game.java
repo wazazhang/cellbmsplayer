@@ -264,7 +264,6 @@ public class Game implements Runnable
 			player_put.remove(cds[i]);
 			player_list[s].addCard(cds[i]);
 		}
-
 		return RetakeCardResponse.RETAKE_CARD_RESULT_SUCCESS;
 	}
 	
