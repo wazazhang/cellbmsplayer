@@ -577,10 +577,12 @@ public class Messages {
 		final static public int LOGIN_RESULT_SUCCESS = 0;
 		final static public int LOGIN_RESULT_FAIL = 1;
 		public int result;
+		public PlayerData player;
 		public RoomData rooms[];
 		
-		public LoginResponse(int result){
+		public LoginResponse(int result,PlayerData player){
 			this.result = result;
+			this.player = player;
 		}
 		
 		public LoginResponse(){}
