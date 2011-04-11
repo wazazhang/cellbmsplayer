@@ -2,10 +2,10 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/000_Engine_Core"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/002_Engine_Server"/>
-	<classpathentry kind="lib" path="/000_Engine_Core/lib/mina-2.0.2/dist/mina-core-2.0.2.jar" sourcepath="/000_Engine_Core/lib/mina-2.0.2/src"/>
-	<classpathentry kind="lib" path="/000_Engine_Core/lib/slf4j-api-1.5.2.jar"/>
-	<classpathentry kind="lib" path="/000_Engine_Core/lib/slf4j-simple-1.5.0.jar"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/000_Engine_Core"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/002_Engine_Server"/>
+	<classpathentry exported="true" kind="lib" path="/000_Engine_Core/lib/mina-2.0.2/dist/mina-core-2.0.2.jar" sourcepath="/000_Engine_Core/lib/mina-2.0.2/src"/>
+	<classpathentry exported="true" kind="lib" path="/000_Engine_Core/lib/slf4j-api-1.5.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="/000_Engine_Core/lib/slf4j-simple-1.5.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

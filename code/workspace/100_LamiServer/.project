@@ -3,6 +3,8 @@
 	<name>100_LamiServer</name>
 	<comment></comment>
 	<projects>
+		<project>000_Engine_Core</project>
+		<project>002_Engine_Server</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
