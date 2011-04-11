@@ -443,9 +443,11 @@ public class MessageCodecJava implements MutualMessageCodec
 	public com.fc.lami.Messages.EnterDeskResponse new_com_fc_lami_Messages_EnterDeskResponse(){return new com.fc.lami.Messages.EnterDeskResponse();}
 	private void _r(com.fc.lami.Messages.EnterDeskResponse msg, NetDataInput in) throws IOException {
 		msg.result = in.readInt();
+		msg.desk = in.readExternal(com.fc.lami.Messages.DeskData.class);
 	}
 	private void _w(com.fc.lami.Messages.EnterDeskResponse msg, NetDataOutput out) throws IOException {
 		out.writeInt(msg.result);
+		out.writeExternal(msg.desk);
 	}
 
 //	----------------------------------------------------------------------------------------------------
