@@ -136,7 +136,7 @@ public class Server extends ServerImpl implements ServerListener
 					boolean result = false;
 					switch (request.seat){
 					case 0:
-						result = d.setPlayerE(player);
+						result = d.setPlayerN(player);
 						break;
 					case 1:
 						result = d.setPlayerW(player);
@@ -145,7 +145,7 @@ public class Server extends ServerImpl implements ServerListener
 						result = d.setPlayerS(player);
 						break;
 					case 3:
-						result = d.setPlayerN(player);
+						result = d.setPlayerE(player);
 						break;
 					}
 					if (result){
