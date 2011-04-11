@@ -89,13 +89,14 @@ public class Server extends ServerImpl implements ServerListener
 			//登陆请求
 			else if (message instanceof LoginRequest){
 				LoginRequest request = (LoginRequest)message;
-				LoginResponse res = new LoginResponse(LoginResponse.LOGIN_RESULT_SUCCESS);
+				this.player = new Player(session, request.name, ids++);
+				LoginResponse res = new LoginResponse(LoginResponse.LOGIN_RESULT_SUCCESS,this.player.getPlayerData());
 				res.rooms = new RoomData[rooms.length];
 				for (int i = 0; i<rooms.length; i++){
 					res.rooms[i] = rooms[i].getRoomData();
 				}
 				session.sendResponse(protocol, res);
-				this.player = new Player(session, request.name, ids++);
+				
 			}
 			//退出请求
 			else if (message instanceof LogoutRequest){
