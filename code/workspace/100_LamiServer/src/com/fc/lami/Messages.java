@@ -728,7 +728,6 @@ public class Messages {
 		final static public int ENTER_DESK_RESULT_SUCCESS = 0;
 		final static public int ENTER_DESK_RESULT_FAIL_PLAYER_EXIST = 1;
 		final static public int ENTER_DESK_RESULT_FAIL_NOT_HAVE_ROOM = 2;
-		
 		public int result;
 		public DeskData desk;
 		
