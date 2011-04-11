@@ -833,6 +833,9 @@ public class Messages {
 		public MainMatrixChangeNotify(CardData[] cards){
 			this.cards = cards;
 		}
+		public MainMatrixChangeNotify()
+		{	
+		}
 		@Override
 		public String toString() {
 			return "MainMatrixNotify";
@@ -845,6 +848,7 @@ public class Messages {
 		public MainMatrixChangeRequest(CardData[] cards){
 			this.cards = cards;
 		}
+		public MainMatrixChangeRequest(){}
 		@Override
 		public String toString() {
 			return "MainMatrixChangeRequest";
