@@ -8,6 +8,8 @@ package Class
 	import Component.Lami;
 	import Component.Matrix_Cpt;
 	
+	import com.fc.lami.Messages.CardData;
+	
 	import flash.events.KeyboardEvent;
 	
 	import mx.collections.ArrayCollection;
@@ -154,8 +156,58 @@ package Class
 			legaled = true;
 			
 			canSendCard = haveSendCard;
-			
 			return true;
+		}
+		
+		
+		
+		public static function get getPublicCards():Array
+		{
+			var cards:Array = new Array()
+	
+			for each(var line:Line in lineArray)
+			{
+				var cardcpt:Card_Cpt = line.firstCard
+				do{	
+					
+					if(cardcpt.card!=null)
+					{
+						cards.push(cardcpt.card.cardData);
+					}
+					cardcpt = cardcpt.nextCardCpt;
+				}	
+				while(cardcpt!=null)	
+				
+			}	
+			return cards;	
+		}
+		
+		//主牌区的变化
+		public static function publicCardChange(cards:Array):void
+		{
+			if(gamer.isMyturn)
+				return;
+			
+			for each(var line:Line in lineArray)
+			{
+				var cardcpt:Card_Cpt = line.firstCard;
+				do{	
+					
+					for each(var carddata:CardData in cards)
+					{
+						if(cardcpt.x == carddata.x&&cardcpt.y == carddata.y)
+						{
+							cardcpt.card = Card.createCardByData(carddata);
+						}
+						else
+						{
+							cardcpt.card = null;
+						}
+					}
+					cardcpt = cardcpt.nextCardCpt;
+				}	
+				while(cardcpt!=null)
+			}	
 		}
 		
 		//获得打出点数

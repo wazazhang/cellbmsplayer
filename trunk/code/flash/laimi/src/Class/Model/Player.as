@@ -32,7 +32,7 @@ package Class.Model
 			
 		public var keydwon:Boolean = false;	   //当前是否按下SHIFT
 			
-		private var startCard:int = 14; //起手牌数 	
+		//private var startCard:int = 14; //起手牌数 	
 		
 		
 		public var canOpearation:Boolean = false;//当前是否能操作

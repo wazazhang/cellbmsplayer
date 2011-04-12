@@ -55,5 +55,25 @@ package Class.Model
 			
 			return cardUI.cardY;
 		}
+		
+		
+		public function get cardData():CardData
+		{
+			var carddata:CardData = new CardData();
+			carddata.id = id;
+			carddata.point = this.point;
+			carddata.type = this.type;
+			carddata.x = this.x;
+			carddata.y = this.y;
+			carddata.isSended = this.isSended;
+			return carddata;
+		}
+		
+		public static function createCardByData(carddata:CardData):Card
+		{
+			var card:Card = new Card(carddata.point,carddata.type,carddata.id);
+			card.isSended = carddata.isSended;	
+			return card;
+		}
 	}
 }

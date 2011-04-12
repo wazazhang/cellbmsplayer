@@ -30,6 +30,8 @@ package Class
 	import com.fc.lami.Messages.LeaveDeskResponse;
 	import com.fc.lami.Messages.LoginRequest;
 	import com.fc.lami.Messages.LoginResponse;
+	import com.fc.lami.Messages.MainMatrixChangeNotify;
+	import com.fc.lami.Messages.MainMatrixChangeRequest;
 	import com.fc.lami.Messages.PlayerData;
 	import com.fc.lami.Messages.ReadyNotify;
 	import com.fc.lami.Messages.ReadyRequest;
@@ -97,10 +99,7 @@ package Class
 				addInfo(player.name+"进入了游戏");
 			}
 			*/
-			
-			//Alert.show("有广播来");
-			
-			
+
 			var ntf : Object = event.getNotify();
 			if (ntf is GetCardNotify){
 				var gcn : GetCardNotify = ntf as GetCardNotify;
@@ -144,6 +143,11 @@ package Class
 				
 			}
 			
+			else if (ntf is MainMatrixChangeNotify ){
+				var mmcn : MainMatrixChangeNotify = ntf as MainMatrixChangeNotify;
+				Game.publicCardChange(mmcn.cards);
+				//game_cpt.leavePlayer(ldn);
+			}
 			else if (ntf is ReadyNotify){
 				var rn : ReadyNotify = ntf as ReadyNotify;
 				if(rn.isReady)
@@ -303,6 +307,7 @@ package Class
 		}
 		
 		//获得服务器端得初始牌
+		/*
 		public static function receiveStartCard():void
 		{
 			//---------------------
@@ -314,6 +319,17 @@ package Class
 			//模拟服务器拿牌
 			Game.gamer.getStartCard(startCard);
 		}
+		*/
+		
+		//发送公共主牌区
+		public static function sendPublicMatrix():void
+		{
+			var res:MainMatrixChangeRequest = new MainMatrixChangeRequest();
+			res.cards = Game.getPublicCards;
+			client.sendRequest(res, client_response);
+
+		}
+
 		
 		//连接服务器
 		public static function linkToServer(name:String):void
