@@ -495,6 +495,7 @@ package com.fc.lami
 		msg.type = input.readInt();
 		msg.x = input.readInt();
 		msg.y = input.readInt();
+		msg.isSended = input.readBoolean();
 	}
 	private function w_CardData_1(msg : com.fc.lami.Messages.CardData, output : NetDataOutput) : void {
 		output.writeInt(msg.id);
@@ -502,6 +503,7 @@ package com.fc.lami
 		output.writeInt(msg.type);
 		output.writeInt(msg.x);
 		output.writeInt(msg.y);
+		output.writeBoolean(msg.isSended);
 	}
 
 //	----------------------------------------------------------------------------------------------------
@@ -651,9 +653,13 @@ package com.fc.lami
 	function new_ExitRoomNotify_13() : com.fc.lami.Messages.ExitRoomNotify {return new com.fc.lami.Messages.ExitRoomNotify();}
 	private function r_ExitRoomNotify_13(msg : com.fc.lami.Messages.ExitRoomNotify, input : NetDataInput) : void {
 		msg.player = input.readExternal() as com.fc.lami.Messages.PlayerData;
+		msg.curRoom = input.readExternal() as com.fc.lami.Messages.RoomData;
+		msg.curDesk = input.readExternal() as com.fc.lami.Messages.DeskData;
 	}
 	private function w_ExitRoomNotify_13(msg : com.fc.lami.Messages.ExitRoomNotify, output : NetDataOutput) : void {
 		output.writeExternal(msg.player);
+		output.writeExternal(msg.curRoom);
+		output.writeExternal(msg.curDesk);
 	}
 
 //	----------------------------------------------------------------------------------------------------
@@ -757,9 +763,13 @@ package com.fc.lami
 	function new_LeaveDeskNotify_23() : com.fc.lami.Messages.LeaveDeskNotify {return new com.fc.lami.Messages.LeaveDeskNotify();}
 	private function r_LeaveDeskNotify_23(msg : com.fc.lami.Messages.LeaveDeskNotify, input : NetDataInput) : void {
 		msg.player = input.readExternal() as com.fc.lami.Messages.PlayerData;
+		msg.desk = input.readExternal() as com.fc.lami.Messages.DeskData;
+		msg.seatID = input.readInt();
 	}
 	private function w_LeaveDeskNotify_23(msg : com.fc.lami.Messages.LeaveDeskNotify, output : NetDataOutput) : void {
 		output.writeExternal(msg.player);
+		output.writeExternal(msg.desk);
+		output.writeInt(msg.seatID);
 	}
 
 //	----------------------------------------------------------------------------------------------------
@@ -767,8 +777,14 @@ package com.fc.lami
 //	----------------------------------------------------------------------------------------------------
 	function new_LeaveDeskRequest_24() : com.fc.lami.Messages.LeaveDeskRequest {return new com.fc.lami.Messages.LeaveDeskRequest();}
 	private function r_LeaveDeskRequest_24(msg : com.fc.lami.Messages.LeaveDeskRequest, input : NetDataInput) : void {
+		msg.player = input.readExternal() as com.fc.lami.Messages.PlayerData;
+		msg.desk = input.readExternal() as com.fc.lami.Messages.DeskData;
+		msg.seatID = input.readInt();
 	}
 	private function w_LeaveDeskRequest_24(msg : com.fc.lami.Messages.LeaveDeskRequest, output : NetDataOutput) : void {
+		output.writeExternal(msg.player);
+		output.writeExternal(msg.desk);
+		output.writeInt(msg.seatID);
 	}
 
 //	----------------------------------------------------------------------------------------------------
@@ -911,10 +927,18 @@ package com.fc.lami
 	private function r_PlayerData_36(msg : com.fc.lami.Messages.PlayerData, input : NetDataInput) : void {
 		msg.player_id = input.readInt();
 		msg.name = input.readJavaUTF();
+		msg.score = input.readInt();
+		msg.win = input.readInt();
+		msg.lose = input.readInt();
+		msg.level = input.readInt();
 	}
 	private function w_PlayerData_36(msg : com.fc.lami.Messages.PlayerData, output : NetDataOutput) : void {
 		output.writeInt(msg.player_id);
 		output.writeJavaUTF(msg.name);
+		output.writeInt(msg.score);
+		output.writeInt(msg.win);
+		output.writeInt(msg.lose);
+		output.writeInt(msg.level);
 	}
 
 //	----------------------------------------------------------------------------------------------------

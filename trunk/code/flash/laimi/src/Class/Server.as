@@ -19,6 +19,7 @@ package Class
 	import com.fc.lami.Messages.EnterRoomRequest;
 	import com.fc.lami.Messages.EnterRoomResponse;
 	import com.fc.lami.Messages.ExitRoomNotify;
+	import com.fc.lami.Messages.GameOverNotify;
 	import com.fc.lami.Messages.GameStartNotify;
 	import com.fc.lami.Messages.GetCardNotify;
 	import com.fc.lami.Messages.GetCardRequest;
@@ -105,7 +106,9 @@ package Class
 				var gcn : GetCardNotify = ntf as GetCardNotify;
 				var cards : ArrayCollection = new ArrayCollection();
 				for each(var cd:CardData in gcn.cards){
-					cards.addItem(new Card(cd.point, cd.type, cd.id));
+					if (cd!=null){
+						cards.addItem(new Card(cd.point, cd.type, cd.id));
+					}
 				}
 				Game.gamer.getCards(cards);
 				//Alert.show("notify : GetCardNotify");
@@ -117,7 +120,7 @@ package Class
 					cards2.addItem(new Card(cd2.point, cd2.type, cd2.id));
 				}
 				Game.gamer.getStartCard(cards2);
-				Alert.show("notify : GameStartNotify");
+//				Alert.show("notify : GameStartNotify");
 			}
 			
 			
@@ -172,7 +175,10 @@ package Class
 				Game.turnOver();
 				//Alert.show("行动结束");
 			}
-			
+			else if (ntf is GameOverNotify){
+				// TODO 此处添加游戏结果的代码
+				Alert.show("游戏结束");
+			}	
 		}
 		
 		protected static function client_response(event:ClientEvent):void

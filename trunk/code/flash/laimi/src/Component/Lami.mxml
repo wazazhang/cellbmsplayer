@@ -124,7 +124,7 @@
 			//有人员离开
 			public function leavePlayer(nt:LeaveDeskNotify):void
 			{
-				if(nt.desk.desk_id!=desk.desk_id)
+				if(desk ==null ||nt.desk.desk_id!=desk.desk_id)
 					return	
 				setPlayerIDbySeatID(nt.seatID,-1);	
 				initSeat(desk);
