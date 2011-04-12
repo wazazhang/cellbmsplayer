@@ -11,6 +11,8 @@
 			import Class.TimesCtr;
 			
 			import com.fc.lami.Messages.DeskData;
+			import com.fc.lami.Messages.EnterDeskNotify;
+			import com.fc.lami.Messages.LeaveDeskNotify;
 			import com.fc.lami.Messages.PlayerData;
 			
 			import mx.controls.Alert;
@@ -54,27 +56,22 @@
 					case desk.player_S_id: seatID = 2;break;
 					case desk.player_W_id: seatID = 1;break;
 				}
-				
 				var cpt:OtherPlayer_Cpt = nextOtherPlayer_Cpt;
 				
 				var index:int = seatID;
 				do{
 					index ++;
-					
 					if(index==4)
 						index = 0
-					
 					cpt.player = new PlayerData()
 					cpt.player.player_id = 	getPlayerIDbySeatID(index);	
 					cpt.seat = getDir(index);
 					cpt = cpt.nextOtherPlayer_Cpt;
 				}
 				while(cpt != null)
-				
-				
 			}
 			
-			
+			//根据座位号获取选手
 			private function getPlayerIDbySeatID(seatID:int):int
 			{
 				switch(seatID)
@@ -86,7 +83,20 @@
 				}
 				return -1;
 			}
+			//根据座位号设置选手
+			private function setPlayerIDbySeatID(seatID:int,playerID:int):int
+			{
+				switch(seatID)
+				{
+					case 3: desk.player_E_id = playerID;break;
+					case 0: desk.player_N_id = playerID;break;
+					case 2: desk.player_S_id = playerID;break;
+					case 1: desk.player_W_id = playerID;break;
+				}
+				return -1;
+			}
 			
+			//根据座位号获取方向
 			public function getDir(seatID:int):String
 			{
 				switch(seatID)
@@ -96,25 +106,36 @@
 					case 2: return "北";
 					case 3: return "东";
 				}
-				
 				return "false";
 			}
 			
 			
-			public function addPlayer(player:PlayerData):void
+			//有人员进入
+			public function enterPlayer(nt:EnterDeskNotify):void
 			{
-				addInfo("玩家"+player.name+"进入桌子");
+				if(nt.desk.desk_id!=desk.desk_id)
+					return
+
+				setPlayerIDbySeatID(nt.seatID,nt.player.player_id);	
+				initSeat(desk);
+				addInfo(nt.player.name+"进入桌子");
 			}
 			
-			public function leavePlayer(player:PlayerData):void
+			
+			//有人员离开
+			public function leavePlayer(nt:LeaveDeskNotify):void
 			{
-				addInfo("玩家"+player.name+"离开桌子");
+				if(nt.desk.desk_id!=desk.desk_id)
+					return	
+				setPlayerIDbySeatID(nt.seatID,-1);	
+				initSeat(desk);
+				addInfo(nt.player.name+"离开桌子");
 			}
 			
 			
 			public function click():void
 			{
-				Alert.show(Game.getSendPoint().toString()+'_'+Game.gamer.keydwon);
+				//Alert.show(Game.getSendPoint().toString()+'_'+Game.gamer.keydwon);
 			}
 			
 			
@@ -131,14 +152,13 @@
 			public function leaveDesk():void
 			{
 				this.visible = false;
-				Server.leaveDesk();
+				Server.leaveDesk(desk,seatID);
 			}
 			
 		]]>
 	</mx:Script>
 	
 	<ns1:Matrix_Cpt id="mx" y="100" borderStyle="solid" height="201" x="30">
-	
 	</ns1:Matrix_Cpt>
 	
 	<ns1:UserMatrix_Cpt id="umx" height="202" x="342" y="389" width="400">
@@ -166,7 +186,6 @@
 	</ns1:OtherPlayer_Cpt>
 	
 	<mx:Label x="268" y="528" text="{getDir(seatID)+':'+ Server.player.name}" color="#FCFDFD"/>
-	
 	<mx:LinkButton x="10" y="10" label="回到大厅" color="#F9FBFC" click="leaveDesk()"/>
 	
 </mx:Canvas>

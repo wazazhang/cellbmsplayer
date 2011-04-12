@@ -3,19 +3,24 @@
 	<mx:Script>
 		<![CDATA[
 			import com.fc.lami.Messages.DeskData;
+			import com.fc.lami.Messages.EnterDeskNotify;
 			import com.fc.lami.Messages.RoomData;
 			
 			public var room:RoomData
+			public var deskCpts:Array;
+			
 			
 			public function init(room:RoomData):void
 			{
-				//room.
+				deskCpts = new Array();
+				
 				for(var i:int=0;i<room.desks.length;i++)
 				{
 					var deskCpt:Desk_Cpt = new Desk_Cpt();
 					deskCpt.desk = room.desks[i];
 					deskCpt.y = parseInt((i/4).toString())*158+10;
 					deskCpt.x = (i%4)*158+10;
+					deskCpts.push(deskCpt);
 					desks.addChild(deskCpt);
 				}
 				
@@ -23,8 +28,25 @@
 			
 			public function addRoomInfo(str:String):void
 			{
-				info.text = info.text + str +"\n";
+				info.text = info.text + "\n" + str;
 			}
+			
+			public function enterDesk(nt:EnterDeskNotify):void
+			{
+				var curDeskCpt:Desk_Cpt;
+				
+				for each(var deskCpt:Desk_Cpt in deskCpts)
+				{
+					if(deskCpt.desk.desk_id == nt.desk.desk_id)
+					{
+						curDeskCpt = deskCpt;
+						break;
+					}
+				}
+				curDeskCpt.enterPlayer(nt.player.player_id,nt.seatID);
+			}
+			
+			
 			
 		]]>
 	</mx:Script>
