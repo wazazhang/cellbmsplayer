@@ -556,7 +556,6 @@ public class Game implements Runnable
 		for (CardData cd : c2){
 			getCurPlayer().addCard(cd);
 		}
-		
 		desk.NotifyAll(new MainMatrixChangeNotify(notify_cds));
 		return true;
 	}
