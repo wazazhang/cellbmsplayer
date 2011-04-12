@@ -37,7 +37,9 @@ package Class.Model
 		
 		public var canOpearation:Boolean = false;//当前是否能操作
 		
-		public var isSendCard:Boolean = false;
+		public var isSendCard:Boolean = false; //是否有出牌
+		
+		public var isMyturn:Boolean = false; //是否轮到我
 		
 		public function Player()
 		{
@@ -49,7 +51,7 @@ package Class.Model
 			var curline:Line;
 			for(var i:int=0;i<matrix_height;i++)
 			{
-				var line:Line = new Line(matrix_length,true);
+				var line:Line = new Line(matrix_length,true,i+1);
 				if(curline != null)
 				{
 					curline.nextLine = line;
@@ -397,6 +399,7 @@ package Class.Model
 			move.addEventListener(EffectEvent.EFFECT_END,addCardMotionComplate);
 			move.play();
 		}
+		
 		protected function addCardMotionComplate(event:EffectEvent):void
 		{
 			var card:Card = ((event.target as Move).target as Card_Cpt).card;
@@ -418,6 +421,11 @@ package Class.Model
 				TimesCtr.start();
 			}
 			*/
+		}
+		
+		public function myTurnStart():void
+		{
+			
 		}
 		
 	}

@@ -11,19 +11,22 @@ package Class.Model
 		public var lineLength:int=20; 
 		private var _lastCard:Card_Cpt;
 		public var nextLine:Line;
-		
+		public var y:int;
 		
 		//单列检测
-		public function Line(length:int,isplayer:Boolean)
+		public function Line(length:int,isplayer:Boolean,y:int)
 		{
 			lineLength = length;
 			firstCard = new Card_Cpt();
 			firstCard.isPlayerOwner = isplayer;
+			this.y = y;
 			
 			var buff:Card_Cpt = firstCard;
 			for(var i:int=1;i<lineLength;i++)
 			{
 				buff.nextCardCpt = new Card_Cpt();
+				buff.cardX = i;
+				buff.cardY = y;
 				buff.nextCardCpt.preCardCpt = buff;
 				
 				buff.nextCardCpt.isPlayerOwner = isplayer;
