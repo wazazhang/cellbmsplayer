@@ -4,6 +4,8 @@
 		<![CDATA[
 			import com.fc.lami.Messages.DeskData;
 			import com.fc.lami.Messages.EnterDeskNotify;
+			import com.fc.lami.Messages.EnterRoomNotify;
+			import com.fc.lami.Messages.ExitRoomNotify;
 			import com.fc.lami.Messages.LeaveDeskNotify;
 			import com.fc.lami.Messages.LeaveDeskRequest;
 			import com.fc.lami.Messages.RoomData;
@@ -45,6 +47,25 @@
 			{
 				var curDeskCpt:Desk_Cpt = getDeskById(nt.desk.desk_id);
 				curDeskCpt.leavePlayer(nt.seatID)
+			}
+			
+			//进入房间
+			public function enterRoom(nt:EnterRoomNotify):void
+			{
+				//nt.player
+				addRoomInfo(nt.player.name+"进入房间")
+			}
+			
+			
+			//退出房间 
+			public function leaveRoom(nt:ExitRoomNotify):void
+			{
+				if(nt.curDesk!=null)
+				{
+					var curDeskCpt:Desk_Cpt = getDeskById(nt.curDesk.desk_id);
+					curDeskCpt.leavePlayerByPlayerId(nt.player.player_id);
+				}
+				addRoomInfo(nt.player.name+"离开房间");	
 			}
 			
 			//根据ID获取桌子
