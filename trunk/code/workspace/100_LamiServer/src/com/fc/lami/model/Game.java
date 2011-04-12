@@ -546,9 +546,11 @@ public class Game implements Runnable
 				notify_cds[p++] = cm;
 			}
 		}
+		matrix = matrix_new;
 		for (CardData cd:c3){
 			matrix_new[cd.y][cd.x] = cd;
 			notify_cds[p++] = cd;
+			player_put.put(cd.id, cd);
 		}
 		
 		for (CardData cd : c2){
