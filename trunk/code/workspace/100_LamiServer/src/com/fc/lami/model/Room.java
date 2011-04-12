@@ -60,6 +60,9 @@ public class Room implements Runnable{
 	public void onPlayerLeave(int pid){
 		Player player = player_list.remove(pid);
 		if (player!=null){
+			if (player.cur_desk !=null){
+				player.cur_desk.leavePlayer(player);
+			}
 			player.cur_room = null;
 			for (Player p : player_list.values()){
 				
