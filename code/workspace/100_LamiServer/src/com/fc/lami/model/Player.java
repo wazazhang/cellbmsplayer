@@ -25,6 +25,11 @@ public class Player {
 	public Room cur_room;
 	public Desk cur_desk;
 	
+	public int score = 0;
+	public int win = 0;
+	public int lose = 0;
+	public int level;
+	
 	/** 手中的牌 */
 	public HashMap<Integer, CardData> card_list;
 	
@@ -42,6 +47,10 @@ public class Player {
 		PlayerData pd = new PlayerData();
 		pd.player_id = this.player_id;
 		pd.name = this.name;
+		pd.level = this.level;
+		pd.score = this.score;
+		pd.win = this.win;
+		pd.lose = this.lose;
 		return pd;
 	}
 	
@@ -70,7 +79,9 @@ public class Player {
 		if (card_list == null){
 			card_list = new HashMap<Integer, CardData>();
 		}
-		card_list.put(c.id, c);
+		if (c!=null){
+			card_list.put(c.id, c);
+		}
 	}
 	
 	public int getHandCardPonit(){
@@ -86,6 +97,12 @@ public class Player {
 	}
 	
 	public ResultPak onPlayerWin(){
+		this.is_ready = false;
+		this.isOpenIce = false;
+		this.card_list.clear();
+		this.score += 10;
+		this.win+=1;
+		
 		ResultPak pak = new ResultPak();
 		pak.is_win = true;
 		pak.point = 10;
@@ -93,6 +110,12 @@ public class Player {
 	}
 	
 	public ResultPak onPlayerLose(){
+		this.is_ready = false;
+		this.isOpenIce = false;
+		this.card_list.clear();
+		this.score -= 5;
+		this.lose += 1;
+		
 		ResultPak pak = new ResultPak();
 		pak.is_win = false;
 		pak.point = -5;

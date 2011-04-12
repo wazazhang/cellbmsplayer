@@ -161,6 +161,7 @@ public class Desk
 				if (game.isGameOver()){
 					future.cancel(false);
 					System.out.println("desk "+desk_id +" game over");
+					game = null;
 				}
 			}else if (isAllPlayerReady()){
 				initing = true;

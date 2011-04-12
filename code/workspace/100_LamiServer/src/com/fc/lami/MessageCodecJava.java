@@ -801,10 +801,18 @@ public class MessageCodecJava implements MutualMessageCodec
 	private void _r(com.fc.lami.Messages.PlayerData msg, NetDataInput in) throws IOException {
 		msg.player_id = in.readInt();
 		msg.name = in.readUTF();
+		msg.score = in.readInt();
+		msg.win = in.readInt();
+		msg.lose = in.readInt();
+		msg.level = in.readInt();
 	}
 	private void _w(com.fc.lami.Messages.PlayerData msg, NetDataOutput out) throws IOException {
 		out.writeInt(msg.player_id);
 		out.writeUTF(msg.name);
+		out.writeInt(msg.score);
+		out.writeInt(msg.win);
+		out.writeInt(msg.lose);
+		out.writeInt(msg.level);
 	}
 
 //	----------------------------------------------------------------------------------------------------

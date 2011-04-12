@@ -103,6 +103,11 @@ public class Messages {
 		public String name;
 		//public PlayerData nextPlayer;
 		//public ClientSession session;
+		public int score;
+		public int win;
+		public int lose;
+		public int level;
+		
 		public PlayerData()
 		{
 			//this.session = session;
