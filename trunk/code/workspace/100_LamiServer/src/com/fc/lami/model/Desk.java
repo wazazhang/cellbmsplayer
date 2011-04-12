@@ -188,23 +188,29 @@ public class Desk
 	
 	public void leavePlayer(Player player){
 		
+		int seatid = -1;
 		if(player_E == player)
 		{
 			player_E = null;
+			seatid = 3;
 		}
 		else if(player_W == player)
 		{
 			player_W = null;
+			seatid = 1;
 		}
 		else if(player_S == player)
 		{
 			player_S = null;
+			seatid = 2;
 		}
 		else if(player_N == player)
 		{
 			player_N = null;
+			seatid = 0;
 		}
-		LeaveDeskNotify ntf = new LeaveDeskNotify(player.getPlayerData());
+
+		LeaveDeskNotify ntf = new LeaveDeskNotify(player.getPlayerData(),getDeskData(),seatid);
 		NotifyAll(ntf);
 	}
 	

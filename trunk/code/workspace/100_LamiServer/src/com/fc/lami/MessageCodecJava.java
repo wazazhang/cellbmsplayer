@@ -449,9 +449,13 @@ public class MessageCodecJava implements MutualMessageCodec
 	public com.fc.lami.Messages.EnterDeskNotify new_com_fc_lami_Messages_EnterDeskNotify(){return new com.fc.lami.Messages.EnterDeskNotify();}
 	private void _r(com.fc.lami.Messages.EnterDeskNotify msg, NetDataInput in) throws IOException {
 		msg.player = in.readExternal(com.fc.lami.Messages.PlayerData.class);
+		msg.desk = in.readExternal(com.fc.lami.Messages.DeskData.class);
+		msg.seatID = in.readInt();
 	}
 	private void _w(com.fc.lami.Messages.EnterDeskNotify msg, NetDataOutput out) throws IOException {
 		out.writeExternal(msg.player);
+		out.writeExternal(msg.desk);
+		out.writeInt(msg.seatID);
 	}
 
 //	----------------------------------------------------------------------------------------------------
@@ -627,9 +631,13 @@ public class MessageCodecJava implements MutualMessageCodec
 	public com.fc.lami.Messages.LeaveDeskNotify new_com_fc_lami_Messages_LeaveDeskNotify(){return new com.fc.lami.Messages.LeaveDeskNotify();}
 	private void _r(com.fc.lami.Messages.LeaveDeskNotify msg, NetDataInput in) throws IOException {
 		msg.player = in.readExternal(com.fc.lami.Messages.PlayerData.class);
+		msg.desk = in.readExternal(com.fc.lami.Messages.DeskData.class);
+		msg.seatID = in.readInt();
 	}
 	private void _w(com.fc.lami.Messages.LeaveDeskNotify msg, NetDataOutput out) throws IOException {
 		out.writeExternal(msg.player);
+		out.writeExternal(msg.desk);
+		out.writeInt(msg.seatID);
 	}
 
 //	----------------------------------------------------------------------------------------------------
@@ -637,8 +645,14 @@ public class MessageCodecJava implements MutualMessageCodec
 //	----------------------------------------------------------------------------------------------------
 	public com.fc.lami.Messages.LeaveDeskRequest new_com_fc_lami_Messages_LeaveDeskRequest(){return new com.fc.lami.Messages.LeaveDeskRequest();}
 	private void _r(com.fc.lami.Messages.LeaveDeskRequest msg, NetDataInput in) throws IOException {
+		msg.player = in.readExternal(com.fc.lami.Messages.PlayerData.class);
+		msg.desk = in.readExternal(com.fc.lami.Messages.DeskData.class);
+		msg.seatID = in.readInt();
 	}
 	private void _w(com.fc.lami.Messages.LeaveDeskRequest msg, NetDataOutput out) throws IOException {
+		out.writeExternal(msg.player);
+		out.writeExternal(msg.desk);
+		out.writeInt(msg.seatID);
 	}
 
 //	----------------------------------------------------------------------------------------------------
