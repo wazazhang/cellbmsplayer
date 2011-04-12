@@ -6,6 +6,7 @@ import java.util.HashMap;
 import com.fc.lami.Messages.CardData;
 import com.fc.lami.Messages.PlayerData;
 import com.fc.lami.Messages.ResultPak;
+import com.fc.lami.login.User;
 import com.net.server.ClientSession;
 
 /**
@@ -13,12 +14,12 @@ import com.net.server.ClientSession;
  * @author yagami0079
  *
  */
-public class Player {
+public class Player implements User{
 	public int player_id;
 	
 	public String name;
 	
-	public boolean is_ready;
+	public boolean is_ready = false;
 	
 	public ClientSession session;
 	
@@ -34,7 +35,11 @@ public class Player {
 	public HashMap<Integer, CardData> card_list;
 	
 	/** 是否破冰 */
-	public boolean isOpenIce;
+	public boolean isOpenIce = false;
+	
+	public Player(){
+
+	}
 	
 	public Player(ClientSession session, String name, int id){
 		this.session = session;
@@ -120,5 +125,34 @@ public class Player {
 		pak.is_win = false;
 		pak.point = -5;
 		return pak;
+	}
+
+	@Override
+	public int getPoint() {
+		// TODO Auto-generated method stub
+		return score;
+	}
+
+	@Override
+	public int addPoint(int value) throws Exception {
+		score += value;
+		return score;
+	}
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public byte getSex() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public byte[] getHeadImageData() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -6,7 +6,7 @@ public interface User
 	
 	public int		addPoint(int value) throws Exception;
 
-	public int		getName();
+	public String	getName();
 	
 	public byte 	getSex();
 	
