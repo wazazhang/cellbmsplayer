@@ -80,21 +80,13 @@
 				}
 				return null;
 			}
-			
-			
 		]]>
 	</mx:Script>
 	
-	<mx:Canvas id="desks"  width="650" height="500" >
-		
+	<mx:Canvas id="desks"  width="650" height="500" >	
 	</mx:Canvas>
 	
-
 	<mx:TextArea id="info" x="658" y="43" height="361"/>
 	<mx:LinkButton x="658" y="11" label="退出房间" fontSize="12"/>
-	
-	
-	
-	
 	
 </mx:Canvas>
