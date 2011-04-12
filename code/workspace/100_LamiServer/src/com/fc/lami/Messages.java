@@ -747,13 +747,14 @@ public class Messages {
 	public static class EnterDeskNotify extends FlashMessage
 	{
 		public PlayerData player;
-		
-		public EnterDeskNotify(PlayerData pd){
+		public DeskData desk;
+		public int seatID;
+		public EnterDeskNotify(PlayerData pd,DeskData desk,int seatid){
 			this.player = pd;
+			this.desk =desk;
+			seatID = seatid;
 		}
-		
 		public EnterDeskNotify(){}
-		
 		@Override
 		public String toString() {
 			return "EnterDeskNotify";

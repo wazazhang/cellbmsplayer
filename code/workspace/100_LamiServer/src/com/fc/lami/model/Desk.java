@@ -66,22 +66,22 @@ public class Desk
 			return false;
 		}
 		player_N = player;
-		onPlayerEnter(player);
+		//onPlayerEnter(player);
 		return true;
 	}
 	
 	private void onPlayerEnter(Player player){
 		if (player_E!=null){
-			player_E.session.send(new EnterDeskNotify(player.getPlayerData()));
+			player_E.session.send(new EnterDeskNotify(player.getPlayerData(),getDeskData(),3));
 		}
 		if (player_W!=null){
-			player_W.session.send(new EnterDeskNotify(player.getPlayerData()));
+			player_W.session.send(new EnterDeskNotify(player.getPlayerData(),getDeskData(),1));
 		}
 		if (player_S!=null){
-			player_S.session.send(new EnterDeskNotify(player.getPlayerData()));
+			player_S.session.send(new EnterDeskNotify(player.getPlayerData(),getDeskData(),2));
 		}
 		if (player_N!=null){
-			player_N.session.send(new EnterDeskNotify(player.getPlayerData()));
+			player_N.session.send(new EnterDeskNotify(player.getPlayerData(),getDeskData(),0));
 		}
 	}
 	

@@ -112,8 +112,7 @@ public class Server extends ServerImpl implements ServerListener
 						EnterRoomResponse res = new EnterRoomResponse(EnterRoomResponse.ENTER_ROOM_RESULT_SUCCESS);
 						res.room = r.getRoomData();
 						session.sendResponse(protocol, res);
-						
-						session.sendResponse(protocol, new EnterRoomResponse(EnterRoomResponse.ENTER_ROOM_RESULT_SUCCESS));
+						//session.sendResponse(protocol, new EnterRoomResponse(EnterRoomResponse.ENTER_ROOM_RESULT_SUCCESS));
 					}else{
 						session.sendResponse(protocol, new EnterRoomResponse(EnterRoomResponse.ENTER_ROOM_RESULT_FAIL_ROOM_FULL));
 					}
@@ -135,6 +134,7 @@ public class Server extends ServerImpl implements ServerListener
 				if (player.cur_room!=null){
 					Desk d = player.cur_room.desks[request.desk_No];
 					boolean result = false;
+					
 					switch (request.seat){
 					case 0:
 						result = d.setPlayerN(player);
@@ -151,6 +151,8 @@ public class Server extends ServerImpl implements ServerListener
 					}
 					if (result){
 						player.cur_desk = d;
+						EnterDeskNotify edn = new EnterDeskNotify(player.getPlayerData(),player.cur_desk.getDeskData(),request.seat);
+						player.cur_room.notifyAll(edn);
 						session.sendResponse(protocol, new EnterDeskResponse(EnterDeskResponse.ENTER_DESK_RESULT_SUCCESS,d.getDeskData()));
 					}else{
 						session.sendResponse(protocol, new EnterDeskResponse(EnterDeskResponse.ENTER_DESK_RESULT_FAIL_PLAYER_EXIST,null));
@@ -166,8 +168,6 @@ public class Server extends ServerImpl implements ServerListener
 				player.cur_desk.leavePlayer(player);
 				session.sendResponse(protocol, new LeaveDeskResponse());
 			}
-			
-			
 			else if (message instanceof ReadyRequest){
 				ReadyRequest req = (ReadyRequest)message;
 				if (player.cur_desk!=null){
