@@ -159,7 +159,7 @@
 		<mx:ProgressBar id="optbar" height="10" width="364" label="" mode="manual" labelPlacement="center" x="0" y="36"/>
 	</ns1:UserMatrix_Cpt>
 	
-	<ns1:Opt_Cpt height="177" y="411" x="704">
+	<ns1:Opt_Cpt id="optCpt" height="177" y="411" x="704">
 	</ns1:Opt_Cpt>
 	
 	<mx:Label x="268" y="556" text="{Game.gamer.handCard.length}" color="#FDFDFD"/>
