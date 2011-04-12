@@ -1,6 +1,7 @@
 package Class.Model
 {
 	import Class.Game;
+	import Class.Server;
 	import Class.TimesCtr;
 	
 	import Component.Card_Cpt;
@@ -12,6 +13,7 @@ package Class.Model
 	import mx.controls.Alert;
 	import mx.effects.Move;
 	import mx.events.EffectEvent;
+
 	[Bindable]
 	public class Player
 	{
@@ -240,6 +242,7 @@ package Class.Model
 				}
 				while(cardctp != null);
 			}
+			Server.sendPublicMatrix();
 			Game.reset();
 			Game.check();
 		}

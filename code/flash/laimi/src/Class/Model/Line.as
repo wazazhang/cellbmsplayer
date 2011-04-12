@@ -32,7 +32,10 @@ package Class.Model
 				buff.nextCardCpt.isPlayerOwner = isplayer;
 				buff = buff.nextCardCpt;	
 			}
-			lastCard = buff;	
+			lastCard = buff;
+			lastCard.cardX = lineLength;
+			lastCard.cardY = y;
+			
 		}
 		
 		public function set lastCard(card:Card_Cpt):void
