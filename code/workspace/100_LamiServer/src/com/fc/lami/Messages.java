@@ -773,6 +773,15 @@ public class Messages {
 	/** 离开桌子 */
 	public static class LeaveDeskRequest extends FlashMessage
 	{
+		public PlayerData player;
+		public DeskData desk;
+		public int seatID;
+		
+		public LeaveDeskRequest(PlayerData pd,DeskData desk,int seatid){
+			this.player = pd;
+			this.desk =desk;
+			seatID = seatid;
+		}
 		public LeaveDeskRequest(){}
 		
 		@Override
@@ -803,9 +812,13 @@ public class Messages {
 	public static class LeaveDeskNotify extends FlashMessage
 	{
 		public PlayerData player;
+		public DeskData desk;
+		public int seatID;
 		
-		public LeaveDeskNotify(PlayerData pd){
+		public LeaveDeskNotify(PlayerData pd,DeskData desk,int seatid){
 			this.player = pd;
+			this.desk =desk;
+			seatID = seatid;
 		}
 		
 		public LeaveDeskNotify(){}
