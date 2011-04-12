@@ -108,12 +108,11 @@
 				}
 				return "false";
 			}
-			
-			
+		    			
 			//有人员进入
 			public function enterPlayer(nt:EnterDeskNotify):void
 			{
-				if(nt.desk.desk_id!=desk.desk_id)
+				if(desk ==null || nt.desk.desk_id!=desk.desk_id)
 					return
 
 				setPlayerIDbySeatID(nt.seatID,nt.player.player_id);	

@@ -11,6 +11,7 @@
 		<![CDATA[
 			import Class.Game;
 			import Class.Model.Card;
+			import Class.Server;
 			import Class.TimesCtr;
 			
 			import mx.controls.Alert;
@@ -152,6 +153,7 @@
 				}
 			}
 			
+			
 			public function click():void
 			{
 				if(!Game.gamer.canOpearation)
@@ -184,11 +186,13 @@
 				}
 				
 			}
+			
+			//选择
 			private function selectCard():void
 			{
+				//放下选择的队列
 				if(Game.gamer.selectedArrayCard!=null)
 				{
-					
 					//验证
 					for each(var curcard:Card in Game.gamer.selectedArrayCard)
 					{
@@ -202,9 +206,13 @@
 					}
 					Game.gamer.selectedArrayCard = null;
 					Game.check();
+					if(Game.gamer.isMyturn)
+					{
+						Server.sendPublicMatrix();
+					}
 					return;
 				}	
-				
+				//选择新的
 				if(Game.gamer.selectedCard==null)
 				{
 					if(card==null)
@@ -212,25 +220,26 @@
 					Game.gamer.selectedCard = card;
 					isSelected = true;
 				}
+				//放下
 				else
 				{
-					
 					isSelected = false;
-					
 					/*
 					var buffcard:Card = Game.gamer.selectedCard;
 					Game.gamer.selectedCard = card;
 					card = buffcard;
 					*/
-					
 					card = Game.gamer.selectedCard;
-					
 					Game.check();
+					if(Game.gamer.isMyturn)
+					{
+						Server.sendPublicMatrix();
+					}
 					Game.gamer.selectedCard = null;
 				}
 			}
 			
-			
+			//选择队列
 			private function selectArrayCard():void
 			{
 				if(Game.gamer.selectedCard!=null)
