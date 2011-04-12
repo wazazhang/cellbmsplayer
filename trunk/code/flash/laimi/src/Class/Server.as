@@ -139,6 +139,7 @@ package Class
 			
 			else if (ntf is LeaveDeskNotify){
 				var ldn : LeaveDeskNotify = ntf as LeaveDeskNotify;
+				room_cpt.leaveDesk(ldn);
 				game_cpt.leavePlayer(ldn);
 				
 			}
