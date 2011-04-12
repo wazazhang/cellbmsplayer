@@ -70,9 +70,12 @@ package Class
 			Game.app.addEventListener(KeyboardEvent.KEY_UP,keyup);
 		}
 		
-		public static function start():void
+		public static function start(startCards:ArrayCollection):void
 		{
-			//gamer.getStartCard();
+			
+			gamer.getStartCard(startCards);
+			app.optCpt.Start(); 
+			
 		}
 		
 		//初始矩阵
@@ -195,9 +198,10 @@ package Class
 					
 					for each(var carddata:CardData in cards)
 					{
-						if(cardcpt.x == carddata.x&&cardcpt.y == carddata.y)
+						if(cardcpt.cardX == carddata.x&&cardcpt.cardY == carddata.y)
 						{
 							cardcpt.card = Card.createCardByData(carddata);
+							break;
 						}
 						else
 						{
@@ -284,12 +288,14 @@ package Class
 		public static function turnStart():void
 		{
 			gamer.canOpearation = true;
+			gamer.isMyturn = true;
 			TimesCtr.start();
 		}
 		
 		public static function turnOver():void
 		{
 			gamer.canOpearation = false;
+			gamer.isMyturn = false;
 			TimesCtr.stop();
 		}
 		

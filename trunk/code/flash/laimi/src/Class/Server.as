@@ -117,9 +117,11 @@ package Class
 				var gsn : GameStartNotify = ntf as GameStartNotify;
 				var cards2 : ArrayCollection = new ArrayCollection();
 				for each(var cd2:CardData in gsn.cards){
-					cards2.addItem(new Card(cd2.point, cd2.type, cd2.id));
+					cards2.addItem(Card.createCardByData(cd2) );
 				}
-				Game.gamer.getStartCard(cards2);
+				
+				
+				Game.start(cards2);
 //				Alert.show("notify : GameStartNotify");
 			}
 			
@@ -148,6 +150,7 @@ package Class
 			}
 			
 			else if (ntf is MainMatrixChangeNotify ){
+				//Alert.show('有住区改变来');
 				var mmcn : MainMatrixChangeNotify = ntf as MainMatrixChangeNotify;
 				Game.publicCardChange(mmcn.cards);
 				//game_cpt.leavePlayer(ldn);
@@ -168,6 +171,7 @@ package Class
 				//TODO 轮到自己行动
 
 				Game.turnStart();
+				
 				//Alert.show("轮到行动");
 			}
 			else if (ntf is TurnEndNotify){
