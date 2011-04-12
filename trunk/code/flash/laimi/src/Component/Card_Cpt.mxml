@@ -206,10 +206,12 @@
 					}
 					Game.gamer.selectedArrayCard = null;
 					Game.check();
+					
 					if(Game.gamer.isMyturn)
 					{
 						Server.sendPublicMatrix();
 					}
+					
 					return;
 				}	
 				//选择新的
@@ -231,6 +233,7 @@
 					*/
 					card = Game.gamer.selectedCard;
 					Game.check();
+					//Alert.show(Game.gamer.isMyturn.toString());
 					if(Game.gamer.isMyturn)
 					{
 						Server.sendPublicMatrix();
@@ -324,4 +327,5 @@
 	
 	<mx:Label text="{confimcard==null?'':confimcard.point}" color="0x000000" visible="{isShow is Card_Cpt}"
 			  horizontalCenter="0" verticalCenter="10" width="100%" textAlign="center" fontWeight="bold" fontSize="8"/>
+	
 </mx:Canvas>
