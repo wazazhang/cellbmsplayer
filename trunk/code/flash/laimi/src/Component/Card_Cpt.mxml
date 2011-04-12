@@ -32,6 +32,8 @@
 			public var cardX:int;
 			public var cardY:int;
 			
+			
+			
 			[Bindable]
 			public var isShow:Boolean = true;
 			
