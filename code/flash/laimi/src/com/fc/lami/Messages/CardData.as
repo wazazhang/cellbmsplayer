@@ -27,25 +27,31 @@ package com.fc.lami.Messages
 		/** Java type is : <font color=#0000ff>int</font> */
 		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
 		public var y :  int;
+		/** Java type is : <font color=#0000ff>boolean</font> */
+		[JavaType(name="boolean", leaf_type=NetDataTypes.TYPE_BOOLEAN)]
+		public var isSended :  Boolean;
 
 		/**
 		 * @param id as <font color=#0000ff>int</font>
 		 * @param point as <font color=#0000ff>int</font>
 		 * @param type as <font color=#0000ff>int</font>
 		 * @param x as <font color=#0000ff>int</font>
-		 * @param y as <font color=#0000ff>int</font>		 */
+		 * @param y as <font color=#0000ff>int</font>
+		 * @param isSended as <font color=#0000ff>boolean</font>		 */
 		public function CardData(
 			id :  int = 0,
 			point :  int = 0,
 			type :  int = 0,
 			x :  int = 0,
-			y :  int = 0) 
+			y :  int = 0,
+			isSended :  Boolean = false) 
 		{
 			this.id = id;
 			this.point = point;
 			this.type = type;
 			this.x = x;
 			this.y = y;
+			this.isSended = isSended;
 		}
 	}
 }
