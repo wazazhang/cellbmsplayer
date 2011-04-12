@@ -40,6 +40,20 @@ package Class.Model
 			else(type==0)
 				return 0xffffff;			
 		}
-	
+		
+		public function get x():int
+		{
+			if(cardUI==null)
+				return 0;
+			
+			return cardUI.cardX;
+		}
+		public function get y():int
+		{
+			if(cardUI==null)
+				return 0;
+			
+			return cardUI.cardY;
+		}
 	}
 }

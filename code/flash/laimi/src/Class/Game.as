@@ -79,7 +79,7 @@ package Class
 			var curline:Line;
 			for(var i:int=0;i<lineCount;i++)
 			{			
-				var line:Line = new Line(20,false);
+				var line:Line = new Line(20,false,i+1);
 				
 				if(curline != null)
 				{
@@ -254,7 +254,7 @@ package Class
 		
 		public static function addGameInfo(str:String):void
 		{
-			app.gameinfo.text = str + app.gameinfo.text + "\n";
+			app.gameinfo.text = str + "\n"+ app.gameinfo.text  ;
 		}
 	}
 }

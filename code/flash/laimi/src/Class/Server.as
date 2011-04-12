@@ -8,6 +8,7 @@ package Class
 	
 	import com.fc.lami.LamiClient;
 	import com.fc.lami.Messages.CardData;
+	import com.fc.lami.Messages.DeskData;
 	import com.fc.lami.Messages.EchoNotify;
 	import com.fc.lami.Messages.EchoRequest;
 	import com.fc.lami.Messages.EchoResponse;
@@ -119,26 +120,32 @@ package Class
 				Game.gamer.getStartCard(cards2);
 				Alert.show("notify : GameStartNotify");
 			}
+			
+			
 			else if (ntf is EnterRoomNotify){
 				var ern : EnterRoomNotify = ntf as EnterRoomNotify;
-				room_cpt.addRoomInfo("玩家"+ern.player.name+"进入房间")
+				room_cpt.addRoomInfo(ern.player.name+"进入房间")
 			}
+			
 			else if (ntf is ExitRoomNotify){
 				var exrn : ExitRoomNotify = ntf as ExitRoomNotify;
-				room_cpt.addRoomInfo("玩家"+exrn.player.name+"离开房间")
+				room_cpt.addRoomInfo(exrn.player.name+"离开房间")
 			}
+			
 			else if (ntf is EnterDeskNotify){
 				var edn : EnterDeskNotify = ntf as EnterDeskNotify;
-				game_cpt.addPlayer(edn.player);
+				room_cpt.enterDesk(edn);
+				game_cpt.enterPlayer(edn);
 			}
+			
 			else if (ntf is LeaveDeskNotify){
 				var ldn : LeaveDeskNotify = ntf as LeaveDeskNotify;
-				game_cpt.leavePlayer(ldn.player);
+				game_cpt.leavePlayer(ldn);
 				
 			}
+			
 			else if (ntf is ReadyNotify){
 				var rn : ReadyNotify = ntf as ReadyNotify;
-				
 				if(rn.isReady)
 				{
 					game_cpt.addInfo("玩家"+rn.player_id+"准备好了");
@@ -225,14 +232,12 @@ package Class
 			else if (res is GetCardResponse){
 				
 			}
-			
 			else if (res is LeaveDeskResponse){
 				room_cpt.visible = true;
 				//game_cpt.visible = true;
 			}
 			
 			/*
-			
 			if (event.getResponse() is EchoResponse) {
 				var response1 : EchoResponse = event.getResponse() as EchoResponse;
 				
@@ -256,7 +261,6 @@ package Class
 					txt_messages.text = txt_messages.text + "房间已满" + "\n";
 				}	
 			}
-			
 			*/
 		}
 		
@@ -272,9 +276,9 @@ package Class
 			client.sendRequest(new EnterDeskRequest(deskid,seat),client_response);
 		}
 		
-		public static function leaveDesk():void
+		public static function leaveDesk(desk:DeskData,seatID:int):void
 		{
-			client.sendRequest(new LeaveDeskRequest(),client_response);
+			client.sendRequest(new LeaveDeskRequest(player,desk,seatID),client_response);
 		}
 		
 		
@@ -311,7 +315,6 @@ package Class
 			Game.gamer.getStartCard(startCard);
 		}
 		
-		
 		//连接服务器
 		public static function linkToServer(name:String):void
 		{
@@ -321,7 +324,5 @@ package Class
 				client.connect('127.0.0.1', 19821);
 			}
 		}
-		
-		
 	}
 }
