@@ -5,6 +5,7 @@ import java.util.HashMap;
 import com.cell.util.concurrent.ThreadPool;
 import com.fc.lami.LamiConfig;
 import com.fc.lami.Messages.*;
+import com.net.flash.message.FlashMessage;
 
 
 public class Room implements Runnable{
@@ -33,16 +34,28 @@ public class Room implements Runnable{
 	}
 
 	public boolean onPlayerEnter(Player player){
+		
 		if (player_list.size()>=LamiConfig.PLAYER_NUMBER_MAX){
 			return false;
 		}
+		
 		player_list.put(player.player_id, player);
 		player.cur_room = this;
+		
 		for (Player p : player_list.values()){
 			p.session.send(new EnterRoomNotify(player.getPlayerData()));
 		}
+		
 		return true;
 	}
+	
+	public void notifyAll(FlashMessage msg)
+	{
+		for (Player p : player_list.values()){
+			p.session.send(msg);
+		}
+	}
+	
 	
 	public void onPlayerLeave(int pid){
 		Player player = player_list.remove(pid);
