@@ -116,7 +116,6 @@ package Class.Model
 			
 			var line:Line = cardLines[0];
 			var cardcpt:Card_Cpt = line.firstCard;
-			
 			var precard:Card;
 			
 			for each(var card:Card in handCard)
@@ -409,6 +408,7 @@ package Class.Model
 			{
 				addCardMotion(card.nextCard);
 			}
+			
 			/*
 			else
 			{
@@ -421,6 +421,7 @@ package Class.Model
 				TimesCtr.start();
 			}
 			*/
+			
 		}
 		
 		public function myTurnStart():void
