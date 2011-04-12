@@ -211,7 +211,8 @@ public class Desk
 		}
 
 		LeaveDeskNotify ntf = new LeaveDeskNotify(player.getPlayerData(),getDeskData(),seatid);
-		NotifyAll(ntf);
+		player.cur_room.notifyAll(ntf);
+		//NotifyAll(ntf);
 	}
 	
 	//通知桌子的人
