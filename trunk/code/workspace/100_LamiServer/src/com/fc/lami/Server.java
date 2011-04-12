@@ -234,6 +234,7 @@ public class Server extends ServerImpl implements ServerListener
 					}
 				}
 			}
+			
 			else if (message instanceof SynchronizeRequest){
 				Game game = player.getGame();
 				if (game!=null){
