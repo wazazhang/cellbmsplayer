@@ -6,11 +6,11 @@ package com.fc.lami.Messages
 
 
 	/**
-	 * Java Class [50] [com.fc.lami.Messages.SendCardResponse]<br>
+	 * Java Class [31] [com.fc.lami.Messages.MainMatrixChangeResponse]<br>
 	 * 此代码为自动生成。不需要在此修改。若有错误，请修改代码生成器。
 	 */
 	[Bindable]
-	public class SendCardResponse extends Message
+	public class MainMatrixChangeResponse extends Message
 	{
 		/** Java type is : <font color=#0000ff>int</font> */
 		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
@@ -18,7 +18,7 @@ package com.fc.lami.Messages
 
 		/**
 		 * @param result as <font color=#0000ff>int</font>		 */
-		public function SendCardResponse(
+		public function MainMatrixChangeResponse(
 			result :  int = 0) 
 		{
 			this.result = result;
