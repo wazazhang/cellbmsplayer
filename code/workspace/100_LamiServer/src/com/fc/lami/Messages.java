@@ -695,6 +695,8 @@ public class Messages {
 	public static class ExitRoomNotify extends FlashMessage
 	{
 		public PlayerData player;
+		public RoomData curRoom;
+		public DeskData curDesk;
 		
 		public ExitRoomNotify(PlayerData pd){
 			this.player = pd;
