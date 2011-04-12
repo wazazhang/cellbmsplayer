@@ -49,16 +49,16 @@ public class Server extends ServerImpl implements ServerListener
 		return c;
 	}
 	
-	class EchoClientSession implements ClientSessionListener, Runnable
+	class EchoClientSession implements ClientSessionListener
 	{
 		ClientSession session;
-		ScheduledFuture<?> task;
+//		ScheduledFuture<?> task;
 		
 		Player player;
 		public EchoClientSession(ClientSession session) {
 			this.session = session;
-			// 每10秒向客户端发送个消息
-			this.task = services.scheduleAtFixedRate(this, 1000, 10000);
+//			// 每10秒向客户端发送个消息
+//			this.task = services.scheduleAtFixedRate(this, 1000, 10000);
 		}
 		@Override
 		public void disconnected(ClientSession session) {
@@ -70,7 +70,7 @@ public class Server extends ServerImpl implements ServerListener
 				
 			}
 			client_list.remove(this);
-			this.task.cancel(false);
+//			this.task.cancel(false);
 		}
 		@Override
 		public void sentMessage(ClientSession session, Protocol protocol, MessageHeader message) {}
@@ -246,9 +246,6 @@ public class Server extends ServerImpl implements ServerListener
 			}
 			
 			System.out.println(message.toString());
-		}
-		public void run() {
-			
 		}
 	}
 	
