@@ -1,7 +1,6 @@
 package com.fc.lami;
 
 import java.io.IOException;
-import java.rmi.dgc.Lease;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.ScheduledFuture;
@@ -97,7 +96,6 @@ public class Server extends ServerImpl implements ServerListener
 					res.rooms[i] = rooms[i].getRoomData();
 				}
 				session.sendResponse(protocol, res);
-				
 			}
 			//退出请求
 			else if (message instanceof LogoutRequest){
@@ -149,6 +147,7 @@ public class Server extends ServerImpl implements ServerListener
 						result = d.setPlayerE(player);
 						break;
 					}
+					
 					if (result){
 						player.cur_desk = d;
 						EnterDeskNotify edn = new EnterDeskNotify(player.getPlayerData(),player.cur_desk.getDeskData(),request.seat);
@@ -223,6 +222,25 @@ public class Server extends ServerImpl implements ServerListener
 					}
 				}
 			}
+			/** 客户端发出桌面牌改变的请求  */
+			else if (message instanceof MainMatrixChangeRequest){
+				MainMatrixChangeRequest req = (MainMatrixChangeRequest)message;
+				Game game = player.getGame();
+				if (game!=null && game.getCurPlayer() == player){
+					if (game.MainMatrixChange(req.cards)){
+						session.sendResponse(protocol, new MainMatrixChangeResponse(MainMatrixChangeResponse.MAIN_MATRIX_CHANGE_RESULT_SUCCESS));
+					}else{
+						session.sendResponse(protocol, new MainMatrixChangeResponse(MainMatrixChangeResponse.MAIN_MATRIX_CHANGE_RESULT_FAIL));
+					}
+				}
+			}
+			else if (message instanceof SynchronizeRequest){
+				Game game = player.getGame();
+				if (game!=null){
+					session.sendResponse(protocol, game.SynchronizePlayerCard(player.player_id));
+				}
+			}
+			
 			System.out.println(message.toString());
 		}
 		public void run() {

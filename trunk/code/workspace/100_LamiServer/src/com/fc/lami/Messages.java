@@ -132,6 +132,15 @@ public class Messages {
 		}
 	}
 	
+	/** 比赛结果包 */
+	public static class ResultPak extends FlashMessage
+	{
+		public int point;
+		public boolean is_win;
+		
+		public ResultPak(){}
+	}
+	
 	public static class GetTimeResponse extends FlashMessage
 	{
 		public String time;
@@ -827,7 +836,33 @@ public class Messages {
 		}
 	}
 	
-	//主信息框变化广播
+	/** 游戏结束通知 */
+	public static class GameOverNotify extends FlashMessage
+	{
+		/** 游戏结束方式     有人出完牌 */
+		final static public int GAME_OVER_TYPE_CLEAR = 0;
+		/** 游戏结束方式     牌堆的牌摸空了 */
+		final static public int GAME_OVER_TYPE_CARD_OVER = 1;
+		/** 游戏结束方式    有人逃跑了（断线也算） */
+		final static public int GAME_OVER_TYPE_ESCAPE = 2;
+		/** 游戏结束方式 */
+		public int game_over_type;
+		
+		public ResultPak[] result_pak;
+		
+		public GameOverNotify(int type, ResultPak[] pak){
+			this.game_over_type = type;
+			this.result_pak = pak;
+		}
+		
+		public GameOverNotify(){}
+		@Override
+		public String toString() {
+			return "GameOverNotify";
+		}
+	}
+	
+		//主信息框变化广播
 	public static class MainMatrixChangeNotify extends FlashMessage
 	{
 		public CardData[] cards;
@@ -853,6 +888,61 @@ public class Messages {
 		@Override
 		public String toString() {
 			return "MainMatrixChangeRequest";
+		}
+	}
+	
+	public static class MainMatrixChangeResponse extends FlashMessage
+	{
+		final static public int MAIN_MATRIX_CHANGE_RESULT_SUCCESS = 0;
+		final static public int MAIN_MATRIX_CHANGE_RESULT_FAIL = 1;
+		
+		public int result;
+		
+		public MainMatrixChangeResponse(int result){
+			this.result = result;
+		}
+		
+		public MainMatrixChangeResponse(){
+		}
+		@Override
+		public String toString() {
+			return "MainMatrixChangeResponse";
+		}
+	}
+	
+	public static class SynchronizeRequest extends FlashMessage
+	{
+//		public int player_id;
+//		
+//		public SynchronizeRequest(int player_id){
+//			this.player_id = player_id;
+//		}
+		
+		public SynchronizeRequest(){}
+		
+		@Override
+		public String toString() {
+			return "SynchronizeRequest";
+		}
+	}
+	
+	public static class SynchronizeResponse extends FlashMessage
+	{
+		public CardData[] matrix;	//桌子上的牌
+		public CardData[] player_card; //玩家的手牌
+		public int left_card;	//牌堆的剩余牌数
+		
+		public SynchronizeResponse(CardData[] m, CardData[] p, int left){
+			this.matrix = m;
+			this.player_card = p;
+			this.left_card = left;
+		}
+		
+		public SynchronizeResponse(){}
+		
+		@Override
+		public String toString() {
+			return "SynchronizeResponse";
 		}
 	}
 	
