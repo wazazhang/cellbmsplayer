@@ -62,9 +62,12 @@ public class Server extends ServerImpl implements ServerListener
 		}
 		@Override
 		public void disconnected(ClientSession session) {
+			
 			log.info("disconnected " + session.getRemoteAddress());
 			if (player.cur_room!=null){
+				
 				player.cur_room.onPlayerLeave(player.player_id);
+				
 			}
 			client_list.remove(this);
 			this.task.cancel(false);
