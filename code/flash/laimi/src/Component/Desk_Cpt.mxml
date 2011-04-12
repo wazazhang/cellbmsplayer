@@ -16,8 +16,6 @@
 		    
 			public var room:RoomData;
 			
-			
-			
 			private function enter0():void
 			{
 				Server.enterDesk(desk.desk_id,0)
@@ -35,17 +33,30 @@
 				Server.enterDesk(desk.desk_id,3)
 			}
 			
-			
+			//进入一个人
 			public function enterPlayer(playerid:int,seatid:int):void
 			{
 				switch(seatid)
 				{
-					case 0:desk.player_N_id = playerid;
-					case 1:desk.player_W_id = playerid;
-					case 2:desk.player_S_id = playerid;
-					case 3:desk.player_E_id = playerid;
+					case 0:desk.player_N_id = playerid;break;
+					case 1:desk.player_W_id = playerid;break;
+					case 2:desk.player_S_id = playerid;break;
+					case 3:desk.player_E_id = playerid;break;
 				}
 			}
+			
+			//退出一个
+			public function leavePlayer(seatid:int):void
+			{
+				switch(seatid)
+				{
+					case 0:desk.player_N_id = -1;break;
+					case 1:desk.player_W_id = -1;break;
+					case 2:desk.player_S_id = -1;break;
+					case 3:desk.player_E_id = -1;break;
+				}
+			}
+			
 			
 			public function start():void
 			{
