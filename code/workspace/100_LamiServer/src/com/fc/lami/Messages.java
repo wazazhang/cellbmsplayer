@@ -118,10 +118,10 @@ public class Messages {
 		public int point;
 		/** 颜色 */
 		public int type;
-		
 		public int x;
-		
 		public int y;
+		
+		public boolean isSended; //是否已经打出
 		
 		public CardData(){
 		}

@@ -369,6 +369,7 @@ public class MessageCodecJava implements MutualMessageCodec
 		msg.type = in.readInt();
 		msg.x = in.readInt();
 		msg.y = in.readInt();
+		msg.isSended = in.readBoolean();
 	}
 	private void _w(com.fc.lami.Messages.CardData msg, NetDataOutput out) throws IOException {
 		out.writeInt(msg.id);
@@ -376,6 +377,7 @@ public class MessageCodecJava implements MutualMessageCodec
 		out.writeInt(msg.type);
 		out.writeInt(msg.x);
 		out.writeInt(msg.y);
+		out.writeBoolean(msg.isSended);
 	}
 
 //	----------------------------------------------------------------------------------------------------
