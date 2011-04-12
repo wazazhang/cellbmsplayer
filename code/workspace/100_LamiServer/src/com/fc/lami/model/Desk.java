@@ -66,7 +66,7 @@ public class Desk
 			return false;
 		}
 		player_N = player;
-		//onPlayerEnter(player);
+		onPlayerEnter(player);
 		return true;
 	}
 	
@@ -209,7 +209,7 @@ public class Desk
 	}
 	
 	//通知桌子的人
-	private void NotifyAll(FlashMessage msg)
+	public  void NotifyAll(FlashMessage msg)
 	{
 		if (player_E!=null){
 			player_E.session.send(msg);
@@ -223,13 +223,14 @@ public class Desk
 		if (player_N!=null){
 			player_N.session.send(msg);
 		}
+		// TODO 此处要添加发送给体旁观者的信息
 	}
 	
-	//通知本桌子的出牌区的变化
-	public void NotifyMatrixChange(MainMatrixChangeRequest res)
-	{
-		MainMatrixChangeNotify ntf = new MainMatrixChangeNotify(res.cards);
-		NotifyAll(ntf);
-	}
+//	//通知本桌子的出牌区的变化
+//	public void NotifyMatrixChange(MainMatrixChangeRequest res)
+//	{
+//		MainMatrixChangeNotify ntf = new MainMatrixChangeNotify(res.cards);
+//		NotifyAll(ntf);
+//	}
 	
 }

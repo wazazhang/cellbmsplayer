@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import com.fc.lami.Messages.CardData;
 import com.fc.lami.Messages.PlayerData;
+import com.fc.lami.Messages.ResultPak;
 import com.net.server.ClientSession;
 
 /**
@@ -70,5 +71,31 @@ public class Player {
 			card_list = new HashMap<Integer, CardData>();
 		}
 		card_list.put(c.id, c);
+	}
+	
+	public int getHandCardPonit(){
+		int point = 0;
+		for (CardData cd:card_list.values()){
+			if (cd.point == 0){
+				point += 30;
+			}else{
+				point += cd.point;
+			}
+		}
+		return point;
+	}
+	
+	public ResultPak onPlayerWin(){
+		ResultPak pak = new ResultPak();
+		pak.is_win = true;
+		pak.point = 10;
+		return pak;
+	}
+	
+	public ResultPak onPlayerLose(){
+		ResultPak pak = new ResultPak();
+		pak.is_win = false;
+		pak.point = -5;
+		return pak;
 	}
 }

@@ -80,8 +80,13 @@ public class Game implements Runnable
 	}
 	
 	public CardData getCardFromCard(){
-		int n = CUtil.getRandom(0, left_cards.size());
-		return left_cards.remove(n);
+		if (left_cards.size()==0){
+			onGameOver();
+			return null;
+		}else{
+			int n = CUtil.getRandom(0, left_cards.size());
+			return left_cards.remove(n);
+		}
 	}
 	
 	public int getLeftCardNumber(){
@@ -96,6 +101,42 @@ public class Game implements Runnable
 	public void onGameOver(){
 		//TODO
 		is_over = true;
+		int game_over_type = 0;
+		ResultPak[] rp = new ResultPak[player_list.length];
+		if (left_cards.size()==0){ // 如果牌堆的牌被取完，则比较玩家手中的牌的点数
+			int point[] = new int[player_list.length];
+			int min = 9999999;
+			int w = 0;
+			for (int i = 0; i<player_list.length; i++){
+				point[i] = player_list[i].getHandCardPonit();
+				if (point[i]<min){
+					min = point[i];
+					w = i;
+				}
+			}
+			for (int i = 0; i<player_list.length; i++){
+				if (i == w){
+					rp[i] = player_list[i].onPlayerWin();
+				}else{
+					rp[i] = player_list[i].onPlayerLose();
+				}
+			}
+			game_over_type = GameOverNotify.GAME_OVER_TYPE_CARD_OVER;
+		}else{
+			for (int i = 0; i<player_list.length; i++){
+				if (player_list[i].card_list.size()==0){
+					rp[i] = player_list[i].onPlayerWin();
+				}else{
+					rp[i] = player_list[i].onPlayerLose();
+				}
+			}
+			game_over_type = GameOverNotify.GAME_OVER_TYPE_CLEAR;
+		}
+		GameOverNotify notify = new GameOverNotify(game_over_type, rp);
+		
+		for (int i = 0; i<player_list.length; i++){
+			player_list[i].session.send(notify);
+		}
 	}
 	
 	public Player getCurPlayer(){
@@ -425,12 +466,14 @@ public class Game implements Runnable
 		if (!getCurPlayer().isOpenIce){
 			if (getCardPoint()>=30){
 				getCurPlayer().isOpenIce = true;
-				matrix_old = null;
-				player_put.clear();
 				for (int i = 0; i<player_list.length; i++){
 					player_list[i].session.send(new OpenIceNotify(getCurPlayer().player_id));
 				}
-				toNextPlayer();
+				if (getCurPlayer().card_list.size() == 0){	//如果玩家牌已出完
+					onGameOver();
+				}else{
+					toNextPlayer();
+				}
 				return SubmitResponse.SUBMIT_RESULT_SUCCESS;	// 破冰成功
 			}else{
 				return SubmitResponse.SUBMIT_RESULT_FAIL_CARD_NOT_OPEN_ICE; // 没有破冰
@@ -439,27 +482,137 @@ public class Game implements Runnable
 		if (check() == false){ // 牌组不成立
 			return SubmitResponse.SUBMIT_RESULT_FAIL_CARD_COMBI_NO_MATCH;
 		}
-
-		matrix_old = null;
-		player_put.clear();
-		toNextPlayer();
+		if (getCurPlayer().card_list.size() == 0){	//如果玩家牌已出完
+			onGameOver();
+		}else{
+			toNextPlayer();
+		}
 		return SubmitResponse.SUBMIT_RESULT_SUCCESS;
+	}
+	
+	public boolean MainMatrixChange(CardData[] cds){
+		ArrayList<CardData> c1 = new  ArrayList<CardData>(); //桌面上新加的牌
+		ArrayList<CardData> c2 = new  ArrayList<CardData>(); //桌面上减少的牌
+		HashMap<Integer, CardData> new_matrix = new HashMap<Integer, CardData>();
+		for (CardData cd:cds){
+			if (getCardFromMatrix(cd.id) == null){
+				c1.add(cd);
+			}
+			new_matrix.put(cd.id, cd);
+		}
+		
+		if (new_matrix.size()!=cds.length){ //有被复制的牌
+			return false;
+		}
+		
+		for (int i = 0; i<mh; i++){
+			for (int j = 0; j<mw; j++){
+				if (matrix[i][j] != null){
+					if (new_matrix.get(matrix[i][j].id)==null){
+						c2.add(matrix[i][j]);
+					}
+				}
+			}
+		}
+		
+		ArrayList<CardData> c3 = new  ArrayList<CardData>();
+		if (!c1.isEmpty()){  // 桌面上有新加的牌，去当前玩家的手里找
+			for (CardData cd:c1){
+				CardData cp = getCurPlayer().card_list.get(cd.id);
+				if (cp == null){	// 该牌是凭空捏造出来的
+					return false;
+				}else{
+					cp.x = cd.x;
+					cp.y = cd.y;
+					c3.add(cp);
+				}
+			}
+		}
+		for (CardData cd : c2){
+			if (player_put.get(cd.id) == null){ // 该牌不是本回合放上去的
+				return false;
+			}
+		}
+		
+		CardData[][] matrix_new = new CardData[mh][mw]; 
+		CardData[] notify_cds = new CardData[cds.length];
+		int p=0;
+		for (CardData cd : new_matrix.values()){
+			CardData cm = getCardFromMatrix(cd.id);
+			if (cm != null){
+				cm.x = cd.x;
+				cm.y = cd.y;
+				matrix_new[cm.y][cm.x] = cm;
+				notify_cds[p++] = cm;
+			}
+		}
+		for (CardData cd:c3){
+			matrix_new[cd.y][cd.x] = cd;
+			notify_cds[p++] = cd;
+		}
+		
+		for (CardData cd : c2){
+			getCurPlayer().addCard(cd);
+		}
+		
+		desk.NotifyAll(new MainMatrixChangeNotify(notify_cds));
+		return true;
+	}
+	
+	
+	/** 同步桌面和玩家的牌 */
+	public SynchronizeResponse SynchronizePlayerCard(int player_id){
+		ArrayList<CardData> ml = new ArrayList<CardData>();
+		for (int i = 0; i<mh; i++){
+			for (int j = 0; j<mw; j++){
+				if (matrix[i][j] != null){
+					matrix[i][j].x = j;
+					matrix[i][j].y = i;
+					ml.add(matrix[i][j]);
+				}
+			}
+		}
+		CardData[] m = new CardData[ml.size()];
+		ml.toArray(m);
+		CardData[] p = null;
+		Player player = getPlayerByID(player_id);
+		if (player!=null){
+			p = new CardData[player.card_list.size()];
+			int t = 0;
+			for (CardData cd:player.card_list.values()){
+				p[t++] = cd;
+			}
+		}
+		
+		return new SynchronizeResponse(m, p, getLeftCardNumber());
+	}
+	
+	
+	private Player getPlayerByID(int id){
+		for (Player p:player_list){
+			if (p.player_id == id){
+				return p;
+			}
+		}
+		return null;
 	}
 	
 	@Override
 	public void run(){
 		//TODO 处理超时，处理游戏是否结束
-		if (System.currentTimeMillis() - turn_start_time>=LamiConfig.TURN_INTERVAL){
-			if (!player_put.isEmpty() /*|| process_open_ice*/){
-				if (check()){
-					toNextPlayer();
+		if (!is_over){
+			if (System.currentTimeMillis() - turn_start_time>=LamiConfig.TURN_INTERVAL){
+				if (!player_put.isEmpty() /*|| process_open_ice*/){
+					if (check()){
+						toNextPlayer();
+					}else{
+						repeal();
+						toNextPlayer();
+					}
 				}else{
-					repeal();
+					playerGetCard(1);
 					toNextPlayer();
 				}
-			}else{
-				playerGetCard(1);
-				toNextPlayer();
 			}
 		}
 	}
