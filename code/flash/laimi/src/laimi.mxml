@@ -8,16 +8,13 @@
 			import Class.Game;
 			import Class.Server;
 			public function init():void
-			{
-				
+			{	
 				Game.app = game;
 				//gameCmt.init();
 				Server.init();
 				Server.room_cpt = rm;
 				Server.game_cpt = game;
 			}
-			
-			
 		]]>
 	</mx:Script>
 	<ns1:Login_Cpt verticalCenter="0" horizontalCenter="0">
@@ -27,5 +24,6 @@
 	</ns1:Room_Cpt>
 	
 	<ns1:Lami id="game" horizontalCenter="0" verticalCenter="0" visible="false">
-	</ns1:Lami>
+	</ns1:Lami> 
+	
 </mx:Application>
