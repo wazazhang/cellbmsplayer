@@ -14,6 +14,21 @@ package com.fc.lami.Messages
 	{
 		/** Java type is : <font color=#0000ff>int</font> */
 		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
+		static public const SEND_CARD_RESULT_SUCCESS :  int = 0;
+		/** Java type is : <font color=#0000ff>int</font> */
+		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
+		static public const SEND_CARD_RESULT_FAIL_NOT_BLANK :  int = 1;
+		/** Java type is : <font color=#0000ff>int</font> */
+		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
+		static public const SEND_CARD_RESULT_FAIL_NO_MATCH :  int = 2;
+		/** Java type is : <font color=#0000ff>int</font> */
+		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
+		static public const SEND_CARD_RESULT_FAIL_LOCATION_WRONG :  int = 3;
+		/** Java type is : <font color=#0000ff>int</font> */
+		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
+		static public const SEND_CARD_RESULT_FAIL_SPLIT :  int = 4;
+		/** Java type is : <font color=#0000ff>int</font> */
+		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
 		public var result :  int;
 
 		/**

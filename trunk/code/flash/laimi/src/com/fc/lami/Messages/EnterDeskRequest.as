@@ -14,6 +14,18 @@ package com.fc.lami.Messages
 	{
 		/** Java type is : <font color=#0000ff>int</font> */
 		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
+		static public const SEAT_EAST :  int = 0;
+		/** Java type is : <font color=#0000ff>int</font> */
+		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
+		static public const SEAT_WEST :  int = 1;
+		/** Java type is : <font color=#0000ff>int</font> */
+		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
+		static public const SEAT_SOUTH :  int = 2;
+		/** Java type is : <font color=#0000ff>int</font> */
+		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
+		static public const SEAT_NORTH :  int = 3;
+		/** Java type is : <font color=#0000ff>int</font> */
+		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
 		public var desk_No :  int;
 		/** Java type is : <font color=#0000ff>int</font> */
 		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]

@@ -14,6 +14,15 @@ package com.fc.lami.Messages
 	{
 		/** Java type is : <font color=#0000ff>int</font> */
 		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
+		static public const ENTER_ROOM_RESULT_SUCCESS :  int = 0;
+		/** Java type is : <font color=#0000ff>int</font> */
+		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
+		static public const ENTER_ROOM_RESULT_FAIL_ROOM_FULL :  int = 1;
+		/** Java type is : <font color=#0000ff>int</font> */
+		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
+		static public const ENTER_ROOM_RESULT_FAIL_ROOM_NOT_EXIST :  int = 2;
+		/** Java type is : <font color=#0000ff>int</font> */
+		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
 		public var result :  int;
 		/** Java type is : <font color=#0000ff>com.fc.lami.Messages.RoomData</font> */
 		[JavaType(name="com.fc.lami.Messages.RoomData", leaf_type=NetDataTypes.TYPE_EXTERNALIZABLE)]

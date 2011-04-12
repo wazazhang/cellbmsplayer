@@ -14,6 +14,15 @@ package com.fc.lami.Messages
 	{
 		/** Java type is : <font color=#0000ff>int</font> */
 		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
+		static public const GAME_OVER_TYPE_CLEAR :  int = 0;
+		/** Java type is : <font color=#0000ff>int</font> */
+		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
+		static public const GAME_OVER_TYPE_CARD_OVER :  int = 1;
+		/** Java type is : <font color=#0000ff>int</font> */
+		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
+		static public const GAME_OVER_TYPE_ESCAPE :  int = 2;
+		/** Java type is : <font color=#0000ff>int</font> */
+		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
 		public var game_over_type :  int;
 		/** Java type is : <font color=#0000ff>com.fc.lami.Messages.ResultPak[]</font> */
 		[JavaType(name="com.fc.lami.Messages.ResultPak[]", leaf_type=NetDataTypes.TYPE_EXTERNALIZABLE)]
