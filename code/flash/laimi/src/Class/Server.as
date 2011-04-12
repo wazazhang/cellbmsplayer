@@ -122,13 +122,13 @@ package Class
 			
 			
 			else if (ntf is EnterRoomNotify){
-				var ern : EnterRoomNotify = ntf as EnterRoomNotify;
-				room_cpt.addRoomInfo(ern.player.name+"进入房间")
+				var ern : EnterRoomNotify = ntf as EnterRoomNotify;	
+				room_cpt.enterRoom(ern);					
 			}
 			
 			else if (ntf is ExitRoomNotify){
 				var exrn : ExitRoomNotify = ntf as ExitRoomNotify;
-				room_cpt.addRoomInfo(exrn.player.name+"离开房间")
+				room_cpt.leaveRoom(exrn);
 			}
 			
 			else if (ntf is EnterDeskNotify){
