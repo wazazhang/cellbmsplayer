@@ -4,6 +4,8 @@
 		<![CDATA[
 			import com.fc.lami.Messages.DeskData;
 			import com.fc.lami.Messages.EnterDeskNotify;
+			import com.fc.lami.Messages.LeaveDeskNotify;
+			import com.fc.lami.Messages.LeaveDeskRequest;
 			import com.fc.lami.Messages.RoomData;
 			
 			public var room:RoomData
@@ -28,24 +30,35 @@
 			
 			public function addRoomInfo(str:String):void
 			{
-				info.text = info.text + "\n" + str;
+				info.text =str + "\n" + info.text;
 			}
 			
+			//进入桌子
 			public function enterDesk(nt:EnterDeskNotify):void
 			{
-				var curDeskCpt:Desk_Cpt;
-				
-				for each(var deskCpt:Desk_Cpt in deskCpts)
-				{
-					if(deskCpt.desk.desk_id == nt.desk.desk_id)
-					{
-						curDeskCpt = deskCpt;
-						break;
-					}
-				}
+				var curDeskCpt:Desk_Cpt = getDeskById(nt.desk.desk_id);
 				curDeskCpt.enterPlayer(nt.player.player_id,nt.seatID);
 			}
 			
+			//退出桌子
+			public function leaveDesk(nt:LeaveDeskNotify):void
+			{
+				var curDeskCpt:Desk_Cpt = getDeskById(nt.desk.desk_id);
+				curDeskCpt.leavePlayer(nt.seatID)
+			}
+			
+			//根据ID获取桌子
+			private function getDeskById(deskid:int):Desk_Cpt
+			{
+				for each(var deskCpt:Desk_Cpt in deskCpts)
+				{
+					if(deskCpt.desk.desk_id == deskid)
+					{
+						return deskCpt;
+					}
+				}
+				return null;
+			}
 			
 			
 		]]>
