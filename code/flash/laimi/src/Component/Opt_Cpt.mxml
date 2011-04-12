@@ -30,13 +30,20 @@
 			
 			public function click6():void
 			{
+				Server.ready(BT6.selected);
+				//Game.start();
+				//Server.ready();
+			}
+			
+		
+			public function Start():void
+			{
 				BT6.enabled = false;
 				BT.enabled = true;
 				BT3.enabled = true;
 				BT4.enabled = true;
-				//Game.start();
-				//Server.ready();
 			}
+		
 	]]>
 </mx:Script>
 
@@ -44,7 +51,7 @@
 	<mx:Button id="BT" x="10" enabled="false" label="摸牌" click="click()"  y="30"/>
 	<mx:Button id="BT3" x="10" enabled="false"  label="排序" click="click3()"  y="56"/>
 	<mx:Button id="BT4" x="10" enabled="false"  label="撤销" click="click4()" y="83"/>
-	<mx:Button id="BT6" x="10" y="3" label="开始" click="click6()" />
+	<mx:Button id="BT6" x="10" y="3" toggle="true" label="准备" click="click6()" />
 	<mx:Label x="10" y="132" text="破冰:{Game.gamer.isCold?'否':'是'}" color="white"/>
 	<mx:Label x="9" text="shift:{Game.gamer.keydwon?'是':'否'}" y="147"  color="white"/>
 	

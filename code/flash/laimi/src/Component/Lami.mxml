@@ -137,12 +137,6 @@
 				//Alert.show(Game.getSendPoint().toString()+'_'+Game.gamer.keydwon);
 			}
 			
-			
-			public function ready():void
-			{
-				Server.ready(readyBt.selected);
-			}
-			
 			public function addInfo(str:String):void
 			{
 				gameinfo.text = str + "\n" +gameinfo.text ;
@@ -170,10 +164,6 @@
 	
 	<mx:Label x="268" y="556" text="{Game.gamer.handCard.length}" color="#FDFDFD"/>
 	<mx:TextArea id="gameinfo" x="29" y="429" width="195" height="113" backgroundAlpha="0.0" color="#FDFFFF" editable="false"/>
-	
-	<mx:Canvas width="293" height="130" horizontalCenter="0" verticalCenter="0" backgroundColor="#FD8006" borderStyle="solid" cornerRadius="10" backgroundAlpha="0.82">
-		<mx:Button id="readyBt" x="110.5" y="44" toggle="true" label="准备" width="70" height="40" cornerRadius="5" fontSize="18" click="ready()"/>
-	</mx:Canvas>
 	
 	<ns1:OtherPlayer_Cpt id="nextPlayer1" x="579" y="100">
 	</ns1:OtherPlayer_Cpt>

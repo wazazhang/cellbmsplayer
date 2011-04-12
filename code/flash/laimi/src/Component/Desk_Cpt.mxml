@@ -45,7 +45,7 @@
 				}
 			}
 			
-			//退出一个
+			//退出一个(根据桌子号)
 			public function leavePlayer(seatid:int):void
 			{
 				switch(seatid)
@@ -54,6 +54,18 @@
 					case 1:desk.player_W_id = -1;break;
 					case 2:desk.player_S_id = -1;break;
 					case 3:desk.player_E_id = -1;break;
+				}
+			}
+			
+			//退出一个(根据用户ID)
+			public function leavePlayerByPlayerId(playerid:int):void
+			{
+				switch(playerid)
+				{
+					case desk.player_N_id:desk.player_N_id = -1;break;
+					case desk.player_W_id:desk.player_W_id = -1;break;
+					case desk.player_S_id:desk.player_S_id = -1;break;
+					case desk.player_E_id:desk.player_E_id = -1;break;
 				}
 			}
 			
