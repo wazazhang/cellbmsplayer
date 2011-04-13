@@ -76,12 +76,12 @@ public class Game implements Runnable
 		card.id = id++;
 		left_cards.add(card);
 		
-		/** 测试 多加20张鬼牌 */
-		for (int i = 0; i<20; i++){
-			card = new CardData(0, 0);
-			card.id = id++;
-			left_cards.add(card);
-		}
+//		/** 测试 多加20张鬼牌 */
+//		for (int i = 0; i<20; i++){
+//			card = new CardData(0, 0);
+//			card.id = id++;
+//			left_cards.add(card);
+//		}
 		
 		System.out.println("initcard = "+ left_cards.size());
 	}
