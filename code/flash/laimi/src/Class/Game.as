@@ -49,7 +49,9 @@ package Class
 		public static var isStarted:Boolean = false;
 		
 		//是否可以出牌
-		public static var canSendCard:Boolean = false;
+		//public static var canSendCard:Boolean = false;
+		
+		
 		
 		//牌堆坐标
 		public static var cardspostion_x:int = 600;
@@ -76,6 +78,12 @@ package Class
 			gamer.getStartCard(startCards);
 			app.optCpt.Start(); 
 			
+		}
+		
+		
+		public static function get canSendCard():Boolean
+		{
+			return legaled&&haveSendCard;
 		}
 		
 		//初始矩阵
@@ -135,9 +143,11 @@ package Class
 			cards.refresh();
 		}
 		
-		public static function getCardFromCard():Card
+		public static function getCardFromServer():void
 		{
-			return cards.removeItemAt(0) as Card; 
+			turnOver();
+			Server.getCard();
+			//return cards.removeItemAt(0) as Card; 
 		}
 		
 		//确定合法性
@@ -150,19 +160,14 @@ package Class
 				if(!line.check())
 				{
 					matrix.setStyle("borderColor",0xff0000);
-					legaled = false;
-					canSendCard = false;
+					legaled = false;	
 					return false;
 				}
 			}
 			matrix.setStyle("borderColor",0x000000);
 			legaled = true;
-			
-			canSendCard = haveSendCard;
 			return true;
 		}
-		
-		
 		
 		public static function get getPublicCards():Array
 		{
@@ -269,6 +274,12 @@ package Class
 		//提交
 		public static function submit():void
 		{
+			if(!canSendCard)
+			{
+				Alert.show("不合法");
+				return;
+			}
+			
 			for each(var line:Line in lineArray)
 			{
 				var cardctp:Card_Cpt = line.firstCard;
@@ -283,18 +294,19 @@ package Class
 				}
 				while(cardctp != null);
 			}
+			Server.submit();
 		}
 		
 		public static function turnStart():void
 		{
-			gamer.canOpearation = true;
+			//gamer.canOpearation = true;
 			gamer.isMyturn = true;
 			TimesCtr.start();
 		}
 		
 		public static function turnOver():void
 		{
-			gamer.canOpearation = false;
+			//gamer.canOpearation = false;
 			gamer.isMyturn = false;
 			TimesCtr.stop();
 		}
