@@ -135,6 +135,11 @@ public class Messages {
 			this.point = point;
 			this.type = type;
 		}
+		
+		@Override
+		public String toString() {
+			return "t:"+type+",p:"+point;
+		}
 	}
 	
 	/** 比赛结果包 */
