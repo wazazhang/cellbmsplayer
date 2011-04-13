@@ -172,8 +172,8 @@ package Class
 				{
 					game_cpt.addInfo("玩家"+rn.player_id+"取消了准备");
 				}
-				
 			}
+			
 			else if (ntf is TurnStartNotify){
 				//TODO 轮到自己行动
 				var tsn:TurnStartNotify = ntf as TurnStartNotify;
@@ -265,6 +265,7 @@ package Class
 			else if(res is SubmitResponse)
 			{
 				var sr : SubmitResponse = res as SubmitResponse;
+				
 				if (sr.result != 0){
 					Alert.show("提交错误 代码："+sr.result);
 					SynchronizeCard();

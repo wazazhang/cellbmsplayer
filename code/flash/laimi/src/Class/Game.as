@@ -306,7 +306,6 @@ package Class
 			//gamer.canOpearation = true;
 			gamer.isMyturn = true;
 			haveSendCard = false;
-			
 			TimesCtr.start();
 		}
 		
