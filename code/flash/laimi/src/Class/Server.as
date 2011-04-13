@@ -325,9 +325,7 @@ package Class
 		
 		public static function submit():void
 		{
-//			
-				client.sendRequest(new SubmitRequest(), client_response);
-
+			client.sendRequest(new SubmitRequest(), client_response);
 		}
 		
 		//获得服务器端得初始牌
