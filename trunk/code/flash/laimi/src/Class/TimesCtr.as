@@ -24,7 +24,6 @@ package Class
 		{
 			 oprTimer.addEventListener(TimerEvent.TIMER, oprTimerHandler);
 			 sumTimer.addEventListener(TimerEvent.TIMER, sumTimerHandler);
-			 
              oprTimer.addEventListener(TimerEvent.TIMER_COMPLETE, completeHandler);
              sumTimer.addEventListener(TimerEvent.TIMER_COMPLETE, completeHandler);   
 		}
