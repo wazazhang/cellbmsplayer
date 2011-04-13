@@ -42,7 +42,7 @@
 			}
 	]]>
 </mx:Script>
-	<mx:Button  x="10" label="结束" enabled="{Game.canSendCard}" click="click5()" y="110"/>
+	<mx:Button  x="10" label="结束" enabled="{Game.legaled&amp;&amp;Game.haveSendCard}" click="click5()" y="110"/>
 	<mx:Button id="BT" x="10"  enabled="{!Game.haveSendCard}" label="摸牌" click="click()"  y="30"/>
 	<mx:Button id="BT3" x="10" enabled="false"  label="排序" click="click3()"  y="56"/>
 	<mx:Button id="BT4" x="10" enabled="false"  label="撤销" click="click4()" y="83"/>

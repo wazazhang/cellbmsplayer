@@ -7,7 +7,7 @@
 	</mx:Script>
 	<mx:Label x="10" y="40" text="{'合法:'+ Game.legaled}"/>
 	<mx:Label x="10" y="68" text="{'出牌' + Game.haveSendCard}"/>
-	<mx:Label x="11" y="96" text="{'综合' + Game.canSendCard}"/>
+	<mx:Label x="11" y="96" text="{'综合' + Game.canSubmitCard}"/>
 	<mx:Label x="17.5" y="10" text="debug信息"/>
 	
 </mx:Canvas>
