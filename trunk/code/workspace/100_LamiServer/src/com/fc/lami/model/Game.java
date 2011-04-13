@@ -76,6 +76,13 @@ public class Game implements Runnable
 		card.id = id++;
 		left_cards.add(card);
 		
+		/** 测试 多加20张鬼牌 */
+		for (int i = 0; i<20; i++){
+			card = new CardData(0, 0);
+			card.id = id++;
+			left_cards.add(card);
+		}
+		
 		System.out.println("initcard = "+ left_cards.size());
 	}
 	
@@ -351,6 +358,10 @@ public class Game implements Runnable
 		if (checkGroup(cds)){
 			return length;
 		}else{
+			for (CardData cd:cds){
+				System.out.println(cd.toString());
+			}
+			checkGroup(cds);
 			return 1;
 		}
 	}
@@ -377,7 +388,7 @@ public class Game implements Runnable
 		}
 		
 		if (c1.point == c2.point){	// 点数相同则检测颜色
-			if (cds.length>=4){
+			if (cds.length>4){
 				return false;
 			}
 			int t[] = new int[4];
@@ -491,6 +502,16 @@ public class Game implements Runnable
 	}
 	
 	public boolean MainMatrixChange(CardData[] cds){
+		if (matrix_old == null){
+			matrix_old = matrix;
+			matrix = new CardData[mh][mw];
+			for (int i = 0; i<mh; i++){
+				for (int j = 0; j<mw; j++){
+					matrix[i][j] = matrix_old[i][j];
+				}
+			}
+		}		
+		
 		ArrayList<CardData> c1 = new  ArrayList<CardData>(); //桌面上新加的牌
 		ArrayList<CardData> c2 = new  ArrayList<CardData>(); //桌面上减少的牌
 		HashMap<Integer, CardData> new_matrix = new HashMap<Integer, CardData>();
