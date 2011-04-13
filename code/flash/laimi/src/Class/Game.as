@@ -316,15 +316,20 @@ package Class
 			if(event.keyCode==16)
 			gamer.keydwon = true;
 		}
+		
 		private static function keyup(event:KeyboardEvent):void
 		{
 			gamer.keydwon = false;	
 		}
 		
-		
 		public static function addGameInfo(str:String):void
 		{
 			app.gameinfo.text = str + "\n"+ app.gameinfo.text  ;
+		}
+		
+		public static function otherPlayerStart(playerid:int):void
+		{
+			
 		}
 	}
 }
