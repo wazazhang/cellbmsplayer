@@ -86,18 +86,13 @@ public class EchoClientSession implements ClientSessionListener
 		else if (message instanceof LoginRequest){
 			LoginRequest request = (LoginRequest)message;
 			this.player = PlayerFactory.getPlayer(request.name);
-			if (player==null){
-				session.sendResponse(protocol, new LoginResponse(LoginResponse.LOGIN_RESULT_FAIL, null));
-				disconnected(session);
-			}else{
-				this.player.session = session;
-				LoginResponse res = new LoginResponse(LoginResponse.LOGIN_RESULT_SUCCESS,this.player.getPlayerData());
-				res.rooms = new RoomData[server.getRoomList().length];
-				for (int i = 0; i<server.getRoomList().length; i++){
-					res.rooms[i] = server.getRoomList()[i].getRoomData();
-				}
-				session.sendResponse(protocol, res);
+			this.player.session = session;
+			LoginResponse res = new LoginResponse(LoginResponse.LOGIN_RESULT_SUCCESS,this.player.getPlayerData());
+			res.rooms = new RoomData[server.getRoomList().length];
+			for (int i = 0; i<server.getRoomList().length; i++){
+				res.rooms[i] = server.getRoomList()[i].getRoomData();
 			}
+			session.sendResponse(protocol, res);
 		}
 		//退出请求
 		else if (message instanceof LogoutRequest){
