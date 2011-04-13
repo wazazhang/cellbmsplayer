@@ -49,7 +49,8 @@ public class Game implements Runnable
 		
 		s = CUtil.getRandom(0, player_list.length);
 		turn_start_time = System.currentTimeMillis();
-		player_list[s].session.send(new TurnStartNotify());
+		TurnStartNotify notify = new TurnStartNotify(player_list[s].player_id);
+		desk.NotifyAll(notify);
 		mw = LamiConfig.MATRIX_WIDTH;
 		mh = LamiConfig.MATRIX_HEIGHT;
 		matrix = new CardData[mh][mw];
@@ -159,7 +160,8 @@ public class Game implements Runnable
 		turn_start_time = System.currentTimeMillis();
 		player_list[s].session.send(new TurnEndNotify());
 		s = (s+1) % player_list.length;
-		player_list[s].session.send(new TurnStartNotify());
+		TurnStartNotify notify = new TurnStartNotify(player_list[s].player_id);
+		desk.NotifyAll(notify);
 		//process_open_ice = false;
 		matrix_old = null;
 		player_put.clear();
