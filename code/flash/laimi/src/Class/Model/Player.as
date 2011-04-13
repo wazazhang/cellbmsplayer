@@ -91,14 +91,15 @@ package Class.Model
 		{
 			if(handCard.length==matrix_length*matrix_height)
 			{
-				Alert.show("牌数已达到上限");
+				//Alert.show("牌数已达到上限");
 				return;
 			}
-				
-				
-			canOpearation = false;
-			getCard(Game.getCardFromCard());
+			//canOpearation = false;
+			Game.getCardFromServer();
+			//getCard(Game.getCardFromCard());
+			
 		}
+		
 		
 		public function getStartCard(startcards:ArrayCollection):void
 		{
@@ -181,7 +182,7 @@ package Class.Model
 		{
 			if(!Game.check())
 			{
-				//Alert.show("出牌不符合规则");
+				Alert.show("出牌不符合规则");
 				return false;
 			}
 			
@@ -202,7 +203,7 @@ package Class.Model
 			
 			Game.submit();
 			confiomCard();
-			Game.canSendCard = false;
+			//Game.canSendCard = false;
 			return true;
 		}
 		
@@ -411,8 +412,6 @@ package Class.Model
 			{
 				addCardMotion(card.nextCard);
 			}
-			
-			/*
 			else
 			{
 				if(!Game.isStarted)
@@ -421,10 +420,8 @@ package Class.Model
 					TimesCtr.start();
 				}
 				canOpearation = true;
-				TimesCtr.start();
+				//TimesCtr.start();
 			}
-			*/
-			
 		}
 		
 		public function myTurnStart():void
