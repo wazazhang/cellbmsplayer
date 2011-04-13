@@ -83,8 +83,9 @@
 				}
 				return -1;
 			}
+			
 			//根据座位号设置选手
-			private function setPlayerIDbySeatID(seatID:int,playerID:int):int
+			private function setPlayerIDbySeatID(seatID:int,playerID:int):void
 			{
 				switch(seatID)
 				{
@@ -93,7 +94,6 @@
 					case 2: desk.player_S_id = playerID;break;
 					case 1: desk.player_W_id = playerID;break;
 				}
-				return -1;
 			}
 			
 			//根据座位号获取方向
@@ -148,6 +148,45 @@
 				Server.leaveDesk(desk,seatID);
 			}
 			
+			//根据用户ID获取用户组建
+			public function getOtherPlayerCptByPlayerId(playerid:int):OtherPlayer_Cpt
+			{
+				var cpt:OtherPlayer_Cpt = nextPlayer1;
+				do{
+					if(cpt.player.player_id==playerid)
+					{
+						return cpt;
+					}
+					cpt = cpt.nextOtherPlayer_Cpt;
+				}
+				while(cpt!=null)
+				return null	
+			}
+			
+			//有人员破冰
+			public function onPlayerPoBing(playerid:int):void
+			{
+				var cpt:OtherPlayer_Cpt = getOtherPlayerCptByPlayerId(playerid);
+				cpt.pobing = true;
+			}
+			
+			//有人员准备取消
+			public function onPlayerReady(playerid:int,isReady:Boolean):void
+			{
+				var cpt:OtherPlayer_Cpt = getOtherPlayerCptByPlayerId(playerid);
+				cpt.ready = isReady;
+			}
+			
+			//有人员会合开始
+			public function onPlayerStart(playerid:int):void
+			{
+				nextPlayer1.gameing = false;
+				nextPlayer2.gameing = false;
+				nextPlayer3.gameing = false;
+				
+				var cpt:OtherPlayer_Cpt = getOtherPlayerCptByPlayerId(playerid);
+				cpt.gameing = true;
+			}	
 		]]>
 	</mx:Script>
 	
