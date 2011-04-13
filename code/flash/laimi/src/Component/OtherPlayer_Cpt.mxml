@@ -18,15 +18,14 @@
 			[Bindable]
 			public var gameing:Boolean
 			
-			
 			//破冰状况
 			[Bindable]
 			public var pobing:Boolean = false;
 		]]>
 	</mx:Script>
 	<mx:Label x="73" y="10" text="{player.player_id==-1?'空闲':'ID:'+player.player_id}" color="#FEFEFE"/>
-	<mx:Label x="86" y="38" text="{seat}" color="#FEFEFE"/>
-	<mx:Label x="146" y="38" text="{pobing?'已破冰':'未破冰'}" color="#FEFEFE"/>
-	<mx:Label x="186" y="38" text="{gameing?'游戏中':'等待中'}" color="#FEFEFE"/>
+	<mx:Label x="66" y="38" text="{seat}" color="#FEFEFE"/>
+	<mx:Label x="126" y="38" text="{pobing?'已破冰':'未破冰'}" color="#FEFEFE"/>
+	<mx:Label x="66" y="68" text="{gameing?'游戏中':'等待中'}" color="#FEFEFE"/>
 	
 </mx:Canvas>
