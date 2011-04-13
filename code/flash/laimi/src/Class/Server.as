@@ -33,6 +33,7 @@ package Class
 	import com.fc.lami.Messages.LoginResponse;
 	import com.fc.lami.Messages.MainMatrixChangeNotify;
 	import com.fc.lami.Messages.MainMatrixChangeRequest;
+	import com.fc.lami.Messages.OpenIceNotify;
 	import com.fc.lami.Messages.PlayerData;
 	import com.fc.lami.Messages.ReadyNotify;
 	import com.fc.lami.Messages.ReadyRequest;
@@ -182,7 +183,10 @@ package Class
 			else if (ntf is GameOverNotify){
 				// TODO 此处添加游戏结果的代码
 				Alert.show("游戏结束");
-			}	
+			}
+			else if (ntf is OpenIceNotify){
+				Alert.show("玩家破冰");
+			}
 		}
 		
 		protected static function client_response(event:ClientEvent):void
@@ -311,10 +315,10 @@ package Class
 		
 		public static function submit():void
 		{
-			if (Game.gamer.isSendCard)
-			{	
+//			if (Game.gamer.isSendCard)
+//			{	
 				client.sendRequest(new SubmitRequest(), client_response);
-			}
+//			}
 		}
 		
 		//获得服务器端得初始牌
