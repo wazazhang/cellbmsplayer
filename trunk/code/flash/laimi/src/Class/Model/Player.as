@@ -7,6 +7,8 @@ package Class.Model
 	import Component.Card_Cpt;
 	import Component.UserMatrix_Cpt;
 	
+	import com.fc.lami.Messages.CardData;
+	
 	import mx.collections.ArrayCollection;
 	import mx.collections.Sort;
 	import mx.collections.SortField;
@@ -36,10 +38,9 @@ package Class.Model
 			
 		//private var startCard:int = 14; //起手牌数 	
 		
-		
 		public var canOpearation:Boolean = false;//当前是否能操作
 		
-		public var isSendCard:Boolean = false; //是否有出牌
+	//	public var isSendCard:Boolean = false; //是否有出牌
 		
 		public var isMyturn:Boolean = false; //是否轮到我
 		
@@ -47,7 +48,7 @@ package Class.Model
 		{
 			
 		}
-		
+		//初始化矩阵
 		public function initMatrix():void
 		{
 			var curline:Line;
@@ -67,6 +68,35 @@ package Class.Model
 				cardLines.addItem(line);
 				fill(i,line);
 			}
+		}
+		
+		//牌区的变化
+		public function myCardChange(cards:Array):void
+		{
+			if(isMyturn)
+				return;
+			
+			for each(var line:Line in cardLines)
+			{
+				var cardcpt:Card_Cpt = line.firstCard;
+				do{	
+					
+					for each(var carddata:CardData in cards)
+					{
+						if(cardcpt.cardX == carddata.x&&cardcpt.cardY == carddata.y)
+						{
+							cardcpt.card = Card.createCardByData(carddata);
+							break;
+						}
+						else
+						{
+							cardcpt.card = null;
+						}
+					}
+					cardcpt = cardcpt.nextCardCpt;
+				}	
+				while(cardcpt!=null)
+			}	
 		}
 		
 		public function fill(lie:int,line:Line):void
@@ -414,9 +444,9 @@ package Class.Model
 			}
 			else
 			{
-				if(!Game.isStarted)
+				if(Game.gamer.isMyturn)
 				{
-					Game.isStarted = true;
+					//Game.isStarted = true;
 					TimesCtr.start();
 				}
 				canOpearation = true;
