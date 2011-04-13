@@ -329,7 +329,7 @@ package Class
 		
 		public static function otherPlayerStart(playerid:int):void
 		{
-			
+			app.onPlayerStart(playerid);
 		}
 	}
 }
