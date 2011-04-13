@@ -39,6 +39,8 @@ package Class
 	import com.fc.lami.Messages.ReadyRequest;
 	import com.fc.lami.Messages.SubmitRequest;
 	import com.fc.lami.Messages.SubmitResponse;
+	import com.fc.lami.Messages.SynchronizeRequest;
+	import com.fc.lami.Messages.SynchronizeResponse;
 	import com.fc.lami.Messages.TurnEndNotify;
 	import com.fc.lami.Messages.TurnStartNotify;
 	import com.net.client.ClientEvent;
@@ -258,9 +260,25 @@ package Class
 			
 			else if(res is SubmitResponse)
 			{
-				
+				var sr : SubmitResponse = res as SubmitResponse;
+				if (sr.result != 0){
+					Alert.show("提交错误 代码："+sr.result);
+					SynchronizeCard();
+				}
 			}
-			
+			else if (res is SynchronizeResponse)
+			{
+				var syn : SynchronizeResponse = res as SynchronizeResponse;
+				Game.publicCardChange(syn.matrix);
+				if (syn.player_card!=null){
+					var cards2 : ArrayCollection = new ArrayCollection();
+					for each(var cd2:CardData in syn.player_card){
+						cards2.addItem(Card.createCardByData(cd2) );
+					}
+					Game.gamer.initMatrix();
+					Game.start(cards2);
+				}
+			}
 			else if (res is LeaveDeskResponse){
 				room_cpt.visible = true;
 				//game_cpt.visible = true;
@@ -328,6 +346,10 @@ package Class
 			client.sendRequest(new SubmitRequest(), client_response);
 		}
 		
+		public static function SynchronizeCard():void
+		{
+			client.sendRequest(new SynchronizeRequest(), client_response);
+		}
 		//获得服务器端得初始牌
 		/*
 		public static function receiveStartCard():void

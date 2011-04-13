@@ -23,6 +23,9 @@ package com.fc.lami.Messages
 		static public const SUBMIT_RESULT_FAIL_CARD_NOT_OPEN_ICE :  int = 2;
 		/** Java type is : <font color=#0000ff>int</font> */
 		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
+		static public const SUBMIT_RESULT_FAIL_CARD_NO_SEND :  int = 3;
+		/** Java type is : <font color=#0000ff>int</font> */
+		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
 		public var result :  int;
 
 		/**
