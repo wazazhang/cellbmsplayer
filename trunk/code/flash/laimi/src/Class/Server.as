@@ -38,6 +38,7 @@ package Class
 	import com.fc.lami.Messages.ReadyNotify;
 	import com.fc.lami.Messages.ReadyRequest;
 	import com.fc.lami.Messages.SubmitRequest;
+	import com.fc.lami.Messages.SubmitResponse;
 	import com.fc.lami.Messages.TurnEndNotify;
 	import com.fc.lami.Messages.TurnStartNotify;
 	import com.net.client.ClientEvent;
@@ -251,8 +252,15 @@ package Class
 			}
 			
 			else if (res is GetCardResponse){
+				var edr : GetCardResponse =res as GetCardResponse;
+			}
+			
+			
+			else if(res is SubmitResponse)
+			{
 				
 			}
+			
 			else if (res is LeaveDeskResponse){
 				room_cpt.visible = true;
 				//game_cpt.visible = true;
@@ -317,10 +325,9 @@ package Class
 		
 		public static function submit():void
 		{
-//			if (Game.gamer.isSendCard)
-//			{	
+//			
 				client.sendRequest(new SubmitRequest(), client_response);
-//			}
+
 		}
 		
 		//获得服务器端得初始牌
