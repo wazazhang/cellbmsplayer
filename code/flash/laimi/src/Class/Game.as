@@ -98,7 +98,6 @@ package Class
 				{
 					curline.nextLine = line;
 				}
-				
 				curline = line;
 				
 				if(i == lineCount-1)
@@ -273,7 +272,7 @@ package Class
 		//提交
 		public static function submit():void
 		{
-			if(canSubmitCard)
+			if(!canSubmitCard)
 			{
 				Alert.show("不合法");
 				return;
