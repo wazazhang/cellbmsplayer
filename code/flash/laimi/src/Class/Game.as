@@ -81,7 +81,7 @@ package Class
 		}
 		
 		
-		public static function get canSendCard():Boolean
+		public static function get canSubmitCard():Boolean
 		{
 			return legaled&&haveSendCard;
 		}
@@ -273,7 +273,7 @@ package Class
 		//提交
 		public static function submit():void
 		{
-			if(!canSendCard)
+			if(canSubmitCard)
 			{
 				Alert.show("不合法");
 				return;
@@ -293,6 +293,10 @@ package Class
 				}
 				while(cardctp != null);
 			}
+			
+			TimesCtr.stop();
+			gamer.isMyturn = false;
+			
 			Server.submit();
 		}
 		
