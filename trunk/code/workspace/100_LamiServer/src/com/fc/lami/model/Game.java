@@ -583,6 +583,7 @@ public class Game implements Runnable
 			if (cm != null){
 				cm.x = cd.x;
 				cm.y = cd.y;
+				cm.isSended = cd.isSended;
 				matrix_new[cm.y][cm.x] = cm;
 				notify_cds[p++] = cm;
 			}
