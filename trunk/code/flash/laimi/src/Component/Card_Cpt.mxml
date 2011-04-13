@@ -162,6 +162,12 @@
 			
 			public function click():void
 			{
+				//放置非自己会合往公共牌区操作
+				if(!isPlayerOwner && !Game.gamer.isMyturn)
+				{
+					return;
+				}
+					
 				if(!Game.gamer.canOpearation)
 					return;
 				
