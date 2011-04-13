@@ -453,6 +453,8 @@ public class Messages {
 		final static public int SUBMIT_RESULT_FAIL_CARD_COMBI_NO_MATCH = 1;
 		/** 放牌结束失败，没有破冰 */
 		final static public int SUBMIT_RESULT_FAIL_CARD_NOT_OPEN_ICE = 2;
+		/** 放牌结束失败, 没有出牌 */
+		final static public int SUBMIT_RESULT_FAIL_CARD_NO_SEND = 3;
 		
 		public int result;
 		

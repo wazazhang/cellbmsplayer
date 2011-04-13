@@ -59,7 +59,7 @@ public class Game implements Runnable
 	public void initCard(){
 		/** 初始化数字牌 */
 		int id = 0;
-		for (int i = 1; i<=13; i++){
+		for (int i = 7; i<=13; i++){	// 1~6的牌舍去便于测试
 			for (int j = 1; j<5; j++){
 				CardData card = new CardData(i, j);
 				card.id = id++;
@@ -470,18 +470,35 @@ public class Game implements Runnable
 			player_list[i].session.send(new RepealSendCardNotify(getCurPlayer().player_id, cds));
 		}
 		
+		ArrayList<CardData> ml = new ArrayList<CardData>();
+		for (int i = 0; i<mh; i++){
+			for (int j = 0; j<mw; j++){
+				if (matrix[i][j] != null){
+					matrix[i][j].x = j;
+					matrix[i][j].y = i;
+					ml.add(matrix[i][j]);
+				}
+			}
+		}
+		CardData[] m = new CardData[ml.size()];
+		ml.toArray(m);
+		desk.NotifyAll(new MainMatrixChangeNotify(m));
 		player_put.clear();
 		playerGetCard(1);
 	}
 	
 	/** 提交 */
 	public int submit(){
+		if (player_put.size()==0){
+			return SubmitResponse.SUBMIT_RESULT_FAIL_CARD_NO_SEND;
+		}
 		if (!getCurPlayer().isOpenIce){
 			if (getCardPoint()>=30){
 				getCurPlayer().isOpenIce = true;
 				for (int i = 0; i<player_list.length; i++){
 					player_list[i].session.send(new OpenIceNotify(getCurPlayer().player_id));
 				}
+				System.out.println("player:"+getCurPlayer().name+"余牌:"+ getCurPlayer().card_list.size());
 				if (getCurPlayer().card_list.size() == 0){	//如果玩家牌已出完
 					onGameOver();
 				}else{
@@ -495,6 +512,7 @@ public class Game implements Runnable
 		if (check() == false){ // 牌组不成立
 			return SubmitResponse.SUBMIT_RESULT_FAIL_CARD_COMBI_NO_MATCH;
 		}
+		System.out.println("player:"+getCurPlayer().name+"余牌:"+ getCurPlayer().card_list.size());
 		if (getCurPlayer().card_list.size() == 0){	//如果玩家牌已出完
 			onGameOver();
 		}else{
@@ -574,8 +592,10 @@ public class Game implements Runnable
 			matrix_new[cd.y][cd.x] = cd;
 			notify_cds[p++] = cd;
 			player_put.put(cd.id, cd);
+			getCurPlayer().card_list.remove(cd.id);
 		}
 		
+		System.out.println("MainMatrixChange player_put size = "+player_put.size());
 		for (CardData cd : c2){
 			getCurPlayer().addCard(cd);
 		}
