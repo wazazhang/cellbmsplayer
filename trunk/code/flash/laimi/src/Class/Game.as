@@ -136,7 +136,6 @@ package Class
 			card = new Card(0,0, cid++);
 			card.order = Math.random();
 			cards.addItem(card);
-			
 			var sort:Sort = new Sort();
 			sort.fields = [new SortField("order",false)];
 			cards.sort = sort;
@@ -308,6 +307,7 @@ package Class
 		{
 			//gamer.canOpearation = false;
 			gamer.isMyturn = false;
+			TimesCtr.reset();
 			TimesCtr.stop();
 		}
 		
