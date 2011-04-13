@@ -168,15 +168,13 @@ package Class
 			}
 			else if (ntf is TurnStartNotify){
 				//TODO 轮到自己行动
-				
-				var tsn : TurnStartNotify = ntf as TurnStartNotify;
-				
-				
-				if(tsn.player.player_id == player.player_id)	
+				var tsn:TurnStartNotify = ntf as TurnStartNotify;
+				if (tsn.player_id == player.player_id){
 					Game.turnStart();
-				else
-					Game.otherPlayerStart(tsn.player.player_id);
-				
+				}else{
+					Game.otherPlayerStart(tsn.player_id);
+				}
+			
 				//Alert.show("轮到行动");
 			}
 			else if (ntf is TurnEndNotify){

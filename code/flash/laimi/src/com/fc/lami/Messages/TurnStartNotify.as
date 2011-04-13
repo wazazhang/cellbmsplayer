@@ -12,14 +12,16 @@ package com.fc.lami.Messages
 	[Bindable]
 	public class TurnStartNotify extends Message
 	{
-
+		/** Java type is : <font color=#0000ff>int</font> */
+		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
+		public var player_id :  int;
 
 		/**
-		 */
+		 * @param player_id as <font color=#0000ff>int</font>		 */
 		public function TurnStartNotify(
-) 
+			player_id :  int = 0) 
 		{
-
+			this.player_id = player_id;
 		}
 	}
 }
