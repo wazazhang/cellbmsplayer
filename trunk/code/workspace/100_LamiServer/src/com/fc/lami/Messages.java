@@ -844,6 +844,10 @@ public class Messages {
 	/** 玩家回合开始通知 */
 	public static class TurnStartNotify extends FlashMessage
 	{
+		public PlayerData player;
+		public TurnStartNotify(PlayerData player){
+			this.player = player;
+		}
 		public TurnStartNotify(){}
 		@Override
 		public String toString() {
