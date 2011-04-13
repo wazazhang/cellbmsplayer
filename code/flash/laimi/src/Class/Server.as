@@ -106,25 +106,29 @@ package Class
 			*/
 
 			var ntf : Object = event.getNotify();
+			
+			//得牌
 			if (ntf is GetCardNotify){
 				var gcn : GetCardNotify = ntf as GetCardNotify;
 				var cards : ArrayCollection = new ArrayCollection();
 				for each(var cd:CardData in gcn.cards){
 					if (cd!=null){
-						cards.addItem(new Card(cd.point, cd.type, cd.id));
+						cards.addItem(Card.createCardByData(cd));
 					}
 				}
 				Game.gamer.getCards(cards);
 				//Alert.show("notify : GetCardNotify");
 			}
+			
+			//获得起始牌
 			else if (ntf is GameStartNotify){
+				
 				var gsn : GameStartNotify = ntf as GameStartNotify;
 				var cards2 : ArrayCollection = new ArrayCollection();
 				for each(var cd2:CardData in gsn.cards){
 					cards2.addItem(Card.createCardByData(cd2) );
 				}
 				Game.start(cards2);
-//				Alert.show("notify : GameStartNotify");
 			}
 			
 			
@@ -157,6 +161,7 @@ package Class
 				Game.publicCardChange(mmcn.cards);
 				//game_cpt.leavePlayer(ldn);
 			}
+			
 			else if (ntf is ReadyNotify){
 				var rn : ReadyNotify = ntf as ReadyNotify;
 				if(rn.isReady)
@@ -172,6 +177,7 @@ package Class
 			else if (ntf is TurnStartNotify){
 				//TODO 轮到自己行动
 				var tsn:TurnStartNotify = ntf as TurnStartNotify;
+				Game.setAllCardIssend();
 				if (tsn.player_id == player.player_id){
 					Game.turnStart();
 				}else{
@@ -250,13 +256,11 @@ package Class
 				{
 					Alert.show("尚未进入房间");
 				}
-				
 			}
 			
 			else if (res is GetCardResponse){
 				var edr : GetCardResponse =res as GetCardResponse;
 			}
-			
 			
 			else if(res is SubmitResponse)
 			{
@@ -265,50 +269,24 @@ package Class
 					Alert.show("提交错误 代码："+sr.result);
 					SynchronizeCard();
 				}
+				else
+				{
+					sendPublicMatrix();
+				}
 			}
+			
 			else if (res is SynchronizeResponse)
 			{
 				var syn : SynchronizeResponse = res as SynchronizeResponse;
+				
 				Game.publicCardChange(syn.matrix);
-				if (syn.player_card!=null){
-					var cards2 : ArrayCollection = new ArrayCollection();
-					for each(var cd2:CardData in syn.player_card){
-						cards2.addItem(Card.createCardByData(cd2) );
-					}
-					Game.gamer.initMatrix();
-					Game.start(cards2);
-				}
+				Game.gamer.myCardChange(syn.player_card);
 			}
+			
 			else if (res is LeaveDeskResponse){
 				room_cpt.visible = true;
 				//game_cpt.visible = true;
 			}
-			
-			/*
-			if (event.getResponse() is EchoResponse) {
-				var response1 : EchoResponse = event.getResponse() as EchoResponse;
-				
-				txt_messages.text = txt_messages.text + "response : " + response1.message + "\n";
-				
-			}
-			else if (event.getResponse() is GetTimeResponse) {
-				var response2 : GetTimeResponse = event.getResponse() as GetTimeResponse;
-				
-				txt_messages.text = txt_messages.text + response2.time + "\n";
-			}
-			else if(event.getResponse() is EnterRoomResponse){
-				var res :EnterRoomResponse = event.getResponse() as EnterRoomResponse;
-				
-				if(res.result == 0)
-				{
-					txt_messages.text = txt_messages.text + "成功进入房间" + "\n";
-				}
-				else
-				{
-					txt_messages.text = txt_messages.text + "房间已满" + "\n";
-				}	
-			}
-			*/
 		}
 		
 		//请求进入房间
@@ -328,7 +306,6 @@ package Class
 			client.sendRequest(new LeaveDeskRequest(player,desk,seatID),client_response);
 		}
 		
-		
 		public static function ready(ready:Boolean):void
 		{
 			client.sendRequest(new ReadyRequest(ready),client_response);
@@ -336,9 +313,7 @@ package Class
 		
 		public static function getCard():void
 		{
-			if (Game.gamer.canOpearation && !Game.gamer.isSendCard){
-				client.sendRequest(new GetCardRequest(), client_response);
-			}
+			client.sendRequest(new GetCardRequest(), client_response);
 		}
 		
 		public static function submit():void
@@ -350,20 +325,6 @@ package Class
 		{
 			client.sendRequest(new SynchronizeRequest(), client_response);
 		}
-		//获得服务器端得初始牌
-		/*
-		public static function receiveStartCard():void
-		{
-			//---------------------
-			var startCard:ArrayCollection = new ArrayCollection();
-			for(var i:int=0;i<startCard.length;i++)
-			{
-				startCard.addItem(Game.getCardFromCard());
-			}
-			//模拟服务器拿牌
-			Game.gamer.getStartCard(startCard);
-		}
-		*/
 		
 		//发送公共主牌区
 		public static function sendPublicMatrix():void

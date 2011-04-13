@@ -25,16 +25,16 @@ package Class.Model
 			for(var i:int=1;i<lineLength;i++)
 			{
 				buff.nextCardCpt = new Card_Cpt();
-				buff.cardX = i;
-				buff.cardY = y;
+				buff.cardX = i-1;
+				buff.cardY = y-1;
 				buff.nextCardCpt.preCardCpt = buff;
 				
 				buff.nextCardCpt.isPlayerOwner = isplayer;
 				buff = buff.nextCardCpt;	
 			}
 			lastCard = buff;
-			lastCard.cardX = lineLength;
-			lastCard.cardY = y;
+			lastCard.cardX = lineLength-1;
+			lastCard.cardY = y-1;
 			
 		}
 		

@@ -269,15 +269,8 @@ package Class
 			}
 		}
 		
-		//提交
-		public static function submit():void
+		public static function setAllCardIssend():void
 		{
-			if(!canSubmitCard)
-			{
-				Alert.show("不合法");
-				return;
-			}
-			
 			for each(var line:Line in lineArray)
 			{
 				var cardctp:Card_Cpt = line.firstCard;
@@ -287,15 +280,24 @@ package Class
 					
 					if(cardctp.card!=null)
 						cardctp.card.isSended = true;
-						
+					
 					cardctp = cardctp.nextCardCpt;	
 				}
 				while(cardctp != null);
 			}
-			
+		}
+		
+		//提交
+		public static function submit():void
+		{
+			if(!canSubmitCard)
+			{
+				Alert.show("不合法");
+				return;
+			}
+			setAllCardIssend();
 			TimesCtr.stop();
 			gamer.isMyturn = false;
-			
 			Server.submit();
 		}
 		
@@ -303,6 +305,8 @@ package Class
 		{
 			//gamer.canOpearation = true;
 			gamer.isMyturn = true;
+			haveSendCard = false;
+			
 			TimesCtr.start();
 		}
 		
