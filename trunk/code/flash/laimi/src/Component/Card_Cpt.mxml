@@ -97,6 +97,12 @@
 			
 			public function mouseOver():void
 			{
+				//放置非自己会合往公共牌区操作
+				if(!isPlayerOwner && !Game.gamer.isMyturn)
+				{
+					return;
+				}
+				
 				//防止打出的牌往回拿
 				if(isPlayerOwner&&Game.gamer.selectedCard!=null&&Game.gamer.selectedCard.isSended)
 				{
@@ -159,7 +165,8 @@
 				if(!Game.gamer.canOpearation)
 					return;
 				
-				TimesCtr.reset();
+				if(Game.gamer.isMyturn)
+					TimesCtr.reset();
 				
 				if(Game.gamer.selectedCard!=null&&Game.gamer.selectedCard!=card)
 				{
@@ -172,7 +179,6 @@
 					return;
 				}
 				
-				
 				if(Game.gamer.keydwon)
 				{
 					if(Game.gamer.selectedArrayCard!=null)
@@ -184,7 +190,6 @@
 				{
 					selectCard();
 				}
-				
 			}
 			
 			//选择
@@ -204,6 +209,7 @@
 					{
 						curcard.cardUI.isSelected = false;
 					}
+					
 					Game.gamer.selectedArrayCard = null;
 					Game.check();
 					
@@ -226,14 +232,16 @@
 				else
 				{
 					isSelected = false;
+					
 					/*
 					var buffcard:Card = Game.gamer.selectedCard;
 					Game.gamer.selectedCard = card;
 					card = buffcard;
 					*/
+					
 					card = Game.gamer.selectedCard;
 					Game.check();
-					//Alert.show(Game.gamer.isMyturn.toString());
+					
 					if(Game.gamer.isMyturn)
 					{
 						Server.sendPublicMatrix();
