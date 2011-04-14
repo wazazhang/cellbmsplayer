@@ -41,11 +41,11 @@ package Class
 		
 		public static function completeHandler(event:TimerEvent):void
 		{
-			if(Game.checkHaveSendCard())
-			{
-				Game.gamer.reset();
-			}
-			Game.gamer.getOneCardFromCardpile();
+//			if(Game.checkHaveSendCard())
+//			{
+//				Game.gamer.reset();
+//			}
+//			Game.gamer.getOneCardFromCardpile();
 			
 			//start();
 			//tt.text = "time up";

@@ -200,31 +200,39 @@ package Class
 		}
 		
 		//主牌区的变化
-		public static function publicCardChange(cards:Array):void
+		public static function publicCardChange(is_hardhanded:Boolean, cards:Array):void
 		{
-			if(gamer.isMyturn)
+			if(!is_hardhanded && gamer.isMyturn)
 				return;
 			
 			for each(var line:Line in lineArray)
 			{
 				var cardcpt:Card_Cpt = line.firstCard;
-				do{	
-					
-					for each(var carddata:CardData in cards)
-					{
-						if(cardcpt.cardX == carddata.x&&cardcpt.cardY == carddata.y)
-						{
-							cardcpt.card = Card.createCardByData(carddata);
-							break;
-						}
-						else
-						{
-							cardcpt.card = null;
-						}
+				if (cards.length == 0){
+					do{
+						cardcpt.card = null;
+						cardcpt = cardcpt.nextCardCpt;
 					}
-					cardcpt = cardcpt.nextCardCpt;
-				}	
-				while(cardcpt!=null)
+					while(cardcpt!=null);
+				}else{
+					do{	
+						
+						for each(var carddata:CardData in cards)
+						{
+							if(cardcpt.cardX == carddata.x&&cardcpt.cardY == carddata.y)
+							{
+								cardcpt.card = Card.createCardByData(carddata);
+								break;
+							}
+							else
+							{
+								cardcpt.card = null;
+							}
+						}
+						cardcpt = cardcpt.nextCardCpt;
+					}	
+					while(cardcpt!=null)
+				}
 			}	
 		}
 		
