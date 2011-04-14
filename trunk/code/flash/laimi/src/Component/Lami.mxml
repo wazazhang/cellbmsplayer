@@ -196,6 +196,14 @@
 			{
 				var cpt:OtherPlayer_Cpt = getOtherPlayerCptByPlayerId(playerid);
 				cpt.ready = isReady;
+				if(isReady)
+				{
+					addInfo("玩家"+playerid+"准备好了");
+				}
+				else
+				{
+					addInfo("玩家"+playerid+"取消了准备");
+				}
 			}
 			
 			//有人员会合开始
