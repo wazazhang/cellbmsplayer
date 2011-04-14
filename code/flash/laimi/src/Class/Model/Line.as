@@ -62,6 +62,19 @@ package Class.Model
 			}
 		}
 		
+		//清空当列
+		public function clean():void
+		{
+			var cardcpt:Card_Cpt = firstCard;
+			do{
+				cardcpt.card = null
+				cardcpt.confimcard = null
+				cardcpt = cardcpt.nextCardCpt;
+			}
+			while(cardcpt!=null)
+		}
+		
+		
 		public function check():Boolean
 		{
 			var array:Array;

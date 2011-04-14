@@ -53,10 +53,7 @@ package Class
 	{
 		
 		protected static var client:LamiClient = new LamiClient();
-		
-		
 		public static var player:PlayerData;
-		
 		public static var login_cpt:Login_Cpt;
 		public static var room_cpt:Room_Cpt;
 		public static var game_cpt:Lami;
@@ -156,7 +153,6 @@ package Class
 			}
 			
 			else if (ntf is MainMatrixChangeNotify ){
-				//Alert.show('有住区改变来');
 				var mmcn : MainMatrixChangeNotify = ntf as MainMatrixChangeNotify;
 				Game.publicCardChange(mmcn.cards);
 				//game_cpt.leavePlayer(ldn);
@@ -196,7 +192,9 @@ package Class
 				Alert.show("游戏结束");
 			}
 			else if (ntf is OpenIceNotify){
-				Alert.show("玩家破冰");
+				var oin:OpenIceNotify = ntf as OpenIceNotify;
+				Game.app.onPlayerPoBing(oin.player_id)	
+				//Alert.show("玩家破冰");
 			}
 		}
 		
@@ -333,10 +331,8 @@ package Class
 			var res:MainMatrixChangeRequest = new MainMatrixChangeRequest();
 			res.cards = Game.getPublicCards;
 			client.sendRequest(res, client_response);
-
 		}
 
-		
 		//连接服务器
 		public static function linkToServer(name:String):void
 		{

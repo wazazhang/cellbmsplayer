@@ -99,6 +99,16 @@ package Class.Model
 			}	
 		}
 		
+		//清空矩阵
+		public function cleanMatrix():void
+		{
+			for each (var line:Line in cardLines)
+			{
+				line.clean();
+			}
+		}
+		
+		
 		public function fill(lie:int,line:Line):void
 		{
 			var top:int = 50; //距离顶部

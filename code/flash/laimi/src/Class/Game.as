@@ -113,6 +113,17 @@ package Class
 			matrix.height = cardcpt.height*lineCount+4;
 		}
 		
+		//清空矩阵
+		public static function cleanMatrix():void
+		{
+			for each (var line:Line in lineArray)
+			{
+				line.clean();
+			}
+		}
+		
+		
+		
 		//初始牌
 		public static function initCard():void
 		{
