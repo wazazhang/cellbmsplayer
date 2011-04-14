@@ -248,9 +248,10 @@ package Class.Model
 		}
 		
 		//提交
-		protected function confiomCard():void
+		public function confiomCard():void
 		{
 			var array:ArrayCollection = new ArrayCollection();
+			
 			for each(var line:Line in cardLines)
 			{
 				var cardctp:Card_Cpt = line.firstCard;
@@ -259,7 +260,6 @@ package Class.Model
 					{
 						array.addItem(cardctp.card);
 					}
-					
 					cardctp.confimcard = cardctp.card;
 					cardctp = cardctp.nextCardCpt;
 				}
