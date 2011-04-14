@@ -6,6 +6,8 @@ import com.cell.CIO;
 import com.cell.j2se.CAppBridge;
 import com.cell.util.concurrent.ThreadPool;
 import com.fc.lami.model.Room;
+import com.net.MessageHeader;
+import com.net.Protocol;
 import com.net.flash.message.FlashMessageFactory;
 import com.net.minaimpl.server.ServerImpl;
 import com.net.server.ClientSession;
@@ -40,6 +42,18 @@ public class Server extends ServerImpl implements ServerListener
 		return c;
 	}
 	
+	class AnySession implements ClientSessionListener
+	{
+		public AnySession() {}
+		
+		@Override
+		public void disconnected(ClientSession session) {}
+		@Override
+		public void receivedMessage(ClientSession session, Protocol protocol, MessageHeader message) {}
+		@Override
+		public void sentMessage(ClientSession session, Protocol protocol, MessageHeader message) {}
+	}
+	
 	public ArrayList<EchoClientSession> getClientList(){
 		return client_list;
 	}
@@ -54,23 +68,13 @@ public class Server extends ServerImpl implements ServerListener
 		try {
 			CAppBridge.init();
 			MessageFactory factory = new MessageFactory();
-			
-
 			int port = 19821;
 			if (args.length > 0) {
 				LamiConfig.load(args[0]);
-//				try {
-//					port = Integer.parseInt(args[0]);
-//				} catch (Exception err) {
-//					System.err.println("use default port " + port);
-//				}
-			}else{
-//				LamiConfig.load("F:/javap/100_LamiServer/config/config.properties");
+				port = LamiConfig.SERVER_PORT;
 			}
 			Server server = new Server(factory);
-			port = LamiConfig.SERVER_PORT;
 			server.open(port);
-			
 		} catch (Exception err) {
 			err.printStackTrace();
 			System.exit(1);

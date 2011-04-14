@@ -29,6 +29,9 @@ public class LamiConfig extends Config{
 	@ConfigField("桌面牌矩阵高")
 	public static Integer	MATRIX_HEIGHT = 10;
 	
+	@ConfigField("第三方接口")
+	public static String	LOGIN_CLASS = com.fc.lami.login.test.LoginDefault.class.getCanonicalName();
+	
 	public static void load(String config_file)
 	{
 		load(LamiConfig.class, config_file);
