@@ -15,6 +15,7 @@ public class Game implements Runnable
 	public boolean is_over = false;
 	final static public int startCard = 14;
 	ArrayList<CardData> left_cards = new ArrayList<CardData>();
+	public boolean is_start_time = false; //发牌时间
 	
 	/** 桌面牌矩阵 */
 	public CardData matrix[][];
@@ -26,6 +27,7 @@ public class Game implements Runnable
 	
 	int s;
 	long turn_start_time;
+	long start_time;
 	int mh;
 	int mw;
 	
@@ -48,9 +50,8 @@ public class Game implements Runnable
 		}
 		
 		s = CUtil.getRandom(0, player_list.length);
-		turn_start_time = System.currentTimeMillis();
-		TurnStartNotify notify = new TurnStartNotify(player_list[s].player_id);
-		desk.NotifyAll(notify);
+		start_time = System.currentTimeMillis();
+		is_start_time = true;
 		mw = LamiConfig.MATRIX_WIDTH;
 		mh = LamiConfig.MATRIX_HEIGHT;
 		matrix = new CardData[mh][mw];
@@ -165,6 +166,7 @@ public class Game implements Runnable
 		//process_open_ice = false;
 		matrix_old = null;
 		player_put.clear();
+		System.out.println("轮到下一个玩家");
 	}
 	
 	private void playerGetCard(int n){
@@ -466,9 +468,9 @@ public class Game implements Runnable
 			getCurPlayer().addCard(cd);
 			cds[t++] = cd;
 		}
-		for (int i = 0; i<player_list.length; i++){
-			player_list[i].session.send(new RepealSendCardNotify(getCurPlayer().player_id, cds));
-		}
+
+		desk.NotifyAll(new RepealSendCardNotify(getCurPlayer().player_id, cds));
+
 		
 		ArrayList<CardData> ml = new ArrayList<CardData>();
 		for (int i = 0; i<mh; i++){
@@ -482,7 +484,7 @@ public class Game implements Runnable
 		}
 		CardData[] m = new CardData[ml.size()];
 		ml.toArray(m);
-		desk.NotifyAll(new MainMatrixChangeNotify(m));
+		desk.NotifyAll(new MainMatrixChangeNotify(true, m));
 		player_put.clear();
 		playerGetCard(1);
 	}
@@ -490,6 +492,7 @@ public class Game implements Runnable
 	/** 提交 */
 	public int submit(){
 		if (player_put.size()==0){
+			System.err.println("submit 没有出牌");
 			return SubmitResponse.SUBMIT_RESULT_FAIL_CARD_NO_SEND;
 		}
 		if (!getCurPlayer().isOpenIce){
@@ -506,10 +509,12 @@ public class Game implements Runnable
 				}
 				return SubmitResponse.SUBMIT_RESULT_SUCCESS;	// 破冰成功
 			}else{
+				System.err.println("submit 没有破冰");
 				return SubmitResponse.SUBMIT_RESULT_FAIL_CARD_NOT_OPEN_ICE; // 没有破冰
 			}
 		}
 		if (check() == false){ // 牌组不成立
+			System.err.println("submit 牌组不成立");
 			return SubmitResponse.SUBMIT_RESULT_FAIL_CARD_COMBI_NO_MATCH;
 		}
 		System.out.println("player:"+getCurPlayer().name+"余牌:"+ getCurPlayer().card_list.size());
@@ -543,6 +548,7 @@ public class Game implements Runnable
 		}
 		
 		if (new_matrix.size()!=cds.length){ //有被复制的牌
+			System.err.println("有被复制的牌");
 			return false;
 		}
 		
@@ -561,6 +567,7 @@ public class Game implements Runnable
 			for (CardData cd:c1){
 				CardData cp = getCurPlayer().card_list.get(cd.id);
 				if (cp == null){	// 该牌是凭空捏造出来的
+					System.err.println("该牌是凭空捏造出来的");
 					return false;
 				}else{
 					cp.x = cd.x;
@@ -571,6 +578,7 @@ public class Game implements Runnable
 		}
 		for (CardData cd : c2){
 			if (player_put.get(cd.id) == null){ // 该牌不是本回合放上去的
+				System.err.println("该牌不是本回合放上去的");
 				return false;
 			}
 		}
@@ -599,8 +607,9 @@ public class Game implements Runnable
 		System.out.println("MainMatrixChange player_put size = "+player_put.size());
 		for (CardData cd : c2){
 			getCurPlayer().addCard(cd);
+			player_put.remove(cd.id);
 		}
-		desk.NotifyAll(new MainMatrixChangeNotify(notify_cds));
+		desk.NotifyAll(new MainMatrixChangeNotify(false, notify_cds));
 		return true;
 	}
 	
@@ -644,12 +653,21 @@ public class Game implements Runnable
 	
 	@Override
 	public void run(){
+		if (is_start_time){	//	游戏开始后延迟10秒轮到第一个玩家
+			if (System.currentTimeMillis() - start_time >= 10000){
+				turn_start_time = System.currentTimeMillis();
+				TurnStartNotify notify = new TurnStartNotify(player_list[s].player_id);
+				desk.NotifyAll(notify);
+				is_start_time = false;
+			}
+		}
 		//TODO 处理超时，处理游戏是否结束
-		if (!is_over){
+		else if (!is_over){
 			if (System.currentTimeMillis() - turn_start_time>=LamiConfig.TURN_INTERVAL){
+				System.err.println("player "+getCurPlayer().getName()+" 超时");
 				if (!player_put.isEmpty() /*|| process_open_ice*/){
-					if (check()){
-						toNextPlayer();
+					if (submit() == SubmitResponse.SUBMIT_RESULT_SUCCESS){
+						
 					}else{
 						repeal();
 						toNextPlayer();
