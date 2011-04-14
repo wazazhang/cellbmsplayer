@@ -838,9 +838,11 @@ package com.fc.lami
 //	----------------------------------------------------------------------------------------------------
 	function new_MainMatrixChangeNotify_29() : com.fc.lami.Messages.MainMatrixChangeNotify {return new com.fc.lami.Messages.MainMatrixChangeNotify();}
 	private function r_MainMatrixChangeNotify_29(msg : com.fc.lami.Messages.MainMatrixChangeNotify, input : NetDataInput) : void {
+		msg.is_hardhanded = input.readBoolean();
 		msg.cards = input.readExternalArray();
 	}
 	private function w_MainMatrixChangeNotify_29(msg : com.fc.lami.Messages.MainMatrixChangeNotify, output : NetDataOutput) : void {
+		output.writeBoolean(msg.is_hardhanded);
 		output.writeExternalArray(msg.cards);
 	}
 

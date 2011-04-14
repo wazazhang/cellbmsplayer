@@ -154,7 +154,7 @@ package Class
 			
 			else if (ntf is MainMatrixChangeNotify ){
 				var mmcn : MainMatrixChangeNotify = ntf as MainMatrixChangeNotify;
-				Game.publicCardChange(mmcn.cards);
+				Game.publicCardChange(mmcn.is_hardhanded, mmcn.cards);
 				//game_cpt.leavePlayer(ldn);
 			}
 			
@@ -271,7 +271,7 @@ package Class
 			{
 				var syn : SynchronizeResponse = res as SynchronizeResponse;
 				
-				Game.publicCardChange(syn.matrix);
+				Game.publicCardChange(true, syn.matrix);
 				Game.gamer.myCardChange(syn.player_card);
 			}
 			

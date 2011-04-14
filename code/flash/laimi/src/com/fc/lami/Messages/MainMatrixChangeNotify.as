@@ -12,15 +12,21 @@ package com.fc.lami.Messages
 	[Bindable]
 	public class MainMatrixChangeNotify extends Message
 	{
+		/** Java type is : <font color=#0000ff>boolean</font> */
+		[JavaType(name="boolean", leaf_type=NetDataTypes.TYPE_BOOLEAN)]
+		public var is_hardhanded :  Boolean;
 		/** Java type is : <font color=#0000ff>com.fc.lami.Messages.CardData[]</font> */
 		[JavaType(name="com.fc.lami.Messages.CardData[]", leaf_type=NetDataTypes.TYPE_EXTERNALIZABLE)]
 		public var cards :  Array;
 
 		/**
+		 * @param is_hardhanded as <font color=#0000ff>boolean</font>
 		 * @param cards as <font color=#0000ff>com.fc.lami.Messages.CardData[]</font>		 */
 		public function MainMatrixChangeNotify(
+			is_hardhanded :  Boolean = false,
 			cards :  Array = null) 
 		{
+			this.is_hardhanded = is_hardhanded;
 			this.cards = cards;
 		}
 	}
