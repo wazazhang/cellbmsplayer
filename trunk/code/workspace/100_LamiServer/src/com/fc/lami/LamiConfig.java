@@ -22,7 +22,7 @@ public class LamiConfig extends Config{
 	public static Integer	THREAD_INTERVAL = 1000;
 	
 	@ConfigField("回合时间")
-	public static Integer	TURN_INTERVAL = 90000;
+	public static Integer	TURN_INTERVAL = 30000;
 	
 	@ConfigField("桌面牌矩阵宽")
 	public static Integer	MATRIX_WIDTH = 26;

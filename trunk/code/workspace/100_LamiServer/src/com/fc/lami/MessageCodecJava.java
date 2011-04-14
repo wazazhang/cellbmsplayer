@@ -712,9 +712,11 @@ public class MessageCodecJava implements MutualMessageCodec
 //	----------------------------------------------------------------------------------------------------
 	public com.fc.lami.Messages.MainMatrixChangeNotify new_com_fc_lami_Messages_MainMatrixChangeNotify(){return new com.fc.lami.Messages.MainMatrixChangeNotify();}
 	private void _r(com.fc.lami.Messages.MainMatrixChangeNotify msg, NetDataInput in) throws IOException {
+		msg.is_hardhanded = in.readBoolean();
 		msg.cards = (com.fc.lami.Messages.CardData[])in.readExternalArray(com.fc.lami.Messages.CardData.class);
 	}
 	private void _w(com.fc.lami.Messages.MainMatrixChangeNotify msg, NetDataOutput out) throws IOException {
+		out.writeBoolean(msg.is_hardhanded);
 		out.writeExternalArray(msg.cards);
 	}
 
