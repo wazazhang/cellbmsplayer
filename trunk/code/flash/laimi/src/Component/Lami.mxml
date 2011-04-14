@@ -27,6 +27,7 @@
 			
 			
 			//初始游戏
+			
 			public function init():void
 			{
 				Game.matrix = mx;
@@ -38,11 +39,31 @@
 			
 			public function initDesk(desk:DeskData):void
 			{
-				init();
+				if(Game.matrix==null)
+				{
+					init();
+				}
+				resetGameAllData();
 				player = Server.player;
 				initSeat(desk);
 			}
 			
+			
+			//进入一个新房间后对所有数据进行重置
+			public function resetGameAllData():void
+			{
+				nextPlayer1.reset();
+				nextPlayer2.reset();
+				nextPlayer3.reset();
+				Game.cleanMatrix();
+				Game.gamer.cleanMatrix();
+				Game.gamer.isMyturn = false;
+				Game.legaled = true;
+				Game.haveSendCard = false;
+				TimesCtr.stop();
+			}
+			
+			//初始位置
 			public function initSeat(desk:DeskData):void
 			{
 				nextOtherPlayer_Cpt = nextPlayer1;
