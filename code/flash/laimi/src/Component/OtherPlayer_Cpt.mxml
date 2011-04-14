@@ -21,6 +21,15 @@
 			//破冰状况
 			[Bindable]
 			public var pobing:Boolean = false;
+			
+			
+			public function reset():void{
+				player = null;
+				seat = null;
+				ready = false;
+				gameing = false;
+			}
+			
 		]]>
 	</mx:Script>
 	<mx:Label x="73" y="10" text="{player.player_id==-1?'空闲':'ID:'+player.player_id}" color="#FEFEFE"/>
