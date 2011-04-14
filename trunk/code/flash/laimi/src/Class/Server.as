@@ -173,8 +173,6 @@ package Class
 				}else{
 					Game.otherPlayerStart(tsn.player_id);
 				}
-			
-				//Alert.show("轮到行动");
 			}
 			else if (ntf is TurnEndNotify){
 				// TODO 自己回合结束
