@@ -60,6 +60,7 @@
 				Game.gamer.isMyturn = false;
 				Game.legaled = true;
 				Game.haveSendCard = false;
+				gameOverCvs.visible = false;
 				TimesCtr.stop();
 			}
 			
@@ -78,7 +79,6 @@
 					case desk.player_W_id: seatID = 1;break;
 				}
 				var cpt:OtherPlayer_Cpt = nextOtherPlayer_Cpt;
-				
 				var index:int = seatID;
 				do{
 					index ++;
@@ -163,7 +163,8 @@
 				gameinfo.text = str + "\n" +gameinfo.text ;
 			}
 			
-			public function leaveDesk():void
+			//回到房间
+			public function returnRoom():void
 			{
 				this.visible = false;
 				Server.leaveDesk(desk,seatID);
@@ -189,6 +190,7 @@
 			{
 				var cpt:OtherPlayer_Cpt = getOtherPlayerCptByPlayerId(playerid);
 				cpt.pobing = true;
+				addInfo("玩家"+playerid+"已经破冰");
 			}
 			
 			//有人员准备取消
@@ -214,6 +216,12 @@
 				nextPlayer3.gameing = false;
 				var cpt:OtherPlayer_Cpt = getOtherPlayerCptByPlayerId(playerid);
 				cpt.gameing = true;
+			}
+			
+			//游戏结束
+			public function onGameOver():void
+			{
+				gameOverCvs.visible = true;
 			}
 		]]>
 	</mx:Script>
@@ -243,6 +251,11 @@
 	
 	<mx:Label x="268" y="520" text="{getDir(seatID)+':'+ Server.player.name}" color="#FCFDFD"/>
 	<mx:Label x="268" y="550" text="{Game.gamer.isMyturn?'游戏中':'等待中'}" color="#FCFDFD"/>
-	<mx:LinkButton x="10" y="10" label="回到大厅" color="#F9FBFC" click="leaveDesk()"/>
+	<mx:LinkButton x="10" y="10" label="回到大厅" color="#F9FBFC" click="returnRoom()"/>
+	
+	<mx:Canvas id="gameOverCvs" visible="false" width="200" height="100" verticalCenter="0" horizontalCenter="0" backgroundColor="#FE0303" backgroundAlpha="0.28" borderStyle="solid" cornerRadius="5">
+		<mx:Label text="游戏结束" color="#FDFDFD" fontSize="16" horizontalCenter="0" verticalCenter="0"/>
+	</mx:Canvas>
+	
 	
 </mx:Canvas>
