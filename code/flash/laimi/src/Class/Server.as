@@ -160,20 +160,14 @@ package Class
 			
 			else if (ntf is ReadyNotify){
 				var rn : ReadyNotify = ntf as ReadyNotify;
-				if(rn.isReady)
-				{
-					game_cpt.addInfo("玩家"+rn.player_id+"准备好了");
-				}
-				else
-				{
-					game_cpt.addInfo("玩家"+rn.player_id+"取消了准备");
-				}
+				game_cpt.onPlayerReady(rn.player_id,rn.isReady);
 			}
 			
 			else if (ntf is TurnStartNotify){
 				//TODO 轮到自己行动
 				var tsn:TurnStartNotify = ntf as TurnStartNotify;
 				Game.setAllCardIssend();
+				
 				if (tsn.player_id == player.player_id){
 					Game.turnStart();
 				}else{
@@ -189,7 +183,8 @@ package Class
 			}
 			else if (ntf is GameOverNotify){
 				// TODO 此处添加游戏结果的代码
-				Alert.show("游戏结束");
+				var gon:GameOverNotify = ntf as GameOverNotify;
+				Game.app.onGameOver();
 			}
 			else if (ntf is OpenIceNotify){
 				var oin:OpenIceNotify = ntf as OpenIceNotify;

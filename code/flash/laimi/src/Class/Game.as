@@ -286,7 +286,7 @@ package Class
 			{
 				var cardctp:Card_Cpt = line.firstCard;
 				do{
-					cardctp.confimcard = null;
+					//cardctp.confimcard = null;
 					cardctp.confimcard = cardctp.card;
 					
 					if(cardctp.card!=null)
@@ -315,6 +315,7 @@ package Class
 		public static function turnStart():void
 		{
 			//gamer.canOpearation = true;
+			gamer.confiomCard();
 			gamer.isMyturn = true;
 			haveSendCard = false;
 			TimesCtr.start();
@@ -331,7 +332,7 @@ package Class
 		private static function keydown(event:KeyboardEvent):void
 		{
 			if(event.keyCode==16)
-			gamer.keydwon = true;
+				gamer.keydwon = true;
 		}
 		
 		private static function keyup(event:KeyboardEvent):void
