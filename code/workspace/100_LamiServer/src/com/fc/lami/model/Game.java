@@ -60,7 +60,7 @@ public class Game implements Runnable
 	public void initCard(){
 		/** 初始化数字牌 */
 		int id = 0;
-		for (int i = 7; i<=13; i++){	// 1~6的牌舍去便于测试
+		for (int i = 1; i<=13; i++){	// 1~6的牌舍去便于测试
 			for (int j = 1; j<5; j++){
 				CardData card = new CardData(i, j);
 				card.id = id++;
@@ -458,8 +458,16 @@ public class Game implements Runnable
 //		}
 //	}
 	
+	public void PlayerRepeal(){
+		if (matrix_old!=null){
+			repeal();
+			playerGetCard(3);
+			toNextPlayer();
+		}
+	}
+	
 	/** 撤销 */
-	public void repeal(){
+	private void repeal(){
 		if (matrix_old!=null){
 			matrix = matrix_old;
 			matrix_old = null;
