@@ -213,6 +213,10 @@ public class Desk
 
 		LeaveDeskNotify ntf = new LeaveDeskNotify(player.getPlayerData(),getDeskData(),seatid);
 		player.cur_room.notifyAll(ntf);
+		
+		if (game!=null){
+			game.onPlayerLeave(player);
+		}
 		//NotifyAll(ntf);
 	}
 	
