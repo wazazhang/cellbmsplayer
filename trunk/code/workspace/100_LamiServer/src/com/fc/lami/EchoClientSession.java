@@ -58,9 +58,7 @@ public class EchoClientSession implements ClientSessionListener
 		
 		System.out.println("disconnected " + session.getRemoteAddress());
 		if (player.cur_room!=null){
-			
 			player.cur_room.onPlayerLeave(player.player_id);
-			
 		}
 		server.getClientList().remove(this);
 //		this.task.cancel(false);

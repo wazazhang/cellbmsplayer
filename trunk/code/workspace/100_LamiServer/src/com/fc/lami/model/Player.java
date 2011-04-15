@@ -127,6 +127,14 @@ public class Player implements User{
 		return pak;
 	}
 
+	public void onPlayerEscape(){
+		this.is_ready = false;
+		this.isOpenIce = false;
+		this.card_list.clear();
+		this.score -= 5;
+		this.lose += 1;
+	}
+	
 	@Override
 	public int getPoint() {
 		// TODO Auto-generated method stub

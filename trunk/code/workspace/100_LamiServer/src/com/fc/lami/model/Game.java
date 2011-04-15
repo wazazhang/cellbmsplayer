@@ -158,9 +158,10 @@ public class Game implements Runnable
 	}
 	
 	public void toNextPlayer(){
-		turn_start_time = System.currentTimeMillis();
+
 		player_list[s].session.send(new TurnEndNotify());
 		s = (s+1) % player_list.length;
+		turn_start_time = System.currentTimeMillis();
 		TurnStartNotify notify = new TurnStartNotify(player_list[s].player_id);
 		desk.NotifyAll(notify);
 		//process_open_ice = false;
@@ -459,8 +460,10 @@ public class Game implements Runnable
 	
 	/** 撤销 */
 	public void repeal(){
-		matrix = matrix_old;
-		matrix_old = null;
+		if (matrix_old!=null){
+			matrix = matrix_old;
+			matrix_old = null;
+		}
 
 		CardData cds[] = new CardData[player_put.size()];
 		int t = 0;
@@ -486,7 +489,6 @@ public class Game implements Runnable
 		ml.toArray(m);
 		desk.NotifyAll(new MainMatrixChangeNotify(true, m));
 		player_put.clear();
-		playerGetCard(1);
 	}
 	
 	/** 提交 */
@@ -651,6 +653,44 @@ public class Game implements Runnable
 		return null;
 	}
 	
+	public void onPlayerLeave(Player player){
+		player.onPlayerEscape();
+		if (getCurPlayer() == player){
+			repeal();
+		}
+		Player next_player = getNextPlayer();
+		player_list = desk.getPlayerList();
+		
+		if (player_list.length>0){
+			if (player_list.length<2){
+				ResultPak[] rp = new ResultPak[player_list.length];
+				if (player_list[0].isOpenIce){
+					rp[0] = player_list[0].onPlayerWin();
+				}
+				GameOverNotify notify = new GameOverNotify(GameOverNotify.GAME_OVER_TYPE_ESCAPE, rp);
+				desk.NotifyAll(notify);
+				is_over = true;
+			}else{
+				for (int i = 0; i<player_list.length; i++){
+					if (player_list[i] == next_player){
+						s = i;
+						turn_start_time = System.currentTimeMillis();
+						TurnStartNotify notify = new TurnStartNotify(player_list[s].player_id);
+						desk.NotifyAll(notify);
+						//process_open_ice = false;
+						matrix_old = null;
+						player_put.clear();
+						System.out.println("轮到下一个玩家");
+						return;
+					}
+				}
+			}
+		}else{
+			is_over = true;
+		}
+		
+	}
+	
 	@Override
 	public void run(){
 		if (is_start_time){	//	游戏开始后延迟10秒轮到第一个玩家
@@ -670,6 +710,7 @@ public class Game implements Runnable
 						
 					}else{
 						repeal();
+						playerGetCard(3); // 撤销罚牌3张
 						toNextPlayer();
 					}
 				}else{
