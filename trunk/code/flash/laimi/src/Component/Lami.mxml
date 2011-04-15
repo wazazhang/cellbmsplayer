@@ -58,6 +58,8 @@
 				Game.cleanMatrix();
 				Game.gamer.cleanMatrix();
 				Game.gamer.isMyturn = false;
+				Game.gamer.isReady = false;
+				Game.gamer.isCold = true;
 				Game.legaled = true;
 				Game.haveSendCard = false;
 				gameOverCvs.visible = false;
@@ -188,19 +190,26 @@
 			//有人员破冰
 			public function onPlayerPoBing(playerid:int):void
 			{
-				var cpt:OtherPlayer_Cpt = getOtherPlayerCptByPlayerId(playerid);
-				if(cpt!=null)
-					cpt.pobing = true;
-				
+				if (playerid == Server.player.player_id){
+					Game.gamer.isCold = false;
+				}else{
+					var cpt:OtherPlayer_Cpt = getOtherPlayerCptByPlayerId(playerid);
+					if(cpt!=null)
+						cpt.pobing = true;
+				}
 				addInfo("玩家"+playerid+"已经破冰");
 			}
 			
 			//有人员准备取消
 			public function onPlayerReady(playerid:int,isReady:Boolean):void
 			{
-				var cpt:OtherPlayer_Cpt = getOtherPlayerCptByPlayerId(playerid);
-				if(cpt!=null)
-					cpt.ready = isReady;
+				if (playerid == Server.player.player_id){
+					Game.gamer.isReady = isReady;
+				}else{
+					var cpt:OtherPlayer_Cpt = getOtherPlayerCptByPlayerId(playerid);
+					if(cpt!=null)
+						cpt.ready = isReady;
+				}
 				if(isReady)
 				{
 					addInfo("玩家"+playerid+"准备好了");

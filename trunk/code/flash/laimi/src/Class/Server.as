@@ -161,6 +161,9 @@ package Class
 			else if (ntf is ReadyNotify){
 				var rn : ReadyNotify = ntf as ReadyNotify;
 				game_cpt.onPlayerReady(rn.player_id,rn.isReady);
+				
+				Game.cleanMatrix();
+				Game.gamer.cleanMatrix();
 			}
 			
 			else if (ntf is TurnStartNotify){
@@ -183,6 +186,8 @@ package Class
 				// TODO 此处添加游戏结果的代码
 				var gon:GameOverNotify = ntf as GameOverNotify;
 				Game.app.onGameOver();
+				// TODO 重置各个玩家的准备按钮
+				game_cpt.onPlayerReady(player.player_id,false);
 			}
 			else if (ntf is OpenIceNotify){
 				var oin:OpenIceNotify = ntf as OpenIceNotify;
