@@ -11,6 +11,7 @@ public class Game implements Runnable
 {
 	public Desk desk;
 	public Player player_list[];
+	public Player cur_player;
 	
 	public boolean is_over = false;
 	final static public int startCard = 14;
@@ -50,6 +51,7 @@ public class Game implements Runnable
 		}
 		
 		s = CUtil.getRandom(0, player_list.length);
+		cur_player = player_list[s];
 		start_time = System.currentTimeMillis();
 		is_start_time = true;
 		mw = LamiConfig.MATRIX_WIDTH;
@@ -149,7 +151,7 @@ public class Game implements Runnable
 	}
 	
 	public Player getCurPlayer(){
-		return player_list[s];
+		return cur_player;
 	}
 	
 	public Player getNextPlayer(){
@@ -159,10 +161,11 @@ public class Game implements Runnable
 	
 	public void toNextPlayer(){
 
-		player_list[s].session.send(new TurnEndNotify());
+		cur_player.session.send(new TurnEndNotify());
 		s = (s+1) % player_list.length;
+		cur_player = player_list[s];
 		turn_start_time = System.currentTimeMillis();
-		TurnStartNotify notify = new TurnStartNotify(player_list[s].player_id);
+		TurnStartNotify notify = new TurnStartNotify(cur_player.player_id);
 		desk.NotifyAll(notify);
 		//process_open_ice = false;
 		matrix_old = null;
@@ -174,9 +177,9 @@ public class Game implements Runnable
 		CardData cds[] = new CardData[n];
 		for (int i = 0; i<n; i++){
 			cds[i] = getCardFromCard();
-			player_list[s].addCard(cds[i]);
+			cur_player.addCard(cds[i]);
 		}
-		player_list[s].session.send(new GetCardNotify(cds));
+		cur_player.session.send(new GetCardNotify(cds));
 	}
 	
 	public boolean playerGetCard(){
@@ -315,7 +318,7 @@ public class Game implements Runnable
 		for (int i = 0; i<card_id.length; i++){
 			removeCardFromMatrix(card_id[i]);
 			player_put.remove(cds[i]);
-			player_list[s].addCard(cds[i]);
+			cur_player.addCard(cds[i]);
 		}
 		return RetakeCardResponse.RETAKE_CARD_RESULT_SUCCESS;
 	}
