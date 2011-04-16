@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Elex>
+<Redmine>
+	<Credential>
+		<Username>Honey</Username>
+		<Password>-105:-128:82:96:32:16:-36:-71:-113:1:-40:44:-107:-34:60:-126:99:12:-24:47:99:-36:118:87:42:-115:53:95:-104:28:-25:89:53:-100:-99:-85:17:92:-62:-55:93:-21:-1:52:-39:-83:-57:99:106:-80:-126:-61:6:34:-41:-124:28:13:83:-78:124:-16:101:-40:</Password>
+	</Credential>
+	<GameList>
+		<Game>
+			<GameName>Rummikub</GameName>
+			<GameIdentifier>rummikub</GameIdentifier>
+			<GameVersion>1.0</GameVersion>
+			<CodeSVNAddress>http://appsvn.xingcloud.com/rummikub/1.0/trunk</CodeSVNAddress>
+			<DeploySVNAddress>http://appsvn.xingcloud.com/rummikub/1.0/.deploy</DeploySVNAddress>
+			<Authority>w</Authority>
+			<CreateTime>2011-04-16 14:13:47</CreateTime>
+			<Selected>true</Selected>
+		</Game>
+	</GameList>
+</Redmine>
+<ProjectList>
+	<ElexProject>
+		<Name/>
+	</ElexProject>
+	<FlexProject>
+		<Name>100_LamiServer</Name>
+	</FlexProject>
+	<MOProject>
+		<Name>100_LamiServer</Name>
+	</MOProject>
+	</ProjectList>
+</Elex>

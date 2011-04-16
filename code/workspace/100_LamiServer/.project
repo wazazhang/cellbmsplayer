@@ -15,5 +15,7 @@
 	</buildSpec>
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
+		<nature>com.iw.sns.platform.project.sdk</nature>
+		<nature>com.iw.sns.platform.project.sfs.sdk</nature>
 	</natures>
 </projectDescription>
