@@ -44,7 +44,7 @@ package Class.Model
 		
 		public var isMyturn:Boolean = false; //是否轮到我
 		
-		public var isReady	= false; //是否准备好了
+		public var isReady:Boolean	= false; //是否准备好了
 		
 		public var player_id:int;
 		
