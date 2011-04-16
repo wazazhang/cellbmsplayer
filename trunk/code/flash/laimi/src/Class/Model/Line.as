@@ -118,6 +118,23 @@ package Class.Model
 			return true;
 		}
 		
+		public function getPointWithOutGuest():int
+		{
+			var point:int = 0;
+			var curnode:Card_Cpt = firstCard;
+			do{
+				if(curnode.card!=null&&(!curnode.card.isSended))
+				{
+					point +=curnode.card.point;
+				}
+				curnode = curnode.nextCardCpt
+			}
+			while(curnode!=null)
+			return point;
+		}
+		
+		
+		
 		public function getPoint():int
 		{
 			var array:Array;
