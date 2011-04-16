@@ -204,7 +204,10 @@ package Class
 			if (res is LoginResponse) {
 				var login : LoginResponse = res as LoginResponse;
 				
-				if(login.result == 0)
+				if(login.result == LoginResponse.LOGIN_RESULT_SUCCESS) 
+				// TODO
+				// 不要直接用数字，用常量
+				// 需要处理，如果没有成功，需要提示用户为什么没成功，或重新输入，不能一旦失败，游戏就卡住。
 				{
 					player = login.player;
 					login_cpt.rooms = login.rooms;
@@ -214,10 +217,11 @@ package Class
 			}
 			
 			//响应进入房间
-			if(res is EnterRoomResponse){
+			if(res is EnterRoomResponse)
+			{
 				var enterRoom : EnterRoomResponse =res as EnterRoomResponse;
 			    
-				if(enterRoom.result==0)
+				if(enterRoom.result==0) 
 				{	
 					
 					room_cpt.init(enterRoom.room)
