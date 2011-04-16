@@ -678,9 +678,11 @@ public class MessageCodecJava implements MutualMessageCodec
 	public com.fc.lami.Messages.LoginRequest new_com_fc_lami_Messages_LoginRequest(){return new com.fc.lami.Messages.LoginRequest();}
 	private void _r(com.fc.lami.Messages.LoginRequest msg, NetDataInput in) throws IOException {
 		msg.name = in.readUTF();
+		msg.validate = in.readUTF();
 	}
 	private void _w(com.fc.lami.Messages.LoginRequest msg, NetDataOutput out) throws IOException {
 		out.writeUTF(msg.name);
+		out.writeUTF(msg.validate);
 	}
 
 //	----------------------------------------------------------------------------------------------------
@@ -688,12 +690,12 @@ public class MessageCodecJava implements MutualMessageCodec
 //	----------------------------------------------------------------------------------------------------
 	public com.fc.lami.Messages.LoginResponse new_com_fc_lami_Messages_LoginResponse(){return new com.fc.lami.Messages.LoginResponse();}
 	private void _r(com.fc.lami.Messages.LoginResponse msg, NetDataInput in) throws IOException {
-		msg.result = in.readInt();
+		msg.result = in.readShort();
 		msg.player = in.readExternal(com.fc.lami.Messages.PlayerData.class);
 		msg.rooms = (com.fc.lami.Messages.RoomData[])in.readExternalArray(com.fc.lami.Messages.RoomData.class);
 	}
 	private void _w(com.fc.lami.Messages.LoginResponse msg, NetDataOutput out) throws IOException {
-		out.writeInt(msg.result);
+		out.writeShort(msg.result);
 		out.writeExternal(msg.player);
 		out.writeExternalArray(msg.rooms);
 	}

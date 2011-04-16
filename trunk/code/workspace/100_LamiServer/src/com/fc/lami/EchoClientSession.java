@@ -64,6 +64,7 @@ public class EchoClientSession implements ClientSessionListener
 			player.cur_room.onPlayerLeave(player.player_id);
 		}
 	}
+	
 	@Override
 	public void sentMessage(ClientSession session, Protocol protocol, MessageHeader message) {}
 	
