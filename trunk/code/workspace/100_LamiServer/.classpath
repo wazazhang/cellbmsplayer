@@ -7,5 +7,7 @@
 	<classpathentry exported="true" kind="lib" path="/000_Engine_Core/lib/slf4j-api-1.5.2.jar"/>
 	<classpathentry exported="true" kind="lib" path="/000_Engine_Core/lib/slf4j-simple-1.5.0.jar"/>
 	<classpathentry kind="lib" path="/000_Engine_Core/lib/mina/2.0.3/mina-core-2.0.3.jar" sourcepath="/000_Engine_Core/lib/mina/2.0.3/mina-core-2.0.3-sources.jar"/>
+	<classpathentry kind="lib" path="lib/sfs2x-core.jar"/>
+	<classpathentry kind="lib" path="lib/sfs2x.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
