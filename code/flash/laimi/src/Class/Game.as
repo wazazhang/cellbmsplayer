@@ -248,7 +248,7 @@ package Class
 					legaled = false;
 					return 0;
 				}
-				point += line.getPoint();
+				point += line.getPointWithOutGuest();
 			}
 			matrix.setStyle("borderColor",0x000000);
 			legaled = true;
