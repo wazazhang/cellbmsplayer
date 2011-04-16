@@ -2,9 +2,17 @@ package com.fc.lami;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
+
 import com.cell.CIO;
 import com.cell.j2se.CAppBridge;
 import com.cell.util.concurrent.ThreadPool;
+import com.fc.lami.Messages.LoginRequest;
+import com.fc.lami.Messages.LoginResponse;
+import com.fc.lami.Messages.RoomData;
+import com.fc.lami.login.Login;
+import com.fc.lami.login.User;
+import com.fc.lami.model.Player;
 import com.fc.lami.model.Room;
 import com.net.MessageHeader;
 import com.net.Protocol;
@@ -16,15 +24,24 @@ import com.net.server.ServerListener;
 
 public class Server extends ServerImpl implements ServerListener
 {
-	ThreadPool services = new ThreadPool("Flash-Test");
-	ArrayList<EchoClientSession> client_list = new ArrayList<EchoClientSession>();
-
-	Room rooms[];
+	private ThreadPool 		services 		= new ThreadPool("Flash-Test");
 	
-	public Server(FlashMessageFactory factory) {
+	private Login			login_adapter;
+	
+	/**保证并发访问同步的MAP*/
+	private ConcurrentHashMap<String, EchoClientSession> 
+							client_list 	= new ConcurrentHashMap<String, EchoClientSession> ();
+
+	private Room 			rooms[];
+	
+	public Server(FlashMessageFactory factory) throws Exception
+	{
 		super(CIO.getAppBridge().getClassLoader(), factory, 10, 600, 600, 0);
+		
+		this.login_adapter = (Login)Class.forName(LamiConfig.LOGIN_CLASS).newInstance();
+		
 		int room_number = LamiConfig.ROOM_NUMBER;
-		rooms = new Room[room_number];
+		this.rooms = new Room[room_number];
 		for (int i = 0; i<room_number; i++){
 			rooms[i] = new Room(i, services, LamiConfig.THREAD_INTERVAL);
 		}
@@ -37,31 +54,74 @@ public class Server extends ServerImpl implements ServerListener
 	@Override
 	public ClientSessionListener connected(ClientSession session) {
 		log.info("connected " + session.getRemoteAddress());
-		EchoClientSession c = new EchoClientSession(session, this);
-		client_list.add(c);
-		return c;
+		return new AnySession();
 	}
 	
-	class AnySession implements ClientSessionListener
+	/**
+	 * 任意的链接，一旦非验证链接发送数据，立即断开，防止被黑。
+	 * @author WAZA
+	 */
+	private class AnySession implements ClientSessionListener
 	{
-		public AnySession() {}
+		private EchoClientSession logined_session;
 		
 		@Override
-		public void disconnected(ClientSession session) {}
+		public void receivedMessage(ClientSession session, Protocol protocol, MessageHeader message) {
+			if (message instanceof LoginRequest){
+				processLoginRequest(session, protocol, (LoginRequest)message);
+			} else if (logined_session != null) {
+				logined_session.receivedMessage(session, protocol, message);
+			} else{
+				session.disconnect(false);
+			}
+		}
+		
 		@Override
-		public void receivedMessage(ClientSession session, Protocol protocol, MessageHeader message) {}
+		public void sentMessage(ClientSession session, Protocol protocol, MessageHeader message) {
+			if (logined_session != null) {
+				logined_session.sentMessage(session, protocol, message);
+			}
+		}
+
 		@Override
-		public void sentMessage(ClientSession session, Protocol protocol, MessageHeader message) {}
-	}
-	
-	public ArrayList<EchoClientSession> getClientList(){
-		return client_list;
+		public void disconnected(ClientSession session) {
+			System.out.println("disconnected " + session.getRemoteAddress());
+			if (logined_session != null) {
+				client_list.remove(logined_session.player.getName());
+				logined_session.disconnected(session);
+			}
+		}
+		
+		/**
+		 * 登陆请求
+		 * @param session
+		 * @param protocol
+		 * @param request
+		 */
+		private void processLoginRequest(ClientSession session, Protocol protocol, LoginRequest request) {
+			User user = login_adapter.login(request.name, request.validate);
+			if (user == null) {
+				session.sendResponse(protocol, new LoginResponse(LoginResponse.LOGIN_RESULT_FAIL, null));
+				session.disconnect(false);
+			} else {
+				this.logined_session = new EchoClientSession(session, Server.this, user);
+				LoginResponse res = new LoginResponse(
+						LoginResponse.LOGIN_RESULT_SUCCESS, 
+						this.logined_session.player.getPlayerData());
+				res.rooms = new RoomData[Server.this.getRoomList().length];
+				for (int i = 0; i < getRoomList().length; i++) {
+					res.rooms[i] = getRoomList()[i].getRoomData();
+				}
+				session.sendResponse(protocol, res);
+			}
+			client_list.put(user.getName(), logined_session);
+		}
+		
 	}
 	
 	public Room[] getRoomList(){
 		return rooms;
 	}
-	
 	
 	public static void main(String[] args) throws IOException
 	{

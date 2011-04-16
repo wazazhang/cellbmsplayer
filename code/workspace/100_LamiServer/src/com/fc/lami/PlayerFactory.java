@@ -1,15 +1,15 @@
 package com.fc.lami;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import com.fc.lami.model.Player;
 
 public class PlayerFactory {
 	
-	static int ids = 0;
-	
 	public static Player getPlayer(String name){
 		Player player = new Player();
 		player.name = name;
-		player.player_id = ids++;
+		player.player_id = ids.addAndGet(delta);
 		return player;
 	}
 }
