@@ -36,6 +36,7 @@ import com.fc.lami.Messages.SendCardResponse;
 import com.fc.lami.Messages.SubmitRequest;
 import com.fc.lami.Messages.SubmitResponse;
 import com.fc.lami.Messages.SynchronizeRequest;
+import com.fc.lami.login.User;
 import com.fc.lami.model.Desk;
 import com.fc.lami.model.Game;
 import com.fc.lami.model.Player;
@@ -47,49 +48,32 @@ import com.net.server.ClientSessionListener;
 
 public class EchoClientSession implements ClientSessionListener
 {
-	ClientSession session;
-	Server server;
+	final public ClientSession 	session;
+	final public Server 		server;
+	final public Player 		player;
 	
-	Player player;
-	public EchoClientSession(ClientSession session, Server server) {
+	public EchoClientSession(ClientSession session, Server server, User user) {
 		this.session = session;
 		this.server = server;
+		this.player = new Player(session, user);
 	}
+	
 	@Override
 	public void disconnected(ClientSession session) {
-		
-		System.out.println("disconnected " + session.getRemoteAddress());
 		if (player.cur_room!=null){
 			player.cur_room.onPlayerLeave(player.player_id);
 		}
-		server.getClientList().remove(this);
-//		this.task.cancel(false);
 	}
 	@Override
 	public void sentMessage(ClientSession session, Protocol protocol, MessageHeader message) {}
 	
 	@Override
-	public void receivedMessage(ClientSession session, Protocol protocol, MessageHeader message) {
-		if (message instanceof EchoRequest) {
-//			session.send(new EchoResponse("xxxxxx"));//<--这句代码发送到客户端，是不会触发客户端response监听方法的，只会触发notify方法。
-			session.sendResponse(protocol, new EchoResponse("xxxxxx"+session.getName()));
-		    server.broadcast(message);
-		}
-
-		if (message instanceof EchoResponse) {
-			server.broadcast(message);
-		}
-		else if (message instanceof GetTimeRequest) {
-			session.sendResponse(protocol, new GetTimeResponse(new Date().toString()));
-		}
-		//登陆请求
-		else if (message instanceof LoginRequest){
-			LoginRequest request = (LoginRequest)message;
-			processLoginRequest(session, protocol, request);
-		}
+	public void receivedMessage(ClientSession session, Protocol protocol, MessageHeader message) 
+	{
 		//退出请求
-		else if (message instanceof LogoutRequest){
-			disconnected(session);
+		if (message instanceof LogoutRequest){
+			session.disconnect(false);
+//			disconnected(session); // 这方法不能直接用，这是后台检查到链接断开后的call back
 		}
 		//进入房间请求
 		else if (message instanceof EnterRoomRequest){
@@ -157,28 +141,6 @@ public class EchoClientSession implements ClientSessionListener
 		}
 		
 		System.out.println(message.toString());
-	}
-	
-	/**
-	 * 登陆请求
-	 * @param session
-	 * @param protocol
-	 * @param request
-	 */
-	private void processLoginRequest(ClientSession session, Protocol protocol, LoginRequest request){
-		this.player = PlayerFactory.getPlayer(request.name);
-		if (player==null){
-			session.sendResponse(protocol, new LoginResponse(LoginResponse.LOGIN_RESULT_FAIL, null));
-			disconnected(session);
-		}else{
-			this.player.session = session;
-			LoginResponse res = new LoginResponse(LoginResponse.LOGIN_RESULT_SUCCESS,this.player.getPlayerData());
-			res.rooms = new RoomData[server.getRoomList().length];
-			for (int i = 0; i<server.getRoomList().length; i++){
-				res.rooms[i] = server.getRoomList()[i].getRoomData();
-			}
-			session.sendResponse(protocol, res);
-		}
 	}
 	
 	/** 进入房间请求*/ 

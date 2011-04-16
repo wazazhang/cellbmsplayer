@@ -2,6 +2,7 @@ package com.fc.lami.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.fc.lami.Messages.CardData;
 import com.fc.lami.Messages.PlayerData;
@@ -14,53 +15,54 @@ import com.net.server.ClientSession;
  * @author yagami0079
  *
  */
-public class Player implements User{
-	public int player_id;
+public class Player
+{
+	static private AtomicInteger ids = new AtomicInteger(0);
 	
-	public String name;
+	final public int 			player_id;
+	final public User 			user;
+	final public ClientSession 	session;
 	
 	public boolean is_ready = false;
-	
-	public ClientSession session;
 	
 	public Room cur_room;
 	public Desk cur_desk;
 	
-	public int score = 0;
-	public int win = 0;
-	public int lose = 0;
-	public int level;
+//	public int score = 0;
+//	public int win = 0;
+//	public int lose = 0;
+//	public int level;
 	
 	/** 手中的牌 */
 	public HashMap<Integer, CardData> card_list;
 	
 	/** 是否破冰 */
 	public boolean isOpenIce = false;
-	
-	public Player(){
-
+		
+	public Player(ClientSession session, User user){
+		this.session = session;
+		this.user = user;
+		this.player_id = ids.incrementAndGet();
+		this.is_ready = false;
 	}
 	
-	public Player(ClientSession session, String name, int id){
-		this.session = session;
-		this.name = name;
-		this.player_id = id;
-		this.is_ready = false;
+	public String getName() {
+		return user.getName();
 	}
 	
 	public PlayerData getPlayerData(){
 		PlayerData pd = new PlayerData();
 		pd.player_id = this.player_id;
-		pd.name = this.name;
-		pd.level = this.level;
-		pd.score = this.score;
-		pd.win = this.win;
-		pd.lose = this.lose;
+		pd.name = this.user.getName();
+		pd.level = 1;
+		pd.score = this.user.getScore();
+		pd.win = this.user.getWin();
+		pd.lose = this.user.getLose();
 		return pd;
 	}
 	
-	public Game getGame(){
-		if (cur_desk!=null){
+	public Game getGame() {
+		if (cur_desk != null) {
 			return cur_desk.game;
 		}
 		return null;
@@ -105,8 +107,10 @@ public class Player implements User{
 		this.is_ready = false;
 		this.isOpenIce = false;
 		this.card_list.clear();
-		this.score += 10;
-		this.win+=1;
+//		this.score += 10;
+//		this.win+=1;
+		this.user.addPoint(10);
+		this.user.addWin(1);
 		
 		ResultPak pak = new ResultPak();
 		pak.is_win = true;
@@ -118,8 +122,10 @@ public class Player implements User{
 		this.is_ready = false;
 		this.isOpenIce = false;
 		this.card_list.clear();
-		this.score -= 5;
-		this.lose += 1;
+//		this.score -= 5;
+//		this.lose += 1;
+//		this.user.addScore(value); // 输了不该扣分吧
+		this.user.addLose(1);
 		
 		ResultPak pak = new ResultPak();
 		pak.is_win = false;
@@ -131,36 +137,37 @@ public class Player implements User{
 		this.is_ready = false;
 		this.isOpenIce = false;
 		this.card_list.clear();
-		this.score -= 5;
-		this.lose += 1;
+//		this.score -= 5;
+//		this.lose += 1;
+		this.user.addLose(1);
 	}
 	
-	@Override
-	public int getPoint() {
-		// TODO Auto-generated method stub
-		return score;
-	}
-
-	@Override
-	public int addPoint(int value) throws Exception {
-		score += value;
-		return score;
-	}
-
-	@Override
-	public String getName() {
-		return name;
-	}
-
-	@Override
-	public byte getSex() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public byte[] getHeadImageData() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+//	@Override
+//	public int getPoint() {
+//		// TODO Auto-generated method stub
+//		return score;
+//	}
+//
+//	@Override
+//	public int addPoint(int value) throws Exception {
+//		score += value;
+//		return score;
+//	}
+//
+//	@Override
+//	public String getName() {
+//		return name;
+//	}
+//
+//	@Override
+//	public byte getSex() {
+//		// TODO Auto-generated method stub
+//		return 0;
+//	}
+//
+//	@Override
+//	public byte[] getHeadImageData() {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 }

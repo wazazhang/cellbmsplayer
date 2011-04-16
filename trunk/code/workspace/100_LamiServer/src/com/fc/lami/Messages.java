@@ -578,9 +578,11 @@ public class Messages {
 	public static class LoginRequest extends FlashMessage
 	{
 		public String name;
+		public String validate;
 		
-		public LoginRequest(String name){
+		public LoginRequest(String name, String validate){
 			this.name = name;
+			this.validate = validate;
 		}
 		
 		public LoginRequest(){}
