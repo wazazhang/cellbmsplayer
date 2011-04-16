@@ -12,14 +12,17 @@ package com.fc.lami.Messages
 	[Bindable]
 	public class LoginResponse extends Message
 	{
-		/** Java type is : <font color=#0000ff>int</font> */
-		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
-		static public const LOGIN_RESULT_SUCCESS :  int = 0;
-		/** Java type is : <font color=#0000ff>int</font> */
-		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
-		static public const LOGIN_RESULT_FAIL :  int = 1;
-		/** Java type is : <font color=#0000ff>int</font> */
-		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
+		/** Java type is : <font color=#0000ff>short</font> */
+		[JavaType(name="short", leaf_type=NetDataTypes.TYPE_SHORT)]
+		static public const LOGIN_RESULT_SUCCESS :  int = 1;
+		/** Java type is : <font color=#0000ff>short</font> */
+		[JavaType(name="short", leaf_type=NetDataTypes.TYPE_SHORT)]
+		static public const LOGIN_RESULT_FAIL :  int = -1;
+		/** Java type is : <font color=#0000ff>short</font> */
+		[JavaType(name="short", leaf_type=NetDataTypes.TYPE_SHORT)]
+		static public const LOGIN_RESULT_FAIL_ALREADY_LOGIN :  int = -2;
+		/** Java type is : <font color=#0000ff>short</font> */
+		[JavaType(name="short", leaf_type=NetDataTypes.TYPE_SHORT)]
 		public var result :  int;
 		/** Java type is : <font color=#0000ff>com.fc.lami.Messages.PlayerData</font> */
 		[JavaType(name="com.fc.lami.Messages.PlayerData", leaf_type=NetDataTypes.TYPE_EXTERNALIZABLE)]
@@ -29,7 +32,7 @@ package com.fc.lami.Messages
 		public var rooms :  Array;
 
 		/**
-		 * @param result as <font color=#0000ff>int</font>
+		 * @param result as <font color=#0000ff>short</font>
 		 * @param player as <font color=#0000ff>com.fc.lami.Messages.PlayerData</font>
 		 * @param rooms as <font color=#0000ff>com.fc.lami.Messages.RoomData[]</font>		 */
 		public function LoginResponse(

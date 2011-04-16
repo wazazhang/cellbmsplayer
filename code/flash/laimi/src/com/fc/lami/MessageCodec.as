@@ -804,9 +804,11 @@ package com.fc.lami
 	function new_LoginRequest_26() : com.fc.lami.Messages.LoginRequest {return new com.fc.lami.Messages.LoginRequest();}
 	private function r_LoginRequest_26(msg : com.fc.lami.Messages.LoginRequest, input : NetDataInput) : void {
 		msg.name = input.readJavaUTF();
+		msg.validate = input.readJavaUTF();
 	}
 	private function w_LoginRequest_26(msg : com.fc.lami.Messages.LoginRequest, output : NetDataOutput) : void {
 		output.writeJavaUTF(msg.name);
+		output.writeJavaUTF(msg.validate);
 	}
 
 //	----------------------------------------------------------------------------------------------------
@@ -814,12 +816,12 @@ package com.fc.lami
 //	----------------------------------------------------------------------------------------------------
 	function new_LoginResponse_27() : com.fc.lami.Messages.LoginResponse {return new com.fc.lami.Messages.LoginResponse();}
 	private function r_LoginResponse_27(msg : com.fc.lami.Messages.LoginResponse, input : NetDataInput) : void {
-		msg.result = input.readInt();
+		msg.result = input.readShort();
 		msg.player = input.readExternal() as com.fc.lami.Messages.PlayerData;
 		msg.rooms = input.readExternalArray();
 	}
 	private function w_LoginResponse_27(msg : com.fc.lami.Messages.LoginResponse, output : NetDataOutput) : void {
-		output.writeInt(msg.result);
+		output.writeShort(msg.result);
 		output.writeExternal(msg.player);
 		output.writeExternalArray(msg.rooms);
 	}
