@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<jardesc>
+    <jar path="100_LamiServer/lib/100_LamiServer.jar"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="/100_LamiServer/deploy/100_LamiServer.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="true" overwrite="true" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
+    <selectedProjects/>
+    <manifest generateManifest="true" mainClassHandleIdentifier="=100_LamiServer/src&lt;com.fc.lami{Server.java[Server" manifestLocation="/020_EatWorld_Edit/lib/deploy/client.mf" manifestVersion="1.0" reuseManifest="false" saveManifest="false" usesManifest="true">
+        <sealing sealJar="false">
+            <packagesToSeal/>
+            <packagesToUnSeal/>
+        </sealing>
+    </manifest>
+    <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
+        <javaElement handleIdentifier="=000_Engine_Core/src&lt;com.cell.location"/>
+        <javaElement handleIdentifier="=000_Engine_Core/src&lt;com.cell.util.anno"/>
+        <javaElement handleIdentifier="=000_Engine_Core/gfx"/>
+        <javaElement handleIdentifier="=000_Engine_Core/src&lt;com.cell.nio.anno"/>
+        <javaElement handleIdentifier="=000_Engine_Core/src&lt;com.cell.util.zip"/>
+        <javaElement handleIdentifier="=000_Engine_Core/src&lt;com.cell.util.task"/>
+        <javaElement handleIdentifier="=000_Engine_Core/j2se&lt;com.cell.j2se"/>
+        <javaElement handleIdentifier="=000_Engine_Core/src&lt;com.cell.util"/>
+        <javaElement handleIdentifier="=000_Engine_Core/src&lt;com.cell.util.pack"/>
+        <javaElement handleIdentifier="=000_Engine_Core/src&lt;com.cell.util.concurrent"/>
+        <javaElement handleIdentifier="=000_Engine_Core/snd&lt;com.cell.sound"/>
+        <javaElement handleIdentifier="=002_Engine_Server/src"/>
+        <javaElement handleIdentifier="=000_Engine_Core/src&lt;com.cell.html"/>
+        <javaElement handleIdentifier="=000_Engine_Core/j2se&lt;com.cell.j2se.tool"/>
+        <javaElement handleIdentifier="=002_Engine_Server/flash"/>
+        <javaElement handleIdentifier="=000_Engine_Core/src&lt;com.cell.exception"/>
+        <javaElement handleIdentifier="=000_Engine_Core/snd&lt;com.cell.musicgame"/>
+        <javaElement handleIdentifier="=000_Engine_Core/src&lt;com.cell"/>
+        <javaElement handleIdentifier="=000_Engine_Core/src&lt;com.cell.script.objective"/>
+        <javaElement handleIdentifier="=000_Engine_Core/j2se&lt;com.cell.j2se.awt"/>
+        <javaElement handleIdentifier="=000_Engine_Core/src&lt;com.cell.nio"/>
+        <javaElement handleIdentifier="=000_Engine_Core/src&lt;com.cell.net.http"/>
+        <javaElement handleIdentifier="=000_Engine_Core/src&lt;com.cell.util.event"/>
+        <javaElement handleIdentifier="=002_Engine_Server/mina"/>
+        <javaElement handleIdentifier="=000_Engine_Core/src&lt;com.cell.io"/>
+        <javaElement handleIdentifier="=000_Engine_Core/src&lt;com.cell.reflect"/>
+        <javaElement handleIdentifier="=000_Engine_Core/src&lt;com.cell.classloader.jcl"/>
+        <javaElement handleIdentifier="=000_Engine_Core/src&lt;com.cell.game.ai.pathfind"/>
+        <javaElement handleIdentifier="=000_Engine_Core/src&lt;com.cell.script.js"/>
+        <javaElement handleIdentifier="=000_Engine_Core/src&lt;com.cell.script"/>
+        <javaElement handleIdentifier="=000_Engine_Core/src&lt;com.cell.security"/>
+        <javaElement handleIdentifier="=000_Engine_Core/src&lt;com.cell.math"/>
+        <javaElement handleIdentifier="=100_LamiServer/src"/>
+    </selectedElements>
+</jardesc>
