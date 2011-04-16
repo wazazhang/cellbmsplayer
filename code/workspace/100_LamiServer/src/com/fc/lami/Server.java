@@ -68,7 +68,11 @@ public class Server extends ServerImpl implements ServerListener
 		@Override
 		public void receivedMessage(ClientSession session, Protocol protocol, MessageHeader message) {
 			if (message instanceof LoginRequest){
-				processLoginRequest(session, protocol, (LoginRequest)message);
+				LoginResponse res = processLoginRequest(session, protocol, (LoginRequest)message);
+				session.sendResponse(protocol, res);
+				if (res.result != LoginResponse.LOGIN_RESULT_SUCCESS) {
+					session.disconnect(false);
+				}
 			} else if (logined_session != null) {
 				logined_session.receivedMessage(session, protocol, message);
 			} else{
@@ -98,11 +102,14 @@ public class Server extends ServerImpl implements ServerListener
 		 * @param protocol
 		 * @param request
 		 */
-		private void processLoginRequest(ClientSession session, Protocol protocol, LoginRequest request) {
+		private LoginResponse processLoginRequest(ClientSession session, Protocol protocol, LoginRequest request) {
+			EchoClientSession old_session = client_list.get(request.name);
+			if (old_session == null) {
+				return new LoginResponse(LoginResponse.LOGIN_RESULT_FAIL_ALREADY_LOGIN, null);
+			}
 			User user = login_adapter.login(request.name, request.validate);
 			if (user == null) {
-				session.sendResponse(protocol, new LoginResponse(LoginResponse.LOGIN_RESULT_FAIL, null));
-				session.disconnect(false);
+				return new LoginResponse(LoginResponse.LOGIN_RESULT_FAIL, null);
 			} else {
 				this.logined_session = new EchoClientSession(session, Server.this, user);
 				LoginResponse res = new LoginResponse(
@@ -112,9 +119,9 @@ public class Server extends ServerImpl implements ServerListener
 				for (int i = 0; i < getRoomList().length; i++) {
 					res.rooms[i] = getRoomList()[i].getRoomData();
 				}
-				session.sendResponse(protocol, res);
+				client_list.put(user.getName(), logined_session);
+				return res;
 			}
-			client_list.put(user.getName(), logined_session);
 		}
 		
 	}

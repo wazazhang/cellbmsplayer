@@ -1,84 +1,87 @@
 package com.fc.lami.login.test;
 
+import java.awt.image.BufferedImage;
+import java.util.concurrent.ConcurrentHashMap;
+
+import com.cell.CIO;
 import com.fc.lami.login.Login;
 import com.fc.lami.login.User;
 
 public class LoginDefault implements Login
 {
+	private byte[] default_head = CIO.loadData("/com/fc/lami/login/test/default_head.jpg");
+	
 	@Override
 	public User login(String user, String validate) {
-		// TODO Auto-generated method stub
-		return null;
+		return new DefaultUser(user);
 	}
 	
-	static class DefaultUser implements User
+	private class DefaultUser implements User
 	{
-
-		@Override
-		public int addLose(int value) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		public int addPoint(int value) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		public int addScore(int value) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		public int addWin(int value) {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		public byte[] getHeadImageData() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public int getLose() {
-			// TODO Auto-generated method stub
-			return 0;
+		private String name;
+		private int win;
+		private int lose;
+		private int point;
+		private int score;
+		
+		public DefaultUser(String name) {
+			this.name = name;
 		}
 
 		@Override
 		public String getName() {
-			// TODO Auto-generated method stub
-			return null;
+			return name;
 		}
 
 		@Override
-		public int getPoint() {
-			// TODO Auto-generated method stub
-			return 0;
+		synchronized public byte[] getHeadImageData() {
+			return default_head;
 		}
 
 		@Override
-		public int getScore() {
-			// TODO Auto-generated method stub
-			return 0;
+		synchronized public int getLose() {
+			return lose;
 		}
 
 		@Override
-		public byte getSex() {
-			// TODO Auto-generated method stub
-			return 0;
+		synchronized public int getPoint() {
+			return point;
 		}
 
 		@Override
-		public int getWin() {
-			// TODO Auto-generated method stub
-			return 0;
+		synchronized public int getScore() {
+			return score;
 		}
+
+		@Override
+		synchronized public byte getSex() {
+			return 1;
+		}
+
+		@Override
+		synchronized public int getWin() {
+			return win;
+		}
+		
+		
+		
+		@Override
+		synchronized public int addLose(int value) {
+			return lose += value;
+		}
+		@Override
+		synchronized public int addPoint(int value) {
+			return point += value;
+		}
+		@Override
+		synchronized public int addScore(int value) {
+			return score += value;
+		}
+		@Override
+		synchronized public int addWin(int value) {
+			return win += value;
+		}
+
 		
 	}
 }
