@@ -140,9 +140,14 @@ package Class
 			}
 			
 			else if (ntf is EnterDeskNotify){
+				
+				//Alert.show("ss");
 				var edn : EnterDeskNotify = ntf as EnterDeskNotify;
+				
 				room_cpt.enterDesk(edn);
+				
 				game_cpt.enterPlayer(edn);
+				
 			}
 			
 			else if (ntf is LeaveDeskNotify){

@@ -2,6 +2,7 @@ package Class.Model
 {
 	import Component.Card_Cpt;
 	
+	import mx.controls.Alert;
 	import mx.core.Container;
 	
 	public class Line
@@ -79,8 +80,9 @@ package Class.Model
 		{
 			var array:Array;
 			var curnode:Card_Cpt = firstCard;
-			
+	
 			do{
+				
 				if(curnode.card == null)
 				{
 					if(array==null)
@@ -112,9 +114,16 @@ package Class.Model
 					}	
 				}
 				
+				if(curnode.nextCardCpt==null&&array!=null)
+				{
+					return 	checkZu(array);
+				}
+				
 				curnode = curnode.nextCardCpt;
 			}
-			while(curnode!=lastCard)
+			while(curnode!=null)
+				
+				
 			return true;
 		}
 		
