@@ -9,6 +9,8 @@
 			import com.fc.lami.Messages.DeskData;
 			import com.fc.lami.Messages.PlayerData;
 			import com.fc.lami.Messages.RoomData;
+			
+			import mx.controls.Alert;
 			[Bindable]
 			public var desk:DeskData;
 	        public var player:PlayerData;
@@ -27,18 +29,30 @@
 			
 			private function enter0():void
 			{
+				if(desk.is_started)
+					Alert.show("此座游戏已经开始");
+					
 				Server.enterDesk(desk.desk_id,0)
 			}
 			private function enter1():void
 			{
+				if(desk.is_started)
+					Alert.show("此座游戏已经开始");
+				
 				Server.enterDesk(desk.desk_id,1)
 			}
 			private function enter2():void
 			{
+				if(desk.is_started)
+					Alert.show("此座游戏已经开始");
+				
 				Server.enterDesk(desk.desk_id,2)
 			}
 			private function enter3():void
 			{
+				if(desk.is_started)
+					Alert.show("此座游戏已经开始");
+				
 				Server.enterDesk(desk.desk_id,3)
 			}
 			
