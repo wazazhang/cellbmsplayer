@@ -83,7 +83,10 @@ package Class
 		
 		protected static function client_disconnected(event:ClientEvent):void 
 		{
-			
+			login_cpt.visible = true;
+			room_cpt.visible = false;
+			game_cpt.visible = false;
+			login_cpt.disLink()
 		}
 		
 		
