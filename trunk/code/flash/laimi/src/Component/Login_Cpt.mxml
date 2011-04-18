@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" verticalCenter="0" horizontalCenter="0" width="300" height="172" borderStyle="solid" cornerRadius="5" backgroundColor="#2D2D2D" backgroundAlpha="0.4">
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" verticalCenter="0" 
+		   horizontalCenter="0" width="300" height="172" borderStyle="solid"
+		   cornerRadius="5" backgroundColor="#2D2D2D" backgroundAlpha="0.4"
+		   creationComplete="init()" >
 		<mx:Script>
 			<![CDATA[
 				import Class.Server;
@@ -8,6 +11,14 @@
 				public var rooms:Array;
 				
 				
+				public var linkTimer:Timer = new Timer(200,25);
+				
+				public function init():void
+				{
+					linkTimer.addEventListener(TimerEvent.TIMER_COMPLETE, linkFilad);
+					linkTimer.addEventListener(TimerEvent.TIMER, linking)
+				}
+				
 				public function linkServer():void
 				{
 					bt.enabled = false;
@@ -15,18 +26,36 @@
 					lb2.visible = true;
 					Server.login_cpt = this;
 					Server.linkToServer(TIname.text);
+					
+					linkTimer.reset();
+					linkTimer.start();
 				}
 				
 				
+				public function linking(event:TimerEvent):void
+				{
+					switch( linkTimer.currentCount%3)
+					{
+						case 0 :lb2.text = "连接中.";break;
+						case 1 :lb2.text = "连接中..";break;
+						case 2 :lb2.text = "连接中...";break;
+					}
+				}
+				
+				
+				public function linkFilad(event:TimerEvent):void
+				{
+					lb2.text = "连接超时..."
+				}
+				
 				public function linkSunccess():void
 				{
+					linkTimer.stop();
 					lb.text = "登陆成功!请选择一个房间:"
 					list.dataProvider = rooms;
 					
 					login.visible = false;
 					selectRoom.visible = true;
-					
-					
 				}
 				
 				public function enterRoom():void
@@ -46,7 +75,6 @@
 				{
 					selectRoom.visible = false;
 					login.visible = true;
-					
 					bt.enabled = true;
 					TIname.enabled = true;
 					lb2.visible = true;
@@ -60,7 +88,7 @@
 			<mx:Button id="bt" label="登入" horizontalCenter="94" verticalCenter="0" fontSize="12" click="linkServer()"/>
 			<mx:TextInput id="TIname" x="49" fontSize="16" verticalCenter="0"/>
 			<mx:Button id="bt2" x="123" y="93" label="进入" visible="false" click="enterRoom()"/>
-			<mx:Label y="107" id="lb2" text="waiting..." visible="false" horizontalCenter="0"/>
+			<mx:Label y="107" id="lb2" text="" x="96"/>
 		</mx:Canvas>
 			
 		<mx:Canvas id="selectRoom" width="100%" height="100%" visible="false">	
