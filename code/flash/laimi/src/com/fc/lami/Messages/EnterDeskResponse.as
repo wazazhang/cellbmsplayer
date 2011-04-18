@@ -24,19 +24,25 @@ package com.fc.lami.Messages
 		/** Java type is : <font color=#0000ff>int</font> */
 		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
 		public var result :  int;
-		/** Java type is : <font color=#0000ff>com.fc.lami.Messages.DeskData</font> */
-		[JavaType(name="com.fc.lami.Messages.DeskData", leaf_type=NetDataTypes.TYPE_EXTERNALIZABLE)]
-		public var desk :  com.fc.lami.Messages.DeskData;
+		/** Java type is : <font color=#0000ff>int</font> */
+		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
+		public var desk_id :  int;
+		/** Java type is : <font color=#0000ff>int</font> */
+		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
+		public var seat :  int;
 
 		/**
 		 * @param result as <font color=#0000ff>int</font>
-		 * @param desk as <font color=#0000ff>com.fc.lami.Messages.DeskData</font>		 */
+		 * @param desk_id as <font color=#0000ff>int</font>
+		 * @param seat as <font color=#0000ff>int</font>		 */
 		public function EnterDeskResponse(
 			result :  int = 0,
-			desk :  com.fc.lami.Messages.DeskData = null) 
+			desk_id :  int = 0,
+			seat :  int = 0) 
 		{
 			this.result = result;
-			this.desk = desk;
+			this.desk_id = desk_id;
+			this.seat = seat;
 		}
 	}
 }

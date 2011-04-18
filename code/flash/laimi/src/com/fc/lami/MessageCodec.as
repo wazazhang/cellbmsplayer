@@ -576,13 +576,13 @@ package com.fc.lami
 //	----------------------------------------------------------------------------------------------------
 	function new_EnterDeskNotify_7() : com.fc.lami.Messages.EnterDeskNotify {return new com.fc.lami.Messages.EnterDeskNotify();}
 	private function r_EnterDeskNotify_7(msg : com.fc.lami.Messages.EnterDeskNotify, input : NetDataInput) : void {
-		msg.player = input.readExternal() as com.fc.lami.Messages.PlayerData;
-		msg.desk = input.readExternal() as com.fc.lami.Messages.DeskData;
+		msg.player_id = input.readInt();
+		msg.desk_id = input.readInt();
 		msg.seatID = input.readInt();
 	}
 	private function w_EnterDeskNotify_7(msg : com.fc.lami.Messages.EnterDeskNotify, output : NetDataOutput) : void {
-		output.writeExternal(msg.player);
-		output.writeExternal(msg.desk);
+		output.writeInt(msg.player_id);
+		output.writeInt(msg.desk_id);
 		output.writeInt(msg.seatID);
 	}
 
@@ -605,11 +605,13 @@ package com.fc.lami
 	function new_EnterDeskResponse_9() : com.fc.lami.Messages.EnterDeskResponse {return new com.fc.lami.Messages.EnterDeskResponse();}
 	private function r_EnterDeskResponse_9(msg : com.fc.lami.Messages.EnterDeskResponse, input : NetDataInput) : void {
 		msg.result = input.readInt();
-		msg.desk = input.readExternal() as com.fc.lami.Messages.DeskData;
+		msg.desk_id = input.readInt();
+		msg.seat = input.readInt();
 	}
 	private function w_EnterDeskResponse_9(msg : com.fc.lami.Messages.EnterDeskResponse, output : NetDataOutput) : void {
 		output.writeInt(msg.result);
-		output.writeExternal(msg.desk);
+		output.writeInt(msg.desk_id);
+		output.writeInt(msg.seat);
 	}
 
 //	----------------------------------------------------------------------------------------------------
@@ -652,14 +654,10 @@ package com.fc.lami
 //	----------------------------------------------------------------------------------------------------
 	function new_ExitRoomNotify_13() : com.fc.lami.Messages.ExitRoomNotify {return new com.fc.lami.Messages.ExitRoomNotify();}
 	private function r_ExitRoomNotify_13(msg : com.fc.lami.Messages.ExitRoomNotify, input : NetDataInput) : void {
-		msg.player = input.readExternal() as com.fc.lami.Messages.PlayerData;
-		msg.curRoom = input.readExternal() as com.fc.lami.Messages.RoomData;
-		msg.curDesk = input.readExternal() as com.fc.lami.Messages.DeskData;
+		msg.player_id = input.readInt();
 	}
 	private function w_ExitRoomNotify_13(msg : com.fc.lami.Messages.ExitRoomNotify, output : NetDataOutput) : void {
-		output.writeExternal(msg.player);
-		output.writeExternal(msg.curRoom);
-		output.writeExternal(msg.curDesk);
+		output.writeInt(msg.player_id);
 	}
 
 //	----------------------------------------------------------------------------------------------------
@@ -762,14 +760,12 @@ package com.fc.lami
 //	----------------------------------------------------------------------------------------------------
 	function new_LeaveDeskNotify_23() : com.fc.lami.Messages.LeaveDeskNotify {return new com.fc.lami.Messages.LeaveDeskNotify();}
 	private function r_LeaveDeskNotify_23(msg : com.fc.lami.Messages.LeaveDeskNotify, input : NetDataInput) : void {
-		msg.player = input.readExternal() as com.fc.lami.Messages.PlayerData;
-		msg.desk = input.readExternal() as com.fc.lami.Messages.DeskData;
-		msg.seatID = input.readInt();
+		msg.player_id = input.readInt();
+		msg.desk_id = input.readInt();
 	}
 	private function w_LeaveDeskNotify_23(msg : com.fc.lami.Messages.LeaveDeskNotify, output : NetDataOutput) : void {
-		output.writeExternal(msg.player);
-		output.writeExternal(msg.desk);
-		output.writeInt(msg.seatID);
+		output.writeInt(msg.player_id);
+		output.writeInt(msg.desk_id);
 	}
 
 //	----------------------------------------------------------------------------------------------------
@@ -777,14 +773,12 @@ package com.fc.lami
 //	----------------------------------------------------------------------------------------------------
 	function new_LeaveDeskRequest_24() : com.fc.lami.Messages.LeaveDeskRequest {return new com.fc.lami.Messages.LeaveDeskRequest();}
 	private function r_LeaveDeskRequest_24(msg : com.fc.lami.Messages.LeaveDeskRequest, input : NetDataInput) : void {
-		msg.player = input.readExternal() as com.fc.lami.Messages.PlayerData;
-		msg.desk = input.readExternal() as com.fc.lami.Messages.DeskData;
-		msg.seatID = input.readInt();
+		msg.player_id = input.readInt();
+		msg.desk_id = input.readInt();
 	}
 	private function w_LeaveDeskRequest_24(msg : com.fc.lami.Messages.LeaveDeskRequest, output : NetDataOutput) : void {
-		output.writeExternal(msg.player);
-		output.writeExternal(msg.desk);
-		output.writeInt(msg.seatID);
+		output.writeInt(msg.player_id);
+		output.writeInt(msg.desk_id);
 	}
 
 //	----------------------------------------------------------------------------------------------------
