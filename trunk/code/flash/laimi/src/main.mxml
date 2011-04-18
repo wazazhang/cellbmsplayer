@@ -25,7 +25,8 @@
 	
 	<ns1:Lami id="game" horizontalCenter="0" verticalCenter="0" visible="false">
 	</ns1:Lami> 
-	<ns1:deBug verticalCenter="0" left="10">
+	
+	<ns1:deBug verticalCenter="0" left="10" visible="false">
 	</ns1:deBug>
 	
 </mx:Application>
