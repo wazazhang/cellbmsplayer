@@ -12,28 +12,16 @@ package com.fc.lami.Messages
 	[Bindable]
 	public class ExitRoomNotify extends Message
 	{
-		/** Java type is : <font color=#0000ff>com.fc.lami.Messages.PlayerData</font> */
-		[JavaType(name="com.fc.lami.Messages.PlayerData", leaf_type=NetDataTypes.TYPE_EXTERNALIZABLE)]
-		public var player :  com.fc.lami.Messages.PlayerData;
-		/** Java type is : <font color=#0000ff>com.fc.lami.Messages.RoomData</font> */
-		[JavaType(name="com.fc.lami.Messages.RoomData", leaf_type=NetDataTypes.TYPE_EXTERNALIZABLE)]
-		public var curRoom :  com.fc.lami.Messages.RoomData;
-		/** Java type is : <font color=#0000ff>com.fc.lami.Messages.DeskData</font> */
-		[JavaType(name="com.fc.lami.Messages.DeskData", leaf_type=NetDataTypes.TYPE_EXTERNALIZABLE)]
-		public var curDesk :  com.fc.lami.Messages.DeskData;
+		/** Java type is : <font color=#0000ff>int</font> */
+		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
+		public var player_id :  int;
 
 		/**
-		 * @param player as <font color=#0000ff>com.fc.lami.Messages.PlayerData</font>
-		 * @param curRoom as <font color=#0000ff>com.fc.lami.Messages.RoomData</font>
-		 * @param curDesk as <font color=#0000ff>com.fc.lami.Messages.DeskData</font>		 */
+		 * @param player_id as <font color=#0000ff>int</font>		 */
 		public function ExitRoomNotify(
-			player :  com.fc.lami.Messages.PlayerData = null,
-			curRoom :  com.fc.lami.Messages.RoomData = null,
-			curDesk :  com.fc.lami.Messages.DeskData = null) 
+			player_id :  int = 0) 
 		{
-			this.player = player;
-			this.curRoom = curRoom;
-			this.curDesk = curDesk;
+			this.player_id = player_id;
 		}
 	}
 }

@@ -1,6 +1,7 @@
 package Class
 {
 	import Class.Model.Card;
+	import Class.Model.Room;
 	
 	import Component.Lami;
 	import Component.Login_Cpt;
@@ -57,8 +58,8 @@ package Class
 		public static var login_cpt:Login_Cpt;
 		public static var room_cpt:Room_Cpt;
 		public static var game_cpt:Lami;
-		
-		
+		public static var room:Room;
+				
 		public function Server()
 		{
 			
@@ -138,22 +139,24 @@ package Class
 			
 			else if (ntf is EnterRoomNotify){
 				var ern : EnterRoomNotify = ntf as EnterRoomNotify;	
+				if (room !=null)room.enterRoom(ern.player);
 				room_cpt.enterRoom(ern);					
 			}
 			
 			else if (ntf is ExitRoomNotify){
 				var exrn : ExitRoomNotify = ntf as ExitRoomNotify;
 				room_cpt.leaveRoom(exrn);
+				room.removePlayer(exrn.player_id);
 			}
 			
 			else if (ntf is EnterDeskNotify){
 				
 				//Alert.show("ss");
 				var edn : EnterDeskNotify = ntf as EnterDeskNotify;
+				room.getDesk(edn.desk_id).sitDown(edn.player_id, edn.seatID);
+				room_cpt.enterDesk(edn.player_id, edn.desk_id, edn.seatID);
 				
-				room_cpt.enterDesk(edn);
-				
-				game_cpt.enterPlayer(edn);
+				game_cpt.enterPlayer(edn.player_id, edn.desk_id, edn.seatID);
 				
 			}
 			
@@ -235,7 +238,7 @@ package Class
 			    
 				if(enterRoom.result==0) 
 				{	
-					
+					room = new Room(enterRoom.room);
 					room_cpt.init(enterRoom.room)
 					login_cpt.visible = false;
 					room_cpt.visible = true;
@@ -258,7 +261,7 @@ package Class
 				{
 					room_cpt.visible = false;
 					game_cpt.visible = true;
-					game_cpt.initDesk(enterdesk.desk);
+					game_cpt.initDesk(room.getDesk(enterdesk.desk_id));
 				}
 				else if(enterdesk.result == 1)
 				{
@@ -314,9 +317,9 @@ package Class
 			client.sendRequest(new EnterDeskRequest(deskid,seat),client_response);
 		}
 		
-		public static function leaveDesk(desk:DeskData,seatID:int):void
+		public static function leaveDesk(deskid:int):void
 		{
-			client.sendRequest(new LeaveDeskRequest(player,desk,seatID),client_response);
+			client.sendRequest(new LeaveDeskRequest(player.player_id,deskid),client_response);
 		}
 		
 		public static function ready(ready:Boolean):void
@@ -356,5 +359,7 @@ package Class
 				client.connect(host, port);
 			}
 		}
+		
+
 	}
 }

@@ -12,27 +12,27 @@ package com.fc.lami.Messages
 	[Bindable]
 	public class EnterDeskNotify extends Message
 	{
-		/** Java type is : <font color=#0000ff>com.fc.lami.Messages.PlayerData</font> */
-		[JavaType(name="com.fc.lami.Messages.PlayerData", leaf_type=NetDataTypes.TYPE_EXTERNALIZABLE)]
-		public var player :  com.fc.lami.Messages.PlayerData;
-		/** Java type is : <font color=#0000ff>com.fc.lami.Messages.DeskData</font> */
-		[JavaType(name="com.fc.lami.Messages.DeskData", leaf_type=NetDataTypes.TYPE_EXTERNALIZABLE)]
-		public var desk :  com.fc.lami.Messages.DeskData;
+		/** Java type is : <font color=#0000ff>int</font> */
+		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
+		public var player_id :  int;
+		/** Java type is : <font color=#0000ff>int</font> */
+		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
+		public var desk_id :  int;
 		/** Java type is : <font color=#0000ff>int</font> */
 		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
 		public var seatID :  int;
 
 		/**
-		 * @param player as <font color=#0000ff>com.fc.lami.Messages.PlayerData</font>
-		 * @param desk as <font color=#0000ff>com.fc.lami.Messages.DeskData</font>
+		 * @param player_id as <font color=#0000ff>int</font>
+		 * @param desk_id as <font color=#0000ff>int</font>
 		 * @param seatID as <font color=#0000ff>int</font>		 */
 		public function EnterDeskNotify(
-			player :  com.fc.lami.Messages.PlayerData = null,
-			desk :  com.fc.lami.Messages.DeskData = null,
+			player_id :  int = 0,
+			desk_id :  int = 0,
 			seatID :  int = 0) 
 		{
-			this.player = player;
-			this.desk = desk;
+			this.player_id = player_id;
+			this.desk_id = desk_id;
 			this.seatID = seatID;
 		}
 	}

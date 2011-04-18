@@ -2,15 +2,15 @@
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="828" height="522" borderColor="#FAFBFB" xmlns:Component="Component.*" backgroundColor="#103667">
 	<mx:Script>
 		<![CDATA[
+			import Class.Server;
+			
 			import com.fc.lami.Messages.DeskData;
-			import com.fc.lami.Messages.EnterDeskNotify;
 			import com.fc.lami.Messages.EnterRoomNotify;
 			import com.fc.lami.Messages.ExitRoomNotify;
 			import com.fc.lami.Messages.LeaveDeskNotify;
 			import com.fc.lami.Messages.LeaveDeskRequest;
 			import com.fc.lami.Messages.RoomData;
 			
-			public var room:RoomData
 			public var deskCpts:Array;
 			
 			
@@ -36,17 +36,17 @@
 			}
 			
 			//进入桌子
-			public function enterDesk(nt:EnterDeskNotify):void
+			public function enterDesk(player_id:int, desk_id:int, seat:int):void
 			{
-				var curDeskCpt:Desk_Cpt = getDeskById(nt.desk.desk_id);
-				curDeskCpt.enterPlayer(nt.player.player_id,nt.seatID);
+				var curDeskCpt:Desk_Cpt = getDeskById(desk_id);
+				curDeskCpt.enterPlayer(player_id,seat);
 			}
 			
 			//退出桌子
 			public function leaveDesk(nt:LeaveDeskNotify):void
 			{
-				var curDeskCpt:Desk_Cpt = getDeskById(nt.desk.desk_id);
-				curDeskCpt.leavePlayer(nt.seatID)
+				var curDeskCpt:Desk_Cpt = getDeskById(nt.desk_id);
+				curDeskCpt.leavePlayerByPlayerId(nt.player_id);
 			}
 			
 			//进入房间
@@ -60,12 +60,13 @@
 			//退出房间 
 			public function leaveRoom(nt:ExitRoomNotify):void
 			{
-				if(nt.curDesk!=null)
+				var desk_id:int = Server.room.getPlayerDeskId(nt.player_id);
+				if(desk_id!=-1)
 				{
-					var curDeskCpt:Desk_Cpt = getDeskById(nt.curDesk.desk_id);
-					curDeskCpt.leavePlayerByPlayerId(nt.player.player_id);
+					var curDeskCpt:Desk_Cpt = getDeskById(desk_id);
+					curDeskCpt.leavePlayerByPlayerId(nt.player_id);
 				}
-				addRoomInfo(nt.player.name+"离开房间");	
+				addRoomInfo(Server.room.getPlayerFromPlayerList(nt.player_id).name+"离开房间");	
 			}
 			
 			//根据ID获取桌子
@@ -80,6 +81,8 @@
 				}
 				return null;
 			}
+			
+			
 		]]>
 	</mx:Script>
 	
