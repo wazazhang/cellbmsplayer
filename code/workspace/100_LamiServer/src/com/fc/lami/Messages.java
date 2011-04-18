@@ -708,12 +708,10 @@ public class Messages {
 	
 	public static class ExitRoomNotify extends FlashMessage
 	{
-		public PlayerData player;
-		public RoomData curRoom;
-		public DeskData curDesk;
+		public int player_id;
 		
-		public ExitRoomNotify(PlayerData pd){
-			this.player = pd;
+		public ExitRoomNotify(int pid){
+			this.player_id = pid;
 		}
 		
 		public ExitRoomNotify(){}
@@ -754,13 +752,18 @@ public class Messages {
 		final static public int ENTER_DESK_RESULT_FAIL_PLAYER_EXIST = 1;
 		final static public int ENTER_DESK_RESULT_FAIL_NOT_HAVE_ROOM = 2;
 		public int result;
-		public DeskData desk;
+		public int desk_id;
+		public int seat;
 		
-		public EnterDeskResponse(int result,DeskData desk){
+		public EnterDeskResponse(int result,int desk_id, int seat){
 			this.result = result;
-			this.desk = desk;
+			this.desk_id = desk_id;
+			this.seat = seat;
 		}
 		
+		public EnterDeskResponse(int result){
+			this.result = result;
+		}
 		public EnterDeskResponse(){}
 		
 		@Override
@@ -771,13 +774,13 @@ public class Messages {
 	
 	public static class EnterDeskNotify extends FlashMessage
 	{
-		public PlayerData player;
-		public DeskData desk;
+		public int player_id;
+		public int desk_id;
 		public int seatID;
-		public EnterDeskNotify(PlayerData pd,DeskData desk,int seatid){
-			this.player = pd;
-			this.desk =desk;
-			seatID = seatid;
+		public EnterDeskNotify(int pid, int did,int seatid){
+			this.player_id = pid;
+			this.desk_id = did;
+			this.seatID = seatid;
 		}
 		public EnterDeskNotify(){}
 		@Override
@@ -789,14 +792,12 @@ public class Messages {
 	/** 离开桌子 */
 	public static class LeaveDeskRequest extends FlashMessage
 	{
-		public PlayerData player;
-		public DeskData desk;
-		public int seatID;
+		public int player_id;
+		public int desk_id;
 		
-		public LeaveDeskRequest(PlayerData pd,DeskData desk,int seatid){
-			this.player = pd;
-			this.desk =desk;
-			seatID = seatid;
+		public LeaveDeskRequest(int pid,int desk_id){
+			this.player_id = pid;
+			this.desk_id =desk_id;
 		}
 		public LeaveDeskRequest(){}
 		
@@ -827,14 +828,12 @@ public class Messages {
 	
 	public static class LeaveDeskNotify extends FlashMessage
 	{
-		public PlayerData player;
-		public DeskData desk;
-		public int seatID;
+		public int player_id;
+		public int desk_id;
 		
-		public LeaveDeskNotify(PlayerData pd,DeskData desk,int seatid){
-			this.player = pd;
-			this.desk =desk;
-			seatID = seatid;
+		public LeaveDeskNotify(int pid, int did){
+			this.player_id = pid;
+			this.desk_id = did;
 		}
 		
 		public LeaveDeskNotify(){}
