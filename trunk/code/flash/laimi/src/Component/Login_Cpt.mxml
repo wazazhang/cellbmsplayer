@@ -10,9 +10,9 @@
 				
 				public function linkServer():void
 				{
-					bt.visible = false;
-					TIname.visible = false;
-					lb.visible = true;
+					bt.enabled = false;
+					TIname.enabled = false;
+					lb2.visible = true;
 					Server.login_cpt = this;
 					Server.linkToServer(TIname.text);
 				}
@@ -21,14 +21,18 @@
 				public function linkSunccess():void
 				{
 					lb.text = "登陆成功!请选择一个房间:"
-					cb.dataProvider = rooms
-					cb.visible = true;
-					bt2.visible = true;
+					list.dataProvider = rooms;
+					
+					login.visible = false;
+					selectRoom.visible = true;
+					
+					
 				}
 				
 				public function enterRoom():void
 				{
-					Server.enterRoom((cb.selectedItem as RoomData).room_id)
+					Server.enterRoom((list.selectedItem as RoomData).room_id)
+						
 				}
 				
 				
@@ -37,15 +41,31 @@
 					
 				}
 				
+				
+				public function disLink():void
+				{
+					selectRoom.visible = false;
+					login.visible = true;
+					
+					bt.enabled = true;
+					TIname.enabled = true;
+					lb2.visible = true;
+					lb2.text="与服务器断开连接...";
+				}
+				
 			]]>
 		</mx:Script>
 	
+		<mx:Canvas id="login" width="100%" height="100%">
+			<mx:Button id="bt" label="登入" horizontalCenter="94" verticalCenter="0" fontSize="12" click="linkServer()"/>
+			<mx:TextInput id="TIname" x="49" fontSize="16" verticalCenter="0"/>
+			<mx:Button id="bt2" x="123" y="93" label="进入" visible="false" click="enterRoom()"/>
+			<mx:Label y="107" id="lb2" text="waiting..." visible="false" horizontalCenter="0"/>
+		</mx:Canvas>
+			
+		<mx:Canvas id="selectRoom" width="100%" height="100%" visible="false">	
+			<mx:Label id="lb" text="waiting..." horizontalCenter="0" y="11" visible="true"></mx:Label>
+			<mx:List id="list" height="126" width="200" verticalCenter="12" labelField="room_id" horizontalCenter="0" doubleClickEnabled="true" doubleClick="enterRoom()" ></mx:List>
+		</mx:Canvas>
 	
-		<mx:Button id="bt" label="登入" horizontalCenter="0" verticalCenter="19" fontSize="20" click="linkServer()"/>
-		<mx:Label id="lb" text="waiting..." horizontalCenter="0" y="35" visible="false">
-		</mx:Label>
-		<mx:TextInput id="TIname" x="69" y="55" fontSize="16"/>
-		<mx:Button id="bt2" x="123" y="93" label="进入" visible="false" click="enterRoom()"/>
-		<mx:ComboBox  id="cb" x="69" y="93" labelField="room_id" visible="false"></mx:ComboBox>
-		
 </mx:Canvas>
