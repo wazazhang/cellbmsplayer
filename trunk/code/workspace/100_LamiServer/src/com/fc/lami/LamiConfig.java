@@ -2,10 +2,12 @@ package com.fc.lami;
 
 import com.cell.util.Config;
 import com.cell.util.anno.ConfigField;
+import com.cell.util.anno.ConfigType;
 
 /**  
  * 拉密牌服务器配置
  */
+@ConfigType("拉密牌服务器配置")
 public class LamiConfig extends Config
 {
 	@ConfigField("端口")
