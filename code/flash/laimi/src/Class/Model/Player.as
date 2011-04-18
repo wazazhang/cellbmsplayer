@@ -288,8 +288,8 @@ package Class.Model
 				}
 				while(cardctp != null);
 			}
-			Server.sendPublicMatrix();
 			Game.reset();
+			Server.sendPublicMatrix();
 			Game.check();
 		}
 		
