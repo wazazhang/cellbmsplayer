@@ -37,7 +37,7 @@
 			
 		]]>
 	</mx:Script>
-	<mx:Label x="61" y="17" text="{player.player_id==-1?'空闲':'ID:'+player.player_id}" color="#FEFEFE"/>
+	<mx:Label x="61" y="17" text="{player.player_id==-1?'空闲':'名字:'+player.name}" color="#FEFEFE"/>
 	<mx:Label x="61" y="41" text="{seat}" color="#FEFEFE"/>
 	<mx:Label x="110" y="41" text="{pobing?'已破冰':'未破冰'}" color="#FEFEFE"/>
 	<mx:Label x="62" y="64" text="{gameing?'游戏中':'等待中'}" color="#FEFEFE"/>
