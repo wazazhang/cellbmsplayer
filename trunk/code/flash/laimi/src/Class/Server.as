@@ -353,7 +353,7 @@ package Class
 			player = new PlayerData(0,name);
 			if (!client.isConnected()) {
 				//txt_messages.text = txt_messages.text +"connecting...\n";
-				client.connect('127.0.0.1', 19821);
+				client.connect(host, port);
 			}
 		}
 	}
