@@ -6,7 +6,6 @@
 <mx:Script>
 	<![CDATA[
 		import Class.Game;
-		import Class.Model.ImageButton;
 		import Class.Server;
 			
 			
