@@ -6,10 +6,8 @@ import com.cell.util.anno.ConfigField;
 /**  
  * 拉密牌服务器配置
  */
-public class LamiConfig extends Config{
-	
-	@ConfigField("主机名")
-	public static String 	SERVER_HOST = "127.0.0.1";
+public class LamiConfig extends Config
+{
 	@ConfigField("端口")
 	public static Integer	SERVER_PORT = 19821;
 	@ConfigField("房间数量")
