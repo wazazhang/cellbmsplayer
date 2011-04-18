@@ -10,6 +10,7 @@ import com.cell.util.concurrent.ThreadPool;
 import com.fc.lami.Messages.LoginRequest;
 import com.fc.lami.Messages.LoginResponse;
 import com.fc.lami.Messages.RoomData;
+import com.fc.lami.Messages.RoomSnapShot;
 import com.fc.lami.login.Login;
 import com.fc.lami.login.User;
 import com.fc.lami.model.Player;
@@ -118,9 +119,9 @@ public class Server extends ServerImpl implements ServerListener
 				LoginResponse res = new LoginResponse(
 						LoginResponse.LOGIN_RESULT_SUCCESS, 
 						this.logined_session.player.getPlayerData());
-				res.rooms = new RoomData[Server.this.getRoomList().length];
+				res.rooms = new RoomSnapShot[Server.this.getRoomList().length];
 				for (int i = 0; i < getRoomList().length; i++) {
-					res.rooms[i] = getRoomList()[i].getRoomData();
+					res.rooms[i] = getRoomList()[i].getRoomSnapShot();
 				}
 				client_list.put(user.getName(), logined_session);
 				return res;

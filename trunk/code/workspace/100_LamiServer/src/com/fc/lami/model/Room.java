@@ -105,6 +105,14 @@ public class Room implements Runnable{
 		return rd;
 	}
 	
+	public RoomSnapShot getRoomSnapShot(){
+		RoomSnapShot rs = new RoomSnapShot();
+		rs.room_id = this.room_id;
+		rs.room_name = "房间 "+this.room_id;
+		rs.player_number = player_list.size();
+		return rs;
+	}
+	
 	/** room线程主要监视各个桌子是否有游戏开始 */
 	@Override
 	public void run() {

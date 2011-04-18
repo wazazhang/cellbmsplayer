@@ -140,6 +140,20 @@ public class Messages {
 		}
 	}
 	
+	public static class RoomSnapShot extends FlashMessage
+	{
+		public int room_id;
+		public String room_name;
+		public int player_number;
+		
+		public RoomSnapShot(int room_id, String room_name, int player_number){
+			this.room_id = room_id;
+			this.room_name = room_name;
+			this.player_number = player_number;
+		}
+		
+		public RoomSnapShot(){}
+	}
 	/** 比赛结果包 */
 	public static class ResultPak extends FlashMessage
 	{
@@ -601,7 +615,7 @@ public class Messages {
 		
 		public short result;
 		public PlayerData player;
-		public RoomData rooms[];
+		public RoomSnapShot rooms[];
 		
 		public LoginResponse(short result, PlayerData player){
 			this.result = result;
