@@ -27,14 +27,14 @@ package com.fc.lami.Messages
 		/** Java type is : <font color=#0000ff>com.fc.lami.Messages.PlayerData</font> */
 		[JavaType(name="com.fc.lami.Messages.PlayerData", leaf_type=NetDataTypes.TYPE_EXTERNALIZABLE)]
 		public var player :  com.fc.lami.Messages.PlayerData;
-		/** Java type is : <font color=#0000ff>com.fc.lami.Messages.RoomData[]</font> */
-		[JavaType(name="com.fc.lami.Messages.RoomData[]", leaf_type=NetDataTypes.TYPE_EXTERNALIZABLE)]
+		/** Java type is : <font color=#0000ff>com.fc.lami.Messages.RoomSnapShot[]</font> */
+		[JavaType(name="com.fc.lami.Messages.RoomSnapShot[]", leaf_type=NetDataTypes.TYPE_EXTERNALIZABLE)]
 		public var rooms :  Array;
 
 		/**
 		 * @param result as <font color=#0000ff>short</font>
 		 * @param player as <font color=#0000ff>com.fc.lami.Messages.PlayerData</font>
-		 * @param rooms as <font color=#0000ff>com.fc.lami.Messages.RoomData[]</font>		 */
+		 * @param rooms as <font color=#0000ff>com.fc.lami.Messages.RoomSnapShot[]</font>		 */
 		public function LoginResponse(
 			result :  int = 0,
 			player :  com.fc.lami.Messages.PlayerData = null,
