@@ -23,14 +23,18 @@
 				
 				public function linkServer():void
 				{
+					if (TIname.text.length <= 0) {
+						Alert.show("用户名不能为空");
+					}
+					
 					bt.enabled = false;
 					TIname.enabled = false;
 					lb2.visible = true;
 					Server.login_cpt = this;
 					Server.linkToServer(TIname.text, server_host.text, server_port.value);
-					
 					linkTimer.reset();
 					linkTimer.start();
+					
 				}
 				
 				
