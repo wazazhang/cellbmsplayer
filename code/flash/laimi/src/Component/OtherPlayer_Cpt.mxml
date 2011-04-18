@@ -5,7 +5,8 @@
 		   import com.fc.lami.Messages.PlayerData;
 		   
 			[Bindable]
-			public var player:PlayerData;			
+			public var player:PlayerData;	
+			
 			public var nextOtherPlayer_Cpt:OtherPlayer_Cpt;
 			
 			[Bindable]
