@@ -71,18 +71,18 @@ public class Desk
 	}
 	
 	private void onPlayerEnter(Player player){
-		if (player_E!=null){
-			player_E.session.send(new EnterDeskNotify(player.getPlayerData(),getDeskData(),3));
-		}
-		if (player_W!=null){
-			player_W.session.send(new EnterDeskNotify(player.getPlayerData(),getDeskData(),1));
-		}
-		if (player_S!=null){
-			player_S.session.send(new EnterDeskNotify(player.getPlayerData(),getDeskData(),2));
-		}
-		if (player_N!=null){
-			player_N.session.send(new EnterDeskNotify(player.getPlayerData(),getDeskData(),0));
-		}
+//		if (player_E!=null){
+//			player_E.session.send(new EnterDeskNotify(player.player_id,getDeskData(),3));
+//		}
+//		if (player_W!=null){
+//			player_W.session.send(new EnterDeskNotify(player.player_id,getDeskData(),1));
+//		}
+//		if (player_S!=null){
+//			player_S.session.send(new EnterDeskNotify(player.player_id,getDeskData(),2));
+//		}
+//		if (player_N!=null){
+//			player_N.session.send(new EnterDeskNotify(player.player_id,getDeskData(),0));
+//		}
 	}
 	
 	public int getPlayerNumber(){
@@ -211,7 +211,7 @@ public class Desk
 			seatid = 0;
 		}
 
-		LeaveDeskNotify ntf = new LeaveDeskNotify(player.getPlayerData(),getDeskData(),seatid);
+		LeaveDeskNotify ntf = new LeaveDeskNotify(player.player_id, desk_id);
 		player.cur_room.notifyAll(ntf);
 		
 		if (game!=null){

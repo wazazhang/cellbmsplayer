@@ -79,11 +79,7 @@ public class Room implements Runnable{
 
 			player.cur_room = null;
 			for (Player p : player_list.values()){
-				ExitRoomNotify ern = new ExitRoomNotify(player.getPlayerData());
-				if(player.cur_room!=null)
-					ern.curRoom = player.cur_room.getRoomData();
-				if(player.cur_desk!=null)
-					ern.curDesk = player.cur_desk.getDeskData();
+				ExitRoomNotify ern = new ExitRoomNotify(player.player_id);
 				p.session.send(ern);
 			}
 		}
