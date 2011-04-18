@@ -6,8 +6,8 @@
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/002_Engine_Server"/>
 	<classpathentry kind="lib" path="lib/sfs2x-core.jar"/>
 	<classpathentry kind="lib" path="lib/sfs2x.jar"/>
-	<classpathentry kind="lib" path="lib/mina-core-2.0.3.jar"/>
-	<classpathentry kind="lib" path="lib/slf4j-api-1.5.2.jar"/>
-	<classpathentry kind="lib" path="lib/slf4j-simple-1.5.0.jar"/>
+	<classpathentry kind="lib" path="lib/mina-core.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-api.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-simple.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
