@@ -1,6 +1,7 @@
 package com.fc.lami.model;
 
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.cell.util.concurrent.ThreadPool;
 import com.fc.lami.LamiConfig;
@@ -10,42 +11,54 @@ import com.net.flash.message.FlashMessage;
 
 public class Room implements Runnable{
 	
-	public int room_No;
-	ThreadPool thread_pool;
-	int update_interval;
+	private int 		room_id;
 	
-	int desk_number;
-	public Desk desks[];
+	private ThreadPool 	thread_pool;
 	
-	public HashMap<Integer, Player> player_list;
+	private int			update_interval;
 	
-	public Room(int room_No, ThreadPool tp, int interval)
+	private Desk 		desks[];
+	
+	private ConcurrentHashMap<Integer, Player> player_list;
+	
+	public Room(int room_id, ThreadPool tp, int interval)
 	{
-		this.room_No = room_No;
+		this.room_id = room_id;
 		this.thread_pool = tp;
 		this.update_interval = interval;
-		player_list = new HashMap<Integer, Player>();
-		desk_number = LamiConfig.DESK_NUMBER;
-		desks = new Desk[desk_number];
-		for (int i = 0; i<desk_number; i++){
+		this.player_list = new ConcurrentHashMap<Integer, Player>();
+	
+		this.desks = new Desk[LamiConfig.DESK_NUMBER];
+		for (int i = 0; i<desks.length; i++){
 			desks[i] = new Desk(i, tp, interval);
 		}
+		
 		this.thread_pool.scheduleAtFixedRate(this, update_interval, update_interval);
 	}
 
-	public boolean onPlayerEnter(Player player){
-		
+	public int getRoomID() {
+		return room_id;
+	} 
+	
+	public Desk[] getDesks() {
+		return desks;
+	}
+	
+	public Desk getDesk(int desk_i) {
+		return desks[desk_i];
+	}
+	
+	
+	public boolean onPlayerEnter(Player player)
+	{
 		if (player_list.size()>=LamiConfig.PLAYER_NUMBER_MAX){
 			return false;
 		}
-		
 		player_list.put(player.player_id, player);
 		player.cur_room = this;
-		
 		for (Player p : player_list.values()){
 			p.session.send(new EnterRoomNotify(player.getPlayerData()));
 		}
-		
 		return true;
 	}
 	
@@ -76,22 +89,22 @@ public class Room implements Runnable{
 		}
 	}
 	
-	public RoomData getRoomData(){
+	public RoomData getRoomData()
+	{
 		RoomData rd = new RoomData();
-		rd.room_id = this.room_No;
-		rd.desks = new DeskData[desk_number];
-		for (int i = 0; i<desk_number; i++){
+		rd.room_id = this.room_id;
+		rd.desks = new DeskData[desks.length];
+		for (int i = 0; i<desks.length; i++){
 			if (desks[i]!=null){
 				rd.desks[i] = desks[i].getDeskData();
 			}
 		}
 		int pn = player_list.size();
 		rd.players = new PlayerData[pn];
-		for (int i = 0; i<pn; i++){
-			Player p = player_list.get(i);
-			if (p!=null){
-				rd.players[i] = p.getPlayerData();
-			}
+		int i = 0;
+		for (Player p : player_list.values()) {
+			rd.players[i] = p.getPlayerData();
+			i++;
 		}
 		return rd;
 	}
@@ -99,8 +112,8 @@ public class Room implements Runnable{
 	/** room线程主要监视各个桌子是否有游戏开始 */
 	@Override
 	public void run() {
-		for (int i = 0; i<desk_number; i++){
-			if (desks[i].getPlayerNumber()>0){
+		for (int i = 0; i < desks.length; i++) {
+			if (desks[i].getPlayerNumber() > 0) {
 				desks[i].logic();
 			}
 		}
