@@ -12,12 +12,6 @@
 			
 			public function init():void
 			{
-				//var bt:Bitmap = new Bitmap();
-				//bt.bitmapData.
-				//bt. = img;
-				//var img:Image = new Image()
-				//img.l				
-				//var mybt:ImageButton = new ImageButton(img.,img,img,img);
 			}
 			
 			public function click():void
