@@ -65,6 +65,10 @@ package Class
 			
 		}
 		
+		public static function getClient() : LamiClient {
+			return client;
+		}
+		
 		public static function init():void
 		{
 			client.addEventListener(ClientEvent.CONNECTED, 		client_connected);
@@ -344,7 +348,7 @@ package Class
 		}
 
 		//连接服务器
-		public static function linkToServer(name:String):void
+		public static function linkToServer(name:String, host:String, port:int):void
 		{
 			player = new PlayerData(0,name);
 			if (!client.isConnected()) {
