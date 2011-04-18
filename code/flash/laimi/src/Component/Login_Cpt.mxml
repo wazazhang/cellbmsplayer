@@ -103,7 +103,7 @@
 			<mx:Button id="bt" label="登入" fontSize="12" click="linkServer()" x="215" y="119"/>
 			<mx:TextInput id="TIname" x="47" fontSize="16" y="116"/>
 			<mx:Button id="bt2" x="123" y="93" label="进入" visible="false" click="enterRoom()"/>
-			<mx:TextInput x="47" y="52" width="160" text="127.0.0.1" id="server_host"/>
+			<mx:TextInput x="47" y="52" width="160" text="115.236.18.104" id="server_host"/>
 			<mx:NumericStepper x="47" y="84" width="160" minimum="0" maximum="100000000" value="19821" id="server_port"/>
 			<mx:Label x="10" y="54" text="IP"/>
 			<mx:Label x="10" y="86" text="端口"/>
