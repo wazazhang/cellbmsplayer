@@ -156,6 +156,9 @@ public class MessageCodecJava implements MutualMessageCodec
 		if (msg.getClass().equals(com.fc.lami.Messages.RoomData.class)) {
 			_r((com.fc.lami.Messages.RoomData)msg, in); return;
 		}
+		if (msg.getClass().equals(com.fc.lami.Messages.RoomSnapShot.class)) {
+			_r((com.fc.lami.Messages.RoomSnapShot)msg, in); return;
+		}
 		if (msg.getClass().equals(com.fc.lami.Messages.SendCardNotify.class)) {
 			_r((com.fc.lami.Messages.SendCardNotify)msg, in); return;
 		}
@@ -328,6 +331,9 @@ public class MessageCodecJava implements MutualMessageCodec
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.RoomData.class)) {
 			_w((com.fc.lami.Messages.RoomData)msg, out); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.RoomSnapShot.class)) {
+			_w((com.fc.lami.Messages.RoomSnapShot)msg, out); return;
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.SendCardNotify.class)) {
 			_w((com.fc.lami.Messages.SendCardNotify)msg, out); return;
@@ -686,7 +692,7 @@ public class MessageCodecJava implements MutualMessageCodec
 	private void _r(com.fc.lami.Messages.LoginResponse msg, NetDataInput in) throws IOException {
 		msg.result = in.readShort();
 		msg.player = in.readExternal(com.fc.lami.Messages.PlayerData.class);
-		msg.rooms = (com.fc.lami.Messages.RoomData[])in.readExternalArray(com.fc.lami.Messages.RoomData.class);
+		msg.rooms = (com.fc.lami.Messages.RoomSnapShot[])in.readExternalArray(com.fc.lami.Messages.RoomSnapShot.class);
 	}
 	private void _w(com.fc.lami.Messages.LoginResponse msg, NetDataOutput out) throws IOException {
 		out.writeShort(msg.result);
@@ -942,6 +948,21 @@ public class MessageCodecJava implements MutualMessageCodec
 		out.writeInt(msg.room_id);
 		out.writeExternalArray(msg.desks);
 		out.writeExternalArray(msg.players);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.RoomSnapShot
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.RoomSnapShot new_com_fc_lami_Messages_RoomSnapShot(){return new com.fc.lami.Messages.RoomSnapShot();}
+	private void _r(com.fc.lami.Messages.RoomSnapShot msg, NetDataInput in) throws IOException {
+		msg.room_id = in.readInt();
+		msg.room_name = in.readUTF();
+		msg.player_number = in.readInt();
+	}
+	private void _w(com.fc.lami.Messages.RoomSnapShot msg, NetDataOutput out) throws IOException {
+		out.writeInt(msg.room_id);
+		out.writeUTF(msg.room_name);
+		out.writeInt(msg.player_number);
 	}
 
 //	----------------------------------------------------------------------------------------------------
