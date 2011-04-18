@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="208" height="98"  borderStyle="solid" themeColor="#FF1200">
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="208" height="98">
 	<mx:Script>
 		<![CDATA[
 		   import com.fc.lami.Messages.PlayerData;
@@ -14,7 +14,6 @@
 		    [Bindable]
 			public var ready:Boolean
 			
-			
 			[Bindable]
 			public var gameing:Boolean
 			
@@ -22,6 +21,12 @@
 			[Bindable]
 			public var pobing:Boolean = false;
 			
+			
+			[Embed(source='image/head.png')]
+			public static const head:Class;    
+			
+			[Embed(source='image/nohead.png')]
+			public static const nohead:Class;    
 			
 			public function reset():void{
 				player = null;
@@ -32,9 +37,11 @@
 			
 		]]>
 	</mx:Script>
-	<mx:Label x="73" y="10" text="{player.player_id==-1?'空闲':'ID:'+player.player_id}" color="#FEFEFE"/>
-	<mx:Label x="66" y="38" text="{seat}" color="#FEFEFE"/>
-	<mx:Label x="126" y="38" text="{pobing?'已破冰':'未破冰'}" color="#FEFEFE"/>
-	<mx:Label x="66" y="68" text="{gameing?'游戏中':'等待中'}" color="#FEFEFE"/>
+	<mx:Label x="61" y="17" text="{player.player_id==-1?'空闲':'ID:'+player.player_id}" color="#FEFEFE"/>
+	<mx:Label x="61" y="41" text="{seat}" color="#FEFEFE"/>
+	<mx:Label x="110" y="41" text="{pobing?'已破冰':'未破冰'}" color="#FEFEFE"/>
+	<mx:Label x="62" y="64" text="{gameing?'游戏中':'等待中'}" color="#FEFEFE"/>
+	
+	<mx:Image source="{player.player_id==-1?nohead:head}"  x="12" y="15" height="72" width="48"/>
 	
 </mx:Canvas>
