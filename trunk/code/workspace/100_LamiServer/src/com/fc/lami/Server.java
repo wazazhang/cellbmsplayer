@@ -103,6 +103,9 @@ public class Server extends ServerImpl implements ServerListener
 		 * @param request
 		 */
 		private LoginResponse processLoginRequest(ClientSession session, Protocol protocol, LoginRequest request) {
+			if (request.name == null) {
+				return new LoginResponse(LoginResponse.LOGIN_RESULT_FAIL, null);
+			}
 			EchoClientSession old_session = client_list.get(request.name);
 			if (old_session != null) {
 				return new LoginResponse(LoginResponse.LOGIN_RESULT_FAIL_ALREADY_LOGIN, null);
