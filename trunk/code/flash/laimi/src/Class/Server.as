@@ -38,6 +38,7 @@ package Class
 	import com.fc.lami.Messages.PlayerData;
 	import com.fc.lami.Messages.ReadyNotify;
 	import com.fc.lami.Messages.ReadyRequest;
+	import com.fc.lami.Messages.RepealSendCardNotify;
 	import com.fc.lami.Messages.SubmitRequest;
 	import com.fc.lami.Messages.SubmitResponse;
 	import com.fc.lami.Messages.SynchronizeRequest;
@@ -208,6 +209,16 @@ package Class
 				var oin:OpenIceNotify = ntf as OpenIceNotify;
 				Game.app.onPlayerPoBing(oin.player_id)	
 				//Alert.show("玩家破冰");
+			}
+			else if (ntf is RepealSendCardNotify){
+				var rscn:RepealSendCardNotify = ntf as RepealSendCardNotify;
+				if (player.player_id == rscn.player_id){
+					var cards3 : ArrayCollection = new ArrayCollection();
+					for each(var cd3:CardData in rscn.cds){
+						cards3.addItem(Card.createCardByData(cd3) );
+					}
+					Game.gamer.getCards(cards3);
+				}
 			}
 		}
 		
