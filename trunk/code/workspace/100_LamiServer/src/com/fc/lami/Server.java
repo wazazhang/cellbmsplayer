@@ -43,7 +43,7 @@ public class Server extends ServerImpl implements ServerListener
 		
 		int room_number = LamiConfig.ROOM_NUMBER;
 		this.rooms = new Room[room_number];
-		for (int i = 0; i<room_number; i++){
+		for (int i = 0; i < room_number; i++) {
 			rooms[i] = new Room(i, services, LamiConfig.THREAD_INTERVAL);
 		}
 	}
@@ -147,7 +147,7 @@ public class Server extends ServerImpl implements ServerListener
 	public static void main(String[] args) throws IOException
 	{
 		try {
-			CAppBridge.init();
+			CAppBridge.initNullStorage();
 			MessageFactory factory = new MessageFactory();
 			int port = 19821;
 			if (args.length > 0) {
