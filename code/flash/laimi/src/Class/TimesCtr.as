@@ -9,7 +9,7 @@ package Class
 		
 		
 		private static const optionTime:int = 12;
-		private static const  sumTime:int = 90;
+		private static var sumTime:int = 90;
 		public static var oprTimer:Timer = new Timer(100,optionTime*10);
 		public static var sumTimer:Timer = new Timer(100,sumTime*10);
 		
@@ -69,6 +69,14 @@ package Class
 			sumTimer.reset();
 			oprTimer.stop();
 			sumTimer.stop();
+		}
+		
+		public static function sumTimerSet(time:int):void
+		{
+			sumTimer = new Timer(100, time/100);
+			sumTime = time/1000;
+			sumTimer.addEventListener(TimerEvent.TIMER, sumTimerHandler);
+			sumTimer.addEventListener(TimerEvent.TIMER_COMPLETE, completeHandler);   
 		}
 	}
 }

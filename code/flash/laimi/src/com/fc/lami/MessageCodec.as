@@ -615,11 +615,13 @@ package com.fc.lami
 		msg.result = input.readInt();
 		msg.desk_id = input.readInt();
 		msg.seat = input.readInt();
+		msg.turn_interval = input.readInt();
 	}
 	private function w_EnterDeskResponse_9(msg : com.fc.lami.Messages.EnterDeskResponse, output : NetDataOutput) : void {
 		output.writeInt(msg.result);
 		output.writeInt(msg.desk_id);
 		output.writeInt(msg.seat);
+		output.writeInt(msg.turn_interval);
 	}
 
 //	----------------------------------------------------------------------------------------------------

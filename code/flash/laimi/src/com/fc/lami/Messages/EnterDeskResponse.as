@@ -30,19 +30,25 @@ package com.fc.lami.Messages
 		/** Java type is : <font color=#0000ff>int</font> */
 		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
 		public var seat :  int;
+		/** Java type is : <font color=#0000ff>int</font> */
+		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
+		public var turn_interval :  int;
 
 		/**
 		 * @param result as <font color=#0000ff>int</font>
 		 * @param desk_id as <font color=#0000ff>int</font>
-		 * @param seat as <font color=#0000ff>int</font>		 */
+		 * @param seat as <font color=#0000ff>int</font>
+		 * @param turn_interval as <font color=#0000ff>int</font>		 */
 		public function EnterDeskResponse(
 			result :  int = 0,
 			desk_id :  int = 0,
-			seat :  int = 0) 
+			seat :  int = 0,
+			turn_interval :  int = 0) 
 		{
 			this.result = result;
 			this.desk_id = desk_id;
 			this.seat = seat;
+			this.turn_interval = turn_interval;
 		}
 	}
 }

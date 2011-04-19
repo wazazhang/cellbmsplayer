@@ -262,6 +262,7 @@ package Class
 					room_cpt.visible = false;
 					game_cpt.visible = true;
 					game_cpt.initDesk(room.getDesk(enterdesk.desk_id));
+					TimesCtr.sumTimerSet(enterdesk.turn_interval);
 				}
 				else if(enterdesk.result == 1)
 				{
