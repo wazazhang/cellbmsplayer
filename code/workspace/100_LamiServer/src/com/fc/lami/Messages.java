@@ -768,11 +768,13 @@ public class Messages {
 		public int result;
 		public int desk_id;
 		public int seat;
+		public int turn_interval;
 		
-		public EnterDeskResponse(int result,int desk_id, int seat){
+		public EnterDeskResponse(int result,int desk_id, int seat, int t){
 			this.result = result;
 			this.desk_id = desk_id;
 			this.seat = seat;
+			this.turn_interval = t;
 		}
 		
 		public EnterDeskResponse(int result){
@@ -863,7 +865,7 @@ public class Messages {
 	{
 		public int player_id;
 		
-		public TurnStartNotify(int pid){
+		public TurnStartNotify(int pid, int t){
 			this.player_id = pid;
 		}
 		
