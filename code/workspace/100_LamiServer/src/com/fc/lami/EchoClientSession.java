@@ -172,6 +172,9 @@ public class EchoClientSession implements ClientSessionListener
 	
 	/** 进入桌子请求 */
 	private void processEnterDeskRequest(ClientSession session, Protocol protocol, EnterDeskRequest request){
+		if (player.cur_desk!=null){
+			player.cur_desk.leavePlayer(player);
+		}
 		if (player.cur_room!=null){
 			Desk d = player.cur_room.getDesk(request.desk_No);
 			boolean result = false;
