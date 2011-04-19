@@ -487,11 +487,13 @@ public class MessageCodecJava implements MutualMessageCodec
 		msg.result = in.readInt();
 		msg.desk_id = in.readInt();
 		msg.seat = in.readInt();
+		msg.turn_interval = in.readInt();
 	}
 	private void _w(com.fc.lami.Messages.EnterDeskResponse msg, NetDataOutput out) throws IOException {
 		out.writeInt(msg.result);
 		out.writeInt(msg.desk_id);
 		out.writeInt(msg.seat);
+		out.writeInt(msg.turn_interval);
 	}
 
 //	----------------------------------------------------------------------------------------------------
