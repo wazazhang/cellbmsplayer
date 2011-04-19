@@ -109,6 +109,7 @@
 			<mx:Label x="10" y="86" text="端口"/>
 			<mx:TextArea x="10" y="10" width="257" height="38" text="此界面为测试界面&#xa;服务器ID和通行证帐号需要和第三方对接" editable="false" cornerRadius="0" borderColor="#646566" borderThickness="0" borderStyle="none" backgroundAlpha="0.0" alpha="1.0"/>
 			<mx:Label y="151" id="lb2" x="47" width="160" height="24" enabled="true"/>
+			<mx:Label x="47" y="183" text="ver 0.9" width="160"/>
 		</mx:Canvas>
 			
 		<mx:Canvas id="selectRoom" width="100%" height="100%" visible="false">	
