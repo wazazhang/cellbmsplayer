@@ -91,8 +91,11 @@ public class Server extends ServerImpl implements ServerListener
 		@Override
 		public void disconnected(ClientSession session) {
 			System.out.println("disconnected " + session.getRemoteAddress());
+			
 			if (logined_session != null) {
-				client_list.remove(logined_session.player.getName());
+				synchronized (client_list) {
+					client_list.remove(logined_session.player.getName());
+				}
 				logined_session.disconnected(session);
 			}
 		}
@@ -104,28 +107,35 @@ public class Server extends ServerImpl implements ServerListener
 		 * @param request
 		 */
 		private LoginResponse processLoginRequest(ClientSession session, Protocol protocol, LoginRequest request) {
-			if (request.name == null) {
-				return new LoginResponse(LoginResponse.LOGIN_RESULT_FAIL, null);
-			}
-			EchoClientSession old_session = client_list.get(request.name);
-			if (old_session != null) {
-				return new LoginResponse(LoginResponse.LOGIN_RESULT_FAIL_ALREADY_LOGIN, null);
-			}
-			User user = login_adapter.login(request.name, request.validate);
-			if (user == null) {
-				return new LoginResponse(LoginResponse.LOGIN_RESULT_FAIL, null);
-			} else {
-				this.logined_session = new EchoClientSession(session, Server.this, user);
-				LoginResponse res = new LoginResponse(
-						LoginResponse.LOGIN_RESULT_SUCCESS, 
-						this.logined_session.player.getPlayerData());
-				res.rooms = new RoomSnapShot[Server.this.getRoomList().length];
-				for (int i = 0; i < getRoomList().length; i++) {
-					res.rooms[i] = getRoomList()[i].getRoomSnapShot();
+			synchronized (client_list) {
+				if (request.name == null) {
+					return new LoginResponse(LoginResponse.LOGIN_RESULT_FAIL, null);
 				}
-				client_list.put(user.getName(), logined_session);
-				return res;
+				EchoClientSession old_session = client_list.get(request.name);
+				if (old_session != null) {
+					if (old_session.session.isConnected()) {
+						return new LoginResponse(LoginResponse.LOGIN_RESULT_FAIL_ALREADY_LOGIN, null);
+					} else {
+						client_list.remove(request.name);
+					}
+				}
+				User user = login_adapter.login(request.name, request.validate);
+				if (user == null) {
+					return new LoginResponse(LoginResponse.LOGIN_RESULT_FAIL, null);
+				} else {
+					logined_session = new EchoClientSession(session, Server.this, user);
+					client_list.put(user.getName(), logined_session);
+				}
 			}
+			
+			LoginResponse res = new LoginResponse(
+					LoginResponse.LOGIN_RESULT_SUCCESS, 
+					this.logined_session.player.getPlayerData());
+			res.rooms = new RoomSnapShot[Server.this.getRoomList().length];
+			for (int i = 0; i < getRoomList().length; i++) {
+				res.rooms[i] = getRoomList()[i].getRoomSnapShot();
+			}
+			return res;
 		}
 		
 	}
