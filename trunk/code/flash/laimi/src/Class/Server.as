@@ -284,9 +284,7 @@ package Class
 				if(enterdesk.result==0)
 				{
 					room_cpt.visible = false;
-					
-					
-					
+
 					game = new Game();
 					app.addChild(game.lami);
 					game.timeCtr.sumTimerSet(enterdesk.turn_interval);

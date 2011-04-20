@@ -230,6 +230,7 @@
 				nextPlayer1.gameing = false;
 				nextPlayer2.gameing = false;
 				nextPlayer3.gameing = false;
+				
 				var cpt:OtherPlayer_Cpt = getOtherPlayerCptByPlayerId(playerid);
 				cpt.gameing = true;
 			}
