@@ -52,8 +52,11 @@ package Class
 		public  var cardspostion_x:int = 600;
 		public  var cardspostion_y:int = 20; 
 		
+		public var timeCtr:TimesCtr;
+		
 		public function Game()
 		{
+			timeCtr = new TimesCtr();
 			lami = new Lami();
 			lami.game = this;
 		}
@@ -62,25 +65,19 @@ package Class
 		{
 			//matrix = lami.mx;
 			initMatrix();
-			
 			gamer.game = this;
-			
 			gamer.initMatrix();
-			
 			//initCard();
-			TimesCtr.init();
+			//TimesCtr.init();
 			lami.addEventListener(KeyboardEvent.KEY_DOWN,keydown);
 			lami.addEventListener(KeyboardEvent.KEY_UP,keyup);
 		}
 		
 		public  function start(startCards:ArrayCollection):void
 		{
-			
 			gamer.getStartCard(startCards);
 			lami.optCpt.Start(); 
-			
 		}
-		
 		
 		public  function get canSubmitCard():Boolean
 		{
@@ -318,7 +315,7 @@ package Class
 				return;
 			}
 			setAllCardIssend();
-			TimesCtr.stop();
+			timeCtr.stop();
 			gamer.isMyturn = false;
 			Server.submit();
 		}
@@ -329,15 +326,15 @@ package Class
 			gamer.confiomCard();
 			gamer.isMyturn = true;
 			haveSendCard = false;
-			TimesCtr.start();
+			timeCtr.start();
 		}
 		
 		public  function turnOver():void
 		{
 			//gamer.canOpearation = false;
 			gamer.isMyturn = false;
-			TimesCtr.reset();
-			TimesCtr.stop();
+			timeCtr.reset();
+			timeCtr.stop();
 		}
 		
 		private  function keydown(event:KeyboardEvent):void
