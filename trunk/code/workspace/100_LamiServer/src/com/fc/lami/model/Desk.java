@@ -312,6 +312,7 @@ public class Desk implements ChannelListener
 //		if (player_N!=null){
 //			player_N.session.send(new ReadyNotify(p.player_id, isReady));
 //		}
+		p.is_ready = isReady;
 		channel.send(new ReadyNotify(p.player_id, isReady));
 	}
 

@@ -145,9 +145,12 @@ public class EchoClientSession implements ClientSessionListener
 	}
 	
 	/** 进入房间请求*/ 
-	private void processEnterRoomRequest(ClientSession session, Protocol protocol, EnterRoomRequest request){
-		if (request.room_no<server.getRoomList().length){
-			Room r = server.getRoomList()[request.room_no];
+	private void processEnterRoomRequest(ClientSession session, Protocol protocol, EnterRoomRequest request) {
+		if (player.cur_room != null) {
+			player.cur_room.onPlayerLeave(player.player_id);
+		}
+		Room r = server.getRoom(request.room_no);
+		if (r != null) {
 			if (r.onPlayerEnter(player)){
 				EnterRoomResponse res = new EnterRoomResponse(EnterRoomResponse.ENTER_ROOM_RESULT_SUCCESS);
 				res.room = r.getRoomData();
@@ -156,7 +159,6 @@ public class EchoClientSession implements ClientSessionListener
 			}else{
 				session.sendResponse(protocol, new EnterRoomResponse(EnterRoomResponse.ENTER_ROOM_RESULT_FAIL_ROOM_FULL));
 			}
-			
 		}else{
 			session.sendResponse(protocol, new EnterRoomResponse(EnterRoomResponse.ENTER_ROOM_RESULT_FAIL_ROOM_NOT_EXIST));
 		}
@@ -164,7 +166,7 @@ public class EchoClientSession implements ClientSessionListener
 	
 	/** 退出房间 */
 	private void processExitRoomRequest(ClientSession session, Protocol protocol, ExitRoomRequest request){
-		if (player.cur_room!=null){
+		if (player.cur_room != null) {
 			player.cur_room.onPlayerLeave(player.player_id);
 			session.sendResponse(protocol, new ExitRoomResponse());
 		}
@@ -177,7 +179,22 @@ public class EchoClientSession implements ClientSessionListener
 		}
 		if (player.cur_room != null) {
 			Desk d = player.cur_room.getDesk(request.desk_No);
-			boolean result = d.joinDesk(player, request.seat);
+			if (d != null) {
+				if (d.joinDesk(player, request.seat)){
+					player.cur_desk = d;
+					EnterDeskNotify edn = new EnterDeskNotify(player.getPlayerData().player_id,d.desk_id,request.seat);
+					player.cur_room.broadcast(edn);
+					session.sendResponse(protocol, 
+							new EnterDeskResponse(EnterDeskResponse.ENTER_DESK_RESULT_SUCCESS,
+									d.getDeskData().desk_id, request.seat, LamiConfig.TURN_INTERVAL));
+				} else {
+					session.sendResponse(protocol, 
+							new EnterDeskResponse(EnterDeskResponse.ENTER_DESK_RESULT_FAIL_PLAYER_EXIST));
+				}
+			} else {
+				session.sendResponse(protocol, 
+						new EnterDeskResponse(EnterDeskResponse.ENTER_DESK_RESULT_FAIL_PLAYER_EXIST));
+			}
 //			switch (request.seat){
 //			case 0:
 //				result = d.setPlayerN(player);
@@ -192,15 +209,6 @@ public class EchoClientSession implements ClientSessionListener
 //				result = d.setPlayerE(player);
 //				break;
 //			}
-			
-			if (result){
-				player.cur_desk = d;
-				EnterDeskNotify edn = new EnterDeskNotify(player.getPlayerData().player_id,d.desk_id,request.seat);
-				player.cur_room.broadcast(edn);
-				session.sendResponse(protocol, new EnterDeskResponse(EnterDeskResponse.ENTER_DESK_RESULT_SUCCESS,d.getDeskData().desk_id, request.seat, LamiConfig.TURN_INTERVAL));
-			}else{
-				session.sendResponse(protocol, new EnterDeskResponse(EnterDeskResponse.ENTER_DESK_RESULT_FAIL_PLAYER_EXIST));
-			}
 		}else{
 			// TODO 要先进房间
 			session.sendResponse(protocol, new EnterDeskResponse(EnterDeskResponse.ENTER_DESK_RESULT_FAIL_NOT_HAVE_ROOM));
@@ -209,18 +217,23 @@ public class EchoClientSession implements ClientSessionListener
 	
 	/** 退出桌子请求 */
 	private void processLeaveDeskRequest(ClientSession session, Protocol protocol, LeaveDeskRequest request){
-		player.cur_desk.leaveDesk(player);
-		session.sendResponse(protocol, new LeaveDeskResponse());
+		if (player.cur_desk != null) {
+			player.cur_desk.leaveDesk(player);
+			session.sendResponse(protocol, new LeaveDeskResponse());
+		}
 	}
 	
 	/** 准备好了 */
 	private void processReadyRequest(ClientSession session, Protocol protocol, ReadyRequest request){
 		if (player.cur_desk!=null){
-			player.is_ready = request.isReady;
 			player.cur_desk.onPlayerReady(player, request.isReady);
 		}
 		session.sendResponse(protocol, new ReadyResponse());
 	}
+	
+//	-----------------------------------------------------------------------------------------------------------------------------
+//
+//	-----------------------------------------------------------------------------------------------------------------------------
 	
 	/** 把卡放到桌面上(废弃中) */
 	private void processSendCardRequest(ClientSession session, Protocol protocol, SendCardRequest request){

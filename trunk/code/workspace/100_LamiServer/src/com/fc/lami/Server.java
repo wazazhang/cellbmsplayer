@@ -140,17 +140,24 @@ public class Server extends ServerImpl implements ServerListener
 			LoginResponse res = new LoginResponse(
 					LoginResponse.LOGIN_RESULT_SUCCESS, 
 					this.logined_session.player.getPlayerData());
-			res.rooms = new RoomSnapShot[Server.this.getRoomList().length];
-			for (int i = 0; i < getRoomList().length; i++) {
-				res.rooms[i] = getRoomList()[i].getRoomSnapShot();
+			res.rooms = new RoomSnapShot[rooms.length];
+			for (int i = 0; i < rooms.length; i++) {
+				res.rooms[i] = rooms[i].getRoomSnapShot();
 			}
 			return res;
 		}
 		
 	}
 	
-	public Room[] getRoomList(){
-		return rooms;
+//	public Room[] getRoomList(){
+//		return rooms;
+//	}
+	
+	public Room getRoom(int id) {
+		if (id >= 0 && id < rooms.length) {
+			return rooms[id];
+		}
+		return null;
 	}
 	
 	public static void main(String[] args) throws IOException
