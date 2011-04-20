@@ -56,7 +56,10 @@ public class Room implements ChannelListener, Runnable
 	}
 	
 	public Desk getDesk(int desk_i) {
-		return desks[desk_i];
+		if (desk_i >= 0 && desk_i < desks.length) {
+			return desks[desk_i];
+		}
+		return null;
 	}
 	
 	@Override
