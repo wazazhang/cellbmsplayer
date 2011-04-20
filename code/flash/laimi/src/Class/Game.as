@@ -22,77 +22,80 @@ package Class
 	[Bindable]
 	public class Game
 	{
-		public static var app:Lami;
+		public  var lami:Lami;
 		
 		//列数
-		public static var lineCount:int=7; 
+		public  var lineCount:int=7; 
 		
 		//列数组
-		public static var lineArray:ArrayCollection = new ArrayCollection();
+		public  var lineArray:ArrayCollection = new ArrayCollection();
 		
 		//中央矩形
-		public static var matrix:Matrix_Cpt;
+		public  var matrix:Matrix_Cpt;
 		
 		//数组
-		public static var cards:ArrayCollection = new ArrayCollection();
+		public  var cards:ArrayCollection = new ArrayCollection();
 		
 		//玩家
-		public static var gamer:Player= new Player();
+		public  var gamer:Player= new Player();
 		
 		//当前合法性
-		public static var legaled:Boolean = true;
+		public  var legaled:Boolean = true;
 		
 		//是否有出牌
-		public static var haveSendCard:Boolean = false;
+		public  var haveSendCard:Boolean = false;
 		
 		//是否已经开始
-		public static var isStarted:Boolean = false;
-		
-		//是否可以出牌
-		//public static var canSendCard:Boolean = false;
+		public  var isStarted:Boolean = false;
 		
 		
 		
 		//牌堆坐标
-		public static var cardspostion_x:int = 600;
-		public static var cardspostion_y:int = 20; 
+		public  var cardspostion_x:int = 600;
+		public  var cardspostion_y:int = 20; 
 		
 		public function Game()
 		{
-			
+			lami = new Lami();
+			lami.game = this;
 		}
 		
-		public static function initGame():void
+		public function initGame():void
 		{
+			//matrix = lami.mx;
 			initMatrix();
+			
+			gamer.game = this;
+			
 			gamer.initMatrix();
-			initCard();
+			
+			//initCard();
 			TimesCtr.init();
-			Game.app.addEventListener(KeyboardEvent.KEY_DOWN,keydown);
-			Game.app.addEventListener(KeyboardEvent.KEY_UP,keyup);
+			lami.addEventListener(KeyboardEvent.KEY_DOWN,keydown);
+			lami.addEventListener(KeyboardEvent.KEY_UP,keyup);
 		}
 		
-		public static function start(startCards:ArrayCollection):void
+		public  function start(startCards:ArrayCollection):void
 		{
 			
 			gamer.getStartCard(startCards);
-			app.optCpt.Start(); 
+			lami.optCpt.Start(); 
 			
 		}
 		
 		
-		public static function get canSubmitCard():Boolean
+		public  function get canSubmitCard():Boolean
 		{
 			return legaled&&haveSendCard;
 		}
 		
 		//初始矩阵
-		public static function initMatrix():void
+		public  function initMatrix():void
 		{
 			var curline:Line;
 			for(var i:int=0;i<lineCount;i++)
 			{			
-				var line:Line = new Line(20,false,i+1);
+				var line:Line = new Line(20,false,i+1,this);
 				
 				if(curline != null)
 				{
@@ -114,7 +117,7 @@ package Class
 		}
 		
 		//清空矩阵
-		public static function cleanMatrix():void
+		public  function cleanMatrix():void
 		{
 			for each (var line:Line in lineArray)
 			{
@@ -125,7 +128,7 @@ package Class
 		
 		
 		//初始牌
-		public static function initCard():void
+		public  function initCard():void
 		{
 			var cid:int = 0;
 			for(var i:int=1;i<=13;i++)
@@ -152,7 +155,9 @@ package Class
 			cards.refresh();
 		}
 		
-		public static function getCardFromServer():void
+		
+		
+		public  function getCardFromServer():void
 		{
 			turnOver();
 			Server.getCard();
@@ -160,7 +165,7 @@ package Class
 		}
 		
 		//确定合法性
-		public static function check():Boolean
+		public  function check():Boolean
 		{
 			haveSendCard = checkHaveSendCard();
 			
@@ -178,7 +183,7 @@ package Class
 			return true;
 		}
 		
-		public static function get getPublicCards():Array
+		public  function get getPublicCards():Array
 		{
 			var cards:Array = new Array()
 	
@@ -200,7 +205,7 @@ package Class
 		}
 		
 		//主牌区的变化
-		public static function publicCardChange(is_hardhanded:Boolean, cards:Array):void
+		public  function publicCardChange(is_hardhanded:Boolean, cards:Array):void
 		{
 			if(!is_hardhanded && gamer.isMyturn)
 				return;
@@ -237,7 +242,7 @@ package Class
 		}
 		
 		//获得打出点数
-		public static function getSendPoint():int
+		public  function getSendPoint():int
 		{
 			var point:int=0;
 			for each(var line:Line in lineArray)
@@ -256,7 +261,7 @@ package Class
 		}
 		
 		//判定是否打出
-		public static function checkHaveSendCard():Boolean
+		public  function checkHaveSendCard():Boolean
 		{
 			for each(var line:Line in lineArray)
 			{
@@ -274,7 +279,7 @@ package Class
 		}
 		
 		//撤销
-		public static function reset():void
+		public  function reset():void
 		{
 			for each(var line:Line in lineArray)
 			{
@@ -288,7 +293,7 @@ package Class
 			}
 		}
 		
-		public static function setAllCardIssend():void
+		public  function setAllCardIssend():void
 		{
 			for each(var line:Line in lineArray)
 			{
@@ -307,7 +312,7 @@ package Class
 		}
 		
 		//提交
-		public static function submit():void
+		public  function submit():void
 		{
 			if(!canSubmitCard)
 			{
@@ -320,7 +325,7 @@ package Class
 			Server.submit();
 		}
 		
-		public static function turnStart():void
+		public  function turnStart():void
 		{
 			//gamer.canOpearation = true;
 			gamer.confiomCard();
@@ -329,7 +334,7 @@ package Class
 			TimesCtr.start();
 		}
 		
-		public static function turnOver():void
+		public  function turnOver():void
 		{
 			//gamer.canOpearation = false;
 			gamer.isMyturn = false;
@@ -337,25 +342,25 @@ package Class
 			TimesCtr.stop();
 		}
 		
-		private static function keydown(event:KeyboardEvent):void
+		private  function keydown(event:KeyboardEvent):void
 		{
 			if(event.keyCode==16)
 				gamer.keydwon = true;
 		}
 		
-		private static function keyup(event:KeyboardEvent):void
+		private  function keyup(event:KeyboardEvent):void
 		{
 			gamer.keydwon = false;	
 		}
 		
-		public static function addGameInfo(str:String):void
+		public  function addGameInfo(str:String):void
 		{
-			app.gameinfo.text = str + "\n"+ app.gameinfo.text  ;
+			lami.gameinfo.text = str + "\n"+ lami.gameinfo.text  ;
 		}
 		
-		public static function otherPlayerStart(playerid:int):void
+		public  function otherPlayerStart(playerid:int):void
 		{
-			app.onPlayerStart(playerid);
+			lami.onPlayerStart(playerid);
 		}
 	}
 }

@@ -49,18 +49,28 @@ package Class
 	
 	import mx.collections.ArrayCollection;
 	import mx.controls.Alert;
+	import mx.core.Application;
 	
 	[Bindable]
 	public class Server
 	{
 		
 		protected static var client:LamiClient = new LamiClient();
+		
 		public static var player:PlayerData;
+		
 		public static var login_cpt:Login_Cpt;
+		
 		public static var room_cpt:Room_Cpt;
-		public static var game_cpt:Lami;
+		
+	//	public static var game_cpt:Lami;
+		
 		public static var room:Room;
-				
+		
+		public static var game:Game;
+		
+		public static var app:Application;	
+			
 		public function Server()
 		{
 			
@@ -91,7 +101,8 @@ package Class
 		{
 			login_cpt.visible = true;
 			room_cpt.visible = false;
-			game_cpt.visible = false;
+			game.lami.visible = false;
+			
 			login_cpt.disLink()
 		}
 		
@@ -122,7 +133,7 @@ package Class
 						cards.addItem(Card.createCardByData(cd));
 					}
 				}
-				Game.gamer.getCards(cards);
+				game.gamer.getCards(cards);
 				//Alert.show("notify : GetCardNotify");
 			}
 			
@@ -134,7 +145,7 @@ package Class
 				for each(var cd2:CardData in gsn.cards){
 					cards2.addItem(Card.createCardByData(cd2) );
 				}
-				Game.start(cards2);
+				game.start(cards2);
 			}
 			
 			
@@ -157,57 +168,59 @@ package Class
 				room.getDesk(edn.desk_id).sitDown(edn.player_id, edn.seatID);
 				room_cpt.enterDesk(edn.player_id, edn.desk_id, edn.seatID);
 				
-				game_cpt.enterPlayer(edn.player_id, edn.desk_id, edn.seatID);
+				if(game!=null)
+					game.lami.enterPlayer(edn.player_id, edn.desk_id, edn.seatID);
 				
 			}
 			
 			else if (ntf is LeaveDeskNotify){
 				var ldn : LeaveDeskNotify = ntf as LeaveDeskNotify;
 				room_cpt.leaveDesk(ldn);
-				game_cpt.leavePlayer(ldn);
+				game.lami.leavePlayer(ldn);
 				
 			}
 			
 			else if (ntf is MainMatrixChangeNotify ){
 				var mmcn : MainMatrixChangeNotify = ntf as MainMatrixChangeNotify;
-				Game.publicCardChange(mmcn.is_hardhanded, mmcn.cards);
+				game.publicCardChange(mmcn.is_hardhanded, mmcn.cards);
 				//game_cpt.leavePlayer(ldn);
 			}
 			
 			else if (ntf is ReadyNotify){
 				var rn : ReadyNotify = ntf as ReadyNotify;
-				game_cpt.onPlayerReady(rn.player_id,rn.isReady);
 				
-				Game.cleanMatrix();
-				Game.gamer.cleanMatrix();
+				game.lami.onPlayerReady(rn.player_id,rn.isReady);
+				
+				game.cleanMatrix();
+				game.gamer.cleanMatrix();
 			}
 			
 			else if (ntf is TurnStartNotify){
 				//TODO 轮到自己行动
 				var tsn:TurnStartNotify = ntf as TurnStartNotify;
-				Game.setAllCardIssend();
+				game.setAllCardIssend();
 				
 				if (tsn.player_id == player.player_id){
-					Game.turnStart();
+					game.turnStart();
 				}else{
-					Game.otherPlayerStart(tsn.player_id);
+					game.otherPlayerStart(tsn.player_id);
 				}
 			}
 			else if (ntf is TurnEndNotify){
 				// TODO 自己回合结束
-				Game.turnOver();
+				game.turnOver();
 				//Alert.show("行动结束");
 			}
 			else if (ntf is GameOverNotify){
 				// TODO 此处添加游戏结果的代码
 				var gon:GameOverNotify = ntf as GameOverNotify;
-				Game.app.onGameOver();
+				game.lami.onGameOver();
 				// TODO 重置各个玩家的准备按钮
-				game_cpt.onPlayerReady(player.player_id,false);
+				game.lami.onPlayerReady(player.player_id,false);
 			}
 			else if (ntf is OpenIceNotify){
 				var oin:OpenIceNotify = ntf as OpenIceNotify;
-				Game.app.onPlayerPoBing(oin.player_id)	
+				game.lami.onPlayerPoBing(oin.player_id)	
 				//Alert.show("玩家破冰");
 			}
 			else if (ntf is RepealSendCardNotify){
@@ -217,7 +230,7 @@ package Class
 					for each(var cd3:CardData in rscn.cds){
 						cards3.addItem(Card.createCardByData(cd3) );
 					}
-					Game.gamer.getCards(cards3);
+					game.gamer.getCards(cards3);
 				}
 			}
 		}
@@ -271,8 +284,17 @@ package Class
 				if(enterdesk.result==0)
 				{
 					room_cpt.visible = false;
-					game_cpt.visible = true;
-					game_cpt.initDesk(room.getDesk(enterdesk.desk_id));
+					
+					//game_cpt.visible = true;
+					
+					game = new Game();
+					app.addChild(game.lami);
+					
+					//game.lami.game = game;
+					
+					game.lami.initDesk(room.getDesk(enterdesk.desk_id));
+					//game.initGame();
+					
 					TimesCtr.sumTimerSet(enterdesk.turn_interval);
 				}
 				else if(enterdesk.result == 1)
@@ -307,11 +329,12 @@ package Class
 			{
 				var syn : SynchronizeResponse = res as SynchronizeResponse;
 				
-				Game.publicCardChange(true, syn.matrix);
-				Game.gamer.myCardChange(syn.player_card);
+				game.publicCardChange(true, syn.matrix);
+				game.gamer.myCardChange(syn.player_card);
 			}
 			
 			else if (res is LeaveDeskResponse){
+				
 				room_cpt.visible = true;
 				//game_cpt.visible = true;
 			}
@@ -358,7 +381,7 @@ package Class
 		public static function sendPublicMatrix():void
 		{
 			var res:MainMatrixChangeRequest = new MainMatrixChangeRequest();
-			res.cards = Game.getPublicCards;
+			res.cards = game.getPublicCards;
 			client.sendRequest(res, client_response);
 		}
 

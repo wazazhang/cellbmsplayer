@@ -1,5 +1,7 @@
 package Class.Model
 {
+	import Class.Game;
+	
 	import Component.Card_Cpt;
 	
 	import mx.controls.Alert;
@@ -15,7 +17,7 @@ package Class.Model
 		public var y:int;
 		
 		//单列检测
-		public function Line(length:int,isplayer:Boolean,y:int)
+		public function Line(length:int,isplayer:Boolean,y:int,game:Game)
 		{
 			lineLength = length;
 			firstCard = new Card_Cpt();
@@ -28,12 +30,14 @@ package Class.Model
 				buff.nextCardCpt = new Card_Cpt();
 				buff.cardX = i-1;
 				buff.cardY = y-1;
+				buff.game = game;
 				buff.nextCardCpt.preCardCpt = buff;
 				
 				buff.nextCardCpt.isPlayerOwner = isplayer;
 				buff = buff.nextCardCpt;	
 			}
 			lastCard = buff;
+			lastCard.game = game;
 			lastCard.cardX = lineLength-1;
 			lastCard.cardY = y-1;
 			
