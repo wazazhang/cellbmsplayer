@@ -54,9 +54,9 @@ package Class.Model
 			switch(player_id)
 			{
 				case player_N_id:player_N_id = -1;break;
-				case player_W_id:player_N_id = -1;break;
-				case player_S_id:player_N_id = -1;break;
-				case player_E_id:player_N_id = -1;break;
+				case player_W_id:player_W_id = -1;break;
+				case player_S_id:player_S_id = -1;break;
+				case player_E_id:player_E_id = -1;break;
 			}
 		}
 		
