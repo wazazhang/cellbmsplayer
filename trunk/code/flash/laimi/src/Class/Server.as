@@ -193,8 +193,8 @@ package Class
 
 				room.getDesk(ldn.desk_id).leaveDesk(ldn.player_id);
 				room_cpt.leaveDesk(ldn.player_id, ldn.desk_id);
-
-				game.lami.leavePlayer(ldn.player_id, ldn.desk_id);
+				if(game!=null)
+					game.lami.leavePlayer(ldn.player_id, ldn.desk_id);
 
 				
 			}
@@ -307,6 +307,7 @@ package Class
 					game = new Game();
 					app.addChild(game.lami);
 					game.timeCtr.sumTimerSet(enterdesk.turn_interval);
+					room.getDesk(enterdesk.desk_id).sitDown(player.player_id, enterdesk.seat);
 					game.lami.initDesk(room.getDesk(enterdesk.desk_id));
 				}
 				else if(enterdesk.result == 1)
