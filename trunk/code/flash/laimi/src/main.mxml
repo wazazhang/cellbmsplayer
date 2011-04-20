@@ -8,19 +8,19 @@
 			import Class.Game;
 			import Class.Server;
 			public function init():void
-			{	
-				Server.DEFAULT_HOST	= "115.236.18.104";
-				Server.DEFAULT_PORT = 19821;
+			{
 				//Game.app = game;
 				//gameCmt.init();
 				Server.init();
 				Server.room_cpt = rm;
 				Server.app = this
 				//Server.game_cpt = game;
+				login_cpt.server_host.text = "115.236.18.104";
+				login_cpt.server_port.value = 19821;
 			}
 		]]>
 	</mx:Script>
-	<ns1:Login_Cpt verticalCenter="10" horizontalCenter="9" width="372" height="268">
+	<ns1:Login_Cpt verticalCenter="10" horizontalCenter="9" width="372" height="268" id="login_cpt">
 	</ns1:Login_Cpt>
 	
 	<ns1:Room_Cpt id="rm" horizontalCenter="0" verticalCenter="0" visible="false">
