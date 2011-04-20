@@ -3,6 +3,7 @@ package com.fc.lami;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.cell.CIO;
 import com.cell.j2se.CAppBridge;
@@ -19,6 +20,8 @@ import com.net.MessageHeader;
 import com.net.Protocol;
 import com.net.flash.message.FlashMessageFactory;
 import com.net.minaimpl.server.ServerImpl;
+import com.net.server.Channel;
+import com.net.server.ChannelListener;
 import com.net.server.ClientSession;
 import com.net.server.ClientSessionListener;
 import com.net.server.ServerListener;
@@ -26,6 +29,8 @@ import com.net.server.ServerListener;
 public class Server extends ServerImpl implements ServerListener
 {
 	private ThreadPool 		services 		= new ThreadPool("Flash-Test");
+
+	private AtomicInteger	channel_index	= new AtomicInteger(0);
 	
 	private Login			login_adapter;
 	
@@ -33,7 +38,7 @@ public class Server extends ServerImpl implements ServerListener
 	private ConcurrentHashMap<String, EchoClientSession> 
 							client_list 	= new ConcurrentHashMap<String, EchoClientSession> ();
 
-	private Room 			rooms[];
+	final private Room		rooms[];
 	
 	public Server(FlashMessageFactory factory) throws Exception
 	{
@@ -44,12 +49,16 @@ public class Server extends ServerImpl implements ServerListener
 		int room_number = LamiConfig.ROOM_NUMBER;
 		this.rooms = new Room[room_number];
 		for (int i = 0; i < room_number; i++) {
-			rooms[i] = new Room(i, services, LamiConfig.THREAD_INTERVAL);
+			rooms[i] = new Room(this, i, services, LamiConfig.THREAD_INTERVAL);
 		}
 	}
-
+	
 	public void open(int port) throws IOException {
 		super.open(port, this);
+	}
+	
+	public Channel createChannel(ChannelListener cl) {
+		return getChannelManager().createChannel(channel_index.incrementAndGet(), cl);
 	}
 	
 	@Override

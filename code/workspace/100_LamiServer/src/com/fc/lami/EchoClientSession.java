@@ -172,32 +172,31 @@ public class EchoClientSession implements ClientSessionListener
 	
 	/** 进入桌子请求 */
 	private void processEnterDeskRequest(ClientSession session, Protocol protocol, EnterDeskRequest request){
-		if (player.cur_desk!=null){
-			player.cur_desk.leavePlayer(player);
+		if (player.cur_desk != null) {
+			player.cur_desk.leaveDesk(player);
 		}
-		if (player.cur_room!=null){
+		if (player.cur_room != null) {
 			Desk d = player.cur_room.getDesk(request.desk_No);
-			boolean result = false;
-			
-			switch (request.seat){
-			case 0:
-				result = d.setPlayerN(player);
-				break;
-			case 1:
-				result = d.setPlayerW(player);
-				break;
-			case 2:
-				result = d.setPlayerS(player);
-				break;
-			case 3:
-				result = d.setPlayerE(player);
-				break;
-			}
+			boolean result = d.joinDesk(player, request.seat);
+//			switch (request.seat){
+//			case 0:
+//				result = d.setPlayerN(player);
+//				break;
+//			case 1:
+//				result = d.setPlayerW(player);
+//				break;
+//			case 2:
+//				result = d.setPlayerS(player);
+//				break;
+//			case 3:
+//				result = d.setPlayerE(player);
+//				break;
+//			}
 			
 			if (result){
 				player.cur_desk = d;
 				EnterDeskNotify edn = new EnterDeskNotify(player.getPlayerData().player_id,d.desk_id,request.seat);
-				player.cur_room.notifyAll(edn);
+				player.cur_room.broadcast(edn);
 				session.sendResponse(protocol, new EnterDeskResponse(EnterDeskResponse.ENTER_DESK_RESULT_SUCCESS,d.getDeskData().desk_id, request.seat, LamiConfig.TURN_INTERVAL));
 			}else{
 				session.sendResponse(protocol, new EnterDeskResponse(EnterDeskResponse.ENTER_DESK_RESULT_FAIL_PLAYER_EXIST));
@@ -210,7 +209,7 @@ public class EchoClientSession implements ClientSessionListener
 	
 	/** 退出桌子请求 */
 	private void processLeaveDeskRequest(ClientSession session, Protocol protocol, LeaveDeskRequest request){
-		player.cur_desk.leavePlayer(player);
+		player.cur_desk.leaveDesk(player);
 		session.sendResponse(protocol, new LeaveDeskResponse());
 	}
 	

@@ -3,39 +3,50 @@ package com.fc.lami.model;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.cell.util.concurrent.ThreadPool;
 import com.fc.lami.LamiConfig;
+import com.fc.lami.Server;
 import com.fc.lami.Messages.*;
+import com.net.MessageHeader;
 import com.net.flash.message.FlashMessage;
+import com.net.server.Channel;
+import com.net.server.ChannelListener;
+import com.net.server.ClientSession;
 
 
-public class Room implements Runnable{
+public class Room implements ChannelListener, Runnable
+{
+	static private Logger		log = LoggerFactory.getLogger(Room.class);
 	
-	private int 		room_id;
+	final private int 			room_id;
+
+	final private Channel		channel;
 	
-	private ThreadPool 	thread_pool;
+	final private ThreadPool 	thread_pool;
 	
-	private int			update_interval;
+	final private Desk 			desks[];
 	
-	private Desk 		desks[];
+	final private ConcurrentHashMap<Integer, Player> player_list;
 	
-	private ConcurrentHashMap<Integer, Player> player_list;
 	
-	public Room(int room_id, ThreadPool tp, int interval)
+	public Room(Server server, int room_id, ThreadPool tp, int interval)
 	{
-		this.room_id = room_id;
-		this.thread_pool = tp;
-		this.update_interval = interval;
-		this.player_list = new ConcurrentHashMap<Integer, Player>();
-	
-		this.desks = new Desk[LamiConfig.DESK_NUMBER];
+		this.room_id 		= room_id;
+		this.channel 		= server.createChannel(this);
+		this.thread_pool 	= tp;
+		this.player_list 	= new ConcurrentHashMap<Integer, Player>();
+		this.desks 			= new Desk[LamiConfig.DESK_NUMBER];
+		
 		for (int i = 0; i<desks.length; i++){
-			desks[i] = new Desk(i, tp, interval);
+			desks[i] = new Desk(server, i, this, tp, interval);
 		}
 		
-		this.thread_pool.scheduleAtFixedRate(this, update_interval, update_interval);
+		this.thread_pool.scheduleAtFixedRate(this, interval, interval);
 	}
-
+	
 	public int getRoomID() {
 		return room_id;
 	} 
@@ -48,41 +59,60 @@ public class Room implements Runnable{
 		return desks[desk_i];
 	}
 	
+	@Override
+	public void receivedMessage(Channel channel, ClientSession sender, MessageHeader message) {
+	}
+	@Override
+	public void sessionJoined(Channel channel, ClientSession session) {
+	}
+	@Override
+	public void sessionLeaved(Channel channel, ClientSession session) {
+	}
 	
 	public boolean onPlayerEnter(Player player)
 	{
-		if (player_list.size()>=LamiConfig.PLAYER_NUMBER_MAX){
-			return false;
-		}
-		player_list.put(player.player_id, player);
-		player.cur_room = this;
-		for (Player p : player_list.values()){
-			p.session.send(new EnterRoomNotify(player.getPlayerData()));
-		}
+		synchronized (player_list) {
+			if (player_list.size()>=LamiConfig.PLAYER_NUMBER_MAX){
+				return false;
+			}
+			if (player_list.contains(player.player_id)) {
+				return false;
+			}
+			player_list.put(player.player_id, player);
+			player.cur_room = this;
+		}			
+		channel.join(player.session);
+		broadcast(new EnterRoomNotify(player.getPlayerData()));
+		log.info("player [" + player.getName() + "] enter room [" + getRoomID() + "]");
+//		for (Player p : player_list.values()){
+//			p.session.send(new EnterRoomNotify(player.getPlayerData())); // 同样消息NEW太多对象
+//		}
 		return true;
-	}
-	
-	public void notifyAll(FlashMessage msg)
-	{
-		for (Player p : player_list.values()){
-			p.session.send(msg);
-		}
 	}
 	
 	
 	public void onPlayerLeave(int pid){
 		Player player = player_list.remove(pid);
-		if (player!=null){
-			if (player.cur_desk !=null){
-				player.cur_desk.leavePlayer(player);
+		if (player != null) {
+			if (player.cur_desk != null) {
+				player.cur_desk.leaveDesk(player);
 			}
-
 			player.cur_room = null;
-			for (Player p : player_list.values()){
-				ExitRoomNotify ern = new ExitRoomNotify(player.player_id);
-				p.session.send(ern);
-			}
+			broadcast(new ExitRoomNotify(player.player_id));
+//			for (Player p : player_list.values()){
+//				ExitRoomNotify ern = new ExitRoomNotify(player.player_id);
+//				p.session.send(ern);
+//			}
+			log.info("player [" + player.getName() + "] leave room [" + getRoomID() + "]");
 		}
+	}
+
+	public void broadcast(FlashMessage msg)
+	{
+//		for (Player p : player_list.values()){
+//			p.session.send(msg);
+//		}
+		channel.send(msg);
 	}
 	
 	public RoomData getRoomData()
@@ -95,12 +125,14 @@ public class Room implements Runnable{
 				rd.desks[i] = desks[i].getDeskData();
 			}
 		}
-		int pn = player_list.size();
-		rd.players = new PlayerData[pn];
-		int i = 0;
-		for (Player p : player_list.values()) {
-			rd.players[i] = p.getPlayerData();
-			i++;
+		synchronized (player_list) {
+			int pn = player_list.size();
+			rd.players = new PlayerData[pn];
+			int i = 0;
+			for (Player p : player_list.values()) {
+				rd.players[i] = p.getPlayerData();
+				i++;
+			}
 		}
 		return rd;
 	}

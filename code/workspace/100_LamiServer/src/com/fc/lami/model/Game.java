@@ -166,7 +166,7 @@ public class Game implements Runnable
 		cur_player = player_list[s];
 		turn_start_time = System.currentTimeMillis();
 		TurnStartNotify notify = new TurnStartNotify(cur_player.player_id, LamiConfig.TURN_INTERVAL);
-		desk.NotifyAll(notify);
+		desk.broadcast(notify);
 		//process_open_ice = false;
 		matrix_old = null;
 		player_put.clear();
@@ -483,7 +483,7 @@ public class Game implements Runnable
 			cds[t++] = cd;
 		}
 
-		desk.NotifyAll(new RepealSendCardNotify(getCurPlayer().player_id, cds));
+		desk.broadcast(new RepealSendCardNotify(getCurPlayer().player_id, cds));
 
 		
 		ArrayList<CardData> ml = new ArrayList<CardData>();
@@ -498,7 +498,7 @@ public class Game implements Runnable
 		}
 		CardData[] m = new CardData[ml.size()];
 		ml.toArray(m);
-		desk.NotifyAll(new MainMatrixChangeNotify(true, m));
+		desk.broadcast(new MainMatrixChangeNotify(true, m));
 		player_put.clear();
 	}
 	
@@ -622,7 +622,7 @@ public class Game implements Runnable
 			getCurPlayer().addCard(cd);
 			player_put.remove(cd.id);
 		}
-		desk.NotifyAll(new MainMatrixChangeNotify(false, notify_cds));
+		desk.broadcast(new MainMatrixChangeNotify(false, notify_cds));
 		return true;
 	}
 	
@@ -679,7 +679,7 @@ public class Game implements Runnable
 					rp[0] = player_list[0].onPlayerWin();
 				}
 				GameOverNotify notify = new GameOverNotify(GameOverNotify.GAME_OVER_TYPE_ESCAPE, rp);
-				desk.NotifyAll(notify);
+				desk.broadcast(notify);
 				is_over = true;
 			}else{
 				for (int i = 0; i<player_list.length; i++){
@@ -687,7 +687,7 @@ public class Game implements Runnable
 						s = i;
 						turn_start_time = System.currentTimeMillis();
 						TurnStartNotify notify = new TurnStartNotify(player_list[s].player_id, LamiConfig.TURN_INTERVAL);
-						desk.NotifyAll(notify);
+						desk.broadcast(notify);
 						//process_open_ice = false;
 						matrix_old = null;
 						player_put.clear();
@@ -708,14 +708,14 @@ public class Game implements Runnable
 			if (System.currentTimeMillis() - start_time >= 10000){
 				turn_start_time = System.currentTimeMillis();
 				TurnStartNotify notify = new TurnStartNotify(player_list[s].player_id, LamiConfig.TURN_INTERVAL);
-				desk.NotifyAll(notify);
+				desk.broadcast(notify);
 				is_start_time = false;
 			}
 		}
 		//TODO 处理超时，处理游戏是否结束
 		else if (!is_over){
 			if (System.currentTimeMillis() - turn_start_time>=LamiConfig.TURN_INTERVAL){
-				System.err.println("player "+getCurPlayer().getName()+" 超时");
+				System.err.println("player " + getCurPlayer().getName() + " 超时");
 				if (!player_put.isEmpty() /*|| process_open_ice*/){
 					if (submit() == SubmitResponse.SUBMIT_RESULT_SUCCESS){
 						
