@@ -48,6 +48,7 @@ package Class.Model
 		
 		public var player_id:int;
 		
+		public var game:Game;
 		
 		public function Player()
 		{
@@ -59,7 +60,7 @@ package Class.Model
 			var curline:Line;
 			for(var i:int=0;i<matrix_height;i++)
 			{
-				var line:Line = new Line(matrix_length,true,i+1);
+				var line:Line = new Line(matrix_length,true,i+1,game);
 				if(curline != null)
 				{
 					curline.nextLine = line;
@@ -140,7 +141,7 @@ package Class.Model
 				return;
 			}
 			//canOpearation = false;
-			Game.getCardFromServer();
+			game.getCardFromServer();
 			//getCard(Game.getCardFromCard());
 			
 		}
@@ -225,7 +226,7 @@ package Class.Model
 		
 		public function submit():Boolean
 		{
-			if(!Game.check())
+			if(!game.check())
 			{
 				Alert.show("出牌不符合规则");
 				return false;
@@ -233,7 +234,7 @@ package Class.Model
 			
 			if(isCold)
 			{
-				var sum:int = Game.getSendPoint();
+				var sum:int = game.getSendPoint();
 				
 				if(sum<30)
 				{
@@ -246,7 +247,7 @@ package Class.Model
 				}
 			}
 			
-			Game.submit();
+			game.submit();
 			confiomCard();
 			//Game.canSendCard = false;
 			return true;
@@ -288,9 +289,9 @@ package Class.Model
 				}
 				while(cardctp != null);
 			}
-			Game.reset();
+			game.reset();
 			Server.sendPublicMatrix();
-			Game.check();
+			game.check();
 		}
 		
 		public function orderCard():void
@@ -428,8 +429,8 @@ package Class.Model
 			var moveCard:Card_Cpt = new Card_Cpt();
 			matrix.addChild(moveCard);
 			moveCard.isShow = true;
-			moveCard.x = Game.cardspostion_x;
-			moveCard.y = Game.cardspostion_y;
+			moveCard.x = game.cardspostion_x;
+			moveCard.y = game.cardspostion_y;
 			moveCard.card = new Card(card.point,card.type, card.id);
 			moveCard.card.nextCard  = card.nextCard;
 			moveCard.nextCardCpt = card.cardUI;
@@ -459,7 +460,7 @@ package Class.Model
 			}
 			else
 			{
-				if(Game.gamer.isMyturn)
+				if(game.gamer.isMyturn)
 				{
 					//Game.isStarted = true;
 					TimesCtr.start();

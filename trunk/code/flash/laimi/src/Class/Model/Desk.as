@@ -38,7 +38,7 @@ package Class.Model
 		
 		public function getSeat(player_id:int):int
 		{
-			var seat = -1;
+			var seat:int = -1;
 			switch(player_id)
 			{
 				case player_N_id:seat = 0;break;
