@@ -54,6 +54,8 @@ package Class
 	[Bindable]
 	public class Server
 	{
+		public static var DEFAULT_HOST : String 	= "localhost";
+		public static var DEFAULT_PORT : int		= 19821;
 		
 		protected static var client:LamiClient = new LamiClient();
 		

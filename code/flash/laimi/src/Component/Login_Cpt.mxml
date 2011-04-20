@@ -17,6 +17,9 @@
 				
 				public function init():void
 				{
+					server_host.text = Server.DEFAULT_HOST;
+					server_port.value = Server.DEFAULT_PORT;
+					
 					linkTimer.addEventListener(TimerEvent.TIMER_COMPLETE, linkFilad);
 					linkTimer.addEventListener(TimerEvent.TIMER, linking)
 				}

@@ -9,6 +9,8 @@
 			import Class.Server;
 			public function init():void
 			{	
+				Server.DEFAULT_HOST	= "115.236.18.104";
+				Server.DEFAULT_PORT = 19821;
 				//Game.app = game;
 				//gameCmt.init();
 				Server.init();
