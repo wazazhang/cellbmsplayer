@@ -48,8 +48,6 @@ package Class
 		//是否已经开始
 		public  var isStarted:Boolean = false;
 		
-		
-		
 		//牌堆坐标
 		public  var cardspostion_x:int = 600;
 		public  var cardspostion_y:int = 20; 
