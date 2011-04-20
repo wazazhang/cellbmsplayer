@@ -2,6 +2,7 @@ package Class
 {
 	import Class.Model.Card;
 	import Class.Model.Room;
+	import Class.Model.Desk;
 	
 	import Component.Lami;
 	import Component.Login_Cpt;
@@ -64,7 +65,7 @@ package Class
 		
 	//	public static var game_cpt:Lami;
 		
-		public static var room:Room;
+		private static var room:Room;
 		
 		public static var game:Game;
 		
@@ -86,6 +87,21 @@ package Class
 			client.addEventListener(ClientEvent.DISCONNECTED,	client_disconnected);
 			// 监听服务器主动发送过来的通知
 			client.addNotifyListener(client_notify);
+		}
+		
+		public static function getPlayer(player_id:int):PlayerData
+		{
+			return room.getPlayerFromPlayerList(player_id);
+		}
+		
+		public static function getDesk(desk_id:int):Desk
+		{
+			return room.getDesk(desk_id);
+		}
+		
+		public static function getPlayerDeskId(player_id):int
+		{
+			return room.getPlayerDeskId(player_id);
 		}
 		
 		//与服务器连接
@@ -151,12 +167,12 @@ package Class
 			else if (ntf is EnterRoomNotify){
 				var ern : EnterRoomNotify = ntf as EnterRoomNotify;	
 				if (room !=null)room.enterRoom(ern.player);
-				room_cpt.enterRoom(ern);					
+				room_cpt.enterRoom(ern.player);					
 			}
 			
 			else if (ntf is ExitRoomNotify){
 				var exrn : ExitRoomNotify = ntf as ExitRoomNotify;
-				room_cpt.leaveRoom(exrn);
+				room_cpt.leaveRoom(exrn.player_id);
 				room.removePlayer(exrn.player_id);
 			}
 			
@@ -174,8 +190,12 @@ package Class
 			
 			else if (ntf is LeaveDeskNotify){
 				var ldn : LeaveDeskNotify = ntf as LeaveDeskNotify;
-				room_cpt.leaveDesk(ldn);
-				game.lami.leavePlayer(ldn);
+
+				room.getDesk(ldn.desk_id).leaveDesk(ldn.player_id);
+				room_cpt.leaveDesk(ldn.player_id, ldn.desk_id);
+
+				game.lami.leavePlayer(ldn.player_id, ldn.desk_id);
+
 				
 			}
 			

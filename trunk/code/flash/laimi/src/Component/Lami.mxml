@@ -11,7 +11,6 @@
 			import Class.Server;
 			import Class.TimesCtr;
 			
-			import com.fc.lami.Messages.LeaveDeskNotify;
 			import com.fc.lami.Messages.PlayerData;
 			
 			import mx.controls.Alert;
@@ -90,7 +89,7 @@
 					index ++;
 					if(index==4)
 						index = 0
-					cpt.player = Server.room.getPlayerFromPlayerList(getPlayerIDbySeatID(index));
+					cpt.player = Server.getPlayer(getPlayerIDbySeatID(index));
 					cpt.seat = getDir(index);
 					cpt = cpt.nextOtherPlayer_Cpt;
 				}
@@ -142,18 +141,17 @@
 					return
 
 				initSeat(desk);
-				addInfo(Server.room.getPlayerFromPlayerList(player_id).name+"进入桌子");
+				addInfo(Server.getPlayer(player_id).name+"进入桌子");
 			}
 			
 			
 			//有人员离开
-			public function leavePlayer(nt:LeaveDeskNotify):void
+			public function leavePlayer(player_id:int, desk_id:int):void
 			{
-				if(desk ==null ||nt.desk_id!=desk.desk_id)
+				if(desk ==null || desk_id!=desk.desk_id)
 					return	
-				desk.leaveDesk(nt.player_id);
 				initSeat(desk);
-				addInfo(Server.room.getPlayerFromPlayerList(nt.player_id).name+"离开桌子");
+				addInfo(Server.getPlayer(player_id).name+"离开桌子");
 			}
 			
 			
