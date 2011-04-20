@@ -102,6 +102,7 @@ public class Room implements ChannelListener, Runnable
 			}
 			player.cur_room = null;
 			broadcast(new ExitRoomNotify(player.player_id));
+			channel.leave(player.session);
 //			for (Player p : player_list.values()){
 //				ExitRoomNotify ern = new ExitRoomNotify(player.player_id);
 //				p.session.send(ern);
