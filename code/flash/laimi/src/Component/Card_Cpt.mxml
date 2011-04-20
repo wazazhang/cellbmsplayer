@@ -173,7 +173,7 @@
 					return;
 				
 				if(game.gamer.isMyturn)
-					TimesCtr.reset();
+					game.timeCtr.reset();
 				
 				if(game.gamer.selectedCard!=null&&game.gamer.selectedCard!=card)
 				{

@@ -34,8 +34,8 @@
 			{
 				game.matrix = mx;
 				game.gamer.matrix = umx;
-				TimesCtr.optionTimeBar = optbar;
-				TimesCtr.sumTimeBar = sumbar;
+				game.timeCtr.optionTimeBar = optbar;
+				game.timeCtr.sumTimeBar = sumbar;
 				optCpt.game = game;
 				
 				game.initGame();
@@ -67,7 +67,7 @@
 				game.legaled = true;
 				game.haveSendCard = false;
 				gameOverCvs.visible = false;
-				TimesCtr.stop();
+				game.timeCtr.stop();
 			}
 			
 			//初始位置
