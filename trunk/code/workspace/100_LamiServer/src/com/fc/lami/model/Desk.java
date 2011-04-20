@@ -30,10 +30,10 @@ public class Desk implements ChannelListener
 	static private Logger		log = LoggerFactory.getLogger(Desk.class);
 	
 	final public static int MAX_PLAYER_COUNT = 4;
-	final public static int PLAYER_E = 0;
+	final public static int PLAYER_E = 3;
 	final public static int PLAYER_W = 1;
 	final public static int PLAYER_S = 2;
-	final public static int PLAYER_N = 3;
+	final public static int PLAYER_N = 0;
 	
 	final public int 		desk_id;
 	final private Channel	channel;
