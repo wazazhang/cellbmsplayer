@@ -34,6 +34,7 @@
 			public var cardY:int;
 			
 			
+			public var game:Game
 			
 			[Bindable]
 			public var isShow:Boolean = true;
@@ -98,20 +99,20 @@
 			public function mouseOver():void
 			{
 				//放置非自己会合往公共牌区操作
-				if(!isPlayerOwner && !Game.gamer.isMyturn)
+				if(!isPlayerOwner && !game.gamer.isMyturn)
 				{
 					return;
 				}
 				
 				//防止打出的牌往回拿
-				if(isPlayerOwner&&Game.gamer.selectedCard!=null&&Game.gamer.selectedCard.isSended)
+				if(isPlayerOwner&&game.gamer.selectedCard!=null&&game.gamer.selectedCard.isSended)
 				{
 					return;
 				}
 				
-				if(Game.gamer.selectedArrayCard != null&&(card==null||isSelected))
+				if(game.gamer.selectedArrayCard != null&&(card==null||isSelected))
 				{
-					var length:int = Game.gamer.selectedArrayCard.length;
+					var length:int = game.gamer.selectedArrayCard.length;
 					var cardcpt:Card_Cpt = this;
 					
 					while(length!=0)
@@ -126,7 +127,7 @@
 						length --;	
 					}
 					
-					for each(var curcard:Card in Game.gamer.selectedArrayCard)
+					for each(var curcard:Card in game.gamer.selectedArrayCard)
 					{
 						if(isPlayerOwner&&curcard.isSended)
 							return;
@@ -134,7 +135,7 @@
 					
 					cardcpt = this;
 					
-					for each(curcard in Game.gamer.selectedArrayCard)
+					for each(curcard in game.gamer.selectedArrayCard)
 					{
 						if(curcard.cardUI.card==curcard)
 						{
@@ -149,12 +150,12 @@
 					return;
 				}
 				
-				if(Game.gamer.selectedCard != null&&card==null)
+				if(game.gamer.selectedCard != null&&card==null)
 				{
-					Game.gamer.selectedCard.cardUI.card = null;
-					Game.gamer.selectedCard.cardUI.isSelected = false;
+					game.gamer.selectedCard.cardUI.card = null;
+					game.gamer.selectedCard.cardUI.isSelected = false;
 					
-					card =  Game.gamer.selectedCard;
+					card =  game.gamer.selectedCard;
 					isSelected = true;
 				}
 			}
@@ -163,31 +164,31 @@
 			public function click():void
 			{
 				//放置非自己会合往公共牌区操作
-				if((!isPlayerOwner) && (!Game.gamer.isMyturn))
+				if((!isPlayerOwner) && (!game.gamer.isMyturn))
 				{
 					return;
 				}
 					
-				if(!Game.gamer.canOpearation)
+				if(!game.gamer.canOpearation)
 					return;
 				
-				if(Game.gamer.isMyturn)
+				if(game.gamer.isMyturn)
 					TimesCtr.reset();
 				
-				if(Game.gamer.selectedCard!=null&&Game.gamer.selectedCard!=card)
+				if(game.gamer.selectedCard!=null&&game.gamer.selectedCard!=card)
 				{
 					return;
 				}
 				
 				//检测往回拿
-				if(isPlayerOwner&&Game.gamer.selectedCard!=null&&Game.gamer.selectedCard.isSended)
+				if(isPlayerOwner&&game.gamer.selectedCard!=null&&game.gamer.selectedCard.isSended)
 				{
 					return;
 				}
 				
-				if(Game.gamer.keydwon)
+				if(game.gamer.keydwon)
 				{
-					if(Game.gamer.selectedArrayCard!=null)
+					if(game.gamer.selectedArrayCard!=null)
 						return;
 					
 					selectArrayCard();
@@ -202,24 +203,24 @@
 			private function selectCard():void
 			{
 				//放下选择的队列
-				if(Game.gamer.selectedArrayCard!=null)
+				if(game.gamer.selectedArrayCard!=null)
 				{
 					//不能把用过的牌往回拿
-					for each(var curcard:Card in Game.gamer.selectedArrayCard)
+					for each(var curcard:Card in game.gamer.selectedArrayCard)
 					{
 						if(isPlayerOwner&&curcard.isSended)
 							return;
 					}
 					
-					for each(curcard in Game.gamer.selectedArrayCard)
+					for each(curcard in game.gamer.selectedArrayCard)
 					{
 						curcard.cardUI.isSelected = false;
 					}
 					
-					Game.gamer.selectedArrayCard = null;
-					Game.check();
+					game.gamer.selectedArrayCard = null;
+					game.check();
 					
-					if(Game.gamer.isMyturn)
+					if(game.gamer.isMyturn)
 					{
 						Server.sendPublicMatrix();
 					}
@@ -227,11 +228,11 @@
 					return;
 				}	
 				//选择新的
-				if(Game.gamer.selectedCard==null)
+				if(game.gamer.selectedCard==null)
 				{
 					if(card==null)
 						return				
-					Game.gamer.selectedCard = card;
+					game.gamer.selectedCard = card;
 					isSelected = true;
 				}
 				//放下
@@ -244,21 +245,21 @@
 					Game.gamer.selectedCard = card;
 					card = buffcard;
 					*/
-					card = Game.gamer.selectedCard;
-					Game.check();
+					card = game.gamer.selectedCard;
+					game.check();
 					
-					if(Game.gamer.isMyturn)
+					if(game.gamer.isMyturn)
 					{
 						Server.sendPublicMatrix();
 					}
-					Game.gamer.selectedCard = null;
+					game.gamer.selectedCard = null;
 				}
 			}
 			
 			//选择队列
 			private function selectArrayCard():void
 			{
-				if(Game.gamer.selectedCard!=null)
+				if(game.gamer.selectedCard!=null)
 				{
 					return
 				}
@@ -303,7 +304,7 @@
 					}
 					while(buffcard.card.point == buffcard.nextCardCpt.card.point&&cardtype.indexOf(buffcard.nextCardCpt.card.type)==-1)
 					
-					Game.gamer.selectedArrayCard = arr;
+					game.gamer.selectedArrayCard = arr;
 					return;
 				}
 				
@@ -327,7 +328,7 @@
 							break;
 					}
 					while(buffcard.card.point == buffcard.nextCardCpt.card.point-1&&buffcard.card.type==buffcard.nextCardCpt.card.type)
-					Game.gamer.selectedArrayCard = arr;
+					game.gamer.selectedArrayCard = arr;
 					return;
 				}
 			}
