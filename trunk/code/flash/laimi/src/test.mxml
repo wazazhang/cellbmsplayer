@@ -15,7 +15,7 @@
 				Server.room_cpt = rm;
 				Server.app = this
 				//Server.game_cpt = game;
-				login_cpt.server_host.text = "115.236.18.104";
+				login_cpt.server_host.text = "127.0.0.1";
 				login_cpt.server_port.value = 19821;
 			}
 		]]>
