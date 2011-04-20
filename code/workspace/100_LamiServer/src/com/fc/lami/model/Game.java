@@ -38,7 +38,8 @@ public class Game implements Runnable
 		player_list = desk.getPlayerList();
 		/** 初始化每个玩家的手牌 */
 		for (int i = 0; i<player_list.length; i++){
-			player_list[i].card_list = new HashMap<Integer, CardData>();
+//			player_list[i].card_list = new HashMap<Integer, CardData>();
+			player_list[i].card_list.clear();
 			for (int j = 0; j<startCard; j++){
 				player_list[i].addCard(getCardFromCard());
 			}
