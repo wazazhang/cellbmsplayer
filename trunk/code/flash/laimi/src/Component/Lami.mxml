@@ -23,22 +23,27 @@
 			public var seatID:int;
 			
 			public var nextOtherPlayer_Cpt:OtherPlayer_Cpt;
+			[Bindable]
+			
+			public var game:Game
 			
 			
 			//初始游戏
 			
 			public function init():void
 			{
-				Game.matrix = mx;
-				Game.gamer.matrix = umx;
+				game.matrix = mx;
+				game.gamer.matrix = umx;
 				TimesCtr.optionTimeBar = optbar;
 				TimesCtr.sumTimeBar = sumbar;
-				Game.initGame();
+				optCpt.game = game;
+				
+				game.initGame();
 			}
 			
 			public function initDesk(desk:Desk):void
 			{
-				if(Game.matrix==null)
+				if(game.matrix==null)
 				{
 					init();
 				}
@@ -54,13 +59,13 @@
 				nextPlayer1.reset();
 				nextPlayer2.reset();
 				nextPlayer3.reset();
-				Game.cleanMatrix();
-				Game.gamer.cleanMatrix();
-				Game.gamer.isMyturn = false;
-				Game.gamer.isReady = false;
-				Game.gamer.isCold = true;
-				Game.legaled = true;
-				Game.haveSendCard = false;
+				game.cleanMatrix();
+				game.gamer.cleanMatrix();
+				game.gamer.isMyturn = false;
+				game.gamer.isReady = false;
+				game.gamer.isCold = true;
+				game.legaled = true;
+				game.haveSendCard = false;
 				gameOverCvs.visible = false;
 				TimesCtr.stop();
 			}
@@ -165,8 +170,10 @@
 			//回到房间
 			public function returnRoom():void
 			{
-				this.visible = false;
+				//this.visible = false;
+				Server.app.removeChild(this);
 				Server.leaveDesk(desk.desk_id);
+				
 			}
 			
 			//根据用户ID获取用户组建
@@ -188,7 +195,7 @@
 			public function onPlayerPoBing(playerid:int):void
 			{
 				if (playerid == Server.player.player_id){
-					Game.gamer.isCold = false;
+					game.gamer.isCold = false;
 				}else{
 					var cpt:OtherPlayer_Cpt = getOtherPlayerCptByPlayerId(playerid);
 					if(cpt!=null)
@@ -201,7 +208,7 @@
 			public function onPlayerReady(playerid:int,isReady:Boolean):void
 			{
 				if (playerid == Server.player.player_id){
-					Game.gamer.isReady = isReady;
+					game.gamer.isReady = isReady;
 				}else{
 					var cpt:OtherPlayer_Cpt = getOtherPlayerCptByPlayerId(playerid);
 					if(cpt!=null)
@@ -246,7 +253,7 @@
 	<ns1:Opt_Cpt id="optCpt" height="177" y="411" x="704">
 	</ns1:Opt_Cpt>
 	
-	<mx:Label x="268" y="536" text="{Game.gamer.handCard.length}" color="#FDFDFD"/>
+	<mx:Label x="268" y="536" text="{game.gamer.handCard.length}" color="#FDFDFD"/>
 	<mx:TextArea id="gameinfo" x="29" y="429" width="195" height="113" backgroundAlpha="0.0" color="#FDFFFF" editable="false"/>
 	
 	<ns1:OtherPlayer_Cpt id="nextPlayer1" x="579" y="100">
@@ -260,7 +267,7 @@
 	
 	<mx:Label x="268" y="520" text="{getDir(seatID)+':'+ Server.player.name}" color="#FCFDFD"/>
 	
-	<mx:Label x="268" y="550" text="{Game.gamer.isMyturn?'游戏中':'等待中'}" color="#FCFDFD"/>
+	<mx:Label x="268" y="550" text="{game.gamer.isMyturn?'游戏中':'等待中'}" color="#FCFDFD"/>
 	<mx:LinkButton x="10" y="10" label="回到大厅" color="#F9FBFC" click="returnRoom()"/>
 	
 	<mx:Canvas id="gameOverCvs" visible="false" width="200" height="100" verticalCenter="0" horizontalCenter="0" backgroundColor="#FE0303" backgroundAlpha="0.28" borderStyle="solid" cornerRadius="5">
