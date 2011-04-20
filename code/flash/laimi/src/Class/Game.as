@@ -150,8 +150,6 @@ package Class
 			cards.refresh();
 		}
 		
-		
-		
 		public  function getCardFromServer():void
 		{
 			turnOver();

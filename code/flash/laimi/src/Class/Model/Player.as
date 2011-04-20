@@ -435,8 +435,6 @@ package Class.Model
 			moveCard.card.nextCard  = card.nextCard;
 			moveCard.nextCardCpt = card.cardUI;
 			
-			
-				
 			var move:Move = new Move();
 			
 			move.target = moveCard;
