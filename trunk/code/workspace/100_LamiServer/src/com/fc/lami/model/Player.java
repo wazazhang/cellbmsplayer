@@ -2,6 +2,7 @@ package com.fc.lami.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.fc.lami.Messages.CardData;
@@ -34,7 +35,7 @@ public class Player
 //	public int level;
 	
 	/** 手中的牌 */
-	public HashMap<Integer, CardData> card_list;
+	final public HashMap<Integer, CardData> card_list = new LinkedHashMap<Integer, CardData>();
 	
 	/** 是否破冰 */
 	public boolean isOpenIce = false;
@@ -83,9 +84,9 @@ public class Player
 	}
 	
 	public void addCard(CardData c){
-		if (card_list == null){
-			card_list = new HashMap<Integer, CardData>();
-		}
+//		if (card_list == null){
+//			card_list = new HashMap<Integer, CardData>();
+//		}
 		if (c!=null){
 			card_list.put(c.id, c);
 		}

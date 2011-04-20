@@ -87,7 +87,7 @@ public class Desk implements ChannelListener
 		}		
 		player.cur_desk = this;
 		player.is_ready = false;
-		player.card_list = null;
+		player.card_list.clear();
 		channel.join(player.session);
 		return true;
 	}
@@ -110,7 +110,7 @@ public class Desk implements ChannelListener
 			if (player != null) {
 				player.cur_desk = null;
 				player.is_ready = false;
-				player.card_list = null;
+				player.card_list.clear();
 				channel.leave(player.session);
 			}
 			return player;
