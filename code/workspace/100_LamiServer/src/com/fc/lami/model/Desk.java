@@ -152,6 +152,7 @@ public class Desk implements ChannelListener
 				desk_players.put(seat, player);
 				player.cur_desk = this;
 				player.is_ready = false;
+				player.card_list = null;
 			}
 		}
 		EnterDeskNotify ntf = new EnterDeskNotify(player.getPlayerData().player_id, desk_id, seat);
