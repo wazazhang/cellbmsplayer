@@ -1,6 +1,5 @@
 package com.fc.lami.model;
 
-import java.rmi.dgc.Lease;
 import java.util.concurrent.ScheduledFuture;
 
 import com.cell.util.concurrent.ThreadPool;
