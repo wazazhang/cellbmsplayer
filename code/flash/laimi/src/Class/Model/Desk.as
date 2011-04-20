@@ -80,9 +80,9 @@ package Class.Model
 					player_S_id = player_id;
 					return true;
 				case 3:
-					if (player_N_id!=-1)
+					if (player_E_id!=-1)
 						return false;
-					player_N_id = player_id;
+					player_E_id = player_id;
 					return true;
 			}
 			return false;
