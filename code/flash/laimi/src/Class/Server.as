@@ -285,17 +285,12 @@ package Class
 				{
 					room_cpt.visible = false;
 					
-					//game_cpt.visible = true;
+					
 					
 					game = new Game();
 					app.addChild(game.lami);
-					
-					//game.lami.game = game;
-					
+					game.timeCtr.sumTimerSet(enterdesk.turn_interval);
 					game.lami.initDesk(room.getDesk(enterdesk.desk_id));
-					//game.initGame();
-					
-					TimesCtr.sumTimerSet(enterdesk.turn_interval);
 				}
 				else if(enterdesk.result == 1)
 				{

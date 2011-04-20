@@ -463,7 +463,7 @@ package Class.Model
 				if(game.gamer.isMyturn)
 				{
 					//Game.isStarted = true;
-					TimesCtr.start();
+				    game.timeCtr.start();
 				}
 				canOpearation = true;
 				//TimesCtr.start();

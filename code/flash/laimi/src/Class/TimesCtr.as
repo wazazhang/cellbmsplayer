@@ -8,19 +8,19 @@ package Class
 	{
 		
 		
-		private static const optionTime:int = 12;
-		private static var sumTime:int = 90;
-		public static var oprTimer:Timer = new Timer(100,optionTime*10);
-		public static var sumTimer:Timer = new Timer(100,sumTime*10);
+		private  const optionTime:int = 12;
+		private  var sumTime:int = 90;
+		public  var oprTimer:Timer = new Timer(100,optionTime*10);
+		public  var sumTimer:Timer = new Timer(100,sumTime*10);
 		
-		public static var optionTimeBar:ProgressBar;
-		public static var sumTimeBar:ProgressBar;
+		public  var optionTimeBar:ProgressBar;
+		public  var sumTimeBar:ProgressBar;
 		
 		public function TimesCtr()
 		{
 			
 		}
-		public static function init():void
+		public  function inits():void
 		{
 			 oprTimer.addEventListener(TimerEvent.TIMER, oprTimerHandler);
 			 sumTimer.addEventListener(TimerEvent.TIMER, sumTimerHandler);
@@ -29,17 +29,17 @@ package Class
 		}
 		
 		
-		public static function oprTimerHandler(event:TimerEvent):void
+		public  function oprTimerHandler(event:TimerEvent):void
 		{
             optionTimeBar.setProgress(oprTimer.delay * oprTimer.currentCount, optionTime*1000); 
 		}
 		
-		public static function sumTimerHandler(event:TimerEvent):void
+		public  function sumTimerHandler(event:TimerEvent):void
 		{
             sumTimeBar.setProgress(sumTimer.delay * sumTimer.currentCount, sumTime*1000); 
 		}	
 		
-		public static function completeHandler(event:TimerEvent):void
+		public  function completeHandler(event:TimerEvent):void
 		{
 //			if(Game.checkHaveSendCard())
 //			{
@@ -50,7 +50,7 @@ package Class
 			//start();
 			//tt.text = "time up";
 		}
-		public static function start():void
+		public  function start():void
 		{
 			oprTimer.reset();
 			sumTimer.reset();
@@ -58,20 +58,20 @@ package Class
 			sumTimer.start();
 		}
 		
-		public static  function reset():void
+		public   function reset():void
 		{
 			oprTimer.reset();
 			oprTimer.start();
 		}
 		
-		public static function stop():void{
+		public  function stop():void{
 			oprTimer.reset();
 			sumTimer.reset();
 			oprTimer.stop();
 			sumTimer.stop();
 		}
 		
-		public static function sumTimerSet(time:int):void
+		public  function sumTimerSet(time:int):void
 		{
 			sumTimer = new Timer(100, time/100);
 			sumTime = time/1000;
