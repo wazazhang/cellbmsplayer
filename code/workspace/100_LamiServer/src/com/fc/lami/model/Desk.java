@@ -84,7 +84,10 @@ public class Desk implements ChannelListener
 				return false;
 			}
 			all_players.put(player.player_id, player);
-		}
+		}		
+		player.cur_desk = this;
+		player.is_ready = false;
+		player.card_list = null;
 		channel.join(player.session);
 		return true;
 	}
@@ -105,6 +108,9 @@ public class Desk implements ChannelListener
 			}
 			Player player = all_players.remove(pid);
 			if (player != null) {
+				player.cur_desk = null;
+				player.is_ready = false;
+				player.card_list = null;
 				channel.leave(player.session);
 			}
 			return player;
@@ -150,9 +156,6 @@ public class Desk implements ChannelListener
 					return false;
 				}
 				desk_players.put(seat, player);
-				player.cur_desk = this;
-				player.is_ready = false;
-				player.card_list = null;
 			}
 		}
 		EnterDeskNotify ntf = new EnterDeskNotify(player.getPlayerData().player_id, desk_id, seat);
