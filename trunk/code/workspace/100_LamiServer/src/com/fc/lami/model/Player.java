@@ -63,7 +63,7 @@ public class Player
 	
 	public Game getGame() {
 		if (cur_desk != null) {
-			return cur_desk.game;
+			return cur_desk.getGame();
 		}
 		return null;
 	}
