@@ -323,7 +323,12 @@ package Class
 			//gamer.canOpearation = true;
 			gamer.confiomCard();
 			gamer.isMyturn = true;
+			
+			
+			
 			haveSendCard = false;
+			
+			lami.turnStartEft.play();
 			timeCtr.start();
 		}
 		
