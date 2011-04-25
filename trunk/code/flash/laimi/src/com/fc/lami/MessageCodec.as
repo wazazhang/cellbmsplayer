@@ -1019,10 +1019,12 @@ package com.fc.lami
 	function new_ResultPak_43() : com.fc.lami.Messages.ResultPak {return new com.fc.lami.Messages.ResultPak();}
 	private function r_ResultPak_43(msg : com.fc.lami.Messages.ResultPak, input : NetDataInput) : void {
 		msg.point = input.readInt();
+		msg.player_id = input.readInt();
 		msg.is_win = input.readBoolean();
 	}
 	private function w_ResultPak_43(msg : com.fc.lami.Messages.ResultPak, output : NetDataOutput) : void {
 		output.writeInt(msg.point);
+		output.writeInt(msg.player_id);
 		output.writeBoolean(msg.is_win);
 	}
 
