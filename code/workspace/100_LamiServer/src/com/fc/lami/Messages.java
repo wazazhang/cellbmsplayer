@@ -158,6 +158,7 @@ public class Messages {
 	public static class ResultPak extends FlashMessage
 	{
 		public int point;
+		public int player_id;
 		public boolean is_win;
 		
 		public ResultPak(){}
