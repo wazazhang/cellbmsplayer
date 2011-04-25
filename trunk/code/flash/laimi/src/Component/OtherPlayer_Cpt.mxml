@@ -29,6 +29,7 @@
 			[Embed(source='image/nohead.png')]
 			public static const nohead:Class;    
 			
+			
 			public function reset():void{
 				player = null;
 				seat = null;
