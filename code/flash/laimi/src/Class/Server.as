@@ -235,7 +235,7 @@ package Class
 			else if (ntf is GameOverNotify){
 				// TODO 此处添加游戏结果的代码
 				var gon:GameOverNotify = ntf as GameOverNotify;
-				game.lami.onGameOver();
+				game.lami.onGameOver(gon);
 				// TODO 重置各个玩家的准备按钮
 				game.lami.onPlayerReady(player.player_id,false);
 			}
