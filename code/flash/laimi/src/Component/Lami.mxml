@@ -286,5 +286,11 @@
 	<mx:Label x="268" y="550" text="{game.gamer.isMyturn?'游戏中':'等待中'}" color="#FCFDFD"/>
 	<mx:LinkButton x="10" y="10" label="回到大厅" color="#F9FBFC" click="returnRoom()"/>
 	
+	<mx:Image id="turnStartImg" horizontalCenter="0" verticalCenter="0" source="image/start.png" alpha="0.0" />
+	
+	<mx:Parallel id="turnStartEft" target="{turnStartImg}">
+		<mx:Fade duration="1500" alphaFrom="1.0" alphaTo="0.0"></mx:Fade>
+		<mx:Zoom duration="1500" zoomHeightFrom="1.0" zoomHeightTo="2.0" zoomWidthFrom="1.0" zoomWidthTo="2.0" > </mx:Zoom>
+	</mx:Parallel>
 	
 </mx:Canvas>
