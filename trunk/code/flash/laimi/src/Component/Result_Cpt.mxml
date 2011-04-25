@@ -3,7 +3,11 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import Class.Server;
+			
 			import com.fc.lami.Messages.GameOverNotify;
+			import com.fc.lami.Messages.PlayerData;
+			import com.fc.lami.Messages.ResultPak;
 			
 			private var gmovn:GameOverNotify;
 			[Bindable]
@@ -16,6 +20,32 @@
 					case GameOverNotify.GAME_OVER_TYPE_CLEAR :tip="结束方式:有人出完牌";break
 					case GameOverNotify.GAME_OVER_TYPE_ESCAPE :tip="结束方式:有人逃跑或则断线";break
 				}
+				var i:int = 0;
+			    for each(var result:ResultPak in  gmovn.result_pak)
+				{
+					if(result == null)
+						continue;
+					
+				    var player:PlayerData = Server.getPlayer(result.player_id);
+					
+					var label:Label =  new Label();
+					
+					label.text = player.name+":"
+					label.text +=" "+result.point;
+					
+					if(result.is_win)
+						label.text +=" 胜利";
+					else
+						label.text +=" 失败";
+					
+					label.x = 20
+					label.y = 60+i*25;
+					
+					addChild(label);
+					
+					i++;
+				}
+				
 			}
 			
 			
@@ -29,7 +59,7 @@
 	
 	
 	<mx:Label y="10" text="游戏结束" horizontalCenter="0" fontSize="16" fontWeight="bold"/>
-	<mx:Label  y="39" text="{tip}" horizontalCenter="0" fontSize="12"/>
+	<mx:Label  y="40" text="{tip}" horizontalCenter="0" fontSize="12"/>
 	<mx:Button y="188" label="关闭" horizontalCenter="0" click="close()"/>
 	
 </mx:Canvas>
