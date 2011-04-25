@@ -891,10 +891,12 @@ public class MessageCodecJava implements MutualMessageCodec
 	public com.fc.lami.Messages.ResultPak new_com_fc_lami_Messages_ResultPak(){return new com.fc.lami.Messages.ResultPak();}
 	private void _r(com.fc.lami.Messages.ResultPak msg, NetDataInput in) throws IOException {
 		msg.point = in.readInt();
+		msg.player_id = in.readInt();
 		msg.is_win = in.readBoolean();
 	}
 	private void _w(com.fc.lami.Messages.ResultPak msg, NetDataOutput out) throws IOException {
 		out.writeInt(msg.point);
+		out.writeInt(msg.player_id);
 		out.writeBoolean(msg.is_win);
 	}
 

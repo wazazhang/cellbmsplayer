@@ -114,6 +114,7 @@ public class Player
 		this.user.addWin(1);
 		
 		ResultPak pak = new ResultPak();
+		pak.player_id = this.player_id;
 		pak.is_win = true;
 		pak.point = 10;
 		return pak;
@@ -129,6 +130,7 @@ public class Player
 		this.user.addLose(1);
 		
 		ResultPak pak = new ResultPak();
+		pak.player_id = this.player_id;
 		pak.is_win = false;
 		pak.point = -5;
 		return pak;
