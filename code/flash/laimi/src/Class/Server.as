@@ -1,8 +1,8 @@
 package Class
 {
 	import Class.Model.Card;
-	import Class.Model.Room;
 	import Class.Model.Desk;
+	import Class.Model.Room;
 	
 	import Component.Lami;
 	import Component.Login_Cpt;
@@ -99,7 +99,7 @@ package Class
 			return room.getDesk(desk_id);
 		}
 		
-		public static function getPlayerDeskId(player_id):int
+		public static function getPlayerDeskId(player_id:int):int
 		{
 			return room.getPlayerDeskId(player_id);
 		}
@@ -227,18 +227,21 @@ package Class
 					game.otherPlayerStart(tsn.player_id);
 				}
 			}
+			
 			else if (ntf is TurnEndNotify){
 				// TODO 自己回合结束
 				game.turnOver();
 				//Alert.show("行动结束");
 			}
+			
 			else if (ntf is GameOverNotify){
 				// TODO 此处添加游戏结果的代码
 				var gon:GameOverNotify = ntf as GameOverNotify;
 				game.lami.onGameOver(gon);
 				// TODO 重置各个玩家的准备按钮
-				game.lami.onPlayerReady(player.player_id,false);
+			
 			}
+			
 			else if (ntf is OpenIceNotify){
 				var oin:OpenIceNotify = ntf as OpenIceNotify;
 				game.lami.onPlayerPoBing(oin.player_id)	
