@@ -37,6 +37,12 @@
 				gameing = false;
 			}
 			
+			public function gameEnd():void
+			{
+				
+			}
+			
+			
 		]]>
 	</mx:Script>
 	<mx:Label x="61" y="17" text="{player.player_id==-1?'空闲':'名字:'+player.name}" color="#FEFEFE"/>
