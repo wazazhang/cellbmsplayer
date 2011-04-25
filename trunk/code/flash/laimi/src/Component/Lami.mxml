@@ -244,7 +244,17 @@
 				rsCpt.setStyle("verticalCenter","0");
 				rsCpt.setStyle("horizontalCenter","0");	
 				addChild(rsCpt);
+				
+				nextPlayer1.reset();
+				nextPlayer2.reset();
+				nextPlayer3.reset();
+				
+				resetGameAllData();
 			}
+			
+			
+			
+			
 		]]>
 	</mx:Script>
 	
