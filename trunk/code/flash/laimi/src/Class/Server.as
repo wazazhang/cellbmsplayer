@@ -116,6 +116,8 @@ package Class
 		{
 			login_cpt.visible = true;
 			room_cpt.visible = false;
+			
+			if(game!=null)
 			game.lami.visible = false;
 			
 			login_cpt.disLink()
