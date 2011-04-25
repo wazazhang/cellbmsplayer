@@ -11,6 +11,7 @@
 			import Class.Server;
 			import Class.TimesCtr;
 			
+			import com.fc.lami.Messages.GameOverNotify;
 			import com.fc.lami.Messages.PlayerData;
 			
 			import mx.controls.Alert;
@@ -65,7 +66,6 @@
 				game.gamer.isCold = true;
 				game.legaled = true;
 				game.haveSendCard = false;
-				gameOverCvs.visible = false;
 				game.timeCtr.stop();
 			}
 			
@@ -231,12 +231,19 @@
 				
 				var cpt:OtherPlayer_Cpt = getOtherPlayerCptByPlayerId(playerid);
 				cpt.gameing = true;
+				addInfo("玩家"+cpt.player.name+"回合开始");
 			}
 			
 			//游戏结束
-			public function onGameOver():void
+			public function onGameOver(gvn:GameOverNotify):void
 			{
-				gameOverCvs.visible = true;
+				addInfo("游戏结束");
+				var rsCpt:Result_Cpt = new Result_Cpt()
+					
+				rsCpt.setRes(gvn);
+				rsCpt.setStyle("verticalCenter","0");
+				rsCpt.setStyle("horizontalCenter","0");	
+				addChild(rsCpt);
 			}
 		]]>
 	</mx:Script>
@@ -268,10 +275,6 @@
 	
 	<mx:Label x="268" y="550" text="{game.gamer.isMyturn?'游戏中':'等待中'}" color="#FCFDFD"/>
 	<mx:LinkButton x="10" y="10" label="回到大厅" color="#F9FBFC" click="returnRoom()"/>
-	
-	<mx:Canvas id="gameOverCvs" visible="false" width="200" height="100" verticalCenter="0" horizontalCenter="0" backgroundColor="#FE0303" backgroundAlpha="0.28" borderStyle="solid" cornerRadius="5">
-		<mx:Label text="游戏结束" color="#FDFDFD" fontSize="16" horizontalCenter="0" verticalCenter="0"/>
-	</mx:Canvas>
 	
 	
 </mx:Canvas>
