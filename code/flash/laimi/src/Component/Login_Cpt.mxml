@@ -13,7 +13,7 @@
 				public var rooms:Array;
 				
 				
-				public var linkTimer:Timer = new Timer(200,25);
+				public var linkTimer:Timer = new Timer(200,300);
 				
 				public function init():void
 				{
