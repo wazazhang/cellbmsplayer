@@ -127,18 +127,6 @@ package Class
 		
 		protected static function client_notify(event:ClientEvent):void
 		{
-			/*
-			if (event.getResponse() is EchoNotify) {
-				var notify : EchoNotify = event.getNotify() as EchoNotify;
-				txt_messages.text = txt_messages.text +"notify : " + notify.message + "\n";
-			}
-			else if(event.getResponse() is PlayerData)
-			{
-				var player:PlayerData =   event.getNotify() as PlayerData;
-				addInfo(player.name+"进入了游戏");
-			}
-			*/
-
 			var ntf : Object = event.getNotify();
 			
 			//得牌
@@ -249,6 +237,7 @@ package Class
 			}
 			else if (ntf is RepealSendCardNotify){
 				var rscn:RepealSendCardNotify = ntf as RepealSendCardNotify;
+				
 				if (player.player_id == rscn.player_id){
 					var cards3 : ArrayCollection = new ArrayCollection();
 					for each(var cd3:CardData in rscn.cds){
@@ -256,6 +245,7 @@ package Class
 					}
 					game.gamer.getCards(cards3);
 				}
+				
 			}
 		}
 		
@@ -288,6 +278,7 @@ package Class
 				{	
 					room = new Room(enterRoom.room);
 					room_cpt.init(enterRoom.room)
+					room_cpt.room =	room;
 					login_cpt.visible = false;
 					room_cpt.visible = true;
 				}

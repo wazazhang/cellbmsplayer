@@ -327,7 +327,7 @@ package Class
 			
 			
 			haveSendCard = false;
-			
+			lami.turnStartImg.visible = true;
 			lami.turnStartEft.play();
 			timeCtr.start();
 		}
@@ -336,6 +336,20 @@ package Class
 		{
 			//gamer.canOpearation = false;
 			gamer.isMyturn = false;
+			if(gamer.selectedArrayCard != null)
+			{
+				for each(var card:Card in gamer.selectedArrayCard)
+				{
+					card.cardUI.isSelected = false;
+				}
+				gamer.selectedArrayCard = null
+			}	
+			if(gamer.selectedCard != null)
+			{
+				gamer.selectedCard.cardUI.isSelected = false;
+				gamer.selectedCard = null;
+			}
+			gamer.reset();
 			timeCtr.reset();
 			timeCtr.stop();
 		}

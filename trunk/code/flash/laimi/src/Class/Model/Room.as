@@ -6,6 +6,7 @@ package Class.Model
 	
 	import flash.utils.Dictionary;
 	
+	import mx.charts.chartClasses.DataDescription;
 	import mx.collections.ArrayCollection;
 
 	[Bindable]
@@ -79,6 +80,11 @@ package Class.Model
 				return desk_list[desk_id].sitDown(pid, seat);
 			}
 			return false;
+		}
+		
+		public function getPlayerList():Dictionary
+		{
+			return player_list;
 		}
 	}
 }
