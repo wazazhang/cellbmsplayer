@@ -71,9 +71,9 @@
 				switch(seatid)
 				{
 					case 0:desk.player_N_id = playerid;playerN = Server.getPlayer(playerid);break;
-					case 1:desk.player_W_id = playerid;playerW = Server.getPlayer(playerid)break;
-					case 2:desk.player_S_id = playerid;playerS = Server.getPlayer(playerid)break;
-					case 3:desk.player_E_id = playerid;playerE = Server.getPlayer(playerid)break;
+					case 1:desk.player_W_id = playerid;playerW = Server.getPlayer(playerid);break;
+					case 2:desk.player_S_id = playerid;playerS = Server.getPlayer(playerid);break;
+					case 3:desk.player_E_id = playerid;playerE = Server.getPlayer(playerid);break;
 				}
 			}
 			
