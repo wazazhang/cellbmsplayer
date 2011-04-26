@@ -866,7 +866,7 @@ public class Messages {
 	{
 		public int player_id;
 		
-		public TurnStartNotify(int pid, int t){
+		public TurnStartNotify(int pid){
 			this.player_id = pid;
 		}
 		
