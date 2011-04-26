@@ -98,6 +98,12 @@
 			
 			public function mouseOver():void
 			{
+				
+				if(game==null)
+				{
+					return;
+				}
+				
 				//放置非自己会合往公共牌区操作
 				if(!isPlayerOwner && !game.gamer.isMyturn)
 				{

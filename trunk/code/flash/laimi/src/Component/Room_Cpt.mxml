@@ -2,13 +2,16 @@
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="828" height="522" borderColor="#FAFBFB" xmlns:Component="Component.*" backgroundColor="#103667">
 	<mx:Script>
 		<![CDATA[
+			import Class.Model.Room;
 			import Class.Server;
-			import com.fc.lami.Messages.PlayerData;
+			
 			import com.fc.lami.Messages.DeskData;
+			import com.fc.lami.Messages.PlayerData;
 			import com.fc.lami.Messages.RoomData;
 			
 			public var deskCpts:Array;
-			
+			[Bindable]
+			public var room:Room;
 			
 			public function init(room:RoomData):void
 			{
@@ -85,7 +88,14 @@
 	<mx:Canvas id="desks"  width="650" height="500" >	
 	</mx:Canvas>
 	
-	<mx:TextArea id="info" x="658" y="43" height="361"/>
+	<mx:TextArea id="info" x="658" y="296" height="204"/>
 	<mx:LinkButton x="658" y="11" label="退出房间" fontSize="12"/>
+	<mx:DataGrid x="658" y="33" width="159" height="255" dataProvider="{room.getPlayerList()}">
+		<mx:columns>
+			<mx:DataGridColumn headerText="ID" dataField="player_id"/>
+			<mx:DataGridColumn headerText="名字" dataField="name"/>
+			<mx:DataGridColumn headerText="等级" dataField="level"/>
+		</mx:columns>
+	</mx:DataGrid>
 	
 </mx:Canvas>
