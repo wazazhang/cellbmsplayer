@@ -17,10 +17,13 @@
 			
 			[Bindable]
 			public var playerE:PlayerData;
+			
 			[Bindable]
 			public var playerN:PlayerData;
+			
 			[Bindable]
 			public var playerW:PlayerData;
+			
 			[Bindable]
 			public var playerS:PlayerData;
 			
