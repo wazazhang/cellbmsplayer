@@ -12,21 +12,29 @@
 			public var deskCpts:Array;
 			[Bindable]
 			public var room:Room;
+			[Bindable]
+			public var plist:Dictionary;
 			
-			public function init(room:RoomData):void
+			public function init(roomData:RoomData):void
 			{
 				deskCpts = new Array();
-				
-				for(var i:int=0;i<room.desks.length;i++)
+				plist = room.getPlayerList();
+				for(var i:int=0;i<roomData.desks.length;i++)
 				{
 					var deskCpt:Desk_Cpt = new Desk_Cpt();
-					deskCpt.desk = room.desks[i];
+					
+					deskCpt.init(roomData.desks[i]);
+					
 					deskCpt.y = parseInt((i/4).toString())*158+10;
 					deskCpt.x = (i%4)*158+10;
 					deskCpts.push(deskCpt);
 					desks.addChild(deskCpt);
 				}
 				
+			
+			
+				
+				//dg.da
 			}
 			
 			public function addRoomInfo(str:String):void
@@ -90,7 +98,7 @@
 	
 	<mx:TextArea id="info" x="658" y="296" height="204"/>
 	<mx:LinkButton x="658" y="11" label="退出房间" fontSize="12"/>
-	<mx:DataGrid x="658" y="33" width="159" height="255" dataProvider="{room.getPlayerList()}">
+	<mx:DataGrid id="dg" x="658" y="33" width="159" height="255" dataProvider="{plist}">
 		<mx:columns>
 			<mx:DataGridColumn headerText="ID" dataField="player_id"/>
 			<mx:DataGridColumn headerText="名字" dataField="name"/>
