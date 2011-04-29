@@ -22,18 +22,12 @@
 				for(var i:int=0;i<roomData.desks.length;i++)
 				{
 					var deskCpt:Desk_Cpt = new Desk_Cpt();
-					
 					deskCpt.init(roomData.desks[i]);
-					
 					deskCpt.y = parseInt((i/4).toString())*158+10;
 					deskCpt.x = (i%4)*158+10;
 					deskCpts.push(deskCpt);
 					desks.addChild(deskCpt);
 				}
-				
-			
-			
-				
 				//dg.da
 			}
 			
@@ -88,8 +82,6 @@
 				}
 				return null;
 			}
-			
-			
 		]]>
 	</mx:Script>
 	
