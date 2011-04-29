@@ -277,8 +277,8 @@ package Class
 				if(enterRoom.result==0) 
 				{	
 					room = new Room(enterRoom.room);
-					room_cpt.init(enterRoom.room)
 					room_cpt.room =	room;
+					room_cpt.init(enterRoom.room)
 					login_cpt.visible = false;
 					room_cpt.visible = true;
 				}
