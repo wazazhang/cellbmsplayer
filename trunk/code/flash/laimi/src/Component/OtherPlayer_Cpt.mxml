@@ -45,11 +45,14 @@
 			
 		]]>
 	</mx:Script>
-	<mx:Label x="61" y="17" text="{player.player_id==-1?'空闲':'名字:'+player.name}" color="#FEFEFE"/>
-	<mx:Label x="61" y="41" text="{seat}" color="#FEFEFE"/>
+	<mx:Label x="65" y="17" text="{player.player_id==-1?'空闲':''+player.name}" color="#FEFEFE" width="88"/>
+	<mx:Label x="65" y="41" text="{seat}" color="#FEFEFE"/>
 	<mx:Label x="110" y="41" text="{pobing?'已破冰':'未破冰'}" color="#FEFEFE"/>
-	<mx:Label x="62" y="64" text="{gameing?'游戏中':'等待中'}" color="#FEFEFE"/>
+	<mx:Label x="65" y="64" text="{gameing?'游戏中':''}" color="#FEFEFE"/>
 	
 	<mx:Image source="{player.player_id==-1?nohead:head}"  x="12" y="15" height="72" width="48"/>
+	
+	<mx:Label x="105" y="17" text="{player==null?'':'等级:'+player.level+' 积分:'+player.score}" color="#FEFEFE" />
+	<mx:Image x="90" verticalCenter="0" visible="{ready}" source="image/ready.png" alpha="0.6"/>
 	
 </mx:Canvas>

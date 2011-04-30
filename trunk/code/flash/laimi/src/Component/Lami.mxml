@@ -230,8 +230,12 @@
 				nextPlayer3.gameing = false;
 				
 				var cpt:OtherPlayer_Cpt = getOtherPlayerCptByPlayerId(playerid);
-				cpt.gameing = true;
-				addInfo("玩家"+cpt.player.name+"回合开始");
+				
+				if(cpt!=null)
+				{
+					cpt.gameing = true;
+					addInfo("玩家"+cpt.player.name+"回合开始");
+				}
 			}
 			
 			//游戏结束
@@ -251,6 +255,17 @@
 				
 				resetGameAllData();
 			}
+			
+			
+			public function onGameStart():void
+			{
+				addInfo("游戏开始");
+				
+				nextPlayer1.ready = false;
+				nextPlayer2.ready = false;
+				nextPlayer3.ready = false;
+			}
+			
 		]]>
 	</mx:Script>
 	
