@@ -17,9 +17,11 @@ package Class.Model
 		private var desk_list : Array = new Array();
 		
 		private var desk_number:int;
+		public var roomData:RoomData;
 		
 		public function Room(room_data:RoomData)
 		{
+			this.roomData = room_data;
 			for each(var p:PlayerData in room_data.players){
 				player_list[p.player_id] = p;
 			}
