@@ -12,6 +12,7 @@
 			import mx.controls.Alert;
 			
 			public var deskCpts:Array;
+			
 			[Bindable]
 			public var room:Room;
 			
@@ -24,9 +25,6 @@
 				plist = room.getPlayerList();
 				
 				//plist  = new Array(new PlayerData(1,"sss"))
-				
-				
-				
 				for(var i:int=0;i<roomData.desks.length;i++)
 				{
 					var deskCpt:Desk_Cpt = new Desk_Cpt();
