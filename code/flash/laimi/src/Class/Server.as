@@ -156,14 +156,13 @@ package Class
 			
 			else if (ntf is EnterRoomNotify){
 				var ern : EnterRoomNotify = ntf as EnterRoomNotify;	
-				if (room !=null)room.enterRoom(ern.player);
 				room_cpt.enterRoom(ern.player);					
 			}
 			
 			else if (ntf is ExitRoomNotify){
 				var exrn : ExitRoomNotify = ntf as ExitRoomNotify;
 				room_cpt.leaveRoom(exrn.player_id);
-				room.removePlayer(exrn.player_id);
+				
 			}
 			
 			else if (ntf is EnterDeskNotify){

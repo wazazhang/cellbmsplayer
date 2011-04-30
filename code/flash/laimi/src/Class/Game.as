@@ -75,6 +75,7 @@ package Class
 		
 		public  function start(startCards:ArrayCollection):void
 		{
+			lami.onGameStart();
 			gamer.getStartCard(startCards);
 			lami.optCpt.Start(); 
 		}
@@ -374,5 +375,8 @@ package Class
 		{
 			lami.onPlayerStart(playerid);
 		}
+		
+		
+		
 	}
 }

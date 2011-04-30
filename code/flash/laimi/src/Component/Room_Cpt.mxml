@@ -9,16 +9,24 @@
 			import com.fc.lami.Messages.PlayerData;
 			import com.fc.lami.Messages.RoomData;
 			
+			import mx.controls.Alert;
+			
 			public var deskCpts:Array;
 			[Bindable]
 			public var room:Room;
+			
 			[Bindable]
-			public var plist:Dictionary;
+			private var _plist:Array;
 			
 			public function init(roomData:RoomData):void
 			{
 				deskCpts = new Array();
 				plist = room.getPlayerList();
+				
+				//plist  = new Array(new PlayerData(1,"sss"))
+				
+				
+				
 				for(var i:int=0;i<roomData.desks.length;i++)
 				{
 					var deskCpt:Desk_Cpt = new Desk_Cpt();
@@ -30,6 +38,19 @@
 				}
 				//dg.da
 			}
+			
+			
+			
+			private function set plist(list:Dictionary):void
+			{
+				_plist = new Array()
+				for each (var player:PlayerData in list)
+				{
+					_plist.push(player);
+				}
+			}
+			
+			
 			
 			public function addRoomInfo(str:String):void
 			{
@@ -54,6 +75,12 @@
 			public function enterRoom(player:PlayerData):void
 			{
 				//nt.player
+				if(room!=null)
+				{
+					room.enterRoom(player);
+					plist = room.getPlayerList();
+				
+				}
 				addRoomInfo(player.name+"进入房间")
 			}
 			
@@ -67,7 +94,11 @@
 					var curDeskCpt:Desk_Cpt = getDeskById(desk_id);
 					curDeskCpt.leavePlayerByPlayerId(player_id);
 				}
-				addRoomInfo(Server.getPlayer(player_id).name+"离开房间");	
+				
+				addRoomInfo(Server.getPlayer(player_id).name+"离开房间s");	
+				
+				room.removePlayer(player_id);
+				plist = room.getPlayerList();
 			}
 			
 			//根据ID获取桌子
@@ -90,10 +121,10 @@
 	
 	<mx:TextArea id="info" x="658" y="296" height="204"/>
 	<mx:LinkButton x="658" y="11" label="退出房间" fontSize="12"/>
-	<mx:DataGrid id="dg" x="658" y="33" width="159" height="255" dataProvider="{plist}">
+	<mx:DataGrid id="dg" x="658" y="33" width="159" height="255" dataProvider="{_plist}">
 		<mx:columns>
-			<mx:DataGridColumn headerText="ID" dataField="player_id"/>
-			<mx:DataGridColumn headerText="名字" dataField="name"/>
+			<mx:DataGridColumn headerText="ID" dataField="player_id" width="40"/>
+			<mx:DataGridColumn headerText="名字" dataField="name" width="80"/>
 			<mx:DataGridColumn headerText="等级" dataField="level"/>
 		</mx:columns>
 	</mx:DataGrid>
