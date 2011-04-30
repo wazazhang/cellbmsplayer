@@ -68,6 +68,24 @@
 				Server.enterDesk(desk.desk_id,3)
 			}
 			
+			
+			public function init(desk:DeskData):void
+			{
+				this.desk = desk;
+				
+				if(desk.player_N_id!=-1)
+					playerN =  Server.getPlayer(desk.player_N_id);
+				
+				if(desk.player_S_id!=-1)
+					playerS =  Server.getPlayer(desk.player_S_id);
+				
+				if(desk.player_W_id!=-1)
+					playerW =  Server.getPlayer(desk.player_W_id);
+				
+				if(desk.player_E_id!=-1)
+					playerE =  Server.getPlayer(desk.player_E_id);
+			}
+			
 			//进入一个人
 			public function enterPlayer(playerid:int,seatid:int):void
 			{
