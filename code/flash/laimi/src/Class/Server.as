@@ -62,9 +62,7 @@ package Class
 		public static var login_cpt:Login_Cpt;
 		
 		public static var room_cpt:Room_Cpt;
-		
-	//	public static var game_cpt:Lami;
-		
+
 		private static var room:Room;
 		
 		public static var game:Game;
@@ -275,6 +273,8 @@ package Class
 			    
 				if(enterRoom.result==0) 
 				{	
+					
+					
 					room = new Room(enterRoom.room);
 					room_cpt.room =	room;
 					room_cpt.init(enterRoom.room)
