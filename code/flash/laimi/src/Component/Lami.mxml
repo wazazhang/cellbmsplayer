@@ -211,13 +211,14 @@
 					if(cpt!=null)
 						cpt.ready = isReady;
 				}
+				
 				if(isReady)
 				{
-					addInfo("玩家"+playerid+"准备好了");
+					addInfo("玩家"+Server.getPlayer(playerid).name+"准备好了");
 				}
 				else
 				{
-					addInfo("玩家"+playerid+"取消了准备");
+					addInfo("玩家"+Server.getPlayer(playerid).name+"取消了准备");
 				}
 			}
 			
