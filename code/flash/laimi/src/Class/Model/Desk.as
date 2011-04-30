@@ -1,7 +1,7 @@
 package Class.Model
 {
 	import com.fc.lami.Messages.DeskData;
-
+	[Bindable]
 	public class Desk
 	{
 		public var desk_id :  int;
