@@ -12,8 +12,8 @@
     </sourceAttachmentPath>
   </compiler>
   <applications>
-    <application path="test.mxml"/>
     <application path="main.mxml"/>
+    <application path="test.mxml"/>
   </applications>
   <modules/>
   <buildCSSFiles/>
