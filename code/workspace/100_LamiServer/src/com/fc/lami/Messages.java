@@ -865,9 +865,11 @@ public class Messages {
 	public static class TurnStartNotify extends FlashMessage
 	{
 		public int player_id;
+		public int stack_num;
 		
-		public TurnStartNotify(int pid){
+		public TurnStartNotify(int pid, int num){
 			this.player_id = pid;
+			this.stack_num = num;
 		}
 		
 		public TurnStartNotify(){}

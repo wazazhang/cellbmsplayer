@@ -159,7 +159,7 @@ public class Desk implements ChannelListener
 			}
 		}
 		EnterDeskNotify ntf = new EnterDeskNotify(player.getPlayerData().player_id, desk_id, seat);
-		broadcast(ntf);
+//		broadcast(ntf);
 		room.broadcast(ntf);
 		return true;
 	}
@@ -181,7 +181,7 @@ public class Desk implements ChannelListener
 			game.onPlayerLeave(player);
 		}
 		LeaveDeskNotify ntf = new LeaveDeskNotify(player.player_id, desk_id);
-		broadcast(ntf);
+//		broadcast(ntf);
 		room.broadcast(ntf);
 //		player.session.send(ntf);
 		return true;
@@ -264,7 +264,7 @@ public class Desk implements ChannelListener
 					count ++;
 				}
 			}
-			return count > 1;
+			return count == desk_players.size();
 		}
 //		if ((player_E==null || player_E.is_ready) &&
 //			(player_W==null || player_W.is_ready) &&

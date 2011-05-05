@@ -1071,9 +1071,11 @@ public class MessageCodecJava implements MutualMessageCodec
 	public com.fc.lami.Messages.TurnStartNotify new_com_fc_lami_Messages_TurnStartNotify(){return new com.fc.lami.Messages.TurnStartNotify();}
 	private void _r(com.fc.lami.Messages.TurnStartNotify msg, NetDataInput in) throws IOException {
 		msg.player_id = in.readInt();
+		msg.stack_num = in.readInt();
 	}
 	private void _w(com.fc.lami.Messages.TurnStartNotify msg, NetDataOutput out) throws IOException {
 		out.writeInt(msg.player_id);
+		out.writeInt(msg.stack_num);
 	}
 
 
