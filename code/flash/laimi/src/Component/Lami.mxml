@@ -294,6 +294,8 @@
 	
 	<mx:Label x="268" y="520" text="{getDir(seatID)+':'+ Server.player.name}" color="#FCFDFD"/>
 	
+	<mx:Label x="403" y="350" text="{Server.game.leftCard}" color="#FCFDFD"/>
+	
 	<mx:Label x="268" y="550" text="{game.gamer.isMyturn?'游戏中':'等待中'}" color="#FCFDFD"/>
 	<mx:LinkButton x="10" y="10" label="回到大厅" color="#F9FBFC" click="returnRoom()"/>
 	
