@@ -205,7 +205,7 @@ package Class
 				//TODO 轮到自己行动
 				var tsn:TurnStartNotify = ntf as TurnStartNotify;
 				game.setAllCardIssend();
-				
+				game.leftCard = tsn.stack_num;
 				if (tsn.player_id == player.player_id){
 					game.turnStart();
 				}else{

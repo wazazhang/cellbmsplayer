@@ -54,6 +54,8 @@ package Class
 		
 		public var timeCtr:TimesCtr;
 		
+		public var leftCard:int;
+		
 		public function Game()
 		{
 			timeCtr = new TimesCtr();

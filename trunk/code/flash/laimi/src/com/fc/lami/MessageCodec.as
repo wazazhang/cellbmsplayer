@@ -1199,9 +1199,11 @@ package com.fc.lami
 	function new_TurnStartNotify_57() : com.fc.lami.Messages.TurnStartNotify {return new com.fc.lami.Messages.TurnStartNotify();}
 	private function r_TurnStartNotify_57(msg : com.fc.lami.Messages.TurnStartNotify, input : NetDataInput) : void {
 		msg.player_id = input.readInt();
+		msg.stack_num = input.readInt();
 	}
 	private function w_TurnStartNotify_57(msg : com.fc.lami.Messages.TurnStartNotify, output : NetDataOutput) : void {
 		output.writeInt(msg.player_id);
+		output.writeInt(msg.stack_num);
 	}
 
 

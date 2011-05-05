@@ -9,7 +9,7 @@ package com.fc.lami.Messages
 	 * Java Class [22] [com.fc.lami.Messages.GetTimeResponse]<br>
 	 * 此代码为自动生成。不需要在此修改。若有错误，请修改代码生成器。
 	 */
-	[Bindable]
+	//[Bindable]
 	public class GetTimeResponse extends Message
 	{
 		/** Java type is : <font color=#0000ff>java.lang.String</font> */
