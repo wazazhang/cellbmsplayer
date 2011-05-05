@@ -166,7 +166,7 @@ public class Game implements Runnable
 		s = (s+1) % player_list.length;
 		cur_player = player_list[s];
 		turn_start_time = System.currentTimeMillis();
-		TurnStartNotify notify = new TurnStartNotify(cur_player.player_id);
+		TurnStartNotify notify = new TurnStartNotify(cur_player.player_id, getLeftCardNumber());
 		desk.broadcast(notify);
 		//process_open_ice = false;
 		matrix_old = null;
@@ -687,7 +687,7 @@ public class Game implements Runnable
 					if (player_list[i] == next_player){
 						s = i;
 						turn_start_time = System.currentTimeMillis();
-						TurnStartNotify notify = new TurnStartNotify(player_list[s].player_id);
+						TurnStartNotify notify = new TurnStartNotify(player_list[s].player_id, getLeftCardNumber());
 						desk.broadcast(notify);
 						//process_open_ice = false;
 						matrix_old = null;
@@ -708,7 +708,7 @@ public class Game implements Runnable
 		if (is_start_time){	//	游戏开始后延迟10秒轮到第一个玩家
 			if (System.currentTimeMillis() - start_time >= 10000){
 				turn_start_time = System.currentTimeMillis();
-				TurnStartNotify notify = new TurnStartNotify(player_list[s].player_id);
+				TurnStartNotify notify = new TurnStartNotify(player_list[s].player_id, getLeftCardNumber());
 				desk.broadcast(notify);
 				is_start_time = false;
 			}
