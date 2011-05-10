@@ -43,6 +43,15 @@
 					
 					addChild(label);
 					
+					if(result.player_id == Server.player.player_id)
+					{
+						if(result.is_win)
+							rs.text = "胜利"
+						else
+							rs.text = "失败"
+					}
+					
+					
 					i++;
 				}
 				
@@ -61,5 +70,7 @@
 	<mx:Label y="10" text="游戏结束" horizontalCenter="0" fontSize="16" fontWeight="bold"/>
 	<mx:Label  y="40" text="{tip}" horizontalCenter="0" fontSize="12"/>
 	<mx:Button y="188" label="关闭" horizontalCenter="0" click="close()"/>
+	<mx:Label y="154" id="rs" text="失败" horizontalCenter="0" fontSize="18" fontWeight="bold" color="#E50E04"/>
+	
 	
 </mx:Canvas>

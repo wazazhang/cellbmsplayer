@@ -36,6 +36,7 @@ package Class
 	import com.fc.lami.Messages.MainMatrixChangeNotify;
 	import com.fc.lami.Messages.MainMatrixChangeRequest;
 	import com.fc.lami.Messages.OpenIceNotify;
+	import com.fc.lami.Messages.OperateCompleteNotify;
 	import com.fc.lami.Messages.PlayerData;
 	import com.fc.lami.Messages.ReadyNotify;
 	import com.fc.lami.Messages.ReadyRequest;
@@ -68,6 +69,12 @@ package Class
 		public static var game:Game;
 		
 		public static var app:Application;	
+		
+		private static var request_time:Date;
+		
+		public static var timer:int;
+		
+		public static var timerStr:String;
 			
 		public function Server()
 		{
@@ -212,7 +219,9 @@ package Class
 					game.otherPlayerStart(tsn.player_id);
 				}
 			}
-			
+			else if (ntf is OperateCompleteNotify){
+				game.timeCtr.reset();
+			}
 			else if (ntf is TurnEndNotify){
 				// TODO 自己回合结束
 				game.turnOver();
@@ -295,13 +304,18 @@ package Class
 			//响应进入房间
 			if(res is EnterDeskResponse){
 				var enterdesk : EnterDeskResponse =res as EnterDeskResponse;
+				var response:Date = new Date();
+				var delay:int = response.getTime() - request_time.getTime();
 				if(enterdesk.result==0)
 				{
 					room_cpt.visible = false;
 
 					game = new Game();
 					app.addChild(game.lami);
-					game.timeCtr.sumTimerSet(enterdesk.turn_interval);
+					
+					game.timeCtr.sumTimerSet(enterdesk.turn_interval-delay);
+					game.timeCtr.oprTimerSet(enterdesk.operate_time);
+					
 					room.getDesk(enterdesk.desk_id).sitDown(player.player_id, enterdesk.seat);
 					game.lami.initDesk(room.getDesk(enterdesk.desk_id));
 				}
@@ -358,6 +372,7 @@ package Class
 		public static function enterDesk(deskid:int,seat:int):void
 		{
 			client.sendRequest(new EnterDeskRequest(deskid,seat),client_response);
+			request_time = new Date();
 		}
 		
 		public static function leaveDesk(deskid:int):void

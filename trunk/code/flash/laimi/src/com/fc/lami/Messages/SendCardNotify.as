@@ -6,10 +6,10 @@ package com.fc.lami.Messages
 
 
 	/**
-	 * Java Class [49] [com.fc.lami.Messages.SendCardNotify]<br>
+	 * Java Class [50] [com.fc.lami.Messages.SendCardNotify]<br>
 	 * 此代码为自动生成。不需要在此修改。若有错误，请修改代码生成器。
 	 */
-	//[Bindable]
+	[Bindable]
 	public class SendCardNotify extends Message
 	{
 		/** Java type is : <font color=#0000ff>int</font> */

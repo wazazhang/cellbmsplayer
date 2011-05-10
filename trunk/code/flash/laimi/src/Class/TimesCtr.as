@@ -8,8 +8,9 @@ package Class
 	{
 		
 		
-		private  const optionTime:int = 12;
-		private  var sumTime:int = 90;
+		private  var optionTime:int = 12;
+		private  var sumTime:int;
+		
 		public  var oprTimer:Timer = new Timer(100,optionTime*10);
 		public  var sumTimer:Timer = new Timer(100,sumTime*10);
 		
@@ -20,13 +21,16 @@ package Class
 		{
 			
 		}
+		/*
 		public  function inits():void
 		{
 			 oprTimer.addEventListener(TimerEvent.TIMER, oprTimerHandler);
 			 sumTimer.addEventListener(TimerEvent.TIMER, sumTimerHandler);
+			 
              oprTimer.addEventListener(TimerEvent.TIMER_COMPLETE, completeHandler);
              sumTimer.addEventListener(TimerEvent.TIMER_COMPLETE, completeHandler);   
 		}
+		*/
 		
 		
 		public  function oprTimerHandler(event:TimerEvent):void
@@ -36,7 +40,12 @@ package Class
 		
 		public  function sumTimerHandler(event:TimerEvent):void
 		{
-            sumTimeBar.setProgress(sumTimer.delay * sumTimer.currentCount, sumTime*1000); 
+            sumTimeBar.setProgress(sumTimer.delay * sumTimer.currentCount, sumTime*1000*4/5); 
+			
+			var d:Date = new Date();
+			Server.timer = d.getSeconds();
+			
+			Server.timerStr = (sumTimer.delay * sumTimer.currentCount) + '/' + (sumTime*1000*4/5);
 		}	
 		
 		public  function completeHandler(event:TimerEvent):void
@@ -50,6 +59,8 @@ package Class
 			//start();
 			//tt.text = "time up";
 		}
+		
+		
 		public  function start():void
 		{
 			oprTimer.reset();
@@ -77,6 +88,14 @@ package Class
 			sumTime = time/1000;
 			sumTimer.addEventListener(TimerEvent.TIMER, sumTimerHandler);
 			sumTimer.addEventListener(TimerEvent.TIMER_COMPLETE, completeHandler);   
+		}
+		
+		public  function oprTimerSet(time:int):void
+		{
+			oprTimer = new Timer(100, time/100);
+			optionTime = time/1000;
+			oprTimer.addEventListener(TimerEvent.TIMER, oprTimerHandler);
+			oprTimer.addEventListener(TimerEvent.TIMER_COMPLETE, completeHandler);   
 		}
 	}
 }

@@ -55,7 +55,5 @@
 	<mx:Button id="BT3" x="10" y="62" enabled="false"   click="click3()" disabledSkin="@Embed(source='../image/button/order2.png')" overSkin="@Embed(source='../image/button/order1.png')" downSkin="@Embed(source='../image/button/order0.png')" skin="@Embed(source='../image/button/order0.png')" />
 	<mx:Button id="BT4" x="10" y="92" enabled="false"  click="click4()" skin="@Embed(source='../image/button/reset0.png')" overSkin="@Embed(source='../image/button/reset1.png')" disabledSkin="@Embed(source='../image/button/reset2.png')" downSkin="@Embed(source='../image/button/reset0.png')"/>
 	<mx:Button id="BT6" x="10" y="3" toggle="true"  click="click6()"  enabled="{!game.gamer.isReady}" skin="@Embed(source='../image/button/ready0.png')" overSkin="@Embed(source='../image/button/ready1.png')" disabledSkin="@Embed(source='../image/button/ready2.png')" downSkin="@Embed(source='../image/button/ready0.png')"/>
-	<mx:Label x="10" y="147" text="破冰:{game.gamer.isCold?'否':'是'} " color="white"/>
-	<mx:Label x="10" y="160" text="shift:{game.gamer.keydwon?'是':'否'}" color="white"/>
-	
+
 </mx:Canvas>

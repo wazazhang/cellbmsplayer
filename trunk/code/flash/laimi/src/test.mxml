@@ -31,7 +31,7 @@
 	</ns1:Lami> 
 	-->
 	
-	<ns1:deBug verticalCenter="0" left="10" visible="false">
+	<ns1:deBug verticalCenter="0" left="10" visible="true">
 	</ns1:deBug>
 	
 </mx:Application>
