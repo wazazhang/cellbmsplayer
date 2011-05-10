@@ -6,10 +6,10 @@ package com.fc.lami.Messages
 
 
 	/**
-	 * Java Class [44] [com.fc.lami.Messages.RetakeCardNotify]<br>
+	 * Java Class [45] [com.fc.lami.Messages.RetakeCardNotify]<br>
 	 * 此代码为自动生成。不需要在此修改。若有错误，请修改代码生成器。
 	 */
-	//[Bindable]
+	[Bindable]
 	public class RetakeCardNotify extends Message
 	{
 		/** Java type is : <font color=#0000ff>int</font> */

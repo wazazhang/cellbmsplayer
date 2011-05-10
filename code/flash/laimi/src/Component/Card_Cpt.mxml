@@ -178,8 +178,8 @@
 				if(!game.gamer.canOpearation)
 					return;
 				
-				if(game.gamer.isMyturn)
-					game.timeCtr.reset();
+//				if(game.gamer.isMyturn)
+//					game.timeCtr.reset();
 				
 				if(game.gamer.selectedCard!=null&&game.gamer.selectedCard!=card)
 				{

@@ -3,6 +3,7 @@
 	<mx:Script>
 		<![CDATA[
 			import Class.Game;
+			import Class.Server;
 			[Bindable]
 			public var game:Game;
 		]]>
@@ -11,5 +12,5 @@
 	<mx:Label x="10" y="68" text="{'出牌' + game.haveSendCard}"/>
 	<mx:Label x="11" y="96" text="{'综合' + game.canSubmitCard}"/>
 	<mx:Label x="17.5" y="10" text="debug信息"/>
-	
+	<mx:Label x="17.5" y="110" text="{Server.timerStr}"/>
 </mx:Canvas>

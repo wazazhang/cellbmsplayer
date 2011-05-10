@@ -25,7 +25,7 @@ package Class
 		public  var lami:Lami;
 		
 		//列数
-		public  var lineCount:int=7; 
+		public  var lineCount:int=10; 
 		
 		//列数组
 		public  var lineArray:ArrayCollection = new ArrayCollection();
@@ -93,7 +93,7 @@ package Class
 			var curline:Line;
 			for(var i:int=0;i<lineCount;i++)
 			{			
-				var line:Line = new Line(20,false,i+1,this);
+				var line:Line = new Line(24,false,i+1,this);
 				
 				if(curline != null)
 				{

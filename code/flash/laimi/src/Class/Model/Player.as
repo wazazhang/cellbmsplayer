@@ -21,7 +21,7 @@ package Class.Model
 	{
 		public var handCard:ArrayCollection = new ArrayCollection(); //当前手牌数组
 		public var matrix:UserMatrix_Cpt    //用户矩阵
-		public var matrix_length:int = 14;  //用户矩阵宽度
+		public var matrix_length:int = 18;  //用户矩阵宽度
 		public var matrix_height:int = 4;    //用户矩阵高度
 		
 		public var cardLines:ArrayCollection = new ArrayCollection();

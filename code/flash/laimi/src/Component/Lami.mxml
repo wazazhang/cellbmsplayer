@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"  xmlns:ns1="Component.*" width="800" height="600" backgroundImage="image/bk.png"
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"  xmlns:ns1="Component.*" width="1024" height="768" borderStyle="solid" borderColor="0x000000" backgroundColor="0xffffff"
 		   verticalCenter="0" horizontalCenter="0">
 	
 	
@@ -269,35 +269,34 @@
 		]]>
 	</mx:Script>
 	
-	<ns1:Matrix_Cpt id="mx" y="100" borderStyle="solid" height="201" x="30">
+	<ns1:Matrix_Cpt id="mx" y="179" borderStyle="solid" height="201" horizontalCenter="-1">
 	</ns1:Matrix_Cpt>
 	
-	<ns1:UserMatrix_Cpt id="umx" height="202" x="342" y="389" width="400">
-		<mx:ProgressBar id="sumbar" width="364" label="" height="10" mode="manual" labelPlacement="center" y="24" x="0"/>
-		<mx:ProgressBar id="optbar" height="10" width="364" label="" mode="manual" labelPlacement="center" x="0" y="36"/>
+	<ns1:UserMatrix_Cpt id="umx" height="202" x="297" y="558" width="479">
+		<mx:ProgressBar id="sumbar" width="465" label="" height="10" mode="manual" labelPlacement="center" y="24" x="0"/>
+		<mx:ProgressBar id="optbar" height="10" width="465" label="" mode="manual" labelPlacement="center" x="0" y="36"/>
 	</ns1:UserMatrix_Cpt>
 	
-	<ns1:Opt_Cpt id="optCpt" height="177" y="411" x="704">
+	<ns1:Opt_Cpt id="optCpt" height="177" y="579" x="784">
 	</ns1:Opt_Cpt>
 	
-	<mx:Label x="268" y="536" text="{game.gamer.handCard.length}" color="#FDFDFD"/>
-	<mx:TextArea id="gameinfo" x="29" y="429" width="195" height="113" backgroundAlpha="0.0" color="#FDFFFF" editable="false"/>
 	
-	<ns1:OtherPlayer_Cpt id="nextPlayer1" x="579" y="100">
+	<mx:TextArea id="gameinfo" x="20" y="562" width="223" height="145" backgroundAlpha="0.0" color="#010101" editable="false"/>
+	
+	<ns1:OtherPlayer_Cpt id="nextPlayer1" x="10" y="179">
 	</ns1:OtherPlayer_Cpt>
 	
-	<ns1:OtherPlayer_Cpt id="nextPlayer2"  x="579" y="203">
+	<ns1:OtherPlayer_Cpt id="nextPlayer2"  x="185" y="10">
 	</ns1:OtherPlayer_Cpt>
 	
-	<ns1:OtherPlayer_Cpt id="nextPlayer3" x="579" y="305">
+	<ns1:OtherPlayer_Cpt id="nextPlayer3" x="898" y="179">
 	</ns1:OtherPlayer_Cpt>
 	
-	<mx:Label x="268" y="520" text="{getDir(seatID)+':'+ Server.player.name}" color="#FCFDFD"/>
+
 	
-	<mx:Label x="403" y="350" text="{Server.game.leftCard}" color="#FCFDFD"/>
+	<mx:Label id="timer" x="20" y="541" text="{Server.timer}" color="#010101" width="138"/>
 	
-	<mx:Label x="268" y="550" text="{game.gamer.isMyturn?'游戏中':'等待中'}" color="#FCFDFD"/>
-	<mx:LinkButton x="10" y="10" label="回到大厅" color="#F9FBFC" click="returnRoom()"/>
+	<mx:LinkButton x="948" y="10" label="回到大厅" color="#020202" click="returnRoom()"/>
 	
 	<mx:Image id="turnStartImg" horizontalCenter="0" verticalCenter="0" source="image/start.png" alpha="0.0" visible="false" />
 	
@@ -305,6 +304,33 @@
 		<mx:Fade duration="1500" alphaFrom="1.0" alphaTo="0.0"></mx:Fade>
 		<mx:Zoom duration="1500" zoomHeightFrom="1.0" zoomHeightTo="2.0" zoomWidthFrom="1.0" zoomWidthTo="2.0" > </mx:Zoom>
 	</mx:Parallel>
-	<mx:Label x="117" y="12" text="{'位置:'+(Server.room_cpt.room.roomData.room_id)+'房间 '+ (desk.desk_id+1)+'号座'}" color="#FDFDFD"/>
+	
+	
+	<mx:Label x="784" y="12" text="{'位置:'+(Server.room_cpt.room.roomData.room_id)+'房间 '+ (desk.desk_id+1)+'号座'}" color="#010101"/>
+	
+	<mx:Canvas id="useinfo" width="144" height="169" x="868" y="579" borderStyle="solid" borderColor="#000000">
+		
+		<mx:Label x="12" y="106" text="{getDir(seatID)+':'+ Server.player.name}" color="#010101"/>
+		
+		<mx:Label x="80" y="106" text="{game.gamer.isMyturn?'游戏中':'等待中'}" color="#010101"/>
+		
+		
+		<mx:Label x="10" y="124" text="手牌数：{game.gamer.handCard.length}" color="#010101"/>
+	
+		
+		<mx:Label x="10" y="139" text="破冰:{game.gamer.isCold?'否':'是'} " color="#010101"/>
+		
+		<mx:Label x="62" y="139" text="shift:{game.gamer.keydwon?'是':'否'}" color="black"/>
+		<mx:Image x="10" y="10" width="98" height="88" source="image/man.png"/>
+		
+	</mx:Canvas>
+	
+	
+	<mx:Canvas x="10" y="10" width="143" height="116" borderStyle="solid" borderColor="#010101">
+		
+		<mx:Label x="10" y="12" text="游戏信息" color="#010101"/>
+		<mx:Label x="10" y="32" text="剩余牌数：{Server.game.leftCard}" color="#010101"/>
+	</mx:Canvas>
+	
 	
 </mx:Canvas>
