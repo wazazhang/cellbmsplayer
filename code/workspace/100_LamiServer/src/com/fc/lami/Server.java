@@ -144,6 +144,7 @@ public class Server extends ServerImpl implements ServerListener
 			for (int i = 0; i < rooms.length; i++) {
 				res.rooms[i] = rooms[i].getRoomSnapShot();
 			}
+//			res.server_time = System.currentTimeMillis();
 			return res;
 		}
 		

@@ -120,6 +120,9 @@ public class MessageCodecJava implements MutualMessageCodec
 		if (msg.getClass().equals(com.fc.lami.Messages.OpenIceNotify.class)) {
 			_r((com.fc.lami.Messages.OpenIceNotify)msg, in); return;
 		}
+		if (msg.getClass().equals(com.fc.lami.Messages.OperateCompleteNotify.class)) {
+			_r((com.fc.lami.Messages.OperateCompleteNotify)msg, in); return;
+		}
 		if (msg.getClass().equals(com.fc.lami.Messages.PlayerData.class)) {
 			_r((com.fc.lami.Messages.PlayerData)msg, in); return;
 		}
@@ -295,6 +298,9 @@ public class MessageCodecJava implements MutualMessageCodec
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.OpenIceNotify.class)) {
 			_w((com.fc.lami.Messages.OpenIceNotify)msg, out); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.OperateCompleteNotify.class)) {
+			_w((com.fc.lami.Messages.OperateCompleteNotify)msg, out); return;
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.PlayerData.class)) {
 			_w((com.fc.lami.Messages.PlayerData)msg, out); return;
@@ -488,12 +494,14 @@ public class MessageCodecJava implements MutualMessageCodec
 		msg.desk_id = in.readInt();
 		msg.seat = in.readInt();
 		msg.turn_interval = in.readInt();
+		msg.operate_time = in.readInt();
 	}
 	private void _w(com.fc.lami.Messages.EnterDeskResponse msg, NetDataOutput out) throws IOException {
 		out.writeInt(msg.result);
 		out.writeInt(msg.desk_id);
 		out.writeInt(msg.seat);
 		out.writeInt(msg.turn_interval);
+		out.writeInt(msg.operate_time);
 	}
 
 //	----------------------------------------------------------------------------------------------------
@@ -798,6 +806,15 @@ public class MessageCodecJava implements MutualMessageCodec
 	}
 	private void _w(com.fc.lami.Messages.OpenIceNotify msg, NetDataOutput out) throws IOException {
 		out.writeInt(msg.player_id);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.OperateCompleteNotify
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.OperateCompleteNotify new_com_fc_lami_Messages_OperateCompleteNotify(){return new com.fc.lami.Messages.OperateCompleteNotify();}
+	private void _r(com.fc.lami.Messages.OperateCompleteNotify msg, NetDataInput in) throws IOException {
+	}
+	private void _w(com.fc.lami.Messages.OperateCompleteNotify msg, NetDataOutput out) throws IOException {
 	}
 
 //	----------------------------------------------------------------------------------------------------

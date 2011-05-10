@@ -26,9 +26,10 @@ public class Game implements Runnable
 	/** 存放玩家本回合打出的牌 */
 	HashMap<Integer, CardData> player_put = new HashMap<Integer, CardData>();
 	
-	int s;
-	long turn_start_time;
-	long start_time;
+	int cur_player_index;
+	long start_time;			// 游戏开始时间
+	long turn_start_time;		// 回合开始时间
+	long operate_start_time;	// 操作开始时间
 	int mh;
 	int mw;
 	
@@ -51,8 +52,8 @@ public class Game implements Runnable
 			player_list[i].session.send(new GameStartNotify(cds));
 		}
 		
-		s = CUtil.getRandom(0, player_list.length);
-		cur_player = player_list[s];
+		cur_player_index = CUtil.getRandom(0, player_list.length);
+		cur_player = player_list[cur_player_index];
 		start_time = System.currentTimeMillis();
 		is_start_time = true;
 		mw = LamiConfig.MATRIX_WIDTH;
@@ -63,7 +64,7 @@ public class Game implements Runnable
 	public void initCard(){
 		/** 初始化数字牌 */
 		int id = 0;
-		for (int i = 1; i<=13; i++){	// 1~6的牌舍去便于测试
+		for (int i = 6; i<=13; i++){	// 1~6的牌舍去便于测试
 			for (int j = 1; j<5; j++){
 				CardData card = new CardData(i, j);
 				card.id = id++;
@@ -156,22 +157,25 @@ public class Game implements Runnable
 	}
 	
 	public Player getNextPlayer(){
-		int z = (s+1) % player_list.length;
+		int z = (cur_player_index+1) % player_list.length;
 		return player_list[z];
 	}
 	
 	public void toNextPlayer(){
 
 		cur_player.session.send(new TurnEndNotify());
-		s = (s+1) % player_list.length;
-		cur_player = player_list[s];
+		cur_player_index = (cur_player_index+1) % player_list.length;
+		cur_player = player_list[cur_player_index];
 		turn_start_time = System.currentTimeMillis();
-		TurnStartNotify notify = new TurnStartNotify(cur_player.player_id, getLeftCardNumber());
+		operate_start_time = turn_start_time;
+		TurnStartNotify notify = new TurnStartNotify(cur_player.player_id, 
+														getLeftCardNumber()/*, 
+														System.currentTimeMillis()+LamiConfig.TURN_INTERVAL*/);
 		desk.broadcast(notify);
 		//process_open_ice = false;
 		matrix_old = null;
 		player_put.clear();
-		System.out.println("轮到下一个玩家");
+		System.out.println("轮到下一个玩家 时间 "+turn_start_time);
 	}
 	
 	private void playerGetCard(int n){
@@ -219,7 +223,7 @@ public class Game implements Runnable
 		}
 		CardData cards[] = new CardData[cd.length];
 		for (int i = 0; i<cd.length; i++){
-			cards[i] = player_list[s].removeCard(cd[i]);
+			cards[i] = player_list[cur_player_index].removeCard(cd[i]);
 			matrix[y][x+i] = cards[i];
 			player_put.put(cd[i], cards[i]);
 		}
@@ -324,26 +328,50 @@ public class Game implements Runnable
 		return RetakeCardResponse.RETAKE_CARD_RESULT_SUCCESS;
 	}
 	
+	int complete_card_group = 0;
+	
+	private int getCompleteGroup(){
+		int g = 0;
+		for (int i = 0; i<mh; i++){
+			for (int j = 0; j<mw-2; j++){
+				CheckResult cr = checkSingle(j, i);
+				if (cr.is_success == false){	//该位置有牌但不成立
+
+				}else{
+					g++;
+				}
+				j += cr.n;
+			}
+		}
+		return g;
+	}
+	
 	/** 检测桌面上的牌是否都合法 */
 	public boolean check(){
 		for (int i = 0; i<mh; i++){
 			for (int j = 0; j<mw-2; j++){
-				int temp = checkSingle(j, i);
-				if (temp == 1){	//该位置有牌但不成立
+				CheckResult cr = checkSingle(j, i);
+				if (cr.is_success == false && cr.n!=0){	//该位置有牌但不成立
 					return false;
 				}else{
-					if (temp != 0){
-						j += temp;
-					}
+					j += cr.n;
 				}
 			}
 		}
 		return true;
 	}
 	
-	public int checkSingle(int x, int y){
+	class CheckResult{
+		boolean is_success;
+		int n;
+	}
+	
+	public CheckResult checkSingle(int x, int y){
+		CheckResult cr = new CheckResult();
 		if (matrix[y][x]==null){
-			return 0;
+			cr.n = 0;
+			cr.is_success = false;
+			return cr;
 		}
 		int xs, xe;
 		xs = x;
@@ -355,8 +383,10 @@ public class Game implements Runnable
 			xe = xe+1;
 		}
 		int length = xe-xs+1;
+		cr.n = length;
 		if (length < 3){
-			return 1;
+			cr.is_success = false;
+			return cr;
 		}
 		
 		CardData cds[] = new CardData[length];
@@ -365,13 +395,14 @@ public class Game implements Runnable
 		}
 		
 		if (checkGroup(cds)){
-			return length;
+			cr.is_success = true;
+			return cr;
 		}else{
 			for (CardData cd:cds){
 				System.out.println(cd.toString());
 			}
-			checkGroup(cds);
-			return 1;
+			cr.is_success = false;
+			return cr;
 		}
 	}
 	
@@ -624,6 +655,12 @@ public class Game implements Runnable
 			player_put.remove(cd.id);
 		}
 		desk.broadcast(new MainMatrixChangeNotify(false, notify_cds));
+		int cur_complete_card_group = getCompleteGroup();
+		if (cur_complete_card_group>complete_card_group){
+			complete_card_group = cur_complete_card_group;
+			operate_start_time = System.currentTimeMillis();
+			getCurPlayer().session.send(new OperateCompleteNotify());
+		}
 		return true;
 	}
 	
@@ -685,9 +722,11 @@ public class Game implements Runnable
 			}else{
 				for (int i = 0; i<player_list.length; i++){
 					if (player_list[i] == next_player){
-						s = i;
+						cur_player_index = i;
 						turn_start_time = System.currentTimeMillis();
-						TurnStartNotify notify = new TurnStartNotify(player_list[s].player_id, getLeftCardNumber());
+						TurnStartNotify notify = new TurnStartNotify(player_list[cur_player_index].player_id, 
+																		getLeftCardNumber()/*, 
+																		System.currentTimeMillis()+LamiConfig.TURN_INTERVAL*/);
 						desk.broadcast(notify);
 						//process_open_ice = false;
 						matrix_old = null;
@@ -708,15 +747,21 @@ public class Game implements Runnable
 		if (is_start_time){	//	游戏开始后延迟10秒轮到第一个玩家
 			if (System.currentTimeMillis() - start_time >= 10000){
 				turn_start_time = System.currentTimeMillis();
-				TurnStartNotify notify = new TurnStartNotify(player_list[s].player_id, getLeftCardNumber());
+				operate_start_time = turn_start_time;
+				TurnStartNotify notify = new TurnStartNotify(player_list[cur_player_index].player_id, 
+																getLeftCardNumber()/*, 
+																System.currentTimeMillis()+LamiConfig.TURN_INTERVAL*/);
 				desk.broadcast(notify);
 				is_start_time = false;
 			}
 		}
 		//TODO 处理超时，处理游戏是否结束
 		else if (!is_over){
-			if (System.currentTimeMillis() - turn_start_time>=LamiConfig.TURN_INTERVAL){
+			long cur_time = System.currentTimeMillis();
+			if (cur_time - operate_start_time >= LamiConfig.OPERATE_TIME ||
+					cur_time - turn_start_time>=LamiConfig.TURN_INTERVAL){
 				System.err.println("player " + getCurPlayer().getName() + " 超时");
+				System.out.println(cur_time);
 				if (!player_put.isEmpty() /*|| process_open_ice*/){
 					if (submit() == SubmitResponse.SUBMIT_RESULT_SUCCESS){
 						
