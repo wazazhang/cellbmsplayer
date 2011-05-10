@@ -186,7 +186,7 @@ public class EchoClientSession implements ClientSessionListener
 //					player.cur_room.broadcast(edn);
 					session.sendResponse(protocol, 
 							new EnterDeskResponse(EnterDeskResponse.ENTER_DESK_RESULT_SUCCESS,
-									d.getDeskData().desk_id, request.seat, LamiConfig.TURN_INTERVAL));
+									d.getDeskData().desk_id, request.seat, LamiConfig.TURN_INTERVAL, LamiConfig.OPERATE_TIME));
 				} else {
 					session.sendResponse(protocol, 
 							new EnterDeskResponse(EnterDeskResponse.ENTER_DESK_RESULT_FAIL_PLAYER_EXIST));

@@ -617,6 +617,7 @@ public class Messages {
 		public short result;
 		public PlayerData player;
 		public RoomSnapShot rooms[];
+//		public long server_time;
 		
 		public LoginResponse(short result, PlayerData player){
 			this.result = result;
@@ -770,12 +771,14 @@ public class Messages {
 		public int desk_id;
 		public int seat;
 		public int turn_interval;
+		public int operate_time;
 		
-		public EnterDeskResponse(int result,int desk_id, int seat, int t){
+		public EnterDeskResponse(int result,int desk_id, int seat, int t, int ot){
 			this.result = result;
 			this.desk_id = desk_id;
 			this.seat = seat;
 			this.turn_interval = t;
+			this.operate_time = ot;
 		}
 		
 		public EnterDeskResponse(int result){
@@ -866,10 +869,12 @@ public class Messages {
 	{
 		public int player_id;
 		public int stack_num;
+//		public long end_time;
 		
 		public TurnStartNotify(int pid, int num){
 			this.player_id = pid;
 			this.stack_num = num;
+//			this.end_time = et;
 		}
 		
 		public TurnStartNotify(){}
@@ -886,6 +891,16 @@ public class Messages {
 		@Override
 		public String toString() {
 			return "TurnEndNotify";
+		}
+	}
+	
+	/** 一次操作成功 完成一个牌组 */
+	public static class OperateCompleteNotify extends FlashMessage
+	{
+		public OperateCompleteNotify(){}
+		@Override
+		public String toString() {
+			return "OperateCompleteNotify";
 		}
 	}
 	

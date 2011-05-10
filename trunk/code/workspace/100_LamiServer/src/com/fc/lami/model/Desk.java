@@ -264,7 +264,7 @@ public class Desk implements ChannelListener
 					count ++;
 				}
 			}
-			return count == desk_players.size();
+			return count>1 && count == desk_players.size();
 		}
 //		if ((player_E==null || player_E.is_ready) &&
 //			(player_W==null || player_W.is_ready) &&
@@ -282,7 +282,7 @@ public class Desk implements ChannelListener
 //		int pn = getPlayerNumber();
 //		Player playerlist[] = new Player[pn];
 //		int i = 0;
-//		/** 顺手针排序 */
+//		/** 顺时针排序 */
 //		if (player_E!=null){
 //			playerlist[i] = player_E;
 //			i++;
