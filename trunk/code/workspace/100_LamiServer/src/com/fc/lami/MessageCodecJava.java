@@ -576,8 +576,10 @@ public class MessageCodecJava implements MutualMessageCodec
 //	----------------------------------------------------------------------------------------------------
 	public com.fc.lami.Messages.ExitRoomResponse new_com_fc_lami_Messages_ExitRoomResponse(){return new com.fc.lami.Messages.ExitRoomResponse();}
 	private void _r(com.fc.lami.Messages.ExitRoomResponse msg, NetDataInput in) throws IOException {
+		msg.rooms = (com.fc.lami.Messages.RoomSnapShot[])in.readExternalArray(com.fc.lami.Messages.RoomSnapShot.class);
 	}
 	private void _w(com.fc.lami.Messages.ExitRoomResponse msg, NetDataOutput out) throws IOException {
+		out.writeExternalArray(msg.rooms);
 	}
 
 //	----------------------------------------------------------------------------------------------------

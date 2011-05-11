@@ -772,6 +772,12 @@ public class Messages {
 	
 	public static class ExitRoomResponse extends FlashMessage
 	{
+		public RoomSnapShot rooms[];
+		
+		public ExitRoomResponse(RoomSnapShot rooms[]){
+			this.rooms = rooms;
+		}
+		
 		public ExitRoomResponse(){}
 		
 		@Override

@@ -140,10 +140,7 @@ public class Server extends ServerImpl implements ServerListener
 			LoginResponse res = new LoginResponse(
 					LoginResponse.LOGIN_RESULT_SUCCESS, 
 					this.logined_session.player.getPlayerData());
-			res.rooms = new RoomSnapShot[rooms.length];
-			for (int i = 0; i < rooms.length; i++) {
-				res.rooms[i] = rooms[i].getRoomSnapShot();
-			}
+			res.rooms = getRoomList();
 //			res.server_time = System.currentTimeMillis();
 			return res;
 		}
@@ -159,6 +156,14 @@ public class Server extends ServerImpl implements ServerListener
 			return rooms[id];
 		}
 		return null;
+	}
+	
+	public RoomSnapShot[] getRoomList(){
+		RoomSnapShot[] rss = new RoomSnapShot[rooms.length];
+		for (int i = 0; i < rooms.length; i++) {
+			rss[i] = rooms[i].getRoomSnapShot();
+		}
+		return rss;
 	}
 	
 	public static void main(String[] args) throws IOException
