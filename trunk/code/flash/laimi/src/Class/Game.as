@@ -235,6 +235,9 @@ package Class
 					while(cardcpt!=null)
 				}
 			}	
+			
+			check();
+			
 		}
 		
 		//获得打出点数
@@ -326,9 +329,6 @@ package Class
 			//gamer.canOpearation = true;
 			gamer.confiomCard();
 			gamer.isMyturn = true;
-			
-			
-			
 			haveSendCard = false;
 			lami.turnStartImg.visible = true;
 			lami.turnStartEft.play();
@@ -339,6 +339,7 @@ package Class
 		{
 			//gamer.canOpearation = false;
 			gamer.isMyturn = false;
+			
 			if(gamer.selectedArrayCard != null)
 			{
 				for each(var card:Card in gamer.selectedArrayCard)
@@ -352,7 +353,10 @@ package Class
 				gamer.selectedCard.cardUI.isSelected = false;
 				gamer.selectedCard = null;
 			}
-			gamer.reset();
+			
+			
+			
+			//gamer.reset();
 			timeCtr.reset();
 			timeCtr.stop();
 		}
@@ -373,9 +377,21 @@ package Class
 			lami.gameinfo.text = str + "\n"+ lami.gameinfo.text  ;
 		}
 		
-		public  function otherPlayerStart(playerid:int):void
+		public  function playerTurnStart(playerid:int):void
 		{
-			lami.onPlayerStart(playerid);
+			
+			lami.nextPlayer1.gameing = false;
+			lami.nextPlayer2.gameing = false;
+			lami.nextPlayer3.gameing = false;
+			
+			if(playerid == Server.player.player_id )
+			{
+				turnStart();
+			}
+			else
+			{
+				lami.onPlayerStart(playerid);
+			}
 		}
 		
 		

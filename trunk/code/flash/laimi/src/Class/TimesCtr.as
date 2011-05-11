@@ -35,7 +35,7 @@ package Class
 		
 		public  function oprTimerHandler(event:TimerEvent):void
 		{
-            optionTimeBar.setProgress(oprTimer.delay * oprTimer.currentCount, optionTime*1000); 
+            optionTimeBar.setProgress(oprTimer.delay * oprTimer.currentCount, optionTime*1000*4/5); 
 		}
 		
 		public  function sumTimerHandler(event:TimerEvent):void

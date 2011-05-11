@@ -30,48 +30,50 @@ package com.fc.lami
 			if (msg is com.fc.lami.Messages.ExitRoomRequest) return 14;
 			if (msg is com.fc.lami.Messages.ExitRoomResponse) return 15;
 			if (msg is com.fc.lami.Messages.GameOverNotify) return 16;
-			if (msg is com.fc.lami.Messages.GameStartNotify) return 17;
-			if (msg is com.fc.lami.Messages.GetCardNotify) return 18;
-			if (msg is com.fc.lami.Messages.GetCardRequest) return 19;
-			if (msg is com.fc.lami.Messages.GetCardResponse) return 20;
-			if (msg is com.fc.lami.Messages.GetTimeRequest) return 21;
-			if (msg is com.fc.lami.Messages.GetTimeResponse) return 22;
-			if (msg is com.fc.lami.Messages.LeaveDeskNotify) return 23;
-			if (msg is com.fc.lami.Messages.LeaveDeskRequest) return 24;
-			if (msg is com.fc.lami.Messages.LeaveDeskResponse) return 25;
-			if (msg is com.fc.lami.Messages.LoginRequest) return 26;
-			if (msg is com.fc.lami.Messages.LoginResponse) return 27;
-			if (msg is com.fc.lami.Messages.LogoutRequest) return 28;
-			if (msg is com.fc.lami.Messages.MainMatrixChangeNotify) return 29;
-			if (msg is com.fc.lami.Messages.MainMatrixChangeRequest) return 30;
-			if (msg is com.fc.lami.Messages.MainMatrixChangeResponse) return 31;
-			if (msg is com.fc.lami.Messages.MoveCardNotify) return 32;
-			if (msg is com.fc.lami.Messages.MoveCardRequest) return 33;
-			if (msg is com.fc.lami.Messages.MoveCardResponse) return 34;
-			if (msg is com.fc.lami.Messages.OpenIceNotify) return 35;
-			if (msg is com.fc.lami.Messages.OperateCompleteNotify) return 36;
-			if (msg is com.fc.lami.Messages.PlayerData) return 37;
-			if (msg is com.fc.lami.Messages.ReadyNotify) return 38;
-			if (msg is com.fc.lami.Messages.ReadyRequest) return 39;
-			if (msg is com.fc.lami.Messages.ReadyResponse) return 40;
-			if (msg is com.fc.lami.Messages.RepealSendCardNotify) return 41;
-			if (msg is com.fc.lami.Messages.RepealSendCardRequest) return 42;
-			if (msg is com.fc.lami.Messages.RepealSendCardResponse) return 43;
-			if (msg is com.fc.lami.Messages.ResultPak) return 44;
-			if (msg is com.fc.lami.Messages.RetakeCardNotify) return 45;
-			if (msg is com.fc.lami.Messages.RetakeCardRequest) return 46;
-			if (msg is com.fc.lami.Messages.RetakeCardResponse) return 47;
-			if (msg is com.fc.lami.Messages.RoomData) return 48;
-			if (msg is com.fc.lami.Messages.RoomSnapShot) return 49;
-			if (msg is com.fc.lami.Messages.SendCardNotify) return 50;
-			if (msg is com.fc.lami.Messages.SendCardRequest) return 51;
-			if (msg is com.fc.lami.Messages.SendCardResponse) return 52;
-			if (msg is com.fc.lami.Messages.SubmitRequest) return 53;
-			if (msg is com.fc.lami.Messages.SubmitResponse) return 54;
-			if (msg is com.fc.lami.Messages.SynchronizeRequest) return 55;
-			if (msg is com.fc.lami.Messages.SynchronizeResponse) return 56;
-			if (msg is com.fc.lami.Messages.TurnEndNotify) return 57;
-			if (msg is com.fc.lami.Messages.TurnStartNotify) return 58;
+			if (msg is com.fc.lami.Messages.GameOverToRoomNotify) return 17;
+			if (msg is com.fc.lami.Messages.GameStartNotify) return 18;
+			if (msg is com.fc.lami.Messages.GameStartToRoomNotify) return 19;
+			if (msg is com.fc.lami.Messages.GetCardNotify) return 20;
+			if (msg is com.fc.lami.Messages.GetCardRequest) return 21;
+			if (msg is com.fc.lami.Messages.GetCardResponse) return 22;
+			if (msg is com.fc.lami.Messages.GetTimeRequest) return 23;
+			if (msg is com.fc.lami.Messages.GetTimeResponse) return 24;
+			if (msg is com.fc.lami.Messages.LeaveDeskNotify) return 25;
+			if (msg is com.fc.lami.Messages.LeaveDeskRequest) return 26;
+			if (msg is com.fc.lami.Messages.LeaveDeskResponse) return 27;
+			if (msg is com.fc.lami.Messages.LoginRequest) return 28;
+			if (msg is com.fc.lami.Messages.LoginResponse) return 29;
+			if (msg is com.fc.lami.Messages.LogoutRequest) return 30;
+			if (msg is com.fc.lami.Messages.MainMatrixChangeNotify) return 31;
+			if (msg is com.fc.lami.Messages.MainMatrixChangeRequest) return 32;
+			if (msg is com.fc.lami.Messages.MainMatrixChangeResponse) return 33;
+			if (msg is com.fc.lami.Messages.MoveCardNotify) return 34;
+			if (msg is com.fc.lami.Messages.MoveCardRequest) return 35;
+			if (msg is com.fc.lami.Messages.MoveCardResponse) return 36;
+			if (msg is com.fc.lami.Messages.OpenIceNotify) return 37;
+			if (msg is com.fc.lami.Messages.OperateCompleteNotify) return 38;
+			if (msg is com.fc.lami.Messages.PlayerData) return 39;
+			if (msg is com.fc.lami.Messages.ReadyNotify) return 40;
+			if (msg is com.fc.lami.Messages.ReadyRequest) return 41;
+			if (msg is com.fc.lami.Messages.ReadyResponse) return 42;
+			if (msg is com.fc.lami.Messages.RepealSendCardNotify) return 43;
+			if (msg is com.fc.lami.Messages.RepealSendCardRequest) return 44;
+			if (msg is com.fc.lami.Messages.RepealSendCardResponse) return 45;
+			if (msg is com.fc.lami.Messages.ResultPak) return 46;
+			if (msg is com.fc.lami.Messages.RetakeCardNotify) return 47;
+			if (msg is com.fc.lami.Messages.RetakeCardRequest) return 48;
+			if (msg is com.fc.lami.Messages.RetakeCardResponse) return 49;
+			if (msg is com.fc.lami.Messages.RoomData) return 50;
+			if (msg is com.fc.lami.Messages.RoomSnapShot) return 51;
+			if (msg is com.fc.lami.Messages.SendCardNotify) return 52;
+			if (msg is com.fc.lami.Messages.SendCardRequest) return 53;
+			if (msg is com.fc.lami.Messages.SendCardResponse) return 54;
+			if (msg is com.fc.lami.Messages.SubmitRequest) return 55;
+			if (msg is com.fc.lami.Messages.SubmitResponse) return 56;
+			if (msg is com.fc.lami.Messages.SynchronizeRequest) return 57;
+			if (msg is com.fc.lami.Messages.SynchronizeResponse) return 58;
+			if (msg is com.fc.lami.Messages.TurnEndNotify) return 59;
+			if (msg is com.fc.lami.Messages.TurnStartNotify) return 60;
 
 			return 0;
 		}
@@ -96,48 +98,50 @@ package com.fc.lami
 			case 14 : return new com.fc.lami.Messages.ExitRoomRequest;
 			case 15 : return new com.fc.lami.Messages.ExitRoomResponse;
 			case 16 : return new com.fc.lami.Messages.GameOverNotify;
-			case 17 : return new com.fc.lami.Messages.GameStartNotify;
-			case 18 : return new com.fc.lami.Messages.GetCardNotify;
-			case 19 : return new com.fc.lami.Messages.GetCardRequest;
-			case 20 : return new com.fc.lami.Messages.GetCardResponse;
-			case 21 : return new com.fc.lami.Messages.GetTimeRequest;
-			case 22 : return new com.fc.lami.Messages.GetTimeResponse;
-			case 23 : return new com.fc.lami.Messages.LeaveDeskNotify;
-			case 24 : return new com.fc.lami.Messages.LeaveDeskRequest;
-			case 25 : return new com.fc.lami.Messages.LeaveDeskResponse;
-			case 26 : return new com.fc.lami.Messages.LoginRequest;
-			case 27 : return new com.fc.lami.Messages.LoginResponse;
-			case 28 : return new com.fc.lami.Messages.LogoutRequest;
-			case 29 : return new com.fc.lami.Messages.MainMatrixChangeNotify;
-			case 30 : return new com.fc.lami.Messages.MainMatrixChangeRequest;
-			case 31 : return new com.fc.lami.Messages.MainMatrixChangeResponse;
-			case 32 : return new com.fc.lami.Messages.MoveCardNotify;
-			case 33 : return new com.fc.lami.Messages.MoveCardRequest;
-			case 34 : return new com.fc.lami.Messages.MoveCardResponse;
-			case 35 : return new com.fc.lami.Messages.OpenIceNotify;
-			case 36 : return new com.fc.lami.Messages.OperateCompleteNotify;
-			case 37 : return new com.fc.lami.Messages.PlayerData;
-			case 38 : return new com.fc.lami.Messages.ReadyNotify;
-			case 39 : return new com.fc.lami.Messages.ReadyRequest;
-			case 40 : return new com.fc.lami.Messages.ReadyResponse;
-			case 41 : return new com.fc.lami.Messages.RepealSendCardNotify;
-			case 42 : return new com.fc.lami.Messages.RepealSendCardRequest;
-			case 43 : return new com.fc.lami.Messages.RepealSendCardResponse;
-			case 44 : return new com.fc.lami.Messages.ResultPak;
-			case 45 : return new com.fc.lami.Messages.RetakeCardNotify;
-			case 46 : return new com.fc.lami.Messages.RetakeCardRequest;
-			case 47 : return new com.fc.lami.Messages.RetakeCardResponse;
-			case 48 : return new com.fc.lami.Messages.RoomData;
-			case 49 : return new com.fc.lami.Messages.RoomSnapShot;
-			case 50 : return new com.fc.lami.Messages.SendCardNotify;
-			case 51 : return new com.fc.lami.Messages.SendCardRequest;
-			case 52 : return new com.fc.lami.Messages.SendCardResponse;
-			case 53 : return new com.fc.lami.Messages.SubmitRequest;
-			case 54 : return new com.fc.lami.Messages.SubmitResponse;
-			case 55 : return new com.fc.lami.Messages.SynchronizeRequest;
-			case 56 : return new com.fc.lami.Messages.SynchronizeResponse;
-			case 57 : return new com.fc.lami.Messages.TurnEndNotify;
-			case 58 : return new com.fc.lami.Messages.TurnStartNotify;
+			case 17 : return new com.fc.lami.Messages.GameOverToRoomNotify;
+			case 18 : return new com.fc.lami.Messages.GameStartNotify;
+			case 19 : return new com.fc.lami.Messages.GameStartToRoomNotify;
+			case 20 : return new com.fc.lami.Messages.GetCardNotify;
+			case 21 : return new com.fc.lami.Messages.GetCardRequest;
+			case 22 : return new com.fc.lami.Messages.GetCardResponse;
+			case 23 : return new com.fc.lami.Messages.GetTimeRequest;
+			case 24 : return new com.fc.lami.Messages.GetTimeResponse;
+			case 25 : return new com.fc.lami.Messages.LeaveDeskNotify;
+			case 26 : return new com.fc.lami.Messages.LeaveDeskRequest;
+			case 27 : return new com.fc.lami.Messages.LeaveDeskResponse;
+			case 28 : return new com.fc.lami.Messages.LoginRequest;
+			case 29 : return new com.fc.lami.Messages.LoginResponse;
+			case 30 : return new com.fc.lami.Messages.LogoutRequest;
+			case 31 : return new com.fc.lami.Messages.MainMatrixChangeNotify;
+			case 32 : return new com.fc.lami.Messages.MainMatrixChangeRequest;
+			case 33 : return new com.fc.lami.Messages.MainMatrixChangeResponse;
+			case 34 : return new com.fc.lami.Messages.MoveCardNotify;
+			case 35 : return new com.fc.lami.Messages.MoveCardRequest;
+			case 36 : return new com.fc.lami.Messages.MoveCardResponse;
+			case 37 : return new com.fc.lami.Messages.OpenIceNotify;
+			case 38 : return new com.fc.lami.Messages.OperateCompleteNotify;
+			case 39 : return new com.fc.lami.Messages.PlayerData;
+			case 40 : return new com.fc.lami.Messages.ReadyNotify;
+			case 41 : return new com.fc.lami.Messages.ReadyRequest;
+			case 42 : return new com.fc.lami.Messages.ReadyResponse;
+			case 43 : return new com.fc.lami.Messages.RepealSendCardNotify;
+			case 44 : return new com.fc.lami.Messages.RepealSendCardRequest;
+			case 45 : return new com.fc.lami.Messages.RepealSendCardResponse;
+			case 46 : return new com.fc.lami.Messages.ResultPak;
+			case 47 : return new com.fc.lami.Messages.RetakeCardNotify;
+			case 48 : return new com.fc.lami.Messages.RetakeCardRequest;
+			case 49 : return new com.fc.lami.Messages.RetakeCardResponse;
+			case 50 : return new com.fc.lami.Messages.RoomData;
+			case 51 : return new com.fc.lami.Messages.RoomSnapShot;
+			case 52 : return new com.fc.lami.Messages.SendCardNotify;
+			case 53 : return new com.fc.lami.Messages.SendCardRequest;
+			case 54 : return new com.fc.lami.Messages.SendCardResponse;
+			case 55 : return new com.fc.lami.Messages.SubmitRequest;
+			case 56 : return new com.fc.lami.Messages.SubmitResponse;
+			case 57 : return new com.fc.lami.Messages.SynchronizeRequest;
+			case 58 : return new com.fc.lami.Messages.SynchronizeResponse;
+			case 59 : return new com.fc.lami.Messages.TurnEndNotify;
+			case 60 : return new com.fc.lami.Messages.TurnStartNotify;
 
 			}
 			return null;
@@ -193,131 +197,137 @@ package com.fc.lami
 		if (msg is com.fc.lami.Messages.GameOverNotify) {
 			r_GameOverNotify_16(com.fc.lami.Messages.GameOverNotify(msg), input); return;
 		}
+		if (msg is com.fc.lami.Messages.GameOverToRoomNotify) {
+			r_GameOverToRoomNotify_17(com.fc.lami.Messages.GameOverToRoomNotify(msg), input); return;
+		}
 		if (msg is com.fc.lami.Messages.GameStartNotify) {
-			r_GameStartNotify_17(com.fc.lami.Messages.GameStartNotify(msg), input); return;
+			r_GameStartNotify_18(com.fc.lami.Messages.GameStartNotify(msg), input); return;
+		}
+		if (msg is com.fc.lami.Messages.GameStartToRoomNotify) {
+			r_GameStartToRoomNotify_19(com.fc.lami.Messages.GameStartToRoomNotify(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.GetCardNotify) {
-			r_GetCardNotify_18(com.fc.lami.Messages.GetCardNotify(msg), input); return;
+			r_GetCardNotify_20(com.fc.lami.Messages.GetCardNotify(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.GetCardRequest) {
-			r_GetCardRequest_19(com.fc.lami.Messages.GetCardRequest(msg), input); return;
+			r_GetCardRequest_21(com.fc.lami.Messages.GetCardRequest(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.GetCardResponse) {
-			r_GetCardResponse_20(com.fc.lami.Messages.GetCardResponse(msg), input); return;
+			r_GetCardResponse_22(com.fc.lami.Messages.GetCardResponse(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.GetTimeRequest) {
-			r_GetTimeRequest_21(com.fc.lami.Messages.GetTimeRequest(msg), input); return;
+			r_GetTimeRequest_23(com.fc.lami.Messages.GetTimeRequest(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.GetTimeResponse) {
-			r_GetTimeResponse_22(com.fc.lami.Messages.GetTimeResponse(msg), input); return;
+			r_GetTimeResponse_24(com.fc.lami.Messages.GetTimeResponse(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.LeaveDeskNotify) {
-			r_LeaveDeskNotify_23(com.fc.lami.Messages.LeaveDeskNotify(msg), input); return;
+			r_LeaveDeskNotify_25(com.fc.lami.Messages.LeaveDeskNotify(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.LeaveDeskRequest) {
-			r_LeaveDeskRequest_24(com.fc.lami.Messages.LeaveDeskRequest(msg), input); return;
+			r_LeaveDeskRequest_26(com.fc.lami.Messages.LeaveDeskRequest(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.LeaveDeskResponse) {
-			r_LeaveDeskResponse_25(com.fc.lami.Messages.LeaveDeskResponse(msg), input); return;
+			r_LeaveDeskResponse_27(com.fc.lami.Messages.LeaveDeskResponse(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.LoginRequest) {
-			r_LoginRequest_26(com.fc.lami.Messages.LoginRequest(msg), input); return;
+			r_LoginRequest_28(com.fc.lami.Messages.LoginRequest(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.LoginResponse) {
-			r_LoginResponse_27(com.fc.lami.Messages.LoginResponse(msg), input); return;
+			r_LoginResponse_29(com.fc.lami.Messages.LoginResponse(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.LogoutRequest) {
-			r_LogoutRequest_28(com.fc.lami.Messages.LogoutRequest(msg), input); return;
+			r_LogoutRequest_30(com.fc.lami.Messages.LogoutRequest(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.MainMatrixChangeNotify) {
-			r_MainMatrixChangeNotify_29(com.fc.lami.Messages.MainMatrixChangeNotify(msg), input); return;
+			r_MainMatrixChangeNotify_31(com.fc.lami.Messages.MainMatrixChangeNotify(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.MainMatrixChangeRequest) {
-			r_MainMatrixChangeRequest_30(com.fc.lami.Messages.MainMatrixChangeRequest(msg), input); return;
+			r_MainMatrixChangeRequest_32(com.fc.lami.Messages.MainMatrixChangeRequest(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.MainMatrixChangeResponse) {
-			r_MainMatrixChangeResponse_31(com.fc.lami.Messages.MainMatrixChangeResponse(msg), input); return;
+			r_MainMatrixChangeResponse_33(com.fc.lami.Messages.MainMatrixChangeResponse(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.MoveCardNotify) {
-			r_MoveCardNotify_32(com.fc.lami.Messages.MoveCardNotify(msg), input); return;
+			r_MoveCardNotify_34(com.fc.lami.Messages.MoveCardNotify(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.MoveCardRequest) {
-			r_MoveCardRequest_33(com.fc.lami.Messages.MoveCardRequest(msg), input); return;
+			r_MoveCardRequest_35(com.fc.lami.Messages.MoveCardRequest(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.MoveCardResponse) {
-			r_MoveCardResponse_34(com.fc.lami.Messages.MoveCardResponse(msg), input); return;
+			r_MoveCardResponse_36(com.fc.lami.Messages.MoveCardResponse(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.OpenIceNotify) {
-			r_OpenIceNotify_35(com.fc.lami.Messages.OpenIceNotify(msg), input); return;
+			r_OpenIceNotify_37(com.fc.lami.Messages.OpenIceNotify(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.OperateCompleteNotify) {
-			r_OperateCompleteNotify_36(com.fc.lami.Messages.OperateCompleteNotify(msg), input); return;
+			r_OperateCompleteNotify_38(com.fc.lami.Messages.OperateCompleteNotify(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.PlayerData) {
-			r_PlayerData_37(com.fc.lami.Messages.PlayerData(msg), input); return;
+			r_PlayerData_39(com.fc.lami.Messages.PlayerData(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.ReadyNotify) {
-			r_ReadyNotify_38(com.fc.lami.Messages.ReadyNotify(msg), input); return;
+			r_ReadyNotify_40(com.fc.lami.Messages.ReadyNotify(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.ReadyRequest) {
-			r_ReadyRequest_39(com.fc.lami.Messages.ReadyRequest(msg), input); return;
+			r_ReadyRequest_41(com.fc.lami.Messages.ReadyRequest(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.ReadyResponse) {
-			r_ReadyResponse_40(com.fc.lami.Messages.ReadyResponse(msg), input); return;
+			r_ReadyResponse_42(com.fc.lami.Messages.ReadyResponse(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.RepealSendCardNotify) {
-			r_RepealSendCardNotify_41(com.fc.lami.Messages.RepealSendCardNotify(msg), input); return;
+			r_RepealSendCardNotify_43(com.fc.lami.Messages.RepealSendCardNotify(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.RepealSendCardRequest) {
-			r_RepealSendCardRequest_42(com.fc.lami.Messages.RepealSendCardRequest(msg), input); return;
+			r_RepealSendCardRequest_44(com.fc.lami.Messages.RepealSendCardRequest(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.RepealSendCardResponse) {
-			r_RepealSendCardResponse_43(com.fc.lami.Messages.RepealSendCardResponse(msg), input); return;
+			r_RepealSendCardResponse_45(com.fc.lami.Messages.RepealSendCardResponse(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.ResultPak) {
-			r_ResultPak_44(com.fc.lami.Messages.ResultPak(msg), input); return;
+			r_ResultPak_46(com.fc.lami.Messages.ResultPak(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.RetakeCardNotify) {
-			r_RetakeCardNotify_45(com.fc.lami.Messages.RetakeCardNotify(msg), input); return;
+			r_RetakeCardNotify_47(com.fc.lami.Messages.RetakeCardNotify(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.RetakeCardRequest) {
-			r_RetakeCardRequest_46(com.fc.lami.Messages.RetakeCardRequest(msg), input); return;
+			r_RetakeCardRequest_48(com.fc.lami.Messages.RetakeCardRequest(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.RetakeCardResponse) {
-			r_RetakeCardResponse_47(com.fc.lami.Messages.RetakeCardResponse(msg), input); return;
+			r_RetakeCardResponse_49(com.fc.lami.Messages.RetakeCardResponse(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.RoomData) {
-			r_RoomData_48(com.fc.lami.Messages.RoomData(msg), input); return;
+			r_RoomData_50(com.fc.lami.Messages.RoomData(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.RoomSnapShot) {
-			r_RoomSnapShot_49(com.fc.lami.Messages.RoomSnapShot(msg), input); return;
+			r_RoomSnapShot_51(com.fc.lami.Messages.RoomSnapShot(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.SendCardNotify) {
-			r_SendCardNotify_50(com.fc.lami.Messages.SendCardNotify(msg), input); return;
+			r_SendCardNotify_52(com.fc.lami.Messages.SendCardNotify(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.SendCardRequest) {
-			r_SendCardRequest_51(com.fc.lami.Messages.SendCardRequest(msg), input); return;
+			r_SendCardRequest_53(com.fc.lami.Messages.SendCardRequest(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.SendCardResponse) {
-			r_SendCardResponse_52(com.fc.lami.Messages.SendCardResponse(msg), input); return;
+			r_SendCardResponse_54(com.fc.lami.Messages.SendCardResponse(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.SubmitRequest) {
-			r_SubmitRequest_53(com.fc.lami.Messages.SubmitRequest(msg), input); return;
+			r_SubmitRequest_55(com.fc.lami.Messages.SubmitRequest(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.SubmitResponse) {
-			r_SubmitResponse_54(com.fc.lami.Messages.SubmitResponse(msg), input); return;
+			r_SubmitResponse_56(com.fc.lami.Messages.SubmitResponse(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.SynchronizeRequest) {
-			r_SynchronizeRequest_55(com.fc.lami.Messages.SynchronizeRequest(msg), input); return;
+			r_SynchronizeRequest_57(com.fc.lami.Messages.SynchronizeRequest(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.SynchronizeResponse) {
-			r_SynchronizeResponse_56(com.fc.lami.Messages.SynchronizeResponse(msg), input); return;
+			r_SynchronizeResponse_58(com.fc.lami.Messages.SynchronizeResponse(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.TurnEndNotify) {
-			r_TurnEndNotify_57(com.fc.lami.Messages.TurnEndNotify(msg), input); return;
+			r_TurnEndNotify_59(com.fc.lami.Messages.TurnEndNotify(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.TurnStartNotify) {
-			r_TurnStartNotify_58(com.fc.lami.Messages.TurnStartNotify(msg), input); return;
+			r_TurnStartNotify_60(com.fc.lami.Messages.TurnStartNotify(msg), input); return;
 		}
 
 		}
@@ -372,131 +382,137 @@ package com.fc.lami
 		if (msg is com.fc.lami.Messages.GameOverNotify) {
 			w_GameOverNotify_16(com.fc.lami.Messages.GameOverNotify(msg), output); return;
 		}
+		if (msg is com.fc.lami.Messages.GameOverToRoomNotify) {
+			w_GameOverToRoomNotify_17(com.fc.lami.Messages.GameOverToRoomNotify(msg), output); return;
+		}
 		if (msg is com.fc.lami.Messages.GameStartNotify) {
-			w_GameStartNotify_17(com.fc.lami.Messages.GameStartNotify(msg), output); return;
+			w_GameStartNotify_18(com.fc.lami.Messages.GameStartNotify(msg), output); return;
+		}
+		if (msg is com.fc.lami.Messages.GameStartToRoomNotify) {
+			w_GameStartToRoomNotify_19(com.fc.lami.Messages.GameStartToRoomNotify(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.GetCardNotify) {
-			w_GetCardNotify_18(com.fc.lami.Messages.GetCardNotify(msg), output); return;
+			w_GetCardNotify_20(com.fc.lami.Messages.GetCardNotify(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.GetCardRequest) {
-			w_GetCardRequest_19(com.fc.lami.Messages.GetCardRequest(msg), output); return;
+			w_GetCardRequest_21(com.fc.lami.Messages.GetCardRequest(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.GetCardResponse) {
-			w_GetCardResponse_20(com.fc.lami.Messages.GetCardResponse(msg), output); return;
+			w_GetCardResponse_22(com.fc.lami.Messages.GetCardResponse(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.GetTimeRequest) {
-			w_GetTimeRequest_21(com.fc.lami.Messages.GetTimeRequest(msg), output); return;
+			w_GetTimeRequest_23(com.fc.lami.Messages.GetTimeRequest(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.GetTimeResponse) {
-			w_GetTimeResponse_22(com.fc.lami.Messages.GetTimeResponse(msg), output); return;
+			w_GetTimeResponse_24(com.fc.lami.Messages.GetTimeResponse(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.LeaveDeskNotify) {
-			w_LeaveDeskNotify_23(com.fc.lami.Messages.LeaveDeskNotify(msg), output); return;
+			w_LeaveDeskNotify_25(com.fc.lami.Messages.LeaveDeskNotify(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.LeaveDeskRequest) {
-			w_LeaveDeskRequest_24(com.fc.lami.Messages.LeaveDeskRequest(msg), output); return;
+			w_LeaveDeskRequest_26(com.fc.lami.Messages.LeaveDeskRequest(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.LeaveDeskResponse) {
-			w_LeaveDeskResponse_25(com.fc.lami.Messages.LeaveDeskResponse(msg), output); return;
+			w_LeaveDeskResponse_27(com.fc.lami.Messages.LeaveDeskResponse(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.LoginRequest) {
-			w_LoginRequest_26(com.fc.lami.Messages.LoginRequest(msg), output); return;
+			w_LoginRequest_28(com.fc.lami.Messages.LoginRequest(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.LoginResponse) {
-			w_LoginResponse_27(com.fc.lami.Messages.LoginResponse(msg), output); return;
+			w_LoginResponse_29(com.fc.lami.Messages.LoginResponse(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.LogoutRequest) {
-			w_LogoutRequest_28(com.fc.lami.Messages.LogoutRequest(msg), output); return;
+			w_LogoutRequest_30(com.fc.lami.Messages.LogoutRequest(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.MainMatrixChangeNotify) {
-			w_MainMatrixChangeNotify_29(com.fc.lami.Messages.MainMatrixChangeNotify(msg), output); return;
+			w_MainMatrixChangeNotify_31(com.fc.lami.Messages.MainMatrixChangeNotify(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.MainMatrixChangeRequest) {
-			w_MainMatrixChangeRequest_30(com.fc.lami.Messages.MainMatrixChangeRequest(msg), output); return;
+			w_MainMatrixChangeRequest_32(com.fc.lami.Messages.MainMatrixChangeRequest(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.MainMatrixChangeResponse) {
-			w_MainMatrixChangeResponse_31(com.fc.lami.Messages.MainMatrixChangeResponse(msg), output); return;
+			w_MainMatrixChangeResponse_33(com.fc.lami.Messages.MainMatrixChangeResponse(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.MoveCardNotify) {
-			w_MoveCardNotify_32(com.fc.lami.Messages.MoveCardNotify(msg), output); return;
+			w_MoveCardNotify_34(com.fc.lami.Messages.MoveCardNotify(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.MoveCardRequest) {
-			w_MoveCardRequest_33(com.fc.lami.Messages.MoveCardRequest(msg), output); return;
+			w_MoveCardRequest_35(com.fc.lami.Messages.MoveCardRequest(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.MoveCardResponse) {
-			w_MoveCardResponse_34(com.fc.lami.Messages.MoveCardResponse(msg), output); return;
+			w_MoveCardResponse_36(com.fc.lami.Messages.MoveCardResponse(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.OpenIceNotify) {
-			w_OpenIceNotify_35(com.fc.lami.Messages.OpenIceNotify(msg), output); return;
+			w_OpenIceNotify_37(com.fc.lami.Messages.OpenIceNotify(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.OperateCompleteNotify) {
-			w_OperateCompleteNotify_36(com.fc.lami.Messages.OperateCompleteNotify(msg), output); return;
+			w_OperateCompleteNotify_38(com.fc.lami.Messages.OperateCompleteNotify(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.PlayerData) {
-			w_PlayerData_37(com.fc.lami.Messages.PlayerData(msg), output); return;
+			w_PlayerData_39(com.fc.lami.Messages.PlayerData(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.ReadyNotify) {
-			w_ReadyNotify_38(com.fc.lami.Messages.ReadyNotify(msg), output); return;
+			w_ReadyNotify_40(com.fc.lami.Messages.ReadyNotify(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.ReadyRequest) {
-			w_ReadyRequest_39(com.fc.lami.Messages.ReadyRequest(msg), output); return;
+			w_ReadyRequest_41(com.fc.lami.Messages.ReadyRequest(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.ReadyResponse) {
-			w_ReadyResponse_40(com.fc.lami.Messages.ReadyResponse(msg), output); return;
+			w_ReadyResponse_42(com.fc.lami.Messages.ReadyResponse(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.RepealSendCardNotify) {
-			w_RepealSendCardNotify_41(com.fc.lami.Messages.RepealSendCardNotify(msg), output); return;
+			w_RepealSendCardNotify_43(com.fc.lami.Messages.RepealSendCardNotify(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.RepealSendCardRequest) {
-			w_RepealSendCardRequest_42(com.fc.lami.Messages.RepealSendCardRequest(msg), output); return;
+			w_RepealSendCardRequest_44(com.fc.lami.Messages.RepealSendCardRequest(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.RepealSendCardResponse) {
-			w_RepealSendCardResponse_43(com.fc.lami.Messages.RepealSendCardResponse(msg), output); return;
+			w_RepealSendCardResponse_45(com.fc.lami.Messages.RepealSendCardResponse(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.ResultPak) {
-			w_ResultPak_44(com.fc.lami.Messages.ResultPak(msg), output); return;
+			w_ResultPak_46(com.fc.lami.Messages.ResultPak(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.RetakeCardNotify) {
-			w_RetakeCardNotify_45(com.fc.lami.Messages.RetakeCardNotify(msg), output); return;
+			w_RetakeCardNotify_47(com.fc.lami.Messages.RetakeCardNotify(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.RetakeCardRequest) {
-			w_RetakeCardRequest_46(com.fc.lami.Messages.RetakeCardRequest(msg), output); return;
+			w_RetakeCardRequest_48(com.fc.lami.Messages.RetakeCardRequest(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.RetakeCardResponse) {
-			w_RetakeCardResponse_47(com.fc.lami.Messages.RetakeCardResponse(msg), output); return;
+			w_RetakeCardResponse_49(com.fc.lami.Messages.RetakeCardResponse(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.RoomData) {
-			w_RoomData_48(com.fc.lami.Messages.RoomData(msg), output); return;
+			w_RoomData_50(com.fc.lami.Messages.RoomData(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.RoomSnapShot) {
-			w_RoomSnapShot_49(com.fc.lami.Messages.RoomSnapShot(msg), output); return;
+			w_RoomSnapShot_51(com.fc.lami.Messages.RoomSnapShot(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.SendCardNotify) {
-			w_SendCardNotify_50(com.fc.lami.Messages.SendCardNotify(msg), output); return;
+			w_SendCardNotify_52(com.fc.lami.Messages.SendCardNotify(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.SendCardRequest) {
-			w_SendCardRequest_51(com.fc.lami.Messages.SendCardRequest(msg), output); return;
+			w_SendCardRequest_53(com.fc.lami.Messages.SendCardRequest(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.SendCardResponse) {
-			w_SendCardResponse_52(com.fc.lami.Messages.SendCardResponse(msg), output); return;
+			w_SendCardResponse_54(com.fc.lami.Messages.SendCardResponse(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.SubmitRequest) {
-			w_SubmitRequest_53(com.fc.lami.Messages.SubmitRequest(msg), output); return;
+			w_SubmitRequest_55(com.fc.lami.Messages.SubmitRequest(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.SubmitResponse) {
-			w_SubmitResponse_54(com.fc.lami.Messages.SubmitResponse(msg), output); return;
+			w_SubmitResponse_56(com.fc.lami.Messages.SubmitResponse(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.SynchronizeRequest) {
-			w_SynchronizeRequest_55(com.fc.lami.Messages.SynchronizeRequest(msg), output); return;
+			w_SynchronizeRequest_57(com.fc.lami.Messages.SynchronizeRequest(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.SynchronizeResponse) {
-			w_SynchronizeResponse_56(com.fc.lami.Messages.SynchronizeResponse(msg), output); return;
+			w_SynchronizeResponse_58(com.fc.lami.Messages.SynchronizeResponse(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.TurnEndNotify) {
-			w_TurnEndNotify_57(com.fc.lami.Messages.TurnEndNotify(msg), output); return;
+			w_TurnEndNotify_59(com.fc.lami.Messages.TurnEndNotify(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.TurnStartNotify) {
-			w_TurnStartNotify_58(com.fc.lami.Messages.TurnStartNotify(msg), output); return;
+			w_TurnStartNotify_60(com.fc.lami.Messages.TurnStartNotify(msg), output); return;
 		}
 
 		}
@@ -694,8 +710,10 @@ package com.fc.lami
 //	----------------------------------------------------------------------------------------------------
 	function new_ExitRoomResponse_15() : com.fc.lami.Messages.ExitRoomResponse {return new com.fc.lami.Messages.ExitRoomResponse();}
 	private function r_ExitRoomResponse_15(msg : com.fc.lami.Messages.ExitRoomResponse, input : NetDataInput) : void {
+		msg.rooms = input.readExternalArray();
 	}
 	private function w_ExitRoomResponse_15(msg : com.fc.lami.Messages.ExitRoomResponse, output : NetDataOutput) : void {
+		output.writeExternalArray(msg.rooms);
 	}
 
 //	----------------------------------------------------------------------------------------------------
@@ -712,78 +730,100 @@ package com.fc.lami
 	}
 
 //	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.GameOverToRoomNotify
+//	----------------------------------------------------------------------------------------------------
+	function new_GameOverToRoomNotify_17() : com.fc.lami.Messages.GameOverToRoomNotify {return new com.fc.lami.Messages.GameOverToRoomNotify();}
+	private function r_GameOverToRoomNotify_17(msg : com.fc.lami.Messages.GameOverToRoomNotify, input : NetDataInput) : void {
+		msg.desk_id = input.readInt();
+	}
+	private function w_GameOverToRoomNotify_17(msg : com.fc.lami.Messages.GameOverToRoomNotify, output : NetDataOutput) : void {
+		output.writeInt(msg.desk_id);
+	}
+
+//	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.GameStartNotify
 //	----------------------------------------------------------------------------------------------------
-	function new_GameStartNotify_17() : com.fc.lami.Messages.GameStartNotify {return new com.fc.lami.Messages.GameStartNotify();}
-	private function r_GameStartNotify_17(msg : com.fc.lami.Messages.GameStartNotify, input : NetDataInput) : void {
+	function new_GameStartNotify_18() : com.fc.lami.Messages.GameStartNotify {return new com.fc.lami.Messages.GameStartNotify();}
+	private function r_GameStartNotify_18(msg : com.fc.lami.Messages.GameStartNotify, input : NetDataInput) : void {
 		msg.cards = input.readExternalArray();
 	}
-	private function w_GameStartNotify_17(msg : com.fc.lami.Messages.GameStartNotify, output : NetDataOutput) : void {
+	private function w_GameStartNotify_18(msg : com.fc.lami.Messages.GameStartNotify, output : NetDataOutput) : void {
 		output.writeExternalArray(msg.cards);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.GameStartToRoomNotify
+//	----------------------------------------------------------------------------------------------------
+	function new_GameStartToRoomNotify_19() : com.fc.lami.Messages.GameStartToRoomNotify {return new com.fc.lami.Messages.GameStartToRoomNotify();}
+	private function r_GameStartToRoomNotify_19(msg : com.fc.lami.Messages.GameStartToRoomNotify, input : NetDataInput) : void {
+		msg.desk_id = input.readInt();
+	}
+	private function w_GameStartToRoomNotify_19(msg : com.fc.lami.Messages.GameStartToRoomNotify, output : NetDataOutput) : void {
+		output.writeInt(msg.desk_id);
 	}
 
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.GetCardNotify
 //	----------------------------------------------------------------------------------------------------
-	function new_GetCardNotify_18() : com.fc.lami.Messages.GetCardNotify {return new com.fc.lami.Messages.GetCardNotify();}
-	private function r_GetCardNotify_18(msg : com.fc.lami.Messages.GetCardNotify, input : NetDataInput) : void {
+	function new_GetCardNotify_20() : com.fc.lami.Messages.GetCardNotify {return new com.fc.lami.Messages.GetCardNotify();}
+	private function r_GetCardNotify_20(msg : com.fc.lami.Messages.GetCardNotify, input : NetDataInput) : void {
 		msg.cards = input.readExternalArray();
 	}
-	private function w_GetCardNotify_18(msg : com.fc.lami.Messages.GetCardNotify, output : NetDataOutput) : void {
+	private function w_GetCardNotify_20(msg : com.fc.lami.Messages.GetCardNotify, output : NetDataOutput) : void {
 		output.writeExternalArray(msg.cards);
 	}
 
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.GetCardRequest
 //	----------------------------------------------------------------------------------------------------
-	function new_GetCardRequest_19() : com.fc.lami.Messages.GetCardRequest {return new com.fc.lami.Messages.GetCardRequest();}
-	private function r_GetCardRequest_19(msg : com.fc.lami.Messages.GetCardRequest, input : NetDataInput) : void {
+	function new_GetCardRequest_21() : com.fc.lami.Messages.GetCardRequest {return new com.fc.lami.Messages.GetCardRequest();}
+	private function r_GetCardRequest_21(msg : com.fc.lami.Messages.GetCardRequest, input : NetDataInput) : void {
 	}
-	private function w_GetCardRequest_19(msg : com.fc.lami.Messages.GetCardRequest, output : NetDataOutput) : void {
+	private function w_GetCardRequest_21(msg : com.fc.lami.Messages.GetCardRequest, output : NetDataOutput) : void {
 	}
 
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.GetCardResponse
 //	----------------------------------------------------------------------------------------------------
-	function new_GetCardResponse_20() : com.fc.lami.Messages.GetCardResponse {return new com.fc.lami.Messages.GetCardResponse();}
-	private function r_GetCardResponse_20(msg : com.fc.lami.Messages.GetCardResponse, input : NetDataInput) : void {
+	function new_GetCardResponse_22() : com.fc.lami.Messages.GetCardResponse {return new com.fc.lami.Messages.GetCardResponse();}
+	private function r_GetCardResponse_22(msg : com.fc.lami.Messages.GetCardResponse, input : NetDataInput) : void {
 		msg.result = input.readInt();
 	}
-	private function w_GetCardResponse_20(msg : com.fc.lami.Messages.GetCardResponse, output : NetDataOutput) : void {
+	private function w_GetCardResponse_22(msg : com.fc.lami.Messages.GetCardResponse, output : NetDataOutput) : void {
 		output.writeInt(msg.result);
 	}
 
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.GetTimeRequest
 //	----------------------------------------------------------------------------------------------------
-	function new_GetTimeRequest_21() : com.fc.lami.Messages.GetTimeRequest {return new com.fc.lami.Messages.GetTimeRequest();}
-	private function r_GetTimeRequest_21(msg : com.fc.lami.Messages.GetTimeRequest, input : NetDataInput) : void {
+	function new_GetTimeRequest_23() : com.fc.lami.Messages.GetTimeRequest {return new com.fc.lami.Messages.GetTimeRequest();}
+	private function r_GetTimeRequest_23(msg : com.fc.lami.Messages.GetTimeRequest, input : NetDataInput) : void {
 		msg.message = input.readJavaUTF();
 	}
-	private function w_GetTimeRequest_21(msg : com.fc.lami.Messages.GetTimeRequest, output : NetDataOutput) : void {
+	private function w_GetTimeRequest_23(msg : com.fc.lami.Messages.GetTimeRequest, output : NetDataOutput) : void {
 		output.writeJavaUTF(msg.message);
 	}
 
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.GetTimeResponse
 //	----------------------------------------------------------------------------------------------------
-	function new_GetTimeResponse_22() : com.fc.lami.Messages.GetTimeResponse {return new com.fc.lami.Messages.GetTimeResponse();}
-	private function r_GetTimeResponse_22(msg : com.fc.lami.Messages.GetTimeResponse, input : NetDataInput) : void {
+	function new_GetTimeResponse_24() : com.fc.lami.Messages.GetTimeResponse {return new com.fc.lami.Messages.GetTimeResponse();}
+	private function r_GetTimeResponse_24(msg : com.fc.lami.Messages.GetTimeResponse, input : NetDataInput) : void {
 		msg.time = input.readJavaUTF();
 	}
-	private function w_GetTimeResponse_22(msg : com.fc.lami.Messages.GetTimeResponse, output : NetDataOutput) : void {
+	private function w_GetTimeResponse_24(msg : com.fc.lami.Messages.GetTimeResponse, output : NetDataOutput) : void {
 		output.writeJavaUTF(msg.time);
 	}
 
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.LeaveDeskNotify
 //	----------------------------------------------------------------------------------------------------
-	function new_LeaveDeskNotify_23() : com.fc.lami.Messages.LeaveDeskNotify {return new com.fc.lami.Messages.LeaveDeskNotify();}
-	private function r_LeaveDeskNotify_23(msg : com.fc.lami.Messages.LeaveDeskNotify, input : NetDataInput) : void {
+	function new_LeaveDeskNotify_25() : com.fc.lami.Messages.LeaveDeskNotify {return new com.fc.lami.Messages.LeaveDeskNotify();}
+	private function r_LeaveDeskNotify_25(msg : com.fc.lami.Messages.LeaveDeskNotify, input : NetDataInput) : void {
 		msg.player_id = input.readInt();
 		msg.desk_id = input.readInt();
 	}
-	private function w_LeaveDeskNotify_23(msg : com.fc.lami.Messages.LeaveDeskNotify, output : NetDataOutput) : void {
+	private function w_LeaveDeskNotify_25(msg : com.fc.lami.Messages.LeaveDeskNotify, output : NetDataOutput) : void {
 		output.writeInt(msg.player_id);
 		output.writeInt(msg.desk_id);
 	}
@@ -791,12 +831,12 @@ package com.fc.lami
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.LeaveDeskRequest
 //	----------------------------------------------------------------------------------------------------
-	function new_LeaveDeskRequest_24() : com.fc.lami.Messages.LeaveDeskRequest {return new com.fc.lami.Messages.LeaveDeskRequest();}
-	private function r_LeaveDeskRequest_24(msg : com.fc.lami.Messages.LeaveDeskRequest, input : NetDataInput) : void {
+	function new_LeaveDeskRequest_26() : com.fc.lami.Messages.LeaveDeskRequest {return new com.fc.lami.Messages.LeaveDeskRequest();}
+	private function r_LeaveDeskRequest_26(msg : com.fc.lami.Messages.LeaveDeskRequest, input : NetDataInput) : void {
 		msg.player_id = input.readInt();
 		msg.desk_id = input.readInt();
 	}
-	private function w_LeaveDeskRequest_24(msg : com.fc.lami.Messages.LeaveDeskRequest, output : NetDataOutput) : void {
+	private function w_LeaveDeskRequest_26(msg : com.fc.lami.Messages.LeaveDeskRequest, output : NetDataOutput) : void {
 		output.writeInt(msg.player_id);
 		output.writeInt(msg.desk_id);
 	}
@@ -804,23 +844,23 @@ package com.fc.lami
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.LeaveDeskResponse
 //	----------------------------------------------------------------------------------------------------
-	function new_LeaveDeskResponse_25() : com.fc.lami.Messages.LeaveDeskResponse {return new com.fc.lami.Messages.LeaveDeskResponse();}
-	private function r_LeaveDeskResponse_25(msg : com.fc.lami.Messages.LeaveDeskResponse, input : NetDataInput) : void {
+	function new_LeaveDeskResponse_27() : com.fc.lami.Messages.LeaveDeskResponse {return new com.fc.lami.Messages.LeaveDeskResponse();}
+	private function r_LeaveDeskResponse_27(msg : com.fc.lami.Messages.LeaveDeskResponse, input : NetDataInput) : void {
 		msg.result = input.readInt();
 	}
-	private function w_LeaveDeskResponse_25(msg : com.fc.lami.Messages.LeaveDeskResponse, output : NetDataOutput) : void {
+	private function w_LeaveDeskResponse_27(msg : com.fc.lami.Messages.LeaveDeskResponse, output : NetDataOutput) : void {
 		output.writeInt(msg.result);
 	}
 
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.LoginRequest
 //	----------------------------------------------------------------------------------------------------
-	function new_LoginRequest_26() : com.fc.lami.Messages.LoginRequest {return new com.fc.lami.Messages.LoginRequest();}
-	private function r_LoginRequest_26(msg : com.fc.lami.Messages.LoginRequest, input : NetDataInput) : void {
+	function new_LoginRequest_28() : com.fc.lami.Messages.LoginRequest {return new com.fc.lami.Messages.LoginRequest();}
+	private function r_LoginRequest_28(msg : com.fc.lami.Messages.LoginRequest, input : NetDataInput) : void {
 		msg.name = input.readJavaUTF();
 		msg.validate = input.readJavaUTF();
 	}
-	private function w_LoginRequest_26(msg : com.fc.lami.Messages.LoginRequest, output : NetDataOutput) : void {
+	private function w_LoginRequest_28(msg : com.fc.lami.Messages.LoginRequest, output : NetDataOutput) : void {
 		output.writeJavaUTF(msg.name);
 		output.writeJavaUTF(msg.validate);
 	}
@@ -828,13 +868,13 @@ package com.fc.lami
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.LoginResponse
 //	----------------------------------------------------------------------------------------------------
-	function new_LoginResponse_27() : com.fc.lami.Messages.LoginResponse {return new com.fc.lami.Messages.LoginResponse();}
-	private function r_LoginResponse_27(msg : com.fc.lami.Messages.LoginResponse, input : NetDataInput) : void {
+	function new_LoginResponse_29() : com.fc.lami.Messages.LoginResponse {return new com.fc.lami.Messages.LoginResponse();}
+	private function r_LoginResponse_29(msg : com.fc.lami.Messages.LoginResponse, input : NetDataInput) : void {
 		msg.result = input.readShort();
 		msg.player = input.readExternal() as com.fc.lami.Messages.PlayerData;
 		msg.rooms = input.readExternalArray();
 	}
-	private function w_LoginResponse_27(msg : com.fc.lami.Messages.LoginResponse, output : NetDataOutput) : void {
+	private function w_LoginResponse_29(msg : com.fc.lami.Messages.LoginResponse, output : NetDataOutput) : void {
 		output.writeShort(msg.result);
 		output.writeExternal(msg.player);
 		output.writeExternalArray(msg.rooms);
@@ -843,21 +883,21 @@ package com.fc.lami
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.LogoutRequest
 //	----------------------------------------------------------------------------------------------------
-	function new_LogoutRequest_28() : com.fc.lami.Messages.LogoutRequest {return new com.fc.lami.Messages.LogoutRequest();}
-	private function r_LogoutRequest_28(msg : com.fc.lami.Messages.LogoutRequest, input : NetDataInput) : void {
+	function new_LogoutRequest_30() : com.fc.lami.Messages.LogoutRequest {return new com.fc.lami.Messages.LogoutRequest();}
+	private function r_LogoutRequest_30(msg : com.fc.lami.Messages.LogoutRequest, input : NetDataInput) : void {
 	}
-	private function w_LogoutRequest_28(msg : com.fc.lami.Messages.LogoutRequest, output : NetDataOutput) : void {
+	private function w_LogoutRequest_30(msg : com.fc.lami.Messages.LogoutRequest, output : NetDataOutput) : void {
 	}
 
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.MainMatrixChangeNotify
 //	----------------------------------------------------------------------------------------------------
-	function new_MainMatrixChangeNotify_29() : com.fc.lami.Messages.MainMatrixChangeNotify {return new com.fc.lami.Messages.MainMatrixChangeNotify();}
-	private function r_MainMatrixChangeNotify_29(msg : com.fc.lami.Messages.MainMatrixChangeNotify, input : NetDataInput) : void {
+	function new_MainMatrixChangeNotify_31() : com.fc.lami.Messages.MainMatrixChangeNotify {return new com.fc.lami.Messages.MainMatrixChangeNotify();}
+	private function r_MainMatrixChangeNotify_31(msg : com.fc.lami.Messages.MainMatrixChangeNotify, input : NetDataInput) : void {
 		msg.is_hardhanded = input.readBoolean();
 		msg.cards = input.readExternalArray();
 	}
-	private function w_MainMatrixChangeNotify_29(msg : com.fc.lami.Messages.MainMatrixChangeNotify, output : NetDataOutput) : void {
+	private function w_MainMatrixChangeNotify_31(msg : com.fc.lami.Messages.MainMatrixChangeNotify, output : NetDataOutput) : void {
 		output.writeBoolean(msg.is_hardhanded);
 		output.writeExternalArray(msg.cards);
 	}
@@ -865,36 +905,36 @@ package com.fc.lami
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.MainMatrixChangeRequest
 //	----------------------------------------------------------------------------------------------------
-	function new_MainMatrixChangeRequest_30() : com.fc.lami.Messages.MainMatrixChangeRequest {return new com.fc.lami.Messages.MainMatrixChangeRequest();}
-	private function r_MainMatrixChangeRequest_30(msg : com.fc.lami.Messages.MainMatrixChangeRequest, input : NetDataInput) : void {
+	function new_MainMatrixChangeRequest_32() : com.fc.lami.Messages.MainMatrixChangeRequest {return new com.fc.lami.Messages.MainMatrixChangeRequest();}
+	private function r_MainMatrixChangeRequest_32(msg : com.fc.lami.Messages.MainMatrixChangeRequest, input : NetDataInput) : void {
 		msg.cards = input.readExternalArray();
 	}
-	private function w_MainMatrixChangeRequest_30(msg : com.fc.lami.Messages.MainMatrixChangeRequest, output : NetDataOutput) : void {
+	private function w_MainMatrixChangeRequest_32(msg : com.fc.lami.Messages.MainMatrixChangeRequest, output : NetDataOutput) : void {
 		output.writeExternalArray(msg.cards);
 	}
 
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.MainMatrixChangeResponse
 //	----------------------------------------------------------------------------------------------------
-	function new_MainMatrixChangeResponse_31() : com.fc.lami.Messages.MainMatrixChangeResponse {return new com.fc.lami.Messages.MainMatrixChangeResponse();}
-	private function r_MainMatrixChangeResponse_31(msg : com.fc.lami.Messages.MainMatrixChangeResponse, input : NetDataInput) : void {
+	function new_MainMatrixChangeResponse_33() : com.fc.lami.Messages.MainMatrixChangeResponse {return new com.fc.lami.Messages.MainMatrixChangeResponse();}
+	private function r_MainMatrixChangeResponse_33(msg : com.fc.lami.Messages.MainMatrixChangeResponse, input : NetDataInput) : void {
 		msg.result = input.readInt();
 	}
-	private function w_MainMatrixChangeResponse_31(msg : com.fc.lami.Messages.MainMatrixChangeResponse, output : NetDataOutput) : void {
+	private function w_MainMatrixChangeResponse_33(msg : com.fc.lami.Messages.MainMatrixChangeResponse, output : NetDataOutput) : void {
 		output.writeInt(msg.result);
 	}
 
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.MoveCardNotify
 //	----------------------------------------------------------------------------------------------------
-	function new_MoveCardNotify_32() : com.fc.lami.Messages.MoveCardNotify {return new com.fc.lami.Messages.MoveCardNotify();}
-	private function r_MoveCardNotify_32(msg : com.fc.lami.Messages.MoveCardNotify, input : NetDataInput) : void {
+	function new_MoveCardNotify_34() : com.fc.lami.Messages.MoveCardNotify {return new com.fc.lami.Messages.MoveCardNotify();}
+	private function r_MoveCardNotify_34(msg : com.fc.lami.Messages.MoveCardNotify, input : NetDataInput) : void {
 		msg.cards = input.readIntArray();
 		msg.nx = input.readInt();
 		msg.ny = input.readInt();
 		msg.player_id = input.readInt();
 	}
-	private function w_MoveCardNotify_32(msg : com.fc.lami.Messages.MoveCardNotify, output : NetDataOutput) : void {
+	private function w_MoveCardNotify_34(msg : com.fc.lami.Messages.MoveCardNotify, output : NetDataOutput) : void {
 		output.writeIntArray(msg.cards);
 		output.writeInt(msg.nx);
 		output.writeInt(msg.ny);
@@ -904,13 +944,13 @@ package com.fc.lami
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.MoveCardRequest
 //	----------------------------------------------------------------------------------------------------
-	function new_MoveCardRequest_33() : com.fc.lami.Messages.MoveCardRequest {return new com.fc.lami.Messages.MoveCardRequest();}
-	private function r_MoveCardRequest_33(msg : com.fc.lami.Messages.MoveCardRequest, input : NetDataInput) : void {
+	function new_MoveCardRequest_35() : com.fc.lami.Messages.MoveCardRequest {return new com.fc.lami.Messages.MoveCardRequest();}
+	private function r_MoveCardRequest_35(msg : com.fc.lami.Messages.MoveCardRequest, input : NetDataInput) : void {
 		msg.cards = input.readIntArray();
 		msg.nx = input.readInt();
 		msg.ny = input.readInt();
 	}
-	private function w_MoveCardRequest_33(msg : com.fc.lami.Messages.MoveCardRequest, output : NetDataOutput) : void {
+	private function w_MoveCardRequest_35(msg : com.fc.lami.Messages.MoveCardRequest, output : NetDataOutput) : void {
 		output.writeIntArray(msg.cards);
 		output.writeInt(msg.nx);
 		output.writeInt(msg.ny);
@@ -919,39 +959,39 @@ package com.fc.lami
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.MoveCardResponse
 //	----------------------------------------------------------------------------------------------------
-	function new_MoveCardResponse_34() : com.fc.lami.Messages.MoveCardResponse {return new com.fc.lami.Messages.MoveCardResponse();}
-	private function r_MoveCardResponse_34(msg : com.fc.lami.Messages.MoveCardResponse, input : NetDataInput) : void {
+	function new_MoveCardResponse_36() : com.fc.lami.Messages.MoveCardResponse {return new com.fc.lami.Messages.MoveCardResponse();}
+	private function r_MoveCardResponse_36(msg : com.fc.lami.Messages.MoveCardResponse, input : NetDataInput) : void {
 		msg.result = input.readInt();
 	}
-	private function w_MoveCardResponse_34(msg : com.fc.lami.Messages.MoveCardResponse, output : NetDataOutput) : void {
+	private function w_MoveCardResponse_36(msg : com.fc.lami.Messages.MoveCardResponse, output : NetDataOutput) : void {
 		output.writeInt(msg.result);
 	}
 
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.OpenIceNotify
 //	----------------------------------------------------------------------------------------------------
-	function new_OpenIceNotify_35() : com.fc.lami.Messages.OpenIceNotify {return new com.fc.lami.Messages.OpenIceNotify();}
-	private function r_OpenIceNotify_35(msg : com.fc.lami.Messages.OpenIceNotify, input : NetDataInput) : void {
+	function new_OpenIceNotify_37() : com.fc.lami.Messages.OpenIceNotify {return new com.fc.lami.Messages.OpenIceNotify();}
+	private function r_OpenIceNotify_37(msg : com.fc.lami.Messages.OpenIceNotify, input : NetDataInput) : void {
 		msg.player_id = input.readInt();
 	}
-	private function w_OpenIceNotify_35(msg : com.fc.lami.Messages.OpenIceNotify, output : NetDataOutput) : void {
+	private function w_OpenIceNotify_37(msg : com.fc.lami.Messages.OpenIceNotify, output : NetDataOutput) : void {
 		output.writeInt(msg.player_id);
 	}
 
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.OperateCompleteNotify
 //	----------------------------------------------------------------------------------------------------
-	function new_OperateCompleteNotify_36() : com.fc.lami.Messages.OperateCompleteNotify {return new com.fc.lami.Messages.OperateCompleteNotify();}
-	private function r_OperateCompleteNotify_36(msg : com.fc.lami.Messages.OperateCompleteNotify, input : NetDataInput) : void {
+	function new_OperateCompleteNotify_38() : com.fc.lami.Messages.OperateCompleteNotify {return new com.fc.lami.Messages.OperateCompleteNotify();}
+	private function r_OperateCompleteNotify_38(msg : com.fc.lami.Messages.OperateCompleteNotify, input : NetDataInput) : void {
 	}
-	private function w_OperateCompleteNotify_36(msg : com.fc.lami.Messages.OperateCompleteNotify, output : NetDataOutput) : void {
+	private function w_OperateCompleteNotify_38(msg : com.fc.lami.Messages.OperateCompleteNotify, output : NetDataOutput) : void {
 	}
 
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.PlayerData
 //	----------------------------------------------------------------------------------------------------
-	function new_PlayerData_37() : com.fc.lami.Messages.PlayerData {return new com.fc.lami.Messages.PlayerData();}
-	private function r_PlayerData_37(msg : com.fc.lami.Messages.PlayerData, input : NetDataInput) : void {
+	function new_PlayerData_39() : com.fc.lami.Messages.PlayerData {return new com.fc.lami.Messages.PlayerData();}
+	private function r_PlayerData_39(msg : com.fc.lami.Messages.PlayerData, input : NetDataInput) : void {
 		msg.player_id = input.readInt();
 		msg.name = input.readJavaUTF();
 		msg.score = input.readInt();
@@ -959,7 +999,7 @@ package com.fc.lami
 		msg.lose = input.readInt();
 		msg.level = input.readInt();
 	}
-	private function w_PlayerData_37(msg : com.fc.lami.Messages.PlayerData, output : NetDataOutput) : void {
+	private function w_PlayerData_39(msg : com.fc.lami.Messages.PlayerData, output : NetDataOutput) : void {
 		output.writeInt(msg.player_id);
 		output.writeJavaUTF(msg.name);
 		output.writeInt(msg.score);
@@ -971,12 +1011,12 @@ package com.fc.lami
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.ReadyNotify
 //	----------------------------------------------------------------------------------------------------
-	function new_ReadyNotify_38() : com.fc.lami.Messages.ReadyNotify {return new com.fc.lami.Messages.ReadyNotify();}
-	private function r_ReadyNotify_38(msg : com.fc.lami.Messages.ReadyNotify, input : NetDataInput) : void {
+	function new_ReadyNotify_40() : com.fc.lami.Messages.ReadyNotify {return new com.fc.lami.Messages.ReadyNotify();}
+	private function r_ReadyNotify_40(msg : com.fc.lami.Messages.ReadyNotify, input : NetDataInput) : void {
 		msg.player_id = input.readInt();
 		msg.isReady = input.readBoolean();
 	}
-	private function w_ReadyNotify_38(msg : com.fc.lami.Messages.ReadyNotify, output : NetDataOutput) : void {
+	private function w_ReadyNotify_40(msg : com.fc.lami.Messages.ReadyNotify, output : NetDataOutput) : void {
 		output.writeInt(msg.player_id);
 		output.writeBoolean(msg.isReady);
 	}
@@ -984,32 +1024,32 @@ package com.fc.lami
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.ReadyRequest
 //	----------------------------------------------------------------------------------------------------
-	function new_ReadyRequest_39() : com.fc.lami.Messages.ReadyRequest {return new com.fc.lami.Messages.ReadyRequest();}
-	private function r_ReadyRequest_39(msg : com.fc.lami.Messages.ReadyRequest, input : NetDataInput) : void {
+	function new_ReadyRequest_41() : com.fc.lami.Messages.ReadyRequest {return new com.fc.lami.Messages.ReadyRequest();}
+	private function r_ReadyRequest_41(msg : com.fc.lami.Messages.ReadyRequest, input : NetDataInput) : void {
 		msg.isReady = input.readBoolean();
 	}
-	private function w_ReadyRequest_39(msg : com.fc.lami.Messages.ReadyRequest, output : NetDataOutput) : void {
+	private function w_ReadyRequest_41(msg : com.fc.lami.Messages.ReadyRequest, output : NetDataOutput) : void {
 		output.writeBoolean(msg.isReady);
 	}
 
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.ReadyResponse
 //	----------------------------------------------------------------------------------------------------
-	function new_ReadyResponse_40() : com.fc.lami.Messages.ReadyResponse {return new com.fc.lami.Messages.ReadyResponse();}
-	private function r_ReadyResponse_40(msg : com.fc.lami.Messages.ReadyResponse, input : NetDataInput) : void {
+	function new_ReadyResponse_42() : com.fc.lami.Messages.ReadyResponse {return new com.fc.lami.Messages.ReadyResponse();}
+	private function r_ReadyResponse_42(msg : com.fc.lami.Messages.ReadyResponse, input : NetDataInput) : void {
 	}
-	private function w_ReadyResponse_40(msg : com.fc.lami.Messages.ReadyResponse, output : NetDataOutput) : void {
+	private function w_ReadyResponse_42(msg : com.fc.lami.Messages.ReadyResponse, output : NetDataOutput) : void {
 	}
 
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.RepealSendCardNotify
 //	----------------------------------------------------------------------------------------------------
-	function new_RepealSendCardNotify_41() : com.fc.lami.Messages.RepealSendCardNotify {return new com.fc.lami.Messages.RepealSendCardNotify();}
-	private function r_RepealSendCardNotify_41(msg : com.fc.lami.Messages.RepealSendCardNotify, input : NetDataInput) : void {
+	function new_RepealSendCardNotify_43() : com.fc.lami.Messages.RepealSendCardNotify {return new com.fc.lami.Messages.RepealSendCardNotify();}
+	private function r_RepealSendCardNotify_43(msg : com.fc.lami.Messages.RepealSendCardNotify, input : NetDataInput) : void {
 		msg.player_id = input.readInt();
 		msg.cds = input.readExternalArray();
 	}
-	private function w_RepealSendCardNotify_41(msg : com.fc.lami.Messages.RepealSendCardNotify, output : NetDataOutput) : void {
+	private function w_RepealSendCardNotify_43(msg : com.fc.lami.Messages.RepealSendCardNotify, output : NetDataOutput) : void {
 		output.writeInt(msg.player_id);
 		output.writeExternalArray(msg.cds);
 	}
@@ -1017,31 +1057,31 @@ package com.fc.lami
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.RepealSendCardRequest
 //	----------------------------------------------------------------------------------------------------
-	function new_RepealSendCardRequest_42() : com.fc.lami.Messages.RepealSendCardRequest {return new com.fc.lami.Messages.RepealSendCardRequest();}
-	private function r_RepealSendCardRequest_42(msg : com.fc.lami.Messages.RepealSendCardRequest, input : NetDataInput) : void {
+	function new_RepealSendCardRequest_44() : com.fc.lami.Messages.RepealSendCardRequest {return new com.fc.lami.Messages.RepealSendCardRequest();}
+	private function r_RepealSendCardRequest_44(msg : com.fc.lami.Messages.RepealSendCardRequest, input : NetDataInput) : void {
 	}
-	private function w_RepealSendCardRequest_42(msg : com.fc.lami.Messages.RepealSendCardRequest, output : NetDataOutput) : void {
+	private function w_RepealSendCardRequest_44(msg : com.fc.lami.Messages.RepealSendCardRequest, output : NetDataOutput) : void {
 	}
 
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.RepealSendCardResponse
 //	----------------------------------------------------------------------------------------------------
-	function new_RepealSendCardResponse_43() : com.fc.lami.Messages.RepealSendCardResponse {return new com.fc.lami.Messages.RepealSendCardResponse();}
-	private function r_RepealSendCardResponse_43(msg : com.fc.lami.Messages.RepealSendCardResponse, input : NetDataInput) : void {
+	function new_RepealSendCardResponse_45() : com.fc.lami.Messages.RepealSendCardResponse {return new com.fc.lami.Messages.RepealSendCardResponse();}
+	private function r_RepealSendCardResponse_45(msg : com.fc.lami.Messages.RepealSendCardResponse, input : NetDataInput) : void {
 	}
-	private function w_RepealSendCardResponse_43(msg : com.fc.lami.Messages.RepealSendCardResponse, output : NetDataOutput) : void {
+	private function w_RepealSendCardResponse_45(msg : com.fc.lami.Messages.RepealSendCardResponse, output : NetDataOutput) : void {
 	}
 
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.ResultPak
 //	----------------------------------------------------------------------------------------------------
-	function new_ResultPak_44() : com.fc.lami.Messages.ResultPak {return new com.fc.lami.Messages.ResultPak();}
-	private function r_ResultPak_44(msg : com.fc.lami.Messages.ResultPak, input : NetDataInput) : void {
+	function new_ResultPak_46() : com.fc.lami.Messages.ResultPak {return new com.fc.lami.Messages.ResultPak();}
+	private function r_ResultPak_46(msg : com.fc.lami.Messages.ResultPak, input : NetDataInput) : void {
 		msg.point = input.readInt();
 		msg.player_id = input.readInt();
 		msg.is_win = input.readBoolean();
 	}
-	private function w_ResultPak_44(msg : com.fc.lami.Messages.ResultPak, output : NetDataOutput) : void {
+	private function w_ResultPak_46(msg : com.fc.lami.Messages.ResultPak, output : NetDataOutput) : void {
 		output.writeInt(msg.point);
 		output.writeInt(msg.player_id);
 		output.writeBoolean(msg.is_win);
@@ -1050,14 +1090,14 @@ package com.fc.lami
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.RetakeCardNotify
 //	----------------------------------------------------------------------------------------------------
-	function new_RetakeCardNotify_45() : com.fc.lami.Messages.RetakeCardNotify {return new com.fc.lami.Messages.RetakeCardNotify();}
-	private function r_RetakeCardNotify_45(msg : com.fc.lami.Messages.RetakeCardNotify, input : NetDataInput) : void {
+	function new_RetakeCardNotify_47() : com.fc.lami.Messages.RetakeCardNotify {return new com.fc.lami.Messages.RetakeCardNotify();}
+	private function r_RetakeCardNotify_47(msg : com.fc.lami.Messages.RetakeCardNotify, input : NetDataInput) : void {
 		msg.player_id = input.readInt();
 		msg.x = input.readInt();
 		msg.y = input.readInt();
 		msg.n = input.readInt();
 	}
-	private function w_RetakeCardNotify_45(msg : com.fc.lami.Messages.RetakeCardNotify, output : NetDataOutput) : void {
+	private function w_RetakeCardNotify_47(msg : com.fc.lami.Messages.RetakeCardNotify, output : NetDataOutput) : void {
 		output.writeInt(msg.player_id);
 		output.writeInt(msg.x);
 		output.writeInt(msg.y);
@@ -1067,35 +1107,35 @@ package com.fc.lami
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.RetakeCardRequest
 //	----------------------------------------------------------------------------------------------------
-	function new_RetakeCardRequest_46() : com.fc.lami.Messages.RetakeCardRequest {return new com.fc.lami.Messages.RetakeCardRequest();}
-	private function r_RetakeCardRequest_46(msg : com.fc.lami.Messages.RetakeCardRequest, input : NetDataInput) : void {
+	function new_RetakeCardRequest_48() : com.fc.lami.Messages.RetakeCardRequest {return new com.fc.lami.Messages.RetakeCardRequest();}
+	private function r_RetakeCardRequest_48(msg : com.fc.lami.Messages.RetakeCardRequest, input : NetDataInput) : void {
 		msg.cards = input.readIntArray();
 	}
-	private function w_RetakeCardRequest_46(msg : com.fc.lami.Messages.RetakeCardRequest, output : NetDataOutput) : void {
+	private function w_RetakeCardRequest_48(msg : com.fc.lami.Messages.RetakeCardRequest, output : NetDataOutput) : void {
 		output.writeIntArray(msg.cards);
 	}
 
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.RetakeCardResponse
 //	----------------------------------------------------------------------------------------------------
-	function new_RetakeCardResponse_47() : com.fc.lami.Messages.RetakeCardResponse {return new com.fc.lami.Messages.RetakeCardResponse();}
-	private function r_RetakeCardResponse_47(msg : com.fc.lami.Messages.RetakeCardResponse, input : NetDataInput) : void {
+	function new_RetakeCardResponse_49() : com.fc.lami.Messages.RetakeCardResponse {return new com.fc.lami.Messages.RetakeCardResponse();}
+	private function r_RetakeCardResponse_49(msg : com.fc.lami.Messages.RetakeCardResponse, input : NetDataInput) : void {
 		msg.result = input.readInt();
 	}
-	private function w_RetakeCardResponse_47(msg : com.fc.lami.Messages.RetakeCardResponse, output : NetDataOutput) : void {
+	private function w_RetakeCardResponse_49(msg : com.fc.lami.Messages.RetakeCardResponse, output : NetDataOutput) : void {
 		output.writeInt(msg.result);
 	}
 
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.RoomData
 //	----------------------------------------------------------------------------------------------------
-	function new_RoomData_48() : com.fc.lami.Messages.RoomData {return new com.fc.lami.Messages.RoomData();}
-	private function r_RoomData_48(msg : com.fc.lami.Messages.RoomData, input : NetDataInput) : void {
+	function new_RoomData_50() : com.fc.lami.Messages.RoomData {return new com.fc.lami.Messages.RoomData();}
+	private function r_RoomData_50(msg : com.fc.lami.Messages.RoomData, input : NetDataInput) : void {
 		msg.room_id = input.readInt();
 		msg.desks = input.readExternalArray();
 		msg.players = input.readExternalArray();
 	}
-	private function w_RoomData_48(msg : com.fc.lami.Messages.RoomData, output : NetDataOutput) : void {
+	private function w_RoomData_50(msg : com.fc.lami.Messages.RoomData, output : NetDataOutput) : void {
 		output.writeInt(msg.room_id);
 		output.writeExternalArray(msg.desks);
 		output.writeExternalArray(msg.players);
@@ -1104,29 +1144,31 @@ package com.fc.lami
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.RoomSnapShot
 //	----------------------------------------------------------------------------------------------------
-	function new_RoomSnapShot_49() : com.fc.lami.Messages.RoomSnapShot {return new com.fc.lami.Messages.RoomSnapShot();}
-	private function r_RoomSnapShot_49(msg : com.fc.lami.Messages.RoomSnapShot, input : NetDataInput) : void {
+	function new_RoomSnapShot_51() : com.fc.lami.Messages.RoomSnapShot {return new com.fc.lami.Messages.RoomSnapShot();}
+	private function r_RoomSnapShot_51(msg : com.fc.lami.Messages.RoomSnapShot, input : NetDataInput) : void {
 		msg.room_id = input.readInt();
 		msg.room_name = input.readJavaUTF();
+		msg.player_number_max = input.readInt();
 		msg.player_number = input.readInt();
 	}
-	private function w_RoomSnapShot_49(msg : com.fc.lami.Messages.RoomSnapShot, output : NetDataOutput) : void {
+	private function w_RoomSnapShot_51(msg : com.fc.lami.Messages.RoomSnapShot, output : NetDataOutput) : void {
 		output.writeInt(msg.room_id);
 		output.writeJavaUTF(msg.room_name);
+		output.writeInt(msg.player_number_max);
 		output.writeInt(msg.player_number);
 	}
 
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.SendCardNotify
 //	----------------------------------------------------------------------------------------------------
-	function new_SendCardNotify_50() : com.fc.lami.Messages.SendCardNotify {return new com.fc.lami.Messages.SendCardNotify();}
-	private function r_SendCardNotify_50(msg : com.fc.lami.Messages.SendCardNotify, input : NetDataInput) : void {
+	function new_SendCardNotify_52() : com.fc.lami.Messages.SendCardNotify {return new com.fc.lami.Messages.SendCardNotify();}
+	private function r_SendCardNotify_52(msg : com.fc.lami.Messages.SendCardNotify, input : NetDataInput) : void {
 		msg.player_id = input.readInt();
 		msg.cards = input.readExternalArray();
 		msg.x = input.readInt();
 		msg.y = input.readInt();
 	}
-	private function w_SendCardNotify_50(msg : com.fc.lami.Messages.SendCardNotify, output : NetDataOutput) : void {
+	private function w_SendCardNotify_52(msg : com.fc.lami.Messages.SendCardNotify, output : NetDataOutput) : void {
 		output.writeInt(msg.player_id);
 		output.writeExternalArray(msg.cards);
 		output.writeInt(msg.x);
@@ -1136,13 +1178,13 @@ package com.fc.lami
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.SendCardRequest
 //	----------------------------------------------------------------------------------------------------
-	function new_SendCardRequest_51() : com.fc.lami.Messages.SendCardRequest {return new com.fc.lami.Messages.SendCardRequest();}
-	private function r_SendCardRequest_51(msg : com.fc.lami.Messages.SendCardRequest, input : NetDataInput) : void {
+	function new_SendCardRequest_53() : com.fc.lami.Messages.SendCardRequest {return new com.fc.lami.Messages.SendCardRequest();}
+	private function r_SendCardRequest_53(msg : com.fc.lami.Messages.SendCardRequest, input : NetDataInput) : void {
 		msg.cards = input.readIntArray();
 		msg.x = input.readInt();
 		msg.y = input.readInt();
 	}
-	private function w_SendCardRequest_51(msg : com.fc.lami.Messages.SendCardRequest, output : NetDataOutput) : void {
+	private function w_SendCardRequest_53(msg : com.fc.lami.Messages.SendCardRequest, output : NetDataOutput) : void {
 		output.writeIntArray(msg.cards);
 		output.writeInt(msg.x);
 		output.writeInt(msg.y);
@@ -1151,53 +1193,53 @@ package com.fc.lami
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.SendCardResponse
 //	----------------------------------------------------------------------------------------------------
-	function new_SendCardResponse_52() : com.fc.lami.Messages.SendCardResponse {return new com.fc.lami.Messages.SendCardResponse();}
-	private function r_SendCardResponse_52(msg : com.fc.lami.Messages.SendCardResponse, input : NetDataInput) : void {
+	function new_SendCardResponse_54() : com.fc.lami.Messages.SendCardResponse {return new com.fc.lami.Messages.SendCardResponse();}
+	private function r_SendCardResponse_54(msg : com.fc.lami.Messages.SendCardResponse, input : NetDataInput) : void {
 		msg.result = input.readInt();
 	}
-	private function w_SendCardResponse_52(msg : com.fc.lami.Messages.SendCardResponse, output : NetDataOutput) : void {
+	private function w_SendCardResponse_54(msg : com.fc.lami.Messages.SendCardResponse, output : NetDataOutput) : void {
 		output.writeInt(msg.result);
 	}
 
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.SubmitRequest
 //	----------------------------------------------------------------------------------------------------
-	function new_SubmitRequest_53() : com.fc.lami.Messages.SubmitRequest {return new com.fc.lami.Messages.SubmitRequest();}
-	private function r_SubmitRequest_53(msg : com.fc.lami.Messages.SubmitRequest, input : NetDataInput) : void {
+	function new_SubmitRequest_55() : com.fc.lami.Messages.SubmitRequest {return new com.fc.lami.Messages.SubmitRequest();}
+	private function r_SubmitRequest_55(msg : com.fc.lami.Messages.SubmitRequest, input : NetDataInput) : void {
 	}
-	private function w_SubmitRequest_53(msg : com.fc.lami.Messages.SubmitRequest, output : NetDataOutput) : void {
+	private function w_SubmitRequest_55(msg : com.fc.lami.Messages.SubmitRequest, output : NetDataOutput) : void {
 	}
 
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.SubmitResponse
 //	----------------------------------------------------------------------------------------------------
-	function new_SubmitResponse_54() : com.fc.lami.Messages.SubmitResponse {return new com.fc.lami.Messages.SubmitResponse();}
-	private function r_SubmitResponse_54(msg : com.fc.lami.Messages.SubmitResponse, input : NetDataInput) : void {
+	function new_SubmitResponse_56() : com.fc.lami.Messages.SubmitResponse {return new com.fc.lami.Messages.SubmitResponse();}
+	private function r_SubmitResponse_56(msg : com.fc.lami.Messages.SubmitResponse, input : NetDataInput) : void {
 		msg.result = input.readInt();
 	}
-	private function w_SubmitResponse_54(msg : com.fc.lami.Messages.SubmitResponse, output : NetDataOutput) : void {
+	private function w_SubmitResponse_56(msg : com.fc.lami.Messages.SubmitResponse, output : NetDataOutput) : void {
 		output.writeInt(msg.result);
 	}
 
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.SynchronizeRequest
 //	----------------------------------------------------------------------------------------------------
-	function new_SynchronizeRequest_55() : com.fc.lami.Messages.SynchronizeRequest {return new com.fc.lami.Messages.SynchronizeRequest();}
-	private function r_SynchronizeRequest_55(msg : com.fc.lami.Messages.SynchronizeRequest, input : NetDataInput) : void {
+	function new_SynchronizeRequest_57() : com.fc.lami.Messages.SynchronizeRequest {return new com.fc.lami.Messages.SynchronizeRequest();}
+	private function r_SynchronizeRequest_57(msg : com.fc.lami.Messages.SynchronizeRequest, input : NetDataInput) : void {
 	}
-	private function w_SynchronizeRequest_55(msg : com.fc.lami.Messages.SynchronizeRequest, output : NetDataOutput) : void {
+	private function w_SynchronizeRequest_57(msg : com.fc.lami.Messages.SynchronizeRequest, output : NetDataOutput) : void {
 	}
 
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.SynchronizeResponse
 //	----------------------------------------------------------------------------------------------------
-	function new_SynchronizeResponse_56() : com.fc.lami.Messages.SynchronizeResponse {return new com.fc.lami.Messages.SynchronizeResponse();}
-	private function r_SynchronizeResponse_56(msg : com.fc.lami.Messages.SynchronizeResponse, input : NetDataInput) : void {
+	function new_SynchronizeResponse_58() : com.fc.lami.Messages.SynchronizeResponse {return new com.fc.lami.Messages.SynchronizeResponse();}
+	private function r_SynchronizeResponse_58(msg : com.fc.lami.Messages.SynchronizeResponse, input : NetDataInput) : void {
 		msg.matrix = input.readExternalArray();
 		msg.player_card = input.readExternalArray();
 		msg.left_card = input.readInt();
 	}
-	private function w_SynchronizeResponse_56(msg : com.fc.lami.Messages.SynchronizeResponse, output : NetDataOutput) : void {
+	private function w_SynchronizeResponse_58(msg : com.fc.lami.Messages.SynchronizeResponse, output : NetDataOutput) : void {
 		output.writeExternalArray(msg.matrix);
 		output.writeExternalArray(msg.player_card);
 		output.writeInt(msg.left_card);
@@ -1206,21 +1248,21 @@ package com.fc.lami
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.TurnEndNotify
 //	----------------------------------------------------------------------------------------------------
-	function new_TurnEndNotify_57() : com.fc.lami.Messages.TurnEndNotify {return new com.fc.lami.Messages.TurnEndNotify();}
-	private function r_TurnEndNotify_57(msg : com.fc.lami.Messages.TurnEndNotify, input : NetDataInput) : void {
+	function new_TurnEndNotify_59() : com.fc.lami.Messages.TurnEndNotify {return new com.fc.lami.Messages.TurnEndNotify();}
+	private function r_TurnEndNotify_59(msg : com.fc.lami.Messages.TurnEndNotify, input : NetDataInput) : void {
 	}
-	private function w_TurnEndNotify_57(msg : com.fc.lami.Messages.TurnEndNotify, output : NetDataOutput) : void {
+	private function w_TurnEndNotify_59(msg : com.fc.lami.Messages.TurnEndNotify, output : NetDataOutput) : void {
 	}
 
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.TurnStartNotify
 //	----------------------------------------------------------------------------------------------------
-	function new_TurnStartNotify_58() : com.fc.lami.Messages.TurnStartNotify {return new com.fc.lami.Messages.TurnStartNotify();}
-	private function r_TurnStartNotify_58(msg : com.fc.lami.Messages.TurnStartNotify, input : NetDataInput) : void {
+	function new_TurnStartNotify_60() : com.fc.lami.Messages.TurnStartNotify {return new com.fc.lami.Messages.TurnStartNotify();}
+	private function r_TurnStartNotify_60(msg : com.fc.lami.Messages.TurnStartNotify, input : NetDataInput) : void {
 		msg.player_id = input.readInt();
 		msg.stack_num = input.readInt();
 	}
-	private function w_TurnStartNotify_58(msg : com.fc.lami.Messages.TurnStartNotify, output : NetDataOutput) : void {
+	private function w_TurnStartNotify_60(msg : com.fc.lami.Messages.TurnStartNotify, output : NetDataOutput) : void {
 		output.writeInt(msg.player_id);
 		output.writeInt(msg.stack_num);
 	}

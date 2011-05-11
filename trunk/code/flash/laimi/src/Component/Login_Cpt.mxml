@@ -75,6 +75,8 @@
 				
 				public function enterRoom():void
 				{
+					
+					if(list.selectedItem!=null)
 					Server.enterRoom((list.selectedItem as RoomSnapShot).room_id)
 						
 				}
@@ -117,7 +119,17 @@
 			
 		<mx:Canvas id="selectRoom" width="100%" height="100%" visible="false">	
 			<mx:Label id="lb" text="waiting..." horizontalCenter="0" y="11" visible="true"></mx:Label>
-			<mx:List id="list" height="126" width="200" verticalCenter="12" labelField="room_name" horizontalCenter="0" doubleClickEnabled="true" doubleClick="enterRoom()"></mx:List>
+			
+			<mx:DataGrid id="list" verticalCenter="12" width="260" height="200" horizontalCenter="0" doubleClickEnabled="true" doubleClick="enterRoom()">
+				<mx:columns>
+					<mx:DataGridColumn headerText="名字" dataField="room_name" width="120"/>
+					<mx:DataGridColumn headerText="当前人数" dataField="player_number"/>
+					<mx:DataGridColumn headerText="最大人数" dataField="player_number_max"/>
+				</mx:columns>
+			</mx:DataGrid>
+			<!--
+			<mx:List id="list2" height="126" width="200" verticalCenter="12" labelField="room_name" horizontalCenter="0" doubleClickEnabled="true" doubleClick="enterRoom()"></mx:List>
+			-->
 		</mx:Canvas>
 	
 </mx:Canvas>

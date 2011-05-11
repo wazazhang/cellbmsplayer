@@ -20,6 +20,7 @@ package Class.Model
 	public class Player
 	{
 		public var handCard:ArrayCollection = new ArrayCollection(); //当前手牌数组
+		
 		public var matrix:UserMatrix_Cpt    //用户矩阵
 		public var matrix_length:int = 18;  //用户矩阵宽度
 		public var matrix_height:int = 4;    //用户矩阵高度
@@ -221,7 +222,6 @@ package Class.Model
 			{
 				getCard(card);
 			}
-			
 		}
 		
 		public function submit():Boolean
@@ -267,6 +267,28 @@ package Class.Model
 						array.addItem(cardctp.card);
 					}
 					cardctp.confimcard = cardctp.card;
+					cardctp = cardctp.nextCardCpt;
+				}
+				while(cardctp != null);
+			}
+			handCard = array;
+		}
+		
+		
+		
+		//计算手牌数
+		public function countHandCard():void
+		{
+			var array:ArrayCollection = new ArrayCollection();
+			
+			for each(var line:Line in cardLines)
+			{
+				var cardctp:Card_Cpt = line.firstCard;
+				do{
+					if(cardctp.card!=null)
+					{
+						array.addItem(cardctp.card);
+					}
 					cardctp = cardctp.nextCardCpt;
 				}
 				while(cardctp != null);
