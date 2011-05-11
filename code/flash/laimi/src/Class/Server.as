@@ -21,8 +21,12 @@ package Class
 	import com.fc.lami.Messages.EnterRoomRequest;
 	import com.fc.lami.Messages.EnterRoomResponse;
 	import com.fc.lami.Messages.ExitRoomNotify;
+	import com.fc.lami.Messages.ExitRoomRequest;
+	import com.fc.lami.Messages.ExitRoomResponse;
 	import com.fc.lami.Messages.GameOverNotify;
+	import com.fc.lami.Messages.GameOverToRoomNotify;
 	import com.fc.lami.Messages.GameStartNotify;
+	import com.fc.lami.Messages.GameStartToRoomNotify;
 	import com.fc.lami.Messages.GetCardNotify;
 	import com.fc.lami.Messages.GetCardRequest;
 	import com.fc.lami.Messages.GetCardResponse;
@@ -158,9 +162,10 @@ package Class
 				game.start(cards2);
 			}
 			
-			
 			else if (ntf is EnterRoomNotify){
 				var ern : EnterRoomNotify = ntf as EnterRoomNotify;	
+				
+				if(room_cpt!=null)
 				room_cpt.enterRoom(ern.player);					
 			}
 			
@@ -213,11 +218,8 @@ package Class
 				var tsn:TurnStartNotify = ntf as TurnStartNotify;
 				game.setAllCardIssend();
 				game.leftCard = tsn.stack_num;
-				if (tsn.player_id == player.player_id){
-					game.turnStart();
-				}else{
-					game.otherPlayerStart(tsn.player_id);
-				}
+				game.playerTurnStart(tsn.player_id);
+
 			}
 			else if (ntf is OperateCompleteNotify){
 				game.timeCtr.reset();
@@ -251,8 +253,21 @@ package Class
 					}
 					game.gamer.getCards(cards3);
 				}
+			}
+			
+			else if (ntf is GameStartToRoomNotify)
+			{
+				var gstrn:GameStartToRoomNotify = ntf as GameStartToRoomNotify
+				room_cpt.onGameStart(gstrn.desk_id);
+			}
+				
+			else if (ntf is GameOverToRoomNotify)
+			{
+				var gotrn:GameOverToRoomNotify = ntf as GameOverToRoomNotify
+				room_cpt.onGameOver(gotrn.desk_id);
 				
 			}
+			
 		}
 		
 		protected static function client_response(event:ClientEvent):void
@@ -282,13 +297,15 @@ package Class
 			    
 				if(enterRoom.result==0) 
 				{	
-					
-					
 					room = new Room(enterRoom.room);
+					room_cpt = new Room_Cpt(); 
+					room_cpt.setStyle("verticalCenter","0");
+					room_cpt.setStyle("horizontalCenter","0");	
+					app.addChild(room_cpt);
 					room_cpt.room =	room;
 					room_cpt.init(enterRoom.room)
 					login_cpt.visible = false;
-					room_cpt.visible = true;
+					
 				}
 				else if(enterRoom.result == 1)
 				{
@@ -299,6 +316,12 @@ package Class
 					Alert.show("进入失败");
 				}
 				
+			}
+			
+			else if(res is ExitRoomResponse){
+				var err : ExitRoomResponse =res as ExitRoomResponse;
+				app.removeChild(room_cpt);
+				login_cpt.visible = true;
 			}
 			
 			//响应进入房间
@@ -360,6 +383,8 @@ package Class
 				room_cpt.visible = true;
 				//game_cpt.visible = true;
 			}
+			
+			
 		}
 		
 		//请求进入房间
@@ -367,6 +392,14 @@ package Class
 		{
 			client.sendRequest(new EnterRoomRequest(roomid),client_response)
 		}
+		
+		
+		//请求退出房间
+		public static function ExitRoom():void
+		{
+			client.sendRequest(new ExitRoomRequest(),client_response)
+		}
+		
 		
 		
 		public static function enterDesk(deskid:int,seat:int):void

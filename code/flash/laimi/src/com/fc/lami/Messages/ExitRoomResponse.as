@@ -12,14 +12,16 @@ package com.fc.lami.Messages
 	[Bindable]
 	public class ExitRoomResponse extends Message
 	{
-
+		/** Java type is : <font color=#0000ff>com.fc.lami.Messages.RoomSnapShot[]</font> */
+		[JavaType(name="com.fc.lami.Messages.RoomSnapShot[]", leaf_type=NetDataTypes.TYPE_EXTERNALIZABLE)]
+		public var rooms :  Array;
 
 		/**
-		 */
+		 * @param rooms as <font color=#0000ff>com.fc.lami.Messages.RoomSnapShot[]</font>		 */
 		public function ExitRoomResponse(
-) 
+			rooms :  Array = null) 
 		{
-
+			this.rooms = rooms;
 		}
 	}
 }

@@ -46,6 +46,9 @@
 				{
 					init();
 				}
+				nextPlayer1.reset();
+				nextPlayer2.reset();
+				nextPlayer3.reset();
 				resetGameAllData();
 				player = Server.player;
 				initSeat(desk);
@@ -55,9 +58,6 @@
 			//进入一个新房间后对所有数据进行重置
 			public function resetGameAllData():void
 			{
-				nextPlayer1.reset();
-				nextPlayer2.reset();
-				nextPlayer3.reset();
 				game.cleanMatrix();
 				game.gamer.cleanMatrix();
 				game.gamer.isMyturn = false;
@@ -225,9 +225,7 @@
 			//有人员会合开始
 			public function onPlayerStart(playerid:int):void
 			{
-				nextPlayer1.gameing = false;
-				nextPlayer2.gameing = false;
-				nextPlayer3.gameing = false;
+				
 				
 				var cpt:OtherPlayer_Cpt = getOtherPlayerCptByPlayerId(playerid);
 				
@@ -249,9 +247,9 @@
 				rsCpt.setStyle("horizontalCenter","0");	
 				addChild(rsCpt);
 				
-				nextPlayer1.reset();
-				nextPlayer2.reset();
-				nextPlayer3.reset();
+				nextPlayer1.gameEnd();
+				nextPlayer2.gameEnd();
+				nextPlayer3.gameEnd();
 				
 				resetGameAllData();
 			}
@@ -277,16 +275,19 @@
 		<mx:ProgressBar id="optbar" height="10" width="465" label="" mode="manual" labelPlacement="center" x="0" y="36"/>
 	</ns1:UserMatrix_Cpt>
 	
+	<!--玩家操作区-->
 	<ns1:Opt_Cpt id="optCpt" height="177" y="579" x="784">
 	</ns1:Opt_Cpt>
 	
-	
+	<!--信息显示 -->
 	<mx:TextArea id="gameinfo" x="20" y="562" width="223" height="145" backgroundAlpha="0.0" color="#010101" editable="false"/>
 	
+	
+	<!--//其他玩家信息-->
 	<ns1:OtherPlayer_Cpt id="nextPlayer1" x="10" y="179">
 	</ns1:OtherPlayer_Cpt>
 	
-	<ns1:OtherPlayer_Cpt id="nextPlayer2"  x="185" y="10">
+	<ns1:OtherPlayer_Cpt id="nextPlayer2"  x="192" y="10">
 	</ns1:OtherPlayer_Cpt>
 	
 	<ns1:OtherPlayer_Cpt id="nextPlayer3" x="898" y="179">
@@ -308,9 +309,14 @@
 	
 	<mx:Label x="784" y="12" text="{'位置:'+(Server.room_cpt.room.roomData.room_id)+'房间 '+ (desk.desk_id+1)+'号座'}" color="#010101"/>
 	
-	<mx:Canvas id="useinfo" width="144" height="169" x="868" y="579" borderStyle="solid" borderColor="#000000">
+	
+	<!--玩家信息区-->
+	<mx:Canvas id="useinfo" width="144" height="169" x="868" y="579" borderStyle="solid" borderColor="{game.gamer.isMyturn?0x990000:0x010101}" borderThickness="{game.gamer.isMyturn?2:1}">
 		
-		<mx:Label x="12" y="106" text="{getDir(seatID)+':'+ Server.player.name}" color="#010101"/>
+		<mx:Label x="104" y="18" text="{getDir(seatID)}" color="#010101"/>
+		
+		
+		<mx:Label x="12" y="106" text="{Server.player.name}" color="#010101"/>
 		
 		<mx:Label x="80" y="106" text="{game.gamer.isMyturn?'游戏中':'等待中'}" color="#010101"/>
 		
@@ -325,8 +331,8 @@
 		
 	</mx:Canvas>
 	
-	
-	<mx:Canvas x="10" y="10" width="143" height="116" borderStyle="solid" borderColor="#010101">
+	<!--//游戏信息区-->
+	<mx:Canvas x="10" y="10" width="143" height="116" borderStyle="solid"  borderColor="#000000">
 		
 		<mx:Label x="10" y="12" text="游戏信息" color="#010101"/>
 		<mx:Label x="10" y="32" text="剩余牌数：{Server.game.leftCard}" color="#010101"/>

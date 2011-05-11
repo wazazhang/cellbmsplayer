@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="26" height="32" borderStyle="solid" 
+<!--
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="26" height="32"  
+		  --> 
+
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="26" height="32"
+		   
+	 borderStyle="{(!isPlayerOwner)&amp;&amp;(!game.gamer.isMyturn)&amp;&amp;_card==null?'none':'solid'}"	   
 		   
 	 borderColor="{isSelected?0xff0000:0x000000}" 
 	 
+	 verticalScrollPolicy="off" horizontalScrollPolicy="off"
+	 
 	 backgroundColor="0xeadda8" click="click()"
 	 
-	 mouseOver="mouseOver()" backgroundAlpha="0.52">
+	 mouseOver="mouseOver()" 
+	 
+	 backgroundAlpha="{(!isPlayerOwner)&amp;&amp;(!game.gamer.isMyturn)&amp;&amp;_card==null?0.0:0.52}">
 	 
 	<mx:Script>
 		<![CDATA[
@@ -20,6 +30,7 @@
 			[Bindable]
 			public var confimcard:Card
 			
+			[Bindable]
 			protected var _card:Card
 			
 			[Bindable]
@@ -28,12 +39,14 @@
 			public var nextCardCpt:Card_Cpt;
 			public var preCardCpt:Card_Cpt;
 			
+			[Bindable]
 			public var isPlayerOwner:Boolean = false;
 			
 			public var cardX:int;
 			public var cardY:int;
 			
 			
+			[Bindable]
 			public var game:Game
 			
 			[Bindable]
@@ -198,10 +211,12 @@
 						return;
 					
 					selectArrayCard();
+					game.gamer.countHandCard();
 				}
 				else
 				{
 					selectCard();
+					game.gamer.countHandCard();
 				}
 			}
 			

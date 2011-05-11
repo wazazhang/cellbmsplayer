@@ -93,7 +93,7 @@
 					curDeskCpt.leavePlayerByPlayerId(player_id);
 				}
 				
-				addRoomInfo(Server.getPlayer(player_id).name+"离开房间s");	
+				addRoomInfo(Server.getPlayer(player_id).name+"离开房间");	
 				
 				room.removePlayer(player_id);
 				plist = room.getPlayerList();
@@ -111,6 +111,25 @@
 				}
 				return null;
 			}
+			
+			
+			public function onGameStart(deskid:int):void
+			{
+				var deskCpt:Desk_Cpt = getDeskById(deskid);
+				deskCpt.desk.is_started = true;
+			}
+			
+			public function onGameOver(deskid:int):void
+			{
+				var deskCpt:Desk_Cpt = getDeskById(deskid);
+				deskCpt.desk.is_started = false;
+			}
+			
+			public function exitRoom():void
+			{
+				Server.ExitRoom();
+			}
+			
 		]]>
 	</mx:Script>
 	
@@ -118,7 +137,9 @@
 	</mx:Canvas>
 	
 	<mx:TextArea id="info" x="658" y="296" height="204"/>
-	<mx:LinkButton x="658" y="11" label="退出房间" fontSize="12"/>
+	
+	<mx:LinkButton x="658" y="5" label="退出房间" fontSize="12" click="exitRoom()" />
+	
 	<mx:DataGrid id="dg" x="658" y="33" width="159" height="255" dataProvider="{_plist}">
 		<mx:columns>
 			<mx:DataGridColumn headerText="ID" dataField="player_id" width="40"/>
