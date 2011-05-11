@@ -144,12 +144,14 @@ public class Messages {
 	{
 		public int room_id;
 		public String room_name;
+		public int player_number_max;
 		public int player_number;
 		
-		public RoomSnapShot(int room_id, String room_name, int player_number){
+		public RoomSnapShot(int room_id, String room_name, int player_number, int pm){
 			this.room_id = room_id;
 			this.room_name = room_name;
 			this.player_number = player_number;
+			this.player_number_max = pm;
 		}
 		
 		public RoomSnapShot(){}
@@ -432,6 +434,36 @@ public class Messages {
 		}
 	}
 	
+	public static class GameStartToRoomNotify extends FlashMessage
+	{
+		public int desk_id;
+		
+		public GameStartToRoomNotify(int did){
+			this.desk_id = did;
+		}
+		
+		public GameStartToRoomNotify() {}
+		@Override
+		public String toString() {
+			return "GameStartToRoomNotify";
+		}
+	}
+	
+	public static class GameOverToRoomNotify extends FlashMessage
+	{
+		public int desk_id;
+		
+		public GameOverToRoomNotify(int did){
+			this.desk_id = did;
+		}
+		
+		public GameOverToRoomNotify() {}
+		@Override
+		public String toString() {
+			return "GameOverToRoomNotify";
+		}
+	}
+	
 	public static class GameStartNotify extends FlashMessage
 	{
 		public CardData cards[];
@@ -444,6 +476,32 @@ public class Messages {
 		@Override
 		public String toString() {
 			return "GameStartNotify";
+		}
+	}
+	
+	/** 游戏结束通知 */
+	public static class GameOverNotify extends FlashMessage
+	{
+		/** 游戏结束方式     有人出完牌 */
+		final static public int GAME_OVER_TYPE_CLEAR = 0;
+		/** 游戏结束方式     牌堆的牌摸空了 */
+		final static public int GAME_OVER_TYPE_CARD_OVER = 1;
+		/** 游戏结束方式    有人逃跑了（断线也算） */
+		final static public int GAME_OVER_TYPE_ESCAPE = 2;
+		/** 游戏结束方式 */
+		public int game_over_type;
+		
+		public ResultPak[] result_pak;
+		
+		public GameOverNotify(int type, ResultPak[] pak){
+			this.game_over_type = type;
+			this.result_pak = pak;
+		}
+		
+		public GameOverNotify(){}
+		@Override
+		public String toString() {
+			return "GameOverNotify";
 		}
 	}
 	
@@ -904,31 +962,7 @@ public class Messages {
 		}
 	}
 	
-	/** 游戏结束通知 */
-	public static class GameOverNotify extends FlashMessage
-	{
-		/** 游戏结束方式     有人出完牌 */
-		final static public int GAME_OVER_TYPE_CLEAR = 0;
-		/** 游戏结束方式     牌堆的牌摸空了 */
-		final static public int GAME_OVER_TYPE_CARD_OVER = 1;
-		/** 游戏结束方式    有人逃跑了（断线也算） */
-		final static public int GAME_OVER_TYPE_ESCAPE = 2;
-		/** 游戏结束方式 */
-		public int game_over_type;
-		
-		public ResultPak[] result_pak;
-		
-		public GameOverNotify(int type, ResultPak[] pak){
-			this.game_over_type = type;
-			this.result_pak = pak;
-		}
-		
-		public GameOverNotify(){}
-		@Override
-		public String toString() {
-			return "GameOverNotify";
-		}
-	}
+
 	
 		//主信息框变化广播
 	public static class MainMatrixChangeNotify extends FlashMessage
