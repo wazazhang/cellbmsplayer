@@ -31,6 +31,7 @@ import com.fc.lami.Messages.RepealSendCardResponse;
 import com.fc.lami.Messages.RetakeCardRequest;
 import com.fc.lami.Messages.RetakeCardResponse;
 import com.fc.lami.Messages.RoomData;
+import com.fc.lami.Messages.RoomSnapShot;
 import com.fc.lami.Messages.SendCardRequest;
 import com.fc.lami.Messages.SendCardResponse;
 import com.fc.lami.Messages.SubmitRequest;
@@ -168,7 +169,7 @@ public class EchoClientSession implements ClientSessionListener
 	private void processExitRoomRequest(ClientSession session, Protocol protocol, ExitRoomRequest request){
 		if (player.cur_room != null) {
 			player.cur_room.onPlayerLeave(player.player_id);
-			session.sendResponse(protocol, new ExitRoomResponse());
+			session.sendResponse(protocol, new ExitRoomResponse(server.getRoomList()));
 		}
 	}
 	
