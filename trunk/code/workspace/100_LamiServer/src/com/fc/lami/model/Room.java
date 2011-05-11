@@ -146,6 +146,7 @@ public class Room implements ChannelListener, Runnable
 		rs.room_id = this.room_id;
 		rs.room_name = "房间 "+this.room_id;
 		rs.player_number = player_list.size();
+		rs.player_number_max = LamiConfig.PLAYER_NUMBER_MAX;
 		return rs;
 	}
 	

@@ -332,6 +332,7 @@ public class Desk implements ChannelListener
 					future.cancel(false);
 					log.info("desk ]" + desk_id + "] game over");
 					game = null;
+					room.broadcast(new GameOverToRoomNotify(desk_id));
 				}
 			} else if (isAllPlayerReady()) {
 				initing = true;
@@ -339,6 +340,7 @@ public class Desk implements ChannelListener
 				future = thread_pool.scheduleAtFixedRate(game, update_interval, update_interval);
 				log.info("desk [" + desk_id + "] game start");
 				initing = false;
+				room.broadcast(new GameStartToRoomNotify(desk_id));
 			}
 		}
 	}

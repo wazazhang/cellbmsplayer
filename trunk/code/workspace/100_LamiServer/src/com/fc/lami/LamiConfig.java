@@ -24,7 +24,7 @@ public class LamiConfig extends Config
 	@ConfigField("回合时间")
 	public static Integer	TURN_INTERVAL = 60000;
 	@ConfigField("操作时间")
-	public static Integer	OPERATE_TIME = 20000;
+	public static Integer	OPERATE_TIME = 30000;
 	
 	@ConfigField("桌面牌矩阵宽")
 	public static Integer	MATRIX_WIDTH = 26;

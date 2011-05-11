@@ -64,7 +64,7 @@ public class Game implements Runnable
 	public void initCard(){
 		/** 初始化数字牌 */
 		int id = 0;
-		for (int i = 6; i<=13; i++){	// 1~6的牌舍去便于测试
+		for (int i = 7; i<=13; i++){	// 1~6的牌舍去便于测试
 			for (int j = 1; j<5; j++){
 				CardData card = new CardData(i, j);
 				card.id = id++;
@@ -178,22 +178,30 @@ public class Game implements Runnable
 		System.out.println("轮到下一个玩家 时间 "+turn_start_time);
 	}
 	
-	private void playerGetCard(int n){
+	private int playerGetCard(int n){
 		CardData cds[] = new CardData[n];
+		int c = 0;
 		for (int i = 0; i<n; i++){
-			cds[i] = getCardFromCard();
-			cur_player.addCard(cds[i]);
+			CardData cd = getCardFromCard();
+			if (cd!=null){
+				cds[i] = cd;
+				cur_player.addCard(cds[i]);
+				c++;
+			}
 		}
 		cur_player.session.send(new GetCardNotify(cds));
+		return c;
 	}
 	
 	public boolean playerGetCard(){
 		if (!player_put.isEmpty() /*|| process_open_ice*/){
 			return false;
 		}
-		playerGetCard(1);
-		toNextPlayer();
-		return true;
+		if (playerGetCard(1)==1){
+			toNextPlayer();
+			return true;
+		}
+		return false;
 	}
 	
 	/** 把牌放到桌面上，桌面上该位置已经有牌则返回false */
@@ -328,9 +336,9 @@ public class Game implements Runnable
 		return RetakeCardResponse.RETAKE_CARD_RESULT_SUCCESS;
 	}
 	
-	int complete_card_group = 0;
+	int complete_card_count = 0;
 	
-	private int getCompleteGroup(){
+	private int getCompleteCardCount(){	//获取成立的牌数
 		int g = 0;
 		for (int i = 0; i<mh; i++){
 			for (int j = 0; j<mw-2; j++){
@@ -338,7 +346,7 @@ public class Game implements Runnable
 				if (cr.is_success == false){	//该位置有牌但不成立
 
 				}else{
-					g++;
+					g+=cr.n;
 				}
 				j += cr.n;
 			}
@@ -496,8 +504,9 @@ public class Game implements Runnable
 	public void PlayerRepeal(){
 		if (matrix_old!=null){
 			repeal();
-			playerGetCard(3);
-			toNextPlayer();
+			if (playerGetCard(3)==3){
+				toNextPlayer();
+			}
 		}
 	}
 	
@@ -655,15 +664,45 @@ public class Game implements Runnable
 			player_put.remove(cd.id);
 		}
 		desk.broadcast(new MainMatrixChangeNotify(false, notify_cds));
-		int cur_complete_card_group = getCompleteGroup();
-		if (cur_complete_card_group>complete_card_group){
-			complete_card_group = cur_complete_card_group;
+		int cur_complete_card_count = getCompleteCardCount();
+		if (cur_complete_card_count>complete_card_count){
 			operate_start_time = System.currentTimeMillis();
 			getCurPlayer().session.send(new OperateCompleteNotify());
 		}
+		complete_card_count = cur_complete_card_count;
 		return true;
 	}
 	
+	
+	private boolean isProcessed(){
+		if (matrix_old == null){
+			return false;
+		}
+		for (int i = 0; i<mh; i++){
+			for (int j = 0; j<mw; j++){
+				if (!isSameCard(matrix[i][j],matrix_old[i][j])){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	private boolean isSameCard(CardData a, CardData b){
+		if (a == b){
+			return true;
+		}
+		if (a==null && b!=null){
+			return false;
+		}
+		if (a!=null && b==null){
+			return false;
+		}
+		if (a.type != b.type || a.point != b.point){
+			return false;
+		}
+		return true;
+	}
 	
 	/** 同步桌面和玩家的牌 */
 	public SynchronizeResponse SynchronizePlayerCard(int player_id){
@@ -762,17 +801,19 @@ public class Game implements Runnable
 					cur_time - turn_start_time>=LamiConfig.TURN_INTERVAL){
 				System.err.println("player " + getCurPlayer().getName() + " 超时");
 				System.out.println(cur_time);
-				if (!player_put.isEmpty() /*|| process_open_ice*/){
+				if (!player_put.isEmpty() || isProcessed()/*|| process_open_ice*/){
 					if (submit() == SubmitResponse.SUBMIT_RESULT_SUCCESS){
 						
 					}else{
 						repeal();
-						playerGetCard(3); // 撤销罚牌3张
-						toNextPlayer();
+						if (playerGetCard(3) == 3){ // 撤销罚牌3张
+							toNextPlayer();
+						}
 					}
 				}else{
-					playerGetCard(1);
-					toNextPlayer();
+					if (playerGetCard(1)==1){
+						toNextPlayer();
+					}
 				}
 			}
 		}

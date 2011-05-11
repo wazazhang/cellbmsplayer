@@ -63,8 +63,14 @@ public class MessageCodecJava implements MutualMessageCodec
 		if (msg.getClass().equals(com.fc.lami.Messages.GameOverNotify.class)) {
 			_r((com.fc.lami.Messages.GameOverNotify)msg, in); return;
 		}
+		if (msg.getClass().equals(com.fc.lami.Messages.GameOverToRoomNotify.class)) {
+			_r((com.fc.lami.Messages.GameOverToRoomNotify)msg, in); return;
+		}
 		if (msg.getClass().equals(com.fc.lami.Messages.GameStartNotify.class)) {
 			_r((com.fc.lami.Messages.GameStartNotify)msg, in); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.GameStartToRoomNotify.class)) {
+			_r((com.fc.lami.Messages.GameStartToRoomNotify)msg, in); return;
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.GetCardNotify.class)) {
 			_r((com.fc.lami.Messages.GetCardNotify)msg, in); return;
@@ -242,8 +248,14 @@ public class MessageCodecJava implements MutualMessageCodec
 		if (msg.getClass().equals(com.fc.lami.Messages.GameOverNotify.class)) {
 			_w((com.fc.lami.Messages.GameOverNotify)msg, out); return;
 		}
+		if (msg.getClass().equals(com.fc.lami.Messages.GameOverToRoomNotify.class)) {
+			_w((com.fc.lami.Messages.GameOverToRoomNotify)msg, out); return;
+		}
 		if (msg.getClass().equals(com.fc.lami.Messages.GameStartNotify.class)) {
 			_w((com.fc.lami.Messages.GameStartNotify)msg, out); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.GameStartToRoomNotify.class)) {
+			_w((com.fc.lami.Messages.GameStartToRoomNotify)msg, out); return;
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.GetCardNotify.class)) {
 			_w((com.fc.lami.Messages.GetCardNotify)msg, out); return;
@@ -582,6 +594,17 @@ public class MessageCodecJava implements MutualMessageCodec
 	}
 
 //	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.GameOverToRoomNotify
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.GameOverToRoomNotify new_com_fc_lami_Messages_GameOverToRoomNotify(){return new com.fc.lami.Messages.GameOverToRoomNotify();}
+	private void _r(com.fc.lami.Messages.GameOverToRoomNotify msg, NetDataInput in) throws IOException {
+		msg.desk_id = in.readInt();
+	}
+	private void _w(com.fc.lami.Messages.GameOverToRoomNotify msg, NetDataOutput out) throws IOException {
+		out.writeInt(msg.desk_id);
+	}
+
+//	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.GameStartNotify
 //	----------------------------------------------------------------------------------------------------
 	public com.fc.lami.Messages.GameStartNotify new_com_fc_lami_Messages_GameStartNotify(){return new com.fc.lami.Messages.GameStartNotify();}
@@ -590,6 +613,17 @@ public class MessageCodecJava implements MutualMessageCodec
 	}
 	private void _w(com.fc.lami.Messages.GameStartNotify msg, NetDataOutput out) throws IOException {
 		out.writeExternalArray(msg.cards);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.GameStartToRoomNotify
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.GameStartToRoomNotify new_com_fc_lami_Messages_GameStartToRoomNotify(){return new com.fc.lami.Messages.GameStartToRoomNotify();}
+	private void _r(com.fc.lami.Messages.GameStartToRoomNotify msg, NetDataInput in) throws IOException {
+		msg.desk_id = in.readInt();
+	}
+	private void _w(com.fc.lami.Messages.GameStartToRoomNotify msg, NetDataOutput out) throws IOException {
+		out.writeInt(msg.desk_id);
 	}
 
 //	----------------------------------------------------------------------------------------------------
@@ -978,11 +1012,13 @@ public class MessageCodecJava implements MutualMessageCodec
 	private void _r(com.fc.lami.Messages.RoomSnapShot msg, NetDataInput in) throws IOException {
 		msg.room_id = in.readInt();
 		msg.room_name = in.readUTF();
+		msg.player_number_max = in.readInt();
 		msg.player_number = in.readInt();
 	}
 	private void _w(com.fc.lami.Messages.RoomSnapShot msg, NetDataOutput out) throws IOException {
 		out.writeInt(msg.room_id);
 		out.writeUTF(msg.room_name);
+		out.writeInt(msg.player_number_max);
 		out.writeInt(msg.player_number);
 	}
 
