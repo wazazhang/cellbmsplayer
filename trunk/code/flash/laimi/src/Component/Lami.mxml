@@ -28,7 +28,7 @@
 			public var game:Game
 			
 			[Bindable]
-			public var talkinfoStr:String="";
+			public var talkinfoStr:String="";                                                                                                                                                                                                                                                                                                                                                       
 			[Bindable]
 			public var gameinfoStr:String="";
 			
