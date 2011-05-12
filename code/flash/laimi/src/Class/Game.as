@@ -25,7 +25,7 @@ package Class
 		public  var lami:Lami;
 		
 		//列数
-		public  var lineCount:int=10; 
+		public  var lineCount:int=9; 
 		
 		//列数组
 		public  var lineArray:ArrayCollection = new ArrayCollection();
