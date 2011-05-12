@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" borderThickness="{gameing?2:1}" width="114" height="116" borderColor="{gameing?0x990000:0x000000}" borderStyle="solid">
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" borderThickness="{gameing?2:1}"
+		   width="100" height="116" borderColor="{gameing?0x990000:0x000000}" borderStyle="solid"
+	 verticalScrollPolicy="off"	 horizontalScrollPolicy="off"   >
 	<mx:Script>
 		<![CDATA[
 		   import com.fc.lami.Messages.PlayerData;
@@ -48,15 +50,15 @@
 			
 		]]>
 	</mx:Script>
-	<mx:Label x="3" y="76" text="{player==null?'空闲':''+player.name}" color="#010101" width="88"/>
-	<mx:Label x="64" y="6" text="{seat}" color="#010101"/>
-	<mx:Label x="64" y="28" text="{pobing?'已破冰':'未破冰'}" visible="{player!=null}" color="#010101"/>
-	<mx:Label x="64" y="48" text="{gameing?'游戏中':''}" color="#010101"/>
+	<mx:Label x="3" y="61" text="{player==null?'空闲':''+player.name}" color="#010101" width="88"/>
+	<mx:Label x="51" y="0" text="{seat}" color="#010101"/>
+	<mx:Label x="51" y="17" text="{pobing?'已破冰':'未破冰'}" visible="{player!=null}" color="#010101"/>
+	<mx:Label x="51" y="35" text="{gameing?'游戏中':''}" color="#010101"/>
 	
-	<mx:Image source="{player ==null?nohead:head}"  x="2" y="2" height="72" width="58"/>
+	<mx:Image source="{player ==null?nohead:head}"  x="2" y="2" height="50" width="50"/>
 	
 	
-	<mx:Label x="3" y="92" text="{player==null?'':'等级:'+player.level+' 积分:'+player.score}" color="#010101" />
+	<mx:Label x="3" y="82" text="{player==null?'':'等级:'+player.level+' 积分:'+player.score}" color="#010101" />
 	
 	<mx:Image x="10" verticalCenter="-121" visible="{ready}" source="image/ready.png" alpha="0.6"/>
 	
