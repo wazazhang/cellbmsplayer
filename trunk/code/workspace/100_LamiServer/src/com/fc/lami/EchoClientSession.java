@@ -1,10 +1,5 @@
 package com.fc.lami;
 
-import java.util.Date;
-
-import com.fc.lami.Messages.EchoRequest;
-import com.fc.lami.Messages.EchoResponse;
-import com.fc.lami.Messages.EnterDeskNotify;
 import com.fc.lami.Messages.EnterDeskRequest;
 import com.fc.lami.Messages.EnterDeskResponse;
 import com.fc.lami.Messages.EnterRoomRequest;
@@ -13,12 +8,8 @@ import com.fc.lami.Messages.ExitRoomRequest;
 import com.fc.lami.Messages.ExitRoomResponse;
 import com.fc.lami.Messages.GetCardRequest;
 import com.fc.lami.Messages.GetCardResponse;
-import com.fc.lami.Messages.GetTimeRequest;
-import com.fc.lami.Messages.GetTimeResponse;
 import com.fc.lami.Messages.LeaveDeskRequest;
 import com.fc.lami.Messages.LeaveDeskResponse;
-import com.fc.lami.Messages.LoginRequest;
-import com.fc.lami.Messages.LoginResponse;
 import com.fc.lami.Messages.LogoutRequest;
 import com.fc.lami.Messages.MainMatrixChangeRequest;
 import com.fc.lami.Messages.MainMatrixChangeResponse;
@@ -30,10 +21,17 @@ import com.fc.lami.Messages.RepealSendCardRequest;
 import com.fc.lami.Messages.RepealSendCardResponse;
 import com.fc.lami.Messages.RetakeCardRequest;
 import com.fc.lami.Messages.RetakeCardResponse;
-import com.fc.lami.Messages.RoomData;
-import com.fc.lami.Messages.RoomSnapShot;
 import com.fc.lami.Messages.SendCardRequest;
 import com.fc.lami.Messages.SendCardResponse;
+import com.fc.lami.Messages.SpeakToChannelNotify;
+import com.fc.lami.Messages.SpeakToChannelRequest;
+import com.fc.lami.Messages.SpeakToChannelResponse;
+import com.fc.lami.Messages.SpeakToPrivateNotify;
+import com.fc.lami.Messages.SpeakToPrivateRequest;
+import com.fc.lami.Messages.SpeakToPrivateResponse;
+import com.fc.lami.Messages.SpeakToPublicNotify;
+import com.fc.lami.Messages.SpeakToPublicRequest;
+import com.fc.lami.Messages.SpeakToPublicResponse;
 import com.fc.lami.Messages.SubmitRequest;
 import com.fc.lami.Messages.SubmitResponse;
 import com.fc.lami.Messages.SynchronizeRequest;
@@ -44,6 +42,7 @@ import com.fc.lami.model.Player;
 import com.fc.lami.model.Room;
 import com.net.MessageHeader;
 import com.net.Protocol;
+import com.net.server.Channel;
 import com.net.server.ClientSession;
 import com.net.server.ClientSessionListener;
 
@@ -141,7 +140,18 @@ public class EchoClientSession implements ClientSessionListener
 			SynchronizeRequest request = (SynchronizeRequest)message;
 			processSynchronizeRequest(session, protocol, request);
 		}
-		
+		else if (message instanceof SpeakToPublicRequest){
+			SpeakToPublicRequest request = (SpeakToPublicRequest)message;
+			processSpeakToPublicRequest(session, protocol, request);
+		}
+		else if (message instanceof SpeakToPrivateRequest){
+			SpeakToPrivateRequest request = (SpeakToPrivateRequest)message;
+			processSpeakToPrivateRequest(session, protocol, request);
+		}
+		else if (message instanceof SpeakToChannelRequest){
+			SpeakToChannelRequest request = (SpeakToChannelRequest)message;
+			processSpeakToChannelRequest(session, protocol, request);
+		}
 		System.out.println(message.toString());
 	}
 	
@@ -311,6 +321,37 @@ public class EchoClientSession implements ClientSessionListener
 		if (game!=null){
 			game.PlayerRepeal();
 			session.sendResponse(protocol, new RepealSendCardResponse());
+		}
+	}
+	
+	/** 聊天  当前频道喊话*/
+	private void processSpeakToPublicRequest(ClientSession session, Protocol protocol, SpeakToPublicRequest request){
+		SpeakToPublicNotify notify = new SpeakToPublicNotify(player.getName(), request.message);
+		player.getCurChannel().send(notify);
+		session.sendResponse(protocol, new SpeakToPublicResponse());
+	}
+	
+	/** 聊天  私聊 */
+	private void processSpeakToPrivateRequest(ClientSession session, Protocol protocol, SpeakToPrivateRequest request){
+		SpeakToPrivateNotify notify = new SpeakToPrivateNotify(player.getName(), request.message);
+		Player p = server.getPlayerByName(request.pname);
+		if (p!=null){
+			p.session.send(notify);
+			session.sendResponse(protocol, new SpeakToPrivateResponse(SpeakToPrivateResponse.SPEAK_TO_PRIVATE_RESULT_SUCCESS));
+		}else{
+			session.sendResponse(protocol, new SpeakToPrivateResponse(SpeakToPrivateResponse.SPEAK_TO_PRIVATE_RESULT_FAIL_PLAYER_NOEXIST));
+		}
+	}
+	
+	/** 聊天  指定频道喊话 */
+	private void processSpeakToChannelRequest(ClientSession session, Protocol protocol, SpeakToChannelRequest request){
+		SpeakToChannelNotify notify = new SpeakToChannelNotify(player.getName(), request.message);
+		Channel channel = server.getChannel(request.channel);
+		if (channel!=null){
+			channel.send(notify);
+			session.sendResponse(protocol, new SpeakToChannelResponse(SpeakToChannelResponse.SPEAK_TO_CHANNEL_RESULT_SUCCESS));
+		}else{
+			session.sendResponse(protocol, new SpeakToChannelResponse(SpeakToChannelResponse.SPEAK_TO_CHANNEL_RESULT_FAIL_CHANNEL_NOEXIST));
 		}
 	}
 }

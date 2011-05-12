@@ -1,23 +1,24 @@
 package com.fc.lami.model;
 
-import java.rmi.dgc.Lease;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.atomic.AtomicReference;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.cell.util.Pair;
 import com.cell.util.concurrent.ThreadPool;
+import com.fc.lami.Messages.DeskData;
+import com.fc.lami.Messages.EnterDeskNotify;
+import com.fc.lami.Messages.GameOverToRoomNotify;
+import com.fc.lami.Messages.GameStartToRoomNotify;
+import com.fc.lami.Messages.LeaveDeskNotify;
+import com.fc.lami.Messages.ReadyNotify;
 import com.fc.lami.Server;
-import com.fc.lami.Messages.*;
 import com.net.MessageHeader;
 import com.net.flash.message.FlashMessage;
 import com.net.server.Channel;
 import com.net.server.ChannelListener;
-import com.net.server.ChannelManager;
 import com.net.server.ClientSession;
 
 /**
@@ -71,6 +72,10 @@ public class Desk implements ChannelListener
 	}
 	@Override
 	public void sessionLeaved(Channel channel, ClientSession session) {
+	}
+	
+	public Channel getChannel(){
+		return channel;
 	}
 
 	/**

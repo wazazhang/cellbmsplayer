@@ -1,8 +1,5 @@
 package com.fc.lami.login.test;
 
-import java.awt.image.BufferedImage;
-import java.util.concurrent.ConcurrentHashMap;
-
 import com.cell.CIO;
 import com.fc.lami.login.Login;
 import com.fc.lami.login.User;

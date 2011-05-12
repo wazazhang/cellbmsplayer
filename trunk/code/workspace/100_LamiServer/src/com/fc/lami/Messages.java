@@ -1056,6 +1056,118 @@ public class Messages {
 		}
 	}
 	
+	// 玩家在当前频道发言
+	public static class SpeakToPublicRequest extends FlashMessage
+	{
+		public String message;
+		
+		public SpeakToPublicRequest(String str){
+			this.message = str;
+		}
+		
+		public SpeakToPublicRequest(){}
+	}
+	
+	public static class SpeakToPublicResponse extends FlashMessage
+	{
+		public SpeakToPublicResponse(){}
+	}
+	
+	public static class SpeakToPublicNotify extends FlashMessage
+	{
+		public String player_name;
+		public String message;
+		
+		public SpeakToPublicNotify(String player, String message){
+			this.player_name = player;
+			this.message = message;
+		}
+		
+		public SpeakToPublicNotify(){}
+	}
+	
+	// 玩家对某玩家私聊
+	public static class SpeakToPrivateRequest extends FlashMessage
+	{
+		public String pname;
+		public String message;
+		
+		public SpeakToPrivateRequest(String pname, String str){
+			this.pname = pname;
+			this.message = str;
+		}
+		
+		public SpeakToPrivateRequest(){}
+	}
+	
+	public static class SpeakToPrivateResponse extends FlashMessage
+	{
+		final static public int SPEAK_TO_PRIVATE_RESULT_SUCCESS = 0;
+		final static public int SPEAK_TO_PRIVATE_RESULT_FAIL_PLAYER_NOEXIST = 1;
+		
+		public int result;
+		
+		public SpeakToPrivateResponse(int result){
+			this.result = result;
+		}
+		
+		public SpeakToPrivateResponse(){}
+	}
+	
+	public static class SpeakToPrivateNotify extends FlashMessage
+	{
+		public String player_name;
+		public String message;
+		
+		public SpeakToPrivateNotify(String player, String message){
+			this.player_name = player;
+			this.message = message;
+		}
+		
+		public SpeakToPrivateNotify(){}
+	}
+	
+	// 向某频道发送消息
+	public static class SpeakToChannelRequest extends FlashMessage
+	{
+		public int channel;
+		public String message;
+		
+		public SpeakToChannelRequest(int channel, String message){
+			this.channel = channel;
+			this.message = message;
+		}
+		
+		public SpeakToChannelRequest(){}
+	}
+	
+	public static class SpeakToChannelNotify extends FlashMessage
+	{
+		public String player_name;
+		public String message;
+		
+		public SpeakToChannelNotify(String player, String message){
+			this.player_name = player;
+			this.message = message;
+		}
+		
+		public SpeakToChannelNotify(){}
+	}
+	
+	public static class SpeakToChannelResponse extends FlashMessage
+	{
+		final static public int SPEAK_TO_CHANNEL_RESULT_SUCCESS = 0;
+		final static public int SPEAK_TO_CHANNEL_RESULT_FAIL_CHANNEL_NOEXIST = 1;
+		
+		public int result;
+		
+		public SpeakToChannelResponse(int result){
+			this.result = result;
+		}
+		
+		public SpeakToChannelResponse(){}
+	}
+	
 	public static void main(String[] args) throws IOException
 	{
 		CAppBridge.init();
