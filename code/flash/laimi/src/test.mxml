@@ -7,11 +7,14 @@
 		<![CDATA[
 			import Class.Game;
 			import Class.Server;
+			
+			import com.fc.lami.MessageCodec;
+			import com.net.client.minaimpl.ServerSessionImpl;
 			public function init():void
 			{
 				//Game.app = game;
 				//gameCmt.init();
-				Server.init();
+				Server.init(new ServerSessionImpl(new MessageCodec()));
 				Server.app = this
 				//Server.game_cpt = game;
 				login_cpt.server_host.text = "127.0.0.1";
