@@ -68,12 +68,21 @@ package com.fc.lami
 			if (msg is com.fc.lami.Messages.SendCardNotify) return 52;
 			if (msg is com.fc.lami.Messages.SendCardRequest) return 53;
 			if (msg is com.fc.lami.Messages.SendCardResponse) return 54;
-			if (msg is com.fc.lami.Messages.SubmitRequest) return 55;
-			if (msg is com.fc.lami.Messages.SubmitResponse) return 56;
-			if (msg is com.fc.lami.Messages.SynchronizeRequest) return 57;
-			if (msg is com.fc.lami.Messages.SynchronizeResponse) return 58;
-			if (msg is com.fc.lami.Messages.TurnEndNotify) return 59;
-			if (msg is com.fc.lami.Messages.TurnStartNotify) return 60;
+			if (msg is com.fc.lami.Messages.SpeakToChannelNotify) return 55;
+			if (msg is com.fc.lami.Messages.SpeakToChannelRequest) return 56;
+			if (msg is com.fc.lami.Messages.SpeakToChannelResponse) return 57;
+			if (msg is com.fc.lami.Messages.SpeakToPrivateNotify) return 58;
+			if (msg is com.fc.lami.Messages.SpeakToPrivateRequest) return 59;
+			if (msg is com.fc.lami.Messages.SpeakToPrivateResponse) return 60;
+			if (msg is com.fc.lami.Messages.SpeakToPublicNotify) return 61;
+			if (msg is com.fc.lami.Messages.SpeakToPublicRequest) return 62;
+			if (msg is com.fc.lami.Messages.SpeakToPublicResponse) return 63;
+			if (msg is com.fc.lami.Messages.SubmitRequest) return 64;
+			if (msg is com.fc.lami.Messages.SubmitResponse) return 65;
+			if (msg is com.fc.lami.Messages.SynchronizeRequest) return 66;
+			if (msg is com.fc.lami.Messages.SynchronizeResponse) return 67;
+			if (msg is com.fc.lami.Messages.TurnEndNotify) return 68;
+			if (msg is com.fc.lami.Messages.TurnStartNotify) return 69;
 
 			return 0;
 		}
@@ -136,12 +145,21 @@ package com.fc.lami
 			case 52 : return new com.fc.lami.Messages.SendCardNotify;
 			case 53 : return new com.fc.lami.Messages.SendCardRequest;
 			case 54 : return new com.fc.lami.Messages.SendCardResponse;
-			case 55 : return new com.fc.lami.Messages.SubmitRequest;
-			case 56 : return new com.fc.lami.Messages.SubmitResponse;
-			case 57 : return new com.fc.lami.Messages.SynchronizeRequest;
-			case 58 : return new com.fc.lami.Messages.SynchronizeResponse;
-			case 59 : return new com.fc.lami.Messages.TurnEndNotify;
-			case 60 : return new com.fc.lami.Messages.TurnStartNotify;
+			case 55 : return new com.fc.lami.Messages.SpeakToChannelNotify;
+			case 56 : return new com.fc.lami.Messages.SpeakToChannelRequest;
+			case 57 : return new com.fc.lami.Messages.SpeakToChannelResponse;
+			case 58 : return new com.fc.lami.Messages.SpeakToPrivateNotify;
+			case 59 : return new com.fc.lami.Messages.SpeakToPrivateRequest;
+			case 60 : return new com.fc.lami.Messages.SpeakToPrivateResponse;
+			case 61 : return new com.fc.lami.Messages.SpeakToPublicNotify;
+			case 62 : return new com.fc.lami.Messages.SpeakToPublicRequest;
+			case 63 : return new com.fc.lami.Messages.SpeakToPublicResponse;
+			case 64 : return new com.fc.lami.Messages.SubmitRequest;
+			case 65 : return new com.fc.lami.Messages.SubmitResponse;
+			case 66 : return new com.fc.lami.Messages.SynchronizeRequest;
+			case 67 : return new com.fc.lami.Messages.SynchronizeResponse;
+			case 68 : return new com.fc.lami.Messages.TurnEndNotify;
+			case 69 : return new com.fc.lami.Messages.TurnStartNotify;
 
 			}
 			return null;
@@ -311,23 +329,50 @@ package com.fc.lami
 		if (msg is com.fc.lami.Messages.SendCardResponse) {
 			r_SendCardResponse_54(com.fc.lami.Messages.SendCardResponse(msg), input); return;
 		}
+		if (msg is com.fc.lami.Messages.SpeakToChannelNotify) {
+			r_SpeakToChannelNotify_55(com.fc.lami.Messages.SpeakToChannelNotify(msg), input); return;
+		}
+		if (msg is com.fc.lami.Messages.SpeakToChannelRequest) {
+			r_SpeakToChannelRequest_56(com.fc.lami.Messages.SpeakToChannelRequest(msg), input); return;
+		}
+		if (msg is com.fc.lami.Messages.SpeakToChannelResponse) {
+			r_SpeakToChannelResponse_57(com.fc.lami.Messages.SpeakToChannelResponse(msg), input); return;
+		}
+		if (msg is com.fc.lami.Messages.SpeakToPrivateNotify) {
+			r_SpeakToPrivateNotify_58(com.fc.lami.Messages.SpeakToPrivateNotify(msg), input); return;
+		}
+		if (msg is com.fc.lami.Messages.SpeakToPrivateRequest) {
+			r_SpeakToPrivateRequest_59(com.fc.lami.Messages.SpeakToPrivateRequest(msg), input); return;
+		}
+		if (msg is com.fc.lami.Messages.SpeakToPrivateResponse) {
+			r_SpeakToPrivateResponse_60(com.fc.lami.Messages.SpeakToPrivateResponse(msg), input); return;
+		}
+		if (msg is com.fc.lami.Messages.SpeakToPublicNotify) {
+			r_SpeakToPublicNotify_61(com.fc.lami.Messages.SpeakToPublicNotify(msg), input); return;
+		}
+		if (msg is com.fc.lami.Messages.SpeakToPublicRequest) {
+			r_SpeakToPublicRequest_62(com.fc.lami.Messages.SpeakToPublicRequest(msg), input); return;
+		}
+		if (msg is com.fc.lami.Messages.SpeakToPublicResponse) {
+			r_SpeakToPublicResponse_63(com.fc.lami.Messages.SpeakToPublicResponse(msg), input); return;
+		}
 		if (msg is com.fc.lami.Messages.SubmitRequest) {
-			r_SubmitRequest_55(com.fc.lami.Messages.SubmitRequest(msg), input); return;
+			r_SubmitRequest_64(com.fc.lami.Messages.SubmitRequest(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.SubmitResponse) {
-			r_SubmitResponse_56(com.fc.lami.Messages.SubmitResponse(msg), input); return;
+			r_SubmitResponse_65(com.fc.lami.Messages.SubmitResponse(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.SynchronizeRequest) {
-			r_SynchronizeRequest_57(com.fc.lami.Messages.SynchronizeRequest(msg), input); return;
+			r_SynchronizeRequest_66(com.fc.lami.Messages.SynchronizeRequest(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.SynchronizeResponse) {
-			r_SynchronizeResponse_58(com.fc.lami.Messages.SynchronizeResponse(msg), input); return;
+			r_SynchronizeResponse_67(com.fc.lami.Messages.SynchronizeResponse(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.TurnEndNotify) {
-			r_TurnEndNotify_59(com.fc.lami.Messages.TurnEndNotify(msg), input); return;
+			r_TurnEndNotify_68(com.fc.lami.Messages.TurnEndNotify(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.TurnStartNotify) {
-			r_TurnStartNotify_60(com.fc.lami.Messages.TurnStartNotify(msg), input); return;
+			r_TurnStartNotify_69(com.fc.lami.Messages.TurnStartNotify(msg), input); return;
 		}
 
 		}
@@ -496,23 +541,50 @@ package com.fc.lami
 		if (msg is com.fc.lami.Messages.SendCardResponse) {
 			w_SendCardResponse_54(com.fc.lami.Messages.SendCardResponse(msg), output); return;
 		}
+		if (msg is com.fc.lami.Messages.SpeakToChannelNotify) {
+			w_SpeakToChannelNotify_55(com.fc.lami.Messages.SpeakToChannelNotify(msg), output); return;
+		}
+		if (msg is com.fc.lami.Messages.SpeakToChannelRequest) {
+			w_SpeakToChannelRequest_56(com.fc.lami.Messages.SpeakToChannelRequest(msg), output); return;
+		}
+		if (msg is com.fc.lami.Messages.SpeakToChannelResponse) {
+			w_SpeakToChannelResponse_57(com.fc.lami.Messages.SpeakToChannelResponse(msg), output); return;
+		}
+		if (msg is com.fc.lami.Messages.SpeakToPrivateNotify) {
+			w_SpeakToPrivateNotify_58(com.fc.lami.Messages.SpeakToPrivateNotify(msg), output); return;
+		}
+		if (msg is com.fc.lami.Messages.SpeakToPrivateRequest) {
+			w_SpeakToPrivateRequest_59(com.fc.lami.Messages.SpeakToPrivateRequest(msg), output); return;
+		}
+		if (msg is com.fc.lami.Messages.SpeakToPrivateResponse) {
+			w_SpeakToPrivateResponse_60(com.fc.lami.Messages.SpeakToPrivateResponse(msg), output); return;
+		}
+		if (msg is com.fc.lami.Messages.SpeakToPublicNotify) {
+			w_SpeakToPublicNotify_61(com.fc.lami.Messages.SpeakToPublicNotify(msg), output); return;
+		}
+		if (msg is com.fc.lami.Messages.SpeakToPublicRequest) {
+			w_SpeakToPublicRequest_62(com.fc.lami.Messages.SpeakToPublicRequest(msg), output); return;
+		}
+		if (msg is com.fc.lami.Messages.SpeakToPublicResponse) {
+			w_SpeakToPublicResponse_63(com.fc.lami.Messages.SpeakToPublicResponse(msg), output); return;
+		}
 		if (msg is com.fc.lami.Messages.SubmitRequest) {
-			w_SubmitRequest_55(com.fc.lami.Messages.SubmitRequest(msg), output); return;
+			w_SubmitRequest_64(com.fc.lami.Messages.SubmitRequest(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.SubmitResponse) {
-			w_SubmitResponse_56(com.fc.lami.Messages.SubmitResponse(msg), output); return;
+			w_SubmitResponse_65(com.fc.lami.Messages.SubmitResponse(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.SynchronizeRequest) {
-			w_SynchronizeRequest_57(com.fc.lami.Messages.SynchronizeRequest(msg), output); return;
+			w_SynchronizeRequest_66(com.fc.lami.Messages.SynchronizeRequest(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.SynchronizeResponse) {
-			w_SynchronizeResponse_58(com.fc.lami.Messages.SynchronizeResponse(msg), output); return;
+			w_SynchronizeResponse_67(com.fc.lami.Messages.SynchronizeResponse(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.TurnEndNotify) {
-			w_TurnEndNotify_59(com.fc.lami.Messages.TurnEndNotify(msg), output); return;
+			w_TurnEndNotify_68(com.fc.lami.Messages.TurnEndNotify(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.TurnStartNotify) {
-			w_TurnStartNotify_60(com.fc.lami.Messages.TurnStartNotify(msg), output); return;
+			w_TurnStartNotify_69(com.fc.lami.Messages.TurnStartNotify(msg), output); return;
 		}
 
 		}
@@ -1202,44 +1274,151 @@ package com.fc.lami
 	}
 
 //	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.SpeakToChannelNotify
+//	----------------------------------------------------------------------------------------------------
+	function new_SpeakToChannelNotify_55() : com.fc.lami.Messages.SpeakToChannelNotify {return new com.fc.lami.Messages.SpeakToChannelNotify();}
+	private function r_SpeakToChannelNotify_55(msg : com.fc.lami.Messages.SpeakToChannelNotify, input : NetDataInput) : void {
+		msg.player_name = input.readJavaUTF();
+		msg.message = input.readJavaUTF();
+	}
+	private function w_SpeakToChannelNotify_55(msg : com.fc.lami.Messages.SpeakToChannelNotify, output : NetDataOutput) : void {
+		output.writeJavaUTF(msg.player_name);
+		output.writeJavaUTF(msg.message);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.SpeakToChannelRequest
+//	----------------------------------------------------------------------------------------------------
+	function new_SpeakToChannelRequest_56() : com.fc.lami.Messages.SpeakToChannelRequest {return new com.fc.lami.Messages.SpeakToChannelRequest();}
+	private function r_SpeakToChannelRequest_56(msg : com.fc.lami.Messages.SpeakToChannelRequest, input : NetDataInput) : void {
+		msg.channel = input.readInt();
+		msg.message = input.readJavaUTF();
+	}
+	private function w_SpeakToChannelRequest_56(msg : com.fc.lami.Messages.SpeakToChannelRequest, output : NetDataOutput) : void {
+		output.writeInt(msg.channel);
+		output.writeJavaUTF(msg.message);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.SpeakToChannelResponse
+//	----------------------------------------------------------------------------------------------------
+	function new_SpeakToChannelResponse_57() : com.fc.lami.Messages.SpeakToChannelResponse {return new com.fc.lami.Messages.SpeakToChannelResponse();}
+	private function r_SpeakToChannelResponse_57(msg : com.fc.lami.Messages.SpeakToChannelResponse, input : NetDataInput) : void {
+		msg.result = input.readInt();
+	}
+	private function w_SpeakToChannelResponse_57(msg : com.fc.lami.Messages.SpeakToChannelResponse, output : NetDataOutput) : void {
+		output.writeInt(msg.result);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.SpeakToPrivateNotify
+//	----------------------------------------------------------------------------------------------------
+	function new_SpeakToPrivateNotify_58() : com.fc.lami.Messages.SpeakToPrivateNotify {return new com.fc.lami.Messages.SpeakToPrivateNotify();}
+	private function r_SpeakToPrivateNotify_58(msg : com.fc.lami.Messages.SpeakToPrivateNotify, input : NetDataInput) : void {
+		msg.player_name = input.readJavaUTF();
+		msg.message = input.readJavaUTF();
+	}
+	private function w_SpeakToPrivateNotify_58(msg : com.fc.lami.Messages.SpeakToPrivateNotify, output : NetDataOutput) : void {
+		output.writeJavaUTF(msg.player_name);
+		output.writeJavaUTF(msg.message);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.SpeakToPrivateRequest
+//	----------------------------------------------------------------------------------------------------
+	function new_SpeakToPrivateRequest_59() : com.fc.lami.Messages.SpeakToPrivateRequest {return new com.fc.lami.Messages.SpeakToPrivateRequest();}
+	private function r_SpeakToPrivateRequest_59(msg : com.fc.lami.Messages.SpeakToPrivateRequest, input : NetDataInput) : void {
+		msg.pname = input.readJavaUTF();
+		msg.message = input.readJavaUTF();
+	}
+	private function w_SpeakToPrivateRequest_59(msg : com.fc.lami.Messages.SpeakToPrivateRequest, output : NetDataOutput) : void {
+		output.writeJavaUTF(msg.pname);
+		output.writeJavaUTF(msg.message);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.SpeakToPrivateResponse
+//	----------------------------------------------------------------------------------------------------
+	function new_SpeakToPrivateResponse_60() : com.fc.lami.Messages.SpeakToPrivateResponse {return new com.fc.lami.Messages.SpeakToPrivateResponse();}
+	private function r_SpeakToPrivateResponse_60(msg : com.fc.lami.Messages.SpeakToPrivateResponse, input : NetDataInput) : void {
+		msg.result = input.readInt();
+	}
+	private function w_SpeakToPrivateResponse_60(msg : com.fc.lami.Messages.SpeakToPrivateResponse, output : NetDataOutput) : void {
+		output.writeInt(msg.result);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.SpeakToPublicNotify
+//	----------------------------------------------------------------------------------------------------
+	function new_SpeakToPublicNotify_61() : com.fc.lami.Messages.SpeakToPublicNotify {return new com.fc.lami.Messages.SpeakToPublicNotify();}
+	private function r_SpeakToPublicNotify_61(msg : com.fc.lami.Messages.SpeakToPublicNotify, input : NetDataInput) : void {
+		msg.player_name = input.readJavaUTF();
+		msg.message = input.readJavaUTF();
+	}
+	private function w_SpeakToPublicNotify_61(msg : com.fc.lami.Messages.SpeakToPublicNotify, output : NetDataOutput) : void {
+		output.writeJavaUTF(msg.player_name);
+		output.writeJavaUTF(msg.message);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.SpeakToPublicRequest
+//	----------------------------------------------------------------------------------------------------
+	function new_SpeakToPublicRequest_62() : com.fc.lami.Messages.SpeakToPublicRequest {return new com.fc.lami.Messages.SpeakToPublicRequest();}
+	private function r_SpeakToPublicRequest_62(msg : com.fc.lami.Messages.SpeakToPublicRequest, input : NetDataInput) : void {
+		msg.message = input.readJavaUTF();
+	}
+	private function w_SpeakToPublicRequest_62(msg : com.fc.lami.Messages.SpeakToPublicRequest, output : NetDataOutput) : void {
+		output.writeJavaUTF(msg.message);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.SpeakToPublicResponse
+//	----------------------------------------------------------------------------------------------------
+	function new_SpeakToPublicResponse_63() : com.fc.lami.Messages.SpeakToPublicResponse {return new com.fc.lami.Messages.SpeakToPublicResponse();}
+	private function r_SpeakToPublicResponse_63(msg : com.fc.lami.Messages.SpeakToPublicResponse, input : NetDataInput) : void {
+	}
+	private function w_SpeakToPublicResponse_63(msg : com.fc.lami.Messages.SpeakToPublicResponse, output : NetDataOutput) : void {
+	}
+
+//	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.SubmitRequest
 //	----------------------------------------------------------------------------------------------------
-	function new_SubmitRequest_55() : com.fc.lami.Messages.SubmitRequest {return new com.fc.lami.Messages.SubmitRequest();}
-	private function r_SubmitRequest_55(msg : com.fc.lami.Messages.SubmitRequest, input : NetDataInput) : void {
+	function new_SubmitRequest_64() : com.fc.lami.Messages.SubmitRequest {return new com.fc.lami.Messages.SubmitRequest();}
+	private function r_SubmitRequest_64(msg : com.fc.lami.Messages.SubmitRequest, input : NetDataInput) : void {
 	}
-	private function w_SubmitRequest_55(msg : com.fc.lami.Messages.SubmitRequest, output : NetDataOutput) : void {
+	private function w_SubmitRequest_64(msg : com.fc.lami.Messages.SubmitRequest, output : NetDataOutput) : void {
 	}
 
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.SubmitResponse
 //	----------------------------------------------------------------------------------------------------
-	function new_SubmitResponse_56() : com.fc.lami.Messages.SubmitResponse {return new com.fc.lami.Messages.SubmitResponse();}
-	private function r_SubmitResponse_56(msg : com.fc.lami.Messages.SubmitResponse, input : NetDataInput) : void {
+	function new_SubmitResponse_65() : com.fc.lami.Messages.SubmitResponse {return new com.fc.lami.Messages.SubmitResponse();}
+	private function r_SubmitResponse_65(msg : com.fc.lami.Messages.SubmitResponse, input : NetDataInput) : void {
 		msg.result = input.readInt();
 	}
-	private function w_SubmitResponse_56(msg : com.fc.lami.Messages.SubmitResponse, output : NetDataOutput) : void {
+	private function w_SubmitResponse_65(msg : com.fc.lami.Messages.SubmitResponse, output : NetDataOutput) : void {
 		output.writeInt(msg.result);
 	}
 
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.SynchronizeRequest
 //	----------------------------------------------------------------------------------------------------
-	function new_SynchronizeRequest_57() : com.fc.lami.Messages.SynchronizeRequest {return new com.fc.lami.Messages.SynchronizeRequest();}
-	private function r_SynchronizeRequest_57(msg : com.fc.lami.Messages.SynchronizeRequest, input : NetDataInput) : void {
+	function new_SynchronizeRequest_66() : com.fc.lami.Messages.SynchronizeRequest {return new com.fc.lami.Messages.SynchronizeRequest();}
+	private function r_SynchronizeRequest_66(msg : com.fc.lami.Messages.SynchronizeRequest, input : NetDataInput) : void {
 	}
-	private function w_SynchronizeRequest_57(msg : com.fc.lami.Messages.SynchronizeRequest, output : NetDataOutput) : void {
+	private function w_SynchronizeRequest_66(msg : com.fc.lami.Messages.SynchronizeRequest, output : NetDataOutput) : void {
 	}
 
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.SynchronizeResponse
 //	----------------------------------------------------------------------------------------------------
-	function new_SynchronizeResponse_58() : com.fc.lami.Messages.SynchronizeResponse {return new com.fc.lami.Messages.SynchronizeResponse();}
-	private function r_SynchronizeResponse_58(msg : com.fc.lami.Messages.SynchronizeResponse, input : NetDataInput) : void {
+	function new_SynchronizeResponse_67() : com.fc.lami.Messages.SynchronizeResponse {return new com.fc.lami.Messages.SynchronizeResponse();}
+	private function r_SynchronizeResponse_67(msg : com.fc.lami.Messages.SynchronizeResponse, input : NetDataInput) : void {
 		msg.matrix = input.readExternalArray();
 		msg.player_card = input.readExternalArray();
 		msg.left_card = input.readInt();
 	}
-	private function w_SynchronizeResponse_58(msg : com.fc.lami.Messages.SynchronizeResponse, output : NetDataOutput) : void {
+	private function w_SynchronizeResponse_67(msg : com.fc.lami.Messages.SynchronizeResponse, output : NetDataOutput) : void {
 		output.writeExternalArray(msg.matrix);
 		output.writeExternalArray(msg.player_card);
 		output.writeInt(msg.left_card);
@@ -1248,21 +1427,21 @@ package com.fc.lami
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.TurnEndNotify
 //	----------------------------------------------------------------------------------------------------
-	function new_TurnEndNotify_59() : com.fc.lami.Messages.TurnEndNotify {return new com.fc.lami.Messages.TurnEndNotify();}
-	private function r_TurnEndNotify_59(msg : com.fc.lami.Messages.TurnEndNotify, input : NetDataInput) : void {
+	function new_TurnEndNotify_68() : com.fc.lami.Messages.TurnEndNotify {return new com.fc.lami.Messages.TurnEndNotify();}
+	private function r_TurnEndNotify_68(msg : com.fc.lami.Messages.TurnEndNotify, input : NetDataInput) : void {
 	}
-	private function w_TurnEndNotify_59(msg : com.fc.lami.Messages.TurnEndNotify, output : NetDataOutput) : void {
+	private function w_TurnEndNotify_68(msg : com.fc.lami.Messages.TurnEndNotify, output : NetDataOutput) : void {
 	}
 
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.TurnStartNotify
 //	----------------------------------------------------------------------------------------------------
-	function new_TurnStartNotify_60() : com.fc.lami.Messages.TurnStartNotify {return new com.fc.lami.Messages.TurnStartNotify();}
-	private function r_TurnStartNotify_60(msg : com.fc.lami.Messages.TurnStartNotify, input : NetDataInput) : void {
+	function new_TurnStartNotify_69() : com.fc.lami.Messages.TurnStartNotify {return new com.fc.lami.Messages.TurnStartNotify();}
+	private function r_TurnStartNotify_69(msg : com.fc.lami.Messages.TurnStartNotify, input : NetDataInput) : void {
 		msg.player_id = input.readInt();
 		msg.stack_num = input.readInt();
 	}
-	private function w_TurnStartNotify_60(msg : com.fc.lami.Messages.TurnStartNotify, output : NetDataOutput) : void {
+	private function w_TurnStartNotify_69(msg : com.fc.lami.Messages.TurnStartNotify, output : NetDataOutput) : void {
 		output.writeInt(msg.player_id);
 		output.writeInt(msg.stack_num);
 	}

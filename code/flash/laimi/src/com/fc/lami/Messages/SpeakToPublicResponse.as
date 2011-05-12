@@ -6,17 +6,17 @@ package com.fc.lami.Messages
 
 
 	/**
-	 * Java Class [64] [com.fc.lami.Messages.SubmitRequest]<br>
+	 * Java Class [63] [com.fc.lami.Messages.SpeakToPublicResponse]<br>
 	 * 此代码为自动生成。不需要在此修改。若有错误，请修改代码生成器。
 	 */
 	[Bindable]
-	public class SubmitRequest extends Message
+	public class SpeakToPublicResponse extends Message
 	{
 
 
 		/**
 		 */
-		public function SubmitRequest(
+		public function SpeakToPublicResponse(
 ) 
 		{
 
