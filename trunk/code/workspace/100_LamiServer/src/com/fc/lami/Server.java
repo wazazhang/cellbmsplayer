@@ -26,8 +26,10 @@ import com.net.server.ClientSession;
 import com.net.server.ClientSessionListener;
 import com.net.server.ServerListener;
 
-public class Server extends ServerImpl implements ServerListener
+public class Server implements ServerListener
 {
+	final private com.net.server.Server server_instance;
+	
 	private ThreadPool 		services 		= new ThreadPool("Flash-Test");
 
 	private AtomicInteger	channel_index	= new AtomicInteger(0);
@@ -40,9 +42,9 @@ public class Server extends ServerImpl implements ServerListener
 
 	final private Room		rooms[];
 	
-	public Server(FlashMessageFactory factory) throws Exception
+	public Server(com.net.server.Server server_instance) throws Exception
 	{
-		super(CIO.getAppBridge().getClassLoader(), factory, 10, 600, 600, 0);
+		this.server_instance = server_instance;
 		
 		this.login_adapter = (Login)Class.forName(LamiConfig.LOGIN_CLASS).newInstance();
 		
@@ -53,17 +55,13 @@ public class Server extends ServerImpl implements ServerListener
 		}
 	}
 	
-	public void open(int port) throws IOException {
-		super.open(port, this);
-	}
-	
 	public Channel createChannel(ChannelListener cl) {
-		return getChannelManager().createChannel(channel_index.incrementAndGet(), cl);
+		return server_instance.getChannelManager().createChannel(channel_index.incrementAndGet(), cl);
 	}
 	
 	@Override
 	public ClientSessionListener connected(ClientSession session) {
-		log.info("connected " + session.getRemoteAddress());
+//		log.info("connected " + session.getRemoteAddress());
 		return new AnySession();
 	}
 	
@@ -166,21 +164,5 @@ public class Server extends ServerImpl implements ServerListener
 		return rss;
 	}
 	
-	public static void main(String[] args) throws IOException
-	{
-		try {
-			CAppBridge.initNullStorage();
-			MessageFactory factory = new MessageFactory();
-			int port = 19821;
-			if (args.length > 0) {
-				LamiConfig.load(args[0]);
-				port = LamiConfig.SERVER_PORT;
-			}
-			Server server = new Server(factory);
-			server.open(port);
-		} catch (Exception err) {
-			err.printStackTrace();
-			System.exit(1);
-		}
-	}
+
 }
