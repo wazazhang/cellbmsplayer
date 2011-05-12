@@ -1,4 +1,4 @@
-package com.fc.sfs;
+package com.fc.lami.net.sfs;
 
 import java.io.IOException;
 
