@@ -1,4 +1,4 @@
-package com.fc.mina;
+package com.fc.lami.net.mina;
 
 import java.io.IOException;
 
