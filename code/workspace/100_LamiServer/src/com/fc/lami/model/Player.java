@@ -1,6 +1,5 @@
 package com.fc.lami.model;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -9,6 +8,7 @@ import com.fc.lami.Messages.CardData;
 import com.fc.lami.Messages.PlayerData;
 import com.fc.lami.Messages.ResultPak;
 import com.fc.lami.login.User;
+import com.net.server.Channel;
 import com.net.server.ClientSession;
 
 /**
@@ -60,6 +60,16 @@ public class Player
 		pd.win = this.user.getWin();
 		pd.lose = this.user.getLose();
 		return pd;
+	}
+	
+	public Channel getCurChannel(){
+		if (cur_desk!=null){
+			return cur_desk.getChannel();
+		}
+		if (cur_room!=null){
+			return cur_room.getChannel();
+		}
+		return null;
 	}
 	
 	public Game getGame() {

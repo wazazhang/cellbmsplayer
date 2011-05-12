@@ -177,6 +177,33 @@ public class MessageCodecJava implements MutualMessageCodec
 		if (msg.getClass().equals(com.fc.lami.Messages.SendCardResponse.class)) {
 			_r((com.fc.lami.Messages.SendCardResponse)msg, in); return;
 		}
+		if (msg.getClass().equals(com.fc.lami.Messages.SpeakToChannelNotify.class)) {
+			_r((com.fc.lami.Messages.SpeakToChannelNotify)msg, in); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.SpeakToChannelRequest.class)) {
+			_r((com.fc.lami.Messages.SpeakToChannelRequest)msg, in); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.SpeakToChannelResponse.class)) {
+			_r((com.fc.lami.Messages.SpeakToChannelResponse)msg, in); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.SpeakToPrivateNotify.class)) {
+			_r((com.fc.lami.Messages.SpeakToPrivateNotify)msg, in); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.SpeakToPrivateRequest.class)) {
+			_r((com.fc.lami.Messages.SpeakToPrivateRequest)msg, in); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.SpeakToPrivateResponse.class)) {
+			_r((com.fc.lami.Messages.SpeakToPrivateResponse)msg, in); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.SpeakToPublicNotify.class)) {
+			_r((com.fc.lami.Messages.SpeakToPublicNotify)msg, in); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.SpeakToPublicRequest.class)) {
+			_r((com.fc.lami.Messages.SpeakToPublicRequest)msg, in); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.SpeakToPublicResponse.class)) {
+			_r((com.fc.lami.Messages.SpeakToPublicResponse)msg, in); return;
+		}
 		if (msg.getClass().equals(com.fc.lami.Messages.SubmitRequest.class)) {
 			_r((com.fc.lami.Messages.SubmitRequest)msg, in); return;
 		}
@@ -361,6 +388,33 @@ public class MessageCodecJava implements MutualMessageCodec
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.SendCardResponse.class)) {
 			_w((com.fc.lami.Messages.SendCardResponse)msg, out); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.SpeakToChannelNotify.class)) {
+			_w((com.fc.lami.Messages.SpeakToChannelNotify)msg, out); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.SpeakToChannelRequest.class)) {
+			_w((com.fc.lami.Messages.SpeakToChannelRequest)msg, out); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.SpeakToChannelResponse.class)) {
+			_w((com.fc.lami.Messages.SpeakToChannelResponse)msg, out); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.SpeakToPrivateNotify.class)) {
+			_w((com.fc.lami.Messages.SpeakToPrivateNotify)msg, out); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.SpeakToPrivateRequest.class)) {
+			_w((com.fc.lami.Messages.SpeakToPrivateRequest)msg, out); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.SpeakToPrivateResponse.class)) {
+			_w((com.fc.lami.Messages.SpeakToPrivateResponse)msg, out); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.SpeakToPublicNotify.class)) {
+			_w((com.fc.lami.Messages.SpeakToPublicNotify)msg, out); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.SpeakToPublicRequest.class)) {
+			_w((com.fc.lami.Messages.SpeakToPublicRequest)msg, out); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.SpeakToPublicResponse.class)) {
+			_w((com.fc.lami.Messages.SpeakToPublicResponse)msg, out); return;
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.SubmitRequest.class)) {
 			_w((com.fc.lami.Messages.SubmitRequest)msg, out); return;
@@ -1065,6 +1119,113 @@ public class MessageCodecJava implements MutualMessageCodec
 	}
 	private void _w(com.fc.lami.Messages.SendCardResponse msg, NetDataOutput out) throws IOException {
 		out.writeInt(msg.result);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.SpeakToChannelNotify
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.SpeakToChannelNotify new_com_fc_lami_Messages_SpeakToChannelNotify(){return new com.fc.lami.Messages.SpeakToChannelNotify();}
+	private void _r(com.fc.lami.Messages.SpeakToChannelNotify msg, NetDataInput in) throws IOException {
+		msg.player_name = in.readUTF();
+		msg.message = in.readUTF();
+	}
+	private void _w(com.fc.lami.Messages.SpeakToChannelNotify msg, NetDataOutput out) throws IOException {
+		out.writeUTF(msg.player_name);
+		out.writeUTF(msg.message);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.SpeakToChannelRequest
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.SpeakToChannelRequest new_com_fc_lami_Messages_SpeakToChannelRequest(){return new com.fc.lami.Messages.SpeakToChannelRequest();}
+	private void _r(com.fc.lami.Messages.SpeakToChannelRequest msg, NetDataInput in) throws IOException {
+		msg.channel = in.readInt();
+		msg.message = in.readUTF();
+	}
+	private void _w(com.fc.lami.Messages.SpeakToChannelRequest msg, NetDataOutput out) throws IOException {
+		out.writeInt(msg.channel);
+		out.writeUTF(msg.message);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.SpeakToChannelResponse
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.SpeakToChannelResponse new_com_fc_lami_Messages_SpeakToChannelResponse(){return new com.fc.lami.Messages.SpeakToChannelResponse();}
+	private void _r(com.fc.lami.Messages.SpeakToChannelResponse msg, NetDataInput in) throws IOException {
+		msg.result = in.readInt();
+	}
+	private void _w(com.fc.lami.Messages.SpeakToChannelResponse msg, NetDataOutput out) throws IOException {
+		out.writeInt(msg.result);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.SpeakToPrivateNotify
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.SpeakToPrivateNotify new_com_fc_lami_Messages_SpeakToPrivateNotify(){return new com.fc.lami.Messages.SpeakToPrivateNotify();}
+	private void _r(com.fc.lami.Messages.SpeakToPrivateNotify msg, NetDataInput in) throws IOException {
+		msg.player_name = in.readUTF();
+		msg.message = in.readUTF();
+	}
+	private void _w(com.fc.lami.Messages.SpeakToPrivateNotify msg, NetDataOutput out) throws IOException {
+		out.writeUTF(msg.player_name);
+		out.writeUTF(msg.message);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.SpeakToPrivateRequest
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.SpeakToPrivateRequest new_com_fc_lami_Messages_SpeakToPrivateRequest(){return new com.fc.lami.Messages.SpeakToPrivateRequest();}
+	private void _r(com.fc.lami.Messages.SpeakToPrivateRequest msg, NetDataInput in) throws IOException {
+		msg.pname = in.readUTF();
+		msg.message = in.readUTF();
+	}
+	private void _w(com.fc.lami.Messages.SpeakToPrivateRequest msg, NetDataOutput out) throws IOException {
+		out.writeUTF(msg.pname);
+		out.writeUTF(msg.message);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.SpeakToPrivateResponse
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.SpeakToPrivateResponse new_com_fc_lami_Messages_SpeakToPrivateResponse(){return new com.fc.lami.Messages.SpeakToPrivateResponse();}
+	private void _r(com.fc.lami.Messages.SpeakToPrivateResponse msg, NetDataInput in) throws IOException {
+		msg.result = in.readInt();
+	}
+	private void _w(com.fc.lami.Messages.SpeakToPrivateResponse msg, NetDataOutput out) throws IOException {
+		out.writeInt(msg.result);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.SpeakToPublicNotify
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.SpeakToPublicNotify new_com_fc_lami_Messages_SpeakToPublicNotify(){return new com.fc.lami.Messages.SpeakToPublicNotify();}
+	private void _r(com.fc.lami.Messages.SpeakToPublicNotify msg, NetDataInput in) throws IOException {
+		msg.player_name = in.readUTF();
+		msg.message = in.readUTF();
+	}
+	private void _w(com.fc.lami.Messages.SpeakToPublicNotify msg, NetDataOutput out) throws IOException {
+		out.writeUTF(msg.player_name);
+		out.writeUTF(msg.message);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.SpeakToPublicRequest
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.SpeakToPublicRequest new_com_fc_lami_Messages_SpeakToPublicRequest(){return new com.fc.lami.Messages.SpeakToPublicRequest();}
+	private void _r(com.fc.lami.Messages.SpeakToPublicRequest msg, NetDataInput in) throws IOException {
+		msg.message = in.readUTF();
+	}
+	private void _w(com.fc.lami.Messages.SpeakToPublicRequest msg, NetDataOutput out) throws IOException {
+		out.writeUTF(msg.message);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.SpeakToPublicResponse
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.SpeakToPublicResponse new_com_fc_lami_Messages_SpeakToPublicResponse(){return new com.fc.lami.Messages.SpeakToPublicResponse();}
+	private void _r(com.fc.lami.Messages.SpeakToPublicResponse msg, NetDataInput in) throws IOException {
+	}
+	private void _w(com.fc.lami.Messages.SpeakToPublicResponse msg, NetDataOutput out) throws IOException {
 	}
 
 //	----------------------------------------------------------------------------------------------------

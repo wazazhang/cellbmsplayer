@@ -1,6 +1,5 @@
 package com.fc.lami.model;
 
-import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
@@ -8,8 +7,13 @@ import org.slf4j.LoggerFactory;
 
 import com.cell.util.concurrent.ThreadPool;
 import com.fc.lami.LamiConfig;
+import com.fc.lami.Messages.DeskData;
+import com.fc.lami.Messages.EnterRoomNotify;
+import com.fc.lami.Messages.ExitRoomNotify;
+import com.fc.lami.Messages.PlayerData;
+import com.fc.lami.Messages.RoomData;
+import com.fc.lami.Messages.RoomSnapShot;
 import com.fc.lami.Server;
-import com.fc.lami.Messages.*;
 import com.net.MessageHeader;
 import com.net.flash.message.FlashMessage;
 import com.net.server.Channel;
@@ -70,6 +74,10 @@ public class Room implements ChannelListener, Runnable
 	}
 	@Override
 	public void sessionLeaved(Channel channel, ClientSession session) {
+	}
+	
+	public Channel getChannel(){
+		return channel;
 	}
 	
 	public boolean onPlayerEnter(Player player)

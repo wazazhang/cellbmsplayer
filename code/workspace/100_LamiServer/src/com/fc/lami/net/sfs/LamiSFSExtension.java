@@ -1,20 +1,12 @@
 package com.fc.lami.net.sfs;
 
-import java.io.IOException;
-
 import com.cell.j2se.CAppBridge;
 import com.fc.lami.LamiConfig;
 import com.fc.lami.MessageFactory;
 import com.fc.lami.Server;
 import com.net.ExternalizableFactory;
-import com.net.MessageHeader;
-import com.net.Protocol;
-import com.net.flash.FlashCrossdomainService;
-import com.net.server.ClientSession;
-import com.net.server.ClientSessionListener;
 import com.net.server.ServerListener;
 import com.net.sfsimpl.server.ServerExtenstion;
-import com.smartfoxserver.v2.extensions.SFSExtension;
 
 public class LamiSFSExtension extends ServerExtenstion
 {

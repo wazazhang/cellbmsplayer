@@ -1,16 +1,11 @@
 package com.fc.lami;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.cell.CIO;
-import com.cell.j2se.CAppBridge;
 import com.cell.util.concurrent.ThreadPool;
 import com.fc.lami.Messages.LoginRequest;
 import com.fc.lami.Messages.LoginResponse;
-import com.fc.lami.Messages.RoomData;
 import com.fc.lami.Messages.RoomSnapShot;
 import com.fc.lami.login.Login;
 import com.fc.lami.login.User;
@@ -18,8 +13,6 @@ import com.fc.lami.model.Player;
 import com.fc.lami.model.Room;
 import com.net.MessageHeader;
 import com.net.Protocol;
-import com.net.flash.message.FlashMessageFactory;
-import com.net.minaimpl.server.ServerImpl;
 import com.net.server.Channel;
 import com.net.server.ChannelListener;
 import com.net.server.ClientSession;
@@ -57,6 +50,10 @@ public class Server implements ServerListener
 	
 	public Channel createChannel(ChannelListener cl) {
 		return server_instance.getChannelManager().createChannel(channel_index.incrementAndGet(), cl);
+	}
+	
+	public Channel getChannel(int channel_id){
+		return server_instance.getChannelManager().getChannel(channel_id);
 	}
 	
 	@Override
@@ -164,5 +161,13 @@ public class Server implements ServerListener
 		return rss;
 	}
 	
-
+	public Player getPlayerByName(String name){
+		for (EchoClientSession cs:client_list.values()){
+			if (cs.player.getName().equals(name)){
+				return cs.player;
+			}
+		}
+		return null;
+	}
+	
 }
