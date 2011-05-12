@@ -7,6 +7,7 @@ import com.cell.j2se.CAppBridge;
 import com.fc.lami.LamiConfig;
 import com.fc.lami.MessageFactory;
 import com.fc.lami.Server;
+import com.net.flash.FlashCrossdomainService;
 import com.net.minaimpl.server.ServerImpl;
 
 public class LamiServer extends ServerImpl {
@@ -20,6 +21,7 @@ public class LamiServer extends ServerImpl {
 	{
 		try {
 			CAppBridge.initNullStorage();
+			FlashCrossdomainService.main(new String[]{});
 			MessageFactory factory = new MessageFactory();
 			int port = 19821;
 			if (args.length > 0) {
