@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"  xmlns:ns1="Component.*" width="960" height="600" borderStyle="solid" borderColor="0x000000" backgroundColor="0xffffff"
-		   verticalCenter="0" horizontalCenter="0" verticalScrollPolicy="off" horizontalScrollPolicy="off">
+		   verticalCenter="0" horizontalCenter="0" verticalScrollPolicy="off" horizontalScrollPolicy="off" creationComplete="initEvent()"  >
 	
 	
 	<mx:Script>
@@ -23,10 +23,14 @@
 			public var seatID:int;
 			
 			public var nextOtherPlayer_Cpt:OtherPlayer_Cpt;
-			[Bindable]
 			
+			[Bindable]
 			public var game:Game
 			
+			[Bindable]
+			public var talkinfoStr:String="";
+			[Bindable]
+			public var gameinfoStr:String="";
 			
 			//初始游戏
 			
@@ -39,6 +43,21 @@
 				optCpt.game = game;
 				game.initGame();
 			}
+			
+			public function initEvent():void
+			{
+				addEventListener(KeyboardEvent.KEY_DOWN,keyDownHandle)
+			}
+			
+			public function keyDownHandle(event:KeyboardEvent):void
+			{
+				 if( event.keyCode==13&&titalk.text!='')
+				 {
+					 pubTalk(); 
+				 }
+			}
+			
+			
 			
 			public function initDesk(desk:Desk):void
 			{
@@ -161,7 +180,13 @@
 			
 			public function addInfo(str:String):void
 			{
-				gameinfo.text = str + "\n" +gameinfo.text ;
+				
+				gameinfoStr = str + "\n" +gameinfoStr ;
+			}
+			
+			public function addTalkInfo(str:String):void
+			{
+				talkinfoStr = str + "\n" +talkinfoStr;
 			}
 			
 			//回到房间
@@ -264,6 +289,12 @@
 				nextPlayer3.ready = false;
 			}
 			
+			public function pubTalk():void
+			{
+				Server.sendTalkMessage(titalk.text);
+				titalk.text='';
+			}
+			
 		]]>
 	</mx:Script>
 	
@@ -344,14 +375,15 @@
 	
 	<mx:TabNavigator x="748" y="293" width="200" height="263">
 		<mx:Canvas label="聊天" width="100%" height="100%">
-			<mx:TextArea id="gameinfo" width="100%" height="100%" backgroundAlpha="0.0" color="#010101" editable="false"  borderStyle="none"/>
+			<mx:TextArea  width="100%" height="100%" backgroundAlpha="0.0" color="#010101" editable="false"  borderStyle="none" text="{talkinfoStr}"/>
 		</mx:Canvas>
 		<mx:Canvas label="出牌记录" width="100%" height="100%">
-			<mx:TextArea id="cardinfo" width="100%" height="100%" backgroundAlpha="0.0" color="#010101" editable="false"  borderStyle="none"/>
+			<mx:TextArea  width="100%" height="100%" backgroundAlpha="0.0" color="#010101" editable="false"  borderStyle="none" text="{gameinfoStr}"/>
 		</mx:Canvas>
 	</mx:TabNavigator>
-	<mx:Button x="896" y="564" label="提交"/>
-	<mx:TextInput x="748" y="564" width="140"/>
+	
+	<mx:Button x="896" y="564" label="提交" click="pubTalk()"/>
+	<mx:TextInput id="titalk" x="748" y="564" width="140"/>
 	
 	
 </mx:Canvas>

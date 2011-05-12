@@ -45,6 +45,8 @@ package Class
 	import com.fc.lami.Messages.ReadyNotify;
 	import com.fc.lami.Messages.ReadyRequest;
 	import com.fc.lami.Messages.RepealSendCardNotify;
+	import com.fc.lami.Messages.SpeakToPublicNotify;
+	import com.fc.lami.Messages.SpeakToPublicRequest;
 	import com.fc.lami.Messages.SubmitRequest;
 	import com.fc.lami.Messages.SubmitResponse;
 	import com.fc.lami.Messages.SynchronizeRequest;
@@ -53,6 +55,7 @@ package Class
 	import com.fc.lami.Messages.TurnStartNotify;
 	import com.net.client.ClientEvent;
 	import com.net.client.ServerSession;
+	import com.smartfoxserver.v2.requests.SpectatorToPlayerRequest;
 	
 	import mx.collections.ArrayCollection;
 	import mx.controls.Alert;
@@ -236,6 +239,12 @@ package Class
 				game.lami.onGameOver(gon);
 				// TODO 重置各个玩家的准备按钮
 			
+			}
+			
+			else if (ntf is SpeakToPublicNotify){
+				var stpn:SpeakToPublicNotify = ntf as SpeakToPublicNotify;
+				game.lami.addTalkInfo(stpn.player_name+':'+stpn.message);
+				
 			}
 			
 			else if (ntf is OpenIceNotify){
@@ -439,6 +448,13 @@ package Class
 			var res:MainMatrixChangeRequest = new MainMatrixChangeRequest();
 			res.cards = game.getPublicCards;
 			client.sendRequest(res, client_response);
+		}
+		
+		
+		public static function sendTalkMessage(str:String):void
+		{
+			var res:SpeakToPublicRequest = new SpeakToPublicRequest(str);
+			client.sendRequest(res,client_response);
 		}
 
 		//连接服务器

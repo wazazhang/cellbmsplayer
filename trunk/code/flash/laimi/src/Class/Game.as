@@ -374,7 +374,7 @@ package Class
 		
 		public  function addGameInfo(str:String):void
 		{
-			lami.gameinfo.text = str + "\n"+ lami.gameinfo.text  ;
+			lami.addInfo(str);
 		}
 		
 		public  function playerTurnStart(playerid:int):void
