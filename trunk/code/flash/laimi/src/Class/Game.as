@@ -93,7 +93,7 @@ package Class
 			var curline:Line;
 			for(var i:int=0;i<lineCount;i++)
 			{			
-				var line:Line = new Line(24,false,i+1,this);
+				var line:Line = new Line(20,false,i+1,this);
 				
 				if(curline != null)
 				{
