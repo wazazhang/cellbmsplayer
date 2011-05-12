@@ -9,8 +9,8 @@ package com.fc.lami
 		public function LamiClient()
 		{
 			
-			//super(new ServerSessionImpl(new MessageCodec()));
-			super(new SFSSessionImpl(new MessageCodec()));
+			super(new ServerSessionImpl(new MessageCodec()));
+//			super(new SFSSessionImpl(new MessageCodec()));
 		}
 	}
 }
