@@ -123,12 +123,16 @@ package Class
 		
 		protected static function client_disconnected(event:ClientEvent):void 
 		{
+			if (login_cpt != null) 
 			login_cpt.visible = true;
+			
+			if (room_cpt != null) 
 			room_cpt.visible = false;
 			
 			if(game!=null)
 			game.lami.visible = false;
 			
+			if (login_cpt != null) 
 			login_cpt.disLink()
 		}
 		
