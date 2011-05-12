@@ -12,8 +12,8 @@
     </sourceAttachmentPath>
   </compiler>
   <applications>
-    <application path="main.mxml"/>
     <application path="test.mxml"/>
+    <application path="sfs_test.mxml"/>
   </applications>
   <modules/>
   <buildCSSFiles/>

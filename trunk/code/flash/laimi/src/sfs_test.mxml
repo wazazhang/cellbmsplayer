@@ -7,25 +7,26 @@
 		<![CDATA[
 			import Class.Game;
 			import Class.Server;
+			
+			import com.fc.lami.MessageCodec;
+			import com.net.client.minaimpl.ServerSessionImpl;
+			import com.net.client.sfsimpl.SFSSessionImpl;
 			public function init():void
 			{
 				//Game.app = game;
 				//gameCmt.init();
-				Server.init();
-				Server.room_cpt = rm;
+				Server.init(new SFSSessionImpl(new MessageCodec(), "XML_NAME"));
 				Server.app = this
 				//Server.game_cpt = game;
-				login_cpt.server_host.text = "115.236.18.104";
-				login_cpt.server_port.value = 19821;
+				login_cpt.server_host.text = "127.0.0.1";
+				login_cpt.server_port.value = 9933;
 			}
 		]]>
 	</mx:Script>
 	<ns1:Login_Cpt verticalCenter="10" horizontalCenter="9" width="372" height="268" id="login_cpt">
 	</ns1:Login_Cpt>
 	
-	<ns1:Room_Cpt id="rm" horizontalCenter="0" verticalCenter="0" visible="false">
-	</ns1:Room_Cpt>
-	
+
 	<!--
 	<ns1:Lami id="game" horizontalCenter="0" verticalCenter="0" visible="false">
 	</ns1:Lami> 

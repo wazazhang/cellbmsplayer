@@ -52,6 +52,7 @@ package Class
 	import com.fc.lami.Messages.TurnEndNotify;
 	import com.fc.lami.Messages.TurnStartNotify;
 	import com.net.client.ClientEvent;
+	import com.net.client.ServerSession;
 	
 	import mx.collections.ArrayCollection;
 	import mx.controls.Alert;
@@ -60,7 +61,7 @@ package Class
 	[Bindable]
 	public class Server
 	{
-		protected static var client:LamiClient = new LamiClient();
+		protected static var client:LamiClient;
 		
 		public static var player:PlayerData;
 		
@@ -80,18 +81,13 @@ package Class
 		
 		public static var timerStr:String;
 			
-		public function Server()
-		{
-			
-			
-		}
-		
 		public static function getClient() : LamiClient {
 			return client;
 		}
 		
-		public static function init():void
+		public static function init(ss : ServerSession):void
 		{
+			Server.client = new LamiClient(ss);
 			client.addEventListener(ClientEvent.CONNECTED, 		client_connected);
 			client.addEventListener(ClientEvent.DISCONNECTED,	client_disconnected);
 			// 监听服务器主动发送过来的通知
