@@ -11,9 +11,11 @@
 	 
 	 verticalScrollPolicy="off" horizontalScrollPolicy="off"
 	 
-	 backgroundColor="0xeadda8" click="click()"
+	 backgroundColor="0xeadda8" click="click(event)" doubleClick="click(event)"  doubleClickEnabled="true"
 	 
-	 mouseOver="mouseOver()" 
+	 mouseOver="mouseOver(event)" 
+	 
+	 
 	 
 	 backgroundAlpha="{(!isPlayerOwner)&amp;&amp;(!game.gamer.isMyturn)&amp;&amp;_card==null?0.0:0.52}">
 	 
@@ -109,7 +111,7 @@
 				card = confimcard;
 			}
 			
-			public function mouseOver():void
+			public function mouseOver(event:MouseEvent):void
 			{
 				
 				if(game==null)
@@ -129,6 +131,38 @@
 					return;
 				}
 				
+				//鼠标滑动
+				if(event.buttonDown)
+				{
+					if(game.gamer.selectedArrayCard!=null&&game.gamer.selectedArrayCard.indexOf(card)!=-1)
+					{
+						return;
+					}
+					
+					if(game.gamer.selectedCard!=null)
+					{
+						game.gamer.selectedCard.cardUI.isSelected = false;
+						game.gamer.selectedCard =null;
+					}
+					
+					if(card!=null&&!isSelected)
+					{
+						if(game.gamer.selectedArrayCard==null)
+						{
+							game.gamer.selectedArrayCard = new Array();
+							game.gamer.selectedArrayCard.push(card);
+						}
+						else
+						{
+							game.gamer.selectedArrayCard.push(card)
+						}
+						isSelected = true;
+					}
+					
+					return;
+				}
+				
+				//当前有牌组的时候移动鼠标
 				if(game.gamer.selectedArrayCard != null&&(card==null||isSelected))
 				{
 					var length:int = game.gamer.selectedArrayCard.length;
@@ -169,6 +203,8 @@
 					return;
 				}
 				
+				
+				//单牌操作
 				if(game.gamer.selectedCard != null&&card==null)
 				{
 					game.gamer.selectedCard.cardUI.card = null;
@@ -180,7 +216,7 @@
 			}
 			
 			
-			public function click():void
+			public function click(event:MouseEvent):void
 			{
 				//放置非自己会合往公共牌区操作
 				if((!isPlayerOwner) && (!game.gamer.isMyturn))
@@ -205,19 +241,19 @@
 					return;
 				}
 				
-				if(game.gamer.keydwon)
+				if(game.gamer.keydwon||event.type==MouseEvent.DOUBLE_CLICK)
 				{
 					if(game.gamer.selectedArrayCard!=null)
 						return;
 					
 					selectArrayCard();
-					game.gamer.countHandCard();
 				}
 				else
 				{
 					selectCard();
-					game.gamer.countHandCard();
 				}
+				
+				game.gamer.countHandCard();
 			}
 			
 			//选择
@@ -261,11 +297,6 @@
 				{
 					isSelected = false;
 					
-					/*
-					var buffcard:Card = Game.gamer.selectedCard;
-					Game.gamer.selectedCard = card;
-					card = buffcard;
-					*/
 					card = game.gamer.selectedCard;
 					game.check();
 					
