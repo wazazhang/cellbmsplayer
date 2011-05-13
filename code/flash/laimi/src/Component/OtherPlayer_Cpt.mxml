@@ -60,6 +60,6 @@
 	
 	<mx:Label x="3" y="82" text="{player==null?'':'等级:'+player.level+' 积分:'+player.score}" color="#010101" />
 	
-	<mx:Image x="10" verticalCenter="-121" visible="{ready}" source="image/ready.png" alpha="0.6"/>
+	<mx:Image verticalCenter="0" horizontalCenter="0" visible="{ready}" source="image/ready.png" alpha="0.6"/>
 	
 </mx:Canvas>

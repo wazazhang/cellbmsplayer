@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="240" height="222" borderStyle="solid" cornerRadius="10" backgroundColor="#FEFEFE" backgroundAlpha="0.8">
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="240" height="222" borderStyle="solid" 
+		   cornerRadius="10" backgroundColor="#FEFEFE" backgroundAlpha="0.8" verticalCenter="0" horizontalCenter="0">
 	
 	<mx:Script>
 		<![CDATA[
@@ -52,14 +53,10 @@
 							rsStr = "胜利"
 						else
 							rsStr = "失败"
-					}
-					
-					
+					}					
 					i++;
 				}
-				
 			}
-			
 			
 			public function close():void
 			{

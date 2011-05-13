@@ -28,12 +28,15 @@
 			public var game:Game
 			
 			[Bindable]
-			public var talkinfoStr:String="";                                                                                                                                                                                                                                                                                                                                                       
+			public var talkinfoStr:String=""; 
+			
 			[Bindable]
 			public var gameinfoStr:String="";
 			
-			//初始游戏
+			public var resetCpt:Reset_Cpt;
+			public var canReset:Boolean = false;
 			
+			//初始游戏
 			public function init():void
 			{
 				game.matrix = mx;
@@ -280,13 +283,32 @@
 			}
 			
 			
-			public function onGameStart():void
+			public function onGameStart(canReset:Boolean):void
 			{
 				addInfo("游戏开始");
-				
+				this.canReset = canReset;
 				nextPlayer1.ready = false;
 				nextPlayer2.ready = false;
 				nextPlayer3.ready = false;
+			}
+			
+			
+			public function showReset():void
+			{
+				if(resetCpt!=null)
+					removeReset();
+				
+				resetCpt = new Reset_Cpt();
+				resetCpt.canReset = canReset;
+				resetCpt.setStyle("verticalCenter","0");
+				resetCpt.setStyle("horizontalCenter","0");	
+				addChild(resetCpt);
+			}
+
+			public function removeReset():void
+			{
+				removeChild(resetCpt)
+				resetCpt = null;
 			}
 			
 			public function pubTalk():void
