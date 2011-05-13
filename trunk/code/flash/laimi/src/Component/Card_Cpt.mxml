@@ -131,6 +131,13 @@
 					return;
 				}
 				
+				
+				//未破冰不能出鬼牌
+				if((!isPlayerOwner)&&game.gamer.selectedCard!=null&&game.gamer.selectedCard.point==0&&game.gamer.isCold)
+				{
+					return;
+				}
+				
 				//鼠标滑动
 				if(event.buttonDown)
 				{
@@ -180,9 +187,15 @@
 						length --;	
 					}
 					
+					
 					for each(var curcard:Card in game.gamer.selectedArrayCard)
 					{
+						//不能往回拿已经打出的牌
 						if(isPlayerOwner&&curcard.isSended)
+							return;
+						
+						
+						if((!isPlayerOwner)&&curcard.point==1&&(!game.gamer.isCold))
 							return;
 					}
 					
