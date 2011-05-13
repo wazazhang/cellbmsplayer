@@ -114,13 +114,13 @@ public class Player
 		return point;
 	}
 	
-	public ResultPak onPlayerWin(){
+	public ResultPak onPlayerWin(int p){
 		this.is_ready = false;
 		this.isOpenIce = false;
 		this.card_list.clear();
 //		this.score += 10;
 //		this.win+=1;
-		this.user.addPoint(10);
+		this.user.addPoint(p);
 		this.user.addWin(1);
 		
 		ResultPak pak = new ResultPak();
@@ -130,19 +130,20 @@ public class Player
 		return pak;
 	}
 	
-	public ResultPak onPlayerLose(){
+	public ResultPak onPlayerLose(int p){
 		this.is_ready = false;
 		this.isOpenIce = false;
 		this.card_list.clear();
 //		this.score -= 5;
 //		this.lose += 1;
 //		this.user.addScore(value); // 输了不该扣分吧
+		this.user.addPoint(-p);
 		this.user.addLose(1);
 		
 		ResultPak pak = new ResultPak();
 		pak.player_id = this.player_id;
 		pak.is_win = false;
-		pak.point = -5;
+		pak.point = -p;
 		return pak;
 	}
 

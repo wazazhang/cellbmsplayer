@@ -143,22 +143,30 @@ public class Game implements Runnable
 					w = i;
 				}
 			}
+			int sum = 0;
 			for (int i = 0; i<player_list.length; i++){
-				if (i == w){
-					rp[i] = player_list[i].onPlayerWin();
-				}else{
-					rp[i] = player_list[i].onPlayerLose();
+				if (i!=w){
+					point[i] = point[i]-min;
+					sum+=point[i];
+					rp[i] = player_list[i].onPlayerLose(point[i]);
 				}
 			}
+			rp[w] = player_list[w].onPlayerWin(sum);
 			game_over_type = GameOverNotify.GAME_OVER_TYPE_CARD_OVER;
 		}else{
+			int point[] = new int[player_list.length];
+			int sum = 0;
+			int w = 0;
 			for (int i = 0; i<player_list.length; i++){
 				if (player_list[i].card_list.size()==0){
-					rp[i] = player_list[i].onPlayerWin();
+					w = i;
 				}else{
-					rp[i] = player_list[i].onPlayerLose();
+					point[i] = player_list[i].getHandCardPonit();
+					rp[i] = player_list[i].onPlayerLose(point[i]);
+					sum += point[i];
 				}
 			}
+			rp[w] = player_list[w].onPlayerWin(sum);
 			game_over_type = GameOverNotify.GAME_OVER_TYPE_CLEAR;
 		}
 		GameOverNotify notify = new GameOverNotify(game_over_type, rp);
@@ -769,7 +777,7 @@ public class Game implements Runnable
 			if (player_list.length<2){
 				ResultPak[] rp = new ResultPak[player_list.length];
 				if (player_list[0].isOpenIce){
-					rp[0] = player_list[0].onPlayerWin();
+					rp[0] = player_list[0].onPlayerWin(5);
 				}
 				GameOverNotify notify = new GameOverNotify(GameOverNotify.GAME_OVER_TYPE_ESCAPE, rp);
 				desk.broadcast(notify);
