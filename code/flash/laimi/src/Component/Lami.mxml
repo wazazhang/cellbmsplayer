@@ -298,7 +298,7 @@
 		]]>
 	</mx:Script>
 	
-	<ns1:Matrix_Cpt id="mx" y="132" borderStyle="solid" height="201" horizontalCenter="-105">
+	<ns1:Matrix_Cpt id="mx" y="134" borderStyle="solid" height="201" horizontalCenter="0">
 	</ns1:Matrix_Cpt>
 	
 	<ns1:UserMatrix_Cpt id="umx" height="202" x="163" y="410" width="479">
@@ -307,25 +307,25 @@
 	</ns1:UserMatrix_Cpt>
 	
 	<!--玩家操作区-->
-	<ns1:Opt_Cpt id="optCpt" height="177" y="429" x="636">
+	<ns1:Opt_Cpt id="optCpt" height="177" y="398" x="155">
 	</ns1:Opt_Cpt>
 	
 	<!--信息显示 -->
 	
 	
 	<!--//其他玩家信息-->
-	<ns1:OtherPlayer_Cpt id="nextPlayer1" x="5" y="208">
+	<ns1:OtherPlayer_Cpt id="nextPlayer1" x="5" y="143">
 	</ns1:OtherPlayer_Cpt>
 	
 	<ns1:OtherPlayer_Cpt id="nextPlayer2"  x="192" y="10">
 	</ns1:OtherPlayer_Cpt>
 	
-	<ns1:OtherPlayer_Cpt id="nextPlayer3" x="640" y="208">
+	<ns1:OtherPlayer_Cpt id="nextPlayer3" x="848" y="143">
 	</ns1:OtherPlayer_Cpt>
 	
 
 	
-	<mx:Label id="timer" x="15" y="370" text="{Server.timer}" color="#010101" width="138"/>
+	<mx:Label id="timer" x="9" y="376" text="{Server.timer}" color="#010101" width="138"/>
 	
 	<mx:LinkButton x="876" y="10" label="回到大厅" color="#020202" click="returnRoom()"/>
 	
@@ -350,40 +350,38 @@
 	
 	<!--玩家信息区-->
 	
-	<mx:Canvas id="useinfo" width="145" height="160" x="5" y="435" borderStyle="solid" borderColor="{game.gamer.isMyturn?0x990000:0x010101}" borderThickness="{game.gamer.isMyturn?2:1}">
+	<mx:Canvas id="useinfo" width="100" height="116" x="7" y="404" borderStyle="solid" borderColor="{game.gamer.isMyturn?0x990000:0x010101}" borderThickness="{game.gamer.isMyturn?2:1}"
+			    verticalScrollPolicy="off" horizontalScrollPolicy="off">
 		
-		<mx:Label x="104" y="18" text="{getDir(seatID)}" color="#010101"/>
+		<mx:Label x="55" y="2" text="{getDir(seatID)}" color="#010101"/>
 	
-		<mx:Label x="5" y="100" text="{Server.player.name}" color="#010101"/>
+		<mx:Label x="0" y="56" text="{Server.player.name}" color="#010101"/>
 		
-		<mx:Label x="80" y="100" text="{game.gamer.isMyturn?'游戏中':'等待中'}" color="#010101"/>
-		
-		
-		<mx:Label x="5" y="118" text="手牌数：{game.gamer.handCard.length}" color="#010101"/>
+		<mx:Label x="55" y="36" text="{game.gamer.isMyturn?'游戏中':'等待中'}" color="#010101"/>
 		
 		
-		<mx:Label x="5" y="135" text="破冰:{game.gamer.isCold?'否':'是'} " color="#010101"/>
+		<mx:Label x="0" y="75" text="手牌数：{game.gamer.handCard.length}" color="#010101"/>
 		
-		<mx:Label x="62" y="135" text="shift:{game.gamer.keydwon?'是':'否'}" color="black"/>
 		
-		<mx:Image x="5" y="5" width="98" height="88" source="image/man.png"/>
+		<mx:Label x="56" y="20" text="{game.gamer.isCold?'未破冰':'已破冰'} " color="#010101"/>
+		
+		<mx:Label x="1" y="92" text="shift:{game.gamer.keydwon?'是':'否'}" color="black"/>
+		
+		<mx:Image x="5" y="5" width="50" height="50" source="image/man.png"/>
 		
 	</mx:Canvas>
 	
-	<mx:Canvas x="748" y="40" width="200" height="245" borderStyle="solid">
-	</mx:Canvas>
-	
-	<mx:TabNavigator x="748" y="293" width="200" height="263">
+	<mx:TabNavigator x="659" y="398" width="289" height="170">
 		<mx:Canvas label="聊天" width="100%" height="100%">
-			<mx:TextArea  width="100%" height="100%" backgroundAlpha="0.0" color="#010101" editable="false"  borderStyle="none" text="{talkinfoStr}"/>
+			<mx:TextArea  width="100%" height="100%" backgroundAlpha="0.0" color="#010101" editable="false"  borderStyle="none" text="{talkinfoStr}" x="0" y="2"/>
 		</mx:Canvas>
 		<mx:Canvas label="出牌记录" width="100%" height="100%">
 			<mx:TextArea  width="100%" height="100%" backgroundAlpha="0.0" color="#010101" editable="false"  borderStyle="none" text="{gameinfoStr}"/>
 		</mx:Canvas>
 	</mx:TabNavigator>
 	
-	<mx:Button x="896" y="564" label="提交" click="pubTalk()"/>
-	<mx:TextInput id="titalk" x="748" y="564" width="140"/>
+	<mx:Button x="896" y="571" label="提交" click="pubTalk()"/>
+	<mx:TextInput id="titalk" x="659" y="571" width="229"/>
 	
 	
 </mx:Canvas>
