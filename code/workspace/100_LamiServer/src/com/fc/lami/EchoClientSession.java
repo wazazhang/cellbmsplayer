@@ -6,6 +6,8 @@ import com.fc.lami.Messages.EnterRoomRequest;
 import com.fc.lami.Messages.EnterRoomResponse;
 import com.fc.lami.Messages.ExitRoomRequest;
 import com.fc.lami.Messages.ExitRoomResponse;
+import com.fc.lami.Messages.GameResetRequest;
+import com.fc.lami.Messages.GameResetResponse;
 import com.fc.lami.Messages.GetCardRequest;
 import com.fc.lami.Messages.GetCardResponse;
 import com.fc.lami.Messages.LeaveDeskRequest;
@@ -139,6 +141,10 @@ public class EchoClientSession implements ClientSessionListener
 		else if (message instanceof SynchronizeRequest){
 			SynchronizeRequest request = (SynchronizeRequest)message;
 			processSynchronizeRequest(session, protocol, request);
+		}
+		else if (message instanceof GameResetRequest){
+			GameResetRequest request = (GameResetRequest)message;
+			processGameResetRequest(session, protocol, request);
 		}
 		else if (message instanceof SpeakToPublicRequest){
 			SpeakToPublicRequest request = (SpeakToPublicRequest)message;
@@ -352,6 +358,22 @@ public class EchoClientSession implements ClientSessionListener
 			session.sendResponse(protocol, new SpeakToChannelResponse(SpeakToChannelResponse.SPEAK_TO_CHANNEL_RESULT_SUCCESS));
 		}else{
 			session.sendResponse(protocol, new SpeakToChannelResponse(SpeakToChannelResponse.SPEAK_TO_CHANNEL_RESULT_FAIL_CHANNEL_NOEXIST));
+		}
+	}
+	
+	/** 处理玩家要求重新发牌的请求 */
+	private void processGameResetRequest(ClientSession session, Protocol protocol, GameResetRequest request){
+		if (player.getGame()!=null){
+			if (player.getGame().isStartTime()){
+				if (player.isCanResetGame()){
+					player.getGame().gameInit();
+					session.sendResponse(protocol, new GameResetResponse(GameResetResponse.GAME_RESET_RESULT_SUCCESS));
+				}else{
+					session.sendResponse(protocol, new GameResetResponse(GameResetResponse.GAME_RESET_RESULT_FAIL_CANT_RESET));
+				}
+			}else{
+				session.sendResponse(protocol, new GameResetResponse(GameResetResponse.GAME_RESET_RESULT_FAIL_TIMEOUT));
+			}
 		}
 	}
 }

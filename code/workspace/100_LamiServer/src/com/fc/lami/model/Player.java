@@ -1,5 +1,6 @@
 package com.fc.lami.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -112,6 +113,164 @@ public class Player
 			}
 		}
 		return point;
+	}
+	
+	/** 判断是否有3组同色同点的牌 */
+	public boolean isCanResetGame(){
+		int pair = 0;
+		CardData cl[] = new CardData[card_list.size()];
+		int index = 0;
+		for (CardData cd:card_list.values()){
+			cl[index++] = cd;
+		}
+		
+		for (int i = 0; i<cl.length; i++){
+			for(int j = i+1; j<cl.length; j++){
+				if (cl[i].type == cl[j].type && cl[i].point == cl[j].point){
+					pair++;
+				}
+			}
+		}
+		if (pair>=3){
+			return true;
+		}
+		return false;
+	}
+	
+	/** 判断是否有可破冰的牌组  */
+	public boolean isCanOpenIce(){
+		int point_1 = 0;
+		int point_2 = 0;
+		ArrayList<CardData> player_cards = new ArrayList<CardData>();
+		for (CardData cd:card_list.values()){
+			player_cards.add(cd);
+		}
+		ArrayList<CardData> group = getCardGroupV(player_cards);
+		while(group.size()>0){
+			for (CardData cd : group){
+				point_1 += cd.point;
+				player_cards.remove(cd);
+			}
+			group = getCardGroupV(player_cards);
+		}
+		
+		if (point_1>=30){
+			return true;
+		}
+		
+		player_cards.clear();
+		for (CardData cd:card_list.values()){
+			player_cards.add(cd);
+		}
+		
+		group = getCardGroupH(player_cards);
+		while(group.size()>0){
+			for (CardData cd : group){
+				point_2 += cd.point;
+				player_cards.remove(cd);
+			}
+			group = getCardGroupH(player_cards);
+		}
+		if (point_2>=30){
+			return true;
+		}
+		return false;
+	}
+	
+	public ArrayList<CardData> getCardGroup(){
+		ArrayList<CardData> player_cards = new ArrayList<CardData>();
+		for (CardData cd:card_list.values()){
+			player_cards.add(cd);
+		}
+		return getCardGroupV(player_cards);
+	}
+	
+	// 纵向优先
+	private ArrayList<CardData> getCardGroupV(ArrayList<CardData> cards){
+		CardData table[][] = new CardData[4][13];
+		for (CardData cd:cards){
+			if (cd.type>0){
+				if (table[cd.type-1][cd.point-1]==null){
+					table[cd.type-1][cd.point-1] = cd;
+				}
+			}
+		}
+		
+		ArrayList<CardData> l = new ArrayList<CardData>();
+		for (int j = 0; j<13; j++){
+			for (int i = 0; i<4; i++){
+				if (table[i][j]!=null){
+					l.add(table[i][j]);
+				}
+			}
+			if (l.size()>=3){
+				return l;
+			}
+			l.clear();
+		}
+		for (int i = 0; i<4; i++){
+			for (int j = 0; j<13; j++){
+				if (table[i][j]==null){
+					if (l.size()>=3){
+						return l;
+					}else{
+						l.clear();
+					}
+				}else{
+					l.add(table[i][j]);
+				}
+			}
+			if (l.size()>=3){
+				return l;
+			}
+			l.clear();
+		}
+		return l;
+	}
+	
+	// 横向优先
+	private ArrayList<CardData> getCardGroupH(ArrayList<CardData> cards){
+		CardData table[][] = new CardData[4][13];
+		for (CardData cd:cards){
+			if (cd.type>0){
+				if (table[cd.type-1][cd.point-1]==null){
+					table[cd.type-1][cd.point-1] = cd;
+				}
+			}
+		}
+		
+		ArrayList<CardData> l = new ArrayList<CardData>();
+
+		for (int i = 0; i<4; i++){
+			for (int j = 0; j<13; j++){
+				if (table[i][j]==null){
+					if (l.size()>=3){
+						return l;
+					}else{
+						l.clear();
+					}
+				}else{
+					l.add(table[i][j]);
+				}
+			}
+			if (l.size()>=3){
+				return l;
+			}
+			l.clear();
+		}
+		
+		for (int j = 0; j<13; j++){
+			for (int i = 0; i<4; i++){
+				if (table[i][j]!=null){
+					l.add(table[i][j]);
+				}
+			}
+			if (l.size()>=3){
+				return l;
+			}
+			l.clear();
+		}
+		return l;
 	}
 	
 	public ResultPak onPlayerWin(int p){
