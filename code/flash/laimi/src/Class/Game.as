@@ -25,7 +25,9 @@ package Class
 		public  var lami:Lami;
 		
 		//列数
-		public  var lineCount:int=9; 
+		public  const lineCount:int=8; 
+		public  const linewidth:int=24; 
+		
 		
 		//列数组
 		public  var lineArray:ArrayCollection = new ArrayCollection();
@@ -75,9 +77,9 @@ package Class
 			lami.addEventListener(KeyboardEvent.KEY_UP,keyup);
 		}
 		
-		public  function start(startCards:ArrayCollection):void
+		public  function start(startCards:ArrayCollection,canReset:Boolean):void
 		{
-			lami.onGameStart();
+			lami.onGameStart(canReset);
 			gamer.getStartCard(startCards);
 			lami.optCpt.Start(); 
 		}
@@ -93,7 +95,7 @@ package Class
 			var curline:Line;
 			for(var i:int=0;i<lineCount;i++)
 			{			
-				var line:Line = new Line(20,false,i+1,this);
+				var line:Line = new Line(linewidth,false,i+1,this);
 				
 				if(curline != null)
 				{
@@ -252,7 +254,7 @@ package Class
 					legaled = false;
 					return 0;
 				}
-				point += line.getPointWithOutGuest();
+				point += line.getPoint();
 			}
 			matrix.setStyle("borderColor",0x000000);
 			legaled = true;
@@ -383,6 +385,9 @@ package Class
 			lami.nextPlayer1.gameing = false;
 			lami.nextPlayer2.gameing = false;
 			lami.nextPlayer3.gameing = false;
+			
+			if(lami.resetCpt!=null)
+			   lami.removeReset();
 			
 			if(playerid == Server.player.player_id )
 			{

@@ -131,6 +131,7 @@ package Class.Model
 			return true;
 		}
 		
+		//获取没有鬼牌的点数
 		public function getPointWithOutGuest():int
 		{
 			var point:int = 0;
@@ -208,6 +209,14 @@ package Class.Model
 			for(var i:int=0;i<arr.length;i++)
 			{
 				var card:Card = (arr[i] as Card_Cpt).card;
+				
+				
+				//确定是否算带鬼组的值
+				if(card.point==0)
+				{
+					return 0;
+				}
+					
 				if(card.point!=0)
 				{
 					avicards.push(card);
