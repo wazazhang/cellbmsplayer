@@ -50,8 +50,12 @@ public class Game implements Runnable
 	int mw;
 	
 	public Game(Desk desk){
-		initCard();
 		this.desk = desk;
+		gameInit();
+	}
+	
+	public void gameInit(){
+		initCard();
 		player_list = desk.getPlayerList();
 		/** 初始化每个玩家的手牌 */
 		for (int i = 0; i<player_list.length; i++){
@@ -65,7 +69,7 @@ public class Game implements Runnable
 			for (CardData cd:player_list[i].card_list.values()){
 				cds[p++] = cd;
 			}
-			player_list[i].session.send(new GameStartNotify(cds));
+			player_list[i].session.send(new GameStartNotify(cds, player_list[i].isCanResetGame()));
 		}
 		
 		cur_player_index = CUtil.getRandom(0, player_list.length);
@@ -75,6 +79,10 @@ public class Game implements Runnable
 		mw = LamiConfig.MATRIX_WIDTH;
 		mh = LamiConfig.MATRIX_HEIGHT;
 		matrix = new CardData[mh][mw];
+	}
+	
+	public boolean isStartTime(){
+		return is_start_time;
 	}
 	
 	public void initCard(){
@@ -147,8 +155,14 @@ public class Game implements Runnable
 			for (int i = 0; i<player_list.length; i++){
 				if (i!=w){
 					point[i] = point[i]-min;
-					sum+=point[i];
+					if (!player_list[i].isOpenIce){
+						point[i] += 100;
+						if (player_list[i].isCanOpenIce()){
+							point[i] += 100;
+						}
+					}
 					rp[i] = player_list[i].onPlayerLose(point[i]);
+					sum+=point[i];
 				}
 			}
 			rp[w] = player_list[w].onPlayerWin(sum);
@@ -162,6 +176,12 @@ public class Game implements Runnable
 					w = i;
 				}else{
 					point[i] = player_list[i].getHandCardPonit();
+					if (!player_list[i].isOpenIce){
+						point[i] += 100;
+						if (player_list[i].isCanOpenIce()){
+							point[i] += 100;
+						}
+					}
 					rp[i] = player_list[i].onPlayerLose(point[i]);
 					sum += point[i];
 				}

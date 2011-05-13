@@ -66,6 +66,12 @@ public class MessageCodecJava implements MutualMessageCodec
 		if (msg.getClass().equals(com.fc.lami.Messages.GameOverToRoomNotify.class)) {
 			_r((com.fc.lami.Messages.GameOverToRoomNotify)msg, in); return;
 		}
+		if (msg.getClass().equals(com.fc.lami.Messages.GameResetRequest.class)) {
+			_r((com.fc.lami.Messages.GameResetRequest)msg, in); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.GameResetResponse.class)) {
+			_r((com.fc.lami.Messages.GameResetResponse)msg, in); return;
+		}
 		if (msg.getClass().equals(com.fc.lami.Messages.GameStartNotify.class)) {
 			_r((com.fc.lami.Messages.GameStartNotify)msg, in); return;
 		}
@@ -277,6 +283,12 @@ public class MessageCodecJava implements MutualMessageCodec
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.GameOverToRoomNotify.class)) {
 			_w((com.fc.lami.Messages.GameOverToRoomNotify)msg, out); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.GameResetRequest.class)) {
+			_w((com.fc.lami.Messages.GameResetRequest)msg, out); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.GameResetResponse.class)) {
+			_w((com.fc.lami.Messages.GameResetResponse)msg, out); return;
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.GameStartNotify.class)) {
 			_w((com.fc.lami.Messages.GameStartNotify)msg, out); return;
@@ -661,14 +673,36 @@ public class MessageCodecJava implements MutualMessageCodec
 	}
 
 //	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.GameResetRequest
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.GameResetRequest new_com_fc_lami_Messages_GameResetRequest(){return new com.fc.lami.Messages.GameResetRequest();}
+	private void _r(com.fc.lami.Messages.GameResetRequest msg, NetDataInput in) throws IOException {
+	}
+	private void _w(com.fc.lami.Messages.GameResetRequest msg, NetDataOutput out) throws IOException {
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.GameResetResponse
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.GameResetResponse new_com_fc_lami_Messages_GameResetResponse(){return new com.fc.lami.Messages.GameResetResponse();}
+	private void _r(com.fc.lami.Messages.GameResetResponse msg, NetDataInput in) throws IOException {
+		msg.result = in.readInt();
+	}
+	private void _w(com.fc.lami.Messages.GameResetResponse msg, NetDataOutput out) throws IOException {
+		out.writeInt(msg.result);
+	}
+
+//	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.GameStartNotify
 //	----------------------------------------------------------------------------------------------------
 	public com.fc.lami.Messages.GameStartNotify new_com_fc_lami_Messages_GameStartNotify(){return new com.fc.lami.Messages.GameStartNotify();}
 	private void _r(com.fc.lami.Messages.GameStartNotify msg, NetDataInput in) throws IOException {
 		msg.cards = (com.fc.lami.Messages.CardData[])in.readExternalArray(com.fc.lami.Messages.CardData.class);
+		msg.is_can_reset = in.readBoolean();
 	}
 	private void _w(com.fc.lami.Messages.GameStartNotify msg, NetDataOutput out) throws IOException {
 		out.writeExternalArray(msg.cards);
+		out.writeBoolean(msg.is_can_reset);
 	}
 
 //	----------------------------------------------------------------------------------------------------

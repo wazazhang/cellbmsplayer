@@ -467,9 +467,11 @@ public class Messages {
 	public static class GameStartNotify extends FlashMessage
 	{
 		public CardData cards[];
+		public boolean is_can_reset;
 		
-		public GameStartNotify(CardData cards[]){
+		public GameStartNotify(CardData cards[], boolean is){
 			this.cards = cards;
+			this.is_can_reset = is;
 		}
 		
 		public GameStartNotify() {}
@@ -477,6 +479,26 @@ public class Messages {
 		public String toString() {
 			return "GameStartNotify";
 		}
+	}
+	
+	public static class GameResetRequest extends FlashMessage
+	{
+		public GameResetRequest(){}
+	}
+	
+	public static class GameResetResponse extends FlashMessage
+	{
+		final static public int GAME_RESET_RESULT_SUCCESS = 0;
+		final static public int GAME_RESET_RESULT_FAIL_TIMEOUT = 1;
+		final static public int GAME_RESET_RESULT_FAIL_CANT_RESET = 2;
+		
+		public int result;
+		
+		public GameResetResponse(int result){
+			this.result = result;
+		}
+		
+		public GameResetResponse(){}
 	}
 	
 	/** 游戏结束通知 */
