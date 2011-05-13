@@ -25,6 +25,7 @@ package Class
 	import com.fc.lami.Messages.ExitRoomResponse;
 	import com.fc.lami.Messages.GameOverNotify;
 	import com.fc.lami.Messages.GameOverToRoomNotify;
+	import com.fc.lami.Messages.GameResetRequest;
 	import com.fc.lami.Messages.GameStartNotify;
 	import com.fc.lami.Messages.GameStartToRoomNotify;
 	import com.fc.lami.Messages.GetCardNotify;
@@ -151,7 +152,6 @@ package Class
 					}
 				}
 				game.gamer.getCards(cards);
-				//Alert.show("notify : GetCardNotify");
 			}
 			
 			//获得起始牌
@@ -162,7 +162,7 @@ package Class
 				for each(var cd2:CardData in gsn.cards){
 					cards2.addItem(Card.createCardByData(cd2) );
 				}
-				game.start(cards2);
+				game.start(cards2,gsn.is_can_reset);
 			}
 			
 			else if (ntf is EnterRoomNotify){
@@ -180,7 +180,6 @@ package Class
 			
 			else if (ntf is EnterDeskNotify){
 				
-				//Alert.show("ss");
 				var edn : EnterDeskNotify = ntf as EnterDeskNotify;
 				room.getDesk(edn.desk_id).sitDown(edn.player_id, edn.seatID);
 				room_cpt.enterDesk(edn.player_id, edn.desk_id, edn.seatID);
@@ -454,6 +453,13 @@ package Class
 		public static function sendTalkMessage(str:String):void
 		{
 			var res:SpeakToPublicRequest = new SpeakToPublicRequest(str);
+			client.sendRequest(res,client_response);
+		}
+		
+		
+		public static function sendResetRequest():void
+		{
+			var res:GameResetRequest = new GameResetRequest()
 			client.sendRequest(res,client_response);
 		}
 

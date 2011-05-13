@@ -480,13 +480,8 @@ package Class.Model
 			}
 			else
 			{
-				if(game.gamer.isMyturn)
-				{
-					//Game.isStarted = true;
-				    game.timeCtr.start();
-				}
+				game.lami.showReset();
 				canOpearation = true;
-				//TimesCtr.start();
 			}
 		}
 		
