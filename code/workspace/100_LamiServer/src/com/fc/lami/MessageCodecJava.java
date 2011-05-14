@@ -487,6 +487,8 @@ public class MessageCodecJava implements MutualMessageCodec
 	public com.fc.lami.Messages.DeskData new_com_fc_lami_Messages_DeskData(){return new com.fc.lami.Messages.DeskData();}
 	private void _r(com.fc.lami.Messages.DeskData msg, NetDataInput in) throws IOException {
 		msg.desk_id = in.readInt();
+		msg.desk_name = in.readUTF();
+		msg.player_number = in.readInt();
 		msg.is_started = in.readBoolean();
 		msg.player_E_id = in.readInt();
 		msg.player_W_id = in.readInt();
@@ -495,6 +497,8 @@ public class MessageCodecJava implements MutualMessageCodec
 	}
 	private void _w(com.fc.lami.Messages.DeskData msg, NetDataOutput out) throws IOException {
 		out.writeInt(msg.desk_id);
+		out.writeUTF(msg.desk_name);
+		out.writeInt(msg.player_number);
 		out.writeBoolean(msg.is_started);
 		out.writeInt(msg.player_E_id);
 		out.writeInt(msg.player_W_id);
