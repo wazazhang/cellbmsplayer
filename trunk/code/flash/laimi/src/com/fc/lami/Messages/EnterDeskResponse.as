@@ -23,6 +23,12 @@ package com.fc.lami.Messages
 		static public const ENTER_DESK_RESULT_FAIL_NOT_HAVE_ROOM :  int = 2;
 		/** Java type is : <font color=#0000ff>int</font> */
 		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
+		static public const ENTER_DESK_RESULT_FAIL_NO_IDLE_SEAT :  int = 3;
+		/** Java type is : <font color=#0000ff>int</font> */
+		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
+		static public const ENTER_DESK_RESULT_FAIL_NO_IDLE_DESK :  int = 4;
+		/** Java type is : <font color=#0000ff>int</font> */
+		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
 		public var result :  int;
 		/** Java type is : <font color=#0000ff>int</font> */
 		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
