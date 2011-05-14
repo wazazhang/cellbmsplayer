@@ -109,6 +109,7 @@ package Class.Model
 		//清空矩阵
 		public function cleanMatrix():void
 		{
+			handCard = new ArrayCollection();
 			for each (var line:Line in cardLines)
 			{
 				line.clean();
@@ -150,8 +151,8 @@ package Class.Model
 		
 		public function getStartCard(startcards:ArrayCollection):void
 		{
+			cleanMatrix();
 			canOpearation = false;
-			
 			handCard =  startcards;
 			/*
 			for(var i:int=0;i<startCard;i++)
@@ -182,6 +183,12 @@ package Class.Model
 			}
 			addCardMotion(handCard[0]);
 		}
+		
+		public function removeAllCard():void
+		{
+			
+		}
+		
 		
 		public function getCard(card:Card):void
 		{
