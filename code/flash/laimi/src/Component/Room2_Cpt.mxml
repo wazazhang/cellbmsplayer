@@ -175,19 +175,40 @@
 				Server.enterDesk(-1,-1)
 			}
 			
+			
+			public function showWaitRoom():void
+			{
+				if(cb1.selected)
+				{
+					var arr:Array = new Array();
+					for each (var desk:DeskData in roomData.desks)
+					{
+						if(!desk.is_started)
+							arr.push(desk)
+					}
+					dgroomlist.dataProvider = arr;
+
+				}
+				else
+				{
+					dgroomlist.dataProvider = roomData.desks;
+				}
+			}
 		]]>
 	</mx:Script>
 	<mx:Canvas x="10" y="10" width="680" height="29" borderStyle="solid" borderColor="#000000">
 		<mx:Label text="信息滚动区" horizontalCenter="0" verticalCenter="0"/>
 	</mx:Canvas>
 	
-	<mx:DataGrid id="dgroomlist" x="10" y="52" width="680" height="379" doubleClickEnabled="true" doubleClick="requestEnterDesk()">
+	<mx:DataGrid id="dgroomlist" x="10" y="52" width="680" height="379" doubleClickEnabled="true"   doubleClick="requestEnterDesk()">
 		<mx:columns>
-			<mx:DataGridColumn headerText="房间序号" dataField="desk_id"/>
+			<mx:DataGridColumn headerText="房间序号" dataField="desk_id" />
 			<mx:DataGridColumn width="200" headerText="房间名称" dataField="desk_name"/>
 			<mx:DataGridColumn headerText="状态"  dataField="is_started" labelFunction="is_startedLF" />
 			<mx:DataGridColumn headerText="人数" dataField="player_number" labelFunction ="player_numberLF" />
 			<mx:DataGridColumn headerText="加密" dataField="" />
+			
+			
 		</mx:columns>
 	</mx:DataGrid>
 	
@@ -215,4 +236,5 @@
 	
 	<mx:Button x="698" y="543" label="快速加入" width="252" height="47" fontSize="20" fontWeight="bold" click="fastRequestEnterDesk()"/>
 	<mx:LinkButton x="876" y="10" label="退出房间" fontSize="12" click="exitRoom()" />
+	<mx:CheckBox id="cb1" x="698" y="10" label="只显示等待房间" change="showWaitRoom()"/>
 </mx:Canvas>
