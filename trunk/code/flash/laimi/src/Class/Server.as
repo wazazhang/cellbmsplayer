@@ -6,6 +6,7 @@ package Class
 	
 	import Component.Lami;
 	import Component.Login_Cpt;
+	import Component.Room2_Cpt;
 	import Component.Room_Cpt;
 	
 	import com.fc.lami.LamiClient;
@@ -71,7 +72,7 @@ package Class
 		
 		public static var login_cpt:Login_Cpt;
 		
-		public static var room_cpt:Room_Cpt;
+		public static var room_cpt:Room2_Cpt;
 
 		private static var room:Room;
 		
@@ -196,8 +197,6 @@ package Class
 				room_cpt.leaveDesk(ldn.player_id, ldn.desk_id);
 				if(game!=null)
 					game.lami.leavePlayer(ldn.player_id, ldn.desk_id);
-
-				
 			}
 			
 			else if (ntf is MainMatrixChangeNotify ){
@@ -242,8 +241,10 @@ package Class
 			
 			else if (ntf is SpeakToPublicNotify){
 				var stpn:SpeakToPublicNotify = ntf as SpeakToPublicNotify;
-				game.lami.addTalkInfo(stpn.player_name+':'+stpn.message);
-				
+				if(game!=null)
+					game.lami.addTalkInfo(stpn.player_name+':'+stpn.message);
+				else
+					room_cpt.addRoomInfo(stpn.player_name+':'+stpn.message);
 			}
 			
 			else if (ntf is OpenIceNotify){
@@ -306,7 +307,7 @@ package Class
 				if(enterRoom.result==0) 
 				{	
 					room = new Room(enterRoom.room);
-					room_cpt = new Room_Cpt(); 
+					room_cpt = new Room2_Cpt(); 
 					room_cpt.setStyle("verticalCenter","0");
 					room_cpt.setStyle("horizontalCenter","0");	
 					app.addChild(room_cpt);
@@ -327,7 +328,6 @@ package Class
 			}
 			
 			else if(res is ExitRoomResponse){
-				var err : ExitRoomResponse =res as ExitRoomResponse;
 				app.removeChild(room_cpt);
 				login_cpt.visible = true;
 			}
@@ -389,6 +389,7 @@ package Class
 			else if (res is LeaveDeskResponse){
 				
 				room_cpt.visible = true;
+				game = null;
 				//game_cpt.visible = true;
 			}
 			
