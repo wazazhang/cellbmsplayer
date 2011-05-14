@@ -22,14 +22,8 @@
 			}
 		]]>
 	</mx:Script>
-	<ns1:Login_Cpt verticalCenter="10" horizontalCenter="9" width="372" height="268" id="login_cpt">
+	<ns1:Login_Cpt verticalCenter="0" horizontalCenter="0"  id="login_cpt">
 	</ns1:Login_Cpt>
-	
-
-	<!--
-	<ns1:Lami id="game" horizontalCenter="0" verticalCenter="0" visible="false">
-	</ns1:Lami> 
-	-->
 	
 	<ns1:deBug verticalCenter="0" left="10" visible="false">
 	</ns1:deBug>
