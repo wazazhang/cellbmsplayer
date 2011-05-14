@@ -369,6 +369,8 @@ public class Desk implements ChannelListener
 	public DeskData getDeskData(){
 		DeskData dd = new DeskData();
 		dd.desk_id = this.desk_id;
+		dd.desk_name = "桌子"+this.desk_id;
+		dd.player_number = getPlayerNumber();
 		dd.is_started = (this.game != null);
 		synchronized (desk_players) {
 			Player player_E = desk_players.get(PLAYER_E);

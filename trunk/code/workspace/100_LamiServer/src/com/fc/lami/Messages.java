@@ -87,6 +87,8 @@ public class Messages {
 	public static class DeskData extends FlashMessage
 	{
 		public int desk_id;
+		public String desk_name;
+		public int player_number;
 		public boolean is_started;
 		public int player_E_id;
 		public int player_W_id;
