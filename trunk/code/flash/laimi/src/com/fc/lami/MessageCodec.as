@@ -12,6 +12,11 @@ package com.fc.lami
 	 */
 	public class MessageCodec implements MessageFactory
 	{
+	
+		public function getVersion() : String{
+			return "Sat May 14 13:14:55 CST 2011";
+		}
+	
 		public function	getType(msg : Message) : int 
 		{
 			if (msg is com.fc.lami.Messages.CardData) return 1;
@@ -643,6 +648,8 @@ package com.fc.lami
 	function new_DeskData_3() : com.fc.lami.Messages.DeskData {return new com.fc.lami.Messages.DeskData();}
 	private function r_DeskData_3(msg : com.fc.lami.Messages.DeskData, input : NetDataInput) : void {
 		msg.desk_id = input.readInt();
+		msg.desk_name = input.readJavaUTF();
+		msg.player_number = input.readInt();
 		msg.is_started = input.readBoolean();
 		msg.player_E_id = input.readInt();
 		msg.player_W_id = input.readInt();
@@ -651,6 +658,8 @@ package com.fc.lami
 	}
 	private function w_DeskData_3(msg : com.fc.lami.Messages.DeskData, output : NetDataOutput) : void {
 		output.writeInt(msg.desk_id);
+		output.writeJavaUTF(msg.desk_name);
+		output.writeInt(msg.player_number);
 		output.writeBoolean(msg.is_started);
 		output.writeInt(msg.player_E_id);
 		output.writeInt(msg.player_W_id);
