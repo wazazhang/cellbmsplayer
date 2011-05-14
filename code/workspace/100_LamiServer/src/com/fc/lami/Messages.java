@@ -2,6 +2,7 @@ package com.fc.lami;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 
 import com.cell.j2se.CAppBridge;
 import com.net.flash.message.FlashMessage;
@@ -1198,12 +1199,18 @@ public class Messages {
 	{
 		CAppBridge.init();
 		MessageFactory factory = new MessageFactory();
+		final Date date = new Date();
 		{
 			MutualMessageCodeGeneratorJava gen_java = new MutualMessageCodeGeneratorJava(
 					"com.fc.lami",
 					"",
 					"MessageCodecJava"
-					);
+					){
+				@Override
+				public String getVersion() {
+					return date.toString();
+				}
+			};
 			gen_java.genCodeFile(factory, 
 					new File("./src"));
 		}{
@@ -1212,7 +1219,12 @@ public class Messages {
 					"MessageCodec",
 					"\timport com.fc.lami.Messages.*;",
 					""
-					);
+					){
+				@Override
+				public String getVersion() {
+					return date.toString();
+				}
+			};
 			gen_as.genCodeFile(factory, 
 					new File(args[0], "\\src"));
 		}
