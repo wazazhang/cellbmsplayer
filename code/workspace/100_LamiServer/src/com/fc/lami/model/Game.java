@@ -86,6 +86,7 @@ public class Game implements Runnable
 	}
 	
 	public void initCard(){
+		left_cards.clear();
 		/** 初始化数字牌 */
 		int id = 0;
 		for (int i = 7; i<=13; i++){	// 1~6的牌舍去便于测试
