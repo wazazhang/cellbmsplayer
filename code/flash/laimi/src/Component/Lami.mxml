@@ -35,7 +35,7 @@
 			
 			public var resetCpt:Reset_Cpt;
 			public var canReset:Boolean = false;
-			
+			public var canShowReset:Boolean = false;
 			//初始游戏
 			public function init():void
 			{
@@ -286,7 +286,11 @@
 			public function onGameStart(canReset:Boolean):void
 			{
 				addInfo("游戏开始");
+				if(resetCpt!=null)
+					removeReset();
+				
 				this.canReset = canReset;
+				canShowReset = true;
 				nextPlayer1.ready = false;
 				nextPlayer2.ready = false;
 				nextPlayer3.ready = false;
@@ -295,6 +299,11 @@
 			
 			public function showReset():void
 			{
+				if(!canShowReset)
+					return
+				else	
+					canShowReset = false
+					
 				if(resetCpt!=null)
 					removeReset();
 				
