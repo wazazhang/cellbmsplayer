@@ -851,8 +851,10 @@ public class Messages {
 	public static class EnterDeskResponse extends FlashMessage
 	{
 		final static public int ENTER_DESK_RESULT_SUCCESS = 0;
-		final static public int ENTER_DESK_RESULT_FAIL_PLAYER_EXIST = 1;
-		final static public int ENTER_DESK_RESULT_FAIL_NOT_HAVE_ROOM = 2;
+		final static public int ENTER_DESK_RESULT_FAIL_PLAYER_EXIST = 1;	// 该座位有人
+		final static public int ENTER_DESK_RESULT_FAIL_NOT_HAVE_ROOM = 2;	//玩家没有进入房间
+		final static public int ENTER_DESK_RESULT_FAIL_NO_IDLE_SEAT = 3;	// 没有空闲的座位
+		final static public int ENTER_DESK_RESULT_FAIL_NO_IDLE_DESK = 4;	// 没有空闲的桌子
 		public int result;
 		public int desk_id;
 		public int seat;

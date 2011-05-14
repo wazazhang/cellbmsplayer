@@ -66,6 +66,23 @@ public class Room implements ChannelListener, Runnable
 		return null;
 	}
 	
+	/** 得到空闲的桌子 */
+	public Desk getIdleDesk(){
+		for (Desk d:desks){
+			if (d.getPlayerNumber()>0 && d.getPlayerNumber()<4 && d.getGame() == null){// 找一个有人且游戏没开始的桌子
+				return d;
+			}
+		}
+		
+		for (Desk d:desks){
+			if (d.getPlayerNumber()<4 && d.getGame() == null){//找一个没有开始游戏的桌子
+				return d;
+			}
+		}
+		
+		return null; //没找到合适桌子
+	}
+	
 	@Override
 	public void receivedMessage(Channel channel, ClientSession sender, MessageHeader message) {
 	}

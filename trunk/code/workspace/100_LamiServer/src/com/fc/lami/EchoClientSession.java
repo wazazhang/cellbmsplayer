@@ -195,9 +195,22 @@ public class EchoClientSession implements ClientSessionListener
 			player.cur_desk.leaveDesk(player);
 		}
 		if (player.cur_room != null) {
-			Desk d = player.cur_room.getDesk(request.desk_No);
+			Desk d = null;
+			if (request.desk_No == -1){
+				d = player.cur_room.getIdleDesk();
+			}else{
+				d = player.cur_room.getDesk(request.desk_No);
+			}
 			if (d != null) {
-				if (d.joinDesk(player, request.seat)){
+				int seat = request.seat;
+				if (request.seat == -1){
+					seat = d.getIdleSeat();
+				}
+				if (seat == -1){
+					session.sendResponse(protocol, 
+							new EnterDeskResponse(EnterDeskResponse.ENTER_DESK_RESULT_FAIL_NO_IDLE_SEAT));
+				}
+				else if (d.joinDesk(player, seat)){
 					player.cur_desk = d;
 //					EnterDeskNotify edn = new EnterDeskNotify(player.getPlayerData().player_id,d.desk_id,request.seat);
 //					player.cur_room.broadcast(edn);
@@ -210,22 +223,8 @@ public class EchoClientSession implements ClientSessionListener
 				}
 			} else {
 				session.sendResponse(protocol, 
-						new EnterDeskResponse(EnterDeskResponse.ENTER_DESK_RESULT_FAIL_PLAYER_EXIST));
+						new EnterDeskResponse(EnterDeskResponse.ENTER_DESK_RESULT_FAIL_NO_IDLE_DESK));
 			}
-//			switch (request.seat){
-//			case 0:
-//				result = d.setPlayerN(player);
-//				break;
-//			case 1:
-//				result = d.setPlayerW(player);
-//				break;
-//			case 2:
-//				result = d.setPlayerS(player);
-//				break;
-//			case 3:
-//				result = d.setPlayerE(player);
-//				break;
-//			}
 		}else{
 			// TODO 要先进房间
 			session.sendResponse(protocol, new EnterDeskResponse(EnterDeskResponse.ENTER_DESK_RESULT_FAIL_NOT_HAVE_ROOM));
