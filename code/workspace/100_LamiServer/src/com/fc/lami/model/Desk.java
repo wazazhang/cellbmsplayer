@@ -206,6 +206,22 @@ public class Desk implements ChannelListener
 		return null;
 	}
 	
+	public int getIdleSeat(){
+		if (desk_players.get(PLAYER_N)== null){
+			return PLAYER_N;
+		}
+		if (desk_players.get(PLAYER_W)== null){
+			return PLAYER_W;
+		}
+		if (desk_players.get(PLAYER_S)== null){
+			return PLAYER_S;
+		}
+		if (desk_players.get(PLAYER_E)== null){
+			return PLAYER_E;
+		}
+		return -1;
+	}
+	
 //	public Boolean setPlayerE(Player player){
 //		if (joinDesk(player, )){
 //			return false;
