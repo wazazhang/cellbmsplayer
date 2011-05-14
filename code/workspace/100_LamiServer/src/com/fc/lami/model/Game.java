@@ -526,12 +526,48 @@ public class Game implements Runnable
 	/** 得到打出的牌的点数 */
 	public int getCardPoint(){
 		int point = 0;
+		ArrayList<CardData> player_put_card = new ArrayList<CardData>();
 		if (check()){
 			for (CardData c : player_put.values()){
-				point+= c.point;
+				player_put_card.add(c);
+			}
+			for (CardData c : player_put.values()){
+				if (player_put_card.contains(c)){
+					CardData[] g = getCardGroup(c.x, c.y);
+					boolean is_old = false;
+					int tpoint = 0;
+					for (CardData cd:g){
+						tpoint+=cd.point;
+						if (!player_put_card.remove(cd)){
+							is_old = true;
+						}
+					}
+					if (is_old == false){
+						point += tpoint;
+					}
+				}
 			}
 		}
 		return point;
+	}
+	
+	private CardData[] getCardGroup(int x, int y){
+		int xs, xe;
+		xs = x;
+		xe = x;
+		while (xs>0 && matrix[y][xs-1]!=null){
+			xs = xs-1;
+		}
+		while (xe<mw-1 && matrix[y][xe+1]!=null){
+			xe = xe+1;
+		}
+		int length = xe-xs+1;
+		
+		CardData cds[] = new CardData[length];
+		for (int i = 0; i<length; i++){
+			cds[i] = matrix[y][xs+i];
+		}
+		return cds;
 	}
 	
 	//public boolean process_open_ice = false;
