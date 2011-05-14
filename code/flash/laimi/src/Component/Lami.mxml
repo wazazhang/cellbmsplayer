@@ -15,6 +15,7 @@
 			import com.fc.lami.Messages.PlayerData;
 			
 			import mx.controls.Alert;
+			import mx.events.FlexEvent;
 			[Bindable]
 			public var desk:Desk;
 			
@@ -274,12 +275,19 @@
 				rsCpt.setStyle("verticalCenter","0");
 				rsCpt.setStyle("horizontalCenter","0");	
 				addChild(rsCpt);
-				
+				rsCpt.addEventListener(FlexEvent.REMOVE,removeResultHandle);
+				//resetGameAllData();
+			}
+			
+			
+			public function removeResultHandle(event:Event):void
+			{
 				nextPlayer1.gameEnd();
 				nextPlayer2.gameEnd();
 				nextPlayer3.gameEnd();
 				resetGameAllData();
 			}
+			
 			
 			
 			public function onGameStart(canReset:Boolean):void

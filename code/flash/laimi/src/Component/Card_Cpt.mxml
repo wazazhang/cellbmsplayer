@@ -13,9 +13,7 @@
 	 
 	 backgroundColor="0xeadda8" click="click(event)" doubleClick="click(event)"  doubleClickEnabled="true"
 	 
-	 mouseOver="mouseOver(event)" 
-	 
-	 
+	 mouseOver="mouseOver(event)"   mouseOut="mouseOut(event)"
 	 
 	 backgroundAlpha="{(!isPlayerOwner)&amp;&amp;(!game.gamer.isMyturn)&amp;&amp;_card==null?0.0:0.52}">
 	 
@@ -141,31 +139,7 @@
 				//鼠标滑动
 				if(event.buttonDown)
 				{
-					if(game.gamer.selectedArrayCard!=null&&game.gamer.selectedArrayCard.indexOf(card)!=-1)
-					{
-						return;
-					}
-					
-					if(game.gamer.selectedCard!=null)
-					{
-						game.gamer.selectedCard.cardUI.isSelected = false;
-						game.gamer.selectedCard =null;
-					}
-					
-					if(card!=null&&!isSelected)
-					{
-						if(game.gamer.selectedArrayCard==null)
-						{
-							game.gamer.selectedArrayCard = new Array();
-							game.gamer.selectedArrayCard.push(card);
-						}
-						else
-						{
-							game.gamer.selectedArrayCard.push(card)
-						}
-						isSelected = true;
-					}
-					
+					mouseOut(event);
 					return;
 				}
 				
@@ -229,6 +203,41 @@
 			}
 			
 			
+			
+			public function mouseOut(event:MouseEvent):void
+			{
+				//鼠标滑动
+				if(event.buttonDown)
+				{
+					if(game.gamer.selectedArrayCard!=null&&game.gamer.selectedArrayCard.indexOf(card)!=-1)
+					{
+						return;
+					}
+					
+					if(game.gamer.selectedCard!=null)
+					{
+						game.gamer.selectedCard.cardUI.isSelected = false;
+						game.gamer.selectedCard =null;
+					}
+					
+					if(card!=null&&!isSelected)
+					{
+						if(game.gamer.selectedArrayCard==null)
+						{
+							game.gamer.selectedArrayCard = new Array();
+							game.gamer.selectedArrayCard.push(card);
+						}
+						else
+						{
+							game.gamer.selectedArrayCard.push(card)
+						}
+						isSelected = true;
+					}
+					
+					return;
+				}
+			}
+			
 			public function click(event:MouseEvent):void
 			{
 				//放置非自己会合往公共牌区操作
@@ -247,6 +256,11 @@
 				{
 					return;
 				}
+				
+				
+				
+				
+				
 				
 				//检测往回拿
 				if(isPlayerOwner&&game.gamer.selectedCard!=null&&game.gamer.selectedCard.isSended)
