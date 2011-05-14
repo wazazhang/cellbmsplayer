@@ -14,7 +14,7 @@ import com.net.NetDataTypes;
 public class MessageCodecJava implements MutualMessageCodec
 {
 	public String getVersion() {
-		return "Sat May 14 13:14:55 CST 2011";
+		return "Sat May 14 14:22:43 CST 2011";
 	}
 
 	public void readExternal(MutualMessage msg, NetDataInput in) throws IOException 
