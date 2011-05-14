@@ -786,7 +786,7 @@ public class Game implements Runnable
 	}
 	
 	public void onPlayerLeave(Player player){
-		player.onPlayerEscape();
+		int point = player.onPlayerEscape();
 		if (getCurPlayer() == player){
 			repeal();
 		}
@@ -797,7 +797,7 @@ public class Game implements Runnable
 			if (player_list.length<2){
 				ResultPak[] rp = new ResultPak[player_list.length];
 				if (player_list[0].isOpenIce){
-					rp[0] = player_list[0].onPlayerWin(5);
+					rp[0] = player_list[0].onPlayerWin(point);
 				}
 				GameOverNotify notify = new GameOverNotify(GameOverNotify.GAME_OVER_TYPE_ESCAPE, rp);
 				desk.broadcast(notify);
