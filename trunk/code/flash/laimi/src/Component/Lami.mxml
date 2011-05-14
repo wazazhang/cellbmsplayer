@@ -278,7 +278,6 @@
 				nextPlayer1.gameEnd();
 				nextPlayer2.gameEnd();
 				nextPlayer3.gameEnd();
-				
 				resetGameAllData();
 			}
 			
