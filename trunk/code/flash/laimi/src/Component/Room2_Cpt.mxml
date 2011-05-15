@@ -146,16 +146,16 @@
 			
 			public function is_startedLF(item:Object,column:DataGridColumn):String
 			{
-				return item.player_number+'/4';
-			}
-			
-			
-			public function player_numberLF(item:Object,column:DataGridColumn):String
-			{
 				if(item.is_started)
 					return "开始";
 				else
 					return "等待";
+			}
+			
+			
+			public function player_numberLF(item:Object,column:DataGridColumn):String
+			{				
+				return item.player_number+'/4';
 			}
 			
 			public function requestEnterDesk():void
