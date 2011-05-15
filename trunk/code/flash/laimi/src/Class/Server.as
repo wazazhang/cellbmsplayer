@@ -328,7 +328,11 @@ package Class
 			}
 			
 			else if(res is ExitRoomResponse){
+				
+				var err:ExitRoomResponse = res as ExitRoomResponse
+				
 				app.removeChild(room_cpt);
+				login_cpt.rooms = err.rooms;
 				login_cpt.visible = true;
 			}
 			
