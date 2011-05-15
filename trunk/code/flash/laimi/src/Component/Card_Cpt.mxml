@@ -168,8 +168,8 @@
 						if(isPlayerOwner&&curcard.isSended)
 							return;
 						
-						
-						if((!isPlayerOwner)&&curcard.point==1&&(!game.gamer.isCold))
+						//未破冰不能放鬼牌
+						if((!isPlayerOwner)&&curcard.point==0&&game.gamer.isCold)
 							return;
 					}
 					
