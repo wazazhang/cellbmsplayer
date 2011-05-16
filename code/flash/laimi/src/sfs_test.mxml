@@ -23,7 +23,7 @@
 			}
 		]]>
 	</mx:Script>
-	<ns1:Login_Cpt verticalCenter="10" horizontalCenter="9" width="372" height="268" id="login_cpt">
+	<ns1:Login_Cpt verticalCenter="10" horizontalCenter="9" width="598" height="496" id="login_cpt">
 	</ns1:Login_Cpt>
 	
 
