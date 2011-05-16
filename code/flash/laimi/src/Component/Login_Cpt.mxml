@@ -117,7 +117,9 @@
 				
 				public function fastEnter():void
 				{
-					Server.sendAutoEnter();
+					//Server.sendAutoEnter();
+					Server.isAutoEnter = true;
+					Server.enterRoom(rooms[0].room_id)
 				}
 			]]>
 		</mx:Script>
