@@ -1,5 +1,7 @@
 package com.fc.lami;
 
+import com.fc.lami.Messages.AutoEnterRequest;
+import com.fc.lami.Messages.AutoEnterResponse;
 import com.fc.lami.Messages.EnterDeskRequest;
 import com.fc.lami.Messages.EnterDeskResponse;
 import com.fc.lami.Messages.EnterRoomRequest;
@@ -101,6 +103,11 @@ public class EchoClientSession implements ClientSessionListener
 		else if (message instanceof ReadyRequest){
 			ReadyRequest request = (ReadyRequest)message;
 			processReadyRequest(session, protocol, request);
+		}
+		/** 自动找房子，自动找桌子坐下 */
+		else if (message instanceof AutoEnterRequest){
+			AutoEnterRequest request = (AutoEnterRequest)message;
+			processAutoEnterRequest(session, protocol, request);
 		}
 		/** 把卡放到桌面上 */
 		else if (message instanceof SendCardRequest){
@@ -216,7 +223,7 @@ public class EchoClientSession implements ClientSessionListener
 //					player.cur_room.broadcast(edn);
 					session.sendResponse(protocol, 
 							new EnterDeskResponse(EnterDeskResponse.ENTER_DESK_RESULT_SUCCESS,
-									d.getDeskData().desk_id, request.seat, LamiConfig.TURN_INTERVAL, LamiConfig.OPERATE_TIME));
+									d.getDeskData().desk_id, seat, LamiConfig.TURN_INTERVAL, LamiConfig.OPERATE_TIME));
 				} else {
 					session.sendResponse(protocol, 
 							new EnterDeskResponse(EnterDeskResponse.ENTER_DESK_RESULT_FAIL_PLAYER_EXIST));
@@ -373,6 +380,34 @@ public class EchoClientSession implements ClientSessionListener
 			}else{
 				session.sendResponse(protocol, new GameResetResponse(GameResetResponse.GAME_RESET_RESULT_FAIL_TIMEOUT));
 			}
+		}
+	}
+	
+	private void processAutoEnterRequest(ClientSession session, Protocol protocol, AutoEnterRequest request){
+		if (player.cur_room != null) {
+			player.cur_room.onPlayerLeave(player.player_id);
+		}
+		AutoEnterResponse res = new AutoEnterResponse();
+		Room r = server.getRandomRoom();
+		
+		if (r != null) {
+			if (r.onPlayerEnter(player)){
+				Desk d = player.cur_room.getIdleDesk();
+				int seat = d.getIdleSeat();
+				d.joinDesk(player, seat);
+				res.room = r.getRoomData();
+				res.desk_id = d.desk_id;
+				res.seat = seat;
+				res.turn_interval = LamiConfig.TURN_INTERVAL;
+				res.operate_time = LamiConfig.OPERATE_TIME;
+				session.sendResponse(protocol, res);
+			}else{
+				res.result = AutoEnterResponse.AUTO_ENTER_RESULT_FAIL_NO_IDLE_SEAT;
+				session.sendResponse(protocol, res);
+			}
+		}else{
+			res.result = AutoEnterResponse.AUTO_ENTER_RESULT_FAIL_NO_IDLE_SEAT;
+			session.sendResponse(protocol, res);
 		}
 	}
 }
