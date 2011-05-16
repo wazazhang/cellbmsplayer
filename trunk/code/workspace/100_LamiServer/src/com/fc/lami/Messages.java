@@ -900,6 +900,30 @@ public class Messages {
 		}
 	}
 	
+	public static class AutoEnterRequest extends FlashMessage
+	{
+		public AutoEnterRequest(){}
+	}
+	
+	public static class AutoEnterResponse extends FlashMessage
+	{
+		final static public int AUTO_ENETR_RESULT_SUCCESS = 0;
+		final static public int AUTO_ENTER_RESULT_FAIL_NO_IDLE_SEAT = 1; 
+		
+		public int result;
+		public RoomData room;
+		public int desk_id;
+		public int seat;
+		public int turn_interval;
+		public int operate_time;
+		
+		public AutoEnterResponse(int result){
+			this.result = result;
+		}
+		
+		public AutoEnterResponse(){}
+	}
+	
 	/** 离开桌子 */
 	public static class LeaveDeskRequest extends FlashMessage
 	{

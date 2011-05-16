@@ -1,8 +1,10 @@
 package com.fc.lami;
 
+import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.cell.CUtil;
 import com.cell.util.concurrent.ThreadPool;
 import com.fc.lami.Messages.LoginRequest;
 import com.fc.lami.Messages.LoginResponse;
@@ -151,6 +153,16 @@ public class Server implements ServerListener
 			return rooms[id];
 		}
 		return null;
+	}
+	
+	public Room getRandomRoom(){
+		ArrayList<Room> roomlist = new ArrayList<Room>();
+		for (int i = 0; i < rooms.length; i++){
+			if (rooms[i].getIdleDesk()!=null){
+				roomlist.add(rooms[i]);
+			}
+		}
+		return roomlist.get(CUtil.getRandom(0, roomlist.size()));
 	}
 	
 	public RoomSnapShot[] getRoomList(){

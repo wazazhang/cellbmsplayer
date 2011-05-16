@@ -14,11 +14,17 @@ import com.net.NetDataTypes;
 public class MessageCodecJava implements MutualMessageCodec
 {
 	public String getVersion() {
-		return "Sat May 14 14:22:43 CST 2011";
+		return "Mon May 16 03:42:03 GMT 2011";
 	}
 
 	public void readExternal(MutualMessage msg, NetDataInput in) throws IOException 
 	{
+		if (msg.getClass().equals(com.fc.lami.Messages.AutoEnterRequest.class)) {
+			_r((com.fc.lami.Messages.AutoEnterRequest)msg, in); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.AutoEnterResponse.class)) {
+			_r((com.fc.lami.Messages.AutoEnterResponse)msg, in); return;
+		}
 		if (msg.getClass().equals(com.fc.lami.Messages.CardData.class)) {
 			_r((com.fc.lami.Messages.CardData)msg, in); return;
 		}
@@ -237,6 +243,12 @@ public class MessageCodecJava implements MutualMessageCodec
 
 	public void writeExternal(MutualMessage msg, NetDataOutput out) throws IOException 
 	{
+		if (msg.getClass().equals(com.fc.lami.Messages.AutoEnterRequest.class)) {
+			_w((com.fc.lami.Messages.AutoEnterRequest)msg, out); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.AutoEnterResponse.class)) {
+			_w((com.fc.lami.Messages.AutoEnterResponse)msg, out); return;
+		}
 		if (msg.getClass().equals(com.fc.lami.Messages.CardData.class)) {
 			_w((com.fc.lami.Messages.CardData)msg, out); return;
 		}
@@ -451,6 +463,36 @@ public class MessageCodecJava implements MutualMessageCodec
 			_w((com.fc.lami.Messages.TurnStartNotify)msg, out); return;
 		}
 
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.AutoEnterRequest
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.AutoEnterRequest new_com_fc_lami_Messages_AutoEnterRequest(){return new com.fc.lami.Messages.AutoEnterRequest();}
+	private void _r(com.fc.lami.Messages.AutoEnterRequest msg, NetDataInput in) throws IOException {
+	}
+	private void _w(com.fc.lami.Messages.AutoEnterRequest msg, NetDataOutput out) throws IOException {
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.AutoEnterResponse
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.AutoEnterResponse new_com_fc_lami_Messages_AutoEnterResponse(){return new com.fc.lami.Messages.AutoEnterResponse();}
+	private void _r(com.fc.lami.Messages.AutoEnterResponse msg, NetDataInput in) throws IOException {
+		msg.result = in.readInt();
+		msg.room = in.readExternal(com.fc.lami.Messages.RoomData.class);
+		msg.desk_id = in.readInt();
+		msg.seat = in.readInt();
+		msg.turn_interval = in.readInt();
+		msg.operate_time = in.readInt();
+	}
+	private void _w(com.fc.lami.Messages.AutoEnterResponse msg, NetDataOutput out) throws IOException {
+		out.writeInt(msg.result);
+		out.writeExternal(msg.room);
+		out.writeInt(msg.desk_id);
+		out.writeInt(msg.seat);
+		out.writeInt(msg.turn_interval);
+		out.writeInt(msg.operate_time);
 	}
 
 //	----------------------------------------------------------------------------------------------------

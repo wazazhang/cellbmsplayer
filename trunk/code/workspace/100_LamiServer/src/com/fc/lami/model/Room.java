@@ -112,9 +112,6 @@ public class Room implements ChannelListener, Runnable
 		channel.join(player.session);
 		broadcast(new EnterRoomNotify(player.getPlayerData()));
 		log.info("player [" + player.getName() + "] enter room [" + getRoomID() + "]");
-//		for (Player p : player_list.values()){
-//			p.session.send(new EnterRoomNotify(player.getPlayerData())); // 同样消息NEW太多对象
-//		}
 		return true;
 	}
 	
@@ -164,6 +161,10 @@ public class Room implements ChannelListener, Runnable
 			}
 		}
 		return rd;
+	}
+	
+	public int getPlayerNumber(){
+		return player_list.size();
 	}
 	
 	public RoomSnapShot getRoomSnapShot(){
