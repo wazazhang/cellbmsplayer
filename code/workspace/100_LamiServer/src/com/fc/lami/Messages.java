@@ -912,10 +912,6 @@ public class Messages {
 		
 		public int result;
 		public RoomData room;
-		public int desk_id;
-		public int seat;
-		public int turn_interval;
-		public int operate_time;
 		
 		public AutoEnterResponse(int result){
 			this.result = result;
