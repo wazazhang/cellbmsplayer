@@ -392,14 +392,7 @@ public class EchoClientSession implements ClientSessionListener
 		
 		if (r != null) {
 			if (r.onPlayerEnter(player)){
-				Desk d = player.cur_room.getIdleDesk();
-				int seat = d.getIdleSeat();
-				d.joinDesk(player, seat);
 				res.room = r.getRoomData();
-				res.desk_id = d.desk_id;
-				res.seat = seat;
-				res.turn_interval = LamiConfig.TURN_INTERVAL;
-				res.operate_time = LamiConfig.OPERATE_TIME;
 				session.sendResponse(protocol, res);
 			}else{
 				res.result = AutoEnterResponse.AUTO_ENTER_RESULT_FAIL_NO_IDLE_SEAT;
