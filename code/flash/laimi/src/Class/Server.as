@@ -87,7 +87,9 @@ package Class
 		public static var timer:int;
 		
 		public static var timerStr:String;
-			
+		
+		public static var isAutoEnter:Boolean = false;
+		
 		public static function getClient() : LamiClient {
 			return client;
 		}
@@ -320,6 +322,12 @@ package Class
 					room_cpt.room =	room;
 					room_cpt.init(enterRoom.room)
 					login_cpt.visible = false;
+					
+					if(isAutoEnter)
+					{
+						isAutoEnter = false;
+						enterDesk(-1,-1);
+					}
 					
 				}
 				else if(enterRoom.result == 1)
