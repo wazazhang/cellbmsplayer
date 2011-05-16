@@ -10,6 +10,8 @@ package Class
 	import Component.Room_Cpt;
 	
 	import com.fc.lami.LamiClient;
+	import com.fc.lami.Messages.AutoEnterRequest;
+	import com.fc.lami.Messages.AutoEnterResponse;
 	import com.fc.lami.Messages.CardData;
 	import com.fc.lami.Messages.DeskData;
 	import com.fc.lami.Messages.EchoNotify;
@@ -182,6 +184,10 @@ package Class
 			else if (ntf is EnterDeskNotify){
 				
 				var edn : EnterDeskNotify = ntf as EnterDeskNotify;
+				if(room==null)
+					return
+				
+				
 				room.getDesk(edn.desk_id).sitDown(edn.player_id, edn.seatID);
 				room_cpt.enterDesk(edn.player_id, edn.desk_id, edn.seatID);
 				
@@ -341,6 +347,8 @@ package Class
 				var enterdesk : EnterDeskResponse =res as EnterDeskResponse;
 				var response:Date = new Date();
 				var delay:int = response.getTime() - request_time.getTime();
+				
+				
 				if(enterdesk.result==0)
 				{
 					room_cpt.visible = false;
@@ -397,7 +405,41 @@ package Class
 				//game_cpt.visible = true;
 			}
 			
-			
+			else if (res is AutoEnterResponse){
+				
+				var aer:AutoEnterResponse = new AutoEnterResponse();
+				
+				if(aer.result == AutoEnterResponse.AUTO_ENTER_RESULT_FAIL_NO_IDLE_SEAT)
+				{
+					Alert.show("自动加入失败");
+					return
+				}
+				
+				
+				room = new Room(aer.room);
+				
+				room_cpt = new Room2_Cpt(); 
+				room_cpt.setStyle("verticalCenter","0");
+				room_cpt.setStyle("horizontalCenter","0");	
+				app.addChild(room_cpt);
+				room_cpt.room =	room;
+				room_cpt.init(enterRoom.room)
+				login_cpt.visible = false;
+				
+
+				delay = (new Date()).getTime() - request_time.getTime();
+				room_cpt.visible = false;
+				game = new Game();
+				app.addChild(game.lami);
+					
+				game.timeCtr.sumTimerSet(aer.turn_interval-delay);
+				game.timeCtr.oprTimerSet(aer.operate_time);
+					
+				room.getDesk(aer.desk_id).sitDown(player.player_id, aer.seat);
+				game.lami.initDesk(room.getDesk(aer.desk_id));
+				
+				
+			}
 		}
 		
 		//请求进入房间
@@ -466,6 +508,14 @@ package Class
 		{
 			var res:GameResetRequest = new GameResetRequest()
 			client.sendRequest(res,client_response);
+		}
+		
+		
+		public static function sendAutoEnter():void
+		{
+			var res:AutoEnterRequest = new AutoEnterRequest();
+			client.sendRequest(res,client_response);
+			request_time = new Date();
 		}
 
 		//连接服务器
