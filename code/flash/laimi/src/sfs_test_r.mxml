@@ -19,11 +19,11 @@
 				Server.app = this
 				//Server.game_cpt = game;
 				login_cpt.server_host.text = "rr2.usxingcloud.info";
-				login_cpt.server_port.value = 40000;
+				login_cpt.server_port.value = 40001;
 			}
 		]]>
 	</mx:Script>
-	<ns1:Login_Cpt verticalCenter="10" horizontalCenter="9" width="372" height="268" id="login_cpt">
+	<ns1:Login_Cpt verticalCenter="10" horizontalCenter="9" width="660" height="562" id="login_cpt">
 	</ns1:Login_Cpt>
 	
 
