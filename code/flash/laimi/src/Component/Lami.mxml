@@ -227,7 +227,7 @@
 					if(cpt!=null)
 						cpt.pobing = true;
 				}
-				addInfo("玩家"+playerid+"已经破冰");
+				addInfo("玩家"+Server.getPlayer(playerid).name+"已经破冰");
 			}
 			
 			//有人员准备取消
@@ -333,6 +333,11 @@
 				titalk.text='';
 			}
 			
+			public function onPlayerReset(player:PlayerData):void
+			{
+				addInfo(player.name+"重置了发牌")
+			}
+			
 		]]>
 	</mx:Script>
 	
@@ -375,7 +380,7 @@
 	</mx:Parallel>
 	
 	
-	<mx:Label x="725" y="12" text="{'位置:'+(Server.room_cpt.room.roomData.room_id)+'房间 '+ (desk.desk_id+1)+'号座'}" color="#010101"/>
+	<mx:Label x="700" y="12" text="{'当前位置:'+(Server.room_cpt.room.roomData.room_id)+'房间 '+ (desk.desk_id+1)+'号座'}" color="#010101"/>
 	
 	
 
