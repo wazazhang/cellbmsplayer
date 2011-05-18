@@ -15,7 +15,7 @@
 			{
 				//Game.app = game;
 				//gameCmt.init();
-				Server.init(new SFSSessionImpl(new MessageCodec(), "7028139564online"));
+				Server.init(new SFSSessionImpl(new MessageCodec(), "XML_NAME"));
 				Server.app = this
 				//Server.game_cpt = game;
 				login_cpt.server_host.text = "127.0.0.1";
