@@ -14,7 +14,7 @@ import com.net.NetDataTypes;
 public class MessageCodecJava implements MutualMessageCodec
 {
 	public String getVersion() {
-		return "Mon May 16 06:40:51 GMT 2011";
+		return "Wed May 18 08:57:23 GMT 2011";
 	}
 
 	public void readExternal(MutualMessage msg, NetDataInput in) throws IOException 
@@ -75,6 +75,9 @@ public class MessageCodecJava implements MutualMessageCodec
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.GameOverToRoomNotify.class)) {
 			_r((com.fc.lami.Messages.GameOverToRoomNotify)msg, in); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.GameResetNotify.class)) {
+			_r((com.fc.lami.Messages.GameResetNotify)msg, in); return;
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.GameResetRequest.class)) {
 			_r((com.fc.lami.Messages.GameResetRequest)msg, in); return;
@@ -299,6 +302,9 @@ public class MessageCodecJava implements MutualMessageCodec
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.GameOverToRoomNotify.class)) {
 			_w((com.fc.lami.Messages.GameOverToRoomNotify)msg, out); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.GameResetNotify.class)) {
+			_w((com.fc.lami.Messages.GameResetNotify)msg, out); return;
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.GameResetRequest.class)) {
 			_w((com.fc.lami.Messages.GameResetRequest)msg, out); return;
@@ -712,6 +718,17 @@ public class MessageCodecJava implements MutualMessageCodec
 	}
 	private void _w(com.fc.lami.Messages.GameOverToRoomNotify msg, NetDataOutput out) throws IOException {
 		out.writeInt(msg.desk_id);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.GameResetNotify
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.GameResetNotify new_com_fc_lami_Messages_GameResetNotify(){return new com.fc.lami.Messages.GameResetNotify();}
+	private void _r(com.fc.lami.Messages.GameResetNotify msg, NetDataInput in) throws IOException {
+		msg.player_id = in.readInt();
+	}
+	private void _w(com.fc.lami.Messages.GameResetNotify msg, NetDataOutput out) throws IOException {
+		out.writeInt(msg.player_id);
 	}
 
 //	----------------------------------------------------------------------------------------------------
