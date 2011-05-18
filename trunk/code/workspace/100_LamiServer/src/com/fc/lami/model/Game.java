@@ -89,7 +89,9 @@ public class Game implements Runnable
 		left_cards.clear();
 		/** 初始化数字牌 */
 		int id = 0;
-		for (int i = 7; i<=13; i++){	// 1~6的牌舍去便于测试
+		int card_start = 1;
+
+		for (int i = card_start; i<=13; i++){	// 1~6的牌舍去便于测试
 			for (int j = 1; j<5; j++){
 				CardData card = new CardData(i, j);
 				card.id = id++;
