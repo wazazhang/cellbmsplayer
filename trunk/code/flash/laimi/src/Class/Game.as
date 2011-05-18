@@ -80,6 +80,7 @@ package Class
 		public  function start(startCards:ArrayCollection,canReset:Boolean):void
 		{
 			lami.onGameStart(canReset);
+			gamer.orderType = true;
 			gamer.getStartCard(startCards);
 			lami.optCpt.Start(); 
 		}
@@ -180,6 +181,16 @@ package Class
 			legaled = true;
 			return true;
 		}
+		
+		
+		public function findError():void
+		{
+			for each(var line:Line in lineArray)
+			{
+				line.findError();
+			}
+		}
+		
 		
 		public  function get getPublicCards():Array
 		{

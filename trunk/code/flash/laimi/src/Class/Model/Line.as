@@ -125,11 +125,73 @@ package Class.Model
 				
 				curnode = curnode.nextCardCpt;
 			}
-			while(curnode!=null)
-				
+			while(curnode!=null)	
 				
 			return true;
 		}
+		
+		public function findError():void
+		{
+			
+			var array:Array;
+			var curnode:Card_Cpt = firstCard;
+			
+			do{
+				if(curnode.card == null)
+				{
+					if(array!=null)
+					{
+						var buffarr:Array = copyArray(array)
+						if(!checkZu(array))
+							shanErrorCard(buffarr);
+							
+						array = null;
+					}
+				}
+				else
+				{
+					if(array==null)
+					{
+						array = new Array();
+						array.push(curnode);
+					}
+					else
+					{
+						array.push(curnode);
+					}	
+				}
+				
+				if(curnode.nextCardCpt==null&&array!=null)
+				{
+					buffarr = copyArray(array)
+					if(!checkZu(array))
+						shanErrorCard(array);
+				}
+
+				curnode = curnode.nextCardCpt;
+			}
+			while(curnode!=null)	
+		}
+		
+		
+		public function shanErrorCard(arr:Array):void
+		{
+			for each(var card:Card_Cpt in arr)
+			{
+				card.shan();
+			}
+		}
+		
+		private function copyArray(arr:Array):Array
+		{
+			var newarr:Array = new Array();
+			for each(var obj:Object in arr)
+			{
+				newarr.push(obj)
+			}
+			return newarr;
+		}
+		
 		
 		//获取没有鬼牌的点数
 		public function getPointWithOutGuest():int
