@@ -28,6 +28,7 @@ package Class
 	import com.fc.lami.Messages.ExitRoomResponse;
 	import com.fc.lami.Messages.GameOverNotify;
 	import com.fc.lami.Messages.GameOverToRoomNotify;
+	import com.fc.lami.Messages.GameResetNotify;
 	import com.fc.lami.Messages.GameResetRequest;
 	import com.fc.lami.Messages.GameStartNotify;
 	import com.fc.lami.Messages.GameStartToRoomNotify;
@@ -228,7 +229,8 @@ package Class
 				game.setAllCardIssend();
 				game.leftCard = tsn.stack_num;
 				game.playerTurnStart(tsn.player_id);
-
+				
+			
 			}
 			else if (ntf is OperateCompleteNotify){
 				game.timeCtr.reset();
@@ -285,6 +287,13 @@ package Class
 				
 			}
 			
+			else if (ntf is GameResetNotify)
+			{
+				var grn:GameResetNotify = ntf as GameResetNotify
+				game.lami.onPlayerReset(getPlayer(grn.player_id));	
+			}
+			
+			
 		}
 		
 		protected static function client_response(event:ClientEvent):void
@@ -328,7 +337,6 @@ package Class
 						isAutoEnter = false;
 						enterDesk(-1,-1);
 					}
-					
 				}
 				else if(enterRoom.result == 1)
 				{
@@ -368,6 +376,7 @@ package Class
 					game.timeCtr.oprTimerSet(enterdesk.operate_time);
 					
 					room.getDesk(enterdesk.desk_id).sitDown(player.player_id, enterdesk.seat);
+					
 					game.lami.initDesk(room.getDesk(enterdesk.desk_id));
 				}
 				else if(enterdesk.result == 1)
@@ -387,8 +396,9 @@ package Class
 			else if(res is SubmitResponse)
 			{
 				var sr : SubmitResponse = res as SubmitResponse;
+
 				
-				if (sr.result != 0){
+				if (sr.result != SubmitResponse.SUBMIT_RESULT_SUCCESS){
 					Alert.show("提交错误 代码："+sr.result);
 					SynchronizeCard();
 				}

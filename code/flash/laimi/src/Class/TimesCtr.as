@@ -8,8 +8,8 @@ package Class
 	{
 		
 		
-		private  var optionTime:int = 12;
-		private  var sumTime:int;
+		public  var optionTime:int = 12;
+		public  var sumTime:int;
 		
 		public  var oprTimer:Timer = new Timer(100,optionTime*10);
 		public  var sumTimer:Timer = new Timer(100,sumTime*10);
@@ -76,6 +76,9 @@ package Class
 		}
 		
 		public  function stop():void{
+			
+			optionTimeBar.setProgress(0, optionTime*1000*4/5); 
+			sumTimeBar.setProgress(0, optionTime*1000*4/5); 
 			oprTimer.reset();
 			sumTimer.reset();
 			oprTimer.stop();

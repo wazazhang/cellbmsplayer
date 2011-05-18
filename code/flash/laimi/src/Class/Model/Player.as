@@ -233,11 +233,13 @@ package Class.Model
 		
 		public function submit():Boolean
 		{
+			/*
 			if(!game.check())
 			{
 				Alert.show("出牌不符合规则");
 				return false;
 			}
+			*/
 			
 			if(isCold)
 			{
@@ -481,6 +483,7 @@ package Class.Model
 			var card:Card = ((event.target as Move).target as Card_Cpt).card;
 			((event.target as Move).target as Card_Cpt).nextCardCpt.isShow = true;
 		    matrix.removeChild((event.target as Move).target as Card_Cpt)
+					
 			if(card.nextCard!=null)
 			{
 				addCardMotion(card.nextCard);
