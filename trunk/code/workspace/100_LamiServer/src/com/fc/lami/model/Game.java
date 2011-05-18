@@ -33,6 +33,7 @@ public class Game implements Runnable
 	final static public int startCard = 14;
 	ArrayList<CardData> left_cards = new ArrayList<CardData>();
 	public boolean is_start_time = false; //发牌时间
+	boolean is_fast_game = false;
 	
 	/** 桌面牌矩阵 */
 	public CardData matrix[][];
@@ -90,7 +91,17 @@ public class Game implements Runnable
 		/** 初始化数字牌 */
 		int id = 0;
 		int card_start = 1;
-
+		if (is_fast_game){
+			if (desk.getPlayerNumber()==4){
+				card_start = 1;
+			}
+			else if (desk.getPlayerNumber() == 3){
+				card_start = 4;
+			}
+			else if (desk.getPlayerNumber() == 2){
+				card_start = 7;
+			}
+		}
 		for (int i = card_start; i<=13; i++){	// 1~6的牌舍去便于测试
 			for (int j = 1; j<5; j++){
 				CardData card = new CardData(i, j);

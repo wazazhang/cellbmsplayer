@@ -8,6 +8,7 @@ import com.fc.lami.Messages.EnterRoomRequest;
 import com.fc.lami.Messages.EnterRoomResponse;
 import com.fc.lami.Messages.ExitRoomRequest;
 import com.fc.lami.Messages.ExitRoomResponse;
+import com.fc.lami.Messages.GameResetNotify;
 import com.fc.lami.Messages.GameResetRequest;
 import com.fc.lami.Messages.GameResetResponse;
 import com.fc.lami.Messages.GetCardRequest;
@@ -373,6 +374,7 @@ public class EchoClientSession implements ClientSessionListener
 			if (player.getGame().isStartTime()){
 				if (player.isCanResetGame()){
 					player.getGame().gameInit();
+					player.cur_desk.broadcast(new GameResetNotify(player.player_id));
 					session.sendResponse(protocol, new GameResetResponse(GameResetResponse.GAME_RESET_RESULT_SUCCESS));
 				}else{
 					session.sendResponse(protocol, new GameResetResponse(GameResetResponse.GAME_RESET_RESULT_FAIL_CANT_RESET));

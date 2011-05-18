@@ -504,6 +504,17 @@ public class Messages {
 		public GameResetResponse(){}
 	}
 	
+	public static class GameResetNotify extends FlashMessage
+	{
+		public int player_id;
+		
+		public GameResetNotify(int pid){
+			this.player_id = pid;
+		}
+		
+		public GameResetNotify(){}
+	}
+	
 	/** 游戏结束通知 */
 	public static class GameOverNotify extends FlashMessage
 	{
