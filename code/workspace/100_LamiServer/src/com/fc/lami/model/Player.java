@@ -131,7 +131,7 @@ public class Player
 				}
 			}
 		}
-		if (pair>=1){
+		if (pair>=3){
 			return true;
 		}
 		return false;
