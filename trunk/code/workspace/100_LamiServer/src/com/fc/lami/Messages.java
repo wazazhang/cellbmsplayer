@@ -565,6 +565,8 @@ public class Messages {
 		
 		public int result;
 		
+		public int[] fail_cards;
+		
 		public SubmitResponse(int result){
 			this.result = result;
 		}
