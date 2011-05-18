@@ -472,6 +472,28 @@ public class Game implements Runnable
 		}
 	}
 	
+	/** 获得桌面上所有不成立的牌 id */
+	public int[] getFailedCard(){
+		ArrayList<CardData> clist = new ArrayList<CardData>();
+		for (int i = 0; i<mh; i++){
+			for (int j = 0; j<mw-2; j++){
+				CheckResult cr = checkSingle(j, i);
+				if (cr.is_success == false && cr.n!=0){
+					for (int z = 0; z<cr.n; z++){
+						clist.add(matrix[i][j+z]);
+					}
+				}
+				j += cr.n;
+			}
+		}
+		int[] cids = new int[clist.size()];
+		int i = 0;
+		for (CardData d:clist){
+			cids[i++] = d.id;
+		}
+		return cids;
+	}
+	
 	public boolean checkGroup(CardData cds[]){
 		CardData c1 = null;
 		CardData c2 = null;

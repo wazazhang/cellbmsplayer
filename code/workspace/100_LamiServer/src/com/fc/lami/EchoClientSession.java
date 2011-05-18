@@ -287,8 +287,11 @@ public class EchoClientSession implements ClientSessionListener
 	private void processSubmitRequest(ClientSession session, Protocol protocol, SubmitRequest req){
 		Game game = player.getGame();
 		if (game!=null && game.getCurPlayer() == player){
-				// TODO 检测打出的牌是否正确
-			session.sendResponse(protocol, new SubmitResponse(game.submit()));
+			SubmitResponse res = new SubmitResponse(game.submit());
+			if (res.result == SubmitResponse.SUBMIT_RESULT_FAIL_CARD_COMBI_NO_MATCH){
+				res.fail_cards = game.getFailedCard();
+			}
+			session.sendResponse(protocol, res);
 		}
 	}
 	
