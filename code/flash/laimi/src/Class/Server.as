@@ -415,36 +415,6 @@ package Class
 			
 			else if (res is AutoEnterResponse){
 				
-				var aer:AutoEnterResponse = new AutoEnterResponse();
-				
-				if(aer.result == AutoEnterResponse.AUTO_ENTER_RESULT_FAIL_NO_IDLE_SEAT)
-				{
-					Alert.show("自动加入失败");
-					return
-				}
-				
-				
-				room = new Room(aer.room);
-				
-				room_cpt = new Room2_Cpt(); 
-				room_cpt.setStyle("verticalCenter","0");
-				room_cpt.setStyle("horizontalCenter","0");	
-				app.addChild(room_cpt);
-				room_cpt.room =	room;
-				room_cpt.init(enterRoom.room)
-				login_cpt.visible = false;
-				
-
-				delay = (new Date()).getTime() - request_time.getTime();
-				room_cpt.visible = false;
-				game = new Game();
-				app.addChild(game.lami);
-					
-				game.timeCtr.sumTimerSet(aer.turn_interval-delay);
-				game.timeCtr.oprTimerSet(aer.operate_time);
-					
-				room.getDesk(aer.desk_id).sitDown(player.player_id, aer.seat);
-				game.lami.initDesk(room.getDesk(aer.desk_id));
 				
 				
 			}
