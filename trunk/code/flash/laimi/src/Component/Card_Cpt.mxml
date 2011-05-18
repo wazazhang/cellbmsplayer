@@ -52,6 +52,7 @@
 			[Bindable]
 			public var isShow:Boolean = true;
 			
+			
 			[Embed(source='image/a000.png')]
 			public static var im1:Class;    
 			
@@ -240,6 +241,7 @@
 			
 			public function click(event:MouseEvent):void
 			{
+				
 				//放置非自己会合往公共牌区操作
 				if((!isPlayerOwner) && (!game.gamer.isMyturn))
 				{
@@ -411,6 +413,11 @@
 					return;
 				}
 			}
+			
+			public function shan():void
+			{
+				ef.play();
+			}
 		]]>
 	</mx:Script>
 	<mx:Image id="img0" visible="{isShow}"></mx:Image>
@@ -421,4 +428,6 @@
 	<mx:Label text="{confimcard==null?'':confimcard.point}" color="0x000000" visible="{isShow is Card_Cpt}"
 			  horizontalCenter="0" verticalCenter="10" width="100%" textAlign="center" fontWeight="bold" fontSize="8"/>
 	
+	
+	<mx:Glow id="ef" target="{this}" color="0xff0000" repeatCount="5" duration="500" strength="10" ></mx:Glow>
 </mx:Canvas>

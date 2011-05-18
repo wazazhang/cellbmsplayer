@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" borderThickness="{gameing?2:1}"
-		   width="100" height="116" borderColor="{gameing?0x990000:0x000000}" borderStyle="solid"
-	 verticalScrollPolicy="off"	 horizontalScrollPolicy="off"   >
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" borderThickness="{_gameing?2:1}"
+		   width="100" height="116" borderColor="{_gameing?0x990000:0x000000}" borderStyle="solid"
+	 verticalScrollPolicy="off"	 horizontalScrollPolicy="off"  creationComplete="init()"  >
 	<mx:Script>
 		<![CDATA[
-		   import com.fc.lami.Messages.PlayerData;
+			import Class.Game;
+			import Class.Server;
+			import Class.TimesCtr;
+			
+			import com.fc.lami.Messages.PlayerData;
 		   
 			[Bindable]
 			public var player:PlayerData;	
@@ -18,7 +22,7 @@
 			public var ready:Boolean
 			
 			[Bindable]
-			public var gameing:Boolean
+			private var _gameing:Boolean
 			
 			//破冰状况
 			[Bindable]
@@ -31,6 +35,7 @@
 			[Embed(source='image/nohead.png')]
 			public static const nohead:Class;    
 			
+			public var timer:Timer;
 			
 			public function reset():void{
 				player = null;
@@ -42,24 +47,62 @@
 			
 			public function gameEnd():void
 			{
-				ready = false;
+				//ready = false;
 				gameing = false;
 				pobing = false;
 			}
 			
+			public function get gameing():Boolean
+			{
+				return _gameing
+			}
+			public function set gameing(val:Boolean):void
+			{
+				_gameing = val;
+				
+				if(timer==null)
+					return
+				
+				if(_gameing)
+				{
+					pbtime.visible = true;
+					timer.reset();
+					timer.start();
+				}
+				else
+				{
+					pbtime.visible = false;
+					pbtime.setProgress(0, Server.game.timeCtr.sumTime*1000*4/5);
+					timer.stop();
+				}
+				
+			}
+			
+			private function timerHandler(event:TimerEvent):void
+			{
+				pbtime.setProgress(timer.delay * timer.currentCount, Server.game.timeCtr.sumTime*1000*4/5); 
+			}
+			
+			public  function init():void
+			{
+				timer = new Timer(100,  Server.game.timeCtr.sumTime/100);
+				timer.addEventListener(TimerEvent.TIMER, timerHandler);
+	
+			}
 			
 		]]>
 	</mx:Script>
 	<mx:Label x="3" y="61" text="{player==null?'空闲':''+player.name}" color="#010101" width="88"/>
 	<mx:Label x="51" y="0" text="{seat}" color="#010101"/>
 	<mx:Label x="51" y="17" text="{pobing?'已破冰':'未破冰'}" visible="{player!=null}" color="#010101"/>
-	<mx:Label x="51" y="35" text="{gameing?'游戏中':''}" color="#010101"/>
+	<mx:Label x="51" y="35" text="{_gameing?'游戏中':''}" color="#010101"/>
 	
 	<mx:Image source="{player ==null?nohead:head}"  x="2" y="2" height="50" width="50"/>
-	
 	
 	<mx:Label x="3" y="82" text="{player==null?'':'等级:'+player.level+' 积分:'+player.score}" color="#010101" />
 	
 	<mx:Image verticalCenter="0" horizontalCenter="0" visible="{ready}" source="image/ready.png" alpha="0.6"/>
+	
+	<mx:ProgressBar id="pbtime" y="105" width="87" height="4" horizontalCenter="0" mode="manual"  label="" visible="false" />
 	
 </mx:Canvas>

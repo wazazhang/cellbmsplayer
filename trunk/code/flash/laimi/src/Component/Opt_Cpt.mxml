@@ -7,6 +7,10 @@
 	<![CDATA[
 		import Class.Game;
 		import Class.Server;
+		
+		import com.fc.lami.Messages.SubmitRequest;
+		
+		import mx.controls.Alert;
 			[Bindable]
 			public var game:Game;
 			
@@ -33,6 +37,22 @@
 			
 			public function click5():void
 			{
+				
+				//Server.submit();
+				//return;
+				
+				if(!game.legaled)
+				{
+					game.findError();
+					return;
+				}
+				
+				if(!game.haveSendCard)
+				{
+					Alert.show("没有牌打出")
+					return;
+				}
+					
 				game.gamer.submit();
 				
 			}
@@ -51,7 +71,7 @@
 			}
 	]]>
 </mx:Script>
-	<mx:Button  x="282" y="3"  enabled="{game.legaled&amp;&amp;game.haveSendCard&amp;&amp;game.gamer.isMyturn }" click="click5()"  disabledSkin="@Embed(source='../image/button/end02.png')" overSkin="@Embed(source='../image/button/end01.png')" downSkin="@Embed(source='../image/button/end00.png')" skin="@Embed(source='../image/button/end00.png')"/>
+	<mx:Button  x="282" y="3"  enabled="{game.gamer.isMyturn }" click="click5()"  disabledSkin="@Embed(source='../image/button/end02.png')" overSkin="@Embed(source='../image/button/end01.png')" downSkin="@Embed(source='../image/button/end00.png')" skin="@Embed(source='../image/button/end00.png')"/>
 	<mx:Button id="BT" x="78"  y="3" enabled="{(!game.haveSendCard)&amp;&amp;game.gamer.isMyturn}"  click="click()"   disabledSkin="@Embed(source='../image/button/get2.png')" overSkin="@Embed(source='../image/button/get1.png')" downSkin="@Embed(source='../image/button/get0.png')" skin="@Embed(source='../image/button/get0.png')"/>
 	<mx:Button id="BT3" x="146" y="3" enabled="false"   click="click3()" disabledSkin="@Embed(source='../image/button/order2.png')" overSkin="@Embed(source='../image/button/order1.png')" downSkin="@Embed(source='../image/button/order0.png')" skin="@Embed(source='../image/button/order0.png')" />
 	<mx:Button id="BT4" x="214" y="3" enabled="false"  click="click4()" skin="@Embed(source='../image/button/reset0.png')" overSkin="@Embed(source='../image/button/reset1.png')" disabledSkin="@Embed(source='../image/button/reset2.png')" downSkin="@Embed(source='../image/button/reset0.png')"/>
