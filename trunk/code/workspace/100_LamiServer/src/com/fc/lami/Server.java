@@ -115,7 +115,7 @@ public class Server implements ServerListener
 		 */
 		private LoginResponse processLoginRequest(ClientSession session, Protocol protocol, LoginRequest request) {
 			String version = server_instance.getMessageFactory().getMutualCodec().getVersion();
-			if (version.equals(request.version)) {
+			if (!version.equals(request.version)) {
 				return new LoginResponse(LoginResponse.LOGIN_RESULT_FAIL_BAD_VERSION, null);
 			}
 			synchronized (client_list) {
