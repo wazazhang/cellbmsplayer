@@ -151,10 +151,9 @@
 			
 		<mx:Canvas id="selectRoom" width="100%" height="100%" visible="false">	
 			<mx:Label id="lb" text="waiting..." horizontalCenter="118" y="11" visible="true"></mx:Label>
-			
 			<mx:DataGrid id="list" width="400" height="372" doubleClickEnabled="true" doubleClick="enterRoom()" x="227" y="39" dataProvider="{rooms}">
 				<mx:columns>
-					<mx:DataGridColumn headerText="房间名称" dataField="room_name" width="140"/>
+					<mx:DataGridColumn headerText="房间名称" dataField="room_name" width="140" />
 					<mx:DataGridColumn headerText="当前人数" labelFunction="player_numberLF"/>
 					<mx:DataGridColumn headerText="等级限制" labelFunction="levelLF"/>
 					<mx:DataGridColumn headerText="模式" labelFunction="modeLF"/>
