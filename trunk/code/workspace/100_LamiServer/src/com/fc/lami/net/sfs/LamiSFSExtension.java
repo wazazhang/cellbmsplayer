@@ -28,7 +28,7 @@ public class LamiSFSExtension extends ServerExtenstion
 		
 		
 	}
-	
+
 	@Override
 	protected ServerListener createListener() throws Exception {
 		return new Server(this);
