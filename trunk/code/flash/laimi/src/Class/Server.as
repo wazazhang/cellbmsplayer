@@ -35,6 +35,8 @@ package Class
 	import com.fc.lami.Messages.GetCardNotify;
 	import com.fc.lami.Messages.GetCardRequest;
 	import com.fc.lami.Messages.GetCardResponse;
+	import com.fc.lami.Messages.GetPlayerDataRequest;
+	import com.fc.lami.Messages.GetPlayerDataResponse;
 	import com.fc.lami.Messages.GetTimeRequest;
 	import com.fc.lami.Messages.GetTimeResponse;
 	import com.fc.lami.Messages.LeaveDeskNotify;
@@ -50,6 +52,7 @@ package Class
 	import com.fc.lami.Messages.ReadyNotify;
 	import com.fc.lami.Messages.ReadyRequest;
 	import com.fc.lami.Messages.RepealSendCardNotify;
+	import com.fc.lami.Messages.ResultPak;
 	import com.fc.lami.Messages.SpeakToPublicNotify;
 	import com.fc.lami.Messages.SpeakToPublicRequest;
 	import com.fc.lami.Messages.SubmitRequest;
@@ -245,6 +248,10 @@ package Class
 				// TODO 此处添加游戏结果的代码
 				var gon:GameOverNotify = ntf as GameOverNotify;
 				game.lami.onGameOver(gon);
+				
+				for each(var rp:ResultPak in gon.result_pak){
+					getPlayerFromServer(rp.player_id);
+				}
 				// TODO 重置各个玩家的准备按钮
 			
 			}
@@ -422,12 +429,14 @@ package Class
 				game = null;
 				//game_cpt.visible = true;
 			}
-			
-			else if (res is AutoEnterResponse){
-				
-				
-				
+			else if (res is GetPlayerDataResponse)
+			{
+				var gpdr : GetPlayerDataResponse = res as GetPlayerDataResponse;
+				if (gpdr.player!=null){
+					Server.room.updateToPlayerList(gpdr.player);
+				}
 			}
+			
 		}
 		
 		//请求进入房间
@@ -474,6 +483,11 @@ package Class
 		public static function SynchronizeCard():void
 		{
 			client.sendRequest(new SynchronizeRequest(), client_response);
+		}
+		
+		public static function getPlayerFromServer(pid:int):void
+		{
+			client.sendRequest(new GetPlayerDataRequest(), client_response);
 		}
 		
 		//发送公共主牌区
