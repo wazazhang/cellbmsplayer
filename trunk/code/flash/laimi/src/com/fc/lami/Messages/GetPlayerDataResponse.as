@@ -6,7 +6,7 @@ package com.fc.lami.Messages
 
 
 	/**
-	 * Java Class [29] [com.fc.lami.Messages.GetPlayerDataResponse]<br>
+	 * Java Class [26] [com.fc.lami.Messages.GetPlayerDataResponse]<br>
 	 * 此代码为自动生成。不需要在此修改。若有错误，请修改代码生成器。
 	 */
 	[Bindable]
