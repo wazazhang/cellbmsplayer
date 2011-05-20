@@ -115,23 +115,24 @@ public class Server implements ServerListener
 		 */
 		private LoginResponse processLoginRequest(ClientSession session, Protocol protocol, LoginRequest request) {
 			String version = server_instance.getMessageFactory().getMutualCodec().getVersion();
+			if (version.equals(request.version)) {
+				return new LoginResponse(LoginResponse.LOGIN_RESULT_FAIL_BAD_VERSION, null);
+			}
 			synchronized (client_list) {
 				if (request.name == null) {
-					return new LoginResponse(LoginResponse.LOGIN_RESULT_FAIL, 
-							null, version);
+					return new LoginResponse(LoginResponse.LOGIN_RESULT_FAIL, null);
 				}
 				EchoClientSession old_session = client_list.get(request.name);
 				if (old_session != null) {
 					if (old_session.session.isConnected()) {
-						return new LoginResponse(LoginResponse.LOGIN_RESULT_FAIL_ALREADY_LOGIN,
-								null, version);
+						return new LoginResponse(LoginResponse.LOGIN_RESULT_FAIL_ALREADY_LOGIN,	null);
 					} else {
 						client_list.remove(request.name);
 					}
 				}
 				User user = login_adapter.login(request.name, request.validate);
 				if (user == null) {
-					return new LoginResponse(LoginResponse.LOGIN_RESULT_FAIL, null, version);
+					return new LoginResponse(LoginResponse.LOGIN_RESULT_FAIL, null);
 				} else {
 					logined_session = new EchoClientSession(session, Server.this, user);
 					client_list.put(user.getName(), logined_session);
@@ -140,8 +141,7 @@ public class Server implements ServerListener
 			
 			LoginResponse res = new LoginResponse(
 					LoginResponse.LOGIN_RESULT_SUCCESS, 
-					this.logined_session.player.getPlayerData(),
-					version);
+					this.logined_session.player.getPlayerData());
 			res.rooms = getRoomList();
 //			res.server_time = System.currentTimeMillis();
 			return res;
