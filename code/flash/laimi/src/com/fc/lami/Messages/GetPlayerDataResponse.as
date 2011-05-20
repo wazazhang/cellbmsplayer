@@ -6,11 +6,11 @@ package com.fc.lami.Messages
 
 
 	/**
-	 * Java Class [12] [com.fc.lami.Messages.EnterRoomNotify]<br>
+	 * Java Class [29] [com.fc.lami.Messages.GetPlayerDataResponse]<br>
 	 * 此代码为自动生成。不需要在此修改。若有错误，请修改代码生成器。
 	 */
 	[Bindable]
-	public class EnterRoomNotify extends Message
+	public class GetPlayerDataResponse extends Message
 	{
 		/** Java type is : <font color=#0000ff>com.fc.lami.Messages.PlayerData</font> */
 		[JavaType(name="com.fc.lami.Messages.PlayerData", leaf_type=NetDataTypes.TYPE_EXTERNALIZABLE)]
@@ -18,7 +18,7 @@ package com.fc.lami.Messages
 
 		/**
 		 * @param player as <font color=#0000ff>com.fc.lami.Messages.PlayerData</font>		 */
-		public function EnterRoomNotify(
+		public function GetPlayerDataResponse(
 			player :  com.fc.lami.Messages.PlayerData = null) 
 		{
 			this.player = player;

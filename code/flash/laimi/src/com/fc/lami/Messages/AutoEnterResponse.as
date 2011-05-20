@@ -24,40 +24,16 @@ package com.fc.lami.Messages
 		/** Java type is : <font color=#0000ff>com.fc.lami.Messages.RoomData</font> */
 		[JavaType(name="com.fc.lami.Messages.RoomData", leaf_type=NetDataTypes.TYPE_EXTERNALIZABLE)]
 		public var room :  com.fc.lami.Messages.RoomData;
-		/** Java type is : <font color=#0000ff>int</font> */
-		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
-		public var desk_id :  int;
-		/** Java type is : <font color=#0000ff>int</font> */
-		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
-		public var seat :  int;
-		/** Java type is : <font color=#0000ff>int</font> */
-		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
-		public var turn_interval :  int;
-		/** Java type is : <font color=#0000ff>int</font> */
-		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
-		public var operate_time :  int;
 
 		/**
 		 * @param result as <font color=#0000ff>int</font>
-		 * @param room as <font color=#0000ff>com.fc.lami.Messages.RoomData</font>
-		 * @param desk_id as <font color=#0000ff>int</font>
-		 * @param seat as <font color=#0000ff>int</font>
-		 * @param turn_interval as <font color=#0000ff>int</font>
-		 * @param operate_time as <font color=#0000ff>int</font>		 */
+		 * @param room as <font color=#0000ff>com.fc.lami.Messages.RoomData</font>		 */
 		public function AutoEnterResponse(
 			result :  int = 0,
-			room :  com.fc.lami.Messages.RoomData = null,
-			desk_id :  int = 0,
-			seat :  int = 0,
-			turn_interval :  int = 0,
-			operate_time :  int = 0) 
+			room :  com.fc.lami.Messages.RoomData = null) 
 		{
 			this.result = result;
 			this.room = room;
-			this.desk_id = desk_id;
-			this.seat = seat;
-			this.turn_interval = turn_interval;
-			this.operate_time = operate_time;
 		}
 	}
 }
