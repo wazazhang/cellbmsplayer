@@ -23,6 +23,9 @@ package com.fc.lami.Messages
 		static public const LOGIN_RESULT_FAIL_ALREADY_LOGIN :  int = -2;
 		/** Java type is : <font color=#0000ff>short</font> */
 		[JavaType(name="short", leaf_type=NetDataTypes.TYPE_SHORT)]
+		static public const LOGIN_RESULT_FAIL_BAD_VERSION :  int = -3;
+		/** Java type is : <font color=#0000ff>short</font> */
+		[JavaType(name="short", leaf_type=NetDataTypes.TYPE_SHORT)]
 		public var result :  int;
 		/** Java type is : <font color=#0000ff>com.fc.lami.Messages.PlayerData</font> */
 		[JavaType(name="com.fc.lami.Messages.PlayerData", leaf_type=NetDataTypes.TYPE_EXTERNALIZABLE)]
@@ -30,25 +33,19 @@ package com.fc.lami.Messages
 		/** Java type is : <font color=#0000ff>com.fc.lami.Messages.RoomSnapShot[]</font> */
 		[JavaType(name="com.fc.lami.Messages.RoomSnapShot[]", leaf_type=NetDataTypes.TYPE_EXTERNALIZABLE)]
 		public var rooms :  Array;
-		/** Java type is : <font color=#0000ff>java.lang.String</font> */
-		[JavaType(name="java.lang.String", leaf_type=NetDataTypes.TYPE_STRING)]
-		public var version :  String;
 
 		/**
 		 * @param result as <font color=#0000ff>short</font>
 		 * @param player as <font color=#0000ff>com.fc.lami.Messages.PlayerData</font>
-		 * @param rooms as <font color=#0000ff>com.fc.lami.Messages.RoomSnapShot[]</font>
-		 * @param version as <font color=#0000ff>java.lang.String</font>		 */
+		 * @param rooms as <font color=#0000ff>com.fc.lami.Messages.RoomSnapShot[]</font>		 */
 		public function LoginResponse(
 			result :  int = 0,
 			player :  com.fc.lami.Messages.PlayerData = null,
-			rooms :  Array = null,
-			version :  String = null) 
+			rooms :  Array = null) 
 		{
 			this.result = result;
 			this.player = player;
 			this.rooms = rooms;
-			this.version = version;
 		}
 	}
 }

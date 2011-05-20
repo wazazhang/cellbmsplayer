@@ -126,8 +126,9 @@ package Class
 		protected static function client_connected(event:ClientEvent):void
 		{
 			//Alert.show("连接成功!");
-
-			client.sendRequest(new LoginRequest(player.name),client_response)
+			var version : String = client.getSession().getMessageFactory().getVersion();
+			trace("client version is : " + version);
+			client.sendRequest(new LoginRequest(player.name, "", version),client_response)
 		}
 		
 		protected static function client_disconnected(event:ClientEvent):void 
@@ -310,8 +311,6 @@ package Class
 			//响应登陆成功
 			if (res is LoginResponse) {
 				var login : LoginResponse = res as LoginResponse;
-				trace("server version is : " + login.version);
-				trace("client version is : " + client.getSession().getMessageFactory().getVersion());
 				if(login.result == LoginResponse.LOGIN_RESULT_SUCCESS) 
 				// TODO
 				// 不要直接用数字，用常量
