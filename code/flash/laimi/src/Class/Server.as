@@ -310,7 +310,8 @@ package Class
 			//响应登陆成功
 			if (res is LoginResponse) {
 				var login : LoginResponse = res as LoginResponse;
-				
+				trace("server version is : " + login.version);
+				trace("client version is : " + client.getSession().getMessageFactory().getVersion());
 				if(login.result == LoginResponse.LOGIN_RESULT_SUCCESS) 
 				// TODO
 				// 不要直接用数字，用常量
