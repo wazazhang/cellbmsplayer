@@ -13,48 +13,6 @@ import com.net.mutual.MutualMessageCodeGeneratorJava;
 
 public class Messages {
 
-	public static class EchoRequest extends FlashMessage
-	{
-		public String message;
-		
-		public EchoRequest(String message) {
-			this.message = message;
-		}
-		public EchoRequest() {}
-		@Override
-		public String toString() {
-			return message+"";
-		}
-	}
-	
-	public static class EchoResponse extends FlashMessage
-	{
-		public String message;
-
-		public EchoResponse(String message) {
-			this.message = message;
-		}
-		public EchoResponse() {}
-		@Override
-		public String toString() {
-			return message+"";
-		}
-	}
-	
-	public static class EchoNotify extends FlashMessage
-	{
-		public String message;
-
-		public EchoNotify(String message) {
-			this.message = message;
-		}
-		public EchoNotify() {}
-		@Override
-		public String toString() {
-			return message+"";
-		}
-	}
-
 	public static class GetTimeRequest extends FlashMessage
 	{
 		public String message;
@@ -714,10 +672,12 @@ public class Messages {
 		public PlayerData player;
 		public RoomSnapShot rooms[];
 //		public long server_time;
+		public String version;
 		
-		public LoginResponse(short result, PlayerData player){
+		public LoginResponse(short result, PlayerData player, String version){
 			this.result = result;
 			this.player = player;
+			this.version = version;
 		}
 		
 		public LoginResponse(){}
