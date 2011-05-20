@@ -18,16 +18,22 @@ package com.fc.lami.Messages
 		/** Java type is : <font color=#0000ff>java.lang.String</font> */
 		[JavaType(name="java.lang.String", leaf_type=NetDataTypes.TYPE_STRING)]
 		public var validate :  String;
+		/** Java type is : <font color=#0000ff>java.lang.String</font> */
+		[JavaType(name="java.lang.String", leaf_type=NetDataTypes.TYPE_STRING)]
+		public var version :  String;
 
 		/**
 		 * @param name as <font color=#0000ff>java.lang.String</font>
-		 * @param validate as <font color=#0000ff>java.lang.String</font>		 */
+		 * @param validate as <font color=#0000ff>java.lang.String</font>
+		 * @param version as <font color=#0000ff>java.lang.String</font>		 */
 		public function LoginRequest(
 			name :  String = null,
-			validate :  String = null) 
+			validate :  String = null,
+			version :  String = null) 
 		{
 			this.name = name;
 			this.validate = validate;
+			this.version = version;
 		}
 	}
 }
