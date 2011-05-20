@@ -14,7 +14,7 @@ import com.net.NetDataTypes;
 public class MessageCodecJava implements MutualMessageCodec
 {
 	public String getVersion() {
-		return "Wed May 18 09:46:44 GMT 2011";
+		return "Fri May 20 01:11:19 GMT 2011";
 	}
 
 	public void readExternal(MutualMessage msg, NetDataInput in) throws IOException 
@@ -99,6 +99,12 @@ public class MessageCodecJava implements MutualMessageCodec
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.GetCardResponse.class)) {
 			_r((com.fc.lami.Messages.GetCardResponse)msg, in); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.GetPlayerDataRequest.class)) {
+			_r((com.fc.lami.Messages.GetPlayerDataRequest)msg, in); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.GetPlayerDataResponse.class)) {
+			_r((com.fc.lami.Messages.GetPlayerDataResponse)msg, in); return;
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.GetTimeRequest.class)) {
 			_r((com.fc.lami.Messages.GetTimeRequest)msg, in); return;
@@ -326,6 +332,12 @@ public class MessageCodecJava implements MutualMessageCodec
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.GetCardResponse.class)) {
 			_w((com.fc.lami.Messages.GetCardResponse)msg, out); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.GetPlayerDataRequest.class)) {
+			_w((com.fc.lami.Messages.GetPlayerDataRequest)msg, out); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.GetPlayerDataResponse.class)) {
+			_w((com.fc.lami.Messages.GetPlayerDataResponse)msg, out); return;
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.GetTimeRequest.class)) {
 			_w((com.fc.lami.Messages.GetTimeRequest)msg, out); return;
@@ -804,6 +816,28 @@ public class MessageCodecJava implements MutualMessageCodec
 	}
 	private void _w(com.fc.lami.Messages.GetCardResponse msg, NetDataOutput out) throws IOException {
 		out.writeInt(msg.result);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.GetPlayerDataRequest
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.GetPlayerDataRequest new_com_fc_lami_Messages_GetPlayerDataRequest(){return new com.fc.lami.Messages.GetPlayerDataRequest();}
+	private void _r(com.fc.lami.Messages.GetPlayerDataRequest msg, NetDataInput in) throws IOException {
+		msg.player_id = in.readInt();
+	}
+	private void _w(com.fc.lami.Messages.GetPlayerDataRequest msg, NetDataOutput out) throws IOException {
+		out.writeInt(msg.player_id);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.GetPlayerDataResponse
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.GetPlayerDataResponse new_com_fc_lami_Messages_GetPlayerDataResponse(){return new com.fc.lami.Messages.GetPlayerDataResponse();}
+	private void _r(com.fc.lami.Messages.GetPlayerDataResponse msg, NetDataInput in) throws IOException {
+		msg.player = in.readExternal(com.fc.lami.Messages.PlayerData.class);
+	}
+	private void _w(com.fc.lami.Messages.GetPlayerDataResponse msg, NetDataOutput out) throws IOException {
+		out.writeExternal(msg.player);
 	}
 
 //	----------------------------------------------------------------------------------------------------

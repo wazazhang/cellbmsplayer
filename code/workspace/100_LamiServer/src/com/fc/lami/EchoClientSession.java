@@ -13,6 +13,8 @@ import com.fc.lami.Messages.GameResetRequest;
 import com.fc.lami.Messages.GameResetResponse;
 import com.fc.lami.Messages.GetCardRequest;
 import com.fc.lami.Messages.GetCardResponse;
+import com.fc.lami.Messages.GetPlayerDataRequest;
+import com.fc.lami.Messages.GetPlayerDataResponse;
 import com.fc.lami.Messages.LeaveDeskRequest;
 import com.fc.lami.Messages.LeaveDeskResponse;
 import com.fc.lami.Messages.LogoutRequest;
@@ -20,6 +22,7 @@ import com.fc.lami.Messages.MainMatrixChangeRequest;
 import com.fc.lami.Messages.MainMatrixChangeResponse;
 import com.fc.lami.Messages.MoveCardRequest;
 import com.fc.lami.Messages.MoveCardResponse;
+import com.fc.lami.Messages.PlayerData;
 import com.fc.lami.Messages.ReadyRequest;
 import com.fc.lami.Messages.ReadyResponse;
 import com.fc.lami.Messages.RepealSendCardRequest;
@@ -153,6 +156,10 @@ public class EchoClientSession implements ClientSessionListener
 		else if (message instanceof GameResetRequest){
 			GameResetRequest request = (GameResetRequest)message;
 			processGameResetRequest(session, protocol, request);
+		}
+		else if (message instanceof GetPlayerDataRequest){
+			GetPlayerDataRequest request = (GetPlayerDataRequest)message;
+			processGetPlayerDataRequest(session, protocol, request);
 		}
 		else if (message instanceof SpeakToPublicRequest){
 			SpeakToPublicRequest request = (SpeakToPublicRequest)message;
@@ -407,5 +414,10 @@ public class EchoClientSession implements ClientSessionListener
 			res.result = AutoEnterResponse.AUTO_ENTER_RESULT_FAIL_NO_IDLE_SEAT;
 			session.sendResponse(protocol, res);
 		}
+	}
+	
+	private void processGetPlayerDataRequest(ClientSession session, Protocol protocol, GetPlayerDataRequest request){
+		PlayerData p = server.getPlayerByID(request.player_id);
+		session.sendResponse(protocol, new GetPlayerDataResponse(p));
 	}
 }

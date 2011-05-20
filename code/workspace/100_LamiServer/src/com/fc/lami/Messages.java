@@ -1116,6 +1116,28 @@ public class Messages {
 		}
 	}
 	
+	public static class GetPlayerDataRequest extends FlashMessage
+	{
+		public int player_id;
+		
+		public GetPlayerDataRequest(int pid){
+			this.player_id = pid;
+		}
+		
+		public GetPlayerDataRequest(){}
+	}
+	
+	public static class GetPlayerDataResponse extends FlashMessage
+	{
+		public PlayerData player;
+		
+		public GetPlayerDataResponse(PlayerData p){
+			this.player = p;
+		}
+		
+		public GetPlayerDataResponse(){}
+	}
+	
 	// 玩家在当前频道发言
 	public static class SpeakToPublicRequest extends FlashMessage
 	{
