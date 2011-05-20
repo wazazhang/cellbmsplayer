@@ -648,11 +648,7 @@ public class Messages {
 	{
 		public String name;
 		public String validate;
-		
-		public LoginRequest(String name, String validate){
-			this.name = name;
-			this.validate = validate;
-		}
+		public String version;
 		
 		public LoginRequest(){}
 		
@@ -667,17 +663,16 @@ public class Messages {
 		final static public short LOGIN_RESULT_SUCCESS 				= 1;
 		final static public short LOGIN_RESULT_FAIL					= -1;
 		final static public short LOGIN_RESULT_FAIL_ALREADY_LOGIN 	= -2;
+		final static public short LOGIN_RESULT_FAIL_BAD_VERSION 	= -3;
 		
 		public short result;
 		public PlayerData player;
 		public RoomSnapShot rooms[];
 //		public long server_time;
-		public String version;
 		
-		public LoginResponse(short result, PlayerData player, String version){
+		public LoginResponse(short result, PlayerData player){
 			this.result = result;
 			this.player = player;
-			this.version = version;
 		}
 		
 		public LoginResponse(){}
