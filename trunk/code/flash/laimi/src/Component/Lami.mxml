@@ -329,6 +329,9 @@
 			
 			public function pubTalk():void
 			{
+				if(titalk.text=="")
+					return;
+					
 				Server.sendTalkMessage(titalk.text);
 				titalk.text='';
 			}
