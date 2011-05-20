@@ -8,6 +8,7 @@ import com.cell.CUtil;
 import com.cell.util.concurrent.ThreadPool;
 import com.fc.lami.Messages.LoginRequest;
 import com.fc.lami.Messages.LoginResponse;
+import com.fc.lami.Messages.PlayerData;
 import com.fc.lami.Messages.RoomSnapShot;
 import com.fc.lami.login.Login;
 import com.fc.lami.login.User;
@@ -182,4 +183,12 @@ public class Server implements ServerListener
 		return null;
 	}
 	
+	public PlayerData getPlayerByID(int pid){
+		for (EchoClientSession cs:client_list.values()){
+			if (cs.player.player_id == pid){
+				return cs.player.getPlayerData();
+			}
+		}
+		return null;
+	}
 }
