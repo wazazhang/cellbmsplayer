@@ -277,9 +277,8 @@ public class Player
 		this.is_ready = false;
 		this.isOpenIce = false;
 		this.card_list.clear();
-//		this.score += 10;
-//		this.win+=1;
-		this.user.addPoint(p);
+
+		this.user.addScore(p);
 		this.user.addWin(1);
 		
 		ResultPak pak = new ResultPak();
@@ -293,10 +292,8 @@ public class Player
 		this.is_ready = false;
 		this.isOpenIce = false;
 		this.card_list.clear();
-//		this.score -= 5;
-//		this.lose += 1;
-//		this.user.addScore(value); // 输了不该扣分吧
-		this.user.addPoint(-p);
+		
+		this.user.addScore(-p);
 		this.user.addLose(1);
 		
 		ResultPak pak = new ResultPak();
@@ -311,9 +308,8 @@ public class Player
 		this.isOpenIce = false;
 		int point = getHandCardPonit();
 		this.card_list.clear();
-		this.user.addPoint(-point);
-//		this.score -= 5;
-//		this.lose += 1;
+		this.user.addScore(-point);
+
 		this.user.addLose(1);
 		return point;
 	}

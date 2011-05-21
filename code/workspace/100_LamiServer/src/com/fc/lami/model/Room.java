@@ -83,6 +83,10 @@ public class Room implements ChannelListener, Runnable
 		return null; //没找到合适桌子
 	}
 	
+	public PlayerData getPlayer(int pid){
+		return player_list.get(pid).getPlayerData();
+	}
+	
 	@Override
 	public void receivedMessage(Channel channel, ClientSession sender, MessageHeader message) {
 	}

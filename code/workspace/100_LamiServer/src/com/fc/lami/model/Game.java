@@ -33,7 +33,7 @@ public class Game implements Runnable
 	final static public int startCard = 14;
 	ArrayList<CardData> left_cards = new ArrayList<CardData>();
 	public boolean is_start_time = false; //发牌时间
-	boolean is_fast_game = false;
+	boolean is_fast_game = true;
 	
 	/** 桌面牌矩阵 */
 	public CardData matrix[][];
