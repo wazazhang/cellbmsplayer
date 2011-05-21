@@ -34,7 +34,15 @@ package Class.Model
 
 		public function updateToPlayerList(player:PlayerData):void
 		{
-			player_list[player.player_id] = player;
+			if (player_list[player.player_id] !=null){
+				var op : PlayerData = player_list[player.player_id] as PlayerData;
+				op.level = player.level;
+				op.lose = player.lose;
+				op.score = player.score;
+				op.win = player.win;
+			}else{
+				player_list[player.player_id] = player;
+			}
 		}
 		
 		public function getPlayerFromPlayerList(id:int):PlayerData

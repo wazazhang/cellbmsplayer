@@ -487,7 +487,7 @@ package Class
 		
 		public static function getPlayerFromServer(pid:int):void
 		{
-			client.sendRequest(new GetPlayerDataRequest(), client_response);
+			client.sendRequest(new GetPlayerDataRequest(pid), client_response);
 		}
 		
 		//发送公共主牌区
