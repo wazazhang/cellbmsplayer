@@ -417,7 +417,7 @@ public class EchoClientSession implements ClientSessionListener
 	}
 	
 	private void processGetPlayerDataRequest(ClientSession session, Protocol protocol, GetPlayerDataRequest request){
-		PlayerData p = server.getPlayerByID(request.player_id);
+		PlayerData p = player.cur_room.getPlayer(request.player_id);
 		session.sendResponse(protocol, new GetPlayerDataResponse(p));
 	}
 }
