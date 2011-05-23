@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<XingCloud>
+<Redmine>
+	<Credential>
+		<Username>Honey</Username>
+		<Password>59:-85:-52:70:-43:125:-94:19:-115:-99:-52:88:-27:-99:-29:-83:-114:91:117:-40:70:-95:52:88:-65:82:124:12:-40:-111:-38:83:-82:118:-21:9:33:123:-100:-89:72:101:7:-7:-3:-13:-113:37:-76:27:93:85:-27:-101:-124:34:-81:54:-113:82:37:-84:110:106:</Password>
+	</Credential>
+	<GameList>
+		<Game>
+			<GameName>Rummikub</GameName>
+			<GameIdentifier>rummikub</GameIdentifier>
+			<GameVersion>1.0</GameVersion>
+			<VersionID>657</VersionID>
+			<CodeSVNAddress>http://appsvn.xingcloud.com/rummikub/1.0/trunk</CodeSVNAddress>
+			<DeploySVNAddress>http://appsvn.xingcloud.com/rummikub/1.0/.deploy</DeploySVNAddress>
+			<Authority>w</Authority>
+			<CreateTime>2011-04-16 14:13:47</CreateTime>
+		</Game>
+	</GameList>
+</Redmine>
+</XingCloud>
