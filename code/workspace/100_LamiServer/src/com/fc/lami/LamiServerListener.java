@@ -22,7 +22,7 @@ import com.net.server.ClientSession;
 import com.net.server.ClientSessionListener;
 import com.net.server.ServerListener;
 
-public class Server implements ServerListener
+public class LamiServerListener implements ServerListener
 {
 	final private com.net.server.Server server_instance;
 	
@@ -38,7 +38,7 @@ public class Server implements ServerListener
 
 	final private Room		rooms[];
 	
-	public Server(com.net.server.Server server_instance) throws Exception
+	public LamiServerListener(com.net.server.Server server_instance) throws Exception
 	{
 		this.server_instance = server_instance;
 		
@@ -134,7 +134,7 @@ public class Server implements ServerListener
 				if (user == null) {
 					return new LoginResponse(LoginResponse.LOGIN_RESULT_FAIL, null);
 				} else {
-					logined_session = new EchoClientSession(session, Server.this, user);
+					logined_session = new EchoClientSession(session, LamiServerListener.this, user);
 					client_list.put(user.getName(), logined_session);
 				}
 			}

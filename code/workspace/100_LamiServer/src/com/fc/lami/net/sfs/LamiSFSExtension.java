@@ -3,7 +3,7 @@ package com.fc.lami.net.sfs;
 import com.cell.j2se.CAppBridge;
 import com.fc.lami.LamiConfig;
 import com.fc.lami.MessageFactory;
-import com.fc.lami.Server;
+import com.fc.lami.LamiServerListener;
 import com.net.ExternalizableFactory;
 import com.net.server.ServerListener;
 import com.net.sfsimpl.server.ServerExtenstion;
@@ -31,7 +31,7 @@ public class LamiSFSExtension extends ServerExtenstion
 
 	@Override
 	protected ServerListener createListener() throws Exception {
-		return new Server(this);
+		return new LamiServerListener(this);
 	}
 	
 	@Override

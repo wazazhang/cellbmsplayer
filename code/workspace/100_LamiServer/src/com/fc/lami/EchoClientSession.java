@@ -57,10 +57,10 @@ import com.net.server.ClientSessionListener;
 public class EchoClientSession implements ClientSessionListener
 {
 	final public ClientSession 	session;
-	final public Server 		server;
+	final public LamiServerListener 		server;
 	final public Player 		player;
 	
-	public EchoClientSession(ClientSession session, Server server, User user) {
+	public EchoClientSession(ClientSession session, LamiServerListener server, User user) {
 		this.session = session;
 		this.server = server;
 		this.player = new Player(session, user);

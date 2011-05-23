@@ -14,7 +14,7 @@ import com.fc.lami.Messages.GameOverToRoomNotify;
 import com.fc.lami.Messages.GameStartToRoomNotify;
 import com.fc.lami.Messages.LeaveDeskNotify;
 import com.fc.lami.Messages.ReadyNotify;
-import com.fc.lami.Server;
+import com.fc.lami.LamiServerListener;
 import com.net.MessageHeader;
 import com.net.flash.message.FlashMessage;
 import com.net.server.Channel;
@@ -56,7 +56,7 @@ public class Desk implements ChannelListener
 	private ScheduledFuture<?>	future;
 	private boolean				initing = false;
 	
-	public Desk(Server server, int id, Room room, ThreadPool tp, int interval){
+	public Desk(LamiServerListener server, int id, Room room, ThreadPool tp, int interval){
 		this.room = room;
 		this.desk_id = id;
 		this.thread_pool = tp;

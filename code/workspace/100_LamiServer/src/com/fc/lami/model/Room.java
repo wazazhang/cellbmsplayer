@@ -13,7 +13,7 @@ import com.fc.lami.Messages.ExitRoomNotify;
 import com.fc.lami.Messages.PlayerData;
 import com.fc.lami.Messages.RoomData;
 import com.fc.lami.Messages.RoomSnapShot;
-import com.fc.lami.Server;
+import com.fc.lami.LamiServerListener;
 import com.net.MessageHeader;
 import com.net.flash.message.FlashMessage;
 import com.net.server.Channel;
@@ -36,7 +36,7 @@ public class Room implements ChannelListener, Runnable
 	final private ConcurrentHashMap<Integer, Player> player_list;
 	
 	
-	public Room(Server server, int room_id, ThreadPool tp, int interval)
+	public Room(LamiServerListener server, int room_id, ThreadPool tp, int interval)
 	{
 		this.room_id 		= room_id;
 		this.channel 		= server.createChannel(this);
