@@ -6,7 +6,7 @@ import com.cell.CIO;
 import com.cell.j2se.CAppBridge;
 import com.fc.lami.LamiConfig;
 import com.fc.lami.MessageFactory;
-import com.fc.lami.Server;
+import com.fc.lami.LamiServerListener;
 import com.net.flash.FlashCrossdomainService;
 import com.net.minaimpl.server.ServerImpl;
 
@@ -29,7 +29,7 @@ public class LamiServer extends ServerImpl {
 				port = LamiConfig.SERVER_PORT;
 			}
 			LamiServer server = new LamiServer(factory);
-			server.open(port, new Server(server));
+			server.open(port, new LamiServerListener(server));
 		} catch (Exception err) {
 			err.printStackTrace();
 			System.exit(1);
