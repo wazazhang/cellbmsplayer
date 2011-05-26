@@ -988,10 +988,14 @@ public class Messages {
 		//主信息框变化广播
 	public static class MainMatrixChangeNotify extends FlashMessage
 	{
-		public boolean is_hardhanded;
+		public boolean is_hardhanded; //是否强制
 		public CardData[] cards;
-		public MainMatrixChangeNotify(boolean is_hardhanded, CardData[] cards){
+		
+		public int player_id;
+		
+		public MainMatrixChangeNotify(boolean is_hardhanded, int pid, CardData[] cards){
 			this.is_hardhanded = is_hardhanded;
+			this.player_id = pid;
 			this.cards = cards;
 		}
 		public MainMatrixChangeNotify()
