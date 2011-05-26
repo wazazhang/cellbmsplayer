@@ -14,7 +14,7 @@ package com.fc.lami
 	{
 	
 		public function getVersion() : String{
-			return "Fri May 20 14:26:51 CST 2011";
+			return "Thu May 26 03:05:15 GMT 2011";
 		}
 	
 		public function	getType(msg : Message) : int 
@@ -1055,10 +1055,12 @@ package com.fc.lami
 	private function r_MainMatrixChangeNotify_35(msg : com.fc.lami.Messages.MainMatrixChangeNotify, input : NetDataInput) : void {
 		msg.is_hardhanded = input.readBoolean();
 		msg.cards = input.readExternalArray();
+		msg.player_id = input.readInt();
 	}
 	private function w_MainMatrixChangeNotify_35(msg : com.fc.lami.Messages.MainMatrixChangeNotify, output : NetDataOutput) : void {
 		output.writeBoolean(msg.is_hardhanded);
 		output.writeExternalArray(msg.cards);
+		output.writeInt(msg.player_id);
 	}
 
 //	----------------------------------------------------------------------------------------------------

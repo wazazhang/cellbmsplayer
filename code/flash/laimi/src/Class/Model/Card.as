@@ -75,5 +75,22 @@ package Class.Model
 			card.isSended = carddata.isSended;	
 			return card;
 		}
+		
+		public static function cardToString(card:CardData):String
+		{
+			switch (card.type){
+				case 0:
+					return "鬼牌";
+				case 1:
+					return "红色"+card.point;
+				case 2:
+					return "黄色"+card.point;
+				case 3:
+					return "绿色"+card.point;
+				case 4:
+					return "蓝色"+card.point;
+			}
+			return "";
+		}
 	}
 }

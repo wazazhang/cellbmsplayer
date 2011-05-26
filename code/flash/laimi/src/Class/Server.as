@@ -65,6 +65,8 @@ package Class
 	import com.net.client.ServerSession;
 	import com.smartfoxserver.v2.requests.SpectatorToPlayerRequest;
 	
+	import flash.utils.Dictionary;
+	
 	import mx.collections.ArrayCollection;
 	import mx.controls.Alert;
 	import mx.core.Application;
@@ -214,6 +216,37 @@ package Class
 			
 			else if (ntf is MainMatrixChangeNotify ){
 				var mmcn : MainMatrixChangeNotify = ntf as MainMatrixChangeNotify;
+				
+				{
+					var cards_old:Array = game.getPublicCards;
+					var comap : Dictionary = new Dictionary();
+					var cnmap : Dictionary = new Dictionary();
+					for each(var cn : CardData in mmcn.cards){
+						cnmap[cn.id] = cn;
+					}
+					
+					for each(var co: CardData in cards_old){
+						comap[co.id] = co;
+					}
+				
+					for each(var cn : CardData in mmcn.cards){
+						var co : CardData = comap[cn.id] as CardData;
+						if (co==null){
+							// 玩家打出牌
+							game.lami.addInfo(Server.getPlayer(mmcn.player_id).name+"打出了"+Card.cardToString(cn));
+						}else if(cn.x!=co.x || cn.y!=co.y){
+							// 玩家移动了牌
+							game.lami.addInfo(Server.getPlayer(mmcn.player_id).name+"移动了"+Card.cardToString(cn));
+						}
+					}
+					
+					for each(var co:CardData in cards_old){
+						if (cnmap[co.id]==null){
+							//玩家取回了牌
+							game.lami.addInfo(Server.getPlayer(mmcn.player_id).name+"取回了"+Card.cardToString(co));
+						}
+					}
+				}
 				game.publicCardChange(mmcn.is_hardhanded, mmcn.cards);
 				//game_cpt.leavePlayer(ldn);
 			}
@@ -251,7 +284,9 @@ package Class
 				game.lami.onGameOver(gon);
 				
 				for each(var rp:ResultPak in gon.result_pak){
-					getPlayerFromServer(rp.player_id);
+					if (rp!=null){
+						getPlayerFromServer(rp.player_id);
+					}
 				}
 				// TODO 重置各个玩家的准备按钮
 			
@@ -411,7 +446,7 @@ package Class
 				}
 				else
 				{
-					sendPublicMatrix();
+//					sendPublicMatrix();
 				}
 			}
 			

@@ -219,6 +219,7 @@ package Class
 			if(!is_hardhanded && gamer.isMyturn)
 				return;
 			
+		
 			for each(var line:Line in lineArray)
 			{
 				var cardcpt:Card_Cpt = line.firstCard;
