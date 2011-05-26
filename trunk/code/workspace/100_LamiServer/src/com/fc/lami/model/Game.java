@@ -655,7 +655,7 @@ public class Game implements Runnable
 		}
 		CardData[] m = new CardData[ml.size()];
 		ml.toArray(m);
-		desk.broadcast(new MainMatrixChangeNotify(true, m));
+		desk.broadcast(new MainMatrixChangeNotify(true, getCurPlayer().player_id, m));
 		player_put.clear();
 	}
 	
@@ -779,7 +779,7 @@ public class Game implements Runnable
 			getCurPlayer().addCard(cd);
 			player_put.remove(cd.id);
 		}
-		desk.broadcast(new MainMatrixChangeNotify(false, notify_cds));
+		desk.broadcast(new MainMatrixChangeNotify(false, getCurPlayer().player_id, notify_cds));
 		int cur_complete_card_count = getCompleteCardCount();
 		if (cur_complete_card_count>complete_card_count){
 			operate_start_time = System.currentTimeMillis();
