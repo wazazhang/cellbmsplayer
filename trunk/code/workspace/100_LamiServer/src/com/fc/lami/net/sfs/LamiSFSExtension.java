@@ -26,7 +26,6 @@ public class LamiSFSExtension extends ServerExtenstion
 //			e.printStackTrace();
 //		}
 		
-		
 	}
 
 	@Override
