@@ -18,16 +18,22 @@ package com.fc.lami.Messages
 		/** Java type is : <font color=#0000ff>com.fc.lami.Messages.CardData[]</font> */
 		[JavaType(name="com.fc.lami.Messages.CardData[]", leaf_type=NetDataTypes.TYPE_EXTERNALIZABLE)]
 		public var cards :  Array;
+		/** Java type is : <font color=#0000ff>int</font> */
+		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
+		public var player_id :  int;
 
 		/**
 		 * @param is_hardhanded as <font color=#0000ff>boolean</font>
-		 * @param cards as <font color=#0000ff>com.fc.lami.Messages.CardData[]</font>		 */
+		 * @param cards as <font color=#0000ff>com.fc.lami.Messages.CardData[]</font>
+		 * @param player_id as <font color=#0000ff>int</font>		 */
 		public function MainMatrixChangeNotify(
 			is_hardhanded :  Boolean = false,
-			cards :  Array = null) 
+			cards :  Array = null,
+			player_id :  int = 0) 
 		{
 			this.is_hardhanded = is_hardhanded;
 			this.cards = cards;
+			this.player_id = player_id;
 		}
 	}
 }
