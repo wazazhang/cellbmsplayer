@@ -49,7 +49,8 @@
 				
 				if(!game.haveSendCard)
 				{
-					Alert.show("没有牌打出")
+					//Alert.show("没有牌打出")
+					game.gamer.getOneCardFromCardpile();
 					return;
 				}
 					
