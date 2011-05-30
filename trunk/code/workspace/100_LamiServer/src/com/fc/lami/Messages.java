@@ -668,13 +668,15 @@ public class Messages {
 		public short result;
 		public PlayerData player;
 		public RoomSnapShot rooms[];
+		public String version;
 //		public long server_time;
 		
-		public LoginResponse(short result, PlayerData player){
+		public LoginResponse(short result, PlayerData player, String version){
 			this.result = result;
 			this.player = player;
+			this.version = version;
 		}
-		
+
 		public LoginResponse(){}
 		
 		@Override

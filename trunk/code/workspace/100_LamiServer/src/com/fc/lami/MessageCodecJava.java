@@ -14,7 +14,7 @@ import com.net.NetDataTypes;
 public class MessageCodecJava implements MutualMessageCodec
 {
 	public String getVersion() {
-		return "Thu May 26 03:05:15 GMT 2011";
+		return "Mon May 30 15:20:06 CST 2011";
 	}
 
 	public void readExternal(MutualMessage msg, NetDataInput in) throws IOException 
@@ -871,11 +871,13 @@ public class MessageCodecJava implements MutualMessageCodec
 		msg.result = in.readShort();
 		msg.player = in.readExternal(com.fc.lami.Messages.PlayerData.class);
 		msg.rooms = (com.fc.lami.Messages.RoomSnapShot[])in.readExternalArray(com.fc.lami.Messages.RoomSnapShot.class);
+		msg.version = in.readUTF();
 	}
 	private void _w(com.fc.lami.Messages.LoginResponse msg, NetDataOutput out) throws IOException {
 		out.writeShort(msg.result);
 		out.writeExternal(msg.player);
 		out.writeExternalArray(msg.rooms);
+		out.writeUTF(msg.version);
 	}
 
 //	----------------------------------------------------------------------------------------------------
