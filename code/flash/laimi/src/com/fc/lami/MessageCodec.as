@@ -14,7 +14,7 @@ package com.fc.lami
 	{
 	
 		public function getVersion() : String{
-			return "Thu May 26 03:05:15 GMT 2011";
+			return "Mon May 30 15:20:06 CST 2011";
 		}
 	
 		public function	getType(msg : Message) : int 
@@ -1032,11 +1032,13 @@ package com.fc.lami
 		msg.result = input.readShort();
 		msg.player = input.readExternal() as com.fc.lami.Messages.PlayerData;
 		msg.rooms = input.readExternalArray();
+		msg.version = input.readJavaUTF();
 	}
 	private function w_LoginResponse_33(msg : com.fc.lami.Messages.LoginResponse, output : NetDataOutput) : void {
 		output.writeShort(msg.result);
 		output.writeExternal(msg.player);
 		output.writeExternalArray(msg.rooms);
+		output.writeJavaUTF(msg.version);
 	}
 
 //	----------------------------------------------------------------------------------------------------
