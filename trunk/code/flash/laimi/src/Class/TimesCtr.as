@@ -17,6 +17,9 @@ package Class
 		public  var optionTimeBar:ProgressBar;
 		public  var sumTimeBar:ProgressBar;
 		
+		private  var oprColor:Number =  0x0000ff;
+		private  var sumColor:Number =  0x0000ff;
+		
 		public function TimesCtr()
 		{
 			
@@ -35,16 +38,36 @@ package Class
 		
 		public  function oprTimerHandler(event:TimerEvent):void
 		{
-            optionTimeBar.setProgress(oprTimer.delay * oprTimer.currentCount, optionTime*1000*4/5); 
+            optionTimeBar.setProgress(optionTime*800 - oprTimer.delay * oprTimer.currentCount, optionTime*800); 
+			
+			var point:Number = (oprTimer.delay * oprTimer.currentCount / (optionTime*800))
+			
+			oprColor = 0xff0000 * point; 
+			
+			oprColor = oprColor - oprColor % 0x010000;
+			
+			oprColor = oprColor + 0xff * (1-point);
+			
+			optionTimeBar.setStyle("barColor",oprColor);
 		}
 		
 		public  function sumTimerHandler(event:TimerEvent):void
 		{
-            sumTimeBar.setProgress(sumTimer.delay * sumTimer.currentCount, sumTime*1000*4/5); 
+            sumTimeBar.setProgress(sumTime*800 - sumTimer.delay * sumTimer.currentCount, sumTime*800); 
+			
+			var point:Number = (sumTimer.delay * sumTimer.currentCount / (sumTime*800))
+			
+			sumColor = 0xff0000 * point; 
+			
+			sumColor = sumColor - sumColor % 0x010000;
+			
+			sumColor = sumColor + 0xff * (1-point);
+			
+			sumTimeBar.setStyle("barColor",sumColor);
+			
 			
 			var d:Date = new Date();
 			Server.timer = d.getSeconds();
-			
 			Server.timerStr = (sumTimer.delay * sumTimer.currentCount) + '/' + (sumTime*1000*4/5);
 		}	
 		
