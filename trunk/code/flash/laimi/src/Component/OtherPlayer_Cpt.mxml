@@ -82,8 +82,8 @@
 			
 			private function timerHandler(event:TimerEvent):void
 			{
-				pbtime.setProgress(timer.delay * timer.currentCount, Server.game.timeCtr.sumTime*1000*4/5); 
-				clock.text = parseInt( ((Server.game.timeCtr.sumTime*800 - timer.delay*timer.currentCount)/1000).toString()).toString() ;
+				pbtime.setProgress(Server.game.timeCtr.sumTime*800 - timer.delay*timer.currentCount, Server.game.timeCtr.sumTime*1000*4/5); 
+				clock.text = parseInt(((Server.game.timeCtr.sumTime*800 - timer.delay*timer.currentCount)/1000).toString()).toString() ;
 			}
 			
 			public  function init():void
@@ -94,7 +94,7 @@
 			
 		]]>
 	</mx:Script>
-	<mx:Label y="1" text="{player==null?'空闲':''+player.name}" color="#010101" horizontalCenter="0"/>
+	<mx:Label y="1" text="{player==null?'':''+player.name}" color="#010101" horizontalCenter="0"/>
 	
 	<!--
 	<mx:Label x="51" y="0" text="{seat}" color="#010101"/>
