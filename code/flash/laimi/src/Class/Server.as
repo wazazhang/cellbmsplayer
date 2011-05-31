@@ -356,9 +356,13 @@ package Class
 					login_cpt.rooms = login.rooms;
 					login_cpt.linkSunccess();
 				}
+				else if (login.result == LoginResponse.LOGIN_RESULT_FAIL_ALREADY_LOGIN)
+				{
+					Alert.show("已在游戏中");
+				}
 				else 
 				{
-					trace();
+					Alert.show("result : " + login.result);
 				}
 				return;
 			}
