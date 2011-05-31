@@ -1,0 +1,28 @@
+package com.slg.entity;
+
+import java.util.ArrayList;
+
+/**
+ * 玩家寨子
+ * @author yagami0079
+ *
+ */
+public class Village {
+	/**
+	 * 粮食
+	 */
+	public int food;
+	/**
+	 * 所属城市ID
+	 */
+	public int city_id;
+	/**
+	 * 建筑id列表
+	 */
+	public ArrayList<Integer> buildings;
+	/**
+	 * 武将id列表
+	 */
+	public ArrayList<Integer> heros;
+	
+}
