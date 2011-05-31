@@ -42,13 +42,8 @@ package Class
 			
 			var point:Number = (oprTimer.delay * oprTimer.currentCount / (optionTime*800))
 			
-			oprColor = 0xff0000 * point; 
 			
-			oprColor = oprColor - oprColor % 0x010000;
-			
-			oprColor = oprColor + 0xff * (1-point);
-			
-			optionTimeBar.setStyle("barColor",oprColor);
+			optionTimeBar.setStyle("barColor",getColorByPoint(point));
 		}
 		
 		public  function sumTimerHandler(event:TimerEvent):void
@@ -56,14 +51,7 @@ package Class
             sumTimeBar.setProgress(sumTime*800 - sumTimer.delay * sumTimer.currentCount, sumTime*800); 
 			
 			var point:Number = (sumTimer.delay * sumTimer.currentCount / (sumTime*800))
-			
-			sumColor = 0xff0000 * point; 
-			
-			sumColor = sumColor - sumColor % 0x010000;
-			
-			sumColor = sumColor + 0xff * (1-point);
-			
-			sumTimeBar.setStyle("barColor",sumColor);
+			sumTimeBar.setStyle("barColor",getColorByPoint(point));
 			
 			
 			var d:Date = new Date();
@@ -123,5 +111,34 @@ package Class
 			oprTimer.addEventListener(TimerEvent.TIMER, oprTimerHandler);
 			oprTimer.addEventListener(TimerEvent.TIMER_COMPLETE, completeHandler);   
 		}
+		
+		
+		public static function getColorByPoint(val:Number):Number
+		{
+			var color:Number
+			
+			if(val>0.5)	
+			{
+				color = 0xff0000;	
+			}
+			else
+			{
+				color = 0xff0000 * val * 2; 
+				color = color - color % 0x010000;
+			}	
+			
+			
+			if(val<0.5)
+			{
+				color = color + 0x00ff00;
+			}	
+			else
+			{
+				color = color + 0xff00 * (1-val)*2;
+				color = color - color % 0x000100;
+			}
+			return color
+		}
+		
 	}
 }
