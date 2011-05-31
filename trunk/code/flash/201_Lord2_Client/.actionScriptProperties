@@ -8,6 +8,7 @@
           <libraryPathEntry kind="3" linkType="1" path="${PROJECT_FRAMEWORKS}/libs/flex.swc" useDefaultLinkType="false"/>
         </excludedEntries>
       </libraryPathEntry>
+      <libraryPathEntry kind="3" linkType="1" path="/EngineNet/bin/EngineNet.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="3" linkType="1" path="/200_SLG_Client_Core/bin/200_SLG_Client_Core.swc" useDefaultLinkType="false"/>
       <libraryPathEntry kind="1" linkType="1" path="libs"/>
     </libraryPath>
