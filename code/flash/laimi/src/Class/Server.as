@@ -346,6 +346,7 @@ package Class
 			//响应登陆成功
 			if (res is LoginResponse) {
 				var login : LoginResponse = res as LoginResponse;
+				trace("server version is : " + login.version);
 				if(login.result == LoginResponse.LOGIN_RESULT_SUCCESS) 
 				// TODO
 				// 不要直接用数字，用常量
@@ -354,6 +355,10 @@ package Class
 					player = login.player;
 					login_cpt.rooms = login.rooms;
 					login_cpt.linkSunccess();
+				}
+				else 
+				{
+					trace();
 				}
 				return;
 			}
