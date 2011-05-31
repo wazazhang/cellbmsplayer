@@ -3,7 +3,9 @@ package Class
 	import flash.events.TimerEvent;
 	import flash.utils.Timer;
 	
+	import mx.controls.Alert;
 	import mx.controls.ProgressBar;
+
 	public class TimesCtr
 	{
 		
@@ -117,26 +119,40 @@ package Class
 		{
 			var color:Number
 			
-			if(val>0.5)	
+			if(val>0.375)
 			{
 				color = 0xff0000;	
 			}
 			else
 			{
-				color = 0xff0000 * val * 2; 
-				color = color - color % 0x010000;
-			}	
+				color = 0xff0000 * val / 0.375; 
+				color = color - color  % 0x010000;
+			}
 			
 			
-			if(val<0.5)
+			if(val <= 0.375)
 			{
 				color = color + 0x00ff00;
 			}	
 			else
 			{
-				color = color + 0xff00 * (1-val)*2;
+				color = color + 0xff00 * (0.75 - val) / 0.375;
 				color = color - color % 0x000100;
 			}
+			
+			if(val>=0.75)
+			{
+				if((val*100 - (val*100)%1)%2==1)
+				{
+					color = 0xff0000
+				}
+				else
+				{
+					color = 0xffff00;
+				}
+			}
+				
+			
 			return color
 		}
 		
