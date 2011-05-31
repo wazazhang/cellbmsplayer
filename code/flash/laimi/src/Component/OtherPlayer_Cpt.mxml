@@ -84,6 +84,8 @@
 			{
 				pbtime.setProgress(Server.game.timeCtr.sumTime*800 - timer.delay*timer.currentCount, Server.game.timeCtr.sumTime*1000*4/5); 
 				clock.text = parseInt(((Server.game.timeCtr.sumTime*800 - timer.delay*timer.currentCount)/1000).toString()).toString() ;
+				var point:Number = timer.delay * timer.currentCount / (Server.game.timeCtr.sumTime*800)	
+				pbtime.setStyle("barColor",TimesCtr.getColorByPoint(point));
 			}
 			
 			public  function init():void
