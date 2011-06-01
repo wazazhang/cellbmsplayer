@@ -14,7 +14,7 @@ package com.fc.lami.Messages
 	{
 		/** Java type is : <font color=#0000ff>java.lang.String</font> */
 		[JavaType(name="java.lang.String", leaf_type=NetDataTypes.TYPE_STRING)]
-		public var name :  String;
+		public var uid :  String;
 		/** Java type is : <font color=#0000ff>java.lang.String</font> */
 		[JavaType(name="java.lang.String", leaf_type=NetDataTypes.TYPE_STRING)]
 		public var validate :  String;
@@ -23,15 +23,15 @@ package com.fc.lami.Messages
 		public var version :  String;
 
 		/**
-		 * @param name as <font color=#0000ff>java.lang.String</font>
+		 * @param uid as <font color=#0000ff>java.lang.String</font>
 		 * @param validate as <font color=#0000ff>java.lang.String</font>
 		 * @param version as <font color=#0000ff>java.lang.String</font>		 */
 		public function LoginRequest(
-			name :  String = null,
+			uid :  String = null,
 			validate :  String = null,
 			version :  String = null) 
 		{
-			this.name = name;
+			this.uid = uid;
 			this.validate = validate;
 			this.version = version;
 		}

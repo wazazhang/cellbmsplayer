@@ -14,7 +14,7 @@ package com.fc.lami
 	{
 	
 		public function getVersion() : String{
-			return "Mon May 30 15:20:06 CST 2011";
+			return "Wed Jun 01 20:05:47 CST 2011";
 		}
 	
 		public function	getType(msg : Message) : int 
@@ -1014,12 +1014,12 @@ package com.fc.lami
 //	----------------------------------------------------------------------------------------------------
 	function new_LoginRequest_32() : com.fc.lami.Messages.LoginRequest {return new com.fc.lami.Messages.LoginRequest();}
 	private function r_LoginRequest_32(msg : com.fc.lami.Messages.LoginRequest, input : NetDataInput) : void {
-		msg.name = input.readJavaUTF();
+		msg.uid = input.readJavaUTF();
 		msg.validate = input.readJavaUTF();
 		msg.version = input.readJavaUTF();
 	}
 	private function w_LoginRequest_32(msg : com.fc.lami.Messages.LoginRequest, output : NetDataOutput) : void {
-		output.writeJavaUTF(msg.name);
+		output.writeJavaUTF(msg.uid);
 		output.writeJavaUTF(msg.validate);
 		output.writeJavaUTF(msg.version);
 	}
@@ -1156,7 +1156,7 @@ package com.fc.lami
 	function new_PlayerData_43() : com.fc.lami.Messages.PlayerData {return new com.fc.lami.Messages.PlayerData();}
 	private function r_PlayerData_43(msg : com.fc.lami.Messages.PlayerData, input : NetDataInput) : void {
 		msg.player_id = input.readInt();
-		msg.name = input.readJavaUTF();
+		msg.uid = input.readJavaUTF();
 		msg.score = input.readInt();
 		msg.win = input.readInt();
 		msg.lose = input.readInt();
@@ -1164,7 +1164,7 @@ package com.fc.lami
 	}
 	private function w_PlayerData_43(msg : com.fc.lami.Messages.PlayerData, output : NetDataOutput) : void {
 		output.writeInt(msg.player_id);
-		output.writeJavaUTF(msg.name);
+		output.writeJavaUTF(msg.uid);
 		output.writeInt(msg.score);
 		output.writeInt(msg.win);
 		output.writeInt(msg.lose);
@@ -1406,11 +1406,11 @@ package com.fc.lami
 //	----------------------------------------------------------------------------------------------------
 	function new_SpeakToPrivateNotify_62() : com.fc.lami.Messages.SpeakToPrivateNotify {return new com.fc.lami.Messages.SpeakToPrivateNotify();}
 	private function r_SpeakToPrivateNotify_62(msg : com.fc.lami.Messages.SpeakToPrivateNotify, input : NetDataInput) : void {
-		msg.player_name = input.readJavaUTF();
+		msg.player_uid = input.readJavaUTF();
 		msg.message = input.readJavaUTF();
 	}
 	private function w_SpeakToPrivateNotify_62(msg : com.fc.lami.Messages.SpeakToPrivateNotify, output : NetDataOutput) : void {
-		output.writeJavaUTF(msg.player_name);
+		output.writeJavaUTF(msg.player_uid);
 		output.writeJavaUTF(msg.message);
 	}
 
@@ -1419,11 +1419,11 @@ package com.fc.lami
 //	----------------------------------------------------------------------------------------------------
 	function new_SpeakToPrivateRequest_63() : com.fc.lami.Messages.SpeakToPrivateRequest {return new com.fc.lami.Messages.SpeakToPrivateRequest();}
 	private function r_SpeakToPrivateRequest_63(msg : com.fc.lami.Messages.SpeakToPrivateRequest, input : NetDataInput) : void {
-		msg.pname = input.readJavaUTF();
+		msg.uid = input.readJavaUTF();
 		msg.message = input.readJavaUTF();
 	}
 	private function w_SpeakToPrivateRequest_63(msg : com.fc.lami.Messages.SpeakToPrivateRequest, output : NetDataOutput) : void {
-		output.writeJavaUTF(msg.pname);
+		output.writeJavaUTF(msg.uid);
 		output.writeJavaUTF(msg.message);
 	}
 

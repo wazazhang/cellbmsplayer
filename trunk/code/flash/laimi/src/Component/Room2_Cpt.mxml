@@ -91,7 +91,7 @@
 				var curDesk:DeskData = getDeskById(desk_id);
 				curDesk.player_number++;
 				
-				addRoomInfo(room.getPlayerFromPlayerList(player_id).name+'进入'+curDesk.desk_name);
+				addRoomInfo(room.getPlayerFromPlayerList(player_id).uid+'进入'+curDesk.desk_name);
 			}
 			
 			//退出桌子
@@ -100,7 +100,7 @@
 				var curDesk:DeskData = getDeskById(desk_id);
 				curDesk.player_number--;
 				
-				addRoomInfo(room.getPlayerFromPlayerList(player_id).name+'离开'+curDesk.desk_name);
+				addRoomInfo(room.getPlayerFromPlayerList(player_id).uid+'离开'+curDesk.desk_name);
 			}
 			
 			
@@ -116,7 +116,7 @@
 					plist = room.getPlayerList();
 					
 				}
-				addRoomInfo(player.name+"进入房间")
+				addRoomInfo(player.uid+"进入房间")
 			}
 			
 			
@@ -124,7 +124,7 @@
 			public function leaveRoom(player_id:int):void
 			{
 				var desk_id:int = Server.getPlayerDeskId(player_id);
-				addRoomInfo(Server.getPlayer(player_id).name+"离开房间");	
+				addRoomInfo(Server.getPlayer(player_id).uid+"离开房间");	
 				room.removePlayer(player_id);
 				plist = room.getPlayerList();
 			}

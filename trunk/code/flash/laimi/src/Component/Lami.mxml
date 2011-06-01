@@ -163,7 +163,7 @@
 					return
 
 				initSeat(desk);
-				addInfo(Server.getPlayer(player_id).name+"进入桌子");
+				addInfo(Server.getPlayer(player_id).uid+"进入桌子");
 			}
 			
 			
@@ -173,7 +173,7 @@
 				if(desk ==null || desk_id!=desk.desk_id)
 					return	
 				initSeat(desk);
-				addInfo(Server.getPlayer(player_id).name+"离开桌子");
+				addInfo(Server.getPlayer(player_id).uid+"离开桌子");
 			}
 			
 			
@@ -227,7 +227,7 @@
 					if(cpt!=null)
 						cpt.pobing = true;
 				}
-				addInfo("玩家"+Server.getPlayer(playerid).name+"已经破冰");
+				addInfo("玩家"+Server.getPlayer(playerid).uid+"已经破冰");
 			}
 			
 			//有人员准备取消
@@ -243,11 +243,11 @@
 				
 				if(isReady)
 				{
-					addInfo("玩家"+Server.getPlayer(playerid).name+"准备好了");
+					addInfo("玩家"+Server.getPlayer(playerid).uid+"准备好了");
 				}
 				else
 				{
-					addInfo("玩家"+Server.getPlayer(playerid).name+"取消了准备");
+					addInfo("玩家"+Server.getPlayer(playerid).uid+"取消了准备");
 				}
 			}
 			
@@ -261,7 +261,7 @@
 				if(cpt!=null)
 				{
 					cpt.gameing = true;
-					addInfo("玩家"+cpt.player.name+"回合开始");
+					addInfo("玩家"+cpt.player.uid+"回合开始");
 				}
 			}
 			
@@ -338,7 +338,7 @@
 			
 			public function onPlayerReset(player:PlayerData):void
 			{
-				addInfo(player.name+"重置了发牌")
+				addInfo(player.uid+"重置了发牌")
 			}
 			
 		]]>
@@ -402,7 +402,7 @@
 		
 		<mx:Label x="0" y="16" text="{getDir(seatID)}" color="#010101"/>
 	
-		<mx:Label x="0" y="0" text="{Server.player.name}" color="#010101"/>
+		<mx:Label x="0" y="0" text="{Server.player.uid}" color="#010101"/>
 		
 		<mx:Label x="80" y="16" text="{game.gamer.isMyturn?'游戏中':'等待中'}" color="#010101"/>
 		

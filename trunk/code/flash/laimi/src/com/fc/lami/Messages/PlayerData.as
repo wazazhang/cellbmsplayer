@@ -17,7 +17,7 @@ package com.fc.lami.Messages
 		public var player_id :  int;
 		/** Java type is : <font color=#0000ff>java.lang.String</font> */
 		[JavaType(name="java.lang.String", leaf_type=NetDataTypes.TYPE_STRING)]
-		public var name :  String;
+		public var uid :  String;
 		/** Java type is : <font color=#0000ff>int</font> */
 		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
 		public var score :  int;
@@ -33,21 +33,21 @@ package com.fc.lami.Messages
 
 		/**
 		 * @param player_id as <font color=#0000ff>int</font>
-		 * @param name as <font color=#0000ff>java.lang.String</font>
+		 * @param uid as <font color=#0000ff>java.lang.String</font>
 		 * @param score as <font color=#0000ff>int</font>
 		 * @param win as <font color=#0000ff>int</font>
 		 * @param lose as <font color=#0000ff>int</font>
 		 * @param level as <font color=#0000ff>int</font>		 */
 		public function PlayerData(
 			player_id :  int = 0,
-			name :  String = null,
+			uid :  String = null,
 			score :  int = 0,
 			win :  int = 0,
 			lose :  int = 0,
 			level :  int = 0) 
 		{
 			this.player_id = player_id;
-			this.name = name;
+			this.uid = uid;
 			this.score = score;
 			this.win = win;
 			this.lose = lose;

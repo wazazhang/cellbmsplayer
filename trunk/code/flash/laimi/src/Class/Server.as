@@ -130,7 +130,7 @@ package Class
 			//Alert.show("连接成功!");
 			var version : String = client.getSession().getMessageFactory().getVersion();
 			trace("client version is : " + version);
-			client.sendRequest(new LoginRequest(player.name, "", version),client_response)
+			client.sendRequest(new LoginRequest(player.uid, "", version),client_response)
 		}
 		
 		protected static function client_disconnected(event:ClientEvent):void 
@@ -233,17 +233,17 @@ package Class
 						var co : CardData = comap[cn.id] as CardData;
 						if (co==null){
 							// 玩家打出牌
-							game.lami.addInfo(Server.getPlayer(mmcn.player_id).name+"打出了"+Card.cardToString(cn));
+							game.lami.addInfo(Server.getPlayer(mmcn.player_id)+"打出了"+Card.cardToString(cn));
 						}else if(cn.x!=co.x || cn.y!=co.y){
 							// 玩家移动了牌
-							game.lami.addInfo(Server.getPlayer(mmcn.player_id).name+"移动了"+Card.cardToString(cn));
+							game.lami.addInfo(Server.getPlayer(mmcn.player_id)+"移动了"+Card.cardToString(cn));
 						}
 					}
 					
 					for each(var co:CardData in cards_old){
 						if (cnmap[co.id]==null){
 							//玩家取回了牌
-							game.lami.addInfo(Server.getPlayer(mmcn.player_id).name+"取回了"+Card.cardToString(co));
+							game.lami.addInfo(Server.getPlayer(mmcn.player_id)+"取回了"+Card.cardToString(co));
 						}
 					}
 				}
