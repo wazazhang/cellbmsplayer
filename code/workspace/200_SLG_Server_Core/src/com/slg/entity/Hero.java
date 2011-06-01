@@ -1,5 +1,7 @@
 package com.slg.entity;
 
+import java.util.HashMap;
+
 /**
  * 武将
  * @author yagami0079
@@ -50,4 +52,22 @@ public class Hero {
 	 * 品阶
 	 */
 	public int quality;
+	
+	/**
+	 * 最大技能数量
+	 */
+	public int max_skill_count;
+	/**
+	 * 技能列表
+	 */
+	public HashMap<Integer, Skill> skill_list;
+	
+	/**
+	 * 最大道具数量
+	 */
+	public int max_item_count;
+	/**
+	 * 道具和装备列表
+	 */
+	public HashMap<Integer, Item> item_list;
 }
