@@ -3,14 +3,15 @@ package com.fc.lami.login.test;
 import com.cell.CIO;
 import com.fc.lami.login.Login;
 import com.fc.lami.login.User;
+import com.net.server.ClientSession;
 
 public class LoginDefault implements Login
 {
 	private byte[] default_head = CIO.loadData("/com/fc/lami/login/test/default_head.jpg");
 	
 	@Override
-	public User login(String user, String validate) {
-		return new DefaultUser(user);
+	public User login(ClientSession session, String uid, String validate) {
+		return new DefaultUser(uid);
 	}
 	
 	private class DefaultUser implements User
@@ -24,7 +25,12 @@ public class LoginDefault implements Login
 		public DefaultUser(String name) {
 			this.name = name;
 		}
-
+		
+		@Override
+		public String getUID() {
+			return name;
+		}
+		
 		@Override
 		public String getName() {
 			return name;

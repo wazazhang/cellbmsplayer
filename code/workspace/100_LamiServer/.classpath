@@ -9,5 +9,6 @@
 	<classpathentry kind="lib" path="lib/mina-core.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-api.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-simple.jar"/>
+	<classpathentry kind="lib" path="lib/game.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
