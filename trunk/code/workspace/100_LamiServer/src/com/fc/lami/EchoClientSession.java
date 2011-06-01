@@ -349,15 +349,15 @@ public class EchoClientSession implements ClientSessionListener
 	
 	/** 聊天  当前频道喊话*/
 	private void processSpeakToPublicRequest(ClientSession session, Protocol protocol, SpeakToPublicRequest request){
-		SpeakToPublicNotify notify = new SpeakToPublicNotify(player.getName(), request.message);
+		SpeakToPublicNotify notify = new SpeakToPublicNotify(player.getUID(), request.message);
 		player.getCurChannel().send(notify);
 		session.sendResponse(protocol, new SpeakToPublicResponse());
 	}
 	
 	/** 聊天  私聊 */
 	private void processSpeakToPrivateRequest(ClientSession session, Protocol protocol, SpeakToPrivateRequest request){
-		SpeakToPrivateNotify notify = new SpeakToPrivateNotify(player.getName(), request.message);
-		Player p = server.getPlayerByName(request.pname);
+		SpeakToPrivateNotify notify = new SpeakToPrivateNotify(player.getUID(), request.message);
+		Player p = server.getPlayerByUID(request.uid);
 		if (p!=null){
 			p.session.send(notify);
 			session.sendResponse(protocol, new SpeakToPrivateResponse(SpeakToPrivateResponse.SPEAK_TO_PRIVATE_RESULT_SUCCESS));
@@ -368,7 +368,7 @@ public class EchoClientSession implements ClientSessionListener
 	
 	/** 聊天  指定频道喊话 */
 	private void processSpeakToChannelRequest(ClientSession session, Protocol protocol, SpeakToChannelRequest request){
-		SpeakToChannelNotify notify = new SpeakToChannelNotify(player.getName(), request.message);
+		SpeakToChannelNotify notify = new SpeakToChannelNotify(player.getUID(), request.message);
 		Channel channel = server.getChannel(request.channel);
 		if (channel!=null){
 			channel.send(notify);

@@ -4,12 +4,9 @@ public interface User
 {
 	public String	getUID();
 	
-	public String	getName();
+//	public String	getName();
 	
-	public byte 	getSex();
 	
-	public byte[] 	getHeadImageData();
-
 	
 	public int		getScore();
 	
@@ -20,6 +17,7 @@ public interface User
 	public int		getLose();
 
 
+	
 	public int		addScore(int value);
 	
 	public int		addPoint(int value);
@@ -27,4 +25,7 @@ public interface User
 	public int		addWin(int value);
 	
 	public int		addLose(int value);
+	
+	
+	public void		save();
 }

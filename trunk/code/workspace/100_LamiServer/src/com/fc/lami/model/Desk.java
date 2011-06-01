@@ -123,7 +123,7 @@ public class Desk implements ChannelListener
 	}
 	
 	public boolean addVisitor(Player player) {
-		log.info("visitor [" + player.getName() + "] join desk " + desk_id);
+		log.info("visitor [" + player + "] join desk " + desk_id);
 		if (addPlayer(player)) {
 			return true;
 		}
@@ -131,7 +131,7 @@ public class Desk implements ChannelListener
 	}
 	
 	public Player removeVisitor(Player player) {	
-		log.info("visitor [" + player.getName() + "] leave desk " + desk_id);
+		log.info("visitor [" + player + "] leave desk " + desk_id);
 		player = removePlayer(player.player_id);
 		if (player != null) {
 		}
@@ -145,7 +145,7 @@ public class Desk implements ChannelListener
 	 * @return
 	 */
 	public boolean joinDesk(Player player, int seat) {
-		log.info("player [" + player.getName() + "] enter desk [" + desk_id + "] with [" + seat + "]");
+		log.info("player [" + player + "] enter desk [" + desk_id + "] with [" + seat + "]");
 		synchronized (all_players) {
 			if (addPlayer(player)) {
 				if (seat != PLAYER_W &&
@@ -171,7 +171,7 @@ public class Desk implements ChannelListener
 	
 	public boolean leaveDesk(Player player)
 	{
-		log.info("player [" + player.getName() + "] leave desk [" + desk_id + "]");
+		log.info("player [" + player + "] leave desk [" + desk_id + "]");
 		Integer seat = null;
 		synchronized (all_players) {
 			seat = getSeat(player);

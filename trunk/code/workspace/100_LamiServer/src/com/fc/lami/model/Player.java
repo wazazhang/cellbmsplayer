@@ -48,14 +48,14 @@ public class Player
 		this.is_ready = false;
 	}
 	
-	public String getName() {
-		return user.getName();
+	public String getUID() {
+		return user.getUID();
 	}
 	
 	public PlayerData getPlayerData(){
 		PlayerData pd = new PlayerData();
 		pd.player_id = this.player_id;
-		pd.name = this.user.getName();
+		pd.uid = this.user.getUID();
 		pd.level = 1;
 		pd.score = this.user.getScore();
 		pd.win = this.user.getWin();

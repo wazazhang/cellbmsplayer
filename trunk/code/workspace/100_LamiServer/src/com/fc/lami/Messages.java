@@ -61,9 +61,7 @@ public class Messages {
 	public static class PlayerData extends FlashMessage
 	{
 		public int player_id;
-		public String name;
-		//public PlayerData nextPlayer;
-		//public ClientSession session;
+		public String uid;
 		public int score;
 		public int win;
 		public int lose;
@@ -646,7 +644,7 @@ public class Messages {
 	/** 登录 */
 	public static class LoginRequest extends FlashMessage
 	{
-		public String name;
+		public String uid;
 		public String validate;
 		public String version;
 		
@@ -1132,11 +1130,11 @@ public class Messages {
 	// 玩家对某玩家私聊
 	public static class SpeakToPrivateRequest extends FlashMessage
 	{
-		public String pname;
+		public String uid;
 		public String message;
 		
-		public SpeakToPrivateRequest(String pname, String str){
-			this.pname = pname;
+		public SpeakToPrivateRequest(String uid, String str){
+			this.uid = uid;
 			this.message = str;
 		}
 		
@@ -1159,11 +1157,11 @@ public class Messages {
 	
 	public static class SpeakToPrivateNotify extends FlashMessage
 	{
-		public String player_name;
+		public String player_uid;
 		public String message;
 		
 		public SpeakToPrivateNotify(String player, String message){
-			this.player_name = player;
+			this.player_uid = player;
 			this.message = message;
 		}
 		
