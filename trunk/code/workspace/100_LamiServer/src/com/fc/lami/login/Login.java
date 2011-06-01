@@ -1,7 +1,9 @@
 package com.fc.lami.login;
 
+import com.net.server.ClientSession;
+
 public interface Login {
 
-	public User login(String user, String validate);
+	public User login(ClientSession session, String uid, String validate);
 
 }

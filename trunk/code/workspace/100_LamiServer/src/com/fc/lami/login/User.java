@@ -2,6 +2,8 @@ package com.fc.lami.login;
 
 public interface User 
 {
+	public String	getUID();
+	
 	public String	getName();
 	
 	public byte 	getSex();
