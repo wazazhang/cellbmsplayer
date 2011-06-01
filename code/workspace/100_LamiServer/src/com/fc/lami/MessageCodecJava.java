@@ -14,7 +14,7 @@ import com.net.NetDataTypes;
 public class MessageCodecJava implements MutualMessageCodec
 {
 	public String getVersion() {
-		return "Mon May 30 15:20:06 CST 2011";
+		return "Wed Jun 01 20:05:47 CST 2011";
 	}
 
 	public void readExternal(MutualMessage msg, NetDataInput in) throws IOException 
@@ -853,12 +853,12 @@ public class MessageCodecJava implements MutualMessageCodec
 //	----------------------------------------------------------------------------------------------------
 	public com.fc.lami.Messages.LoginRequest new_com_fc_lami_Messages_LoginRequest(){return new com.fc.lami.Messages.LoginRequest();}
 	private void _r(com.fc.lami.Messages.LoginRequest msg, NetDataInput in) throws IOException {
-		msg.name = in.readUTF();
+		msg.uid = in.readUTF();
 		msg.validate = in.readUTF();
 		msg.version = in.readUTF();
 	}
 	private void _w(com.fc.lami.Messages.LoginRequest msg, NetDataOutput out) throws IOException {
-		out.writeUTF(msg.name);
+		out.writeUTF(msg.uid);
 		out.writeUTF(msg.validate);
 		out.writeUTF(msg.version);
 	}
@@ -995,7 +995,7 @@ public class MessageCodecJava implements MutualMessageCodec
 	public com.fc.lami.Messages.PlayerData new_com_fc_lami_Messages_PlayerData(){return new com.fc.lami.Messages.PlayerData();}
 	private void _r(com.fc.lami.Messages.PlayerData msg, NetDataInput in) throws IOException {
 		msg.player_id = in.readInt();
-		msg.name = in.readUTF();
+		msg.uid = in.readUTF();
 		msg.score = in.readInt();
 		msg.win = in.readInt();
 		msg.lose = in.readInt();
@@ -1003,7 +1003,7 @@ public class MessageCodecJava implements MutualMessageCodec
 	}
 	private void _w(com.fc.lami.Messages.PlayerData msg, NetDataOutput out) throws IOException {
 		out.writeInt(msg.player_id);
-		out.writeUTF(msg.name);
+		out.writeUTF(msg.uid);
 		out.writeInt(msg.score);
 		out.writeInt(msg.win);
 		out.writeInt(msg.lose);
@@ -1245,11 +1245,11 @@ public class MessageCodecJava implements MutualMessageCodec
 //	----------------------------------------------------------------------------------------------------
 	public com.fc.lami.Messages.SpeakToPrivateNotify new_com_fc_lami_Messages_SpeakToPrivateNotify(){return new com.fc.lami.Messages.SpeakToPrivateNotify();}
 	private void _r(com.fc.lami.Messages.SpeakToPrivateNotify msg, NetDataInput in) throws IOException {
-		msg.player_name = in.readUTF();
+		msg.player_uid = in.readUTF();
 		msg.message = in.readUTF();
 	}
 	private void _w(com.fc.lami.Messages.SpeakToPrivateNotify msg, NetDataOutput out) throws IOException {
-		out.writeUTF(msg.player_name);
+		out.writeUTF(msg.player_uid);
 		out.writeUTF(msg.message);
 	}
 
@@ -1258,11 +1258,11 @@ public class MessageCodecJava implements MutualMessageCodec
 //	----------------------------------------------------------------------------------------------------
 	public com.fc.lami.Messages.SpeakToPrivateRequest new_com_fc_lami_Messages_SpeakToPrivateRequest(){return new com.fc.lami.Messages.SpeakToPrivateRequest();}
 	private void _r(com.fc.lami.Messages.SpeakToPrivateRequest msg, NetDataInput in) throws IOException {
-		msg.pname = in.readUTF();
+		msg.uid = in.readUTF();
 		msg.message = in.readUTF();
 	}
 	private void _w(com.fc.lami.Messages.SpeakToPrivateRequest msg, NetDataOutput out) throws IOException {
-		out.writeUTF(msg.pname);
+		out.writeUTF(msg.uid);
 		out.writeUTF(msg.message);
 	}
 

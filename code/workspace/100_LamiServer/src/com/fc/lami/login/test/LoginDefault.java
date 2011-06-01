@@ -31,15 +31,10 @@ public class LoginDefault implements Login
 			return name;
 		}
 		
-		@Override
-		public String getName() {
-			return name;
-		}
-
-		@Override
-		synchronized public byte[] getHeadImageData() {
-			return default_head;
-		}
+//		@Override
+//		public String getName() {
+//			return name;
+//		}
 
 		@Override
 		synchronized public int getLose() {
@@ -57,16 +52,15 @@ public class LoginDefault implements Login
 		}
 
 		@Override
-		synchronized public byte getSex() {
-			return 1;
-		}
-
-		@Override
 		synchronized public int getWin() {
 			return win;
 		}
 		
-		
+		@Override
+		public void save() {
+			// TODO Auto-generated method stub
+			
+		}
 		
 		@Override
 		synchronized public int addLose(int value) {

@@ -101,7 +101,7 @@ public class LamiServerListener implements ServerListener
 			
 			if (logined_session != null) {
 				synchronized (client_list) {
-					client_list.remove(logined_session.player.getName());
+					client_list.remove(logined_session.player.getUID());
 				}
 				logined_session.disconnected(session);
 			}
@@ -122,13 +122,13 @@ public class LamiServerListener implements ServerListener
 						version);
 			}
 			synchronized (client_list) {
-				if (request.name == null) {
+				if (request.uid == null) {
 					return new LoginResponse(
 							LoginResponse.LOGIN_RESULT_FAIL, 
 							null, 
 							version);
 				}
-				EchoClientSession old_session = client_list.get(request.name);
+				EchoClientSession old_session = client_list.get(request.uid);
 				if (old_session != null) {
 					if (old_session.session.isConnected()) {
 						return new LoginResponse(
@@ -136,10 +136,10 @@ public class LamiServerListener implements ServerListener
 								null, 
 								version);
 					} else {
-						client_list.remove(request.name);
+						client_list.remove(request.uid);
 					}
 				}
-				User user = login_adapter.login(request.name, request.validate);
+				User user = login_adapter.login(session, request.uid, request.validate);
 				if (user == null) {
 					return new LoginResponse(LoginResponse.LOGIN_RESULT_FAIL, 
 							null, 
@@ -147,7 +147,7 @@ public class LamiServerListener implements ServerListener
 				} else {
 					logined_session = new EchoClientSession(
 							session, LamiServerListener.this, user);
-					client_list.put(user.getName(), logined_session);
+					client_list.put(user.getUID(), logined_session);
 				}
 			}
 			
@@ -191,9 +191,9 @@ public class LamiServerListener implements ServerListener
 		return rss;
 	}
 	
-	public Player getPlayerByName(String name){
+	public Player getPlayerByUID(String uid){
 		for (EchoClientSession cs:client_list.values()){
-			if (cs.player.getName().equals(name)){
+			if (cs.player.getUID().equals(uid)){
 				return cs.player;
 			}
 		}

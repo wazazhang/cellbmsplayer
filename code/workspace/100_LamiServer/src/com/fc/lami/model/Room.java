@@ -115,7 +115,7 @@ public class Room implements ChannelListener, Runnable
 		}			
 		channel.join(player.session);
 		broadcast(new EnterRoomNotify(player.getPlayerData()));
-		log.info("player [" + player.getName() + "] enter room [" + getRoomID() + "]");
+		log.info("player [" + player + "] enter room [" + getRoomID() + "]");
 		return true;
 	}
 	
@@ -133,7 +133,7 @@ public class Room implements ChannelListener, Runnable
 //				ExitRoomNotify ern = new ExitRoomNotify(player.player_id);
 //				p.session.send(ern);
 //			}
-			log.info("player [" + player.getName() + "] leave room [" + getRoomID() + "]");
+			log.info("player [" + player + "] leave room [" + getRoomID() + "]");
 		}
 	}
 

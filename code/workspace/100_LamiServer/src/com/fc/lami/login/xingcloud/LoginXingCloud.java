@@ -25,102 +25,130 @@ public class LoginXingCloud implements Login
 	@Override
 	public User login(ClientSession session, String uid, String validate) 
 	{
-		/*
 		//init PersistenceSession
-		PersistenceSession persistenceSession = (PersistenceSession) session.getAttribute("persistenceSession");
-		if(persistenceSession == null){
-			persistenceSession = SessionFactory.openSession();
-			session.setAttribute("persistenceSession", persistenceSession);
-		}
-		//check uid
-		if(!sfsObject.containsKey("uid")){
-			//TODO throw exception or return error
-		}
-		//update UserProfile
-		try {
-			//get UserProfile
-			UserProfile userProfile = (UserProfile) UserFactory.getInstance().get(
-					persistenceSession, sfsObject.getUtfString("uid"));
-			if(userProfile == null){
-				//TODO throw exception or return error
+		synchronized (this) {
+			if (persistenceSession == null) {
+				persistenceSession = SessionFactory.openSession();
 			}
-			userProfile.setLevel(userProfile.getLevel() + 1);
-			persistenceSession.put(userProfile);
-			persistenceSession.flush();
-			session.setProperty("persistenceSession", persistenceSession);
-		} catch (Exception e) {
-			//TODO throw exception or return error
-		}*/
+			if (persistenceSession == null) {
+				log.error("there is no persistenceSession!");
+				return null;
+			}		
+			try {
+				//get UserProfile
+				UserProfile userProfile = (UserProfile) UserFactory.getInstance().get(
+						persistenceSession, uid);
+				if (userProfile == null) {
+					log.error("there is no userProfile with uid(" + uid + ")!");
+					return null;
+				}
+				return new XingCloudUser(userProfile);
+			} catch (Exception e) {
+				log.error(e.getMessage(), e);
+			}
+		}
 		return null;
 	}
-//	
-//	private class DefaultUser implements User
-//	{
-//		private UserProfile userProfile;
-//				
-//		public DefaultUser(UserProfile userProfile) {
-//			this.userProfile = userProfile;
-//		}
-//		
-//		@Override
-//		public String getUID() {
-//			return uid;
-//		}
-//		
+	
+	private class XingCloudUser implements User
+	{
+		final private String		uid;
+		final private String		name;
+		final private UserProfile	userProfile;
+				
+		public XingCloudUser(UserProfile userProfile) {
+			this.userProfile = userProfile;
+			this.uid = userProfile.getUid();
+			this.name = userProfile.getUserNameFull();
+		}
+		
+		@Override
+		public String getUID() {
+			return uid;
+		}
+		
 //		@Override
 //		public String getName() {
 //			return name;
 //		}
-//
-//		@Override
-//		synchronized public byte[] getHeadImageData() {
-//			return default_head;
-//		}
-//
-//		@Override
-//		synchronized public int getLose() {
-//			return lose;
-//		}
-//
-//		@Override
-//		synchronized public int getPoint() {
-//			return point;
-//		}
-//
-//		@Override
-//		synchronized public int getScore() {
-//			return score;
-//		}
-//
-//		@Override
-//		synchronized public byte getSex() {
-//			return 1;
-//		}
-//
-//		@Override
-//		synchronized public int getWin() {
-//			return win;
-//		}
-//		
-//		
-//		
-//		@Override
-//		synchronized public int addLose(int value) {
-//			return lose += value;
-//		}
-//		@Override
-//		synchronized public int addPoint(int value) {
-//			return point += value;
-//		}
-//		@Override
-//		synchronized public int addScore(int value) {
-//			return score += value;
-//		}
-//		@Override
-//		synchronized public int addWin(int value) {
-//			return win += value;
-//		}
-//
-//		
-//	}
+
+		private int getValueAsInt(String key) {
+			try {
+				Object value = userProfile.get(key);
+				if (value instanceof Integer) {
+					return (Integer) value;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return 0;
+		}
+
+		private int addValueAsInt(String key, int add) {
+			try {
+				Object value = userProfile.get(key);
+				if (value instanceof Integer) {
+					int v = (Integer)value;
+					v += add;
+					userProfile.set(key, new Integer(v));
+					return v;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return 0;
+		}
+		
+		
+		@Override
+		synchronized public int getLose() {
+			return getValueAsInt("lose");
+		}
+
+		@Override
+		synchronized public int getPoint() {
+			return getValueAsInt("point");
+		}
+
+		@Override
+		synchronized public int getScore() {
+			return getValueAsInt("score");
+		}
+
+		@Override
+		synchronized public int getWin() {
+			return getValueAsInt("win");
+		}
+		
+		@Override
+		synchronized public int addLose(int value) {
+			return addValueAsInt("lose", value);
+		}
+
+		@Override
+		synchronized public int addPoint(int value) {
+			return addValueAsInt("point", value);
+		}
+
+		@Override
+		synchronized public int addScore(int value) {
+			return addValueAsInt("score", value);
+		}
+
+		@Override
+		synchronized public int addWin(int value) {
+			return addValueAsInt("win", value);
+		}
+
+		@Override
+		synchronized public void save() {
+			try {
+				persistenceSession.put(userProfile);
+				persistenceSession.flush();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
 }

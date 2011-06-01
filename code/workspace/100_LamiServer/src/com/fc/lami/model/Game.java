@@ -671,7 +671,7 @@ public class Game implements Runnable
 				for (int i = 0; i<player_list.length; i++){
 					player_list[i].session.send(new OpenIceNotify(getCurPlayer().player_id));
 				}
-				System.out.println("player:"+getCurPlayer().getName()+"余牌:"+ getCurPlayer().card_list.size());
+				System.out.println("player:"+getCurPlayer()+"余牌:"+ getCurPlayer().card_list.size());
 				if (getCurPlayer().card_list.size() == 0){	//如果玩家牌已出完
 					onGameOver();
 				}else{
@@ -687,7 +687,7 @@ public class Game implements Runnable
 			System.err.println("submit 牌组不成立");
 			return SubmitResponse.SUBMIT_RESULT_FAIL_CARD_COMBI_NO_MATCH;
 		}
-		System.out.println("player:"+getCurPlayer().getName()+"余牌:"+ getCurPlayer().card_list.size());
+		System.out.println("player:"+getCurPlayer()+"余牌:"+ getCurPlayer().card_list.size());
 		if (getCurPlayer().card_list.size() == 0){	//如果玩家牌已出完
 			onGameOver();
 		}else{
@@ -915,7 +915,7 @@ public class Game implements Runnable
 			long cur_time = System.currentTimeMillis();
 			if (cur_time - operate_start_time >= LamiConfig.OPERATE_TIME ||
 					cur_time - turn_start_time>=LamiConfig.TURN_INTERVAL){
-				System.err.println("player " + getCurPlayer().getName() + " 超时");
+				System.err.println("player " + getCurPlayer() + " 超时");
 				System.out.println(cur_time);
 				if (!player_put.isEmpty() || isProcessed()/*|| process_open_ice*/){
 					if (submit() == SubmitResponse.SUBMIT_RESULT_SUCCESS){
