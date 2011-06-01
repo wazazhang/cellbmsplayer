@@ -15,6 +15,7 @@
     <application path="test.mxml"/>
     <application path="sfs_test.mxml"/>
     <application path="sfs_test_r.mxml"/>
+    <application path="TestApp.mxml"/>
   </applications>
   <modules/>
   <buildCSSFiles/>

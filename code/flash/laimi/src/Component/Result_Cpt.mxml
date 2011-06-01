@@ -34,7 +34,7 @@
 					
 					var label:Label =  new Label();
 					
-					label.text = player.name+":"
+					label.text = player.uid+":"
 					label.text +=" "+result.point;
 					
 					if(result.is_win)

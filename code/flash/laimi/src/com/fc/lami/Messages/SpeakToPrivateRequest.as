@@ -14,19 +14,19 @@ package com.fc.lami.Messages
 	{
 		/** Java type is : <font color=#0000ff>java.lang.String</font> */
 		[JavaType(name="java.lang.String", leaf_type=NetDataTypes.TYPE_STRING)]
-		public var pname :  String;
+		public var uid :  String;
 		/** Java type is : <font color=#0000ff>java.lang.String</font> */
 		[JavaType(name="java.lang.String", leaf_type=NetDataTypes.TYPE_STRING)]
 		public var message :  String;
 
 		/**
-		 * @param pname as <font color=#0000ff>java.lang.String</font>
+		 * @param uid as <font color=#0000ff>java.lang.String</font>
 		 * @param message as <font color=#0000ff>java.lang.String</font>		 */
 		public function SpeakToPrivateRequest(
-			pname :  String = null,
+			uid :  String = null,
 			message :  String = null) 
 		{
-			this.pname = pname;
+			this.uid = uid;
 			this.message = message;
 		}
 	}

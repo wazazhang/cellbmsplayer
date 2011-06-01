@@ -96,7 +96,7 @@
 			
 		]]>
 	</mx:Script>
-	<mx:Label y="1" text="{player==null?'':''+player.name}" color="#010101" horizontalCenter="0"/>
+	<mx:Label y="1" text="{player==null?'':''+player.uid}" color="#010101" horizontalCenter="0"/>
 	
 	<!--
 	<mx:Label x="51" y="0" text="{seat}" color="#010101"/>

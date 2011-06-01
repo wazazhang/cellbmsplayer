@@ -14,19 +14,19 @@ package com.fc.lami.Messages
 	{
 		/** Java type is : <font color=#0000ff>java.lang.String</font> */
 		[JavaType(name="java.lang.String", leaf_type=NetDataTypes.TYPE_STRING)]
-		public var player_name :  String;
+		public var player_uid :  String;
 		/** Java type is : <font color=#0000ff>java.lang.String</font> */
 		[JavaType(name="java.lang.String", leaf_type=NetDataTypes.TYPE_STRING)]
 		public var message :  String;
 
 		/**
-		 * @param player_name as <font color=#0000ff>java.lang.String</font>
+		 * @param player_uid as <font color=#0000ff>java.lang.String</font>
 		 * @param message as <font color=#0000ff>java.lang.String</font>		 */
 		public function SpeakToPrivateNotify(
-			player_name :  String = null,
+			player_uid :  String = null,
 			message :  String = null) 
 		{
-			this.player_name = player_name;
+			this.player_uid = player_uid;
 			this.message = message;
 		}
 	}
