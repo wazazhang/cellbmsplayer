@@ -9,6 +9,14 @@ import java.util.ArrayList;
  */
 public class Village {
 	/**
+	 * 村寨ID
+	 */
+	public int id;
+	/**
+	 * 村寨名字
+	 */
+	public String name;
+	/**
 	 * 粮食
 	 */
 	public int food;
@@ -25,4 +33,12 @@ public class Village {
 	 */
 	public ArrayList<Integer> heros;
 	
+	/**
+	 * 兵器库
+	 */
+	public ArrayList<Arms> arms_list;
+	/**
+	 * 士兵
+	 */
+	public ArrayList<Soldiers> soldiers_list;
 }

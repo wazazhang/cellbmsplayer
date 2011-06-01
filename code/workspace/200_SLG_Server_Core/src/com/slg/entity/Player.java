@@ -7,6 +7,18 @@ package com.slg.entity;
  */
 public class Player {
 	/**
+	 * 玩家ID
+	 */
+	public int player_id;
+	/**
+	 * 玩家名字
+	 */
+	public String name;
+	/**
+	 * 官职
+	 */
+	public int office;
+	/**
 	 * 经验
 	 */
 	public int exp;
