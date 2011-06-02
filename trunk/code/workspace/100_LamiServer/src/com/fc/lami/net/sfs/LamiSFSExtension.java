@@ -4,6 +4,7 @@ import com.cell.j2se.CAppBridge;
 import com.fc.lami.LamiConfig;
 import com.fc.lami.MessageFactory;
 import com.fc.lami.LamiServerListener;
+
 import com.net.ExternalizableFactory;
 import com.net.server.ServerListener;
 import com.net.sfsimpl.server.ServerExtenstion;
@@ -15,7 +16,7 @@ public class LamiSFSExtension extends ServerExtenstion
 	{
 		CAppBridge.initNullStorage();
 		LamiConfig.load(LamiConfig.class, super.getConfigProperties());
-
+		LamiConfig.LOGIN_CLASS = "com.fc.lami.login.xingcloud.LoginXingCloud";
 		super.init();
 		
 		trace(new Object[] { "Lami SFSExtension started" });
