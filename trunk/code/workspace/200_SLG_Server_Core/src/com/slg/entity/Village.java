@@ -2,12 +2,14 @@ package com.slg.entity;
 
 import java.util.ArrayList;
 
+import com.net.flash.message.FlashMessage;
+
 /**
  * 玩家寨子
  * @author yagami0079
  *
  */
-public class Village {
+public class Village extends FlashMessage{
 	/**
 	 * 村寨ID
 	 */

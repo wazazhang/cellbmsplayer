@@ -1,11 +1,13 @@
 package com.slg.entity;
 
+import com.net.flash.message.FlashMessage;
+
 /**
  * 技能
  * @author yagami0079
  *
  */
-public class Skill {
+public class Skill extends FlashMessage{
 	/**
 	 * 等级
 	 */

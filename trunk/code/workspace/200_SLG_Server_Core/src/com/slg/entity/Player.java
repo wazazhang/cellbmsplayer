@@ -1,11 +1,13 @@
 package com.slg.entity;
 
+import com.net.flash.message.FlashMessage;
+
 /**
  * 玩家数据结构
  * @author yagami0079
  *
  */
-public class Player {
+public class Player extends FlashMessage{
 	/**
 	 * 玩家ID
 	 */
