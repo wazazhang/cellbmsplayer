@@ -62,7 +62,7 @@ public class Hero extends FlashMessage{
 	/**
 	 * 技能列表
 	 */
-	public HashMap<Integer, Skill> skill_list;
+	public Skill[] skill_list;
 	
 	/**
 	 * 最大道具数量
@@ -71,5 +71,5 @@ public class Hero extends FlashMessage{
 	/**
 	 * 道具和装备列表
 	 */
-	public HashMap<Integer, Item> item_list;
+	public Item[] item_list;
 }

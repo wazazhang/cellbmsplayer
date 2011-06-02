@@ -1,35 +1,46 @@
-package com.slg.sanguosha.impl;
+package com.slg.net.impl;
 
 import com.net.server.ClientSession;
 import com.slg.IPlayer;
+import com.slg.IWorld;
 import com.slg.entity.Player;
-import com.slg.sanguosha.login.User;
 
 public class PlayerImpl implements IPlayer
 {
-	final public User 			user;
-	final public ClientSession 	session;
+	private ClientSession 	session;
+	final private IWorld world;
 	final private Player player;
 	
-	public PlayerImpl(ClientSession session, User user){
-		this.user = user;
-		this.session = session;
-		this.player = user.getDefaultPlayer();
+	public PlayerImpl(IWorld world, Player p){
+		this.world = world;
+		this.player = p;
+		//TODO 
 	}
 	
+	public void onConnected(ClientSession session){
+		this.session = session;
+	}
+	
+	public void onDisconnected(){
+		this.session = null;
+	}
+	
+	public IWorld getWorld(){
+		return world;
+	}
 	public Player getPlayer(){
 		return player;
 	}
 	@Override
 	public int getPlayerId() {
 		// TODO Auto-generated method stub
-		return 0;
+		return player.player_id;
 	}
 
 	@Override
 	public String getPlayerName() {
 		// TODO Auto-generated method stub
-		return null;
+		return player.name;
 	}
 
 	@Override
@@ -84,10 +95,6 @@ public class PlayerImpl implements IPlayer
 	public int setOffice(int office) {
 		// TODO Auto-generated method stub
 		return 0;
-	}
-	public String getUID() {
-		// TODO Auto-generated method stub
-		return user.getUID();
 	}
 
 }

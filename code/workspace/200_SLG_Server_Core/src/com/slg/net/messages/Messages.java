@@ -1,4 +1,4 @@
-package com.slg.sanguosha;
+package com.slg.net.messages;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,8 +9,6 @@ import com.net.flash.message.FlashMessage;
 import com.net.flash.message.FlashMessageCodeGenerator;
 import com.net.mutual.MutualMessageCodeGeneratorJava;
 import com.slg.entity.Player;
-
-
 
 public class Messages {
 

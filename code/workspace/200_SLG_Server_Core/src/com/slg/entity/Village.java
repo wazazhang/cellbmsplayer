@@ -29,18 +29,18 @@ public class Village extends FlashMessage{
 	/**
 	 * 建筑id列表
 	 */
-	public ArrayList<Integer> buildings;
+	public int[] buildings;
 	/**
 	 * 武将id列表
 	 */
-	public ArrayList<Integer> heros;
+	public int[] heros;
 	
 	/**
 	 * 兵器库
 	 */
-	public ArrayList<Arms> arms_list;
+	public Arms[] arms_list;
 	/**
 	 * 士兵
 	 */
-	public ArrayList<Soldiers> soldiers_list;
+	public Soldiers[] soldiers_list;
 }
