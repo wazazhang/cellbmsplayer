@@ -17,6 +17,7 @@ public interface IPlayer {
 	 */
 	public String getPlayerName();
 	
+	public IWorld getWorld();
 	/**
 	 * 获得当前经验值
 	 * @return

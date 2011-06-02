@@ -5,8 +5,8 @@ import com.net.Protocol;
 import com.net.server.Channel;
 import com.net.server.ClientSession;
 import com.net.server.ClientSessionListener;
-import com.slg.sanguosha.Messages.LogoutRequest;
-import com.slg.sanguosha.impl.PlayerImpl;
+import com.slg.net.impl.PlayerImpl;
+import com.slg.net.messages.Messages.LogoutRequest;
 import com.slg.sanguosha.login.User;
 
 public class EchoClientSession implements ClientSessionListener

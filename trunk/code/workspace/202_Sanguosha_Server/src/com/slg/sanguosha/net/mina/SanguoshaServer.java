@@ -6,7 +6,7 @@ import com.cell.CIO;
 import com.cell.j2se.CAppBridge;
 import com.net.flash.FlashCrossdomainService;
 import com.net.minaimpl.server.ServerImpl;
-import com.slg.sanguosha.MessageFactory;
+import com.slg.net.messages.MessageFactory;
 import com.slg.sanguosha.SanguoshaConfig;
 import com.slg.sanguosha.SanguoshaServerListener;
 

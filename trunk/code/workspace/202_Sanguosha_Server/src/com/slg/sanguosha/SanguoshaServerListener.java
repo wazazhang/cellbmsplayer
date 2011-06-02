@@ -13,10 +13,10 @@ import com.net.server.ChannelListener;
 import com.net.server.ClientSession;
 import com.net.server.ClientSessionListener;
 import com.net.server.ServerListener;
+import com.slg.net.messages.Messages.LoginRequest;
+import com.slg.net.messages.Messages.LoginResponse;
 import com.slg.sanguosha.login.Login;
 import com.slg.sanguosha.login.User;
-import com.slg.sanguosha.Messages.LoginRequest;
-import com.slg.sanguosha.Messages.LoginResponse;
 
 public class SanguoshaServerListener implements ServerListener
 {
