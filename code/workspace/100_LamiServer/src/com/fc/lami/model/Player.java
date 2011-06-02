@@ -280,6 +280,7 @@ public class Player
 
 		this.user.addScore(p);
 		this.user.addWin(1);
+		this.user.save();
 		
 		ResultPak pak = new ResultPak();
 		pak.player_id = this.player_id;
@@ -288,13 +289,15 @@ public class Player
 		return pak;
 	}
 	
-	public ResultPak onPlayerLose(int p){
+	public ResultPak onPlayerLose(int p)
+	{
 		this.is_ready = false;
 		this.isOpenIce = false;
 		this.card_list.clear();
 		
 		this.user.addScore(-p);
 		this.user.addLose(1);
+		this.user.save();
 		
 		ResultPak pak = new ResultPak();
 		pak.player_id = this.player_id;
@@ -303,14 +306,17 @@ public class Player
 		return pak;
 	}
 
-	public int onPlayerEscape(){
+	public int onPlayerEscape()
+	{
 		this.is_ready = false;
 		this.isOpenIce = false;
 		int point = getHandCardPonit();
 		this.card_list.clear();
+		
 		this.user.addScore(-point);
-
 		this.user.addLose(1);
+		this.user.save();
+		
 		return point;
 	}
 	
