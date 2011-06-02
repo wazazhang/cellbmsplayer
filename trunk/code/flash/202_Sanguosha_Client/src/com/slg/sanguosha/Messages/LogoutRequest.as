@@ -3,7 +3,7 @@ package com.slg.sanguosha.Messages
 	import com.net.client.Message;
 	import com.net.client.MessageFactory;
 	import com.net.client.NetDataTypes;
-
+	import com.slg.entity.*;
 
 	/**
 	 * Java Class [8] [com.slg.sanguosha.Messages.LogoutRequest]<br>
