@@ -16,12 +16,33 @@ public interface IPlayer {
 	 * @return
 	 */
 	public String getPlayerName();
+	
+	/**
+	 * 获得当前经验值
+	 * @return
+	 */
+	public int getExp();
+	/**
+	 * 获得经验值最大值
+	 * @return
+	 */
+	public int getExpMax();
 	/**
 	 * 添加经验值
 	 * @param exp
 	 * @return
 	 */
 	public int addExp(int exp);
+	/**
+	 * 获得玩家当前行动值
+	 * @return
+	 */
+	public int getAp();
+	/**
+	 * 获得玩家行动值的上限
+	 * @return
+	 */
+	public int getApMax();
 	/**
 	 * 添加玩家行动值
 	 * @param ap

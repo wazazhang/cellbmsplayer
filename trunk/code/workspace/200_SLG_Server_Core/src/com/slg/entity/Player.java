@@ -21,7 +21,7 @@ public class Player {
 	/**
 	 * 经验
 	 */
-	public int exp;
+	public GuageNumber exp;
 	/**
 	 * 等级
 	 */
@@ -30,8 +30,7 @@ public class Player {
 	/**
 	 * 行动值
 	 */
-	public int ap;
-	
+	public GuageNumber ap;
 	/**
 	 * 货币
 	 */
