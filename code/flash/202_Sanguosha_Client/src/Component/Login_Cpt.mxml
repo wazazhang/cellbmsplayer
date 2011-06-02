@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" verticalCenter="0" 
+		   horizontalCenter="0" width="960" height="600"
+		   creationComplete="init()" >
+		<mx:Script>
+			<![CDATA[
+				import Class.Server;
+				
+				
+				import mx.controls.Alert;
+				import mx.controls.dataGridClasses.DataGridColumn;
+				
+				public var linkTimer:Timer = new Timer(200,300);
+				
+				public function init():void
+				{
+					linkTimer.addEventListener(TimerEvent.TIMER_COMPLETE, linkFilad);
+					linkTimer.addEventListener(TimerEvent.TIMER, linking)
+				}
+				
+
+				public function linkServer():void
+				{
+					if (TIname.text.length <= 0) {
+						Alert.show("用户名不能为空");
+					}
+					
+					bt.enabled = false;
+					TIname.enabled = false;
+					lb2.visible = true;
+					Server.login_cpt = this;
+					Server.linkToServer(TIname.text, TIpass.text, server_host.text, server_port.value);
+					linkTimer.reset();
+					linkTimer.start();
+					
+				}
+				
+				
+				public function linking(event:TimerEvent):void
+				{
+					switch( linkTimer.currentCount%3)
+					{
+						case 0 :lb2.text = "连接中.";break;
+						case 1 :lb2.text = "连接中..";break;
+						case 2 :lb2.text = "连接中...";break;
+					}
+				}
+				
+				
+				public function linkFilad(event:TimerEvent):void
+				{
+					if (!Server.getClient().isConnected()) 
+					{
+						lb2.text = "连接超时..."
+						Alert.show("连接超时");
+						bt.enabled = true;
+						TIname.enabled = true;
+					}
+				}
+				
+				public function linkSunccess():void
+				{
+					linkTimer.stop();
+					//lb.text = "登陆成功!请选择一个房间:"
+					
+					login.visible = false;
+//					selectRoom.visible = true;
+					
+					bt.enabled = true;
+					TIname.enabled = true;
+				}
+				
+
+				public function disLink():void
+				{
+					selectRoom.visible = false;
+					login.visible = true;
+					bt.enabled = true;
+					TIname.enabled = true;
+					lb2.visible = true;
+					lb2.text="与服务器断开连接...";
+				}
+				
+				
+			]]>
+		</mx:Script>
+		<mx:Style>
+			
+			.dg{
+			    header-height:0px;
+				backgroundAlpha: 0.54;
+				backgroundColor: #ffffff;
+				horizontalGridLines: true;
+				letterSpacing: 0;
+				horizontalGridLineColor: #000000;
+				verticalGridLines: false;
+				useRollOver: true;
+				borderThickness: 0;
+				textIndent: 0;
+				item-skin:"../image/itbg.png";
+			}
+			
+			.dghead{
+				
+			}
+		</mx:Style>	
+		
+		<mx:Canvas id="login" width="650" height="450"  horizontalCenter="0" verticalCenter="0"  borderStyle="solid"
+				   cornerRadius="5" backgroundColor="#2D2D2D" backgroundAlpha="0.4"  >
+			<mx:Button id="bt" label="开始" fontSize="20" click="linkServer()" x="240" y="353" width="138" height="47"/>
+			<mx:TextInput id="TIname" x="227" fontSize="16" y="217"/>
+			<!--
+			<mx:TextInput x="47" y="52" width="160" text="115.236.18.104" id="server_host"/>
+			-->
+			<mx:TextInput x="227" y="153" width="160" text="127.0.0.1" id="server_host"/>
+			<mx:NumericStepper x="227" y="185" width="160" minimum="0" maximum="100000000" value="19821" id="server_port"/>
+			<mx:Label x="190" y="155" text="IP"/>
+			<mx:Label x="190" y="187" text="端口"/>
+			<mx:TextArea x="10" y="10" width="257" height="38" text="此界面为测试界面&#xa;服务器ID和通行证帐号需要和第三方对接" editable="false" cornerRadius="0" borderColor="#646566" borderThickness="0" borderStyle="none" backgroundAlpha="0.0" alpha="1.0"/>
+			<mx:Label y="289" id="lb2" x="227" width="160" height="24" enabled="true"/>
+			<mx:Label x="467" y="408" text="ver 0.9" width="160"/>
+			<mx:Image x="292.5" y="73" source="../image/head.png"/>
+			<mx:Label x="190" y="222" text="ID"/>
+			<mx:Label x="190" y="258" text="密码"/>
+			<mx:TextInput x="227" y="253" fontSize="16" displayAsPassword="true" id="TIpass"/>
+			<mx:LinkButton x="395" y="220" label="注册账号"/>
+			<mx:LinkButton x="395" y="256" label="忘记密码"/>
+			<mx:CheckBox x="190" y="321" label="保存账号"/>
+			<mx:CheckBox x="292" y="321" label="记住密码"/>
+			<mx:Label x="395" y="323" text="请不要在公用电脑上保存密码"/>
+		</mx:Canvas>
+			
+		<mx:Canvas id="selectRoom" width="100%" height="100%" backgroundImage="../image/pdbg.png" visible="false">	
+			
+			<!--
+			<mx:DataGrid id="list" width="606" styleName="dg" height="372"  headerHeight="0"
+						 backgroundImage="../image/itbg.png"   rowHeight="36" doubleClickEnabled="true"
+						 doubleClick="enterRoom()" x="330" y="107" dataProvider="{rooms}"
+						 >
+				<mx:columns >
+					<mx:DataGridColumn headerText="房间名称" dataField="room_name" width="140" />
+					<mx:DataGridColumn headerText="当前人数" labelFunction="player_numberLF"/>
+					<mx:DataGridColumn headerText="等级限制" labelFunction="levelLF"/>
+					<mx:DataGridColumn headerText="模式" labelFunction="modeLF"/>
+					
+				</mx:columns>
+			</mx:DataGrid>
+			-->
+			
+			<mx:VBox id="vb1" x="328.5" y="102" height="388" width="609" horizontalScrollPolicy="off">
+			</mx:VBox>
+			<!--
+			<mx:List id="list2" height="126" width="200" verticalCenter="12" labelField="room_name" horizontalCenter="0" doubleClickEnabled="true" doubleClick="enterRoom()"></mx:List>
+			-->
+		</mx:Canvas>
+	
+</mx:Canvas>
