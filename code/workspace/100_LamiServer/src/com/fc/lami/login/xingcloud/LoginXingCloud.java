@@ -149,4 +149,27 @@ public class LoginXingCloud implements Login
 		}
 		
 	}
+	
+	public static void main(String args[])
+	{
+		PersistenceSession persistenceSession = null;
+		//init PersistenceSession
+			try {
+				if (persistenceSession == null) {
+					persistenceSession = SessionFactory.openSession();
+				}
+				if (persistenceSession == null) {
+					log.error("there is no persistenceSession!");
+				}
+				//get UserProfile
+				UserProfile userProfile = (UserProfile) UserFactory.getInstance().get(
+						persistenceSession, "1234");
+				if (userProfile == null) {
+					log.error("there is no userProfile with uid(" + "1234" + ")!");
+				}
+			} catch (Throwable e) {
+				log.error(e.getMessage(), e);
+			}
+	
+	}
 }

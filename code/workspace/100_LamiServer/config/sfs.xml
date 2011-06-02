@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xingcloud:config xmlns:xingcloud="http://www.iw.com/sns/config/">
+<sfs>
+<entry id="entry" class="game.sfs.SFSGameContext">
+</entry>
+<events>
+<event id="USER_LOGIN" class="game.sfs.SFSEventHandler">
+</event>
+</events>
+<requests>
+<request id="game" class="game.sfs.SFSRequestHandler">
+</request>
+<request id="levelUp" class="game.sfs.SFSLevelUpRequestHandler">
+</request>
+</requests>
+</sfs>
+</xingcloud:config>
