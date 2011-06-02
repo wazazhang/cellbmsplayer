@@ -7,9 +7,9 @@ import com.fc.lami.LamiServerListener;
 
 import com.net.ExternalizableFactory;
 import com.net.server.ServerListener;
-import com.net.sfsimpl.server.ServerExtenstion;
+import com.net.sfsimpl.server.SFSServerAdapter;
 
-public class LamiSFSExtension extends ServerExtenstion
+public class LamiSFSExtension extends SFSServerAdapter
 {
 	@Override
 	public void init() 
