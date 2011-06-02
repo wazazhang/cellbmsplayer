@@ -27,14 +27,14 @@ public class LoginXingCloud implements Login
 	{
 		//init PersistenceSession
 		synchronized (this) {
-			if (persistenceSession == null) {
-				persistenceSession = SessionFactory.openSession();
-			}
-			if (persistenceSession == null) {
-				log.error("there is no persistenceSession!");
-				return null;
-			}		
 			try {
+				if (persistenceSession == null) {
+					persistenceSession = SessionFactory.openSession();
+				}
+				if (persistenceSession == null) {
+					log.error("there is no persistenceSession!");
+					return null;
+				}
 				//get UserProfile
 				UserProfile userProfile = (UserProfile) UserFactory.getInstance().get(
 						persistenceSession, uid);
