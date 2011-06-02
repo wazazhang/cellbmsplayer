@@ -18,8 +18,6 @@ public class LoginXingCloud implements Login
 {
 	private static Logger log = LoggerFactory.getLogger(LoginXingCloud.class);
 	
-	private byte[] default_head = CIO.loadData("/com/fc/lami/login/test/default_head.jpg");
-	
 	private PersistenceSession persistenceSession;
 	
 	@Override
@@ -43,7 +41,7 @@ public class LoginXingCloud implements Login
 					return null;
 				}
 				return new XingCloudUser(userProfile);
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				log.error(e.getMessage(), e);
 			}
 		}

@@ -7,8 +7,6 @@ import com.net.server.ClientSession;
 
 public class LoginDefault implements Login
 {
-	private byte[] default_head = CIO.loadData("/com/fc/lami/login/test/default_head.jpg");
-	
 	@Override
 	public User login(ClientSession session, String uid, String validate) {
 		return new DefaultUser(uid);
