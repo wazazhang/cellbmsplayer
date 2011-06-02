@@ -3,7 +3,7 @@ package com.slg.entity
 	import com.net.client.Message;
 	import com.net.client.MessageFactory;
 	import com.net.client.NetDataTypes;
-
+	import com.slg.entity.*;
 
 	/**
 	 * Java Class [3] [com.slg.entity.Player]<br>

@@ -6,8 +6,7 @@ package com.slg.sanguosha
 	import com.net.client.NetDataOutput;
 	import com.net.client.NetDataTypes;
 	import com.slg.sanguosha.Messages.*;
-	import com.slg.entity.Currency;
-	import com.slg.entity.GuageNumber;
+	import com.slg.entity.*;
 
 	/**
 	 * 此代码为自动生成。不需要在此修改。若有错误，请修改代码生成器。
@@ -16,7 +15,7 @@ package com.slg.sanguosha
 	{
 	
 		public function getVersion() : String{
-			return "Thu Jun 02 16:12:45 CST 2011";
+			return "Thu Jun 02 17:17:15 CST 2011";
 		}
 	
 		public function	getType(msg : Message) : int 

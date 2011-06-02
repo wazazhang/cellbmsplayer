@@ -3,7 +3,7 @@ package com.slg.entity
 	import com.net.client.Message;
 	import com.net.client.MessageFactory;
 	import com.net.client.NetDataTypes;
-
+	import com.slg.entity.*;
 
 	/**
 	 * Java Class [2] [com.slg.entity.GuageNumber]<br>
