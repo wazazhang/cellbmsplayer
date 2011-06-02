@@ -45,11 +45,11 @@
 					bt.enabled = false;
 					TIname.enabled = false;
 					lb2.visible = true;
-					Server.login_cpt = this;
-					Server.linkToServer(TIname.text, server_host.text, server_port.value);
+					Server.login_cpt = this;				
 					linkTimer.reset();
 					linkTimer.start();
 					
+					Server.linkToServer(TIname.text, server_host.text, server_port.value);
 				}
 				
 				
