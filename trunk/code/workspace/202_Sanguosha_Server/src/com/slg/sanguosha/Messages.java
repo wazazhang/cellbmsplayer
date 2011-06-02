@@ -119,8 +119,9 @@ public class Messages {
 			FlashMessageCodeGenerator gen_as = new FlashMessageCodeGenerator(
 					"com.slg.sanguosha",
 					"MessageCodec",
-					"\timport com.slg.sanguosha.Messages.*;",
-					""
+					"\timport com.slg.sanguosha.Messages.*;\n" +
+					"\timport com.slg.entity.*;",
+					"\timport com.slg.entity.*;"
 					){
 				@Override
 				public String getVersion() {
