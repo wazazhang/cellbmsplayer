@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" backgroundColor="0xa27937"  layout="absolute" xmlns:ns1="Component.*"
+				creationComplete="init()"  preloader="Class.Myloading"  >
+	<mx:Style>
+		global {font-size:12px}
+	</mx:Style>
+	<mx:Script>
+		<![CDATA[
+			import Class.Server;
+			
+			import com.slg.sanguosha.MessageCodec;
+			import com.net.client.minaimpl.ServerSessionImpl;
+			public function init():void
+			{
+				//Game.app = game;
+				//gameCmt.init();
+				Server.init(new ServerSessionImpl(new MessageCodec()));
+				Server.app = this
+				//Server.game_cpt = game;
+				login_cpt.server_host.text = "127.0.0.1";
+				login_cpt.server_port.value = 19830;
+			}
+		]]>
+	</mx:Script>
+	<ns1:Login_Cpt verticalCenter="0" horizontalCenter="0"  id="login_cpt">
+	</ns1:Login_Cpt>
+	
+	
+</mx:Application>
