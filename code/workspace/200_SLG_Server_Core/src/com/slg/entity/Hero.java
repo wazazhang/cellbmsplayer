@@ -19,7 +19,7 @@ public class Hero {
 	/**
 	 * 经验
 	 */
-	public int exp;
+	public GuageNumber exp;
 	/**
 	 * 等级
 	 */
@@ -27,7 +27,7 @@ public class Hero {
 	/**
 	 * 生命值
 	 */
-	public int hp;
+	public GuageNumber hp;
 	/**
 	 * 攻击力
 	 */
@@ -47,7 +47,7 @@ public class Hero {
 	/**
 	 * 忠诚度
 	 */
-	public int loyalty;
+	public GuageNumber loyalty;
 	/**
 	 * 品阶
 	 */
