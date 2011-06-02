@@ -143,7 +143,7 @@ public class LoginXingCloud implements Login
 			try {
 				persistenceSession.put(userProfile);
 				persistenceSession.flush();
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				e.printStackTrace();
 			}
 		}
