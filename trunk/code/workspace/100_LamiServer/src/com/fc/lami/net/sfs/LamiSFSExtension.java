@@ -14,19 +14,21 @@ public class LamiSFSExtension extends ServerExtenstion
 	@Override
 	public void init() 
 	{
+		trace("\n" +
+		"===================================================\n" +
+		"= Lami SFSExtension initializing ...\n" +
+		"===================================================\n");
+		
 		CAppBridge.initNullStorage();
 		LamiConfig.load(LamiConfig.class, super.getConfigProperties());
 		LamiConfig.LOGIN_CLASS = "com.fc.lami.login.xingcloud.LoginXingCloud";
 		super.init();
 		
-		trace(new Object[] { "Lami SFSExtension started" });
-		
-//		try {
-//			FlashCrossdomainService.main(new String[]{});
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-		
+		trace("\n" +
+		"===================================================\n" +
+		"= Lami SFSExtension started !\n" +
+		"===================================================\n");
+
 	}
 
 	@Override
