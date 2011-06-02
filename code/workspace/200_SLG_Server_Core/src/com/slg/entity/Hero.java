@@ -2,12 +2,14 @@ package com.slg.entity;
 
 import java.util.HashMap;
 
+import com.net.flash.message.FlashMessage;
+
 /**
  * 武将
  * @author yagami0079
  *
  */
-public class Hero {
+public class Hero extends FlashMessage{
 	/**
 	 * 武将ID
 	 */

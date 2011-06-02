@@ -1,11 +1,13 @@
 package com.slg.entity;
 
+import com.net.flash.message.FlashMessage;
+
 /**
  * 道具
  * @author yagami0079
  *
  */
-public class Item {
+public class Item extends FlashMessage{
 	/**
 	 * id
 	 */

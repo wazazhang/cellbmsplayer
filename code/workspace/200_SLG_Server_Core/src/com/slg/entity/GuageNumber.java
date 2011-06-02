@@ -1,6 +1,8 @@
 package com.slg.entity;
 
-public class GuageNumber {
+import com.net.flash.message.FlashMessage;
+
+public class GuageNumber extends FlashMessage{
 	int value;
 	int max;
 	int min;

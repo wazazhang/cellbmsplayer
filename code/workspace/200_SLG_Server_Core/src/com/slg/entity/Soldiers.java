@@ -1,11 +1,13 @@
 package com.slg.entity;
 
+import com.net.flash.message.FlashMessage;
+
 /**
  * 士兵
  * @author yagami0079
  *
  */
-public class Soldiers {
+public class Soldiers extends FlashMessage{
 	/**
 	 * 兵种
 	 */
