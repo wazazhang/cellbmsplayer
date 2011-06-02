@@ -27,7 +27,6 @@
 	<classpathentry kind="lib" path="lib/libthrift-0.5.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.15.jar"/>
 	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.6.jar"/>
-	<classpathentry kind="lib" path="lib/server.jar"/>
 	<classpathentry kind="lib" path="lib/servlet-api.jar"/>
 	<classpathentry kind="lib" path="lib/sfs2x-util.jar"/>
 	<classpathentry kind="lib" path="lib/slf4j-api-1.5.8.jar"/>
