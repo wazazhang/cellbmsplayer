@@ -24,7 +24,7 @@ import com.net.server.ServerListener;
 
 public class LamiServerListener implements ServerListener
 {
-	final private com.net.server.Server server_instance;
+	private com.net.server.Server server_instance;
 	
 	private ThreadPool 		services 		= new ThreadPool("Flash-Test");
 
@@ -38,17 +38,24 @@ public class LamiServerListener implements ServerListener
 
 	final private Room		rooms[];
 	
-	public LamiServerListener(com.net.server.Server server_instance) throws Exception
+	public LamiServerListener() throws Exception
 	{
-		this.server_instance = server_instance;
-		
 		this.login_adapter = (Login)Class.forName(LamiConfig.LOGIN_CLASS).newInstance();
-		
 		int room_number = LamiConfig.ROOM_NUMBER;
 		this.rooms = new Room[room_number];
 		for (int i = 0; i < room_number; i++) {
 			rooms[i] = new Room(this, i, services, LamiConfig.THREAD_INTERVAL);
 		}
+	}
+
+	@Override
+	public void init(com.net.server.Server server_instance) {
+		this.server_instance = server_instance;
+	}
+	
+	@Override
+	public void destory() {
+		
 	}
 	
 	public Channel createChannel(ChannelListener cl) {
