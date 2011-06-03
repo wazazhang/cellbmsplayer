@@ -40,17 +40,17 @@ public class LamiServerListener implements ServerListener
 	
 	public LamiServerListener() throws Exception
 	{
-		this.login_adapter = (Login)Class.forName(LamiConfig.LOGIN_CLASS).newInstance();
+		this.login_adapter = (Login)Class.forName(LamiConfig.LOGIN_CLASS).newInstance();	
 		int room_number = LamiConfig.ROOM_NUMBER;
 		this.rooms = new Room[room_number];
-		for (int i = 0; i < room_number; i++) {
-			rooms[i] = new Room(this, i, services, LamiConfig.THREAD_INTERVAL);
-		}
 	}
 
 	@Override
 	public void init(com.net.server.Server server_instance) {
 		this.server_instance = server_instance;
+		for (int i = 0; i < rooms.length; i++) {
+			rooms[i] = new Room(this, i, services, LamiConfig.THREAD_INTERVAL);
+		}
 	}
 	
 	@Override
