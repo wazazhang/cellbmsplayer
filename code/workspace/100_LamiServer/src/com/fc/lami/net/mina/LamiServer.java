@@ -29,7 +29,7 @@ public class LamiServer extends ServerImpl {
 				port = LamiConfig.SERVER_PORT;
 			}
 			LamiServer server = new LamiServer(factory);
-			server.open(port, new LamiServerListener(server));
+			server.open(port, new LamiServerListener());
 		} catch (Exception err) {
 			err.printStackTrace();
 			System.exit(1);
