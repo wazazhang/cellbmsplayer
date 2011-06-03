@@ -14,7 +14,7 @@ package com.fc.lami
 	{
 	
 		public function getVersion() : String{
-			return "Thu Jun 02 09:58:56 CST 2011";
+			return "Fri Jun 03 10:52:40 CST 2011";
 		}
 	
 		public function	getType(msg : Message) : int 
