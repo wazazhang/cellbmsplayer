@@ -34,7 +34,7 @@ public class LamiSFSExtension extends XingCloudSFSExtension
 			this.adapter = new SFSServerAdapter(this, new MessageFactory());
 			this.adapter.open(0, new LamiServerListener());
 		} catch (Exception e) {
-			trace(e, e.getMessage());
+			e.printStackTrace();
 		}
 		trace("\n" +
 		"===================================================\n" +
