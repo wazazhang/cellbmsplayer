@@ -117,7 +117,7 @@ public class Messages {
 			FlashMessageCodeGenerator gen_as = new FlashMessageCodeGenerator(
 					"com.slg",
 					"MessageCodec",
-					"\timport com.slg.net.Messages.*;\n" +
+					"\timport com.slg.net.messages.Messages.*;\n" +
 					"\timport com.slg.entity.*;",
 					"\timport com.slg.entity.*;"
 					){
