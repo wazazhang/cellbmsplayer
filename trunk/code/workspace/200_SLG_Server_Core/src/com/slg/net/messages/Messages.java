@@ -102,7 +102,7 @@ public class Messages {
 		final Date date = new Date();
 		{
 			MutualMessageCodeGeneratorJava gen_java = new MutualMessageCodeGeneratorJava(
-					"com.slg.sanguosha",
+					"com.slg.net.messages",
 					"",
 					"MessageCodecJava"
 					){
@@ -115,9 +115,9 @@ public class Messages {
 					new File("./src"));
 		}{
 			FlashMessageCodeGenerator gen_as = new FlashMessageCodeGenerator(
-					"com.slg.sanguosha",
+					"com.slg",
 					"MessageCodec",
-					"\timport com.slg.sanguosha.Messages.*;\n" +
+					"\timport com.slg.net.Messages.*;\n" +
 					"\timport com.slg.entity.*;",
 					"\timport com.slg.entity.*;"
 					){

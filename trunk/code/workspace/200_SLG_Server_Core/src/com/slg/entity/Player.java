@@ -38,6 +38,10 @@ public class Player extends FlashMessage{
 	 */
 	public Currency currency;
 	
+	public Player(){
+		
+	}
+	
 	public Player(String name){
 		this.name = name;
 		this.exp = new GuageNumber(0, 100);
