@@ -14,7 +14,7 @@ import com.net.NetDataTypes;
 public class MessageCodecJava implements MutualMessageCodec
 {
 	public String getVersion() {
-		return "Tue Jun 07 12:44:42 CST 2011";
+		return "Tue Jun 07 15:29:46 CST 2011";
 	}
 
 	public void readExternal(MutualMessage msg, NetDataInput in) throws IOException 
@@ -164,6 +164,7 @@ public class MessageCodecJava implements MutualMessageCodec
 		msg.level = in.readInt();
 		msg.ap = in.readExternal(com.slg.entity.GuageNumber.class);
 		msg.currency = in.readExternal(com.slg.entity.Currency.class);
+		msg.cur_village_id = in.readInt();
 	}
 	private void _w(com.slg.entity.Player msg, NetDataOutput out) throws IOException {
 		out.writeInt(msg.player_id);
@@ -173,6 +174,7 @@ public class MessageCodecJava implements MutualMessageCodec
 		out.writeInt(msg.level);
 		out.writeExternal(msg.ap);
 		out.writeExternal(msg.currency);
+		out.writeInt(msg.cur_village_id);
 	}
 
 //	----------------------------------------------------------------------------------------------------
@@ -191,6 +193,7 @@ public class MessageCodecJava implements MutualMessageCodec
 	private void _r(com.slg.entity.Village msg, NetDataInput in) throws IOException {
 		msg.id = in.readInt();
 		msg.name = in.readUTF();
+		msg.player_id = in.readInt();
 		msg.food = in.readInt();
 		msg.city_id = in.readInt();
 		msg.buildings = in.readIntArray();
@@ -201,6 +204,7 @@ public class MessageCodecJava implements MutualMessageCodec
 	private void _w(com.slg.entity.Village msg, NetDataOutput out) throws IOException {
 		out.writeInt(msg.id);
 		out.writeUTF(msg.name);
+		out.writeInt(msg.player_id);
 		out.writeInt(msg.food);
 		out.writeInt(msg.city_id);
 		out.writeIntArray(msg.buildings);
@@ -254,11 +258,13 @@ public class MessageCodecJava implements MutualMessageCodec
 		msg.result = in.readShort();
 		msg.version = in.readUTF();
 		msg.player_data = in.readExternal(com.slg.entity.Player.class);
+		msg.village = in.readExternal(com.slg.entity.Village.class);
 	}
 	private void _w(com.slg.net.messages.Messages.LoginResponse msg, NetDataOutput out) throws IOException {
 		out.writeShort(msg.result);
 		out.writeUTF(msg.version);
 		out.writeExternal(msg.player_data);
+		out.writeExternal(msg.village);
 	}
 
 //	----------------------------------------------------------------------------------------------------

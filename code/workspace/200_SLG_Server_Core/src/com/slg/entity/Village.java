@@ -19,6 +19,10 @@ public class Village extends FlashMessage{
 	 */
 	public String name;
 	/**
+	 * 所属玩家ID
+	 */
+	public int player_id;
+	/**
 	 * 粮食
 	 */
 	public int food;
@@ -43,4 +47,13 @@ public class Village extends FlashMessage{
 	 * 士兵
 	 */
 	public Soldiers[] soldiers_list;
+	
+	public Village(){
+		
+	}
+	
+	public Village(Player player){
+		name = player.name+"的村子";
+		player_id = player.player_id;
+	}
 }

@@ -1,5 +1,7 @@
 package com.slg;
 
+import com.slg.entity.Player;
+
 /**
  * 玩家实体接口
  * @author yagami0079
@@ -69,4 +71,10 @@ public interface IPlayer {
 	 * @return
 	 */
 	public int setOffice(int office);
+	
+	public Player getPlayerData();
+	
+	public IVillage getCurVillage();
+	
+	public void setCurVillage(IVillage village);
 }

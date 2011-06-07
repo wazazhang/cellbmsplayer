@@ -38,6 +38,11 @@ public class Player extends FlashMessage{
 	 */
 	public Currency currency;
 	
+	/**
+	 * 当前所在村寨ID
+	 */
+	public int cur_village_id;
+	
 	public Player(){
 		
 	}
