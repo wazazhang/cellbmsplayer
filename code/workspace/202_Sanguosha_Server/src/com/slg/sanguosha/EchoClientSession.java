@@ -5,6 +5,7 @@ import com.net.Protocol;
 import com.net.server.Channel;
 import com.net.server.ClientSession;
 import com.net.server.ClientSessionListener;
+import com.slg.IPlayer;
 import com.slg.net.impl.PlayerImpl;
 import com.slg.net.messages.Messages.LogoutRequest;
 import com.slg.sanguosha.login.User;
@@ -15,10 +16,10 @@ public class EchoClientSession implements ClientSessionListener
 	final public SanguoshaServerListener 		server;
 	final public PlayerImpl 	player;
 	
-	public EchoClientSession(ClientSession session, SanguoshaServerListener server, User user) {
+	public EchoClientSession(ClientSession session, SanguoshaServerListener server, IPlayer player) {
 		this.session = session;
 		this.server = server;
-		this.player = new PlayerImpl(session, user);
+		this.player = (PlayerImpl)player;
 	}
 	
 	@Override

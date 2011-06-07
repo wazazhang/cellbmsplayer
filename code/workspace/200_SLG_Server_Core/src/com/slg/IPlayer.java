@@ -10,7 +10,9 @@ public interface IPlayer {
 	 * 获得玩家ID
 	 * @return
 	 */
-	public int getPlayerId();
+	public int getPlayerID();
+	
+	public void setPlayerID(int id);
 	/**
 	 * 获得玩家名字
 	 * @return
