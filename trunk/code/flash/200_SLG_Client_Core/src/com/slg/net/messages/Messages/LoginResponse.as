@@ -33,19 +33,25 @@ package com.slg.net.messages.Messages
 		/** Java type is : <font color=#0000ff>com.slg.entity.Player</font> */
 		[JavaType(name="com.slg.entity.Player", leaf_type=NetDataTypes.TYPE_EXTERNALIZABLE)]
 		public var player_data :  com.slg.entity.Player;
+		/** Java type is : <font color=#0000ff>com.slg.entity.Village</font> */
+		[JavaType(name="com.slg.entity.Village", leaf_type=NetDataTypes.TYPE_EXTERNALIZABLE)]
+		public var village :  com.slg.entity.Village;
 
 		/**
 		 * @param result as <font color=#0000ff>short</font>
 		 * @param version as <font color=#0000ff>java.lang.String</font>
-		 * @param player_data as <font color=#0000ff>com.slg.entity.Player</font>		 */
+		 * @param player_data as <font color=#0000ff>com.slg.entity.Player</font>
+		 * @param village as <font color=#0000ff>com.slg.entity.Village</font>		 */
 		public function LoginResponse(
 			result :  int = 0,
 			version :  String = null,
-			player_data :  com.slg.entity.Player = null) 
+			player_data :  com.slg.entity.Player = null,
+			village :  com.slg.entity.Village = null) 
 		{
 			this.result = result;
 			this.version = version;
 			this.player_data = player_data;
+			this.village = village;
 		}
 	}
 }

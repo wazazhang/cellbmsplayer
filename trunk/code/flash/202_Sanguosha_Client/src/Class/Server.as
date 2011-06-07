@@ -1,14 +1,15 @@
 package Class
 {
-	import mx.core.Application;
-	
 	import Component.Login_Cpt;
 	
 	import com.net.client.ClientEvent;
 	import com.net.client.ServerSession;
 	import com.slg.entity.Player;
+	import com.slg.entity.Village;
 	import com.slg.net.messages.Messages.LoginRequest;
 	import com.slg.net.messages.Messages.LoginResponse;
+	
+	import mx.core.Application;
 	
 	[Bindable]
 	public class Server
@@ -22,6 +23,7 @@ package Class
 		private static var password:String;
 		
 		public static var player:Player;
+		public static var village:Village;
 		
 		public static function getClient() : SanguoshaClient {
 			return client;
@@ -74,6 +76,7 @@ package Class
 					// 需要处理，如果没有成功，需要提示用户为什么没成功，或重新输入，不能一旦失败，游戏就卡住。
 				{
 					player = login.player_data;
+					village = login.village;
 					login_cpt.linkSunccess();
 				}
 				else 

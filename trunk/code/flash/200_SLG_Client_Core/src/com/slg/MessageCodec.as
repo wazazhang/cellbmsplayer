@@ -15,7 +15,7 @@ package com.slg
 	{
 	
 		public function getVersion() : String{
-			return "Tue Jun 07 12:44:42 CST 2011";
+			return "Tue Jun 07 15:29:46 CST 2011";
 		}
 	
 		public function	getType(msg : Message) : int 
@@ -202,6 +202,7 @@ package com.slg
 		msg.level = input.readInt();
 		msg.ap = input.readExternal() as com.slg.entity.GuageNumber;
 		msg.currency = input.readExternal() as com.slg.entity.Currency;
+		msg.cur_village_id = input.readInt();
 	}
 	private function w_Player_4(msg : com.slg.entity.Player, output : NetDataOutput) : void {
 		output.writeInt(msg.player_id);
@@ -211,6 +212,7 @@ package com.slg
 		output.writeInt(msg.level);
 		output.writeExternal(msg.ap);
 		output.writeExternal(msg.currency);
+		output.writeInt(msg.cur_village_id);
 	}
 
 //	----------------------------------------------------------------------------------------------------
@@ -229,6 +231,7 @@ package com.slg
 	private function r_Village_6(msg : com.slg.entity.Village, input : NetDataInput) : void {
 		msg.id = input.readInt();
 		msg.name = input.readJavaUTF();
+		msg.player_id = input.readInt();
 		msg.food = input.readInt();
 		msg.city_id = input.readInt();
 		msg.buildings = input.readIntArray();
@@ -239,6 +242,7 @@ package com.slg
 	private function w_Village_6(msg : com.slg.entity.Village, output : NetDataOutput) : void {
 		output.writeInt(msg.id);
 		output.writeJavaUTF(msg.name);
+		output.writeInt(msg.player_id);
 		output.writeInt(msg.food);
 		output.writeInt(msg.city_id);
 		output.writeIntArray(msg.buildings);
@@ -292,11 +296,13 @@ package com.slg
 		msg.result = input.readShort();
 		msg.version = input.readJavaUTF();
 		msg.player_data = input.readExternal() as com.slg.entity.Player;
+		msg.village = input.readExternal() as com.slg.entity.Village;
 	}
 	private function w_LoginResponse_10(msg : com.slg.net.messages.Messages.LoginResponse, output : NetDataOutput) : void {
 		output.writeShort(msg.result);
 		output.writeJavaUTF(msg.version);
 		output.writeExternal(msg.player_data);
+		output.writeExternal(msg.village);
 	}
 
 //	----------------------------------------------------------------------------------------------------
