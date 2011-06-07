@@ -19,7 +19,10 @@
 				Server.app = this
 				//Server.game_cpt = game;
 				login_cpt.server_host.text = "127.0.0.1";
-				login_cpt.server_port.value = 19821;
+				login_cpt.server_port.value = 19821;		
+				login_cpt.version.text = Server.getClient().getSession().getMessageFactory().getVersion();
+
+				
 			}
 		]]>
 	</mx:Script>

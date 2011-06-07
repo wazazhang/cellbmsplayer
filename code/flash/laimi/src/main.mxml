@@ -3,7 +3,7 @@
 				implements="elex.socialize.IGameClient" 
 				layout="absolute" xmlns:ns1="Component.*" 
 				creationComplete="init()" 
-				preloader="Class.Myloading">
+				preloader="Class.Myloading" horizontalAlign="left" verticalAlign="top">
 	<mx:Style>
 		global {font-size:12px}
 	</mx:Style>
@@ -26,6 +26,7 @@
 			import flash.events.*;
 			import flash.net.SharedObject;
 			
+			import mx.controls.Alert;
 			import mx.utils.URLUtil;
 			
 			//平台容器实例引用
@@ -34,26 +35,42 @@
 			//游戏自身的配置信息 对应337 上平台接入所填写的game配置
 			private var config:XML;
 			
-			private var currentUid:String;
-			
 			public function init():void
 			{
 				Server.app = this
+				Server.init(new SFSSessionImpl(
+					new MessageCodec(), 
+					"7028139564online"));
+				//Server.game_cpt = game;
+				login_cpt.server_host.text = "rr2.usxingcloud.info";
+				login_cpt.server_port.value = 40001;
+				login_cpt.TIname.text = this._container.uid;
+				login_cpt.version.text = Server.getClient().getSession().getMessageFactory().getVersion();
+
+				
+				if (this._container)
+				{
+					println("init uid: "+this._container.uid);
+					
+					
+					getUserInfo();
+				}
 			}
 			
 			//实现IGameClient 接口 平台启动接口
 			public function startUp(container:elex.socialize.ISocializeContainer,config:XML,width:int,height:int):void
 			{
 				Security.allowDomain("*");
-				_container=container;
+				this._container=container;
 				
 				this.config = config;
 				this.width=width;
 				this.height=height;
 				
-				if(!_container)
+				if(!this._container)
 				{
-					throw new Error("container is null");
+					Alert.show("GDP container is null");
+					return;
 				}
 				
 				//this.stage.addEventListener(MouseEvent.MOUSE_WHEEL,onMouseWheel);
@@ -61,23 +78,101 @@
 				//test googleAnalysics
 				//_container.trackTransaction({category:"1",cost:"300",money:"0",name: "Prinzessin Stuhl",orderId :"100001258912073359"},1,1);
 				//var useridInfoArr:Array=String(stage.loaderInfo.parameters.sig_user).split("_");
-				this.currentUid=container.uid;
 				trace("uid: "+container.uid);
-				
-				
-				Server.init(new SFSSessionImpl(
-					new MessageCodec(), 
-					"7028139564online"));
-				//Server.game_cpt = game;
-				login_cpt.server_host.text = "rr2.usxingcloud.info";
-				login_cpt.server_port.value = 40001;
-				login_cpt.TIname.text = container.uid;
-				
-
+				println("startUp: "+this._container.uid);
 			}
+			
+			public function println(info:String):void
+			{
+				login_cpt.println(info);
+			}
+			
+			public function print(info:String):void
+			{
+				login_cpt.print(info);
+			}
+			
+//			-------------------------------------------------------------------------
+			
+			public function getAllFriendsInfo():void
+			{
+				println("获取好友信息：");
+				_container.getFriendsInfo(getAllFriendsInfoCallback);
+			}
+			
+			public function getAppFriendsInfo():void
+			{
+				println("获取APP好友信息：");
+				_container.getAppFriendsInfo(getAppFriendsInfoCallback);
+			}
+			
+			private function getAllFriendsInfoCallback(fusers:Array):void
+			{
+				if(fusers){
+					println("成功获取好友信息");
+					println("多少好友："+fusers.length +" friends");
+					printUserInfo(fusers);
+				}else{
+					println("获取好友信息失败");
+				}
+			}
+			
+			private function getAppFriendsInfoCallback(fusers:Array):void
+			{
+				if(fusers){
+					println("成功APP获取好友信息");
+					println("多少APP好友："+fusers.length +" friends");
+					printUserInfo(fusers);
+				}else{
+					println("获取APP好友信息失败");
+				}
+			}
+			
+			public function getUserInfo():void
+			{
+				println("获取自己的信息");
+				_container.getUserProfile(getUserProfileCallback);
+			}
+			
+			private function getUserProfileCallback(user:IUserSocialData):void
+			{
+				if(Boolean(user)){
+					println("成功获取自己的信息");
+					parseUserInfo(user);
+				}
+			}
+			
+			private function printUserInfo(fusers:Array):void
+			{
+				for (var i:int=0;i<fusers.length; i++){
+					parseUserInfo(fusers[i]);
+				}
+			}
+			
+			private function parseUserInfo(uesrData:IUserSocialData):void{
+				try{
+					var info:String="======list user info=======\n";
+					//IUserSocialData 
+					var user:IUserSocialData=uesrData;
+					//uid
+					
+					info=info +"uid::"+ user.id+"\n";
+					//user name
+					info=info +"name::"+  user.name+"\n";
+					//user header photo
+					info=info +"header photo::"+  user.photoSmall;
+					//其他IUserSocialData属性信息
+					println(info);
+				}catch(e:Error){
+					trace(e.getStackTrace());
+				}
+			}
+			
+			
+			
 		]]>
 	</mx:Script>
-	<ns1:Login_Cpt verticalCenter="0" horizontalCenter="0"  id="login_cpt">
+	<ns1:Login_Cpt verticalCenter="-34" horizontalCenter="0"  id="login_cpt" width="644" height="446" left="-65.5" top="10">
 	</ns1:Login_Cpt>
 	
 
