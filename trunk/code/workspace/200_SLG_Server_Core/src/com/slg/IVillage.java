@@ -1,5 +1,7 @@
 package com.slg;
 
+import com.slg.entity.Village;
+
 /**
  * 村寨实体
  * @author yagami0079
@@ -11,11 +13,18 @@ public interface IVillage {
 	 * @return
 	 */
 	public int getVillageID();
+	
+	public void setVillageID(int id);
 	/**
 	 * 获得村寨名
 	 * @return
 	 */
 	public String getVillageName();
+	/**
+	 * 获得所属玩家ID
+	 */
+	public int getPlayerID();
+	
 	/**
 	 * 获得所属城市ID
 	 * @return
@@ -26,4 +35,6 @@ public interface IVillage {
 	 * @return
 	 */
 	public int getFood();
+	
+	public Village getVillageData();
 }

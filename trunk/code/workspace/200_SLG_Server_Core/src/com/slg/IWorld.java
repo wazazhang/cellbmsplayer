@@ -6,4 +6,8 @@ public interface IWorld {
 	public IPlayer getPlayer(String name);
 	
 	public int addPlayer(IPlayer newplayer);
+	
+	public IVillage getVillage(int id);
+	
+	public int addVillage(IVillage village);
 }

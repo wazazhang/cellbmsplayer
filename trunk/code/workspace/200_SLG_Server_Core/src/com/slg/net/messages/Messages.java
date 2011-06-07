@@ -9,6 +9,7 @@ import com.net.flash.message.FlashMessage;
 import com.net.flash.message.FlashMessageCodeGenerator;
 import com.net.mutual.MutualMessageCodeGeneratorJava;
 import com.slg.entity.Player;
+import com.slg.entity.Village;
 
 public class Messages {
 
@@ -66,13 +67,20 @@ public class Messages {
 		public short result;
 		public String version;
 		public Player player_data;
+		public Village village;
 
 //		public long server_time;
 		
-		public LoginResponse(short result, Player p, String version){
+		public LoginResponse(short result, String version){
+			this.result = result;
+			this.version = version;
+		}
+		
+		public LoginResponse(short result, String version, Player p, Village village){
 			this.result = result;
 			this.version = version;
 			this.player_data = p;
+			this.village = village;
 		}
 		
 		public LoginResponse(){}

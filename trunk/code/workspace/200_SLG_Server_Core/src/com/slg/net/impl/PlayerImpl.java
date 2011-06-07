@@ -2,6 +2,7 @@ package com.slg.net.impl;
 
 import com.net.server.ClientSession;
 import com.slg.IPlayer;
+import com.slg.IVillage;
 import com.slg.IWorld;
 import com.slg.entity.Player;
 
@@ -28,7 +29,8 @@ public class PlayerImpl implements IPlayer
 	public IWorld getWorld(){
 		return world;
 	}
-	public Player getPlayer(){
+	
+	public Player getPlayerData(){
 		return player;
 	}
 	@Override
@@ -99,6 +101,16 @@ public class PlayerImpl implements IPlayer
 	@Override
 	public void setPlayerID(int id) {
 		player.player_id = id;
+	}
+
+	@Override
+	public IVillage getCurVillage() {
+		return world.getVillage(player.cur_village_id);
+	}
+
+	@Override
+	public void setCurVillage(IVillage village) {
+		player.cur_village_id = village.getVillageID();
 	}
 
 }

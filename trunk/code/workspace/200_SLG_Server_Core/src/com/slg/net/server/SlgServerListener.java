@@ -15,7 +15,9 @@ import com.net.server.ClientSessionListener;
 import com.net.server.ServerListener;
 import com.slg.IWorld;
 import com.slg.entity.Player;
+import com.slg.entity.Village;
 import com.slg.net.impl.PlayerImpl;
+import com.slg.net.impl.VillageImpl;
 import com.slg.net.impl.WorldImpl;
 import com.slg.net.messages.Messages.LoginRequest;
 import com.slg.net.messages.Messages.LoginResponse;
@@ -113,22 +115,21 @@ public class SlgServerListener implements ServerListener
 				System.out.println("版本号不对");
 				return new LoginResponse(
 						LoginResponse.LOGIN_RESULT_FAIL_BAD_VERSION, 
-						null,
 						version);
 			}
 			synchronized (client_list) {
 				if (request.name == null) {
+					System.out.println("没有输入名字");
 					return new LoginResponse(
 							LoginResponse.LOGIN_RESULT_FAIL, 
-							null,
 							version);
 				}
 				EchoClientSession old_session = client_list.get(request.name);
 				if (old_session != null) {
+					System.out.println("该号已经有人登陆");
 					if (old_session.session.isConnected()) {
 						return new LoginResponse(
 								LoginResponse.LOGIN_RESULT_FAIL_ALREADY_LOGIN, 
-								null,
 								version);
 					} else {
 						client_list.remove(request.name);
@@ -139,6 +140,9 @@ public class SlgServerListener implements ServerListener
 				if (world.getPlayer(request.name) == null){
 					PlayerImpl newp = new PlayerImpl(world, new Player(request.name));
 					world.addPlayer(newp);
+					VillageImpl newv = new VillageImpl(new Village(newp.getPlayerData()));
+					world.addVillage(newv);
+					newp.setCurVillage(newv);
 				}
 				logined_session = new EchoClientSession(
 						session, SlgServerListener.this, world.getPlayer(request.name));
@@ -148,8 +152,10 @@ public class SlgServerListener implements ServerListener
 			
 			LoginResponse res = new LoginResponse(
 					LoginResponse.LOGIN_RESULT_SUCCESS, 
-					this.logined_session.player.getPlayer(),
-					version);
+					version,
+					this.logined_session.player.getPlayerData(),
+					this.logined_session.player.getCurVillage().getVillageData()
+					);
 //			res.server_time = System.currentTimeMillis();
 			return res;
 		}
