@@ -8,7 +8,7 @@
 		<![CDATA[
 			import Class.Server;
 			
-			import com.slg.sanguosha.MessageCodec;
+			import com.slg.MessageCodec;
 			import com.net.client.minaimpl.ServerSessionImpl;
 			public function init():void
 			{
