@@ -13,6 +13,8 @@ import com.net.server.ChannelListener;
 import com.net.server.ClientSession;
 import com.net.server.ClientSessionListener;
 import com.net.server.ServerListener;
+import com.slg.IWorld;
+import com.slg.net.impl.WorldImpl;
 import com.slg.net.messages.Messages.LoginRequest;
 import com.slg.net.messages.Messages.LoginResponse;
 import com.slg.sanguosha.login.Login;
@@ -22,11 +24,13 @@ public class SanguoshaServerListener implements ServerListener
 {
 	final private com.net.server.Server server_instance;
 	
-	private ThreadPool 		services 		= new ThreadPool("Flash-Test");
+	private ThreadPool 		services 		= new ThreadPool("Sanguosha-Test");
 
 	private AtomicInteger	channel_index	= new AtomicInteger(0);
 	
 	private Login			login_adapter;
+	
+	private IWorld	world;
 	
 	/**保证并发访问同步的MAP*/
 	private ConcurrentHashMap<String, EchoClientSession> 
@@ -38,6 +42,11 @@ public class SanguoshaServerListener implements ServerListener
 		
 		this.login_adapter = (Login)Class.forName(SanguoshaConfig.LOGIN_CLASS).newInstance();
 		
+		world = new WorldImpl();
+	}
+	
+	public IWorld getWorld(){
+		return world;
 	}
 	
 	public Channel createChannel(ChannelListener cl) {
@@ -88,9 +97,9 @@ public class SanguoshaServerListener implements ServerListener
 		public void disconnected(ClientSession session) {
 			System.out.println("disconnected " + session.getRemoteAddress());
 			
-			if (logined_session != null) {
+			if (logined_session != null&&logined_session.player!=null) {
 				synchronized (client_list) {
-					client_list.remove(logined_session.player.getUID());
+					client_list.remove(logined_session.player.getPlayerName());
 				}
 				logined_session.disconnected(session);
 			}
@@ -136,7 +145,7 @@ public class SanguoshaServerListener implements ServerListener
 							version);
 				} else {
 					logined_session = new EchoClientSession(
-							session, SanguoshaServerListener.this, user);
+							session, SanguoshaServerListener.this, world.getPlayer(user.getDefaultPlayer().player_id));
 					client_list.put(user.getUID(), logined_session);
 					System.out.println("登陆成功");
 				}

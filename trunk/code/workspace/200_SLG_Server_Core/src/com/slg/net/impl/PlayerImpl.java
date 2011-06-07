@@ -32,7 +32,7 @@ public class PlayerImpl implements IPlayer
 		return player;
 	}
 	@Override
-	public int getPlayerId() {
+	public int getPlayerID() {
 		// TODO Auto-generated method stub
 		return player.player_id;
 	}
@@ -95,6 +95,11 @@ public class PlayerImpl implements IPlayer
 	public int setOffice(int office) {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public void setPlayerID(int id) {
+		player.player_id = id;
 	}
 
 }
