@@ -14,7 +14,7 @@ import com.net.NetDataTypes;
 public class MessageCodecJava implements MutualMessageCodec
 {
 	public String getVersion() {
-		return "Thu Jun 02 17:27:11 CST 2011";
+		return "Tue Jun 07 11:47:38 CST 2011";
 	}
 
 	public void readExternal(MutualMessage msg, NetDataInput in) throws IOException 
@@ -210,9 +210,9 @@ public class MessageCodecJava implements MutualMessageCodec
 	}
 
 //	----------------------------------------------------------------------------------------------------
-//	com.slg.sanguosha.Messages.GetTimeRequest
+//	com.slg.net.messages.Messages.GetTimeRequest
 //	----------------------------------------------------------------------------------------------------
-	public com.slg.net.messages.Messages.GetTimeRequest new_com_slg_sanguosha_Messages_GetTimeRequest(){return new com.slg.net.messages.Messages.GetTimeRequest();}
+	public com.slg.net.messages.Messages.GetTimeRequest new_com_slg_net_messages_Messages_GetTimeRequest(){return new com.slg.net.messages.Messages.GetTimeRequest();}
 	private void _r(com.slg.net.messages.Messages.GetTimeRequest msg, NetDataInput in) throws IOException {
 		msg.message = in.readUTF();
 	}
@@ -221,9 +221,9 @@ public class MessageCodecJava implements MutualMessageCodec
 	}
 
 //	----------------------------------------------------------------------------------------------------
-//	com.slg.sanguosha.Messages.GetTimeResponse
+//	com.slg.net.messages.Messages.GetTimeResponse
 //	----------------------------------------------------------------------------------------------------
-	public com.slg.net.messages.Messages.GetTimeResponse new_com_slg_sanguosha_Messages_GetTimeResponse(){return new com.slg.net.messages.Messages.GetTimeResponse();}
+	public com.slg.net.messages.Messages.GetTimeResponse new_com_slg_net_messages_Messages_GetTimeResponse(){return new com.slg.net.messages.Messages.GetTimeResponse();}
 	private void _r(com.slg.net.messages.Messages.GetTimeResponse msg, NetDataInput in) throws IOException {
 		msg.time = in.readUTF();
 	}
@@ -232,9 +232,9 @@ public class MessageCodecJava implements MutualMessageCodec
 	}
 
 //	----------------------------------------------------------------------------------------------------
-//	com.slg.sanguosha.Messages.LoginRequest
+//	com.slg.net.messages.Messages.LoginRequest
 //	----------------------------------------------------------------------------------------------------
-	public com.slg.net.messages.Messages.LoginRequest new_com_slg_sanguosha_Messages_LoginRequest(){return new com.slg.net.messages.Messages.LoginRequest();}
+	public com.slg.net.messages.Messages.LoginRequest new_com_slg_net_messages_Messages_LoginRequest(){return new com.slg.net.messages.Messages.LoginRequest();}
 	private void _r(com.slg.net.messages.Messages.LoginRequest msg, NetDataInput in) throws IOException {
 		msg.name = in.readUTF();
 		msg.validate = in.readUTF();
@@ -247,9 +247,9 @@ public class MessageCodecJava implements MutualMessageCodec
 	}
 
 //	----------------------------------------------------------------------------------------------------
-//	com.slg.sanguosha.Messages.LoginResponse
+//	com.slg.net.messages.Messages.LoginResponse
 //	----------------------------------------------------------------------------------------------------
-	public com.slg.net.messages.Messages.LoginResponse new_com_slg_sanguosha_Messages_LoginResponse(){return new com.slg.net.messages.Messages.LoginResponse();}
+	public com.slg.net.messages.Messages.LoginResponse new_com_slg_net_messages_Messages_LoginResponse(){return new com.slg.net.messages.Messages.LoginResponse();}
 	private void _r(com.slg.net.messages.Messages.LoginResponse msg, NetDataInput in) throws IOException {
 		msg.result = in.readShort();
 		msg.version = in.readUTF();
@@ -262,9 +262,9 @@ public class MessageCodecJava implements MutualMessageCodec
 	}
 
 //	----------------------------------------------------------------------------------------------------
-//	com.slg.sanguosha.Messages.LogoutRequest
+//	com.slg.net.messages.Messages.LogoutRequest
 //	----------------------------------------------------------------------------------------------------
-	public com.slg.net.messages.Messages.LogoutRequest new_com_slg_sanguosha_Messages_LogoutRequest(){return new com.slg.net.messages.Messages.LogoutRequest();}
+	public com.slg.net.messages.Messages.LogoutRequest new_com_slg_net_messages_Messages_LogoutRequest(){return new com.slg.net.messages.Messages.LogoutRequest();}
 	private void _r(com.slg.net.messages.Messages.LogoutRequest msg, NetDataInput in) throws IOException {
 	}
 	private void _w(com.slg.net.messages.Messages.LogoutRequest msg, NetDataOutput out) throws IOException {

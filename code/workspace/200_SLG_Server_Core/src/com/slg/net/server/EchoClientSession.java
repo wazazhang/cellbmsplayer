@@ -8,7 +8,6 @@ import com.net.server.ClientSessionListener;
 import com.slg.IPlayer;
 import com.slg.net.impl.PlayerImpl;
 import com.slg.net.messages.Messages.LogoutRequest;
-import com.slg.sanguosha.login.User;
 
 public class EchoClientSession implements ClientSessionListener
 {
