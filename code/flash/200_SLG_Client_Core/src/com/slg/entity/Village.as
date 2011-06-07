@@ -20,6 +20,9 @@ package com.slg.entity
 		public var name :  String;
 		/** Java type is : <font color=#0000ff>int</font> */
 		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
+		public var player_id :  int;
+		/** Java type is : <font color=#0000ff>int</font> */
+		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
 		public var food :  int;
 		/** Java type is : <font color=#0000ff>int</font> */
 		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
@@ -40,6 +43,7 @@ package com.slg.entity
 		/**
 		 * @param id as <font color=#0000ff>int</font>
 		 * @param name as <font color=#0000ff>java.lang.String</font>
+		 * @param player_id as <font color=#0000ff>int</font>
 		 * @param food as <font color=#0000ff>int</font>
 		 * @param city_id as <font color=#0000ff>int</font>
 		 * @param buildings as <font color=#0000ff>int[]</font>
@@ -49,6 +53,7 @@ package com.slg.entity
 		public function Village(
 			id :  int = 0,
 			name :  String = null,
+			player_id :  int = 0,
 			food :  int = 0,
 			city_id :  int = 0,
 			buildings :  Array = null,
@@ -58,6 +63,7 @@ package com.slg.entity
 		{
 			this.id = id;
 			this.name = name;
+			this.player_id = player_id;
 			this.food = food;
 			this.city_id = city_id;
 			this.buildings = buildings;

@@ -33,6 +33,9 @@ package com.slg.entity
 		/** Java type is : <font color=#0000ff>com.slg.entity.Currency</font> */
 		[JavaType(name="com.slg.entity.Currency", leaf_type=NetDataTypes.TYPE_EXTERNALIZABLE)]
 		public var currency :  com.slg.entity.Currency;
+		/** Java type is : <font color=#0000ff>int</font> */
+		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
+		public var cur_village_id :  int;
 
 		/**
 		 * @param player_id as <font color=#0000ff>int</font>
@@ -41,7 +44,8 @@ package com.slg.entity
 		 * @param exp as <font color=#0000ff>com.slg.entity.GuageNumber</font>
 		 * @param level as <font color=#0000ff>int</font>
 		 * @param ap as <font color=#0000ff>com.slg.entity.GuageNumber</font>
-		 * @param currency as <font color=#0000ff>com.slg.entity.Currency</font>		 */
+		 * @param currency as <font color=#0000ff>com.slg.entity.Currency</font>
+		 * @param cur_village_id as <font color=#0000ff>int</font>		 */
 		public function Player(
 			player_id :  int = 0,
 			name :  String = null,
@@ -49,7 +53,8 @@ package com.slg.entity
 			exp :  com.slg.entity.GuageNumber = null,
 			level :  int = 0,
 			ap :  com.slg.entity.GuageNumber = null,
-			currency :  com.slg.entity.Currency = null) 
+			currency :  com.slg.entity.Currency = null,
+			cur_village_id :  int = 0) 
 		{
 			this.player_id = player_id;
 			this.name = name;
@@ -58,6 +63,7 @@ package com.slg.entity
 			this.level = level;
 			this.ap = ap;
 			this.currency = currency;
+			this.cur_village_id = cur_village_id;
 		}
 	}
 }
