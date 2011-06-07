@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import com.cell.CIO;
 import com.net.server.ClientSession;
 import com.slg.entity.Player;
-import com.slg.sanguosha.login.Login;
-import com.slg.sanguosha.login.User;
+import com.slg.login.Login;
+import com.slg.login.User;
 
 public class LoginDefault implements Login
 {
