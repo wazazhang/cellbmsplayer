@@ -7,8 +7,8 @@ package Class
 	import com.net.client.ClientEvent;
 	import com.net.client.ServerSession;
 	import com.slg.entity.Player;
-	import com.slg.sanguosha.Messages.LoginRequest;
-	import com.slg.sanguosha.Messages.LoginResponse;
+	import com.slg.net.messages.Messages.LoginRequest;
+	import com.slg.net.messages.Messages.LoginResponse;
 	
 	[Bindable]
 	public class Server
