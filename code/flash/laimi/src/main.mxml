@@ -3,12 +3,14 @@
 				implements="elex.socialize.IGameClient" 
 				layout="absolute" xmlns:ns1="Component.*" 
 				creationComplete="init()" 
-				preloader="Class.Myloading" horizontalAlign="left" verticalAlign="top">
+				horizontalAlign="left" 
+				verticalAlign="top">
 	<mx:Style>
 		global {font-size:12px}
 	</mx:Style>
 	<mx:Script>
 		<![CDATA[
+//			preloader="Class.Myloading"
 			import Class.Game;
 			import Class.Server;
 			
@@ -35,37 +37,19 @@
 			//游戏自身的配置信息 对应337 上平台接入所填写的game配置
 			private var config:XML;
 			
-			public function init():void
-			{
-				Server.app = this
-				Server.init(new SFSSessionImpl(
-					new MessageCodec(), 
-					"7028139564online"));
-				//Server.game_cpt = game;
-				login_cpt.server_host.text = "rr2.usxingcloud.info";
-				login_cpt.server_port.value = 40001;
-				login_cpt.TIname.text = this._container.uid;
-				login_cpt.version.text = Server.getClient().getSession().getMessageFactory().getVersion();
-
-				
-				if (this._container)
-				{
-					println("init uid: "+this._container.uid);
-					
-					
-					getUserInfo();
-				}
-			}
-			
 			//实现IGameClient 接口 平台启动接口
-			public function startUp(container:elex.socialize.ISocializeContainer,config:XML,width:int,height:int):void
+			public function startUp(
+				container:elex.socialize.ISocializeContainer,
+				config:XML,
+				width:int,
+				height:int):void
 			{
 				Security.allowDomain("*");
 				this._container=container;
 				
-				this.config = config;
-				this.width=width;
-				this.height=height;
+				this.config	= config;
+				this.width	= width;
+				this.height	= height;
 				
 				if(!this._container)
 				{
@@ -73,13 +57,13 @@
 					return;
 				}
 				
+				
 				//this.stage.addEventListener(MouseEvent.MOUSE_WHEEL,onMouseWheel);
 				//_container.addEventListener(HeaderClickEvent.HEADERCLICK,onHeaderClick);
 				//test googleAnalysics
 				//_container.trackTransaction({category:"1",cost:"300",money:"0",name: "Prinzessin Stuhl",orderId :"100001258912073359"},1,1);
 				//var useridInfoArr:Array=String(stage.loaderInfo.parameters.sig_user).split("_");
 				trace("uid: "+container.uid);
-				println("startUp: "+this._container.uid);
 			}
 			
 			public function println(info:String):void
@@ -90,6 +74,30 @@
 			public function print(info:String):void
 			{
 				login_cpt.print(info);
+			}
+			
+			public function init():void
+			{
+				Server.app = this
+				Server.init(new SFSSessionImpl(
+					new MessageCodec(), 
+					"9832165470online"));
+				//Server.game_cpt = game;
+				login_cpt.server_host.text = "rr2.usxingcloud.info";
+				login_cpt.server_port.value = 40001;
+				login_cpt.version.text = Server.getClient().getSession().getMessageFactory().getVersion();
+
+				
+				if (this._container)
+				{
+					println("init uid: "+this._container.uid);
+					
+					println(this.config.toXMLString());
+					
+					login_cpt.TIname.text = this._container.uid;
+					
+					getUserInfo();
+				}
 			}
 			
 //			-------------------------------------------------------------------------
@@ -172,7 +180,7 @@
 			
 		]]>
 	</mx:Script>
-	<ns1:Login_Cpt verticalCenter="-34" horizontalCenter="0"  id="login_cpt" width="644" height="446" left="-65.5" top="10">
+	<ns1:Login_Cpt verticalCenter="-34" horizontalCenter="0"  id="login_cpt">
 	</ns1:Login_Cpt>
 	
 
