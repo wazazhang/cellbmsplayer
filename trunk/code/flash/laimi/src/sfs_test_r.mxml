@@ -40,8 +40,9 @@
 			{
 				//Game.app = game;
 				//gameCmt.init();
-				Server.init(new SFSSessionImpl(new MessageCodec(), "7028139564online"));
 				Server.app = this
+				Server.init(new SFSSessionImpl(new MessageCodec(), 
+					"9832165470online"));
 				//Server.game_cpt = game;
 				login_cpt.server_host.text = "rr2.usxingcloud.info";
 				login_cpt.server_port.value = 40001;		
