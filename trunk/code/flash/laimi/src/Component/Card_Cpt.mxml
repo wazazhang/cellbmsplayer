@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="26" height="32"  
-		  --> 
 
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="26" height="32"
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="25" height="31"
 		   
-	 borderStyle="{(!isPlayerOwner)&amp;&amp;(!game.gamer.isMyturn)&amp;&amp;_card==null?'none':'solid'}"	   
+	 borderStyle="{isSelected?'solid':'none'}"	   
 		   
 	 borderColor="{isSelected?0xff0000:0x000000}" 
+	 
 	 
 	 verticalScrollPolicy="off" horizontalScrollPolicy="off"
 	 
@@ -15,12 +13,13 @@
 	 
 	 mouseOver="mouseOver(event)"   mouseOut="mouseOut(event)"
 	 
-	 backgroundAlpha="{(!isPlayerOwner)&amp;&amp;(!game.gamer.isMyturn)&amp;&amp;_card==null?0.0:0.52}">
+	 backgroundAlpha="{(!isPlayerOwner)&amp;&amp;(!game.gamer.isMyturn)&amp;&amp;_card==null?0.0:0.32}">
 	 
 	<mx:Script>
 		<![CDATA[
 			import Class.Game;
 			import Class.Model.Card;
+			import Class.Resource;
 			import Class.Server;
 			import Class.TimesCtr;
 			
@@ -53,21 +52,6 @@
 			public var isShow:Boolean = true;
 			
 			
-			[Embed(source='image/a000.png')]
-			public static var im1:Class;    
-			
-			[Embed(source='image/a001.png')]
-			public static var im2:Class;    
-			
-			[Embed(source='image/a002.png')]
-			public static var im3:Class;    
-			
-			[Embed(source='image/a003.png')]
-			public static var im4:Class;    
-			
-			[Embed(source='image/a004.png')]
-			public static var im5:Class;    
- 
 			public function confim():void
 			{
 				confimcard = card;
@@ -86,16 +70,10 @@
 				{
 					c.cardUI = this;
 				}
+				
 				if(c!=null)
 				{
-					switch(c.type)
-					{
-						case 0: img0.source = im5; break;
-						case 1: img0.source = im1; break;
-						case 2: img0.source = im2; break;
-						case 3: img0.source = im3; break;
-						case 4: img0.source = im4; break;
-					}
+					img0.source = Resource.getCardImg(c.type,c.point)
 				}
 				else
 				{
@@ -420,14 +398,8 @@
 			}
 		]]>
 	</mx:Script>
-	<mx:Image id="img0" visible="{isShow}"></mx:Image>
+	<mx:Image id="img0" visible="{isShow}" width="28" height="38"></mx:Image>
 	<mx:Canvas width="100%" height="100%" backgroundColor="#000000" backgroundAlpha="0.3" visible="{card==null?false:card.isSended}"></mx:Canvas>
-	<mx:Label text="{card==null?'':card.point}" color="0x000000" visible="{isShow}"
-		 horizontalCenter="0" verticalCenter="0" width="100%" textAlign="center" fontWeight="bold" fontSize="14"/>
-	
-	<mx:Label text="{confimcard==null?'':confimcard.point}" color="0x000000" visible="{isShow is Card_Cpt}"
-			  horizontalCenter="0" verticalCenter="10" width="100%" textAlign="center" fontWeight="bold" fontSize="8"/>
-	
 	
 	<mx:Glow id="ef" target="{this}" color="0xff0000" repeatCount="5" duration="500" strength="10" ></mx:Glow>
 </mx:Canvas>

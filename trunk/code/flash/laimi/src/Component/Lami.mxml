@@ -1,8 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"  xmlns:ns1="Component.*" width="960" height="600" borderStyle="solid" borderColor="0x000000" backgroundColor="0xffffff"
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"  xmlns:ns1="Component.*" width="960" height="600"
+		   borderStyle="solid" borderColor="0x000000" backgroundColor="0xffffff"   styleName="taskDetailBG"
 		   verticalCenter="0" horizontalCenter="0" verticalScrollPolicy="off" horizontalScrollPolicy="off" creationComplete="initEvent()"  >
 	
-	
+	<mx:Style>  
+		.taskDetailBG
+		{  
+			border-skin:ClassReference('Class.MyBackgroundSkin');  
+			background-image:Embed("image/bg/gbg.png");  
+			backgroundImagePosition:left,top;/*第一个参数可用值：left,center,right,默认值left;第二个参数可用值：top,middle,bottom,默认值top*/  
+			backgroundImageRepeat:repeat;/*可用值：repeat,no-repeat,repeat-x,repeat-y,默认值no-repeat*/  
+			background-size:100;  
+			/*border-thickness-bottom:30;  
+			border-thickness-left:30;  
+			border-thickness-right:30;  
+			border-thickness-top:30;  
+			header-height:30;  */
+		}  
+	</mx:Style>
 	<mx:Script>
 		<![CDATA[
 			import Class.Game;
@@ -344,29 +359,31 @@
 		]]>
 	</mx:Script>
 	
-	<ns1:Matrix_Cpt id="mx" y="130" borderStyle="solid" height="201" horizontalCenter="0">
+	<mx:Image  source="image/bg/pqbg2.png" y="91" horizontalCenter="0">
+	</mx:Image>
+	
+	<ns1:Matrix_Cpt id="mx" y="115"  height="201" horizontalCenter="3">
 	</ns1:Matrix_Cpt>
 	
-	<ns1:UserMatrix_Cpt id="umx" height="202" x="245" y="410" width="479">
-		<mx:ProgressBar id="sumbar" width="465" label="" height="10" mode="manual" labelPlacement="center" y="24" x="0"/>
-		<mx:ProgressBar id="optbar" height="10" width="465" label="" mode="manual" labelPlacement="center" x="0" y="36"/>
+	<mx:ProgressBar id="sumbar" width="465" label="" height="10" mode="manual" labelPlacement="center" y="398" x="246"/>
+	<mx:ProgressBar id="optbar" height="10" width="465" label="" mode="manual" labelPlacement="center" x="246" y="410"/>
+	
+	<ns1:UserMatrix_Cpt id="umx" height="202" x="245" y="415" width="479">
 	</ns1:UserMatrix_Cpt>
 	
-	<!--玩家操作区-->
-	<ns1:Opt_Cpt id="optCpt" height="177" y="395" x="369">
-	</ns1:Opt_Cpt>
+
 	
 	<!--信息显示 -->
 	
 	
 	<!--//其他玩家信息-->
-	<ns1:OtherPlayer_Cpt id="nextPlayer1" x="19" y="200">
+	<ns1:OtherPlayer_Cpt id="nextPlayer1" x="8" y="200">
 	</ns1:OtherPlayer_Cpt>
 	
-	<ns1:OtherPlayer_Cpt id="nextPlayer2"  x="429" y="10">
+	<ns1:OtherPlayer_Cpt id="nextPlayer2" y="-1" horizontalCenter="0">
 	</ns1:OtherPlayer_Cpt>
 	
-	<ns1:OtherPlayer_Cpt id="nextPlayer3" x="808" y="200">
+	<ns1:OtherPlayer_Cpt id="nextPlayer3" x="825" y="200">
 	</ns1:OtherPlayer_Cpt>
 	
 
@@ -397,12 +414,10 @@
 	
 	<!--玩家信息区-->
 	
-	<mx:Canvas id="useinfo" width="470" height="36" x="243" y="396" borderStyle="solid" borderColor="{game.gamer.isMyturn?0x990000:0x010101}" borderThickness="{game.gamer.isMyturn?2:1}"
-			    verticalScrollPolicy="off" horizontalScrollPolicy="off" cornerRadius="3">
+	<mx:Canvas id="useinfo" width="470" height="39" x="243" y="422" 
+			   verticalScrollPolicy="off" horizontalScrollPolicy="off" backgroundImage="@Embed(source='../image/bg/opbg.png')">
 		
-		<mx:Label x="0" y="16" text="{getDir(seatID)}" color="#010101"/>
-	
-		<mx:Label x="0" y="0" text="{Server.player.uid}" color="#010101"/>
+		<mx:Label x="7" y="0" text="{Server.player.uid}" color="#010101"/>
 		
 		<mx:Label x="80" y="16" text="{game.gamer.isMyturn?'游戏中':'等待中'}" color="#010101"/>
 		
@@ -420,10 +435,14 @@
 		
 	</mx:Canvas>
 	
+	<!--玩家操作区-->
+	<ns1:Opt_Cpt id="optCpt" height="177" y="421" x="409">
+	</ns1:Opt_Cpt>
 	
-	<mx:TextArea  x="720" y="395" width="230" height="171" backgroundAlpha="0.0" color="#010101" editable="false"  text="{talkinfoStr}"/>
+	
+	<mx:TextArea  x="720" y="397" width="230" height="168" backgroundAlpha="0.0" color="#010101" editable="false"  text="{talkinfoStr}"/>
 
-	<mx:TextArea  width="230" height="198"  backgroundAlpha="0.0" color="#010101" editable="false"  text="{gameinfoStr}" x="7" y="396"/>
+	<mx:TextArea  width="230" height="195"  backgroundAlpha="0.0" color="#010101" editable="false"  text="{gameinfoStr}" x="7" y="398"/>
 	
 	
 	<mx:Button x="901" y="569" label="提交" click="pubTalk()"/>
