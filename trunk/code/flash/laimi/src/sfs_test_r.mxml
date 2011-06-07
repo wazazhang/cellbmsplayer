@@ -44,7 +44,9 @@
 				Server.app = this
 				//Server.game_cpt = game;
 				login_cpt.server_host.text = "rr2.usxingcloud.info";
-				login_cpt.server_port.value = 40001;
+				login_cpt.server_port.value = 40001;		
+				login_cpt.version.text = Server.getClient().getSession().getMessageFactory().getVersion();
+
 			}
 			
 			//实现IGameClient 接口 平台启动接口
