@@ -124,11 +124,11 @@ package Class.Model
 			var fontx:int = 0;
 			
 			var cardcpt:Card_Cpt = line.firstCard;
-			var y:int =top+ lie*(cardcpt.height+2);
+			var y:int =top+ lie*(cardcpt.height+1);
 			
 			for(var i:int=0;i<line.lineLength;i++)
 			{
-				cardcpt.x = i*cardcpt.width+(lie*fontx);
+				cardcpt.x = i*(cardcpt.width+1)+(lie*fontx);
 				cardcpt.y = y;
 				matrix.addChild(cardcpt);
 				cardcpt = cardcpt.nextCardCpt;	

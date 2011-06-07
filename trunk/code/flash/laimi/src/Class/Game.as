@@ -113,8 +113,8 @@ package Class
 				line.fill(i,matrix);
 			}
 			var cardcpt:Card_Cpt = (lineArray[0] as Line).firstCard;
-			matrix.width = cardcpt.width*(lineArray[0] as Line).lineLength+4;
-			matrix.height = cardcpt.height*lineCount+4;
+			matrix.width = (cardcpt.width+1)*(lineArray[0] as Line).lineLength+4;
+			matrix.height = (cardcpt.height+1)*lineCount+4;
 		}
 		
 		//清空矩阵

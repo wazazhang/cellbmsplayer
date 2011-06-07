@@ -56,11 +56,11 @@ package Class.Model
 		{
 			
 			var cardcpt:Card_Cpt = firstCard;
-			var y:int = lie*cardcpt.height;
+			var y:int = lie*(cardcpt.height+1);
 			
 			for(var i:int=0;i<lineLength;i++)
 			{
-				cardcpt.x = i*cardcpt.width;
+				cardcpt.x = i*(cardcpt.width+1);
 				cardcpt.y = y;
 				ct.addChild(cardcpt);
 				cardcpt = cardcpt.nextCardCpt;	
