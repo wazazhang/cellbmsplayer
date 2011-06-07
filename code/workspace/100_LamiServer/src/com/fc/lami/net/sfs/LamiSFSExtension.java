@@ -29,7 +29,8 @@ public class LamiSFSExtension extends XingCloudSFSExtension
 		
 		CAppBridge.initNullStorage();
 		LamiConfig.load(LamiConfig.class, super.getConfigProperties());
-		LamiConfig.LOGIN_CLASS = "com.fc.lami.login.xingcloud.LoginXingCloud";
+		LamiConfig.LOGIN_CLASS = com.fc.lami.login.xingcloud.LoginXingCloud.class.getCanonicalName();
+//		LamiConfig.LOGIN_CLASS = com.fc.lami.login.test.LoginDefault.class.getCanonicalName();
 		try {
 			this.adapter = new SFSServerAdapter(this, new MessageFactory());
 			this.adapter.open(0, new LamiServerListener());
