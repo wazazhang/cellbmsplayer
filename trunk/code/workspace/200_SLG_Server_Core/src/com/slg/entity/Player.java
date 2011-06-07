@@ -36,6 +36,13 @@ public class Player extends FlashMessage{
 	/**
 	 * 货币
 	 */
-	public Currency currency = new Currency();
+	public Currency currency;
 	
+	public Player(String name){
+		this.name = name;
+		this.exp = new GuageNumber(0, 100);
+		this.level = 0;
+		this.ap = new GuageNumber(0, 100, 100);
+		currency = new Currency();
+	}
 }

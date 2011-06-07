@@ -93,8 +93,7 @@ public class PlayerImpl implements IPlayer
 
 	@Override
 	public int setOffice(int office) {
-		// TODO Auto-generated method stub
-		return 0;
+		return player.office = office;
 	}
 
 	@Override
