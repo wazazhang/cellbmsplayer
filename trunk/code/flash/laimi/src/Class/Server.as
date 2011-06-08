@@ -46,6 +46,7 @@ package Class
 	import com.fc.lami.Messages.LoginResponse;
 	import com.fc.lami.Messages.MainMatrixChangeNotify;
 	import com.fc.lami.Messages.MainMatrixChangeRequest;
+	import com.fc.lami.Messages.MainMatrixChangeResponse;
 	import com.fc.lami.Messages.OpenIceNotify;
 	import com.fc.lami.Messages.OperateCompleteNotify;
 	import com.fc.lami.Messages.PlayerData;
@@ -443,7 +444,12 @@ package Class
 			else if (res is GetCardResponse){
 				var edr : GetCardResponse =res as GetCardResponse;
 			}
-			
+			else if (res is MainMatrixChangeResponse){
+				var mmcr : MainMatrixChangeResponse = res as MainMatrixChangeResponse;
+				if (mmcr.result!=MainMatrixChangeResponse.MAIN_MATRIX_CHANGE_RESULT_SUCCESS){
+					SynchronizeCard();
+				}
+			}
 			else if(res is SubmitResponse)
 			{
 				var sr : SubmitResponse = res as SubmitResponse;
