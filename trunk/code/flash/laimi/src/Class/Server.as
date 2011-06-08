@@ -367,7 +367,7 @@ package Class
 				}
 				else 
 				{
-					Alert.show("result : " + login.result);
+					Alert.show("result=" + login.result + " : reason="+login.reason);
 				}
 				return;
 			}
