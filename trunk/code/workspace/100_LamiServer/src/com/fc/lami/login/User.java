@@ -4,10 +4,6 @@ public interface User
 {
 	public String	getUID();
 	
-//	public String	getName();
-	
-	
-	
 	public int		getScore();
 	
 	public int		getPoint();

@@ -6,7 +6,9 @@ import org.slf4j.LoggerFactory;
 import game.service.user.UserProfile;
 
 import com.cell.CIO;
+import com.fc.lami.Messages.LoginRequest;
 import com.fc.lami.login.Login;
+import com.fc.lami.login.LoginInfo;
 import com.fc.lami.login.User;
 import com.net.server.ClientSession;
 import com.smartfoxserver.bitswarm.sessions.ISession;
@@ -21,8 +23,15 @@ public class LoginXingCloud implements Login
 	private PersistenceSession persistenceSession;
 	
 	@Override
-	public User login(ClientSession session, String uid, String validate) 
+	public LoginInfo login(ClientSession session, LoginRequest login) 
 	{
+		String uid = login.player.uid;
+		
+		if (login.platform == null || login.platform.isEmpty())
+		{
+			return new LoginInfo(new DefaultUser(uid), "default user");
+		}
+		
 		//init PersistenceSession
 		synchronized (this) {
 			try {
@@ -30,22 +39,26 @@ public class LoginXingCloud implements Login
 					persistenceSession = SessionFactory.openSession();
 				}
 				if (persistenceSession == null) {
-					log.error("there is no persistenceSession!");
-					return null;
+					log.error(
+							"there is no persistenceSession!");
+					return new LoginInfo(null, 
+							"there is no persistenceSession!");	
 				}
 				//get UserProfile
 				UserProfile userProfile = (UserProfile) UserFactory.getInstance().get(
 						persistenceSession, uid);
 				if (userProfile == null) {
-					log.error("there is no userProfile with uid(" + uid + ")!");
-					return null;
+					log.error(
+							"there is no userProfile with uid(" + uid + ")!");
+					return new LoginInfo(null, 
+							"there is no userProfile with uid(" + uid + ")!");	
 				}
-				return new XingCloudUser(userProfile);
+				return new LoginInfo(new XingCloudUser(userProfile), "");
 			} catch (Throwable e) {
 				log.error(e.getMessage(), e);
+				return new LoginInfo(null, e.getClass() + " : " + e.getMessage()+"\n");	
 			}
 		}
-		return null;
 	}
 	
 	private class XingCloudUser implements User
@@ -149,7 +162,66 @@ public class LoginXingCloud implements Login
 		}
 		
 	}
-	
+
+	private class DefaultUser implements User
+	{
+		private String name;
+		private int win;
+		private int lose;
+		private int point;
+		private int score;
+		
+		public DefaultUser(String name) {
+			this.name = name;
+		}
+		
+		@Override
+		public String getUID() {
+			return name;
+		}
+		
+		@Override
+		synchronized public int getLose() {
+			return lose;
+		}
+
+		@Override
+		synchronized public int getPoint() {
+			return point;
+		}
+
+		@Override
+		synchronized public int getScore() {
+			return score;
+		}
+
+		@Override
+		synchronized public int getWin() {
+			return win;
+		}
+		
+		@Override
+		public void save() {}
+		
+		@Override
+		synchronized public int addLose(int value) {
+			return lose += value;
+		}
+		@Override
+		synchronized public int addPoint(int value) {
+			return point += value;
+		}
+		@Override
+		synchronized public int addScore(int value) {
+			return score += value;
+		}
+		@Override
+		synchronized public int addWin(int value) {
+			return win += value;
+		}
+
+		
+	}
 	public static void main(String args[])
 	{
 		PersistenceSession persistenceSession = null;

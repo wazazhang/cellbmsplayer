@@ -11,6 +11,7 @@ import com.fc.lami.Messages.LoginResponse;
 import com.fc.lami.Messages.PlayerData;
 import com.fc.lami.Messages.RoomSnapShot;
 import com.fc.lami.login.Login;
+import com.fc.lami.login.LoginInfo;
 import com.fc.lami.login.User;
 import com.fc.lami.model.Player;
 import com.fc.lami.model.Room;
@@ -130,14 +131,16 @@ public class LamiServerListener implements ServerListener
 				return new LoginResponse(
 						LoginResponse.LOGIN_RESULT_FAIL_BAD_VERSION, 
 						null, 
-						version);
+						version, 
+						"");
 			}
 			synchronized (client_list) {
 				if (request.player == null) {
 					return new LoginResponse(
 							LoginResponse.LOGIN_RESULT_FAIL, 
 							null, 
-							version);
+							version, 
+							"");
 				}
 				String ruid = request.player.uid;
 				EchoClientSession old_session = client_list.get(ruid);
@@ -146,27 +149,29 @@ public class LamiServerListener implements ServerListener
 						return new LoginResponse(
 								LoginResponse.LOGIN_RESULT_FAIL_ALREADY_LOGIN, 
 								null, 
-								version);
+								version, 
+								"");
 					} else {
 						client_list.remove(ruid);
 					}
 				}
-				User user = login_adapter.login(session, ruid, request.validate);
-				if (user == null) {
+				LoginInfo result = login_adapter.login(session, request);
+				if (!result.isSuccess()) {
 					return new LoginResponse(LoginResponse.LOGIN_RESULT_FAIL, 
 							null, 
-							version);
+							version, 
+							result.getReason());
 				} else {
 					logined_session = new EchoClientSession(
-							session, LamiServerListener.this, request, user);
-					client_list.put(user.getUID(), logined_session);
+							session, LamiServerListener.this, request, result.getUser());
+					client_list.put(result.getUser().getUID(), logined_session);
 				}
 			}
 			
 			LoginResponse res = new LoginResponse(
 					LoginResponse.LOGIN_RESULT_SUCCESS, 
 					this.logined_session.player.getPlayerData(),
-					version);
+					version, "");
 			res.rooms = getRoomList();
 //			res.server_time = System.currentTimeMillis();
 			return res;

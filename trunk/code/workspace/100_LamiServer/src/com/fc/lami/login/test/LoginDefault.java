@@ -1,15 +1,17 @@
 package com.fc.lami.login.test;
 
 import com.cell.CIO;
+import com.fc.lami.Messages.LoginRequest;
 import com.fc.lami.login.Login;
+import com.fc.lami.login.LoginInfo;
 import com.fc.lami.login.User;
 import com.net.server.ClientSession;
 
 public class LoginDefault implements Login
 {
 	@Override
-	public User login(ClientSession session, String uid, String validate) {
-		return new DefaultUser(uid);
+	public LoginInfo login(ClientSession session, LoginRequest login) {
+		return new LoginInfo(new DefaultUser(login.player.uid), "");
 	}
 	
 	private class DefaultUser implements User
