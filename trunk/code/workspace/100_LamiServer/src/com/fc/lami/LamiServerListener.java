@@ -120,7 +120,11 @@ public class LamiServerListener implements ServerListener
 		 * @param protocol
 		 * @param request
 		 */
-		private LoginResponse processLoginRequest(ClientSession session, Protocol protocol, LoginRequest request) {
+		private LoginResponse processLoginRequest(
+				ClientSession session, 
+				Protocol protocol, 
+				LoginRequest request) 
+		{
 			String version = server_instance.getMessageFactory().getMutualCodec().getVersion();
 			if (!version.equals(request.version)) {
 				return new LoginResponse(
@@ -153,7 +157,7 @@ public class LamiServerListener implements ServerListener
 							version);
 				} else {
 					logined_session = new EchoClientSession(
-							session, LamiServerListener.this, user);
+							session, LamiServerListener.this, request, user);
 					client_list.put(user.getUID(), logined_session);
 				}
 			}

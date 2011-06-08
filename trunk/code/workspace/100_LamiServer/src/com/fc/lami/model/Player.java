@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.fc.lami.Messages.CardData;
+import com.fc.lami.Messages.LoginRequest;
 import com.fc.lami.Messages.PlayerData;
 import com.fc.lami.Messages.ResultPak;
 import com.fc.lami.login.User;
@@ -24,6 +25,7 @@ public class Player
 	final public int 			player_id;
 	final public User 			user;
 	final public ClientSession 	session;
+	final private LoginRequest	login;
 	
 	public boolean is_ready = false;
 	
@@ -41,11 +43,12 @@ public class Player
 	/** 是否破冰 */
 	public boolean isOpenIce = false;
 		
-	public Player(ClientSession session, User user){
+	public Player(ClientSession session, LoginRequest login, User user){
 		this.session = session;
 		this.user = user;
 		this.player_id = ids.incrementAndGet();
 		this.is_ready = false;
+		this.login = login;
 	}
 	
 	public String getUID() {
@@ -55,6 +58,8 @@ public class Player
 	public PlayerData getPlayerData(){
 		PlayerData pd = new PlayerData();
 		pd.player_id = this.player_id;
+		pd.player_name = login.name;
+		pd.player_head_url = login.head_url;
 		pd.uid = this.user.getUID();
 		pd.level = 1;
 		pd.score = this.user.getScore();

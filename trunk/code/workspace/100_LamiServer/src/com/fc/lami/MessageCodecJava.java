@@ -14,7 +14,7 @@ import com.net.NetDataTypes;
 public class MessageCodecJava implements MutualMessageCodec
 {
 	public String getVersion() {
-		return "Fri Jun 03 10:52:40 CST 2011";
+		return "Wed Jun 08 12:59:17 CST 2011";
 	}
 
 	public void readExternal(MutualMessage msg, NetDataInput in) throws IOException 
@@ -854,11 +854,15 @@ public class MessageCodecJava implements MutualMessageCodec
 	public com.fc.lami.Messages.LoginRequest new_com_fc_lami_Messages_LoginRequest(){return new com.fc.lami.Messages.LoginRequest();}
 	private void _r(com.fc.lami.Messages.LoginRequest msg, NetDataInput in) throws IOException {
 		msg.uid = in.readUTF();
+		msg.name = in.readUTF();
+		msg.head_url = in.readUTF();
 		msg.validate = in.readUTF();
 		msg.version = in.readUTF();
 	}
 	private void _w(com.fc.lami.Messages.LoginRequest msg, NetDataOutput out) throws IOException {
 		out.writeUTF(msg.uid);
+		out.writeUTF(msg.name);
+		out.writeUTF(msg.head_url);
 		out.writeUTF(msg.validate);
 		out.writeUTF(msg.version);
 	}
@@ -996,6 +1000,8 @@ public class MessageCodecJava implements MutualMessageCodec
 	private void _r(com.fc.lami.Messages.PlayerData msg, NetDataInput in) throws IOException {
 		msg.player_id = in.readInt();
 		msg.uid = in.readUTF();
+		msg.player_name = in.readUTF();
+		msg.player_head_url = in.readUTF();
 		msg.score = in.readInt();
 		msg.win = in.readInt();
 		msg.lose = in.readInt();
@@ -1004,6 +1010,8 @@ public class MessageCodecJava implements MutualMessageCodec
 	private void _w(com.fc.lami.Messages.PlayerData msg, NetDataOutput out) throws IOException {
 		out.writeInt(msg.player_id);
 		out.writeUTF(msg.uid);
+		out.writeUTF(msg.player_name);
+		out.writeUTF(msg.player_head_url);
 		out.writeInt(msg.score);
 		out.writeInt(msg.win);
 		out.writeInt(msg.lose);

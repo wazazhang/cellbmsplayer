@@ -62,6 +62,9 @@ public class Messages {
 	{
 		public int player_id;
 		public String uid;
+		public String player_name;
+		public String player_head_url;
+		
 		public int score;
 		public int win;
 		public int lose;
@@ -645,6 +648,8 @@ public class Messages {
 	public static class LoginRequest extends FlashMessage
 	{
 		public String uid;
+		public String name;
+		public String head_url;
 		public String validate;
 		public String version;
 		

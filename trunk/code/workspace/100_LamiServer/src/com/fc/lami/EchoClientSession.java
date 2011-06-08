@@ -17,6 +17,7 @@ import com.fc.lami.Messages.GetPlayerDataRequest;
 import com.fc.lami.Messages.GetPlayerDataResponse;
 import com.fc.lami.Messages.LeaveDeskRequest;
 import com.fc.lami.Messages.LeaveDeskResponse;
+import com.fc.lami.Messages.LoginRequest;
 import com.fc.lami.Messages.LogoutRequest;
 import com.fc.lami.Messages.MainMatrixChangeRequest;
 import com.fc.lami.Messages.MainMatrixChangeResponse;
@@ -60,10 +61,15 @@ public class EchoClientSession implements ClientSessionListener
 	final public LamiServerListener 		server;
 	final public Player 		player;
 	
-	public EchoClientSession(ClientSession session, LamiServerListener server, User user) {
+	public EchoClientSession(
+			ClientSession session, 
+			LamiServerListener server, 
+			LoginRequest req, 
+			User user) 
+	{
 		this.session = session;
 		this.server = server;
-		this.player = new Player(session, user);
+		this.player = new Player(session, req, user);
 	}
 	
 	@Override
