@@ -6,7 +6,7 @@ package com.slg.entity
 	import com.slg.entity.*;
 
 	/**
-	 * Java Class [6] [com.slg.entity.Village]<br>
+	 * Java Class [9] [com.slg.entity.Village]<br>
 	 * 此代码为自动生成。不需要在此修改。若有错误，请修改代码生成器。
 	 */
 	[Bindable]
@@ -27,8 +27,8 @@ package com.slg.entity
 		/** Java type is : <font color=#0000ff>int</font> */
 		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
 		public var city_id :  int;
-		/** Java type is : <font color=#0000ff>int[]</font> */
-		[JavaType(name="int[]", leaf_type=NetDataTypes.TYPE_INT)]
+		/** Java type is : <font color=#0000ff>com.slg.entity.Building[]</font> */
+		[JavaType(name="com.slg.entity.Building[]", leaf_type=NetDataTypes.TYPE_EXTERNALIZABLE)]
 		public var buildings :  Array;
 		/** Java type is : <font color=#0000ff>int[]</font> */
 		[JavaType(name="int[]", leaf_type=NetDataTypes.TYPE_INT)]
@@ -46,7 +46,7 @@ package com.slg.entity
 		 * @param player_id as <font color=#0000ff>int</font>
 		 * @param food as <font color=#0000ff>int</font>
 		 * @param city_id as <font color=#0000ff>int</font>
-		 * @param buildings as <font color=#0000ff>int[]</font>
+		 * @param buildings as <font color=#0000ff>com.slg.entity.Building[]</font>
 		 * @param heros as <font color=#0000ff>int[]</font>
 		 * @param arms_list as <font color=#0000ff>com.slg.entity.Arms[]</font>
 		 * @param soldiers_list as <font color=#0000ff>com.slg.entity.Soldiers[]</font>		 */

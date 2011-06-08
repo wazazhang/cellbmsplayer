@@ -6,7 +6,7 @@ package com.slg.net.messages.Messages
 	import com.slg.entity.*;
 
 	/**
-	 * Java Class [9] [com.slg.net.messages.Messages.LoginRequest]<br>
+	 * Java Class [12] [com.slg.net.messages.Messages.LoginRequest]<br>
 	 * 此代码为自动生成。不需要在此修改。若有错误，请修改代码生成器。
 	 */
 	[Bindable]
