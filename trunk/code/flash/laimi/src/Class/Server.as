@@ -271,7 +271,7 @@ package Class
 				game.setAllCardIssend();
 				game.leftCard = tsn.stack_num;
 				game.playerTurnStart(tsn.player_id);
-				
+				SynchronizeCard();
 			
 			}
 			else if (ntf is OperateCompleteNotify){
@@ -474,6 +474,7 @@ package Class
 				var syn : SynchronizeResponse = res as SynchronizeResponse;
 				
 				game.publicCardChange(true, syn.matrix);
+				
 				game.gamer.myCardChange(syn.player_card);
 			}
 			

@@ -81,28 +81,60 @@ package Class.Model
 		{
 			if(isMyturn)
 				return;
+			cleanMatrix();
+			handCard.removeAll();
+			for each(var cd:CardData in cards){
+				handCard.addItem(Card.createCardByData(cd) );
+			}
+
+			handCard.refresh();
 			
-			for each(var line:Line in cardLines)
+			var line:Line = cardLines[0];
+			var cardcpt:Card_Cpt = line.firstCard;
+			var precard:Card;
+			
+			for each(var card:Card in handCard)
 			{
-				var cardcpt:Card_Cpt = line.firstCard;
-				do{	
-					
-					for each(var carddata:CardData in cards)
-					{
-						if(cardcpt.cardX == carddata.x&&cardcpt.cardY == carddata.y)
-						{
-							cardcpt.card = Card.createCardByData(carddata);
-							break;
-						}
-						else
-						{
-							cardcpt.card = null;
-						}
-					}
-					cardcpt = cardcpt.nextCardCpt;
-				}	
-				while(cardcpt!=null)
-			}	
+				cardcpt.card = card;
+				cardcpt.confimcard = card;
+//				cardcpt.isShow = false;
+				cardcpt = cardcpt.nextCardCpt;
+				if(precard!=null)
+				{
+					precard.nextCard = card;
+				}
+				precard = card;
+			}
+
+			if(orderType)
+			{
+				orderCardByPoint();
+			}
+			else
+			{
+				orderCardByColor();
+			}
+//			for each(var line:Line in cardLines)
+//			{
+//				var cardcpt:Card_Cpt = line.firstCard;
+//				do{	
+//					
+//					for each(var carddata:CardData in cards)
+//					{
+//						if(cardcpt.cardX == carddata.x&&cardcpt.cardY == carddata.y)
+//						{
+//							cardcpt.card = Card.createCardByData(carddata);
+//							break;
+//						}
+//						else
+//						{
+//							cardcpt.card = null;
+//						}
+//					}
+//					cardcpt = cardcpt.nextCardCpt;
+//				}	
+//				while(cardcpt!=null)
+//			}	
 		}
 		
 		//清空矩阵
