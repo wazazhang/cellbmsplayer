@@ -97,6 +97,8 @@ package Class
 		
 		public static var isAutoEnter:Boolean = false;
 		
+		private static var platform : String;
+		
 		public static function getClient() : LamiClient {
 			return client;
 		}
@@ -131,11 +133,8 @@ package Class
 			//Alert.show("连接成功!");
 			var version : String = client.getSession().getMessageFactory().getVersion();
 			trace("client version is : " + version);
-			client.sendRequest(new LoginRequest(
-				player.uid, 
-				player.player_name, 
-				player.player_head_url,
-				version),
+			client.sendRequest(
+				new LoginRequest(player, version, version, platform), 
 				client_response);
 		}
 		
@@ -578,12 +577,14 @@ package Class
 		//连接服务器
 		public static function linkToServer(
 			p:PlayerData, 
+			pt:String,
 			host:String,
 			port:int):void
 		{
 			if (client.isConnected()) {
 				client.disconnect();
 			}
+			platform = pt;
 			player = p;
 			if (!client.isConnected()) {
 				//txt_messages.text = txt_messages.text +"connecting...\n";
