@@ -32,7 +32,7 @@
 			import mx.utils.URLUtil;
 			
 			//平台容器实例引用
-			private var _container:*;
+			private var _container:elex.socialize.ISocializeContainer;
 			
 			//游戏自身的配置信息 对应337 上平台接入所填写的game配置
 			private var config:XML;
@@ -101,9 +101,9 @@
 					login_cpt.player_uid.enabled 	= false;
 					login_cpt.server_host.enabled 	= false;
 					login_cpt.server_port.enabled 	= false;
-					
+					login_cpt.platform				= this._container.sns;
+					println(this._container+"");
 					println(this.config.toXMLString());
-					
 					getUserInfo();
 				}
 				else 

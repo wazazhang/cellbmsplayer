@@ -36,22 +36,28 @@ package com.fc.lami.Messages
 		/** Java type is : <font color=#0000ff>java.lang.String</font> */
 		[JavaType(name="java.lang.String", leaf_type=NetDataTypes.TYPE_STRING)]
 		public var version :  String;
+		/** Java type is : <font color=#0000ff>java.lang.String</font> */
+		[JavaType(name="java.lang.String", leaf_type=NetDataTypes.TYPE_STRING)]
+		public var reason :  String;
 
 		/**
 		 * @param result as <font color=#0000ff>short</font>
 		 * @param player as <font color=#0000ff>com.fc.lami.Messages.PlayerData</font>
 		 * @param rooms as <font color=#0000ff>com.fc.lami.Messages.RoomSnapShot[]</font>
-		 * @param version as <font color=#0000ff>java.lang.String</font>		 */
+		 * @param version as <font color=#0000ff>java.lang.String</font>
+		 * @param reason as <font color=#0000ff>java.lang.String</font>		 */
 		public function LoginResponse(
 			result :  int = 0,
 			player :  com.fc.lami.Messages.PlayerData = null,
 			rooms :  Array = null,
-			version :  String = null) 
+			version :  String = null,
+			reason :  String = null) 
 		{
 			this.result = result;
 			this.player = player;
 			this.rooms = rooms;
 			this.version = version;
+			this.reason = reason;
 		}
 	}
 }
