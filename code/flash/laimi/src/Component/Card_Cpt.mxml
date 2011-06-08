@@ -193,6 +193,13 @@
 						return;
 					}
 					
+					
+					//不能在非自己回合去滑动公共牌区
+					if(!isPlayerOwner && (!game.gamer.isMyturn))
+					{
+						return;
+					}
+					
 					if(game.gamer.selectedCard!=null)
 					{
 						game.gamer.selectedCard.cardUI.isSelected = false;
@@ -226,12 +233,14 @@
 					return;
 				}
 					
+				//当前为非操作阶段
 				if(!game.gamer.canOpearation)
 					return;
 				
 //				if(game.gamer.isMyturn)
 //					game.timeCtr.reset();
 				
+				//选定牌以后再选定其他牌
 				if(game.gamer.selectedCard!=null&&game.gamer.selectedCard!=card)
 				{
 					return;
@@ -399,7 +408,7 @@
 		]]>
 	</mx:Script>
 	<mx:Image id="img0" visible="{isShow}" width="28" height="38"></mx:Image>
-	<mx:Canvas width="100%" height="100%" backgroundColor="#000000" backgroundAlpha="0.3" visible="{card==null?false:card.isSended}"></mx:Canvas>
-	
+	<mx:Canvas width="100%" height="100%" backgroundColor="#000000" backgroundAlpha="0.2" visible="{card==null?false:card.isSended}"></mx:Canvas>
+	<mx:SWFLoader width="100%" height="100%" source="{Resource.guang}" visible="{isSelected}"></mx:SWFLoader>
 	<mx:Glow id="ef" target="{this}" color="0xff0000" repeatCount="5" duration="500" strength="10" ></mx:Glow>
 </mx:Canvas>
