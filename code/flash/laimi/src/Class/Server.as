@@ -97,7 +97,14 @@ package Class
 		
 		public static var isAutoEnter:Boolean = false;
 		
+		
 		private static var platform : String;
+		private static var host : String;
+		private static var port : int;
+		
+		
+		
+		
 		
 		public static function getClient() : LamiClient {
 			return client;
@@ -110,6 +117,17 @@ package Class
 			client.addEventListener(ClientEvent.DISCONNECTED,	client_disconnected);
 			// 监听服务器主动发送过来的通知
 			client.addNotifyListener(client_notify);
+		}
+		
+		public static function initServer(player:PlayerData, 
+										  platform:String,
+										  host:String,
+										  port:String) 
+		{
+			Server.host 	= host;
+			Server.port 	= int(port);
+			Server.platform	= platform;
+			Server.player 	= player;
 		}
 		
 		public static function getPlayer(player_id:int):PlayerData
@@ -576,17 +594,11 @@ package Class
 		}
 
 		//连接服务器
-		public static function linkToServer(
-			p:PlayerData, 
-			pt:String,
-			host:String,
-			port:int):void
+		public static function linkToServer():void
 		{
 			if (client.isConnected()) {
 				client.disconnect();
 			}
-			platform = pt;
-			player = p;
 			if (!client.isConnected()) {
 				//txt_messages.text = txt_messages.text +"connecting...\n";
 				client.connect(host, port);
