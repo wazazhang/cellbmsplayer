@@ -6,7 +6,7 @@ package com.slg.entity
 	import com.slg.entity.*;
 
 	/**
-	 * Java Class [4] [com.slg.entity.Player]<br>
+	 * Java Class [6] [com.slg.entity.Player]<br>
 	 * 此代码为自动生成。不需要在此修改。若有错误，请修改代码生成器。
 	 */
 	[Bindable]
@@ -33,9 +33,15 @@ package com.slg.entity
 		/** Java type is : <font color=#0000ff>com.slg.entity.Currency</font> */
 		[JavaType(name="com.slg.entity.Currency", leaf_type=NetDataTypes.TYPE_EXTERNALIZABLE)]
 		public var currency :  com.slg.entity.Currency;
+		/** Java type is : <font color=#0000ff>int[]</font> */
+		[JavaType(name="int[]", leaf_type=NetDataTypes.TYPE_INT)]
+		public var village_list :  Array;
 		/** Java type is : <font color=#0000ff>int</font> */
 		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
 		public var cur_village_id :  int;
+		/** Java type is : <font color=#0000ff>int[]</font> */
+		[JavaType(name="int[]", leaf_type=NetDataTypes.TYPE_INT)]
+		public var hero_list :  Array;
 
 		/**
 		 * @param player_id as <font color=#0000ff>int</font>
@@ -45,7 +51,9 @@ package com.slg.entity
 		 * @param level as <font color=#0000ff>int</font>
 		 * @param ap as <font color=#0000ff>com.slg.entity.GuageNumber</font>
 		 * @param currency as <font color=#0000ff>com.slg.entity.Currency</font>
-		 * @param cur_village_id as <font color=#0000ff>int</font>		 */
+		 * @param village_list as <font color=#0000ff>int[]</font>
+		 * @param cur_village_id as <font color=#0000ff>int</font>
+		 * @param hero_list as <font color=#0000ff>int[]</font>		 */
 		public function Player(
 			player_id :  int = 0,
 			name :  String = null,
@@ -54,7 +62,9 @@ package com.slg.entity
 			level :  int = 0,
 			ap :  com.slg.entity.GuageNumber = null,
 			currency :  com.slg.entity.Currency = null,
-			cur_village_id :  int = 0) 
+			village_list :  Array = null,
+			cur_village_id :  int = 0,
+			hero_list :  Array = null) 
 		{
 			this.player_id = player_id;
 			this.name = name;
@@ -63,7 +73,9 @@ package com.slg.entity
 			this.level = level;
 			this.ap = ap;
 			this.currency = currency;
+			this.village_list = village_list;
 			this.cur_village_id = cur_village_id;
+			this.hero_list = hero_list;
 		}
 	}
 }
