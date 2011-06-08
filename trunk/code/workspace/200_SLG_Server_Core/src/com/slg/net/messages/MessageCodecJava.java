@@ -14,11 +14,17 @@ import com.net.NetDataTypes;
 public class MessageCodecJava implements MutualMessageCodec
 {
 	public String getVersion() {
-		return "Tue Jun 07 15:29:46 CST 2011";
+		return "Wed Jun 08 18:09:04 CST 2011";
 	}
 
 	public void readExternal(MutualMessage msg, NetDataInput in) throws IOException 
 	{
+		if (msg.getClass().equals(com.slg.entity.Arms.class)) {
+			_r((com.slg.entity.Arms)msg, in); return;
+		}
+		if (msg.getClass().equals(com.slg.entity.Building.class)) {
+			_r((com.slg.entity.Building)msg, in); return;
+		}
 		if (msg.getClass().equals(com.slg.entity.Currency.class)) {
 			_r((com.slg.entity.Currency)msg, in); return;
 		}
@@ -33,6 +39,9 @@ public class MessageCodecJava implements MutualMessageCodec
 		}
 		if (msg.getClass().equals(com.slg.entity.Position.class)) {
 			_r((com.slg.entity.Position)msg, in); return;
+		}
+		if (msg.getClass().equals(com.slg.entity.Soldiers.class)) {
+			_r((com.slg.entity.Soldiers)msg, in); return;
 		}
 		if (msg.getClass().equals(com.slg.entity.Village.class)) {
 			_r((com.slg.entity.Village)msg, in); return;
@@ -57,6 +66,12 @@ public class MessageCodecJava implements MutualMessageCodec
 
 	public void writeExternal(MutualMessage msg, NetDataOutput out) throws IOException 
 	{
+		if (msg.getClass().equals(com.slg.entity.Arms.class)) {
+			_w((com.slg.entity.Arms)msg, out); return;
+		}
+		if (msg.getClass().equals(com.slg.entity.Building.class)) {
+			_w((com.slg.entity.Building)msg, out); return;
+		}
 		if (msg.getClass().equals(com.slg.entity.Currency.class)) {
 			_w((com.slg.entity.Currency)msg, out); return;
 		}
@@ -71,6 +86,9 @@ public class MessageCodecJava implements MutualMessageCodec
 		}
 		if (msg.getClass().equals(com.slg.entity.Position.class)) {
 			_w((com.slg.entity.Position)msg, out); return;
+		}
+		if (msg.getClass().equals(com.slg.entity.Soldiers.class)) {
+			_w((com.slg.entity.Soldiers)msg, out); return;
 		}
 		if (msg.getClass().equals(com.slg.entity.Village.class)) {
 			_w((com.slg.entity.Village)msg, out); return;
@@ -94,14 +112,46 @@ public class MessageCodecJava implements MutualMessageCodec
 	}
 
 //	----------------------------------------------------------------------------------------------------
+//	com.slg.entity.Arms
+//	----------------------------------------------------------------------------------------------------
+	public com.slg.entity.Arms new_com_slg_entity_Arms(){return new com.slg.entity.Arms();}
+	private void _r(com.slg.entity.Arms msg, NetDataInput in) throws IOException {
+		msg.type = in.readInt();
+		msg.count = in.readInt();
+	}
+	private void _w(com.slg.entity.Arms msg, NetDataOutput out) throws IOException {
+		out.writeInt(msg.type);
+		out.writeInt(msg.count);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.slg.entity.Building
+//	----------------------------------------------------------------------------------------------------
+	public com.slg.entity.Building new_com_slg_entity_Building(){return new com.slg.entity.Building();}
+	private void _r(com.slg.entity.Building msg, NetDataInput in) throws IOException {
+		msg.id = in.readInt();
+		msg.level = in.readInt();
+		msg.type = in.readInt();
+		msg.pos = in.readExternal(com.slg.entity.Position.class);
+	}
+	private void _w(com.slg.entity.Building msg, NetDataOutput out) throws IOException {
+		out.writeInt(msg.id);
+		out.writeInt(msg.level);
+		out.writeInt(msg.type);
+		out.writeExternal(msg.pos);
+	}
+
+//	----------------------------------------------------------------------------------------------------
 //	com.slg.entity.Currency
 //	----------------------------------------------------------------------------------------------------
 	public com.slg.entity.Currency new_com_slg_entity_Currency(){return new com.slg.entity.Currency();}
 	private void _r(com.slg.entity.Currency msg, NetDataInput in) throws IOException {
-		msg.gold = in.readInt();
+		msg.key = in.readUTFArray();
+		msg.value = in.readIntArray();
 	}
 	private void _w(com.slg.entity.Currency msg, NetDataOutput out) throws IOException {
-		out.writeInt(msg.gold);
+		out.writeUTFArray(msg.key);
+		out.writeIntArray(msg.value);
 	}
 
 //	----------------------------------------------------------------------------------------------------
@@ -164,7 +214,9 @@ public class MessageCodecJava implements MutualMessageCodec
 		msg.level = in.readInt();
 		msg.ap = in.readExternal(com.slg.entity.GuageNumber.class);
 		msg.currency = in.readExternal(com.slg.entity.Currency.class);
+		msg.village_list = in.readIntArray();
 		msg.cur_village_id = in.readInt();
+		msg.hero_list = in.readIntArray();
 	}
 	private void _w(com.slg.entity.Player msg, NetDataOutput out) throws IOException {
 		out.writeInt(msg.player_id);
@@ -174,7 +226,9 @@ public class MessageCodecJava implements MutualMessageCodec
 		out.writeInt(msg.level);
 		out.writeExternal(msg.ap);
 		out.writeExternal(msg.currency);
+		out.writeIntArray(msg.village_list);
 		out.writeInt(msg.cur_village_id);
+		out.writeIntArray(msg.hero_list);
 	}
 
 //	----------------------------------------------------------------------------------------------------
@@ -187,6 +241,19 @@ public class MessageCodecJava implements MutualMessageCodec
 	}
 
 //	----------------------------------------------------------------------------------------------------
+//	com.slg.entity.Soldiers
+//	----------------------------------------------------------------------------------------------------
+	public com.slg.entity.Soldiers new_com_slg_entity_Soldiers(){return new com.slg.entity.Soldiers();}
+	private void _r(com.slg.entity.Soldiers msg, NetDataInput in) throws IOException {
+		msg.type = in.readInt();
+		msg.count = in.readInt();
+	}
+	private void _w(com.slg.entity.Soldiers msg, NetDataOutput out) throws IOException {
+		out.writeInt(msg.type);
+		out.writeInt(msg.count);
+	}
+
+//	----------------------------------------------------------------------------------------------------
 //	com.slg.entity.Village
 //	----------------------------------------------------------------------------------------------------
 	public com.slg.entity.Village new_com_slg_entity_Village(){return new com.slg.entity.Village();}
@@ -196,7 +263,7 @@ public class MessageCodecJava implements MutualMessageCodec
 		msg.player_id = in.readInt();
 		msg.food = in.readInt();
 		msg.city_id = in.readInt();
-		msg.buildings = in.readIntArray();
+		msg.buildings = (com.slg.entity.Building[])in.readExternalArray(com.slg.entity.Building.class);
 		msg.heros = in.readIntArray();
 		msg.arms_list = (com.slg.entity.Arms[])in.readExternalArray(com.slg.entity.Arms.class);
 		msg.soldiers_list = (com.slg.entity.Soldiers[])in.readExternalArray(com.slg.entity.Soldiers.class);
@@ -207,7 +274,7 @@ public class MessageCodecJava implements MutualMessageCodec
 		out.writeInt(msg.player_id);
 		out.writeInt(msg.food);
 		out.writeInt(msg.city_id);
-		out.writeIntArray(msg.buildings);
+		out.writeExternalArray(msg.buildings);
 		out.writeIntArray(msg.heros);
 		out.writeExternalArray(msg.arms_list);
 		out.writeExternalArray(msg.soldiers_list);

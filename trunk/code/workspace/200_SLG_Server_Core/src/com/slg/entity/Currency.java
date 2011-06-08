@@ -8,5 +8,6 @@ import com.net.flash.message.FlashMessage;
  *
  */
 public class Currency extends FlashMessage{
-	public int gold;
+	public String[] key;
+	public int[] value;
 }

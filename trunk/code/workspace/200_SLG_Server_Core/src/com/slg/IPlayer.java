@@ -77,4 +77,6 @@ public interface IPlayer {
 	public IVillage getCurVillage();
 	
 	public void setCurVillage(IVillage village);
+	
+	public void addVillage(IVillage village);
 }

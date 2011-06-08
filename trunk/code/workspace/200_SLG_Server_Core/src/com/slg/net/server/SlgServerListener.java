@@ -12,6 +12,7 @@ import com.net.server.Channel;
 import com.net.server.ChannelListener;
 import com.net.server.ClientSession;
 import com.net.server.ClientSessionListener;
+import com.net.server.Server;
 import com.net.server.ServerListener;
 import com.slg.IWorld;
 import com.slg.entity.Player;
@@ -141,8 +142,7 @@ public class SlgServerListener implements ServerListener
 					PlayerImpl newp = new PlayerImpl(world, new Player(request.name));
 					world.addPlayer(newp);
 					VillageImpl newv = new VillageImpl(new Village(newp.getPlayerData()));
-					world.addVillage(newv);
-					newp.setCurVillage(newv);
+					newp.addVillage(newv);
 				}
 				logined_session = new EchoClientSession(
 						session, SlgServerListener.this, world.getPlayer(request.name));
@@ -159,6 +159,18 @@ public class SlgServerListener implements ServerListener
 //			res.server_time = System.currentTimeMillis();
 			return res;
 		}
+		
+	}
+
+	@Override
+	public void init(Server server) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void destory() {
+		// TODO Auto-generated method stub
 		
 	}
 	

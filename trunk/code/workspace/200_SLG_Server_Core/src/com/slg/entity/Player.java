@@ -1,5 +1,7 @@
 package com.slg.entity;
 
+import java.util.ArrayList;
+
 import com.net.flash.message.FlashMessage;
 
 /**
@@ -39,9 +41,18 @@ public class Player extends FlashMessage{
 	public Currency currency;
 	
 	/**
+	 * 拥有的村寨列表
+	 */
+	public int[] village_list;
+	/**
 	 * 当前所在村寨ID
 	 */
 	public int cur_village_id;
+	
+	/** 
+	 * 拥有的武将列表
+	 */
+	public int[] hero_list;
 	
 	public Player(){
 		
