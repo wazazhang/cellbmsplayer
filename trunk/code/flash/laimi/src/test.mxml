@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" backgroundColor="0xa27937"  layout="absolute" xmlns:ns1="Component.*"
-				creationComplete="init()"  preloader="Class.Myloading"  >
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" backgroundColor="0xa27937" 
+				layout="absolute" 
+				xmlns:ns1="Component.*"
+				creationComplete="init()"  
+				preloader="Class.Myloading"  
+				width="960" height="600">
 	<mx:Style>
 		global {font-size:12px}
 	</mx:Style>
@@ -9,19 +13,17 @@
 			import Class.Game;
 			import Class.Server;
 			
+			import Component.Login_Cpt;
+			
 			import com.fc.lami.MessageCodec;
+			import com.fc.lami.Messages.PlayerData;
 			import com.net.client.minaimpl.ServerSessionImpl;
+			import com.net.client.sfsimpl.SFSSessionImpl;
+			
+			import mx.controls.Alert;
+			
 			public function init():void
 			{
-				//Game.app = game;
-				//gameCmt.init();
-				Server.init(new ServerSessionImpl(new MessageCodec()));
-				Server.app = this
-				//Server.game_cpt = game;
-				login_cpt.server_host.text = "127.0.0.1";
-				login_cpt.server_port.value = 19821;		
-				login_cpt.version.text = Server.getClient().getSession().getMessageFactory().getVersion();
-
 				var xml : XML = new XML(
 					"<game>" +
 					"<webbase>http://rr2.usxingcloud.info/9832165470_online/front/flash</webbase>" +
@@ -29,20 +31,81 @@
 					"<lang>cn</lang>" +
 					"<sfszone>9832165470online</sfszone>" +
 					"</game>");
-				
 				var webbase : XMLList = xml.child("webbase");
-//				var webbase : XMLList = game.child("webbase");
-				
 				trace(webbase.text());
 				
+				com_sfs_zone.visible = chk_sfs.selected;
 				
 			}
+
+			protected function chk_mina_clickHandler(event:MouseEvent):void
+			{
+				chk_sfs.selected = !chk_mina.selected;
+				com_sfs_zone.visible = chk_sfs.selected;
+			}
+			protected function chk_sfs_clickHandler(event:MouseEvent):void
+			{
+				chk_mina.selected = !chk_sfs.selected;
+				com_sfs_zone.visible = chk_sfs.selected;
+			}
+
+
+			protected function btn_connect_clickHandler(event:MouseEvent):void
+			{
+				Server.app = this
+				
+				var codec : MessageCodec = new MessageCodec();
+				
+				if (chk_mina.selected)
+				{
+					Server.init(new ServerSessionImpl(codec));
+				}
+				if (chk_sfs.selected) 
+				{
+					Server.init(new SFSSessionImpl(codec, com_sfs_zone.text));
+				}
+				if (chk_mina.selected || chk_sfs.selected) 
+				{
+					Server.initServer(
+						new PlayerData(0,
+							txt_uid.text,
+							txt_uid.text,
+							"http://www.google.com.hk/intl/zh-CN/images/logo_cn.png"),
+						null, 
+						com_server_addrs.text.split(":")[0],
+						com_server_addrs.text.split(":")[1]
+					);
+					this.removeAllChildren();
+					Server.login_cpt = new Login_Cpt();
+					Server.login_cpt.visible = true;
+					this.addChild(Server.login_cpt);
+				}
+				else 
+				{
+					Alert.show("未选择通信协议");
+				}
+			}
+
 		]]>
 	</mx:Script>
-	<ns1:Login_Cpt verticalCenter="0" horizontalCenter="0"  id="login_cpt">
-	</ns1:Login_Cpt>
-	
-	<ns1:deBug verticalCenter="0" left="10" visible="false">
-	</ns1:deBug>
+	<mx:TextInput x="105" y="74" width="344" id="txt_uid"/>
+	<mx:Button x="105" y="170" label="连接" click="btn_connect_clickHandler(event)" id="btn_connect"/>
+	<mx:CheckBox x="105" y="106" label="Apache Mina" id="chk_mina" selected="true" click="chk_mina_clickHandler(event)"/>
+	<mx:CheckBox x="105" y="138" label="SmartFoxServer" id="chk_sfs" click="chk_sfs_clickHandler(event)"/>
+	<mx:ComboBox x="105" y="42" id="com_server_addrs" width="344" editable="true">
+		<mx:Array id="com_server_addrs_Data">
+			<mx:Object label="127.0.0.1:19821"/>
+			<mx:Object label="127.0.0.1:9933"/>
+			<mx:Object label="rr2.usxingcloud.info:40001"/>
+		</mx:Array>
+	</mx:ComboBox>
+	<mx:Label x="10" y="45" text="服务器地址" width="87" textAlign="right"/>
+	<mx:Label x="10" y="76" text="用户UID" width="87" textAlign="right"/>
+	<mx:ComboBox x="238" y="137" id="com_sfs_zone" width="211" editable="true">
+		<mx:Array id="com_sfs_zone_Data">
+			<mx:Object label="XML_NAME"/>
+			<mx:Object label="9832165470online"/>
+		</mx:Array>
+	</mx:ComboBox>
 	
 </mx:Application>

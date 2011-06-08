@@ -10,11 +10,11 @@
 	</mx:Style>
 	<mx:Script>
 		<![CDATA[
-//			preloader="Class.Myloading"
 			import Class.Game;
 			import Class.Server;
 			
 			import com.fc.lami.MessageCodec;
+			import com.fc.lami.Messages.PlayerData;
 			import com.net.client.minaimpl.ServerSessionImpl;
 			import com.net.client.sfsimpl.SFSSessionImpl;
 			
@@ -45,78 +45,43 @@
 				height:int):void
 			{
 				Security.allowDomain("*");
-				this._container=container;
 				
-				this.config	= config;
-				this.width	= width;
-				this.height	= height;
-				
-				if(!this._container)
-				{
-					Alert.show("GDP container is null");
-					return;
-				}
-				
+				this._container	= container;
+				this.config		= config;
+				this.width		= width;
+				this.height		= height;
 				
 				//this.stage.addEventListener(MouseEvent.MOUSE_WHEEL,onMouseWheel);
 				//_container.addEventListener(HeaderClickEvent.HEADERCLICK,onHeaderClick);
 				//test googleAnalysics
 				//_container.trackTransaction({category:"1",cost:"300",money:"0",name: "Prinzessin Stuhl",orderId :"100001258912073359"},1,1);
 				//var useridInfoArr:Array=String(stage.loaderInfo.parameters.sig_user).split("_");
-				trace("uid: "+container.uid);
+				
 			}
 			
 			public function println(info:String):void
 			{
-				login_cpt.println(info);
+				trace(info);
 			}
 			
 			public function print(info:String):void
 			{
-				login_cpt.print(info);
+				trace(info);
 			}
 			
 			public function init():void
 			{
-				Server.app = this
-				
-				var codec : MessageCodec = new MessageCodec();
-				
-				if (this._container)
+				if(this._container)
 				{
 					println("init uid: "+this._container.uid);
 					
-					var webbase : String = this.config.child("webbase").toString();
-					var sfs 	: String = this.config.child("sfs").toString();
-					var sfszone : String = this.config.child("sfszone").toString();
-					var lang	: String = this.config.child("lang").toString();
-					
-					Server.init(new SFSSessionImpl(codec, sfszone));
-					
-					//Server.game_cpt = game;
-					login_cpt.player_uid.text 		= this._container.uid;
-					login_cpt.server_host.text 		= sfs.split(":")[0];
-					login_cpt.server_port.value		= int(sfs.split(":")[1]);
-					login_cpt.version.text 			= codec.getVersion();
-					login_cpt.player_uid.enabled 	= false;
-					login_cpt.server_host.enabled 	= false;
-					login_cpt.server_port.enabled 	= false;
-					login_cpt.platform				= this._container.sns;
 					println(this._container+"");
 					println(this.config.toXMLString());
 					getUserInfo();
 				}
 				else 
 				{
-					Alert.show("无法获取GDP");
-					
-					Server.init(new SFSSessionImpl(new MessageCodec(), 
-						"9832165470online"));
-					//Server.game_cpt = game;
-					login_cpt.server_host.text = "rr2.usxingcloud.info";
-					login_cpt.server_port.value = 40001;		
-					login_cpt.version.text = codec.getVersion();
-
+					Alert.show("GDP container is null");
 				}
 			}
 			
@@ -130,13 +95,31 @@
 			
 			private function getUserProfileCallback(user:IUserSocialData):void
 			{
-				if(Boolean(user)){
+				if(Boolean(user))
+				{
 					println("成功获取自己的信息");
 					parseUserInfo(user);
-					login_cpt.player.uid = user.id;
-					login_cpt.player.player_name = user.name;
-					login_cpt.player.player_head_url = user.photoSmall;
-				} else {
+					
+					Server.app = this
+					
+					var codec 	: MessageCodec = new MessageCodec();
+					
+					var webbase : String = this.config.child("webbase").toString();
+					var sfs 	: String = this.config.child("sfs").toString();
+					var sfszone : String = this.config.child("sfszone").toString();
+					var lang	: String = this.config.child("lang").toString();
+					
+					Server.init(new SFSSessionImpl(codec, sfszone));
+					
+					Server.initServer(
+						new PlayerData(0, user.id, user.name, user.photoSmall),
+						_container.sns,
+						sfs.split(":")[0],
+						sfs.split(":")[1]
+					);
+				}
+				else
+				{
 					Alert.show("无法获得用户信息");
 				}
 			}
@@ -209,7 +192,7 @@
 			
 		]]>
 	</mx:Script>
-	<ns1:Login_Cpt verticalCenter="-34" horizontalCenter="0"  id="login_cpt">
+	<ns1:Login_Cpt verticalCenter="-7" horizontalCenter="0"  id="login_cpt">
 	</ns1:Login_Cpt>
 	
 
@@ -217,8 +200,5 @@
 	<ns1:Lami id="game" horizontalCenter="0" verticalCenter="0" visible="false">
 	</ns1:Lami> 
 	-->
-	
-	<ns1:deBug verticalCenter="0" left="10" visible="false">
-	</ns1:deBug>
 	
 </mx:Application>
