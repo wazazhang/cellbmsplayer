@@ -29,7 +29,6 @@ package Class.Model
 		public var selectedCard:Card; //选中的牌
 		public var selectedArrayCard:Array; //选中的牌组
 		
-//		public var nextPlayer:Player;	//下一位玩家
 	   
 		public var isCold:Boolean = true;	 //是否已经破冰
 			
