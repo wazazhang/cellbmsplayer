@@ -23,6 +23,7 @@
 			import Class.Game;
 			import Class.Model.Desk;
 			import Class.Model.Player;
+			import Class.Resource;
 			import Class.Server;
 			import Class.TimesCtr;
 			
@@ -31,6 +32,7 @@
 			
 			import mx.controls.Alert;
 			import mx.events.FlexEvent;
+			import mx.graphics.RoundedRectangle;
 			[Bindable]
 			public var desk:Desk;
 			
@@ -386,11 +388,8 @@
 	<ns1:OtherPlayer_Cpt id="nextPlayer3" x="825" y="200">
 	</ns1:OtherPlayer_Cpt>
 	
-
 	
-	<mx:Label id="timer" x="9" y="376" text="{Server.timer}" color="#010101" width="138"/>
-	
-	<mx:LinkButton x="876" y="10" label="回到大厅" color="#020202" click="returnRoom()"/>
+	<mx:LinkButton x="876" y="10" label="回到大厅" color="#FFFDFD" click="returnRoom()"/>
 	
 	<mx:Image id="turnStartImg" horizontalCenter="0" verticalCenter="0" source="image/start.png" alpha="0.0" visible="false" />
 	
@@ -400,16 +399,18 @@
 	</mx:Parallel>
 	
 	
-	<mx:Label x="700" y="12" text="{'当前位置:'+(Server.room_cpt.room.roomData.room_id)+'房间 '+ (desk.desk_id+1)+'号座'}" color="#010101"/>
+	<mx:Label x="700" y="12" text="{'当前位置:'+(Server.room_cpt.room.roomData.room_id)+'房间 '+ (desk.desk_id+1)+'号座'}" color="#FDFDFD"/>
 	
 	
 
 	<!--//游戏信息区-->
-	<mx:Canvas x="10" y="10" width="143" height="116" borderStyle="none"  borderColor="#000000">
+	<mx:Canvas x="10" y="10" width="143" height="127" borderStyle="none"  borderColor="#000000">
 		
-		<mx:Label x="10" y="10" text="游戏信息" color="#010101"/>
-		<mx:Label x="45" y="39" text="{Server.game.leftCard}" color="#010101"/>
+		<mx:Label x="10" y="10" text="游戏信息" color="#FFFDFD"/>
+		<mx:Label x="45" y="39" text="{Server.game.leftCard}" color="#FFFEFE"/>
 		<mx:Image x="10" y="32" source="image/pai.jpg"/>
+		<mx:Label x="10" y="74" text="玩家信息" color="#FFFFFF"/>
+		<mx:Label x="10" y="91" text="积分：{Server.player.score} 等级：{Server.player.level}" color="#FEFEFE"/>
 	</mx:Canvas>
 	
 	<!--玩家信息区-->
@@ -419,13 +420,15 @@
 		
 		<mx:Label x="7" y="0" text="{Server.player.uid}" color="#010101"/>
 		
-		<mx:Label x="80" y="16" text="{game.gamer.isMyturn?'游戏中':'等待中'}" color="#010101"/>
+		<mx:Image x="80" y="5" source="{game.gamer.isMyturn?Resource.yxz:Resource.ddz}" ></mx:Image>
 		
 		
-		<mx:Label x="22" y="16" text="手牌：{game.gamer.handCard.length}" color="#010101"/>
+		<mx:Label x="7" y="16" text="手牌：{game.gamer.handCard.length}" color="#010101"/>
 		
 		
-		<mx:Label x="80" y="0" text="{game.gamer.isCold?'未破冰':'已破冰'} " color="#010101"/>
+		
+		<mx:Image x="80" y="0" source="{game.gamer.isCold?Resource.wpb:Resource.ypb}" > </mx:Image>
+		
 		
 		<!--
 		<mx:Label x="1" y="92" text="shift:{game.gamer.keydwon?'是':'否'}" color="black"/>
@@ -439,14 +442,15 @@
 	<ns1:Opt_Cpt id="optCpt" height="177" y="421" x="409">
 	</ns1:Opt_Cpt>
 	
+	<mx:Image source="{Resource.talkbg}" x="720" y="397" alpha="0.5"></mx:Image>
+	<mx:TextArea  x="725" y="405" width="220" height="150" backgroundAlpha="0.0" borderStyle="none"  color="#010101" editable="false"  text="{talkinfoStr}"/>
 	
-	<mx:TextArea  x="720" y="397" width="230" height="168" backgroundAlpha="0.0" color="#010101" editable="false"  text="{talkinfoStr}"/>
-
-	<mx:TextArea  width="230" height="195"  backgroundAlpha="0.0" color="#010101" editable="false"  text="{gameinfoStr}" x="7" y="398"/>
+	<mx:Image source="{Resource.xtbg}" x="7" y="398" alpha="0.5"></mx:Image>
+	<mx:TextArea  x="12" y="405" width="220" height="185" backgroundAlpha="0.0" borderStyle="none"  editable="false" text="{gameinfoStr}" />
 	
 	
-	<mx:Button x="901" y="569" label="提交" click="pubTalk()"/>
-	<mx:TextInput id="titalk" x="721" y="569" width="178"/>
+	<mx:Button x="890" y="558" click="pubTalk()" width="49" skin="@Embed(source='../image/button/tj.png')"  height="28" downSkin="@Embed(source='../image/button/tj1.png')"/>
+	<mx:TextInput id="titalk" x="731" y="560" width="150" alpha="0.5" backgroundColor="0xD2A55A" borderColor="0x8B5505"/>
 	
 	
 </mx:Canvas>
