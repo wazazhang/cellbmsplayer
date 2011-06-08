@@ -670,12 +670,14 @@ public class Messages {
 		public PlayerData player;
 		public RoomSnapShot rooms[];
 		public String version;
+		public String reason;
 //		public long server_time;
 		
-		public LoginResponse(short result, PlayerData player, String version){
+		public LoginResponse(short result, PlayerData player, String version, String reason){
 			this.result = result;
 			this.player = player;
 			this.version = version;
+			this.reason = reason;
 		}
 
 		public LoginResponse(){}
