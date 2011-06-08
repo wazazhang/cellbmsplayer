@@ -131,7 +131,12 @@ package Class
 			//Alert.show("连接成功!");
 			var version : String = client.getSession().getMessageFactory().getVersion();
 			trace("client version is : " + version);
-			client.sendRequest(new LoginRequest(player.uid, "", version),client_response)
+			client.sendRequest(new LoginRequest(
+				player.uid, 
+				player.player_name, 
+				player.player_head_url,
+				version),
+				client_response);
 		}
 		
 		protected static function client_disconnected(event:ClientEvent):void 
@@ -571,12 +576,15 @@ package Class
 		}
 
 		//连接服务器
-		public static function linkToServer(name:String, host:String, port:int):void
+		public static function linkToServer(
+			p:PlayerData, 
+			host:String,
+			port:int):void
 		{
 			if (client.isConnected()) {
 				client.disconnect();
 			}
-			player = new PlayerData(0,name);
+			player = p;
 			if (!client.isConnected()) {
 				//txt_messages.text = txt_messages.text +"connecting...\n";
 				client.connect(host, port);
