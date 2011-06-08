@@ -256,7 +256,7 @@ public class EchoClientSession implements ClientSessionListener
 	
 	/** 准备好了 */
 	private void processReadyRequest(ClientSession session, Protocol protocol, ReadyRequest request){
-		if (player.cur_desk!=null){
+		if (player.cur_desk!=null&&player.cur_desk.getGame() == null){
 			player.cur_desk.onPlayerReady(player, request.isReady);
 		}
 		session.sendResponse(protocol, new ReadyResponse());
