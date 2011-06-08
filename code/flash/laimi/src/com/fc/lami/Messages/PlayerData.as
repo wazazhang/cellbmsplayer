@@ -18,6 +18,12 @@ package com.fc.lami.Messages
 		/** Java type is : <font color=#0000ff>java.lang.String</font> */
 		[JavaType(name="java.lang.String", leaf_type=NetDataTypes.TYPE_STRING)]
 		public var uid :  String;
+		/** Java type is : <font color=#0000ff>java.lang.String</font> */
+		[JavaType(name="java.lang.String", leaf_type=NetDataTypes.TYPE_STRING)]
+		public var player_name :  String;
+		/** Java type is : <font color=#0000ff>java.lang.String</font> */
+		[JavaType(name="java.lang.String", leaf_type=NetDataTypes.TYPE_STRING)]
+		public var player_head_url :  String;
 		/** Java type is : <font color=#0000ff>int</font> */
 		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
 		public var score :  int;
@@ -34,6 +40,8 @@ package com.fc.lami.Messages
 		/**
 		 * @param player_id as <font color=#0000ff>int</font>
 		 * @param uid as <font color=#0000ff>java.lang.String</font>
+		 * @param player_name as <font color=#0000ff>java.lang.String</font>
+		 * @param player_head_url as <font color=#0000ff>java.lang.String</font>
 		 * @param score as <font color=#0000ff>int</font>
 		 * @param win as <font color=#0000ff>int</font>
 		 * @param lose as <font color=#0000ff>int</font>
@@ -41,6 +49,8 @@ package com.fc.lami.Messages
 		public function PlayerData(
 			player_id :  int = 0,
 			uid :  String = null,
+			player_name :  String = null,
+			player_head_url :  String = null,
 			score :  int = 0,
 			win :  int = 0,
 			lose :  int = 0,
@@ -48,6 +58,8 @@ package com.fc.lami.Messages
 		{
 			this.player_id = player_id;
 			this.uid = uid;
+			this.player_name = player_name;
+			this.player_head_url = player_head_url;
 			this.score = score;
 			this.win = win;
 			this.lose = lose;

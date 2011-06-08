@@ -22,6 +22,19 @@
 				login_cpt.server_port.value = 19821;		
 				login_cpt.version.text = Server.getClient().getSession().getMessageFactory().getVersion();
 
+				var xml : XML = new XML(
+					"<game>" +
+					"<webbase>http://rr2.usxingcloud.info/9832165470_online/front/flash</webbase>" +
+					"<sfs>rr2.usxingcloud.info:40001</sfs>" +
+					"<lang>cn</lang>" +
+					"<sfszone>9832165470online</sfszone>" +
+					"</game>");
+				
+				var webbase : XMLList = xml.child("webbase");
+//				var webbase : XMLList = game.child("webbase");
+				
+				trace(webbase.text());
+				
 				
 			}
 		]]>
