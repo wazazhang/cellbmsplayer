@@ -33,7 +33,7 @@ public class Village extends FlashMessage{
 	/**
 	 * 建筑id列表
 	 */
-	public int[] buildings;
+	public Building[] buildings;
 	/**
 	 * 武将id列表
 	 */

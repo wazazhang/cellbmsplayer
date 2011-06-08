@@ -8,6 +8,8 @@ import com.net.flash.message.FlashMessage;
  *
  */
 public class Building extends FlashMessage{
+	
+	public int id;
 	public int level;
 	
 	public int type;
