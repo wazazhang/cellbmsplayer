@@ -167,7 +167,48 @@ package Class
 
 		[Embed(source='image/card/g.png')]
 		private static var g:Class;
-
+		
+		[Bindable]
+		[Embed(source='image/bg/xtbg.png')] //系统信息背景
+		public static var xtbg:Class;
+		
+		[Bindable]
+		[Embed(source='image/bg/talkbg.png')] //系统信息背景
+		public static var talkbg:Class;
+		
+		[Bindable]
+		[Embed(source='image/guang.swf')] //系统信息背景
+		public static var guang:Class;
+		
+		
+		[Bindable]
+		[Embed(source='image/ypb.png')] //已经破冰
+		public static var ypb:Class;
+		
+		[Bindable]
+		[Embed(source='image/wpb.png')] //未破冰
+		public static var wpb:Class;
+		
+		[Bindable]
+		[Embed(source='image/ddz.png')] //等待中
+		public static var ddz:Class;
+		
+		[Bindable]
+		[Embed(source='image/yxz.png')] //游戏中
+		public static var yxz:Class;
+		
+		
+		[Bindable]
+		[Embed(source='image/pdbg.png')] //频道背景
+		public static var pdbg:Class;
+		
+		[Bindable]
+		[Embed(source='image/sjbt1.png')] //快速加入1
+		public static var sjbt1:Class;
+		
+		[Bindable]
+		[Embed(source='image/sjbt2.png')] //快速加入2
+		public static var sjbt2:Class;
 		
 		public function Resource()
 		{
