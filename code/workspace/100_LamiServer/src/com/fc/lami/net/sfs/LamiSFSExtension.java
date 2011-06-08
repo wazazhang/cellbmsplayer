@@ -46,8 +46,21 @@ public class LamiSFSExtension extends XingCloudSFSExtension
 
 	@Override
 	public void handleClientRequest(String requestId, User sender, ISFSObject params) {
+		System.out.println("handleClientRequest ex: " + sender + " : " + params);
 		super.handleClientRequest(requestId, sender, params);
 		adapter.handleClientRequest(requestId, sender, params);
+	}
+	
+	@Override
+	public void handleServerEvent(ISFSEvent event) throws Exception {
+		System.out.println("handleServerEvent ex: " + event.toString());
+		super.handleServerEvent(event);
+	}
+	
+	@Override
+	public Object handleInternalMessage(String cmdName, Object params) {
+		System.out.println("handleInternalMessage ex: " + cmdName + " : " + params);
+		return super.handleInternalMessage(cmdName, params);
 	}
 	
 	@Override
