@@ -14,7 +14,7 @@ package com.fc.lami
 	{
 	
 		public function getVersion() : String{
-			return "Wed Jun 08 12:59:17 CST 2011";
+			return "Wed Jun 08 14:01:17 CST 2011";
 		}
 	
 		public function	getType(msg : Message) : int 
@@ -1014,18 +1014,16 @@ package com.fc.lami
 //	----------------------------------------------------------------------------------------------------
 	function new_LoginRequest_32() : com.fc.lami.Messages.LoginRequest {return new com.fc.lami.Messages.LoginRequest();}
 	private function r_LoginRequest_32(msg : com.fc.lami.Messages.LoginRequest, input : NetDataInput) : void {
-		msg.uid = input.readJavaUTF();
-		msg.name = input.readJavaUTF();
-		msg.head_url = input.readJavaUTF();
+		msg.player = input.readExternal() as com.fc.lami.Messages.PlayerData;
 		msg.validate = input.readJavaUTF();
 		msg.version = input.readJavaUTF();
+		msg.platform = input.readJavaUTF();
 	}
 	private function w_LoginRequest_32(msg : com.fc.lami.Messages.LoginRequest, output : NetDataOutput) : void {
-		output.writeJavaUTF(msg.uid);
-		output.writeJavaUTF(msg.name);
-		output.writeJavaUTF(msg.head_url);
+		output.writeExternal(msg.player);
 		output.writeJavaUTF(msg.validate);
 		output.writeJavaUTF(msg.version);
+		output.writeJavaUTF(msg.platform);
 	}
 
 //	----------------------------------------------------------------------------------------------------

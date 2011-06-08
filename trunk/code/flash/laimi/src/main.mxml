@@ -80,6 +80,8 @@
 			{
 				Server.app = this
 				
+				var codec : MessageCodec = new MessageCodec();
+				
 				if (this._container)
 				{
 					println("init uid: "+this._container.uid);
@@ -89,16 +91,14 @@
 					var sfszone : String = this.config.child("sfszone").toString();
 					var lang	: String = this.config.child("lang").toString();
 					
-					var codec	: MessageCodec = new MessageCodec();
-					
 					Server.init(new SFSSessionImpl(codec, sfszone));
 					
 					//Server.game_cpt = game;
-					login_cpt.player_uid.text 			= this._container.uid;
+					login_cpt.player_uid.text 		= this._container.uid;
 					login_cpt.server_host.text 		= sfs.split(":")[0];
 					login_cpt.server_port.value		= int(sfs.split(":")[1]);
 					login_cpt.version.text 			= codec.getVersion();
-					login_cpt.player_uid.enabled 		= false;
+					login_cpt.player_uid.enabled 	= false;
 					login_cpt.server_host.enabled 	= false;
 					login_cpt.server_port.enabled 	= false;
 					
@@ -109,6 +109,14 @@
 				else 
 				{
 					Alert.show("无法获取GDP");
+					
+					Server.init(new SFSSessionImpl(new MessageCodec(), 
+						"9832165470online"));
+					//Server.game_cpt = game;
+					login_cpt.server_host.text = "rr2.usxingcloud.info";
+					login_cpt.server_port.value = 40001;		
+					login_cpt.version.text = codec.getVersion();
+
 				}
 			}
 			
