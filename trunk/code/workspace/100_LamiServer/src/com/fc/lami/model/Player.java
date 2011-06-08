@@ -58,8 +58,8 @@ public class Player
 	public PlayerData getPlayerData(){
 		PlayerData pd = new PlayerData();
 		pd.player_id = this.player_id;
-		pd.player_name = login.name;
-		pd.player_head_url = login.head_url;
+		pd.player_name = login.player.player_name;
+		pd.player_head_url = login.player.player_head_url;
 		pd.uid = this.user.getUID();
 		pd.level = 1;
 		pd.score = this.user.getScore();

@@ -133,13 +133,14 @@ public class LamiServerListener implements ServerListener
 						version);
 			}
 			synchronized (client_list) {
-				if (request.uid == null) {
+				if (request.player == null) {
 					return new LoginResponse(
 							LoginResponse.LOGIN_RESULT_FAIL, 
 							null, 
 							version);
 				}
-				EchoClientSession old_session = client_list.get(request.uid);
+				String ruid = request.player.uid;
+				EchoClientSession old_session = client_list.get(ruid);
 				if (old_session != null) {
 					if (old_session.session.isConnected()) {
 						return new LoginResponse(
@@ -147,10 +148,10 @@ public class LamiServerListener implements ServerListener
 								null, 
 								version);
 					} else {
-						client_list.remove(request.uid);
+						client_list.remove(ruid);
 					}
 				}
-				User user = login_adapter.login(session, request.uid, request.validate);
+				User user = login_adapter.login(session, ruid, request.validate);
 				if (user == null) {
 					return new LoginResponse(LoginResponse.LOGIN_RESULT_FAIL, 
 							null, 
