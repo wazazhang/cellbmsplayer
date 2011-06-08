@@ -226,12 +226,19 @@ public class Game implements Runnable
 		cur_player = player_list[cur_player_index];
 		turn_start_time = System.currentTimeMillis();
 		operate_start_time = turn_start_time;
+		matrix_old = null;
+		for (int i = 0; i<mh; i++){
+			for (int j = 0; j<mw; j++){
+				if (matrix[i][j]!=null){
+					matrix[i][j].isSended = true;
+				}
+			}
+		}
 		TurnStartNotify notify = new TurnStartNotify(cur_player.player_id, 
 														getLeftCardNumber()/*, 
 														System.currentTimeMillis()+LamiConfig.TURN_INTERVAL*/);
 		desk.broadcast(notify);
 		//process_open_ice = false;
-		matrix_old = null;
 		player_put.clear();
 		System.out.println("轮到下一个玩家 时间 "+turn_start_time);
 	}
