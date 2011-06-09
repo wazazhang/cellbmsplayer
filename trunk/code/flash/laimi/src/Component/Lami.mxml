@@ -272,10 +272,7 @@
 			//有人员会合开始
 			public function onPlayerStart(playerid:int):void
 			{
-				
-				
 				var cpt:OtherPlayer_Cpt = getOtherPlayerCptByPlayerId(playerid);
-				optCpt.openOrder();
 				if(cpt!=null)
 				{
 					cpt.gameing = true;
@@ -313,7 +310,9 @@
 				addInfo("游戏开始");
 				if(resetCpt!=null)
 					removeReset();
-
+				
+				optCpt.Start();
+				
 				this.canReset = canReset;
 				canShowReset = true;
 				nextPlayer1.ready = false;
