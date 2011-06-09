@@ -648,10 +648,11 @@ public class Messages {
 	/** 登录 */
 	public static class LoginRequest extends FlashMessage
 	{
-		public PlayerData player;
+		public String platform_user_uid;
+		public String platform_uid;
+		
 		public String validate;
 		public String version;
-		public String platform;
 		public LoginRequest(){}
 		
 		@Override

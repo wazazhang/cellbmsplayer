@@ -11,7 +11,7 @@ public class LoginDefault implements Login
 {
 	@Override
 	public LoginInfo login(ClientSession session, LoginRequest login) {
-		return new LoginInfo(new DefaultUser(login.player.uid), "");
+		return new LoginInfo(new DefaultUser(login.platform_user_uid), "");
 	}
 	
 	private class DefaultUser implements User
@@ -26,7 +26,18 @@ public class LoginDefault implements Login
 		public DefaultUser(String name) {
 			this.name = name;
 		}
-		
+		@Override
+		public String getHeadURL() {
+			return null;
+		}
+		@Override
+		public int getLevel() {
+			return 0;
+		}
+		@Override
+		public String getName() {
+			return "";
+		}
 		@Override
 		public String getUID() {
 			return name;

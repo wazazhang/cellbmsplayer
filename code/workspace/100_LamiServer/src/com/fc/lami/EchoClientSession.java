@@ -71,7 +71,7 @@ public class EchoClientSession implements ClientSessionListener
 	{
 		this.session = session;
 		this.server = server;
-		this.player = new Player(session, req, user);
+		this.player = new Player(session, user);
 	}
 	
 	@Override
