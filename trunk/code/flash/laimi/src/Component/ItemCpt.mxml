@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="600" height="35" borderStyle="solid" borderColor="#b96400"  doubleClickEnabled="true" doubleClick="click()"
-		   cornerRadius="5" backgroundImage="@Embed(source='../image/itbg.png')"  borderThickness="2"  mouseOver="mouseOver(event)" mouseOut="mouseOut(event)">
+		   cornerRadius="5" backgroundImage="{Resource.itbg}"  borderThickness="2"  mouseOver="mouseOver(event)" mouseOut="mouseOut(event)">
 	<mx:Script>
 		<![CDATA[
+			import Class.Resource;
 			import Class.Server;
 			
 			import com.fc.lami.Messages.RoomData;
@@ -12,22 +13,17 @@
 			
 			[Bindable]
 			public var room:RoomSnapShot
-			
-			[Embed(source='image/itbg.png')]
-			private static var im1:Class;    
-			
-			[Embed(source='image/itbg2.png')]
-			private static var im2:Class;    
+			 
 			
 			private  function mouseOver(event:Event):void
 			{
-				setStyle("backgroundImage",im2)
+				setStyle("backgroundImage",Resource.itbg2)
 			}
 			
 			
 			private  function mouseOut(event:Event):void
 			{
-				setStyle("backgroundImage",im1)
+				setStyle("backgroundImage",Resource.itbg)
 			}
 			
 			
