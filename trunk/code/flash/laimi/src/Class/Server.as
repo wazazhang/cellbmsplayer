@@ -17,6 +17,8 @@ package Class
 	import com.fc.lami.Messages.EchoNotify;
 	import com.fc.lami.Messages.EchoRequest;
 	import com.fc.lami.Messages.EchoResponse;
+	import com.fc.lami.Messages.EnterDeskAsVisitorRequest;
+	import com.fc.lami.Messages.EnterDeskAsVisitorResponse;
 	import com.fc.lami.Messages.EnterDeskNotify;
 	import com.fc.lami.Messages.EnterDeskRequest;
 	import com.fc.lami.Messages.EnterDeskResponse;
@@ -71,6 +73,7 @@ package Class
 	import mx.collections.ArrayCollection;
 	import mx.controls.Alert;
 	import mx.core.Application;
+	import mx.events.CloseEvent;
 	
 	[Bindable]
 	public class Server
@@ -102,7 +105,7 @@ package Class
 		private static var host : String;
 		private static var port : int;
 		
-		
+		private static var is_visitor:Boolean = false;
 		
 		
 		
@@ -172,6 +175,13 @@ package Class
 		}
 		
 		
+		private static var DESK_ID:int;
+		
+		private static function enterDeskHandler(evt:CloseEvent):void {
+			if (evt.detail == Alert.YES) {
+				client.sendRequest(new EnterDeskAsVisitorRequest(DESK_ID), client_response);
+			}
+		}
 		
 		protected static function client_notify(event:ClientEvent):void
 		{
@@ -433,16 +443,16 @@ package Class
 			}
 			
 			//响应进入房间
-			if(res is EnterDeskResponse){
+			else if(res is EnterDeskResponse){
 				var enterdesk : EnterDeskResponse =res as EnterDeskResponse;
 				var response:Date = new Date();
 				var delay:int = response.getTime() - request_time.getTime();
 				
 				
-				if(enterdesk.result==0)
+				if(enterdesk.result==EnterDeskResponse.ENTER_DESK_RESULT_SUCCESS)
 				{
+					is_visitor = false;
 					room_cpt.visible = false;
-
 					game = new Game();
 					app.addChild(game.lami);
 					
@@ -452,17 +462,45 @@ package Class
 					room.getDesk(enterdesk.desk_id).sitDown(player.player_id, enterdesk.seat);
 					
 					game.lami.initDesk(room.getDesk(enterdesk.desk_id));
+					
 				}
-				else if(enterdesk.result == 1)
+				else if(enterdesk.result == EnterDeskResponse.ENTER_DESK_RESULT_FAIL_NO_IDLE_DESK)
 				{
-					Alert.show("此游戏已满");
+					Alert.show("是否进入围观", "该桌子已满", Alert.YES|Alert.NO, null, enterDeskHandler);
+				}
+				else if(enterdesk.result == EnterDeskResponse.ENTER_DESK_RESULT_FAIL_GAME_STARTED)
+				{
+					Alert.show("是否进入围观", "该桌游戏已经开始", Alert.YES|Alert.NO, null, enterDeskHandler);
 				}
 				else
 				{
 					Alert.show("尚未进入房间");
 				}
 			}
-			
+			else if (res is EnterDeskAsVisitorResponse){
+				var edav : EnterDeskAsVisitorResponse = res as EnterDeskAsVisitorResponse;
+				if (edav.result ==  EnterDeskAsVisitorResponse.ENTER_DESK_VISITOR_RESULT_SUCCESS){
+					is_visitor = true;
+					room_cpt.visible = false;
+					
+					game = new Game();
+					app.addChild(game.lami);
+					
+					game.timeCtr.sumTimerSet(edav.turn_interval);
+					game.timeCtr.oprTimerSet(edav.operate_time);
+					
+					game.lami.initDesk(room.getDesk(edav.desk_id));
+				}
+				else if (edav.result == EnterDeskAsVisitorResponse.ENTER_DESK_VISITOR_RESULT_FAIL_ALREADY_IN_DESK){
+					Alert.show("已经在当前桌子里了");
+				}
+				else if (edav.result == EnterDeskAsVisitorResponse.ENTER_DESK_VISITOR_RESULT_FAIL_NO_DESK){
+					Alert.show("没有找到桌子");
+				}
+				else if (edav.result == EnterDeskAsVisitorResponse.ENTER_DESK_VISITOR_RESULT_FAIL_NO_ROOM){
+					Alert.show("要先进入房间");
+				}
+			}
 			else if (res is GetCardResponse){
 				var edr : GetCardResponse =res as GetCardResponse;
 			}
@@ -511,6 +549,7 @@ package Class
 			}
 			
 		}
+
 		
 		//请求进入房间
 		public static function enterRoom(roomid:int):void
@@ -531,6 +570,9 @@ package Class
 		{
 			client.sendRequest(new EnterDeskRequest(deskid,seat),client_response);
 			request_time = new Date();
+			if (deskid!=-1){
+				DESK_ID = deskid;
+			}
 		}
 		
 		public static function leaveDesk(deskid:int):void
@@ -605,6 +647,10 @@ package Class
 			}
 		}
 		
+		public static function isVisitor():Boolean
+		{
+			return is_visitor;
+		}
 
 	}
 }
