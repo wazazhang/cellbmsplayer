@@ -18,7 +18,7 @@ import com.xingcloud.service.user.UserFactory;
 
 public class LoginXingCloud implements Login
 {
-	private static Logger log = LoggerFactory.getLogger(LoginXingCloud.class);
+	private static Logger log = LoggerFactory.getLogger("Extensions");
 	
 	private PersistenceSession persistenceSession;
 	
@@ -27,10 +27,6 @@ public class LoginXingCloud implements Login
 	{
 		String uid = login.player.uid;
 		
-		if (login.platform == null || login.platform.isEmpty())
-		{
-			return new LoginInfo(new DefaultUser(uid), "default user");
-		}
 		
 		//init PersistenceSession
 		synchronized (this) {
@@ -54,9 +50,16 @@ public class LoginXingCloud implements Login
 							"there is no userProfile with uid(" + uid + ")!");	
 				}
 				return new LoginInfo(new XingCloudUser(userProfile), "");
-			} catch (Throwable e) {
+			}
+			catch (Throwable e) 
+			{
 				log.error(e.getMessage(), e);
-				return new LoginInfo(null, e.getClass() + " : " + e.getMessage()+"\n");	
+				String reason = e.getClass() + " : " + e.getMessage();
+				if (login.platform == null || login.platform.isEmpty()) {
+					return new LoginInfo(new DefaultUser(uid), reason);
+				} else {
+					return new LoginInfo(null, reason);
+				}
 			}
 		}
 	}
