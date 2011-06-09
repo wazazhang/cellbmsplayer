@@ -85,6 +85,12 @@ public class LoginXingCloud implements Login
 //		public String getName() {
 //			return name;
 //		}
+		
+		@Override
+		public int getSex() {
+			return 0;
+		}
+
 
 		private int getValueAsInt(String key) {
 			try {
@@ -173,6 +179,7 @@ public class LoginXingCloud implements Login
 		private int lose;
 		private int point;
 		private int score;
+		private int sex;
 		
 		public DefaultUser(String name) {
 			this.name = name;
@@ -183,6 +190,11 @@ public class LoginXingCloud implements Login
 			return name;
 		}
 		
+		@Override
+		public int getSex() {
+			return sex;
+		}
+
 		@Override
 		synchronized public int getLose() {
 			return lose;

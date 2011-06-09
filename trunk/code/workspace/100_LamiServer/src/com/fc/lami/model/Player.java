@@ -61,6 +61,7 @@ public class Player
 		pd.player_name = login.player.player_name;
 		pd.player_head_url = login.player.player_head_url;
 		pd.uid = this.user.getUID();
+		pd.sex = this.user.getSex();
 		pd.level = 1;
 		pd.score = this.user.getScore();
 		pd.win = this.user.getWin();

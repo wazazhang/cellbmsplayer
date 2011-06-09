@@ -2,6 +2,8 @@ package com.fc.lami;
 
 import com.fc.lami.Messages.AutoEnterRequest;
 import com.fc.lami.Messages.AutoEnterResponse;
+import com.fc.lami.Messages.EnterDeskAsVisitorRequest;
+import com.fc.lami.Messages.EnterDeskAsVisitorResponse;
 import com.fc.lami.Messages.EnterDeskRequest;
 import com.fc.lami.Messages.EnterDeskResponse;
 import com.fc.lami.Messages.EnterRoomRequest;
@@ -109,6 +111,10 @@ public class EchoClientSession implements ClientSessionListener
 		else if (message instanceof LeaveDeskRequest){
 			LeaveDeskRequest request = (LeaveDeskRequest)message;
 			processLeaveDeskRequest(session, protocol, request);
+		}
+		else if (message instanceof EnterDeskAsVisitorRequest){
+			EnterDeskAsVisitorRequest request = (EnterDeskAsVisitorRequest)message;
+			processEnterDeskAsVisitorRequest(session, protocol, request);
 		}
 		else if (message instanceof ReadyRequest){
 			ReadyRequest request = (ReadyRequest)message;
@@ -223,6 +229,11 @@ public class EchoClientSession implements ClientSessionListener
 				d = player.cur_room.getDesk(request.desk_No);
 			}
 			if (d != null) {
+				if (d.getGame()!=null){
+					session.sendResponse(protocol, 
+							new EnterDeskResponse(EnterDeskResponse.ENTER_DESK_RESULT_FAIL_GAME_STARTED));
+					return;
+				}
 				int seat = request.seat;
 				if (request.seat == -1){
 					seat = d.getIdleSeat();
@@ -249,6 +260,30 @@ public class EchoClientSession implements ClientSessionListener
 		}else{
 			// TODO 要先进房间
 			session.sendResponse(protocol, new EnterDeskResponse(EnterDeskResponse.ENTER_DESK_RESULT_FAIL_NOT_HAVE_ROOM));
+		}
+	}
+	
+	/** 进入桌子围观请求 */
+	private void processEnterDeskAsVisitorRequest(ClientSession session, Protocol protocol, EnterDeskAsVisitorRequest request){
+		if (player.cur_desk != null) {
+			player.cur_desk.leaveDesk(player);
+		}
+		if (player.cur_room != null) {
+			Desk d = player.cur_room.getDesk(request.desk_id);
+			if (d != null) {
+				if (d.addVisitor(player)){
+					session.sendResponse(protocol, 
+							new EnterDeskAsVisitorResponse(EnterDeskAsVisitorResponse.ENTER_DESK_VISITOR_RESULT_SUCCESS, 
+									request.desk_id,
+									LamiConfig.TURN_INTERVAL, LamiConfig.OPERATE_TIME));
+				}else{
+					session.sendResponse(protocol, new EnterDeskAsVisitorResponse(EnterDeskAsVisitorResponse.ENTER_DESK_VISITOR_RESULT_FAIL_ALREADY_IN_DESK));
+				}
+			}else{
+				session.sendResponse(protocol, new EnterDeskAsVisitorResponse(EnterDeskAsVisitorResponse.ENTER_DESK_VISITOR_RESULT_FAIL_NO_DESK));
+			}
+		}else{
+			session.sendResponse(protocol, new EnterDeskAsVisitorResponse(EnterDeskAsVisitorResponse.ENTER_DESK_VISITOR_RESULT_FAIL_NO_ROOM));
 		}
 	}
 	
