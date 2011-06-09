@@ -25,9 +25,7 @@ public class LoginXingCloud implements Login
 	@Override
 	public LoginInfo login(ClientSession session, LoginRequest login) 
 	{
-		String uid = login.player.uid;
-		
-		
+		String platformAddress = login.platform_user_uid + "_" + login.platform_uid;
 		//init PersistenceSession
 		synchronized (this) {
 			try {
@@ -35,28 +33,30 @@ public class LoginXingCloud implements Login
 					persistenceSession = SessionFactory.openSession();
 				}
 				if (persistenceSession == null) {
-					log.error(
-							"there is no persistenceSession!");
-					return new LoginInfo(null, 
-							"there is no persistenceSession!");	
+					String reason = "there is no persistenceSession!";
+					log.error(reason);
+					return new LoginInfo(null, reason);	
 				}
 				//get UserProfile
-				UserProfile userProfile = (UserProfile) UserFactory.getInstance().get(
-						persistenceSession, uid);
+				UserProfile userProfile = (UserProfile) 
+				UserFactory.getInstance().register(
+						persistenceSession, 
+						platformAddress);
+//				UserFactory.getInstance().get(persistenceSession, uid);
 				if (userProfile == null) {
-					log.error(
-							"there is no userProfile with uid(" + uid + ")!");
-					return new LoginInfo(null, 
-							"there is no userProfile with uid(" + uid + ")!");	
+					String reason = "there is no userProfile with (" + platformAddress + ")!";
+					log.error(reason);
+					return new LoginInfo(null, reason);	
+				} else {
+					return new LoginInfo(new XingCloudUser(userProfile), "");
 				}
-				return new LoginInfo(new XingCloudUser(userProfile), "");
 			}
 			catch (Throwable e) 
 			{
 				log.error(e.getMessage(), e);
 				String reason = e.getClass() + " : " + e.getMessage();
-				if (login.platform == null || login.platform.isEmpty()) {
-					return new LoginInfo(new DefaultUser(uid), reason);
+				if (login.platform_uid == null || login.platform_uid.isEmpty()) {
+					return new LoginInfo(new DefaultUser(platformAddress), reason);
 				} else {
 					return new LoginInfo(null, reason);
 				}
@@ -81,17 +81,26 @@ public class LoginXingCloud implements Login
 			return uid;
 		}
 		
-//		@Override
-//		public String getName() {
-//			return name;
-//		}
+		@Override
+		public String getName() {
+			return name;
+		}
 		
 		@Override
 		public int getSex() {
 			return 0;
 		}
 
-
+		@Override
+		public String getHeadURL() {
+			return userProfile.getImageUrl();
+		}
+		
+		@Override
+		public int getLevel() {
+			return userProfile.getLevel();
+		}
+		
 		private int getValueAsInt(String key) {
 			try {
 				Object value = userProfile.get(key);
@@ -184,7 +193,20 @@ public class LoginXingCloud implements Login
 		public DefaultUser(String name) {
 			this.name = name;
 		}
-		
+		@Override
+		public String getHeadURL() {
+			return null;
+		}
+		@Override
+		public int getLevel() {
+			return 0;
+		}
+
+		@Override
+		public String getName() {
+			return name;
+		}
+
 		@Override
 		public String getUID() {
 			return name;

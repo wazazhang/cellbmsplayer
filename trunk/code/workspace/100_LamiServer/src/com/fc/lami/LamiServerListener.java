@@ -132,17 +132,18 @@ public class LamiServerListener implements ServerListener
 						LoginResponse.LOGIN_RESULT_FAIL_BAD_VERSION, 
 						null, 
 						version, 
-						"");
+						"server version is [" + version + "]\n" +
+						"client version is [" + request.version + "]");
 			}
 			synchronized (client_list) {
-				if (request.player == null) {
+				if (request.platform_user_uid == null) {
 					return new LoginResponse(
 							LoginResponse.LOGIN_RESULT_FAIL, 
 							null, 
 							version, 
-							"");
+							"request player is null");
 				}
-				String ruid = request.player.uid;
+				String ruid = request.platform_user_uid;
 				EchoClientSession old_session = client_list.get(ruid);
 				if (old_session != null) {
 					if (old_session.session.isConnected()) {
@@ -150,7 +151,7 @@ public class LamiServerListener implements ServerListener
 								LoginResponse.LOGIN_RESULT_FAIL_ALREADY_LOGIN, 
 								null, 
 								version, 
-								"");
+								"[" + ruid + "] is already login");
 					} else {
 						client_list.remove(ruid);
 					}
