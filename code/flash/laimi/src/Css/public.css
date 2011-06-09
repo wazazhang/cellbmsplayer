@@ -1,0 +1,49 @@
+/* CSS file */
+
+.VScrollBar   
+{   
+	
+	width:100px;
+	
+	bar-width-ratio:100px;
+	
+	
+	
+	/*上面箭头的样式*/  
+	/*
+	up-arrow-skin:Embed(source="../image/bg/bar.png");   
+	*/
+	upArrowUpSkin:   
+		Embed(source="../image/bg/rollup.png");   
+	upArrowOverSkin:   
+		Embed(source="../image/bg/rollup.png");   
+	upArrowDownSkin:   
+		Embed(source="../image/bg/rollup1.png");   
+	
+	/*下面箭头的样式*/  
+	downArrowUpSkin:   
+		Embed(source="../image/bg/rolldwon.png");   
+	downArrowOverSkin:   
+		Embed(source="../image/bg/rolldwon.png");   
+	downArrowDownSkin:   
+		Embed(source="../image/bg/rolldwon1.png");   
+	
+	thumbDownSkin:   
+		Embed(source="../image/bg/bar.png",   
+		scaleGridLeft="20", scaleGridTop="20",   
+		scaleGridRight="21", scaleGridBottom="21");   
+	thumbUpSkin:   
+		Embed(source="../image/bg/bar.png",   
+		scaleGridLeft="20", scaleGridTop="20",   
+		scaleGridRight="21", scaleGridBottom="21");   
+	thumbOverSkin:   
+		Embed(source="../image/bg/bar.png",   
+		scaleGridLeft="20", scaleGridTop="20",   
+		scaleGridRight="21", scaleGridBottom="21");   
+
+
+	trackSkin:   
+		Embed(source="../image/bg/vcenter.png",   
+		scaleGridLeft="7", scaleGridTop="4",   
+		scaleGridRight="8", scaleGridBottom="6");
+}  
