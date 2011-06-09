@@ -361,7 +361,7 @@
 		]]>
 	</mx:Script>
 	
-	<mx:Image  source="image/bg/pqbg2.png" y="91" horizontalCenter="0">
+	<mx:Image  source="{Resource.newbg}" y="91" horizontalCenter="0">
 	</mx:Image>
 	
 	<ns1:Matrix_Cpt id="mx" y="115"  height="201" horizontalCenter="3">
