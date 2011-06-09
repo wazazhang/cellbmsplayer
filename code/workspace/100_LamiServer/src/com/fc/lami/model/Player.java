@@ -198,7 +198,7 @@ public class Player
 	 * @return
 	 */
 	public boolean isVisitor(){
-		if (cur_desk.getSeat(this)!=-1){
+		if (cur_desk.getSeat(this)!=null){
 			return false;
 		}
 		return true;
