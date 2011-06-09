@@ -344,6 +344,7 @@ package Class
 			gamer.confiomCard();
 			gamer.isMyturn = true;
 			haveSendCard = false;
+		
 			lami.turnStartImg.visible = true;
 			lami.turnStartEft.play();
 			timeCtr.start();
@@ -397,6 +398,8 @@ package Class
 			lami.nextPlayer1.gameing = false;
 			lami.nextPlayer2.gameing = false;
 			lami.nextPlayer3.gameing = false;
+			
+			lami.optCpt.openOrder();
 			
 			if(lami.resetCpt!=null)
 			   lami.removeReset();
