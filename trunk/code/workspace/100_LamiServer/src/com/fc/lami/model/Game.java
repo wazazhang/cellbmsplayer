@@ -555,11 +555,12 @@ public class Game implements Runnable
 					}
 				}
 			}else{ //倒序
-				for (int i = c1_index+1; i<cds.length; i++){
-					if (cds[i].point!=0 && cds[i].point != c1.point-(i-c1_index)){
-						return false;
-					}
-				}
+				return false;
+//				for (int i = c1_index+1; i<cds.length; i++){
+//					if (cds[i].point!=0 && cds[i].point != c1.point-(i-c1_index)){
+//						return false;
+//					}
+//				}
 			}
 			return true;
 		}
