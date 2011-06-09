@@ -54,6 +54,12 @@
 			{
 				Server.app = this
 				
+				if (txt_uid.text == null)
+				{
+					Alert.show("名字不能为空");
+					return;	
+				}
+				
 				var codec : MessageCodec = new MessageCodec();
 				
 				if (chk_mina.selected)
@@ -95,6 +101,7 @@
 	<mx:ComboBox x="105" y="42" id="com_server_addrs" width="344" editable="true">
 		<mx:Array id="com_server_addrs_Data">
 			<mx:Object label="127.0.0.1:19821"/>
+			<mx:Object label="192.168.1.71:19821"/>
 			<mx:Object label="127.0.0.1:9933"/>
 			<mx:Object label="rr2.usxingcloud.info:40001"/>
 		</mx:Array>

@@ -19,8 +19,15 @@
 				
 				public function init():void
 				{
-					version.text = 
-						Server.getClient().getSession().getMessageFactory().getVersion();
+					if (Server.getClient() != null &&
+						Server.getClient().getSession() != null) {
+						version.text = 
+							Server.
+							getClient().
+							getSession().
+							getMessageFactory().
+							getVersion();
+					}
 					
 					linkTimer.addEventListener(TimerEvent.TIMER_COMPLETE, linkFilad);
 					linkTimer.addEventListener(TimerEvent.TIMER, linking)
