@@ -64,6 +64,7 @@ public class Messages {
 		public String uid;
 		public String player_name;
 		public String player_head_url;
+		public int sex;
 		
 		public int score;
 		public int win;
@@ -831,6 +832,7 @@ public class Messages {
 		final static public int ENTER_DESK_RESULT_FAIL_NOT_HAVE_ROOM = 2;	//玩家没有进入房间
 		final static public int ENTER_DESK_RESULT_FAIL_NO_IDLE_SEAT = 3;	// 没有空闲的座位
 		final static public int ENTER_DESK_RESULT_FAIL_NO_IDLE_DESK = 4;	// 没有空闲的桌子
+		final static public int ENTER_DESK_RESULT_FAIL_GAME_STARTED = 5;	// 已经开始游戏
 		public int result;
 		public int desk_id;
 		public int seat;
@@ -1212,6 +1214,41 @@ public class Messages {
 		}
 		
 		public SpeakToChannelResponse(){}
+	}
+	
+	public static class EnterDeskAsVisitorRequest extends FlashMessage
+	{
+		public int desk_id;
+		
+		public EnterDeskAsVisitorRequest(int did){
+			this.desk_id = did;
+		}
+		public EnterDeskAsVisitorRequest(){}
+	}
+	
+	public static class EnterDeskAsVisitorResponse extends FlashMessage
+	{
+		final static public int ENTER_DESK_VISITOR_RESULT_SUCCESS = 0;
+		final static public int ENTER_DESK_VISITOR_RESULT_FAIL_ALREADY_IN_DESK = 1;
+		final static public int ENTER_DESK_VISITOR_RESULT_FAIL_NO_DESK = 2;
+		final static public int ENTER_DESK_VISITOR_RESULT_FAIL_NO_ROOM = 3;
+		public int result;
+		public int desk_id;
+		public int turn_interval;
+		public int operate_time;
+		
+		public EnterDeskAsVisitorResponse(int result, int did, int ti, int ot){
+			this.result = result;
+			this.desk_id = did;
+			this.turn_interval = ti;
+			this.operate_time = ot;
+		}
+		
+		public EnterDeskAsVisitorResponse(int result){
+			this.result = result;
+		}
+		
+		public EnterDeskAsVisitorResponse(){}
 	}
 	
 	public static void main(String[] args) throws IOException

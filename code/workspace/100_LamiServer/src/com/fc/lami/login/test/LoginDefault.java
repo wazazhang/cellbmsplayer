@@ -21,6 +21,7 @@ public class LoginDefault implements Login
 		private int lose;
 		private int point;
 		private int score;
+		private int sex;
 		
 		public DefaultUser(String name) {
 			this.name = name;
@@ -77,6 +78,11 @@ public class LoginDefault implements Login
 		@Override
 		synchronized public int addWin(int value) {
 			return win += value;
+		}
+
+		@Override
+		public int getSex() {
+			return sex;
 		}
 
 		

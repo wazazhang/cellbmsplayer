@@ -4,6 +4,8 @@ public interface User
 {
 	public String	getUID();
 	
+	public int		getSex();
+	
 	public int		getScore();
 	
 	public int		getPoint();

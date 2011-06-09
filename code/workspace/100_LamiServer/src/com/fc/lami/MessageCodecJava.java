@@ -14,7 +14,7 @@ import com.net.NetDataTypes;
 public class MessageCodecJava implements MutualMessageCodec
 {
 	public String getVersion() {
-		return "Thu Jun 09 10:15:06 CST 2011";
+		return "Thu Jun 09 14:04:17 CST 2011";
 	}
 
 	public void readExternal(MutualMessage msg, NetDataInput in) throws IOException 
@@ -33,6 +33,12 @@ public class MessageCodecJava implements MutualMessageCodec
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.DeskData.class)) {
 			_r((com.fc.lami.Messages.DeskData)msg, in); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.EnterDeskAsVisitorRequest.class)) {
+			_r((com.fc.lami.Messages.EnterDeskAsVisitorRequest)msg, in); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.EnterDeskAsVisitorResponse.class)) {
+			_r((com.fc.lami.Messages.EnterDeskAsVisitorResponse)msg, in); return;
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.EnterDeskNotify.class)) {
 			_r((com.fc.lami.Messages.EnterDeskNotify)msg, in); return;
@@ -257,6 +263,12 @@ public class MessageCodecJava implements MutualMessageCodec
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.DeskData.class)) {
 			_w((com.fc.lami.Messages.DeskData)msg, out); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.EnterDeskAsVisitorRequest.class)) {
+			_w((com.fc.lami.Messages.EnterDeskAsVisitorRequest)msg, out); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.EnterDeskAsVisitorResponse.class)) {
+			_w((com.fc.lami.Messages.EnterDeskAsVisitorResponse)msg, out); return;
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.EnterDeskNotify.class)) {
 			_w((com.fc.lami.Messages.EnterDeskNotify)msg, out); return;
@@ -542,6 +554,34 @@ public class MessageCodecJava implements MutualMessageCodec
 		out.writeInt(msg.player_W_id);
 		out.writeInt(msg.player_S_id);
 		out.writeInt(msg.player_N_id);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.EnterDeskAsVisitorRequest
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.EnterDeskAsVisitorRequest new_com_fc_lami_Messages_EnterDeskAsVisitorRequest(){return new com.fc.lami.Messages.EnterDeskAsVisitorRequest();}
+	private void _r(com.fc.lami.Messages.EnterDeskAsVisitorRequest msg, NetDataInput in) throws IOException {
+		msg.desk_id = in.readInt();
+	}
+	private void _w(com.fc.lami.Messages.EnterDeskAsVisitorRequest msg, NetDataOutput out) throws IOException {
+		out.writeInt(msg.desk_id);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.EnterDeskAsVisitorResponse
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.EnterDeskAsVisitorResponse new_com_fc_lami_Messages_EnterDeskAsVisitorResponse(){return new com.fc.lami.Messages.EnterDeskAsVisitorResponse();}
+	private void _r(com.fc.lami.Messages.EnterDeskAsVisitorResponse msg, NetDataInput in) throws IOException {
+		msg.result = in.readInt();
+		msg.desk_id = in.readInt();
+		msg.turn_interval = in.readInt();
+		msg.operate_time = in.readInt();
+	}
+	private void _w(com.fc.lami.Messages.EnterDeskAsVisitorResponse msg, NetDataOutput out) throws IOException {
+		out.writeInt(msg.result);
+		out.writeInt(msg.desk_id);
+		out.writeInt(msg.turn_interval);
+		out.writeInt(msg.operate_time);
 	}
 
 //	----------------------------------------------------------------------------------------------------
@@ -1002,6 +1042,7 @@ public class MessageCodecJava implements MutualMessageCodec
 		msg.uid = in.readUTF();
 		msg.player_name = in.readUTF();
 		msg.player_head_url = in.readUTF();
+		msg.sex = in.readInt();
 		msg.score = in.readInt();
 		msg.win = in.readInt();
 		msg.lose = in.readInt();
@@ -1012,6 +1053,7 @@ public class MessageCodecJava implements MutualMessageCodec
 		out.writeUTF(msg.uid);
 		out.writeUTF(msg.player_name);
 		out.writeUTF(msg.player_head_url);
+		out.writeInt(msg.sex);
 		out.writeInt(msg.score);
 		out.writeInt(msg.win);
 		out.writeInt(msg.lose);
