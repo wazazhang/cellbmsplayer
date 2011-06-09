@@ -54,7 +54,7 @@
 			{
 				Server.app = this
 				
-				if (txt_uid.text == null)
+				if (txt_uid.text == null || txt_uid.text.length == 0)
 				{
 					Alert.show("名字不能为空");
 					return;	

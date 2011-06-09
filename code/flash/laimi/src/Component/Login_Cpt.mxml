@@ -46,7 +46,7 @@
 				
 				public function linkServer():void
 				{
-					if (Server.player != null && Server.player.uid != null)
+					if (Server.checkConnection())
 					{
 						login_btn.enabled = false;
 						
