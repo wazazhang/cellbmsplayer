@@ -5,6 +5,7 @@
 	<mx:Script>
 		<![CDATA[
 			import Class.Game;
+			import Class.Resource;
 			import Class.Server;
 			import Class.TimesCtr;
 			
@@ -116,7 +117,8 @@
 	
 	<mx:ProgressBar id="pbtime" y="85" width="87" height="4" horizontalCenter="0" mode="manual"  label="" visible="false" />
 	
-	<mx:Image id="clockimg" x="90" y="24" source="image/zhong.jpg" width="27" height="34" visible="{pbtime.visible}"/>
-	<mx:Label id="clock" x="94" y="32" visible="{pbtime.visible}"/>
+	<mx:SWFLoader  x="87" y="24" source="{Resource.time}" visible="{pbtime.visible}" width="30" height="30"></mx:SWFLoader>
+	
+	<mx:Label id="clock" color="0xffffff" x="94" y="32" visible="{pbtime.visible}"/>
 	
 </mx:Canvas>
