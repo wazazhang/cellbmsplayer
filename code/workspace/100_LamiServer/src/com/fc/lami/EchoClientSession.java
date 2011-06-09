@@ -290,8 +290,12 @@ public class EchoClientSession implements ClientSessionListener
 	/** 退出桌子请求 */
 	private void processLeaveDeskRequest(ClientSession session, Protocol protocol, LeaveDeskRequest request){
 		if (player.cur_desk != null) {
-			player.cur_desk.leaveDesk(player);
-			session.sendResponse(protocol, new LeaveDeskResponse());
+			if (player.cur_desk.getGame()!=null && !player.isVisitor()){
+				session.sendResponse(protocol, new LeaveDeskResponse(LeaveDeskResponse.LEAVE_DESK_RESULT_FAIL_GAMING));
+			}else{
+				player.cur_desk.leaveDesk(player);
+				session.sendResponse(protocol, new LeaveDeskResponse(LeaveDeskResponse.LEAVE_DESK_RESULT_SUCCESS));
+			}
 		}
 	}
 	
