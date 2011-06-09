@@ -11,11 +11,6 @@
 			backgroundImagePosition:left,top;/*第一个参数可用值：left,center,right,默认值left;第二个参数可用值：top,middle,bottom,默认值top*/  
 			backgroundImageRepeat:repeat;/*可用值：repeat,no-repeat,repeat-x,repeat-y,默认值no-repeat*/  
 			background-size:100;  
-			/*border-thickness-bottom:30;  
-			border-thickness-left:30;  
-			border-thickness-right:30;  
-			border-thickness-top:30;  
-			header-height:30;  */
 		}  
 	</mx:Style>
 	<mx:Script>
