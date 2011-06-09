@@ -29,10 +29,12 @@ public class LamiSFSExtension extends XingCloudSFSExtension
 		
 		CAppBridge.initNullStorage();
 		LamiConfig.load(LamiConfig.class, super.getConfigProperties());
-//		LamiConfig.LOGIN_CLASS = com.fc.lami.login.xingcloud.LoginXingCloud.class.getCanonicalName();
-		LamiConfig.LOGIN_CLASS = com.fc.lami.login.test.LoginDefault.class.getCanonicalName();
+		LamiConfig.LOGIN_CLASS = com.fc.lami.login.xingcloud.LoginXingCloud.class.getCanonicalName();
+//		LamiConfig.LOGIN_CLASS = com.fc.lami.login.test.LoginDefault.class.getCanonicalName();
+		trace("\n" +LamiConfig.toProperties(LamiConfig.class));
+		MessageFactory codec = new MessageFactory();
 		try {
-			this.adapter = new SFSServerAdapter(this, new MessageFactory());
+			this.adapter = new SFSServerAdapter(this, codec);
 			this.adapter.open(0, new LamiServerListener());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -41,6 +43,7 @@ public class LamiSFSExtension extends XingCloudSFSExtension
 		"===================================================\n" +
 		"= Lami SFSExtension started !\n" +
 		"= default zone is : " + getParentZone().getName() + "\n" +
+		"= codec version is : " + codec.getMutualCodec().getVersion() + "\n" +
 		"===================================================\n");
 	}
 
