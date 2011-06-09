@@ -83,6 +83,9 @@
 			
 			private function timerHandler(event:TimerEvent):void
 			{
+				if(timer == null)
+					return 
+				
 				pbtime.setProgress(Server.game.timeCtr.sumTime*800 - timer.delay*timer.currentCount, Server.game.timeCtr.sumTime*1000*4/5); 
 				clock.text = parseInt(((Server.game.timeCtr.sumTime*800 - timer.delay*timer.currentCount)/1000).toString()).toString() ;
 				var point:Number = timer.delay * timer.currentCount / (Server.game.timeCtr.sumTime*800)	
