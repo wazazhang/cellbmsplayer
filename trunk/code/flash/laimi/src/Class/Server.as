@@ -66,6 +66,7 @@ package Class
 	import com.fc.lami.Messages.TurnStartNotify;
 	import com.net.client.ClientEvent;
 	import com.net.client.ServerSession;
+	import com.smartfoxserver.v2.requests.ManualDisconnectionRequest;
 	import com.smartfoxserver.v2.requests.SpectatorToPlayerRequest;
 	
 	import flash.utils.Dictionary;
@@ -397,7 +398,11 @@ package Class
 				{
 					Alert.show("已在游戏中");
 				}
-				else 
+				else if (login.result == LoginResponse.LOGIN_RESULT_FAIL_BAD_VERSION)
+				{
+					Alert.show("版本错误");
+				}
+				else if (login.result == LoginResponse.LOGIN_RESULT_FAIL)
 				{
 					Alert.show("result=" + login.result + " : reason="+login.reason);
 				}
@@ -409,7 +414,7 @@ package Class
 			{
 				var enterRoom : EnterRoomResponse =res as EnterRoomResponse;
 			    
-				if(enterRoom.result==0) 
+				if(enterRoom.result==EnterRoomResponse.ENTER_ROOM_RESULT_SUCCESS) 
 				{	
 					room = new Room(enterRoom.room);
 					room_cpt = new Room2_Cpt(); 
@@ -426,13 +431,13 @@ package Class
 						enterDesk(-1,-1);
 					}
 				}
-				else if(enterRoom.result == 1)
+				else if(enterRoom.result == EnterRoomResponse.ENTER_ROOM_RESULT_FAIL_ROOM_FULL)
 				{
 					Alert.show("房间已满");
 				}
-				else
+				else if (enterRoom.result == EnterRoomResponse.ENTER_ROOM_RESULT_FAIL_ROOM_NOT_EXIST)
 				{
-					Alert.show("进入失败");
+					Alert.show("房间不存在");
 				}
 				
 			}
@@ -513,19 +518,24 @@ package Class
 				if (mmcr.result!=MainMatrixChangeResponse.MAIN_MATRIX_CHANGE_RESULT_SUCCESS){
 					SynchronizeCard();
 				}
+				
 			}
 			else if(res is SubmitResponse)
 			{
 				var sr : SubmitResponse = res as SubmitResponse;
 
 				
-				if (sr.result != SubmitResponse.SUBMIT_RESULT_SUCCESS){
-					Alert.show("提交错误 代码："+sr.result);
+				if (sr.result == SubmitResponse.SUBMIT_RESULT_FAIL_CARD_COMBI_NO_MATCH){
+					Alert.show("有不成立的牌组");
 					SynchronizeCard();
 				}
-				else
-				{
-//					sendPublicMatrix();
+				else if (sr.result == SubmitResponse.SUBMIT_RESULT_FAIL_CARD_NO_SEND){
+					Alert.show("没有破冰");
+					SynchronizeCard();
+				}
+				else if (sr.result == SubmitResponse.SUBMIT_RESULT_FAIL_CARD_NO_SEND){
+					Alert.show("没有出牌");
+					SynchronizeCard();
 				}
 			}
 			
@@ -539,10 +549,15 @@ package Class
 			}
 			
 			else if (res is LeaveDeskResponse){
-				
-				room_cpt.visible = true;
-				game = null;
-				//game_cpt.visible = true;
+				var ldr : LeaveDeskResponse = res as LeaveDeskResponse;
+				if (ldr.result == LeaveDeskResponse.LEAVE_DESK_RESULT_SUCCESS){
+					app.removeChild(game.lami);
+					room_cpt.visible = true;
+					game = null;
+					//game_cpt.visible = true;
+				}else if (ldr.result == LeaveDeskResponse.LEAVE_DESK_RESULT_FAIL_GAMING){
+					Alert.show("正在游戏中不能退出");
+				}
 			}
 			else if (res is GetPlayerDataResponse)
 			{
