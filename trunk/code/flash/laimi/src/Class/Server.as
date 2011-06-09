@@ -134,6 +134,11 @@ package Class
 			Server.platform_user_uid 	= platform_user_uid;
 		}
 		
+		public static function checkConnection() : Boolean
+		{
+			return platform_user_uid != null && platform_user_uid.length > 0;
+		}
+		
 		public static function getPlayer(player_id:int):PlayerData
 		{
 			return room.getPlayerFromPlayerList(player_id);
