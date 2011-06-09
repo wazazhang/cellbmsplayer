@@ -210,6 +210,14 @@ package Class
 		[Embed(source='image/sjbt2.png')] //快速加入2
 		public static var sjbt2:Class;
 		
+		[Bindable]
+		[Embed(source='image/time.swf')] //时间
+		public static var time:Class;
+		
+		[Bindable]
+		[Embed(source='image/bg/newbg.png')] //桌面背景
+		public static var newbg:Class;
+		
 		public function Resource()
 		{
 			
