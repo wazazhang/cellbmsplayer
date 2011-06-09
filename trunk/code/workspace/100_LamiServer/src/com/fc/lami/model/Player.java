@@ -193,6 +193,17 @@ public class Player
 		return false;
 	}
 	
+	/**
+	 * 是否是旁观者
+	 * @return
+	 */
+	public boolean isVisitor(){
+		if (cur_desk.getSeat(this)!=-1){
+			return false;
+		}
+		return true;
+	}
+	
 	public ArrayList<CardData> getCardGroup(){
 		ArrayList<CardData> player_cards = new ArrayList<CardData>();
 		for (CardData cd:card_list.values()){
