@@ -81,39 +81,50 @@ package Class.Model
 		{
 			if(isMyturn)
 				return;
-			cleanMatrix();
-			handCard.removeAll();
+//			cleanMatrix();
+//			handCard.removeAll();
 			for each(var cd:CardData in cards){
-				handCard.addItem(Card.createCardByData(cd) );
-			}
-
-			handCard.refresh();
-			
-			var line:Line = cardLines[0];
-			var cardcpt:Card_Cpt = line.firstCard;
-			var precard:Card;
-			
-			for each(var card:Card in handCard)
-			{
-				cardcpt.card = card;
-				cardcpt.confimcard = card;
-//				cardcpt.isShow = false;
-				cardcpt = cardcpt.nextCardCpt;
-				if(precard!=null)
-				{
-					precard.nextCard = card;
+				if (!isHandCard(cd)){
+					getCard(Card.createCardByData(cd));
 				}
-				precard = card;
 			}
+			var h2 :ArrayCollection = new ArrayCollection();
+			for each(var c:Card in handCard){
+				for each(var cd:CardData in cards){
+					if (c.id == cd.id){
+						h2.addItem(c);
+						break;
+					}
+				}
+			}
+			handCard = h2;
+//			handCard.refresh();
+			
+//			var line:Line = cardLines[0];
+//			var cardcpt:Card_Cpt = line.firstCard;
+//			var precard:Card;
+			
+//			for each(var card:Card in handCard)
+//			{
+//				cardcpt.card = card;
+//				cardcpt.confimcard = card;
+////				cardcpt.isShow = false;
+//				cardcpt = cardcpt.nextCardCpt;
+//				if(precard!=null)
+//				{
+//					precard.nextCard = card;
+//				}
+//				precard = card;
+//			}
 
-			if(orderType)
-			{
-				orderCardByPoint();
-			}
-			else
-			{
-				orderCardByColor();
-			}
+//			if(orderType)
+//			{
+//				orderCardByPoint();
+//			}
+//			else
+//			{
+//				orderCardByColor();
+//			}
 //			for each(var line:Line in cardLines)
 //			{
 //				var cardcpt:Card_Cpt = line.firstCard;
@@ -315,7 +326,15 @@ package Class.Model
 		}
 		
 		
-		
+		public function isHandCard(card:CardData):Boolean
+		{
+			for each(var c:Card in handCard){
+				if (c.id == card.id){
+					return true;
+				}
+			}
+			return false;
+		}
 		//计算手牌数
 		public function countHandCard():void
 		{
