@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"  xmlns:ns1="Component.*" width="960" height="600"
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"  xmlns:ns1="Component.*" width="960" height="600" 
 		   borderStyle="solid" borderColor="0x000000" backgroundColor="0xffffff"   styleName="taskDetailBG"
 		   verticalCenter="0" horizontalCenter="0" verticalScrollPolicy="off" horizontalScrollPolicy="off" creationComplete="initEvent()"  >
 	
@@ -85,6 +85,7 @@
 				nextPlayer2.reset();
 				nextPlayer3.reset();
 				resetGameAllData();
+				optCpt.reset();
 				player = Server.player;
 				initSeat(desk);
 			}
@@ -101,6 +102,8 @@
 				game.legaled = true;
 				game.haveSendCard = false;
 				game.timeCtr.stop();
+				
+				
 			}
 			
 			//初始位置
@@ -196,13 +199,16 @@
 			
 			public function addInfo(str:String):void
 			{
-				
-				gameinfoStr = str + "\n" +gameinfoStr ;
+				gameinfoStr =   gameinfoStr  + str + "\n" ;
+				TA_gameinfoStr.validateNow();
+				TA_gameinfoStr.verticalScrollPosition=TA_gameinfoStr.maxVerticalScrollPosition;
 			}
 			
 			public function addTalkInfo(str:String):void
 			{
-				talkinfoStr = str + "\n" +talkinfoStr;
+				talkinfoStr = talkinfoStr  + str + "\n";
+				TA_talkinfoStr.validateNow(); 
+				TA_talkinfoStr.verticalScrollPosition=TA_talkinfoStr.maxVerticalScrollPosition;
 			}
 			
 			//回到房间
@@ -269,7 +275,7 @@
 				
 				
 				var cpt:OtherPlayer_Cpt = getOtherPlayerCptByPlayerId(playerid);
-				
+				optCpt.openOrder();
 				if(cpt!=null)
 				{
 					cpt.gameing = true;
@@ -307,7 +313,7 @@
 				addInfo("游戏开始");
 				if(resetCpt!=null)
 					removeReset();
-				
+
 				this.canReset = canReset;
 				canShowReset = true;
 				nextPlayer1.ready = false;
@@ -399,13 +405,14 @@
 	
 
 	<!--//游戏信息区-->
-	<mx:Canvas x="10" y="10" width="143" height="127" borderStyle="none"  borderColor="#000000">
+	<mx:Canvas x="10" y="10" width="143" height="149" borderStyle="none"  borderColor="#000000">
 		
 		<mx:Label x="10" y="10" text="游戏信息" color="#FFFDFD"/>
-		<mx:Label x="45" y="39" text="{Server.game.leftCard}" color="#FFFEFE"/>
+		<mx:Label x="45" y="39" text="剩余手牌:{Server.game.leftCard}" color="#FFFEFE"/>
 		<mx:Image x="10" y="32" source="image/pai.jpg"/>
 		<mx:Label x="10" y="74" text="玩家信息" color="#FFFFFF"/>
-		<mx:Label x="10" y="91" text="积分：{Server.player.score} 等级：{Server.player.level}" color="#FEFEFE"/>
+		<mx:Label x="10" y="106" text="积分：{Server.player.score} 等级：{Server.player.level}" color="#FEFEFE"/>
+		<mx:Label x="10" y="91" text="{Server.player.uid}" color="#FFFFFF"/>
 	</mx:Canvas>
 	
 	<!--玩家信息区-->
@@ -413,16 +420,16 @@
 	<mx:Canvas id="useinfo" width="470" height="39" x="243" y="422" 
 			   verticalScrollPolicy="off" horizontalScrollPolicy="off" backgroundImage="@Embed(source='../image/bg/opbg.png')">
 		
-		<mx:Label x="7" y="0" text="{Server.player.uid}" color="#010101"/>
+		<mx:Label x="7" y="2" text="{Server.player.uid}" color="#010101"/>
 		
-		<mx:Image x="80" y="5" source="{game.gamer.isMyturn?Resource.yxz:Resource.ddz}" ></mx:Image>
-		
-		
-		<mx:Label x="7" y="16" text="手牌：{game.gamer.handCard.length}" color="#010101"/>
+		<mx:Image x="100" y="16" source="{game.gamer.isMyturn?Resource.yxz:Resource.ddz}" ></mx:Image>
 		
 		
+		<mx:Label x="7" y="17" text="手牌：{game.gamer.handCard.length}" color="#010101"/>
 		
-		<mx:Image x="80" y="0" source="{game.gamer.isCold?Resource.wpb:Resource.ypb}" > </mx:Image>
+		
+		
+		<mx:Image x="100" y="2" source="{game.gamer.isCold?Resource.wpb:Resource.ypb}" > </mx:Image>
 		
 		
 		<!--
@@ -438,14 +445,13 @@
 	</ns1:Opt_Cpt>
 	
 	<mx:Image source="{Resource.talkbg}" x="720" y="397" alpha="0.5"></mx:Image>
-	<mx:TextArea  x="725" y="405" width="220" height="150" backgroundAlpha="0.0" borderStyle="none"  color="#010101" editable="false"  text="{talkinfoStr}"/>
+	<mx:TextArea  id="TA_talkinfoStr"  x="725" y="405" width="220" height="150" backgroundAlpha="0.0" borderStyle="none"  color="0xffffff" editable="false"  text="{talkinfoStr}"/>
 	
 	<mx:Image source="{Resource.xtbg}" x="7" y="398" alpha="0.5"></mx:Image>
-	<mx:TextArea  x="12" y="405" width="220" height="185" backgroundAlpha="0.0" borderStyle="none"  editable="false" text="{gameinfoStr}" />
-	
+	<mx:TextArea  id="TA_gameinfoStr"  x="12" y="405" color="0xffffff" width="220" height="185" backgroundAlpha="0.0" borderStyle="none"  editable="false" text="{gameinfoStr}" />
 	
 	<mx:Button x="890" y="558" click="pubTalk()" width="49" skin="@Embed(source='../image/button/tj.png')"  height="28" downSkin="@Embed(source='../image/button/tj1.png')"/>
-	<mx:TextInput id="titalk" x="731" y="560" width="150" alpha="0.5" backgroundColor="0xD2A55A" borderColor="0x8B5505"/>
+	<mx:TextInput  color="0xffffff" id="titalk" x="731" y="560" width="150" alpha="0.5" backgroundColor="0xD2A55A" borderColor="0x8B5505" themeColor="#BF7204"/>
 	
 	
 </mx:Canvas>
