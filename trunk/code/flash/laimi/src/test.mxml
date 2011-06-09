@@ -68,15 +68,12 @@
 				}
 				if (chk_sfs.selected) 
 				{
-					Server.init(new SFSSessionImpl(codec, com_sfs_zone.text));
+					Server.init(new SFSSessionImpl(codec).setZone(com_sfs_zone.text));
 				}
 				if (chk_mina.selected || chk_sfs.selected) 
 				{
 					Server.initServer(
-						new PlayerData(0,
-							txt_uid.text,
-							txt_uid.text,
-							"http://www.google.com.hk/intl/zh-CN/images/logo_cn.png"),
+						txt_uid.text,
 						null, 
 						com_server_addrs.text.split(":")[0],
 						com_server_addrs.text.split(":")[1]

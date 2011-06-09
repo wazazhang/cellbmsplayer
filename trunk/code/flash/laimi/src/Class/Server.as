@@ -100,8 +100,8 @@ package Class
 		
 		public static var isAutoEnter:Boolean = false;
 		
-		
-		private static var platform : String;
+		private static var platform_user_uid : String;
+		private static var platform_uid : String;
 		private static var host : String;
 		private static var port : int;
 		
@@ -122,15 +122,15 @@ package Class
 			client.addNotifyListener(client_notify);
 		}
 		
-		public static function initServer(player:PlayerData, 
-										  platform:String,
+		public static function initServer(platform_user_uid:String, 
+										  platform_uid:String,
 										  host:String,
 										  port:String) 
 		{
-			Server.host 	= host;
-			Server.port 	= int(port);
-			Server.platform	= platform;
-			Server.player 	= player;
+			Server.host 				= host;
+			Server.port 				= int(port);
+			Server.platform_uid			= platform_uid;
+			Server.platform_user_uid 	= platform_user_uid;
 		}
 		
 		public static function getPlayer(player_id:int):PlayerData
@@ -155,7 +155,11 @@ package Class
 			var version : String = client.getSession().getMessageFactory().getVersion();
 			trace("client version is : " + version);
 			client.sendRequest(
-				new LoginRequest(player, version, version, platform), 
+				new LoginRequest(
+					platform_user_uid, 
+					platform_uid,
+					version, 
+					version), 
 				client_response);
 		}
 		

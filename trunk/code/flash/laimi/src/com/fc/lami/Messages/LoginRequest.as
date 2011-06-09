@@ -12,34 +12,34 @@ package com.fc.lami.Messages
 	[Bindable]
 	public class LoginRequest extends Message
 	{
-		/** Java type is : <font color=#0000ff>com.fc.lami.Messages.PlayerData</font> */
-		[JavaType(name="com.fc.lami.Messages.PlayerData", leaf_type=NetDataTypes.TYPE_EXTERNALIZABLE)]
-		public var player :  com.fc.lami.Messages.PlayerData;
+		/** Java type is : <font color=#0000ff>java.lang.String</font> */
+		[JavaType(name="java.lang.String", leaf_type=NetDataTypes.TYPE_STRING)]
+		public var platform_user_uid :  String;
+		/** Java type is : <font color=#0000ff>java.lang.String</font> */
+		[JavaType(name="java.lang.String", leaf_type=NetDataTypes.TYPE_STRING)]
+		public var platform_uid :  String;
 		/** Java type is : <font color=#0000ff>java.lang.String</font> */
 		[JavaType(name="java.lang.String", leaf_type=NetDataTypes.TYPE_STRING)]
 		public var validate :  String;
 		/** Java type is : <font color=#0000ff>java.lang.String</font> */
 		[JavaType(name="java.lang.String", leaf_type=NetDataTypes.TYPE_STRING)]
 		public var version :  String;
-		/** Java type is : <font color=#0000ff>java.lang.String</font> */
-		[JavaType(name="java.lang.String", leaf_type=NetDataTypes.TYPE_STRING)]
-		public var platform :  String;
 
 		/**
-		 * @param player as <font color=#0000ff>com.fc.lami.Messages.PlayerData</font>
+		 * @param platform_user_uid as <font color=#0000ff>java.lang.String</font>
+		 * @param platform_uid as <font color=#0000ff>java.lang.String</font>
 		 * @param validate as <font color=#0000ff>java.lang.String</font>
-		 * @param version as <font color=#0000ff>java.lang.String</font>
-		 * @param platform as <font color=#0000ff>java.lang.String</font>		 */
+		 * @param version as <font color=#0000ff>java.lang.String</font>		 */
 		public function LoginRequest(
-			player :  com.fc.lami.Messages.PlayerData = null,
+			platform_user_uid :  String = null,
+			platform_uid :  String = null,
 			validate :  String = null,
-			version :  String = null,
-			platform :  String = null) 
+			version :  String = null) 
 		{
-			this.player = player;
+			this.platform_user_uid = platform_user_uid;
+			this.platform_uid = platform_uid;
 			this.validate = validate;
 			this.version = version;
-			this.platform = platform;
 		}
 	}
 }
