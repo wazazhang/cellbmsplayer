@@ -39,7 +39,7 @@ public class LoginXingCloud implements Login
 				if (persistenceSession == null) {
 					String reason = "there is no persistenceSession!";
 					log.error(reason);
-					return new LoginInfo(null, reason);	
+					return new LoginInfo(new DefaultUser(platformAddress), reason);	
 				}
 				//get UserProfile
 				UserProfile userProfile = (UserProfile) 
@@ -50,14 +50,14 @@ public class LoginXingCloud implements Login
 				if (userProfile == null) {
 					String reason = "there is no userProfile with (" + platformAddress + ")!";
 					log.error(reason);
-					return new LoginInfo(null, reason);	
+					return new LoginInfo(new DefaultUser(platformAddress), reason);	
 				} else {
 					return new LoginInfo(new XingCloudUser(userProfile), "");
 				}
 			} catch (Throwable e) {
 				log.error(e.getMessage(), e);
 				String reason = e.getClass() + " : " + e.getMessage();
-				return new LoginInfo(null, reason);
+				return new LoginInfo(new DefaultUser(platformAddress), reason);
 			}
 		}
 	}
