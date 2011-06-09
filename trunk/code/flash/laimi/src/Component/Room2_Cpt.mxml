@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" fontSize="12" width="960" height="600"
-		   borderStyle="solid" borderColor="#000000" backgroundColor="#FDFDFD" creationComplete="initEvent()"
-		   
-		   >
-
+		   borderStyle="solid" borderColor="#BC8E38" backgroundColor="#FDFDFD" creationComplete="initEvent()"
+		    backgroundImage="image/bg/deskbg.png"
+		    themeColor="#F25010">
+	<!--
+	<mx:Style source="css/public.css">
+	</mx:Style>
+	-->
 	<mx:Script>
 		<![CDATA[
 			import Class.Model.Desk;
 			import Class.Model.Room;
+			import Class.Resource;
 			import Class.Server;
+			import Class.WebResource;
 			
 			import com.fc.lami.Messages.DeskData;
 			import com.fc.lami.Messages.PlayerData;
@@ -33,8 +38,9 @@
 			{
 				deskCpts = new Array();
 				plist = room.getPlayerList();
-				dgroomlist.dataProvider = roomData.desks
+				//dgroomlist.dataProvider = roomData.desks
 				this.roomData = roomData
+				restDesks();
 			}
 			
 			public function initEvent():void
@@ -66,6 +72,7 @@
 				{
 					_plist.push(player);
 				}
+				restPlayers();
 			}
 			
 			public function addRoomInfo(str:String):void
@@ -147,6 +154,7 @@
 				Server.ExitRoom();
 			}
 			
+			/*
 			public function is_startedLF(item:Object,column:DataGridColumn):String
 			{
 				if(item.is_started)
@@ -160,24 +168,43 @@
 			{				
 				return item.player_number+'/4';
 			}
+			*/
 			
-			public function requestEnterDesk():void
-			{
-				var desk:DeskData = dgroomlist.selectedItem as DeskData
-				if(desk.player_number==4)
-				{
-					Alert.show("当前桌子已满！");
-					return;
-				}
-					
-				Server.enterDesk(desk.desk_id,-1)
-			}
 			
 			public function fastRequestEnterDesk():void
 			{
 				Server.enterDesk(-1,-1)
 			}
 			
+			
+			
+			public function addItem(desk:DeskData):void
+			{
+				var it:DeskItemCpt = new DeskItemCpt();
+				it.desk = desk;
+				dgroomlist.addChild(it);
+			}
+			
+			
+			public function restDesks():void
+			{
+				dgroomlist.removeAllChildren();
+				for each(var desk:DeskData in roomData.desks)
+				{
+					addItem(desk);
+				}
+			}
+			
+			public function restPlayers():void
+			{
+				playerlist.removeAllChildren();
+				for each(var player:PlayerData in _plist)
+				{
+					var it:PlayerItemCpt = new PlayerItemCpt();
+					it.player = player;
+					playerlist.addChild(it);
+				}
+			}
 			
 			public function showWaitRoom():void
 			{
@@ -189,12 +216,12 @@
 						if(!desk.is_started)
 							arr.push(desk)
 					}
-					dgroomlist.dataProvider = arr;
+					//dgroomlist.dataProvider = arr;
 
 				}
 				else
 				{
-					dgroomlist.dataProvider = roomData.desks;
+					//dgroomlist.dataProvider = roomData.desks;
 				}
 			}
 			
@@ -202,10 +229,14 @@
 			
 		]]>
 	</mx:Script>
-	<mx:Canvas x="10" y="10" width="680" height="29" borderStyle="solid" borderColor="#000000">
-		<mx:Label text="信息滚动区" horizontalCenter="0" verticalCenter="0"/>
+	<mx:Canvas x="27" y="57" width="591" height="29" borderStyle="none">
+		<mx:Label text="信息滚动区" horizontalCenter="0" verticalCenter="0" fontSize="14"/>
 	</mx:Canvas>
 	
+	<mx:VBox id="dgroomlist"  x="20" y="151" height="280" width="608" verticalGap="1"  >
+	</mx:VBox>
+	
+	<!--
 	<mx:DataGrid id="dgroomlist" x="10" y="52" width="680" height="379" doubleClickEnabled="true"   doubleClick="requestEnterDesk()">
 		<mx:columns>
 			<mx:DataGridColumn headerText="房间序号" dataField="desk_id" />
@@ -217,21 +248,24 @@
 			
 		</mx:columns>
 	</mx:DataGrid>
+	-->
 	
-	<mx:TextArea x="10" y="439" width="680" height="114" text="{roomMessage}" editable="false"/>
-	<mx:TextInput id="titalk" x="10" y="566" width="624"/>
+	<mx:TextArea x="20" y="450" width="608" height="99" text="{roomMessage}" editable="false" backgroundAlpha="0.0" borderStyle="none"/>
+	<mx:TextInput id="titalk" x="91" y="558" width="467" backgroundColor="#D2A55A" borderColor="#BC8E38" borderStyle="solid" cornerRadius="5"/>
 	
-	<mx:Button x="642" y="566" label="提交" click="pubTalk()"/>
+	<mx:Button x="566" y="557" label="提交" click="pubTalk()"/>
 	
-	<mx:Canvas x="697" y="52" width="253" height="149" borderStyle="solid" borderColor="#030303">
-		<mx:Image x="153" y="49" source="image/head.png"/>
+	<mx:Canvas x="652" y="72" width="286" height="120" borderStyle="none" borderColor="#030303">
+		<mx:Image x="208" y="32" source="image/head.png"/>
 		<mx:Label x="10" y="10" text="等级：888"/>
 		<mx:Label x="10" y="38" text="经验：10000"/>
 		<mx:Label x="10" y="66" text="总局数：355"/>
 		<mx:Label x="10" y="94" text="胜率：66%"/>
-		<mx:Label x="10" y="122" text="金币：888"/>
 	</mx:Canvas>
 	
+	<mx:VBox id="playerlist" x="654" y="230" height="201" width="284" verticalGap="1">
+	</mx:VBox>
+	<!--
 	<mx:DataGrid x="698" y="209" width="252" height="326" dataProvider="{_plist}">
 		<mx:columns>
 			<mx:DataGridColumn headerText="ID" dataField="player_id" width="40"/>
@@ -239,8 +273,19 @@
 			<mx:DataGridColumn headerText="等级" dataField="level"/>
 		</mx:columns>
 	</mx:DataGrid>
+	-->
 	
-	<mx:Button x="698" y="543" label="快速加入" width="252" height="47" fontSize="20" fontWeight="bold" click="fastRequestEnterDesk()"/>
-	<mx:LinkButton x="876" y="10" label="退出房间" fontSize="12" click="exitRoom()" />
-	<mx:CheckBox id="cb1" x="698" y="10" label="只显示等待房间" change="showWaitRoom()"/>
+	
+	
+	<mx:Button x="708" y="477" 
+			   skin="{Resource.fastBt}"
+			   downSkin="{Resource.fastBt2}"
+			   overSkin="{Resource.fastBt3}"
+			   click="fastRequestEnterDesk()"/>
+	
+	
+	<mx:LinkButton x="843" y="45" label="退出房间" fontSize="12" click="exitRoom()" />
+	<mx:CheckBox id="cb1" x="660" y="46" label="只显示等待房间" change="showWaitRoom()"/>
+	
+	
 </mx:Canvas>
