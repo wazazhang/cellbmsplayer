@@ -2,6 +2,8 @@ package Class
 {
 	public class Resource
 	{
+		public static var webRoot:String = '';
+		
 		
 		[Embed(source='image/card/b1.png')]
 		private static var b1:Class;
@@ -217,6 +219,46 @@ package Class
 		[Bindable]
 		[Embed(source='image/bg/newbg.png')] //桌面背景
 		public static var newbg:Class;
+		
+		[Bindable]
+		[Embed(source='image/bg/deskbg.png')] //选择桌子背景
+		public static var deskbg:Class;
+		
+		[Bindable]
+		[Embed(source='image/bg/deskItemBg.png')] //桌子项
+		public static var deskItemBg:Class;
+		
+		[Bindable]
+		[Embed(source='image/bg/deskItemBg2.png')] //桌子项
+		public static var deskItemBg2:Class;
+		
+		
+		[Bindable]
+		[Embed(source='image/bg/playerItemBg.png')] //桌子项
+		public static var playerItemBg:Class;
+		
+		[Bindable]
+		[Embed(source='image/bg/playerItemBg2.png')] //桌子项
+		public static var playerItemBg2:Class;
+		
+		[Bindable]
+		[Embed(source='image/itbg.png')] //桌子项
+		public static var itbg:Class;
+		
+		[Bindable]
+		[Embed(source='image/itbg2.png')] //桌子项
+		public static var itbg2:Class;
+		
+		[Bindable]
+		[Embed(source='image/button/fastBt.png')] //桌子项
+		public static var fastBt:Class;
+		
+		[Bindable]
+		[Embed(source='image/button/fastBt2.png')] //桌子项
+		public static var fastBt2:Class;
+		[Bindable]
+		[Embed(source='image/button/fastBt3.png')] //桌子项
+		public static var fastBt3:Class;
 		
 		public function Resource()
 		{
