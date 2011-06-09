@@ -79,8 +79,8 @@ package Class.Model
 		//牌区的变化
 		public function myCardChange(cards:Array):void
 		{
-			if(isMyturn)
-				return;
+//			if(isMyturn)
+//				return;
 //			cleanMatrix();
 //			handCard.removeAll();
 			for each(var cd:CardData in cards){

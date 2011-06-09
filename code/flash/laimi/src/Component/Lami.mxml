@@ -209,7 +209,7 @@
 			public function returnRoom():void
 			{
 				//this.visible = false;
-				Server.app.removeChild(this);
+//				Server.app.removeChild(this);
 				Server.leaveDesk(desk.desk_id);
 				
 			}
