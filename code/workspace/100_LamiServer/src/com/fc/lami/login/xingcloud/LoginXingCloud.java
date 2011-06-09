@@ -26,8 +26,12 @@ public class LoginXingCloud implements Login
 	public LoginInfo login(ClientSession session, LoginRequest login) 
 	{
 		String platformAddress = login.platform_user_uid + "_" + login.platform_uid;
-		//init PersistenceSession
-		synchronized (this) {
+//		if (login.platform_uid == null || login.platform_uid.isEmpty()) 
+//		{
+//			return new LoginInfo(new DefaultUser(platformAddress), "default player");
+//		}
+		synchronized (this) 
+		{
 			try {
 				if (persistenceSession == null) {
 					persistenceSession = SessionFactory.openSession();
@@ -50,16 +54,10 @@ public class LoginXingCloud implements Login
 				} else {
 					return new LoginInfo(new XingCloudUser(userProfile), "");
 				}
-			}
-			catch (Throwable e) 
-			{
+			} catch (Throwable e) {
 				log.error(e.getMessage(), e);
 				String reason = e.getClass() + " : " + e.getMessage();
-				if (login.platform_uid == null || login.platform_uid.isEmpty()) {
-					return new LoginInfo(new DefaultUser(platformAddress), reason);
-				} else {
-					return new LoginInfo(null, reason);
-				}
+				return new LoginInfo(null, reason);
 			}
 		}
 	}
