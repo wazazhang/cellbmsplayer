@@ -36,10 +36,10 @@ public abstract class User
 	abstract public int		getWin();
 	abstract public int		getLose();
 
-	abstract public int		addScore(int value);
-	abstract public int		addPoint(int value);
-	abstract public int		addWin(int value);
-	abstract public int		addLose(int value);
+	abstract public User	addScore(int value);
+	abstract public User	addPoint(int value);
+	abstract public User	addWin(int value);
+	abstract public User	addLose(int value);
 	
-	abstract public void	save();
+	abstract public User	save();
 }
