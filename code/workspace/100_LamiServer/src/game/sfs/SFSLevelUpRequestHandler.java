@@ -33,7 +33,7 @@ public class SFSLevelUpRequestHandler extends BaseClientRequestHandler
 			if(userProfile == null){
 				//TODO throw exception or return error
 			}
-			userProfile.setLevel(userProfile.getLevel() + 1);
+//			userProfile.setLevel(userProfile.getLevel() + 1);
 			persistenceSession.put(userProfile);
 			persistenceSession.flush();
 			session.setProperty("persistenceSession", persistenceSession);

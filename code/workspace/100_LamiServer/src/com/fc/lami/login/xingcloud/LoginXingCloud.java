@@ -60,6 +60,14 @@ public class LoginXingCloud implements Login
 							userProfile.getUid(), sb);
 					CUtil.toStatusLine("getPlatformAddress",  
 							userProfile.getPlatformAddress(), sb);
+					CUtil.toStatusLine("getLose",  
+							userProfile.getLose(), sb);
+					CUtil.toStatusLine("getPoint",  
+							userProfile.getPoint(), sb);	
+					CUtil.toStatusLine("getScore",  
+							userProfile.getScore(), sb);
+					CUtil.toStatusLine("getWin",  
+							userProfile.getWin(), sb);
 					log.info(sb.toString());
 					return new LoginInfo(new XingCloudUser(userProfile, login.platform_user_data), "");
 				}
@@ -83,41 +91,15 @@ public class LoginXingCloud implements Login
 			this.userProfile = userProfile;
 		}
 		
-		private int getValueAsInt(String key) {
-			try {
-				Object value = userProfile.get(key);
-				if (value instanceof Integer) {
-					return (Integer) value;
-				}
-			} catch (Exception e) {
-				log.error(e.getMessage(), e);
-			}
-			return 0;
-		}
-
-		private int addValueAsInt(String key, int add) {
-			try {
-				Object value = userProfile.get(key);
-				if (value instanceof Integer) {
-					int v = (Integer)value;
-					v += add;
-					userProfile.set(key, new Integer(v));
-					return v;
-				}
-			} catch (Exception e) {
-				log.error(e.getMessage(), e);
-			}
-			return 0;
-		}
-		
 		@Override
-		synchronized public void save() {
+		synchronized public User save() {
 			try {
 				persistenceSession.put(userProfile);
 				persistenceSession.flush();
 			} catch (Throwable e) {
 				log.error(e.getMessage(), e);
 			}
+			return this;
 		}
 
 		@Override
@@ -125,44 +107,33 @@ public class LoginXingCloud implements Login
 			return 0;
 		}
 		
-		@Override
 		synchronized public int getLose() {
-			return getValueAsInt("lose");
+			return userProfile.getLose();
 		}
-
-		@Override
 		synchronized public int getPoint() {
-			return getValueAsInt("point");
+			return userProfile.getPoint();
 		}
-
-		@Override
 		synchronized public int getScore() {
-			return getValueAsInt("score");
+			return userProfile.getScore();
 		}
-
-		@Override
 		synchronized public int getWin() {
-			return getValueAsInt("win");
+			return userProfile.getWin();
 		}
-		
-		@Override
-		synchronized public int addLose(int value) {
-			return addValueAsInt("lose", value);
+		synchronized public User addLose(int value) {
+			userProfile.setLose(userProfile.getLose() + value);
+			return this;
 		}
-
-		@Override
-		synchronized public int addPoint(int value) {
-			return addValueAsInt("point", value);
+		synchronized public User addPoint(int value) {
+			userProfile.setPoint(userProfile.getPoint() + value);
+			return this;
 		}
-
-		@Override
-		synchronized public int addScore(int value) {
-			return addValueAsInt("score", value);
+		synchronized public User addScore(int value) {
+			userProfile.setScore(userProfile.getScore() + value);
+			return this;
 		}
-
-		@Override
-		synchronized public int addWin(int value) {
-			return addValueAsInt("win", value);
+		synchronized public User addWin(int value) {
+			userProfile.setWin(userProfile.getWin() + value);
+			return this;
 		}
 
 		
@@ -205,23 +176,29 @@ public class LoginXingCloud implements Login
 		}
 		
 		@Override
-		public void save() {}
-		
+		public User save() {
+			return this;
+		}
+
 		@Override
-		synchronized public int addLose(int value) {
-			return lose += value;
+		synchronized public User addLose(int value) {
+			lose += value;
+			return this;
 		}
 		@Override
-		synchronized public int addPoint(int value) {
-			return point += value;
+		synchronized public User addPoint(int value) {
+			point += value;
+			return this;
 		}
 		@Override
-		synchronized public int addScore(int value) {
-			return score += value;
+		synchronized public User addScore(int value) {
+			score += value;
+			return this;
 		}
 		@Override
-		synchronized public int addWin(int value) {
-			return win += value;
+		synchronized public User addWin(int value) {
+			win += value;
+			return this;
 		}
 	}
 }

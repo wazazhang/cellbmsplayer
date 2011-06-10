@@ -51,24 +51,31 @@ public class LoginDefault implements Login
 			return win;
 		}
 		
+
 		@Override
-		public void save() {}
-		
+		public User save() {
+			return this;
+		}
+
 		@Override
-		synchronized public int addLose(int value) {
-			return lose += value;
+		synchronized public User addLose(int value) {
+			lose += value;
+			return this;
 		}
 		@Override
-		synchronized public int addPoint(int value) {
-			return point += value;
+		synchronized public User addPoint(int value) {
+			point += value;
+			return this;
 		}
 		@Override
-		synchronized public int addScore(int value) {
-			return score += value;
+		synchronized public User addScore(int value) {
+			score += value;
+			return this;
 		}
 		@Override
-		synchronized public int addWin(int value) {
-			return win += value;
+		synchronized public User addWin(int value) {
+			win += value;
+			return this;
 		}
 
 
