@@ -502,6 +502,7 @@ package Class
 					game.timeCtr.oprTimerSet(edav.operate_time);
 					
 					game.lami.initDesk(room.getDesk(edav.desk_id));
+					SynchronizeCard();
 				}
 				else if (edav.result == EnterDeskAsVisitorResponse.ENTER_DESK_VISITOR_RESULT_FAIL_ALREADY_IN_DESK){
 					Alert.show("已经在当前桌子里了");
