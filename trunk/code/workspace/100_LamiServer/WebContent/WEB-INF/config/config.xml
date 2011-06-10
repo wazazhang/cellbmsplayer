@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<configuration>
+	<xml fileName="auth.xml" />
+	<xml fileName="global.xml" />
+ 	<ini fileName="log4j.properties" loader="com.xingcloud.framework.intergation.log4j.Log4jConfigLoader" />
+ 	<xml fileName="action.xml" loader="com.xingcloud.service.action.ActionConfigLoader" />
+ 	<xml fileName="bean.xml" loader="com.xingcloud.framework.bean.BeanConfigLoader" />
+ 	<xml fileName="persistence.xml" />
+ 	<xml fileName="service.xml" loader="com.xingcloud.framework.service.ServiceConfigLoader" />
+ 	<xml fileName="sfs.xml" loader="com.xingcloud.framework.intergation.sfs.SFSConfigLoader" />
+</configuration>
