@@ -31,11 +31,7 @@ public class Player
 	public Room cur_room;
 	public Desk cur_desk;
 	
-//	public int score = 0;
-//	public int win = 0;
-//	public int lose = 0;
-//	public int level;
-	
+
 	/** 手中的牌 */
 	final public HashMap<Integer, CardData> card_list = new LinkedHashMap<Integer, CardData>();
 	
@@ -55,7 +51,6 @@ public class Player
 	
 	public PlayerData getPlayerData(){
 		PlayerData pd = new PlayerData();
-//<<<<<<< .mine
 		pd.player_id 		= this.player_id;
 		pd.player_name 		= this.user.getName();
 		pd.player_head_url 	= this.user.getHeadURL();
@@ -65,17 +60,6 @@ public class Player
 		pd.score 			= this.user.getScore();
 		pd.win 				= this.user.getWin();
 		pd.lose 			= this.user.getLose();
-//=======
-//		pd.player_id = this.player_id;
-//		pd.player_name = login.player.player_name;
-//		pd.player_head_url = login.player.player_head_url;
-//		pd.uid = this.user.getUID();
-//		pd.sex = this.user.getSex();
-//		pd.level = 1;
-//		pd.score = this.user.getScore();
-//		pd.win = this.user.getWin();
-//		pd.lose = this.user.getLose();
-//>>>>>>> .r2119
 		return pd;
 	}
 	
