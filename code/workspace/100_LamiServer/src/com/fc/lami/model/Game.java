@@ -791,7 +791,7 @@ public class Game implements Runnable
 		int cur_complete_card_count = getCompleteCardCount();
 		if (cur_complete_card_count>complete_card_count){
 			operate_start_time = System.currentTimeMillis();
-			getCurPlayer().session.send(new OperateCompleteNotify());
+			desk.broadcast(new OperateCompleteNotify(getCurPlayer().player_id));
 		}
 		complete_card_count = cur_complete_card_count;
 		return true;
