@@ -97,7 +97,7 @@ public class LoginXingCloud implements Login
 					return (Integer) value;
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				log.error(e.getMessage(), e);
 			}
 			return 0;
 		}
@@ -112,7 +112,7 @@ public class LoginXingCloud implements Login
 					return v;
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				log.error(e.getMessage(), e);
 			}
 			return 0;
 		}
@@ -123,7 +123,7 @@ public class LoginXingCloud implements Login
 				persistenceSession.put(userProfile);
 				persistenceSession.flush();
 			} catch (Throwable e) {
-				e.printStackTrace();
+				log.error(e.getMessage(), e);
 			}
 		}
 
@@ -230,29 +230,5 @@ public class LoginXingCloud implements Login
 		synchronized public int addWin(int value) {
 			return win += value;
 		}
-
-		
-	}
-	public static void main(String args[])
-	{
-		PersistenceSession persistenceSession = null;
-		//init PersistenceSession
-			try {
-				if (persistenceSession == null) {
-					persistenceSession = SessionFactory.openSession();
-				}
-				if (persistenceSession == null) {
-					log.error("there is no persistenceSession!");
-				}
-				//get UserProfile
-				UserProfile userProfile = (UserProfile) UserFactory.getInstance().get(
-						persistenceSession, "1234");
-				if (userProfile == null) {
-					log.error("there is no userProfile with uid(" + "1234" + ")!");
-				}
-			} catch (Throwable e) {
-				log.error(e.getMessage(), e);
-			}
-	
 	}
 }
