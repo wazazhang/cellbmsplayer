@@ -126,7 +126,7 @@
 					index ++;
 					if(index==4)
 						index = 0
-					cpt.player = Server.getPlayer(getPlayerIDbySeatID(index));
+					cpt.setPlayer = Server.getPlayer(getPlayerIDbySeatID(index));
 					cpt.seat = getDir(index);
 					cpt = cpt.nextOtherPlayer_Cpt;
 				}

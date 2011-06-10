@@ -45,7 +45,7 @@
 				ready = false;
 				gameing = false;
 				pobing = false;
-				
+				visible = false;
 			}
 			
 			public function gameEnd():void
@@ -96,6 +96,16 @@
 			{
 				timer = new Timer(100,  Server.game.timeCtr.sumTime/100);
 				timer.addEventListener(TimerEvent.TIMER, timerHandler);
+			}
+			
+			public function set setPlayer(value:PlayerData):void
+			{
+				player = value;
+				if (player==null){
+					visible = false;
+				}else{
+					visible = true;
+				}
 			}
 			
 		]]>

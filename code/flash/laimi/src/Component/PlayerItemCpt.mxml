@@ -32,5 +32,5 @@
 	</mx:Script>
 	<mx:Label x="7" text="{player.level}" verticalCenter="0"  />
 	<mx:Label x="81" text="{Server.getPlayerName(player)}" verticalCenter="0" />
-	<mx:Label x="211" text="{player.sex==0?'男':'女'}" verticalCenter="0" />
+	<mx:Label x="211" text="{player.sex}" verticalCenter="0" />
 </mx:Canvas>
