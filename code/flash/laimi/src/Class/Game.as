@@ -58,6 +58,9 @@ package Class
 		
 		public var leftCard:int;
 		
+		//服务器端公共牌
+		public var serverCards:Array;
+		
 		public function Game()
 		{
 			timeCtr = new TimesCtr();
@@ -216,6 +219,8 @@ package Class
 		//主牌区的变化
 		public  function publicCardChange(is_hardhanded:Boolean, cards:Array):void
 		{
+			
+			
 			if(!is_hardhanded && gamer.isMyturn)
 				return;
 			
@@ -350,6 +355,36 @@ package Class
 			timeCtr.start();
 		}
 		
+		//检测是都在牌区中
+		public function checkHaveSameInPublic(card:Card):Boolean
+		{
+			for each(var c:Line in lineArray)
+			{
+				var cardcpt:Card_Cpt  = c.firstCard
+				
+				while(cardcpt!=null)
+				{
+					if(cardcpt.card!=null&&cardcpt.card.cardData.id == card.cardData.id)
+					{
+						return true;
+					}
+					cardcpt = cardcpt.nextCardCpt
+				}
+			}
+			return false;
+		}
+		
+		//检测是否在服务器区牌堆中
+		public function checkInServerCards(card:Card):Boolean
+		{
+			for each(var c:CardData in serverCards)
+			{
+				if(c.id == card.cardData.id)
+					return true
+			}
+			return false;
+		}
+		
 		public  function turnOver():void
 		{
 			//gamer.canOpearation = false;
@@ -360,17 +395,35 @@ package Class
 				for each(var card:Card in gamer.selectedArrayCard)
 				{
 					card.cardUI.isSelected = false;
+					if(card.isSended == false)
+					{
+						card.cardUI.card = null;
+						var index:int = gamer.handCard.getItemIndex(card)
+						if(index!=-1)
+						gamer.handCard.removeItemAt(index)
+					
+					}
 				}
 				gamer.selectedArrayCard = null
+
 			}	
 			if(gamer.selectedCard != null)
 			{
 				gamer.selectedCard.cardUI.isSelected = false;
+
+				if(gamer.selectedCard.isSended == false)
+				{
+					gamer.selectedCard.cardUI.card = null;	
+					
+					index = gamer.handCard.getItemIndex(gamer.selectedCard)
+					if(index!=-1)
+					{
+						gamer.handCard.removeItemAt(index)
+					}
+				}
 				gamer.selectedCard = null;
+				
 			}
-			
-			
-			
 			//gamer.reset();
 			timeCtr.reset();
 			timeCtr.stop();
@@ -404,6 +457,7 @@ package Class
 			if(lami.resetCpt!=null)
 			   lami.removeReset();
 			
+			timeCtr.stop();
 			if(playerid == Server.player.player_id )
 			{
 				turnStart();
