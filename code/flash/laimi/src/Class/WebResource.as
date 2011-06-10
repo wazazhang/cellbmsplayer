@@ -5,6 +5,10 @@ package Class
 		
 		private static var webRoot:String = '';
 		
+		public static function setWebRoot(root:String) : void
+		{
+			WebResource.webRoot = root;
+		}
 		
 		public static function get fastBt():String
 		{

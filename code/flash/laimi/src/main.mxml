@@ -12,6 +12,7 @@
 		<![CDATA[
 			import Class.Game;
 			import Class.Server;
+			import Class.WebResource;
 			
 			import com.fc.lami.MessageCodec;
 			import com.fc.lami.Messages.PlayerData;
@@ -50,7 +51,6 @@
 				this.config		= config;
 				this.width		= width;
 				this.height		= height;
-				
 				//this.stage.addEventListener(MouseEvent.MOUSE_WHEEL,onMouseWheel);
 				//_container.addEventListener(HeaderClickEvent.HEADERCLICK,onHeaderClick);
 				//test googleAnalysics
@@ -78,9 +78,13 @@
 					
 					println(this.gdp_container+"");
 					println(this.config.toXMLString());
+					
+					var lang	: String = this.config.child("lang").toString();
+					var webbase : String = this.config.child("webbase").toString();
+					
+					WebResource.setWebRoot(webbase);
+					
 					getUserInfo();
-					
-					
 				}
 				else 
 				{
@@ -107,10 +111,8 @@
 					
 					var codec 	: MessageCodec = new MessageCodec();
 					
-					var webbase : String = this.config.child("webbase").toString();
 					var sfs 	: String = this.config.child("sfs").toString();
 					var sfszone : String = this.config.child("sfszone").toString();
-					var lang	: String = this.config.child("lang").toString();
 					
 					var sfs_session : SFSSessionImpl = new SFSSessionImpl(codec);
 					sfs_session.setZone(sfs);
@@ -141,16 +143,26 @@
 			
 			private function parseUserInfo(uesrData:IUserSocialData):void{
 				try{
-					var info:String="======list user info=======\n";
+					var info:String="======list user info=======\n" +
+					"{\n";
 					//IUserSocialData 
 					var user:IUserSocialData=uesrData;
 					//uid
 					
-					info=info +"uid::"+ user.id+"\n";
+					info=info +"  uid::"+ user.id+"\n";
 					//user name
-					info=info +"name::"+  user.name+"\n";
+					info=info +"  name     ::"+  user.name+"\n";
+					info=info +"  sex      ::"+  user.sex+"\n";
+					info=info +"  birthDate::"+  user.birthDate+"\n";
+					info=info +"  city     ::"+  user.city+"\n";
+					info=info +"  country  ::"+  user.country+"\n";
+					info=info +"  url      ::"+  user.url+"\n";
+					
 					//user header photo
-					info=info +"header photo::"+  user.photoSmall;
+					info=info +"  header photo s::"+  user.photoSmall+"\n";
+					info=info +"  header photo m::"+  user.photoMedium+"\n";
+					info=info +"  header photo b::"+  user.photoBig+"\n";
+					info=info +"}";
 					//其他IUserSocialData属性信息
 					println(info);
 				}
