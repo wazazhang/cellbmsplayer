@@ -16,6 +16,7 @@
 			import Component.Login_Cpt;
 			
 			import com.fc.lami.MessageCodec;
+			import com.fc.lami.Messages.PlatformUserData;
 			import com.fc.lami.Messages.PlayerData;
 			import com.net.client.minaimpl.ServerSessionImpl;
 			import com.net.client.sfsimpl.SFSSessionImpl;
@@ -72,9 +73,13 @@
 				}
 				if (chk_mina.selected || chk_sfs.selected) 
 				{
-					Server.initServer(
-						txt_uid.text,
-						null, 
+					Server.initUserLogin(
+						new PlatformUserData(
+							null,
+							txt_uid.text,
+							txt_uid.text, 
+							"male", 
+							"http://r.337.com/plugin_assets/redmine_elextech_platform/images/headpic.gif"),
 						com_server_addrs.text.split(":")[0],
 						com_server_addrs.text.split(":")[1]
 					);

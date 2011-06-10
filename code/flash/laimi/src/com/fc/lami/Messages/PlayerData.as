@@ -6,7 +6,7 @@ package com.fc.lami.Messages
 
 
 	/**
-	 * Java Class [45] [com.fc.lami.Messages.PlayerData]<br>
+	 * Java Class [46] [com.fc.lami.Messages.PlayerData]<br>
 	 * 此代码为自动生成。不需要在此修改。若有错误，请修改代码生成器。
 	 */
 	[Bindable]
@@ -24,9 +24,9 @@ package com.fc.lami.Messages
 		/** Java type is : <font color=#0000ff>java.lang.String</font> */
 		[JavaType(name="java.lang.String", leaf_type=NetDataTypes.TYPE_STRING)]
 		public var player_head_url :  String;
-		/** Java type is : <font color=#0000ff>int</font> */
-		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
-		public var sex :  int;
+		/** Java type is : <font color=#0000ff>java.lang.String</font> */
+		[JavaType(name="java.lang.String", leaf_type=NetDataTypes.TYPE_STRING)]
+		public var sex :  String;
 		/** Java type is : <font color=#0000ff>int</font> */
 		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
 		public var score :  int;
@@ -45,7 +45,7 @@ package com.fc.lami.Messages
 		 * @param uid as <font color=#0000ff>java.lang.String</font>
 		 * @param player_name as <font color=#0000ff>java.lang.String</font>
 		 * @param player_head_url as <font color=#0000ff>java.lang.String</font>
-		 * @param sex as <font color=#0000ff>int</font>
+		 * @param sex as <font color=#0000ff>java.lang.String</font>
 		 * @param score as <font color=#0000ff>int</font>
 		 * @param win as <font color=#0000ff>int</font>
 		 * @param lose as <font color=#0000ff>int</font>
@@ -55,7 +55,7 @@ package com.fc.lami.Messages
 			uid :  String = null,
 			player_name :  String = null,
 			player_head_url :  String = null,
-			sex :  int = 0,
+			sex :  String = null,
 			score :  int = 0,
 			win :  int = 0,
 			lose :  int = 0,
