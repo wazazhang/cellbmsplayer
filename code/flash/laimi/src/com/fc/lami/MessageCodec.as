@@ -14,7 +14,7 @@ package com.fc.lami
 	{
 	
 		public function getVersion() : String{
-			return "Thu Jun 09 16:30:07 CST 2011";
+			return "Fri Jun 10 10:25:11 CST 2011";
 		}
 	
 		public function	getType(msg : Message) : int 
@@ -1194,8 +1194,10 @@ package com.fc.lami
 //	----------------------------------------------------------------------------------------------------
 	function new_OperateCompleteNotify_44() : com.fc.lami.Messages.OperateCompleteNotify {return new com.fc.lami.Messages.OperateCompleteNotify();}
 	private function r_OperateCompleteNotify_44(msg : com.fc.lami.Messages.OperateCompleteNotify, input : NetDataInput) : void {
+		msg.player_id = input.readInt();
 	}
 	private function w_OperateCompleteNotify_44(msg : com.fc.lami.Messages.OperateCompleteNotify, output : NetDataOutput) : void {
+		output.writeInt(msg.player_id);
 	}
 
 //	----------------------------------------------------------------------------------------------------
