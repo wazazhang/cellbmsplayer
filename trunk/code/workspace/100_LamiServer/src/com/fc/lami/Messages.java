@@ -984,6 +984,11 @@ public class Messages {
 	/** 一次操作成功 完成一个牌组 */
 	public static class OperateCompleteNotify extends FlashMessage
 	{
+		public int player_id;
+		
+		public OperateCompleteNotify(int pid){
+			this.player_id = pid;
+		}
 		public OperateCompleteNotify(){}
 		@Override
 		public String toString() {
