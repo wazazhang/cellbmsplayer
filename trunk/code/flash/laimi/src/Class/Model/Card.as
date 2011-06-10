@@ -20,6 +20,7 @@ package Class.Model
 		
 		public var comfidcard:Card;//确认卡
 		
+		
 		public function Card(point:int,type:int,id:int)
 		{
 			this.point = point;

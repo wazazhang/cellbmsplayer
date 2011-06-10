@@ -251,11 +251,26 @@ package Class.Model
 					{
 						array.push(curnode);
 					}	
+					
+					if(curnode.nextCardCpt==null&&array!=null)
+					{
+						p = getZuPoint(array);
+						
+						if(p!=0)
+						{
+							point += p;
+						}
+						else
+						{
+							return 0;
+						}	
+					}
+						
 				}
 				
 				curnode = curnode.nextCardCpt;
 			}
-			while(curnode!=lastCard)
+			while(curnode!=null)
 			
 			return point;
 		}
