@@ -17,6 +17,7 @@ import com.net.server.ClientSession;
 import com.smartfoxserver.bitswarm.sessions.ISession;
 import com.xingcloud.framework.orm.session.PersistenceSession;
 import com.xingcloud.framework.orm.session.SessionFactory;
+import com.xingcloud.service.user.AbstractUserProfile;
 import com.xingcloud.service.user.UserFactory;
 
 public class LoginXingCloud implements Login
@@ -29,10 +30,6 @@ public class LoginXingCloud implements Login
 	public LoginInfo login(ClientSession session, LoginRequest login) 
 	{
 		String platformAddress = login.platform_user_data.getPlatformAddress();
-//		if (login.platform_uid == null || login.platform_uid.isEmpty()) 
-//		{
-//			return new LoginInfo(new DefaultUser(platformAddress), "default player");
-//		}
 		synchronized (this) 
 		{
 			try {
@@ -56,17 +53,13 @@ public class LoginXingCloud implements Login
 					return new LoginInfo(new DefaultUser(login.platform_user_data), reason);	
 				} else {
 					StringBuilder sb = new StringBuilder(
-							"--> get user profile : " + userProfile.getUid() + "\n");
+							"--> get user profile : \n");
 					CUtil.toStatusLine("getClassName", 
 							userProfile.getClassName(), sb);
-					CUtil.toStatusLine("getImageUrl",  
-							userProfile.getImageUrl(), sb);
+					CUtil.toStatusLine("getUid", 
+							userProfile.getUid(), sb);
 					CUtil.toStatusLine("getPlatformAddress",  
 							userProfile.getPlatformAddress(), sb);
-					CUtil.toStatusLine("getUserNameFull",  
-							userProfile.getUserNameFull(), sb);
-					CUtil.toStatusLine("getUserNameShort",  
-							userProfile.getUserNameShort(), sb);
 					log.info(sb.toString());
 					return new LoginInfo(new XingCloudUser(userProfile, login.platform_user_data), "");
 				}
@@ -129,7 +122,7 @@ public class LoginXingCloud implements Login
 
 		@Override
 		public int getLevel() {
-			return userProfile.getLevel();
+			return 0;
 		}
 		
 		@Override
