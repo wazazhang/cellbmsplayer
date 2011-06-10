@@ -15,6 +15,7 @@
 			import Class.WebResource;
 			
 			import com.fc.lami.MessageCodec;
+			import com.fc.lami.Messages.PlatformUserData;
 			import com.fc.lami.Messages.PlayerData;
 			import com.net.client.minaimpl.ServerSessionImpl;
 			import com.net.client.sfsimpl.SFSSessionImpl;
@@ -115,15 +116,20 @@
 					var sfszone : String = this.config.child("sfszone").toString();
 					
 					var sfs_session : SFSSessionImpl = new SFSSessionImpl(codec);
-					sfs_session.setZone(sfs);
+					sfs_session.setZone(sfszone);
 					sfs_session.setUser(user.id);
 					sfs_session.setPassword(this.gdp_container.authKey);
 					
 					Server.init(sfs_session);
 					
-					Server.initServer(
-						user.id,
-						gdp_container.sns,
+					Server.initUserLogin(
+						new PlatformUserData(
+							this.gdp_container.sns,
+							user.id,
+							user.name,
+							user.sex, 
+							user.photoSmall
+						),
 						sfs.split(":")[0],
 						sfs.split(":")[1]
 					);
@@ -214,7 +220,7 @@
 	</mx:Script>
 	<ns1:Login_Cpt verticalCenter="0" horizontalCenter="0"  id="login_cpt">
 	</ns1:Login_Cpt>
-	<mx:Text width="960" height="356" id="txt_debug" horizontalCenter="0" top="10"/>
+	<mx:Text width="960" height="356" id="txt_debug" horizontalCenter="0" top="10" fontFamily="Courier New"/>
 	
 
 	<!--

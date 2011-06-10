@@ -51,6 +51,7 @@ package Class
 	import com.fc.lami.Messages.MainMatrixChangeResponse;
 	import com.fc.lami.Messages.OpenIceNotify;
 	import com.fc.lami.Messages.OperateCompleteNotify;
+	import com.fc.lami.Messages.PlatformUserData;
 	import com.fc.lami.Messages.PlayerData;
 	import com.fc.lami.Messages.ReadyNotify;
 	import com.fc.lami.Messages.ReadyRequest;
@@ -101,8 +102,7 @@ package Class
 		
 		public static var isAutoEnter:Boolean = false;
 		
-		private static var platform_user_uid : String;
-		private static var platform_uid : String;
+		private static var platform_user : PlatformUserData;
 		private static var host : String;
 		private static var port : int;
 		
@@ -123,20 +123,19 @@ package Class
 			client.addNotifyListener(client_notify);
 		}
 		
-		public static function initServer(platform_user_uid:String, 
-										  platform_uid:String,
-										  host:String,
-										  port:String) 
+		public static function initUserLogin(
+			platform_user:PlatformUserData, 
+			host:String,
+			port:String) : void
 		{
-			Server.host 				= host;
-			Server.port 				= int(port);
-			Server.platform_uid			= platform_uid;
-			Server.platform_user_uid 	= platform_user_uid;
+			Server.host 			= host;
+			Server.port 			= int(port);
+			Server.platform_user 	= platform_user;
 		}
 		
 		public static function checkConnection() : Boolean
 		{
-			return platform_user_uid != null && platform_user_uid.length > 0;
+			return platform_user != null;
 		}
 		
 		public static function getPlayer(player_id:int):PlayerData
@@ -162,8 +161,7 @@ package Class
 			trace("client version is : " + version);
 			client.sendRequest(
 				new LoginRequest(
-					platform_user_uid, 
-					platform_uid,
+					platform_user, 
 					version, 
 					version), 
 				client_response);
