@@ -231,10 +231,8 @@ package Class.Model
 			
 		}
 		
-		
-		public function getCard(card:Card):void
+		public function setCardInToMatrix(card:Card):void
 		{
-			handCard.addItem(card);
 			var line:Line;
 			if(card.type==0)
 			{
@@ -265,8 +263,46 @@ package Class.Model
 			while(true)
 		}
 		
+		public function getCard(card:Card):void
+		{
+		
+			
+			handCard.addItem(card);
+			setCardInToMatrix(card);
+		}
+		
+		//检测是否含有重复的牌
+		private function checkHaveSameCard(card:Card):Boolean
+		{
+			for each(var c:Line in cardLines)
+			{
+				var cardcpt:Card_Cpt  = c.firstCard
+				
+				while(cardcpt!=null)
+				{
+					if(cardcpt.card!=null&&cardcpt.card.cardData.id == card.cardData.id)
+					{
+						return true;
+					}
+					cardcpt = cardcpt.nextCardCpt
+				}
+			}
+			return false;
+		}
+		
+		public function getCardsByArray(cards:Array):void
+		{
+			for each(var card:Card in cards)
+			{
+				getCard(card);
+			}
+		}
+		
 		public function getCards(cards:ArrayCollection):void
 		{
+			
+			
+			
 			for each(var card:Card in cards)
 			{
 				getCard(card);
@@ -519,11 +555,13 @@ package Class.Model
 			var move:Move = new Move();
 			
 			move.target = moveCard;
-			move.duration = 500;
+			move.duration = 300;
 
 			move.xTo = card.cardUI.x;
 			move.yTo = card.cardUI.y;
 			
+//			//card.isSended = false;
+			card.nextCard = null;
 			move.addEventListener(EffectEvent.EFFECT_END,addCardMotionComplate);
 			move.play();
 		}
@@ -537,6 +575,9 @@ package Class.Model
 			if(card.nextCard!=null)
 			{
 				addCardMotion(card.nextCard);
+				
+				
+				//card.nextCard = null;
 			}
 			else
 			{
