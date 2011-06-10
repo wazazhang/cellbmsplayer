@@ -194,6 +194,14 @@ public class LamiServerListener implements ServerListener
 	public Room getRandomRoom(){
 		ArrayList<Room> roomlist = new ArrayList<Room>();
 		for (int i = 0; i < rooms.length; i++){
+			if(rooms[i].getPlayerNumber()>0&&rooms[i].getPlayerNumber()<LamiConfig.PLAYER_NUMBER_MAX){
+				roomlist.add(rooms[i]);
+			}
+		}
+		if (roomlist.size()>0){
+			return roomlist.get(CUtil.getRandom(0, roomlist.size()));
+		}
+		for (int i = 0; i < rooms.length; i++){
 			if (rooms[i].getIdleDesk()!=null){
 				roomlist.add(rooms[i]);
 			}
