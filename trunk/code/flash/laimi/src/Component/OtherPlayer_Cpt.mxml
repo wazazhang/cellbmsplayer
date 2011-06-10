@@ -37,7 +37,8 @@
 			public static const nohead:Class;    
 			
 			[Bindable]
-			public var timer:Timer;
+			public var oprtimer:Timer;
+			public var sumtimer:Timer;
 			
 			public function reset():void{
 				player = null;
@@ -53,7 +54,10 @@
 				//ready = false;
 				gameing = false;
 				pobing = false;
+				pbtime.visible = false;
 				
+				oprtimer.stop();
+				sumtimer.stop();
 			}
 			
 			public function get gameing():Boolean
@@ -64,38 +68,57 @@
 			{
 				_gameing = val;
 				
-				if(timer==null)
+				if(oprtimer==null||sumtimer==null)
 					return
 				
 				if(_gameing)
 				{
 					pbtime.visible = true;
-					timer.reset();
-					timer.start();
+					oprtimer.reset();
+					oprtimer.start();
+					sumtimer.reset();
+					sumtimer.start();
 				}
 				else
 				{
 					pbtime.visible = false;
-					pbtime.setProgress(0, Server.game.timeCtr.sumTime*1000*4/5);
-					timer.stop();
+					pbtime.setProgress(0, Server.game.timeCtr.optionTime*800);
+					oprtimer.stop();
+					sumtimer.stop();
 				}
 			}
 			
-			private function timerHandler(event:TimerEvent):void
+			public function timeReset():void
 			{
-				if(timer == null)
+				oprtimer.reset();
+				oprtimer.start();
+			}	
+				
+			
+			private function oprTimerHandler(event:TimerEvent):void
+			{
+				if(oprtimer == null)
 					return 
 				
-				pbtime.setProgress(Server.game.timeCtr.sumTime*800 - timer.delay*timer.currentCount, Server.game.timeCtr.sumTime*1000*4/5); 
-				clock.text = parseInt(((Server.game.timeCtr.sumTime*800 - timer.delay*timer.currentCount)/1000).toString()).toString() ;
-				var point:Number = timer.delay * timer.currentCount / (Server.game.timeCtr.sumTime*800)	
+				pbtime.setProgress(Server.game.timeCtr.optionTime*800 - oprtimer.delay*oprtimer.currentCount, Server.game.timeCtr.optionTime*1000*4/5); 
+				var point:Number = oprtimer.delay * oprtimer.currentCount / (Server.game.timeCtr.optionTime*800)	
 				pbtime.setStyle("barColor",TimesCtr.getColorByPoint(point));
 			}
 			
+			private function sumTimerHandler(event:TimerEvent):void
+			{
+				if(sumtimer == null)
+					return
+				
+				clock.text = parseInt(((Server.game.timeCtr.sumTime*800 - sumtimer.delay*sumtimer.currentCount)/1000).toString()).toString() ;	
+			}
 			public  function init():void
 			{
-				timer = new Timer(100,  Server.game.timeCtr.sumTime/100);
-				timer.addEventListener(TimerEvent.TIMER, timerHandler);
+				oprtimer = new Timer(100,  Server.game.timeCtr.optionTime/100);
+				oprtimer.addEventListener(TimerEvent.TIMER, oprTimerHandler);
+				
+				sumtimer = new Timer(100,  Server.game.timeCtr.sumTime/100);
+				sumtimer.addEventListener(TimerEvent.TIMER, sumTimerHandler);
 			}
 			
 			public function set setPlayer(value:PlayerData):void
@@ -112,16 +135,10 @@
 	</mx:Script>
 	<mx:Label y="-1" text="{player==null?'':''+Server.getPlayerName(player)}" color="#FFFFFF" horizontalCenter="0"/>
 	
-	<!--
-	<mx:Label x="51" y="0" text="{seat}" color="#010101"/>
-	-->
 	
 	<mx:Label y="70" text="{pobing?'已破冰':'未破冰'}" visible="{player!=null}" color="#FFFFFF" horizontalCenter="0"/>
 	
-	<!--
-	<mx:Label x="51" y="35" text="{_gameing?'游戏中':''}" color="#010101"/>
-	-->
-	
+
 	<mx:Image source="{player ==null?nohead:head}" y="13" height="50" width="50" horizontalCenter="0"/>
 	
 	<mx:Label y="60" text="{player==null?'':'积分:'+player.score}" color="#FFFFFF"  horizontalCenter="0"/>
