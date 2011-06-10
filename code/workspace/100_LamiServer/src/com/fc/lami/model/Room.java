@@ -184,7 +184,7 @@ public class Room implements ChannelListener, Runnable
 	@Override
 	public void run() {
 		for (int i = 0; i < desks.length; i++) {
-			if (desks[i].getPlayerNumber() > 0) {
+			if (desks[i].getPlayerNumber() > 0||desks[i].getGame()!=null) {
 				desks[i].logic();
 			}
 		}
