@@ -263,7 +263,7 @@
 		<mx:Label x="10" y="94" text="{'胜率：'+(Server.player.win/(Server.player.win+Server.player.lose>0?Server.player.win+Server.player.lose:1)*100)+'%'}" id="winrate"/>
 	</mx:Canvas>
 	
-	<mx:VBox id="playerlist" x="654" y="230" height="201" width="284" verticalGap="1">
+	<mx:VBox id="playerlist" x="654" y="230" height="201" width="284" verticalGap="1" verticalPageScrollSize="100">
 	</mx:VBox>
 	<!--
 	<mx:DataGrid x="698" y="209" width="252" height="326" dataProvider="{_plist}">
