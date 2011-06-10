@@ -231,18 +231,18 @@ package Class
 					while(cardcpt!=null);
 				}else{
 					do{	
-						
+						var have_card:Boolean = false;
 						for each(var carddata:CardData in cards)
 						{
 							if(cardcpt.cardX == carddata.x&&cardcpt.cardY == carddata.y)
 							{
 								cardcpt.card = Card.createCardByData(carddata);
+								have_card = true;
 								break;
 							}
-							else
-							{
-								cardcpt.card = null;
-							}
+						}
+						if (!have_card){
+							cardcpt.card = null;
 						}
 						cardcpt = cardcpt.nextCardCpt;
 					}	
