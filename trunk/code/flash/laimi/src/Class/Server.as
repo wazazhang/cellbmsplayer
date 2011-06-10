@@ -413,7 +413,7 @@ package Class
 			}
 			
 			//响应进入房间
-			if(res is EnterRoomResponse)
+			else if(res is EnterRoomResponse)
 			{
 				var enterRoom : EnterRoomResponse =res as EnterRoomResponse;
 			    
@@ -444,7 +444,22 @@ package Class
 				}
 				
 			}
-			
+			else if (res is AutoEnterResponse){
+				var aer:AutoEnterResponse = res as AutoEnterResponse;
+				if (aer.result == AutoEnterResponse.AUTO_ENETR_RESULT_SUCCESS){
+					room = new Room(aer.room);
+					room_cpt = new Room2_Cpt(); 
+					room_cpt.setStyle("verticalCenter","0");
+					room_cpt.setStyle("horizontalCenter","0");	
+					app.addChild(room_cpt);
+					room_cpt.room =	room;
+					room_cpt.init(aer.room)
+					login_cpt.visible = false;
+					enterDesk(-1,-1);
+				}else if (aer.result == AutoEnterResponse.AUTO_ENTER_RESULT_FAIL_NO_IDLE_SEAT){
+					Alert.show("没有空余座位");
+				}
+			}
 			else if(res is ExitRoomResponse){
 				
 				var err:ExitRoomResponse = res as ExitRoomResponse
