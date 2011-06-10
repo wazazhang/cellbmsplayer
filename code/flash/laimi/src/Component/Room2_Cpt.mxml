@@ -98,7 +98,7 @@
 				var curDesk:DeskData = getDeskById(desk_id);
 				curDesk.player_number++;
 				
-				addRoomInfo(room.getPlayerFromPlayerList(player_id).uid+'进入'+curDesk.desk_name);
+				addRoomInfo(Server.getPlayerName(room.getPlayerFromPlayerList(player_id))+'进入'+curDesk.desk_name);
 			}
 			
 			//退出桌子
@@ -107,7 +107,7 @@
 				var curDesk:DeskData = getDeskById(desk_id);
 				curDesk.player_number--;
 				
-				addRoomInfo(room.getPlayerFromPlayerList(player_id).uid+'离开'+curDesk.desk_name);
+				addRoomInfo(Server.getPlayerName(room.getPlayerFromPlayerList(player_id))+'离开'+curDesk.desk_name);
 			}
 			
 			
@@ -123,7 +123,7 @@
 					plist = room.getPlayerList();
 					
 				}
-				addRoomInfo(player.uid+"进入房间")
+				addRoomInfo(Server.getPlayerName(player)+"进入房间")
 			}
 			
 			
@@ -131,7 +131,7 @@
 			public function leaveRoom(player_id:int):void
 			{
 				var desk_id:int = Server.getPlayerDeskId(player_id);
-				addRoomInfo(Server.getPlayer(player_id).uid+"离开房间");	
+				addRoomInfo(Server.getPlayerName(Server.getPlayer(player_id))+"离开房间");	
 				room.removePlayer(player_id);
 				plist = room.getPlayerList();
 			}
@@ -257,10 +257,10 @@
 	
 	<mx:Canvas x="652" y="72" width="286" height="120" borderStyle="none" borderColor="#030303">
 		<mx:Image x="208" y="32" source="image/head.png"/>
-		<mx:Label x="10" y="10" text="等级：888"/>
-		<mx:Label x="10" y="38" text="经验：10000"/>
-		<mx:Label x="10" y="66" text="总局数：355"/>
-		<mx:Label x="10" y="94" text="胜率：66%"/>
+		<mx:Label x="10" y="10" text="{Server.getPlayerName(Server.player)}" id="pname"/>
+		<mx:Label x="10" y="38" text="{'分数：'+Server.player.score}" id="score"/>
+		<mx:Label x="10" y="66" text="{'总局数：'+(Server.player.win+Server.player.lose)}" id="gamecount"/>
+		<mx:Label x="10" y="94" text="{'胜率：'+(Server.player.win/(Server.player.win+Server.player.lose>0?Server.player.win+Server.player.lose:1)*100)+'%'}" id="winrate"/>
 	</mx:Canvas>
 	
 	<mx:VBox id="playerlist" x="654" y="230" height="201" width="284" verticalGap="1">
