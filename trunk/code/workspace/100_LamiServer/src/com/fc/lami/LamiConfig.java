@@ -23,7 +23,7 @@ public class LamiConfig extends Config
 //	---------------------------------------------------------------------
 	
 	@ConfigField("房间数量")
-	public static Integer	ROOM_NUMBER = 2;
+	public static Integer	ROOM_NUMBER = 10;
 	@ConfigField("桌子数量")
 	public static Integer	DESK_NUMBER = 10;
 	@ConfigField("每个房间能容纳的玩家")
