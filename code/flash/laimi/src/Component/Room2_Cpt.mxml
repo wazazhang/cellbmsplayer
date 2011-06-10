@@ -210,18 +210,16 @@
 			{
 				if(cb1.selected)
 				{
-					var arr:Array = new Array();
+					dgroomlist.removeAllChildren();
 					for each (var desk:DeskData in roomData.desks)
 					{
 						if(!desk.is_started)
-							arr.push(desk)
+							addItem(desk);
 					}
-					//dgroomlist.dataProvider = arr;
-
 				}
 				else
 				{
-					//dgroomlist.dataProvider = roomData.desks;
+					restDesks();
 				}
 			}
 			
