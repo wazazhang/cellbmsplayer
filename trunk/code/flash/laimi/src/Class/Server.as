@@ -311,7 +311,18 @@ package Class
 			
 			}
 			else if (ntf is OperateCompleteNotify){
-				game.timeCtr.reset();
+				
+				var ocn:OperateCompleteNotify = ntf as OperateCompleteNotify;
+				
+				if(ocn.player_id == Server.player.player_id ) 
+				{
+					game.timeCtr.reset();
+				}
+				else
+				{
+					game.lami.getOtherPlayerCptByPlayerId(ocn.player_id).timeReset();
+				}
+				
 			}
 			else if (ntf is TurnEndNotify){
 				// TODO 自己回合结束

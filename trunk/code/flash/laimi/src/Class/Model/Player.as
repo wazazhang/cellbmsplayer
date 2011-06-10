@@ -46,7 +46,7 @@ package Class.Model
 		
 		public var isReady:Boolean	= false; //是否准备好了
 		
-		public var player_id:int;
+		//public var player_id:int;
 		
 		public var game:Game;
 		

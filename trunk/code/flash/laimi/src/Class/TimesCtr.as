@@ -58,7 +58,7 @@ package Class
 			
 			var d:Date = new Date();
 			Server.timer = d.getSeconds();
-			Server.timerStr = (sumTimer.delay * sumTimer.currentCount) + '/' + (sumTime*1000*4/5);
+			Server.timerStr = (sumTimer.delay * sumTimer.currentCount) + '/' + (sumTime*800);
 		}	
 		
 		public  function completeHandler(event:TimerEvent):void
