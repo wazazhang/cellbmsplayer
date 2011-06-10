@@ -285,6 +285,7 @@
 			{
 				addInfo("游戏结束");
 				var rsCpt:Result_Cpt = new Result_Cpt()
+				optCpt.reset();	
 					
 				rsCpt.setRes(gvn);
 				rsCpt.setStyle("verticalCenter","0");
