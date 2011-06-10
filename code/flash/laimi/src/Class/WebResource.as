@@ -7,7 +7,7 @@ package Class
 		
 		public static function setWebRoot(root:String) : void
 		{
-			WebResource.webRoot = root;
+			WebResource.webRoot = root + "/";
 		}
 		
 		public static function get fastBt():String
