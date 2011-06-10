@@ -187,11 +187,6 @@ public class LoginXingCloud implements Login
 		}
 		
 		@Override
-		public String getHeadURL() {
-			return "http://r.337.com/plugin_assets/redmine_elextech_platform/images/headpic.gif";
-		}
-		
-		@Override
 		public int getLevel() {
 			return 0;
 		}
