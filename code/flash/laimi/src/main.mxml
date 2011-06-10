@@ -83,9 +83,11 @@
 					var lang	: String = this.config.child("lang").toString();
 					var webbase : String = this.config.child("webbase").toString();
 					
+					println("webbase="+webbase);
 					WebResource.setWebRoot(webbase);
 					
 					getUserInfo();
+					
 				}
 				else 
 				{
@@ -115,6 +117,14 @@
 					var sfs 	: String = this.config.child("sfs").toString();
 					var sfszone : String = this.config.child("sfszone").toString();
 					
+					var pdata	: PlatformUserData = new PlatformUserData(
+						this.gdp_container.sns,
+						user.id,
+						user.name,
+						user.sex, 
+						user.photoSmall
+					);
+					
 					var sfs_session : SFSSessionImpl = new SFSSessionImpl(codec);
 					sfs_session.setZone(sfszone);
 					sfs_session.setUser(user.id);
@@ -123,13 +133,7 @@
 					Server.init(sfs_session);
 					
 					Server.initUserLogin(
-						new PlatformUserData(
-							this.gdp_container.sns,
-							user.id,
-							user.name,
-							user.sex, 
-							user.photoSmall
-						),
+						pdata,
 						sfs.split(":")[0],
 						sfs.split(":")[1]
 					);
