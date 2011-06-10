@@ -26,7 +26,7 @@ public class LamiServer extends ServerImpl {
 			int port = 19821;
 			if (args.length > 0) {
 				LamiConfig.load(args[0]);
-				port = LamiConfig.SERVER_PORT;
+				port = LamiConfig.MINA_SERVER_PORT;
 			}
 			LamiServer server = new LamiServer(factory);
 			server.open(port, new LamiServerListener());

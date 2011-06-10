@@ -17,7 +17,6 @@ public class LoginDefault implements Login
 	
 	private class DefaultUser extends User
 	{
-		private String name;
 		private int win;
 		private int lose;
 		private int point;
@@ -25,18 +24,12 @@ public class LoginDefault implements Login
 		
 		public DefaultUser(PlatformUserData data) {
 			super(data);
-			this.name = data.platform_uid;
 		}
 
 		@Override
 		public int getLevel() {
 			return 0;
 		}
-
-//		@Override
-//		public String getName() {
-//			return name;
-//		}
 
 		@Override
 		synchronized public int getLose() {
@@ -59,10 +52,7 @@ public class LoginDefault implements Login
 		}
 		
 		@Override
-		public void save() {
-			// TODO Auto-generated method stub
-			
-		}
+		public void save() {}
 		
 		@Override
 		synchronized public int addLose(int value) {

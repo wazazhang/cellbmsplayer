@@ -2,6 +2,7 @@ package com.fc.lami;
 
 import com.cell.util.Config;
 import com.cell.util.anno.ConfigField;
+import com.cell.util.anno.ConfigSeparator;
 import com.cell.util.anno.ConfigType;
 
 /**  
@@ -10,8 +11,17 @@ import com.cell.util.anno.ConfigType;
 @ConfigType("拉密牌服务器配置")
 public class LamiConfig extends Config
 {
-	@ConfigField("端口")
-	public static Integer	SERVER_PORT = 19821;
+//	---------------------------------------------------------------------
+	@ConfigSeparator("网络")
+//	---------------------------------------------------------------------
+	
+	@ConfigField("MINA端口")
+	public static Integer	MINA_SERVER_PORT = 19821;
+	
+//	---------------------------------------------------------------------
+	@ConfigSeparator("游戏数据")
+//	---------------------------------------------------------------------
+	
 	@ConfigField("房间数量")
 	public static Integer	ROOM_NUMBER = 2;
 	@ConfigField("桌子数量")
@@ -30,12 +40,17 @@ public class LamiConfig extends Config
 	public static Integer	MATRIX_WIDTH = 26;
 	@ConfigField("桌面牌矩阵高")
 	public static Integer	MATRIX_HEIGHT = 10;
+
+//	---------------------------------------------------------------------
+	@ConfigSeparator("第三方")
+//	---------------------------------------------------------------------
 	
 	@ConfigField("第三方接口")
-	public static String	LOGIN_CLASS = com.fc.lami.login.test.LoginDefault.class.getCanonicalName();
+	public static String	LOGIN_CLASS = 
+		com.fc.lami.login.xingcloud.LoginXingCloud.class.getCanonicalName();
 	
-	public static void load(String config_file)
-	{
+	
+	public static void load(String config_file) {
 		load(LamiConfig.class, config_file);
 	}
 }
