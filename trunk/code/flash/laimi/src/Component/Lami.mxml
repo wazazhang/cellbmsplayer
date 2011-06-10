@@ -178,7 +178,7 @@
 					return
 
 				initSeat(desk);
-				addInfo(Server.getPlayer(player_id).uid+"进入桌子");
+				addInfo(Server.getPlayerName(Server.getPlayer(player_id))+"进入桌子");
 			}
 			
 			
@@ -188,7 +188,7 @@
 				if(desk ==null || desk_id!=desk.desk_id)
 					return	
 				initSeat(desk);
-				addInfo(Server.getPlayer(player_id).uid+"离开桌子");
+				addInfo(Server.getPlayerName(Server.getPlayer(player_id))+"离开桌子");
 			}
 			
 			
@@ -245,7 +245,7 @@
 					if(cpt!=null)
 						cpt.pobing = true;
 				}
-				addInfo("玩家"+Server.getPlayer(playerid).uid+"已经破冰");
+				addInfo("玩家"+Server.getPlayerName(Server.getPlayer(playerid))+"已经破冰");
 			}
 			
 			//有人员准备取消
@@ -261,11 +261,11 @@
 				
 				if(isReady)
 				{
-					addInfo("玩家"+Server.getPlayer(playerid).uid+"准备好了");
+					addInfo("玩家"+Server.getPlayerName(Server.getPlayer(playerid))+"准备好了");
 				}
 				else
 				{
-					addInfo("玩家"+Server.getPlayer(playerid).uid+"取消了准备");
+					addInfo("玩家"+Server.getPlayerName(Server.getPlayer(playerid))+"取消了准备");
 				}
 			}
 			
@@ -276,7 +276,7 @@
 				if(cpt!=null)
 				{
 					cpt.gameing = true;
-					addInfo("玩家"+cpt.player.uid+"回合开始");
+					addInfo("玩家"+Server.getPlayerName(cpt.player)+"回合开始");
 				}
 			}
 			
@@ -356,7 +356,7 @@
 			
 			public function onPlayerReset(player:PlayerData):void
 			{
-				addInfo(player.uid+"重置了发牌")
+				addInfo(Server.getPlayerName(player)+"重置了发牌")
 			}
 			
 		]]>
@@ -411,8 +411,8 @@
 		<mx:Label x="45" y="39" text="剩余手牌:{Server.game.leftCard}" color="#FFFEFE"/>
 		<mx:Image x="10" y="32" source="image/pai.jpg"/>
 		<mx:Label x="10" y="74" text="玩家信息" color="#FFFFFF"/>
-		<mx:Label x="10" y="106" text="积分：{Server.player.score} 等级：{Server.player.level}" color="#FEFEFE"/>
-		<mx:Label x="10" y="91" text="{Server.player.uid}" color="#FFFFFF"/>
+		<mx:Label x="10" y="106" text="积分：{Server.player.score}" color="#FEFEFE"/>
+		<mx:Label x="10" y="91" text="{Server.getPlayerName(Server.player)}" color="#FFFFFF"/>
 	</mx:Canvas>
 	
 	<!--玩家信息区-->
@@ -420,7 +420,7 @@
 	<mx:Canvas id="useinfo" width="470" height="39" x="243" y="422" 
 			   verticalScrollPolicy="off" horizontalScrollPolicy="off" backgroundImage="@Embed(source='../image/bg/opbg.png')">
 		
-		<mx:Label x="7" y="2" text="{Server.player.uid}" color="#010101"/>
+		<mx:Label x="7" y="2" text="{Server.getPlayerName(Server.player)}" color="#010101"/>
 		
 		<mx:Image x="100" y="16" source="{game.gamer.isMyturn?Resource.yxz:Resource.ddz}" ></mx:Image>
 		

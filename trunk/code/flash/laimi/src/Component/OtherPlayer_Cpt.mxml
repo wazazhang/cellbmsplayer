@@ -100,7 +100,7 @@
 			
 		]]>
 	</mx:Script>
-	<mx:Label y="-1" text="{player==null?'':''+player.uid}" color="#FFFFFF" horizontalCenter="0"/>
+	<mx:Label y="-1" text="{player==null?'':''+Server.getPlayerName(player)}" color="#FFFFFF" horizontalCenter="0"/>
 	
 	<!--
 	<mx:Label x="51" y="0" text="{seat}" color="#010101"/>
@@ -114,7 +114,7 @@
 	
 	<mx:Image source="{player ==null?nohead:head}" y="13" height="50" width="50" horizontalCenter="0"/>
 	
-	<mx:Label y="60" text="{player==null?'':'等级:'+player.level+' 积分:'+player.score}" color="#FFFFFF"  horizontalCenter="0"/>
+	<mx:Label y="60" text="{player==null?'':'积分:'+player.score}" color="#FFFFFF"  horizontalCenter="0"/>
 	
 	<mx:Image verticalCenter="0" horizontalCenter="0" visible="{ready}" source="image/ready.png" alpha="0.6"/>
 	
