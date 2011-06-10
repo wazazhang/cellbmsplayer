@@ -14,7 +14,7 @@ import com.net.NetDataTypes;
 public class MessageCodecJava implements MutualMessageCodec
 {
 	public String getVersion() {
-		return "Fri Jun 10 10:25:11 CST 2011";
+		return "Fri Jun 10 11:48:41 CST 2011";
 	}
 
 	public void readExternal(MutualMessage msg, NetDataInput in) throws IOException 
@@ -150,6 +150,9 @@ public class MessageCodecJava implements MutualMessageCodec
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.OperateCompleteNotify.class)) {
 			_r((com.fc.lami.Messages.OperateCompleteNotify)msg, in); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.PlatformUserData.class)) {
+			_r((com.fc.lami.Messages.PlatformUserData)msg, in); return;
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.PlayerData.class)) {
 			_r((com.fc.lami.Messages.PlayerData)msg, in); return;
@@ -380,6 +383,9 @@ public class MessageCodecJava implements MutualMessageCodec
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.OperateCompleteNotify.class)) {
 			_w((com.fc.lami.Messages.OperateCompleteNotify)msg, out); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.PlatformUserData.class)) {
+			_w((com.fc.lami.Messages.PlatformUserData)msg, out); return;
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.PlayerData.class)) {
 			_w((com.fc.lami.Messages.PlayerData)msg, out); return;
@@ -893,14 +899,12 @@ public class MessageCodecJava implements MutualMessageCodec
 //	----------------------------------------------------------------------------------------------------
 	public com.fc.lami.Messages.LoginRequest new_com_fc_lami_Messages_LoginRequest(){return new com.fc.lami.Messages.LoginRequest();}
 	private void _r(com.fc.lami.Messages.LoginRequest msg, NetDataInput in) throws IOException {
-		msg.platform_user_uid = in.readUTF();
-		msg.platform_uid = in.readUTF();
+		msg.platform_user_data = in.readExternal(com.fc.lami.Messages.PlatformUserData.class);
 		msg.validate = in.readUTF();
 		msg.version = in.readUTF();
 	}
 	private void _w(com.fc.lami.Messages.LoginRequest msg, NetDataOutput out) throws IOException {
-		out.writeUTF(msg.platform_user_uid);
-		out.writeUTF(msg.platform_uid);
+		out.writeExternal(msg.platform_user_data);
 		out.writeUTF(msg.validate);
 		out.writeUTF(msg.version);
 	}
@@ -1036,6 +1040,25 @@ public class MessageCodecJava implements MutualMessageCodec
 	}
 
 //	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.PlatformUserData
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.PlatformUserData new_com_fc_lami_Messages_PlatformUserData(){return new com.fc.lami.Messages.PlatformUserData();}
+	private void _r(com.fc.lami.Messages.PlatformUserData msg, NetDataInput in) throws IOException {
+		msg.platform_uid = in.readUTF();
+		msg.user_uid = in.readUTF();
+		msg.user_name = in.readUTF();
+		msg.user_sex = in.readUTF();
+		msg.user_image_url = in.readUTF();
+	}
+	private void _w(com.fc.lami.Messages.PlatformUserData msg, NetDataOutput out) throws IOException {
+		out.writeUTF(msg.platform_uid);
+		out.writeUTF(msg.user_uid);
+		out.writeUTF(msg.user_name);
+		out.writeUTF(msg.user_sex);
+		out.writeUTF(msg.user_image_url);
+	}
+
+//	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.PlayerData
 //	----------------------------------------------------------------------------------------------------
 	public com.fc.lami.Messages.PlayerData new_com_fc_lami_Messages_PlayerData(){return new com.fc.lami.Messages.PlayerData();}
@@ -1044,7 +1067,7 @@ public class MessageCodecJava implements MutualMessageCodec
 		msg.uid = in.readUTF();
 		msg.player_name = in.readUTF();
 		msg.player_head_url = in.readUTF();
-		msg.sex = in.readInt();
+		msg.sex = in.readUTF();
 		msg.score = in.readInt();
 		msg.win = in.readInt();
 		msg.lose = in.readInt();
@@ -1055,7 +1078,7 @@ public class MessageCodecJava implements MutualMessageCodec
 		out.writeUTF(msg.uid);
 		out.writeUTF(msg.player_name);
 		out.writeUTF(msg.player_head_url);
-		out.writeInt(msg.sex);
+		out.writeUTF(msg.sex);
 		out.writeInt(msg.score);
 		out.writeInt(msg.win);
 		out.writeInt(msg.lose);

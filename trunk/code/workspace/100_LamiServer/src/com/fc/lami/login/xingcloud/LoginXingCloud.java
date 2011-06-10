@@ -6,7 +6,10 @@ import org.slf4j.LoggerFactory;
 import game.service.user.UserProfile;
 
 import com.cell.CIO;
+import com.cell.CUtil;
+import com.fc.lami.Messages;
 import com.fc.lami.Messages.LoginRequest;
+import com.fc.lami.Messages.PlatformUserData;
 import com.fc.lami.login.Login;
 import com.fc.lami.login.LoginInfo;
 import com.fc.lami.login.User;
@@ -25,7 +28,7 @@ public class LoginXingCloud implements Login
 	@Override
 	public LoginInfo login(ClientSession session, LoginRequest login) 
 	{
-		String platformAddress = login.platform_user_uid + "_" + login.platform_uid;
+		String platformAddress = login.platform_user_data.getPlatformAddress();
 //		if (login.platform_uid == null || login.platform_uid.isEmpty()) 
 //		{
 //			return new LoginInfo(new DefaultUser(platformAddress), "default player");
@@ -39,7 +42,7 @@ public class LoginXingCloud implements Login
 				if (persistenceSession == null) {
 					String reason = "there is no persistenceSession!";
 					log.error(reason);
-					return new LoginInfo(new DefaultUser(platformAddress), reason);	
+					return new LoginInfo(new DefaultUser(login.platform_user_data), reason);	
 				}
 				//get UserProfile
 				UserProfile userProfile = (UserProfile) 
@@ -50,53 +53,41 @@ public class LoginXingCloud implements Login
 				if (userProfile == null) {
 					String reason = "there is no userProfile with (" + platformAddress + ")!";
 					log.error(reason);
-					return new LoginInfo(new DefaultUser(platformAddress), reason);	
+					return new LoginInfo(new DefaultUser(login.platform_user_data), reason);	
 				} else {
-					return new LoginInfo(new XingCloudUser(userProfile), "");
+					StringBuilder sb = new StringBuilder(
+							"--> get user profile : " + userProfile.getUid() + "\n");
+					CUtil.toStatusLine("getClassName", 
+							userProfile.getClassName(), sb);
+					CUtil.toStatusLine("getImageUrl",  
+							userProfile.getImageUrl(), sb);
+					CUtil.toStatusLine("getPlatformAddress",  
+							userProfile.getPlatformAddress(), sb);
+					CUtil.toStatusLine("getUserNameFull",  
+							userProfile.getUserNameFull(), sb);
+					CUtil.toStatusLine("getUserNameShort",  
+							userProfile.getUserNameShort(), sb);
+					log.info(sb.toString());
+					return new LoginInfo(new XingCloudUser(userProfile, login.platform_user_data), "");
 				}
 			} catch (Throwable e) {
 				log.error(e.getMessage(), e);
 				String reason = e.getClass() + " : " + e.getMessage();
-				return new LoginInfo(new DefaultUser(platformAddress), reason);
+				return new LoginInfo(new DefaultUser(login.platform_user_data), reason);
 			}
 		}
 	}
 	
-	private class XingCloudUser implements User
+	private class XingCloudUser extends User
 	{
-		final private String		uid;
-		final private String		name;
-		final private UserProfile	userProfile;
-				
-		public XingCloudUser(UserProfile userProfile) {
+		final private UserProfile userProfile;
+		
+		public XingCloudUser(
+				UserProfile userProfile, 
+				PlatformUserData login_data)
+		{
+			super(login_data);
 			this.userProfile = userProfile;
-			this.uid = userProfile.getUid();
-			this.name = userProfile.getUserNameFull();
-		}
-		
-		@Override
-		public String getUID() {
-			return uid;
-		}
-		
-		@Override
-		public String getName() {
-			return name;
-		}
-		
-		@Override
-		public int getSex() {
-			return 0;
-		}
-
-		@Override
-		public String getHeadURL() {
-			return userProfile.getImageUrl();
-		}
-		
-		@Override
-		public int getLevel() {
-			return userProfile.getLevel();
 		}
 		
 		private int getValueAsInt(String key) {
@@ -126,6 +117,20 @@ public class LoginXingCloud implements Login
 			return 0;
 		}
 		
+		@Override
+		synchronized public void save() {
+			try {
+				persistenceSession.put(userProfile);
+				persistenceSession.flush();
+			} catch (Throwable e) {
+				e.printStackTrace();
+			}
+		}
+
+		@Override
+		public int getLevel() {
+			return userProfile.getLevel();
+		}
 		
 		@Override
 		synchronized public int getLose() {
@@ -167,52 +172,28 @@ public class LoginXingCloud implements Login
 			return addValueAsInt("win", value);
 		}
 
-		@Override
-		synchronized public void save() {
-			try {
-				persistenceSession.put(userProfile);
-				persistenceSession.flush();
-			} catch (Throwable e) {
-				e.printStackTrace();
-			}
-		}
 		
 	}
 
-	private class DefaultUser implements User
+	private class DefaultUser extends User
 	{
-		private String name;
 		private int win;
 		private int lose;
 		private int point;
 		private int score;
-		private int sex;
 		
-		public DefaultUser(String name) {
-			this.name = name;
+		public DefaultUser(PlatformUserData data) {
+			super(data);
 		}
+		
 		@Override
 		public String getHeadURL() {
 			return "http://r.337.com/plugin_assets/redmine_elextech_platform/images/headpic.gif";
 		}
+		
 		@Override
 		public int getLevel() {
 			return 0;
-		}
-
-		@Override
-		public String getName() {
-			return name;
-		}
-
-		@Override
-		public String getUID() {
-			return name;
-		}
-		
-		@Override
-		public int getSex() {
-			return sex;
 		}
 
 		@Override

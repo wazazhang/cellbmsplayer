@@ -64,7 +64,7 @@ public class Messages {
 		public String uid;
 		public String player_name;
 		public String player_head_url;
-		public int sex;
+		public String sex;
 		
 		public int score;
 		public int win;
@@ -77,6 +77,21 @@ public class Messages {
 		}
 		
 	}
+	
+	public static class PlatformUserData extends FlashMessage
+	{
+		public String platform_uid;
+		
+		public String user_uid;
+		public String user_name;
+		public String user_sex;
+		public String user_image_url;
+		
+		public String getPlatformAddress() {
+			return user_uid + "_" + platform_uid;
+		}
+	}
+	
 	
 	public static class CardData extends FlashMessage
 	{
@@ -648,9 +663,7 @@ public class Messages {
 	/** 登录 */
 	public static class LoginRequest extends FlashMessage
 	{
-		public String platform_user_uid;
-		public String platform_uid;
-		
+		public PlatformUserData platform_user_data;
 		public String validate;
 		public String version;
 		public LoginRequest(){}

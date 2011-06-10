@@ -2,6 +2,7 @@ package com.fc.lami.login.test;
 
 import com.cell.CIO;
 import com.fc.lami.Messages.LoginRequest;
+import com.fc.lami.Messages.PlatformUserData;
 import com.fc.lami.login.Login;
 import com.fc.lami.login.LoginInfo;
 import com.fc.lami.login.User;
@@ -11,38 +12,27 @@ public class LoginDefault implements Login
 {
 	@Override
 	public LoginInfo login(ClientSession session, LoginRequest login) {
-		return new LoginInfo(new DefaultUser(login.platform_user_uid), "");
+		return new LoginInfo(new DefaultUser(login.platform_user_data), "");
 	}
 	
-	private class DefaultUser implements User
+	private class DefaultUser extends User
 	{
 		private String name;
 		private int win;
 		private int lose;
 		private int point;
 		private int score;
-		private int sex;
 		
-		public DefaultUser(String name) {
-			this.name = name;
+		public DefaultUser(PlatformUserData data) {
+			super(data);
+			this.name = data.platform_uid;
 		}
-		@Override
-		public String getHeadURL() {
-			return null;
-		}
+
 		@Override
 		public int getLevel() {
 			return 0;
 		}
-		@Override
-		public String getName() {
-			return "";
-		}
-		@Override
-		public String getUID() {
-			return name;
-		}
-		
+
 //		@Override
 //		public String getName() {
 //			return name;
@@ -91,10 +81,6 @@ public class LoginDefault implements Login
 			return win += value;
 		}
 
-		@Override
-		public int getSex() {
-			return sex;
-		}
 
 		
 	}

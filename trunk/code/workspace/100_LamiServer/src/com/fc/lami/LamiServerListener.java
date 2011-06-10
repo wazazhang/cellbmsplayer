@@ -136,14 +136,14 @@ public class LamiServerListener implements ServerListener
 						"client version is [" + request.version + "]");
 			}
 			synchronized (client_list) {
-				if (request.platform_user_uid == null) {
+				if (request.platform_user_data == null) {
 					return new LoginResponse(
 							LoginResponse.LOGIN_RESULT_FAIL, 
 							null, 
 							version, 
 							"request player is null");
 				}
-				String ruid = request.platform_user_uid;
+				String ruid = request.platform_user_data.getPlatformAddress();
 				EchoClientSession old_session = client_list.get(ruid);
 				if (old_session != null) {
 					if (old_session.session.isConnected()) {
