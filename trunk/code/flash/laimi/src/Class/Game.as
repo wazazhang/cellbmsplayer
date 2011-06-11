@@ -396,7 +396,7 @@ package Class
 				for each(var card:Card in gamer.selectedArrayCard)
 				{
 					card.cardUI.isSelected = false;
-					if(card.isSended == false)
+					if(card.isSended == false && !card.cardUI.isPlayerOwner)
 					{
 						card.cardUI.card = null;
 						var index:int = gamer.handCard.getItemIndex(card)
@@ -413,7 +413,7 @@ package Class
 			{
 				gamer.selectedCard.cardUI.isSelected = false;
 
-				if(gamer.selectedCard.isSended == false)
+				if(gamer.selectedCard.isSended == false && !gamer.selectedCard.cardUI.isPlayerOwner)
 				{
 					gamer.selectedCard.cardUI.card = null;	
 					
