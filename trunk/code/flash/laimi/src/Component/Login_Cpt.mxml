@@ -7,6 +7,7 @@
 				import Class.Resource;
 				import Class.Server;
 				
+				import com.fc.lami.MessageCodec;
 				import com.fc.lami.Messages.PlayerData;
 				import com.fc.lami.Messages.RoomSnapShot;
 				
@@ -20,15 +21,8 @@
 				
 				public function init():void
 				{
-					if (Server.getClient() != null &&
-						Server.getClient().getSession() != null) {
-						version.text = 
-							Server.
-							getClient().
-							getSession().
-							getMessageFactory().
-							getVersion();
-					}
+					version.text = new MessageCodec().getVersion();
+					
 					
 					linkTimer.addEventListener(TimerEvent.TIMER_COMPLETE, linkFilad);
 					linkTimer.addEventListener(TimerEvent.TIMER, linking)
