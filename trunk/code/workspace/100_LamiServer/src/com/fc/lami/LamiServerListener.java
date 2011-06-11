@@ -13,6 +13,7 @@ import com.fc.lami.Messages.RoomSnapShot;
 import com.fc.lami.login.Login;
 import com.fc.lami.login.LoginInfo;
 import com.fc.lami.login.User;
+import com.fc.lami.model.Hall;
 import com.fc.lami.model.Player;
 import com.fc.lami.model.Room;
 import com.net.MessageHeader;
@@ -36,7 +37,9 @@ public class LamiServerListener implements ServerListener
 	/**保证并发访问同步的MAP*/
 	private ConcurrentHashMap<String, EchoClientSession> 
 							client_list 	= new ConcurrentHashMap<String, EchoClientSession> ();
-
+	
+	private Hall		hall;
+	
 	final private Room		rooms[];
 	
 	public LamiServerListener() throws Exception
@@ -52,6 +55,7 @@ public class LamiServerListener implements ServerListener
 		for (int i = 0; i < rooms.length; i++) {
 			rooms[i] = new Room(this, i, services, LamiConfig.THREAD_INTERVAL);
 		}
+		this.hall = new Hall(this);
 	}
 	
 	@Override
@@ -166,6 +170,7 @@ public class LamiServerListener implements ServerListener
 					logined_session = new EchoClientSession(
 							session, LamiServerListener.this, request, result.getUser());
 					client_list.put(result.getUser().getUID(), logined_session);
+					LamiServerListener.this.hall.join(session);
 				}
 			}
 			
@@ -178,6 +183,10 @@ public class LamiServerListener implements ServerListener
 			return res;
 		}
 		
+	}
+	
+	public Hall getHall(){
+		return hall;
 	}
 	
 //	public Room[] getRoomList(){

@@ -10,6 +10,7 @@ import com.fc.lami.Messages.EnterRoomRequest;
 import com.fc.lami.Messages.EnterRoomResponse;
 import com.fc.lami.Messages.ExitRoomRequest;
 import com.fc.lami.Messages.ExitRoomResponse;
+import com.fc.lami.Messages.FreshRoomListNotify;
 import com.fc.lami.Messages.GameResetNotify;
 import com.fc.lami.Messages.GameResetRequest;
 import com.fc.lami.Messages.GameResetResponse;
@@ -78,7 +79,10 @@ public class EchoClientSession implements ClientSessionListener
 	public void disconnected(ClientSession session) {
 		if (player.cur_room!=null){
 			player.cur_room.onPlayerLeave(player.player_id);
+		}else{
+			server.getHall().leave(session);
 		}
+		server.getHall().broadcast(new FreshRoomListNotify(server.getRoomList()));
 	}
 	
 	@Override
@@ -199,6 +203,8 @@ public class EchoClientSession implements ClientSessionListener
 				EnterRoomResponse res = new EnterRoomResponse(EnterRoomResponse.ENTER_ROOM_RESULT_SUCCESS);
 				res.room = r.getRoomData();
 				session.sendResponse(protocol, res);
+				server.getHall().leave(session);
+				server.getHall().broadcast(new FreshRoomListNotify(server.getRoomList()));
 				//session.sendResponse(protocol, new EnterRoomResponse(EnterRoomResponse.ENTER_ROOM_RESULT_SUCCESS));
 			}else{
 				session.sendResponse(protocol, new EnterRoomResponse(EnterRoomResponse.ENTER_ROOM_RESULT_FAIL_ROOM_FULL));
@@ -213,6 +219,8 @@ public class EchoClientSession implements ClientSessionListener
 		if (player.cur_room != null) {
 			player.cur_room.onPlayerLeave(player.player_id);
 			session.sendResponse(protocol, new ExitRoomResponse(server.getRoomList()));
+			server.getHall().join(session);
+			server.getHall().broadcast(new FreshRoomListNotify(server.getRoomList()));
 		}
 	}
 	
@@ -451,6 +459,8 @@ public class EchoClientSession implements ClientSessionListener
 			if (r.onPlayerEnter(player)){
 				res.room = r.getRoomData();
 				session.sendResponse(protocol, res);
+				server.getHall().leave(session);
+				server.getHall().broadcast(new FreshRoomListNotify(server.getRoomList()));
 			}else{
 				res.result = AutoEnterResponse.AUTO_ENTER_RESULT_FAIL_NO_IDLE_SEAT;
 				session.sendResponse(protocol, res);
