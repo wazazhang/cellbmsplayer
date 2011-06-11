@@ -110,7 +110,7 @@
 				if(sumtimer == null)
 					return
 				
-				clock.text = parseInt(((Server.game.timeCtr.sumTime*800 - sumtimer.delay*sumtimer.currentCount)/1000).toString()).toString() ;	
+				clock.text = parseInt(((Server.game.timeCtr.sumTime*1000 - sumtimer.delay*sumtimer.currentCount/0.8)/1000).toString()).toString() ;	
 			}
 			public  function init():void
 			{
