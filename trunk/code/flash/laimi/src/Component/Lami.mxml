@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"  xmlns:ns1="Component.*" width="960" height="600" 
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+		  xmlns:ns1="Component.*" width="960" height="600" 
 		   borderStyle="solid" borderColor="0x000000" backgroundColor="0xffffff"   styleName="taskDetailBG"
 		   verticalCenter="0" horizontalCenter="0" verticalScrollPolicy="off" horizontalScrollPolicy="off" creationComplete="initEvent()"  >
 	
@@ -203,13 +204,17 @@
 				gameinfoStr =   gameinfoStr  + str + "\n" ;
 				TA_gameinfoStr.validateNow();
 				TA_gameinfoStr.verticalScrollPosition=TA_gameinfoStr.maxVerticalScrollPosition;
+				
+				
 			}
 			
 			public function addTalkInfo(str:String):void
 			{
 				talkinfoStr = talkinfoStr  + str + "\n";
 				TA_talkinfoStr.validateNow(); 
-				TA_talkinfoStr.verticalScrollPosition=TA_talkinfoStr.maxVerticalScrollPosition;
+				TA_talkinfoStr.verticalScrollPosition=TA_talkinfoStr.maxVerticalScrollPosition;		
+				
+				Alert.show(TA_talkinfoStr.verticalScrollPosition +'/' +TA_talkinfoStr.maxVerticalScrollPosition)
 			}
 			
 			//回到房间
@@ -440,7 +445,8 @@
 	</ns1:Opt_Cpt>
 	
 	<mx:Image source="{Resource.talkbg}" x="720" y="397" alpha="0.5"></mx:Image>
-	<mx:TextArea  id="TA_talkinfoStr"  x="725" y="405" width="220" height="150" backgroundAlpha="0.0" borderStyle="none"  color="0xffffff" editable="false"  text="{talkinfoStr}"/>
+	<mx:TextArea  id="TA_talkinfoStr"  x="725" y="405" width="220" height="150"   backgroundAlpha="0.0" borderStyle="none"  color="0xffffff" editable="false"  text="{talkinfoStr}">
+	</mx:TextArea>
 	
 	<mx:Image source="{Resource.xtbg}" x="7" y="398" alpha="0.5"></mx:Image>
 	<mx:TextArea  id="TA_gameinfoStr"  x="12" y="405" color="0xffffff" width="220" height="185" backgroundAlpha="0.0" borderStyle="none"  editable="false" text="{gameinfoStr}" />
@@ -448,6 +454,4 @@
 	<mx:Button x="890" y="558" click="pubTalk()" width="49" skin="@Embed(source='../image/button/tj.png')"  height="28" downSkin="@Embed(source='../image/button/tj1.png')"/>
 	<mx:TextInput  color="0xffffff" id="titalk" x="731" y="560" width="150" alpha="0.5" backgroundColor="0xD2A55A" borderColor="0x8B5505" themeColor="#BF7204"/>
 
-	
-	
 </mx:Canvas>
