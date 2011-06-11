@@ -167,6 +167,8 @@ public class LamiServerListener implements ServerListener
 							version, 
 							result.getReason());
 				} else {
+					// TODO test code
+					result.getUser().save();
 					logined_session = new EchoClientSession(
 							session, LamiServerListener.this, request, result.getUser());
 					client_list.put(result.getUser().getUID(), logined_session);
