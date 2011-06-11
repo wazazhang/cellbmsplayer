@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="578" height="35" 
-		   backgroundImage="image/bg/deskItemBg.png" 
+		   backgroundImage="{Resource.deskItemBg}" 
 		   mouseOver="mouseOver(event)" mouseOut="mouseOut(event)"
 		   doubleClickEnabled="true" doubleClick="click()" borderThickness="2" borderColor="#b96400"   cornerRadius="5"
 		   
