@@ -179,7 +179,7 @@ package Class
 		public static var talkbg:Class;
 		
 		[Bindable]
-		[Embed(source='image/guang.swf')] //系统信息背景
+		[Embed(source='image/guang2.swf')] //系统信息背景
 		public static var guang:Class;
 		
 		

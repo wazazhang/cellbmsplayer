@@ -9,7 +9,9 @@
 			import Class.Server;
 			import Class.TimesCtr;
 			
+			import com.fc.lami.Messages.PlatformUserData;
 			import com.fc.lami.Messages.PlayerData;
+			import com.fc.lami.Messages.PlayerState;
 		   
 			[Bindable]
 			public var player:PlayerData;	
@@ -143,8 +145,23 @@
 				{
 					visible = true;
 				}
-				
-				
+			}
+			
+			public function setState(arr:Array)
+			{
+				if(player == null)
+					return 
+					
+				for each(var state:PlayerState in arr)	
+				{
+					if(player.player_id == state.player_id)
+					{
+						pobing =state.is_openice;
+						ready = state.is_ready;
+						return;
+					}
+				}
+					
 			}
 			
 		]]>
