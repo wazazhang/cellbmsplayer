@@ -22,6 +22,8 @@ package Class
 		private  var oprColor:Number =  0x0000ff;
 		private  var sumColor:Number =  0x0000ff;
 		
+		private var oprStartTime:Date; 
+		private var sumStartTime:Date; 
 		public function TimesCtr()
 		{
 			
@@ -40,25 +42,18 @@ package Class
 		
 		public  function oprTimerHandler(event:TimerEvent):void
 		{
-            optionTimeBar.setProgress(optionTime*800 - oprTimer.delay * oprTimer.currentCount, optionTime*800); 
-			
-			var point:Number = (oprTimer.delay * oprTimer.currentCount / (optionTime*800))
-			
-			
+			var s:Number = new Date().getTime() - oprStartTime.getTime()  ;
+            optionTimeBar.setProgress(optionTime - s, optionTime); 
+			var point:Number = (  s /optionTime)
 			optionTimeBar.setStyle("barColor",getColorByPoint(point));
 		}
 		
 		public  function sumTimerHandler(event:TimerEvent):void
 		{
-            sumTimeBar.setProgress(sumTime*800 - sumTimer.delay * sumTimer.currentCount, sumTime*800); 
-			
-			var point:Number = (sumTimer.delay * sumTimer.currentCount / (sumTime*800))
+			var s:Number = new Date().getTime() - sumStartTime.getTime()  ;
+            sumTimeBar.setProgress(sumTime - s, sumTime); 
+			var point:Number = (s / sumTime);
 			sumTimeBar.setStyle("barColor",getColorByPoint(point));
-			
-			
-			var d:Date = new Date();
-			Server.timer = d.getSeconds();
-			Server.timerStr = (sumTimer.delay * sumTimer.currentCount) + '/' + (sumTime*800);
 		}	
 		
 		public  function completeHandler(event:TimerEvent):void
@@ -76,6 +71,9 @@ package Class
 		
 		public  function start():void
 		{
+			oprStartTime = new Date();
+			sumStartTime = new Date();
+				
 			oprTimer.reset();
 			sumTimer.reset();
 			oprTimer.start();
@@ -84,14 +82,16 @@ package Class
 		
 		public   function reset():void
 		{
+			oprStartTime = new Date();
+			
 			oprTimer.reset();
 			oprTimer.start();
 		}
 		
 		public  function stop():void{
 			
-			optionTimeBar.setProgress(0, optionTime*1000*4/5); 
-			sumTimeBar.setProgress(0, optionTime*1000*4/5); 
+			optionTimeBar.setProgress(0, optionTime); 
+			sumTimeBar.setProgress(0, optionTime); 
 			oprTimer.reset();
 			sumTimer.reset();
 			oprTimer.stop();
@@ -101,7 +101,7 @@ package Class
 		public  function sumTimerSet(time:int):void
 		{
 			sumTimer = new Timer(100, time/100);
-			sumTime = time/1000;
+			sumTime = time;
 			sumTimer.addEventListener(TimerEvent.TIMER, sumTimerHandler);
 			sumTimer.addEventListener(TimerEvent.TIMER_COMPLETE, completeHandler);   
 		}
@@ -109,7 +109,7 @@ package Class
 		public  function oprTimerSet(time:int):void
 		{
 			oprTimer = new Timer(100, time/100);
-			optionTime = time/1000;
+			optionTime = time;
 			oprTimer.addEventListener(TimerEvent.TIMER, oprTimerHandler);
 			oprTimer.addEventListener(TimerEvent.TIMER_COMPLETE, completeHandler);   
 		}
@@ -151,8 +151,6 @@ package Class
 					color = 0xffff00;
 				}
 			}
-				
-			
 			return color
 		}
 		

@@ -256,9 +256,16 @@ package Class
 		[Bindable]
 		[Embed(source='image/button/fastBt2.png')] //桌子项
 		public static var fastBt2:Class;
+		
 		[Bindable]
 		[Embed(source='image/button/fastBt3.png')] //桌子项
 		public static var fastBt3:Class;
+		
+		[Bindable]
+		[Embed(source='image/pai.jpg')] //桌子项
+		public static var pai:Class;
+		
+		
 		
 		public function Resource()
 		{

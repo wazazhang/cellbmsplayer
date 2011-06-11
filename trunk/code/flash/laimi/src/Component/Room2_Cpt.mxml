@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" fontSize="12" width="960" height="600"
 		   borderStyle="solid" borderColor="#BC8E38" backgroundColor="#FDFDFD" creationComplete="initEvent()"
-		    backgroundImage="image/bg/deskbg.png"
+		    backgroundImage="{Resource.deskbg}"
 		    themeColor="#F25010">
 	<!--
 	<mx:Style source="css/public.css">
@@ -254,7 +254,7 @@
 	<mx:Button x="566" y="557" label="提交" click="pubTalk()"/>
 	
 	<mx:Canvas x="652" y="72" width="286" height="120" borderStyle="none" borderColor="#030303">
-		<mx:Image x="208" y="32" source="image/head.png"/>
+		<mx:Image x="208" y="32" source="{WebResource.guestHead}"/>
 		<mx:Label x="10" y="10" text="{Server.getPlayerName(Server.player)}" id="pname"/>
 		<mx:Label x="10" y="38" text="{'分数：'+Server.player.score}" id="score"/>
 		<mx:Label x="10" y="66" text="{'总局数：'+(Server.player.win+Server.player.lose)}" id="gamecount"/>
@@ -282,8 +282,8 @@
 			   click="fastRequestEnterDesk()"/>
 	
 	
-	<mx:LinkButton x="843" y="45" label="退出房间" fontSize="12" click="exitRoom()" />
-	<mx:CheckBox id="cb1" x="660" y="46" label="只显示等待房间" change="showWaitRoom()"/>
+	<mx:LinkButton x="843" y="48" label="退出房间" fontSize="12" click="exitRoom()"  color="#FFFFFF"/>
+	<mx:CheckBox id="cb1" x="660" y="46" label="只显示等待房间" change="showWaitRoom()" color="#FDFDFD"/>
 	
 	
 </mx:Canvas>

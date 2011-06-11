@@ -40,6 +40,9 @@
 			public var oprtimer:Timer;
 			public var sumtimer:Timer;
 			
+			private var oprStartTime:Date;
+			private var sumStartTime:Date;
+			
 			public function reset():void{
 				player = null;
 				seat = null;
@@ -74,6 +77,10 @@
 				if(_gameing)
 				{
 					pbtime.visible = true;
+					
+					sumStartTime = new Date();
+					oprStartTime = new Date();
+					
 					oprtimer.reset();
 					oprtimer.start();
 					sumtimer.reset();
@@ -82,7 +89,7 @@
 				else
 				{
 					pbtime.visible = false;
-					pbtime.setProgress(0, Server.game.timeCtr.optionTime*800);
+					pbtime.setProgress(0, Server.game.timeCtr.optionTime);
 					oprtimer.stop();
 					sumtimer.stop();
 				}
@@ -90,6 +97,7 @@
 			
 			public function timeReset():void
 			{
+				oprStartTime = new Date();
 				oprtimer.reset();
 				oprtimer.start();
 			}	
@@ -99,9 +107,12 @@
 			{
 				if(oprtimer == null)
 					return 
+					
+				var s:Number = new Date().getTime() - oprStartTime.getTime(); 
 				
-				pbtime.setProgress(Server.game.timeCtr.optionTime*800 - oprtimer.delay*oprtimer.currentCount, Server.game.timeCtr.optionTime*1000*4/5); 
-				var point:Number = oprtimer.delay * oprtimer.currentCount / (Server.game.timeCtr.optionTime*800)	
+				pbtime.setProgress(Server.game.timeCtr.optionTime - s, Server.game.timeCtr.optionTime); 
+				var point:Number = s / Server.game.timeCtr.optionTime;
+				
 				pbtime.setStyle("barColor",TimesCtr.getColorByPoint(point));
 			}
 			
@@ -109,8 +120,8 @@
 			{
 				if(sumtimer == null)
 					return
-				
-				clock.text = parseInt(((Server.game.timeCtr.sumTime*1000 - sumtimer.delay*sumtimer.currentCount/0.8)/1000).toString()).toString() ;	
+				var s:Number = new Date().getTime() - sumStartTime.getTime(); 
+				clock.text = parseInt(((Server.game.timeCtr.sumTime - s)/1000).toString()).toString() ;	
 			}
 			public  function init():void
 			{
