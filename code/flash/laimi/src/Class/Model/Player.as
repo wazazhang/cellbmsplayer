@@ -413,6 +413,25 @@ package Class.Model
 		
 		public function orderCard():void
 		{
+			//选中牌的时候点击排序做处理
+			
+			if(selectedArrayCard != null)
+			{
+				for each(var card:Card in selectedArrayCard)
+				{
+					card.cardUI.isSelected = false;
+				}
+				selectedArrayCard = null
+				
+			}	
+			//处理结束时候还有选中的牌
+			if(selectedCard != null)
+			{
+				selectedCard.cardUI.isSelected = false;
+				selectedCard = null;
+				
+			}
+			
 			if(orderType)
 			{
 				orderType = false;
