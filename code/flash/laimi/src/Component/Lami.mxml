@@ -214,7 +214,7 @@
 				TA_talkinfoStr.validateNow(); 
 				TA_talkinfoStr.verticalScrollPosition=TA_talkinfoStr.maxVerticalScrollPosition;		
 				
-				Alert.show(TA_talkinfoStr.verticalScrollPosition +'/' +TA_talkinfoStr.maxVerticalScrollPosition)
+				//Alert.show(TA_talkinfoStr.verticalScrollPosition +'/' +TA_talkinfoStr.maxVerticalScrollPosition)
 			}
 			
 			//回到房间
