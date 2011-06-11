@@ -206,9 +206,7 @@ public class Game implements Runnable
 		}
 		GameOverNotify notify = new GameOverNotify(game_over_type, rp);
 		
-		for (int i = 0; i<player_list.length; i++){
-			player_list[i].session.send(notify);
-		}
+		desk.broadcast(notify);
 	}
 	
 	public Player getCurPlayer(){
@@ -674,9 +672,7 @@ public class Game implements Runnable
 		if (!getCurPlayer().isOpenIce){
 			if (getCardPoint()>=30){
 				getCurPlayer().isOpenIce = true;
-				for (int i = 0; i<player_list.length; i++){
-					player_list[i].session.send(new OpenIceNotify(getCurPlayer().player_id));
-				}
+				desk.broadcast(new OpenIceNotify(getCurPlayer().player_id));
 				System.out.println("player:"+getCurPlayer()+"余牌:"+ getCurPlayer().card_list.size());
 				if (getCurPlayer().card_list.size() == 0){	//如果玩家牌已出完
 					onGameOver();

@@ -27,6 +27,7 @@ import com.fc.lami.Messages.MainMatrixChangeResponse;
 import com.fc.lami.Messages.MoveCardRequest;
 import com.fc.lami.Messages.MoveCardResponse;
 import com.fc.lami.Messages.PlayerData;
+import com.fc.lami.Messages.PlayerState;
 import com.fc.lami.Messages.ReadyRequest;
 import com.fc.lami.Messages.ReadyResponse;
 import com.fc.lami.Messages.RepealSendCardRequest;
@@ -254,9 +255,17 @@ public class EchoClientSession implements ClientSessionListener
 					player.cur_desk = d;
 //					EnterDeskNotify edn = new EnterDeskNotify(player.getPlayerData().player_id,d.desk_id,request.seat);
 //					player.cur_room.broadcast(edn);
+					Player players[] = player.cur_desk.getPlayerList();
+					PlayerState[] ps = new PlayerState[players.length];
+					for (int i = 0; i <ps.length; i++){
+						ps[i].player_id = players[i].player_id;
+						ps[i].is_ready = players[i].is_ready;
+						ps[i].is_openice = players[i].isOpenIce;
+					}
 					session.sendResponse(protocol, 
 							new EnterDeskResponse(EnterDeskResponse.ENTER_DESK_RESULT_SUCCESS,
-									d.getDeskData().desk_id, seat, LamiConfig.TURN_INTERVAL, LamiConfig.OPERATE_TIME));
+									d.getDeskData().desk_id, seat, LamiConfig.TURN_INTERVAL, LamiConfig.OPERATE_TIME,
+									ps));
 				} else {
 					session.sendResponse(protocol, 
 							new EnterDeskResponse(EnterDeskResponse.ENTER_DESK_RESULT_FAIL_PLAYER_EXIST));
@@ -280,10 +289,17 @@ public class EchoClientSession implements ClientSessionListener
 			Desk d = player.cur_room.getDesk(request.desk_id);
 			if (d != null) {
 				if (d.addVisitor(player)){
+					Player players[] = player.cur_desk.getPlayerList();
+					PlayerState[] ps = new PlayerState[players.length];
+					for (int i = 0; i <ps.length; i++){
+						ps[i].player_id = players[i].player_id;
+						ps[i].is_ready = players[i].is_ready;
+						ps[i].is_openice = players[i].isOpenIce;
+					}
 					session.sendResponse(protocol, 
 							new EnterDeskAsVisitorResponse(EnterDeskAsVisitorResponse.ENTER_DESK_VISITOR_RESULT_SUCCESS, 
 									request.desk_id,
-									LamiConfig.TURN_INTERVAL, LamiConfig.OPERATE_TIME));
+									LamiConfig.TURN_INTERVAL, LamiConfig.OPERATE_TIME, ps));
 				}else{
 					session.sendResponse(protocol, new EnterDeskAsVisitorResponse(EnterDeskAsVisitorResponse.ENTER_DESK_VISITOR_RESULT_FAIL_ALREADY_IN_DESK));
 				}

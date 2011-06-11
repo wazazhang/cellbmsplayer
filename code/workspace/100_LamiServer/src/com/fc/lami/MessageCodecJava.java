@@ -14,7 +14,7 @@ import com.net.NetDataTypes;
 public class MessageCodecJava implements MutualMessageCodec
 {
 	public String getVersion() {
-		return "Sat Jun 11 07:32:30 GMT 2011";
+		return "Sat Jun 11 08:05:53 GMT 2011";
 	}
 
 	public void readExternal(MutualMessage msg, NetDataInput in) throws IOException 
@@ -159,6 +159,9 @@ public class MessageCodecJava implements MutualMessageCodec
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.PlayerData.class)) {
 			_r((com.fc.lami.Messages.PlayerData)msg, in); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.PlayerState.class)) {
+			_r((com.fc.lami.Messages.PlayerState)msg, in); return;
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.ReadyNotify.class)) {
 			_r((com.fc.lami.Messages.ReadyNotify)msg, in); return;
@@ -399,6 +402,9 @@ public class MessageCodecJava implements MutualMessageCodec
 		if (msg.getClass().equals(com.fc.lami.Messages.PlayerData.class)) {
 			_w((com.fc.lami.Messages.PlayerData)msg, out); return;
 		}
+		if (msg.getClass().equals(com.fc.lami.Messages.PlayerState.class)) {
+			_w((com.fc.lami.Messages.PlayerState)msg, out); return;
+		}
 		if (msg.getClass().equals(com.fc.lami.Messages.ReadyNotify.class)) {
 			_w((com.fc.lami.Messages.ReadyNotify)msg, out); return;
 		}
@@ -594,12 +600,14 @@ public class MessageCodecJava implements MutualMessageCodec
 		msg.desk_id = in.readInt();
 		msg.turn_interval = in.readInt();
 		msg.operate_time = in.readInt();
+		msg.ps = (com.fc.lami.Messages.PlayerState[])in.readExternalArray(com.fc.lami.Messages.PlayerState.class);
 	}
 	private void _w(com.fc.lami.Messages.EnterDeskAsVisitorResponse msg, NetDataOutput out) throws IOException {
 		out.writeInt(msg.result);
 		out.writeInt(msg.desk_id);
 		out.writeInt(msg.turn_interval);
 		out.writeInt(msg.operate_time);
+		out.writeExternalArray(msg.ps);
 	}
 
 //	----------------------------------------------------------------------------------------------------
@@ -640,6 +648,7 @@ public class MessageCodecJava implements MutualMessageCodec
 		msg.seat = in.readInt();
 		msg.turn_interval = in.readInt();
 		msg.operate_time = in.readInt();
+		msg.ps = (com.fc.lami.Messages.PlayerState[])in.readExternalArray(com.fc.lami.Messages.PlayerState.class);
 	}
 	private void _w(com.fc.lami.Messages.EnterDeskResponse msg, NetDataOutput out) throws IOException {
 		out.writeInt(msg.result);
@@ -647,6 +656,7 @@ public class MessageCodecJava implements MutualMessageCodec
 		out.writeInt(msg.seat);
 		out.writeInt(msg.turn_interval);
 		out.writeInt(msg.operate_time);
+		out.writeExternalArray(msg.ps);
 	}
 
 //	----------------------------------------------------------------------------------------------------
@@ -1106,6 +1116,21 @@ public class MessageCodecJava implements MutualMessageCodec
 		out.writeInt(msg.win);
 		out.writeInt(msg.lose);
 		out.writeInt(msg.level);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.PlayerState
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.PlayerState new_com_fc_lami_Messages_PlayerState(){return new com.fc.lami.Messages.PlayerState();}
+	private void _r(com.fc.lami.Messages.PlayerState msg, NetDataInput in) throws IOException {
+		msg.player_id = in.readInt();
+		msg.is_ready = in.readBoolean();
+		msg.is_openice = in.readBoolean();
+	}
+	private void _w(com.fc.lami.Messages.PlayerState msg, NetDataOutput out) throws IOException {
+		out.writeInt(msg.player_id);
+		out.writeBoolean(msg.is_ready);
+		out.writeBoolean(msg.is_openice);
 	}
 
 //	----------------------------------------------------------------------------------------------------

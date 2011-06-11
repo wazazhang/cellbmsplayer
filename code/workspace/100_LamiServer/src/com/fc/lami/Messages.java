@@ -78,6 +78,13 @@ public class Messages {
 		
 	}
 	
+	public static class PlayerState extends FlashMessage
+	{
+		public int player_id;
+		public boolean is_ready;
+		public boolean is_openice;
+	}
+	
 	public static class PlatformUserData extends FlashMessage
 	{
 		public String platform_uid;
@@ -864,12 +871,15 @@ public class Messages {
 		public int turn_interval;
 		public int operate_time;
 		
-		public EnterDeskResponse(int result,int desk_id, int seat, int t, int ot){
+		public PlayerState[] ps;
+		
+		public EnterDeskResponse(int result,int desk_id, int seat, int t, int ot, PlayerState[] ps){
 			this.result = result;
 			this.desk_id = desk_id;
 			this.seat = seat;
 			this.turn_interval = t;
 			this.operate_time = ot;
+			this.ps = ps;
 		}
 		
 		public EnterDeskResponse(int result){
@@ -1277,12 +1287,14 @@ public class Messages {
 		public int desk_id;
 		public int turn_interval;
 		public int operate_time;
+		public PlayerState[] ps;
 		
-		public EnterDeskAsVisitorResponse(int result, int did, int ti, int ot){
+		public EnterDeskAsVisitorResponse(int result, int did, int ti, int ot, PlayerState[] ps){
 			this.result = result;
 			this.desk_id = did;
 			this.turn_interval = ti;
 			this.operate_time = ot;
+			this.ps = ps;
 		}
 		
 		public EnterDeskAsVisitorResponse(int result){
