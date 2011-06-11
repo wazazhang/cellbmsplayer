@@ -115,7 +115,7 @@ public class Desk implements ChannelListener
 			if (player != null) {
 				player.cur_desk = null;
 				player.is_ready = false;
-				player.card_list.clear();
+//				player.card_list.clear();
 				channel.leave(player.session);
 			}
 			return player;
