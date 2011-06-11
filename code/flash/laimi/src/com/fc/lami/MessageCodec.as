@@ -14,7 +14,7 @@ package com.fc.lami
 	{
 	
 		public function getVersion() : String{
-			return "Sat Jun 11 04:57:19 GMT 2011";
+			return "Sat Jun 11 07:32:30 GMT 2011";
 		}
 	
 		public function	getType(msg : Message) : int 
@@ -94,8 +94,9 @@ package com.fc.lami
 			if (msg is com.fc.lami.Messages.SubmitResponse) return 73;
 			if (msg is com.fc.lami.Messages.SynchronizeRequest) return 74;
 			if (msg is com.fc.lami.Messages.SynchronizeResponse) return 75;
-			if (msg is com.fc.lami.Messages.TurnEndNotify) return 76;
-			if (msg is com.fc.lami.Messages.TurnStartNotify) return 77;
+			if (msg is com.fc.lami.Messages.TimeOutNotify) return 76;
+			if (msg is com.fc.lami.Messages.TurnEndNotify) return 77;
+			if (msg is com.fc.lami.Messages.TurnStartNotify) return 78;
 
 			return 0;
 		}
@@ -179,8 +180,9 @@ package com.fc.lami
 			case 73 : return new com.fc.lami.Messages.SubmitResponse;
 			case 74 : return new com.fc.lami.Messages.SynchronizeRequest;
 			case 75 : return new com.fc.lami.Messages.SynchronizeResponse;
-			case 76 : return new com.fc.lami.Messages.TurnEndNotify;
-			case 77 : return new com.fc.lami.Messages.TurnStartNotify;
+			case 76 : return new com.fc.lami.Messages.TimeOutNotify;
+			case 77 : return new com.fc.lami.Messages.TurnEndNotify;
+			case 78 : return new com.fc.lami.Messages.TurnStartNotify;
 
 			}
 			return null;
@@ -413,11 +415,14 @@ package com.fc.lami
 		if (msg is com.fc.lami.Messages.SynchronizeResponse) {
 			r_SynchronizeResponse_75(com.fc.lami.Messages.SynchronizeResponse(msg), input); return;
 		}
+		if (msg is com.fc.lami.Messages.TimeOutNotify) {
+			r_TimeOutNotify_76(com.fc.lami.Messages.TimeOutNotify(msg), input); return;
+		}
 		if (msg is com.fc.lami.Messages.TurnEndNotify) {
-			r_TurnEndNotify_76(com.fc.lami.Messages.TurnEndNotify(msg), input); return;
+			r_TurnEndNotify_77(com.fc.lami.Messages.TurnEndNotify(msg), input); return;
 		}
 		if (msg is com.fc.lami.Messages.TurnStartNotify) {
-			r_TurnStartNotify_77(com.fc.lami.Messages.TurnStartNotify(msg), input); return;
+			r_TurnStartNotify_78(com.fc.lami.Messages.TurnStartNotify(msg), input); return;
 		}
 
 		}
@@ -649,11 +654,14 @@ package com.fc.lami
 		if (msg is com.fc.lami.Messages.SynchronizeResponse) {
 			w_SynchronizeResponse_75(com.fc.lami.Messages.SynchronizeResponse(msg), output); return;
 		}
+		if (msg is com.fc.lami.Messages.TimeOutNotify) {
+			w_TimeOutNotify_76(com.fc.lami.Messages.TimeOutNotify(msg), output); return;
+		}
 		if (msg is com.fc.lami.Messages.TurnEndNotify) {
-			w_TurnEndNotify_76(com.fc.lami.Messages.TurnEndNotify(msg), output); return;
+			w_TurnEndNotify_77(com.fc.lami.Messages.TurnEndNotify(msg), output); return;
 		}
 		if (msg is com.fc.lami.Messages.TurnStartNotify) {
-			w_TurnStartNotify_77(com.fc.lami.Messages.TurnStartNotify(msg), output); return;
+			w_TurnStartNotify_78(com.fc.lami.Messages.TurnStartNotify(msg), output); return;
 		}
 
 		}
@@ -1618,23 +1626,34 @@ package com.fc.lami
 	}
 
 //	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.TimeOutNotify
+//	----------------------------------------------------------------------------------------------------
+	function new_TimeOutNotify_76() : com.fc.lami.Messages.TimeOutNotify {return new com.fc.lami.Messages.TimeOutNotify();}
+	private function r_TimeOutNotify_76(msg : com.fc.lami.Messages.TimeOutNotify, input : NetDataInput) : void {
+		msg.player_id = input.readInt();
+	}
+	private function w_TimeOutNotify_76(msg : com.fc.lami.Messages.TimeOutNotify, output : NetDataOutput) : void {
+		output.writeInt(msg.player_id);
+	}
+
+//	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.TurnEndNotify
 //	----------------------------------------------------------------------------------------------------
-	function new_TurnEndNotify_76() : com.fc.lami.Messages.TurnEndNotify {return new com.fc.lami.Messages.TurnEndNotify();}
-	private function r_TurnEndNotify_76(msg : com.fc.lami.Messages.TurnEndNotify, input : NetDataInput) : void {
+	function new_TurnEndNotify_77() : com.fc.lami.Messages.TurnEndNotify {return new com.fc.lami.Messages.TurnEndNotify();}
+	private function r_TurnEndNotify_77(msg : com.fc.lami.Messages.TurnEndNotify, input : NetDataInput) : void {
 	}
-	private function w_TurnEndNotify_76(msg : com.fc.lami.Messages.TurnEndNotify, output : NetDataOutput) : void {
+	private function w_TurnEndNotify_77(msg : com.fc.lami.Messages.TurnEndNotify, output : NetDataOutput) : void {
 	}
 
 //	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.TurnStartNotify
 //	----------------------------------------------------------------------------------------------------
-	function new_TurnStartNotify_77() : com.fc.lami.Messages.TurnStartNotify {return new com.fc.lami.Messages.TurnStartNotify();}
-	private function r_TurnStartNotify_77(msg : com.fc.lami.Messages.TurnStartNotify, input : NetDataInput) : void {
+	function new_TurnStartNotify_78() : com.fc.lami.Messages.TurnStartNotify {return new com.fc.lami.Messages.TurnStartNotify();}
+	private function r_TurnStartNotify_78(msg : com.fc.lami.Messages.TurnStartNotify, input : NetDataInput) : void {
 		msg.player_id = input.readInt();
 		msg.stack_num = input.readInt();
 	}
-	private function w_TurnStartNotify_77(msg : com.fc.lami.Messages.TurnStartNotify, output : NetDataOutput) : void {
+	private function w_TurnStartNotify_78(msg : com.fc.lami.Messages.TurnStartNotify, output : NetDataOutput) : void {
 		output.writeInt(msg.player_id);
 		output.writeInt(msg.stack_num);
 	}

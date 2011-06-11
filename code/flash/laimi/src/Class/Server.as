@@ -57,6 +57,7 @@ package Class
 	import com.fc.lami.Messages.ReadyNotify;
 	import com.fc.lami.Messages.ReadyRequest;
 	import com.fc.lami.Messages.RepealSendCardNotify;
+	import com.fc.lami.Messages.RepealSendCardRequest;
 	import com.fc.lami.Messages.ResultPak;
 	import com.fc.lami.Messages.SpeakToPublicNotify;
 	import com.fc.lami.Messages.SpeakToPublicRequest;
@@ -64,6 +65,7 @@ package Class
 	import com.fc.lami.Messages.SubmitResponse;
 	import com.fc.lami.Messages.SynchronizeRequest;
 	import com.fc.lami.Messages.SynchronizeResponse;
+	import com.fc.lami.Messages.TimeOutNotify;
 	import com.fc.lami.Messages.TurnEndNotify;
 	import com.fc.lami.Messages.TurnStartNotify;
 	import com.net.client.ClientEvent;
@@ -259,36 +261,36 @@ package Class
 			else if (ntf is MainMatrixChangeNotify ){
 				var mmcn : MainMatrixChangeNotify = ntf as MainMatrixChangeNotify;
 				
-				{
-					var cards_old:Array = game.getPublicCards;
-					var comap : Dictionary = new Dictionary();
-					var cnmap : Dictionary = new Dictionary();
-					for each(var cn : CardData in mmcn.cards){
-						cnmap[cn.id] = cn;
-					}
-					
-					for each(var co: CardData in cards_old){
-						comap[co.id] = co;
-					}
-				
-					for each(var cn : CardData in mmcn.cards){
-						var co : CardData = comap[cn.id] as CardData;
-						if (co==null){
-							// 玩家打出牌
-							game.lami.addInfo(Server.getPlayerName(getPlayer(mmcn.player_id))+"打出了"+Card.cardToString(cn));
-						}else if(cn.x!=co.x || cn.y!=co.y){
-							// 玩家移动了牌
-							game.lami.addInfo(Server.getPlayerName(getPlayer(mmcn.player_id))+"移动了"+Card.cardToString(cn));
-						}
-					}
-					
-					for each(var co:CardData in cards_old){
-						if (cnmap[co.id]==null){
-							//玩家取回了牌
-							game.lami.addInfo(Server.getPlayerName(getPlayer(mmcn.player_id))+"取回了"+Card.cardToString(co));
-						}
-					}
-				}
+//				{
+//					var cards_old:Array = game.getPublicCards;
+//					var comap : Dictionary = new Dictionary();
+//					var cnmap : Dictionary = new Dictionary();
+//					for each(var cn : CardData in mmcn.cards){
+//						cnmap[cn.id] = cn;
+//					}
+//					
+//					for each(var co: CardData in cards_old){
+//						comap[co.id] = co;
+//					}
+//				
+//					for each(var cn : CardData in mmcn.cards){
+//						var co : CardData = comap[cn.id] as CardData;
+//						if (co==null){
+//							// 玩家打出牌
+//							game.lami.addInfo(Server.getPlayerName(getPlayer(mmcn.player_id))+"打出了"+Card.cardToString(cn));
+//						}else if(cn.x!=co.x || cn.y!=co.y){
+//							// 玩家移动了牌
+//							game.lami.addInfo(Server.getPlayerName(getPlayer(mmcn.player_id))+"移动了"+Card.cardToString(cn));
+//						}
+//					}
+//					
+//					for each(var co:CardData in cards_old){
+//						if (cnmap[co.id]==null){
+//							//玩家取回了牌
+//							game.lami.addInfo(Server.getPlayerName(getPlayer(mmcn.player_id))+"取回了"+Card.cardToString(co));
+//						}
+//					}
+//				}
 				game.publicCardChange(mmcn.is_hardhanded, mmcn.cards);
 				//game_cpt.leavePlayer(ldn);
 			}
@@ -368,8 +370,13 @@ package Class
 					}
 					game.gamer.getCards(cards3);
 				}
+				
+				game.lami.addInfo(Server.getPlayerName(getPlayer(rscn.player_id))+"撤销出牌");
 			}
-			
+			else if (ntf is TimeOutNotify){
+				var ton:TimeOutNotify = ntf as TimeOutNotify;
+				game.lami.addInfo(Server.getPlayerName(getPlayer(ton.player_id))+"超时");
+			}
 			else if (ntf is GameStartToRoomNotify)
 			{
 				var gstrn:GameStartToRoomNotify = ntf as GameStartToRoomNotify
@@ -691,6 +698,11 @@ package Class
 			var res:AutoEnterRequest = new AutoEnterRequest();
 			client.sendRequest(res,client_response);
 			request_time = new Date();
+		}
+		
+		public static function sendRepealRequest():void
+		{
+			client.sendRequest(new RepealSendCardRequest(), client_response);
 		}
 
 		//连接服务器
