@@ -69,7 +69,10 @@ public class LoginXingCloud implements Login
 					CUtil.toStatusLine("getWin",  
 							userProfile.getWin(), sb);
 					log.info(sb.toString());
-					return new LoginInfo(new XingCloudUser(userProfile, login.platform_user_data), "");
+					XingCloudUser user = new XingCloudUser(userProfile, login.platform_user_data);
+					user.addScore(1);
+					user.save();
+					return new LoginInfo(user, "");
 				}
 			} catch (Throwable e) {
 				log.error(e.getMessage(), e);
