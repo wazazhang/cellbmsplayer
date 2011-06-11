@@ -284,6 +284,10 @@ public class Player
 		return l;
 	}
 	
+	public void onGameStart(){
+		this.is_ready = false;
+	}
+	
 	public ResultPak onPlayerWin(int p){
 		this.is_ready = false;
 		this.isOpenIce = false;
