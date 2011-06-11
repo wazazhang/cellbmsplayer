@@ -15,6 +15,18 @@ package Class
 			return  webRoot+'image/button/fastBt.png';
 		}
 		
+		public static function get guestHead():String
+		{
+			return  webRoot+'image/head.png';
+		}
+		
+		public static function get start():String
+		{
+			return  webRoot+'image/start.png';
+		}
+		
+		
+		
 		public function WebResource()
 		{
 

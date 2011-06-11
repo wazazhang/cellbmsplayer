@@ -21,6 +21,7 @@
 			import Class.Resource;
 			import Class.Server;
 			import Class.TimesCtr;
+			import Class.WebResource;
 			
 			import com.fc.lami.Messages.GameOverNotify;
 			import com.fc.lami.Messages.PlayerData;
@@ -392,7 +393,7 @@
 	
 	<mx:LinkButton x="876" y="10" label="回到大厅" color="#FFFDFD" click="returnRoom()"/>
 	
-	<mx:Image id="turnStartImg" horizontalCenter="0" verticalCenter="0" source="image/start.png" alpha="0.0" visible="false" />
+	<mx:Image id="turnStartImg" horizontalCenter="0" verticalCenter="0" source="{WebResource.start}" alpha="0.0" visible="false" />
 	
 	<mx:Parallel id="turnStartEft" target="{turnStartImg}" effectEnd="turnStartImg.visible=false">
 		<mx:Fade duration="1500" alphaFrom="1.0" alphaTo="0.0"></mx:Fade>
@@ -409,7 +410,7 @@
 		
 		<mx:Label x="10" y="10" text="游戏信息" color="#FFFDFD"/>
 		<mx:Label x="45" y="39" text="剩余手牌:{Server.game.leftCard}" color="#FFFEFE"/>
-		<mx:Image x="10" y="32" source="image/pai.jpg"/>
+		<mx:Image x="10" y="32" source="{Resource.pai}"/>
 		<mx:Label x="10" y="74" text="玩家信息" color="#FFFFFF"/>
 		<mx:Label x="10" y="106" text="积分：{Server.player.score}" color="#FEFEFE"/>
 		<mx:Label x="10" y="91" text="{Server.getPlayerName(Server.player)}" color="#FFFFFF"/>
@@ -431,12 +432,6 @@
 		
 		<mx:Image x="100" y="2" source="{game.gamer.isCold?Resource.wpb:Resource.ypb}" > </mx:Image>
 		
-		
-		<!--
-		<mx:Label x="1" y="92" text="shift:{game.gamer.keydwon?'是':'否'}" color="black"/>
-		
-		<mx:Image x="5" y="5" width="50" height="50" source="image/man.png"/>
-		-->
 		
 	</mx:Canvas>
 	

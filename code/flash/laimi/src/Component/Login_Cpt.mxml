@@ -4,6 +4,7 @@
 		   creationComplete="init()"  backgroundColor="#C1C1C1" themeColor="#FFFFFF">
 		<mx:Script>
 			<![CDATA[
+				import Class.Resource;
 				import Class.Server;
 				
 				import com.fc.lami.Messages.PlayerData;
@@ -184,7 +185,7 @@
 			<mx:Label text="ver 0.9" width="628" id="version" textAlign="center" horizontalCenter="0" bottom="0"/>
 		</mx:Canvas>
 			
-		<mx:Canvas id="selectRoom" width="100%" height="100%" backgroundImage="image/pdbg.png" visible="false">	
+		<mx:Canvas id="selectRoom" width="100%" height="100%" backgroundImage="{Resource.pdbg}" visible="false">	
 			
 			<!--
 			<mx:DataGrid id="list" width="606" styleName="dg" height="372"  headerHeight="0"
