@@ -22,6 +22,7 @@ import com.fc.lami.Messages.SubmitResponse;
 import com.fc.lami.Messages.SynchronizeResponse;
 import com.fc.lami.Messages.TurnEndNotify;
 import com.fc.lami.Messages.TurnStartNotify;
+import com.fc.lami.Messages.TimeOutNotify;;
 
 public class Game implements Runnable
 {
@@ -628,9 +629,6 @@ public class Game implements Runnable
 	public void PlayerRepeal(){
 		if (matrix_old!=null){
 			repeal();
-			if (playerGetCard(3)==3){
-				toNextPlayer();
-			}
 		}
 	}
 	
@@ -925,6 +923,7 @@ public class Game implements Runnable
 					cur_time - turn_start_time>=LamiConfig.TURN_INTERVAL){
 				System.err.println("player " + getCurPlayer() + " 超时");
 				System.out.println(cur_time);
+				desk.broadcast(new TimeOutNotify(getCurPlayer().player_id));
 				if (!player_put.isEmpty() || isProcessed()/*|| process_open_ice*/){
 					if (submit() == SubmitResponse.SUBMIT_RESULT_SUCCESS){
 						
