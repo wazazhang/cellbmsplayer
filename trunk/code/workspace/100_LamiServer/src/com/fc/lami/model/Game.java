@@ -215,6 +215,9 @@ public class Game implements Runnable
 	}
 	
 	public Player getNextPlayer(){
+		if (player_list.length == 0){
+			return null;
+		}
 		int z = (cur_player_index+1) % player_list.length;
 		return player_list[z];
 	}
