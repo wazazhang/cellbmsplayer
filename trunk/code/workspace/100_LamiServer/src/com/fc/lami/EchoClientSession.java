@@ -258,6 +258,7 @@ public class EchoClientSession implements ClientSessionListener
 					Player players[] = player.cur_desk.getPlayerList();
 					PlayerState[] ps = new PlayerState[players.length];
 					for (int i = 0; i <ps.length; i++){
+						ps[i] = new PlayerState();
 						ps[i].player_id = players[i].player_id;
 						ps[i].is_ready = players[i].is_ready;
 						ps[i].is_openice = players[i].isOpenIce;
@@ -292,6 +293,7 @@ public class EchoClientSession implements ClientSessionListener
 					Player players[] = player.cur_desk.getPlayerList();
 					PlayerState[] ps = new PlayerState[players.length];
 					for (int i = 0; i <ps.length; i++){
+						ps[i] = new PlayerState();
 						ps[i].player_id = players[i].player_id;
 						ps[i].is_ready = players[i].is_ready;
 						ps[i].is_openice = players[i].isOpenIce;
