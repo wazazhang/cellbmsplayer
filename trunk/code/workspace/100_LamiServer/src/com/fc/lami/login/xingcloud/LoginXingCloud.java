@@ -60,14 +60,18 @@ public class LoginXingCloud implements Login
 							userProfile.getUid(), sb);
 					CUtil.toStatusLine("getPlatformAddress",  
 							userProfile.getPlatformAddress(), sb);
-					CUtil.toStatusLine("getLose",  
-							userProfile.getLose(), sb);
-					CUtil.toStatusLine("getPoint",  
-							userProfile.getPoint(), sb);	
-					CUtil.toStatusLine("getScore",  
-							userProfile.getScore(), sb);
-					CUtil.toStatusLine("getWin",  
-							userProfile.getWin(), sb);
+					try {
+						CUtil.toStatusLine("getLose",  
+								userProfile.getLose(), sb);
+						CUtil.toStatusLine("getPoint",  
+								userProfile.getPoint(), sb);	
+						CUtil.toStatusLine("getScore",  
+								userProfile.getScore(), sb);
+						CUtil.toStatusLine("getWin",  
+								userProfile.getWin(), sb);
+					} catch (Throwable e) {
+						log.error(e.getMessage(), e);
+					}
 					log.info(sb.toString());
 					return new LoginInfo(new XingCloudUser(userProfile, login.platform_user_data), "");
 				}

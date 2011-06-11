@@ -27,7 +27,7 @@ public class LamiSFSExtension extends XingCloudSFSExtension
 	{
 		super.init();
 		
-		if (adapter == null) 
+//		if (adapter == null) 
 		{
 			trace("\n===================================================\n" +
 					"= Lami SFSExtension initializing ...\n" +
