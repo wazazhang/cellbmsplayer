@@ -70,8 +70,6 @@ public class LoginXingCloud implements Login
 							userProfile.getWin(), sb);
 					log.info(sb.toString());
 					XingCloudUser user = new XingCloudUser(userProfile, login.platform_user_data);
-					user.addScore(1);
-					user.save();
 					return new LoginInfo(user, "");
 				}
 			} catch (Throwable e) {
