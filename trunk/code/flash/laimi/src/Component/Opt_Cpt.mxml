@@ -32,7 +32,8 @@
 			
 			public function click4():void
 			{
-				game.gamer.reset();
+//				game.gamer.reset();
+				Server.sendRepealRequest();
 			}
 			
 			public function click5():void
