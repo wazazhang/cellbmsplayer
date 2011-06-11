@@ -28,6 +28,7 @@ package Class
 	import com.fc.lami.Messages.ExitRoomNotify;
 	import com.fc.lami.Messages.ExitRoomRequest;
 	import com.fc.lami.Messages.ExitRoomResponse;
+	import com.fc.lami.Messages.FreshRoomListNotify;
 	import com.fc.lami.Messages.GameOverNotify;
 	import com.fc.lami.Messages.GameOverToRoomNotify;
 	import com.fc.lami.Messages.GameResetNotify;
@@ -387,7 +388,10 @@ package Class
 				var grn:GameResetNotify = ntf as GameResetNotify
 				game.lami.onPlayerReset(getPlayer(grn.player_id));	
 			}
-			
+			else if (ntf is FreshRoomListNotify){
+				var frln:FreshRoomListNotify = ntf as FreshRoomListNotify;
+				login_cpt.rooms = frln.rooms;
+			}
 			
 		}
 		
