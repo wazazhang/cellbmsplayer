@@ -53,7 +53,7 @@ public class LoginXingCloud implements Login
 					return new LoginInfo(new DefaultUser(login.platform_user_data), reason);	
 				} else {
 					log.info("--> get user profile : ");
-					StringBuilder sb = new StringBuilder();
+					StringBuilder sb = new StringBuilder("\n");
 					CUtil.toStatusLine("getClassName", 
 							userProfile.getClassName(), sb);
 					CUtil.toStatusLine("getUid", 
