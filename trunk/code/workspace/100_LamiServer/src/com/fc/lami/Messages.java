@@ -1112,6 +1112,17 @@ public class Messages {
 		}
 	}
 	
+	public static class TimeOutNotify extends FlashMessage
+	{
+		public int player_id;
+		
+		public TimeOutNotify(int pid){
+			this.player_id = pid;
+		}
+		
+		public TimeOutNotify(){}
+	}
+	
 	public static class GetPlayerDataRequest extends FlashMessage
 	{
 		public int player_id;

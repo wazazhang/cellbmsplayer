@@ -14,7 +14,7 @@ import com.net.NetDataTypes;
 public class MessageCodecJava implements MutualMessageCodec
 {
 	public String getVersion() {
-		return "Sat Jun 11 04:57:19 GMT 2011";
+		return "Sat Jun 11 07:32:30 GMT 2011";
 	}
 
 	public void readExternal(MutualMessage msg, NetDataInput in) throws IOException 
@@ -243,6 +243,9 @@ public class MessageCodecJava implements MutualMessageCodec
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.SynchronizeResponse.class)) {
 			_r((com.fc.lami.Messages.SynchronizeResponse)msg, in); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.TimeOutNotify.class)) {
+			_r((com.fc.lami.Messages.TimeOutNotify)msg, in); return;
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.TurnEndNotify.class)) {
 			_r((com.fc.lami.Messages.TurnEndNotify)msg, in); return;
@@ -479,6 +482,9 @@ public class MessageCodecJava implements MutualMessageCodec
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.SynchronizeResponse.class)) {
 			_w((com.fc.lami.Messages.SynchronizeResponse)msg, out); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.TimeOutNotify.class)) {
+			_w((com.fc.lami.Messages.TimeOutNotify)msg, out); return;
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.TurnEndNotify.class)) {
 			_w((com.fc.lami.Messages.TurnEndNotify)msg, out); return;
@@ -1446,6 +1452,17 @@ public class MessageCodecJava implements MutualMessageCodec
 		out.writeExternalArray(msg.matrix);
 		out.writeExternalArray(msg.player_card);
 		out.writeInt(msg.left_card);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.TimeOutNotify
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.TimeOutNotify new_com_fc_lami_Messages_TimeOutNotify(){return new com.fc.lami.Messages.TimeOutNotify();}
+	private void _r(com.fc.lami.Messages.TimeOutNotify msg, NetDataInput in) throws IOException {
+		msg.player_id = in.readInt();
+	}
+	private void _w(com.fc.lami.Messages.TimeOutNotify msg, NetDataOutput out) throws IOException {
+		out.writeInt(msg.player_id);
 	}
 
 //	----------------------------------------------------------------------------------------------------
