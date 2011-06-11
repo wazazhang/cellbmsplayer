@@ -71,6 +71,7 @@ public class Game implements Runnable
 			for (CardData cd:player_list[i].card_list.values()){
 				cds[p++] = cd;
 			}
+			player_list[i].onGameStart();
 			player_list[i].session.send(new GameStartNotify(cds, player_list[i].isCanResetGame()));
 		}
 		
