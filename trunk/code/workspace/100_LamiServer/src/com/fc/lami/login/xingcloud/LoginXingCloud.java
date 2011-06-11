@@ -97,8 +97,10 @@ public class LoginXingCloud implements Login
 		@Override
 		synchronized public User save() {
 			try {
+				log.info("save user : " + userProfile.getUid());
 				persistenceSession.put(userProfile);
 				persistenceSession.flush();
+				log.info("save user : " + userProfile.getUid() + " succeed !");
 			} catch (Throwable e) {
 				log.error(e.getMessage(), e);
 			}
