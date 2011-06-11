@@ -14,7 +14,7 @@ import com.net.NetDataTypes;
 public class MessageCodecJava implements MutualMessageCodec
 {
 	public String getVersion() {
-		return "Fri Jun 10 11:48:41 CST 2011";
+		return "Sat Jun 11 04:57:19 GMT 2011";
 	}
 
 	public void readExternal(MutualMessage msg, NetDataInput in) throws IOException 
@@ -66,6 +66,9 @@ public class MessageCodecJava implements MutualMessageCodec
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.ExitRoomResponse.class)) {
 			_r((com.fc.lami.Messages.ExitRoomResponse)msg, in); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.FreshRoomListNotify.class)) {
+			_r((com.fc.lami.Messages.FreshRoomListNotify)msg, in); return;
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.GameOverNotify.class)) {
 			_r((com.fc.lami.Messages.GameOverNotify)msg, in); return;
@@ -299,6 +302,9 @@ public class MessageCodecJava implements MutualMessageCodec
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.ExitRoomResponse.class)) {
 			_w((com.fc.lami.Messages.ExitRoomResponse)msg, out); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.FreshRoomListNotify.class)) {
+			_w((com.fc.lami.Messages.FreshRoomListNotify)msg, out); return;
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.GameOverNotify.class)) {
 			_w((com.fc.lami.Messages.GameOverNotify)msg, out); return;
@@ -700,6 +706,17 @@ public class MessageCodecJava implements MutualMessageCodec
 		msg.rooms = (com.fc.lami.Messages.RoomSnapShot[])in.readExternalArray(com.fc.lami.Messages.RoomSnapShot.class);
 	}
 	private void _w(com.fc.lami.Messages.ExitRoomResponse msg, NetDataOutput out) throws IOException {
+		out.writeExternalArray(msg.rooms);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.FreshRoomListNotify
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.FreshRoomListNotify new_com_fc_lami_Messages_FreshRoomListNotify(){return new com.fc.lami.Messages.FreshRoomListNotify();}
+	private void _r(com.fc.lami.Messages.FreshRoomListNotify msg, NetDataInput in) throws IOException {
+		msg.rooms = (com.fc.lami.Messages.RoomSnapShot[])in.readExternalArray(com.fc.lami.Messages.RoomSnapShot.class);
+	}
+	private void _w(com.fc.lami.Messages.FreshRoomListNotify msg, NetDataOutput out) throws IOException {
 		out.writeExternalArray(msg.rooms);
 	}
 

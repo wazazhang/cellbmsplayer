@@ -815,6 +815,17 @@ public class Messages {
 		}
 	}
 	
+	public static class FreshRoomListNotify extends FlashMessage
+	{
+		public RoomSnapShot rooms[];
+		
+		public FreshRoomListNotify(RoomSnapShot rooms[]){
+			this.rooms = rooms;
+		}
+		
+		public FreshRoomListNotify(){}
+	}
+	
 	/** 进桌子 */
 	public static class EnterDeskRequest extends FlashMessage
 	{
