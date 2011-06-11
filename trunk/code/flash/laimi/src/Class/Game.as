@@ -390,6 +390,7 @@ package Class
 			//gamer.canOpearation = false;
 			gamer.isMyturn = false;
 			
+			//处理结束时候还有选中的牌组
 			if(gamer.selectedArrayCard != null)
 			{
 				for each(var card:Card in gamer.selectedArrayCard)
@@ -407,6 +408,7 @@ package Class
 				gamer.selectedArrayCard = null
 
 			}	
+			//处理结束时候还有选中的牌
 			if(gamer.selectedCard != null)
 			{
 				gamer.selectedCard.cardUI.isSelected = false;
