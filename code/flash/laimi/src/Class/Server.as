@@ -592,10 +592,13 @@ package Class
 			else if (res is LeaveDeskResponse){
 				var ldr : LeaveDeskResponse = res as LeaveDeskResponse;
 				if (ldr.result == LeaveDeskResponse.LEAVE_DESK_RESULT_SUCCESS){
+					
+					game.lami.stopTime();
 					app.removeChild(game.lami);
 					room_cpt.visible = true;
 					game = null;
 					//game_cpt.visible = true;
+					
 				}else if (ldr.result == LeaveDeskResponse.LEAVE_DESK_RESULT_FAIL_GAMING){
 					Alert.show("正在游戏中不能退出");
 				}
@@ -717,7 +720,7 @@ package Class
 			}
 		}
 		
-		public static function isVisitor():Boolean
+		public static function get isVisitor():Boolean
 		{
 			return is_visitor;
 		}

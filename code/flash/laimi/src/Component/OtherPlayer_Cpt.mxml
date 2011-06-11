@@ -110,6 +110,7 @@
 					
 				var s:Number = new Date().getTime() - oprStartTime.getTime(); 
 				
+				var ss:int = Server.game.timeCtr.optionTime;
 				pbtime.setProgress(Server.game.timeCtr.optionTime - s, Server.game.timeCtr.optionTime); 
 				var point:Number = s / Server.game.timeCtr.optionTime;
 				
@@ -135,11 +136,15 @@
 			public function set setPlayer(value:PlayerData):void
 			{
 				player = value;
-				if (player==null){
+				if ( player==null||player.player_id == Server.player.player_id)
+				{
 					visible = false;
-				}else{
+				}else
+				{
 					visible = true;
 				}
+				
+				
 			}
 			
 		]]>
@@ -160,6 +165,6 @@
 	
 	<mx:SWFLoader  x="87" y="24" source="{Resource.time}" visible="{pbtime.visible}" width="30" height="30"></mx:SWFLoader>
 	
-	<mx:Label id="clock" color="0xffffff" x="94" y="32" visible="{pbtime.visible}"/>
+	<mx:Label id="clock" color="0xffffff" x="95" y="33" visible="{pbtime.visible}" width="20" textAlign="center"/>
 	
 </mx:Canvas>
