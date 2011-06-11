@@ -498,6 +498,7 @@ package Class
 				var delay:int = response.getTime() - request_time.getTime();
 				
 				
+				
 				if(enterdesk.result==EnterDeskResponse.ENTER_DESK_RESULT_SUCCESS)
 				{
 					is_visitor = false;
@@ -510,7 +511,7 @@ package Class
 					
 					room.getDesk(enterdesk.desk_id).sitDown(player.player_id, enterdesk.seat);
 					
-					game.lami.initDesk(room.getDesk(enterdesk.desk_id));
+					game.lami.initDesk(room.getDesk(enterdesk.desk_id),enterdesk.ps);
 					
 				}
 				else if(enterdesk.result == EnterDeskResponse.ENTER_DESK_RESULT_FAIL_NO_IDLE_DESK)
@@ -528,6 +529,8 @@ package Class
 			}
 			else if (res is EnterDeskAsVisitorResponse){
 				var edav : EnterDeskAsVisitorResponse = res as EnterDeskAsVisitorResponse;
+				
+				
 				if (edav.result ==  EnterDeskAsVisitorResponse.ENTER_DESK_VISITOR_RESULT_SUCCESS){
 					is_visitor = true;
 					room_cpt.visible = false;
@@ -538,9 +541,11 @@ package Class
 					game.timeCtr.sumTimerSet(edav.turn_interval);
 					game.timeCtr.oprTimerSet(edav.operate_time);
 					
-					game.lami.initDesk(room.getDesk(edav.desk_id));
+					game.lami.initDesk(room.getDesk(edav.desk_id),edav.ps);
 					SynchronizeCard();
 				}
+				
+				
 				else if (edav.result == EnterDeskAsVisitorResponse.ENTER_DESK_VISITOR_RESULT_FAIL_ALREADY_IN_DESK){
 					Alert.show("已经在当前桌子里了");
 				}

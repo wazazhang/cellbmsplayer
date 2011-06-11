@@ -77,7 +77,7 @@
 			
 			
 			
-			public function initDesk(desk:Desk):void
+			public function initDesk(desk:Desk,playerstats:Array):void
 			{
 				if(game.matrix==null)
 				{
@@ -90,7 +90,7 @@
 				resetGameAllData();
 				optCpt.reset();
 				player = Server.player;
-				initSeat(desk);
+				initSeat(desk,playerstats);
 			}
 			
 			
@@ -110,7 +110,7 @@
 			}
 			
 			//初始位置
-			public function initSeat(desk:Desk):void
+			public function initSeat(desk:Desk,playerstats:Array):void
 			{
 				nextOtherPlayer_Cpt = nextPlayer1;
 				nextPlayer1.nextOtherPlayer_Cpt = nextPlayer2;
@@ -132,6 +132,8 @@
 					if(index==4)
 						index = 0
 					cpt.setPlayer = Server.getPlayer(getPlayerIDbySeatID(index));
+					cpt.setState(playerstats);
+					
 					cpt.seat = getDir(index);
 					cpt = cpt.nextOtherPlayer_Cpt;
 				}
@@ -182,7 +184,7 @@
 				if(desk ==null || desk_id!=desk.desk_id)
 					return
 
-				initSeat(desk);
+				initSeat(desk,null);
 				addInfo(Server.getPlayerName(Server.getPlayer(player_id))+"进入桌子");
 			}
 			
@@ -192,7 +194,7 @@
 			{
 				if(desk ==null || desk_id!=desk.desk_id)
 					return	
-				initSeat(desk);
+				initSeat(desk,null);
 				addInfo(Server.getPlayerName(Server.getPlayer(player_id))+"离开桌子");
 			}
 			
