@@ -104,6 +104,7 @@
 		<mx:Array id="com_server_addrs_Data">
 			<mx:Object label="127.0.0.1:19821"/>
 			<mx:Object label="192.168.1.71:19821"/>
+			<mx:Object label="yagamiya3:19821"/>
 			<mx:Object label="127.0.0.1:9933"/>
 			<mx:Object label="rr2.usxingcloud.info:40001"/>
 		</mx:Array>
