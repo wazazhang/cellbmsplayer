@@ -62,12 +62,12 @@
 			
 			public function println(info:String):void
 			{
-				txt_debug.text = txt_debug.text + info + "\n";
+				this.login_cpt.txt_debug.text = this.login_cpt.txt_debug.text + info + "\n";
 			}
 			
 			public function print(info:String):void
 			{
-				txt_debug.text = txt_debug.text + info;
+				this.login_cpt.txt_debug.text = this.login_cpt.txt_debug.text + info;
 			}
 			
 			public function init():void
@@ -224,7 +224,6 @@
 	</mx:Script>
 	<ns1:Login_Cpt verticalCenter="0" horizontalCenter="0"  id="login_cpt">
 	</ns1:Login_Cpt>
-	<mx:Text width="960" height="356" id="txt_debug" horizontalCenter="0" top="10" fontFamily="Courier New"/>
 	
 
 	<!--
