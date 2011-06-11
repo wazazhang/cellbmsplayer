@@ -469,6 +469,6 @@
 	<mx:TextArea  id="TA_gameinfoStr"  x="12" y="405" color="0xffffff" width="220" height="185" backgroundAlpha="0.0" borderStyle="none"  editable="false" text="{gameinfoStr}" />
 	
 	<mx:Button x="890" y="558" click="pubTalk()" width="49" skin="@Embed(source='../image/button/tj.png')"  height="28" downSkin="@Embed(source='../image/button/tj1.png')"/>
-	<mx:TextInput  color="0xffffff" id="titalk" x="731" y="560" width="150" alpha="0.5" backgroundColor="0xD2A55A" borderColor="0x8B5505" themeColor="#BF7204"/>
+	<mx:TextInput  color="0xffffff" id="titalk" x="731" y="562" width="152" alpha="0.5" backgroundColor="0xD2A55A" borderColor="0x8B5505" themeColor="#BF7204" cornerRadius="3" borderStyle="solid"/>
 
 </mx:Canvas>
