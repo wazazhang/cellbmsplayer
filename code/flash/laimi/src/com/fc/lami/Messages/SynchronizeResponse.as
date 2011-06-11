@@ -6,7 +6,7 @@ package com.fc.lami.Messages
 
 
 	/**
-	 * Java Class [74] [com.fc.lami.Messages.SynchronizeResponse]<br>
+	 * Java Class [75] [com.fc.lami.Messages.SynchronizeResponse]<br>
 	 * 此代码为自动生成。不需要在此修改。若有错误，请修改代码生成器。
 	 */
 	[Bindable]
