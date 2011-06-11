@@ -6,34 +6,34 @@ package com.fc.lami.Messages
 
 
 	/**
-	 * Java Class [55] [com.fc.lami.Messages.ResultPak]<br>
+	 * Java Class [48] [com.fc.lami.Messages.PlayerState]<br>
 	 * 此代码为自动生成。不需要在此修改。若有错误，请修改代码生成器。
 	 */
 	[Bindable]
-	public class ResultPak extends Message
+	public class PlayerState extends Message
 	{
-		/** Java type is : <font color=#0000ff>int</font> */
-		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
-		public var point :  int;
 		/** Java type is : <font color=#0000ff>int</font> */
 		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
 		public var player_id :  int;
 		/** Java type is : <font color=#0000ff>boolean</font> */
 		[JavaType(name="boolean", leaf_type=NetDataTypes.TYPE_BOOLEAN)]
-		public var is_win :  Boolean;
+		public var is_ready :  Boolean;
+		/** Java type is : <font color=#0000ff>boolean</font> */
+		[JavaType(name="boolean", leaf_type=NetDataTypes.TYPE_BOOLEAN)]
+		public var is_openice :  Boolean;
 
 		/**
-		 * @param point as <font color=#0000ff>int</font>
 		 * @param player_id as <font color=#0000ff>int</font>
-		 * @param is_win as <font color=#0000ff>boolean</font>		 */
-		public function ResultPak(
-			point :  int = 0,
+		 * @param is_ready as <font color=#0000ff>boolean</font>
+		 * @param is_openice as <font color=#0000ff>boolean</font>		 */
+		public function PlayerState(
 			player_id :  int = 0,
-			is_win :  Boolean = false) 
+			is_ready :  Boolean = false,
+			is_openice :  Boolean = false) 
 		{
-			this.point = point;
 			this.player_id = player_id;
-			this.is_win = is_win;
+			this.is_ready = is_ready;
+			this.is_openice = is_openice;
 		}
 	}
 }
