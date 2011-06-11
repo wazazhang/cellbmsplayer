@@ -227,6 +227,8 @@
 			public function click(event:MouseEvent):void
 			{
 				
+				
+				
 				//放置非自己会合往公共牌区操作
 				if((!isPlayerOwner) && (!game.gamer.isMyturn))
 				{
@@ -405,10 +407,14 @@
 			{
 				ef.play();
 			}
+			
+			
+
 		]]>
 	</mx:Script>
 	<mx:Image id="img0" visible="{isShow}" width="28" height="38"></mx:Image>
 	<mx:Canvas width="100%" height="100%" backgroundColor="#000000" backgroundAlpha="0.2" visible="{card==null?false:card.isSended}"></mx:Canvas>
 	<mx:SWFLoader width="50" height="100" y="5" source="{Resource.guang}" visible="{isSelected}"></mx:SWFLoader>
 	<mx:Glow id="ef" target="{this}" color="0xff0000" repeatCount="5" duration="500" strength="10" ></mx:Glow>
+	<mx:Canvas width="100%" height="100%" backgroundColor="#000000" backgroundAlpha="0.00"></mx:Canvas>
 </mx:Canvas>
