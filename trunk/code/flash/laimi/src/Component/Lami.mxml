@@ -86,6 +86,7 @@
 				nextPlayer1.reset();
 				nextPlayer2.reset();
 				nextPlayer3.reset();
+				nextPlayer4.reset();
 				resetGameAllData();
 				optCpt.reset();
 				player = Server.player;
@@ -114,6 +115,8 @@
 				nextOtherPlayer_Cpt = nextPlayer1;
 				nextPlayer1.nextOtherPlayer_Cpt = nextPlayer2;
 				nextPlayer2.nextOtherPlayer_Cpt = nextPlayer3;
+				nextPlayer3.nextOtherPlayer_Cpt = nextPlayer4;
+				
 				this.desk = desk;
 				switch(player.player_id)
 				{
@@ -226,6 +229,18 @@
 				
 			}
 			
+			//响应回到房间
+			public function stopTime():void
+			{
+				nextPlayer1.gameing = false;
+				nextPlayer2.gameing = false;
+				nextPlayer3.gameing = false;
+				nextPlayer4.gameing = false;
+				
+				Server.game.timeCtr.stop();
+			}
+			
+			
 			//根据用户ID获取用户组建
 			public function getOtherPlayerCptByPlayerId(playerid:int):OtherPlayer_Cpt
 			{
@@ -290,6 +305,8 @@
 			public function onGameOver(gvn:GameOverNotify):void
 			{
 				addInfo("游戏结束");
+				
+				stopTime();
 				var rsCpt:Result_Cpt = new Result_Cpt()
 				optCpt.reset();	
 					
@@ -307,6 +324,7 @@
 				nextPlayer1.gameEnd();
 				nextPlayer2.gameEnd();
 				nextPlayer3.gameEnd();
+				nextPlayer4.gameEnd();
 				resetGameAllData();
 			}
 			
@@ -325,6 +343,7 @@
 				nextPlayer1.ready = false;
 				nextPlayer2.ready = false;
 				nextPlayer3.ready = false;
+				nextPlayer4.ready = false;
 			}
 			
 			
@@ -374,10 +393,10 @@
 	<ns1:Matrix_Cpt id="mx" y="115"  height="201" horizontalCenter="3">
 	</ns1:Matrix_Cpt>
 	
-	<mx:ProgressBar id="sumbar" width="465" label="" height="10" mode="manual" labelPlacement="center" y="398" x="246"/>
-	<mx:ProgressBar id="optbar" height="10" width="465" label="" mode="manual" labelPlacement="center" x="246" y="410"/>
+	<mx:ProgressBar id="sumbar" width="465" label="" height="10" mode="manual" labelPlacement="center" y="398" x="246"  visible="{!Server.isVisitor}"/>
+	<mx:ProgressBar id="optbar" height="10" width="465" label="" mode="manual" labelPlacement="center" x="246" y="410"  visible="{!Server.isVisitor}"/>
 	
-	<ns1:UserMatrix_Cpt id="umx" height="202" x="245" y="415" width="479">
+	<ns1:UserMatrix_Cpt id="umx" height="202" x="245" y="415" width="479"  visible="{!Server.isVisitor}">
 	</ns1:UserMatrix_Cpt>
 	
 
@@ -395,6 +414,8 @@
 	<ns1:OtherPlayer_Cpt id="nextPlayer3" x="825" y="200">
 	</ns1:OtherPlayer_Cpt>
 	
+	<ns1:OtherPlayer_Cpt id="nextPlayer4" y="460" horizontalCenter="0" visible="{Server.isVisitor}">
+	</ns1:OtherPlayer_Cpt>
 	
 	<mx:LinkButton x="876" y="10" label="回到大厅" color="#FFFDFD" click="returnRoom()"/>
 	
@@ -423,25 +444,21 @@
 	
 	<!--玩家信息区-->
 	
-	<mx:Canvas id="useinfo" width="470" height="39" x="243" y="422" 
+	<mx:Canvas id="useinfo" width="470" height="39" x="243" y="422"  visible="{!Server.isVisitor}"
 			   verticalScrollPolicy="off" horizontalScrollPolicy="off" backgroundImage="@Embed(source='../image/bg/opbg.png')">
 		
 		<mx:Label x="7" y="2" text="{Server.getPlayerName(Server.player)}" color="#010101"/>
 		
 		<mx:Image x="100" y="16" source="{game.gamer.isMyturn?Resource.yxz:Resource.ddz}" ></mx:Image>
 		
-		
 		<mx:Label x="7" y="17" text="手牌：{game.gamer.handCard.length}" color="#010101"/>
 		
-		
-		
 		<mx:Image x="100" y="2" source="{game.gamer.isCold?Resource.wpb:Resource.ypb}" > </mx:Image>
-		
-		
+				
 	</mx:Canvas>
 	
 	<!--玩家操作区-->
-	<ns1:Opt_Cpt id="optCpt" height="177" y="421" x="409">
+	<ns1:Opt_Cpt id="optCpt" height="177" y="421" x="409"  visible="{!Server.isVisitor}">
 	</ns1:Opt_Cpt>
 	
 	<mx:Image source="{Resource.talkbg}" x="720" y="397" alpha="0.5"></mx:Image>

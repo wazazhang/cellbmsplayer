@@ -453,6 +453,7 @@ package Class
 			lami.nextPlayer1.gameing = false;
 			lami.nextPlayer2.gameing = false;
 			lami.nextPlayer3.gameing = false;
+			lami.nextPlayer4.gameing = false;
 			
 			lami.optCpt.openOrder();
 			
