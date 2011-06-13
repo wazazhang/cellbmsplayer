@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" backgroundColor="0xa27937" 
+				layout="absolute" 
+				xmlns:ns1="Component.*"
+				creationComplete="init()"  
+				preloader="Class.Myloading"  
+				width="960" height="600">
+	<mx:Style>
+		global {font-size:12px}
+	</mx:Style>
+	<mx:Script>
+		<![CDATA[
+			import Class.Game;
+			import Class.Server;
+			
+			import Component.Login_Cpt;
+			
+			import com.fc.lami.MessageCodec;
+			import com.fc.lami.Messages.PlatformUserData;
+			import com.fc.lami.Messages.PlayerData;
+			import com.net.client.minaimpl.ServerSessionImpl;
+			import com.net.client.sfsimpl.SFSSessionImpl;
+			
+			import mx.controls.Alert;
+			
+			public function init():void
+			{
+				var xml : XML = new XML(
+					"<game>" +
+					"<webbase>http://rr2.usxingcloud.info/9832165470_online/front/flash</webbase>" +
+					"<sfs>rr2.usxingcloud.info:40001</sfs>" +
+					"<lang>cn</lang>" +
+					"<sfszone>9832165470online</sfszone>" +
+					"</game>");
+				var webbase : XMLList = xml.child("webbase");
+				trace(webbase.text());
+				
+				com_sfs_zone.visible = chk_sfs.selected;
+				
+			}
+
+			protected function chk_mina_clickHandler(event:MouseEvent):void
+			{
+				chk_sfs.selected = !chk_mina.selected;
+				com_sfs_zone.visible = chk_sfs.selected;
+			}
+			protected function chk_sfs_clickHandler(event:MouseEvent):void
+			{
+				chk_mina.selected = !chk_sfs.selected;
+				com_sfs_zone.visible = chk_sfs.selected;
+			}
+
+
+			protected function btn_connect_clickHandler(event:MouseEvent):void
+			{
+				Server.app = this
+				
+				if (txt_uid.text == null || txt_uid.text.length == 0)
+				{
+					Alert.show("名字不能为空");
+					return;	
+				}
+				
+				var codec : MessageCodec = new MessageCodec();
+				
+				if (chk_mina.selected)
+				{
+					Server.init(new ServerSessionImpl(codec));
+				}
+				if (chk_sfs.selected) 
+				{
+					Server.init(new SFSSessionImpl(codec).setZone(com_sfs_zone.text));
+				}
+				if (chk_mina.selected || chk_sfs.selected) 
+				{
+					Server.initUserLogin(
+						new PlatformUserData(
+							null,
+							txt_uid.text,
+							txt_uid.text, 
+							"male", 
+							"http://r.337.com/plugin_assets/redmine_elextech_platform/images/headpic.gif"),
+						com_server_addrs.text.split(":")[0],
+						com_server_addrs.text.split(":")[1]
+					);
+					this.removeAllChildren();
+					Server.login_cpt = new Login_Cpt();
+					Server.login_cpt.visible = true;
+					this.addChild(Server.login_cpt);
+				}
+				else 
+				{
+					Alert.show("未选择通信协议");
+				}
+			}
+
+		]]>
+	</mx:Script>
+	<mx:TextInput x="105" y="74" width="344" id="txt_uid"/>
+	<mx:Button x="105" y="170" label="连接" click="btn_connect_clickHandler(event)" id="btn_connect"/>
+	<mx:CheckBox x="105" y="106" label="Apache Mina" id="chk_mina" selected="true" click="chk_mina_clickHandler(event)"/>
+	<mx:CheckBox x="105" y="138" label="SmartFoxServer" id="chk_sfs" click="chk_sfs_clickHandler(event)"/>
+	<mx:ComboBox x="105" y="42" id="com_server_addrs" width="344" editable="true">
+		<mx:Array id="com_server_addrs_Data">
+			<mx:Object label="127.0.0.1:19821"/>
+			<mx:Object label="192.168.1.71:19821"/>
+			<mx:Object label="yagamiya3:19821"/>
+			<mx:Object label="127.0.0.1:9933"/>
+			<mx:Object label="rr2.usxingcloud.info:40001"/>
+		</mx:Array>
+	</mx:ComboBox>
+	<mx:Label x="10" y="45" text="服务器地址" width="87" textAlign="right"/>
+	<mx:Label x="10" y="76" text="用户UID" width="87" textAlign="right"/>
+	<mx:ComboBox x="238" y="137" id="com_sfs_zone" width="211" editable="true">
+		<mx:Array id="com_sfs_zone_Data">
+			<mx:Object label="XML_NAME"/>
+			<mx:Object label="9832165470online"/>
+		</mx:Array>
+	</mx:ComboBox>
+	
+</mx:Application>

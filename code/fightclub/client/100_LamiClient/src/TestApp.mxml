@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+这个应用相当于一个游戏，主要体现如何使用平台获取sns网站用户信息，和与sns网站交互(例如：feed message)
+-->
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"
+				layout="absolute"  implements="elex.socialize.IGameClient" addedToStage="init(event)">
+	<mx:Script>
+		
+		<![CDATA[
+			import elex.socialize.FeedObject;
+			import elex.socialize.IGameClient;
+			import elex.socialize.ISocializeContainer;
+			import elex.socialize.IUserSocialData;
+			import elex.socialize.event.HeaderClickEvent;
+			import elex.socialize.event.SocializeEvent;
+			
+			import flash.events.*;
+			import flash.net.SharedObject;
+			
+			import mx.utils.URLUtil;
+			
+			//平台容器实例引用
+			private var _container:*;
+			
+			//游戏自身的配置信息 对应337 上平台接入所填写的game配置
+			private var config:XML;
+			
+			private var currentUid:String;
+			
+			private function init(e:Event):void{
+				stage.showDefaultContextMenu=false;
+			}
+			
+			//实现IGameClient 接口 平台启动接口
+			public function startUp(container:elex.socialize.ISocializeContainer,config:XML,width:int,height:int):void
+			{
+				
+				Security.allowDomain("*");
+				_container=container;
+				
+				this.config = config;
+				this.width=width;
+				this.height=height;
+				
+				if(!_container)
+				{
+					throw new Error("container is null");
+				}
+				
+				//this.stage.addEventListener(MouseEvent.MOUSE_WHEEL,onMouseWheel);
+				//_container.addEventListener(HeaderClickEvent.HEADERCLICK,onHeaderClick);
+				//test googleAnalysics
+				//_container.trackTransaction({category:"1",cost:"300",money:"0",name: "Prinzessin Stuhl",orderId :"100001258912073359"},1,1);
+				//var useridInfoArr:Array=String(stage.loaderInfo.parameters.sig_user).split("_");
+				this.currentUid=container.uid;
+				setText("uid："+container.uid);
+			}
+		/*
+			private function onHeaderClick(e:HeaderClickEvent):void{
+				setText("onHeaderClick::"+e.action+"\n");
+			}
+			
+			private function onMouseWheel(e:MouseEvent):void{
+				setText("===onMouseWheeling===\n");
+			}
+		*/	
+			public function getAllFriendsInfo(e:Event):void
+			{
+				setText("获取好友信息：");
+				_container.getFriendsInfo(getAllFriendsInfoCallback);
+			}
+
+			public function getAppFriendsInfo(e:Event):void
+			{
+				setText("获取APP好友信息：");
+				_container.getAppFriendsInfo(getAppFriendsInfoCallback);
+			}
+
+			private function getAllFriendsInfoCallback(fusers:Array):void
+			{
+				if(fusers){
+					setText("成功获取好友信息");
+					setText("多少好友："+fusers.length +" friends");
+					printUserInfo(fusers);
+				}else{
+					setText("获取好友信息失败");
+				}
+			}
+			
+			private function getAppFriendsInfoCallback(fusers:Array):void
+			{
+				if(fusers){
+					setText("成功APP获取好友信息");
+					setText("多少APP好友："+fusers.length +" friends");
+					printUserInfo(fusers);
+				}else{
+					setText("获取APP好友信息失败");
+				}
+			}
+
+			public function getUserInfo(e:Event):void
+			{
+				setText("获取自己的信息");
+				_container.getUserProfile(getUserProfileCallback);
+			}
+			
+			public function getUsersInfo(e:Event):void
+			{
+				setText("获取多个用户的信息");
+				_container.getUsersProfiles(getUsersProfilesCallback,["645756231","777180226"]/*此处可设定对应平台的用户id*/);
+			}
+			
+			private function getUsersProfilesCallback(users:Array):void
+			{
+				setText("成功获取多个用户的信息");
+				for each( var user in users){
+					parseUserInfo(user);
+				}
+				
+			}
+			
+			private function getUserProfileCallback(user:IUserSocialData):void
+			{
+				if(Boolean(user)){
+					setText("成功获取自己的信息");
+					parseUserInfo(user);
+				}
+			}
+
+			private function printUserInfo(fusers:Array):void
+			{
+				for (var i:int=0;i<fusers.length; i++){
+					parseUserInfo(fusers[i]);
+				}
+			}
+			
+			private function parseUserInfo(uesrData:IUserSocialData):void{
+				try{
+					var info:String="======list user info=======\n";
+					//IUserSocialData 
+					var user:IUserSocialData=uesrData;
+					//uid
+					
+					currentUid=user.id;
+					info=info +"uid::"+ user.id+"\n";
+					//user name
+					info=info +"name::"+  user.name+"\n";
+					//user header photo
+					info=info +"header photo::"+  user.photoSmall;
+					//其他IUserSocialData属性信息
+					setText(info);
+				}catch(e:Error){
+					trace(e.getStackTrace());
+				}
+			}
+			
+			private function sendFeed(e:Event):void
+			{
+				setText("send feed...");
+				doPostFeed();
+			}
+			public  function doPostFeed():void{
+				if(_container){
+					var fo : FeedObject = new FeedObject([], [10,12],currentUid,["img"],["tlink"],["imglink"]);
+					_container.postFeed(0,postFeedCallBack,fo);
+				}
+			}
+			public function postFeedCallBack(data:*):void{
+				setText("postFeedCallBack..."+String(data));
+			}
+			
+			private function setText(info:String):void
+			{
+				textInfo.text=textInfo.text + info + "\n";
+			}
+			
+			private function showPayments(e:Event):void{
+				navigateToURL(new URLRequest("http://www.baidu.com"),"_blank");
+					//_container.showPayments();
+			}
+			
+			private function inviteFriends(e:Event):void{
+					_container.showInviteFriends(showInviteFriendsCallBack);
+			}
+			
+			private function showInviteFriendsCallBack(data:Object):void{
+				this.setText("showInviteFriendsCallBack"+data.toString());
+			}
+			
+			private function reloadGame(e:Event):void{
+				//重新加载游戏
+				this.dispatchEvent(new SocializeEvent(SocializeEvent.GAMERELOAD));
+			}
+			
+			private function postMessage(event:Event):void{
+				//test data
+				if(Boolean(mid.text)){
+					var feedObj:FeedObject=new FeedObject(["hello"],["ok111"],mid.text);
+				}else{
+					this.setText("input user id");
+				}
+				
+				_container.postMessage(1,postMessageCallBack,feedObj);
+			}
+			
+			private function postMessageCallBack(b:*):void{
+				this.textInfo.text+="postMessageCallBack::"+b.toString()+"\n";
+			}
+			private function fullScreen(e:Event):void{
+				//游戏全屏
+				this.stage.displayState=StageDisplayState.FULL_SCREEN;
+			}
+			//test this with GAstat
+			public function testTraceEvent(e:Event):void
+			{
+			}
+			
+			//test this with XingcloudStat
+			public function testTraceEventByXC(e:Event):void
+			{
+				//构造统计数据
+				var fun:String = "sum";
+				var gameuid:String = "5025268";
+				var data:Array = ['buy','item','','','','','90'];
+				_container.trackEventByXC(fun,data,gameuid);
+			}
+			/*
+			private function callOtherFunctions(e:MouseEvent):void{
+				var str:String="appid::"+_container.appId+"\n"+
+				"authKey::"+_container.authKey+"\n"+
+				"sns::"+_container.sns+"\n"+
+				"sessionKey::"+_container.sessionKey+"\n"+
+				"version::"+(_container as ISocializeContainer).version+"\n"+
+				"uid::"+(_container as ISocializeContainer).uid;
+				
+				this.textInfo.text=str;
+			}
+			private function deleCookie(e:Event):void{
+				if((_container as ISocializeContainer).deleCookie("testKey")){
+					this.textInfo.text="deleCookie true";
+				}
+			}
+			private function getCookie(e:Event):void{
+				if((_container as ISocializeContainer).getCookie("testKey")){
+					this.textInfo.text="getCookie true";
+				}
+			}
+			private function setCookie(e:Event):void{
+				if((_container as ISocializeContainer).setCookie("testKey","testValue")){
+					this.textInfo.text="setCookie true";
+				}
+			}
+			//test global error catch
+			private function onCauseError(e:MouseEvent):void
+            {
+                var foo:String = null;
+                try
+                {
+                    trace(foo.length);
+                }
+                catch (e:TypeError)
+                {
+                    trace("This error is caught.");
+                }
+                
+                // Since this error isn't caught, it will cause the global error handler to fire.
+                trace(foo.length);
+				//throw new Error("dddGak!");
+
+            }
+            private function writeShareObject(e:MouseEvent):void{
+				var _cookieShareObject:SharedObject= SharedObject.getLocal("test");
+				try{
+					_cookieShareObject.setProperty("testShare","this is a testShareObject");
+					_cookieShareObject.flush(100);
+					this.setText("shareObject ok");
+					this.setText(_cookieShareObject.data["testShare"])
+				}catch(e:Error){
+					this.setText("shareObject error");
+				}
+			}
+			*/
+		]]>
+	</mx:Script>
+	<mx:HBox x="0"
+			 y="0"
+			 width="100%"
+			 height="100%">
+		<mx:VBox width="200" paddingTop="10"
+				 height="100%"
+				 horizontalAlign="center">
+			<mx:Button id="getUserInfoBtn"
+					   label="getUserInfo"
+					   width="180"
+					   click="getUserInfo(event)" toolTip="get user info"/>
+			<mx:Button id="getUsersInfoBtn"
+					   label="getUsersInfo"
+					   width="180"
+					   click="getUsersInfo(event)" toolTip="get user info"/>
+			<mx:Button label="getAllFriendsInfo" width="180" click="getAllFriendsInfo(event)"/>
+			<mx:Button id="getAppFriendsInfoBtn"
+					   label="getAppFriendsInfo"
+					   width="180"
+					   click="getAppFriendsInfo(event)" toolTip="get appFriends info"/>
+			<mx:Button id="feedBtn" label="postFeed" width="180" click="sendFeed(event)"/>
+			<mx:Button label="reloadGame" width="180" click="reloadGame(event)"/>
+			<mx:Button label="fullScreen" width="180" click="fullScreen(event)"/>
+			<mx:Button label="showPayMents" width="180" click="showPayments(event)"/>
+			<mx:Button label="showInviteFriends" id="inviteFriendBtn" click="inviteFriends(event)" width="180"/>
+			<mx:Label text="Message To:" width="180"/>
+			<mx:TextInput width="180" id="mid"/>
+			<mx:Button label="postMessage" width="180" click="postMessage(event)"  toolTip="post message"/>
+			<!--<mx:Button id="uploadPhotoBtn" label="uploadPhoto"  width="180" click="uploadPhoto(event)" />
+			<mx:Button label="goToUserPage" id="goToUserPageBtn" click="goToUserPage(event)" width="180"/>
+			<mx:Button label="setCookie" width="180" click="setCookie(event)"  toolTip="set cookie"/>
+			<mx:Button label="getCookie" width="180" click="getCookie(event)" toolTip="get cookie"/>
+			<mx:Button label="deleCookie" width="180" click="deleCookie(event)" toolTip="dele cookie"/>
+			<mx:Button label="testGlobalError" width="180" click="onCauseError(event)"/>
+			<mx:Button label="otherFunctions" width="180" click="callOtherFunctions(event)"/>
+			<mx:Button label="writeShareObject" id="writeShareObjectBtn" click="writeShareObject(event)" width="180"/>	-->
+			<mx:Button label="clear" width="180" click="textInfo.text=''"/>
+			<mx:Button label="traceEvent" width="180" click="testTraceEvent(event)"/>
+			<mx:Button label="traceEventByXC" width="180" click="testTraceEventByXC(event)"/>
+		</mx:VBox>
+		<mx:TextArea id="textInfo"
+					 height="100%"
+					 width="100%"
+					 color="0xff0000" editable="false"/>
+	</mx:HBox>
+
+</mx:Application>
