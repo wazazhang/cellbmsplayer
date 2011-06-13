@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="252" height="28"  backgroundImage="{Resource.playerItemBg}"
+		   mouseOver="mouseOver(event)" mouseOut="mouseOut(event)"   
+		   cornerRadius="5" borderThickness="2" 
+		   borderStyle="solid" borderColor="#b96400" 
+		   
+		   >
+	<mx:Script>
+		<![CDATA[
+			import Class.Resource;
+			
+			import com.fc.lami.Messages.PlayerData;
+			
+			import mx.controls.Alert;
+			import Class.Server;
+			
+			[Bindable]
+			public var player:PlayerData;
+			
+			private  function mouseOver(event:Event):void
+			{
+				setStyle("backgroundImage",Resource.playerItemBg2)
+			}
+			
+			
+			private  function mouseOut(event:Event):void
+			{
+				setStyle("backgroundImage",Resource.playerItemBg);
+			}
+			
+		]]>
+	</mx:Script>
+	<mx:Label x="7" text="{player.level}" verticalCenter="0"  />
+	<mx:Label x="81" text="{Server.getPlayerName(player)}" verticalCenter="0" />
+	<mx:Label x="211" text="{player.sex}" verticalCenter="0" />
+</mx:Canvas>

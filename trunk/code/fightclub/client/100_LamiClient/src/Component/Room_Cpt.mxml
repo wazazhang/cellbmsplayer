@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="828" height="522" borderColor="#FAFBFB" xmlns:Component="Component.*" backgroundColor="#103667">
+	<mx:Script>
+		<![CDATA[
+			import Class.Model.Room;
+			import Class.Server;
+			
+			import com.fc.lami.Messages.DeskData;
+			import com.fc.lami.Messages.PlayerData;
+			import com.fc.lami.Messages.RoomData;
+			
+			import mx.controls.Alert;
+			
+			public var deskCpts:Array;
+			
+			[Bindable]
+			public var room:Room;
+			
+			[Bindable]
+			private var _plist:Array;
+			
+			public function init(roomData:RoomData):void
+			{
+				deskCpts = new Array();
+				plist = room.getPlayerList();
+				
+				//plist  = new Array(new PlayerData(1,"sss"))
+				for(var i:int=0;i<roomData.desks.length;i++)
+				{
+					var deskCpt:Desk_Cpt = new Desk_Cpt();
+					deskCpt.init(roomData.desks[i]);
+					deskCpt.y = parseInt((i/4).toString())*158+10;
+					deskCpt.x = (i%4)*158+10;
+					deskCpts.push(deskCpt);
+					desks.addChild(deskCpt);
+				}
+				//dg.da
+			}
+			
+			
+			
+			private function set plist(list:Dictionary):void
+			{
+				_plist = new Array()
+				for each (var player:PlayerData in list)
+				{
+					_plist.push(player);
+				}
+			}
+			
+			
+			
+			public function addRoomInfo(str:String):void
+			{
+				info.text =str + "\n" + info.text;
+			}
+			
+			//进入桌子
+			public function enterDesk(player_id:int, desk_id:int, seat:int):void
+			{
+				var curDeskCpt:Desk_Cpt = getDeskById(desk_id);
+				curDeskCpt.enterPlayer(player_id,seat);
+			}
+			
+			//退出桌子
+			public function leaveDesk(player_id:int, desk_id:int):void
+			{
+				var curDeskCpt:Desk_Cpt = getDeskById(desk_id);
+				curDeskCpt.leavePlayerByPlayerId(player_id);
+			}
+			
+			//进入房间
+			public function enterRoom(player:PlayerData):void
+			{
+				//nt.player
+				if(room!=null)
+				{
+					room.enterRoom(player);
+					plist = room.getPlayerList();
+				
+				}
+				addRoomInfo(player.name+"进入房间")
+			}
+			
+			
+			//退出房间 
+			public function leaveRoom(player_id:int):void
+			{
+				var desk_id:int = Server.getPlayerDeskId(player_id);
+				if(desk_id!=-1)
+				{
+					var curDeskCpt:Desk_Cpt = getDeskById(desk_id);
+					curDeskCpt.leavePlayerByPlayerId(player_id);
+				}
+				
+				addRoomInfo(Server.getPlayer(player_id).name+"离开房间");	
+				
+				room.removePlayer(player_id);
+				plist = room.getPlayerList();
+			}
+			
+			//根据ID获取桌子
+			private function getDeskById(deskid:int):Desk_Cpt
+			{
+				for each(var deskCpt:Desk_Cpt in deskCpts)
+				{
+					if(deskCpt.desk.desk_id == deskid)
+					{
+						return deskCpt;
+					}
+				}
+				return null;
+			}
+			
+			
+			public function onGameStart(deskid:int):void
+			{
+				var deskCpt:Desk_Cpt = getDeskById(deskid);
+				deskCpt.desk.is_started = true;
+			}
+			
+			public function onGameOver(deskid:int):void
+			{
+				var deskCpt:Desk_Cpt = getDeskById(deskid);
+				deskCpt.desk.is_started = false;
+			}
+			
+			public function exitRoom():void
+			{
+				Server.ExitRoom();
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<mx:Canvas id="desks"  width="650" height="500" >	
+	</mx:Canvas>
+	
+	<mx:TextArea id="info" x="658" y="296" height="204"/>
+	
+	<mx:LinkButton x="658" y="5" label="退出房间" fontSize="12" click="exitRoom()" />
+	
+	<mx:DataGrid id="dg" x="658" y="33" width="159" height="255" dataProvider="{_plist}">
+		<mx:columns>
+			<mx:DataGridColumn headerText="ID" dataField="player_id" width="40"/>
+			<mx:DataGridColumn headerText="名字" dataField="name" width="80"/>
+			<mx:DataGridColumn headerText="等级" dataField="level"/>
+		</mx:columns>
+	</mx:DataGrid>
+	
+</mx:Canvas>

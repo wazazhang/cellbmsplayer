@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="25" height="31"
+		   
+	 borderStyle="{isSelected?'solid':'none'}"	   
+		   
+	 borderColor="{isSelected?0xff0000:0x000000}" 
+	 
+	 
+	 verticalScrollPolicy="off" horizontalScrollPolicy="off"
+	 
+	 backgroundColor="0xeadda8" click="click(event)" doubleClick="click(event)"  doubleClickEnabled="true"
+	 
+	 mouseOver="mouseOver(event)"   mouseOut="mouseOut(event)"
+	 
+	 backgroundAlpha="{(!isPlayerOwner)&amp;&amp;(!game.gamer.isMyturn)&amp;&amp;_card==null?0.0:0.32}">
+	 
+	<mx:Script>
+		<![CDATA[
+			import Class.Game;
+			import Class.Model.Card;
+			import Class.Resource;
+			import Class.Server;
+			import Class.TimesCtr;
+			
+			import mx.controls.Alert;
+			import mx.states.SetStyle;
+			
+			[Bindable]
+			public var confimcard:Card
+			
+			[Bindable]
+			protected var _card:Card
+			
+			[Bindable]
+			public var isSelected:Boolean = false; 
+			
+			public var nextCardCpt:Card_Cpt;
+			public var preCardCpt:Card_Cpt;
+			
+			[Bindable]
+			public var isPlayerOwner:Boolean = false;
+			
+			public var cardX:int;
+			public var cardY:int;
+			
+			
+			[Bindable]
+			public var game:Game
+			
+			[Bindable]
+			public var isShow:Boolean = true;
+			
+			
+			public function confim():void
+			{
+				confimcard = card;
+			}
+			
+			[Bindable]
+			public function get card():Card
+			{
+				return _card
+			}
+			
+			public function set card(c:Card):void
+			{
+				//resetBg();
+				if(c!=null)
+				{
+					c.cardUI = this;
+				}
+				
+				if(c!=null)
+				{
+					img0.source = Resource.getCardImg(c.type,c.point)
+				}
+				else
+				{
+					img0.source = "";
+				}			
+				
+				_card = c;
+			}
+			
+			public function reset():void
+			{
+				card = confimcard;
+			}
+			
+			public function mouseOver(event:MouseEvent):void
+			{
+				
+				if(game==null)
+				{
+					return;
+				}
+				
+				//放置非自己会合往公共牌区操作
+				if(!isPlayerOwner && !game.gamer.isMyturn)
+				{
+					return;
+				}
+				
+				//防止打出的牌往回拿
+				if(isPlayerOwner&&game.gamer.selectedCard!=null&&game.gamer.selectedCard.isSended)
+				{
+					return;
+				}
+				
+				
+				//未破冰不能出鬼牌
+				if((!isPlayerOwner)&&game.gamer.selectedCard!=null&&game.gamer.selectedCard.point==0&&game.gamer.isCold)
+				{
+					return;
+				}
+				
+				//鼠标滑动
+				if(event.buttonDown)
+				{
+					mouseOut(event);
+					return;
+				}
+				
+				//当前有牌组的时候移动鼠标
+				if(game.gamer.selectedArrayCard != null&&(card==null||isSelected))
+				{
+					var length:int = game.gamer.selectedArrayCard.length;
+					var cardcpt:Card_Cpt = this;
+					
+					while(length!=0)
+					{
+						if(cardcpt==null)
+							return	
+						
+						if(cardcpt.card!=null&&!cardcpt.isSelected)
+							return
+							
+						cardcpt = cardcpt.nextCardCpt;
+						length --;	
+					}
+					
+					
+					for each(var curcard:Card in game.gamer.selectedArrayCard)
+					{
+						//不能往回拿已经打出的牌
+						if(isPlayerOwner&&curcard.isSended)
+							return;
+						
+						//未破冰不能放鬼牌
+						if((!isPlayerOwner)&&curcard.point==0&&game.gamer.isCold)
+							return;
+					}
+					
+					cardcpt = this;
+					
+					for each(curcard in game.gamer.selectedArrayCard)
+					{
+						if(curcard.cardUI.card==curcard)
+						{
+						curcard.cardUI.isSelected = false;
+						curcard.cardUI.card =null;
+						}
+						cardcpt.card = curcard;
+						cardcpt.isSelected = true;
+						cardcpt = cardcpt.nextCardCpt;
+					}
+					//Game.gamer.selectedArrayCard = null;
+					return;
+				}
+				
+				
+				//单牌操作
+				if(game.gamer.selectedCard != null&&card==null)
+				{
+					game.gamer.selectedCard.cardUI.card = null;
+					game.gamer.selectedCard.cardUI.isSelected = false;
+					
+					card =  game.gamer.selectedCard;
+					isSelected = true;
+				}
+			}
+			
+			
+			
+			public function mouseOut(event:MouseEvent):void
+			{
+				//鼠标滑动
+				if(event.buttonDown)
+				{
+					if(game.gamer.selectedArrayCard!=null&&game.gamer.selectedArrayCard.indexOf(card)!=-1)
+					{
+						return;
+					}
+					
+					
+					//不能在非自己回合去滑动公共牌区
+					if(!isPlayerOwner && (!game.gamer.isMyturn))
+					{
+						return;
+					}
+					
+					if(game.gamer.selectedCard!=null)
+					{
+						game.gamer.selectedCard.cardUI.isSelected = false;
+						game.gamer.selectedCard =null;
+					}
+					
+					if(card!=null&&!isSelected)
+					{
+						if(game.gamer.selectedArrayCard==null)
+						{
+							game.gamer.selectedArrayCard = new Array();
+							game.gamer.selectedArrayCard.push(card);
+						}
+						else
+						{
+							game.gamer.selectedArrayCard.push(card)
+						}
+						isSelected = true;
+					}
+					
+					return;
+				}
+			}
+			
+			public function click(event:MouseEvent):void
+			{
+				
+				
+				
+				//放置非自己会合往公共牌区操作
+				if((!isPlayerOwner) && (!game.gamer.isMyturn))
+				{
+					return;
+				}
+					
+				//当前为非操作阶段
+				if(!game.gamer.canOpearation)
+					return;
+				
+//				if(game.gamer.isMyturn)
+//					game.timeCtr.reset();
+				
+				//选定牌以后再选定其他牌
+				if(game.gamer.selectedCard!=null&&game.gamer.selectedCard!=card)
+				{
+					return;
+				}
+				
+				
+				
+				
+				
+				
+				//检测往回拿
+				if(isPlayerOwner&&game.gamer.selectedCard!=null&&game.gamer.selectedCard.isSended)
+				{
+					return;
+				}
+				
+				if(game.gamer.keydwon||event.type==MouseEvent.DOUBLE_CLICK)
+				{
+					if(game.gamer.selectedArrayCard!=null)
+						return;
+					
+					selectArrayCard();
+				}
+				else
+				{
+					selectCard();
+				}
+				
+				game.gamer.countHandCard();
+			}
+			
+			//选择
+			private function selectCard():void
+			{
+				//放下选择的队列
+				if(game.gamer.selectedArrayCard!=null)
+				{
+					//不能把用过的牌往回拿
+					for each(var curcard:Card in game.gamer.selectedArrayCard)
+					{
+						if(isPlayerOwner&&curcard.isSended)
+							return;
+					}
+					
+					for each(curcard in game.gamer.selectedArrayCard)
+					{
+						curcard.cardUI.isSelected = false;
+					}
+					
+					game.gamer.selectedArrayCard = null;
+					game.check();
+					
+					if(game.gamer.isMyturn)
+					{
+						Server.sendPublicMatrix();
+					}
+					
+					return;
+				}	
+				//选择新的
+				if(game.gamer.selectedCard==null)
+				{
+					if(card==null)
+						return				
+					game.gamer.selectedCard = card;
+					isSelected = true;
+				}
+				//放下
+				else
+				{
+					isSelected = false;
+					
+					card = game.gamer.selectedCard;
+					game.check();
+					
+					if(game.gamer.isMyturn)
+					{
+						Server.sendPublicMatrix();
+					}
+					game.gamer.selectedCard = null;
+				}
+			}
+			
+			//选择队列
+			private function selectArrayCard():void
+			{
+				if(game.gamer.selectedCard!=null)
+				{
+					return
+				}
+				
+				if(nextCardCpt == null)
+				{
+					return
+				}
+				
+				if(nextCardCpt.card == null)
+				{
+					return
+				}
+				
+				if(card == null)
+				{
+					return
+				}
+				//同点
+				if(card.point == nextCardCpt.card.point&&card.type!=nextCardCpt.card.type)
+				{
+					var arr:Array = new Array()
+					var cardtype:Array = new Array();
+					
+					var buffcard:Card_Cpt = this;
+					arr.push(buffcard.card);
+					cardtype.push(buffcard.card.type)
+					buffcard.isSelected = true;
+					
+					do{
+						buffcard = buffcard.nextCardCpt;
+						
+						arr.push(buffcard.card);
+						cardtype.push(buffcard.card.type);
+						buffcard.isSelected = true;
+						
+						if(buffcard.nextCardCpt ==null)
+							break;
+						
+						if(buffcard.nextCardCpt.card ==null)
+							break;
+					}
+					while(buffcard.card.point == buffcard.nextCardCpt.card.point&&cardtype.indexOf(buffcard.nextCardCpt.card.type)==-1)
+					
+					game.gamer.selectedArrayCard = arr;
+					return;
+				}
+				
+				//顺子
+				if(card.point == nextCardCpt.card.point-1&&card.type==nextCardCpt.card.type)
+				{
+					arr = new Array()
+					buffcard = this;
+					arr.push(buffcard.card);
+					buffcard.isSelected = true;
+					do{
+						buffcard = buffcard.nextCardCpt;
+						
+						arr.push(buffcard.card);
+						buffcard.isSelected = true;
+						
+						if(buffcard.nextCardCpt ==null)
+							break;
+						
+						if(buffcard.nextCardCpt.card ==null)
+							break;
+					}
+					while(buffcard.card.point == buffcard.nextCardCpt.card.point-1&&buffcard.card.type==buffcard.nextCardCpt.card.type)
+					game.gamer.selectedArrayCard = arr;
+					return;
+				}
+			}
+			
+			public function shan():void
+			{
+				ef.play();
+			}
+			
+			
+
+		]]>
+	</mx:Script>
+	<mx:Image id="img0" visible="{isShow}" width="28" height="38"></mx:Image>
+	<mx:Canvas width="100%" height="100%" backgroundColor="#000000" backgroundAlpha="0.2" visible="{card==null?false:card.isSended}"></mx:Canvas>
+	<mx:SWFLoader width="50" height="100" y="5" source="{Resource.guang}" visible="{isSelected}"></mx:SWFLoader>
+	<mx:Glow id="ef" target="{this}" color="0xff0000" repeatCount="5" duration="500" strength="10" ></mx:Glow>
+	<mx:Canvas width="100%" height="100%" backgroundColor="#000000" backgroundAlpha="0.00"></mx:Canvas>
+</mx:Canvas>

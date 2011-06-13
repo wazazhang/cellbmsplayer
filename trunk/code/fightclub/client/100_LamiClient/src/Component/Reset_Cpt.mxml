@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="400" height="90" borderStyle="solid" borderColor="#000000" borderThickness="1" cornerRadius="10">
+	<mx:Script>
+		<![CDATA[
+			import Class.Server;
+			[Bindable]
+			public var canReset:Boolean
+			
+			public function reset():void
+			{
+				canReset = false;
+				Server.sendResetRequest();
+			}
+			
+			public function cancel():void
+			{
+				canReset = false;
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<mx:Label y="11" text="{canReset?'是否重置当前手牌？':'等待其他玩家确认手牌重置。'}" horizontalCenter="0" fontSize="24" fontWeight="bold"/>
+	<mx:Button x="148" y="54" label="确认" visible="{canReset}" click="reset()"/>
+	<mx:Button x="208" y="53" label="取消" visible="{canReset}" click="cancel()"/>
+</mx:Canvas>
