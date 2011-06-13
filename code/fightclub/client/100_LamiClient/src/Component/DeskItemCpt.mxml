@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="578" height="30" 
+		   backgroundImage="{Resource.deskItemBg}" 
+		   mouseOver="mouseOver(event)" mouseOut="mouseOut(event)"
+		   doubleClickEnabled="true" doubleClick="click()" borderThickness="2" borderColor="#b96400"   cornerRadius="5"
+		   
+		    borderStyle="solid">
+	<mx:Script>
+		<![CDATA[
+			import Class.Resource;
+			import Class.Server;
+			
+			import com.fc.lami.Messages.DeskData;
+			
+			import mx.controls.Alert;
+			
+			[Bindable]
+			public var desk:DeskData
+			
+			private  function mouseOver(event:Event):void
+			{
+				setStyle("backgroundImage",Resource.deskItemBg2)
+			}
+			
+			
+			private  function mouseOut(event:Event):void
+			{
+				setStyle("backgroundImage",Resource.deskItemBg);
+			}
+			
+			
+			private function click():void
+			{
+				
+				if(desk.player_number==4)
+				{
+					Alert.show("当前桌子已满！");
+					return;
+				}
+				Server.enterDesk(desk.desk_id,-1)
+			}
+		]]>
+	</mx:Script>
+	<mx:Label x="8" text="{desk.desk_id}" verticalCenter="0" />
+	<mx:Label x="115" text="{desk.desk_name}" verticalCenter="0"/>
+	<mx:Label x="325" text="{desk.is_started?'开始':'等待'}" verticalCenter="0"/>
+	<mx:Label x="443" text="{desk.player_number+'/4'}" verticalCenter="0"/>
+</mx:Canvas>

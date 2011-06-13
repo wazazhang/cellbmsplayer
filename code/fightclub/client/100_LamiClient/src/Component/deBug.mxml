@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="104" height="392">
+	<mx:Script>
+		<![CDATA[
+			import Class.Game;
+			import Class.Server;
+			[Bindable]
+			public var game:Game;
+		]]>
+	</mx:Script>
+	<mx:Label x="10" y="40" text="{'合法:'+ game.legaled}"/>
+	<mx:Label x="10" y="68" text="{'出牌' + game.haveSendCard}"/>
+	<mx:Label x="11" y="96" text="{'综合' + game.canSubmitCard}"/>
+	<mx:Label x="17.5" y="10" text="debug信息"/>
+	<mx:Label x="17.5" y="110" text="{Server.timerStr}"/>
+</mx:Canvas>

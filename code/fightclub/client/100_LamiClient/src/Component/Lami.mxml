@@ -1,0 +1,476 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+		  xmlns:ns1="Component.*" width="960" height="600" 
+		   borderStyle="solid" borderColor="0x000000" backgroundColor="0xffffff"   styleName="taskDetailBG"
+		   verticalCenter="0" horizontalCenter="0" verticalScrollPolicy="off" horizontalScrollPolicy="off" creationComplete="initEvent()"  >
+	
+	<mx:Style>  
+		.taskDetailBG
+		{  
+			border-skin:ClassReference('Class.MyBackgroundSkin');  
+			background-image:Embed("image/bg/gbg.png");  
+			backgroundImagePosition:left,top;/*第一个参数可用值：left,center,right,默认值left;第二个参数可用值：top,middle,bottom,默认值top*/  
+			backgroundImageRepeat:repeat;/*可用值：repeat,no-repeat,repeat-x,repeat-y,默认值no-repeat*/  
+			background-size:100;  
+		}  
+	</mx:Style>
+	<mx:Script>
+		<![CDATA[
+			import Class.Game;
+			import Class.Model.Desk;
+			import Class.Model.Player;
+			import Class.Resource;
+			import Class.Server;
+			import Class.TimesCtr;
+			import Class.WebResource;
+			
+			import com.fc.lami.Messages.GameOverNotify;
+			import com.fc.lami.Messages.PlayerData;
+			
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.graphics.RoundedRectangle;
+			[Bindable]
+			public var desk:Desk;
+			
+			public var player:PlayerData; //玩家
+			[Bindable]
+			public var seatID:int;
+			
+			public var nextOtherPlayer_Cpt:OtherPlayer_Cpt;
+			
+			[Bindable]
+			public var game:Game
+			
+			[Bindable]
+			public var talkinfoStr:String=""; 
+			
+			[Bindable]
+			public var gameinfoStr:String="";
+			
+			public var resetCpt:Reset_Cpt;
+			public var canReset:Boolean = false;
+			public var canShowReset:Boolean = false;
+			//初始游戏
+			public function init():void
+			{
+				game.matrix = mx;
+				game.gamer.matrix = umx;
+				game.timeCtr.optionTimeBar = optbar;
+				game.timeCtr.sumTimeBar = sumbar;
+				optCpt.game = game;
+				game.initGame();
+			}
+			
+			public function initEvent():void
+			{
+				addEventListener(KeyboardEvent.KEY_DOWN,keyDownHandle)
+			}
+			
+			public function keyDownHandle(event:KeyboardEvent):void
+			{
+				 if( event.keyCode==13&&titalk.text!='')
+				 {
+					 pubTalk(); 
+				 }
+			}
+			
+			
+			
+			public function initDesk(desk:Desk,playerstats:Array):void
+			{
+				if(game.matrix==null)
+				{
+					init();
+				}
+				nextPlayer1.reset();
+				nextPlayer2.reset();
+				nextPlayer3.reset();
+				nextPlayer4.reset();
+				resetGameAllData();
+				optCpt.reset();
+				player = Server.player;
+				initSeat(desk,playerstats);
+			}
+			
+			
+			//进入一个新房间后对所有数据进行重置
+			public function resetGameAllData():void
+			{
+				game.cleanMatrix();
+				game.gamer.cleanMatrix();
+				game.gamer.isMyturn = false;
+				game.gamer.isReady = false;
+				game.gamer.isCold = true;
+				game.legaled = true;
+				game.haveSendCard = false;
+				game.timeCtr.stop();
+				
+				
+			}
+			
+			//初始位置
+			public function initSeat(desk:Desk,playerstats:Array):void
+			{
+				nextOtherPlayer_Cpt = nextPlayer1;
+				nextPlayer1.nextOtherPlayer_Cpt = nextPlayer2;
+				nextPlayer2.nextOtherPlayer_Cpt = nextPlayer3;
+				nextPlayer3.nextOtherPlayer_Cpt = nextPlayer4;
+				
+				this.desk = desk;
+				switch(player.player_id)
+				{
+					case desk.player_E_id: seatID = 3;break;
+					case desk.player_N_id: seatID = 0;break;
+					case desk.player_S_id: seatID = 2;break;
+					case desk.player_W_id: seatID = 1;break;
+				}
+				var cpt:OtherPlayer_Cpt = nextOtherPlayer_Cpt;
+				var index:int = seatID;
+				do{
+					index ++;
+					if(index==4)
+						index = 0
+					cpt.setPlayer = Server.getPlayer(getPlayerIDbySeatID(index));
+					cpt.setState(playerstats);
+					
+					cpt.seat = getDir(index);
+					cpt = cpt.nextOtherPlayer_Cpt;
+				}
+				while(cpt != null)
+			}
+			
+			//根据座位号获取选手
+			private function getPlayerIDbySeatID(seatID:int):int
+			{
+				switch(seatID)
+				{
+					case 3: return desk.player_E_id;
+					case 0: return desk.player_N_id;
+					case 2: return desk.player_S_id;
+					case 1: return desk.player_W_id;
+				}
+				return -1;
+			}
+			
+			//根据座位号设置选手
+			private function setPlayerIDbySeatID(seatID:int,playerID:int):void
+			{
+				switch(seatID)
+				{
+					case 3: desk.player_E_id = playerID;break;
+					case 0: desk.player_N_id = playerID;break;
+					case 2: desk.player_S_id = playerID;break;
+					case 1: desk.player_W_id = playerID;break;
+				}
+			}
+			
+			//根据座位号获取方向
+			public function getDir(seatID:int):String
+			{
+				switch(seatID)
+				{
+					case 0: return "南";
+					case 1: return "西";
+					case 2: return "北";
+					case 3: return "东";
+				}
+				return "false";
+			}
+		    			
+			//有人员进入
+			public function enterPlayer(player_id:int, desk_id:int, seat:int):void
+			{
+				if(desk ==null || desk_id!=desk.desk_id)
+					return
+
+				initSeat(desk,null);
+				addInfo(Server.getPlayerName(Server.getPlayer(player_id))+"进入桌子");
+			}
+			
+			
+			//有人员离开
+			public function leavePlayer(player_id:int, desk_id:int):void
+			{
+				if(desk ==null || desk_id!=desk.desk_id)
+					return	
+				initSeat(desk,null);
+				addInfo(Server.getPlayerName(Server.getPlayer(player_id))+"离开桌子");
+			}
+			
+			
+			public function click():void
+			{
+				//Alert.show(Game.getSendPoint().toString()+'_'+Game.gamer.keydwon);
+			}
+			
+			public function addInfo(str:String):void
+			{
+				gameinfoStr =   gameinfoStr  + str + "\n" ;
+				TA_gameinfoStr.validateNow();
+				TA_gameinfoStr.verticalScrollPosition=TA_gameinfoStr.maxVerticalScrollPosition;
+				
+				
+			}
+			
+			public function addTalkInfo(str:String):void
+			{
+				talkinfoStr = talkinfoStr  + str + "\n";
+				TA_talkinfoStr.validateNow(); 
+				TA_talkinfoStr.verticalScrollPosition=TA_talkinfoStr.maxVerticalScrollPosition;		
+				
+				//Alert.show(TA_talkinfoStr.verticalScrollPosition +'/' +TA_talkinfoStr.maxVerticalScrollPosition)
+			}
+			
+			//回到房间
+			public function returnRoom():void
+			{
+				//this.visible = false;
+//				Server.app.removeChild(this);
+				Server.leaveDesk(desk.desk_id);
+				
+			}
+			
+			//响应回到房间
+			public function stopTime():void
+			{
+				nextPlayer1.gameing = false;
+				nextPlayer2.gameing = false;
+				nextPlayer3.gameing = false;
+				nextPlayer4.gameing = false;
+				
+				Server.game.timeCtr.stop();
+			}
+			
+			
+			//根据用户ID获取用户组建
+			public function getOtherPlayerCptByPlayerId(playerid:int):OtherPlayer_Cpt
+			{
+				var cpt:OtherPlayer_Cpt = nextPlayer1;
+				do{
+					if(cpt.player!=null && cpt.player.player_id==playerid)
+					{
+						return cpt;
+					}
+					cpt = cpt.nextOtherPlayer_Cpt;
+				}
+				while(cpt!=null)
+				return null	
+			}
+			
+			//有人员破冰
+			public function onPlayerPoBing(playerid:int):void
+			{
+				if (playerid == Server.player.player_id){
+					game.gamer.isCold = false;
+				}else{
+					var cpt:OtherPlayer_Cpt = getOtherPlayerCptByPlayerId(playerid);
+					if(cpt!=null)
+						cpt.pobing = true;
+				}
+				addInfo("玩家"+Server.getPlayerName(Server.getPlayer(playerid))+"已经破冰");
+			}
+			
+			//有人员准备取消
+			public function onPlayerReady(playerid:int,isReady:Boolean):void
+			{
+				if (playerid == Server.player.player_id){
+					game.gamer.isReady = isReady;
+				}else{
+					var cpt:OtherPlayer_Cpt = getOtherPlayerCptByPlayerId(playerid);
+					if(cpt!=null)
+						cpt.ready = isReady;
+				}
+				
+				if(isReady)
+				{
+					addInfo("玩家"+Server.getPlayerName(Server.getPlayer(playerid))+"准备好了");
+				}
+				else
+				{
+					addInfo("玩家"+Server.getPlayerName(Server.getPlayer(playerid))+"取消了准备");
+				}
+			}
+			
+			//有人员会合开始
+			public function onPlayerStart(playerid:int):void
+			{
+				var cpt:OtherPlayer_Cpt = getOtherPlayerCptByPlayerId(playerid);
+				if(cpt!=null)
+				{
+					cpt.gameing = true;
+					addInfo("玩家"+Server.getPlayerName(cpt.player)+"回合开始");
+				}
+			}
+			
+			//游戏结束
+			public function onGameOver(gvn:GameOverNotify):void
+			{
+				addInfo("游戏结束");
+				
+				stopTime();
+				var rsCpt:Result_Cpt = new Result_Cpt()
+				optCpt.reset();	
+					
+				rsCpt.setRes(gvn);
+				rsCpt.setStyle("verticalCenter","0");
+				rsCpt.setStyle("horizontalCenter","0");	
+				addChild(rsCpt);
+				rsCpt.addEventListener(FlexEvent.REMOVE,removeResultHandle);
+				//resetGameAllData();
+			}
+			
+			
+			public function removeResultHandle(event:Event):void
+			{
+				nextPlayer1.gameEnd();
+				nextPlayer2.gameEnd();
+				nextPlayer3.gameEnd();
+				nextPlayer4.gameEnd();
+				resetGameAllData();
+			}
+			
+			
+			
+			public function onGameStart(canReset:Boolean):void
+			{
+				addInfo("游戏开始");
+				if(resetCpt!=null)
+					removeReset();
+				
+				optCpt.Start();
+				
+				this.canReset = canReset;
+				canShowReset = true;
+				nextPlayer1.ready = false;
+				nextPlayer2.ready = false;
+				nextPlayer3.ready = false;
+				nextPlayer4.ready = false;
+			}
+			
+			
+			public function showReset():void
+			{
+				if(!canShowReset)
+					return
+				else	
+					canShowReset = false
+					
+				if(resetCpt!=null)
+					removeReset();
+				
+				resetCpt = new Reset_Cpt();
+				resetCpt.canReset = canReset;
+				resetCpt.setStyle("verticalCenter","0");
+				resetCpt.setStyle("horizontalCenter","0");	
+				addChild(resetCpt);
+			}
+
+			public function removeReset():void
+			{
+				removeChild(resetCpt)
+				resetCpt = null;
+			}
+			
+			public function pubTalk():void
+			{
+				if(titalk.text=="")
+					return;
+					
+				Server.sendTalkMessage(titalk.text);
+				titalk.text='';
+			}
+			
+			public function onPlayerReset(player:PlayerData):void
+			{
+				addInfo(Server.getPlayerName(player)+"重置了发牌")
+			}
+			
+		]]>
+	</mx:Script>
+	
+	<mx:Image  source="{Resource.newbg}" y="91" horizontalCenter="0">
+	</mx:Image>
+	
+	<ns1:Matrix_Cpt id="mx" y="115"  height="201" horizontalCenter="3">
+	</ns1:Matrix_Cpt>
+	
+	<mx:ProgressBar id="sumbar" width="465" label="" height="10" mode="manual" labelPlacement="center" y="398" x="246"  visible="{!Server.isVisitor}"/>
+	<mx:ProgressBar id="optbar" height="10" width="465" label="" mode="manual" labelPlacement="center" x="246" y="410"  visible="{!Server.isVisitor}"/>
+	
+	<ns1:UserMatrix_Cpt id="umx" height="202" x="245" y="415" width="479"  visible="{!Server.isVisitor}">
+	</ns1:UserMatrix_Cpt>
+	
+
+	
+	<!--信息显示 -->
+	
+	
+	<!--//其他玩家信息-->
+	<ns1:OtherPlayer_Cpt id="nextPlayer1" x="8" y="200">
+	</ns1:OtherPlayer_Cpt>
+	
+	<ns1:OtherPlayer_Cpt id="nextPlayer2" y="-1" horizontalCenter="0">
+	</ns1:OtherPlayer_Cpt>
+	
+	<ns1:OtherPlayer_Cpt id="nextPlayer3" x="825" y="200">
+	</ns1:OtherPlayer_Cpt>
+	
+	<ns1:OtherPlayer_Cpt id="nextPlayer4" y="460" horizontalCenter="0" visible="{Server.isVisitor}">
+	</ns1:OtherPlayer_Cpt>
+	
+	<mx:LinkButton x="876" y="10" label="回到大厅" color="#FFFDFD" click="returnRoom()"/>
+	
+	<mx:Image id="turnStartImg" horizontalCenter="0" verticalCenter="0" source="{WebResource.start}" alpha="0.0" visible="false" />
+	
+	<mx:Parallel id="turnStartEft" target="{turnStartImg}" effectEnd="turnStartImg.visible=false">
+		<mx:Fade duration="1500" alphaFrom="1.0" alphaTo="0.0"></mx:Fade>
+		<mx:Zoom duration="1500" zoomHeightFrom="1.0" zoomHeightTo="2.0" zoomWidthFrom="1.0" zoomWidthTo="2.0" > </mx:Zoom>
+	</mx:Parallel>
+	
+	
+	<mx:Label x="700" y="12" text="{'当前位置:'+(Server.room_cpt.room.roomData.room_id)+'房间 '+ (desk.desk_id+1)+'号座'}" color="#FDFDFD"/>
+	
+	
+
+	<!--//游戏信息区-->
+	<mx:Canvas x="10" y="10" width="143" height="149" borderStyle="none"  borderColor="#000000">
+		
+		<mx:Label x="10" y="10" text="游戏信息" color="#FFFDFD"/>
+		<mx:Label x="45" y="39" text="剩余手牌:{Server.game.leftCard}" color="#FFFEFE"/>
+		<mx:Image x="10" y="32" source="{Resource.pai}"/>
+		<mx:Label x="10" y="74" text="玩家信息" color="#FFFFFF"/>
+		<mx:Label x="10" y="106" text="积分：{Server.player.score}" color="#FEFEFE"/>
+		<mx:Label x="10" y="91" text="{Server.getPlayerName(Server.player)}" color="#FFFFFF"/>
+	</mx:Canvas>
+	
+	<!--玩家信息区-->
+	
+	<mx:Canvas id="useinfo" width="470" height="39" x="243" y="422"  visible="{!Server.isVisitor}"
+			   verticalScrollPolicy="off" horizontalScrollPolicy="off" backgroundImage="@Embed(source='../image/bg/opbg.png')">
+		
+		<mx:Label x="7" y="2" text="{Server.getPlayerName(Server.player)}" color="#010101"/>
+		
+		<mx:Image x="100" y="16" source="{game.gamer.isMyturn?Resource.yxz:Resource.ddz}" ></mx:Image>
+		
+		<mx:Label x="7" y="17" text="手牌：{game.gamer.handCard.length}" color="#010101"/>
+		
+		<mx:Image x="100" y="2" source="{game.gamer.isCold?Resource.wpb:Resource.ypb}" > </mx:Image>
+				
+	</mx:Canvas>
+	
+	<!--玩家操作区-->
+	<ns1:Opt_Cpt id="optCpt" height="177" y="421" x="409"  visible="{!Server.isVisitor}">
+	</ns1:Opt_Cpt>
+	
+	<mx:Image source="{Resource.talkbg}" x="720" y="397" alpha="0.5"></mx:Image>
+	<mx:TextArea  id="TA_talkinfoStr"  x="725" y="405" width="220" height="150"   backgroundAlpha="0.0" borderStyle="none"  color="0xffffff" editable="false"  text="{talkinfoStr}">
+	</mx:TextArea>
+	
+	<mx:Image source="{Resource.xtbg}" x="7" y="398" alpha="0.5"></mx:Image>
+	<mx:TextArea  id="TA_gameinfoStr"  x="12" y="405" color="0xffffff" width="220" height="185" backgroundAlpha="0.0" borderStyle="none"  editable="false" text="{gameinfoStr}" />
+	
+	<mx:Button x="890" y="558" click="pubTalk()" width="49" skin="@Embed(source='../image/button/tj.png')"  height="28" downSkin="@Embed(source='../image/button/tj1.png')"/>
+	<mx:TextInput  color="0xffffff" id="titalk" x="731" y="562" width="152" alpha="0.5" backgroundColor="0xD2A55A" borderColor="0x8B5505" themeColor="#BF7204" cornerRadius="3" borderStyle="solid"/>
+
+</mx:Canvas>
