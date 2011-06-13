@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<xingcloud:config xmlns:xingcloud="http://www.iw.com/sns/config/">
-<sfs>
-<events>
-</events>
-<requests>
-</requests>
-</sfs>
-</xingcloud:config>
