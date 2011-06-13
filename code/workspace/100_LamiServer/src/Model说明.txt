@@ -1,8 +1,0 @@
-
- 服务器（Server）下有若干房间（Room），房间中有若干桌子（Desk），桌子边围着0～4个人（Player），一张桌子上有一个运行着的游戏
- 
- 以上类型都不可以直接传给客户端。在Message类中有对应的可以传给客户端的纯数据类。
- Room -> RoomData
- Desk -> DeskData
- Player -> PlayerData
- 
