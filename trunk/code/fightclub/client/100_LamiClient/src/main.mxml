@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" 
+				implements="elex.socialize.IGameClient" 
+				layout="absolute" xmlns:ns1="Component.*" 
+				creationComplete="init()" 
+				horizontalAlign="left" 
+				verticalAlign="top">
+	<mx:Style>
+		global {font-size:12px}
+	</mx:Style>
+	<mx:Script>
+		<![CDATA[
+			import Class.Game;
+			import Class.Server;
+			import Class.WebResource;
+			
+			import com.fc.lami.MessageCodec;
+			import com.fc.lami.Messages.PlatformUserData;
+			import com.fc.lami.Messages.PlayerData;
+			import com.net.client.minaimpl.ServerSessionImpl;
+			import com.net.client.sfsimpl.SFSSessionImpl;
+			
+			import elex.socialize.FeedObject;
+			import elex.socialize.IGameClient;
+			import elex.socialize.ISocializeContainer;
+			import elex.socialize.IUserSocialData;
+			import elex.socialize.event.HeaderClickEvent;
+			import elex.socialize.event.SocializeEvent;
+			
+			import flash.events.*;
+			import flash.net.SharedObject;
+			
+			import mx.controls.Alert;
+			import mx.utils.URLUtil;
+			
+			//平台容器实例引用
+			private var gdp_container:elex.socialize.ISocializeContainer;
+			
+			//游戏自身的配置信息 对应337 上平台接入所填写的game配置
+			private var config:XML;
+			
+			//实现IGameClient 接口 平台启动接口
+			public function startUp(
+				container:elex.socialize.ISocializeContainer,
+				config:XML,
+				width:int,
+				height:int):void
+			{
+				Security.allowDomain("*");
+				
+				this.gdp_container	= container;
+				this.config		= config;
+				this.width		= width;
+				this.height		= height;
+				//this.stage.addEventListener(MouseEvent.MOUSE_WHEEL,onMouseWheel);
+				//_container.addEventListener(HeaderClickEvent.HEADERCLICK,onHeaderClick);
+				//test googleAnalysics
+				//_container.trackTransaction({category:"1",cost:"300",money:"0",name: "Prinzessin Stuhl",orderId :"100001258912073359"},1,1);
+				//var useridInfoArr:Array=String(stage.loaderInfo.parameters.sig_user).split("_");
+				
+			}
+			
+			public function println(info:String):void
+			{
+				this.login_cpt.txt_debug.text = this.login_cpt.txt_debug.text + info + "\n";
+			}
+			
+			public function print(info:String):void
+			{
+				this.login_cpt.txt_debug.text = this.login_cpt.txt_debug.text + info;
+			}
+			
+			public function init():void
+			{
+				if(this.gdp_container)
+				{
+					println("uid="+this.gdp_container.uid);
+					println("sns="+this.gdp_container.sns);
+					
+					println(this.gdp_container+"");
+					println(this.config.toXMLString());
+					
+					var lang	: String = this.config.child("lang").toString();
+					var webbase : String = this.config.child("webbase").toString();
+					
+					println("webbase="+webbase);
+					WebResource.setWebRoot(webbase);
+					
+					getUserInfo();
+					
+				}
+				else 
+				{
+					Alert.show("GDP container is null");
+				}
+			}
+			
+//			-------------------------------------------------------------------------
+			
+			public function getUserInfo():void
+			{
+				println("获取自己的信息");
+				gdp_container.getUserProfile(getUserProfileCallback);
+			}
+			
+			private function getUserProfileCallback(user:IUserSocialData):void
+			{
+				if(Boolean(user))
+				{
+					println("成功获取自己的信息");
+					parseUserInfo(user);
+					
+					Server.app = this
+					
+					var codec 	: MessageCodec = new MessageCodec();
+					
+					var sfs 	: String = this.config.child("sfs").toString();
+					var sfszone : String = this.config.child("sfszone").toString();
+					
+					var pdata	: PlatformUserData = new PlatformUserData(
+						this.gdp_container.sns,
+						user.id,
+						user.name,
+						user.sex, 
+						user.photoSmall
+					);
+					
+					var sfs_session : SFSSessionImpl = new SFSSessionImpl(codec);
+					sfs_session.setZone(sfszone);
+					sfs_session.setUser(user.id);
+					sfs_session.setPassword(this.gdp_container.authKey);
+					
+					Server.init(sfs_session);
+					
+					Server.initUserLogin(
+						pdata,
+						sfs.split(":")[0],
+						sfs.split(":")[1]
+					);
+				}
+				else
+				{
+					Alert.show("无法获得用户信息");
+				}
+			}
+			
+			private function printUserInfo(fusers:Array):void
+			{
+				for (var i:int=0;i<fusers.length; i++){
+					parseUserInfo(fusers[i]);
+				}
+			}
+			
+			private function parseUserInfo(uesrData:IUserSocialData):void{
+				try{
+					var info:String="======list user info=======\n" +
+					"{\n";
+					//IUserSocialData 
+					var user:IUserSocialData=uesrData;
+					//uid
+					
+					info=info +"  uid::"+ user.id+"\n";
+					//user name
+					info=info +"  name     ::"+  user.name+"\n";
+					info=info +"  sex      ::"+  user.sex+"\n";
+					info=info +"  birthDate::"+  user.birthDate+"\n";
+					info=info +"  city     ::"+  user.city+"\n";
+					info=info +"  country  ::"+  user.country+"\n";
+					info=info +"  url      ::"+  user.url+"\n";
+					
+					//user header photo
+					info=info +"  header photo s::"+  user.photoSmall+"\n";
+					info=info +"  header photo m::"+  user.photoMedium+"\n";
+					info=info +"  header photo b::"+  user.photoBig+"\n";
+					info=info +"}";
+					//其他IUserSocialData属性信息
+					println(info);
+				}
+				catch(e:Error)
+				{
+					trace(e.getStackTrace());
+				}
+			}
+			
+//			-------------------------------------------------------------------------
+			
+			public function getAllFriendsInfo():void
+			{
+				println("获取好友信息：");
+				gdp_container.getFriendsInfo(getAllFriendsInfoCallback);
+			}
+			
+			public function getAppFriendsInfo():void
+			{
+				println("获取APP好友信息：");
+				gdp_container.getAppFriendsInfo(getAppFriendsInfoCallback);
+			}
+			
+			private function getAllFriendsInfoCallback(fusers:Array):void
+			{
+				if(fusers){
+					println("成功获取好友信息");
+					println("多少好友："+fusers.length +" friends");
+					printUserInfo(fusers);
+				}else{
+					println("获取好友信息失败");
+				}
+			}
+			
+			private function getAppFriendsInfoCallback(fusers:Array):void
+			{
+				if(fusers){
+					println("成功APP获取好友信息");
+					println("多少APP好友："+fusers.length +" friends");
+					printUserInfo(fusers);
+				}else{
+					println("获取APP好友信息失败");
+				}
+			}
+			
+			
+			
+		]]>
+	</mx:Script>
+	<ns1:Login_Cpt verticalCenter="0" horizontalCenter="0"  id="login_cpt">
+	</ns1:Login_Cpt>
+	
+
+	<!--
+	<ns1:Lami id="game" horizontalCenter="0" verticalCenter="0" visible="false">
+	</ns1:Lami> 
+	-->
+	
+</mx:Application>
