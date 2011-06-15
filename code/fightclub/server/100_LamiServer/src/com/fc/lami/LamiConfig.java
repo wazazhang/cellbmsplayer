@@ -40,6 +40,9 @@ public class LamiConfig extends Config
 	public static Integer	MATRIX_WIDTH = 26;
 	@ConfigField("桌面牌矩阵高")
 	public static Integer	MATRIX_HEIGHT = 10;
+	
+	@ConfigField("是否快速游戏模式")
+	public static Integer	IS_FAST_GAME = 0;
 
 //	---------------------------------------------------------------------
 	@ConfigSeparator("第三方")

@@ -34,7 +34,7 @@ public class Game implements Runnable
 	final static public int startCard = 14;
 	ArrayList<CardData> left_cards = new ArrayList<CardData>();
 	public boolean is_start_time = false; //发牌时间
-	boolean is_fast_game = true;
+	boolean is_fast_game = false;
 	
 	/** 桌面牌矩阵 */
 	public CardData matrix[][];
@@ -53,6 +53,9 @@ public class Game implements Runnable
 	
 	public Game(Desk desk){
 		this.desk = desk;
+		if (LamiConfig.IS_FAST_GAME == 1){
+			is_fast_game = true;
+		}
 		gameInit();
 	}
 	

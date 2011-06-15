@@ -52,10 +52,10 @@ public class LamiServerListener implements ServerListener
 	@Override
 	public void init(com.net.server.Server server_instance) {
 		this.server_instance = server_instance;
+		this.hall = new Hall(this);
 		for (int i = 0; i < rooms.length; i++) {
 			rooms[i] = new Room(this, i, services, LamiConfig.THREAD_INTERVAL);
 		}
-		this.hall = new Hall(this);
 	}
 	
 	@Override
@@ -229,6 +229,15 @@ public class LamiServerListener implements ServerListener
 	public Player getPlayerByUID(String uid){
 		for (EchoClientSession cs:client_list.values()){
 			if (cs.player.getUID().equals(uid)){
+				return cs.player;
+			}
+		}
+		return null;
+	}
+	
+	public Player getPlayerByName(String name){
+		for (EchoClientSession cs:client_list.values()){
+			if (cs.player.getName().equals(name)){
 				return cs.player;
 			}
 		}

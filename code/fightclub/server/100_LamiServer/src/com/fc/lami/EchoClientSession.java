@@ -10,7 +10,7 @@ import com.fc.lami.Messages.EnterRoomRequest;
 import com.fc.lami.Messages.EnterRoomResponse;
 import com.fc.lami.Messages.ExitRoomRequest;
 import com.fc.lami.Messages.ExitRoomResponse;
-import com.fc.lami.Messages.FreshRoomListNotify;
+import com.fc.lami.Messages.FreshRoomNotify;
 import com.fc.lami.Messages.GameResetNotify;
 import com.fc.lami.Messages.GameResetRequest;
 import com.fc.lami.Messages.GameResetResponse;
@@ -80,10 +80,8 @@ public class EchoClientSession implements ClientSessionListener
 	public void disconnected(ClientSession session) {
 		if (player.cur_room!=null){
 			player.cur_room.onPlayerLeave(player.player_id);
-		}else{
-			server.getHall().leave(session);
 		}
-		server.getHall().broadcast(new FreshRoomListNotify(server.getRoomList()));
+		server.getHall().leave(session);
 	}
 	
 	@Override
@@ -204,8 +202,6 @@ public class EchoClientSession implements ClientSessionListener
 				EnterRoomResponse res = new EnterRoomResponse(EnterRoomResponse.ENTER_ROOM_RESULT_SUCCESS);
 				res.room = r.getRoomData();
 				session.sendResponse(protocol, res);
-				server.getHall().leave(session);
-				server.getHall().broadcast(new FreshRoomListNotify(server.getRoomList()));
 				//session.sendResponse(protocol, new EnterRoomResponse(EnterRoomResponse.ENTER_ROOM_RESULT_SUCCESS));
 			}else{
 				session.sendResponse(protocol, new EnterRoomResponse(EnterRoomResponse.ENTER_ROOM_RESULT_FAIL_ROOM_FULL));
@@ -218,10 +214,9 @@ public class EchoClientSession implements ClientSessionListener
 	/** 退出房间 */
 	private void processExitRoomRequest(ClientSession session, Protocol protocol, ExitRoomRequest request){
 		if (player.cur_room != null) {
+			Room room = player.cur_room;
 			player.cur_room.onPlayerLeave(player.player_id);
 			session.sendResponse(protocol, new ExitRoomResponse(server.getRoomList()));
-			server.getHall().join(session);
-			server.getHall().broadcast(new FreshRoomListNotify(server.getRoomList()));
 		}
 	}
 	
@@ -420,15 +415,15 @@ public class EchoClientSession implements ClientSessionListener
 	
 	/** 聊天  当前频道喊话*/
 	private void processSpeakToPublicRequest(ClientSession session, Protocol protocol, SpeakToPublicRequest request){
-		SpeakToPublicNotify notify = new SpeakToPublicNotify(player.getUID(), request.message);
+		SpeakToPublicNotify notify = new SpeakToPublicNotify(player.player_id, request.message);
 		player.getCurChannel().send(notify);
 		session.sendResponse(protocol, new SpeakToPublicResponse());
 	}
 	
 	/** 聊天  私聊 */
 	private void processSpeakToPrivateRequest(ClientSession session, Protocol protocol, SpeakToPrivateRequest request){
-		SpeakToPrivateNotify notify = new SpeakToPrivateNotify(player.getUID(), request.message);
-		Player p = server.getPlayerByUID(request.uid);
+		SpeakToPrivateNotify notify = new SpeakToPrivateNotify(player.getName(), request.message);
+		Player p = server.getPlayerByName(request.player_name);
 		if (p!=null){
 			p.session.send(notify);
 			session.sendResponse(protocol, new SpeakToPrivateResponse(SpeakToPrivateResponse.SPEAK_TO_PRIVATE_RESULT_SUCCESS));
@@ -439,7 +434,7 @@ public class EchoClientSession implements ClientSessionListener
 	
 	/** 聊天  指定频道喊话 */
 	private void processSpeakToChannelRequest(ClientSession session, Protocol protocol, SpeakToChannelRequest request){
-		SpeakToChannelNotify notify = new SpeakToChannelNotify(player.getUID(), request.message);
+		SpeakToChannelNotify notify = new SpeakToChannelNotify(player.player_id, request.message);
 		Channel channel = server.getChannel(request.channel);
 		if (channel!=null){
 			channel.send(notify);
@@ -477,8 +472,6 @@ public class EchoClientSession implements ClientSessionListener
 			if (r.onPlayerEnter(player)){
 				res.room = r.getRoomData();
 				session.sendResponse(protocol, res);
-				server.getHall().leave(session);
-				server.getHall().broadcast(new FreshRoomListNotify(server.getRoomList()));
 			}else{
 				res.result = AutoEnterResponse.AUTO_ENTER_RESULT_FAIL_NO_IDLE_SEAT;
 				session.sendResponse(protocol, res);

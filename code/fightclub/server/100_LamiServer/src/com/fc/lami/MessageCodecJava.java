@@ -14,7 +14,7 @@ import com.net.NetDataTypes;
 public class MessageCodecJava implements MutualMessageCodec
 {
 	public String getVersion() {
-		return "Sat Jun 11 10:40:07 GMT 2011";
+		return "Tue Jun 14 12:46:49 CST 2011";
 	}
 
 	public void readExternal(MutualMessage msg, NetDataInput in) throws IOException 
@@ -67,8 +67,8 @@ public class MessageCodecJava implements MutualMessageCodec
 		if (msg.getClass().equals(com.fc.lami.Messages.ExitRoomResponse.class)) {
 			_r((com.fc.lami.Messages.ExitRoomResponse)msg, in); return;
 		}
-		if (msg.getClass().equals(com.fc.lami.Messages.FreshRoomListNotify.class)) {
-			_r((com.fc.lami.Messages.FreshRoomListNotify)msg, in); return;
+		if (msg.getClass().equals(com.fc.lami.Messages.FreshRoomNotify.class)) {
+			_r((com.fc.lami.Messages.FreshRoomNotify)msg, in); return;
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.GameOverNotify.class)) {
 			_r((com.fc.lami.Messages.GameOverNotify)msg, in); return;
@@ -309,8 +309,8 @@ public class MessageCodecJava implements MutualMessageCodec
 		if (msg.getClass().equals(com.fc.lami.Messages.ExitRoomResponse.class)) {
 			_w((com.fc.lami.Messages.ExitRoomResponse)msg, out); return;
 		}
-		if (msg.getClass().equals(com.fc.lami.Messages.FreshRoomListNotify.class)) {
-			_w((com.fc.lami.Messages.FreshRoomListNotify)msg, out); return;
+		if (msg.getClass().equals(com.fc.lami.Messages.FreshRoomNotify.class)) {
+			_w((com.fc.lami.Messages.FreshRoomNotify)msg, out); return;
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.GameOverNotify.class)) {
 			_w((com.fc.lami.Messages.GameOverNotify)msg, out); return;
@@ -726,14 +726,14 @@ public class MessageCodecJava implements MutualMessageCodec
 	}
 
 //	----------------------------------------------------------------------------------------------------
-//	com.fc.lami.Messages.FreshRoomListNotify
+//	com.fc.lami.Messages.FreshRoomNotify
 //	----------------------------------------------------------------------------------------------------
-	public com.fc.lami.Messages.FreshRoomListNotify new_com_fc_lami_Messages_FreshRoomListNotify(){return new com.fc.lami.Messages.FreshRoomListNotify();}
-	private void _r(com.fc.lami.Messages.FreshRoomListNotify msg, NetDataInput in) throws IOException {
-		msg.rooms = (com.fc.lami.Messages.RoomSnapShot[])in.readExternalArray(com.fc.lami.Messages.RoomSnapShot.class);
+	public com.fc.lami.Messages.FreshRoomNotify new_com_fc_lami_Messages_FreshRoomNotify(){return new com.fc.lami.Messages.FreshRoomNotify();}
+	private void _r(com.fc.lami.Messages.FreshRoomNotify msg, NetDataInput in) throws IOException {
+		msg.room = in.readExternal(com.fc.lami.Messages.RoomSnapShot.class);
 	}
-	private void _w(com.fc.lami.Messages.FreshRoomListNotify msg, NetDataOutput out) throws IOException {
-		out.writeExternalArray(msg.rooms);
+	private void _w(com.fc.lami.Messages.FreshRoomNotify msg, NetDataOutput out) throws IOException {
+		out.writeExternal(msg.room);
 	}
 
 //	----------------------------------------------------------------------------------------------------
@@ -1331,11 +1331,11 @@ public class MessageCodecJava implements MutualMessageCodec
 //	----------------------------------------------------------------------------------------------------
 	public com.fc.lami.Messages.SpeakToChannelNotify new_com_fc_lami_Messages_SpeakToChannelNotify(){return new com.fc.lami.Messages.SpeakToChannelNotify();}
 	private void _r(com.fc.lami.Messages.SpeakToChannelNotify msg, NetDataInput in) throws IOException {
-		msg.player_name = in.readUTF();
+		msg.player_id = in.readInt();
 		msg.message = in.readUTF();
 	}
 	private void _w(com.fc.lami.Messages.SpeakToChannelNotify msg, NetDataOutput out) throws IOException {
-		out.writeUTF(msg.player_name);
+		out.writeInt(msg.player_id);
 		out.writeUTF(msg.message);
 	}
 
@@ -1368,11 +1368,11 @@ public class MessageCodecJava implements MutualMessageCodec
 //	----------------------------------------------------------------------------------------------------
 	public com.fc.lami.Messages.SpeakToPrivateNotify new_com_fc_lami_Messages_SpeakToPrivateNotify(){return new com.fc.lami.Messages.SpeakToPrivateNotify();}
 	private void _r(com.fc.lami.Messages.SpeakToPrivateNotify msg, NetDataInput in) throws IOException {
-		msg.player_uid = in.readUTF();
+		msg.player_name = in.readUTF();
 		msg.message = in.readUTF();
 	}
 	private void _w(com.fc.lami.Messages.SpeakToPrivateNotify msg, NetDataOutput out) throws IOException {
-		out.writeUTF(msg.player_uid);
+		out.writeUTF(msg.player_name);
 		out.writeUTF(msg.message);
 	}
 
@@ -1381,11 +1381,11 @@ public class MessageCodecJava implements MutualMessageCodec
 //	----------------------------------------------------------------------------------------------------
 	public com.fc.lami.Messages.SpeakToPrivateRequest new_com_fc_lami_Messages_SpeakToPrivateRequest(){return new com.fc.lami.Messages.SpeakToPrivateRequest();}
 	private void _r(com.fc.lami.Messages.SpeakToPrivateRequest msg, NetDataInput in) throws IOException {
-		msg.uid = in.readUTF();
+		msg.player_name = in.readUTF();
 		msg.message = in.readUTF();
 	}
 	private void _w(com.fc.lami.Messages.SpeakToPrivateRequest msg, NetDataOutput out) throws IOException {
-		out.writeUTF(msg.uid);
+		out.writeUTF(msg.player_name);
 		out.writeUTF(msg.message);
 	}
 
@@ -1405,11 +1405,11 @@ public class MessageCodecJava implements MutualMessageCodec
 //	----------------------------------------------------------------------------------------------------
 	public com.fc.lami.Messages.SpeakToPublicNotify new_com_fc_lami_Messages_SpeakToPublicNotify(){return new com.fc.lami.Messages.SpeakToPublicNotify();}
 	private void _r(com.fc.lami.Messages.SpeakToPublicNotify msg, NetDataInput in) throws IOException {
-		msg.player_name = in.readUTF();
+		msg.player_id = in.readInt();
 		msg.message = in.readUTF();
 	}
 	private void _w(com.fc.lami.Messages.SpeakToPublicNotify msg, NetDataOutput out) throws IOException {
-		out.writeUTF(msg.player_name);
+		out.writeInt(msg.player_id);
 		out.writeUTF(msg.message);
 	}
 
