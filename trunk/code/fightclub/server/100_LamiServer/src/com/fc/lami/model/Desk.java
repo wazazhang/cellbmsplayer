@@ -93,7 +93,6 @@ public class Desk implements ChannelListener
 		player.cur_desk = this;
 		player.is_ready = false;
 		player.card_list.clear();
-		channel.join(player.session);
 		return true;
 	}
 	
@@ -116,7 +115,6 @@ public class Desk implements ChannelListener
 				player.cur_desk = null;
 				player.is_ready = false;
 //				player.card_list.clear();
-				channel.leave(player.session);
 			}
 			return player;
 		}
@@ -125,6 +123,7 @@ public class Desk implements ChannelListener
 	public boolean addVisitor(Player player) {
 		log.info("visitor [" + player + "] join desk " + desk_id);
 		if (addPlayer(player)) {
+			onPlayerEnter(player);
 			return true;
 		}
 		return false;
@@ -134,6 +133,7 @@ public class Desk implements ChannelListener
 		log.info("visitor [" + player + "] leave desk " + desk_id);
 		player = removePlayer(player.player_id);
 		if (player != null) {
+			onPlayerLeave(player);
 		}
 		return player;
 	}
@@ -163,8 +163,9 @@ public class Desk implements ChannelListener
 				desk_players.put(seat, player);
 			}
 		}
+		onPlayerEnter(player);
 		EnterDeskNotify ntf = new EnterDeskNotify(player.getPlayerData().player_id, desk_id, seat);
-//		broadcast(ntf);
+		broadcast(ntf);
 		room.broadcast(ntf);
 		return true;
 	}
@@ -185,14 +186,11 @@ public class Desk implements ChannelListener
 		if (game != null) {
 			game.onPlayerLeave(player);
 		}
+		onPlayerLeave(player);
 		LeaveDeskNotify ntf = new LeaveDeskNotify(player.player_id, desk_id);
-//		broadcast(ntf);
+		broadcast(ntf);
 		room.broadcast(ntf);
-//		player.session.send(ntf);
 		return true;
-//		player.cur_room.notifyAll(ntf);
-		
-		//NotifyAll(ntf);
 	}
 
 	public Integer getSeat(Player player) {
@@ -222,57 +220,17 @@ public class Desk implements ChannelListener
 		return -1;
 	}
 	
-//	public Boolean setPlayerE(Player player){
-//		if (joinDesk(player, )){
-//			return false;
-//		}
-//		player_E = player;
-//		onPlayerEnter(player);
-//		return true;
-//	}
-//	
-//	public Boolean setPlayerW(Player player){
-//		if (player_W!=null){
-//			return false;
-//		}
-//		player_W = player;
-//		onPlayerEnter(player);
-//		return true;
-//	}
-//	
-//	public Boolean setPlayerS(Player player){
-//		if (player_S!=null){
-//			return false;
-//		}
-//		player_S = player;
-//		onPlayerEnter(player);
-//		return true;
-//	}
-//	
-//	public Boolean setPlayerN(Player player){
-//		if (player_N!=null){
-//			return false;
-//		}
-//		player_N = player;
-//		onPlayerEnter(player);
-//		return true;
-//	}
-//	
-//	private void onPlayerEnter(Player player){
-//		if (player_E!=null){
-//			player_E.session.send(new EnterDeskNotify(player.player_id,getDeskData(),3));
-//		}
-//		if (player_W!=null){
-//			player_W.session.send(new EnterDeskNotify(player.player_id,getDeskData(),1));
-//		}
-//		if (player_S!=null){
-//			player_S.session.send(new EnterDeskNotify(player.player_id,getDeskData(),2));
-//		}
-//		if (player_N!=null){
-//			player_N.session.send(new EnterDeskNotify(player.player_id,getDeskData(),0));
-//		}
-//	}
-//	
+
+	private void onPlayerEnter(Player player){
+		room.getChannel().leave(player.session);
+		getChannel().join(player.session);
+	}
+	
+	private void onPlayerLeave(Player player){
+		room.getChannel().join(player.session);
+		getChannel().leave(player.session);
+	}
+
 	public int getPlayerNumber(){
 		return desk_players.size();
 	}
@@ -300,27 +258,6 @@ public class Desk implements ChannelListener
 		synchronized (desk_players) {
 			return desk_players.values().toArray(new Player[desk_players.size()]);
 		}
-//		int pn = getPlayerNumber();
-//		Player playerlist[] = new Player[pn];
-//		int i = 0;
-//		/** 顺时针排序 */
-//		if (player_E!=null){
-//			playerlist[i] = player_E;
-//			i++;
-//		}
-//		if (player_S!=null){
-//			playerlist[i] = player_S;
-//			i++;
-//		}
-//		if (player_W!=null){
-//			playerlist[i] = player_W;
-//			i++;
-//		}
-//		if (player_N!=null){
-//			playerlist[i] = player_N;
-//			i++;
-//		}
-//		return playerlist;
 	}
 	
 	public void onPlayerReady(Player p, boolean isReady){
@@ -392,26 +329,7 @@ public class Desk implements ChannelListener
 	public  void broadcast(FlashMessage msg)
 	{
 		channel.send(msg);
-//		if (player_E!=null){
-//			player_E.session.send(msg);
-//		}
-//		if (player_W!=null){
-//			player_W.session.send(msg);
-//		}
-//		if (player_S!=null){
-//			player_S.session.send(msg);
-//		}
-//		if (player_N!=null){
-//			player_N.session.send(msg);
-//		}
-		// TODO 此处要添加发送给体旁观者的信息
 	}
 	
-//	//通知本桌子的出牌区的变化
-//	public void NotifyMatrixChange(MainMatrixChangeRequest res)
-//	{
-//		MainMatrixChangeNotify ntf = new MainMatrixChangeNotify(res.cards);
-//		NotifyAll(ntf);
-//	}
 	
 }

@@ -822,15 +822,15 @@ public class Messages {
 		}
 	}
 	
-	public static class FreshRoomListNotify extends FlashMessage
+	public static class FreshRoomNotify extends FlashMessage
 	{
-		public RoomSnapShot rooms[];
+		public RoomSnapShot room;
 		
-		public FreshRoomListNotify(RoomSnapShot rooms[]){
-			this.rooms = rooms;
+		public FreshRoomNotify(RoomSnapShot room){
+			this.room = room;
 		}
 		
-		public FreshRoomListNotify(){}
+		public FreshRoomNotify(){}
 	}
 	
 	/** 进桌子 */
@@ -1174,11 +1174,11 @@ public class Messages {
 	
 	public static class SpeakToPublicNotify extends FlashMessage
 	{
-		public String player_name;
+		public int player_id;
 		public String message;
 		
-		public SpeakToPublicNotify(String player, String message){
-			this.player_name = player;
+		public SpeakToPublicNotify(int pid, String message){
+			this.player_id = pid;
 			this.message = message;
 		}
 		
@@ -1188,11 +1188,11 @@ public class Messages {
 	// 玩家对某玩家私聊
 	public static class SpeakToPrivateRequest extends FlashMessage
 	{
-		public String uid;
+		public String player_name;
 		public String message;
 		
-		public SpeakToPrivateRequest(String uid, String str){
-			this.uid = uid;
+		public SpeakToPrivateRequest(String name, String str){
+			this.player_name = name;
 			this.message = str;
 		}
 		
@@ -1215,11 +1215,11 @@ public class Messages {
 	
 	public static class SpeakToPrivateNotify extends FlashMessage
 	{
-		public String player_uid;
+		public String player_name;
 		public String message;
 		
-		public SpeakToPrivateNotify(String player, String message){
-			this.player_uid = player;
+		public SpeakToPrivateNotify(String name, String message){
+			this.player_name = name;
 			this.message = message;
 		}
 		
@@ -1242,11 +1242,11 @@ public class Messages {
 	
 	public static class SpeakToChannelNotify extends FlashMessage
 	{
-		public String player_name;
+		public int player_id;
 		public String message;
 		
-		public SpeakToChannelNotify(String player, String message){
-			this.player_name = player;
+		public SpeakToChannelNotify(int pid, String message){
+			this.player_id = pid;
 			this.message = message;
 		}
 		

@@ -49,6 +49,10 @@ public class Player
 		return user.getUID();
 	}
 	
+	public String getName(){
+		return user.getName();
+	}
+	
 	public PlayerData getPlayerData(){
 		PlayerData pd = new PlayerData();
 		pd.player_id 		= this.player_id;

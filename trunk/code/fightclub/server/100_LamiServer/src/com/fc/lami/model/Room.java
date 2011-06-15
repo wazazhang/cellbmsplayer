@@ -10,6 +10,7 @@ import com.fc.lami.LamiConfig;
 import com.fc.lami.Messages.DeskData;
 import com.fc.lami.Messages.EnterRoomNotify;
 import com.fc.lami.Messages.ExitRoomNotify;
+import com.fc.lami.Messages.FreshRoomNotify;
 import com.fc.lami.Messages.PlayerData;
 import com.fc.lami.Messages.RoomData;
 import com.fc.lami.Messages.RoomSnapShot;
@@ -35,6 +36,8 @@ public class Room implements ChannelListener, Runnable
 	
 	final private ConcurrentHashMap<Integer, Player> player_list;
 	
+	final private Hall		hall;
+	
 	
 	public Room(LamiServerListener server, int room_id, ThreadPool tp, int interval)
 	{
@@ -49,6 +52,8 @@ public class Room implements ChannelListener, Runnable
 		}
 		
 		this.thread_pool.scheduleAtFixedRate(this, interval, interval);
+		
+		this.hall = server.getHall();
 	}
 	
 	public int getRoomID() {
@@ -114,6 +119,7 @@ public class Room implements ChannelListener, Runnable
 			player.cur_room = this;
 		}			
 		channel.join(player.session);
+		hall.broadcast(new FreshRoomNotify(getRoomSnapShot()));
 		broadcast(new EnterRoomNotify(player.getPlayerData()));
 		log.info("player [" + player + "] enter room [" + getRoomID() + "]");
 		return true;
@@ -128,6 +134,7 @@ public class Room implements ChannelListener, Runnable
 			}
 			player.cur_room = null;
 			broadcast(new ExitRoomNotify(player.player_id));
+			hall.broadcast(new FreshRoomNotify(getRoomSnapShot()));
 			channel.leave(player.session);
 //			for (Player p : player_list.values()){
 //				ExitRoomNotify ern = new ExitRoomNotify(player.player_id);
