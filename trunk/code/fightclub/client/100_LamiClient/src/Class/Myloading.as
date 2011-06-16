@@ -15,7 +15,6 @@ package Class
 	{
 		private var logo:Loader;
 		private var logo2:Loader;
-		
 		private var loadingt:Loader;
 		private var txt:TextField;
 		private var txt2:TextField;
@@ -23,23 +22,21 @@ package Class
 		
 		public function Myloading()
 		{
-			
-			
 			logo = new Loader();
 			logo.load(new URLRequest("image/bg.jpg"));
 			addChild(logo);
 			
 			
 			logo2 = new Loader();
-			logo2.load(new URLRequest("image/loadings.png"));
+			logo2.load(new URLRequest("image/myloading0.swf"));
 			addChild(logo2);
-			
-			loadingt = new Loader();
-			loadingt.load(new URLRequest("image/loadingt.png"));
-			addChild(loadingt);
+
+		
+			//loadingt = new Loader();
+			//loadingt.load(new URLRequest("image/loadingt.png"));
+			//addChild(loadingt);
 				
 			var style:TextFormat = new TextFormat(null,20,0xFFFFFF,'bold',null,null,null,null,"center");
-
 			txt = new TextField();
 			txt.defaultTextFormat = style;
 			txt.width = 200;
@@ -47,9 +44,7 @@ package Class
 			txt.height = 30;
 			addChild(txt);
 			
-			super();
-			
-			
+			super();			
 		}
 		//最重要的代码就在这里..重写preloader,让swf执行加载的时候~进行你希望的操作~
 		public override  function set preloader(value:Sprite):void{
@@ -79,14 +74,13 @@ package Class
 			logo.y = 0;
 			
 			logo2.x = (stage.stageWidth - 597)/2;
-			logo2.y =  230;
-			
+			logo2.y =  130;
 			
 			txt.x = (stage.stageWidth - 200)/2;
-			txt.y = 430;
+			txt.y = 400;
 			
-			loadingt.x = logo2.x;
-			loadingt.y =  359;
+			//loadingt.x = logo2.x;
+			//loadingt.y =  359;
 
 			graphics.clear();
 			graphics.beginFill(0x000000);
@@ -109,11 +103,16 @@ package Class
 			return new RoundedRectangle(0, 35, 580, 8, 4);
 		}
 		
-		
-		
 		private function load_progress(e:ProgressEvent):void{
-			txt.text = int(e.bytesLoaded/e.bytesTotal*100)+"%";
-			//loadingt.width = int(e.bytesLoaded/e.bytesTotal*100)*2;
+			
+			var p:int =  int(e.bytesLoaded/e.bytesTotal*100)
+			txt.text = p +"%";
+			var mv:MovieClip =  (logo2.content as MovieClip)
+			if(mv != null)
+				mv.loading.gotoAndStop(p);
+			
+			
+			
 		}
 		private function load_complete(e:Event):void{
 			txt.text = "加载完毕!"

@@ -25,6 +25,10 @@ package Class
 			return  webRoot+'image/start.png';
 		}
 		
+		public static function get startSwf():String
+		{
+			return  webRoot+'image/start.swf';
+		}
 		
 		
 		public function WebResource()

@@ -1,14 +1,119 @@
 /* CSS file */
 
+global {font-size:12px}
+
+Alert
+{
+	borderSkin: Embed(source="../image/alert.png");
+	backgroundSize: "100%";
+	titleStyleName: alertTitle;
+	controlBarStyleName: alertControlBar;
+	statusStyleName: alertStatus;
+	borderThicknessBottom: 10;
+	borderThicknessRight: 10;
+	borderThicknessLeft: 10;
+	borderThicknessTop: 2;
+	cornerRadius: 4;
+	paddingTop: 10;
+	paddingBottom: 10;
+	buttonStyleName: alertButton;
+}
+
+.alertButton
+{
+	skin: Embed(source="../image/alert_btn.png");
+	textDecoration: none;
+	upSkin: Embed(source="../image/alert_btn.png");
+	downSkin: Embed(source="../image/alert_btn_d.png");
+	focusSkin: Embed(source="../image/alert_btn_e.png");
+	overSkin: Embed(source="../image/alert_btn_e.png");
+	fontAntiAliasType: advanced;
+	fontStyle: normal;
+	fontWeight: normal;
+	color: #FFFFFF;
+	textSelectedColor: #FFFFFF;
+	fontSize: 12;
+	themeColor: #FFFFFF;
+	errorColor: #FFFFFF;
+	textRollOverColor: #FFFFFF;
+	
+}
+
+.alertTitle
+{
+}
+.alertControlBar
+{
+	
+}
+.alertStatus
+{
+}
+
+.bigButton
+{
+	skin: Embed(source="../image/big_btn_u.png");
+	textDecoration: none;
+	upSkin: Embed(source="../image/big_btn_u.png");
+	downSkin: Embed(source="../image/big_btn_d.png");
+	focusSkin: Embed(source="../image/big_btn_e.png");
+	overSkin: Embed(source="../image/big_btn_e.png");
+	fontAntiAliasType: advanced;
+	fontStyle: normal;
+	fontWeight: normal;
+	color: #FFFFFF;
+	textSelectedColor: #FFFFFF;
+	fontSize: 12;
+	themeColor: #FFFFFF;
+	errorColor: #FFFFFF;
+	textRollOverColor: #FFFFFF;
+	
+}
+
+@font-face { 
+	src: local("Arial"); 
+	fontFamily: "ArialEmbedded"; 
+} 
+
+ToggleButtonBar
+{
+	firstButtonStyleName: toggleButtonBarFirstButton;
+	lastButtonStyleName: toggleButtonBarFirstButton;
+	
+	
+}
+
+.toggleButtonBarFirstButton
+{
+	upSkin: Embed(source="../image/alert_btn.png");
+	overSkin: Embed(source="../image/alert_btn_e.png");
+	downSkin: Embed(source="../image/alert_btn_d.png");
+	
+	selectedUpSkin: Embed(source="../image/alert_btn_d.png");
+	selectedOverSkin: Embed(source="../image/alert_btn_d.png");
+	selectedDownSkin: Embed(source="../image/alert_btn_d.png");
+	selectedDisabledSkin: Embed(source="../image/alert_btn_d.png");
+
+}
+
+
+
+
+
+.myTabs {
+	letterSpacing: 2;
+	
+	fillAlphas: 0, 0.4;
+	/*selectedTabTextStyleName: "mySelectedTabs";*/
+}
+.mySelectedTabs {
+	color: #ffff00;
+	textRollOverColor: #ff0000;
+}
+
+
 .VScrollBar   
 {   
-	
-	width:100px;
-	
-	bar-width-ratio:100px;
-	
-	
-	
 	/*上面箭头的样式*/  
 	/*
 	up-arrow-skin:Embed(source="../image/bg/bar.png");   
@@ -19,6 +124,10 @@
 		Embed(source="../image/bg/rollup.png");   
 	upArrowDownSkin:   
 		Embed(source="../image/bg/rollup1.png");   
+	upArrowDisabledSkin:   
+		Embed(source="../image/bg/rollup.png");   
+	
+	
 	
 	/*下面箭头的样式*/  
 	downArrowUpSkin:   
@@ -26,24 +135,44 @@
 	downArrowOverSkin:   
 		Embed(source="../image/bg/rolldwon.png");   
 	downArrowDownSkin:   
-		Embed(source="../image/bg/rolldwon1.png");   
+		Embed(source="../image/bg/rolldwon1.png");  
+	downArrowDisabledSkin:   
+		Embed(source="../image/bg/rolldwon.png");   
+	
 	
 	thumbDownSkin:   
-		Embed(source="../image/bg/bar.png",   
-		scaleGridLeft="20", scaleGridTop="20",   
-		scaleGridRight="21", scaleGridBottom="21");   
+		Embed(source="../image/bg/bar.png",
+		scaleGridLeft="7", scaleGridTop="5", 
+		scaleGridRight="8", scaleGridBottom="7");  
+	
 	thumbUpSkin:   
-		Embed(source="../image/bg/bar.png",   
-		scaleGridLeft="20", scaleGridTop="20",   
-		scaleGridRight="21", scaleGridBottom="21");   
+		Embed(source="../image/bg/bar.png",
+		scaleGridLeft="7", scaleGridTop="5", 
+		scaleGridRight="8", scaleGridBottom="7"); 
+	
 	thumbOverSkin:   
-		Embed(source="../image/bg/bar.png",   
-		scaleGridLeft="20", scaleGridTop="20",   
-		scaleGridRight="21", scaleGridBottom="21");   
+		Embed(source="../image/bg/bar.png",
+		scaleGridLeft="7", scaleGridTop="5", 
+		scaleGridRight="8", scaleGridBottom="7"); 
+	
+	thumbDisabledSkin:   
+		Embed(source="../image/bg/bar.png",
+		scaleGridLeft="7", scaleGridTop="5", 
+		scaleGridRight="8", scaleGridBottom="7");    
 
 
 	trackSkin:   
-		Embed(source="../image/bg/vcenter.png",   
-		scaleGridLeft="7", scaleGridTop="4",   
-		scaleGridRight="8", scaleGridBottom="6");
+		Embed(source="../image/bg/trcak.png",   
+		scaleGridLeft="7", scaleGridTop="9",   
+		scaleGridRight="8", scaleGridBottom="10");
 }  
+
+.taskDetailBG
+{  
+	border-skin:ClassReference('Class.MyBackgroundSkin');  
+	background-image:Embed("../image/bg/gbg.png");  
+	backgroundImagePosition:left,top;/*第一个参数可用值：left,center,right,默认值left;第二个参数可用值：top,middle,bottom,默认值top*/  
+	backgroundImageRepeat:repeat;/*可用值：repeat,no-repeat,repeat-x,repeat-y,默认值no-repeat*/  
+	background-size:100;  
+}
+

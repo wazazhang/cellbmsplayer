@@ -35,6 +35,8 @@ public class LamiConfig extends Config
 	public static Integer	TURN_INTERVAL = 60000;
 	@ConfigField("操作时间")
 	public static Integer	OPERATE_TIME = 30000;
+	@ConfigField("确认手牌时间")
+	public static Integer	READY_TIME = 10000;
 	
 	@ConfigField("桌面牌矩阵宽")
 	public static Integer	MATRIX_WIDTH = 26;
@@ -43,7 +45,10 @@ public class LamiConfig extends Config
 	
 	@ConfigField("是否快速游戏模式")
 	public static Integer	IS_FAST_GAME = 0;
-
+	
+	@ConfigField("游戏中退出扣分")
+	public static Integer	PUNISH_SCORE = 300;
+	
 //	---------------------------------------------------------------------
 	@ConfigSeparator("第三方")
 //	---------------------------------------------------------------------

@@ -175,7 +175,7 @@ package Class
 		public static var xtbg:Class;
 		
 		[Bindable]
-		[Embed(source='image/bg/talkbg.png')] //系统信息背景
+		[Embed(source='image/bg/chat_bg.png')] //系统信息背景
 		public static var talkbg:Class;
 		
 		[Bindable]
@@ -183,27 +183,8 @@ package Class
 		public static var guang:Class;
 		
 		
-		[Bindable]
-		[Embed(source='image/ypb.png')] //已经破冰
-		public static var ypb:Class;
-		
-		[Bindable]
-		[Embed(source='image/wpb.png')] //未破冰
-		public static var wpb:Class;
-		
-		[Bindable]
-		[Embed(source='image/ddz.png')] //等待中
-		public static var ddz:Class;
-		
-		[Bindable]
-		[Embed(source='image/yxz.png')] //游戏中
-		public static var yxz:Class;
-		
-		
-		[Bindable]
-		[Embed(source='image/pdbg.png')] //频道背景
-		public static var pdbg:Class;
-		
+
+
 		[Bindable]
 		[Embed(source='image/sjbt1.png')] //快速加入1
 		public static var sjbt1:Class;
@@ -217,12 +198,10 @@ package Class
 		public static var time:Class;
 		
 		[Bindable]
-		[Embed(source='image/bg/newbg.png')] //桌面背景
+		[Embed(source='image/bg/desk.png')] //桌面背景
 		public static var newbg:Class;
 		
-		[Bindable]
-		[Embed(source='image/bg/deskbg.png')] //选择桌子背景
-		public static var deskbg:Class;
+
 		
 		[Bindable]
 		[Embed(source='image/bg/deskItemBg.png')] //桌子项
@@ -234,38 +213,68 @@ package Class
 		
 		
 		[Bindable]
-		[Embed(source='image/bg/playerItemBg.png')] //桌子项
+		[Embed(source='image/bg/playerItbg.png')] //玩家项
 		public static var playerItemBg:Class;
 		
 		[Bindable]
-		[Embed(source='image/bg/playerItemBg2.png')] //桌子项
+		[Embed(source='image/bg/playerItbg2.png')] //玩家项
 		public static var playerItemBg2:Class;
 		
 		[Bindable]
-		[Embed(source='image/itbg.png')] //桌子项
+		[Embed(source='image/bg/itbg.png')] //桌子项
 		public static var itbg:Class;
 		
 		[Bindable]
-		[Embed(source='image/itbg2.png')] //桌子项
+		[Embed(source='image/bg/itbg2.png')] //桌子项
 		public static var itbg2:Class;
 		
 		[Bindable]
-		[Embed(source='image/button/fastBt.png')] //桌子项
+		[Embed(source='image/button/fastBt.png')] //快速开始按钮
 		public static var fastBt:Class;
 		
 		[Bindable]
-		[Embed(source='image/button/fastBt2.png')] //桌子项
+		[Embed(source='image/button/fastBt2.png')] //快速开始按钮
 		public static var fastBt2:Class;
 		
 		[Bindable]
-		[Embed(source='image/button/fastBt3.png')] //桌子项
+		[Embed(source='image/button/fastBt3.png')] //快速开始按钮
 		public static var fastBt3:Class;
 		
 		[Bindable]
-		[Embed(source='image/pai.jpg')] //桌子项
+		[Embed(source='image/card/b.png')] //牌
 		public static var pai:Class;
 		
+		[Bindable]
+		[Embed(source='image/bg/top_bar.png')] //游戏顶部木纹
+		public static var top_bar:Class;
 		
+		[Bindable]
+		[Embed(source='image/gold.png')] //金币
+		public static var gold:Class;
+		
+		[Bindable]
+		[Embed(source='image/bg/wood_bar.png')] //操作区木纹
+		public static var wood_bar:Class;
+		
+		
+		[Bindable]
+		[Embed(source='image/bg/chat_send.png')] //操作区木纹
+		public static var chat_send:Class;
+		
+		
+		[Bindable]
+		[Embed(source='image/bg/head_bar.png')] //操作区木纹
+		public static var head_bar:Class;
+		
+		[Bindable]
+		[Embed(source='image/gold2.png')] //金币2
+		public static var gold2:Class;
+		
+		[Bindable]
+		[Embed(source='image/bg/ProgressBarBg.png')] //进度条
+		public static var ProgressBarBg:Class;
+		
+
 		
 		public function Resource()
 		{

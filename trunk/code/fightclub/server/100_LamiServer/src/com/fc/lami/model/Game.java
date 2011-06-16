@@ -2,8 +2,10 @@ package com.fc.lami.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.ScheduledFuture;
 
 import com.cell.CUtil;
+import com.cell.util.concurrent.ThreadPool;
 import com.fc.lami.LamiConfig;
 import com.fc.lami.Messages.CardData;
 import com.fc.lami.Messages.GameOverNotify;
@@ -22,15 +24,16 @@ import com.fc.lami.Messages.SubmitResponse;
 import com.fc.lami.Messages.SynchronizeResponse;
 import com.fc.lami.Messages.TurnEndNotify;
 import com.fc.lami.Messages.TurnStartNotify;
-import com.fc.lami.Messages.TimeOutNotify;;
+import com.fc.lami.Messages.TimeOutNotify;
+import com.fc.lami.Messages.GameOverToRoomNotify;
 
-public class Game implements Runnable
+public class Game
 {
 	public Desk desk;
 	public Player player_list[];
 	public Player cur_player;
 	
-	public boolean is_over = false;
+//	public boolean is_over = false;
 	final static public int startCard = 14;
 	ArrayList<CardData> left_cards = new ArrayList<CardData>();
 	public boolean is_start_time = false; //发牌时间
@@ -45,14 +48,17 @@ public class Game implements Runnable
 	HashMap<Integer, CardData> player_put = new HashMap<Integer, CardData>();
 	
 	int cur_player_index;
-	long start_time;			// 游戏开始时间
-	long turn_start_time;		// 回合开始时间
-	long operate_start_time;	// 操作开始时间
+//	long start_time;			// 游戏开始时间
+//	long turn_start_time;		// 回合开始时间
+//	long operate_start_time;	// 操作开始时间
 	int mh;
 	int mw;
 	
-	public Game(Desk desk){
+	int escape_point = 0; //逃跑扣的分
+	
+	public Game(Desk desk, ThreadPool thread_pool){
 		this.desk = desk;
+		this.thread_pool = thread_pool;
 		if (LamiConfig.IS_FAST_GAME == 1){
 			is_fast_game = true;
 		}
@@ -80,7 +86,10 @@ public class Game implements Runnable
 		
 		cur_player_index = CUtil.getRandom(0, player_list.length);
 		cur_player = player_list[cur_player_index];
-		start_time = System.currentTimeMillis();
+		if (future!=null){
+			future.cancel(false);
+		}
+		future = thread_pool.scheduleAtFixedRate(new Trun(), LamiConfig.READY_TIME, LamiConfig.READY_TIME);
 		is_start_time = true;
 		mw = LamiConfig.MATRIX_WIDTH;
 		mh = LamiConfig.MATRIX_HEIGHT;
@@ -149,14 +158,14 @@ public class Game implements Runnable
 		return left_cards.size();
 	}
 	
-	public boolean isGameOver(){
-		return is_over;
-	}
+//	public boolean isGameOver(){
+//		return is_over;
+//	}
 	
 	/** 当游戏结束时做的处理，玩家加减分，胜率什么的 */
 	public void onGameOver(){
 		//TODO
-		is_over = true;
+//		is_over = true;
 		int game_over_type = 0;
 		ResultPak[] rp = new ResultPak[player_list.length];
 		if (left_cards.size()==0){ // 如果牌堆的牌被取完，则比较玩家手中的牌的点数
@@ -171,20 +180,20 @@ public class Game implements Runnable
 				}
 			}
 			int sum = 0;
-			for (int i = 0; i<player_list.length; i++){
-				if (i!=w){
-					point[i] = point[i]-min;
-					if (!player_list[i].isOpenIce){
-						point[i] += 100;
-						if (player_list[i].isCanOpenIce()){
-							point[i] += 100;
-						}
+			if (player_list[w].isOpenIce){
+				for (int i = 0; i<player_list.length; i++){
+					if (i!=w){
+						point[i] = point[i]-min;
+						rp[i] = player_list[i].onPlayerLose(point[i]);
+						sum+=point[i];
 					}
-					rp[i] = player_list[i].onPlayerLose(point[i]);
-					sum+=point[i];
+				}
+				rp[w] = player_list[w].onPlayerWin(sum);
+			}else{
+				for (int i = 0; i<player_list.length; i++){
+					rp[i] = player_list[i].onPlayerLose(0);
 				}
 			}
-			rp[w] = player_list[w].onPlayerWin(sum);
 			game_over_type = GameOverNotify.GAME_OVER_TYPE_CARD_OVER;
 		}else{
 			int point[] = new int[player_list.length];
@@ -195,12 +204,6 @@ public class Game implements Runnable
 					w = i;
 				}else{
 					point[i] = player_list[i].getHandCardPonit();
-					if (!player_list[i].isOpenIce){
-						point[i] += 100;
-						if (player_list[i].isCanOpenIce()){
-							point[i] += 100;
-						}
-					}
 					rp[i] = player_list[i].onPlayerLose(point[i]);
 					sum += point[i];
 				}
@@ -211,6 +214,11 @@ public class Game implements Runnable
 		GameOverNotify notify = new GameOverNotify(game_over_type, rp);
 		
 		desk.broadcast(notify);
+		desk.game = null;
+		future.cancel(false);
+		future2.cancel(false);
+		desk.getLogger().info("desk [" + desk.desk_id + "] game over");
+		desk.getRoom().broadcast(new GameOverToRoomNotify(desk.desk_id));
 	}
 	
 	public Player getCurPlayer(){
@@ -230,8 +238,6 @@ public class Game implements Runnable
 		cur_player.session.send(new TurnEndNotify());
 		cur_player_index = (cur_player_index+1) % player_list.length;
 		cur_player = player_list[cur_player_index];
-		turn_start_time = System.currentTimeMillis();
-		operate_start_time = turn_start_time;
 		matrix_old = null;
 		for (int i = 0; i<mh; i++){
 			for (int j = 0; j<mw; j++){
@@ -246,7 +252,15 @@ public class Game implements Runnable
 		desk.broadcast(notify);
 		//process_open_ice = false;
 		player_put.clear();
-		System.out.println("轮到下一个玩家 时间 "+turn_start_time);
+		if (future!=null){
+			future.cancel(false);
+		}
+		future = thread_pool.scheduleAtFixedRate(new Trun(), LamiConfig.OPERATE_TIME, LamiConfig.OPERATE_TIME);
+		if (future2!=null){
+			future2.cancel(false);
+		}
+		future2 = thread_pool.scheduleAtFixedRate(new Trun(), LamiConfig.TURN_INTERVAL, LamiConfig.TURN_INTERVAL);
+//		System.out.println("轮到下一个玩家 时间 "+turn_start_time);
 	}
 	
 	private int playerGetCard(int n){
@@ -791,8 +805,12 @@ public class Game implements Runnable
 		desk.broadcast(new MainMatrixChangeNotify(false, getCurPlayer().player_id, notify_cds));
 		int cur_complete_card_count = getCompleteCardCount();
 		if (cur_complete_card_count>complete_card_count){
-			operate_start_time = System.currentTimeMillis();
+			
 			desk.broadcast(new OperateCompleteNotify(getCurPlayer().player_id));
+			if (future!=null){
+				future.cancel(false);
+			}
+			future = thread_pool.scheduleAtFixedRate(new Trun(), LamiConfig.OPERATE_TIME, LamiConfig.OPERATE_TIME);
 		}
 		complete_card_count = cur_complete_card_count;
 		return true;
@@ -867,7 +885,7 @@ public class Game implements Runnable
 	}
 	
 	public void onPlayerLeave(Player player){
-		int point = player.onPlayerEscape();
+		this.escape_point += player.onPlayerEscape();
 		if (getCurPlayer() == player){
 			repeal();
 		}
@@ -875,57 +893,128 @@ public class Game implements Runnable
 		player_list = desk.getPlayerList();
 		
 		if (player_list.length>0){
-			if (player_list.length<2){
-				ResultPak[] rp = new ResultPak[player_list.length];
-				if (player_list[0].isOpenIce){
-					rp[0] = player_list[0].onPlayerWin(point);
-				}
-				GameOverNotify notify = new GameOverNotify(GameOverNotify.GAME_OVER_TYPE_ESCAPE, rp);
-				desk.broadcast(notify);
-				is_over = true;
-			}else{
-				for (int i = 0; i<player_list.length; i++){
-					if (player_list[i] == next_player){
-						cur_player_index = i;
-						turn_start_time = System.currentTimeMillis();
-						TurnStartNotify notify = new TurnStartNotify(player_list[cur_player_index].player_id, 
-																		getLeftCardNumber()/*, 
-																		System.currentTimeMillis()+LamiConfig.TURN_INTERVAL*/);
-						desk.broadcast(notify);
-						//process_open_ice = false;
-						matrix_old = null;
-						player_put.clear();
-						System.out.println("轮到下一个玩家");
-						return;
-					}
-				}
+			ResultPak[] rp = new ResultPak[player_list.length];
+			for (int i = 0; i<player_list.length; i++){
+				rp[i] = player_list[i].onPlayerWin(escape_point/player_list.length);
 			}
+			GameOverNotify notify = new GameOverNotify(GameOverNotify.GAME_OVER_TYPE_ESCAPE, rp);
+			desk.broadcast(notify);
+			desk.game = null;
+			future.cancel(false);
+			if (future2!=null){
+				future2.cancel(false);
+			}
+			desk.getLogger().info("desk [" + desk.desk_id + "] game over");
+			desk.getRoom().broadcast(new GameOverToRoomNotify(desk.desk_id));
+//			if (player_list.length<2){
+//				ResultPak[] rp = new ResultPak[player_list.length];
+//				if (player_list[0].isOpenIce){
+//					rp[0] = player_list[0].onPlayerWin(escape_point);
+//				}
+//				GameOverNotify notify = new GameOverNotify(GameOverNotify.GAME_OVER_TYPE_ESCAPE, rp);
+//				desk.broadcast(notify);
+//				is_over = true;
+//			}else{
+//				for (int i = 0; i<player_list.length; i++){
+//					if (cur_player == player){
+//						if (player_list[i] == next_player){
+//							cur_player_index = i;
+//							if (!is_start_time){
+//								turn_start_time = System.currentTimeMillis();
+//								TurnStartNotify notify = new TurnStartNotify(player_list[cur_player_index].player_id, 
+//										getLeftCardNumber()/*, 
+//																			System.currentTimeMillis()+LamiConfig.TURN_INTERVAL*/);
+//								desk.broadcast(notify);
+//								//process_open_ice = false;
+//								matrix_old = null;
+//								player_put.clear();
+//								System.out.println("轮到下一个玩家");
+//							}
+//							return;
+//						}
+//					}else if (player_list[i] == cur_player){
+//						cur_player_index = i;
+//					}
+//				}
+//			}
 		}else{
-			is_over = true;
+			GameOverNotify notify = new GameOverNotify(GameOverNotify.GAME_OVER_TYPE_ESCAPE, null);
+			desk.broadcast(notify);
+			desk.game = null;
+			future.cancel(false);
+			if (future2!=null){
+				future2.cancel(false);
+			}
+			desk.getLogger().info("desk [" + desk.desk_id + "] game over");
+			desk.getRoom().broadcast(new GameOverToRoomNotify(desk.desk_id));
 		}
 		
 	}
 	
-	@Override
-	public void run(){
-		if (is_start_time){	//	游戏开始后延迟10秒轮到第一个玩家
-			if (System.currentTimeMillis() - start_time >= 10000){
-				turn_start_time = System.currentTimeMillis();
-				operate_start_time = turn_start_time;
+//	@Override
+//	public void run(){
+//		if (is_start_time){	//	游戏开始后延迟10秒轮到第一个玩家
+//			if (System.currentTimeMillis() - start_time >= 10000){
+//				turn_start_time = System.currentTimeMillis();
+//				operate_start_time = turn_start_time;
+//				TurnStartNotify notify = new TurnStartNotify(player_list[cur_player_index].player_id, 
+//																getLeftCardNumber()/*, 
+//																System.currentTimeMillis()+LamiConfig.TURN_INTERVAL*/);
+//				desk.broadcast(notify);
+//				is_start_time = false;
+//			}
+//		}
+//		//TODO 处理超时，处理游戏是否结束
+//		else if (!is_over){
+//			long cur_time = System.currentTimeMillis();
+//			if (cur_time - operate_start_time >= LamiConfig.OPERATE_TIME ||
+//					cur_time - turn_start_time>=LamiConfig.TURN_INTERVAL){
+//				System.err.println("player " + getCurPlayer() + " 超时");
+//				System.out.println(cur_time);
+//				desk.broadcast(new TimeOutNotify(getCurPlayer().player_id));
+//				if (!player_put.isEmpty() || isProcessed()/*|| process_open_ice*/){
+//					if (submit() == SubmitResponse.SUBMIT_RESULT_SUCCESS){
+//						
+//					}else{
+//						repeal();
+//						if (playerGetCard(3) == 3){ // 撤销罚牌3张
+//							toNextPlayer();
+//						}
+//					}
+//				}else{
+//					if (playerGetCard(1)==1){
+//						toNextPlayer();
+//					}
+//				}
+//			}
+//		}
+//	}
+	
+	private ScheduledFuture<?>	future;
+	private ScheduledFuture<?>	future2;
+	final private ThreadPool			thread_pool;
+	
+	class Trun implements Runnable
+	{
+
+		@Override
+		public void run() {
+			if (is_start_time){
 				TurnStartNotify notify = new TurnStartNotify(player_list[cur_player_index].player_id, 
-																getLeftCardNumber()/*, 
-																System.currentTimeMillis()+LamiConfig.TURN_INTERVAL*/);
+						getLeftCardNumber()/*, 
+						System.currentTimeMillis()+LamiConfig.TURN_INTERVAL*/);
 				desk.broadcast(notify);
 				is_start_time = false;
-			}
-		}
-		//TODO 处理超时，处理游戏是否结束
-		else if (!is_over){
-			long cur_time = System.currentTimeMillis();
-			if (cur_time - operate_start_time >= LamiConfig.OPERATE_TIME ||
-					cur_time - turn_start_time>=LamiConfig.TURN_INTERVAL){
+				if (future!=null){
+					future.cancel(false);
+				}
+				future = thread_pool.scheduleAtFixedRate(new Trun(), LamiConfig.OPERATE_TIME, LamiConfig.OPERATE_TIME);
+				if (future2!=null){
+					future2.cancel(false);
+				}
+				future2 = thread_pool.scheduleAtFixedRate(new Trun(), LamiConfig.TURN_INTERVAL, LamiConfig.TURN_INTERVAL);
+			}else{
 				System.err.println("player " + getCurPlayer() + " 超时");
-				System.out.println(cur_time);
 				desk.broadcast(new TimeOutNotify(getCurPlayer().player_id));
 				if (!player_put.isEmpty() || isProcessed()/*|| process_open_ice*/){
 					if (submit() == SubmitResponse.SUBMIT_RESULT_SUCCESS){
@@ -943,6 +1032,7 @@ public class Game implements Runnable
 				}
 			}
 		}
+		
 	}
 }
 

@@ -9,7 +9,9 @@ package Class
 	import Component.Matrix_Cpt;
 	
 	import com.fc.lami.Messages.CardData;
+	import com.fc.lami.ui.LamiAlert;
 	
+	import flash.display.MovieClip;
 	import flash.events.KeyboardEvent;
 	
 	import mx.collections.ArrayCollection;
@@ -49,10 +51,6 @@ package Class
 		
 		//是否已经开始
 		public  var isStarted:Boolean = false;
-		
-		//牌堆坐标
-		public  var cardspostion_x:int = 600;
-		public  var cardspostion_y:int = 20; 
 		
 		public var timeCtr:TimesCtr;
 		
@@ -258,6 +256,22 @@ package Class
 			check();
 			
 		}
+//		
+		public function getCardCpt(x:int, y:int):Card_Cpt
+		{
+			var line:Line = lineArray.getItemAt(y) as Line;
+			var cardcpt:Card_Cpt = line.firstCard;
+			var i:int = x;
+			// todo
+			while (i>0){
+				i--;
+				cardcpt = cardcpt.nextCardCpt;
+				if (cardcpt == null){
+					return null;
+				}
+			}
+			return cardcpt;
+		}
 		
 		//获得打出点数
 		public  function getSendPoint():int
@@ -334,7 +348,7 @@ package Class
 		{
 			if(!canSubmitCard)
 			{
-				Alert.show("不合法");
+				LamiAlert.show("不合法");
 				return;
 			}
 			setAllCardIssend();
@@ -349,9 +363,7 @@ package Class
 			gamer.confiomCard();
 			gamer.isMyturn = true;
 			haveSendCard = false;
-		
-			lami.turnStartImg.visible = true;
-			lami.turnStartEft.play();
+			(lami.beginSwf.content as MovieClip).mc.gotoAndPlay(2);
 			timeCtr.start();
 		}
 		
@@ -396,14 +408,14 @@ package Class
 				for each(var card:Card in gamer.selectedArrayCard)
 				{
 					card.cardUI.isSelected = false;
-					if(card.isSended == false && !card.cardUI.isPlayerOwner)
-					{
-						card.cardUI.card = null;
-						var index:int = gamer.handCard.getItemIndex(card)
-						if(index!=-1)
-						gamer.handCard.removeItemAt(index)
-					
-					}
+//					if(card.isSended == false && !card.cardUI.isPlayerOwner)
+//					{
+//						card.cardUI.card = null;
+//						var index:int = gamer.handCard.getItemIndex(card)
+//						if(index!=-1)
+//						gamer.handCard.removeItemAt(index)
+//					
+//					}
 				}
 				gamer.selectedArrayCard = null
 
@@ -413,16 +425,16 @@ package Class
 			{
 				gamer.selectedCard.cardUI.isSelected = false;
 
-				if(gamer.selectedCard.isSended == false && !gamer.selectedCard.cardUI.isPlayerOwner)
-				{
-					gamer.selectedCard.cardUI.card = null;	
-					
-					index = gamer.handCard.getItemIndex(gamer.selectedCard)
-					if(index!=-1)
-					{
-						gamer.handCard.removeItemAt(index)
-					}
-				}
+//				if(gamer.selectedCard.isSended == false && !gamer.selectedCard.cardUI.isPlayerOwner)
+//				{
+//					gamer.selectedCard.cardUI.card = null;	
+//					
+//					index = gamer.handCard.getItemIndex(gamer.selectedCard)
+//					if(index!=-1)
+//					{
+//						gamer.handCard.removeItemAt(index)
+//					}
+//				}
 				gamer.selectedCard = null;
 				
 			}
@@ -434,12 +446,12 @@ package Class
 		private  function keydown(event:KeyboardEvent):void
 		{
 			if(event.keyCode==16)
-				gamer.keydwon = true;
+				gamer.keydown = true;
 		}
 		
 		private  function keyup(event:KeyboardEvent):void
 		{
-			gamer.keydwon = false;	
+			gamer.keydown = false;	
 		}
 		
 		public  function addGameInfo(str:String):void

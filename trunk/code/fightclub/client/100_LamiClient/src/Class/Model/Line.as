@@ -165,7 +165,7 @@ package Class.Model
 				{
 					buffarr = copyArray(array)
 					if(!checkZu(array))
-						shanErrorCard(array);
+						shanErrorCard(buffarr);
 				}
 
 				curnode = curnode.nextCardCpt;

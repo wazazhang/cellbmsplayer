@@ -22,7 +22,7 @@ import com.net.server.ChannelListener;
 import com.net.server.ClientSession;
 
 
-public class Room implements ChannelListener, Runnable
+public class Room implements ChannelListener
 {
 	static private Logger		log = LoggerFactory.getLogger(Room.class);
 	
@@ -51,7 +51,7 @@ public class Room implements ChannelListener, Runnable
 			desks[i] = new Desk(server, i, this, tp, interval);
 		}
 		
-		this.thread_pool.scheduleAtFixedRate(this, interval, interval);
+//		this.thread_pool.scheduleAtFixedRate(this, interval, interval);
 		
 		this.hall = server.getHall();
 	}
@@ -188,13 +188,13 @@ public class Room implements ChannelListener, Runnable
 	}
 	
 	/** room线程主要监视各个桌子是否有游戏开始 */
-	@Override
-	public void run() {
-		for (int i = 0; i < desks.length; i++) {
-			if (desks[i].getPlayerNumber() > 0||desks[i].getGame()!=null) {
-				desks[i].logic();
-			}
-		}
-	}
+//	@Override
+//	public void run() {
+//		for (int i = 0; i < desks.length; i++) {
+//			if (desks[i].getPlayerNumber() > 0||desks[i].getGame()!=null) {
+//				desks[i].logic();
+//			}
+//		}
+//	}
 	
 }

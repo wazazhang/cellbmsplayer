@@ -8,6 +8,7 @@ package Class.Model
 	import Component.UserMatrix_Cpt;
 	
 	import com.fc.lami.Messages.CardData;
+	import com.fc.lami.ui.LamiAlert;
 	
 	import mx.collections.ArrayCollection;
 	import mx.collections.Sort;
@@ -34,7 +35,7 @@ package Class.Model
 			
 		public var orderType:Boolean = true;   //排序类型	
 			
-		public var keydwon:Boolean = false;	   //当前是否按下SHIFT
+		public var keydown:Boolean = false;	   //当前是否按下SHIFT
 			
 		//private var startCard:int = 14; //起手牌数 	
 		
@@ -98,54 +99,6 @@ package Class.Model
 				}
 			}
 			handCard = h2;
-//			handCard.refresh();
-			
-//			var line:Line = cardLines[0];
-//			var cardcpt:Card_Cpt = line.firstCard;
-//			var precard:Card;
-			
-//			for each(var card:Card in handCard)
-//			{
-//				cardcpt.card = card;
-//				cardcpt.confimcard = card;
-////				cardcpt.isShow = false;
-//				cardcpt = cardcpt.nextCardCpt;
-//				if(precard!=null)
-//				{
-//					precard.nextCard = card;
-//				}
-//				precard = card;
-//			}
-
-//			if(orderType)
-//			{
-//				orderCardByPoint();
-//			}
-//			else
-//			{
-//				orderCardByColor();
-//			}
-//			for each(var line:Line in cardLines)
-//			{
-//				var cardcpt:Card_Cpt = line.firstCard;
-//				do{	
-//					
-//					for each(var carddata:CardData in cards)
-//					{
-//						if(cardcpt.cardX == carddata.x&&cardcpt.cardY == carddata.y)
-//						{
-//							cardcpt.card = Card.createCardByData(carddata);
-//							break;
-//						}
-//						else
-//						{
-//							cardcpt.card = null;
-//						}
-//					}
-//					cardcpt = cardcpt.nextCardCpt;
-//				}	
-//				while(cardcpt!=null)
-//			}	
 		}
 		
 		//清空矩阵
@@ -181,7 +134,7 @@ package Class.Model
 		{
 			if(handCard.length==matrix_length*matrix_height)
 			{
-				//Alert.show("牌数已达到上限");
+				//LamiLamiAlert.show("牌数已达到上限");
 				return;
 			}
 			//canOpearation = false;
@@ -223,7 +176,7 @@ package Class.Model
 				}
 				precard = card;
 			}
-			addCardMotion(handCard[0]);
+			game.lami.addCardMotion(handCard[0]);
 		}
 		
 		public function removeAllCard():void
@@ -251,7 +204,7 @@ package Class.Model
 						cardcpt.isShow = false;
 						cardcpt.card = card;
 						cardcpt.confimcard = card;
-						addCardMotion(card)
+						game.lami.addCardMotion(card)
 						return;
 					}
 					cardcpt = cardcpt.preCardCpt
@@ -314,7 +267,7 @@ package Class.Model
 			/*
 			if(!game.check())
 			{
-				Alert.show("出牌不符合规则");
+			LamiLamiAlert.show("出牌不符合规则");
 				return false;
 			}
 			*/
@@ -325,7 +278,7 @@ package Class.Model
 				
 				if(sum<30)
 				{
-					Alert.show('尚未破冰')
+					LamiAlert.show('尚未破冰')
 					return false;
 				}
 				else
@@ -560,50 +513,47 @@ package Class.Model
 		}
 		
 		
-		protected function addCardMotion(card:Card):void
-		{
-			var moveCard:Card_Cpt = new Card_Cpt();
-			matrix.addChild(moveCard);
-			moveCard.isShow = true;
-			moveCard.x = game.cardspostion_x;
-			moveCard.y = game.cardspostion_y;
-			moveCard.card = new Card(card.point,card.type, card.id);
-			moveCard.card.nextCard  = card.nextCard;
-			moveCard.nextCardCpt = card.cardUI;
-			
-			var move:Move = new Move();
-			
-			move.target = moveCard;
-			move.duration = 300;
-
-			move.xTo = card.cardUI.x;
-			move.yTo = card.cardUI.y;
-			
-//			//card.isSended = false;
-			card.nextCard = null;
-			move.addEventListener(EffectEvent.EFFECT_END,addCardMotionComplate);
-			move.play();
-		}
-		
-		protected function addCardMotionComplate(event:EffectEvent):void
-		{
-			var card:Card = ((event.target as Move).target as Card_Cpt).card;
-			((event.target as Move).target as Card_Cpt).nextCardCpt.isShow = true;
-		    matrix.removeChild((event.target as Move).target as Card_Cpt)
-					
-			if(card.nextCard!=null)
-			{
-				addCardMotion(card.nextCard);
-				
-				
-				//card.nextCard = null;
-			}
-			else
-			{
-				game.lami.showReset();
-				canOpearation = true;
-			}
-		}
+//		protected function addCardMotion(card:Card):void
+//		{
+//			var moveCard:Card_Cpt = new Card_Cpt();
+//			matrix.addChild(moveCard);
+//			moveCard.isShow = true;
+//			moveCard.x = game.cardspostion_x;
+//			moveCard.y = game.cardspostion_y;
+//			moveCard.card = new Card(card.point,card.type, card.id);
+//			moveCard.card.nextCard  = card.nextCard;
+//			moveCard.nextCardCpt = card.cardUI;
+//			
+//			var move:Move = new Move();
+//			
+//			move.target = moveCard;
+//			move.duration = 300;
+//
+//			move.xTo = card.cardUI.x;
+//			move.yTo = card.cardUI.y;
+//			
+////			//card.isSended = false;
+//			card.nextCard = null;
+//			move.addEventListener(EffectEvent.EFFECT_END,addCardMotionComplate);
+//			move.play();
+//		}
+//		
+//		protected function addCardMotionComplate(event:EffectEvent):void
+//		{
+//			var card:Card = ((event.target as Move).target as Card_Cpt).card;
+//			((event.target as Move).target as Card_Cpt).nextCardCpt.isShow = true;
+//		    matrix.removeChild((event.target as Move).target as Card_Cpt)
+//					
+//			if(card.nextCard!=null)
+//			{
+//				addCardMotion(card.nextCard);
+//			}
+//			else
+//			{
+//				game.lami.showReset();
+//				canOpearation = true;
+//			}
+//		}
 		
 		public function myTurnStart():void
 		{
