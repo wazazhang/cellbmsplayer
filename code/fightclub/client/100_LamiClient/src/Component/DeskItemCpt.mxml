@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="578" height="30" 
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="475" height="29" 
 		   backgroundImage="{Resource.deskItemBg}" 
 		   mouseOver="mouseOver(event)" mouseOut="mouseOut(event)"
 		   doubleClickEnabled="true" doubleClick="click()" borderThickness="2" borderColor="#b96400"   cornerRadius="5"
@@ -11,6 +11,7 @@
 			import Class.Server;
 			
 			import com.fc.lami.Messages.DeskData;
+			import com.fc.lami.ui.LamiAlert;
 			
 			import mx.controls.Alert;
 			
@@ -32,17 +33,22 @@
 			private function click():void
 			{
 				
-				if(desk.player_number==4)
-				{
-					Alert.show("当前桌子已满！");
-					return;
-				}
+//				if(desk.player_number==4)
+//				{
+//					LamiAlert.show("当前桌子已满！");
+//					return;
+//				}
 				Server.enterDesk(desk.desk_id,-1)
 			}
 		]]>
 	</mx:Script>
 	<mx:Label x="8" text="{desk.desk_id}" verticalCenter="0" />
-	<mx:Label x="115" text="{desk.desk_name}" verticalCenter="0"/>
-	<mx:Label x="325" text="{desk.is_started?'开始':'等待'}" verticalCenter="0"/>
-	<mx:Label x="443" text="{desk.player_number+'/4'}" verticalCenter="0"/>
+	<mx:Label x="80" text="{desk.desk_name}" verticalCenter="0"/>
+	<mx:Label x="267" text="{desk.is_started?'开始':'空闲'}" verticalCenter="0"/>
+	<mx:Label x="356" text="{desk.player_number+'/4'}" verticalCenter="0"/>
+	<mx:Label x="427" text="未加密" verticalCenter="0"/>
+	
+	<mx:Canvas width="100%" height="100%" buttonMode="true" backgroundAlpha="0.00" backgroundColor="0x000000">	
+	</mx:Canvas>
+	
 </mx:Canvas>

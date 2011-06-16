@@ -15,6 +15,7 @@
     <application path="TestApp.mxml"/>
     <application path="test.mxml"/>
     <application path="main.mxml"/>
+    <application path="TestRoll.mxml"/>
   </applications>
   <modules/>
   <buildCSSFiles/>

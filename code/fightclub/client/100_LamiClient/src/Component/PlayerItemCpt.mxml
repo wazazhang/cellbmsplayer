@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="252" height="28"  backgroundImage="{Resource.playerItemBg}"
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="160" height="24"  backgroundImage="{Resource.playerItemBg}"
 		   mouseOver="mouseOver(event)" mouseOut="mouseOut(event)"   
 		   cornerRadius="5" borderThickness="2" 
 		   borderStyle="solid" borderColor="#b96400" 
@@ -30,7 +30,14 @@
 			
 		]]>
 	</mx:Script>
-	<mx:Label x="7" text="{player.level}" verticalCenter="0"  />
-	<mx:Label x="81" text="{Server.getPlayerName(player)}" verticalCenter="0" />
+	<mx:Label x="5" text="{player.level}" verticalCenter="0"  />
+	<mx:Label x="67" text="{Server.getPlayerName(player)}" width="85" verticalCenter="0" />
+	
+	<!--
 	<mx:Label x="211" text="{player.sex}" verticalCenter="0" />
+	-->
+	
+	<mx:Canvas width="100%" height="100%" buttonMode="true" backgroundAlpha="0.00" backgroundColor="0x000000">	
+	</mx:Canvas>
+	
 </mx:Canvas>

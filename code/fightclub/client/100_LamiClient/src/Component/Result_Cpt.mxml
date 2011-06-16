@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="240" height="222" borderStyle="solid" 
-		   cornerRadius="10" backgroundColor="#FEFEFE" backgroundAlpha="0.8" verticalCenter="0" horizontalCenter="0">
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
+		   width="318" 
+		   height="323" 
+		   borderStyle="solid" 
+		   cornerRadius="10" 
+		   backgroundColor="#FEFEFE" 
+		   backgroundAlpha="0.8" 
+		   verticalCenter="0" 
+		   horizontalCenter="0"
+		   borderColor="#FF0000" 
+		   borderSkin="@Embed(source='../image/result_bg.png')">
 	
 	<mx:Script>
 		<![CDATA[
@@ -25,36 +34,57 @@
 					case GameOverNotify.GAME_OVER_TYPE_ESCAPE :tip="结束方式:有人逃跑或则断线";break
 				}
 				var i:int = 0;
+				var i2:int = 0;
 			    for each(var result:ResultPak in  gmovn.result_pak)
 				{
 					if(result == null)
 						continue;
 					
-				    var player:PlayerData = Server.getPlayer(result.player_id);
+				  //  var player:PlayerData = Server.getPlayer(result.player_id);
 					
 					var label:Label =  new Label();
+					var labelpoint:Label = new Label();
 					
-					label.text = Server.getPlayerName(player)+":"
-					label.text +=" "+result.point;
+					label.text = Server.getPlayerName(player)
+					labelpoint.text = result.point.toString();
+					
+					label.x = 60
+					labelpoint.x = 220
+					label.setStyle('fontWeight','bold');
+					labelpoint.setStyle('fontWeight','bold');	
 					
 					if(result.is_win)
-						label.text +=" 胜利";
+					{	
+						label.y = 60 + i2 * 24;
+						labelpoint.y = 60 + i2 * 24;
+						label.setStyle('color',0xff0000);
+						labelpoint.setStyle('color',0xff0000);
+						i2 ++
+					}
 					else
-						label.text +=" 失败";
+					{
+						label.y = 149+i*24;
+						labelpoint.y = 149+i*24;
+						label.setStyle('color',0x007ad0);
+						labelpoint.setStyle('color',0x007ad0);
+						i++;
+					}
 					
-					label.x = 20
-					label.y = 60+i*25;
 					
 					addChild(label);
+					addChild(labelpoint);
 					
+					/*
 					if(result.player_id == Server.player.player_id)
 					{
 						if(result.is_win)
 							rsStr = "胜利"
 						else
 							rsStr = "失败"
-					}					
-					i++;
+					}	
+					*/
+					
+					
 				}
 			}
 			
@@ -67,10 +97,22 @@
 	</mx:Script>
 	
 	
-	<mx:Label y="10" text="游戏结束" horizontalCenter="0" fontSize="16" fontWeight="bold"/>
-	<mx:Label  y="40" text="{tip}" horizontalCenter="0" fontSize="12"/>
-	<mx:Button y="188" label="关闭" horizontalCenter="0" click="close()"/>
-	<mx:Label y="154" id="rs" text="{rsStr}" horizontalCenter="0" fontSize="18" fontWeight="bold" color="#E50E04"/>
+	<mx:Label y="4" text="游戏结束" horizontalCenter="0" fontSize="16" fontWeight="bold" fontAntiAliasType="advanced" kerning="false" fontSharpness="0"/>
+	<mx:Label  y="250" text="{tip}" horizontalCenter="3" fontSize="12" />
+	<mx:Button y="269" label="关闭" horizontalCenter="0" buttonMode="true" click="close()" upSkin="@Embed(source='../image/alert_btn.png')" color="#FFFFFF" fontWeight="normal" skin="@Embed(source='../image/alert_btn.png')" selectedUpSkin="@Embed(source='../image/alert_btn.png')" selectedOverSkin="@Embed(source='../image/alert_btn_e.png')" selectedDownSkin="@Embed(source='../image/alert_btn_d.png')" overSkin="@Embed(source='../image/alert_btn_e.png')" downSkin="@Embed(source='../image/alert_btn_d.png')" focusSkin="@Embed(source='../image/alert_btn_e.png')"/>
 	
+	<mx:Label y="36" id="rs" text="胜利" horizontalCenter="0" fontSize="18" fontWeight="bold" color="#FCD601">
+		<mx:filters>
+			<mx:GlowFilter color="0x000000">	
+			</mx:GlowFilter>
+		</mx:filters>
+	</mx:Label>
 	
+	<mx:Label y="125" id="rs0" text="失败" horizontalCenter="0" fontSize="18" fontWeight="bold" color="#ffffff">
+		<mx:filters>
+			<mx:GlowFilter color="0x000000">	
+			</mx:GlowFilter>
+		</mx:filters>
+	</mx:Label>
+
 </mx:Canvas>

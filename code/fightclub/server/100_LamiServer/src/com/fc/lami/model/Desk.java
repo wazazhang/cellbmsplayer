@@ -50,7 +50,7 @@ public class Desk implements ChannelListener
 							all_players = new ConcurrentHashMap<Integer, Player>();
 	
 	/** 游戏逻辑体 */
-	private Game 				game;
+	public  Game 				game;
 	private ThreadPool			thread_pool;
 	private int 				update_interval;
 	private ScheduledFuture<?>	future;
@@ -165,7 +165,6 @@ public class Desk implements ChannelListener
 		}
 		onPlayerEnter(player);
 		EnterDeskNotify ntf = new EnterDeskNotify(player.getPlayerData().player_id, desk_id, seat);
-		broadcast(ntf);
 		room.broadcast(ntf);
 		return true;
 	}
@@ -188,7 +187,6 @@ public class Desk implements ChannelListener
 		}
 		onPlayerLeave(player);
 		LeaveDeskNotify ntf = new LeaveDeskNotify(player.player_id, desk_id);
-		broadcast(ntf);
 		room.broadcast(ntf);
 		return true;
 	}
@@ -222,12 +220,10 @@ public class Desk implements ChannelListener
 	
 
 	private void onPlayerEnter(Player player){
-		room.getChannel().leave(player.session);
 		getChannel().join(player.session);
 	}
 	
 	private void onPlayerLeave(Player player){
-		room.getChannel().join(player.session);
 		getChannel().leave(player.session);
 	}
 
@@ -261,47 +257,51 @@ public class Desk implements ChannelListener
 	}
 	
 	public void onPlayerReady(Player p, boolean isReady){
-//		if (player_E!=null){
-//			player_E.session.send(new ReadyNotify(p.player_id, isReady));
-//		}
-//		if (player_W!=null){
-//			player_W.session.send(new ReadyNotify(p.player_id, isReady));
-//		}
-//		if (player_S!=null){
-//			player_S.session.send(new ReadyNotify(p.player_id, isReady));
-//		}
-//		if (player_N!=null){
-//			player_N.session.send(new ReadyNotify(p.player_id, isReady));
-//		}
 		p.is_ready = isReady;
 		channel.send(new ReadyNotify(p.player_id, isReady));
-	}
-
-	public Game getGame() {
-		return game;
-	}
-	
-	public void logic()
-	{
-		if (!initing)
-		{
-			if (game != null) {
-				if (game.isGameOver()){
-					future.cancel(false);
-					log.info("desk ]" + desk_id + "] game over");
-					game = null;
-					room.broadcast(new GameOverToRoomNotify(desk_id));
-				}
-			} else if (isAllPlayerReady()) {
-				initing = true;
-				game = new Game(this);
-				future = thread_pool.scheduleAtFixedRate(game, update_interval, update_interval);
+		if (p.is_ready){
+			if (isAllPlayerReady()){
+				game = new Game(this, thread_pool);
 				log.info("desk [" + desk_id + "] game start");
 				initing = false;
 				room.broadcast(new GameStartToRoomNotify(desk_id));
 			}
 		}
 	}
+
+	public Game getGame() {
+		return game;
+	}
+	
+	public Room getRoom(){
+		return room;
+	}
+	
+	public Logger getLogger(){
+		return log;
+	}
+	
+//	public void logic()
+//	{
+//		if (!initing)
+//		{
+//			if (game != null) {
+//				if (game.isGameOver()){
+//					future.cancel(false);
+//					log.info("desk ]" + desk_id + "] game over");
+//					game = null;
+//					room.broadcast(new GameOverToRoomNotify(desk_id));
+//				}
+//			} else if (isAllPlayerReady()) {
+//				initing = true;
+//				game = new Game(this, thread_pool);
+//				future = thread_pool.scheduleAtFixedRate(game, update_interval, update_interval);
+//				log.info("desk [" + desk_id + "] game start");
+//				initing = false;
+//				room.broadcast(new GameStartToRoomNotify(desk_id));
+//			}
+//		}
+//	}
 	
 	public DeskData getDeskData(){
 		DeskData dd = new DeskData();

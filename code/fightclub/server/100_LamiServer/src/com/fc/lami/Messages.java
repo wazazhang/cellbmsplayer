@@ -933,13 +933,7 @@ public class Messages {
 	/** 离开桌子 */
 	public static class LeaveDeskRequest extends FlashMessage
 	{
-		public int player_id;
-		public int desk_id;
-		
-		public LeaveDeskRequest(int pid,int desk_id){
-			this.player_id = pid;
-			this.desk_id =desk_id;
-		}
+
 		public LeaveDeskRequest(){}
 		
 		@Override
@@ -983,6 +977,23 @@ public class Messages {
 		public String toString() {
 			return "LeaveDeskNotify";
 		}
+	}
+	
+	public static class LeaveDeskForceRequest extends FlashMessage
+	{
+		public LeaveDeskForceRequest(){}
+	}
+	
+	public static class LeaveDeskForceResponse extends FlashMessage
+	{
+		final static public int LEAVE_DESK_RESULT_SUCCESS = 0;
+		public int result;
+		
+		public LeaveDeskForceResponse(int result){
+			this.result = result;
+		}
+		
+		public LeaveDeskForceResponse(){}
 	}
 	
 	/** 玩家回合开始通知 */
@@ -1174,11 +1185,17 @@ public class Messages {
 	
 	public static class SpeakToPublicNotify extends FlashMessage
 	{
+		final static public int CHANNEL_TYPE_HALL = 0;
+		final static public int CHANNEL_TYPE_ROOM = 1;
+		final static public int CHANNEL_TYPE_DESK = 2;
+		
 		public int player_id;
+		public int channel_type;
 		public String message;
 		
-		public SpeakToPublicNotify(int pid, String message){
+		public SpeakToPublicNotify(int pid, int ctype, String message){
 			this.player_id = pid;
+			this.channel_type = ctype;
 			this.message = message;
 		}
 		

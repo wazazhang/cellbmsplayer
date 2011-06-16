@@ -87,5 +87,12 @@ package Class.Model
 			}
 			return false;
 		}
+		
+		public function get player_number():int
+		{
+			var n:int = 0;
+			n = (player_N_id!=-1?1:0)+(player_W_id!=-1?1:0)+(player_S_id!=-1?1:0)+(player_E_id!=-1?1:0);
+			return n;
+		}
 	}
 }

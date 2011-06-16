@@ -14,7 +14,7 @@ import com.net.NetDataTypes;
 public class MessageCodecJava implements MutualMessageCodec
 {
 	public String getVersion() {
-		return "Tue Jun 14 12:46:49 CST 2011";
+		return "Thu Jun 16 16:33:12 CST 2011";
 	}
 
 	public void readExternal(MutualMessage msg, NetDataInput in) throws IOException 
@@ -111,6 +111,12 @@ public class MessageCodecJava implements MutualMessageCodec
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.GetTimeResponse.class)) {
 			_r((com.fc.lami.Messages.GetTimeResponse)msg, in); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.LeaveDeskForceRequest.class)) {
+			_r((com.fc.lami.Messages.LeaveDeskForceRequest)msg, in); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.LeaveDeskForceResponse.class)) {
+			_r((com.fc.lami.Messages.LeaveDeskForceResponse)msg, in); return;
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.LeaveDeskNotify.class)) {
 			_r((com.fc.lami.Messages.LeaveDeskNotify)msg, in); return;
@@ -353,6 +359,12 @@ public class MessageCodecJava implements MutualMessageCodec
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.GetTimeResponse.class)) {
 			_w((com.fc.lami.Messages.GetTimeResponse)msg, out); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.LeaveDeskForceRequest.class)) {
+			_w((com.fc.lami.Messages.LeaveDeskForceRequest)msg, out); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.LeaveDeskForceResponse.class)) {
+			_w((com.fc.lami.Messages.LeaveDeskForceResponse)msg, out); return;
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.LeaveDeskNotify.class)) {
 			_w((com.fc.lami.Messages.LeaveDeskNotify)msg, out); return;
@@ -891,6 +903,26 @@ public class MessageCodecJava implements MutualMessageCodec
 	}
 
 //	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.LeaveDeskForceRequest
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.LeaveDeskForceRequest new_com_fc_lami_Messages_LeaveDeskForceRequest(){return new com.fc.lami.Messages.LeaveDeskForceRequest();}
+	private void _r(com.fc.lami.Messages.LeaveDeskForceRequest msg, NetDataInput in) throws IOException {
+	}
+	private void _w(com.fc.lami.Messages.LeaveDeskForceRequest msg, NetDataOutput out) throws IOException {
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.LeaveDeskForceResponse
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.LeaveDeskForceResponse new_com_fc_lami_Messages_LeaveDeskForceResponse(){return new com.fc.lami.Messages.LeaveDeskForceResponse();}
+	private void _r(com.fc.lami.Messages.LeaveDeskForceResponse msg, NetDataInput in) throws IOException {
+		msg.result = in.readInt();
+	}
+	private void _w(com.fc.lami.Messages.LeaveDeskForceResponse msg, NetDataOutput out) throws IOException {
+		out.writeInt(msg.result);
+	}
+
+//	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.LeaveDeskNotify
 //	----------------------------------------------------------------------------------------------------
 	public com.fc.lami.Messages.LeaveDeskNotify new_com_fc_lami_Messages_LeaveDeskNotify(){return new com.fc.lami.Messages.LeaveDeskNotify();}
@@ -908,12 +940,8 @@ public class MessageCodecJava implements MutualMessageCodec
 //	----------------------------------------------------------------------------------------------------
 	public com.fc.lami.Messages.LeaveDeskRequest new_com_fc_lami_Messages_LeaveDeskRequest(){return new com.fc.lami.Messages.LeaveDeskRequest();}
 	private void _r(com.fc.lami.Messages.LeaveDeskRequest msg, NetDataInput in) throws IOException {
-		msg.player_id = in.readInt();
-		msg.desk_id = in.readInt();
 	}
 	private void _w(com.fc.lami.Messages.LeaveDeskRequest msg, NetDataOutput out) throws IOException {
-		out.writeInt(msg.player_id);
-		out.writeInt(msg.desk_id);
 	}
 
 //	----------------------------------------------------------------------------------------------------
@@ -1406,10 +1434,12 @@ public class MessageCodecJava implements MutualMessageCodec
 	public com.fc.lami.Messages.SpeakToPublicNotify new_com_fc_lami_Messages_SpeakToPublicNotify(){return new com.fc.lami.Messages.SpeakToPublicNotify();}
 	private void _r(com.fc.lami.Messages.SpeakToPublicNotify msg, NetDataInput in) throws IOException {
 		msg.player_id = in.readInt();
+		msg.channel_type = in.readInt();
 		msg.message = in.readUTF();
 	}
 	private void _w(com.fc.lami.Messages.SpeakToPublicNotify msg, NetDataOutput out) throws IOException {
 		out.writeInt(msg.player_id);
+		out.writeInt(msg.channel_type);
 		out.writeUTF(msg.message);
 	}
 

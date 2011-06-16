@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.fc.lami.LamiConfig;
 import com.fc.lami.Messages.CardData;
 import com.fc.lami.Messages.LoginRequest;
 import com.fc.lami.Messages.PlayerData;
@@ -114,6 +115,12 @@ public class Player
 				point += 30;
 			}else{
 				point += cd.point;
+			}
+		}
+		if (!isOpenIce){
+			point+=100;
+			if (isCanOpenIce()){
+				point+=100;
 			}
 		}
 		return point;
@@ -329,7 +336,7 @@ public class Player
 	{
 		this.is_ready = false;
 		this.isOpenIce = false;
-		int point = getHandCardPonit();
+		int point = LamiConfig.PUNISH_SCORE;
 		this.card_list.clear();
 		
 		this.user.addScore(-point);

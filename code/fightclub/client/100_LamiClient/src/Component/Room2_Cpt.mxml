@@ -61,8 +61,8 @@
 				if(titalk.text=='')
 					return
 					
-				Server.sendTalkMessage(titalk.text);
-				titalk.text='';
+				if (Server.sendTalkMessage(titalk.text))
+					titalk.text='';
 			}
 			
 			private function set plist(list:Dictionary):void
@@ -263,6 +263,7 @@
 	
 	<mx:VBox id="playerlist" x="654" y="230" height="201" width="284" verticalGap="1" verticalPageScrollSize="100">
 	</mx:VBox>
+	
 	<!--
 	<mx:DataGrid x="698" y="209" width="252" height="326" dataProvider="{_plist}">
 		<mx:columns>

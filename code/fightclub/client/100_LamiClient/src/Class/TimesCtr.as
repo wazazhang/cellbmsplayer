@@ -45,7 +45,7 @@ package Class
 			var s:Number = new Date().getTime() - oprStartTime.getTime()  ;
             optionTimeBar.setProgress(optionTime - s, optionTime); 
 			var point:Number = (  s /optionTime)
-			optionTimeBar.setStyle("barColor",getColorByPoint(point));
+			optionTimeBar.setStyle("barColor",getColorByPointBeginWithYellow(point));
 		}
 		
 		public  function sumTimerHandler(event:TimerEvent):void
@@ -53,7 +53,7 @@ package Class
 			var s:Number = new Date().getTime() - sumStartTime.getTime()  ;
             sumTimeBar.setProgress(sumTime - s, sumTime); 
 			var point:Number = (s / sumTime);
-			sumTimeBar.setStyle("barColor",getColorByPoint(point));
+			sumTimeBar.setStyle("barColor",getColorByPointBeginWithYellow(point));
 		}	
 		
 		public  function completeHandler(event:TimerEvent):void
@@ -90,8 +90,12 @@ package Class
 		
 		public  function stop():void{
 			
-			optionTimeBar.setProgress(0, optionTime); 
-			sumTimeBar.setProgress(0, optionTime); 
+			optionTimeBar.setProgress(optionTime, optionTime); 
+			sumTimeBar.setProgress(optionTime, optionTime); 
+			
+			optionTimeBar.setStyle("barColor",0xffff00)
+			sumTimeBar.setStyle("barColor",0xffff00)	
+				
 			oprTimer.reset();
 			sumTimer.reset();
 			oprTimer.stop();
@@ -114,7 +118,7 @@ package Class
 			oprTimer.addEventListener(TimerEvent.TIMER_COMPLETE, completeHandler);   
 		}
 		
-		
+		//从绿到红
 		public static function getColorByPoint(val:Number):Number
 		{
 			var color:Number
@@ -137,6 +141,34 @@ package Class
 			else
 			{
 				color = color + 0xff00 * (0.75 - val) / 0.375;
+				color = color - color % 0x000100;
+			}
+			
+			if(val>=0.75)
+			{
+				if((val*100 - (val*100)%1)%2==1)
+				{
+					color = 0xff0000
+				}
+				else
+				{
+					color = 0xffff00;
+				}
+			}
+			return color
+		}
+		//从黄色到红色
+		public static function getColorByPointBeginWithYellow(val:Number):Number
+		{
+			var color:Number
+			
+			
+			color = 0xff0000;	
+			
+			
+			if(val <= 0.75)
+			{
+				color = color + 0xff00 * (0.75 - val) / 0.75;
 				color = color - color % 0x000100;
 			}
 			

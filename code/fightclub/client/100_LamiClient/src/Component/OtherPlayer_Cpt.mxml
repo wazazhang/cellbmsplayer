@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" borderThickness="{_gameing?2:1}"
-		   width="124" height="94" borderColor="{_gameing?0x990000:0x000000}" borderStyle="none"
+		   width="124" height="96" borderColor="{_gameing?0x990000:0x000000}" borderStyle="none"
 	 verticalScrollPolicy="off"	 horizontalScrollPolicy="off"  creationComplete="init()"   cornerRadius="10" fontSize="10">
+	
 	<mx:Script>
 		<![CDATA[
 			import Class.Game;
@@ -14,7 +15,7 @@
 			import com.fc.lami.Messages.PlayerState;
 		   
 			[Bindable]
-			public var player:PlayerData;	
+			private var _player:PlayerData;	
 			
 			public var nextOtherPlayer_Cpt:OtherPlayer_Cpt;
 			
@@ -32,11 +33,10 @@
 			public var pobing:Boolean = false;
 			
 			
-			[Embed(source='image/head1.jpg')]
-			public static const head:Class;    
+			//是否开始
+			[Bindable]
+			public var isStarted:Boolean = false;
 			
-			[Embed(source='image/headno1.jpg')]
-			public static const nohead:Class;    
 			
 			[Bindable]
 			public var oprtimer:Timer;
@@ -45,6 +45,20 @@
 			private var oprStartTime:Date;
 			private var sumStartTime:Date;
 			
+			
+			public function get player():PlayerData
+			{
+				return _player
+			}
+			/*
+			public function set player(val:PlayerData):void
+			{
+				reset()
+				visible = true;
+				_player = val;
+			}
+			*/
+			
 			public function reset():void{
 				player = null;
 				seat = null;
@@ -52,6 +66,7 @@
 				gameing = false;
 				pobing = false;
 				visible = false;
+				isStarted= false;
 			}
 			
 			public function gameEnd():void
@@ -59,11 +74,19 @@
 				//ready = false;
 				gameing = false;
 				pobing = false;
-				pbtime.visible = false;
 				
+				isStarted = false;
+				pbtime.visible = false;
 				oprtimer.stop();
 				sumtimer.stop();
 			}
+			
+			public function gameStart():void
+			{
+				isStarted = true;
+				ready = false;
+			}
+			
 			
 			public function get gameing():Boolean
 			{
@@ -116,7 +139,7 @@
 				pbtime.setProgress(Server.game.timeCtr.optionTime - s, Server.game.timeCtr.optionTime); 
 				var point:Number = s / Server.game.timeCtr.optionTime;
 				
-				pbtime.setStyle("barColor",TimesCtr.getColorByPoint(point));
+				pbtime.setStyle("barColor",TimesCtr.getColorByPointBeginWithYellow(point));
 			}
 			
 			private function sumTimerHandler(event:TimerEvent):void
@@ -135,10 +158,16 @@
 				sumtimer.addEventListener(TimerEvent.TIMER, sumTimerHandler);
 			}
 			
-			public function set setPlayer(value:PlayerData):void
+			public function set player(value:PlayerData):void
 			{
-				player = value;
-				if ( player==null||player.player_id == Server.player.player_id)
+				//reset();
+				
+				gameing = false;
+				pobing = false;
+				isStarted = false;
+				ready = false;
+				_player = value;
+				if ( _player==null||_player.player_id == Server.player.player_id)
 				{
 					visible = false;
 				}else
@@ -147,7 +176,7 @@
 				}
 			}
 			
-			public function setState(arr:Array)
+			public function setState(arr:Array):void
 			{
 				if(player == null)
 					return 
@@ -158,6 +187,8 @@
 					{
 						pobing =state.is_openice;
 						ready = state.is_ready;
+						isStarted = Server.isVisitor;
+						
 						return;
 					}
 				}
@@ -166,22 +197,36 @@
 			
 		]]>
 	</mx:Script>
-	<mx:Label y="-1" text="{player==null?'':''+Server.getPlayerName(player)}" color="#FFFFFF" horizontalCenter="0"/>
+	<mx:Label y="-1" text="{_player==null?'':''+Server.getPlayerName(_player)}" color="#FFFFFF" fontSize="12" horizontalCenter="0"  />
+	
+	<mx:Image source="{Resource.head_bar}" y="14" height="58" width="58" horizontalCenter="0"/>
+	
+	<mx:Image source="{_player.player_head_url}" y="18" height="50" width="50" horizontalCenter="0" id="playerhead" complete="playerhead.visible = true" visible="false" />
+	
+	<mx:Image source="{Resource.gold2}" y="73" x="22"/>
+	<mx:Label y="72" text="{_player==null?'':_player.score}" color="#FFFFFF" fontSize="12" width="57" horizontalCenter="0" textAlign="center"/>
+	
+	<mx:Label y="54" text="{pobing?'已破冰':'未破冰'}" visible="{isStarted}" color="{pobing?0x00a0e0:0xffffff}" fontSize="12" horizontalCenter="0">
+		<mx:filters>
+			<mx:GlowFilter color="#000000" strength="10" ></mx:GlowFilter>
+		</mx:filters>
+	</mx:Label>
 	
 	
-	<mx:Label y="70" text="{pobing?'已破冰':'未破冰'}" visible="{player!=null}" color="#FFFFFF" horizontalCenter="0"/>
+	<mx:Label y="54" text="{ready?'已准备':'未准备'}" visible="{!isStarted}" color="{ready?0x009900:0xff0000}" fontSize="12" horizontalCenter="0">
+		<mx:filters>
+			<mx:GlowFilter color="#000000" strength="10" ></mx:GlowFilter>
+		</mx:filters>
+	</mx:Label>
 	
-
-	<mx:Image source="{player ==null?nohead:head}" y="13" height="50" width="50" horizontalCenter="0"/>
+	<!--
+	<mx:Image verticalCenter="7" horizontalCenter="0" visible="{ready}" source="image/ready.png" alpha="0.6"/>
+	-->
 	
-	<mx:Label y="60" text="{player==null?'':'积分:'+player.score}" color="#FFFFFF"  horizontalCenter="0"/>
+	<mx:ProgressBar id="pbtime" y="90" width="85" height="5"  horizontalCenter="0" mode="manual" labelPlacement="center"  label="" visible="false" trackSkin="{Resource.ProgressBarBg}"/>
 	
-	<mx:Image verticalCenter="0" horizontalCenter="0" visible="{ready}" source="image/ready.png" alpha="0.6"/>
+	<mx:SWFLoader  x="90" y="28" source="{Resource.time}" visible="{pbtime.visible}" width="30" height="30"></mx:SWFLoader>
 	
-	<mx:ProgressBar id="pbtime" y="85" width="87" height="4" horizontalCenter="0" mode="manual"  label="" visible="false" />
-	
-	<mx:SWFLoader  x="87" y="24" source="{Resource.time}" visible="{pbtime.visible}" width="30" height="30"></mx:SWFLoader>
-	
-	<mx:Label id="clock" color="0xffffff" x="95" y="33" visible="{pbtime.visible}" width="20" textAlign="center"/>
+	<mx:Label id="clock" color="0xffffff" x="97" y="37" visible="{pbtime.visible}" width="20" textAlign="center"/>
 	
 </mx:Canvas>

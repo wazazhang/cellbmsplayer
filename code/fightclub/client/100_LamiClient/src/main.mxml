@@ -5,8 +5,7 @@
 				creationComplete="init()" 
 				horizontalAlign="left" 
 				verticalAlign="top">
-	<mx:Style>
-		global {font-size:12px}
+	<mx:Style source="Css/public.css">
 	</mx:Style>
 	<mx:Script>
 		<![CDATA[
@@ -17,6 +16,7 @@
 			import com.fc.lami.MessageCodec;
 			import com.fc.lami.Messages.PlatformUserData;
 			import com.fc.lami.Messages.PlayerData;
+			import com.fc.lami.ui.LamiAlert;
 			import com.net.client.minaimpl.ServerSessionImpl;
 			import com.net.client.sfsimpl.SFSSessionImpl;
 			
@@ -57,7 +57,6 @@
 				//test googleAnalysics
 				//_container.trackTransaction({category:"1",cost:"300",money:"0",name: "Prinzessin Stuhl",orderId :"100001258912073359"},1,1);
 				//var useridInfoArr:Array=String(stage.loaderInfo.parameters.sig_user).split("_");
-				
 			}
 			
 			public function println(info:String):void
@@ -91,7 +90,7 @@
 				}
 				else 
 				{
-					Alert.show("GDP container is null");
+					LamiAlert.show("无法获得平台数据！");
 				}
 			}
 			
@@ -99,12 +98,16 @@
 			
 			public function getUserInfo():void
 			{
+				this.login_cpt.login_btn.enabled = false;
+				
 				println("获取自己的信息");
 				gdp_container.getUserProfile(getUserProfileCallback);
 			}
 			
 			private function getUserProfileCallback(user:IUserSocialData):void
 			{
+				this.login_cpt.login_btn.enabled = true;
+				
 				if(Boolean(user))
 				{
 					println("成功获取自己的信息");
@@ -137,10 +140,12 @@
 						sfs.split(":")[0],
 						sfs.split(":")[1]
 					);
+					
+					this.login_cpt.linkServer();
 				}
 				else
 				{
-					Alert.show("无法获得用户信息");
+					LamiAlert.show("无法获得用户信息！");
 				}
 			}
 			

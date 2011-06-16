@@ -18,6 +18,8 @@ import com.fc.lami.Messages.GetCardRequest;
 import com.fc.lami.Messages.GetCardResponse;
 import com.fc.lami.Messages.GetPlayerDataRequest;
 import com.fc.lami.Messages.GetPlayerDataResponse;
+import com.fc.lami.Messages.LeaveDeskForceRequest;
+import com.fc.lami.Messages.LeaveDeskForceResponse;
 import com.fc.lami.Messages.LeaveDeskRequest;
 import com.fc.lami.Messages.LeaveDeskResponse;
 import com.fc.lami.Messages.LoginRequest;
@@ -114,6 +116,10 @@ public class EchoClientSession implements ClientSessionListener
 		else if (message instanceof LeaveDeskRequest){
 			LeaveDeskRequest request = (LeaveDeskRequest)message;
 			processLeaveDeskRequest(session, protocol, request);
+		}
+		else if (message instanceof LeaveDeskForceRequest){
+			LeaveDeskForceRequest request = (LeaveDeskForceRequest)message;
+			processLeaveDeskForceRequest(session, protocol, request);
 		}
 		else if (message instanceof EnterDeskAsVisitorRequest){
 			EnterDeskAsVisitorRequest request = (EnterDeskAsVisitorRequest)message;
@@ -319,6 +325,13 @@ public class EchoClientSession implements ClientSessionListener
 			}
 		}
 	}
+	/** 强行退出桌子 */
+	private void processLeaveDeskForceRequest(ClientSession session, Protocol protocol, LeaveDeskForceRequest request){
+		if (player.cur_desk != null) {
+			player.cur_desk.leaveDesk(player);
+			session.sendResponse(protocol, new LeaveDeskResponse(LeaveDeskForceResponse.LEAVE_DESK_RESULT_SUCCESS));
+		}
+	}
 	
 	/** 准备好了 */
 	private void processReadyRequest(ClientSession session, Protocol protocol, ReadyRequest request){
@@ -415,7 +428,14 @@ public class EchoClientSession implements ClientSessionListener
 	
 	/** 聊天  当前频道喊话*/
 	private void processSpeakToPublicRequest(ClientSession session, Protocol protocol, SpeakToPublicRequest request){
-		SpeakToPublicNotify notify = new SpeakToPublicNotify(player.player_id, request.message);
+		SpeakToPublicNotify notify = new SpeakToPublicNotify(player.player_id, 0, request.message);
+		if (player.cur_room == null){
+			notify.channel_type = SpeakToPublicNotify.CHANNEL_TYPE_HALL;
+		}else if (player.cur_desk == null){
+			notify.channel_type = SpeakToPublicNotify.CHANNEL_TYPE_ROOM;
+		}else{
+			notify.channel_type = SpeakToPublicNotify.CHANNEL_TYPE_DESK;
+		}
 		player.getCurChannel().send(notify);
 		session.sendResponse(protocol, new SpeakToPublicResponse());
 	}

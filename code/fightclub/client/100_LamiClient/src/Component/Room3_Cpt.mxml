@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" fontSize="12" width="731" height="556"
+		    creationComplete="initEvent()">
+	
+	<mx:Script>
+		<![CDATA[
+			import Class.Model.Desk;
+			import Class.Model.Room;
+			import Class.Resource;
+			import Class.Server;
+			import Class.WebResource;
+			
+			import com.fc.lami.Messages.DeskData;
+			import com.fc.lami.Messages.PlayerData;
+			import com.fc.lami.Messages.RoomData;
+			
+			import mx.controls.Alert;
+			
+			public var deskCpts:Array;
+			
+			[Bindable]
+			public var room:Room;
+			
+			[Bindable]
+			private var _plist:Array;
+			
+			[Bindable]
+			private var roomData:RoomData
+			
+			[Bindable]
+			private var roomMessage:String = '';
+			
+			public function init(roomData:RoomData):void
+			{
+				deskCpts = new Array();
+				plist = room.getPlayerList();
+				//dgroomlist.dataProvider = roomData.desks
+				this.roomData = roomData;
+				restDesks();
+			}
+			
+			public function initEvent():void
+			{
+				addEventListener(KeyboardEvent.KEY_DOWN,keyDownHandle);
+			}
+			
+			public function keyDownHandle(event:KeyboardEvent):void
+			{
+				if( event.keyCode==13&&titalk.text!='')
+				{
+					pubTalk(); 
+				}
+			}
+			
+			public function pubTalk():void
+			{	
+				if(roomData == null)
+				{
+					addRoomInfo('进入房间后才能提交.');
+					return;
+				}
+					
+				if(titalk.text=='')
+					return;
+					
+				if (Server.sendTalkMessage(titalk.text))
+					titalk.text='';
+			}
+			
+			private function set plist(list:Dictionary):void
+			{
+				_plist = new Array()
+				for each (var player:PlayerData in list)
+				{
+					_plist.push(player);
+				}
+				restPlayers();
+			}
+			
+			public function addRoomInfo(str:String):void
+			{
+				roomMessage =  roomMessage   +  str + "\n";
+				roomta.validateNow(); 
+				roomta.verticalScrollPosition=roomta.maxVerticalScrollPosition;		
+				
+			}
+			
+			public function getDeskById(deskid:int):DeskData
+			{
+				for each(var desk:DeskData in roomData.desks)
+				{
+					if(deskid == desk.desk_id)
+					{
+						return desk;
+					}
+				}
+				return null
+			}
+			
+			//进入桌子
+			public function enterDesk(player_id:int, desk_id:int, seat:int):void
+			{
+				var curDesk:DeskData = getDeskById(desk_id);
+				curDesk.player_number = room.getDesk(desk_id).player_number;
+				
+				addRoomInfo(Server.getPlayerName(room.getPlayerFromPlayerList(player_id))+'进入'+curDesk.desk_name);
+			}
+			
+			//退出桌子
+			public function leaveDesk(player_id:int, desk_id:int):void
+			{
+				var curDesk:DeskData = getDeskById(desk_id);
+				curDesk.player_number = room.getDesk(desk_id).player_number;
+				
+				addRoomInfo(Server.getPlayerName(room.getPlayerFromPlayerList(player_id))+'离开'+curDesk.desk_name);
+			}
+			
+			
+			
+			
+			//进入房间
+			public function enterRoom(player:PlayerData):void
+			{
+				//nt.player
+				if(room!=null)
+				{
+					room.enterRoom(player);
+					plist = room.getPlayerList();
+					
+				}
+				addRoomInfo(Server.getPlayerName(player)+"进入房间")
+			}
+			
+			
+			//退出房间 
+			public function leaveRoom(player_id:int):void
+			{
+				var desk_id:int = Server.getPlayerDeskId(player_id);
+				addRoomInfo(Server.getPlayerName(Server.getPlayer(player_id))+"离开房间");	
+				room.removePlayer(player_id);
+				plist = room.getPlayerList();
+			}
+			
+			
+			public function onGameStart(deskid:int):void
+			{
+				var curDesk:DeskData = getDeskById(deskid);
+				curDesk.is_started=true;
+			}
+			
+			public function onGameOver(deskid:int):void
+			{
+				var curDesk:DeskData = getDeskById(deskid);
+				curDesk.is_started=false;
+			}
+			
+			public function exitRoom():void
+			{
+				Server.ExitRoom();
+			}
+			
+			/*
+			public function is_startedLF(item:Object,column:DataGridColumn):String
+			{
+			if(item.is_started)
+			return "开始";
+			else
+			return "等待";
+			}
+			
+			
+			public function player_numberLF(item:Object,column:DataGridColumn):String
+			{				
+			return item.player_number+'/4';
+			}
+			*/
+			
+			
+			public function fastRequestEnterDesk():void
+			{
+				if(roomData == null)
+				{
+					Server.sendAutoEnter();
+				}
+				else
+				{
+					Server.enterDesk(-1,-1);
+				}
+			}
+			
+			
+			
+			public function addItem(desk:DeskData):void
+			{
+				var it:DeskItemCpt = new DeskItemCpt();
+				it.desk = desk;
+				dgroomlist.addChild(it);
+			}
+			
+			
+			public function restDesks():void
+			{
+				dgroomlist.removeAllChildren();
+				for each(var desk:DeskData in roomData.desks)
+				{
+					addItem(desk);
+				}
+			}
+			
+			public function restPlayers():void
+			{
+				playerlist.removeAllChildren();
+				for each(var player:PlayerData in _plist)
+				{
+					var it:PlayerItemCpt = new PlayerItemCpt();
+					it.player = player;
+					playerlist.addChild(it);
+				}
+			}
+			
+			public function showWaitRoom():void
+			{
+				if(cb1.selected)
+				{
+					dgroomlist.removeAllChildren();
+					for each (var desk:DeskData in roomData.desks)
+					{
+						if(!desk.is_started)
+							addItem(desk);
+					}
+				}
+				else
+				{
+					restDesks();
+				}
+			}
+			
+			
+			
+		]]>
+	</mx:Script>
+	<mx:Canvas x="28" y="23" width="489" height="29" borderStyle="none">
+		<mx:Label text="信息滚动区" horizontalCenter="0" verticalCenter="-1" fontSize="14"/>
+	</mx:Canvas>
+	
+	<mx:VBox id="dgroomlist" visible="{roomData!=null}"  x="14" y="74" height="316" width="496" verticalGap="2" horizontalScrollPolicy="off" verticalScrollPolicy="on"  borderStyle="none" verticalScrollBarStyleName="VScrollBar"  >
+	</mx:VBox>
+	
+	<mx:Canvas  x="14" y="74" visible="{roomData==null}" height="316" width="496">
+		<mx:Image source="image/lami.jpg" horizontalCenter="0" verticalCenter="0"></mx:Image>
+	</mx:Canvas>
+	
+	
+	<mx:TextArea id="roomta" x="8" y="412" width="502" height="97" text="{roomMessage}" editable="false" backgroundAlpha="0.0" borderStyle="none" verticalScrollBarStyleName="VScrollBar"/>
+	
+	<mx:TextInput id="titalk" x="19" y="520" width="429" backgroundColor="#D2A55A" borderColor="#BC8E38" borderStyle="solid" cornerRadius="5"/>
+	
+	<mx:Button x="455" y="519" label="提交" buttonMode="true" click="pubTalk()"/>
+	
+	<mx:Canvas x="539" y="63" width="173" height="100" borderStyle="none" borderColor="#030303">
+		<mx:Label x="10" y="10" text="{Server.getPlayerName(Server.player)}" id="pname"/>
+		<mx:Label x="20" y="29" text="{'分数：'+Server.player.score}" id="score"/>
+		<mx:Label x="8" y="50" text="{'总局数：'+(Server.player.win+Server.player.lose)}" id="gamecount"/>
+		<mx:Label x="20" y="71" text="{'胜率：'+(Server.player.win/(Server.player.win+Server.player.lose>0?Server.player.win+Server.player.lose:1)*100).toString().substr(0,4)+'%'}" id="winrate"/>
+		<mx:Image source="{Resource.head_bar}" x="111" y="23"  height="58" width="58" />
+		<mx:Image complete="headimg.visible = true" visible="false"  id="headimg"  x="115" y="27" width="50" height="50" source="{Server.player.player_head_url}"/>
+	</mx:Canvas>
+	
+	<mx:ViewStack id="viewstack1" x="535" y="209" height="250" width="179" >
+		<mx:VBox  label="好友列表" id="friendlist" width="100%" height="100%" verticalGap="2" horizontalScrollPolicy="off" verticalScrollPolicy="on" verticalScrollBarStyleName="VScrollBar" >
+		</mx:VBox>
+
+		
+		<mx:VBox  label="房间列表" id="playerlist" width="100%" height="100%" verticalGap="2" horizontalScrollPolicy="off" verticalScrollPolicy="on" verticalScrollBarStyleName="VScrollBar" >
+		</mx:VBox>
+		
+	</mx:ViewStack>
+	
+	<mx:Button x="537" y="475" 
+			    buttonMode="true"
+			   skin="{Resource.fastBt}"
+			   downSkin="{Resource.fastBt2}"
+			   overSkin="{Resource.fastBt3}"
+			   click="fastRequestEnterDesk()"/>
+	
+	
+	<mx:LinkButton x="632" y="22" label="退出房间" fontSize="12" click="exitRoom()"  color="#FFFFFF" visible="false"/>
+	<mx:CheckBox id="cb1" x="554" y="22" label="只选择空闲牌桌" change="showWaitRoom()" color="#FDFDFD"/>
+
+	<mx:ToggleButtonBar x="533" y="165"  dataProvider="{viewstack1}" buttonMode="true">
+	</mx:ToggleButtonBar>
+	
+	
+
+	
+</mx:Canvas>

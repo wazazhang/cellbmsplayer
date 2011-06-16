@@ -5,9 +5,11 @@
 				creationComplete="init()"  
 				preloader="Class.Myloading"  
 				width="960" height="600">
-	<mx:Style>
-		global {font-size:12px}
+
+	
+	<mx:Style source="Css/public.css">
 	</mx:Style>
+	
 	<mx:Script>
 		<![CDATA[
 			import Class.Game;
@@ -18,6 +20,7 @@
 			import com.fc.lami.MessageCodec;
 			import com.fc.lami.Messages.PlatformUserData;
 			import com.fc.lami.Messages.PlayerData;
+			import com.fc.lami.ui.LamiAlert;
 			import com.net.client.minaimpl.ServerSessionImpl;
 			import com.net.client.sfsimpl.SFSSessionImpl;
 			
@@ -57,7 +60,7 @@
 				
 				if (txt_uid.text == null || txt_uid.text.length == 0)
 				{
-					Alert.show("名字不能为空");
+					LamiAlert.show("名字不能为空");
 					return;	
 				}
 				
@@ -90,7 +93,7 @@
 				}
 				else 
 				{
-					Alert.show("未选择通信协议");
+					LamiAlert.show("未选择通信协议");
 				}
 			}
 

@@ -4,6 +4,8 @@
 -->
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml"
 				layout="absolute"  implements="elex.socialize.IGameClient" addedToStage="init(event)">
+	<mx:Style source="Css/public.css">
+	</mx:Style>
 	<mx:Script>
 		
 		<![CDATA[

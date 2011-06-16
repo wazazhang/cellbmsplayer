@@ -4,19 +4,10 @@
 		   borderStyle="solid" borderColor="0x000000" backgroundColor="0xffffff"   styleName="taskDetailBG"
 		   verticalCenter="0" horizontalCenter="0" verticalScrollPolicy="off" horizontalScrollPolicy="off" creationComplete="initEvent()"  >
 	
-	<mx:Style>  
-		.taskDetailBG
-		{  
-			border-skin:ClassReference('Class.MyBackgroundSkin');  
-			background-image:Embed("image/bg/gbg.png");  
-			backgroundImagePosition:left,top;/*第一个参数可用值：left,center,right,默认值left;第二个参数可用值：top,middle,bottom,默认值top*/  
-			backgroundImageRepeat:repeat;/*可用值：repeat,no-repeat,repeat-x,repeat-y,默认值no-repeat*/  
-			background-size:100;  
-		}  
-	</mx:Style>
 	<mx:Script>
 		<![CDATA[
 			import Class.Game;
+			import Class.Model.Card;
 			import Class.Model.Desk;
 			import Class.Model.Player;
 			import Class.Resource;
@@ -24,12 +15,16 @@
 			import Class.TimesCtr;
 			import Class.WebResource;
 			
+			import com.fc.lami.Messages.CardData;
 			import com.fc.lami.Messages.GameOverNotify;
 			import com.fc.lami.Messages.PlayerData;
 			
 			import mx.controls.Alert;
+			import mx.effects.Move;
+			import mx.events.EffectEvent;
 			import mx.events.FlexEvent;
 			import mx.graphics.RoundedRectangle;
+			
 			[Bindable]
 			public var desk:Desk;
 			
@@ -90,6 +85,7 @@
 				resetGameAllData();
 				optCpt.reset();
 				player = Server.player;
+				game.isStarted = desk.is_started;
 				initSeat(desk,playerstats);
 			}
 			
@@ -130,8 +126,8 @@
 				do{
 					index ++;
 					if(index==4)
-						index = 0
-					cpt.setPlayer = Server.getPlayer(getPlayerIDbySeatID(index));
+						index = 0;
+					cpt.player = Server.getPlayer(getPlayerIDbySeatID(index));
 					cpt.setState(playerstats);
 					
 					cpt.seat = getDir(index);
@@ -182,8 +178,8 @@
 			public function enterPlayer(player_id:int, desk_id:int, seat:int):void
 			{
 				if(desk ==null || desk_id!=desk.desk_id)
-					return
-
+					return;
+				
 				initSeat(desk,null);
 				addInfo(Server.getPlayerName(Server.getPlayer(player_id))+"进入桌子");
 			}
@@ -193,15 +189,17 @@
 			public function leavePlayer(player_id:int, desk_id:int):void
 			{
 				if(desk ==null || desk_id!=desk.desk_id)
-					return	
-				initSeat(desk,null);
+					return	;
+//				initSeat(desk,null);
+				var opc:OtherPlayer_Cpt = getOtherPlayerCptByPlayerId(player_id);
+				opc.player = null;
 				addInfo(Server.getPlayerName(Server.getPlayer(player_id))+"离开桌子");
 			}
 			
 			
 			public function click():void
 			{
-				//Alert.show(Game.getSendPoint().toString()+'_'+Game.gamer.keydwon);
+				//LamiAlert.show(Game.getSendPoint().toString()+'_'+Game.gamer.keydwon);
 			}
 			
 			public function addInfo(str:String):void
@@ -219,7 +217,7 @@
 				TA_talkinfoStr.validateNow(); 
 				TA_talkinfoStr.verticalScrollPosition=TA_talkinfoStr.maxVerticalScrollPosition;		
 				
-				//Alert.show(TA_talkinfoStr.verticalScrollPosition +'/' +TA_talkinfoStr.maxVerticalScrollPosition)
+				//LamiAlert.show(TA_talkinfoStr.verticalScrollPosition +'/' +TA_talkinfoStr.maxVerticalScrollPosition)
 			}
 			
 			//回到房间
@@ -227,7 +225,7 @@
 			{
 				//this.visible = false;
 //				Server.app.removeChild(this);
-				Server.leaveDesk(desk.desk_id);
+				Server.leaveDesk();
 				
 			}
 			
@@ -342,10 +340,10 @@
 				
 				this.canReset = canReset;
 				canShowReset = true;
-				nextPlayer1.ready = false;
-				nextPlayer2.ready = false;
-				nextPlayer3.ready = false;
-				nextPlayer4.ready = false;
+				nextPlayer1.gameStart();
+				nextPlayer2.gameStart();
+				nextPlayer3.gameStart();
+				nextPlayer4.gameStart();
 			}
 			
 			
@@ -377,8 +375,8 @@
 				if(titalk.text=="")
 					return;
 					
-				Server.sendTalkMessage(titalk.text);
-				titalk.text='';
+				if (Server.sendTalkMessage(titalk.text))
+					titalk.text='';
 			}
 			
 			public function onPlayerReset(player:PlayerData):void
@@ -386,19 +384,97 @@
 				addInfo(Server.getPlayerName(player)+"重置了发牌")
 			}
 			
+			public function addCardMotion(card:Card):void
+			{
+				var moveCard:Card_Cpt = new Card_Cpt();
+				addChild(moveCard);
+				moveCard.isShow = true;
+				moveCard.x = cardstack.getVisibleRect().x;
+				moveCard.y = cardstack.getVisibleRect().y;
+				moveCard.card = new Card(card.point,card.type, card.id);
+				moveCard.card.nextCard  = card.nextCard;
+				moveCard.nextCardCpt = card.cardUI;
+				
+				var move:Move = new Move();
+				
+				move.target = moveCard;
+				move.duration = 300;
+				
+				move.xTo = card.cardUI.getVisibleRect().x;
+				move.yTo = card.cardUI.getVisibleRect().y;
+				
+				//			//card.isSended = false;
+				card.nextCard = null;
+				move.addEventListener(EffectEvent.EFFECT_END,addCardMotionComplate);
+				move.play();
+			}
+			
+			public function moveCardMotion(card:CardData, start:Rectangle, end:Rectangle):void
+			{
+				var moveCard:Card_Cpt = new Card_Cpt();
+				addChild(moveCard);
+				moveCard.isShow = true;
+				moveCard.x = start.x;
+				moveCard.y = start.y;
+				moveCard.card = new Card(card.point,card.type, card.id);
+				moveCard.card.nextCard  = null;
+				moveCard.nextCardCpt = game.getCardCpt(card.x, card.y);
+				if (moveCard.nextCardCpt!=null){
+					moveCard.nextCardCpt.isShow = false;
+				}
+				
+				var move:Move = new Move();
+				
+				move.target = moveCard;
+				move.duration = 300;
+				
+				move.xTo = end.x;
+				move.yTo = end.y;
+				
+				//			//card.isSended = false;
+				move.addEventListener(EffectEvent.EFFECT_END,addCardMotionComplate);
+				move.play();
+			}
+			
+			public function addCardMotionComplate(event:EffectEvent):void
+			{
+				var move:Move = event.target as Move;
+				var card:Card_Cpt = move.target as Card_Cpt;
+				removeChild(card);
+				
+				if (card.nextCardCpt!=null){
+					card.nextCardCpt.isShow = true;
+				}
+				if(card.card.nextCard!=null)
+				{
+					addCardMotion(card.card.nextCard);
+				}
+				else
+				{
+					showReset();
+					game.gamer.canOpearation = true;
+				}
+			}
 		]]>
 	</mx:Script>
 	
-	<mx:Image  source="{Resource.newbg}" y="91" horizontalCenter="0">
+	
+	
+	<mx:Image  source="{Resource.newbg}" y="93" horizontalCenter="0">
 	</mx:Image>
 	
-	<ns1:Matrix_Cpt id="mx" y="115"  height="201" horizontalCenter="3">
+	<ns1:Matrix_Cpt id="mx" y="120"  height="201" horizontalCenter="1">
 	</ns1:Matrix_Cpt>
 	
-	<mx:ProgressBar id="sumbar" width="465" label="" height="10" mode="manual" labelPlacement="center" y="398" x="246"  visible="{!Server.isVisitor}"/>
-	<mx:ProgressBar id="optbar" height="10" width="465" label="" mode="manual" labelPlacement="center" x="246" y="410"  visible="{!Server.isVisitor}"/>
+	<mx:ProgressBar id="sumbar" width="469" label=""  height="5" 
+					mode="manual"
+					labelPlacement="center" y="408" x="244"  visible="{!Server.isVisitor}" trackSkin="{Resource.ProgressBarBg}"/>
 	
-	<ns1:UserMatrix_Cpt id="umx" height="202" x="245" y="415" width="479"  visible="{!Server.isVisitor}">
+	<mx:ProgressBar id="optbar" height="5" label="" width="469"
+					mode="manual"
+					labelPlacement="center" x="244" y="415"  visible="{!Server.isVisitor}" trackSkin="{Resource.ProgressBarBg}"/>
+	
+	<ns1:UserMatrix_Cpt id="umx" height="201" x="245" y="420" width="484"  visible="{!Server.isVisitor}">
 	</ns1:UserMatrix_Cpt>
 	
 
@@ -416,61 +492,77 @@
 	<ns1:OtherPlayer_Cpt id="nextPlayer3" x="825" y="200">
 	</ns1:OtherPlayer_Cpt>
 	
-	<ns1:OtherPlayer_Cpt id="nextPlayer4" y="460" horizontalCenter="0" visible="{Server.isVisitor}">
+	<ns1:OtherPlayer_Cpt id="nextPlayer4" y="415" horizontalCenter="0" visible="{Server.isVisitor}">
 	</ns1:OtherPlayer_Cpt>
 	
-	<mx:LinkButton x="876" y="10" label="回到大厅" color="#FFFDFD" click="returnRoom()"/>
-	
-	<mx:Image id="turnStartImg" horizontalCenter="0" verticalCenter="0" source="{WebResource.start}" alpha="0.0" visible="false" />
-	
-	<mx:Parallel id="turnStartEft" target="{turnStartImg}" effectEnd="turnStartImg.visible=false">
-		<mx:Fade duration="1500" alphaFrom="1.0" alphaTo="0.0"></mx:Fade>
-		<mx:Zoom duration="1500" zoomHeightFrom="1.0" zoomHeightTo="2.0" zoomWidthFrom="1.0" zoomWidthTo="2.0" > </mx:Zoom>
-	</mx:Parallel>
-	
-	
-	<mx:Label x="700" y="12" text="{'当前位置:'+(Server.room_cpt.room.roomData.room_id)+'房间 '+ (desk.desk_id+1)+'号座'}" color="#FDFDFD"/>
-	
+
 	
 
 	<!--//游戏信息区-->
-	<mx:Canvas x="10" y="10" width="143" height="149" borderStyle="none"  borderColor="#000000">
+	<mx:Canvas x="10" y="28" width="143" height="81" borderStyle="none"  borderColor="#000000">
 		
-		<mx:Label x="10" y="10" text="游戏信息" color="#FFFDFD"/>
-		<mx:Label x="45" y="39" text="剩余手牌:{Server.game.leftCard}" color="#FFFEFE"/>
-		<mx:Image x="10" y="32" source="{Resource.pai}"/>
-		<mx:Label x="10" y="74" text="玩家信息" color="#FFFFFF"/>
-		<mx:Label x="10" y="106" text="积分：{Server.player.score}" color="#FEFEFE"/>
-		<mx:Label x="10" y="91" text="{Server.getPlayerName(Server.player)}" color="#FFFFFF"/>
+		<mx:Label x="10" y="10" text="游戏信息" color="#FFFDFD" visible="false"/>
+		<mx:Label x="45" y="39" text="剩余牌数:{Server.game.leftCard}" color="#FFFEFE"/>
+		<mx:Image x="10" y="32" width="30" height="35" source="{Resource.pai}" id="cardstack"/>
+		<mx:Image x="13" y="35" width="30" height="35" source="{Resource.pai}"/>
+		<mx:Image x="16" y="38" width="30" height="35" source="{Resource.pai}"/>
+		
 	</mx:Canvas>
 	
 	<!--玩家信息区-->
 	
-	<mx:Canvas id="useinfo" width="470" height="39" x="243" y="422"  visible="{!Server.isVisitor}"
-			   verticalScrollPolicy="off" horizontalScrollPolicy="off" backgroundImage="@Embed(source='../image/bg/opbg.png')">
+	<mx:Canvas id="useinfo" width="472" height="45" x="242" y="422"  visible="{!Server.isVisitor}"
+			   verticalScrollPolicy="off" horizontalScrollPolicy="off" backgroundImage="{Resource.wood_bar}">
 		
-		<mx:Label x="7" y="2" text="{Server.getPlayerName(Server.player)}" color="#010101"/>
+		<mx:Label x="27" verticalCenter="0" text="{game.gamer.isMyturn?'游戏中':'等待中'}" fontWeight="bold" color="#FCF300" fontSize="14">
+			<mx:filters>
+				<mx:GlowFilter color="#000000" strength="10" quality="10" alpha="0.5"></mx:GlowFilter>
+			</mx:filters>
+		</mx:Label>
 		
+		<mx:Label x="85" verticalCenter="0" text="{game.gamer.isCold?'未破冰':'已破冰'}" fontWeight="bold" color="#FCF300" fontSize="14">
+			<mx:filters>
+				<mx:GlowFilter color="#000000" strength="10" quality="10" alpha="0.5"></mx:GlowFilter>
+			</mx:filters>
+		</mx:Label>
+		<!--
 		<mx:Image x="100" y="16" source="{game.gamer.isMyturn?Resource.yxz:Resource.ddz}" ></mx:Image>
-		
 		<mx:Label x="7" y="17" text="手牌：{game.gamer.handCard.length}" color="#010101"/>
-		
 		<mx:Image x="100" y="2" source="{game.gamer.isCold?Resource.wpb:Resource.ypb}" > </mx:Image>
-				
+		-->	
 	</mx:Canvas>
 	
 	<!--玩家操作区-->
-	<ns1:Opt_Cpt id="optCpt" height="177" y="421" x="409"  visible="{!Server.isVisitor}">
+	<ns1:Opt_Cpt id="optCpt" height="177" y="426" x="400"  visible="{!Server.isVisitor}">
 	</ns1:Opt_Cpt>
 	
-	<mx:Image source="{Resource.talkbg}" x="720" y="397" alpha="0.5"></mx:Image>
-	<mx:TextArea  id="TA_talkinfoStr"  x="725" y="405" width="220" height="150"   backgroundAlpha="0.0" borderStyle="none"  color="0xffffff" editable="false"  text="{talkinfoStr}">
+	<mx:Image source="{Resource.talkbg}" x="720" y="403" alpha="0.5"></mx:Image>
+	<mx:Image source="{Resource.chat_send}" x="725" y="566" height="29" width="344"></mx:Image>
+	<mx:TextArea  id="TA_talkinfoStr"  x="725" y="412" width="220" height="150"   backgroundAlpha="0.0" borderStyle="none"  color="0xffffff" editable="false"  text="{talkinfoStr}" verticalScrollBarStyleName="VScrollBar">
 	</mx:TextArea>
 	
-	<mx:Image source="{Resource.xtbg}" x="7" y="398" alpha="0.5"></mx:Image>
-	<mx:TextArea  id="TA_gameinfoStr"  x="12" y="405" color="0xffffff" width="220" height="185" backgroundAlpha="0.0" borderStyle="none"  editable="false" text="{gameinfoStr}" />
+	<mx:Image source="{Resource.talkbg}" x="7" y="404" alpha="0.5"></mx:Image>
 	
-	<mx:Button x="890" y="558" click="pubTalk()" width="49" skin="@Embed(source='../image/button/tj.png')"  height="28" downSkin="@Embed(source='../image/button/tj1.png')"/>
-	<mx:TextInput  color="0xffffff" id="titalk" x="731" y="562" width="152" alpha="0.5" backgroundColor="0xD2A55A" borderColor="0x8B5505" themeColor="#BF7204" cornerRadius="3" borderStyle="solid"/>
+	<mx:TextArea  id="TA_gameinfoStr"  x="12" y="411" color="0xffffff" width="220" height="185" backgroundAlpha="0.0" borderStyle="none"  editable="false" text="{gameinfoStr}" verticalScrollBarStyleName="VScrollBar" />
+	
+	<mx:Button x="890" y="566" click="pubTalk()" width="49" buttonMode="true" skin="@Embed(source='../image/button/tj.png')"  height="28" downSkin="@Embed(source='../image/button/tj1.png')"/>
+	<mx:TextInput  color="0xffffff" id="titalk" x="732" y="569" width="152" alpha="0.5" backgroundColor="0xD2A55A" borderColor="0x8B5505" themeColor="#BF7204" cornerRadius="3" borderStyle="solid"/>
+	
+	<!--左上角玩家信息-->
+	<mx:Canvas x="0" y="0" width="331" height="27" backgroundImage="{Resource.top_bar}" borderStyle="none">
+		<mx:Label text="{Server.getPlayerName(Server.player)}" color="#FFFFFF" x="8" verticalCenter="0"   />
+		<mx:Label text="等级：{Server.player.level}" color="#FEFEFE"   x="128" verticalCenter="0" />
+		<mx:Image source="{Resource.gold}" x="202" verticalCenter="0"></mx:Image>
+		<mx:Label text="{Server.player.score}" color="#FEFEFE"   x="230" verticalCenter="0" />
+	</mx:Canvas>
 
+	
+	<!--右上角房间信息-->
+	<mx:Canvas x="627" y="0" width="331" height="27" backgroundImage="{Resource.top_bar}" borderStyle="none">
+		<mx:Label x="31" verticalCenter="0"  text="{'当前位置:'+(Server.room_cpt.room.roomData.room_id + 1)+'房间 '+ (desk.desk_id+1)+'号座'}" color="#FDFDFD"/>
+		<mx:LinkButton x="233" verticalCenter="0"  label="回到大厅" color="#FFFDFD" click="returnRoom()"/>
+	</mx:Canvas>
+
+	<!--回合开始 -->
+	<mx:SWFLoader id="beginSwf" source="{WebResource.startSwf}"></mx:SWFLoader>
 </mx:Canvas>

@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" verticalCenter="0" 
 		   horizontalCenter="0" width="960" height="600"
-		   creationComplete="init()"  backgroundColor="#C1C1C1" themeColor="#FFFFFF">
-		<mx:Script>
+		   creationComplete="init()"  
+		   backgroundColor="#FFFFFF" 
+		   themeColor="#FFFFFF"
+		   alpha="1.0" backgroundAlpha="0.0">  
+	<mx:Script>
 			<![CDATA[
 				import Class.Resource;
 				import Class.Server;
@@ -10,6 +13,7 @@
 				import com.fc.lami.MessageCodec;
 				import com.fc.lami.Messages.PlayerData;
 				import com.fc.lami.Messages.RoomSnapShot;
+				import com.fc.lami.ui.LamiAlert;
 				
 				import mx.controls.Alert;
 				import mx.controls.dataGridClasses.DataGridColumn;
@@ -39,6 +43,17 @@
 					restRooms();
 				}
 				
+				public function setRoom(room:RoomSnapShot):void
+				{
+					for each(var r:RoomSnapShot in _rooms){
+						if (r.room_id == room.room_id){
+							r.player_number = room.player_number;
+							r.player_number_max = room.player_number_max;
+							r.room_name = room.room_name;
+						}
+					}
+				}
+				
 				public function linkServer():void
 				{
 					if (Server.checkConnection())
@@ -53,7 +68,7 @@
 					} 
 					else 
 					{
-						Alert.show("用户名不能为空");
+						LamiAlert.show("通行证帐号错误，不能进入游戏！");
 					}
 				}
 				
@@ -66,7 +81,7 @@
 				{
 					if (!Server.getClient().isConnected()) 
 					{
-						Alert.show("连接超时");
+						LamiAlert.show("连接超时");
 						login_btn.enabled = true;
 					}
 				}
@@ -79,6 +94,9 @@
 					selectRoom.visible = true;
 					
 					login_btn.enabled = true;
+					
+					
+					desklist.addChild(new Room3_Cpt());
 				}
 				
 				
@@ -88,16 +106,7 @@
 					login.visible = true;
 					login_btn.enabled = true;
 				}
-				
-				public function enterRoom():void
-				{
 					
-					//if(list.selectedItem!=null)
-					//Server.enterRoom((list.selectedItem as RoomSnapShot).room_id)
-						
-				}
-				
-				
 				public function addRoom():void
 				{
 					
@@ -144,65 +153,51 @@
 					}
 				}
 				
-				
+				public function enterRoom(roomCpt:Room3_Cpt):void
+				{
+					for each (var item:ItemCpt in vb1.getChildren())
+						item.isSelect = (item.room.room_id == roomCpt.room.roomData.room_id);
+
+					desklist.addChild(roomCpt);
+				}
 				
 			]]>
 		</mx:Script>
-		<mx:Style>
-			
-			.dg{
-			    header-height:0px;
-				backgroundAlpha: 0.54;
-				backgroundColor: #ffffff;
-				horizontalGridLines: true;
-				letterSpacing: 0;
-				horizontalGridLineColor: #000000;
-				verticalGridLines: false;
-				useRollOver: true;
-				borderThickness: 0;
-				textIndent: 0;
-				item-skin:"image/itbg.png";
-			}
-			
-			.dghead{
-				
-			}
-		</mx:Style>	
+		<mx:Style source="css/public.css">
+		</mx:Style>
+
 		
 		<mx:Canvas id="login" width="960" height="600"  horizontalCenter="0" verticalCenter="0"  borderStyle="solid"
-				   cornerRadius="5" backgroundColor="#2D2D2D" backgroundAlpha="0.4"  >
-			<mx:Button id="login_btn" label="开始" fontSize="20" click="linkServer()" width="138" height="47" verticalCenter="247" horizontalCenter="0"/>
-			<mx:Button id="bt2" x="123" y="93" label="进入" visible="false" click="enterRoom()"/>
+				   cornerRadius="5" backgroundColor="#2D2D2D" backgroundAlpha="0.4"   borderSkin="@Embed(source='../image/logobg.png')">
+			<mx:Button id="login_btn" label="开始" fontSize="20" click="linkServer()" width="138" height="47" horizontalCenter="0" bottom="100" styleName="bigButton" fontWeight="bold"/>
 			<!--
 			<mx:TextInput x="47" y="52" width="160" text="115.236.18.104" id="server_host"/>
 			-->
 			<mx:Label text="ver 0.9" width="628" id="version" textAlign="center" horizontalCenter="0" bottom="0"/>
-			<mx:TextArea width="958" height="515" top="0" horizontalCenter="0" id="txt_debug" alpha="1.0" text="trace" backgroundAlpha="0.0"/>
+			<mx:TextArea width="958" height="445" top="0" horizontalCenter="0" id="txt_debug" alpha="0.0" backgroundAlpha="0.0" editable="false" enabled="false" borderThickness="0" borderStyle="none" color="#FFFFFF"/>
 		</mx:Canvas>
 			
-		<mx:Canvas id="selectRoom" width="100%" height="100%" backgroundImage="{Resource.pdbg}" visible="false">	
+	
+		<mx:Canvas id="selectRoom" width="100%" height="100%" backgroundImage="image/bg/deskbg2.png" visible="false" x="0" y="0"  >	
 			
-			<!--
-			<mx:DataGrid id="list" width="606" styleName="dg" height="372"  headerHeight="0"
-						 backgroundImage="image/itbg.png"   rowHeight="36" doubleClickEnabled="true"
-						 doubleClick="enterRoom()" x="330" y="107" dataProvider="{rooms}"
-						 >
-				<mx:columns >
-					<mx:DataGridColumn headerText="房间名称" dataField="room_name" width="140" />
-					<mx:DataGridColumn headerText="当前人数" labelFunction="player_numberLF"/>
-					<mx:DataGridColumn headerText="等级限制" labelFunction="levelLF"/>
-					<mx:DataGridColumn headerText="模式" labelFunction="modeLF"/>
-					
-				</mx:columns>
-			</mx:DataGrid>
-			-->
+			<mx:Canvas width="197" height="549"  x="14" y="44">
+				<mx:Label text="房间选择"  x="61" y="13" color="#5E1C00" fontSize="18" fontWeight="bold"> 
+					<mx:filters>
+						<mx:GlowFilter color="0xffffff" quality="5" ></mx:GlowFilter>
+					</mx:filters>
+				</mx:Label>
+				
+				<mx:VBox id="vb1" x="11" y="65" height="454" width="180" horizontalScrollPolicy="off" verticalGap="2" verticalScrollPolicy="on" verticalScrollBarStyleName="VScrollBar"> 
+				</mx:VBox>
+				<!--
+				<mx:Button x="35" y="482" click="fastEnter()" skin="@Embed(source='../image/sjbt1.png')" overSkin="@Embed(source='../image/sjbt2.png')"/>
+				-->
+			</mx:Canvas>
 			
-			<mx:Button x="583" y="511" click="fastEnter()" skin="@Embed(source='../image/sjbt1.png')" overSkin="@Embed(source='../image/sjbt2.png')"/>
-			<mx:VBox id="vb1" x="328.5" y="102" height="388" width="609" horizontalScrollPolicy="off">
-			</mx:VBox>
-			<!--
-			<mx:List id="list2" height="126" width="200" verticalCenter="12" labelField="room_name" horizontalCenter="0" doubleClickEnabled="true" doubleClick="enterRoom()"></mx:List>
-			-->
+			<mx:Canvas id="desklist"  x="219" y="34" width="731" height="556"  > 
+				
+			</mx:Canvas>
+			
 		</mx:Canvas>
 	
 </mx:Canvas>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" minWidth="955" minHeight="600" 
+				xmlns:Component="Component.*" xmlns:Class="Class.*" creationComplete="inits()">
+	<mx:Style source="Css/public.css">
+	</mx:Style>
+	
+	<mx:Script>
+		<![CDATA[
+			import com.fc.lami.Messages.GameOverNotify;
+			import com.fc.lami.Messages.ResultPak;
+			
+			import de.polygonal.ds.Collection;
+			
+			import mx.charts.chartClasses.GraphicsUtilities;
+			import mx.controls.Alert;
+			import mx.controls.scrollClasses.ScrollBar;
+			import mx.core.UIComponent;
+			[Bindable]
+			public var ss:ScrollBar;
+			
+			[Embed(source="image/myloading0.swf")]
+			private var LoaderMC:Class;
+			
+			
+			private var _loader_mc:MovieClip;
+			
+			public function inits():void
+			{
+				//sss.addEventListener(
+			}
+			
+			
+			public function drow():void
+			{
+				var line:Sprite = new Sprite();
+				line.graphics.lineStyle(5,0xff0000);      //设置线的粗细及颜色
+				//line.graphics.beginFill(0x0000ff,0.5);       //填充颜色及透明度
+				line.graphics.moveTo(290,70);
+				line.graphics.curveTo(250,100,200,120);    //这画的是段弧线，手册上对这个函数还有配图说明
+				//line.graphics.
+				
+				GraphicsUtilities.drawArc(line.graphics,500,300,100,60,100,100,false);
+				//GraphicsUtilities.drawArc(line.graphics,
+				//	GraphicsUtilities.drawArc(g,10,10,
+				
+				line.graphics.lineTo(200,120);
+				line.graphics.lineTo(190,200);
+				line.graphics.lineTo(350,200);
+				
+				line.graphics.moveTo(275,150);
+				line.graphics.lineTo(275,350);
+				line.graphics.lineTo(245,330);
+				
+				line.graphics.moveTo(230,240);
+				line.graphics.lineTo(180,300);
+				
+				line.graphics.moveTo(320,240);
+				line.graphics.lineTo(370,300);
+				//canvs.addChild(line);       //加与不加this，都没有区别
+				
+				var ss:UIComponent = new UIComponent()
+				ss.addChild(line)
+					
+				addChild(ss);	
+			}
+			
+			public function init():void
+			{
+				
+				//this._loader_mc = new LoaderMC()
+				//addChild(this._loader_mc);
+				//this._loader_mc.gotoAndStop(2filters
+				ss = new ScrollBar();
+				ss.width=100;
+				ss.alpha = 0.5;
+				ss.buttonMode = true;
+				ss.height = 1000;
+				
+				ssdd.verticalScrollBar = ss;
+				
+			}
+			
+			
+			public function test():void
+			{
+				var jj:GameOverNotify = new GameOverNotify(1,new Array(new ResultPak(-100,1,0),new ResultPak(-190,1,0),new ResultPak(-100,1,0),new ResultPak(100,1,1),new ResultPak(100,1,1)));
+				sss.setRes(jj);
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:VBox id="ssdd" x="354" y="107" height="163" width="168" verticalLineScrollSize="100" verticalScrollBarStyleName="VScrollBar" >
+		
+		<mx:TitleWindow width="250" height="200" layout="absolute">
+		</mx:TitleWindow>
+	</mx:VBox>
+	<mx:Button x="150" y="327" label="按钮" click="init()"/>
+	
+	
+	<mx:Button x="150" y="427" label="画图" click="test()"/>
+	<mx:Canvas id="canvs" x="576" y="86" width="282" height="249">
+	</mx:Canvas>
+	
+	
+	<Component:Result_Cpt id="sss" x="324" y="341">
+	</Component:Result_Cpt>
+	
+	
+	
+	
+</mx:Application>

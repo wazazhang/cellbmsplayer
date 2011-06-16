@@ -236,8 +236,8 @@
 				}
 					
 				//当前为非操作阶段
-				if(!game.gamer.canOpearation)
-					return;
+//				if(!game.gamer.canOpearation)
+//					return;
 				
 //				if(game.gamer.isMyturn)
 //					game.timeCtr.reset();
@@ -259,7 +259,7 @@
 					return;
 				}
 				
-				if(game.gamer.keydwon||event.type==MouseEvent.DOUBLE_CLICK)
+				if(game.gamer.keydown||event.type==MouseEvent.DOUBLE_CLICK)
 				{
 					if(game.gamer.selectedArrayCard!=null)
 						return;
