@@ -14,7 +14,7 @@ import com.net.NetDataTypes;
 public class MessageCodecJava implements MutualMessageCodec
 {
 	public String getVersion() {
-		return "Thu Jun 16 16:33:12 CST 2011";
+		return "Fri Jun 17 14:22:23 CST 2011";
 	}
 
 	public void readExternal(MutualMessage msg, NetDataInput in) throws IOException 
@@ -168,6 +168,9 @@ public class MessageCodecJava implements MutualMessageCodec
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.PlayerState.class)) {
 			_r((com.fc.lami.Messages.PlayerState)msg, in); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.PlayerUpdateNotify.class)) {
+			_r((com.fc.lami.Messages.PlayerUpdateNotify)msg, in); return;
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.ReadyNotify.class)) {
 			_r((com.fc.lami.Messages.ReadyNotify)msg, in); return;
@@ -416,6 +419,9 @@ public class MessageCodecJava implements MutualMessageCodec
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.PlayerState.class)) {
 			_w((com.fc.lami.Messages.PlayerState)msg, out); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.PlayerUpdateNotify.class)) {
+			_w((com.fc.lami.Messages.PlayerUpdateNotify)msg, out); return;
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.ReadyNotify.class)) {
 			_w((com.fc.lami.Messages.ReadyNotify)msg, out); return;
@@ -1159,6 +1165,17 @@ public class MessageCodecJava implements MutualMessageCodec
 		out.writeInt(msg.player_id);
 		out.writeBoolean(msg.is_ready);
 		out.writeBoolean(msg.is_openice);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.PlayerUpdateNotify
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.PlayerUpdateNotify new_com_fc_lami_Messages_PlayerUpdateNotify(){return new com.fc.lami.Messages.PlayerUpdateNotify();}
+	private void _r(com.fc.lami.Messages.PlayerUpdateNotify msg, NetDataInput in) throws IOException {
+		msg.player = in.readExternal(com.fc.lami.Messages.PlayerData.class);
+	}
+	private void _w(com.fc.lami.Messages.PlayerUpdateNotify msg, NetDataOutput out) throws IOException {
+		out.writeExternal(msg.player);
 	}
 
 //	----------------------------------------------------------------------------------------------------

@@ -18,12 +18,7 @@
 			[Bindable]
 			public var ss:ScrollBar;
 			
-			[Embed(source="image/myloading0.swf")]
-			private var LoaderMC:Class;
-			
-			
 			private var _loader_mc:MovieClip;
-			
 			public function inits():void
 			{
 				//sss.addEventListener(
@@ -67,17 +62,10 @@
 			public function init():void
 			{
 				
-				//this._loader_mc = new LoaderMC()
-				//addChild(this._loader_mc);
-				//this._loader_mc.gotoAndStop(2filters
-				ss = new ScrollBar();
-				ss.width=100;
-				ss.alpha = 0.5;
-				ss.buttonMode = true;
-				ss.height = 1000;
+			   var tt:MovieClip =  (swf.content as MovieClip)
 				
-				ssdd.verticalScrollBar = ss;
-				
+			   tt.setp(80);
+			   
 			}
 			
 			
@@ -102,8 +90,10 @@
 	</mx:Canvas>
 	
 	
-	<Component:Result_Cpt id="sss" x="324" y="341">
+	<Component:Result_Cpt id="sss" x="324" y="341" visible="false">
 	</Component:Result_Cpt>
+	
+	<mx:SWFLoader id="swf" x="93" y="107" width="133" height="97" source="image/newloading0.swf" autoLoad="true"/>
 	
 	
 	

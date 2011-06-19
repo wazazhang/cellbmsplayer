@@ -346,14 +346,13 @@ package Class
 		//提交
 		public  function submit():void
 		{
+			
 			if(!canSubmitCard)
 			{
 				LamiAlert.show("不合法");
 				return;
 			}
-			setAllCardIssend();
-			timeCtr.stop();
-			gamer.isMyturn = false;
+			
 			Server.submit();
 		}
 		

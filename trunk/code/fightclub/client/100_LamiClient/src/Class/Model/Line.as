@@ -215,7 +215,6 @@ package Class.Model
 		{
 			var array:Array;
 			var curnode:Card_Cpt = firstCard;
-			
 			var point:int = 0;
 			
 			do{
@@ -229,15 +228,7 @@ package Class.Model
 					else
 					{
 						var p:int = getZuPoint(array);
-						if(p!=0)
-						{
-							point += p;
-							array = null;
-						}
-						else
-						{
-							return 0;
-						}	
+						point += p;
 					}
 				}
 				else
@@ -255,15 +246,8 @@ package Class.Model
 					if(curnode.nextCardCpt==null&&array!=null)
 					{
 						p = getZuPoint(array);
+						point += p;
 						
-						if(p!=0)
-						{
-							point += p;
-						}
-						else
-						{
-							return 0;
-						}	
 					}
 						
 				}

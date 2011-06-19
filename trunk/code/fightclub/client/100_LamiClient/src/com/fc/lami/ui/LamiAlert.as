@@ -14,6 +14,7 @@ package com.fc.lami.ui
 									iconClass:Class = null, 
 									defaultButtonFlag:uint = 0x4 /* Alert.OK */):Alert
 		{
+			
 			var alert:Alert = Alert.show(
 				text,
 				title, 

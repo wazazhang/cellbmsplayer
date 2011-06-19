@@ -23,12 +23,12 @@ package Class
 		public function Myloading()
 		{
 			logo = new Loader();
-			logo.load(new URLRequest("image/bg.jpg"));
+			logo.load(new URLRequest("image/logobg.png"));
 			addChild(logo);
 			
 			
 			logo2 = new Loader();
-			logo2.load(new URLRequest("image/myloading0.swf"));
+			logo2.load(new URLRequest("image/newloading0.swf"));
 			addChild(logo2);
 
 		
@@ -42,7 +42,7 @@ package Class
 			txt.width = 200;
 			txt.selectable = false;
 			txt.height = 30;
-			addChild(txt);
+			//addChild(txt);
 			
 			super();			
 		}
@@ -73,11 +73,11 @@ package Class
 			logo.x = (stage.stageWidth - 976)/2;
 			logo.y = 0;
 			
-			logo2.x = (stage.stageWidth - 597)/2;
-			logo2.y =  130;
+			logo2.x = (stage.stageWidth - 620)/2;
+			logo2.y =  320;
 			
 			txt.x = (stage.stageWidth - 200)/2;
-			txt.y = 400;
+			txt.y = 320;
 			
 			//loadingt.x = logo2.x;
 			//loadingt.y =  359;
@@ -109,10 +109,7 @@ package Class
 			txt.text = p +"%";
 			var mv:MovieClip =  (logo2.content as MovieClip)
 			if(mv != null)
-				mv.loading.gotoAndStop(p);
-			
-			
-			
+				mv.setp(p);			
 		}
 		private function load_complete(e:Event):void{
 			txt.text = "加载完毕!"

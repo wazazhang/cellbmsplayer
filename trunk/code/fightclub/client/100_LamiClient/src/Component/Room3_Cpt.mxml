@@ -32,6 +32,8 @@
 			
 			public function init(roomData:RoomData):void
 			{
+				room = new Room(roomData);
+				
 				deskCpts = new Array();
 				plist = room.getPlayerList();
 				//dgroomlist.dataProvider = roomData.desks
@@ -247,7 +249,6 @@
 	</mx:VBox>
 	
 	<mx:Canvas  x="14" y="74" visible="{roomData==null}" height="316" width="496">
-		<mx:Image source="image/lami.jpg" horizontalCenter="0" verticalCenter="0"></mx:Image>
 	</mx:Canvas>
 	
 	
@@ -258,12 +259,15 @@
 	<mx:Button x="455" y="519" label="提交" buttonMode="true" click="pubTalk()"/>
 	
 	<mx:Canvas x="539" y="63" width="173" height="100" borderStyle="none" borderColor="#030303">
-		<mx:Label x="10" y="10" text="{Server.getPlayerName(Server.player)}" id="pname"/>
-		<mx:Label x="20" y="29" text="{'分数：'+Server.player.score}" id="score"/>
-		<mx:Label x="8" y="50" text="{'总局数：'+(Server.player.win+Server.player.lose)}" id="gamecount"/>
-		<mx:Label x="20" y="71" text="{'胜率：'+(Server.player.win/(Server.player.win+Server.player.lose>0?Server.player.win+Server.player.lose:1)*100).toString().substr(0,4)+'%'}" id="winrate"/>
+		<mx:Label x="52.5" y="2" text="{Server.getPlayerName(Server.player)}" id="pname" width="110.5" fontWeight="bold"/>
+		<mx:Label x="52.5" y="24" text="{Server.player.score}" id="score" width="104.5"/>
+		<mx:Label x="52.5" y="46" text="{(Server.player.win+Server.player.lose)}" id="gamecount" width="104.5"/>
+		<mx:Label x="52.5" y="68" text="{(Server.player.win/(Server.player.win+Server.player.lose&gt;0?Server.player.win+Server.player.lose:1)*100).toString().substr(0,4)+'%'}" id="winrate" width="104.5"/>
 		<mx:Image source="{Resource.head_bar}" x="111" y="23"  height="58" width="58" />
 		<mx:Image complete="headimg.visible = true" visible="false"  id="headimg"  x="115" y="27" width="50" height="50" source="{Server.player.player_head_url}"/>
+		<mx:Label x="0" y="24" text="金币：" width="55" textAlign="right"/>
+		<mx:Label x="0" y="46" text="总局数：" width="55" textAlign="right"/>
+		<mx:Label x="0" y="68" text="胜率：" width="55" textAlign="right"/>
 	</mx:Canvas>
 	
 	<mx:ViewStack id="viewstack1" x="535" y="209" height="250" width="179" >

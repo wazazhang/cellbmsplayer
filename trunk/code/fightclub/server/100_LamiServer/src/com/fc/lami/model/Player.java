@@ -9,6 +9,7 @@ import com.fc.lami.LamiConfig;
 import com.fc.lami.Messages.CardData;
 import com.fc.lami.Messages.LoginRequest;
 import com.fc.lami.Messages.PlayerData;
+import com.fc.lami.Messages.PlayerUpdateNotify;
 import com.fc.lami.Messages.ResultPak;
 import com.fc.lami.login.User;
 import com.net.server.Channel;
@@ -307,6 +308,7 @@ public class Player
 		this.user.addScore(p);
 		this.user.addWin(1);
 		this.user.save();
+		onPlayerDateChange();
 		
 		ResultPak pak = new ResultPak();
 		pak.player_id = this.player_id;
@@ -324,6 +326,7 @@ public class Player
 		this.user.addScore(-p);
 		this.user.addLose(1);
 		this.user.save();
+		onPlayerDateChange();
 		
 		ResultPak pak = new ResultPak();
 		pak.player_id = this.player_id;
@@ -342,8 +345,13 @@ public class Player
 		this.user.addScore(-point);
 		this.user.addLose(1);
 		this.user.save();
+		onPlayerDateChange();
 		
 		return point;
+	}
+	
+	private void onPlayerDateChange(){
+		cur_room.broadcast(new PlayerUpdateNotify(this.getPlayerData()));
 	}
 	
 //	@Override

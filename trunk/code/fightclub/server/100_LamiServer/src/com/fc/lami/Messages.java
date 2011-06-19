@@ -1166,6 +1166,16 @@ public class Messages {
 		public GetPlayerDataResponse(){}
 	}
 	
+	public static class PlayerUpdateNotify extends FlashMessage
+	{
+		public PlayerData player;
+		
+		public PlayerUpdateNotify(PlayerData p){
+			this.player = p;
+		}
+		
+		public PlayerUpdateNotify(){}
+	}
 	// 玩家在当前频道发言
 	public static class SpeakToPublicRequest extends FlashMessage
 	{

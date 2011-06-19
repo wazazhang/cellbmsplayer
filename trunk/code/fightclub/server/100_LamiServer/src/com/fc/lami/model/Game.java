@@ -33,7 +33,7 @@ public class Game
 	public Player player_list[];
 	public Player cur_player;
 	
-//	public boolean is_over = false;
+	public boolean is_over = false;
 	final static public int startCard = 14;
 	ArrayList<CardData> left_cards = new ArrayList<CardData>();
 	public boolean is_start_time = false; //发牌时间
@@ -89,7 +89,10 @@ public class Game
 		if (future!=null){
 			future.cancel(false);
 		}
-		future = thread_pool.scheduleAtFixedRate(new Trun(), LamiConfig.READY_TIME, LamiConfig.READY_TIME);
+		is_over = false;
+		if (thread_pool!=null){
+			future = thread_pool.scheduleAtFixedRate(new Trun(), LamiConfig.READY_TIME, LamiConfig.READY_TIME);
+		}
 		is_start_time = true;
 		mw = LamiConfig.MATRIX_WIDTH;
 		mh = LamiConfig.MATRIX_HEIGHT;
@@ -165,7 +168,10 @@ public class Game
 	/** 当游戏结束时做的处理，玩家加减分，胜率什么的 */
 	public void onGameOver(){
 		//TODO
-//		is_over = true;
+		if (is_over){
+			return;
+		}
+		is_over = true;
 		int game_over_type = 0;
 		ResultPak[] rp = new ResultPak[player_list.length];
 		if (left_cards.size()==0){ // 如果牌堆的牌被取完，则比较玩家手中的牌的点数
@@ -217,6 +223,7 @@ public class Game
 		desk.game = null;
 		future.cancel(false);
 		future2.cancel(false);
+		thread_pool = null;
 		desk.getLogger().info("desk [" + desk.desk_id + "] game over");
 		desk.getRoom().broadcast(new GameOverToRoomNotify(desk.desk_id));
 	}
@@ -255,11 +262,15 @@ public class Game
 		if (future!=null){
 			future.cancel(false);
 		}
-		future = thread_pool.scheduleAtFixedRate(new Trun(), LamiConfig.OPERATE_TIME, LamiConfig.OPERATE_TIME);
+		if (thread_pool!=null){
+			future = thread_pool.scheduleAtFixedRate(new Trun(), LamiConfig.OPERATE_TIME, LamiConfig.OPERATE_TIME);
+		}
 		if (future2!=null){
 			future2.cancel(false);
 		}
-		future2 = thread_pool.scheduleAtFixedRate(new Trun(), LamiConfig.TURN_INTERVAL, LamiConfig.TURN_INTERVAL);
+		if (thread_pool!=null){
+			future2 = thread_pool.scheduleAtFixedRate(new Trun(), LamiConfig.TURN_INTERVAL, LamiConfig.TURN_INTERVAL);
+		}
 //		System.out.println("轮到下一个玩家 时间 "+turn_start_time);
 	}
 	
@@ -810,7 +821,9 @@ public class Game
 			if (future!=null){
 				future.cancel(false);
 			}
-			future = thread_pool.scheduleAtFixedRate(new Trun(), LamiConfig.OPERATE_TIME, LamiConfig.OPERATE_TIME);
+			if (thread_pool!=null){
+				future = thread_pool.scheduleAtFixedRate(new Trun(), LamiConfig.OPERATE_TIME, LamiConfig.OPERATE_TIME);
+			}
 		}
 		complete_card_count = cur_complete_card_count;
 		return true;
@@ -992,7 +1005,7 @@ public class Game
 	
 	private ScheduledFuture<?>	future;
 	private ScheduledFuture<?>	future2;
-	final private ThreadPool			thread_pool;
+	private ThreadPool			thread_pool;
 	
 	class Trun implements Runnable
 	{
@@ -1008,11 +1021,15 @@ public class Game
 				if (future!=null){
 					future.cancel(false);
 				}
-				future = thread_pool.scheduleAtFixedRate(new Trun(), LamiConfig.OPERATE_TIME, LamiConfig.OPERATE_TIME);
+				if (thread_pool!=null){
+					future = thread_pool.scheduleAtFixedRate(new Trun(), LamiConfig.OPERATE_TIME, LamiConfig.OPERATE_TIME);
+				}
 				if (future2!=null){
 					future2.cancel(false);
 				}
-				future2 = thread_pool.scheduleAtFixedRate(new Trun(), LamiConfig.TURN_INTERVAL, LamiConfig.TURN_INTERVAL);
+				if (thread_pool!=null){
+					future2 = thread_pool.scheduleAtFixedRate(new Trun(), LamiConfig.TURN_INTERVAL, LamiConfig.TURN_INTERVAL);
+				}
 			}else{
 				System.err.println("player " + getCurPlayer() + " 超时");
 				desk.broadcast(new TimeOutNotify(getCurPlayer().player_id));
