@@ -270,7 +270,7 @@ package Class.Model
 			LamiLamiAlert.show("出牌不符合规则");
 				return false;
 			}
-			*/
+			
 			
 			if(isCold)
 			{
@@ -278,7 +278,7 @@ package Class.Model
 				
 				if(sum<30)
 				{
-					LamiAlert.show('尚未破冰')
+					LamiAlert.show('尚未破冰,当前点数只有'+sum+'.')
 					return false;
 				}
 				else
@@ -286,6 +286,7 @@ package Class.Model
 					isCold = false;
 				}
 			}
+			*/
 			
 			game.submit();
 			confiomCard();
@@ -345,24 +346,24 @@ package Class.Model
 		}
 		
 		
-		public function reset():void
-		{
-			for each(var line:Line in cardLines)
-			{
-				var cardctp:Card_Cpt = line.firstCard;
-				
-				do{
-					cardctp.card = null;
-					cardctp.card = cardctp.confimcard;
-					
-					cardctp = cardctp.nextCardCpt;
-				}
-				while(cardctp != null);
-			}
-			game.reset();
-			Server.sendPublicMatrix();
-			game.check();
-		}
+//		public function reset():void
+//		{
+//			for each(var line:Line in cardLines)
+//			{
+//				var cardctp:Card_Cpt = line.firstCard;
+//				
+//				do{
+//					cardctp.card = null;
+//					cardctp.card = cardctp.confimcard;
+//					
+//					cardctp = cardctp.nextCardCpt;
+//				}
+//				while(cardctp != null);
+//			}
+//			game.reset();
+//			Server.sendPublicMatrix();
+//			game.check();
+//		}
 		
 		public function orderCard():void
 		{

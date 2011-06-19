@@ -306,6 +306,7 @@
 			{
 				addInfo("游戏结束");
 				
+				removeReset();
 				stopTime();
 				var rsCpt:Result_Cpt = new Result_Cpt()
 				optCpt.reset();	
@@ -316,6 +317,23 @@
 				addChild(rsCpt);
 				rsCpt.addEventListener(FlexEvent.REMOVE,removeResultHandle);
 				//resetGameAllData();
+				if(game.gamer.selectedArrayCard != null)
+				{
+					for each(var card:Card in game.gamer.selectedArrayCard)
+					{
+						card.cardUI.isSelected = false;
+					}
+					game.gamer.selectedArrayCard = null;
+					
+				}	
+				//处理结束时候还有选中的牌
+				if(game.gamer.selectedCard != null)
+				{
+					game.gamer.selectedCard.cardUI.isSelected = false;
+					game.gamer.selectedCard = null;
+					
+				}
+				StopMotionList();
 			}
 			
 			
@@ -366,8 +384,10 @@
 
 			public function removeReset():void
 			{
-				removeChild(resetCpt)
-				resetCpt = null;
+				if (resetCpt!=null){
+					removeChild(resetCpt);
+					resetCpt = null;
+				}
 			}
 			
 			public function pubTalk():void
@@ -383,6 +403,8 @@
 			{
 				addInfo(Server.getPlayerName(player)+"重置了发牌")
 			}
+			
+			var cur_move:Move;
 			
 			public function addCardMotion(card:Card):void
 			{
@@ -407,6 +429,7 @@
 				card.nextCard = null;
 				move.addEventListener(EffectEvent.EFFECT_END,addCardMotionComplate);
 				move.play();
+				cur_move = move;
 			}
 			
 			public function moveCardMotion(card:CardData, start:Rectangle, end:Rectangle):void
@@ -453,6 +476,13 @@
 				{
 					showReset();
 					game.gamer.canOpearation = true;
+				}
+			}
+			
+			public function StopMotionList():void
+			{
+				if (cur_move!=null){
+					cur_move.stop();
 				}
 			}
 		]]>
@@ -559,7 +589,7 @@
 	
 	<!--右上角房间信息-->
 	<mx:Canvas x="627" y="0" width="331" height="27" backgroundImage="{Resource.top_bar}" borderStyle="none">
-		<mx:Label x="31" verticalCenter="0"  text="{'当前位置:'+(Server.room_cpt.room.roomData.room_id + 1)+'房间 '+ (desk.desk_id+1)+'号座'}" color="#FDFDFD"/>
+		<mx:Label x="31" verticalCenter="0"  text="{'当前位置:'+(Server.login_cpt.RoomCptlogin_cpt.RoomCpt.room.roomData.room_id + 1)+'房间 '+ (desk.desk_id+1)+'号座'}" color="#FDFDFD"/>
 		<mx:LinkButton x="233" verticalCenter="0"  label="回到大厅" color="#FFFDFD" click="returnRoom()"/>
 	</mx:Canvas>
 

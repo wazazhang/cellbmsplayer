@@ -40,16 +40,16 @@
 					if(result == null)
 						continue;
 					
-				  //  var player:PlayerData = Server.getPlayer(result.player_id);
+				    var player:PlayerData = Server.getPlayer(result.player_id);
 					
 					var label:Label =  new Label();
 					var labelpoint:Label = new Label();
 					
-					label.text = Server.getPlayerName(player)
+					label.text = Server.getPlayerName(player);
 					labelpoint.text = result.point.toString();
 					
-					label.x = 60
-					labelpoint.x = 220
+					label.x = 60;
+					labelpoint.x = 220;
 					label.setStyle('fontWeight','bold');
 					labelpoint.setStyle('fontWeight','bold');	
 					

@@ -4,6 +4,9 @@ package Class
 	{
 		public static var webRoot:String = '';
 		
+		[Bindable]
+		[Embed(source='image/logo.png')]
+		public static var logo:Class;
 		
 		[Embed(source='image/card/b1.png')]
 		private static var b1:Class;

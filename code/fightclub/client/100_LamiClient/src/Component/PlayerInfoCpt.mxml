@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
+		 width="200" 
+		 height="160" 
+		 initialize="form1_initializeHandler(event)" 
+		 cornerRadius="5"
+		 borderStyle="solid" 
+		 borderThickness="2" 
+		 backgroundColor="#E2E2E2" mouseDownOutside="canvas1_mouseDownOutsideHandler(event)">
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import mx.core.Application;
+			import mx.events.FlexEvent;
+			import mx.events.FlexMouseEvent;
+			import mx.managers.ISystemManager;
+			import mx.managers.PopUpManager;
+			
+			
+			protected function form1_initializeHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+			}
+			
+			protected function canvas1_mouseDownOutsideHandler(event:FlexMouseEvent):void
+			{
+				close();
+			}
+			
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				close();
+			}
+			
+	
+			public function close() : void
+			{
+				this.parent.removeChild(this);
+			}
+			
+			
+			private static var room_player_info_tip : PlayerInfoCpt;
+			
+	
+			
+			static public function show() : PlayerInfoCpt
+			{
+				if (room_player_info_tip != null) {
+					if (room_player_info_tip.parent != null) {
+						room_player_info_tip.parent.removeChild(room_player_info_tip);
+					}
+				}
+				
+				room_player_info_tip = new PlayerInfoCpt();
+				
+				var parent : Sprite;
+				var sm:ISystemManager = ISystemManager(Application.application.systemManager);
+				if (sm.useSWFBridge()) {
+					parent = Sprite(sm.getSandboxRoot());
+				} else {
+					parent = Sprite(Application.application);
+				}
+				room_player_info_tip.visible = true;
+				PopUpManager.addPopUp(room_player_info_tip, parent, false);
+				return room_player_info_tip;
+			}
+
+
+
+
+		]]>
+	</mx:Script>
+	<mx:Button x="178" y="2" width="16" height="16" icon="@Embed(source='../image/x.png')" click="button1_clickHandler(event)"/>
+	<mx:Image x="10" y="10" width="50" height="50" brokenImageBorderSkin="@Embed(source='../image/bg/head_bar.png')"/>
+	
+</mx:Canvas>

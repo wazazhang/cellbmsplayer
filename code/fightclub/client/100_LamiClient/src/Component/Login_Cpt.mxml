@@ -4,16 +4,21 @@
 		   creationComplete="init()"  
 		   backgroundColor="#FFFFFF" 
 		   themeColor="#FFFFFF"
-		   alpha="1.0" backgroundAlpha="0.0">  
+		   alpha="1.0" backgroundAlpha="0.0" xmlns:Component="Component.*">  
 	<mx:Script>
 			<![CDATA[
+				import Class.Model.Room;
 				import Class.Resource;
 				import Class.Server;
 				
 				import com.fc.lami.MessageCodec;
+				import com.fc.lami.Messages.AutoEnterRequest;
+				import com.fc.lami.Messages.AutoEnterResponse;
 				import com.fc.lami.Messages.PlayerData;
+				import com.fc.lami.Messages.RoomData;
 				import com.fc.lami.Messages.RoomSnapShot;
 				import com.fc.lami.ui.LamiAlert;
+				import com.net.client.ClientEvent;
 				
 				import mx.controls.Alert;
 				import mx.controls.dataGridClasses.DataGridColumn;
@@ -96,9 +101,30 @@
 					login_btn.enabled = true;
 					
 					
-					desklist.addChild(new Room3_Cpt());
+					//desklist.addChild(new Room3_Cpt());
+					
+					
+					Server.getClient().sendRequest(
+						new AutoEnterRequest(), 
+						onFirstLoginAutoEnter);
 				}
 				
+				/**
+				 * 首次进入游戏自动选择个房间而不进入桌子
+				 */
+				private function onFirstLoginAutoEnter(event:ClientEvent) : void
+				{
+					if (event.getResponse() is AutoEnterResponse)
+					{
+						var aer:AutoEnterResponse = event.getResponse() as AutoEnterResponse;
+						if (aer.result == AutoEnterResponse.AUTO_ENETR_RESULT_SUCCESS){
+							Server.onAutoEnterResponse(aer);
+							enterRoom(Server.room_cpt);
+						}else if (aer.result == AutoEnterResponse.AUTO_ENTER_RESULT_FAIL_NO_IDLE_SEAT){
+							LamiAlert.show("没有空余座位");
+						}
+					}
+				}
 				
 				public function disLink():void
 				{
@@ -153,12 +179,16 @@
 					}
 				}
 				
-				public function enterRoom(roomCpt:Room3_Cpt):void
+				public function enterRoom(roomData:RoomData):void
 				{
 					for each (var item:ItemCpt in vb1.getChildren())
-						item.isSelect = (item.room.room_id == roomCpt.room.roomData.room_id);
-
-					desklist.addChild(roomCpt);
+						item.isSelect = (item.room.room_id == roomData.room_id);
+					
+					
+						
+						RoomCpt.init(roomData);
+							
+					//desklist.addChild(roomCpt);
 				}
 				
 			]]>
@@ -173,8 +203,9 @@
 			<!--
 			<mx:TextInput x="47" y="52" width="160" text="115.236.18.104" id="server_host"/>
 			-->
-			<mx:Label text="ver 0.9" width="628" id="version" textAlign="center" horizontalCenter="0" bottom="0"/>
+			<mx:Label text="ver 0.9" width="628" id="version" textAlign="center" horizontalCenter="0" bottom="2"/>
 			<mx:TextArea width="958" height="445" top="0" horizontalCenter="0" id="txt_debug" alpha="0.0" backgroundAlpha="0.0" editable="false" enabled="false" borderThickness="0" borderStyle="none" color="#FFFFFF"/>
+			<mx:Image horizontalCenter="0" top="0" source="{Resource.logo}"/>
 		</mx:Canvas>
 			
 	
@@ -194,9 +225,15 @@
 				-->
 			</mx:Canvas>
 			
+			
+			<Component:Room3_Cpt id="RoomCpt" x="219" y="34">
+				
+			</Component:Room3_Cpt>
+			<!--
 			<mx:Canvas id="desklist"  x="219" y="34" width="731" height="556"  > 
 				
 			</mx:Canvas>
+			-->
 			
 		</mx:Canvas>
 	
