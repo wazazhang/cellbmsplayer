@@ -37,6 +37,8 @@ package Class
 	import com.fc.lami.Messages.GameStartNotify;
 	import com.fc.lami.Messages.GameStartToRoomNotify;
 	import com.fc.lami.Messages.GetCardNotify;
+	import com.fc.lami.Messages.GetCardOverRequest;
+	import com.fc.lami.Messages.GetCardOverResponse;
 	import com.fc.lami.Messages.GetCardRequest;
 	import com.fc.lami.Messages.GetCardResponse;
 	import com.fc.lami.Messages.GetPlayerDataRequest;
@@ -56,6 +58,7 @@ package Class
 	import com.fc.lami.Messages.OperateCompleteNotify;
 	import com.fc.lami.Messages.PlatformUserData;
 	import com.fc.lami.Messages.PlayerData;
+	import com.fc.lami.Messages.PlayerUpdateNotify;
 	import com.fc.lami.Messages.ReadyNotify;
 	import com.fc.lami.Messages.ReadyRequest;
 	import com.fc.lami.Messages.RepealSendCardNotify;
@@ -95,7 +98,7 @@ package Class
 		
 		//public static var room_cpt:Room3_Cpt;
 
-		private static var room:Room;
+	//	private static var room:Room;
 		
 		public static var game:Game;
 		
@@ -147,17 +150,18 @@ package Class
 		
 		public static function getPlayer(player_id:int):PlayerData
 		{
-			return room.getPlayerFromPlayerList(player_id);
+		
+			return login_cpt.selectRoom.room.getPlayerFromPlayerList(player_id);
 		}
 		
 		public static function getDesk(desk_id:int):Desk
 		{
-			return room.getDesk(desk_id);
+			return login_cpt.selectRoom.room.getDesk(desk_id);
 		}
 		
 		public static function getPlayerDeskId(player_id:int):int
 		{
-			return room.getPlayerDeskId(player_id);
+			return login_cpt.selectRoom.room.getPlayerDeskId(player_id);
 		}
 		
 		//与服务器连接
@@ -225,31 +229,27 @@ package Class
 				for each(var cd2:CardData in gsn.cards){
 					cards2.addItem(Card.createCardByData(cd2) );
 				}
-				game.start(cards2,gsn.is_can_reset);
+				game.start(cards2);
 			}
 			
 			else if (ntf is EnterRoomNotify){
 				var ern : EnterRoomNotify = ntf as EnterRoomNotify;	
 				
-				login_cpt.RoomCpt.enterRoom(ern.player);					
+				login_cpt.selectRoom.playerEnterRoom(ern.player);					
 			}
 			
 			else if (ntf is ExitRoomNotify){
 				var exrn : ExitRoomNotify = ntf as ExitRoomNotify;
-			    
-				login_cpt.RoomCpt.leaveRoom(exrn.player_id);
+				login_cpt.selectRoom.leaveRoom(exrn.player_id);
 				
 			}
 			
 			else if (ntf is EnterDeskNotify){
 				
 				var edn : EnterDeskNotify = ntf as EnterDeskNotify;
-				if(room==null)
-					return;
-				
-				
-				room.getDesk(edn.desk_id).sitDown(edn.player_id, edn.seatID);
-				login_cpt.RoomCpt.enterDesk(edn.player_id, edn.desk_id, edn.seatID);
+			
+				login_cpt.selectRoom.room.getDesk(edn.desk_id).sitDown(edn.player_id, edn.seatID);
+				login_cpt.selectRoom.enterDesk(edn.player_id, edn.desk_id, edn.seatID);
 				
 				if(game!=null)
 					game.lami.enterPlayer(edn.player_id, edn.desk_id, edn.seatID);
@@ -259,8 +259,8 @@ package Class
 			else if (ntf is LeaveDeskNotify){
 				var ldn : LeaveDeskNotify = ntf as LeaveDeskNotify;
 
-				room.getDesk(ldn.desk_id).leaveDesk(ldn.player_id);
-				login_cpt.RoomCpt.leaveDesk(ldn.player_id, ldn.desk_id);
+				login_cpt.selectRoom.room.getDesk(ldn.desk_id).leaveDesk(ldn.player_id);
+				login_cpt.selectRoom.leaveDesk(ldn.player_id, ldn.desk_id);
 				if(game!=null)
 					game.lami.leavePlayer(ldn.player_id, ldn.desk_id);
 			}
@@ -354,11 +354,11 @@ package Class
 				var gon:GameOverNotify = ntf as GameOverNotify;
 				game.lami.onGameOver(gon);
 				
-				for each(var rp:ResultPak in gon.result_pak){
-					if (rp!=null){
-						getPlayerFromServer(rp.player_id);
-					}
-				}
+//				for each(var rp:ResultPak in gon.result_pak){
+//					if (rp!=null){
+//						getPlayerFromServer(rp.player_id);
+//					}
+//				}
 				// TODO 重置各个玩家的准备按钮
 			
 			}
@@ -370,7 +370,7 @@ package Class
 						game.lami.addTalkInfo(getPlayerName(getPlayer(stpn.player_id))+':'+stpn.message);
 					}
 				}else if (stpn.channel_type == SpeakToPublicNotify.CHANNEL_TYPE_ROOM){
-					login_cpt.RoomCpt.addRoomInfo(getPlayerName(getPlayer(stpn.player_id))+':'+stpn.message);
+					login_cpt.selectRoom.addRoomInfo(getPlayerName(getPlayer(stpn.player_id))+':'+stpn.message);
 				}
 			}
 			
@@ -390,35 +390,48 @@ package Class
 					game.gamer.getCards(cards3);
 				}
 				
-				game.lami.addInfo(Server.getPlayerName(getPlayer(rscn.player_id))+"撤销出牌");
+				game.lami.addInfo(Server.getPlayerName(getPlayer(rscn.player_id))+LanguageManager.getText('server.cancel')); //撤销出牌
 			}
 			else if (ntf is TimeOutNotify){
 				var ton:TimeOutNotify = ntf as TimeOutNotify;
-				game.lami.addInfo(Server.getPlayerName(getPlayer(ton.player_id))+"超时");
+				game.lami.addInfo(Server.getPlayerName(getPlayer(ton.player_id))+LanguageManager.getText('server.timeout')); //超时
 			}
 			else if (ntf is GameStartToRoomNotify)
 			{
 				var gstrn:GameStartToRoomNotify = ntf as GameStartToRoomNotify;
-				login_cpt.RoomCpt.onGameStart(gstrn.desk_id);
+				login_cpt.selectRoom.onGameStart(gstrn.desk_id);
 			}
 				
 			else if (ntf is GameOverToRoomNotify)
 			{
 				var gotrn:GameOverToRoomNotify = ntf as GameOverToRoomNotify;
-				login_cpt.RoomCpt.onGameOver(gotrn.desk_id);
+				login_cpt.selectRoom.onGameOver(gotrn.desk_id);
 				
 			}
 			
 			else if (ntf is GameResetNotify)
 			{
 				var grn:GameResetNotify = ntf as GameResetNotify;
-				game.lami.onPlayerReset(getPlayer(grn.player_id));	
+				game.lami.onPlayerReset(getPlayer(grn.player_id));
+				game.lami.StopMotionList();
 			}
 			else if (ntf is FreshRoomNotify){
 				var frn:FreshRoomNotify = ntf as FreshRoomNotify;
-				login_cpt.setRoom(frn.room);
+				login_cpt.selectRoom.setRoom(frn.room);
 			}
 			
+			else if (ntf is PlayerUpdateNotify)
+			{
+				var pun:PlayerUpdateNotify = ntf as PlayerUpdateNotify;
+				if (pun.player!=null){
+					login_cpt.selectRoom.room.updateToPlayerList(pun.player);
+					if (player.player_id == pun.player.player_id){
+						player.lose = pun.player.lose;
+						player.score = pun.player.score;
+						player.win = pun.player.win;
+					}
+				}
+			}
 		}
 		
 		protected static function client_response(event:ClientEvent):void
@@ -435,16 +448,16 @@ package Class
 				// 需要处理，如果没有成功，需要提示用户为什么没成功，或重新输入，不能一旦失败，游戏就卡住。
 				{
 					player = login.player;
-					login_cpt.rooms = login.rooms;
+					login_cpt.selectRoom.rooms = login.rooms;
 					login_cpt.linkSunccess();
 				}
 				else if (login.result == LoginResponse.LOGIN_RESULT_FAIL_ALREADY_LOGIN)
 				{
-					LamiAlert.show("已在游戏中");
+					LamiAlert.show(LanguageManager.getText("server.alreadyin")); // 已在游戏中
 				}
 				else if (login.result == LoginResponse.LOGIN_RESULT_FAIL_BAD_VERSION)
 				{
-					LamiAlert.show("版本错误");
+					LamiAlert.show(LanguageManager.getText("server.errerVersion")); //版本错误
 				}
 				else if (login.result == LoginResponse.LOGIN_RESULT_FAIL)
 				{
@@ -460,8 +473,7 @@ package Class
 			    
 				if(enterRoom.result==EnterRoomResponse.ENTER_ROOM_RESULT_SUCCESS) 
 				{	
-					
-					login_cpt.enterRoom(enterRoom.room);
+					login_cpt.selectRoom.enterRoom(enterRoom.room);
 							
 					if(isAutoEnter)
 					{
@@ -471,23 +483,24 @@ package Class
 				}
 				else if(enterRoom.result == EnterRoomResponse.ENTER_ROOM_RESULT_FAIL_ROOM_FULL)
 				{
-					LamiAlert.show("房间已满");
+					LamiAlert.show(LanguageManager.getText("server.roomFull")); //房间已满
 				}
 				else if (enterRoom.result == EnterRoomResponse.ENTER_ROOM_RESULT_FAIL_ROOM_NOT_EXIST)
 				{
-					LamiAlert.show("房间不存在");
+					LamiAlert.show(LanguageManager.getText("server.roomNoExist")); //房间不存在
 				}
 				
 			}
 			else if (res is AutoEnterResponse){
 				var aer:AutoEnterResponse = res as AutoEnterResponse;
 				if (aer.result == AutoEnterResponse.AUTO_ENETR_RESULT_SUCCESS){
-					onAutoEnterResponse(aer);
-					login_cpt.enterRoom(aer.room)
+					//onAutoEnterResponse(aer);
+					//room = new Room(aer.room);
+					login_cpt.selectRoom.enterRoom(aer.room)
 					//login_cpt.visible = false;
 					enterDesk(-1,-1);
 				}else if (aer.result == AutoEnterResponse.AUTO_ENTER_RESULT_FAIL_NO_IDLE_SEAT){
-					LamiAlert.show("没有空余座位");
+					LamiAlert.show(LanguageManager.getText("没有空余座位")); //没有空余座位
 				}
 			}
 			else if(res is ExitRoomResponse){
@@ -495,7 +508,7 @@ package Class
 				var err:ExitRoomResponse = res as ExitRoomResponse
 				
 	
-				login_cpt.rooms = err.rooms;
+				login_cpt.selectRoom.rooms = err.rooms;
 				//login_cpt.visible = true;
 			}
 			
@@ -516,33 +529,31 @@ package Class
 					
 					game.timeCtr.sumTimerSet(enterdesk.turn_interval-delay);
 					game.timeCtr.oprTimerSet(enterdesk.operate_time);
-					
-					room.getDesk(enterdesk.desk_id).sitDown(player.player_id, enterdesk.seat);
-					
-					game.lami.initDesk(room.getDesk(enterdesk.desk_id),enterdesk.ps);
+				    login_cpt.selectRoom.room.getDesk(enterdesk.desk_id).sitDown(player.player_id, enterdesk.seat);
+					game.lami.initDesk(login_cpt.selectRoom.room.getDesk(enterdesk.desk_id),enterdesk.ps);
 					
 				}
 				else if(enterdesk.result == EnterDeskResponse.ENTER_DESK_RESULT_FAIL_NO_IDLE_SEAT)
 				{
-					LamiAlert.show("是否进入围观", "该桌子已满", Alert.YES|Alert.NO, null, enterDeskHandler);
+					LamiAlert.show(LanguageManager.getText("server.Onlookers"), LanguageManager.getText("server.deskFull"), Alert.YES|Alert.NO, null, enterDeskHandler); //是否进入围观 //该桌子已满
 				}
 				else if(enterdesk.result == EnterDeskResponse.ENTER_DESK_RESULT_FAIL_NO_IDLE_DESK)
 				{
-					LamiAlert.show("没有空余桌子");
+					LamiAlert.show(LanguageManager.getText("server.NoDesk"));//没有空余桌子
 				}
 				else if(enterdesk.result == EnterDeskResponse.ENTER_DESK_RESULT_FAIL_GAME_STARTED)
 				{
-					LamiAlert.show("是否进入围观", "该桌游戏已经开始", Alert.YES|Alert.NO, null, enterDeskHandler);
+					LamiAlert.show(LanguageManager.getText("server.Onlookers"), LanguageManager.getText("server.alreadyStart"), Alert.YES|Alert.NO, null, enterDeskHandler); //是否进入围观 //没有空余位置
 				}
 				else if(enterdesk.result == EnterDeskResponse.ENTER_DESK_RESULT_FAIL_NOT_HAVE_ROOM)
 				{
-					LamiAlert.show("尚未进入房间");
+					LamiAlert.show(LanguageManager.getText("server.NoJoin")); //尚未进入房间
 				}
 				else if(enterdesk.result == EnterDeskResponse.ENTER_DESK_RESULT_FAIL_PLAYER_EXIST)
 				{
-					LamiAlert.show("玩家不存在");
+					LamiAlert.show(LanguageManager.getText("server.playerNoExist")); //玩家不纯在
 				}
-				
+				MaskCtr.close();
 			}
 			else if (res is EnterDeskAsVisitorResponse){
 				var edav : EnterDeskAsVisitorResponse = res as EnterDeskAsVisitorResponse;
@@ -558,19 +569,27 @@ package Class
 					game.timeCtr.sumTimerSet(edav.turn_interval);
 					game.timeCtr.oprTimerSet(edav.operate_time);
 					
-					game.lami.initDesk(room.getDesk(edav.desk_id),edav.ps);
+					game.lami.initDesk(login_cpt.selectRoom.room.getDesk(edav.desk_id),edav.ps);
 					SynchronizeCard();
 				}
 				
 				
 				else if (edav.result == EnterDeskAsVisitorResponse.ENTER_DESK_VISITOR_RESULT_FAIL_ALREADY_IN_DESK){
-					LamiAlert.show("已经在当前桌子里了");
+					LamiAlert.show(LanguageManager.getText("server.alreadyInDesk")); //已经在当前桌子里了
 				}
 				else if (edav.result == EnterDeskAsVisitorResponse.ENTER_DESK_VISITOR_RESULT_FAIL_NO_DESK){
-					LamiAlert.show("没有找到桌子");
+					LamiAlert.show(LanguageManager.getText("server.NoFindDesk")); //没有找到桌子
 				}
 				else if (edav.result == EnterDeskAsVisitorResponse.ENTER_DESK_VISITOR_RESULT_FAIL_NO_ROOM){
-					LamiAlert.show("要先进入房间");
+					LamiAlert.show(LanguageManager.getText("server.joinRoom")); //要先进入房间
+				}
+				MaskCtr.close();
+			}
+			else if (res is GetCardOverResponse){
+				var gcor:GetCardOverResponse = res as GetCardOverResponse;
+				game.lami.onGameStart(gcor.is_can_reset);
+				if (gcor.is_can_reset == false){
+					client.sendRequest(new GameResetRequest(false), client_response);
 				}
 			}
 			else if (res is GetCardResponse){
@@ -581,6 +600,17 @@ package Class
 				if (mmcr.result!=MainMatrixChangeResponse.MAIN_MATRIX_CHANGE_RESULT_SUCCESS){
 					SynchronizeCard();
 				}
+				if (mmcr.result == MainMatrixChangeResponse.MAIN_MATRIX_CHANGE_RESULT_FAIL_CARD_COPYED){
+					LamiAlert.show(LanguageManager.getText("server.haveCopyCard")); //有复制的牌
+				}else if (mmcr.result == MainMatrixChangeResponse.MAIN_MATRIX_CHANGE_RESULT_FAIL_CANT_RETAKE){
+					LamiAlert.show(LanguageManager.getText("server.canotBack")); //该牌不能取回
+				}else if (mmcr.result == MainMatrixChangeResponse.MAIN_MATRIX_CHANGE_RESULT_FAIL_CANNT_MOVE){
+					LamiAlert.show(LanguageManager.getText("server.canotMove")); //未破冰不能移动原有的牌
+				}else if (mmcr.result == MainMatrixChangeResponse.MAIN_MATRIX_CHANGE_RESULT_FAIL_CARD_NOEXIST){
+					LamiAlert.show(LanguageManager.getText("server.cardNoExist")); //该牌不存在
+				}else if (mmcr.result == MainMatrixChangeResponse.MAIN_MAIRIX_CHANGE_RESULT_FAIL_CANNT_SPLICE){
+					LamiAlert.show(LanguageManager.getText("server.canotSplice")); //未破冰不能和原有牌拼接
+				}
 				
 			}
 			else if(res is SubmitResponse)
@@ -589,15 +619,15 @@ package Class
 
 				
 				if (sr.result == SubmitResponse.SUBMIT_RESULT_FAIL_CARD_COMBI_NO_MATCH){
-					LamiAlert.show("有不成立的牌组");
+					LamiAlert.show(LanguageManager.getText("server.noExistence")); //有不成立的牌组
 					SynchronizeCard();
 				}
 				else if (sr.result == SubmitResponse.SUBMIT_RESULT_FAIL_CARD_NOT_OPEN_ICE){
-					LamiAlert.show("没有破冰");
+					LamiAlert.show(LanguageManager.getText("server.noOpenIce")); //没有破冰
 					SynchronizeCard();
 				}
 				else if (sr.result == SubmitResponse.SUBMIT_RESULT_FAIL_CARD_NO_SEND){
-					LamiAlert.show("没有出牌");
+					LamiAlert.show(LanguageManager.getText("server.noSendCard")); //没有出牌
 					SynchronizeCard();
 				}
 				else
@@ -628,14 +658,14 @@ package Class
 					//game_cpt.visible = true;
 					
 				}else if (ldr.result == LeaveDeskResponse.LEAVE_DESK_RESULT_FAIL_GAMING){
-					LamiAlert.show("是否强行退出（扣分）", "正在游戏中不能退出", Alert.YES|Alert.NO, null, leaveDeskHandler);
+					LamiAlert.show(LanguageManager.getText("server.Exit"), LanguageManager.getText("server.canntExit"), Alert.YES|Alert.NO, null, leaveDeskHandler);//是否强行退出（扣分）//正在游戏中不能退出
 				}
 			}
 			else if (res is GetPlayerDataResponse)
 			{
 				var gpdr : GetPlayerDataResponse = res as GetPlayerDataResponse;
 				if (gpdr.player!=null){
-					Server.room.updateToPlayerList(gpdr.player);
+					login_cpt.selectRoom.room.updateToPlayerList(gpdr.player);
 					if (player.player_id == gpdr.player.player_id){
 						player.lose = gpdr.player.lose;
 						player.score = gpdr.player.score;
@@ -643,7 +673,6 @@ package Class
 					}
 				}
 			}
-			
 		}
 
 		
@@ -651,6 +680,8 @@ package Class
 		public static function enterRoom(roomid:int):void
 		{
 			//login_cpt.desklist.removeAllChildren();
+			login_cpt.selectRoom.dgroomlist.removeAllChildren();
+			
 			client.sendRequest(new EnterRoomRequest(roomid),client_response);
 		}
 		
@@ -714,7 +745,7 @@ package Class
 		public static function sendTalkMessage(str:String):Boolean
 		{
 			if (str.length<1||str.length>100){
-				LamiAlert.show("说话的字数要在1到100个之间");
+				LamiAlert.show(LanguageManager.getText("server.talkError")); //说话的字数要在1到100个之间
 				return false;
 			}
 			var res:SpeakToPublicRequest = new SpeakToPublicRequest(str);
@@ -723,12 +754,17 @@ package Class
 		}
 		
 		
-		public static function sendResetRequest():void
+		public static function sendResetRequest(is_reset:Boolean):void
 		{
-			var res:GameResetRequest = new GameResetRequest();
+			var res:GameResetRequest = new GameResetRequest(is_reset);
 			client.sendRequest(res,client_response);
 		}
 		
+		public static function sendGetCardOver():void
+		{
+			var res:GetCardOverRequest = new GetCardOverRequest();
+			client.sendRequest(res,client_response);
+		}
 		
 		public static function sendAutoEnter():void
 		{
@@ -740,6 +776,11 @@ package Class
 		public static function sendRepealRequest():void
 		{
 			client.sendRequest(new RepealSendCardRequest(), client_response);
+		}
+		
+		public static function sendGetCardOverRequest():void
+		{
+			client.sendRequest(new GetCardOverRequest(), client_response);
 		}
 
 		//连接服务器

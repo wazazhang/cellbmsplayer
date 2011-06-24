@@ -6,6 +6,7 @@
 	<mx:Script>
 		<![CDATA[
 			import Class.Game;
+			import Class.LanguageManager;
 			import Class.Resource;
 			import Class.Server;
 			import Class.TimesCtr;
@@ -45,6 +46,7 @@
 			private var oprStartTime:Date;
 			private var sumStartTime:Date;
 			
+			private var circle:Sprite;
 			
 			public function get player():PlayerData
 			{
@@ -146,8 +148,16 @@
 			{
 				if(sumtimer == null)
 					return
+					
 				var s:Number = new Date().getTime() - sumStartTime.getTime(); 
 				clock.text = parseInt(((Server.game.timeCtr.sumTime - s)/1000).toString()).toString() ;	
+				
+				var point:Number = s / Server.game.timeCtr.sumTime;
+				var color:Number = TimesCtr.getColorByPointBeginWithYellowNoShine(point); 
+				clock.setStyle("color",color);
+				
+				drow(point*100,color);
+				
 			}
 			public  function init():void
 			{
@@ -191,9 +201,46 @@
 						
 						return;
 					}
+				}	
+			}
+			
+			//画进度圆
+			public function drow(p:int,color:Number):void
+			{
+				if(circle!=null)
+				timeCircle.removeChild(circle);
+					
+				p = 100 - p;
+				circle = new Sprite();
+				
+				var angle:Number = Math.PI
+				var centerX:Number = 15;
+				var centerY:Number = 15;
+				var Radius:Number = 12;
+				
+				var Speed:Number = Math.PI/50;
+				//var i:Number = 0;
+				
+				circle.graphics.lineStyle(3,color,100);
+				
+				circle.graphics.moveTo(centerX,centerY-Radius);	
+				
+				for(var i:int = 0; i<=p; i++)
+				{
+					var xpos:Number = centerX+Math.sin(angle)*Radius;
+					var ypos:Number = centerY+Math.cos(angle)*Radius;
+					
+					angle += Speed;
+					
+					circle.graphics.lineTo(xpos,ypos);
 				}
+				
+				
+				
+				timeCircle.addChild(circle)
 					
 			}
+			
 			
 		]]>
 	</mx:Script>
@@ -206,14 +253,14 @@
 	<mx:Image source="{Resource.gold2}" y="73" x="22"/>
 	<mx:Label y="72" text="{_player==null?'':_player.score}" color="#FFFFFF" fontSize="12" width="57" horizontalCenter="0" textAlign="center"/>
 	
-	<mx:Label y="54" text="{pobing?'已破冰':'未破冰'}" visible="{isStarted}" color="{pobing?0x00a0e0:0xffffff}" fontSize="12" horizontalCenter="0">
+	<mx:Label y="54" text="{pobing?LanguageManager.getText('lami.ypb'):LanguageManager.getText('lami.wpb')}" visible="{isStarted}" color="{pobing?0x00a0e0:0xffffff}" fontSize="12" horizontalCenter="0">
 		<mx:filters>
 			<mx:GlowFilter color="#000000" strength="10" ></mx:GlowFilter>
 		</mx:filters>
 	</mx:Label>
 	
 	
-	<mx:Label y="54" text="{ready?'已准备':'未准备'}" visible="{!isStarted}" color="{ready?0x009900:0xff0000}" fontSize="12" horizontalCenter="0">
+	<mx:Label y="54" text="{ready?LanguageManager.getText('lami.yzb'):LanguageManager.getText('lami.wzb')}" visible="{!isStarted}" color="{ready?0x009900:0xff0000}" fontSize="12" horizontalCenter="0">
 		<mx:filters>
 			<mx:GlowFilter color="#000000" strength="10" ></mx:GlowFilter>
 		</mx:filters>
@@ -224,8 +271,12 @@
 	-->
 	
 	<mx:ProgressBar id="pbtime" y="90" width="85" height="5"  horizontalCenter="0" mode="manual" labelPlacement="center"  label="" visible="false" trackSkin="{Resource.ProgressBarBg}"/>
-	
+	<!--
 	<mx:SWFLoader  x="90" y="28" source="{Resource.time}" visible="{pbtime.visible}" width="30" height="30"></mx:SWFLoader>
+	-->
+	<mx:UIComponent id="timeCircle" x="92" y="30" visible="{pbtime.visible}" width="30" height="30">
+		
+	</mx:UIComponent>
 	
 	<mx:Label id="clock" color="0xffffff" x="97" y="37" visible="{pbtime.visible}" width="20" textAlign="center"/>
 	

@@ -26,8 +26,8 @@
 			import mx.controls.Alert;
 			import mx.states.SetStyle;
 			
-			[Bindable]
-			public var confimcard:Card
+			//[Bindable]
+			//public var confimcard:Card
 			
 			[Bindable]
 			protected var _card:Card
@@ -54,7 +54,7 @@
 			
 			public function confim():void
 			{
-				confimcard = card;
+	//			confimcard = card;
 			}
 			
 			[Bindable]
@@ -85,7 +85,7 @@
 			
 			public function reset():void
 			{
-				card = confimcard;
+//				card = confimcard;
 			}
 			
 			public function mouseOver(event:MouseEvent):void
@@ -188,6 +188,7 @@
 				//鼠标滑动
 				if(event.buttonDown)
 				{
+					if (card != null) 
 					if(game.gamer.selectedArrayCard!=null&&game.gamer.selectedArrayCard.indexOf(card)!=-1)
 					{
 						return;
@@ -412,7 +413,7 @@
 
 		]]>
 	</mx:Script>
-	<mx:Image id="img0" visible="{isShow}" width="28" height="38"></mx:Image>
+	<mx:Image id="img0" visible="{isShow}" width="25" height="31"></mx:Image>
 	<mx:Canvas width="100%" height="100%" backgroundColor="#000000" backgroundAlpha="0.2" visible="{card==null?false:card.isSended}"></mx:Canvas>
 	<mx:SWFLoader width="50" height="100" y="5" source="{Resource.guang}" visible="{isSelected}"></mx:SWFLoader>
 	<mx:Glow id="ef" target="{this}" color="0xff0000" repeatCount="5" duration="500" strength="10" ></mx:Glow>

@@ -13,6 +13,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import Class.LanguageManager;
 			import Class.Server;
 			
 			import com.fc.lami.Messages.GameOverNotify;
@@ -29,9 +30,9 @@
 			{
 				switch(gmovn.game_over_type)
 				{
-					case GameOverNotify.GAME_OVER_TYPE_CARD_OVER :tip="结束方式:牌堆的牌摸空了";break
-					case GameOverNotify.GAME_OVER_TYPE_CLEAR :tip="结束方式:有人出完牌";break
-					case GameOverNotify.GAME_OVER_TYPE_ESCAPE :tip="结束方式:有人逃跑或则断线";break
+					case GameOverNotify.GAME_OVER_TYPE_CARD_OVER :tip=LanguageManager.getText('resultCpt.pmk');break // >结束方式:牌堆的牌摸空了     
+					case GameOverNotify.GAME_OVER_TYPE_CLEAR :tip=LanguageManager.getText('resultCpt.cpw');break  //结束方式:有人出完牌
+					case GameOverNotify.GAME_OVER_TYPE_ESCAPE :tip=LanguageManager.getText('resultCpt.tp');break //结束方式:有人逃跑或则断线
 				}
 				var i:int = 0;
 				var i2:int = 0;
@@ -46,7 +47,11 @@
 					var labelpoint:Label = new Label();
 					
 					label.text = Server.getPlayerName(player);
-					labelpoint.text = result.point.toString();
+					if (result.is_win){
+						labelpoint.text = '+'+result.point.toString();
+					}else{
+						labelpoint.text = result.point.toString();
+					}
 					
 					label.x = 60;
 					labelpoint.x = 220;
@@ -90,6 +95,7 @@
 			
 			public function close():void
 			{
+				(parent as Lami).stopFireMoiveClip();
 				parent.removeChild(this);
 			}
 			
@@ -97,18 +103,18 @@
 	</mx:Script>
 	
 	
-	<mx:Label y="4" text="游戏结束" horizontalCenter="0" fontSize="16" fontWeight="bold" fontAntiAliasType="advanced" kerning="false" fontSharpness="0"/>
+	<mx:Label y="4" text="{LanguageManager.getText('resultCpt.yxjs')}" horizontalCenter="0" fontSize="16" fontWeight="bold" fontAntiAliasType="advanced" kerning="false" fontSharpness="0"/>
 	<mx:Label  y="250" text="{tip}" horizontalCenter="3" fontSize="12" />
-	<mx:Button y="269" label="关闭" horizontalCenter="0" buttonMode="true" click="close()" upSkin="@Embed(source='../image/alert_btn.png')" color="#FFFFFF" fontWeight="normal" skin="@Embed(source='../image/alert_btn.png')" selectedUpSkin="@Embed(source='../image/alert_btn.png')" selectedOverSkin="@Embed(source='../image/alert_btn_e.png')" selectedDownSkin="@Embed(source='../image/alert_btn_d.png')" overSkin="@Embed(source='../image/alert_btn_e.png')" downSkin="@Embed(source='../image/alert_btn_d.png')" focusSkin="@Embed(source='../image/alert_btn_e.png')"/>
+	<mx:Button y="269" label="{LanguageManager.getText('resultCpt.gb')}" horizontalCenter="0" buttonMode="true" click="close()" upSkin="@Embed(source='../image/alert_btn.png')" color="#FFFFFF" fontWeight="normal" skin="@Embed(source='../image/alert_btn.png')" selectedUpSkin="@Embed(source='../image/alert_btn.png')" selectedOverSkin="@Embed(source='../image/alert_btn_e.png')" selectedDownSkin="@Embed(source='../image/alert_btn_d.png')" overSkin="@Embed(source='../image/alert_btn_e.png')" downSkin="@Embed(source='../image/alert_btn_d.png')" focusSkin="@Embed(source='../image/alert_btn_e.png')"/>
 	
-	<mx:Label y="36" id="rs" text="胜利" horizontalCenter="0" fontSize="18" fontWeight="bold" color="#FCD601">
+	<mx:Label y="36" id="rs" text="{LanguageManager.getText('resultCpt.sl')}" horizontalCenter="0" fontSize="18" fontWeight="bold" color="#FCD601">
 		<mx:filters>
 			<mx:GlowFilter color="0x000000">	
 			</mx:GlowFilter>
 		</mx:filters>
 	</mx:Label>
 	
-	<mx:Label y="125" id="rs0" text="失败" horizontalCenter="0" fontSize="18" fontWeight="bold" color="#ffffff">
+	<mx:Label y="125" id="rs0" text="{LanguageManager.getText('resultCpt.sb')}" horizontalCenter="0" fontSize="18" fontWeight="bold" color="#ffffff">
 		<mx:filters>
 			<mx:GlowFilter color="0x000000">	
 			</mx:GlowFilter>

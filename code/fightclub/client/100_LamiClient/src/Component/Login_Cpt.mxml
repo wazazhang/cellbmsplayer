@@ -7,6 +7,7 @@
 		   alpha="1.0" backgroundAlpha="0.0" xmlns:Component="Component.*">  
 	<mx:Script>
 			<![CDATA[
+				import Class.LanguageManager;
 				import Class.Model.Room;
 				import Class.Resource;
 				import Class.Server;
@@ -23,40 +24,15 @@
 				import mx.controls.Alert;
 				import mx.controls.dataGridClasses.DataGridColumn;
 				
-				[Bindable]
-				private var _rooms:Array;
 				
 				private var linkTimer:Timer = new Timer(200,300);
 				
 				public function init():void
 				{
 					version.text = new MessageCodec().getVersion();
-					
-					
 					linkTimer.addEventListener(TimerEvent.TIMER_COMPLETE, linkFilad);
 					linkTimer.addEventListener(TimerEvent.TIMER, linking)
-				}
-				
-				public function get rooms():Array
-				{
-					return _rooms
-				}
-				
-				public function set rooms(val:Array):void
-				{
-					_rooms = val;
-					restRooms();
-				}
-				
-				public function setRoom(room:RoomSnapShot):void
-				{
-					for each(var r:RoomSnapShot in _rooms){
-						if (r.room_id == room.room_id){
-							r.player_number = room.player_number;
-							r.player_number_max = room.player_number_max;
-							r.room_name = room.room_name;
-						}
-					}
+						
 				}
 				
 				public function linkServer():void
@@ -65,7 +41,6 @@
 					{
 						login_btn.enabled = false;
 						
-						Server.login_cpt = this;
 						Server.linkToServer();
 						
 						linkTimer.reset();
@@ -73,7 +48,7 @@
 					} 
 					else 
 					{
-						LamiAlert.show("通行证帐号错误，不能进入游戏！");
+						LamiAlert.show(LanguageManager.getText("loginCpt.zhcw"));//通行证帐号错误，不能进入游戏！
 					}
 				}
 				
@@ -86,7 +61,7 @@
 				{
 					if (!Server.getClient().isConnected()) 
 					{
-						LamiAlert.show("连接超时");
+						LamiAlert.show(LanguageManager.getText("loginCpt.ljcs")); //连接超时
 						login_btn.enabled = true;
 					}
 				}
@@ -94,102 +69,19 @@
 				public function linkSunccess():void
 				{
 					linkTimer.stop();
-					
+					login_btn.enabled = true;
 					login.visible = false;
 					selectRoom.visible = true;
-					
-					login_btn.enabled = true;
-					
-					
-					//desklist.addChild(new Room3_Cpt());
-					
-					
-					Server.getClient().sendRequest(
-						new AutoEnterRequest(), 
-						onFirstLoginAutoEnter);
+					selectRoom.startGame();
 				}
-				
-				/**
-				 * 首次进入游戏自动选择个房间而不进入桌子
-				 */
-				private function onFirstLoginAutoEnter(event:ClientEvent) : void
-				{
-					if (event.getResponse() is AutoEnterResponse)
-					{
-						var aer:AutoEnterResponse = event.getResponse() as AutoEnterResponse;
-						if (aer.result == AutoEnterResponse.AUTO_ENETR_RESULT_SUCCESS){
-							Server.onAutoEnterResponse(aer);
-							enterRoom(Server.room_cpt);
-						}else if (aer.result == AutoEnterResponse.AUTO_ENTER_RESULT_FAIL_NO_IDLE_SEAT){
-							LamiAlert.show("没有空余座位");
-						}
-					}
-				}
-				
+
 				public function disLink():void
 				{
 					selectRoom.visible = false;
 					login.visible = true;
 					login_btn.enabled = true;
 				}
-					
-				public function addRoom():void
-				{
-					
-				}
 				
-				public function player_numberLF(item:Object,column:DataGridColumn):String
-				{
-					return item.player_number+'/' +item.player_number_max;
-				}
-				
-				public function levelLF(item:Object,column:DataGridColumn):String
-				{
-					return "20";
-				}
-				
-				public function modeLF(item:Object,column:DataGridColumn):String
-				{
-					return "dollar";
-				}
-				
-				
-				public function fastEnter():void
-				{
-					Server.sendAutoEnter();
-//					Server.isAutoEnter = true;
-//					Server.enterRoom(rooms[0].room_id)
-				}
-				
-				
-				public function addItem(room:RoomSnapShot):void
-				{
-					var it:ItemCpt = new ItemCpt();
-					it.room = room;
-					vb1.addChild(it);
-				}
-				
-				
-				public function restRooms():void
-				{
-					vb1.removeAllChildren();
-					for each(var room:RoomSnapShot in _rooms)
-					{
-						addItem(room);
-					}
-				}
-				
-				public function enterRoom(roomData:RoomData):void
-				{
-					for each (var item:ItemCpt in vb1.getChildren())
-						item.isSelect = (item.room.room_id == roomData.room_id);
-					
-					
-						
-						RoomCpt.init(roomData);
-							
-					//desklist.addChild(roomCpt);
-				}
 				
 			]]>
 		</mx:Script>
@@ -199,42 +91,16 @@
 		
 		<mx:Canvas id="login" width="960" height="600"  horizontalCenter="0" verticalCenter="0"  borderStyle="solid"
 				   cornerRadius="5" backgroundColor="#2D2D2D" backgroundAlpha="0.4"   borderSkin="@Embed(source='../image/logobg.png')">
-			<mx:Button id="login_btn" label="开始" fontSize="20" click="linkServer()" width="138" height="47" horizontalCenter="0" bottom="100" styleName="bigButton" fontWeight="bold"/>
+			<mx:Button id="login_btn" label="{LanguageManager.getText('loginCpt.ks')}" fontSize="20" click="linkServer()" width="138" height="47" horizontalCenter="0" bottom="100" styleName="bigButton" fontWeight="bold"/>
 			<!--
 			<mx:TextInput x="47" y="52" width="160" text="115.236.18.104" id="server_host"/>
 			-->
-			<mx:Label text="ver 0.9" width="628" id="version" textAlign="center" horizontalCenter="0" bottom="2"/>
-			<mx:TextArea width="958" height="445" top="0" horizontalCenter="0" id="txt_debug" alpha="0.0" backgroundAlpha="0.0" editable="false" enabled="false" borderThickness="0" borderStyle="none" color="#FFFFFF"/>
-			<mx:Image horizontalCenter="0" top="0" source="{Resource.logo}"/>
-		</mx:Canvas>
-			
-	
-		<mx:Canvas id="selectRoom" width="100%" height="100%" backgroundImage="image/bg/deskbg2.png" visible="false" x="0" y="0"  >	
-			
-			<mx:Canvas width="197" height="549"  x="14" y="44">
-				<mx:Label text="房间选择"  x="61" y="13" color="#5E1C00" fontSize="18" fontWeight="bold"> 
-					<mx:filters>
-						<mx:GlowFilter color="0xffffff" quality="5" ></mx:GlowFilter>
-					</mx:filters>
-				</mx:Label>
-				
-				<mx:VBox id="vb1" x="11" y="65" height="454" width="180" horizontalScrollPolicy="off" verticalGap="2" verticalScrollPolicy="on" verticalScrollBarStyleName="VScrollBar"> 
-				</mx:VBox>
-				<!--
-				<mx:Button x="35" y="482" click="fastEnter()" skin="@Embed(source='../image/sjbt1.png')" overSkin="@Embed(source='../image/sjbt2.png')"/>
-				-->
-			</mx:Canvas>
-			
-			
-			<Component:Room3_Cpt id="RoomCpt" x="219" y="34">
-				
-			</Component:Room3_Cpt>
-			<!--
-			<mx:Canvas id="desklist"  x="219" y="34" width="731" height="556"  > 
-				
-			</mx:Canvas>
-			-->
+			<mx:Label text="ver 0.9"  width="628" id="version" textAlign="center" horizontalCenter="0" bottom="2"/>
+			<mx:Image horizontalCenter="0" top="40" source="{Resource.logo}"/>
 			
 		</mx:Canvas>
+			
+	<Component:Room3_Cpt id="selectRoom" x="0" y="0" visible="false">
+	</Component:Room3_Cpt>
 	
 </mx:Canvas>

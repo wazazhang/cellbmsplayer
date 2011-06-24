@@ -27,18 +27,6 @@
 			[Bindable]
 			public var playerS:PlayerData;
 			
-			
-			
-			[Embed(source='image/man.png')]
-			public  static const man:Class;    
-			
-			[Embed(source='image/noman.png')]
-			public static const noman:Class;    
-			
-			[Embed(source='image/noman1.png')]
-			public static const man1:Class;    
-			
-			
 			private function enter0():void
 			{
 				if(desk.is_started)

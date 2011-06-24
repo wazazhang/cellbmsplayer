@@ -70,15 +70,12 @@ Alert
 	
 }
 
-@font-face { 
-	src: local("Arial"); 
-	fontFamily: "ArialEmbedded"; 
-} 
 
-ToggleButtonBar
+.myToggleButtonBar
 {
-	firstButtonStyleName: toggleButtonBarFirstButton;
-	lastButtonStyleName: toggleButtonBarFirstButton;
+	firstButtonStyleName: tabButton;
+	lastButtonStyleName: tabButton;
+	buttonStyleName: tabButton;
 	
 	
 }
@@ -93,78 +90,163 @@ ToggleButtonBar
 	selectedOverSkin: Embed(source="../image/alert_btn_d.png");
 	selectedDownSkin: Embed(source="../image/alert_btn_d.png");
 	selectedDisabledSkin: Embed(source="../image/alert_btn_d.png");
+	
+}
 
+.tabButton
+{
+	upSkin: Embed(source="../image/tabButtonA.png");
+	overSkin: Embed(source="../image/tabButtonA.png");
+	downSkin:  Embed(source="../image/tabButtonB.png");
+	
+	selectedUpSkin: Embed(source="../image/tabButtonB.png");
+	selectedOverSkin: Embed(source="../image/tabButtonB.png");
+	selectedDownSkin: Embed(source="../image/tabButtonB.png");
+	selectedDisabledSkin: Embed(source="../image/tabButtonB.png");
+	
 }
 
 
 
 
+
+.myTabNavigator {
+		backgroundAlpha: 0.5;
+	backgroundColor: #000000;
+	borderColor: #aab3b3;
+	color: #ffffff;
+	tabStyleName: "myTabs";
+	firstTabStyleName: "myTabs";
+	lastTabStyleName: "myTabs";
+	selectedTabTextStyleName: "mySelectedTabs";
+}
 
 .myTabs {
-	letterSpacing: 2;
+	fillColors: #333333, #000000;
+	backgroundAlpha: 0.5;
+	backgroundColor: #000000;
+	color: #333333;
+	textRollOverColor: #ffffff;
+	themeColor: #333333;
 	
-	fillAlphas: 0, 0.4;
-	/*selectedTabTextStyleName: "mySelectedTabs";*/
 }
+
 .mySelectedTabs {
-	color: #ffff00;
-	textRollOverColor: #ff0000;
+	color: #ffffff;
+	textRollOverColor: #ffffff;
 }
 
 
-.VScrollBar   
+.VScrollBar2
 {   
 	/*上面箭头的样式*/  
 	/*
 	up-arrow-skin:Embed(source="../image/bg/bar.png");   
 	*/
 	upArrowUpSkin:   
-		Embed(source="../image/bg/rollup.png");   
+		Embed(source="../image/track1/rollup.png");   
 	upArrowOverSkin:   
-		Embed(source="../image/bg/rollup.png");   
+		Embed(source="../image/track1/rollup.png");   
 	upArrowDownSkin:   
-		Embed(source="../image/bg/rollup1.png");   
+		Embed(source="../image/track1/rollup1.png");   
 	upArrowDisabledSkin:   
-		Embed(source="../image/bg/rollup.png");   
+		Embed(source="../image/track1/rollup.png");   
 	
 	
 	
 	/*下面箭头的样式*/  
 	downArrowUpSkin:   
-		Embed(source="../image/bg/rolldwon.png");   
+		Embed(source="../image/track1/rolldwon.png");   
 	downArrowOverSkin:   
-		Embed(source="../image/bg/rolldwon.png");   
+		Embed(source="../image/track1/rolldwon.png");   
 	downArrowDownSkin:   
-		Embed(source="../image/bg/rolldwon1.png");  
+		Embed(source="../image/track1/rolldwon1.png");  
 	downArrowDisabledSkin:   
-		Embed(source="../image/bg/rolldwon.png");   
+		Embed(source="../image/track1/rolldwon.png");   
 	
 	
 	thumbDownSkin:   
-		Embed(source="../image/bg/bar.png",
+		Embed(source="../image/track1/bar.png",
 		scaleGridLeft="7", scaleGridTop="5", 
 		scaleGridRight="8", scaleGridBottom="7");  
 	
 	thumbUpSkin:   
-		Embed(source="../image/bg/bar.png",
+		Embed(source="../image/track1/bar.png",
 		scaleGridLeft="7", scaleGridTop="5", 
 		scaleGridRight="8", scaleGridBottom="7"); 
 	
 	thumbOverSkin:   
-		Embed(source="../image/bg/bar.png",
+		Embed(source="../image/track1/bar.png",
 		scaleGridLeft="7", scaleGridTop="5", 
 		scaleGridRight="8", scaleGridBottom="7"); 
 	
 	thumbDisabledSkin:   
-		Embed(source="../image/bg/bar.png",
+		Embed(source="../image/track1/bar.png",
 		scaleGridLeft="7", scaleGridTop="5", 
 		scaleGridRight="8", scaleGridBottom="7");    
 
 
 	trackSkin:   
-		Embed(source="../image/bg/trcak.png",   
+		Embed(source="../image/track1/trcak.png",   
 		scaleGridLeft="7", scaleGridTop="9",   
 		scaleGridRight="8", scaleGridBottom="10");
+}  
+
+
+.VScrollBar
+{   
+	/*上面箭头的样式*/  
+	/*
+	up-arrow-skin:Embed(source="../image/bg/bar.png");   
+	*/
+	upArrowUpSkin:   
+		Embed(source="../image/track2/rollup.png");   
+	upArrowOverSkin:   
+		Embed(source="../image/track2/rollup.png");   
+	upArrowDownSkin:   
+		Embed(source="../image/track2/rollup1.png");   
+	upArrowDisabledSkin:   
+		Embed(source="../image/track2/rollup.png");   
+	
+	
+	
+	/*下面箭头的样式*/  
+	downArrowUpSkin:   
+		Embed(source="../image/track2/rolldwon.png");   
+	downArrowOverSkin:   
+		Embed(source="../image/track2/rolldwon.png");   
+	downArrowDownSkin:   
+		Embed(source="../image/track2/rolldwon1.png");  
+	downArrowDisabledSkin:   
+		Embed(source="../image/track2/rolldwon.png");   
+	
+	
+	thumbDownSkin:   
+		Embed(source="../image/track2/bar.png",
+		scaleGridLeft="7", scaleGridTop="5", 
+		scaleGridRight="8", scaleGridBottom="7");  
+	
+	thumbUpSkin:   
+		Embed(source="../image/track2/bar.png",
+		scaleGridLeft="7", scaleGridTop="5", 
+		scaleGridRight="8", scaleGridBottom="7"); 
+	
+	thumbOverSkin:   
+		Embed(source="../image/track2/bar.png",
+		scaleGridLeft="7", scaleGridTop="5", 
+		scaleGridRight="8", scaleGridBottom="7"); 
+	
+	thumbDisabledSkin:   
+		Embed(source="../image/track2/bar.png",
+		scaleGridLeft="7", scaleGridTop="5", 
+		scaleGridRight="8", scaleGridBottom="7");    
+	
+	
+	trackSkin:   
+		Embed(source="../image/track2/trcak.png",   
+		scaleGridLeft="7", scaleGridTop="9",   
+		scaleGridRight="8", scaleGridBottom="10");
+	cornerRadius: 0;
 }  
 
 .taskDetailBG
@@ -175,4 +257,15 @@ ToggleButtonBar
 	backgroundImageRepeat:repeat;/*可用值：repeat,no-repeat,repeat-x,repeat-y,默认值no-repeat*/  
 	background-size:100;  
 }
+
+
+.myTest
+{
+	backgroundColor: #828282;
+	borderColor: #000000;
+	borderStyle: outset;
+	borderThickness: 8;
+	cornerRadius: 5;
+}
+
 

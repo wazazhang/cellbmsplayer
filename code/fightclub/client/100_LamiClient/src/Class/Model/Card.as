@@ -1,5 +1,7 @@
 package Class.Model
 {
+	import Class.LanguageManager;
+	
 	import Component.Card_Cpt;
 	
 	import com.fc.lami.Messages.CardData;
@@ -81,15 +83,15 @@ package Class.Model
 		{
 			switch (card.type){
 				case 0:
-					return "鬼牌";
+					return LanguageManager.getText("card.g"); //鬼牌
 				case 1:
-					return "红色"+card.point;
+					return LanguageManager.getText("card.r")+card.point; //红色
 				case 2:
-					return "黄色"+card.point;
+					return LanguageManager.getText("card.y")+card.point; //黄色
 				case 3:
-					return "绿色"+card.point;
+					return LanguageManager.getText("card.b")+card.point; //黑色
 				case 4:
-					return "蓝色"+card.point;
+					return LanguageManager.getText("card.bl")+card.point; //蓝色
 			}
 			return "";
 		}

@@ -1,12 +1,40 @@
 package Class
 {
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
+	import flash.display.Loader;
+	import flash.events.Event;
+	import flash.geom.Point;
+	import flash.geom.Rectangle;
+	import flash.net.URLLoader;
+	import flash.net.URLRequest;
+	import flash.utils.Dictionary;
+	
+	import mx.controls.Alert;
+
 	public class Resource
-	{
-		public static var webRoot:String = '';
-		
+	{		
 		[Bindable]
 		[Embed(source='image/logo.png')]
 		public static var logo:Class;
+		
+		[Bindable]
+		[Embed(source='image/roomicon.png')]
+		public static var roomicon:Class;
+		
+		
+		[Bindable]
+		[Embed(source='image/deskicon.png')]
+		public static var deskicon:Class;
+		
+		
+		[Bindable]
+		[Embed(source='image/pf.png')]
+		public static var picon_female:Class;	
+		
+		[Bindable]
+		[Embed(source='image/pm.png')]
+		public static var picon_male:Class;	
 		
 		[Embed(source='image/card/b1.png')]
 		private static var b1:Class;
@@ -173,6 +201,10 @@ package Class
 		[Embed(source='image/card/g.png')]
 		private static var g:Class;
 		
+		[Embed(source='image/card/g2.png')]
+		private static var g2:Class;
+	
+		
 		[Bindable]
 		[Embed(source='image/bg/xtbg.png')] //系统信息背景
 		public static var xtbg:Class;
@@ -266,6 +298,11 @@ package Class
 		
 		
 		[Bindable]
+		[Embed(source='image/bg/deskbg2.png')] //操作区木纹
+		public static var deskbg2:Class;
+
+		
+		[Bindable]
 		[Embed(source='image/bg/head_bar.png')] //操作区木纹
 		public static var head_bar:Class;
 		
@@ -277,138 +314,176 @@ package Class
 		[Embed(source='image/bg/ProgressBarBg.png')] //进度条
 		public static var ProgressBarBg:Class;
 		
-
+		[Bindable]
+		[Embed(source='image/cardsleft.png')]
+		public static var cardsleft : Class;
 		
-		public function Resource()
+		
+		[Embed(source='image/cards.png')]
+		private static var cards : Class;
+		private static var cards_image : BitmapData;
+		private static var cards_loader : Loader = new Loader();
+		private static var cards_map : Dictionary = new Dictionary();
+		
+		public static function init():void
 		{
-			
+			cards_loader.contentLoaderInfo.addEventListener(Event.COMPLETE, onLoadCardsComplete);
+			cards_loader.load(new URLRequest(cards+""));
 		}
+		
+
+		private static function onLoadCardsComplete(event:Event):void 
+		{
+			var bitmap:Bitmap = Bitmap(cards_loader.content);
+			cards_image = bitmap.bitmapData;
+			
+			for (var y:int=0; y<5; y++) {
+				for (var x:int=0; x<14; x++) {
+					var card : BitmapData = new BitmapData(25, 31, true, 0x00ffffff);
+					card.copyPixels(cards_image, 
+						new Rectangle(x*26, y*52, 25, 31), 
+						new Point(0, 0));
+						cards_map[y+"_"+x] = card;
+				}
+			}
+		}
+
 		
 		public static function getCardImg(type:int,point:int):Class
 		{
-			if(type==1)
+			//var bd : BitmapData = cards_map[type+"_"+point];
+			
+			switch (point)
 			{
-				if(point==1)
-					return b1;
-				if(point==2)
-					return b2;
-				if(point==3)
-					return b3;
-				if(point==4)
-					return b4;
-				if(point==5)
-					return b5;
-				if(point==6)
-					return b6;
-				if(point==7)
-					return b7;
-				if(point==8)
-					return b8;
-				if(point==9)
-					return b9;
-				if(point==10)
-					return b10;
-				if(point==11)
-					return b11;
-				if(point==12)
-					return b12;
-				if(point==13)
-					return b13;
-			}
-			else if(type == 2)
-			{
-				if(point==1)
-					return c1;
-				if(point==2)
-					return c2;
-				if(point==3)
-					return c3;
-				if(point==4)
-					return c4;
-				if(point==5)
-					return c5;
-				if(point==6)
-					return c6;
-				if(point==7)
-					return c7;
-				if(point==8)
-					return c8;
-				if(point==9)
-					return c9;
-				if(point==10)
-					return c10;
-				if(point==11)
-					return c11;
-				if(point==12)
-					return c12;
-				if(point==13)
-					return c13;
-			}
-			else if(type == 3)
-			{
-				if(point==1)
-					return h1;
-				if(point==2)
-					return h2;
-				if(point==3)
-					return h3;
-				if(point==4)
-					return h4;
-				if(point==5)
-					return h5;
-				if(point==6)
-					return h6;
-				if(point==7)
-					return h7;
-				if(point==8)
-					return h8;
-				if(point==9)
-					return h9;
-				if(point==10)
-					return h10;
-				if(point==11)
-					return h11;
-				if(point==12)
-					return h12;
-				if(point==13)
-					return h13;
-			}
-			else if(type == 4)
-			{
-				if(point==1)
-					return l1;
-				if(point==2)
-					return l2;
-				if(point==3)
-					return l3;
-				if(point==4)
-					return l4;
-				if(point==5)
-					return l5;
-				if(point==6)
-					return l6;
-				if(point==7)
-					return l7;
-				if(point==8)
-					return l8;
-				if(point==9)
-					return l9;
-				if(point==10)
-					return l10;
-				if(point==11)
-					return l11;
-				if(point==12)
-					return l12;
-				if(point==13)
-					return l13;
-			}
-			else
-			{
-				return g;
+				case 0:
+					if (type==0)
+						return g;
+					else
+						return g2;
+					break;
+				case 1:
+					switch (type)
+					{
+						case 1:return b1;
+						case 2:return c1;
+						case 3:return h1;
+						case 4:return l1;
+					}
+					break;
+				case 2:
+					switch (type)
+					{
+						case 1:return b2;
+						case 2:return c2;
+						case 3:return h2;
+						case 4:return l2;
+					}
+					break;
+				case 3:
+					switch (type)
+					{
+						case 1:return b3;
+						case 2:return c3;
+						case 3:return h3;
+						case 4:return l3;
+					}
+					break;
+				case 4:
+					switch (type)
+					{
+						case 1:return b4;
+						case 2:return c4;
+						case 3:return h4;
+						case 4:return l4;
+					}
+					break;
+				case 5:
+					switch (type)
+					{
+						case 1:return b5;
+						case 2:return c5;
+						case 3:return h5;
+						case 4:return l5;
+					}
+					break;
+				case 6:
+					switch (type)
+					{
+						case 1:return b6;
+						case 2:return c6;
+						case 3:return h6;
+						case 4:return l6;
+					}
+					break;
+				case 7:
+					switch (type)
+					{
+						case 1:return b7;
+						case 2:return c7;
+						case 3:return h7;
+						case 4:return l7;
+					}
+					break;
+				case 8:
+					switch (type)
+					{
+						case 1:return b8;
+						case 2:return c8;
+						case 3:return h8;
+						case 4:return l8;
+					}
+					break;
+				case 9:
+					switch (type)
+					{
+						case 1:return b9;
+						case 2:return c9;
+						case 3:return h9;
+						case 4:return l9;
+					}
+					break;
+				case 10:
+					switch (type)
+					{
+						case 1:return b10;
+						case 2:return c10;
+						case 3:return h10;
+						case 4:return l10;
+					}
+					break;
+				case 11:
+					switch (type)
+					{
+						case 1:return b11;
+						case 2:return c11;
+						case 3:return h11;
+						case 4:return l11;
+					}
+					break;
+				case 12:
+					switch (type)
+					{
+						case 1:return b12;
+						case 2:return c12;
+						case 3:return h12;
+						case 4:return l12;
+					}
+					break;
+				case 13:
+					switch (type)
+					{
+						case 1:return b13;
+						case 2:return c13;
+						case 3:return h13;
+						case 4:return l13;
+					}
+					break;
 			}
 			return g;
 		}
 			
+		
+		
 		
 	}
 }

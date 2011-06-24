@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="304" height="38" borderStyle="solid"
-		   cornerRadius="0" borderThickness="0" initialize="init()"
+		   cornerRadius="0" borderThickness="0" initialize="init()" 
  verticalScrollPolicy="off" horizontalScrollPolicy="off"		   >
 
 <mx:Script>
@@ -90,7 +90,7 @@
 			}
 	]]>
 </mx:Script>
-	<mx:Button  x="240" y="1"  buttonMode="true" enabled="{game.gamer.isMyturn }" click="click5()"  disabledSkin="@Embed(source='../image/button/js4.png')" overSkin="@Embed(source='../image/button/js3.png')" downSkin="@Embed(source='../image/button/js2.png')" skin="@Embed(source='../image/button/js1.png')"/>
+	<mx:Button   x="240" y="1"  buttonMode="true" enabled="{game.gamer.isMyturn }" click="click5()"  disabledSkin="@Embed(source='../image/button/js4.png')" overSkin="@Embed(source='../image/button/js3.png')" downSkin="@Embed(source='../image/button/js2.png')" skin="@Embed(source='../image/button/js1.png')"/>
 	<mx:Button id="BT" x="59"  y="1" buttonMode="true" enabled="{(!game.haveSendCard)&amp;&amp;game.gamer.isMyturn}"  click="click()"   disabledSkin="@Embed(source='../image/button/mp4.png')" overSkin="@Embed(source='../image/button/mp3.png')" downSkin="@Embed(source='../image/button/mp2.png')" skin="@Embed(source='../image/button/mp1.png')"/>
 	<mx:Button id="BT3" x="119" y="1" buttonMode="true" enabled="false"   click="click3()" disabledSkin="@Embed(source='../image/button/px4.png')" overSkin="@Embed(source='../image/button/px3.png')" downSkin="@Embed(source='../image/button/px2.png')" skin="@Embed(source='../image/button/px1.png')" />
 	<mx:Button id="BT4" x="180" y="1" buttonMode="true" enabled="{game.gamer.isMyturn }"  click="click4()" skin="@Embed(source='../image/button/cx1.png')" overSkin="@Embed(source='../image/button/cx3.png')" disabledSkin="@Embed(source='../image/button/cx4.png')" downSkin="@Embed(source='../image/button/cx2.png')"/>

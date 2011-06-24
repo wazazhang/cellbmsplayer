@@ -8,7 +8,6 @@ package Class
 	
 	import mx.containers.Canvas;
 	import mx.events.FlexEvent;
-	import mx.graphics.RoundedRectangle;
 	import mx.preloaders.DownloadProgressBar;
 	
 	public class Myloading extends DownloadProgressBar
@@ -87,7 +86,7 @@ package Class
 			graphics.drawRect(0,0,stage.stageWidth,stage.stageHeight);
 			graphics.endFill();
 		}
-		
+		/*
 		protected override function get barRect():RoundedRectangle
 		{
 			return new RoundedRectangle(0, 28, 570, 6, 0);
@@ -102,7 +101,7 @@ package Class
 		{
 			return new RoundedRectangle(0, 35, 580, 8, 4);
 		}
-		
+		*/
 		private function load_progress(e:ProgressEvent):void{
 			
 			var p:int =  int(e.bytesLoaded/e.bytesTotal*100)

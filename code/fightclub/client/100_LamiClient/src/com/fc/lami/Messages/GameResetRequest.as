@@ -12,14 +12,16 @@ package com.fc.lami.Messages
 	[Bindable]
 	public class GameResetRequest extends Message
 	{
-
+		/** Java type is : <font color=#0000ff>boolean</font> */
+		[JavaType(name="boolean", leaf_type=NetDataTypes.TYPE_BOOLEAN)]
+		public var is_reset :  Boolean;
 
 		/**
-		 */
+		 * @param is_reset as <font color=#0000ff>boolean</font>		 */
 		public function GameResetRequest(
-) 
+			is_reset :  Boolean = false) 
 		{
-
+			this.is_reset = is_reset;
 		}
 	}
 }

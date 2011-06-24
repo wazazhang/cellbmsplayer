@@ -3,7 +3,6 @@
 				layout="absolute" 
 				xmlns:ns1="Component.*"
 				creationComplete="init()"  
-				preloader="Class.Myloading"  
 				width="960" height="600">
 
 	
@@ -13,7 +12,10 @@
 	<mx:Script>
 		<![CDATA[
 			import Class.Game;
+			import Class.LanguageManager;
+			import Class.Resource;
 			import Class.Server;
+			import Class.WebResource;
 			
 			import Component.Login_Cpt;
 			
@@ -28,6 +30,8 @@
 			
 			public function init():void
 			{
+				//Resource.loadLanguage();
+				//LanguageManager.loadLanguage();  
 				var xml : XML = new XML(
 					"<game>" +
 					"<webbase>http://rr2.usxingcloud.info/9832165470_online/front/flash</webbase>" +
@@ -37,11 +41,16 @@
 					"</game>");
 				var webbase : XMLList = xml.child("webbase");
 				trace(webbase.text());
-				
+				this.btn_connect.enabled = false;
 				com_sfs_zone.visible = chk_sfs.selected;
-				
+				LanguageManager.loadLanguage(loadLanguageComplete);
 			}
 
+			private function loadLanguageComplete(event:Event) : void
+			{
+				this.btn_connect.enabled = true;
+			}
+			
 			protected function chk_mina_clickHandler(event:MouseEvent):void
 			{
 				chk_sfs.selected = !chk_mina.selected;
@@ -99,25 +108,26 @@
 
 		]]>
 	</mx:Script>
-	<mx:TextInput x="105" y="74" width="344" id="txt_uid"/>
-	<mx:Button x="105" y="170" label="连接" click="btn_connect_clickHandler(event)" id="btn_connect"/>
-	<mx:CheckBox x="105" y="106" label="Apache Mina" id="chk_mina" selected="true" click="chk_mina_clickHandler(event)"/>
-	<mx:CheckBox x="105" y="138" label="SmartFoxServer" id="chk_sfs" click="chk_sfs_clickHandler(event)"/>
-	<mx:ComboBox x="105" y="42" id="com_server_addrs" width="344" editable="true">
+	<mx:TextInput x="168" y="8" width="235" id="txt_uid"/>
+	<mx:Button x="166" y="219" label="开始" click="btn_connect_clickHandler(event)" id="btn_connect" width="130" height="30"/>
+	<mx:CheckBox x="166" y="116" label="Apache Mina" id="chk_mina" selected="false" click="chk_mina_clickHandler(event)"/>
+	<mx:CheckBox x="278" y="116" label="SmartFoxServer" id="chk_sfs" click="chk_sfs_clickHandler(event)" selected="true"/>
+	<mx:ComboBox x="166" y="84" id="com_server_addrs" width="237" editable="true">
 		<mx:Array id="com_server_addrs_Data">
+			<mx:Object label="rr2.usxingcloud.info:40001"/>
 			<mx:Object label="127.0.0.1:19821"/>
 			<mx:Object label="192.168.1.71:19821"/>
 			<mx:Object label="yagamiya3:19821"/>
 			<mx:Object label="127.0.0.1:9933"/>
-			<mx:Object label="rr2.usxingcloud.info:40001"/>
 		</mx:Array>
 	</mx:ComboBox>
-	<mx:Label x="10" y="45" text="服务器地址" width="87" textAlign="right"/>
-	<mx:Label x="10" y="76" text="用户UID" width="87" textAlign="right"/>
-	<mx:ComboBox x="238" y="137" id="com_sfs_zone" width="211" editable="true">
+	<mx:Label x="79" y="86" text="服务器地址" width="79" textAlign="right"/>
+	<mx:Label x="79" y="150" text="SFSZone" width="79" textAlign="right"/>
+	<mx:Label x="10" y="10" text="用户UID (随便输入)" width="150" textAlign="right"/>
+	<mx:ComboBox x="166" y="148" id="com_sfs_zone" width="237" editable="true">
 		<mx:Array id="com_sfs_zone_Data">
+			<mx:Object label="1406827935online"/>
 			<mx:Object label="XML_NAME"/>
-			<mx:Object label="9832165470online"/>
 		</mx:Array>
 	</mx:ComboBox>
 	

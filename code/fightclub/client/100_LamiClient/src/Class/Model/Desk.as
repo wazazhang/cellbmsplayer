@@ -4,7 +4,9 @@ package Class.Model
 	[Bindable]
 	public class Desk
 	{
-		public var desk_id :  int;
+		private var data : DeskData;
+		
+		//public var desk_id :  int;
 
 		public var is_started :  Boolean;
 
@@ -18,7 +20,8 @@ package Class.Model
 		
 		public function Desk(dd : DeskData)
 		{
-			desk_id = dd.desk_id;
+			this.data = dd;
+			//desk_id = dd.desk_id;
 			is_started = dd.is_started;
 			player_E_id = dd.player_E_id;
 			player_W_id = dd.player_W_id;
@@ -26,9 +29,20 @@ package Class.Model
 			player_N_id = dd.player_N_id;
 		}
 		
+		public function getDeskID() : int
+		{
+			return data.desk_id;
+		}
+		
+		public function getName() : String
+		{
+			return data.desk_name;
+		}
+		
 		public function update(dd : DeskData):void
 		{
-			desk_id = dd.desk_id;
+			this.data = dd;
+			//desk_id = dd.desk_id;
 			is_started = dd.is_started;
 			player_E_id = dd.player_E_id;
 			player_W_id = dd.player_W_id;

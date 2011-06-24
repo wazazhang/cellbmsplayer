@@ -30,6 +30,10 @@ package Class
 			return  webRoot+'image/start.swf';
 		}
 		
+		public static function get languageUrl() : String
+		{
+			return  webRoot+"Language/chinese.xml";
+		}
 		
 		public function WebResource()
 		{

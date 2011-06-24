@@ -25,6 +25,7 @@ package com.fc.lami.ui
 				defaultButtonFlag);
 			alert.width = 226;
 			alert.height = 199;
+			alert.alpha = .70;
 			return alert;
 		}
 	}

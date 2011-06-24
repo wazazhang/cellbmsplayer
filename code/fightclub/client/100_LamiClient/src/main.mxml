@@ -4,14 +4,17 @@
 				layout="absolute" xmlns:ns1="Component.*" 
 				creationComplete="init()" 
 				horizontalAlign="left" 
-				verticalAlign="top">
+				verticalAlign="top" backgroundImage="@Embed(source='image/logobg.png')">
 	<mx:Style source="Css/public.css">
 	</mx:Style>
 	<mx:Script>
 		<![CDATA[
 			import Class.Game;
+			import Class.LanguageManager;
 			import Class.Server;
 			import Class.WebResource;
+			
+			import Component.Login_Cpt;
 			
 			import com.fc.lami.MessageCodec;
 			import com.fc.lami.Messages.PlatformUserData;
@@ -39,6 +42,8 @@
 			//游戏自身的配置信息 对应337 上平台接入所填写的game配置
 			private var config:XML;
 			
+			private var login_cpt : Login_Cpt ;
+			
 			//实现IGameClient 接口 平台启动接口
 			public function startUp(
 				container:elex.socialize.ISocializeContainer,
@@ -61,14 +66,19 @@
 			
 			public function println(info:String):void
 			{
-				this.login_cpt.txt_debug.text = this.login_cpt.txt_debug.text + info + "\n";
+				this.txt_debug.text = this.txt_debug.text + info + "\n";
 			}
 			
 			public function print(info:String):void
 			{
-				this.login_cpt.txt_debug.text = this.login_cpt.txt_debug.text + info;
+				this.txt_debug.text = this.txt_debug.text + info;
 			}
 			
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				this.removeChild(debug_pan);
+			}
+
 			public function init():void
 			{
 				if(this.gdp_container)
@@ -76,31 +86,38 @@
 					println("uid="+this.gdp_container.uid);
 					println("sns="+this.gdp_container.sns);
 					
-					println(this.gdp_container+"");
-					println(this.config.toXMLString());
-					
 					var lang	: String = this.config.child("lang").toString();
 					var webbase : String = this.config.child("webbase").toString();
 					
 					println("webbase="+webbase);
 					WebResource.setWebRoot(webbase);
+					LanguageManager.loadLanguage(onLanguageLoadComplete);
 					
-					getUserInfo();
+					println(this.gdp_container+"");
+					println(this.config.toXMLString());
 					
 				}
 				else 
 				{
-					LamiAlert.show("无法获得平台数据！");
+					LamiAlert.show("Can not get GDP container !"); //无法获得平台数据！ LanguageManager.getText('main.err1')
 				}
 			}
+			
+			private function onLanguageLoadComplete(event:Event) : void
+			{
+				println("语言包已加载");
+				this.login_cpt = new Login_Cpt();
+				this.addChildAt(login_cpt, 0);
+				getUserInfo();
+			}
+			
 			
 //			-------------------------------------------------------------------------
 			
 			public function getUserInfo():void
 			{
-				this.login_cpt.login_btn.enabled = false;
-				
 				println("获取自己的信息");
+				this.login_cpt.login_btn.enabled = false;
 				gdp_container.getUserProfile(getUserProfileCallback);
 			}
 			
@@ -141,11 +158,12 @@
 						sfs.split(":")[1]
 					);
 					
+					println("链接游戏服务器");
 					this.login_cpt.linkServer();
 				}
 				else
 				{
-					LamiAlert.show("无法获得用户信息！");
+					LamiAlert.show(LanguageManager.getText('main.err2')); //无法获得用户信息！
 				}
 			}
 			
@@ -225,10 +243,13 @@
 			
 			
 			
+
 		]]>
 	</mx:Script>
-	<ns1:Login_Cpt verticalCenter="0" horizontalCenter="0"  id="login_cpt">
-	</ns1:Login_Cpt>
+	<mx:Canvas x="10" y="20" width="487" height="300" id="debug_pan" backgroundColor="#8F8F8F">
+		<mx:TextArea id="txt_debug" width="467" height="266" x="10" y="24"/>
+		<mx:Button width="14" height="14" skin="@Embed(source='image/x.png')" click="button1_clickHandler(event)" right="2" top="2"/>
+	</mx:Canvas>
 	
 
 	<!--

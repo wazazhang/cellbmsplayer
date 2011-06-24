@@ -31,6 +31,10 @@ package Class.Model
 			}
 		}
 		
+		public function getName() : String
+		{
+			return roomData.room_id + "";
+		}
 
 		public function updateToPlayerList(player:PlayerData):void
 		{
@@ -69,7 +73,7 @@ package Class.Model
 		{
 			for each(var d:Desk in desk_list){
 				if (d.getSeat(pid)!=-1){
-					return d.desk_id;
+					return d.getDeskID();
 				}
 			}
 			return -1;

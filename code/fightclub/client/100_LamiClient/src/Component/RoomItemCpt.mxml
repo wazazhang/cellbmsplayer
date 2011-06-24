@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Button xmlns:mx="http://www.adobe.com/2006/mxml" 
+		   width="160" height="24" 
+		  
+		   borderColor="#000000" 
+		   click="click()"
+		   cornerRadius="5" 
+		  
+		  
+		   mouseOver="mouseOver(event)"
+		   mouseOut="mouseOut(event)"
+			
+			label="{room.room_name} ({room.player_number}人)" 
+			
+			fontWeight="{ isSelect ? 'bold': 'normal'}"
+			textAlign="left" toggle="true" alpha="1.0" color="#000000" icon="@Embed(source='../image/roomicon.png')">
+	<mx:Script>
+		<![CDATA[
+			/*
+			width="160" height="24" 
+			borderStyle="solid" 
+			borderColor="#b96400" 
+			click="click()"
+			cornerRadius="5" 
+			backgroundImage="{Resource.itbg}" 
+			borderThickness="2"  
+			mouseOver="mouseOver(event)"
+			mouseOut="mouseOut(event)"
+			horizontalScrollPolicy="off" 
+			buttonMode="true"
+			*/
+			import Class.Resource;
+			import Class.Server;
+			
+			import com.fc.lami.Messages.RoomData;
+			import com.fc.lami.Messages.RoomSnapShot;
+			
+			import mx.effects.easing.Back;
+			
+			[Bindable]
+			private var room:RoomSnapShot;
+			
+			[Bindable]
+			private var isSelect:Boolean; 
+			
+			public function setSelectRoom(v:Boolean) : void
+			{
+				this.isSelect = v;
+				
+				this.selected = v;
+				
+			}
+			
+			public function setRoomData(room:RoomSnapShot) : void
+			{
+				this.room = room;
+			}
+			
+			public function getRoomData() : RoomSnapShot
+			{
+				return this.room;
+			}
+			
+			private  function mouseOver(event:Event):void
+			{
+				//setStyle("backgroundImage",Resource.itbg2)
+			}
+			
+			
+			private  function mouseOut(event:Event):void
+			{
+				//setStyle("backgroundImage",Resource.itbg)
+			}
+			
+			
+			private function click():void
+			{
+				Server.enterRoom(room.room_id)
+					
+			}
+		]]>
+	</mx:Script>
+
+	
+	<!--
+	<mx:Label x="6" text="{room.room_name}" fontWeight="{ isSelect?'bold': 'normal'}" verticalCenter="0" buttonMode="true"/>
+	<mx:Label  right="0" text="{room.player_number + '/' +room.player_number_max}" fontWeight="{ isSelect?'bold': 'normal'}" verticalCenter="0"  textAlign="right" width="68" buttonMode="true"/>
+	<mx:Canvas width="100%" height="100%" buttonMode="true" backgroundAlpha="0.00" backgroundColor="0x000000">	
+	</mx:Canvas>
+	-->
+</mx:Button>
