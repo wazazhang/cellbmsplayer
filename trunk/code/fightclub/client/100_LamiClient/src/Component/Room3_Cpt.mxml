@@ -5,19 +5,17 @@
 	<mx:Script>
 		<![CDATA[
 			import Class.LanguageManager;
+			import Class.MaskCtr;
 			import Class.Model.Desk;
 			import Class.Model.Room;
 			import Class.Resource;
 			import Class.Server;
 			import Class.WebResource;
-			import Class.LanguageManager;
-			import Class.Model.Room;
-			import Class.Resource;
-			import Class.Server;
 			
 			import com.fc.lami.MessageCodec;
 			import com.fc.lami.Messages.AutoEnterRequest;
 			import com.fc.lami.Messages.AutoEnterResponse;
+			import com.fc.lami.Messages.DeskData;
 			import com.fc.lami.Messages.PlayerData;
 			import com.fc.lami.Messages.RoomData;
 			import com.fc.lami.Messages.RoomSnapShot;
@@ -26,14 +24,7 @@
 			
 			import mx.controls.Alert;
 			import mx.controls.dataGridClasses.DataGridColumn;
-			import com.fc.lami.Messages.DeskData;
-			import com.fc.lami.Messages.PlayerData;
-			import com.fc.lami.Messages.RoomData;
-			import com.fc.lami.Messages.RoomSnapShot;
-			import com.net.client.ClientEvent;
-			
-			import mx.controls.Alert;
-			import mx.controls.dataGridClasses.DataGridColumn;
+
 			
 			public var deskCpts:Array;
 			
