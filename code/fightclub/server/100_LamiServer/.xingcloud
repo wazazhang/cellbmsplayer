@@ -3,18 +3,18 @@
 <Redmine>
 	<Credential>
 		<Username>Honey</Username>
-		<Password>24:22:63:-65:-68:22:71:112:-4:4:-107:-107:37:-13:-7:-87:-53:83:14:-117:79:-121:55:15:26:-40:-3:-12:-95:29:17:-9:69:-98:-25:-55:-67:-81:120:-122:-89:-51:99:-62:-27:121:-123:-78:98:22:-44:-32:-37:-44:116:-28:-19:-12:-89:80:34:-59:-64:-115:</Password>
+		<Password>114:5:54:-52:31:-107:86:9:33:-111:-48:89:88:-109:-13:71:13:-71:82:119:-126:33:14:72:85:64:-58:98:114:83:78:57:90:74:-68:24:-63:-24:25:-63:-110:-50:113:63:33:5:39:-114:35:-48:25:-80:-57:82:-5:-90:-78:53:-5:-45:127:-8:16:37:</Password>
 	</Credential>
 	<GameList>
 		<Game>
 			<GameName>Rummikub</GameName>
 			<GameIdentifier>rummikub</GameIdentifier>
-			<GameVersion>1.0</GameVersion>
-			<VersionID>657</VersionID>
-			<CodeSVNAddress>http://appsvn.xingcloud.com/rummikub/1.0/trunk</CodeSVNAddress>
-			<DeploySVNAddress>http://appsvn.xingcloud.com/rummikub/1.0/.deploy</DeploySVNAddress>
+			<GameVersion>test7</GameVersion>
+			<VersionID>778</VersionID>
+			<CodeSVNAddress>http://appsvn.xingcloud.com/rummikub/778/trunk</CodeSVNAddress>
+			<DeploySVNAddress>http://appsvn.xingcloud.com/rummikub/778/.deploy</DeploySVNAddress>
 			<Authority>w</Authority>
-			<CreateTime>2011-04-16 14:13:47</CreateTime>
+			<CreateTime>2011-06-21 14:06:25</CreateTime>
 		</Game>
 	</GameList>
 </Redmine>

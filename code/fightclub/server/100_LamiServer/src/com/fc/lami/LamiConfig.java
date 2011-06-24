@@ -48,7 +48,16 @@ public class LamiConfig extends Config
 	
 	@ConfigField("游戏中退出扣分")
 	public static Integer	PUNISH_SCORE = 300;
+	@ConfigField("初始牌数")
+	public static Integer	START_CARD_NUMBER = 14;
 	
+	@ConfigField("多少时间没有进行游戏桌子重置")
+	public static Integer	DESK_RESET_TIME = 60000;
+	
+	@ConfigField("默认桌子名")
+	public static String	DEFAULT_DESK_NAME = "一起来玩拉密牌吧";
+	@ConfigField("房间列表设置文件")
+	public static String	ROOM_SET_CONFIG_XLS = "./extension/config/lami_roomset.xls";
 //	---------------------------------------------------------------------
 	@ConfigSeparator("第三方")
 //	---------------------------------------------------------------------

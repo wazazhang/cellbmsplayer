@@ -1,10 +1,12 @@
 package com.fc.lami.model;
 
+import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.cell.CUtil;
 import com.cell.util.concurrent.ThreadPool;
 import com.fc.lami.LamiConfig;
 import com.fc.lami.Messages.DeskData;
@@ -15,6 +17,7 @@ import com.fc.lami.Messages.PlayerData;
 import com.fc.lami.Messages.RoomData;
 import com.fc.lami.Messages.RoomSnapShot;
 import com.fc.lami.LamiServerListener;
+import com.fc.lami.RoomSet;
 import com.net.MessageHeader;
 import com.net.flash.message.FlashMessage;
 import com.net.server.Channel;
@@ -38,17 +41,45 @@ public class Room implements ChannelListener
 	
 	final private Hall		hall;
 	
+	final public int turn_interval;
 	
-	public Room(LamiServerListener server, int room_id, ThreadPool tp, int interval)
+	final public int operate_time;
+	
+	final public int is_fast_game;
+	
+	final public int start_card_number;
+	
+	final public String name;
+	
+	public Room(LamiServerListener server, int room_id, ThreadPool tp, RoomSet set)
 	{
 		this.room_id 		= room_id;
 		this.channel 		= server.createChannel(this);
 		this.thread_pool 	= tp;
 		this.player_list 	= new ConcurrentHashMap<Integer, Player>();
-		this.desks 			= new Desk[LamiConfig.DESK_NUMBER];
+		int desk_number = LamiConfig.DESK_NUMBER;
+		if (set!=null){
+			desk_number = set.desk_count;
+			turn_interval = set.turn_time;
+			operate_time = set.operate_time;
+			is_fast_game = set.fastgame;
+			start_card_number = set.startcard;
+			name = set.name;
+		}else{
+			turn_interval = LamiConfig.TURN_INTERVAL;
+			operate_time = LamiConfig.OPERATE_TIME;
+			is_fast_game = LamiConfig.IS_FAST_GAME;
+			start_card_number = LamiConfig.START_CARD_NUMBER;
+			name = "房间 "+(this.room_id+1);
+		}
+		this.desks 			= new Desk[desk_number];
 		
 		for (int i = 0; i<desks.length; i++){
-			desks[i] = new Desk(server, i, this, tp, interval);
+			if (set!=null){
+				desks[i] = new Desk(server, i, this, tp, set.default_desk_name);
+			}else{
+				desks[i] = new Desk(server, i, this, tp, "普通桌");
+			}
 		}
 		
 //		this.thread_pool.scheduleAtFixedRate(this, interval, interval);
@@ -73,18 +104,23 @@ public class Room implements ChannelListener
 	
 	/** 得到空闲的桌子 */
 	public Desk getIdleDesk(){
+		ArrayList<Desk> dl = new ArrayList<Desk>();
 		for (Desk d:desks){
 			if (d.getPlayerNumber()>0 && d.getPlayerNumber()<4 && d.getGame() == null){// 找一个有人且游戏没开始的桌子
-				return d;
+				dl.add(d);
+			}
+		}
+		if (dl.size()==0){
+			for (Desk d:desks){
+				if (d.getPlayerNumber()<4 && d.getGame() == null){//找一个没有开始游戏的桌子
+					dl.add(d);
+				}
 			}
 		}
 		
-		for (Desk d:desks){
-			if (d.getPlayerNumber()<4 && d.getGame() == null){//找一个没有开始游戏的桌子
-				return d;
-			}
+		if (dl.size()>0){
+			return dl.get(CUtil.getRandom(0, dl.size()));
 		}
-		
 		return null; //没找到合适桌子
 	}
 	
@@ -156,6 +192,7 @@ public class Room implements ChannelListener
 	{
 		RoomData rd = new RoomData();
 		rd.room_id = this.room_id;
+		rd.room_name = this.name;
 		rd.desks = new DeskData[desks.length];
 		for (int i = 0; i<desks.length; i++){
 			if (desks[i]!=null){
@@ -181,7 +218,7 @@ public class Room implements ChannelListener
 	public RoomSnapShot getRoomSnapShot(){
 		RoomSnapShot rs = new RoomSnapShot();
 		rs.room_id = this.room_id;
-		rs.room_name = "房间 "+(this.room_id+1);
+		rs.room_name = this.name;
 		rs.player_number = player_list.size();
 		rs.player_number_max = LamiConfig.PLAYER_NUMBER_MAX;
 		return rs;

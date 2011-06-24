@@ -2,7 +2,6 @@ package com.fc.lami.model;
 
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ScheduledFuture;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,8 +9,8 @@ import org.slf4j.LoggerFactory;
 import com.cell.util.concurrent.ThreadPool;
 import com.fc.lami.Messages.DeskData;
 import com.fc.lami.Messages.EnterDeskNotify;
-import com.fc.lami.Messages.GameOverToRoomNotify;
 import com.fc.lami.Messages.GameStartToRoomNotify;
+import com.fc.lami.Messages.KickOutNotify;
 import com.fc.lami.Messages.LeaveDeskNotify;
 import com.fc.lami.Messages.ReadyNotify;
 import com.fc.lami.LamiServerListener;
@@ -37,6 +36,9 @@ public class Desk implements ChannelListener
 	final public static int PLAYER_N = 0;
 	
 	final public int 		desk_id;
+	final public String     default_name;
+	public String 			name;
+	public String			paseword_md5;
 	final private Channel	channel;
 
 	final private Room 		room;
@@ -52,16 +54,14 @@ public class Desk implements ChannelListener
 	/** 游戏逻辑体 */
 	public  Game 				game;
 	private ThreadPool			thread_pool;
-	private int 				update_interval;
-	private ScheduledFuture<?>	future;
-	private boolean				initing = false;
+
 	
-	public Desk(LamiServerListener server, int id, Room room, ThreadPool tp, int interval){
+	public Desk(LamiServerListener server, int id, Room room, ThreadPool tp, String default_name){
 		this.room = room;
 		this.desk_id = id;
 		this.thread_pool = tp;
-		this.update_interval = interval;
 		this.channel = server.createChannel(this);
+		this.default_name = default_name;
 	}
 
 	@Override
@@ -263,7 +263,6 @@ public class Desk implements ChannelListener
 			if (isAllPlayerReady()){
 				game = new Game(this, thread_pool);
 				log.info("desk [" + desk_id + "] game start");
-				initing = false;
 				room.broadcast(new GameStartToRoomNotify(desk_id));
 			}
 		}
@@ -306,7 +305,7 @@ public class Desk implements ChannelListener
 	public DeskData getDeskData(){
 		DeskData dd = new DeskData();
 		dd.desk_id = this.desk_id;
-		dd.desk_name = "桌子"+(this.desk_id+1);
+		dd.desk_name = this.name!=null?this.name:this.default_name;
 		dd.player_number = getPlayerNumber();
 		dd.is_started = (this.game != null);
 		synchronized (desk_players) {
@@ -322,7 +321,10 @@ public class Desk implements ChannelListener
 		return dd;
 	}
 	
-	
+	public void kick(Player player, int reason){
+		leaveDesk(player);
+		player.session.send(new KickOutNotify(reason));
+	}
 	
 	
 	//通知桌子的人
@@ -331,5 +333,28 @@ public class Desk implements ChannelListener
 		channel.send(msg);
 	}
 	
+	public void reset(){
+		name = null;
+		paseword_md5 = null;
+	}
 	
+	class DeskReset implements Runnable
+	{
+
+		@Override
+		public void run() {
+			if (game!=null){
+				return;
+			}
+			Player[] ps = new Player[all_players.size()];
+			all_players.values().toArray(ps);
+			for (Player p : ps){
+				kick(p, KickOutNotify.KICK_OUT_REASON_TIME_OUT);
+			}
+			all_players.clear();
+
+			reset();
+		}
+		
+	}
 }

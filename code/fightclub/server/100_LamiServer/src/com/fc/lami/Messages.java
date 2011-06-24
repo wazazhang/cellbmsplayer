@@ -32,6 +32,8 @@ public class Messages {
 	public static class RoomData extends FlashMessage
 	{
 		public int room_id;
+		
+		public String room_name;
 		public DeskData desks[];
 		public PlayerData players[];
 
@@ -452,11 +454,9 @@ public class Messages {
 	public static class GameStartNotify extends FlashMessage
 	{
 		public CardData cards[];
-		public boolean is_can_reset;
 		
-		public GameStartNotify(CardData cards[], boolean is){
+		public GameStartNotify(CardData cards[]){
 			this.cards = cards;
-			this.is_can_reset = is;
 		}
 		
 		public GameStartNotify() {}
@@ -468,6 +468,11 @@ public class Messages {
 	
 	public static class GameResetRequest extends FlashMessage
 	{
+		public boolean is_reset;
+		
+		public GameResetRequest(boolean reset){
+			this.is_reset = reset;
+		}
 		public GameResetRequest(){}
 	}
 	
@@ -544,6 +549,8 @@ public class Messages {
 		final static public int SUBMIT_RESULT_FAIL_CARD_NOT_OPEN_ICE = 2;
 		/** 放牌结束失败, 没有出牌 */
 		final static public int SUBMIT_RESULT_FAIL_CARD_NO_SEND = 3;
+		/** 放牌结束失败，游戏未开始 */
+		final static public int SUBMIT_RESULT_FAIL_GAME_NOT_START = 4;
 		
 		public int result;
 		
@@ -930,6 +937,23 @@ public class Messages {
 		public AutoEnterResponse(){}
 	}
 	
+	/** 玩家获得手牌完毕 */
+	public static class GetCardOverRequest extends FlashMessage
+	{
+		public GetCardOverRequest(){}
+	}
+	
+	/** 返回是否能重置牌 */
+	public static class GetCardOverResponse extends FlashMessage
+	{
+		public boolean is_can_reset;
+		
+		public GetCardOverResponse(boolean is){
+			this.is_can_reset = is;
+		}
+		public GetCardOverResponse(){}
+	}
+	
 	/** 离开桌子 */
 	public static class LeaveDeskRequest extends FlashMessage
 	{
@@ -994,6 +1018,22 @@ public class Messages {
 		}
 		
 		public LeaveDeskForceResponse(){}
+	}
+	
+	/** 玩家被踢出桌子通知 */
+	public static class KickOutNotify extends FlashMessage
+	{
+		/** 超时被系统踢出 */
+		final public static int KICK_OUT_REASON_TIME_OUT = 1;
+		/** 被其他玩家踢出 */
+		final public static int KICK_OUT_REASON_OTHER_PLAYER = 2;
+		
+		public int reason;
+		public KickOutNotify(int r){
+			this.reason = r;
+		}
+		
+		public KickOutNotify(){}
 	}
 	
 	/** 玩家回合开始通知 */
@@ -1081,7 +1121,12 @@ public class Messages {
 	public static class MainMatrixChangeResponse extends FlashMessage
 	{
 		final static public int MAIN_MATRIX_CHANGE_RESULT_SUCCESS = 0;
-		final static public int MAIN_MATRIX_CHANGE_RESULT_FAIL = 1;
+		final static public int MAIN_MATRIX_CHANGE_RESULT_FAIL_CARD_COPYED = 1; 
+		final static public int MAIN_MATRIX_CHANGE_RESULT_FAIL_CARD_NOEXIST = 2;
+		final static public int MAIN_MATRIX_CHANGE_RESULT_FAIL_CANT_RETAKE = 3;
+		final static public int MAIN_MATRIX_CHANGE_RESULT_FAIL_CANNT_MOVE = 4;
+		final static public int MAIN_MAIRIX_CHANGE_RESULT_FAIL_CANNT_SPLICE = 5;
+		final static public int MAIN_MAIRIX_CHANGE_RESULT_FAIL_GAME_NOT_START = 6;
 		
 		public int result;
 		

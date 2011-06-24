@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xingcloud:config xmlns:xingcloud="http://www.iw.com/sns/config/">
+<security>
+	<oauth>
+		<consumerKey>b5cd4331db4771120839d9bfb5e952e8</consumerKey>
+		<secretKey>7be2a724f6c3968b6bd97d55d48b8a33</secretKey>
+	</oauth>
+	<service>
+		<default>false</default>
+	</service>
+</security>
+</xingcloud:config>

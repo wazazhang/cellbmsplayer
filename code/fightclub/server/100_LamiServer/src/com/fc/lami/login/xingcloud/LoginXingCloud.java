@@ -62,8 +62,8 @@ public class LoginXingCloud implements Login
 							userProfile.getPlatformAddress(), sb);
 					CUtil.toStatusLine("getLose",  
 							userProfile.getLose(), sb);
-					CUtil.toStatusLine("getPoint",  
-							userProfile.getPoint(), sb);	
+//					CUtil.toStatusLine("getPoint",  
+//							userProfile.getPoint(), sb);	
 					CUtil.toStatusLine("getScore",  
 							userProfile.getScore(), sb);
 					CUtil.toStatusLine("getWin",  
@@ -113,9 +113,9 @@ public class LoginXingCloud implements Login
 		synchronized public int getLose() {
 			return userProfile.getLose();
 		}
-		synchronized public int getPoint() {
-			return userProfile.getPoint();
-		}
+//		synchronized public int getPoint() {
+//			return userProfile.getPoint();
+//		}
 		synchronized public int getScore() {
 			return userProfile.getScore();
 		}
@@ -126,10 +126,10 @@ public class LoginXingCloud implements Login
 			userProfile.setLose(userProfile.getLose() + value);
 			return this;
 		}
-		synchronized public User addPoint(int value) {
-			userProfile.setPoint(userProfile.getPoint() + value);
-			return this;
-		}
+//		synchronized public User addPoint(int value) {
+//			userProfile.setPoint(userProfile.getPoint() + value);
+//			return this;
+//		}
 		synchronized public User addScore(int value) {
 			userProfile.setScore(userProfile.getScore() + value);
 			return this;
@@ -163,10 +163,10 @@ public class LoginXingCloud implements Login
 			return lose;
 		}
 
-		@Override
-		synchronized public int getPoint() {
-			return point;
-		}
+//		@Override
+//		synchronized public int getPoint() {
+//			return point;
+//		}
 
 		@Override
 		synchronized public int getScore() {
@@ -188,11 +188,11 @@ public class LoginXingCloud implements Login
 			lose += value;
 			return this;
 		}
-		@Override
-		synchronized public User addPoint(int value) {
-			point += value;
-			return this;
-		}
+//		@Override
+//		synchronized public User addPoint(int value) {
+//			point += value;
+//			return this;
+//		}
 		@Override
 		synchronized public User addScore(int value) {
 			score += value;

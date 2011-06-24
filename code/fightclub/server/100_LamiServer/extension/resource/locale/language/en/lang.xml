@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<local type="en">
+	<texts>
+	    <nameLabel text="Name"/>
+	    <expLabel text="Exp"/>
+	    <coinsLabel text="Coins"/>
+	    <buyButton  text="Buy"/>
+	    <sowButton text="Sow"/>
+	    <wateringButton text="Watering"/>
+	    <reapButton text="Reap"/>
+		<sellButton text="Sell"/>
+	</texts>
+</local>
