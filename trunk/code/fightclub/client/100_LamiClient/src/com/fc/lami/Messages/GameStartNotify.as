@@ -15,19 +15,13 @@ package com.fc.lami.Messages
 		/** Java type is : <font color=#0000ff>com.fc.lami.Messages.CardData[]</font> */
 		[JavaType(name="com.fc.lami.Messages.CardData[]", leaf_type=NetDataTypes.TYPE_EXTERNALIZABLE)]
 		public var cards :  Array;
-		/** Java type is : <font color=#0000ff>boolean</font> */
-		[JavaType(name="boolean", leaf_type=NetDataTypes.TYPE_BOOLEAN)]
-		public var is_can_reset :  Boolean;
 
 		/**
-		 * @param cards as <font color=#0000ff>com.fc.lami.Messages.CardData[]</font>
-		 * @param is_can_reset as <font color=#0000ff>boolean</font>		 */
+		 * @param cards as <font color=#0000ff>com.fc.lami.Messages.CardData[]</font>		 */
 		public function GameStartNotify(
-			cards :  Array = null,
-			is_can_reset :  Boolean = false) 
+			cards :  Array = null) 
 		{
 			this.cards = cards;
-			this.is_can_reset = is_can_reset;
 		}
 	}
 }

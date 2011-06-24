@@ -7,6 +7,7 @@
 	<mx:Script>
 		<![CDATA[
 			import Class.Game;
+			import Class.LanguageManager;
 			import Class.Model.Card;
 			import Class.Model.Desk;
 			import Class.Model.Player;
@@ -19,11 +20,15 @@
 			import com.fc.lami.Messages.GameOverNotify;
 			import com.fc.lami.Messages.PlayerData;
 			
+			import flash.utils.setTimeout;
+			
 			import mx.controls.Alert;
+			import mx.controls.SWFLoader;
 			import mx.effects.Move;
 			import mx.events.EffectEvent;
 			import mx.events.FlexEvent;
-			import mx.graphics.RoundedRectangle;
+			import mx.utils.StringUtil;
+			//import mx.graphics.RoundedRectangle;
 			
 			[Bindable]
 			public var desk:Desk;
@@ -55,6 +60,15 @@
 				game.timeCtr.sumTimeBar = sumbar;
 				optCpt.game = game;
 				game.initGame();
+			}
+			
+			[Bindable]
+			public function isStartedGame() : Boolean	
+			{
+				//if (desk != null) {
+				//	return desk.is_started;
+				//}
+				return true;
 			}
 			
 			public function initEvent():void
@@ -177,23 +191,23 @@
 			//有人员进入
 			public function enterPlayer(player_id:int, desk_id:int, seat:int):void
 			{
-				if(desk ==null || desk_id!=desk.desk_id)
+				if(desk ==null || desk_id!=desk.getDeskID())
 					return;
 				
 				initSeat(desk,null);
-				addInfo(Server.getPlayerName(Server.getPlayer(player_id))+"进入桌子");
+				addInfo(Server.getPlayerName(Server.getPlayer(player_id))+LanguageManager.getText("lami.jrzz")); //进入桌子
 			}
 			
 			
 			//有人员离开
 			public function leavePlayer(player_id:int, desk_id:int):void
 			{
-				if(desk ==null || desk_id!=desk.desk_id)
+				if(desk ==null || desk_id!=desk.getDeskID())
 					return	;
 //				initSeat(desk,null);
 				var opc:OtherPlayer_Cpt = getOtherPlayerCptByPlayerId(player_id);
 				opc.player = null;
-				addInfo(Server.getPlayerName(Server.getPlayer(player_id))+"离开桌子");
+				addInfo(Server.getPlayerName(Server.getPlayer(player_id))+LanguageManager.getText("lami.lkzz")); //离开桌子
 			}
 			
 			
@@ -266,7 +280,7 @@
 					if(cpt!=null)
 						cpt.pobing = true;
 				}
-				addInfo("玩家"+Server.getPlayerName(Server.getPlayer(playerid))+"已经破冰");
+				addInfo(LanguageManager.getText('lami.wj')+Server.getPlayerName(Server.getPlayer(playerid))+LanguageManager.getText("lami.yjpb")); //已经破冰
 			}
 			
 			//有人员准备取消
@@ -282,11 +296,11 @@
 				
 				if(isReady)
 				{
-					addInfo("玩家"+Server.getPlayerName(Server.getPlayer(playerid))+"准备好了");
+					addInfo(LanguageManager.getText('lami.wj')+Server.getPlayerName(Server.getPlayer(playerid))+LanguageManager.getText('lami.zbhl')); //准备好了
 				}
 				else
 				{
-					addInfo("玩家"+Server.getPlayerName(Server.getPlayer(playerid))+"取消了准备");
+					addInfo(LanguageManager.getText('lami.wj')+Server.getPlayerName(Server.getPlayer(playerid))+LanguageManager.getText('lami.qxzb')); //取消了准备
 				}
 			}
 			
@@ -297,14 +311,14 @@
 				if(cpt!=null)
 				{
 					cpt.gameing = true;
-					addInfo("玩家"+Server.getPlayerName(cpt.player)+"回合开始");
+					addInfo(LanguageManager.getText('lami.wj')+Server.getPlayerName(cpt.player)+LanguageManager.getText('lami.hhks')); //回合开始
 				}
 			}
 			
 			//游戏结束
 			public function onGameOver(gvn:GameOverNotify):void
 			{
-				addInfo("游戏结束");
+				addInfo(LanguageManager.getText('lami.yxjs')); //游戏结束
 				
 				removeReset();
 				stopTime();
@@ -315,7 +329,7 @@
 				rsCpt.setStyle("verticalCenter","0");
 				rsCpt.setStyle("horizontalCenter","0");	
 				addChild(rsCpt);
-				rsCpt.addEventListener(FlexEvent.REMOVE,removeResultHandle);
+				rsCpt.addEventListener(Event.REMOVED,removeResultHandle);
 				//resetGameAllData();
 				if(game.gamer.selectedArrayCard != null)
 				{
@@ -334,6 +348,7 @@
 					
 				}
 				StopMotionList();
+				playFireMoiveClip();
 			}
 			
 			
@@ -350,7 +365,7 @@
 			
 			public function onGameStart(canReset:Boolean):void
 			{
-				addInfo("游戏开始");
+				addInfo(LanguageManager.getText('lami.yxks'));  //游戏开始
 				if(resetCpt!=null)
 					removeReset();
 				
@@ -358,6 +373,7 @@
 				
 				this.canReset = canReset;
 				canShowReset = true;
+				showReset();
 				nextPlayer1.gameStart();
 				nextPlayer2.gameStart();
 				nextPlayer3.gameStart();
@@ -367,11 +383,12 @@
 			
 			public function showReset():void
 			{
-				if(!canShowReset)
-					return
-				else	
+				if(!canShowReset){
+					return;
+				} else	{
 					canShowReset = false
-					
+				}
+				
 				if(resetCpt!=null)
 					removeReset();
 				
@@ -401,7 +418,9 @@
 			
 			public function onPlayerReset(player:PlayerData):void
 			{
-				addInfo(Server.getPlayerName(player)+"重置了发牌")
+
+				addInfo(Server.getPlayerName(player)+LanguageManager.getText("lami.czfp")) //重置了发牌
+
 			}
 			
 			var cur_move:Move;
@@ -463,28 +482,82 @@
 			{
 				var move:Move = event.target as Move;
 				var card:Card_Cpt = move.target as Card_Cpt;
-				removeChild(card);
-				
-				if (card.nextCardCpt!=null){
-					card.nextCardCpt.isShow = true;
-				}
-				if(card.card.nextCard!=null)
-				{
-					addCardMotion(card.card.nextCard);
-				}
-				else
-				{
-					showReset();
-					game.gamer.canOpearation = true;
+				if (card!=null){
+					removeChild(card);
+					
+					if (card.nextCardCpt!=null){
+						card.nextCardCpt.isShow = true;
+					}
+					if(card.card.nextCard!=null)
+					{
+						addCardMotion(card.card.nextCard);
+					}
+					else
+					{
+						Server.sendGetCardOverRequest();
+						cur_move = null;
+						game.gamer.canOpearation = true;
+						optCpt.openOrder();
+					}
 				}
 			}
 			
 			public function StopMotionList():void
 			{
-				if (cur_move!=null){
-					cur_move.stop();
+				var move:Move = cur_move;
+				cur_move = null;
+				if (move!=null){
+					var cardcpt:Card_Cpt = move.target as Card_Cpt;
+					move.stop();
+					if (cardcpt!=null){
+						if (cardcpt.parent == this){
+							removeChild(cardcpt);
+						}
+						
+						if (cardcpt.nextCardCpt!=null){
+							cardcpt.nextCardCpt.isShow = true;
+						}
+						var card:Card = cardcpt.card;
+						while (card.nextCard!=null)
+						{
+							card = card.nextCard;
+							card.cardUI.isShow;
+						}
+					}
+					game.gamer.canOpearation = true;
+				}
+				
+				
+			}
+			
+			[Bindable]
+			public function getLeftCardColor():uint
+			{
+				if (Server.game.leftCard<10) {
+					return 0xffFF0000;
+				} else {
+					return 0xffFFFEFE;
 				}
 			}
+			
+			public function playRoundStartMoiveClip() : void
+			{
+				(beginSwf.content as MovieClip).mc.gotoAndPlay(2);
+			}
+			
+			public function playFireMoiveClip() : void
+			{
+				yhSwf.visible = true;
+				
+				var timer = new Timer(0,1000)
+					
+				setTimeout(stopFireMoiveClip,15000)
+			}
+			public function stopFireMoiveClip() : void
+			{
+				yhSwf.visible = false;
+			}
+			
 		]]>
 	</mx:Script>
 	
@@ -529,28 +602,30 @@
 	
 
 	<!--//游戏信息区-->
+	<!--
 	<mx:Canvas x="10" y="28" width="143" height="81" borderStyle="none"  borderColor="#000000">
 		
-		<mx:Label x="10" y="10" text="游戏信息" color="#FFFDFD" visible="false"/>
-		<mx:Label x="45" y="39" text="剩余牌数:{Server.game.leftCard}" color="#FFFEFE"/>
+		<mx:Label x="10" y="10" text="{LanguageManager.getText('lami.yxxx')}" color="#FFFDFD" visible="false"/>  
+		<mx:Label x="45" y="39" text="{LanguageManager.getText('lami.syps')}:{Server.game.leftCard}" color="#FFFEFE"/>  
 		<mx:Image x="10" y="32" width="30" height="35" source="{Resource.pai}" id="cardstack"/>
 		<mx:Image x="13" y="35" width="30" height="35" source="{Resource.pai}"/>
 		<mx:Image x="16" y="38" width="30" height="35" source="{Resource.pai}"/>
 		
 	</mx:Canvas>
+	-->
 	
 	<!--玩家信息区-->
 	
 	<mx:Canvas id="useinfo" width="472" height="45" x="242" y="422"  visible="{!Server.isVisitor}"
 			   verticalScrollPolicy="off" horizontalScrollPolicy="off" backgroundImage="{Resource.wood_bar}">
 		
-		<mx:Label x="27" verticalCenter="0" text="{game.gamer.isMyturn?'游戏中':'等待中'}" fontWeight="bold" color="#FCF300" fontSize="14">
+		<mx:Label x="27" verticalCenter="0" text="{game.gamer.isMyturn?LanguageManager.getText('lami.yxz'):LanguageManager.getText('lami.ddz')}" fontWeight="bold" color="#FCF300" fontSize="14">   <!--游戏中  等待中-->
 			<mx:filters>
 				<mx:GlowFilter color="#000000" strength="10" quality="10" alpha="0.5"></mx:GlowFilter>
 			</mx:filters>
 		</mx:Label>
 		
-		<mx:Label x="85" verticalCenter="0" text="{game.gamer.isCold?'未破冰':'已破冰'}" fontWeight="bold" color="#FCF300" fontSize="14">
+		<mx:Label x="85" verticalCenter="0" text="{game.gamer.isCold?LanguageManager.getText('lami.wpb'):LanguageManager.getText('lami.ypb')}" fontWeight="bold" color="#FCF300" fontSize="14"> <!--未破冰 已破冰-->
 			<mx:filters>
 				<mx:GlowFilter color="#000000" strength="10" quality="10" alpha="0.5"></mx:GlowFilter>
 			</mx:filters>
@@ -580,19 +655,42 @@
 	
 	<!--左上角玩家信息-->
 	<mx:Canvas x="0" y="0" width="331" height="27" backgroundImage="{Resource.top_bar}" borderStyle="none">
-		<mx:Label text="{Server.getPlayerName(Server.player)}" color="#FFFFFF" x="8" verticalCenter="0"   />
-		<mx:Label text="等级：{Server.player.level}" color="#FEFEFE"   x="128" verticalCenter="0" />
-		<mx:Image source="{Resource.gold}" x="202" verticalCenter="0"></mx:Image>
-		<mx:Label text="{Server.player.score}" color="#FEFEFE"   x="230" verticalCenter="0" />
+		<mx:Image source="{Resource.gold}" x="178" width="29" height="27" y="1"></mx:Image>
+		<!--
+		// todo 性别图标  
+		// 女 Resource.picon_female 
+		// 男 Resource.picon_male 
+		-->
+		<mx:Image source="{
+				  Resource.picon_male
+				  }" x="2" width="21" height="25" y="1"></mx:Image>
+		<mx:Label text="{Server.player.score}" color="#FEFEFE"   x="211" width="110" textAlign="left" y="3" height="22"/>
+		<mx:Label text="{
+				  Server.getPlayerName(Server.player) + 
+				  ' (' + LanguageManager.getText('lami.dj') + Server.player.level + ')'
+				  }" color="#FFFFFF" x="29" width="141" fontWeight="normal" y="3" height="22"/>
 	</mx:Canvas>
 
 	
 	<!--右上角房间信息-->
 	<mx:Canvas x="627" y="0" width="331" height="27" backgroundImage="{Resource.top_bar}" borderStyle="none">
-		<mx:Label x="31" verticalCenter="0"  text="{'当前位置:'+(Server.login_cpt.RoomCptlogin_cpt.RoomCpt.room.roomData.room_id + 1)+'房间 '+ (desk.desk_id+1)+'号座'}" color="#FDFDFD"/>
-		<mx:LinkButton x="233" verticalCenter="0"  label="回到大厅" color="#FFFDFD" click="returnRoom()"/>
+		<mx:Label x="114" verticalCenter="-1"  text="{
+				  Server.login_cpt.selectRoom.room.getName() + ' ' + desk.getName()
+				  }" color="#FDFDFD"/> 
+		<!--当前位置 房间  号座-->
+		<mx:LinkButton x="242" verticalCenter="-1" styleName="alertButton"  label="{LanguageManager.getText('lami.hddt')}" color="#FFFDFD" click="returnRoom()" width="88" height="22"/>
 	</mx:Canvas>
 
-	<!--回合开始 -->
+	<!--回合开始
+	color="{getLeftCardColor()}" 
+	visible="{isStartedGame()}"-->
+	<mx:Label x="84" y="56" text="{Server.game.leftCard}" 
+			  width="61" height="31" 
+			  fontFamily="Arial" fontSize="20" fontWeight="bold" textAlign="left" color="#F1F1F1"/>
+	<mx:Image x="0" y="36" width="81" height="70" source="{Resource.cardsleft}" id="cardstack"/>
+	
 	<mx:SWFLoader id="beginSwf" source="{WebResource.startSwf}"></mx:SWFLoader>
+	
+	<mx:SWFLoader id="yhSwf" source="image/fireworks.swf" horizontalCenter="0" verticalCenter="0" visible="false"></mx:SWFLoader>
+	
 </mx:Canvas>

@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
-		   width="160" 
+		   width="154" 
 		   height="60"
 		   mouseOver="mouseOver(event)" 
 		   mouseOut="mouseOut(event)"   
-		   cornerRadius="5"
-		   borderThickness="2" 
+		   cornerRadius="1"
+		   borderThickness="0" 
 		   borderStyle="solid" 
-		   borderColor="#FF8A01" 
- 			backgroundAlpha="1.0" 
- 			backgroundColor="#4993D7"
+		   borderColor="#3D3D3D" 
+ 			backgroundAlpha="0.0" 
+ 			backgroundColor="#858585"
 			click="onClick(event)">
 	<mx:Script>
 		<![CDATA[
+			import Class.LanguageManager;
 			import Class.Resource;
 			import Class.Server;
 			
@@ -28,31 +29,39 @@
 			private  function mouseOver(event:Event):void
 			{
 				//setStyle("backgroundImage",Resource.playerItemBg2)
+				bt.selected = true;
 			}
 			
 			
 			private  function mouseOut(event:Event):void
 			{
 				//setStyle("backgroundImage",Resource.playerItemBg);
+				bt.selected = false;
+
 			}
 			
 
 			protected function onClick(event:MouseEvent):void
 			{
-				var rect : Rectangle = this.getVisibleRect();
-				var info : PlayerInfoCpt = PlayerInfoCpt.show();
-				info.x = rect.x - info.width - 10;
-				info.y = rect.y;
+				//var rect : Rectangle = this.getVisibleRect();
+				//var info : PlayerInfoCpt = PlayerInfoCpt.show();
+				//info.x = rect.x - info.width - 10;
+				//info.y = rect.y;
 			}
 
 		]]>
 	</mx:Script>	
+	<mx:Button id="bt" label="" width="100%" height="100%" cornerRadius="8" borderColor="#111111"/>
+
 	<mx:Label x="60" text="{Server.getPlayerName(player)}" width="86" y="3"/>
-	<mx:Label x="60" y="18" width="86" text="金币：{player.score}"/>
-	<mx:Label x="60" y="33" width="86" text="(闲逛中)"/>
+	<mx:Label x="60" y="18" width="86" text="{LanguageManager.getText('playerItemCpt.jb')}：{player.score}"/>
+	<mx:Label x="60" y="33" width="86" text="({LanguageManager.getText('playerItemCpt.xgz')})"/>
 
 	<mx:Image x="3" y="3" width="50" height="50" source="{player.player_head_url}" 
 			  brokenImageBorderSkin="@Embed(source='../image/bg/head_bar.png')"/>
+	<mx:Canvas width="100%" height="100%" buttonMode="true" backgroundAlpha="0.00" backgroundColor="0x000000">	
+	</mx:Canvas>
+
 	<!--
 	<mx:Label x="211" text="{player.sex}" verticalCenter="0" />
 	-->

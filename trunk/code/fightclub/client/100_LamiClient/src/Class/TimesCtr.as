@@ -185,6 +185,28 @@ package Class
 			}
 			return color
 		}
+		//从黄色到红色最后不闪
+		public static function getColorByPointBeginWithYellowNoShine(val:Number):Number
+		{
+			var color:Number
+			
+			
+			color = 0xff0000;	
+			
+			
+			if(val <= 0.75)
+			{
+				color = color + 0xff00 * (0.75 - val) / 0.75;
+				color = color - color % 0x000100;
+			}
+			
+			if(val>=0.75)
+			{
+				color = 0xff0000
+			}
+			return color
+		}
+		
 		
 	}
 }

@@ -1,20 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" fontSize="12" width="731" height="556"
-		    creationComplete="initEvent()">
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" fontSize="12" width="960" height="600"
+		    creationComplete="initEvent()" backgroundImage="@Embed(source='../image/bg/deskbg2.png')">
 	
 	<mx:Script>
 		<![CDATA[
+			import Class.LanguageManager;
 			import Class.Model.Desk;
 			import Class.Model.Room;
 			import Class.Resource;
 			import Class.Server;
 			import Class.WebResource;
+			import Class.LanguageManager;
+			import Class.Model.Room;
+			import Class.Resource;
+			import Class.Server;
 			
+			import com.fc.lami.MessageCodec;
+			import com.fc.lami.Messages.AutoEnterRequest;
+			import com.fc.lami.Messages.AutoEnterResponse;
+			import com.fc.lami.Messages.PlayerData;
+			import com.fc.lami.Messages.RoomData;
+			import com.fc.lami.Messages.RoomSnapShot;
+			import com.fc.lami.ui.LamiAlert;
+			import com.net.client.ClientEvent;
+			
+			import mx.controls.Alert;
+			import mx.controls.dataGridClasses.DataGridColumn;
 			import com.fc.lami.Messages.DeskData;
 			import com.fc.lami.Messages.PlayerData;
 			import com.fc.lami.Messages.RoomData;
+			import com.fc.lami.Messages.RoomSnapShot;
+			import com.net.client.ClientEvent;
 			
 			import mx.controls.Alert;
+			import mx.controls.dataGridClasses.DataGridColumn;
 			
 			public var deskCpts:Array;
 			
@@ -30,7 +49,42 @@
 			[Bindable]
 			private var roomMessage:String = '';
 			
-			public function init(roomData:RoomData):void
+			
+			[Bindable]
+			private var _rooms:Array;
+			
+			
+			public function initEvent():void
+			{
+				addEventListener(KeyboardEvent.KEY_DOWN,keyDownHandle);
+				
+			}
+			
+			public function startGame()
+			{
+				Server.getClient().sendRequest(
+					new AutoEnterRequest(), 
+					onFirstLoginAutoEnter);			
+			}
+			
+			/**
+			 * 首次进入游戏自动选择个房间而不进入桌子
+			 */
+			private function onFirstLoginAutoEnter(event:ClientEvent) : void
+			{
+				if (event.getResponse() is AutoEnterResponse)
+				{
+					var aer:AutoEnterResponse = event.getResponse() as AutoEnterResponse;
+					if (aer.result == AutoEnterResponse.AUTO_ENETR_RESULT_SUCCESS){
+						//Server.onAutoEnterResponse(aer);
+						enterRoom(aer.room);
+					}else if (aer.result == AutoEnterResponse.AUTO_ENTER_RESULT_FAIL_NO_IDLE_SEAT){
+						LamiAlert.show(LanguageManager.getText("loginCpt.myzw")); //没有空余座位
+					}
+				}
+			}
+			
+			public function setRoomData(roomData:RoomData):void
 			{
 				room = new Room(roomData);
 				
@@ -39,11 +93,7 @@
 				//dgroomlist.dataProvider = roomData.desks
 				this.roomData = roomData;
 				restDesks();
-			}
-			
-			public function initEvent():void
-			{
-				addEventListener(KeyboardEvent.KEY_DOWN,keyDownHandle);
+				
 			}
 			
 			public function keyDownHandle(event:KeyboardEvent):void
@@ -58,7 +108,7 @@
 			{	
 				if(roomData == null)
 				{
-					addRoomInfo('进入房间后才能提交.');
+					addRoomInfo(LanguageManager.getText('roomCpt.jrfjtj'));  //进入房间后才能提交.
 					return;
 				}
 					
@@ -105,7 +155,7 @@
 				var curDesk:DeskData = getDeskById(desk_id);
 				curDesk.player_number = room.getDesk(desk_id).player_number;
 				
-				addRoomInfo(Server.getPlayerName(room.getPlayerFromPlayerList(player_id))+'进入'+curDesk.desk_name);
+				addRoomInfo(Server.getPlayerName(room.getPlayerFromPlayerList(player_id))+LanguageManager.getText('roomCpt.jr')+curDesk.desk_name);
 			}
 			
 			//退出桌子
@@ -114,14 +164,14 @@
 				var curDesk:DeskData = getDeskById(desk_id);
 				curDesk.player_number = room.getDesk(desk_id).player_number;
 				
-				addRoomInfo(Server.getPlayerName(room.getPlayerFromPlayerList(player_id))+'离开'+curDesk.desk_name);
+				addRoomInfo(Server.getPlayerName(room.getPlayerFromPlayerList(player_id))+LanguageManager.getText('roomCpt.lk')+curDesk.desk_name);
 			}
 			
 			
 			
 			
 			//进入房间
-			public function enterRoom(player:PlayerData):void
+			public function playerEnterRoom(player:PlayerData):void
 			{
 				//nt.player
 				if(room!=null)
@@ -130,7 +180,7 @@
 					plist = room.getPlayerList();
 					
 				}
-				addRoomInfo(Server.getPlayerName(player)+"进入房间")
+				addRoomInfo(Server.getPlayerName(player)+LanguageManager.getText('roomCpt.jrfj')); //进入房间
 			}
 			
 			
@@ -138,7 +188,7 @@
 			public function leaveRoom(player_id:int):void
 			{
 				var desk_id:int = Server.getPlayerDeskId(player_id);
-				addRoomInfo(Server.getPlayerName(Server.getPlayer(player_id))+"离开房间");	
+				addRoomInfo(Server.getPlayerName(Server.getPlayer(player_id))+LanguageManager.getText('roomCpt.lkfj'));	//离开房间
 				room.removePlayer(player_id);
 				plist = room.getPlayerList();
 			}
@@ -160,22 +210,6 @@
 			{
 				Server.ExitRoom();
 			}
-			
-			/*
-			public function is_startedLF(item:Object,column:DataGridColumn):String
-			{
-			if(item.is_started)
-			return "开始";
-			else
-			return "等待";
-			}
-			
-			
-			public function player_numberLF(item:Object,column:DataGridColumn):String
-			{				
-			return item.player_number+'/4';
-			}
-			*/
 			
 			
 			public function fastRequestEnterDesk():void
@@ -239,60 +273,175 @@
 			
 			
 			
+			public function get rooms():Array
+			{
+				return _rooms
+			}
+			
+			public function set rooms(val:Array):void
+			{
+				_rooms = val;
+				restRooms();
+			}
+			
+			public function setRoom(room:RoomSnapShot):void
+			{
+				for each(var r:RoomSnapShot in _rooms){
+					if (r.room_id == room.room_id){
+						r.player_number = room.player_number;
+						r.player_number_max = room.player_number_max;
+						r.room_name = room.room_name;
+					}
+				}
+			}
+			
+			
+			public function addRoom():void
+			{
+				
+			}
+			
+			public function player_numberLF(item:Object,column:DataGridColumn):String
+			{
+				return item.player_number+'/' +item.player_number_max;
+			}
+			
+			public function levelLF(item:Object,column:DataGridColumn):String
+			{
+				return "20";
+			}
+			
+			public function modeLF(item:Object,column:DataGridColumn):String
+			{
+				return "dollar";
+			}
+			
+			
+			public function fastEnter():void
+			{
+				MaskCtr.show(LanguageManager.getText('roomCpt.deskItemCpt.jryx') ); //进入游戏中
+				Server.sendAutoEnter();
+				//Server.isAutoEnter = true;
+				//Server.enterRoom(rooms[0].room_id)
+			}
+			
+			
+			public function addRoomItem(room:RoomSnapShot):void
+			{
+				var it:RoomItemCpt = new RoomItemCpt();
+				it.setRoomData(room);
+				vb1.addChild(it);
+			}
+			
+			
+			public function restRooms():void
+			{
+				vb1.removeAllChildren();
+				for each(var room:RoomSnapShot in _rooms)
+				{
+					addRoomItem(room);
+				}
+			}
+			
+			public function enterRoom(roomData:RoomData):void
+			{
+				for each (var item:RoomItemCpt in vb1.getChildren()) {
+					item.setSelectRoom(item.getRoomData().room_id == roomData.room_id);
+				}
+				setRoomData(roomData);		
+				//desklist.addChild(roomCpt);
+			}
 		]]>
 	</mx:Script>
-	<mx:Canvas x="28" y="23" width="489" height="29" borderStyle="none">
-		<mx:Label text="信息滚动区" horizontalCenter="0" verticalCenter="-1" fontSize="14"/>
-	</mx:Canvas>
 	
-	<mx:VBox id="dgroomlist" visible="{roomData!=null}"  x="14" y="74" height="316" width="496" verticalGap="2" horizontalScrollPolicy="off" verticalScrollPolicy="on"  borderStyle="none" verticalScrollBarStyleName="VScrollBar"  >
+			
+	<mx:VBox id="vb1" x="26" y="103" height="468" width="180" horizontalScrollPolicy="off" verticalGap="2" verticalScrollPolicy="on" verticalScrollBarStyleName="VScrollBar"> 
+	</mx:VBox>
+	<mx:Label text="{LanguageManager.getText('loginCpt.fjxz')}"  x="27" y="40" color="#EBEBEB" fontSize="18" fontWeight="bold" width="180" textAlign="center"> 
+		<mx:filters>
+			<mx:GlowFilter color="0x000080" quality="5" ></mx:GlowFilter>
+		</mx:filters>
+	</mx:Label>
+	<!--
+	<mx:Button x="35" y="482" click="fastEnter()" skin="@Embed(source='../image/sjbt1.png')" overSkin="@Embed(source='../image/sjbt2.png')"/>
+	-->
+		
+	
+	<mx:VBox id="dgroomlist" visible="{roomData!=null}"  x="232" y="103" height="316" width="496" verticalGap="2" horizontalScrollPolicy="off" verticalScrollPolicy="on"  borderStyle="none" verticalScrollBarStyleName="VScrollBar"  >
+		<mx:Canvas visible="{roomData==null}" height="316" width="496">
+		</mx:Canvas>
 	</mx:VBox>
 	
-	<mx:Canvas  x="14" y="74" visible="{roomData==null}" height="316" width="496">
+	
+	<mx:TextArea id="roomta" x="232" y="442" width="496" height="90" text="{roomMessage}" editable="false" backgroundAlpha="0.0" borderStyle="none" verticalScrollBarStyleName="VScrollBar" color="#CECECE"/>
+	
+	<mx:TextInput id="titalk" x="236" y="548" width="429" backgroundColor="#000000" borderColor="#000000" borderStyle="inset" cornerRadius="5" color="#FFFFFF" backgroundAlpha="0.7" borderThickness="2"/>
+	
+	<mx:Button x="673" y="547" label="{LanguageManager.getText('roomCpt.tj')}" buttonMode="true" click="pubTalk()" width="55"/>
+	
+	<mx:Canvas x="755" y="93" width="179" height="90" borderStyle="none" borderColor="#030303">
+		<mx:Label x="0" y="0" text="{Server.getPlayerName(Server.player)}" id="pname" width="173" fontWeight="bold" textAlign="center" color="#D6D6D6" height="18"/>
+		<mx:Label x="100" y="35" text="{Server.player.score}" id="score" width="79" height="18" color="#D6D6D6"/>
+		<mx:Image source="{Resource.head_bar}" x="0" y="20"  height="58" width="58" />
+		<mx:Image complete="headimg.visible = true" visible="false"  id="headimg"  x="4" y="24" width="50" height="50" source="{Server.player.player_head_url}"/>
+		<mx:Label x="59" y="53" text="{LanguageManager.getText('roomCpt.js')}：" width="45" textAlign="right" height="18" color="#D6D6D6"/>
+		<mx:Label x="59" y="71" text="{LanguageManager.getText('roomCpt.sl')}：" width="45" textAlign="right" height="18" color="#D6D6D6"/>
+		<mx:Label x="100" y="53" text="{(Server.player.win+Server.player.lose)}" id="gamecount" width="79" height="18" color="#D6D6D6"/>
+		<mx:Label x="100" y="71" text="{(Server.player.win/(Server.player.win+Server.player.lose&gt;0?Server.player.win+Server.player.lose:1)*100).toString().substr(0,4)+'%'}" id="winrate" width="79" height="18" color="#D6D6D6"/>
+		<mx:Label x="100" y="17" text="{Server.player.level}" id="level" width="79" height="18" color="#D6D6D6"/>
+		<mx:Label text="{LanguageManager.getText('roomCpt.dj')}：" width="45" textAlign="right" x="59" y="17" height="18" color="#D6D6D6"/>
+		<mx:Label text="{LanguageManager.getText('roomCpt.jb')}：" width="45" textAlign="right" x="59" y="35" height="18" color="#D6D6D6"/>
 	</mx:Canvas>
 	
-	
-	<mx:TextArea id="roomta" x="8" y="412" width="502" height="97" text="{roomMessage}" editable="false" backgroundAlpha="0.0" borderStyle="none" verticalScrollBarStyleName="VScrollBar"/>
-	
-	<mx:TextInput id="titalk" x="19" y="520" width="429" backgroundColor="#D2A55A" borderColor="#BC8E38" borderStyle="solid" cornerRadius="5"/>
-	
-	<mx:Button x="455" y="519" label="提交" buttonMode="true" click="pubTalk()"/>
-	
-	<mx:Canvas x="539" y="63" width="173" height="100" borderStyle="none" borderColor="#030303">
-		<mx:Label x="52.5" y="2" text="{Server.getPlayerName(Server.player)}" id="pname" width="110.5" fontWeight="bold"/>
-		<mx:Label x="52.5" y="24" text="{Server.player.score}" id="score" width="104.5"/>
-		<mx:Label x="52.5" y="46" text="{(Server.player.win+Server.player.lose)}" id="gamecount" width="104.5"/>
-		<mx:Label x="52.5" y="68" text="{(Server.player.win/(Server.player.win+Server.player.lose&gt;0?Server.player.win+Server.player.lose:1)*100).toString().substr(0,4)+'%'}" id="winrate" width="104.5"/>
-		<mx:Image source="{Resource.head_bar}" x="111" y="23"  height="58" width="58" />
-		<mx:Image complete="headimg.visible = true" visible="false"  id="headimg"  x="115" y="27" width="50" height="50" source="{Server.player.player_head_url}"/>
-		<mx:Label x="0" y="24" text="金币：" width="55" textAlign="right"/>
-		<mx:Label x="0" y="46" text="总局数：" width="55" textAlign="right"/>
-		<mx:Label x="0" y="68" text="胜率：" width="55" textAlign="right"/>
-	</mx:Canvas>
-	
-	<mx:ViewStack id="viewstack1" x="535" y="209" height="250" width="179" >
-		<mx:VBox  label="好友列表" id="friendlist" width="100%" height="100%" verticalGap="2" horizontalScrollPolicy="off" verticalScrollPolicy="on" verticalScrollBarStyleName="VScrollBar" >
+	<mx:TabNavigator x="755" y="190" width="179" height="297" backgroundColor="#373737" styleName="myTabNavigator">
+		<mx:VBox  label="{LanguageManager.getText('roomCpt.hylb')}" 
+				  id="friendlist" width="100%" height="100%" verticalGap="2"
+				  horizontalScrollPolicy="off" verticalScrollPolicy="on"
+				  verticalScrollBarStyleName="VScrollBar"  borderStyle="none">
 		</mx:VBox>
+		<mx:VBox  label="{LanguageManager.getText('roomCpt.fjlb')}"
+				  id="playerlist" width="100%" height="100%" verticalGap="2" 
+				  horizontalScrollPolicy="off" verticalScrollPolicy="on" 
+				  verticalScrollBarStyleName="VScrollBar"  borderStyle="none" paddingLeft="2">
+		</mx:VBox>
+	</mx:TabNavigator>
+
+	<!--
+	<mx:ViewStack id="viewstack1" x="755" y="210" height="275" width="179" >
+		<mx:VBox  label="{LanguageManager.getText('roomCpt.hylb')}" id="friendlist" width="100%" height="100%" verticalGap="2" horizontalScrollPolicy="off" verticalScrollPolicy="on" verticalScrollBarStyleName="VScrollBar" >
+		</mx:VBox>
+		<mx:Canvas label="d" width="100%" height="100%">
+		</mx:Canvas>
 
 		
-		<mx:VBox  label="房间列表" id="playerlist" width="100%" height="100%" verticalGap="2" horizontalScrollPolicy="off" verticalScrollPolicy="on" verticalScrollBarStyleName="VScrollBar" >
+		<mx:VBox  label="{LanguageManager.getText('roomCpt.fjlb')}" id="playerlist" width="100%" height="100%" verticalGap="2" horizontalScrollPolicy="off" verticalScrollPolicy="on" verticalScrollBarStyleName="VScrollBar" >
 		</mx:VBox>
 		
 	</mx:ViewStack>
 	
-	<mx:Button x="537" y="475" 
-			    buttonMode="true"
-			   skin="{Resource.fastBt}"
-			   downSkin="{Resource.fastBt2}"
-			   overSkin="{Resource.fastBt3}"
-			   click="fastRequestEnterDesk()"/>
-	
-	
-	<mx:LinkButton x="632" y="22" label="退出房间" fontSize="12" click="exitRoom()"  color="#FFFFFF" visible="false"/>
-	<mx:CheckBox id="cb1" x="554" y="22" label="只选择空闲牌桌" change="showWaitRoom()" color="#FDFDFD"/>
-
-	<mx:ToggleButtonBar x="533" y="165"  dataProvider="{viewstack1}" buttonMode="true">
+	<mx:ToggleButtonBar x="549" y="410"  dataProvider="{viewstack1}" width="179" styleName="myToggleButtonBar" color="#D1D1D1">
 	</mx:ToggleButtonBar>
+	-->
+	
+	<mx:Button x="752" y="504" 
+			    buttonMode="true"
+			   click="fastRequestEnterDesk()" 
+			   width="186" height="70" 
+			   label="快速开始" 
+			   color="#EAEAEA" fontSize="30" alpha="1.0" 
+			   fillAlphas="[0.26, 0.27, 0.5, 0.5]" 
+			   fillColors="[#17FFF1, #0089A6]" borderColor="#00358C" fontWeight="bold" fontFamily="中易黑体">
+		<!--
+		<mx:filters>
+			<mx:GlowFilter color="0x000080" quality="5" ></mx:GlowFilter>
+		</mx:filters>
+		-->
+	</mx:Button>
+	
+	<mx:LinkButton x="632" y="22" label="{LanguageManager.getText('roomCpt.tcfj')}" fontSize="12" click="exitRoom()"  color="#FFFFFF" visible="false"/>
+	<mx:CheckBox id="cb1" x="770" y="44" label="{LanguageManager.getText('roomCpt.kxpz')}" change="showWaitRoom()" color="#FDFDFD" textSelectedColor="#FFFFFF" textRollOverColor="#FFFFFF" textAlign="center"/>
+
+	<mx:Label text="{LanguageManager.getText('roomCpt.xxgdq')}" fontSize="14" x="431" y="44" color="#ECECEC"/>
 	
 	
 

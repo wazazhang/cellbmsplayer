@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<language type="cn">
+   		<string name="server.cancel">撤销出牌</string>
+		<string name="server.timeout">超时</string>
+		<string name="server.alreadyin">已在游戏中</string>
+		<string name="server.errerVersion">版本错误</string>
+		<string name="server.roomFull">房间已满</string>
+		<string name="server.roomNoExist">房间不存在</string>
+		<string name="server.NoSeat">没有空余座位</string>
+		<string name="server.Onlookers">是否进入围观</string>
+		<string name="server.deskFull">该桌子已满</string>
+		<string name="server.NoDesk">没有空余桌子</string>
+		<string name="server.alreadyStart">该桌游戏已经开始</string>
+		<string name="server.NoJoin">尚未进入房间</string>
+		<string name="server.playerNoExist">玩家不存在</string>
+		<string name="server.alreadyInDesk">已经在当前桌子里了</string>
+		<string name="server.NoFindDesk">没有找到桌子</string>
+		<string name="server.joinRoom">要先进入房间</string>
+		<string name="server.haveCopyCard">有复制的牌</string>
+		<string name="server.canotBack">该牌不能取回</string>
+		<string name="server.canotMove">未破冰不能移动原有的牌</string>
+		<string name="server.cardNoExist">该牌不存在</string>
+		<string name="server.canotSplice">未破冰不能和原有牌拼接</string>
+		<string name="server.noExistence">有不成立的牌组</string>
+		<string name="server.noOpenIce">没有破冰</string>
+		<string name="server.noSendCard">没有出牌</string>
+		<string name="server.Exit">是否强行退出（扣分）</string>
+		<string name="server.canntExit">没有出牌</string>
+		<string name="server.forceExit">是否强行退出（扣分）</string>
+		<string name="server.talkError">说话的字数要在1到100个之间</string>
+		
+		
+		<string name="deskItemCpt.ks">开始</string>
+		<string name="deskItemCpt.kx">空闲</string>
+		<string name="deskItemCpt.wjm">未加密</string>
+		<string name="deskItemCpt.jryx">进入桌子中...</string>
+		
+		<string name="lami.jrzz">进入桌子</string>
+		<string name="lami.lkzz">离开桌子</string>
+		<string name="lami.wj">玩家</string>
+		<string name="lami.yjpb">已经破冰</string>
+		<string name="lami.zbhl">准备好了</string>
+		<string name="lami.qxzb">取消准备</string>
+		<string name="lami.hhks">回合开始</string>
+		<string name="lami.yxjs">游戏结束</string>
+		<string name="lami.yxks">游戏开始</string>
+		<string name="lami.czfp">重置发牌</string>
+		<string name="lami.yxxx">游戏信息</string>
+		<string name="lami.syps">剩余牌数</string>
+		<string name="lami.yxz">游戏中</string>
+		<string name="lami.ddz">等待中</string>
+		<string name="lami.wpb">未破冰</string>
+		<string name="lami.ypb">已破冰</string>
+		<string name="lami.dqwz">当前位置</string>
+		<string name="lami.hddt">回到大厅</string>
+		<string name="lami.fj">房间{0} 桌子{1}</string>
+		<string name="lami.dj">等级</string>
+		<string name="lami.yzb">已准备</string>
+		<string name="lami.wzb">未准备</string>
+		
+		<string name="loginCpt.zhcw">通行证帐号错误，不能进入游戏！</string>
+		<string name="loginCpt.ljcs">连接超时</string>
+		<string name="loginCpt.myzw">没有空余座位</string>
+		<string name="loginCpt.ks">开始</string>
+		<string name="loginCpt.fjxz">房间选择</string>
+		
+		<string name="playerItemCpt.jb">金币</string>
+		<string name="playerItemCpt.xgz">闲逛中</string>
+		
+		<string name="resetCpt.cz">是否重置当前手牌？</string>
+		<string name="resetCpt.dd">等待其他玩家确认手牌重置。</string>
+		<string name="resetCpt.qr">确认</string>
+		<string name="resetCpt.qx">取消</string>
+		
+		<string name="resultCpt.pmk">结束方式:牌堆的牌摸空了</string>
+		<string name="resultCpt.cpw">结束方式:有人出完牌</string>
+		<string name="resultCpt.tp">结束方式:有人逃跑或则断线</string>
+		<string name="resultCpt.yxjs">游戏结束</string>
+		<string name="resultCpt.gb">关闭</string>
+		<string name="resultCpt.sl">胜利</string>
+		<string name="resultCpt.sb">失败</string>
+		
+		<string name="roomCpt.jrfjtj">进入房间后才能提交.</string>
+		<string name="roomCpt.jr">进入</string>
+		<string name="roomCpt.lk">离开</string>
+		<string name="roomCpt.jrfj">进入房间</string>
+		<string name="roomCpt.lkfj">离开房间</string>
+		<string name="roomCpt.xxgdq">信息滚动区</string>
+		<string name="roomCpt.tj">提交</string>
+		<string name="roomCpt.js">局数</string>
+		<string name="roomCpt.sl">胜率</string>
+		<string name="roomCpt.dj">等级</string>
+		<string name="roomCpt.jb">金币</string>
+		<string name="roomCpt.hylb">好友列表</string>
+		<string name="roomCpt.fjlb">房间列表</string>
+		<string name="roomCpt.tcfj">退出房间</string>
+		<string name="roomCpt.kxpz">只显示空闲牌桌</string>
+		
+		<string name="card.g">鬼牌</string>
+		<string name="card.r">红色</string>
+		<string name="card.y">黄色</string>
+		<string name="card.b">黑色</string>
+		<string name="card.bl">蓝色</string>
+		
+		<string name="main.err1">无法获得平台数据！</string>
+		<string name="main.err2">无法获得用户信息！</string>
+		
+		<string name="image.">快速开始</string>
+		<string name="image.">准备</string>
+		<string name="image.">摸牌</string>
+		<string name="image.">排序</string>
+		<string name="image.">撤销</string>
+		<string name="image.">结束</string>
+		<string name="image.">你的回合开始</string>
+		<string name="image.">提交</string>
+		
+	</language>
+</root>

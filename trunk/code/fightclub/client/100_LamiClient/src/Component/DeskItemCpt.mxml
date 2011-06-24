@@ -1,54 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="475" height="29" 
-		   backgroundImage="{Resource.deskItemBg}" 
 		   mouseOver="mouseOver(event)" mouseOut="mouseOut(event)"
-		   doubleClickEnabled="true" doubleClick="click()" borderThickness="2" borderColor="#b96400"   cornerRadius="5"
-		   
-		    borderStyle="solid">
+		   doubleClickEnabled="true" 
+		   doubleClick="click()" 
+		   borderThickness="1"
+		   borderColor="#1F1F1F"  
+		   cornerRadius="5"
+		    borderStyle="none" 
+			backgroundColor="#828282" dropShadowEnabled="false" shadowDirection="center" shadowDistance="2" dropShadowColor="#000000" backgroundAlpha="0.0">
 	<mx:Script>
 		<![CDATA[
+			import Class.LanguageManager;
+			import Class.MaskCtr;
 			import Class.Resource;
 			import Class.Server;
 			
 			import com.fc.lami.Messages.DeskData;
 			import com.fc.lami.ui.LamiAlert;
+			import com.smartfoxserver.v2.requests.HandshakeRequest;
 			
 			import mx.controls.Alert;
+			import mx.managers.CursorManager;
 			
 			[Bindable]
 			public var desk:DeskData
 			
 			private  function mouseOver(event:Event):void
 			{
-				setStyle("backgroundImage",Resource.deskItemBg2)
+				//setStyle("backgroundImage",Resource.deskItemBg2)
+				bt.setStyle("backgroundColor", "#f0f0f0");
+				bt.selected = true;
 			}
 			
 			
 			private  function mouseOut(event:Event):void
 			{
-				setStyle("backgroundImage",Resource.deskItemBg);
+				//setStyle("backgroundImage",Resource.deskItemBg);
+				bt.setStyle("backgroundColor", "#828282");
+				bt.selected = false;
 			}
 			
 			
 			private function click():void
 			{
-				
-//				if(desk.player_number==4)
-//				{
-//					LamiAlert.show("当前桌子已满！");
-//					return;
-//				}
+				MaskCtr.show(LanguageManager.getText('roomCpt.deskItemCpt.jryx')); //进入游戏中
 				Server.enterDesk(desk.desk_id,-1)
 			}
+			
 		]]>
-	</mx:Script>
-	<mx:Label x="8" text="{desk.desk_id}" verticalCenter="0" />
-	<mx:Label x="80" text="{desk.desk_name}" verticalCenter="0"/>
-	<mx:Label x="267" text="{desk.is_started?'开始':'空闲'}" verticalCenter="0"/>
-	<mx:Label x="356" text="{desk.player_number+'/4'}" verticalCenter="0"/>
-	<mx:Label x="427" text="未加密" verticalCenter="0"/>
+	</mx:Script>	
+	<mx:Button id="bt" x="0" y="0" label="" width="100%" height="100%"/>
+	<mx:Label x="40" text="{desk.desk_id+1}" verticalCenter="0"   width="29" textAlign="center" 
+			  disabledColor="#000000" color="#000000" enabled="false"/>
+	<mx:Label x="75" text="{desk.desk_name}" verticalCenter="0" 
+			  disabledColor="#000000" color="#000000" enabled="false"/>
+	<mx:Label x="199" text="{desk.is_started?LanguageManager.getText('deskItemCpt.ks'):LanguageManager.getText('deskItemCpt.kx')}" verticalCenter="0" 
+			  disabledColor="#000000" color="#000000" enabled="false"/>
+	<mx:Label x="334" text="{desk.player_number+'/4'}" verticalCenter="0" width="39"
+			  disabledColor="#000000" color="#000000" enabled="false"/>
+	<mx:Label  x="395" text="{LanguageManager.getText('deskItemCpt.wjm')}" verticalCenter="0" width="71" 
+			  disabledColor="#000000" color="#000000" enabled="false"/>
+	<mx:Image x="3" y="3" width="27" height="22" source="{Resource.deskicon}"/>
+	<mx:Canvas width="100%"  height="100%" buttonMode="true" backgroundAlpha="0.00" backgroundColor="0x000000">	
 	
-	<mx:Canvas width="100%" height="100%" buttonMode="true" backgroundAlpha="0.00" backgroundColor="0x000000">	
 	</mx:Canvas>
-	
+
 </mx:Canvas>

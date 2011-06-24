@@ -86,7 +86,10 @@ package Class.Model
 //			handCard.removeAll();
 			for each(var cd:CardData in cards){
 				if (!isHandCard(cd)){
-					getCard(Card.createCardByData(cd));
+//					getCard(Card.createCardByData(cd));
+					var card:Card = Card.createCardByData(cd);
+					handCard.addItem(card);
+					setCardInToMatrix(card, false);
 				}
 			}
 			var h2 :ArrayCollection = new ArrayCollection();
@@ -160,16 +163,26 @@ package Class.Model
 			handCard.sort = sort;
 			handCard.refresh();
 			
-			var line:Line = cardLines[0];
-			var cardcpt:Card_Cpt = line.firstCard;
+			var lineindex:int = 0;
+			var line:Line;
+			var cardcpt:Card_Cpt;
 			var precard:Card;
 			
 			for each(var card:Card in handCard)
 			{
-				cardcpt.card = card;
-				cardcpt.confimcard = card;
-				cardcpt.isShow = false;
-				cardcpt = cardcpt.nextCardCpt;
+				if (cardcpt==null){
+					line = cardLines[lineindex++];
+					cardcpt = line.firstCard;
+					cardcpt.card = card;
+					//cardcpt.confimcard = card;
+					cardcpt.isShow = false;
+					cardcpt = cardcpt.nextCardCpt;
+				}else{
+					cardcpt.card = card;
+					//cardcpt.confimcard = card;
+					cardcpt.isShow = false;
+					cardcpt = cardcpt.nextCardCpt;
+				}
 				if(precard!=null)
 				{
 					precard.nextCard = card;
@@ -184,7 +197,7 @@ package Class.Model
 			
 		}
 		
-		public function setCardInToMatrix(card:Card):void
+		public function setCardInToMatrix(card:Card, is_motion:Boolean):void
 		{
 			var line:Line;
 			if(card.type==0)
@@ -197,19 +210,25 @@ package Class.Model
 			}
 			var cardcpt:Card_Cpt = line.lastCard;
 			do{
+				
 				do
 				{
-					if(cardcpt.card ==null&&cardcpt.confimcard ==null)
+					if(cardcpt.card ==null)
 					{	
-						cardcpt.isShow = false;
 						cardcpt.card = card;
-						cardcpt.confimcard = card;
-						game.lami.addCardMotion(card)
+						//cardcpt.confimcard = card;
+						
+						if (is_motion){
+							cardcpt.isShow = false;
+							game.lami.addCardMotion(card);
+						}
+						
 						return;
 					}
 					cardcpt = cardcpt.preCardCpt
 				}
 				while(cardcpt!=null)
+					
 				line = line.nextLine;
 				cardcpt = line.lastCard;
 			}
@@ -221,7 +240,7 @@ package Class.Model
 		
 			
 			handCard.addItem(card);
-			setCardInToMatrix(card);
+			setCardInToMatrix(card, true);
 		}
 		
 		//检测是否含有重复的牌
@@ -307,7 +326,7 @@ package Class.Model
 					{
 						array.addItem(cardctp.card);
 					}
-					cardctp.confimcard = cardctp.card;
+					//cardctp.confimcard = cardctp.card;
 					cardctp = cardctp.nextCardCpt;
 				}
 				while(cardctp != null);

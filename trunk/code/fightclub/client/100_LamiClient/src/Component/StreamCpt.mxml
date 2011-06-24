@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
+		   width="280" 
+		   height="60" 
+		   backgroundColor="#0084FF" 
+		   borderStyle="solid" 
+		   cornerRadius="5"
+		   borderColor="#00146A"
+		   backgroundAlpha="0.5"
+		   alpha="1.0"
+		   borderThickness="2"
+		   dropShadowColor="#000000"
+		   dropShadowEnabled="true">
+	
+	<mx:Label x="74" y="10" text="网络缓冲中..." height="38" width="194" id="text" textAlign="center"/>
+	
+	
+	<mx:Script>
+		<![CDATA[
+			import com.net.client.Client;
+			import com.net.client.ClientEvent;
+			
+			public function show() : Function
+			{
+				var parent : Sprite;
+				var sm:ISystemManager = ISystemManager(Application.application.systemManager);
+				if (sm.useSWFBridge()) {
+					parent = Sprite(sm.getSandboxRoot());
+				} else {
+					parent = Sprite(Application.application);
+				}
+				PopUpManager.addPopUp(this, parent, false);
+				return response;
+			}
+			
+			
+			
+			public function response(event:ClientEvent)
+			{
+				this.parent.removeChild(this);
+			}
+		]]>
+	</mx:Script>
+	
+</mx:Canvas>

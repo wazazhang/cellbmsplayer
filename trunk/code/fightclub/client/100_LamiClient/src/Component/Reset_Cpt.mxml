@@ -2,6 +2,7 @@
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="332" height="140" borderStyle="solid" borderColor="#000000" borderThickness="1" cornerRadius="10" borderSkin="@Embed(source='../image/alert.png')">
 	<mx:Script>
 		<![CDATA[
+			import Class.LanguageManager;
 			import Class.Server;
 			[Bindable]
 			public var canReset:Boolean
@@ -9,18 +10,21 @@
 			public function reset():void
 			{
 				canReset = false;
-				Server.sendResetRequest();
+				Server.sendResetRequest(true);
 			}
 			
 			public function cancel():void
 			{
 				canReset = false;
+				Server.sendResetRequest(false);
 			}
 			
 		]]>
 	</mx:Script>
-	
-	<mx:Label y="32" text="{canReset?'是否重置当前手牌？':'等待其他玩家确认手牌重置。'}" fontSize="12" fontWeight="normal" width="304" height="62" x="10" textAlign="center"/>
-	<mx:Button label="确认" visible="{canReset}" click="reset()" horizontalCenter="-50" skin="@Embed(source='../image/alert_btn.png')" fontWeight="normal" color="#FFFFFF" upSkin="@Embed(source='../image/alert_btn.png')" focusSkin="@Embed(source='../image/alert_btn_e.png')" downSkin="@Embed(source='../image/alert_btn_d.png')" verticalCenter="46"/>
-	<mx:Button label="取消" visible="{canReset}" click="cancel()" horizontalCenter="47" skin="@Embed(source='../image/alert_btn.png')" color="#FFFFFF" fontWeight="normal" selectedUpSkin="@Embed(source='../image/alert_btn.png')" selectedOverSkin="@Embed(source='../image/alert_btn_e.png')" selectedDownSkin="@Embed(source='../image/alert_btn_d.png')" upSkin="@Embed(source='../image/alert_btn.png')" downSkin="@Embed(source='../image/alert_btn_d.png')" focusSkin="@Embed(source='../image/alert_btn_e.png')" verticalCenter="46"/>
+	<!-- 是否重置当前手牌？  等待其他玩家确认手牌重置。-->
+	<mx:Label y="32" text="{canReset?LanguageManager.getText('resetCpt.cz'):LanguageManager.getText('resetCpt.dd')}" fontSize="12" fontWeight="normal" width="304" height="62" x="10" textAlign="center"/>
+	<!-- 确认-->
+	<mx:Button label="{LanguageManager.getText('resetCpt.qr')}" visible="{canReset}" click="reset()" horizontalCenter="-50" skin="@Embed(source='../image/alert_btn.png')" fontWeight="normal" color="#FFFFFF" upSkin="@Embed(source='../image/alert_btn.png')" focusSkin="@Embed(source='../image/alert_btn_e.png')" downSkin="@Embed(source='../image/alert_btn_d.png')" verticalCenter="46"/>
+	<!-- 取消-->
+	<mx:Button label="{LanguageManager.getText('resetCpt.qx')}" visible="{canReset}" click="cancel()" horizontalCenter="47" skin="@Embed(source='../image/alert_btn.png')" color="#FFFFFF" fontWeight="normal" selectedUpSkin="@Embed(source='../image/alert_btn.png')" selectedOverSkin="@Embed(source='../image/alert_btn_e.png')" selectedDownSkin="@Embed(source='../image/alert_btn_d.png')" upSkin="@Embed(source='../image/alert_btn.png')" downSkin="@Embed(source='../image/alert_btn_d.png')" focusSkin="@Embed(source='../image/alert_btn_e.png')" verticalCenter="46"/>
 </mx:Canvas>

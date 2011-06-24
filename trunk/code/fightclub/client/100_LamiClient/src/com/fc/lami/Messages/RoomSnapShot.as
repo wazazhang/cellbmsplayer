@@ -6,7 +6,7 @@ package com.fc.lami.Messages
 
 
 	/**
-	 * Java Class [63] [com.fc.lami.Messages.RoomSnapShot]<br>
+	 * Java Class [66] [com.fc.lami.Messages.RoomSnapShot]<br>
 	 * 此代码为自动生成。不需要在此修改。若有错误，请修改代码生成器。
 	 */
 	[Bindable]

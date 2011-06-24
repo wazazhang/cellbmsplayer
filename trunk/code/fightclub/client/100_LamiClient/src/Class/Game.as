@@ -78,9 +78,9 @@ package Class
 			lami.addEventListener(KeyboardEvent.KEY_UP,keyup);
 		}
 		
-		public  function start(startCards:ArrayCollection,canReset:Boolean):void
+		public  function start(startCards:ArrayCollection):void
 		{
-			lami.onGameStart(canReset);
+			lami.removeReset();
 			gamer.orderType = true;
 			gamer.getStartCard(startCards);
 			lami.optCpt.Start(); 
@@ -318,7 +318,7 @@ package Class
 				var cardctp:Card_Cpt = line.firstCard;
 				do{
 					cardctp.card = null;
-					cardctp.card = cardctp.confimcard;
+				//	cardctp.card = cardctp.confimcard;
 					cardctp = cardctp.nextCardCpt;
 				}
 				while(cardctp != null);
@@ -332,7 +332,7 @@ package Class
 				var cardctp:Card_Cpt = line.firstCard;
 				do{
 					//cardctp.confimcard = null;
-					cardctp.confimcard = cardctp.card;
+					//cardctp.confimcard = cardctp.card;
 					
 					if(cardctp.card!=null)
 						cardctp.card.isSended = true;
@@ -362,7 +362,7 @@ package Class
 			gamer.confiomCard();
 			gamer.isMyturn = true;
 			haveSendCard = false;
-			(lami.beginSwf.content as MovieClip).mc.gotoAndPlay(2);
+			lami.playRoundStartMoiveClip();
 			timeCtr.start();
 		}
 		
@@ -407,16 +407,16 @@ package Class
 				for each(var card:Card in gamer.selectedArrayCard)
 				{
 					card.cardUI.isSelected = false;
-//					if(card.isSended == false && !card.cardUI.isPlayerOwner)
-//					{
-//						card.cardUI.card = null;
-//						var index:int = gamer.handCard.getItemIndex(card)
-//						if(index!=-1)
-//						gamer.handCard.removeItemAt(index)
-//					
-//					}
+					if(card.isSended == false && !card.cardUI.isPlayerOwner)
+					{
+						card.cardUI.card = null;
+						var index:int = gamer.handCard.getItemIndex(card);
+						if(index!=-1)
+						gamer.handCard.removeItemAt(index);
+					
+					}
 				}
-				gamer.selectedArrayCard = null
+				gamer.selectedArrayCard = null;
 
 			}	
 			//处理结束时候还有选中的牌
@@ -424,16 +424,16 @@ package Class
 			{
 				gamer.selectedCard.cardUI.isSelected = false;
 
-//				if(gamer.selectedCard.isSended == false && !gamer.selectedCard.cardUI.isPlayerOwner)
-//				{
-//					gamer.selectedCard.cardUI.card = null;	
-//					
-//					index = gamer.handCard.getItemIndex(gamer.selectedCard)
-//					if(index!=-1)
-//					{
-//						gamer.handCard.removeItemAt(index)
-//					}
-//				}
+				if(gamer.selectedCard.isSended == false && !gamer.selectedCard.cardUI.isPlayerOwner)
+				{
+					gamer.selectedCard.cardUI.card = null;	
+					
+					index = gamer.handCard.getItemIndex(gamer.selectedCard);
+					if(index!=-1)
+					{
+						gamer.handCard.removeItemAt(index);
+					}
+				}
 				gamer.selectedCard = null;
 				
 			}

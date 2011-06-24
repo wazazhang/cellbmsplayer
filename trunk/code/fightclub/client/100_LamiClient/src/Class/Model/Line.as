@@ -73,7 +73,7 @@ package Class.Model
 			var cardcpt:Card_Cpt = firstCard;
 			do{
 				cardcpt.card = null
-				cardcpt.confimcard = null
+			//	cardcpt.confimcard = null
 				cardcpt = cardcpt.nextCardCpt;
 			}
 			while(cardcpt!=null)
