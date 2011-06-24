@@ -1,7 +1,16 @@
 package com.fc.lami.net.sfs;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
+import com.cell.CObject;
+import com.cell.CUtil;
+import com.cell.io.ConsoleRedirectTask;
 import com.cell.j2se.CAppBridge;
 import com.fc.lami.LamiConfig;
 import com.fc.lami.MessageFactory;
@@ -18,53 +27,73 @@ import com.smartfoxserver.v2.exceptions.SFSException;
 import com.smartfoxserver.v2.extensions.SFSExtension;
 import com.xingcloud.framework.intergation.sfs.XingCloudSFSExtension;
 
-public class LamiSFSExtension extends XingCloudSFSExtension
+public class LamiSFSExtension extends SFSServerAdapter
 {
-	static private SFSServerAdapter adapter;
+	static private XingCloud xingcloud;
+	
+	static private AtomicInteger init_count = new AtomicInteger();
+	
+	private MessageFactory codec = new MessageFactory();
 	
 	@Override
 	public void init() 
 	{
-		super.init();
+		xingcloud = new XingCloud(this);
 		
 //		if (adapter == null) 
 		{
 			trace("\n===================================================\n" +
 					"= Lami SFSExtension initializing ...\n" +
+					"=    init_count = " + init_count.get() + "\n" +
+					"= CurrentFolder = " + getCurrentFolder() + "\n" +
 					"===================================================\n");
-					
-			CAppBridge.initNullStorage();
-			LamiConfig.load(LamiConfig.class, super.getConfigProperties());
-			trace("\n" +LamiConfig.toProperties(LamiConfig.class));
-			MessageFactory codec = new MessageFactory();
 			try {
-				adapter = new SFSServerAdapter(this, codec);
-				adapter.open(0, new LamiServerListener());
+				trace("root dir is " + new File(".").getCanonicalPath());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			CObject.initSystem(
+					new CObject.NullStorage(), 
+					new CAppBridge(getClass().getClassLoader(), getClass()));
+			
+			try {		
+				LamiConfig.load(LamiConfig.class, 
+						getExtResource("/config/lami_config.properties"));
+				trace("\n" +LamiConfig.toProperties(LamiConfig.class));
+				super.open(0, new LamiServerListener(
+						getExtResource(LamiConfig.ROOM_SET_CONFIG_XLS)));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}		
 			trace("\n===================================================\n" +
 					"= Lami SFSExtension started !\n" +
-					"= default zone is : " + getParentZone().getName() + "\n" +
+					"=  default zone is : " + getParentZone().getName() + "\n" +
 					"= codec version is : " + codec.getMutualCodec().getVersion() + "\n" +
 					"===================================================\n");
+			StringBuilder sb = new StringBuilder();
+			Properties properties = System.getProperties();
+			for (Object key : properties.keySet()) {
+				CUtil.toStatusLine(key, properties.get(key), sb);
+			}
+			trace("\nSystem Properties: \n" + sb + "\n");
 		}
 		
 	}
 	
 	@Override
-	public void handleClientRequest(String requestId, User sender, ISFSObject params) {
-		adapter.handleClientRequest(requestId, sender, params);
-		super.handleClientRequest(requestId, sender, params);
+	public ExternalizableFactory getMessageFactory() {
+		return codec;
+	}
+	
+	public InputStream getExtResource(String sub_path) throws IOException {
+		File file = new File(".", getCurrentFolder() + "/" + sub_path);
+		trace("getExtResource: " + file.getPath());
+		return new FileInputStream(file);
 	}
 	
 	@Override
 	public void destroy() {
-		try {
-			adapter.dispose();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		super.destroy();
+		xingcloud.destroy();
 	}
 }

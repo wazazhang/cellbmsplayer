@@ -14,6 +14,8 @@ import com.fc.lami.Messages.FreshRoomNotify;
 import com.fc.lami.Messages.GameResetNotify;
 import com.fc.lami.Messages.GameResetRequest;
 import com.fc.lami.Messages.GameResetResponse;
+import com.fc.lami.Messages.GetCardOverRequest;
+import com.fc.lami.Messages.GetCardOverResponse;
 import com.fc.lami.Messages.GetCardRequest;
 import com.fc.lami.Messages.GetCardResponse;
 import com.fc.lami.Messages.GetPlayerDataRequest;
@@ -174,6 +176,10 @@ public class EchoClientSession implements ClientSessionListener
 			SynchronizeRequest request = (SynchronizeRequest)message;
 			processSynchronizeRequest(session, protocol, request);
 		}
+		else if (message instanceof GetCardOverRequest){
+			GetCardOverRequest request = (GetCardOverRequest)message;
+			processGetCardOverRequest(session, protocol, request);
+		}
 		else if (message instanceof GameResetRequest){
 			GameResetRequest request = (GameResetRequest)message;
 			processGameResetRequest(session, protocol, request);
@@ -220,7 +226,7 @@ public class EchoClientSession implements ClientSessionListener
 	/** 退出房间 */
 	private void processExitRoomRequest(ClientSession session, Protocol protocol, ExitRoomRequest request){
 		if (player.cur_room != null) {
-			Room room = player.cur_room;
+//			Room room = player.cur_room;
 			player.cur_room.onPlayerLeave(player.player_id);
 			session.sendResponse(protocol, new ExitRoomResponse(server.getRoomList()));
 		}
@@ -266,7 +272,7 @@ public class EchoClientSession implements ClientSessionListener
 					}
 					session.sendResponse(protocol, 
 							new EnterDeskResponse(EnterDeskResponse.ENTER_DESK_RESULT_SUCCESS,
-									d.getDeskData().desk_id, seat, LamiConfig.TURN_INTERVAL, LamiConfig.OPERATE_TIME,
+									d.getDeskData().desk_id, seat, player.cur_room.turn_interval, player.cur_room.operate_time,
 									ps));
 				} else {
 					session.sendResponse(protocol, 
@@ -302,7 +308,7 @@ public class EchoClientSession implements ClientSessionListener
 					session.sendResponse(protocol, 
 							new EnterDeskAsVisitorResponse(EnterDeskAsVisitorResponse.ENTER_DESK_VISITOR_RESULT_SUCCESS, 
 									request.desk_id,
-									LamiConfig.TURN_INTERVAL, LamiConfig.OPERATE_TIME, ps));
+									player.cur_room.turn_interval, player.cur_room.operate_time, ps));
 				}else{
 					session.sendResponse(protocol, new EnterDeskAsVisitorResponse(EnterDeskAsVisitorResponse.ENTER_DESK_VISITOR_RESULT_FAIL_ALREADY_IN_DESK));
 				}
@@ -401,11 +407,7 @@ public class EchoClientSession implements ClientSessionListener
 	private void processMainMatrixChangeRequest(ClientSession session, Protocol protocol, MainMatrixChangeRequest req){
 		Game game = player.getGame();
 		if (game!=null && game.getCurPlayer() == player){
-			if (game.MainMatrixChange(req.cards)){
-				session.sendResponse(protocol, new MainMatrixChangeResponse(MainMatrixChangeResponse.MAIN_MATRIX_CHANGE_RESULT_SUCCESS));
-			}else{
-				session.sendResponse(protocol, new MainMatrixChangeResponse(MainMatrixChangeResponse.MAIN_MATRIX_CHANGE_RESULT_FAIL));
-			}
+			session.sendResponse(protocol, new MainMatrixChangeResponse(game.MainMatrixChange(req.cards)));
 		}
 	}
 	
@@ -467,12 +469,17 @@ public class EchoClientSession implements ClientSessionListener
 	/** 处理玩家要求重新发牌的请求 */
 	private void processGameResetRequest(ClientSession session, Protocol protocol, GameResetRequest request){
 		if (player.getGame()!=null){
-			if (player.getGame().isStartTime()){
-				if (player.isCanResetGame()){
+			if (player.getGame().isConfilmTime()){
+				if (request.is_reset==false){
+					player.getGame().onPlayerConfilm(player);
+					session.sendResponse(protocol, new GameResetResponse(GameResetResponse.GAME_RESET_RESULT_SUCCESS));
+				}
+				else if (player.isCanResetGame()){
 					player.getGame().gameInit();
 					player.cur_desk.broadcast(new GameResetNotify(player.player_id));
 					session.sendResponse(protocol, new GameResetResponse(GameResetResponse.GAME_RESET_RESULT_SUCCESS));
 				}else{
+					player.getGame().onPlayerConfilm(player);
 					session.sendResponse(protocol, new GameResetResponse(GameResetResponse.GAME_RESET_RESULT_FAIL_CANT_RESET));
 				}
 			}else{
@@ -486,8 +493,8 @@ public class EchoClientSession implements ClientSessionListener
 			player.cur_room.onPlayerLeave(player.player_id);
 		}
 		AutoEnterResponse res = new AutoEnterResponse();
-		Room r = server.getRandomRoom();
-		
+//		Room r = server.getRandomRoom();
+		Room r = server.getFirstIdelRoom();
 		if (r != null) {
 			if (r.onPlayerEnter(player)){
 				res.room = r.getRoomData();
@@ -506,4 +513,19 @@ public class EchoClientSession implements ClientSessionListener
 		PlayerData p = player.cur_room.getPlayer(request.player_id);
 		session.sendResponse(protocol, new GetPlayerDataResponse(p));
 	}
+	
+	private void processGetCardOverRequest(ClientSession session, Protocol protocol, GetCardOverRequest request){
+		if (player.getGame()!=null){
+			if (player.getGame().isGetCardTime()){
+				player.getGame().onPlayerGetCardOver(player);
+			}
+			if (player.getGame().isGetCardTime()||player.getGame().isConfilmTime()){
+				session.sendResponse(protocol, new GetCardOverResponse(player.isCanResetGame()));
+				if (!player.isCanResetGame()){
+					player.getGame().onPlayerConfilm(player);
+				}
+			}
+		}
+	}
+	
 }

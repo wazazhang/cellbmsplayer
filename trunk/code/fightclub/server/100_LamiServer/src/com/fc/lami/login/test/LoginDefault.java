@@ -36,10 +36,10 @@ public class LoginDefault implements Login
 			return lose;
 		}
 
-		@Override
-		synchronized public int getPoint() {
-			return point;
-		}
+//		@Override
+//		synchronized public int getPoint() {
+//			return point;
+//		}
 
 		@Override
 		synchronized public int getScore() {
@@ -62,11 +62,11 @@ public class LoginDefault implements Login
 			lose += value;
 			return this;
 		}
-		@Override
-		synchronized public User addPoint(int value) {
-			point += value;
-			return this;
-		}
+//		@Override
+//		synchronized public User addPoint(int value) {
+//			point += value;
+//			return this;
+//		}
 		@Override
 		synchronized public User addScore(int value) {
 			score += value;

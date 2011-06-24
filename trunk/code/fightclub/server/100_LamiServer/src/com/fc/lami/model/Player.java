@@ -212,7 +212,7 @@ public class Player
 	private ArrayList<CardData> getCardGroupV(ArrayList<CardData> cards){
 		CardData table[][] = new CardData[4][13];
 		for (CardData cd:cards){
-			if (cd.type>0){
+			if (cd.point>0){
 				if (table[cd.type-1][cd.point-1]==null){
 					table[cd.type-1][cd.point-1] = cd;
 				}
@@ -255,7 +255,7 @@ public class Player
 	private ArrayList<CardData> getCardGroupH(ArrayList<CardData> cards){
 		CardData table[][] = new CardData[4][13];
 		for (CardData cd:cards){
-			if (cd.type>0){
+			if (cd.point>0){
 				if (table[cd.type-1][cd.point-1]==null){
 					table[cd.type-1][cd.point-1] = cd;
 				}
@@ -335,7 +335,7 @@ public class Player
 		return pak;
 	}
 
-	public int onPlayerEscape()
+	public ResultPak onPlayerEscape()
 	{
 		this.is_ready = false;
 		this.isOpenIce = false;
@@ -347,7 +347,11 @@ public class Player
 		this.user.save();
 		onPlayerDateChange();
 		
-		return point;
+		ResultPak pak = new ResultPak();
+		pak.player_id = this.player_id;
+		pak.is_win = false;
+		pak.point = -point;
+		return pak;
 	}
 	
 	private void onPlayerDateChange(){

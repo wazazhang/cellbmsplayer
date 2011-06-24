@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <jardesc>
-    <jar path="100_LamiServer/lamiserver.jar"/>
+    <jar path="100_LamiServer/extension/lamiserver.jar"/>
     <options buildIfNeeded="true" compress="true" descriptionLocation="/100_LamiServer/100_LamiServer.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="true" overwrite="true" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
     <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
     <selectedProjects/>
@@ -16,16 +16,16 @@
         <javaElement handleIdentifier="=000_Engine_Core/snd"/>
         <javaElement handleIdentifier="=000_Engine_Core/gfx"/>
         <javaElement handleIdentifier="=000_Engine_Core/src&lt;com.cell.nio.anno"/>
-        <javaElement handleIdentifier="=000_Engine_Core/src&lt;com.cell.util.zip"/>
         <javaElement handleIdentifier="=000_Engine_Core/src&lt;com.cell.util.task"/>
+        <javaElement handleIdentifier="=000_Engine_Core/src&lt;com.cell.util.zip"/>
         <javaElement handleIdentifier="=002_Engine_Server/sfs"/>
         <javaElement handleIdentifier="=000_Engine_Core/src&lt;com.cell.util"/>
         <javaElement handleIdentifier="=000_Engine_Core/src&lt;com.cell.util.pack"/>
         <javaElement handleIdentifier="=000_Engine_Core/src&lt;com.cell.util.concurrent"/>
         <javaElement handleIdentifier="=002_Engine_Server/src"/>
         <javaElement handleIdentifier="=000_Engine_Core/src&lt;com.cell.html"/>
-        <javaElement handleIdentifier="=002_Engine_Server/flash"/>
         <javaElement handleIdentifier="=000_Engine_Core/src&lt;com.cell.exception"/>
+        <javaElement handleIdentifier="=002_Engine_Server/flash"/>
         <javaElement handleIdentifier="=000_Engine_Core/src&lt;com.cell.script.objective"/>
         <javaElement handleIdentifier="=000_Engine_Core/src&lt;com.cell"/>
         <javaElement handleIdentifier="=000_Engine_Core/src&lt;com.cell.nio"/>

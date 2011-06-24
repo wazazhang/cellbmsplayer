@@ -32,12 +32,12 @@ public abstract class User
 	abstract public int		getLevel();
 	
 	abstract public int		getScore();
-	abstract public int		getPoint();
+//	abstract public int		getPoint();
 	abstract public int		getWin();
 	abstract public int		getLose();
 
 	abstract public User	addScore(int value);
-	abstract public User	addPoint(int value);
+//	abstract public User	addPoint(int value);
 	abstract public User	addWin(int value);
 	abstract public User	addLose(int value);
 	

@@ -1,12 +1,19 @@
 package com.fc.lami.net.mina;
 
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+
+import jxl.Cell;
+import jxl.Sheet;
+import jxl.Workbook;
 
 import com.cell.CIO;
 import com.cell.j2se.CAppBridge;
 import com.fc.lami.LamiConfig;
 import com.fc.lami.MessageFactory;
 import com.fc.lami.LamiServerListener;
+import com.fc.lami.RoomSet;
 import com.net.flash.FlashCrossdomainService;
 import com.net.minaimpl.server.ServerImpl;
 
@@ -29,7 +36,9 @@ public class LamiServer extends ServerImpl {
 				port = LamiConfig.MINA_SERVER_PORT;
 			}
 			LamiServer server = new LamiServer(factory);
-			server.open(port, new LamiServerListener());
+			
+			server.open(port, new LamiServerListener(
+					CIO.getInputStream(LamiConfig.ROOM_SET_CONFIG_XLS)));
 		} catch (Exception err) {
 			err.printStackTrace();
 			System.exit(1);
