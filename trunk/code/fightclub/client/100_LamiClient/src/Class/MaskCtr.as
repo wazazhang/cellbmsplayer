@@ -42,7 +42,9 @@ package Class
 		}	
 		public static function close():void
 		{
-			Application.application.removeChild(canvas);
+			if (canvas != null) {
+				Application.application.removeChild(canvas);
+			}
 		}
 	}
 }

@@ -12,7 +12,7 @@
 		   dropShadowColor="#000000"
 		   dropShadowEnabled="true">
 	
-	<mx:Label x="74" y="10" text="网络缓冲中..." height="38" width="194" id="text" textAlign="center"/>
+	<mx:Label x="74" y="10" text="{this.info}" height="38" width="194" id="text" textAlign="center"/>
 	
 	
 	<mx:Script>
@@ -20,8 +20,16 @@
 			import com.net.client.Client;
 			import com.net.client.ClientEvent;
 			
-			public function show() : Function
+			import mx.core.Application;
+			import mx.managers.ISystemManager;
+			import mx.managers.PopUpManager;
+			
+			[Bindable]
+			private var info : String;
+			
+			public function show(info:String) : Function
 			{
+				this.info = info;
 				var parent : Sprite;
 				var sm:ISystemManager = ISystemManager(Application.application.systemManager);
 				if (sm.useSWFBridge()) {
@@ -34,8 +42,8 @@
 			}
 			
 			
-			
-			public function response(event:ClientEvent)
+				
+			private function response(event:ClientEvent)
 			{
 				this.parent.removeChild(this);
 			}
