@@ -677,12 +677,12 @@ package Class
 
 		
 		//请求进入房间
-		public static function enterRoom(roomid:int):void
+		public static function enterRoom(roomid:int, listener:Function):void
 		{
 			//login_cpt.desklist.removeAllChildren();
 			login_cpt.selectRoom.dgroomlist.removeAllChildren();
 			
-			client.sendRequest(new EnterRoomRequest(roomid),client_response);
+			client.sendRequestImpl(new EnterRoomRequest(roomid),new Array(client_response, listener));
 		}
 		
 		

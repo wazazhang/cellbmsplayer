@@ -75,7 +75,7 @@
 			
 			private function click():void
 			{
-				Server.enterRoom(room.room_id)
+				Server.enterRoom(room.room_id, new StreamCpt().show("loading..."))
 					
 			}
 		]]>

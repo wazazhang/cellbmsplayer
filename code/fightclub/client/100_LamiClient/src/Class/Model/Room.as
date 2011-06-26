@@ -31,9 +31,13 @@ package Class.Model
 			}
 		}
 		
+		public function getRoomID() {
+			return roomData.room_id;
+		}
+		
 		public function getName() : String
 		{
-			return roomData.room_id + "";
+			return roomData.room_name;
 		}
 
 		public function updateToPlayerList(player:PlayerData):void

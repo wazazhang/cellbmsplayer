@@ -10,25 +10,20 @@
 			import Class.LanguageManager;
 			import Class.Model.Card;
 			import Class.Model.Desk;
-			import Class.Model.Player;
 			import Class.Resource;
 			import Class.Server;
-			import Class.TimesCtr;
 			import Class.WebResource;
 			
 			import com.fc.lami.Messages.CardData;
 			import com.fc.lami.Messages.GameOverNotify;
 			import com.fc.lami.Messages.PlayerData;
+			import com.fc.lami.Messages.RoomData;
 			
-			import flash.utils.setTimeout;
-			
-			import mx.controls.Alert;
 			import mx.controls.SWFLoader;
 			import mx.effects.Move;
 			import mx.events.EffectEvent;
-			import mx.events.FlexEvent;
-			import mx.utils.StringUtil;
-			//import mx.graphics.RoundedRectangle;
+
+			import com.cell.util.StringUtil;
 			
 			[Bindable]
 			public var desk:Desk;
@@ -675,7 +670,9 @@
 	<!--右上角房间信息-->
 	<mx:Canvas x="627" y="0" width="331" height="27" backgroundImage="{Resource.top_bar}" borderStyle="none">
 		<mx:Label x="114" verticalCenter="-1"  text="{
-				  Server.login_cpt.selectRoom.room.getName() + ' ' + desk.getName()
+				  StringUtil.format(LanguageManager.getText('lami.fj'),
+						Server.login_cpt.selectRoom.room.getName(),
+				 		desk.getDeskID())
 				  }" color="#FDFDFD"/> 
 		<!--当前位置 房间  号座-->
 		<mx:LinkButton x="242" verticalCenter="-1" styleName="alertButton"  label="{LanguageManager.getText('lami.hddt')}" color="#FFFDFD" click="returnRoom()" width="88" height="22"/>
