@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="25" height="31"
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="26" height="32"
 		   
-	 borderStyle="{isSelected?'solid':'none'}"	   
+		   borderColor="{isSelected?0xff0000:0x000000}"
+		   borderStyle="none"
 		   
-	 borderColor="{isSelected?0xff0000:0x000000}" 
-	 
-	 
-	 verticalScrollPolicy="off" horizontalScrollPolicy="off"
-	 
-	 backgroundColor="0xeadda8" click="click(event)" doubleClick="click(event)"  doubleClickEnabled="true"
-	 
-	 mouseOver="mouseOver(event)"   mouseOut="mouseOut(event)"
-	 
-	 backgroundAlpha="{(!isPlayerOwner)&amp;&amp;(!game.gamer.isMyturn)&amp;&amp;_card==null?0.0:0.32}">
-	 
+		   verticalScrollPolicy="off" horizontalScrollPolicy="off"
+		   
+		   click="click(event)" doubleClick="click(event)"  doubleClickEnabled="true"
+		   
+		   mouseOver="mouseOver(event)"   mouseOut="mouseOut(event)"
+		   backgroundAlpha="0.0"
+		    initialize="initalize(event)" enterFrame="update(event)">
+	
 	<mx:Script>
 		<![CDATA[
 			import Class.Game;
@@ -23,20 +21,20 @@
 			import Class.Server;
 			import Class.TimesCtr;
 			
+			import com.fc.lami.ui.LamiSwfLoader;
+			import com.greensock.OverwriteManager;
+			import com.greensock.TweenLite;
+			
 			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import mx.messaging.messages.ISmallMessage;
 			import mx.states.SetStyle;
 			
 			//[Bindable]
 			//public var confimcard:Card
-			
+				
 			[Bindable]
-			protected var _card:Card
-			
-			[Bindable]
-			public var isSelected:Boolean = false; 
-			
-			public var nextCardCpt:Card_Cpt;
-			public var preCardCpt:Card_Cpt;
+			private var card:Card
 			
 			[Bindable]
 			public var isPlayerOwner:Boolean = false;
@@ -48,45 +46,92 @@
 			[Bindable]
 			public var game:Game
 			
+			
+			
 			[Bindable]
-			public var isShow:Boolean = true;
+			private var _isSelected:Boolean = false; 
+			
+			[Bindable]
+			private var _isShow:Boolean = true;
+//			
+//			[Bindable]
+//			public var isAlpha:Boolean = false;
+//			
+//			[Bindable]
+//			public var isShadow:Boolean = false;
+			
+			public var tl:TweenLite;//牌的移动效果;
+			
+				
+			private var light : LamiSwfLoader = new LamiSwfLoader(Resource.guang);
+//			<mx:SWFLoader width="50" height="100" y="5" source="{Resource.guang}" 
+//			visible="{isSelected}"></mx:SWFLoader>
+						
+			
+			
+			protected function initalize(event:FlexEvent):void
+			{
+				light.width = 50;
+				light.height = 100;
+				light.y = 5;
+				// TODO Auto-generated method stub
+			}
 			
 			
 			public function confim():void
 			{
-	//			confimcard = card;
+				//			confimcard = card;
 			}
 			
 			[Bindable]
-			public function get card():Card
+			public function getCard():Card
 			{
-				return _card
+				return card;
 			}
 			
-			public function set card(c:Card):void
+			public function setCard(c:Card):void
 			{
 				//resetBg();
-				if(c!=null)
-				{
-					c.cardUI = this;
-				}
 				
 				if(c!=null)
 				{
-					img0.source = Resource.getCardImg(c.type,c.point)
+					img0.source = Resource.getCardImg(c.type,c.point);
 				}
 				else
 				{
 					img0.source = "";
-				}			
+				}
 				
-				_card = c;
+				card = c;
+				setShadow(false);
 			}
 			
-			public function reset():void
+			public function set isShow(i:Boolean):void
 			{
-//				card = confimcard;
+				_isShow = i;
+				setShadow(false);
 			}
+			
+			[Bindable]
+			public function get isSelected() : Boolean
+			{
+				return _isSelected;
+			}
+			
+			public function set isSelected(b:Boolean) : void
+			{
+				this._isSelected = b;
+				if (b) {
+					if (!contains(light)) {
+						addChild(light);
+					}
+				} else {
+					if (contains(light)) {
+						removeChild(light);
+					}
+				}
+			}
+			
 			
 			public function mouseOver(event:MouseEvent):void
 			{
@@ -96,23 +141,15 @@
 					return;
 				}
 				
-				//放置非自己会合往公共牌区操作
+				//不允许非自己回合往公共牌区操作
 				if(!isPlayerOwner && !game.gamer.isMyturn)
 				{
 					return;
 				}
 				
-				//防止打出的牌往回拿
-				if(isPlayerOwner&&game.gamer.selectedCard!=null&&game.gamer.selectedCard.isSended)
+				if (card == null && game.lami.selected_cards.isSelectedCard())
 				{
-					return;
-				}
-				
-				
-				//未破冰不能出鬼牌
-				if((!isPlayerOwner)&&game.gamer.selectedCard!=null&&game.gamer.selectedCard.point==0&&game.gamer.isCold)
-				{
-					return;
+					//trace("SelectedCard");
 				}
 				
 				//鼠标滑动
@@ -121,79 +158,30 @@
 					mouseOut(event);
 					return;
 				}
-				
-				//当前有牌组的时候移动鼠标
-				if(game.gamer.selectedArrayCard != null&&(card==null||isSelected))
+				else if (game.lami.selected_cards.isSelectedCard())
 				{
-					var length:int = game.gamer.selectedArrayCard.length;
-					var cardcpt:Card_Cpt = this;
-					
-					while(length!=0)
-					{
-						if(cardcpt==null)
-							return	
-						
-						if(cardcpt.card!=null&&!cardcpt.isSelected)
-							return
-							
-						cardcpt = cardcpt.nextCardCpt;
-						length --;	
+					game.cleanShadow();
+					game.gamer.cleanShadow();
+					if (isPlayerOwner){
+						game.gamer.putCardsShadow(game.lami.selected_cards.getSelectCards(),cardX, cardY);
+					}else{
+						game.putCardsShadow(game.lami.selected_cards.getSelectCards(),cardX, cardY);
 					}
-					
-					
-					for each(var curcard:Card in game.gamer.selectedArrayCard)
-					{
-						//不能往回拿已经打出的牌
-						if(isPlayerOwner&&curcard.isSended)
-							return;
-						
-						//未破冰不能放鬼牌
-						if((!isPlayerOwner)&&curcard.point==0&&game.gamer.isCold)
-							return;
-					}
-					
-					cardcpt = this;
-					
-					for each(curcard in game.gamer.selectedArrayCard)
-					{
-						if(curcard.cardUI.card==curcard)
-						{
-						curcard.cardUI.isSelected = false;
-						curcard.cardUI.card =null;
-						}
-						cardcpt.card = curcard;
-						cardcpt.isSelected = true;
-						cardcpt = cardcpt.nextCardCpt;
-					}
-					//Game.gamer.selectedArrayCard = null;
-					return;
+				}
+				else
+				{
+					game.cleanShadow();
+					game.gamer.cleanShadow();
 				}
 				
-				
-				//单牌操作
-				if(game.gamer.selectedCard != null&&card==null)
-				{
-					game.gamer.selectedCard.cardUI.card = null;
-					game.gamer.selectedCard.cardUI.isSelected = false;
-					
-					card =  game.gamer.selectedCard;
-					isSelected = true;
-				}
 			}
-			
-			
 			
 			public function mouseOut(event:MouseEvent):void
 			{
+				
 				//鼠标滑动
 				if(event.buttonDown)
 				{
-					if (card != null) 
-					if(game.gamer.selectedArrayCard!=null&&game.gamer.selectedArrayCard.indexOf(card)!=-1)
-					{
-						return;
-					}
-					
 					
 					//不能在非自己回合去滑动公共牌区
 					if(!isPlayerOwner && (!game.gamer.isMyturn))
@@ -201,221 +189,151 @@
 						return;
 					}
 					
-					if(game.gamer.selectedCard!=null)
+					if(isPlayerOwner && card!=null && card.isSended) 
 					{
-						game.gamer.selectedCard.cardUI.isSelected = false;
-						game.gamer.selectedCard =null;
+						return;
 					}
 					
-					if(card!=null&&!isSelected)
-					{
-						if(game.gamer.selectedArrayCard==null)
-						{
-							game.gamer.selectedArrayCard = new Array();
-							game.gamer.selectedArrayCard.push(card);
-						}
-						else
-						{
-							game.gamer.selectedArrayCard.push(card)
-						}
-						isSelected = true;
+					if (!isSelected){
+						game.lami.selected_cards.addSelectCard(this);
 					}
-					
 					return;
 				}
 			}
 			
 			public function click(event:MouseEvent):void
 			{
-				
-				
-				
-				//放置非自己会合往公共牌区操作
-				if((!isPlayerOwner) && (!game.gamer.isMyturn))
+				if(!isPlayerOwner && (!game.gamer.isMyturn))
 				{
 					return;
 				}
+				
+				if(isPlayerOwner && card!=null && card.isSended) 
+				{
+					return;
+				}
+				
 					
-				//当前为非操作阶段
-//				if(!game.gamer.canOpearation)
-//					return;
-				
-//				if(game.gamer.isMyturn)
-//					game.timeCtr.reset();
-				
-				//选定牌以后再选定其他牌
-				if(game.gamer.selectedCard!=null&&game.gamer.selectedCard!=card)
-				{
-					return;
+				if (event.type==MouseEvent.DOUBLE_CLICK){
+					if (game.lami.selected_cards.isSelectedCard()){
+						if (isPlayerOwner){
+							//要检测空格位置是否够
+							if (game.gamer.putCards(game.lami.selected_cards.getSelectCards(),cardX, cardY)){
+								game.lami.cleanCardState();
+							}
+//							game.gamer.putCards(game.lami.selected_cards.getSelectCards(),cardX, cardY);
+						}else{
+							if (game.putCards(game.lami.selected_cards.getSelectCards(),cardX, cardY)){
+								game.lami.cleanCardState();
+							}
+//							game.putCards(game.lami.selected_cards.getSelectCards(),cardX, cardY)
+						}
+					}else{
+						if (isPlayerOwner){
+							game.lami.selected_cards.selectCards(game.gamer.getCardGroup(cardX, cardY));
+						}else{
+							game.lami.selected_cards.selectCards(game.getCardGroup(cardX, cardY));
+						}
+					}
+				}else{
+					if (game.lami.selected_cards.isSelectedCard()){
+						if (isPlayerOwner){
+							//要检测空格位置是否够
+							if (game.gamer.putCards(game.lami.selected_cards.getSelectCards(),cardX, cardY)){
+								game.lami.cleanCardState();
+							}
+//							game.gamer.putCards(game.lami.selected_cards.getSelectCards(),cardX, cardY);
+						}else{
+							if (game.putCards(game.lami.selected_cards.getSelectCards(),cardX, cardY)){
+								game.lami.cleanCardState();
+							}
+//							game.putCards(game.lami.selected_cards.getSelectCards(),cardX, cardY);
+						}
+					}else{
+						if (isPlayerOwner){
+							game.lami.selected_cards.selectCard(this);
+						}else{
+							game.lami.selected_cards.selectCard(this);
+						}
+					}
 				}
 				
-				
-				
-				
-				
-				
-				//检测往回拿
-				if(isPlayerOwner&&game.gamer.selectedCard!=null&&game.gamer.selectedCard.isSended)
-				{
-					return;
-				}
-				
-				if(game.gamer.keydown||event.type==MouseEvent.DOUBLE_CLICK)
-				{
-					if(game.gamer.selectedArrayCard!=null)
-						return;
-					
-					selectArrayCard();
-				}
-				else
-				{
-					selectCard();
-				}
-				
-				game.gamer.countHandCard();
+				if(game.cardOwner!=null)
+				game.cardOwner.cardClick(this);
 			}
 			
-			//选择
-			private function selectCard():void
-			{
-				//放下选择的队列
-				if(game.gamer.selectedArrayCard!=null)
-				{
-					//不能把用过的牌往回拿
-					for each(var curcard:Card in game.gamer.selectedArrayCard)
-					{
-						if(isPlayerOwner&&curcard.isSended)
-							return;
-					}
-					
-					for each(curcard in game.gamer.selectedArrayCard)
-					{
-						curcard.cardUI.isSelected = false;
-					}
-					
-					game.gamer.selectedArrayCard = null;
-					game.check();
-					
-					if(game.gamer.isMyturn)
-					{
-						Server.sendPublicMatrix();
-					}
-					
-					return;
-				}	
-				//选择新的
-				if(game.gamer.selectedCard==null)
-				{
-					if(card==null)
-						return				
-					game.gamer.selectedCard = card;
-					isSelected = true;
-				}
-				//放下
-				else
-				{
-					isSelected = false;
-					
-					card = game.gamer.selectedCard;
-					game.check();
-					
-					if(game.gamer.isMyturn)
-					{
-						Server.sendPublicMatrix();
-					}
-					game.gamer.selectedCard = null;
-				}
-			}
-			
-			//选择队列
-			private function selectArrayCard():void
-			{
-				if(game.gamer.selectedCard!=null)
-				{
-					return
-				}
-				
-				if(nextCardCpt == null)
-				{
-					return
-				}
-				
-				if(nextCardCpt.card == null)
-				{
-					return
-				}
-				
-				if(card == null)
-				{
-					return
-				}
-				//同点
-				if(card.point == nextCardCpt.card.point&&card.type!=nextCardCpt.card.type)
-				{
-					var arr:Array = new Array()
-					var cardtype:Array = new Array();
-					
-					var buffcard:Card_Cpt = this;
-					arr.push(buffcard.card);
-					cardtype.push(buffcard.card.type)
-					buffcard.isSelected = true;
-					
-					do{
-						buffcard = buffcard.nextCardCpt;
-						
-						arr.push(buffcard.card);
-						cardtype.push(buffcard.card.type);
-						buffcard.isSelected = true;
-						
-						if(buffcard.nextCardCpt ==null)
-							break;
-						
-						if(buffcard.nextCardCpt.card ==null)
-							break;
-					}
-					while(buffcard.card.point == buffcard.nextCardCpt.card.point&&cardtype.indexOf(buffcard.nextCardCpt.card.type)==-1)
-					
-					game.gamer.selectedArrayCard = arr;
-					return;
-				}
-				
-				//顺子
-				if(card.point == nextCardCpt.card.point-1&&card.type==nextCardCpt.card.type)
-				{
-					arr = new Array()
-					buffcard = this;
-					arr.push(buffcard.card);
-					buffcard.isSelected = true;
-					do{
-						buffcard = buffcard.nextCardCpt;
-						
-						arr.push(buffcard.card);
-						buffcard.isSelected = true;
-						
-						if(buffcard.nextCardCpt ==null)
-							break;
-						
-						if(buffcard.nextCardCpt.card ==null)
-							break;
-					}
-					while(buffcard.card.point == buffcard.nextCardCpt.card.point-1&&buffcard.card.type==buffcard.nextCardCpt.card.type)
-					game.gamer.selectedArrayCard = arr;
-					return;
-				}
-			}
 			
 			public function shan():void
 			{
 				ef.play();
 			}
 			
+			public function setShadow(is_shadow:Boolean):void
+			{
+				if (is_shadow){
+					maskcolor.setStyle('backgroundColor', 0xffffff);
+					maskcolor.setStyle('backgroundAlpha', 0.5);
+				}
+				else if (card==null||_isShow==false){
+					if (isPlayerOwner|| game.gamer.isMyturn){
+						maskcolor.setStyle('backgroundColor', 0xeadda8);
+						maskcolor.setStyle('backgroundAlpha', 0.32);
+					}else{
+						maskcolor.setStyle('backgroundAlpha', 0.0);
+					}
+				}
+				else if (card!=null){
+					if(card.isSended){
+						maskcolor.setStyle('backgroundColor', 0x000000);
+						maskcolor.setStyle('backgroundAlpha', 0.2);
+					}else{
+						maskcolor.setStyle('backgroundAlpha', 0.0);
+					}
+				}
+			}
+			
+			
+			protected function update(event:Event):void
+			{
+				
+			}
+
+//			static public const CARD_CPT_STATE_NORMAL:int = 0;
+//			static public const CARD_CPT_STATE_SELECTED:int = 1;
+//			static public const CARD_CPT_STATE_SHADOW:int = 2;
+			
+//			public function setState(state:int)
+//			{
+//				switch (state)
+//				{
+//					case CARD_CPT_STATE_NORMAL:
+//						img0.alpha = 1.0;
+//						if (_card==null){
+//							mask.visible = false;
+//						}else if(_card.isSended){
+//							mask.setStyle("backgroundColor", 0x000000);
+//							mask.setStyle("backgroundAlpha", 0.2);
+//						}
+//						break;
+//					case CARD_CPT_STATE_SELECTED:
+//						if (_card==null){
+//							img0.visible = false;
+//						}else{
+//							img0.alpha = 0.3;
+//						}
+//						break;
+//					case CARD_CPT_STATE_SHADOW:
+//						mask.setStyle("backgroundColor", 0xffffff);
+//						mask.setStyle("backgroundAlpha", 0.25);
+//						break;
+//				}
+//			}
 			
 
 		]]>
 	</mx:Script>
-	<mx:Image id="img0" visible="{isShow}" width="25" height="31"></mx:Image>
-	<mx:Canvas width="100%" height="100%" backgroundColor="#000000" backgroundAlpha="0.2" visible="{card==null?false:card.isSended}"></mx:Canvas>
-	<mx:SWFLoader width="50" height="100" y="5" source="{Resource.guang}" visible="{isSelected}"></mx:SWFLoader>
+	<mx:Image id="img0" visible="{_isShow}" width="25" height="31" alpha="{_isSelected?0.5:1.0}"></mx:Image>
+	<mx:Canvas id = "maskcolor" width="25" height="31" backgroundColor="#000000" backgroundAlpha="0.2"></mx:Canvas>
+	
 	<mx:Glow id="ef" target="{this}" color="0xff0000" repeatCount="5" duration="500" strength="10" ></mx:Glow>
-	<mx:Canvas width="100%" height="100%" backgroundColor="#000000" backgroundAlpha="0.00"></mx:Canvas>
 </mx:Canvas>

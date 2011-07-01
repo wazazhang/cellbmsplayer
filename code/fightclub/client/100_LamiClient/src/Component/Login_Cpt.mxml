@@ -23,6 +23,9 @@
 				
 				import mx.controls.Alert;
 				import mx.controls.dataGridClasses.DataGridColumn;
+				import mx.events.CloseEvent;
+				import mx.managers.CursorManager;
+				import mx.managers.CursorManagerPriority;
 				
 				
 				private var linkTimer:Timer = new Timer(200,300);
@@ -31,8 +34,10 @@
 				{
 					version.text = new MessageCodec().getVersion();
 					linkTimer.addEventListener(TimerEvent.TIMER_COMPLETE, linkFilad);
-					linkTimer.addEventListener(TimerEvent.TIMER, linking)
-						
+					linkTimer.addEventListener(TimerEvent.TIMER, linking);
+				
+					Resource.createCursorID();
+					
 				}
 				
 				public function linkServer():void
@@ -40,7 +45,6 @@
 					if (Server.checkConnection())
 					{
 						login_btn.enabled = false;
-						
 						Server.linkToServer();
 						
 						linkTimer.reset();
@@ -71,16 +75,16 @@
 					linkTimer.stop();
 					login_btn.enabled = true;
 					login.visible = false;
-					selectRoom.visible = true;
-					selectRoom.startGame();
+					
+					
 				}
-
-				public function disLink():void
-				{
-					selectRoom.visible = false;
-					login.visible = true;
-					login_btn.enabled = true;
-				}
+			
+//				public function disLink():void
+//				{
+//					selectRoom.visible = false;
+//					login.visible = true;
+//					login_btn.enabled = true;
+//				}
 				
 				
 			]]>
@@ -100,7 +104,4 @@
 			
 		</mx:Canvas>
 			
-	<Component:Room3_Cpt id="selectRoom" x="0" y="0" visible="false">
-	</Component:Room3_Cpt>
-	
 </mx:Canvas>

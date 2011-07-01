@@ -52,7 +52,7 @@
 					}else{
 						labelpoint.text = result.point.toString();
 					}
-					
+					label.width = 150;
 					label.x = 60;
 					labelpoint.x = 220;
 					label.setStyle('fontWeight','bold');
@@ -75,7 +75,6 @@
 						i++;
 					}
 					
-					
 					addChild(label);
 					addChild(labelpoint);
 					
@@ -88,14 +87,11 @@
 							rsStr = "失败"
 					}	
 					*/
-					
-					
 				}
 			}
 			
 			public function close():void
 			{
-				(parent as Lami).stopFireMoiveClip();
 				parent.removeChild(this);
 			}
 			

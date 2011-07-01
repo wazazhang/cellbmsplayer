@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="25" height="31"
+		   
+	 verticalScrollPolicy="off" horizontalScrollPolicy="off"  mouseEnabled="false" mouseChildren="false" mouseFocusEnabled="false">
+	 
+	<mx:Script>
+		<![CDATA[
+			import Class.Game;
+			import Class.Model.Card;
+			import Class.Resource;
+			import Class.Server;
+			import Class.TimesCtr;
+			
+			import com.greensock.TweenLite;
+			
+			import mx.controls.Alert;
+			import mx.states.SetStyle;
+			
+			public var nextCardm:Card_Move;
+			public var curCardCpt:Card_Cpt;
+			
+			public var cardX:int;
+			public var cardY:int;
+			
+			[Bindable]
+			private var imgSourse:Class;
+			
+		
+			public var tl:TweenLite;//牌的移动效果;
+			
+			
+			public function setCurCardCpt(cardcpt:Card_Cpt):void
+			{
+				if(cardcpt!=null)
+				{
+					if (cardcpt.getCard()!=null){
+						if (cardcpt.img0!=null){
+							imgSourse = cardcpt.img0.source as Class;
+						}else{
+							imgSourse =  Resource.getCardImg(cardcpt.getCard().type,cardcpt.getCard().point);
+						}
+					}else{
+						imgSourse = null
+						//img0.source = "";
+					}
+				}
+				else
+				{
+					img0.source = "";
+				}
+
+//				img0.source = cardcpt.img0.source;
+				this.curCardCpt = cardcpt;
+			}
+			
+
+		]]>
+	</mx:Script>
+	<mx:Image id="img0" width="25" height="31" source="{imgSourse}" mouseEnabled="false"></mx:Image>
+	<mx:SWFLoader width="50" height="100" y="5" source="{Resource.guang}" mouseEnabled="false"></mx:SWFLoader>
+</mx:Canvas>

@@ -11,9 +11,31 @@ package Class
 	import flash.utils.Dictionary;
 	
 	import mx.controls.Alert;
+	import mx.managers.CursorManager;
+	import mx.managers.CursorManagerPriority;
 
 	public class Resource
 	{		
+		
+		
+		[Bindable]
+		[Embed(source='image/cursor.png')]
+		private static var cursor:Class;
+		
+		private static var cursor_id:int;
+		
+		public static function createCursorID() : int
+		{
+			//cursor_id = CursorManager.setCursor(
+			//	cursor, CursorManagerPriority.HIGH, -8, -4);
+			return cursor_id;
+		}
+		
+		public static function getCursorID() : int
+		{
+			return cursor_id;
+		}
+		
 		[Bindable]
 		[Embed(source='image/logo.png')]
 		public static var logo:Class;
@@ -317,6 +339,10 @@ package Class
 		[Bindable]
 		[Embed(source='image/cardsleft.png')]
 		public static var cardsleft : Class;
+		
+		[Bindable]
+		[Embed(source='image/talk_bg.png')]
+		public static var talk_bg : Class;
 		
 		
 		[Embed(source='image/cards.png')]

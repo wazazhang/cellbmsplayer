@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>laimi</name>
-	<comment/>
+	<name>100_LamiClient</name>
+	<comment></comment>
 	<projects>
 	</projects>
 	<buildSpec>
@@ -14,6 +14,6 @@
 	<natures>
 		<nature>com.adobe.flexbuilder.project.flexnature</nature>
 		<nature>com.adobe.flexbuilder.project.actionscriptnature</nature>
-	<nature>com.xingcloud.core.project.nature</nature>
-</natures>
+		<nature>com.xingcloud.core.project.nature</nature>
+	</natures>
 </projectDescription>

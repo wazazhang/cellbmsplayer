@@ -43,7 +43,7 @@
 			
 			private function click():void
 			{
-				MaskCtr.show(LanguageManager.getText('roomCpt.deskItemCpt.jryx')); //进入游戏中
+				MaskCtr.show(LanguageManager.getText('deskItemCpt.jryx')); //进入游戏中
 				Server.enterDesk(desk.desk_id,-1)
 			}
 			

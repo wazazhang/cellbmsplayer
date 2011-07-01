@@ -20,19 +20,19 @@ package Class
 			return  webRoot+'image/head.png';
 		}
 		
-		public static function get start():String
-		{
-			return  webRoot+'image/start.png';
-		}
-		
-		public static function get startSwf():String
-		{
-			return  webRoot+'image/start.swf';
-		}
-		
 		public static function get languageUrl() : String
 		{
 			return  webRoot+"Language/chinese.xml";
+		}
+		
+		public static function get fireworks_swf() : String
+		{
+			return webRoot+"image/fireworks.swf";
+		}
+		
+		public static function get start_swf() : String
+		{
+			return webRoot+"image/start.swf";
 		}
 		
 		public function WebResource()

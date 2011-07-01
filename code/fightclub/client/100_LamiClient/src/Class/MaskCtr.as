@@ -5,6 +5,8 @@ package Class
 	import mx.containers.Canvas;
 	import mx.controls.Label;
 	import mx.core.Application;
+	import mx.managers.CursorManager;
+	import mx.olap.aggregators.CountAggregator;
 
 	public class MaskCtr
 	{
@@ -22,6 +24,7 @@ package Class
 				canvas = new Canvas();
 				label  =  new Label();
 				
+				
 				label.setStyle('horizontalCenter',0);
 				label.setStyle('verticalCenter',0);
 				label.setStyle('fontSize',20);
@@ -38,13 +41,15 @@ package Class
 			//canvas.addChild()
 			label.text = str;
 			Application.application.addChild(canvas);
-			
+			//CursorManager.setBusyCursor();
 		}	
 		public static function close():void
 		{
-			if (canvas != null) {
+			if (canvas != null && canvas.parent == Application.application ) {
 				Application.application.removeChild(canvas);
 			}
+			
+			//CursorManager.removeBusyCursor();
 		}
 	}
 }

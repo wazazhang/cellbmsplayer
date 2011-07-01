@@ -42,6 +42,7 @@ package Class
 		
 		public  function oprTimerHandler(event:TimerEvent):void
 		{
+			trace("oprTimerHandler");
 			var s:Number = new Date().getTime() - oprStartTime.getTime()  ;
             optionTimeBar.setProgress(optionTime - s, optionTime); 
 			var point:Number = (  s /optionTime)
@@ -50,6 +51,7 @@ package Class
 		
 		public  function sumTimerHandler(event:TimerEvent):void
 		{
+			trace("sumTimerHandler");
 			var s:Number = new Date().getTime() - sumStartTime.getTime()  ;
             sumTimeBar.setProgress(sumTime - s, sumTime); 
 			var point:Number = (s / sumTime);
@@ -58,6 +60,7 @@ package Class
 		
 		public  function completeHandler(event:TimerEvent):void
 		{
+			trace("completeHandler");
 //			if(Game.checkHaveSendCard())
 //			{
 //				Game.gamer.reset();

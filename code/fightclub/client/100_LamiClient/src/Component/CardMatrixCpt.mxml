@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
+	width="698" 
+	height="448"  
+	borderStyle="none"
+	horizontalScrollPolicy="off"
+	verticalScrollPolicy="off" 
+	
+	mouseOut="canvas1_mouseOutHandler(event)" 
+	mouseOver="canvas1_mouseOverHandler(event)"
+	>
+	
+	<mx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			private var lami:Lami;
+			
+			private var temp_card : Card_Cpt = new Card_Cpt();
+			
+			public var is_player_owner:Boolean; //是否是玩家的牌区
+			
+			public function init(lami:Lami, isPlayerOwner:Boolean) : CardMatrixCpt
+			{
+				this.lami = lami;
+				this.is_player_owner = isPlayerOwner;
+//				for (var x:int = 0; x<width; x+=temp_card.width) {
+//					for (var y:int = 0; y<height; y+=temp_card.height) {
+//						this.graphics.lineTo();
+//					}
+//				}
+				return this;
+			}
+
+			protected function canvas1_mouseOutHandler(event:MouseEvent):void
+			{
+				cleanShadow();
+			}
+				
+
+			protected function canvas1_mouseOverHandler(event:MouseEvent):void
+			{
+				if(lami==null)
+					return;
+				
+				if (lami.selected_cards.isSelectedCard())
+				{
+					
+				}
+			}
+
+			public function cleanShadow():void
+			{
+				for each (var card : Card_Cpt in getChildren()) {
+					card.setShadow(false);
+				}
+			}
+			
+		]]>
+	</mx:Script>
+	
+	
+	
+	
+	
+	
+</mx:Canvas>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+		   width="32" 
+		   height="32" 
+		   backgroundColor="#FFFFFF" 
+		   backgroundAlpha="0.0"
+		   borderStyle="none" 
+		   creationComplete="init(event)" 
+		   clipContent="false" 
+		   mouseChildren="false" 
+		   mouseEnabled="false">
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
+			
+			private var selected_card:ArrayCollection = new ArrayCollection();
+			
+			protected function init(event:FlexEvent):void
+			{
+
+			}
+			
+			
+			public function selectCard(card:Card_Cpt):void
+			{
+				if (card.getCard() == null)return;
+				selectCardCancel();
+				var move_card:Card_Move = new Card_Move();
+				move_card.setCurCardCpt(card);
+				card.isSelected = true;
+				selected_card.addItem(move_card);
+				startFollow();
+				trace("selectCard");
+			}
+			
+			public function selectCards(cards:ArrayCollection):void
+			{
+				if (cards == null || cards.length == 0)return;
+				selectCardCancel();
+				var move_card:Card_Move;
+				for each(var card:Card_Cpt in cards){
+					move_card = new Card_Move();
+					move_card.setCurCardCpt(card);
+					card.isSelected = true;
+					selected_card.addItem(move_card);
+				}
+				startFollow();
+			}
+			
+			public function addSelectCard(card:Card_Cpt):void
+			{
+				if (card.getCard() == null)return;
+				var move_card:Card_Move = new Card_Move();
+				move_card.setCurCardCpt(card);
+				card.isSelected = true;
+				//				card.isShow = false;
+				if (selected_card.length==0){
+				}
+				selected_card.addItem(move_card);
+				trace("addSelectCard");
+			}
+			
+			public function getSelectCards():ArrayCollection
+			{
+				return selected_card;
+			}
+			public function getSelectedCards() : ArrayCollection
+			{
+				return selected_card;
+			}
+			
+//			public function cleanSelectCard():void
+//			{
+//				if (selected_card.length>0){
+//					for each(var cm:Card_Move in selected_card){
+//						if (cm.curCardCpt!=null){
+//							cm.curCardCpt.card = null;
+//							cm.curCardCpt.isAlpha = false;
+//							cm.curCardCpt.isSelected = false;
+//							cm.curCardCpt = null;
+//						}
+//						if (contains(cm)) {
+//							removeChild(cm);
+//						}
+//					}
+//				}
+//				selected_card.removeAll();
+//			}
+			
+			public function selectCardCancel():void
+			{
+				if (selected_card.length>0){
+					for each(var cm:Card_Move in selected_card){
+						if (cm.curCardCpt!=null){
+							cm.curCardCpt.isSelected = false;
+						}
+						removeChild(cm);
+					}
+					selected_card.removeAll();
+				}
+			}
+			
+			public function isSelectedCard():Boolean
+			{
+				return selected_card.length>0;
+			}
+			
+			public function startFollow():void
+			{
+				if (selected_card.length>0){
+					for each(var cm:Card_Move in selected_card){
+						addChild(cm);
+					}
+					setSelectCardPos();
+				}
+				validateNow();
+			}
+			
+			
+			private function setSelectCardPos():void
+			{
+				var X:int = 0;
+				var Y:int = 0;
+				
+				for each(var cardm:Card_Move in selected_card)
+				{
+					cardm.x = X - cardm.width/2;
+					cardm.y = Y - cardm.height/2;
+					X += cardm.width;
+				}
+			}
+
+		]]>
+	</mx:Script>
+	
+
+</mx:Canvas>

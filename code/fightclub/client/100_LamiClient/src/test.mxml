@@ -2,8 +2,8 @@
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" backgroundColor="0xa27937" 
 				layout="absolute" 
 				xmlns:ns1="Component.*"
-				creationComplete="init()"  
-				width="960" height="600">
+				creationComplete="init()"
+				width="960" height="600"  frameRate="24" enterFrame="application1_enterFrameHandler(event)">
 
 	
 	<mx:Style source="Css/public.css">
@@ -16,13 +16,12 @@
 			import Class.Resource;
 			import Class.Server;
 			import Class.WebResource;
-			
 			import Component.Login_Cpt;
-			
 			import com.fc.lami.MessageCodec;
 			import com.fc.lami.Messages.PlatformUserData;
 			import com.fc.lami.Messages.PlayerData;
 			import com.fc.lami.ui.LamiAlert;
+			import com.fc.lami.ui.LamiSwfLoader;
 			import com.net.client.minaimpl.ServerSessionImpl;
 			import com.net.client.sfsimpl.SFSSessionImpl;
 			
@@ -44,6 +43,9 @@
 				this.btn_connect.enabled = false;
 				com_sfs_zone.visible = chk_sfs.selected;
 				LanguageManager.loadLanguage(loadLanguageComplete);
+				
+				
+				
 			}
 
 			private function loadLanguageComplete(event:Event) : void
@@ -55,36 +57,48 @@
 			{
 				chk_sfs.selected = !chk_mina.selected;
 				com_sfs_zone.visible = chk_sfs.selected;
+				
+//				var movie : LamiSwfLoader = new LamiSwfLoader("image/start.swf");
+//				movie.gotoAndPlay(2, null, true);
+//				movie.move(mouseX, mouseY);
+//				addChild(movie);
 			}
+			
 			protected function chk_sfs_clickHandler(event:MouseEvent):void
 			{
 				chk_mina.selected = !chk_sfs.selected;
 				com_sfs_zone.visible = chk_sfs.selected;
+				
+//				var movie : LamiSwfLoader = new LamiSwfLoader("image/start.swf");
+//				movie.gotoAndPlay(2, null, true);
+//				movie.move(mouseX, mouseY);
+//				addChild(movie);
 			}
 
 
 			protected function btn_connect_clickHandler(event:MouseEvent):void
 			{
-				Server.app = this
-				
 				if (txt_uid.text == null || txt_uid.text.length == 0)
 				{
 					LamiAlert.show("名字不能为空");
 					return;	
 				}
-				
+
 				var codec : MessageCodec = new MessageCodec();
+				
+				var login_cpt : Login_Cpt = new Login_Cpt();
 				
 				if (chk_mina.selected)
 				{
-					Server.init(new ServerSessionImpl(codec));
+					Server.init(this, login_cpt, new ServerSessionImpl(codec));
 				}
 				if (chk_sfs.selected) 
 				{
-					Server.init(new SFSSessionImpl(codec).setZone(com_sfs_zone.text));
+					Server.init(this, login_cpt, new SFSSessionImpl(codec).setZone(com_sfs_zone.text));
 				}
 				if (chk_mina.selected || chk_sfs.selected) 
 				{
+					this.removeAllChildren();
 					Server.initUserLogin(
 						new PlatformUserData(
 							null,
@@ -95,15 +109,22 @@
 						com_server_addrs.text.split(":")[0],
 						com_server_addrs.text.split(":")[1]
 					);
-					this.removeAllChildren();
-					Server.login_cpt = new Login_Cpt();
-					Server.login_cpt.visible = true;
-					this.addChild(Server.login_cpt);
+					this.addChild(login_cpt);
+					Server.showLogin();
 				}
 				else 
 				{
 					LamiAlert.show("未选择通信协议");
 				}
+			}
+
+
+			private var start_time : Number = new Date().valueOf();
+			protected function application1_enterFrameHandler(event:Event):void
+			{
+				//var cur_time : Number = new Date().valueOf();
+				//trace("fps is " + (1000/(cur_time-start_time)));
+				//start_time = cur_time;
 			}
 
 		]]>

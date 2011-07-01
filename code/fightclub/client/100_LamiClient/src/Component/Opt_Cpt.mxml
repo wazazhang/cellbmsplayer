@@ -6,6 +6,7 @@
 <mx:Script>
 	<![CDATA[
 		import Class.Game;
+		import Class.LanguageManager;
 		import Class.Server;
 		
 		import com.fc.lami.Messages.SubmitRequest;
@@ -42,41 +43,45 @@
 				//Server.submit();
 				//return;
 				
-				if(!game.legaled)
-				{
-					game.findError();
-					return;
-				}
+//				if(!game.legaled)
+//				{
+//					game.findError();
+//					return;
+//				}
 				
-				if(!game.haveSendCard)
+//				if(!game.haveSendCard)
+//				{
+//					//LamiAlert.show("没有牌打出")
+//					game.gamer.getOneCardFromCardpile();
+//					return;
+//				}
+				if (game.gamer.isSendCard())
 				{
-					//LamiAlert.show("没有牌打出")
+					Server.submit();
+				}else{
 					game.gamer.getOneCardFromCardpile();
-					return;
 				}
-					
-				game.gamer.submit();
 				
 			}
 			
 			public function click6():void
 			{
-				if(game.gamer.isReady)
-					return;
+//				if(game.gamer.isReady)
+//					return;
 				
-				Server.ready(true);
+				Server.ready(!game.gamer.isReady);
 			}
 			
 			public function Start():void
 			{
-				BT7.enabled = false;
-				BT7.selected = false;
+				bt_ready.enabled = false;
+				bt_ready.selected = false;
 			}
 		
 		
 			public function openOrder():void
 			{
-				BT3.enabled = true;
+				bt_sort.enabled = true;
 				//BT7.enabled = false;
 				//BT7.selected = false;
 			}
@@ -84,16 +89,59 @@
 		
 			public function reset():void
 			{
-			    BT7.enabled = true;
-				BT3.enabled = false;
-				BT7.selected = false;
+			    bt_ready.enabled = true;
+				bt_sort.enabled = false;
+				bt_ready.selected = false;
 			}
 	]]>
 </mx:Script>
-	<mx:Button   x="240" y="1"  buttonMode="true" enabled="{game.gamer.isMyturn }" click="click5()"  disabledSkin="@Embed(source='../image/button/js4.png')" overSkin="@Embed(source='../image/button/js3.png')" downSkin="@Embed(source='../image/button/js2.png')" skin="@Embed(source='../image/button/js1.png')"/>
-	<mx:Button id="BT" x="59"  y="1" buttonMode="true" enabled="{(!game.haveSendCard)&amp;&amp;game.gamer.isMyturn}"  click="click()"   disabledSkin="@Embed(source='../image/button/mp4.png')" overSkin="@Embed(source='../image/button/mp3.png')" downSkin="@Embed(source='../image/button/mp2.png')" skin="@Embed(source='../image/button/mp1.png')"/>
-	<mx:Button id="BT3" x="119" y="1" buttonMode="true" enabled="false"   click="click3()" disabledSkin="@Embed(source='../image/button/px4.png')" overSkin="@Embed(source='../image/button/px3.png')" downSkin="@Embed(source='../image/button/px2.png')" skin="@Embed(source='../image/button/px1.png')" />
-	<mx:Button id="BT4" x="180" y="1" buttonMode="true" enabled="{game.gamer.isMyturn }"  click="click4()" skin="@Embed(source='../image/button/cx1.png')" overSkin="@Embed(source='../image/button/cx3.png')" disabledSkin="@Embed(source='../image/button/cx4.png')" downSkin="@Embed(source='../image/button/cx2.png')"/>
-	<mx:Button id="BT7" x="0" y="1" buttonMode="true" toggle="true"  enabled="false" click="click6()" skin="@Embed(source='../image/button/zb1.png')" overSkin="@Embed(source='../image/button/zb3.png')" disabledSkin="@Embed(source='../image/button/zb4.png')" downSkin="@Embed(source='../image/button/zb2.png')"   />
-
+	<mx:Button id="bt_over"  label="{
+			   LanguageManager.getText('image.op.over')
+			   }" x="242" y="4"  buttonMode="true" enabled="{game.gamer.isMyturn }" click="click5()" styleName="opButton" width="60" height="28" >
+		<mx:filters>
+			<mx:DropShadowFilter>
+			</mx:DropShadowFilter>
+		</mx:filters>
+	</mx:Button>
+	
+	<mx:Button id="bt_getcard" label="{
+			   LanguageManager.getText('image.op.getcard')
+			   }" x="62"  y="4" buttonMode="true" enabled="{(!game.gamer.is_sended_card)&amp;&amp;game.gamer.isMyturn}"  click="click()" width="60" height="28"  styleName="opButton">
+		<mx:filters>
+			<mx:DropShadowFilter>
+			</mx:DropShadowFilter>
+		</mx:filters>
+	</mx:Button>
+	
+	
+	
+	<mx:Button id="bt_cancel" label="{
+				LanguageManager.getText('image.op.cancel')
+			   }" x="182" y="4" buttonMode="true" enabled="{game.gamer.isMyturn }"  click="click4()" width="60" height="28" styleName="opButton" >
+		<mx:filters>
+			<mx:DropShadowFilter>
+			</mx:DropShadowFilter>
+		</mx:filters>
+	</mx:Button>
+	
+	<mx:Button id="bt_ready" label="{
+			   LanguageManager.getText('image.op.ready')
+			   }" x="2" y="4" buttonMode="true" enabled="false" 
+				  click="click6()"  width="60" height="28" styleName="opButton" 
+				  selected="{game.gamer.isReady}" toggle="true">
+		<mx:filters>
+			<mx:DropShadowFilter>
+			</mx:DropShadowFilter>
+		</mx:filters>
+	</mx:Button>
+	
+	<mx:Button id="bt_sort" label="{
+			   LanguageManager.getText('image.op.sort')
+			   }" x="122" y="4" buttonMode="true" enabled="false"   click="click3()"  styleName="opButton" width="60" height="28">
+		<mx:filters>
+			<mx:DropShadowFilter>
+			</mx:DropShadowFilter>
+		</mx:filters>
+	</mx:Button>
+	
 </mx:Canvas>

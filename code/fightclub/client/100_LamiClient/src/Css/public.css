@@ -39,6 +39,29 @@ Alert
 	
 }
 
+.opButton
+{
+	skin: Embed(source="../image/button/btn1.png");
+	textDecoration: none;
+	upSkin: Embed(source="../image/button/btn1.png");
+	downSkin: Embed(source="../image/button/btn2.png");
+	fontAntiAliasType: advanced;
+	fontStyle: normal;
+	fontWeight: normal;
+	color: #FFF000;
+	textSelectedColor: #FFF000;
+	fontSize: 12;
+	errorColor: #FFFFFF;
+	textRollOverColor: #FFFF80;
+	disabledSkin: Embed(source="../image/button/btn3.png");
+	overSkin: Embed(source="../image/button/btn4.png");
+	selectedDisabledSkin: Embed(source="../image/button/btn3.png");
+	selectedDownSkin: Embed(source="../image/button/btn2.png");
+	selectedOverSkin: Embed(source="../image/button/btn2.png");
+	selectedUpSkin: Embed(source="../image/button/btn2.png");
+	
+}
+
 .alertTitle
 {
 }

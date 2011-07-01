@@ -6,7 +6,7 @@ package com.fc.lami.Messages
 
 
 	/**
-	 * Java Class [52] [com.fc.lami.Messages.PlayerData]<br>
+	 * Java Class [53] [com.fc.lami.Messages.PlayerData]<br>
 	 * 此代码为自动生成。不需要在此修改。若有错误，请修改代码生成器。
 	 */
 	[Bindable]
@@ -27,6 +27,9 @@ package com.fc.lami.Messages
 		/** Java type is : <font color=#0000ff>java.lang.String</font> */
 		[JavaType(name="java.lang.String", leaf_type=NetDataTypes.TYPE_STRING)]
 		public var sex :  String;
+		/** Java type is : <font color=#0000ff>boolean</font> */
+		[JavaType(name="boolean", leaf_type=NetDataTypes.TYPE_BOOLEAN)]
+		public var is_first_game :  Boolean;
 		/** Java type is : <font color=#0000ff>int</font> */
 		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
 		public var score :  int;
@@ -46,6 +49,7 @@ package com.fc.lami.Messages
 		 * @param player_name as <font color=#0000ff>java.lang.String</font>
 		 * @param player_head_url as <font color=#0000ff>java.lang.String</font>
 		 * @param sex as <font color=#0000ff>java.lang.String</font>
+		 * @param is_first_game as <font color=#0000ff>boolean</font>
 		 * @param score as <font color=#0000ff>int</font>
 		 * @param win as <font color=#0000ff>int</font>
 		 * @param lose as <font color=#0000ff>int</font>
@@ -56,6 +60,7 @@ package com.fc.lami.Messages
 			player_name :  String = null,
 			player_head_url :  String = null,
 			sex :  String = null,
+			is_first_game :  Boolean = false,
 			score :  int = 0,
 			win :  int = 0,
 			lose :  int = 0,
@@ -66,6 +71,7 @@ package com.fc.lami.Messages
 			this.player_name = player_name;
 			this.player_head_url = player_head_url;
 			this.sex = sex;
+			this.is_first_game = is_first_game;
 			this.score = score;
 			this.win = win;
 			this.lose = lose;

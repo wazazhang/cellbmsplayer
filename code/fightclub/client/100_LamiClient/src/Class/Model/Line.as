@@ -4,90 +4,155 @@ package Class.Model
 	
 	import Component.Card_Cpt;
 	
+	import mx.collections.ArrayCollection;
 	import mx.controls.Alert;
 	import mx.core.Container;
 	
-	public class Line
+	public class Line extends ArrayCollection
 	{
-		public var firstCard:Card_Cpt;
-		//public var lastCard:Card_Cpt;
-		public var lineLength:int=20; 
-		private var _lastCard:Card_Cpt;
-		public var nextLine:Line;
 		public var y:int;
 		
-		//单列检测
+		/** 
+		 * 初始化1行
+		 * */
 		public function Line(length:int,isplayer:Boolean,y:int,game:Game)
 		{
-			lineLength = length;
-			firstCard = new Card_Cpt();
-			firstCard.isPlayerOwner = isplayer;
 			this.y = y;
 			
-			var buff:Card_Cpt = firstCard;
-			for(var i:int=1;i<lineLength;i++)
+			for(var i:int=0;i<length;i++)
 			{
-				buff.nextCardCpt = new Card_Cpt();
-				buff.cardX = i-1;
-				buff.cardY = y-1;
+				var buff:Card_Cpt = new Card_Cpt();
+				buff.cardX = i;
+				buff.cardY = y;
 				buff.game = game;
-				buff.nextCardCpt.preCardCpt = buff;
-				
-				buff.nextCardCpt.isPlayerOwner = isplayer;
-				buff = buff.nextCardCpt;	
+				buff.isPlayerOwner = isplayer;
+				this.addItem(buff);
 			}
-			lastCard = buff;
-			lastCard.game = game;
-			lastCard.cardX = lineLength-1;
-			lastCard.cardY = y-1;
-			
 		}
 		
-		public function set lastCard(card:Card_Cpt):void
+		public function getFirstCard():Card_Cpt
 		{
-			_lastCard = card;
+			var cardcpt:Card_Cpt = this.getItemAt(0) as Card_Cpt;
+			return cardcpt;
 		}
-		public function get lastCard():Card_Cpt
+		
+		public function getLastCard():Card_Cpt
 		{
-			return _lastCard;
+			var cardcpt:Card_Cpt = this.getItemAt(this.length-1) as Card_Cpt;
+			return cardcpt;
+		}
+		
+		public function getCardByIndex(index:int):Card_Cpt
+		{
+			var cardcpt:Card_Cpt = this.getItemAt(index) as Card_Cpt;
+			return cardcpt;
+		}
+		
+		/** 得到该行最后一个空格 */
+		public function getLastBlank():Card_Cpt
+		{
+			var i:int = this.length-1;
+			while(i>=0){
+				var cardcpt:Card_Cpt = getCardByIndex(i);
+				if (cardcpt.getCard()==null){
+					return cardcpt;
+				}
+				i--;
+			}
+			return null;
+		}
+		
+		/** 得到该行最前一个空格 */
+		public function getFrontBlank():Card_Cpt
+		{
+			var i:int = 0;
+			while(i<this.length){
+				var cardcpt:Card_Cpt = getCardByIndex(i);
+				if (cardcpt.getCard()==null){
+					return cardcpt;
+				}
+				i++;
+			}
+			return null;
+		}
+		
+		/** 得到一个成立的牌组 */
+		public function getCardGroup(x:int):ArrayCollection
+		{
+			var cardcpt:Card_Cpt = getCardByIndex(x);
+			if (cardcpt.getCard()==null){
+				return null;
+			}
+			var array:ArrayCollection = new ArrayCollection();
+			array.addItem(cardcpt);
+			return array;
+			// 待完成
+		}
+		
+		public function getBlankStart(x:int, length:int):int
+		{
+			var l:int = length;
+			var x2:int = x;
+			while(x2<this.length && l>0){
+				var cardcpt:Card_Cpt = getCardByIndex(x2);
+				if (cardcpt.getCard()!=null && !cardcpt.isSelected){
+					break;
+				}
+				x2++;
+				l--;
+			}
+			
+			if (l>0){
+				var x1:int = x-1;
+				while(x1>=0 && l>0){
+					var cardcpt:Card_Cpt = getCardByIndex(x1);
+					if (cardcpt.getCard()!=null && !cardcpt.isSelected){
+						break;
+					}
+					x1--;
+					l--;
+				}
+				if (l>0){
+					return -1;
+				}else{
+					return x1+1;
+				}
+			}else{
+				return x;
+			}
 		}
 		
 		public function fill(lie:int,ct:Container):void
 		{
 			
-			var cardcpt:Card_Cpt = firstCard;
-			var y:int = lie*(cardcpt.height+1);
+			var cardcpt:Card_Cpt = getFirstCard();
+			var y:int = lie*(cardcpt.height);
 			
-			for(var i:int=0;i<lineLength;i++)
+			for(var i:int=0;i<this.length;i++)
 			{
-				cardcpt.x = i*(cardcpt.width+1);
+				cardcpt=getCardByIndex(i);
+				cardcpt.x = i*(cardcpt.width);
 				cardcpt.y = y;
 				ct.addChild(cardcpt);
-				cardcpt = cardcpt.nextCardCpt;	
 			}
 		}
 		
 		//清空当列
 		public function clean():void
 		{
-			var cardcpt:Card_Cpt = firstCard;
-			do{
-				cardcpt.card = null
-			//	cardcpt.confimcard = null
-				cardcpt = cardcpt.nextCardCpt;
+			for each(var cardcpt:Card_Cpt in this){
+				cardcpt.setCard(null);
 			}
-			while(cardcpt!=null)
 		}
 		
 		
 		public function check():Boolean
 		{
 			var array:Array;
-			var curnode:Card_Cpt = firstCard;
 	
-			do{
+			for each(var curnode:Card_Cpt in this){
 				
-				if(curnode.card == null)
+				if(curnode.getCard() == null)
 				{
 					if(array==null)
 					{
@@ -117,15 +182,10 @@ package Class.Model
 						array.push(curnode);
 					}	
 				}
-				
-				if(curnode.nextCardCpt==null&&array!=null)
-				{
-					return 	checkZu(array);
-				}
-				
-				curnode = curnode.nextCardCpt;
 			}
-			while(curnode!=null)	
+			if (array!=null){
+				return checkZu(array);
+			}
 				
 			return true;
 		}
@@ -134,10 +194,9 @@ package Class.Model
 		{
 			
 			var array:Array;
-			var curnode:Card_Cpt = firstCard;
 			
-			do{
-				if(curnode.card == null)
+			for each(var curnode:Card_Cpt in this){
+				if(curnode.getCard() == null)
 				{
 					if(array!=null)
 					{
@@ -160,17 +219,13 @@ package Class.Model
 						array.push(curnode);
 					}	
 				}
-				
-				if(curnode.nextCardCpt==null&&array!=null)
-				{
-					buffarr = copyArray(array)
-					if(!checkZu(array))
-						shanErrorCard(buffarr);
-				}
-
-				curnode = curnode.nextCardCpt;
 			}
-			while(curnode!=null)	
+			
+			if (array!=null){
+				buffarr = copyArray(array)
+				if(!checkZu(array))
+					shanErrorCard(buffarr);
+			}
 		}
 		
 		
@@ -197,15 +252,14 @@ package Class.Model
 		public function getPointWithOutGuest():int
 		{
 			var point:int = 0;
-			var curnode:Card_Cpt = firstCard;
-			do{
-				if(curnode.card!=null&&(!curnode.card.isSended))
+
+			for each(var curnode:Card_Cpt in this){
+				if(curnode.getCard()!=null&&(!curnode.getCard().isSended))
 				{
-					point +=curnode.card.point;
+					point +=curnode.getCard().point;
 				}
-				curnode = curnode.nextCardCpt
 			}
-			while(curnode!=null)
+
 			return point;
 		}
 		
@@ -214,12 +268,12 @@ package Class.Model
 		public function getPoint():int
 		{
 			var array:Array;
-			var curnode:Card_Cpt = firstCard;
+
 			var point:int = 0;
 			
-			do{
+			for each(var curnode:Card_Cpt in this){
 
-				if(!(curnode.card != null&&!curnode.card.isSended))
+				if(!(curnode.getCard() != null&&!curnode.getCard().isSended))
 				{
 					if(array==null)
 					{
@@ -242,20 +296,15 @@ package Class.Model
 					{
 						array.push(curnode);
 					}	
-					
-					if(curnode.nextCardCpt==null&&array!=null)
-					{
-						p = getZuPoint(array);
-						point += p;
-						
-					}
 						
 				}
-				
-				curnode = curnode.nextCardCpt;
 			}
-			while(curnode!=null)
 			
+			if(array!=null)
+			{
+				p = getZuPoint(array);
+				point += p;
+			}
 			return point;
 		}
 		
@@ -269,7 +318,7 @@ package Class.Model
 			
 			for(var i:int=0;i<arr.length;i++)
 			{
-				var card:Card = (arr[i] as Card_Cpt).card;
+				var card:Card = (arr[i] as Card_Cpt).getCard();
 				
 				
 				//确定是否算带鬼组的值
@@ -312,13 +361,13 @@ package Class.Model
 			if(arr.length>13)
 				return 0;
 			var n:int = arr.length;	
-			var percar:Card = (arr.shift() as Card_Cpt).card;
+			var percar:Card = (arr.shift() as Card_Cpt).getCard();
 			var firstGUST:int = 0;//数组头部的鬼牌
 			
 			while(percar.point==0)
 			{
 				firstGUST ++;
-				percar = (arr.shift() as Card_Cpt).card;
+				percar = (arr.shift() as Card_Cpt).getCard();
 				if(percar.point<=firstGUST)
 				{
 					return 0;
@@ -329,7 +378,7 @@ package Class.Model
 			while(arr.length>0)
 			{
 				index++;
-				var aftcar:Card = (arr.shift() as Card_Cpt).card;
+				var aftcar:Card = (arr.shift() as Card_Cpt).getCard();
 				if(!((percar.point==aftcar.point-index && percar.type == aftcar.type)||aftcar.point==0))
 				{
 					return 0;
@@ -347,11 +396,11 @@ package Class.Model
 			var n:int = arr.length;
 			var huaArray:Array = new Array();
 		
-			var card:Card = (arr.shift() as Card_Cpt).card;
+			var card:Card = (arr.shift() as Card_Cpt).getCard();
 			
 			while(card.point==0)
 			{
-				card = (arr.shift() as Card_Cpt).card;
+				card = (arr.shift() as Card_Cpt).getCard();
 			}
 
 			huaArray.push(card.type);
@@ -359,7 +408,7 @@ package Class.Model
 
 			while(arr.length>0)
 			{
-				card = (arr.shift() as Card_Cpt).card;
+				card = (arr.shift() as Card_Cpt).getCard();
 				if(!((huaArray.indexOf(card.type)==-1&&card.point==point)||card.point==0))
 				{
 					return 0;
@@ -384,7 +433,7 @@ package Class.Model
 			
 			for(var i:int=0;i<arr.length;i++)
 			{
-				var card:Card = (arr[i] as Card_Cpt).card;
+				var card:Card = (arr[i] as Card_Cpt).getCard();
 				if(card.point!=0)
 				{
 					avicards.push(card);
@@ -421,11 +470,11 @@ package Class.Model
 			if(arr.length>13)
 				return false;
 				
-			var percar:Card = (arr.shift() as Card_Cpt).card;
+			var percar:Card = (arr.shift() as Card_Cpt).getCard();
 			
 			while(percar.point==0)
 			{
-				percar = (arr.shift() as Card_Cpt).card;
+				percar = (arr.shift() as Card_Cpt).getCard();
 				if(percar.point==1)
 				{
 					return false;
@@ -436,7 +485,7 @@ package Class.Model
 			while(arr.length>0)
 			{
 				index++;
-				var aftcar:Card = (arr.shift() as Card_Cpt).card;
+				var aftcar:Card = (arr.shift() as Card_Cpt).getCard();
 				if(!((percar.point==aftcar.point-index && percar.type == aftcar.type)||aftcar.point==0))
 				{
 					return false;
@@ -453,11 +502,11 @@ package Class.Model
 			
 			var huaArray:Array = new Array();
 		
-			var card:Card = (arr.shift() as Card_Cpt).card;
+			var card:Card = (arr.shift() as Card_Cpt).getCard();
 			
 			while(card.point==0)
 			{
-				card = (arr.shift() as Card_Cpt).card;
+				card = (arr.shift() as Card_Cpt).getCard();
 			}
 
 			huaArray.push(card.type);
@@ -465,7 +514,7 @@ package Class.Model
 			
 			while(arr.length>0)
 			{
-				card = (arr.shift() as Card_Cpt).card;
+				card = (arr.shift() as Card_Cpt).getCard();
 				if(!((huaArray.indexOf(card.type)==-1&&card.point==point)||card.point==0))
 				{
 					return false;

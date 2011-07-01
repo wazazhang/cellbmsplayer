@@ -10,28 +10,26 @@
 		   mouseOver="mouseOver(event)"
 		   mouseOut="mouseOut(event)"
 			
-			label="{room.room_name} ({room.player_number}人)" 
+			label="{
+				com.cell.util.StringUtil.fillAlign(
+				room.room_id, 3, ' ')
+			} {
+				room.room_name
+			} ({
+				com.cell.util.StringUtil.format(
+				LanguageManager.getText('roomCpt.pcount'),
+				room.player_number)
+			})" 
 			
 			fontWeight="{ isSelect ? 'bold': 'normal'}"
 			textAlign="left" toggle="true" alpha="1.0" color="#000000" icon="@Embed(source='../image/roomicon.png')">
 	<mx:Script>
 		<![CDATA[
-			/*
-			width="160" height="24" 
-			borderStyle="solid" 
-			borderColor="#b96400" 
-			click="click()"
-			cornerRadius="5" 
-			backgroundImage="{Resource.itbg}" 
-			borderThickness="2"  
-			mouseOver="mouseOver(event)"
-			mouseOut="mouseOut(event)"
-			horizontalScrollPolicy="off" 
-			buttonMode="true"
-			*/
+			import Class.LanguageManager;
 			import Class.Resource;
 			import Class.Server;
 			
+			import com.cell.util.StringUtil;
 			import com.fc.lami.Messages.RoomData;
 			import com.fc.lami.Messages.RoomSnapShot;
 			
@@ -42,6 +40,8 @@
 			
 			[Bindable]
 			private var isSelect:Boolean; 
+			
+			
 			
 			public function setSelectRoom(v:Boolean) : void
 			{
@@ -54,6 +54,8 @@
 			public function setRoomData(room:RoomSnapShot) : void
 			{
 				this.room = room;
+				
+				//var fj : String = LanguageManager.getText('roomCpt.fj');
 			}
 			
 			public function getRoomData() : RoomSnapShot
@@ -75,7 +77,8 @@
 			
 			private function click():void
 			{
-				Server.enterRoom(room.room_id, new StreamCpt().show("loading..."))
+				//Server.enterRoom(room.room_id, new StreamCpt().show("loading..."))
+				Server.enterRoom(room.room_id);
 					
 			}
 		]]>

@@ -1,14 +1,19 @@
 package Class.Model
 {
 	import Class.Game;
+	import Class.LanguageManager;
 	import Class.Server;
 	import Class.TimesCtr;
 	
+	import Component.CardMatrixCpt;
 	import Component.Card_Cpt;
-	import Component.UserMatrix_Cpt;
+	import Component.Card_Move;
 	
 	import com.fc.lami.Messages.CardData;
+	import com.fc.lami.Messages.MoveCardToPlayerRequest;
+	import com.fc.lami.Messages.MoveCardToPlayerResponse;
 	import com.fc.lami.ui.LamiAlert;
+	import com.net.client.ClientEvent;
 	
 	import mx.collections.ArrayCollection;
 	import mx.collections.Sort;
@@ -22,13 +27,13 @@ package Class.Model
 	{
 		public var handCard:ArrayCollection = new ArrayCollection(); //当前手牌数组
 		
-		public var matrix:UserMatrix_Cpt    //用户矩阵
+		public var matrix:CardMatrixCpt    //用户矩阵
 		public var matrix_length:int = 18;  //用户矩阵宽度
 		public var matrix_height:int = 4;    //用户矩阵高度
 		
 		public var cardLines:ArrayCollection = new ArrayCollection();
-		public var selectedCard:Card; //选中的牌
-		public var selectedArrayCard:Array; //选中的牌组
+//		public var selectedCard:Card; //选中的牌
+//		public var selectedArrayCard:Array; //选中的牌组
 		
 	   
 		public var isCold:Boolean = true;	 //是否已经破冰
@@ -58,23 +63,29 @@ package Class.Model
 		//初始化矩阵
 		public function initMatrix():void
 		{
-			var curline:Line;
 			for(var i:int=0;i<matrix_height;i++)
 			{
-				var line:Line = new Line(matrix_length,true,i+1,game);
-				if(curline != null)
-				{
-					curline.nextLine = line;
-				}
-				curline = line;
-				if(i == matrix_height-1)
-				{
-					curline.nextLine = cardLines[0];
-				}
+				var line:Line = new Line(matrix_length,true,i,game);
 				
 				cardLines.addItem(line);
 				fill(i,line);
+				line.clean();
 			}
+		}
+		
+		public function getCardUI(card:Card):Card_Cpt
+		{
+			for each(var line:Line in cardLines)
+			{
+				for each(var cardcpt:Card_Cpt in line)
+				{
+					if(cardcpt.getCard() == card)
+					{
+						return cardcpt;
+					}
+				}
+			}
+			return null;
 		}
 		
 		//牌区的变化
@@ -85,11 +96,11 @@ package Class.Model
 //			cleanMatrix();
 //			handCard.removeAll();
 			for each(var cd:CardData in cards){
-				if (!isHandCard(cd)){
+				if (cd!=null && !isHandCard(cd)){
 //					getCard(Card.createCardByData(cd));
 					var card:Card = Card.createCardByData(cd);
 					handCard.addItem(card);
-					setCardInToMatrix(card, false);
+					setCardInToMatrix(card);
 				}
 			}
 			var h2 :ArrayCollection = new ArrayCollection();
@@ -102,12 +113,12 @@ package Class.Model
 				}
 			}
 			handCard = h2;
+			is_sended_card = isSendCard();
 		}
 		
 		//清空矩阵
-		public function cleanMatrix():void
+		private function cleanMatrix():void
 		{
-			handCard = new ArrayCollection();
 			for each (var line:Line in cardLines)
 			{
 				line.clean();
@@ -117,19 +128,18 @@ package Class.Model
 		
 		public function fill(lie:int,line:Line):void
 		{
-			var top:int = 50; //距离顶部
-			var jtop:int = 10; //间隔
+			var top:int = 0; //距离顶部
 			var fontx:int = 0;
 			
-			var cardcpt:Card_Cpt = line.firstCard;
-			var y:int =top+ lie*(cardcpt.height+1);
+			var cardcpt:Card_Cpt = new Card_Cpt();
+			var y:int =top+ lie*(cardcpt.height);
 			
-			for(var i:int=0;i<line.lineLength;i++)
+			for(var i:int=0;i<line.length;i++)
 			{
-				cardcpt.x = i*(cardcpt.width+1)+(lie*fontx);
+				cardcpt = line.getCardByIndex(i);
+				cardcpt.x = i*(cardcpt.width)+(lie*fontx);
 				cardcpt.y = y;
 				matrix.addChild(cardcpt);
-				cardcpt = cardcpt.nextCardCpt;	
 			}
 		}
 		
@@ -152,44 +162,31 @@ package Class.Model
 			cleanMatrix();
 			canOpearation = false;
 			handCard =  startcards;
-			/*
-			for(var i:int=0;i<startCard;i++)
-			{
-				handCard.addItem(Game.getCardFromCard());
-			}
-			*/
+
 			var sort:Sort = new Sort();
 			sort.fields = [new SortField("point",false),new SortField("type",false)];
 			handCard.sort = sort;
 			handCard.refresh();
 			
-			var lineindex:int = 0;
+			var y:int = 0;
+			var x:int = 0;
 			var line:Line;
 			var cardcpt:Card_Cpt;
-			var precard:Card;
+//			var precard:Card;
+			var card_motion_array:ArrayCollection  = new ArrayCollection();
 			
 			for each(var card:Card in handCard)
 			{
-				if (cardcpt==null){
-					line = cardLines[lineindex++];
-					cardcpt = line.firstCard;
-					cardcpt.card = card;
-					//cardcpt.confimcard = card;
-					cardcpt.isShow = false;
-					cardcpt = cardcpt.nextCardCpt;
-				}else{
-					cardcpt.card = card;
-					//cardcpt.confimcard = card;
-					cardcpt.isShow = false;
-					cardcpt = cardcpt.nextCardCpt;
+				if (x>=matrix_length){
+					x = 0;
+					y++;
 				}
-				if(precard!=null)
-				{
-					precard.nextCard = card;
-				}
-				precard = card;
+				cardcpt=cardLines[y][x++];
+				cardcpt.setCard(card);
+				cardcpt.isShow = false;
+				card_motion_array.addItem(cardcpt);
 			}
-			game.lami.addCardMotion(handCard[0]);
+			game.lami.addCardMotionList(card_motion_array);
 		}
 		
 		public function removeAllCard():void
@@ -197,69 +194,93 @@ package Class.Model
 			
 		}
 		
-		public function setCardInToMatrix(card:Card, is_motion:Boolean):void
+		public function removeCardByID(id:int):void
+		{
+			for each(var card:Card in handCard){
+				if (card.id == id){
+					var i = handCard.getItemIndex(card);
+					if (i!=-1){
+						handCard.removeItemAt(i);
+						is_sended_card = isSendCard();
+						var cardcpt:Card_Cpt = getCardUI(card);
+						cardcpt.setCard(null);
+					}
+				}
+			}
+			
+		}
+		
+		private function setCardInToMatrix(card:Card):Card_Cpt
 		{
 			var line:Line;
-			if(card.type==0)
-			{
-				line = cardLines[0];
-			}
-			else
-			{
-				line = cardLines[card.type-1]
-			}
-			var cardcpt:Card_Cpt = line.lastCard;
-			do{
-				
-				do
+			var line_index:int;
+			var cardcpt:Card_Cpt;
+			if (!orderType){
+				if(card.type==0)
 				{
-					if(cardcpt.card ==null)
-					{	
-						cardcpt.card = card;
-						//cardcpt.confimcard = card;
-						
-						if (is_motion){
-							cardcpt.isShow = false;
-							game.lami.addCardMotion(card);
-						}
-						
-						return;
-					}
-					cardcpt = cardcpt.preCardCpt
+					line_index = 0;
+					line = cardLines[0];
 				}
-				while(cardcpt!=null)
-					
-				line = line.nextLine;
-				cardcpt = line.lastCard;
+				else
+				{
+					line_index = card.type-1;
+					line = cardLines[card.type-1]
+				}
+				if (card.point==0){
+					cardcpt = line.getLastBlank();
+					cardcpt.setCard(card);
+					return cardcpt;
+				}else if(line.getCardByIndex(card.point-1).getCard()==null){
+					cardcpt = line.getCardByIndex(card.point-1);
+					cardcpt.setCard(card);
+					return cardcpt;
+				}else{
+					cardcpt = line.getLastBlank();
+					if (cardcpt!=null){
+						cardcpt.setCard(card);
+						return cardcpt;
+					}else{
+						line_index = 3;
+						while (line_index>=0){
+							line = cardLines[line_index];
+							cardcpt = line.getLastBlank();
+							if (cardcpt!=null){
+								cardcpt.setCard(card);
+								return cardcpt;
+							}else{
+								line_index--;
+							}
+						}
+						// 运行到这里就是所有行都没空格了
+						return cardcpt;
+					}
+				}
+			}else{
+				line_index = 0;
+				while(line_index<4){
+					line = cardLines[line_index];
+					cardcpt = line.getFrontBlank();
+					if (cardcpt!=null){
+						cardcpt.setCard(card);
+						return cardcpt;
+					}else{
+						line_index++;
+					}
+				}
+				// 运行到这里就是所有行都没空格了
+				return null;
 			}
-			while(true)
+			
 		}
 		
 		public function getCard(card:Card):void
 		{
-		
-			
 			handCard.addItem(card);
-			setCardInToMatrix(card, true);
-		}
-		
-		//检测是否含有重复的牌
-		private function checkHaveSameCard(card:Card):Boolean
-		{
-			for each(var c:Line in cardLines)
-			{
-				var cardcpt:Card_Cpt  = c.firstCard
-				
-				while(cardcpt!=null)
-				{
-					if(cardcpt.card!=null&&cardcpt.card.cardData.id == card.cardData.id)
-					{
-						return true;
-					}
-					cardcpt = cardcpt.nextCardCpt
-				}
+			is_sended_card = isSendCard();
+			var cardcpt:Card_Cpt = setCardInToMatrix(card);
+			if (cardcpt!=null){
+				game.lami.addCardMotion(cardcpt);
 			}
-			return false;
 		}
 		
 		public function getCardsByArray(cards:Array):void
@@ -272,68 +293,12 @@ package Class.Model
 		
 		public function getCards(cards:ArrayCollection):void
 		{
-			
-			
-			
+
 			for each(var card:Card in cards)
 			{
 				getCard(card);
 			}
 		}
-		
-		public function submit():Boolean
-		{
-			/*
-			if(!game.check())
-			{
-			LamiLamiAlert.show("出牌不符合规则");
-				return false;
-			}
-			
-			
-			if(isCold)
-			{
-				var sum:int = game.getSendPoint();
-				
-				if(sum<30)
-				{
-					LamiAlert.show('尚未破冰,当前点数只有'+sum+'.')
-					return false;
-				}
-				else
-				{
-					isCold = false;
-				}
-			}
-			*/
-			
-			game.submit();
-			confiomCard();
-			//Game.canSendCard = false;
-			return true;
-		}
-		
-		//提交
-		public function confiomCard():void
-		{
-			var array:ArrayCollection = new ArrayCollection();
-			
-			for each(var line:Line in cardLines)
-			{
-				var cardctp:Card_Cpt = line.firstCard;
-				do{
-					if(cardctp.card!=null)
-					{
-						array.addItem(cardctp.card);
-					}
-					//cardctp.confimcard = cardctp.card;
-					cardctp = cardctp.nextCardCpt;
-				}
-				while(cardctp != null);
-			}
-			handCard = array;
-		}
-		
 		
 		public function isHandCard(card:CardData):Boolean
 		{
@@ -344,66 +309,21 @@ package Class.Model
 			}
 			return false;
 		}
-		//计算手牌数
-		public function countHandCard():void
-		{
-			var array:ArrayCollection = new ArrayCollection();
-			
-			for each(var line:Line in cardLines)
-			{
-				var cardctp:Card_Cpt = line.firstCard;
-				do{
-					if(cardctp.card!=null)
-					{
-						array.addItem(cardctp.card);
-					}
-					cardctp = cardctp.nextCardCpt;
-				}
-				while(cardctp != null);
-			}
-			handCard = array;
-		}
 		
-		
-//		public function reset():void
-//		{
-//			for each(var line:Line in cardLines)
-//			{
-//				var cardctp:Card_Cpt = line.firstCard;
-//				
-//				do{
-//					cardctp.card = null;
-//					cardctp.card = cardctp.confimcard;
-//					
-//					cardctp = cardctp.nextCardCpt;
-//				}
-//				while(cardctp != null);
-//			}
-//			game.reset();
-//			Server.sendPublicMatrix();
-//			game.check();
-//		}
 		
 		public function orderCard():void
 		{
 			//选中牌的时候点击排序做处理
 			
-			if(selectedArrayCard != null)
-			{
-				for each(var card:Card in selectedArrayCard)
-				{
-					card.cardUI.isSelected = false;
-				}
-				selectedArrayCard = null
-				
-			}	
-			//处理结束时候还有选中的牌
-			if(selectedCard != null)
-			{
-				selectedCard.cardUI.isSelected = false;
-				selectedCard = null;
-				
-			}
+//			if(selectedArrayCard != null)
+//			{
+//				for each(var card:Card in selectedArrayCard)
+//				{
+//					card.cardUI.isSelected = false;
+//				}
+//				selectedArrayCard = null
+//				
+//			}	
 			
 			if(orderType)
 			{
@@ -419,166 +339,223 @@ package Class.Model
 		//按照颜色排序
 		private function orderCardByColor():void
 		{
-			var cards:ArrayCollection = clearAllCardToArray();
-			
-			if(cards.length==0)
+			cleanMatrix();
+			if(handCard.length==0){
 				return;
-				
-			for each(var card:Card in cards)
+			}
+			for each(var card:Card in handCard)
 			{
-				
-				if(card.point==0)
-				{
-					var lines:Line = cardLines[0] as Line
-					
-					if(lines.lastCard.card==null)
-						(cardLines[0] as Line).lastCard.card = card;
-					else if((cardLines[1] as Line).lastCard.card==null)	
-						(cardLines[1] as Line).lastCard.card = card;
-					else if((cardLines[2] as Line).lastCard.card==null)	
-						(cardLines[2] as Line).lastCard.card = card;
-					else((cardLines[3] as Line).lastCard.card==null)	
-						(cardLines[3] as Line).lastCard.card = card;
-						
-					continue;			
-				}
-				var line:Line = cardLines[card.type-1] as Line;
-				
-				var point:int = 12;
-				
-				var cardcpt:Card_Cpt = line.firstCard;
-				
-				while(point!=(13-card.point)) 
-				{
-					cardcpt = cardcpt.nextCardCpt;
-					point --;
-				}
-				
-				if(cardcpt.card==null)
-				{
-					cardcpt.card = card;
-				}
-				else
-				{
-					cardcpt = cardcpt.nextCardCpt;
-					
-					while(point!=0) 
-					{
-						point --;
-						cardcpt = cardcpt.nextCardCpt;
-					}
-					while(cardcpt.card!=null) 
-					{
-						cardcpt = cardcpt.nextCardCpt;
-						
-						if(cardcpt==null)
-						{
-							cardcpt = line.nextLine.firstCard;
-						}
-					}
-					cardcpt.card = card;
-				}
+				setCardInToMatrix(card);
 			}
 		}
 		
 		//按照点数排序
 		private function orderCardByPoint():void
 		{
-			var cards:ArrayCollection = clearAllCardToArray();		
-			
-			if(cards.length==0)
+			cleanMatrix();
+			if(handCard.length==0)
 				return;
 
 			var sort:Sort = new Sort();
 			sort.fields = [new SortField("point",false),new SortField("type",false)];
-			cards.sort = sort;
-			cards.refresh();
-			var index:int=0;
-			for each(var line:Line in cardLines)
+			handCard.sort = sort;
+			handCard.refresh();
+			for each(var card:Card in handCard)
 			{
-				var cardctp:Card_Cpt = line.firstCard;	
-				do{
-					if(cardctp.card==null)
-					{
-						cardctp.card = cards[index];
-						index++;
-						if(index == cards.length)
-						{
-							return;		
-						}
-					}
-					cardctp = cardctp.nextCardCpt;
-				}
-				while(cardctp!=null)
+				setCardInToMatrix(card);
 			}
 		}
 		
-		protected function clearAllCardToArray():ArrayCollection
+		public function cleanAllCard():void
 		{
-			var array:ArrayCollection = new ArrayCollection();
-			for each(var line:Line in cardLines)
-			{
-				var cardctp:Card_Cpt = line.firstCard;
-				do{
-					if(cardctp.card !=null)
-					{
-						array.addItem(cardctp.card);
-						cardctp.card = null;
-					}
-					cardctp = cardctp.nextCardCpt;
-				}
-				while(cardctp != null);
-			}
-			return array;
+			cleanMatrix();
+			handCard = new ArrayCollection();
 		}
 		
+		private var start_card_number:int;
 		
-//		protected function addCardMotion(card:Card):void
-//		{
-//			var moveCard:Card_Cpt = new Card_Cpt();
-//			matrix.addChild(moveCard);
-//			moveCard.isShow = true;
-//			moveCard.x = game.cardspostion_x;
-//			moveCard.y = game.cardspostion_y;
-//			moveCard.card = new Card(card.point,card.type, card.id);
-//			moveCard.card.nextCard  = card.nextCard;
-//			moveCard.nextCardCpt = card.cardUI;
-//			
-//			var move:Move = new Move();
-//			
-//			move.target = moveCard;
-//			move.duration = 300;
-//
-//			move.xTo = card.cardUI.x;
-//			move.yTo = card.cardUI.y;
-//			
-////			//card.isSended = false;
-//			card.nextCard = null;
-//			move.addEventListener(EffectEvent.EFFECT_END,addCardMotionComplate);
-//			move.play();
-//		}
-//		
-//		protected function addCardMotionComplate(event:EffectEvent):void
-//		{
-//			var card:Card = ((event.target as Move).target as Card_Cpt).card;
-//			((event.target as Move).target as Card_Cpt).nextCardCpt.isShow = true;
-//		    matrix.removeChild((event.target as Move).target as Card_Cpt)
-//					
-//			if(card.nextCard!=null)
-//			{
-//				addCardMotion(card.nextCard);
-//			}
-//			else
-//			{
-//				game.lami.showReset();
-//				canOpearation = true;
-//			}
-//		}
-		
-		public function myTurnStart():void
+		public function onTurnStart():void
 		{
+			isMyturn = true;
+			start_card_number = handCard.length;
+			is_sended_card = false;
+		}
+		
+		[Bindable]
+		public var is_sended_card :Boolean;
+		
+		public function isSendCard():Boolean
+		{
+			return start_card_number>handCard.length;
+		}
+		
+		public function getCardGroup(x:int, y:int):ArrayCollection
+		{
+			var line:Line = cardLines[y];
+			return line.getCardGroup(x);
+		}
+		
+		private function tackCardBackResponseListener(event:ClientEvent):void
+		{
+			var res:Object = event.getResponse();
 			
+			if (res is MoveCardToPlayerResponse){
+				var mcpr : MoveCardToPlayerResponse = res as MoveCardToPlayerResponse;
+				var mcp:MoveCardToPlayerRequest = event.getRequest() as MoveCardToPlayerRequest;
+				if (mcpr.result == MoveCardToPlayerResponse.MOVE_CARD_TO_PLAYER_RESULT_SUCCESS){
+					var array : ArrayCollection = game.lami.selected_cards.getSelectCards();
+					var cards:ArrayCollection = new ArrayCollection();
+					for each (var cardm:Card_Move in array){
+						cards.addItem(cardm.curCardCpt.getCard());
+					}
+					var line:Line = cardLines[mcp.y];
+					var x1:int = mcp.x;
+					for each(var cardm:Card_Move in array){
+						if (!cardm.curCardCpt.isPlayerOwner){
+							handCard.addItem(cardm.curCardCpt.getCard());
+							is_sended_card = isSendCard();
+						}else{
+							
+						}
+						cardm.curCardCpt.setCard(null);
+						cardm.curCardCpt.isSelected = false;
+					}
+					for each(var card:Card in cards){
+						line.getCardByIndex(x1).setCard(card);
+						x1++;
+					}
+					game.lami.cleanCardState();
+				}else{
+					
+				}
+			}
 		}
 		
+		public function putCards(array:ArrayCollection, x:int, y:int):Boolean
+		{
+			var cards:ArrayCollection = new ArrayCollection();
+			for each (var cardm:Card_Move in array){
+				if (cardm.curCardCpt.getCard().isSended){
+					LamiAlert.show(LanguageManager.getText("server.canotBack"));
+					return false;
+				}
+				cards.addItem(cardm.curCardCpt.getCard());
+			}
+			
+			var line:Line = cardLines[y];
+			var cardcpt:Card_Cpt = line.getCardByIndex(x);
+			if (cardcpt.getCard()!=null && !cardcpt.isSelected){
+				return false;
+			}
+			
+			var x1:int = line.getBlankStart(x, array.length);
+			var X:int = x1;
+			var is_change_public_matrix:Boolean = false;
+			if (x1==-1){
+				return false;
+			}else{
+				for each(var cardm:Card_Move in array){
+					if (!cardm.curCardCpt.isPlayerOwner){
+						is_change_public_matrix = true;
+						handCard.addItem(cardm.curCardCpt.getCard());
+						is_sended_card = isSendCard();
+					}else{
+						
+					}
+					cardm.curCardCpt.setCard(null);
+					cardm.curCardCpt.isSelected = false;
+				}
+			}
+			for each(var card:Card in cards){
+				line.getCardByIndex(x1).setCard(card);
+				x1++;
+			}
+			if (is_change_public_matrix){
+				Server.sendPublicMatrix();
+			}
+			return true;
+		}
+		
+//		public function putCards(array:ArrayCollection, x:int, y:int):void
+//		{
+//			var cards:ArrayCollection = new ArrayCollection();
+//			for each (var cardm:Card_Move in array){
+//				if (cardm.curCardCpt.card.isSended){
+//					LamiAlert.show(LanguageManager.getText("server.canotBack"));
+//					return ;
+//				}
+//				cards.addItem(cardm.curCardCpt.card);
+//			}
+//			
+//			var line:Line = cardLines[y];
+//			var cardcpt:Card_Cpt = line.getCardByIndex(x);
+//			if (cardcpt.card!=null && !cardcpt.isSelected){
+//				return ;
+//			}
+//			
+//			var x1:int = line.getBlankStart(x, array.length);
+//			var X:int = x1;
+//			var is_change_public_matrix:Boolean = false;
+//			if (x1==-1){
+//				return ;
+//			}else{
+//				for each(var cardm:Card_Move in array){
+//					if (!cardm.curCardCpt.isPlayerOwner){
+//						is_change_public_matrix = true;
+//					}
+//				}
+//			}
+//			if (is_change_public_matrix){
+//				var cds:Array = new Array();
+//				for each(var card:Card in cards){
+//					cds.push(card.id);
+//				}
+//				Server.sendMoveCardToPlayer(cds, tackCardBackResponseListener);
+//			}else{
+//				for each(var cardm:Card_Move in array){
+//					cardm.curCardCpt.card = null;
+//					cardm.curCardCpt.isSelected = false;
+//				}
+//				for each(var card:Card in cards){
+//					line.getCardByIndex(x1).card = card;
+//					x1++;
+//				}
+//				game.lami.cleanCardState();
+//			}
+//		}
+		
+		public function putCardsShadow(array:ArrayCollection, x:int, y:int):void
+		{
+			var cards:ArrayCollection = new ArrayCollection();
+			for each (var cardm:Card_Move in array){
+				cards.addItem(cardm.curCardCpt.getCard());
+			}
+			
+			var line:Line = cardLines[y];
+			var cardcpt:Card_Cpt = line.getCardByIndex(x);
+			if (cardcpt.getCard()!=null && !cardcpt.isSelected){
+				return;
+			}
+			
+			var x1:int = line.getBlankStart(x, array.length);
+			if (x1==-1){
+				return;
+			}else{
+				for each(var card:Card in cards){
+					line.getCardByIndex(x1).setShadow(true);
+					x1++;
+				}
+			}
+		}
+
+		public function cleanShadow():void
+		{
+			for each (var line:Line in cardLines)
+			{
+				for each(var cardcpt:Card_Cpt in line){
+					cardcpt.setShadow(false);
+				}
+			}
+		}
 	}
 }

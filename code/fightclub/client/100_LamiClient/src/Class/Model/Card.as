@@ -13,12 +13,15 @@ package Class.Model
 		public var point:int;  //点数(0为任意牌)
 		public var type:int;   //颜色
 		public var order:Number; //随机排序数
+		public var x:int;
+		public var y:int;
 		
+		[Bindable]
 		public var isSended:Boolean = false; //是否已经打出
 		
-		public var cardUI:Card_Cpt;  //前台展示框
+//		public var cardUI:Card_Cpt;  //前台展示框
 		
-		public var nextCard:Card;//用于卡片顺序添加
+//		public var nextCard:Card;//用于卡片顺序添加
 		
 		public var comfidcard:Card;//确认卡
 		
@@ -44,20 +47,20 @@ package Class.Model
 				return 0xffffff;			
 		}
 		
-		public function get x():int
-		{
-			if(cardUI==null)
-				return 0;
-			
-			return cardUI.cardX;
-		}
-		public function get y():int
-		{
-			if(cardUI==null)
-				return 0;
-			
-			return cardUI.cardY;
-		}
+//		public function get x():int
+//		{
+//			if(cardUI==null)
+//				return 0;
+//			
+//			return cardUI.cardX;
+//		}
+//		public function get y():int
+//		{
+//			if(cardUI==null)
+//				return 0;
+//			
+//			return cardUI.cardY;
+//		}
 		
 		
 		public function get cardData():CardData
@@ -75,6 +78,8 @@ package Class.Model
 		public static function createCardByData(carddata:CardData):Card
 		{
 			var card:Card = new Card(carddata.point,carddata.type,carddata.id);
+			card.x = carddata.x;
+			card.y = carddata.y;
 			card.isSended = carddata.isSended;	
 			return card;
 		}
