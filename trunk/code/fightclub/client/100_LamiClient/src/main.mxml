@@ -4,7 +4,9 @@
 				layout="absolute" xmlns:ns1="Component.*" 
 				creationComplete="init()" 
 				horizontalAlign="left" 
-				verticalAlign="top" backgroundImage="@Embed(source='image/logobg.png')">
+				verticalAlign="top"
+				frameRate="24"
+				backgroundImage="@Embed(source='image/logobg.png')">
 	<mx:Style source="Css/public.css">
 	</mx:Style>
 	<mx:Script>
@@ -81,6 +83,8 @@
 
 			public function init():void
 			{
+				Security.allowDomain("*");
+				
 				if(this.gdp_container)
 				{
 					println("uid="+this.gdp_container.uid);
@@ -105,6 +109,8 @@
 			
 			private function onLanguageLoadComplete(event:Event) : void
 			{
+				Security.allowDomain("*");
+				
 				println("语言包已加载");
 				this.login_cpt = new Login_Cpt();
 				this.addChildAt(login_cpt, 0);
@@ -130,8 +136,6 @@
 					println("成功获取自己的信息");
 					parseUserInfo(user);
 					
-					Server.app = this
-					
 					var codec 	: MessageCodec = new MessageCodec();
 					
 					var sfs 	: String = this.config.child("sfs").toString();
@@ -150,7 +154,7 @@
 					sfs_session.setUser(user.id);
 					sfs_session.setPassword(this.gdp_container.authKey);
 					
-					Server.init(sfs_session);
+					Server.init(this, this.login_cpt, sfs_session);
 					
 					Server.initUserLogin(
 						pdata,

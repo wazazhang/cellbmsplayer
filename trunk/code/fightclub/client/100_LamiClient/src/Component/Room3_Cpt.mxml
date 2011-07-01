@@ -24,6 +24,7 @@
 			
 			import mx.controls.Alert;
 			import mx.controls.dataGridClasses.DataGridColumn;
+			import mx.events.CloseEvent;
 
 			
 			public var deskCpts:Array;
@@ -31,8 +32,8 @@
 			[Bindable]
 			public var room:Room;
 			
-			[Bindable]
-			private var _plist:Array;
+//			[Bindable]
+//			private var _plist:Array;
 			
 			[Bindable]
 			private var roomData:RoomData
@@ -51,11 +52,22 @@
 				
 			}
 			
-			public function startGame()
+			public function startGame():void
 			{
 				Server.getClient().sendRequest(
 					new AutoEnterRequest(), 
-					onFirstLoginAutoEnter);			
+					onFirstLoginAutoEnter);		
+				
+				
+				this.addChild(new TaskCpt());
+				//LamiAlert.show('是否进入新手教程?','提示', Alert.YES|Alert.NO, null, learnHandler)
+			}
+			
+			private function learnHandler(evt:CloseEvent):void {
+				
+				if (evt.detail == Alert.YES) {
+					addChild(new Intro());
+				}
 			}
 			
 			/**
@@ -80,7 +92,6 @@
 				room = new Room(roomData);
 				
 				deskCpts = new Array();
-				plist = room.getPlayerList();
 				//dgroomlist.dataProvider = roomData.desks
 				this.roomData = roomData;
 				restDesks();
@@ -110,15 +121,15 @@
 					titalk.text='';
 			}
 			
-			private function set plist(list:Dictionary):void
-			{
-				_plist = new Array()
-				for each (var player:PlayerData in list)
-				{
-					_plist.push(player);
-				}
-				restPlayers();
-			}
+//			private function set plist(list:Dictionary):void
+//			{
+//				_plist = new Array()
+//				for each (var player:PlayerData in list)
+//				{
+//					_plist.push(player);
+//				}
+//				restPlayers();
+//			}
 			
 			public function addRoomInfo(str:String):void
 			{
@@ -146,7 +157,7 @@
 				var curDesk:DeskData = getDeskById(desk_id);
 				curDesk.player_number = room.getDesk(desk_id).player_number;
 				
-				addRoomInfo(Server.getPlayerName(room.getPlayerFromPlayerList(player_id))+LanguageManager.getText('roomCpt.jr')+curDesk.desk_name);
+				//addRoomInfo(Server.getPlayerName(room.getPlayerFromPlayerList(player_id))+LanguageManager.getText('roomCpt.jr')+curDesk.desk_name+curDesk.desk_id);
 			}
 			
 			//退出桌子
@@ -155,7 +166,7 @@
 				var curDesk:DeskData = getDeskById(desk_id);
 				curDesk.player_number = room.getDesk(desk_id).player_number;
 				
-				addRoomInfo(Server.getPlayerName(room.getPlayerFromPlayerList(player_id))+LanguageManager.getText('roomCpt.lk')+curDesk.desk_name);
+				//addRoomInfo(Server.getPlayerName(room.getPlayerFromPlayerList(player_id))+LanguageManager.getText('roomCpt.lk')+curDesk.desk_name+curDesk.desk_id);
 			}
 			
 			
@@ -168,10 +179,10 @@
 				if(room!=null)
 				{
 					room.enterRoom(player);
-					plist = room.getPlayerList();
+					restPlayers();
 					
 				}
-				addRoomInfo(Server.getPlayerName(player)+LanguageManager.getText('roomCpt.jrfj')); //进入房间
+				//addRoomInfo(Server.getPlayerName(player)+LanguageManager.getText('roomCpt.jrfj')); //进入房间
 			}
 			
 			
@@ -179,9 +190,9 @@
 			public function leaveRoom(player_id:int):void
 			{
 				var desk_id:int = Server.getPlayerDeskId(player_id);
-				addRoomInfo(Server.getPlayerName(Server.getPlayer(player_id))+LanguageManager.getText('roomCpt.lkfj'));	//离开房间
+				//addRoomInfo(Server.getPlayerName(Server.getPlayer(player_id))+LanguageManager.getText('roomCpt.lkfj'));	//离开房间
 				room.removePlayer(player_id);
-				plist = room.getPlayerList();
+				restPlayers();
 			}
 			
 			
@@ -205,6 +216,7 @@
 			
 			public function fastRequestEnterDesk():void
 			{
+				MaskCtr.show('loading...');
 				if(roomData == null)
 				{
 					Server.sendAutoEnter();
@@ -237,7 +249,7 @@
 			public function restPlayers():void
 			{
 				playerlist.removeAllChildren();
-				for each(var player:PlayerData in _plist)
+				for each(var player:PlayerData in room.getPlayerList())
 				{
 					var it:PlayerItemCpt = new PlayerItemCpt();
 					it.player = player;
@@ -249,11 +261,13 @@
 			{
 				if(cb1.selected)
 				{
-					dgroomlist.removeAllChildren();
-					for each (var desk:DeskData in roomData.desks)
-					{
-						if(!desk.is_started)
-							addItem(desk);
+					if (desk != null) {
+						dgroomlist.removeAllChildren();
+						for each (var desk:DeskData in roomData.desks)
+						{
+							if(!desk.is_started)
+								addItem(desk);
+						}
 					}
 				}
 				else
@@ -372,14 +386,14 @@
 	
 	<mx:Canvas x="755" y="93" width="179" height="90" borderStyle="none" borderColor="#030303">
 		<mx:Label x="0" y="0" text="{Server.getPlayerName(Server.player)}" id="pname" width="173" fontWeight="bold" textAlign="center" color="#D6D6D6" height="18"/>
-		<mx:Label x="100" y="35" text="{Server.player.score}" id="score" width="79" height="18" color="#D6D6D6"/>
+		<mx:Label x="100" y="35" text="{Server.player.score}" id="score" width="79" height="18" color="#D6D6D6" textAlign="center"/>
 		<mx:Image source="{Resource.head_bar}" x="0" y="20"  height="58" width="58" />
 		<mx:Image complete="headimg.visible = true" visible="false"  id="headimg"  x="4" y="24" width="50" height="50" source="{Server.player.player_head_url}"/>
 		<mx:Label x="59" y="53" text="{LanguageManager.getText('roomCpt.js')}：" width="45" textAlign="right" height="18" color="#D6D6D6"/>
 		<mx:Label x="59" y="71" text="{LanguageManager.getText('roomCpt.sl')}：" width="45" textAlign="right" height="18" color="#D6D6D6"/>
-		<mx:Label x="100" y="53" text="{(Server.player.win+Server.player.lose)}" id="gamecount" width="79" height="18" color="#D6D6D6"/>
-		<mx:Label x="100" y="71" text="{(Server.player.win/(Server.player.win+Server.player.lose&gt;0?Server.player.win+Server.player.lose:1)*100).toString().substr(0,4)+'%'}" id="winrate" width="79" height="18" color="#D6D6D6"/>
-		<mx:Label x="100" y="17" text="{Server.player.level}" id="level" width="79" height="18" color="#D6D6D6"/>
+		<mx:Label x="100" y="53" text="{(Server.player.win+Server.player.lose)}" id="gamecount" width="79" height="18" color="#D6D6D6" textAlign="center"/>
+		<mx:Label x="100" y="71" text="{(Server.player.win/(Server.player.win+Server.player.lose&gt;0?Server.player.win+Server.player.lose:1)*100).toString().substr(0,4)+'%'}" id="winrate" width="79" height="18" color="#D6D6D6" textAlign="center"/>
+		<mx:Label x="100" y="17" text="{Server.player.level}" id="level" width="79" height="18" color="#D6D6D6" textAlign="center"/>
 		<mx:Label text="{LanguageManager.getText('roomCpt.dj')}：" width="45" textAlign="right" x="59" y="17" height="18" color="#D6D6D6"/>
 		<mx:Label text="{LanguageManager.getText('roomCpt.jb')}：" width="45" textAlign="right" x="59" y="35" height="18" color="#D6D6D6"/>
 	</mx:Canvas>
@@ -414,14 +428,14 @@
 	</mx:ToggleButtonBar>
 	-->
 	
-	<mx:Button x="752" y="504" 
+	<mx:Button x="744" y="495" 
 			    buttonMode="true"
 			   click="fastRequestEnterDesk()" 
-			   width="186" height="70" 
-			   label="快速开始" 
-			   color="#EAEAEA" fontSize="30" alpha="1.0" 
+			   width="203" height="90" 
+			   label="{LanguageManager.getText('image.faststart')}" 
+			   color="#FFCC99" fontSize="30" alpha="1.0" 
 			   fillAlphas="[0.26, 0.27, 0.5, 0.5]" 
-			   fillColors="[#17FFF1, #0089A6]" borderColor="#00358C" fontWeight="bold" fontFamily="中易黑体">
+			   fillColors="[#17FFF1, #0089A6]" borderColor="#00358C" fontWeight="bold" skin="@Embed(source='../image/button/fastBt.png')" overSkin="@Embed(source='../image/button/fastBt2.png')" downSkin="@Embed(source='../image/button/fastBt3.png')" textRollOverColor="#EAEAEA" textSelectedColor="#EAEAEA" fontFamily="中易黑体">
 		<!--
 		<mx:filters>
 			<mx:GlowFilter color="0x000080" quality="5" ></mx:GlowFilter>
@@ -431,9 +445,10 @@
 	
 	<mx:LinkButton x="632" y="22" label="{LanguageManager.getText('roomCpt.tcfj')}" fontSize="12" click="exitRoom()"  color="#FFFFFF" visible="false"/>
 	<mx:CheckBox id="cb1" x="770" y="44" label="{LanguageManager.getText('roomCpt.kxpz')}" change="showWaitRoom()" color="#FDFDFD" textSelectedColor="#FFFFFF" textRollOverColor="#FFFFFF" textAlign="center"/>
-
-	<mx:Label text="{LanguageManager.getText('roomCpt.xxgdq')}" fontSize="14" x="431" y="44" color="#ECECEC"/>
 	
+	<!--
+	<mx:Label text="{LanguageManager.getText('roomCpt.xxgdq')}" fontSize="14" x="431" y="44" color="#ECECEC"/>
+	-->
 	
 
 	

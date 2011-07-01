@@ -53,9 +53,9 @@
 	</mx:Script>	
 	<mx:Button id="bt" label="" width="100%" height="100%" cornerRadius="8" borderColor="#111111"/>
 
-	<mx:Label x="60" text="{Server.getPlayerName(player)}" width="86" y="3"/>
-	<mx:Label x="60" y="18" width="86" text="{LanguageManager.getText('playerItemCpt.jb')}：{player.score}"/>
-	<mx:Label x="60" y="33" width="86" text="({LanguageManager.getText('playerItemCpt.xgz')})"/>
+	<mx:Label x="60" text="{Server.getPlayerName(player)}" width="86" y="3" color="#000000"/>
+	<mx:Label x="60" y="18" width="86" text="{LanguageManager.getText('playerItemCpt.jb')}：{player.score}" color="#000000"/>
+	<mx:Label x="60" y="33" width="86" text="({LanguageManager.getText('playerItemCpt.xgz')})" color="#000000"/>
 
 	<mx:Image x="3" y="3" width="50" height="50" source="{player.player_head_url}" 
 			  brokenImageBorderSkin="@Embed(source='../image/bg/head_bar.png')"/>

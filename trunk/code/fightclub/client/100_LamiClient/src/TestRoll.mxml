@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" minWidth="955" minHeight="600" 
-				xmlns:Component="Component.*" xmlns:Class="Class.*" creationComplete="inits()">
+				xmlns:Component="Component.*" xmlns:Class="Class.*" creationComplete="inits()"   >
 	<mx:Style source="Css/public.css">
 	</mx:Style>
 	
 	<mx:Script>
 		<![CDATA[
+			import Class.LanguageManager;
 			import Class.MaskCtr;
+			import Class.Model.Card;
+			
+			import Component.Card_Cpt;
+			import Component.Intro;
 			
 			import com.fc.lami.Messages.GameOverNotify;
 			import com.fc.lami.Messages.ResultPak;
+			import com.greensock.TweenLite;
 			
 			import de.polygonal.ds.Collection;
 			
@@ -19,7 +25,9 @@
 			import mx.controls.Alert;
 			import mx.controls.scrollClasses.ScrollBar;
 			import mx.core.UIComponent;
+			import mx.events.FlexEvent;
 			import mx.managers.CursorManager;
+			import mx.states.AddChild;
 			[Bindable]
 			public var ss:ScrollBar;
 			[Bindable]
@@ -32,9 +40,15 @@
 			private var _loader_mc:MovieClip;
 			public function inits():void
 			{
+				
+				LanguageManager.loadLanguage(ssssss);
+			
 				//sss.addEventListener(
 			}
 			
+			public function ssssss(event:Event):void
+			{
+			}
 			
 			public function drow():void
 			{
@@ -71,9 +85,74 @@
 			
 			
 			
-			public function init():void
+			
+			private var tl:TweenLite;
+			private var moveCard:Card_Cpt
+			public function addCardMotion():void
 			{
 				
+				moveCard = new Card_Cpt();
+				
+				moveCard.isShow = true;
+				moveCard.x = 0
+				moveCard.y = 0
+				addChild(moveCard);
+				moveCard.setCard(new Card(1,1,1));
+				
+				moveCard.addEventListener(FlexEvent.CREATION_COMPLETE,goto);
+				/*
+				var can:Canvas = new Canvas();
+				addChild(can);
+				can.width =100;
+				can.height = 100;
+				can.setStyle('backgroundColor',0x030303)
+				//moveCard.card.nextCard  = card.nextCard;
+				//moveCard.nextCardCpt = card.cardUI;
+				
+				/*
+				var move:Move = new Move();
+				
+				move.target = moveCard;
+				move.duration = 300;
+				
+				move.xTo = card.cardUI.getVisibleRect().x;
+				move.yTo = card.cardUI.getVisibleRect().y;
+				
+				
+				move.addEventListener(EffectEvent.EFFECT_END,addCardMotionComplate);
+				move.play();
+				cur_move = move;
+				*/
+				//card.nextCard = null;
+				//tl = TweenLite.to(moveCard,1,{x:500,y:500})
+				
+				
+			}
+			
+			public function goto(event:Event):void
+			{
+				//tl = TweenLite.to(moveCard,0.3,{x:500,y:500});
+				tl = new TweenLite(moveCard,5,{x:500,y:500});
+				tl.paused = true;
+				tl.play();
+			}
+			
+			public function go():void
+			{
+				//TweenLite.killTweensOf();
+				//TweenLite.
+				//tl = TweenLite.to(moveCard,0,{x:500,y:500})
+			}
+			
+			public function init():void
+			{
+				var intro:Intro = new Intro();
+				//AddChild(intro);
+				
+				this.addChild(intro);
+				//addCardMotion()
+				//TweenLite.to(hbox,0.3,{x:826, y:572})
+			
 			   //var tt:MovieClip =  (swf.content as MovieClip)
 				
 			   //tt.setp(80);
@@ -82,10 +161,7 @@
 				
 				//var fw:Fireworks = new Fireworks();
 				
-				
 				//uic.addChild(fw);
-				
-				
 			}
 			
 			
@@ -152,7 +228,7 @@
 	<mx:Button x="150" y="327" label="按钮" click="init()"/>
 	
 	
-	<mx:Button x="150" y="427" label="画图" click="drow()"/>
+	<mx:Button x="150" y="427" label="画图" click="go()"/>
 	
 	
 	
@@ -161,7 +237,7 @@
 	
 
 	
-	<mx:HBox id="hbox" x="321" y="309" height="230" width="649" borderStyle="solid" cornerRadius="2" mouseMove="mmove(event)" mouseDown="mdwon(event)" >
+	<mx:HBox id="hbox" x="1000" y="1000" height="230" width="649" borderStyle="solid" cornerRadius="2" mouseMove="mmove(event)" mouseDown="mdwon(event)" >
 		<mx:Canvas x="576" y="86" width="182" height="149" backgroundColor="#030303" dragStart="drag()" >
 			
 			

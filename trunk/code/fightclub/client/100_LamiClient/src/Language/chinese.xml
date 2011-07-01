@@ -85,6 +85,8 @@
 		<string name="roomCpt.jr">进入</string>
 		<string name="roomCpt.lk">离开</string>
 		<string name="roomCpt.jrfj">进入房间</string>
+		<string name="roomCpt.pcount">{0}人</string>
+		<string name="roomCpt.fj">房间{0}</string>
 		<string name="roomCpt.lkfj">离开房间</string>
 		<string name="roomCpt.xxgdq">信息滚动区</string>
 		<string name="roomCpt.tj">提交</string>
@@ -106,14 +108,44 @@
 		<string name="main.err1">无法获得平台数据！</string>
 		<string name="main.err2">无法获得用户信息！</string>
 		
-		<string name="image.">快速开始</string>
-		<string name="image.">准备</string>
-		<string name="image.">摸牌</string>
-		<string name="image.">排序</string>
-		<string name="image.">撤销</string>
-		<string name="image.">结束</string>
-		<string name="image.">你的回合开始</string>
-		<string name="image.">提交</string>
+		<string name="image.faststart">快速开始</string>
+		
+		<string name="image.submit">提交</string>
+		
+		<string name="image.op.ready">准备</string>
+		<string name="image.op.getcard">摸牌</string>
+		<string name="image.op.sort">排序</string>
+		<string name="image.op.cancel">撤销</string>
+		<string name="image.op.over">结束</string>
+		
+		<string name="image.roundstart">你的回合开始</string>
+		
+		
+		<string name="intro.title">新手教学</string>
+		<string name="intro.next">下一步</string>
+		<string name="intro.wc">完成</string>
+		
+		<string name="intro.stepTitle1">1.拉密牌介绍</string>
+		<string name="intro.step1">拉密牌由104张普通牌和2张百搭牌组成。普通牌有红、黄、蓝、黑4种颜色，每种颜色各有1-13点牌各2张；百搭牌分为2种颜色，分别为红与黑。</string>
+		<string name="intro.stepTitle2">2.发牌</string>
+		<string name="intro.step2">每局开始时，会随机分配给每名玩家14张手牌</string>
+		<string name="intro.stepTitle3">3.排序</string>
+		<string name="intro.step3">请对当前的手牌进行排序。</string>
+		<string name="intro.stepTitle4">4.出牌</string>
+		<string name="intro.step4">点击指定手牌并放到牌桌上以完成出牌。</string>
+		<string name="intro.stepTitle5">5.组牌</string>
+		<string name="intro.step5">组牌由颜色不同而数字相同的牌组成，请将手牌中的红色10、黄色10和黑色10移动到牌桌中。可以按住鼠标纵向滑动选取组牌牌组。</string>
+		<string name="intro.stepTitle6">6.顺牌</string>
+		<string name="intro.step6">顺牌由颜色相同而数字相连的牌组成，请将手牌中的红色4、5、6移动到牌桌中。可以按住鼠标横向滑动选取顺牌牌组。</string>
+		<string name="intro.stepTitle7">7.自由组合</string>
+		<string name="intro.step7">可以使用手牌与桌面中现有的牌组进行组合。</string>
+		<string name="intro.stepTitle8">8.百搭牌</string>
+		<string name="intro.step8">百搭牌可以代替任何一张牌使用</string>
+		<string name="intro.stepTitle9">完成</string>
+		<string name="intro.step9">恭喜你完成了新手教学，如果在游戏中还有疑问的话，可以随时查看游戏中的帮助，祝你游戏愉快。</string>
+		
+		
+		
 		
 	</language>
 </root>

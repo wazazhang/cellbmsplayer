@@ -4,15 +4,23 @@ package Class
 	import Class.Model.Line;
 	import Class.Model.Player;
 	
+	import Component.CardMatrixCpt;
 	import Component.Card_Cpt;
+	import Component.Card_Move;
 	import Component.Lami;
-	import Component.Matrix_Cpt;
+	import Component.Login_Cpt;
+	
+	import Interface.ICardOwner;
 	
 	import com.fc.lami.Messages.CardData;
+	import com.fc.lami.Messages.MoveCardToDeskRequest;
+	import com.fc.lami.Messages.MoveCardToDeskResponse;
 	import com.fc.lami.ui.LamiAlert;
+	import com.net.client.ClientEvent;
 	
 	import flash.display.MovieClip;
 	import flash.events.KeyboardEvent;
+	import flash.sampler.NewObjectSample;
 	
 	import mx.collections.ArrayCollection;
 	import mx.collections.Sort;
@@ -26,19 +34,18 @@ package Class
 	{
 		public  var lami:Lami;
 		
+		public var cardOwner:ICardOwner;
 		//列数
 		public  const lineCount:int=8; 
 		public  const linewidth:int=24; 
 		
+		public var cards:ArrayCollection; //游戏介绍使用的数组
 		
 		//列数组
 		public  var lineArray:ArrayCollection = new ArrayCollection();
 		
 		//中央矩形
-		public  var matrix:Matrix_Cpt;
-		
-		//数组
-		public  var cards:ArrayCollection = new ArrayCollection();
+		public  var matrix:CardMatrixCpt;
 		
 		//玩家
 		public  var gamer:Player= new Player();
@@ -46,8 +53,8 @@ package Class
 		//当前合法性
 		public  var legaled:Boolean = true;
 		
-		//是否有出牌
-		public  var haveSendCard:Boolean = false;
+//		//是否有出牌
+//		public  var haveSendCard:Boolean = false;
 		
 		//是否已经开始
 		public  var isStarted:Boolean = false;
@@ -64,8 +71,11 @@ package Class
 			timeCtr = new TimesCtr();
 			lami = new Lami();
 			lami.game = this;
+			
+			//cardOwner = lami;
 		}
 		
+	
 		public function initGame():void
 		{
 			//matrix = lami.mx;
@@ -74,6 +84,7 @@ package Class
 			gamer.initMatrix();
 			//initCard();
 			//TimesCtr.init();
+			
 			lami.addEventListener(KeyboardEvent.KEY_DOWN,keydown);
 			lami.addEventListener(KeyboardEvent.KEY_UP,keyup);
 		}
@@ -86,36 +97,26 @@ package Class
 			lami.optCpt.Start(); 
 		}
 		
-		public  function get canSubmitCard():Boolean
-		{
-			return legaled&&haveSendCard;
-		}
+//		public  function get canSubmitCard():Boolean
+//		{
+//			return legaled&&haveSendCard;
+//		}
 		
 		//初始矩阵
 		public  function initMatrix():void
 		{
-			var curline:Line;
 			for(var i:int=0;i<lineCount;i++)
 			{			
-				var line:Line = new Line(linewidth,false,i+1,this);
+				var line:Line = new Line(linewidth,false,i,this);
 				
-				if(curline != null)
-				{
-					curline.nextLine = line;
-				}
-				curline = line;
-				
-				if(i == lineCount-1)
-				{
-					curline.nextLine = lineArray[0];
-				}
-				
+								
 				lineArray.addItem(line);
 				line.fill(i,matrix);
+				line.clean();
 			}
-			var cardcpt:Card_Cpt = (lineArray[0] as Line).firstCard;
-			matrix.width = (cardcpt.width+1)*(lineArray[0] as Line).lineLength+4;
-			matrix.height = (cardcpt.height+1)*lineCount+4;
+			var cardcpt:Card_Cpt = new Card_Cpt();
+			matrix.width = (cardcpt.width)*linewidth+4;
+			matrix.height = (cardcpt.height)*lineCount+4;
 		}
 		
 		//清空矩阵
@@ -128,34 +129,7 @@ package Class
 		}
 		
 		
-		
-		//初始牌
-		public  function initCard():void
-		{
-			var cid:int = 0;
-			for(var i:int=1;i<=13;i++)
-			{
-				for(var j:int=1;j<=4;j++)
-				{
-					var card:Card = new Card(i,j, cid++);
-					card.order = Math.random();
-					cards.addItem(card);
-					card = new Card(i,j, cid++);
-					card.order = Math.random();
-					cards.addItem(card);
-				}
-			}
-			card = new Card(0,0, cid++);
-			card.order = Math.random();
-			cards.addItem(card);
-			card = new Card(0,0, cid++);
-			card.order = Math.random();
-			cards.addItem(card);
-			var sort:Sort = new Sort();
-			sort.fields = [new SortField("order",false)];
-			cards.sort = sort;
-			cards.refresh();
-		}
+	
 		
 		public  function getCardFromServer():void
 		{
@@ -167,7 +141,7 @@ package Class
 		//确定合法性
 		public  function check():Boolean
 		{
-			haveSendCard = checkHaveSendCard();
+//			haveSendCard = checkHaveSendCard();
 			
 			for each(var line:Line in lineArray)
 			{
@@ -196,20 +170,17 @@ package Class
 		public  function get getPublicCards():Array
 		{
 			var cards:Array = new Array()
-	
+			var cardcpt:Card_Cpt;
 			for each(var line:Line in lineArray)
 			{
-				var cardcpt:Card_Cpt = line.firstCard
-				do{	
-					
-					if(cardcpt.card!=null)
+				for (var i:int=0;i<line.length;i++)
+				{
+					cardcpt = line.getCardByIndex(i);
+					if(cardcpt.getCard()!=null)
 					{
-						cards.push(cardcpt.card.cardData);
+						cards.push(cardcpt.getCard().cardData);
 					}
-					cardcpt = cardcpt.nextCardCpt;
-				}	
-				while(cardcpt!=null)	
-				
+				}
 			}	
 			return cards;	
 		}
@@ -217,42 +188,32 @@ package Class
 		//主牌区的变化
 		public  function publicCardChange(is_hardhanded:Boolean, cards:Array):void
 		{
-			
-			
 			if(!is_hardhanded && gamer.isMyturn)
 				return;
 			
-		
-			for each(var line:Line in lineArray)
-			{
-				var cardcpt:Card_Cpt = line.firstCard;
-				if (cards.length == 0){
-					do{
-						cardcpt.card = null;
-						cardcpt = cardcpt.nextCardCpt;
-					}
-					while(cardcpt!=null);
-				}else{
-					do{	
+			if (cards.length == 0){
+				cleanMatrix();
+			}else{
+				for each(var line:Line in lineArray)
+				{
+					for each(var cardcpt:Card_Cpt in line){
 						var have_card:Boolean = false;
 						for each(var carddata:CardData in cards)
 						{
 							if(cardcpt.cardX == carddata.x&&cardcpt.cardY == carddata.y)
 							{
-								cardcpt.card = Card.createCardByData(carddata);
+								cardcpt.setCard(Card.createCardByData(carddata));
 								have_card = true;
 								break;
 							}
 						}
 						if (!have_card){
-							cardcpt.card = null;
+							cardcpt.setCard(null);;
 						}
-						cardcpt = cardcpt.nextCardCpt;
-					}	
-					while(cardcpt!=null)
+					}
 				}
-			}	
-			
+			}
+			cleanShadow();
 			check();
 			
 		}
@@ -260,16 +221,7 @@ package Class
 		public function getCardCpt(x:int, y:int):Card_Cpt
 		{
 			var line:Line = lineArray.getItemAt(y) as Line;
-			var cardcpt:Card_Cpt = line.firstCard;
-			var i:int = x;
-			// todo
-			while (i>0){
-				i--;
-				cardcpt = cardcpt.nextCardCpt;
-				if (cardcpt == null){
-					return null;
-				}
-			}
+			var cardcpt:Card_Cpt = line.getCardByIndex(x);
 			return cardcpt;
 		}
 		
@@ -292,76 +244,26 @@ package Class
 			return point;
 		}
 		
-		//判定是否打出
-		public  function checkHaveSendCard():Boolean
-		{
-			for each(var line:Line in lineArray)
-			{
-				var cardcpt:Card_Cpt = line.firstCard;
-				
-				while(cardcpt!=null)
-				{
-					if(cardcpt.card!=null&&!cardcpt.card.isSended)
-						return true;
-					else
-						cardcpt = cardcpt.nextCardCpt;	
-				}	
-			}
-			return false
-		}
+//		//判定是否打出
+//		public  function checkHaveSendCard():Boolean
+//		{
+//			for each(var line:Line in lineArray)
+//			{
+//				for each (var cardcpt:Card_Cpt in line){
+//					if(cardcpt.card!=null&&!cardcpt.card.isSended){
+//						return true;
+//					}
+//				}	
+//			}
+//			return false
+//		}
 		
-		//撤销
-		public  function reset():void
-		{
-			for each(var line:Line in lineArray)
-			{
-				var cardctp:Card_Cpt = line.firstCard;
-				do{
-					cardctp.card = null;
-				//	cardctp.card = cardctp.confimcard;
-					cardctp = cardctp.nextCardCpt;
-				}
-				while(cardctp != null);
-			}
-		}
-		
-		public  function setAllCardIssend():void
-		{
-			for each(var line:Line in lineArray)
-			{
-				var cardctp:Card_Cpt = line.firstCard;
-				do{
-					//cardctp.confimcard = null;
-					//cardctp.confimcard = cardctp.card;
-					
-					if(cardctp.card!=null)
-						cardctp.card.isSended = true;
-					
-					cardctp = cardctp.nextCardCpt;	
-				}
-				while(cardctp != null);
-			}
-		}
-		
-		//提交
-		public  function submit():void
-		{
-			
-			if(!canSubmitCard)
-			{
-				LamiAlert.show("不合法");
-				return;
-			}
-			
-			Server.submit();
-		}
+
 		
 		public  function turnStart():void
 		{
-			//gamer.canOpearation = true;
-			gamer.confiomCard();
-			gamer.isMyturn = true;
-			haveSendCard = false;
+			gamer.onTurnStart();
+//			gamer.isMyturn = true;
 			lami.playRoundStartMoiveClip();
 			timeCtr.start();
 		}
@@ -371,15 +273,12 @@ package Class
 		{
 			for each(var c:Line in lineArray)
 			{
-				var cardcpt:Card_Cpt  = c.firstCard
-				
-				while(cardcpt!=null)
+				for each(var cardcpt:Card_Cpt in c)
 				{
-					if(cardcpt.card!=null&&cardcpt.card.cardData.id == card.cardData.id)
+					if(cardcpt.getCard()!=null&&cardcpt.getCard().id == card.id)
 					{
 						return true;
 					}
-					cardcpt = cardcpt.nextCardCpt
 				}
 			}
 			return false;
@@ -390,7 +289,7 @@ package Class
 		{
 			for each(var c:CardData in serverCards)
 			{
-				if(c.id == card.cardData.id)
+				if(c.id == card.id)
 					return true
 			}
 			return false;
@@ -402,42 +301,19 @@ package Class
 			gamer.isMyturn = false;
 			
 			//处理结束时候还有选中的牌组
-			if(gamer.selectedArrayCard != null)
-			{
-				for each(var card:Card in gamer.selectedArrayCard)
-				{
-					card.cardUI.isSelected = false;
-					if(card.isSended == false && !card.cardUI.isPlayerOwner)
-					{
-						card.cardUI.card = null;
-						var index:int = gamer.handCard.getItemIndex(card);
-						if(index!=-1)
-						gamer.handCard.removeItemAt(index);
-					
-					}
-				}
-				gamer.selectedArrayCard = null;
+//			if(gamer.selectedArrayCard != null)
+//			{
+//				for each(var cardm:Card_Move in gamer.selectedArrayCard)
+//				{
+//					cardm.curCardCpt.isShow = true;
+//					lami.removeChild(cardm);
+//				}
+//				gamer.selectedArrayCard = null;
+//
+//			}	
 
-			}	
-			//处理结束时候还有选中的牌
-			if(gamer.selectedCard != null)
-			{
-				gamer.selectedCard.cardUI.isSelected = false;
-
-				if(gamer.selectedCard.isSended == false && !gamer.selectedCard.cardUI.isPlayerOwner)
-				{
-					gamer.selectedCard.cardUI.card = null;	
-					
-					index = gamer.handCard.getItemIndex(gamer.selectedCard);
-					if(index!=-1)
-					{
-						gamer.handCard.removeItemAt(index);
-					}
-				}
-				gamer.selectedCard = null;
-				
-			}
 			//gamer.reset();
+			lami.cleanCardState();
 			timeCtr.reset();
 			timeCtr.stop();
 		}
@@ -482,7 +358,149 @@ package Class
 			}
 		}
 		
+		public function getCardGroup(x:int, y:int):ArrayCollection
+		{
+			var line:Line = lineArray[y];
+			return line.getCardGroup(x);
+		}
 		
+		private function moveCardResponseListener(event:ClientEvent):void
+		{
+			var res:Object = event.getResponse();
+			
+			if (res is MoveCardToDeskResponse){
+				var mcpr : MoveCardToDeskResponse = res as MoveCardToDeskResponse;
+				var mcp : MoveCardToDeskRequest = event.getRequest() as MoveCardToDeskRequest;
+				if (mcpr.result == MoveCardToDeskResponse.MOVE_CARD_TO_DESK_RESULT_SUCCESS){
+					var array : ArrayCollection = lami.selected_cards.getSelectCards();
+					var cards:ArrayCollection = new ArrayCollection();
+					for each (var cardm:Card_Move in array){
+						cards.addItem(cardm.curCardCpt.getCard());
+					}
+					var line:Line = lineArray[mcp.y];
+					var x1:int = mcp.x;
+					for each(var cardm:Card_Move in array){
+						if (cardm.curCardCpt.isPlayerOwner){
+							var i:int = gamer.handCard.getItemIndex(cardm.curCardCpt.getCard());
+							if (i!=-1){
+								gamer.handCard.removeItemAt(i);
+								gamer.is_sended_card = gamer.isSendCard();
+							}
+						}
+						cardm.curCardCpt.setCard(null);
+						cardm.curCardCpt.isSelected = false;
+					}
+					for each(var card:Card in cards){
+						card.x = x1;
+						card.y = mcp.y;
+						line.getCardByIndex(x1).setCard(card);
+						x1++;
+					}
+					lami.cleanCardState();
+				}else{
+					
+				}
+			}
+		}
 		
+		public function putCards(array:ArrayCollection, x:int, y:int):Boolean
+		{
+			var cards:ArrayCollection = new ArrayCollection();
+			for each (var cardm:Card_Move in array){
+				cards.addItem(cardm.curCardCpt.getCard());
+			}
+			
+			var line:Line = lineArray[y];
+			var cardcpt:Card_Cpt = line.getCardByIndex(x);
+			if (cardcpt.getCard()!=null && !cardcpt.isSelected){
+				return false;
+			}
+			
+			var x1:int = line.getBlankStart(x, array.length);
+			if (x1==-1){
+				return false;
+			}else{
+				for each(var cardm:Card_Move in array){
+					if (cardm.curCardCpt.isPlayerOwner){
+						var i:int = gamer.handCard.getItemIndex(cardm.curCardCpt.getCard());
+						if (i!=-1){
+							gamer.handCard.removeItemAt(i);
+							gamer.is_sended_card = gamer.isSendCard();
+						}
+					}
+					cardm.curCardCpt.setCard(null);
+					cardm.curCardCpt.isSelected = false;
+				}
+				for each(var card:Card in cards){
+					card.x = x1;
+					card.y = y;
+					line.getCardByIndex(x1).setCard(card);
+					x1++;
+				}
+			}
+			Server.sendPublicMatrix();
+			return true;
+		}
+		
+//		public function putCards(array:ArrayCollection, x:int, y:int):void
+//		{
+//			var cards:ArrayCollection = new ArrayCollection();
+//			for each (var cardm:Card_Move in array){
+//				cards.addItem(cardm.curCardCpt.card);
+//			}
+//			
+//			var line:Line = lineArray[y];
+//			var cardcpt:Card_Cpt = line.getCardByIndex(x);
+//			if (cardcpt.card!=null && !cardcpt.isSelected){
+//				return;
+//			}
+//			
+//			var x1:int = line.getBlankStart(x, array.length);
+//			var X:int = x1;
+//			if (x1==-1){
+//				return;
+//			}else{
+//				var cds:Array = new Array();
+//				for each(var card:Card in cards){
+//					cds.push(card.id);
+//				}
+//				Server.sendMoveCardToDesk(cds, X, y, moveCardResponseListener);
+//			}
+//			return;
+//		}
+		
+		public function putCardsShadow(array:ArrayCollection, x:int, y:int):void
+		{
+			var cards:ArrayCollection = new ArrayCollection();
+			for each (var cardm:Card_Move in array){
+				cards.addItem(cardm.curCardCpt.getCard());
+			}
+			
+			var line:Line = lineArray[y];
+			var cardcpt:Card_Cpt = line.getCardByIndex(x);
+			if (cardcpt.getCard()!=null && !cardcpt.isSelected){
+				return;
+			}
+			
+			var x1:int = line.getBlankStart(x, array.length);
+			if (x1==-1){
+				return;
+			}else{
+				for each(var card:Card in cards){
+					line.getCardByIndex(x1).setShadow(true);
+					x1++;
+				}
+			}
+		}
+		
+		public function cleanShadow():void
+		{
+			for each (var line:Line in lineArray)
+			{
+				for each(var cardcpt:Card_Cpt in line){
+					cardcpt.setShadow(false);
+				}
+			}
+		}
 	}
 }

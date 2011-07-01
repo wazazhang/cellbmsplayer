@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" borderThickness="{_gameing?2:1}"
 		   width="124" height="96" borderColor="{_gameing?0x990000:0x000000}" borderStyle="none"
-	 verticalScrollPolicy="off"	 horizontalScrollPolicy="off"  creationComplete="init()"   cornerRadius="10" fontSize="10">
+	 verticalScrollPolicy="off"	 horizontalScrollPolicy="off"  creationComplete="init()"   cornerRadius="10" fontSize="10" mouseEnabled="false" mouseChildren="false">
 	
 	<mx:Script>
 		<![CDATA[
@@ -188,7 +188,7 @@
 			
 			public function setState(arr:Array):void
 			{
-				if(player == null)
+				if(player == null || arr==null)
 					return 
 					
 				for each(var state:PlayerState in arr)	

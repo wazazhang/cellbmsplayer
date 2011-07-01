@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%" backgroundAlpha="0.2" backgroundColor="0x000000" implements="Interface.ITask" creationComplete="showEF()" >
+	<mx:Script>
+		<![CDATA[
+			import Interface.ITask;
+			private function enter():void
+			{
+				var intro:Intro = new Intro();
+				intro.task = this;
+				addChild(intro);
+			}
+			
+			private function close():void
+			{
+				parent.removeChild(this);
+			}
+			
+			public function complate():void
+			{
+				text.text = "恭喜完成新手任务,获得XXXXXX奖励!";
+				bt1.enabled = false;
+			}
+			
+			public function showEF():void
+			{
+				zoom.play();
+			}
+
+		]]>
+	</mx:Script>
+	
+	<mx:TitleWindow id="tw" addedEffect="zoom" width="360" height="276" borderAlpha="0.78" layout="absolute" horizontalCenter="0" verticalCenter="0" showCloseButton="true" title="新手任务" close="close()">
+		<mx:Text id="text" x="10" y="10" text="    欢迎来到拉密牌,下面将会有一个新手教程的任务来帮助您熟悉游戏的操作,完成后会得到一定的奖励,如果熟悉玩法,可以选择跳过.&#xa;" width="320" height="104" fontSize="14"/>
+		<mx:Button id="bt1" x="116" y="200" label="进入" click="enter()" />
+		<mx:Button x="190" y="200" label="跳过" click="close()" />
+	</mx:TitleWindow>
+	<mx:Zoom id="zoom" target="{tw}" zoomHeightFrom="0" zoomHeightTo="1" zoomWidthFrom="0" zoomWidthTo="1">
+	</mx:Zoom>
+</mx:Canvas>

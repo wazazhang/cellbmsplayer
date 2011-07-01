@@ -32,6 +32,9 @@ package com.fc.lami.Messages
 		static public const MAIN_MAIRIX_CHANGE_RESULT_FAIL_CANNT_SPLICE :  int = 5;
 		/** Java type is : <font color=#0000ff>int</font> */
 		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
+		static public const MAIN_MAIRIX_CHANGE_RESULT_FAIL_GAME_NOT_START :  int = 6;
+		/** Java type is : <font color=#0000ff>int</font> */
+		[JavaType(name="int", leaf_type=NetDataTypes.TYPE_INT)]
 		public var result :  int;
 
 		/**

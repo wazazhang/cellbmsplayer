@@ -1,0 +1,631 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%" implements="Interface.ICardOwner" 
+		   creationComplete="init()" xmlns:Component="Component.*" horizontalCenter="0" verticalCenter="0"
+		   backgroundColor="#000000" verticalScrollPolicy="off"  horizontalScrollPolicy="off" styleName="taskDetailBG"
+		   > 
+	
+	<mx:Script>
+		<![CDATA[
+			import Class.Game;
+			import Class.LanguageManager;
+			import Class.Model.Card;
+			import Class.Model.Line;
+			import Class.Model.Player;
+			import Class.Resource;
+			
+			import Interface.ITask;
+			
+			import com.greensock.TweenLite;
+			
+			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
+			
+			public var task:ITask;
+			private var game:Game;
+			private var selected_card:ArrayCollection = new ArrayCollection();
+			[Bindable]
+			private var step4card:Card;//4阶段的牌
+			
+			[Bindable]
+			private var step5card:ArrayCollection = new ArrayCollection();//5阶段的牌
+			
+			[Bindable]
+			private var step6card:ArrayCollection = new ArrayCollection();//6阶段的牌
+			
+			[Bindable]
+			private var step7card:Card;//7阶段的牌
+			
+			[Bindable]
+			private var step8card:ArrayCollection = new ArrayCollection();//8阶段的牌
+			
+			private function init():void
+			{
+				addEventListener(MouseEvent.MOUSE_UP,mouseUp);
+				addEventListener(MouseEvent.MOUSE_MOVE,mouseMove);
+				
+				game = new Game();
+				game.gamer = new Player();
+				game.matrix = mx;
+				game.gamer.matrix = umx;
+				optCpt.game = game;
+				game.gamer.isMyturn = true;
+				game.initGame();
+				createIntroCard();
+				game.cardOwner = this;
+				game.lami.selected_cards = selected_cards;
+				
+				//game.cardOwner = this;
+				//game.lami.selected_cards = new CardMouseMoveCpt();
+				//game.lami.selected_cards.
+				//addChild(game.lami.selected_cards);
+				
+				step1();
+				
+				//game.gamer.isMyturn;
+			}
+			
+			protected function mouseUp(event:MouseEvent):void
+			{
+				selected_cards.startFollow();
+				selected_cards.x = mouseX;
+				selected_cards.y = mouseY;
+			}
+			
+			protected function mouseMove(event:MouseEvent):void
+			{
+				selected_cards.x = mouseX;
+				selected_cards.y = mouseY;
+			}
+			
+			//教程时候发牌
+			private  function createIntroCard():void
+			{
+				game.cards = new ArrayCollection();
+				var cid:int = 0;
+				for(var i:int=1;i<=13;i++)
+				{
+					for(var j:int=1;j<=4;j++)
+					{
+						game.cards.addItem(new Card(i,j, cid++));
+						game.cards.addItem(new Card(i,j, cid++));
+					}
+				}
+				game.cards.addItem( new Card(0,0, cid++));
+				game.cards.addItem( new Card(0,1, cid++));
+			}
+			
+			private function moveCardMotionDelay(card:Card_Cpt, start:Rectangle, end:Rectangle,delay:Number):void
+			{
+				var moveCard:Card_Move = new Card_Move();
+				addChild(moveCard);
+				
+				moveCard.curCardCpt = card; //借助nextCardCpt保留原来的CardCpt
+				
+				moveCard.x = start.x;
+				moveCard.y = start.y;
+				
+				moveCard.addEventListener(FlexEvent.CREATION_COMPLETE,creatHandle);
+				moveCard.tl = new TweenLite(moveCard,0.5,{x:end.x,y:end.y,onComplete:addCardMotionComplate,onCompleteParams:[moveCard],delay:delay});
+				moveCard.tl.pause();
+			}
+			
+			public function getSelectCards():ArrayCollection
+			{
+				return selected_card;
+			}
+			private function addCardMotionComplate(cardcpt:Card_Move):void
+			{
+				cardcpt.curCardCpt.isShow = true;
+				removeChild(cardcpt);
+			}
+			
+			private function creatHandle(event:Event):void
+			{
+				//curMoveCard = event.target as Card_Cpt;
+				(event.target as Card_Move).tl.play();
+			}
+			
+			
+			public function cleanSelectCard():void
+			{
+				if (selected_card.length>0){
+					for each(var cm:Card_Move in selected_card){
+						removeChild(cm);
+					}
+				}
+				selected_card.removeAll();
+				removeEventListener(MouseEvent.MOUSE_MOVE, mouseMove);
+			}
+			
+			public function isSelectedCard():Boolean
+			{
+				return selected_card.length>0;
+			}
+			
+			private function startFollow():void
+			{
+				if (selected_card.length>0){
+					for each(var cm:Card_Move in selected_card){
+						addChild(cm);
+						cm.curCardCpt.isShow = false;
+					}
+					addEventListener(MouseEvent.MOUSE_MOVE, mouseMove);
+					setSelectCardPos(mouseX, mouseY);
+				}
+			}
+			/*
+			protected function mouseUp(event:MouseEvent):void
+			{
+				startFollow();
+			}
+			
+			protected function mouseMove(event:MouseEvent):void
+			{
+				setSelectCardPos(event.stageX, event.stageY);
+				event.updateAfterEvent();
+			}*/
+			
+			private function setSelectCardPos(x:int, y:int):void
+			{
+				var X:int = x;
+				var Y:int = y;
+				
+				for each(var cardm:Card_Move in selected_card)
+				{
+					cardm.x = X;
+					cardm.y = Y;
+					X += cardm.width+1;
+				}
+			}
+			
+			public function selectCard(card:Card_Cpt):void
+			{
+				if (card.getCard() == null)return;
+				selected_card.removeAll();
+				var move_card:Card_Move = new Card_Move();
+				move_card.setCurCardCpt(card);
+				card.isSelected = true;
+				card.isShow = false;
+				selected_card.addItem(move_card);
+				startFollow();
+			}
+			
+			public function selectCards(cards:ArrayCollection):void
+			{
+				if (cards == null || cards.length == 0)return;
+				selected_card.removeAll();
+				var move_card:Card_Move;
+				for each(var card:Card_Cpt in cards){
+					move_card = new Card_Move();
+					move_card.setCurCardCpt(card);
+					card.isSelected = true;
+					card.isShow = false;
+					selected_card.addItem(move_card);
+				}
+				startFollow();
+			}
+			
+			public function addSelectCard(card:Card_Cpt):void
+			{
+				if (card.getCard() == null)return;
+				var move_card:Card_Move = new Card_Move();
+				move_card.setCurCardCpt(card);
+				card.isSelected = true;
+				//				card.isShow = false;
+				selected_card.addItem(move_card);
+				trace(addSelectCard);
+			}
+			
+			
+			public function cardClick(card:Card_Cpt):void 
+			{
+				if(card.getCard() == step4card && !card.isPlayerOwner)
+				{
+					bt4.enabled = true;
+					return;
+				}
+					
+				if(game.check() &&game.getSendPoint()==30)
+				{
+					bt5.enabled = true;
+					return;
+				}
+				
+				if(game.check() &&game.getSendPoint()==15)
+				{
+					bt6.enabled = true;
+					return;
+				}
+				
+				if(game.check() && card.getCard() == step7card && !card.isPlayerOwner)
+				{
+					bt7.enabled = true;
+					return;
+				}
+				
+				if(game.check())
+				{
+					for each(var ccard:Card in step8card)
+					{
+						if(game.gamer.getCardUI(ccard)!=null)
+							return;
+					}
+					bt8.enabled = true;
+					return;
+				}
+				
+			}
+				
+			private function step1():void
+			{
+				var line:Line = game.lineArray[0];
+				var cardcpt:Card_Cpt;
+				
+				var i:int = 0;
+				var j:int = 0;
+				
+				for each (var card:Card in game.cards)
+				{
+					cardcpt = line.getCardByIndex(i);
+					i ++;
+					
+					cardcpt.setCard(card);
+					cardcpt.isShow = false;
+					moveCardMotionDelay(cardcpt,new Rectangle(0,0),new Rectangle(cardcpt.x+cardcpt.parent.x,cardcpt.y+cardcpt.parent.y),0.05*i);
+					
+					
+					
+					if(cardcpt == line.getLastCard())
+					{
+						j++;
+						i = 0;
+						line = game.lineArray[j];
+					}
+				}
+				stepCanvs1.visible = true;
+			}
+			
+			private function step2():void
+			{
+				game.cleanMatrix();
+				stepCanvs1.visible = false;
+				stepCanvs2.visible = true;
+				
+				game.gamer.handCard = new ArrayCollection();
+				
+				game.gamer.handCard.addItem(new Card(10,1,1));
+				game.gamer.handCard.addItem(new Card(10,2,2));
+				game.gamer.handCard.addItem(new Card(10,3,3));
+				
+				game.gamer.handCard.addItem(new Card(1,3,4));
+				game.gamer.handCard.addItem(new Card(2,3,5));
+				game.gamer.handCard.addItem(new Card(3,3,6));
+				game.gamer.handCard.addItem(new Card(5,3,7));
+				game.gamer.handCard.addItem(new Card(6,3,8));
+				
+				game.gamer.handCard.addItem(new Card(11,4,9));
+				game.gamer.handCard.addItem(new Card(12,4,10));
+				
+				game.gamer.handCard.addItem(new Card(4,1,11));
+				game.gamer.handCard.addItem(new Card(5,1,12));
+				game.gamer.handCard.addItem(new Card(6,1,13));
+				
+				game.gamer.handCard.addItem(new Card(0,1,14));
+				
+				step4card = game.gamer.handCard[9];
+				step5card.addItem(game.gamer.handCard[0]);
+				step5card.addItem(game.gamer.handCard[1]);
+				step5card.addItem(game.gamer.handCard[2]);
+				step6card.addItem(game.gamer.handCard[10]);
+				step6card.addItem(game.gamer.handCard[11]);
+				step6card.addItem(game.gamer.handCard[12]);
+				
+				step7card = game.gamer.handCard[8];
+				
+				step8card.addItem(game.gamer.handCard[3]);
+				step8card.addItem(game.gamer.handCard[4]);
+				step8card.addItem(game.gamer.handCard[5]);
+				step8card.addItem(game.gamer.handCard[6]);
+				step8card.addItem(game.gamer.handCard[7]);
+				step8card.addItem(game.gamer.handCard[13]);
+				
+				var line:Line = game.gamer.cardLines[0];
+				var cardcpt:Card_Cpt;
+				
+				var i:int = 0;
+				var j:int = 0;
+				
+				for each (var card:Card in game.gamer.handCard)
+				{
+					cardcpt = line.getCardByIndex(i);
+					i ++;
+					
+					cardcpt.setCard(card);
+					cardcpt.isShow = false;
+					
+					
+					moveCardMotionDelay(cardcpt,new Rectangle(0,0),new Rectangle(cardcpt.x+cardcpt.parent.x,cardcpt.y+cardcpt.parent.y),0.05*i);
+
+					if(cardcpt == line.getLastCard())
+					{
+						j++;
+						i = 0;
+						line = game.gamer.cardLines[0];
+					}
+				}	
+				//game.gamer.getStartCard(handcards);
+			}
+			
+			
+			private function step3():void
+			{
+				stepCanvs2.visible = false;
+				stepCanvs3.visible = true;
+				game.gamer.isMyturn = false;
+				optCpt.bt_sort.enabled = true;
+				
+				optCpt.mouseChildren = true;
+				//optCptMask.visible = false
+				optCpt.bt_sort.addEventListener(MouseEvent.CLICK,clickSort);
+				
+			}
+			
+			private function clickSort(event:Event):void
+			{
+				glow.play();
+				hand3.visible = false;
+				bt3.enabled = true;
+			}
+			
+			private function step4():void
+			{
+				stepCanvs3.visible = false;
+				stepCanvs4.visible = true;
+				
+				mx.mouseChildren = true
+				umx.mouseChildren = true
+					
+				game.gamer.isMyturn = true;
+				optCpt.mouseChildren = false;
+				
+				
+				setAllSended();
+				step4card.isSended = false;
+				var cardcpt:Card_Cpt =  game.gamer.getCardUI(step4card)
+				
+				//var point:Point = contentToLocal(new Point(cardcpt.x,cardcpt.y))
+				hand4.x = cardcpt.x + cardcpt.parent.x -20;
+				hand4.y = cardcpt.y + cardcpt.parent.y  -115;
+				cardcpt.shan();
+				
+				//step4card.
+			}
+			private function step5():void
+			{
+				stepCanvs4.visible = false;
+				stepCanvs5.visible = true;
+				game.cleanMatrix();
+				
+				for each(var card:Card in step5card)
+				{
+					card.isSended = false;
+					game.gamer.getCardUI(card).shan();
+				}
+			}
+			private function step6():void
+			{
+				stepCanvs5.visible = false;
+				stepCanvs6.visible = true;
+				
+				game.cleanMatrix();
+				
+				for each(var card:Card in step6card)
+				{
+					card.isSended = false;
+					game.gamer.getCardUI(card).shan();
+				}
+			}
+			
+			
+			private function step7():void
+			{
+				stepCanvs6.visible = false;
+				stepCanvs7.visible = true;
+				
+				game.cleanMatrix();
+				step7card.isSended = false;
+				game.gamer.getCardUI(step7card).shan();
+				
+				addaCard(new Card(8,4,12),10,5,0.1,true);
+				addaCard(new Card(9,4,12),11,5,0.3,true);
+				addaCard(new Card(10,4,12),12,5,0.5,true);
+				
+				
+			}
+			
+			private function step8():void
+			{
+				stepCanvs7.visible = false;
+				stepCanvs8.visible = true;
+				game.cleanMatrix();
+				for each(var card:Card in step8card)
+				{
+					card.isSended = false;
+					game.gamer.getCardUI(card).shan();
+				}
+			}
+			
+			private function step9():void
+			{
+				game.cleanMatrix();
+				stepCanvs8.visible = false;
+				stepCanvs9.visible = true;	
+				
+				mx.mouseChildren = false;
+				umx.mouseChildren = false;
+				optCpt.mouseChildren = false;
+				//dok();
+			}
+			
+			
+			
+			private function step10():void
+			{
+				task.complate();
+				parent.removeChild(this);
+			}
+			
+			private function setAllSended():void
+			{
+				for each (var card:Card in game.gamer.handCard)
+				{
+					card.isSended = true;
+				}
+			}
+			
+			
+			private function dok():void
+			{
+				
+				adddokcard(6,2);
+				adddokcard(6,3);
+				adddokcard(6,4);
+				adddokcard(6,5);
+				
+				
+				adddokcard(7,1);
+				adddokcard(8,1);
+				adddokcard(9,1);
+				
+				adddokcard(10,2);
+				adddokcard(10,3);
+				adddokcard(10,4);
+				adddokcard(10,5);
+				
+				adddokcard(7,6);
+				adddokcard(8,6);
+				adddokcard(9,6);
+				
+				
+				adddokcard(14,1);
+				adddokcard(14,2);
+				adddokcard(14,3);
+				adddokcard(14,4);
+				adddokcard(14,5);
+				adddokcard(14,6);
+				
+				adddokcard(17,1);
+				adddokcard(16,2);
+				adddokcard(15,3);
+				adddokcard(15,4);
+				adddokcard(16,5);
+				adddokcard(17,6);
+			}
+			
+			private function adddokcard(x:int,y:int):void
+			{
+				addaCard(new Card(0,1,1),x,y,0.2*y,false);
+			}
+				
+			private function addaCard(card:Card,x:int,y:int,delay:Number,sended:Boolean):void
+			{
+				var line:Line =  game.lineArray[y];
+				var cardcpt:Card_Cpt = line.getCardByIndex(x);
+				cardcpt.setCard(card);
+				cardcpt.getCard().isSended = sended;
+				cardcpt.isShow = false;
+				moveCardMotionDelay(cardcpt,new Rectangle(0,0),new Rectangle(cardcpt.x+cardcpt.parent.x,cardcpt.y+cardcpt.parent.y),delay);
+			}
+			
+			
+			private function close():void
+			{
+				parent.removeChild(this);
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:Zoom id="zoom" duration="500" zoomHeightTo="0" zoomWidthTo="0"></mx:Zoom>
+	<mx:Zoom id="zoom2" duration="500" zoomHeightFrom="0"  zoomHeightTo="1" zoomWidthFrom="0" zoomWidthTo="1"></mx:Zoom>
+		
+	<mx:Canvas y="96" 
+			   borderSkin="@Embed(source='../image/bg/desk.png')" 
+			   width="670" height="302" horizontalCenter="0">
+		<Component:CardMatrixCpt id="mx" y="22"  height="258" x="23" width="627" mouseChildren="false">
+			
+		</Component:CardMatrixCpt>
+	</mx:Canvas>
+
+	<mx:Canvas id="useinfo" width="469" height="45" x="244" y="406" 
+			   verticalScrollPolicy="off" horizontalScrollPolicy="off" borderSkin="@Embed(source='../image/bg/wood_bar.png')">
+		<Component:Opt_Cpt id="optCpt"  height="40" y="3" x="158"  mouseChildren="false" >
+		</Component:Opt_Cpt>
+	</mx:Canvas>
+	
+	<Component:CardMatrixCpt id="umx" height="190"  y="460" width="470"  horizontalCenter="0"  mouseChildren="false">
+	</Component:CardMatrixCpt>
+	
+	
+	
+	<mx:Canvas id="stepCanvs1" horizontalCenter="0" hideEffect="zoom" showEffect="zoom2" y="10" width="500" height="150"  backgroundImage="{Resource.talk_bg}" visible="false">
+		<mx:Text horizontalCenter="0" y="45" text="{LanguageManager.getText('intro.step1')}" width="450" height="91" color="#FAFCFD" fontSize="12"/>
+		<mx:Button right="10" bottom="10" label="{LanguageManager.getText('intro.next')}" buttonMode="true" styleName="opButton" click="step2()"/>
+	</mx:Canvas>
+	
+	<mx:Canvas id="stepCanvs2" horizontalCenter="0" hideEffect="zoom" showEffect="zoom2" y="10" width="500" height="150"  backgroundImage="{Resource.talk_bg}" visible="false">
+		<mx:Text horizontalCenter="0" y="45" text="{LanguageManager.getText('intro.step2')}" width="450" height="91" color="#FAFCFD" fontSize="12"/>
+		<mx:Button right="10" bottom="10" label="{LanguageManager.getText('intro.next')}" buttonMode="true" styleName="opButton" click="step3()"/>
+	</mx:Canvas>
+	
+	
+	<mx:Canvas id="stepCanvs3"  horizontalCenter="0" hideEffect="zoom" showEffect="zoom2" y="10" width="500" height="150"  backgroundImage="{Resource.talk_bg}" visible="false" >
+		<mx:Text horizontalCenter="0" y="45" text="{LanguageManager.getText('intro.step3')}" textAlign="center" width="450" height="91" color="#FAFCFD" fontSize="12"/>
+		<mx:Button id="bt3" right="10" bottom="10" enabled="false" label="{LanguageManager.getText('intro.next')}" buttonMode="true" styleName="opButton" click="step4()"/>
+	</mx:Canvas>
+	<mx:SWFLoader id="hand3" x="518" y="297" source="image/arrow.swf" visible="{stepCanvs3.visible}"/>
+	
+	<mx:Canvas id="stepCanvs4"  horizontalCenter="0" hideEffect="zoom" showEffect="zoom2" y="10" width="500" height="150"  backgroundImage="{Resource.talk_bg}" visible="false" >
+		<mx:Text horizontalCenter="0" y="45" text="{LanguageManager.getText('intro.step4')}" textAlign="center" width="450" height="91" color="#FAFCFD" fontSize="12"/>
+		<mx:Button id="bt4" right="10" bottom="10" enabled="false" label="{LanguageManager.getText('intro.next')}" buttonMode="true" styleName="opButton" click="step5()"/>
+	</mx:Canvas>
+	<mx:SWFLoader  id="hand4" source="image/arrow.swf" visible="{stepCanvs4.visible}"/>
+	
+	<mx:Glow id="glow" target="{optCpt.bt_sort}" color="0xff0000"  repeatCount="5" strength="30"  ></mx:Glow>
+	
+	<mx:Canvas id="stepCanvs5"  horizontalCenter="0" hideEffect="zoom" showEffect="zoom2" y="10" width="500" height="150"  backgroundImage="{Resource.talk_bg}" visible="false" >
+		<mx:Text horizontalCenter="46" y="48" text="{LanguageManager.getText('intro.step5')}" textAlign="center" width="366" height="91" color="#FAFCFD" fontSize="12"/>
+		<mx:SWFLoader  id="hand5"  y="20" x="10" source="image/jc1.swf"/>
+		<mx:Button id="bt5" right="10" bottom="10" enabled="false" label="{LanguageManager.getText('intro.next')}" buttonMode="true" styleName="opButton" click="step6()"/>
+	</mx:Canvas>
+	
+	
+	<mx:Canvas id="stepCanvs6"  horizontalCenter="0" hideEffect="zoom" showEffect="zoom2" y="10" width="500" height="150"  backgroundImage="{Resource.talk_bg}" visible="false" >
+		<mx:Text horizontalCenter="0" y="48" text="{LanguageManager.getText('intro.step6')}" textAlign="left" width="444" height="56" color="#FAFCFD" fontSize="12"/>
+		<mx:SWFLoader  id="hand6"  y="76" x="236" source="image/jc2.swf"/>
+		<mx:Button id="bt6" right="10" bottom="10" enabled="false" label="{LanguageManager.getText('intro.next')}" buttonMode="true" styleName="opButton" click="step7()"/>
+	</mx:Canvas>
+	
+	<mx:Canvas id="stepCanvs7"  horizontalCenter="0" hideEffect="zoom" showEffect="zoom2" y="10" width="500" height="150"  backgroundImage="{Resource.talk_bg}" visible="false" >
+		<mx:Text horizontalCenter="115" y="48" text="{LanguageManager.getText('intro.step7')}" textAlign="left" width="232" height="56" color="#FAFCFD" fontSize="12"/>
+		<mx:SWFLoader  id="hand7"  y="23" x="18" width="150" height="113" source="image/jc3.swf"/>
+		<mx:Button id="bt7" right="10" bottom="10" enabled="false" label="{LanguageManager.getText('intro.next')}" buttonMode="true" styleName="opButton" click="step8()"/>
+	</mx:Canvas>
+	
+	<mx:Canvas id="stepCanvs8"  horizontalCenter="0" hideEffect="zoom" showEffect="zoom2" y="10" width="500" height="150"  backgroundImage="{Resource.talk_bg}" visible="false" >
+		<mx:Text horizontalCenter="115" y="48" text="{LanguageManager.getText('intro.step8')}" textAlign="left" width="232" height="56" color="#FAFCFD" fontSize="12"/>
+		<mx:SWFLoader  id="hand8"  y="10" x="18"  source="image/jc4.swf"/>
+		<mx:Button id="bt8" right="10" bottom="10" enabled="false" label="{LanguageManager.getText('intro.next')}" buttonMode="true" styleName="opButton" click="step9()"/>
+	</mx:Canvas>
+	
+	<mx:Canvas id="stepCanvs9"  horizontalCenter="0" hideEffect="zoom" showEffect="zoom2" y="110" width="500" height="150"  backgroundImage="{Resource.talk_bg}" visible="false" >
+		<mx:Label horizontalCenter="0" y="16" text="{LanguageManager.getText('intro.stepTitle9')}" fontSize="16" color="#FFFFFF" fontWeight="bold"/>
+		<mx:Text horizontalCenter="0" y="67" text="{LanguageManager.getText('intro.step9')}" textAlign="center" width="404" height="56" color="#FAFCFD" fontSize="12"/>
+		<mx:Button id="bt9" bottom="10" label="{LanguageManager.getText('intro.wc')}" buttonMode="true" styleName="opButton" click="step10()" horizontalCenter="0"/>
+	</mx:Canvas>
+	
+	<Component:CardMouseMoveCpt id="selected_cards">
+	</Component:CardMouseMoveCpt>
+	
+	<mx:Button top="10" right="10" buttonMode="true" label="跳过" styleName="opButton" click="close()" />
+	
+</mx:Canvas>
