@@ -225,6 +225,11 @@ public class Desk implements ChannelListener
 	
 	private void onPlayerLeave(Player player){
 		getChannel().leave(player.session);
+		if (isAllPlayerReady()){
+			game = new Game(this, thread_pool);
+			log.info("desk [" + desk_id + "] game start");
+			room.broadcast(new GameStartToRoomNotify(desk_id));
+		}
 	}
 
 	public int getPlayerNumber(){

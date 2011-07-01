@@ -51,7 +51,15 @@ public class LoginDefault implements Login
 			return win;
 		}
 		
-
+		@Override
+		public boolean isFirstGame() {
+			return true;
+		}
+		
+		@Override
+		public void setFirstGame(boolean v) {
+		}
+		
 		@Override
 		public User save() {
 			return this;

@@ -14,14 +14,12 @@ import com.fc.lami.Messages.GameStartNotify;
 import com.fc.lami.Messages.GetCardNotify;
 import com.fc.lami.Messages.MainMatrixChangeNotify;
 import com.fc.lami.Messages.MainMatrixChangeResponse;
-import com.fc.lami.Messages.MoveCardResponse;
+import com.fc.lami.Messages.MoveCardToDeskResponse;
+import com.fc.lami.Messages.MoveCardToPlayerResponse;
 import com.fc.lami.Messages.OpenIceNotify;
 import com.fc.lami.Messages.OperateCompleteNotify;
 import com.fc.lami.Messages.RepealSendCardNotify;
 import com.fc.lami.Messages.ResultPak;
-import com.fc.lami.Messages.RetakeCardResponse;
-import com.fc.lami.Messages.SendCardNotify;
-import com.fc.lami.Messages.SendCardResponse;
 import com.fc.lami.Messages.SubmitResponse;
 import com.fc.lami.Messages.SynchronizeResponse;
 import com.fc.lami.Messages.TurnEndNotify;
@@ -374,94 +372,115 @@ public class Game
 		return false;
 	}
 	
-	/** 把牌放到桌面上，桌面上该位置已经有牌则返回false */
-	public int putCardToDesk(int cd[], int x, int y){
-		if (matrix_old == null){
-			matrix_old = matrix;
-			matrix = new CardData[mh][mw];
-			for (int i = 0; i<mh; i++){
-				for (int j = 0; j<mw; j++){
-					matrix[i][j] = matrix_old[i][j];
-				}
-			}
-		}
-		
-		if (x<0 || x+cd.length > mw || y<0 || y>mh-1){ // 位置不对
-			return SendCardResponse.SEND_CARD_RESULT_FAIL_LOCATION_WRONG;
-		}
-		if (!getCurPlayer().isOpenIce){ // 没破冰前，放出的牌不能和桌上的牌拼接
-			if ((x-1>=0 && matrix_old[y][x-1]!=null) || (x+cd.length<mw && matrix_old[y][x+cd.length]!=null)){
-				return SendCardResponse.SEND_CARD_RESULT_FAIL_SPLIT;
-			}
-		}
-		for (int i = 0; i<cd.length; i++){
-			if (matrix[y][x+i]!=null){ // 该位置已经有牌
-				return SendCardResponse.SEND_CARD_RESULT_FAIL_NOT_BLANK;
-			}
-		}
-		CardData cards[] = new CardData[cd.length];
-		for (int i = 0; i<cd.length; i++){
-			cards[i] = player_list[cur_player_index].removeCard(cd[i]);
-			matrix[y][x+i] = cards[i];
-			player_put.put(cd[i], cards[i]);
-		}
-		
-		for (int i = 0; i<player_list.length; i++){
-			player_list[i].session.send(new SendCardNotify(getCurPlayer().player_id, cards, x, y));
-		}
-		
-//		if (!getCurPlayer().isOpenIce){
-//			if (getCardPoint()>=30){
-//				openIce();
+//	/** 把牌放到桌面上，桌面上该位置已经有牌则返回false */
+//	public int putCardToDesk(int cd[], int x, int y){
+//		if (matrix_old == null){
+//			matrix_old = matrix;
+//			matrix = new CardData[mh][mw];
+//			for (int i = 0; i<mh; i++){
+//				for (int j = 0; j<mw; j++){
+//					matrix[i][j] = matrix_old[i][j];
+//				}
 //			}
 //		}
-		return SendCardResponse.SEND_CARD_RESULT_SUCCESS;
-	}
+//		
+//		if (x<0 || x+cd.length > mw || y<0 || y>mh-1){ // 位置不对
+//			return SendCardResponse.SEND_CARD_RESULT_FAIL_LOCATION_WRONG;
+//		}
+//		if (!getCurPlayer().isOpenIce){ // 没破冰前，放出的牌不能和桌上的牌拼接
+//			if ((x-1>=0 && matrix_old[y][x-1]!=null) || (x+cd.length<mw && matrix_old[y][x+cd.length]!=null)){
+//				return SendCardResponse.SEND_CARD_RESULT_FAIL_SPLIT;
+//			}
+//		}
+//		for (int i = 0; i<cd.length; i++){
+//			if (matrix[y][x+i]!=null){ // 该位置已经有牌
+//				return SendCardResponse.SEND_CARD_RESULT_FAIL_NOT_BLANK;
+//			}
+//		}
+//		CardData cards[] = new CardData[cd.length];
+//		for (int i = 0; i<cd.length; i++){
+//			cards[i] = player_list[cur_player_index].removeCard(cd[i]);
+//			cards[i].x = x+i;
+//			cards[i].y = y;
+//			matrix[y][x+i] = cards[i];
+//			player_put.put(cd[i], cards[i]);
+//		}
+//		
+//		desk.broadcast(new SendCardNotify(getCurPlayer().player_id, cards));
+//		return SendCardResponse.SEND_CARD_RESULT_SUCCESS;
+//	}
 	
-	/** 移动桌面上的牌 */
-	public int MoveCard(int cd[], int x, int y){
-		if (matrix_old == null){
-			matrix_old = matrix;
-			matrix = new CardData[mh][mw];
-			for (int i = 0; i<mh; i++){
-				for (int j = 0; j<mw; j++){
-					matrix[i][j] = matrix_old[i][j];
+	
+	
+//	/** 移动桌面上的牌 */
+//	public int MoveCard(int cd[], int x, int y){
+//		if (matrix_old == null){
+//			matrix_old = matrix;
+//			matrix = new CardData[mh][mw];
+//			for (int i = 0; i<mh; i++){
+//				for (int j = 0; j<mw; j++){
+//					matrix[i][j] = matrix_old[i][j];
+//				}
+//			}
+//		}
+//		
+//		if (x<0 || x+cd.length > mw || y<0 || y>mh-1){ // 位置不对
+//			return MoveCardResponse.MOVE_CARD_RESULT_FAIL_LOCATION_WRONG;
+//		}
+//		
+//		if (!getCurPlayer().isOpenIce){
+//			if (player_put.containsKey(cd[0])==false){ // 未破冰前不能移动原有的牌
+//				return MoveCardResponse.MOVE_CARD_RESULT_FAIL_CANNT_MOVE;
+//			}
+//			/** 未破冰前移动的牌不能和桌上原有的牌拼接 */
+//			if ((x-1>=0 && matrix_old[y][x-1]!=null) || (x+cd.length<mw && matrix_old[y][x+cd.length]!=null)){
+//				return MoveCardResponse.MOVE_CARD_RESULT_FAIL_SPLIT;
+//			}
+//		}
+//		CardData cards[] = new CardData[cd.length];
+//		for (int i = 0; i<cd.length; i++){
+//			cards[i] = getCardFromMatrix(cd[i]);
+//			if (cards[i] == null){	// 桌面上没有这张牌
+//				return MoveCardResponse.MOVE_CARD_RESULT_FAIL_CARD_NOEXIST;
+//			}
+//		}
+//		
+//		for (int i = 0; i<cd.length; i++){
+//			removeCardFromMatrix(cd[i]);
+//			cards[i].x = x+i;
+//			cards[i].y = y;
+//			matrix[y][x+i] = cards[i];
+//		}
+//		
+//		MoveCardNotify notify = new MoveCardNotify(getCurPlayer().player_id, cd, x, y);
+//		desk.broadcast(notify);
+////		if (!getCurPlayer().isOpenIce){
+////			if (getCardPoint()>=30){
+////				openIce();
+////			}
+////		}
+//		return MoveCardResponse.MOVE_CARD_RESULT_SUCCESS;
+//	}
+	
+	private void broadMatrix(){
+		ArrayList<CardData> list = new ArrayList<CardData>();
+		for (int i = 0; i<mh; i++){
+			for (int j = 0; j<mw; j++){
+				if (matrix[i][j]!=null){
+					list.add(matrix[i][j]);
 				}
 			}
 		}
-		
-		if (x<0 || x+cd.length > mw || y<0 || y>mh-1){ // 位置不对
-			return MoveCardResponse.MOVE_CARD_RESULT_FAIL_LOCATION_WRONG;
+		CardData notify_cds[] = new CardData[list.size()];
+		list.toArray(notify_cds);
+		desk.broadcast(new MainMatrixChangeNotify(false, getCurPlayer().player_id, notify_cds));
+		int cur_complete_card_count = getCompleteCardCount();
+		if (cur_complete_card_count>complete_card_count){
+			
+			desk.broadcast(new OperateCompleteNotify(getCurPlayer().player_id));
+			resetOperateTimer();
 		}
-		
-		if (!getCurPlayer().isOpenIce){
-			if (player_put.containsKey(cd[0])==false){ // 未破冰前不能移动原有的牌
-				return MoveCardResponse.MOVE_CARD_RESULT_FAIL_CANNT_MOVE;
-			}
-			/** 未破冰前移动的牌不能和桌上原有的牌拼接 */
-			if ((x-1>=0 && matrix_old[y][x-1]!=null) || (x+cd.length<mw && matrix_old[y][x+cd.length]!=null)){
-				return MoveCardResponse.MOVE_CARD_RESULT_FAIL_SPLIT;
-			}
-		}
-		CardData cards[] = new CardData[cd.length];
-		for (int i = 0; i<cd.length; i++){
-			cards[i] = getCardFromMatrix(cd[i]);
-			if (cards[i] == null){	// 桌面上没有这张牌
-				return MoveCardResponse.MOVE_CARD_RESULT_FAIL_CARD_NOEXIST;
-			}
-		}
-		
-		for (int i = 0; i<cd.length; i++){
-			removeCardFromMatrix(cd[i]);
-			matrix[y][x+i] = cards[i];
-		}
-		
-//		if (!getCurPlayer().isOpenIce){
-//			if (getCardPoint()>=30){
-//				openIce();
-//			}
-//		}
-		return MoveCardResponse.MOVE_CARD_RESULT_SUCCESS;
+		complete_card_count = cur_complete_card_count;
 	}
 	
 	private CardData getCardFromMatrix(int card_id){
@@ -475,35 +494,166 @@ public class Game
 		return null;
 	}
 	
-	private void removeCardFromMatrix(int card_id){
+	private CardData removeCardFromMatrix(int card_id){
 		for (int i = 0; i<mh; i++){
 			for (int j = 0; j<mw; j++){
 				if (matrix[i][j] != null && matrix[i][j].id == card_id){
+					CardData cd = matrix[i][j];
 					matrix[i][j] = null;
-					return;
+					return cd;
 				}
 			}
 		}
+		return null;
 	}
 	
-	/** 取回本回合自己放的牌 */
-	public int takeCardFromDesk(int card_id[]){
-		CardData cds[] = new CardData[card_id.length];
-		for (int i = 0; i<card_id.length; i++){
-			if (getCardFromMatrix(card_id[i]) == null){ //桌面上没有这张牌
-				return RetakeCardResponse.RETAKE_CARD_RESULT_FAIL_NOEXIST;
+	private CardData getCardFromCurPlayer(int card_id){
+		return cur_player.card_list.get(card_id);
+	}
+	
+//	/** 取回本回合自己放的牌 */
+//	public int takeCardFromDesk(int card_id[]){
+//		CardData cds[] = new CardData[card_id.length];
+//		for (int i = 0; i<card_id.length; i++){
+//			if (getCardFromMatrix(card_id[i]) == null){ //桌面上没有这张牌
+//				return RetakeCardResponse.RETAKE_CARD_RESULT_FAIL_NOEXIST;
+//			}
+//			if (player_put.containsKey(card_id[i]) == false){ // 该牌不是本回合放上去的
+//				return RetakeCardResponse.RETAKE_CARD_RESULT_FAIL_NOT_THIS_TURN;
+//			}
+//			cds[i] = getCardFromMatrix(card_id[i]);
+//		}
+//		for (int i = 0; i<card_id.length; i++){
+//			removeCardFromMatrix(card_id[i]);
+//			player_put.remove(cds[i]);
+//			cur_player.addCard(cds[i]);
+//		}
+//		
+//		RetakeCardNotify notify = new RetakeCardNotify(getCurPlayer().player_id, card_id);
+//		desk.broadcast(notify);
+//		return RetakeCardResponse.RETAKE_CARD_RESULT_SUCCESS;
+//	}
+	
+	public MoveCardToDeskResponse moveCardv3(int card_ids[], int x, int y){
+		if (matrix_old == null){
+			matrix_old = matrix;
+			matrix = new CardData[mh][mw];
+			for (int i = 0; i<mh; i++){
+				for (int j = 0; j<mw; j++){
+					matrix[i][j] = matrix_old[i][j];
+				}
 			}
-			if (player_put.containsKey(card_id[i]) == false){ // 该牌不是本回合放上去的
-				return RetakeCardResponse.RETAKE_CARD_RESULT_FAIL_NOT_THIS_TURN;
+		}
+		
+		if (x<0 || x+card_ids.length > mw || y<0 || y>mh-1){ // 位置不对
+			return new MoveCardToDeskResponse(MoveCardToDeskResponse.MOVE_CARD_TO_DESK_RESULT_FAIL_LOCATION_WRONG);
+		}
+		CardData cards[] = new CardData[card_ids.length]; //所有移动的牌
+		ArrayList<CardData> cards_m = new ArrayList<CardData>(); //桌上的牌
+		ArrayList<CardData> cards_p = new ArrayList<CardData>(); //玩家手里的牌
+		
+		for (int i = 0; i<card_ids.length; i++){
+			cards[i] = removeCardFromMatrix(card_ids[i]);
+			if (cards[i]==null){
+				cards[i] = getCurPlayer().card_list.get(card_ids[i]);
+				if (cards[i]==null){
+					return new MoveCardToDeskResponse(MoveCardToDeskResponse.MOVE_CARD_TO_DESK_RESULT_FAIL_CARD_NOEXIST);	//没有此牌
+				}else{
+					cards_p.add(cards[i]);
+				}
+			}else{
+				cards_m.add(cards[i]);
 			}
-			cds[i] = getCardFromMatrix(card_id[i]);
 		}
-		for (int i = 0; i<card_id.length; i++){
-			removeCardFromMatrix(card_id[i]);
-			player_put.remove(cds[i]);
-			cur_player.addCard(cds[i]);
+		
+		if (!getCurPlayer().isOpenIce){///如果玩家未破冰，则不能操作已有的牌，不能和原来的牌拼接
+			for(CardData cd:cards_m){
+				if (player_put.get(cd.id)==null){
+					return new MoveCardToDeskResponse(MoveCardToDeskResponse.MOVE_CARD_TO_DESK_RESULT_FAIL_CANNT_MOVE); //不能移动桌面原有的牌
+				}
+			}
+			
+			for (CardData cd:cards_p){
+				if (cd.x>=1 && matrix_old[cd.y][cd.x-1]!= null){
+					return new MoveCardToDeskResponse(MoveCardToDeskResponse.MOVE_CARD_TO_DESK_RESULT_FAIL_CANNT_SPLICE); //不能和已有的牌拼接
+				}
+				if (cd.x<mw-1 && matrix_old[cd.y][cd.x+1]!= null){
+					return new MoveCardToDeskResponse(MoveCardToDeskResponse.MOVE_CARD_TO_DESK_RESULT_FAIL_CANNT_SPLICE); //不能和已有的牌拼接
+				}
+			}
 		}
-		return RetakeCardResponse.RETAKE_CARD_RESULT_SUCCESS;
+		
+		for (int i = 0; i<cards.length; i++){
+			if (matrix[y][x+i]!=null){
+				for (CardData cd:cards_m){//重置桌面原有牌
+					matrix[cd.y][cd.x] = cd;
+				}
+				return new MoveCardToDeskResponse(MoveCardToDeskResponse.MOVE_CARD_TO_DESK_RESULT_FAIL_AREALDY_HAVE_CARD); //原位置有牌
+			}
+		}
+		
+		for (int i = 0; i<cards.length; i++){
+			cards[i].x = x+i;
+			cards[i].y = y;
+			matrix[y][x+i] = cards[i];
+		}
+		
+		for (CardData cd:cards_p){
+			player_put.put(cd.id, cd);
+			getCurPlayer().card_list.remove(cd.id);
+		}
+		broadMatrix();
+		return new MoveCardToDeskResponse(
+				MoveCardToDeskResponse.MOVE_CARD_TO_DESK_RESULT_SUCCESS,
+				card_ids, x, y);
+	}
+	
+	public MoveCardToPlayerResponse moveBack(int[] card_ids){
+		if (matrix_old == null){
+			matrix_old = matrix;
+			matrix = new CardData[mh][mw];
+			for (int i = 0; i<mh; i++){
+				for (int j = 0; j<mw; j++){
+					matrix[i][j] = matrix_old[i][j];
+				}
+			}
+			return new MoveCardToPlayerResponse(MoveCardToPlayerResponse.MOVE_CARD_TO_PLAYER_RESULT_FAIL_CANNT_TAKEBACK); //原有的牌不能取回 
+		}
+		
+		ArrayList<CardData> cards_m = new ArrayList<CardData>();
+		for (int id:card_ids){
+			CardData cd = getCardFromMatrix(id);
+			if (cd!=null){
+				if (cd.isSended){
+					return new MoveCardToPlayerResponse(MoveCardToPlayerResponse.MOVE_CARD_TO_PLAYER_RESULT_FAIL_CANNT_TAKEBACK); //原有的牌不能取回
+				} 
+			}else{
+				cd = getCardFromCurPlayer(id);
+				if (cd == null){
+					return new MoveCardToPlayerResponse(MoveCardToPlayerResponse.MOVE_CARD_TO_PLAYER_RESULT_FAIL_CARD_NOEXIST); //无效的牌
+				}
+			}
+		}
+		
+		for (int id:card_ids){
+			CardData cd = removeCardFromMatrix(id);
+			if (cd!=null){
+				cards_m.add(cd);
+			}
+		}
+		
+		int idsn[] = new int[cards_m.size()];
+		int i = 0;
+		for (CardData cd:cards_m){
+			cd.x = -1;
+			cd.y = -1;
+			getCurPlayer().card_list.put(cd.id, cd);
+			idsn[i] = cd.id;
+		}
+		broadMatrix();
+		return new MoveCardToPlayerResponse(
+				MoveCardToPlayerResponse.MOVE_CARD_TO_PLAYER_RESULT_SUCCESS,
+				idsn);
 	}
 	
 	int complete_card_count = 0;
@@ -675,7 +825,7 @@ public class Game
 	public int getCardPoint(){
 		int point = 0;
 		ArrayList<CardData> player_put_card = new ArrayList<CardData>();
-		if (check()){
+//		if (check()){
 			for (CardData c : player_put.values()){
 				player_put_card.add(c);
 			}
@@ -695,7 +845,7 @@ public class Game
 					}
 				}
 			}
-		}
+//		}
 		return point;
 	}
 	
@@ -777,6 +927,10 @@ public class Game
 			System.err.println("submit 没有出牌");
 			return SubmitResponse.SUBMIT_RESULT_FAIL_CARD_NO_SEND;
 		}
+		if (check() == false){ // 牌组不成立
+			System.err.println("submit 牌组不成立");
+			return SubmitResponse.SUBMIT_RESULT_FAIL_CARD_COMBI_NO_MATCH;
+		}
 		if (!getCurPlayer().isOpenIce){
 			if (getCardPoint()>=30){
 				getCurPlayer().isOpenIce = true;
@@ -792,10 +946,6 @@ public class Game
 				System.err.println("submit 没有破冰");
 				return SubmitResponse.SUBMIT_RESULT_FAIL_CARD_NOT_OPEN_ICE; // 没有破冰
 			}
-		}
-		if (check() == false){ // 牌组不成立
-			System.err.println("submit 牌组不成立");
-			return SubmitResponse.SUBMIT_RESULT_FAIL_CARD_COMBI_NO_MATCH;
 		}
 		System.out.println("player:"+getCurPlayer()+"余牌:"+ getCurPlayer().card_list.size());
 		if (getCurPlayer().card_list.size() == 0){	//如果玩家牌已出完

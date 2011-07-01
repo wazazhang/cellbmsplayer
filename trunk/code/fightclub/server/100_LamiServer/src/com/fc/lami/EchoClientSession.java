@@ -28,18 +28,16 @@ import com.fc.lami.Messages.LoginRequest;
 import com.fc.lami.Messages.LogoutRequest;
 import com.fc.lami.Messages.MainMatrixChangeRequest;
 import com.fc.lami.Messages.MainMatrixChangeResponse;
-import com.fc.lami.Messages.MoveCardRequest;
-import com.fc.lami.Messages.MoveCardResponse;
+import com.fc.lami.Messages.MoveCardToDeskRequest;
+import com.fc.lami.Messages.MoveCardToDeskResponse;
+import com.fc.lami.Messages.MoveCardToPlayerRequest;
+import com.fc.lami.Messages.MoveCardToPlayerResponse;
 import com.fc.lami.Messages.PlayerData;
 import com.fc.lami.Messages.PlayerState;
 import com.fc.lami.Messages.ReadyRequest;
 import com.fc.lami.Messages.ReadyResponse;
 import com.fc.lami.Messages.RepealSendCardRequest;
 import com.fc.lami.Messages.RepealSendCardResponse;
-import com.fc.lami.Messages.RetakeCardRequest;
-import com.fc.lami.Messages.RetakeCardResponse;
-import com.fc.lami.Messages.SendCardRequest;
-import com.fc.lami.Messages.SendCardResponse;
 import com.fc.lami.Messages.SpeakToChannelNotify;
 import com.fc.lami.Messages.SpeakToChannelRequest;
 import com.fc.lami.Messages.SpeakToChannelResponse;
@@ -136,20 +134,28 @@ public class EchoClientSession implements ClientSessionListener
 			AutoEnterRequest request = (AutoEnterRequest)message;
 			processAutoEnterRequest(session, protocol, request);
 		}
-		/** 把卡放到桌面上 */
-		else if (message instanceof SendCardRequest){
-			SendCardRequest req = (SendCardRequest)message;
-			processSendCardRequest(session, protocol, req);
+//		/** 把卡放到桌面上 */
+//		else if (message instanceof SendCardRequest){
+//			SendCardRequest req = (SendCardRequest)message;
+//			processSendCardRequest(session, protocol, req);
+//		}
+//		/** 把卡从桌面上取回 */
+//		else if (message instanceof RetakeCardRequest){
+//			RetakeCardRequest req = (RetakeCardRequest)message;
+//			processRetakeCardRequest(session, protocol, req);
+//		}
+//		/** 移动桌面上的牌 */
+//		else if (message instanceof MoveCardRequest){
+//			MoveCardRequest req = (MoveCardRequest)message;
+//			processMoveCardRequest(session, protocol, req);
+//		}
+		else if (message instanceof MoveCardToDeskRequest){
+			MoveCardToDeskRequest req = (MoveCardToDeskRequest)message;
+			processMoveCardToDeskRequest(session, protocol, req);
 		}
-		/** 把卡从桌面上取回 */
-		else if (message instanceof RetakeCardRequest){
-			RetakeCardRequest req = (RetakeCardRequest)message;
-			processRetakeCardRequest(session, protocol, req);
-		}
-		/** 移动桌面上的牌 */
-		else if (message instanceof MoveCardRequest){
-			MoveCardRequest req = (MoveCardRequest)message;
-			processMoveCardRequest(session, protocol, req);
+		else if (message instanceof MoveCardToPlayerRequest){
+			MoveCardToPlayerRequest req = (MoveCardToPlayerRequest)message;
+			processMoveCardToPlayerRequest(session, protocol, req);
 		}
 		/** 结束放牌 */
 		else if (message instanceof SubmitRequest){
@@ -351,29 +357,29 @@ public class EchoClientSession implements ClientSessionListener
 //
 //	-----------------------------------------------------------------------------------------------------------------------------
 	
-	/** 把卡放到桌面上(废弃中) */
-	private void processSendCardRequest(ClientSession session, Protocol protocol, SendCardRequest request){
-		Game game = player.getGame();
-		if (game !=null && game.getCurPlayer() == player){
-			session.sendResponse(protocol, new SendCardResponse(game.putCardToDesk(request.cards, request.x, request.y)));
-		}
-	}
+//	/** 把卡放到桌面上(废弃中) */
+//	private void processSendCardRequest(ClientSession session, Protocol protocol, SendCardRequest request){
+//		Game game = player.getGame();
+//		if (game !=null && game.getCurPlayer() == player){
+//			session.sendResponse(protocol, new SendCardResponse(game.putCardToDesk(request.cards, request.x, request.y)));
+//		}
+//	}
 	
-	/** 把卡从桌面上取回(废弃中) */
-	private void processRetakeCardRequest(ClientSession session, Protocol protocol, RetakeCardRequest req){
-		Game game = player.getGame();
-		if (game!=null && game.getCurPlayer() == player){
-			session.sendResponse(protocol, new RetakeCardResponse(game.takeCardFromDesk(req.cards)));
-		}
-	}
+//	/** 把卡从桌面上取回(废弃中) */
+//	private void processRetakeCardRequest(ClientSession session, Protocol protocol, RetakeCardRequest req){
+//		Game game = player.getGame();
+//		if (game!=null && game.getCurPlayer() == player){
+//			session.sendResponse(protocol, new RetakeCardResponse(game.takeCardFromDesk(req.cards)));
+//		}
+//	}
 	
-	/** 移动桌面上的牌(废弃中) */
-	private void processMoveCardRequest(ClientSession session, Protocol protocol, MoveCardRequest req){
-		Game game = player.getGame();
-		if (game !=null && game.getCurPlayer() == player){
-			session.sendResponse(protocol, new MoveCardResponse(game.MoveCard(req.cards, req.nx, req.ny)));
-		}
-	}
+//	/** 移动桌面上的牌(废弃中) */
+//	private void processMoveCardRequest(ClientSession session, Protocol protocol, MoveCardRequest req){
+//		Game game = player.getGame();
+//		if (game !=null && game.getCurPlayer() == player){
+//			session.sendResponse(protocol, new MoveCardResponse(game.MoveCard(req.cards, req.nx, req.ny)));
+//		}
+//	}
 	
 	/** 结束放牌 */
 	private void processSubmitRequest(ClientSession session, Protocol protocol, SubmitRequest req){
@@ -528,4 +534,19 @@ public class EchoClientSession implements ClientSessionListener
 		}
 	}
 	
+	private void processMoveCardToDeskRequest(ClientSession session, Protocol protocol, MoveCardToDeskRequest request){
+		Game game = player.getGame();
+		if (game!=null && game.getCurPlayer() == player){
+			session.sendResponse(protocol, 
+					game.moveCardv3(request.ids, request.x, request.y));
+		}
+	}
+	
+	private void processMoveCardToPlayerRequest(ClientSession session, Protocol protocol, MoveCardToPlayerRequest request){
+		Game game = player.getGame();
+		if (game!=null && game.getCurPlayer() == player){
+			session.sendResponse(protocol, 
+					game.moveBack(request.ids));
+		}
+	}
 }
