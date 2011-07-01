@@ -104,10 +104,20 @@ public class LoginXingCloud implements Login
 			}
 			return this;
 		}
-
+		
 		@Override
 		public int getLevel() {
 			return 0;
+		}
+		
+		@Override
+		public boolean isFirstGame() {
+			return userProfile.getFirst_game();
+		}
+		
+		@Override
+		public void setFirstGame(boolean v) {
+			userProfile.setFirst_game(v);
 		}
 		
 		synchronized public int getLose() {
@@ -151,6 +161,15 @@ public class LoginXingCloud implements Login
 		
 		public DefaultUser(PlatformUserData data) {
 			super(data);
+		}
+		
+		@Override
+		public boolean isFirstGame() {
+			return true;
+		}
+		
+		@Override
+		public void setFirstGame(boolean v) {
 		}
 		
 		@Override

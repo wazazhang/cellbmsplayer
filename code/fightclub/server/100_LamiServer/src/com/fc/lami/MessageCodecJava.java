@@ -14,7 +14,7 @@ import com.net.NetDataTypes;
 public class MessageCodecJava implements MutualMessageCodec
 {
 	public String getVersion() {
-		return "Wed Jun 22 18:10:40 CST 2011";
+		return "Fri Jul 01 09:59:00 CST 2011";
 	}
 
 	public void readExternal(MutualMessage msg, NetDataInput in) throws IOException 
@@ -154,14 +154,17 @@ public class MessageCodecJava implements MutualMessageCodec
 		if (msg.getClass().equals(com.fc.lami.Messages.MainMatrixChangeResponse.class)) {
 			_r((com.fc.lami.Messages.MainMatrixChangeResponse)msg, in); return;
 		}
-		if (msg.getClass().equals(com.fc.lami.Messages.MoveCardNotify.class)) {
-			_r((com.fc.lami.Messages.MoveCardNotify)msg, in); return;
+		if (msg.getClass().equals(com.fc.lami.Messages.MoveCardToDeskRequest.class)) {
+			_r((com.fc.lami.Messages.MoveCardToDeskRequest)msg, in); return;
 		}
-		if (msg.getClass().equals(com.fc.lami.Messages.MoveCardRequest.class)) {
-			_r((com.fc.lami.Messages.MoveCardRequest)msg, in); return;
+		if (msg.getClass().equals(com.fc.lami.Messages.MoveCardToDeskResponse.class)) {
+			_r((com.fc.lami.Messages.MoveCardToDeskResponse)msg, in); return;
 		}
-		if (msg.getClass().equals(com.fc.lami.Messages.MoveCardResponse.class)) {
-			_r((com.fc.lami.Messages.MoveCardResponse)msg, in); return;
+		if (msg.getClass().equals(com.fc.lami.Messages.MoveCardToPlayerRequest.class)) {
+			_r((com.fc.lami.Messages.MoveCardToPlayerRequest)msg, in); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.MoveCardToPlayerResponse.class)) {
+			_r((com.fc.lami.Messages.MoveCardToPlayerResponse)msg, in); return;
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.OpenIceNotify.class)) {
 			_r((com.fc.lami.Messages.OpenIceNotify)msg, in); return;
@@ -202,29 +205,11 @@ public class MessageCodecJava implements MutualMessageCodec
 		if (msg.getClass().equals(com.fc.lami.Messages.ResultPak.class)) {
 			_r((com.fc.lami.Messages.ResultPak)msg, in); return;
 		}
-		if (msg.getClass().equals(com.fc.lami.Messages.RetakeCardNotify.class)) {
-			_r((com.fc.lami.Messages.RetakeCardNotify)msg, in); return;
-		}
-		if (msg.getClass().equals(com.fc.lami.Messages.RetakeCardRequest.class)) {
-			_r((com.fc.lami.Messages.RetakeCardRequest)msg, in); return;
-		}
-		if (msg.getClass().equals(com.fc.lami.Messages.RetakeCardResponse.class)) {
-			_r((com.fc.lami.Messages.RetakeCardResponse)msg, in); return;
-		}
 		if (msg.getClass().equals(com.fc.lami.Messages.RoomData.class)) {
 			_r((com.fc.lami.Messages.RoomData)msg, in); return;
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.RoomSnapShot.class)) {
 			_r((com.fc.lami.Messages.RoomSnapShot)msg, in); return;
-		}
-		if (msg.getClass().equals(com.fc.lami.Messages.SendCardNotify.class)) {
-			_r((com.fc.lami.Messages.SendCardNotify)msg, in); return;
-		}
-		if (msg.getClass().equals(com.fc.lami.Messages.SendCardRequest.class)) {
-			_r((com.fc.lami.Messages.SendCardRequest)msg, in); return;
-		}
-		if (msg.getClass().equals(com.fc.lami.Messages.SendCardResponse.class)) {
-			_r((com.fc.lami.Messages.SendCardResponse)msg, in); return;
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.SpeakToChannelNotify.class)) {
 			_r((com.fc.lami.Messages.SpeakToChannelNotify)msg, in); return;
@@ -414,14 +399,17 @@ public class MessageCodecJava implements MutualMessageCodec
 		if (msg.getClass().equals(com.fc.lami.Messages.MainMatrixChangeResponse.class)) {
 			_w((com.fc.lami.Messages.MainMatrixChangeResponse)msg, out); return;
 		}
-		if (msg.getClass().equals(com.fc.lami.Messages.MoveCardNotify.class)) {
-			_w((com.fc.lami.Messages.MoveCardNotify)msg, out); return;
+		if (msg.getClass().equals(com.fc.lami.Messages.MoveCardToDeskRequest.class)) {
+			_w((com.fc.lami.Messages.MoveCardToDeskRequest)msg, out); return;
 		}
-		if (msg.getClass().equals(com.fc.lami.Messages.MoveCardRequest.class)) {
-			_w((com.fc.lami.Messages.MoveCardRequest)msg, out); return;
+		if (msg.getClass().equals(com.fc.lami.Messages.MoveCardToDeskResponse.class)) {
+			_w((com.fc.lami.Messages.MoveCardToDeskResponse)msg, out); return;
 		}
-		if (msg.getClass().equals(com.fc.lami.Messages.MoveCardResponse.class)) {
-			_w((com.fc.lami.Messages.MoveCardResponse)msg, out); return;
+		if (msg.getClass().equals(com.fc.lami.Messages.MoveCardToPlayerRequest.class)) {
+			_w((com.fc.lami.Messages.MoveCardToPlayerRequest)msg, out); return;
+		}
+		if (msg.getClass().equals(com.fc.lami.Messages.MoveCardToPlayerResponse.class)) {
+			_w((com.fc.lami.Messages.MoveCardToPlayerResponse)msg, out); return;
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.OpenIceNotify.class)) {
 			_w((com.fc.lami.Messages.OpenIceNotify)msg, out); return;
@@ -462,29 +450,11 @@ public class MessageCodecJava implements MutualMessageCodec
 		if (msg.getClass().equals(com.fc.lami.Messages.ResultPak.class)) {
 			_w((com.fc.lami.Messages.ResultPak)msg, out); return;
 		}
-		if (msg.getClass().equals(com.fc.lami.Messages.RetakeCardNotify.class)) {
-			_w((com.fc.lami.Messages.RetakeCardNotify)msg, out); return;
-		}
-		if (msg.getClass().equals(com.fc.lami.Messages.RetakeCardRequest.class)) {
-			_w((com.fc.lami.Messages.RetakeCardRequest)msg, out); return;
-		}
-		if (msg.getClass().equals(com.fc.lami.Messages.RetakeCardResponse.class)) {
-			_w((com.fc.lami.Messages.RetakeCardResponse)msg, out); return;
-		}
 		if (msg.getClass().equals(com.fc.lami.Messages.RoomData.class)) {
 			_w((com.fc.lami.Messages.RoomData)msg, out); return;
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.RoomSnapShot.class)) {
 			_w((com.fc.lami.Messages.RoomSnapShot)msg, out); return;
-		}
-		if (msg.getClass().equals(com.fc.lami.Messages.SendCardNotify.class)) {
-			_w((com.fc.lami.Messages.SendCardNotify)msg, out); return;
-		}
-		if (msg.getClass().equals(com.fc.lami.Messages.SendCardRequest.class)) {
-			_w((com.fc.lami.Messages.SendCardRequest)msg, out); return;
-		}
-		if (msg.getClass().equals(com.fc.lami.Messages.SendCardResponse.class)) {
-			_w((com.fc.lami.Messages.SendCardResponse)msg, out); return;
 		}
 		if (msg.getClass().equals(com.fc.lami.Messages.SpeakToChannelNotify.class)) {
 			_w((com.fc.lami.Messages.SpeakToChannelNotify)msg, out); return;
@@ -1091,46 +1061,63 @@ public class MessageCodecJava implements MutualMessageCodec
 	}
 
 //	----------------------------------------------------------------------------------------------------
-//	com.fc.lami.Messages.MoveCardNotify
+//	com.fc.lami.Messages.MoveCardToDeskRequest
 //	----------------------------------------------------------------------------------------------------
-	public com.fc.lami.Messages.MoveCardNotify new_com_fc_lami_Messages_MoveCardNotify(){return new com.fc.lami.Messages.MoveCardNotify();}
-	private void _r(com.fc.lami.Messages.MoveCardNotify msg, NetDataInput in) throws IOException {
-		msg.cards = in.readIntArray();
-		msg.nx = in.readInt();
-		msg.ny = in.readInt();
-		msg.player_id = in.readInt();
+	public com.fc.lami.Messages.MoveCardToDeskRequest new_com_fc_lami_Messages_MoveCardToDeskRequest(){return new com.fc.lami.Messages.MoveCardToDeskRequest();}
+	private void _r(com.fc.lami.Messages.MoveCardToDeskRequest msg, NetDataInput in) throws IOException {
+		msg.ids = in.readIntArray();
+		msg.x = in.readInt();
+		msg.y = in.readInt();
 	}
-	private void _w(com.fc.lami.Messages.MoveCardNotify msg, NetDataOutput out) throws IOException {
-		out.writeIntArray(msg.cards);
-		out.writeInt(msg.nx);
-		out.writeInt(msg.ny);
-		out.writeInt(msg.player_id);
+	private void _w(com.fc.lami.Messages.MoveCardToDeskRequest msg, NetDataOutput out) throws IOException {
+		out.writeIntArray(msg.ids);
+		out.writeInt(msg.x);
+		out.writeInt(msg.y);
 	}
 
 //	----------------------------------------------------------------------------------------------------
-//	com.fc.lami.Messages.MoveCardRequest
+//	com.fc.lami.Messages.MoveCardToDeskResponse
 //	----------------------------------------------------------------------------------------------------
-	public com.fc.lami.Messages.MoveCardRequest new_com_fc_lami_Messages_MoveCardRequest(){return new com.fc.lami.Messages.MoveCardRequest();}
-	private void _r(com.fc.lami.Messages.MoveCardRequest msg, NetDataInput in) throws IOException {
-		msg.cards = in.readIntArray();
-		msg.nx = in.readInt();
-		msg.ny = in.readInt();
-	}
-	private void _w(com.fc.lami.Messages.MoveCardRequest msg, NetDataOutput out) throws IOException {
-		out.writeIntArray(msg.cards);
-		out.writeInt(msg.nx);
-		out.writeInt(msg.ny);
-	}
-
-//	----------------------------------------------------------------------------------------------------
-//	com.fc.lami.Messages.MoveCardResponse
-//	----------------------------------------------------------------------------------------------------
-	public com.fc.lami.Messages.MoveCardResponse new_com_fc_lami_Messages_MoveCardResponse(){return new com.fc.lami.Messages.MoveCardResponse();}
-	private void _r(com.fc.lami.Messages.MoveCardResponse msg, NetDataInput in) throws IOException {
+	public com.fc.lami.Messages.MoveCardToDeskResponse new_com_fc_lami_Messages_MoveCardToDeskResponse(){return new com.fc.lami.Messages.MoveCardToDeskResponse();}
+	private void _r(com.fc.lami.Messages.MoveCardToDeskResponse msg, NetDataInput in) throws IOException {
 		msg.result = in.readInt();
+		msg.ids = in.readIntArray();
+		msg.x = in.readInt();
+		msg.y = in.readInt();
 	}
-	private void _w(com.fc.lami.Messages.MoveCardResponse msg, NetDataOutput out) throws IOException {
+	private void _w(com.fc.lami.Messages.MoveCardToDeskResponse msg, NetDataOutput out) throws IOException {
 		out.writeInt(msg.result);
+		out.writeIntArray(msg.ids);
+		out.writeInt(msg.x);
+		out.writeInt(msg.y);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.MoveCardToPlayerRequest
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.MoveCardToPlayerRequest new_com_fc_lami_Messages_MoveCardToPlayerRequest(){return new com.fc.lami.Messages.MoveCardToPlayerRequest();}
+	private void _r(com.fc.lami.Messages.MoveCardToPlayerRequest msg, NetDataInput in) throws IOException {
+		msg.ids = in.readIntArray();
+		msg.x = in.readInt();
+		msg.y = in.readInt();
+	}
+	private void _w(com.fc.lami.Messages.MoveCardToPlayerRequest msg, NetDataOutput out) throws IOException {
+		out.writeIntArray(msg.ids);
+		out.writeInt(msg.x);
+		out.writeInt(msg.y);
+	}
+
+//	----------------------------------------------------------------------------------------------------
+//	com.fc.lami.Messages.MoveCardToPlayerResponse
+//	----------------------------------------------------------------------------------------------------
+	public com.fc.lami.Messages.MoveCardToPlayerResponse new_com_fc_lami_Messages_MoveCardToPlayerResponse(){return new com.fc.lami.Messages.MoveCardToPlayerResponse();}
+	private void _r(com.fc.lami.Messages.MoveCardToPlayerResponse msg, NetDataInput in) throws IOException {
+		msg.result = in.readInt();
+		msg.ids = in.readIntArray();
+	}
+	private void _w(com.fc.lami.Messages.MoveCardToPlayerResponse msg, NetDataOutput out) throws IOException {
+		out.writeInt(msg.result);
+		out.writeIntArray(msg.ids);
 	}
 
 //	----------------------------------------------------------------------------------------------------
@@ -1184,6 +1171,7 @@ public class MessageCodecJava implements MutualMessageCodec
 		msg.player_name = in.readUTF();
 		msg.player_head_url = in.readUTF();
 		msg.sex = in.readUTF();
+		msg.is_first_game = in.readBoolean();
 		msg.score = in.readInt();
 		msg.win = in.readInt();
 		msg.lose = in.readInt();
@@ -1195,6 +1183,7 @@ public class MessageCodecJava implements MutualMessageCodec
 		out.writeUTF(msg.player_name);
 		out.writeUTF(msg.player_head_url);
 		out.writeUTF(msg.sex);
+		out.writeBoolean(msg.is_first_game);
 		out.writeInt(msg.score);
 		out.writeInt(msg.win);
 		out.writeInt(msg.lose);
@@ -1307,45 +1296,6 @@ public class MessageCodecJava implements MutualMessageCodec
 	}
 
 //	----------------------------------------------------------------------------------------------------
-//	com.fc.lami.Messages.RetakeCardNotify
-//	----------------------------------------------------------------------------------------------------
-	public com.fc.lami.Messages.RetakeCardNotify new_com_fc_lami_Messages_RetakeCardNotify(){return new com.fc.lami.Messages.RetakeCardNotify();}
-	private void _r(com.fc.lami.Messages.RetakeCardNotify msg, NetDataInput in) throws IOException {
-		msg.player_id = in.readInt();
-		msg.x = in.readInt();
-		msg.y = in.readInt();
-		msg.n = in.readInt();
-	}
-	private void _w(com.fc.lami.Messages.RetakeCardNotify msg, NetDataOutput out) throws IOException {
-		out.writeInt(msg.player_id);
-		out.writeInt(msg.x);
-		out.writeInt(msg.y);
-		out.writeInt(msg.n);
-	}
-
-//	----------------------------------------------------------------------------------------------------
-//	com.fc.lami.Messages.RetakeCardRequest
-//	----------------------------------------------------------------------------------------------------
-	public com.fc.lami.Messages.RetakeCardRequest new_com_fc_lami_Messages_RetakeCardRequest(){return new com.fc.lami.Messages.RetakeCardRequest();}
-	private void _r(com.fc.lami.Messages.RetakeCardRequest msg, NetDataInput in) throws IOException {
-		msg.cards = in.readIntArray();
-	}
-	private void _w(com.fc.lami.Messages.RetakeCardRequest msg, NetDataOutput out) throws IOException {
-		out.writeIntArray(msg.cards);
-	}
-
-//	----------------------------------------------------------------------------------------------------
-//	com.fc.lami.Messages.RetakeCardResponse
-//	----------------------------------------------------------------------------------------------------
-	public com.fc.lami.Messages.RetakeCardResponse new_com_fc_lami_Messages_RetakeCardResponse(){return new com.fc.lami.Messages.RetakeCardResponse();}
-	private void _r(com.fc.lami.Messages.RetakeCardResponse msg, NetDataInput in) throws IOException {
-		msg.result = in.readInt();
-	}
-	private void _w(com.fc.lami.Messages.RetakeCardResponse msg, NetDataOutput out) throws IOException {
-		out.writeInt(msg.result);
-	}
-
-//	----------------------------------------------------------------------------------------------------
 //	com.fc.lami.Messages.RoomData
 //	----------------------------------------------------------------------------------------------------
 	public com.fc.lami.Messages.RoomData new_com_fc_lami_Messages_RoomData(){return new com.fc.lami.Messages.RoomData();}
@@ -1377,49 +1327,6 @@ public class MessageCodecJava implements MutualMessageCodec
 		out.writeUTF(msg.room_name);
 		out.writeInt(msg.player_number_max);
 		out.writeInt(msg.player_number);
-	}
-
-//	----------------------------------------------------------------------------------------------------
-//	com.fc.lami.Messages.SendCardNotify
-//	----------------------------------------------------------------------------------------------------
-	public com.fc.lami.Messages.SendCardNotify new_com_fc_lami_Messages_SendCardNotify(){return new com.fc.lami.Messages.SendCardNotify();}
-	private void _r(com.fc.lami.Messages.SendCardNotify msg, NetDataInput in) throws IOException {
-		msg.player_id = in.readInt();
-		msg.cards = (com.fc.lami.Messages.CardData[])in.readExternalArray(com.fc.lami.Messages.CardData.class);
-		msg.x = in.readInt();
-		msg.y = in.readInt();
-	}
-	private void _w(com.fc.lami.Messages.SendCardNotify msg, NetDataOutput out) throws IOException {
-		out.writeInt(msg.player_id);
-		out.writeExternalArray(msg.cards);
-		out.writeInt(msg.x);
-		out.writeInt(msg.y);
-	}
-
-//	----------------------------------------------------------------------------------------------------
-//	com.fc.lami.Messages.SendCardRequest
-//	----------------------------------------------------------------------------------------------------
-	public com.fc.lami.Messages.SendCardRequest new_com_fc_lami_Messages_SendCardRequest(){return new com.fc.lami.Messages.SendCardRequest();}
-	private void _r(com.fc.lami.Messages.SendCardRequest msg, NetDataInput in) throws IOException {
-		msg.cards = in.readIntArray();
-		msg.x = in.readInt();
-		msg.y = in.readInt();
-	}
-	private void _w(com.fc.lami.Messages.SendCardRequest msg, NetDataOutput out) throws IOException {
-		out.writeIntArray(msg.cards);
-		out.writeInt(msg.x);
-		out.writeInt(msg.y);
-	}
-
-//	----------------------------------------------------------------------------------------------------
-//	com.fc.lami.Messages.SendCardResponse
-//	----------------------------------------------------------------------------------------------------
-	public com.fc.lami.Messages.SendCardResponse new_com_fc_lami_Messages_SendCardResponse(){return new com.fc.lami.Messages.SendCardResponse();}
-	private void _r(com.fc.lami.Messages.SendCardResponse msg, NetDataInput in) throws IOException {
-		msg.result = in.readInt();
-	}
-	private void _w(com.fc.lami.Messages.SendCardResponse msg, NetDataOutput out) throws IOException {
-		out.writeInt(msg.result);
 	}
 
 //	----------------------------------------------------------------------------------------------------

@@ -66,6 +66,7 @@ public class Player
 		pd.score 			= this.user.getScore();
 		pd.win 				= this.user.getWin();
 		pd.lose 			= this.user.getLose();
+		pd.is_first_game	= this.user.isFirstGame();
 		return pd;
 	}
 	

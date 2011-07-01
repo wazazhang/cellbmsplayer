@@ -28,6 +28,9 @@ public abstract class User
 		return data.user_image_url;
 	}
 	
+	abstract public boolean	isFirstGame();
+
+	abstract public void	setFirstGame(boolean v);
 	
 	abstract public int		getLevel();
 	
