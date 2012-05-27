@@ -1,0 +1,434 @@
+<entry>
+<!--
+<OUTPUT>		.\output\world.xml
+<IMAGE_OUTPUT>	.\output\
+<FORMAT_NUMBER_ARRAY_1D>    <>,
+<FORMAT_STRING_ARRAY_1D>	<>,
+<FORMAT_ARRAY_1D>			<>,
+<FORMAT_ARRAY_2D>			{<>},
+<FIXED_STRING_ARRAY>		char,
+-->
+<IMAGE_TYPE>png
+</IMAGE_TYPE>
+<IMAGE_TILE>false
+</IMAGE_TILE>
+<IMAGE_GROUP>true
+</IMAGE_GROUP>
+
+
+<resource images_count="2" map_count="1" sprite_count="2" >
+	
+	
+	<images index="0" name="map_tile" size="80" 
+		output_type=""
+		output_file="">
+		
+		<clip index="0" x="0" y="0" width="80" height="60" data="" />
+		<clip index="1" x="80" y="0" width="80" height="60" data="" />
+		<clip index="2" x="160" y="0" width="80" height="60" data="" />
+		<clip index="3" x="240" y="0" width="80" height="60" data="" />
+		<clip index="4" x="320" y="0" width="80" height="60" data="" />
+		<clip index="5" x="400" y="0" width="80" height="60" data="" />
+		<clip index="6" x="480" y="0" width="80" height="60" data="" />
+		<clip index="7" x="560" y="0" width="80" height="60" data="" />
+		<clip index="8" x="640" y="0" width="80" height="60" data="" />
+		<clip index="9" x="720" y="0" width="80" height="60" data="" />
+		<clip index="10" x="0" y="60" width="80" height="60" data="" />
+		<clip index="11" x="80" y="60" width="80" height="60" data="" />
+		<clip index="12" x="160" y="60" width="80" height="60" data="" />
+		<clip index="13" x="240" y="60" width="80" height="60" data="" />
+		<clip index="14" x="320" y="60" width="80" height="60" data="" />
+		<clip index="15" x="400" y="60" width="80" height="60" data="" />
+		<clip index="16" x="480" y="60" width="80" height="60" data="" />
+		<clip index="17" x="560" y="60" width="80" height="60" data="" />
+		<clip index="18" x="640" y="60" width="80" height="60" data="" />
+		<clip index="19" x="720" y="60" width="80" height="60" data="" />
+		<clip index="20" x="0" y="120" width="80" height="60" data="" />
+		<clip index="21" x="80" y="120" width="80" height="60" data="" />
+		<clip index="22" x="160" y="120" width="80" height="60" data="" />
+		<clip index="23" x="240" y="120" width="80" height="60" data="" />
+		<clip index="24" x="320" y="120" width="80" height="60" data="" />
+		<clip index="25" x="400" y="120" width="80" height="60" data="" />
+		<clip index="26" x="480" y="120" width="80" height="60" data="" />
+		<clip index="27" x="560" y="120" width="80" height="60" data="" />
+		<clip index="28" x="640" y="120" width="80" height="60" data="" />
+		<clip index="29" x="720" y="120" width="80" height="60" data="" />
+		<clip index="30" x="0" y="180" width="80" height="60" data="" />
+		<clip index="31" x="80" y="180" width="80" height="60" data="" />
+		<clip index="32" x="160" y="180" width="80" height="60" data="" />
+		<clip index="33" x="240" y="180" width="80" height="60" data="" />
+		<clip index="34" x="320" y="180" width="80" height="60" data="" />
+		<clip index="35" x="400" y="180" width="80" height="60" data="" />
+		<clip index="36" x="480" y="180" width="80" height="60" data="" />
+		<clip index="37" x="560" y="180" width="80" height="60" data="" />
+		<clip index="38" x="640" y="180" width="80" height="60" data="" />
+		<clip index="39" x="720" y="180" width="80" height="60" data="" />
+		<clip index="40" x="0" y="240" width="80" height="60" data="" />
+		<clip index="41" x="80" y="240" width="80" height="60" data="" />
+		<clip index="42" x="160" y="240" width="80" height="60" data="" />
+		<clip index="43" x="240" y="240" width="80" height="60" data="" />
+		<clip index="44" x="320" y="240" width="80" height="60" data="" />
+		<clip index="45" x="400" y="240" width="80" height="60" data="" />
+		<clip index="46" x="480" y="240" width="80" height="60" data="" />
+		<clip index="47" x="560" y="240" width="80" height="60" data="" />
+		<clip index="48" x="640" y="240" width="80" height="60" data="" />
+		<clip index="49" x="720" y="240" width="80" height="60" data="" />
+		<clip index="50" x="0" y="300" width="80" height="60" data="" />
+		<clip index="51" x="80" y="300" width="80" height="60" data="" />
+		<clip index="52" x="160" y="300" width="80" height="60" data="" />
+		<clip index="53" x="240" y="300" width="80" height="60" data="" />
+		<clip index="54" x="320" y="300" width="80" height="60" data="" />
+		<clip index="55" x="400" y="300" width="80" height="60" data="" />
+		<clip index="56" x="480" y="300" width="80" height="60" data="" />
+		<clip index="57" x="560" y="300" width="80" height="60" data="" />
+		<clip index="58" x="640" y="300" width="80" height="60" data="" />
+		<clip index="59" x="720" y="300" width="80" height="60" data="" />
+		<clip index="60" x="0" y="360" width="80" height="60" data="" />
+		<clip index="61" x="80" y="360" width="80" height="60" data="" />
+		<clip index="62" x="160" y="360" width="80" height="60" data="" />
+		<clip index="63" x="240" y="360" width="80" height="60" data="" />
+		<clip index="64" x="320" y="360" width="80" height="60" data="" />
+		<clip index="65" x="400" y="360" width="80" height="60" data="" />
+		<clip index="66" x="480" y="360" width="80" height="60" data="" />
+		<clip index="67" x="560" y="360" width="80" height="60" data="" />
+		<clip index="68" x="640" y="360" width="80" height="60" data="" />
+		<clip index="69" x="720" y="360" width="80" height="60" data="" />
+		<clip index="70" x="0" y="420" width="80" height="60" data="" />
+		<clip index="71" x="80" y="420" width="80" height="60" data="" />
+		<clip index="72" x="160" y="420" width="80" height="60" data="" />
+		<clip index="73" x="240" y="420" width="80" height="60" data="" />
+		<clip index="74" x="320" y="420" width="80" height="60" data="" />
+		<clip index="75" x="400" y="420" width="80" height="60" data="" />
+		<clip index="76" x="480" y="420" width="80" height="60" data="" />
+		<clip index="77" x="560" y="420" width="80" height="60" data="" />
+		<clip index="78" x="640" y="420" width="80" height="60" data="" />
+		<clip index="79" x="720" y="420" width="80" height="60" data="" />
+		<Append data="0,," />
+	</images>
+	
+
+	<images index="1" name="spr_tile" size="2" 
+		output_type=""
+		output_file="">
+		
+		<clip index="0" x="0" y="0" width="48" height="52" data="" />
+		<clip index="1" x="48" y="0" width="47" height="73" data="" />
+		<Append data="0,," />
+	</images>
+	
+
+	
+	
+	<map index="0" name="worldmap" 
+		images_name="map_tile" 
+		xcount="21" 
+		ycount="17"
+		layer_count="1"
+		cellw="80" 
+		cellh="60"
+		scene_part_count="80"
+		scene_frame_count="80"
+		cd_part_count="8">
+		
+		<scene_part index="0" tile="0" trans="0" />
+		<scene_part index="1" tile="1" trans="0" />
+		<scene_part index="2" tile="2" trans="0" />
+		<scene_part index="3" tile="3" trans="0" />
+		<scene_part index="4" tile="4" trans="0" />
+		<scene_part index="5" tile="5" trans="0" />
+		<scene_part index="6" tile="6" trans="0" />
+		<scene_part index="7" tile="7" trans="0" />
+		<scene_part index="8" tile="8" trans="0" />
+		<scene_part index="9" tile="9" trans="0" />
+		<scene_part index="10" tile="10" trans="0" />
+		<scene_part index="11" tile="11" trans="0" />
+		<scene_part index="12" tile="12" trans="0" />
+		<scene_part index="13" tile="13" trans="0" />
+		<scene_part index="14" tile="14" trans="0" />
+		<scene_part index="15" tile="15" trans="0" />
+		<scene_part index="16" tile="16" trans="0" />
+		<scene_part index="17" tile="17" trans="0" />
+		<scene_part index="18" tile="18" trans="0" />
+		<scene_part index="19" tile="19" trans="0" />
+		<scene_part index="20" tile="20" trans="0" />
+		<scene_part index="21" tile="21" trans="0" />
+		<scene_part index="22" tile="22" trans="0" />
+		<scene_part index="23" tile="23" trans="0" />
+		<scene_part index="24" tile="24" trans="0" />
+		<scene_part index="25" tile="25" trans="0" />
+		<scene_part index="26" tile="26" trans="0" />
+		<scene_part index="27" tile="27" trans="0" />
+		<scene_part index="28" tile="28" trans="0" />
+		<scene_part index="29" tile="29" trans="0" />
+		<scene_part index="30" tile="30" trans="0" />
+		<scene_part index="31" tile="31" trans="0" />
+		<scene_part index="32" tile="32" trans="0" />
+		<scene_part index="33" tile="33" trans="0" />
+		<scene_part index="34" tile="34" trans="0" />
+		<scene_part index="35" tile="35" trans="0" />
+		<scene_part index="36" tile="36" trans="0" />
+		<scene_part index="37" tile="37" trans="0" />
+		<scene_part index="38" tile="38" trans="0" />
+		<scene_part index="39" tile="39" trans="0" />
+		<scene_part index="40" tile="40" trans="0" />
+		<scene_part index="41" tile="41" trans="0" />
+		<scene_part index="42" tile="42" trans="0" />
+		<scene_part index="43" tile="43" trans="0" />
+		<scene_part index="44" tile="44" trans="0" />
+		<scene_part index="45" tile="45" trans="0" />
+		<scene_part index="46" tile="46" trans="0" />
+		<scene_part index="47" tile="47" trans="0" />
+		<scene_part index="48" tile="48" trans="0" />
+		<scene_part index="49" tile="49" trans="0" />
+		<scene_part index="50" tile="50" trans="0" />
+		<scene_part index="51" tile="51" trans="0" />
+		<scene_part index="52" tile="52" trans="0" />
+		<scene_part index="53" tile="53" trans="0" />
+		<scene_part index="54" tile="54" trans="0" />
+		<scene_part index="55" tile="55" trans="0" />
+		<scene_part index="56" tile="56" trans="0" />
+		<scene_part index="57" tile="57" trans="0" />
+		<scene_part index="58" tile="58" trans="0" />
+		<scene_part index="59" tile="59" trans="0" />
+		<scene_part index="60" tile="60" trans="0" />
+		<scene_part index="61" tile="61" trans="0" />
+		<scene_part index="62" tile="62" trans="0" />
+		<scene_part index="63" tile="63" trans="0" />
+		<scene_part index="64" tile="64" trans="0" />
+		<scene_part index="65" tile="65" trans="0" />
+		<scene_part index="66" tile="66" trans="0" />
+		<scene_part index="67" tile="67" trans="0" />
+		<scene_part index="68" tile="68" trans="0" />
+		<scene_part index="69" tile="69" trans="0" />
+		<scene_part index="70" tile="70" trans="0" />
+		<scene_part index="71" tile="71" trans="0" />
+		<scene_part index="72" tile="72" trans="0" />
+		<scene_part index="73" tile="73" trans="0" />
+		<scene_part index="74" tile="74" trans="0" />
+		<scene_part index="75" tile="75" trans="0" />
+		<scene_part index="76" tile="76" trans="0" />
+		<scene_part index="77" tile="77" trans="0" />
+		<scene_part index="78" tile="78" trans="0" />
+		<scene_part index="79" tile="79" trans="0" />
+		
+		<scene_frame index="0" data_size="1" data="0," />
+		<scene_frame index="1" data_size="1" data="1," />
+		<scene_frame index="2" data_size="1" data="2," />
+		<scene_frame index="3" data_size="1" data="3," />
+		<scene_frame index="4" data_size="1" data="4," />
+		<scene_frame index="5" data_size="1" data="5," />
+		<scene_frame index="6" data_size="1" data="6," />
+		<scene_frame index="7" data_size="1" data="7," />
+		<scene_frame index="8" data_size="1" data="8," />
+		<scene_frame index="9" data_size="1" data="9," />
+		<scene_frame index="10" data_size="1" data="10," />
+		<scene_frame index="11" data_size="1" data="11," />
+		<scene_frame index="12" data_size="1" data="12," />
+		<scene_frame index="13" data_size="1" data="13," />
+		<scene_frame index="14" data_size="1" data="14," />
+		<scene_frame index="15" data_size="1" data="15," />
+		<scene_frame index="16" data_size="1" data="16," />
+		<scene_frame index="17" data_size="1" data="17," />
+		<scene_frame index="18" data_size="1" data="18," />
+		<scene_frame index="19" data_size="1" data="19," />
+		<scene_frame index="20" data_size="1" data="20," />
+		<scene_frame index="21" data_size="1" data="21," />
+		<scene_frame index="22" data_size="1" data="22," />
+		<scene_frame index="23" data_size="1" data="23," />
+		<scene_frame index="24" data_size="1" data="24," />
+		<scene_frame index="25" data_size="1" data="25," />
+		<scene_frame index="26" data_size="1" data="26," />
+		<scene_frame index="27" data_size="1" data="27," />
+		<scene_frame index="28" data_size="1" data="28," />
+		<scene_frame index="29" data_size="1" data="29," />
+		<scene_frame index="30" data_size="1" data="30," />
+		<scene_frame index="31" data_size="1" data="31," />
+		<scene_frame index="32" data_size="1" data="32," />
+		<scene_frame index="33" data_size="1" data="33," />
+		<scene_frame index="34" data_size="1" data="34," />
+		<scene_frame index="35" data_size="1" data="35," />
+		<scene_frame index="36" data_size="1" data="36," />
+		<scene_frame index="37" data_size="1" data="37," />
+		<scene_frame index="38" data_size="1" data="38," />
+		<scene_frame index="39" data_size="1" data="39," />
+		<scene_frame index="40" data_size="1" data="40," />
+		<scene_frame index="41" data_size="1" data="41," />
+		<scene_frame index="42" data_size="1" data="42," />
+		<scene_frame index="43" data_size="1" data="43," />
+		<scene_frame index="44" data_size="1" data="44," />
+		<scene_frame index="45" data_size="1" data="45," />
+		<scene_frame index="46" data_size="1" data="46," />
+		<scene_frame index="47" data_size="1" data="47," />
+		<scene_frame index="48" data_size="1" data="48," />
+		<scene_frame index="49" data_size="1" data="49," />
+		<scene_frame index="50" data_size="1" data="50," />
+		<scene_frame index="51" data_size="1" data="51," />
+		<scene_frame index="52" data_size="1" data="52," />
+		<scene_frame index="53" data_size="1" data="53," />
+		<scene_frame index="54" data_size="1" data="54," />
+		<scene_frame index="55" data_size="1" data="55," />
+		<scene_frame index="56" data_size="1" data="56," />
+		<scene_frame index="57" data_size="1" data="57," />
+		<scene_frame index="58" data_size="1" data="58," />
+		<scene_frame index="59" data_size="1" data="59," />
+		<scene_frame index="60" data_size="1" data="60," />
+		<scene_frame index="61" data_size="1" data="61," />
+		<scene_frame index="62" data_size="1" data="62," />
+		<scene_frame index="63" data_size="1" data="63," />
+		<scene_frame index="64" data_size="1" data="64," />
+		<scene_frame index="65" data_size="1" data="65," />
+		<scene_frame index="66" data_size="1" data="66," />
+		<scene_frame index="67" data_size="1" data="67," />
+		<scene_frame index="68" data_size="1" data="68," />
+		<scene_frame index="69" data_size="1" data="69," />
+		<scene_frame index="70" data_size="1" data="70," />
+		<scene_frame index="71" data_size="1" data="71," />
+		<scene_frame index="72" data_size="1" data="72," />
+		<scene_frame index="73" data_size="1" data="73," />
+		<scene_frame index="74" data_size="1" data="74," />
+		<scene_frame index="75" data_size="1" data="75," />
+		<scene_frame index="76" data_size="1" data="76," />
+		<scene_frame index="77" data_size="1" data="77," />
+		<scene_frame index="78" data_size="1" data="78," />
+		<scene_frame index="79" data_size="1" data="79," />
+		
+		<cd_part index="0" type="rect" mask="0" x1="0" y1="0" x2="80" y2="60" width="80" height="60" />
+		<cd_part index="1" type="rect" mask="1" x1="0" y1="0" x2="80" y2="60" width="80" height="60" />
+		<cd_part index="2" type="rect" mask="2" x1="0" y1="0" x2="80" y2="60" width="80" height="1" />
+		<cd_part index="3" type="rect" mask="4" x1="0" y1="59" x2="80" y2="60" width="80" height="1" />
+		<cd_part index="4" type="rect" mask="8" x1="0" y1="0" x2="80" y2="60" width="1" height="60" />
+		<cd_part index="5" type="rect" mask="16" x1="79" y1="0" x2="80" y2="60" width="1" height="60" />
+		<cd_part index="6" type="line" mask="32" x1="0" y1="0" x2="79" y2="59" width="80" height="60" />
+		<cd_part index="7" type="line" mask="64" x1="79" y1="0" x2="0" y2="59" width="80" height="60" />
+		
+		<layer index="0"
+			tile_matrix="{0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,},{10,11,12,13,14,15,16,17,18,19,10,11,12,13,14,15,16,17,18,19,0,},{20,21,22,23,24,25,26,27,28,29,20,21,22,23,24,25,26,27,28,29,0,},{30,31,32,33,34,35,36,37,38,39,30,31,32,33,34,35,36,37,38,39,0,},{40,41,42,43,44,45,46,47,48,49,40,41,42,43,44,45,46,47,48,49,0,},{50,51,52,53,54,55,56,57,58,59,50,51,52,53,54,55,56,57,58,59,0,},{60,61,62,63,64,65,66,67,68,69,60,61,62,63,64,65,66,67,68,69,0,},{70,71,72,73,74,75,76,77,78,79,70,71,72,73,74,75,76,77,78,79,0,},{0,1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0,},{10,11,12,13,14,15,16,17,18,19,10,11,12,13,14,15,16,17,18,19,0,},{20,21,22,23,24,25,26,27,28,29,20,21,22,23,24,25,26,27,28,29,0,},{30,31,32,33,34,35,36,37,38,39,30,31,32,33,34,35,36,37,38,39,0,},{40,41,42,43,44,45,46,47,48,49,40,41,42,43,44,45,46,47,48,49,0,},{50,51,52,53,54,55,56,57,58,59,50,51,52,53,54,55,56,57,58,59,0,},{60,61,62,63,64,65,66,67,68,69,60,61,62,63,64,65,66,67,68,69,0,},{70,71,72,73,74,75,76,77,78,79,70,71,72,73,74,75,76,77,78,79,0,},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},"
+			flag_matrix="{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},"
+		/>
+		
+		<Append data="0,," />
+	</map>
+	
+
+	
+	
+	<sprite index="0" name="enemy"
+		images_name="spr_tile"
+		scene_part_count="1"
+		scene_frame_count="1"
+		cd_part_count="0"
+		cd_frame_count="1"
+		animate_count="1"
+		complexMode="True">
+		
+		<scene_part index="0" tile="0" x="-24" y="-36" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		
+		<scene_frame index="0" data_size="1" data="0," />
+		
+		
+		<cd_frame index="0" data_size="0" data="" />
+		<frames 
+			counts="1," 
+			names="4,0000," 
+			animates="{0,},"
+			cd_map="{0,},"
+			cd_atk="{0,},"
+			cd_def="{0,},"
+			cd_ext="{0,},"
+			alpha="{1,},"
+			rotate="{0,},"
+			scaleX="{1,},"
+			scaleY="{1,},"
+			shearX="{0,},"
+			shearY="{0,},"
+		/>
+		<Append data="0,," />
+	</sprite>
+	
+
+	<sprite index="1" name="event"
+		images_name="spr_tile"
+		scene_part_count="1"
+		scene_frame_count="1"
+		cd_part_count="0"
+		cd_frame_count="1"
+		animate_count="1"
+		complexMode="True">
+		
+		<scene_part index="0" tile="1" x="-24" y="-50" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		
+		<scene_frame index="0" data_size="1" data="0," />
+		
+		
+		<cd_frame index="0" data_size="0" data="" />
+		<frames 
+			counts="1," 
+			names="4,0000," 
+			animates="{0,},"
+			cd_map="{0,},"
+			cd_atk="{0,},"
+			cd_def="{0,},"
+			cd_ext="{0,},"
+			alpha="{1,},"
+			rotate="{0,},"
+			scaleX="{1,},"
+			scaleY="{1,},"
+			shearX="{0,},"
+			shearY="{0,},"
+		/>
+		<Append data="0,," />
+	</sprite>
+	
+
+	
+</resource>
+
+
+
+<level world_count="1">
+
+	
+	<world index="0" name="world" 
+		grid_x_count="17"
+		grid_y_count="10"
+		grid_w="48"
+		grid_h="48"
+		width="800"
+		height="480"
+		unit_count_map="1"
+		unit_count_sprite="10"
+		waypoint_count="0"
+		region_count="0"
+		data="0,,"
+		terrain="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,">
+		
+		<unit_map index="0" map_name="M000_worldmap" id="worldmap" x="0" y="0" images="map_tile" map_data="0,," priority="0" />
+		
+		<unit_sprite index="0" spr_name="S002_enemy" id="enemy" animate_id="0" frame_id="0" x="240" y="96" images="spr_tile" spr_data="7,Level=1,0,," priority="0" />
+		<unit_sprite index="1" spr_name="S004_enemy" id="enemy" animate_id="0" frame_id="0" x="480" y="96" images="spr_tile" spr_data="7,Level=4,0,," priority="0" />
+		<unit_sprite index="2" spr_name="S010_enemy" id="enemy" animate_id="0" frame_id="0" x="624" y="96" images="spr_tile" spr_data="7,Level=7,0,," priority="0" />
+		<unit_sprite index="3" spr_name="S005_enemy" id="enemy" animate_id="0" frame_id="0" x="528" y="240" images="spr_tile" spr_data="7,Level=5,0,," priority="0" />
+		<unit_sprite index="4" spr_name="S006_enemy" id="enemy" animate_id="0" frame_id="0" x="336" y="240" images="spr_tile" spr_data="7,Level=2,0,," priority="0" />
+		<unit_sprite index="5" spr_name="S009_enemy" id="enemy" animate_id="0" frame_id="0" x="672" y="240" images="spr_tile" spr_data="7,Level=8,0,," priority="0" />
+		<unit_sprite index="6" spr_name="S001_enemy" id="enemy" animate_id="0" frame_id="0" x="144" y="288" images="spr_tile" spr_data="7,Level=0,0,," priority="0" />
+		<unit_sprite index="7" spr_name="S003_enemy" id="enemy" animate_id="0" frame_id="0" x="336" y="336" images="spr_tile" spr_data="7,Level=3,0,," priority="0" />
+		<unit_sprite index="8" spr_name="S007_enemy" id="enemy" animate_id="0" frame_id="0" x="480" y="384" images="spr_tile" spr_data="7,Level=6,0,," priority="0" />
+		<unit_sprite index="9" spr_name="S008_enemy" id="enemy" animate_id="0" frame_id="0" x="672" y="384" images="spr_tile" spr_data="7,Level=9,0,," priority="0" />
+		
+		
+		
+	</world>
+	
+
+	
+</level>
+
+
+
+
+</entry>
+
+
+
+
+

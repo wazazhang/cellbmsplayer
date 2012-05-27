@@ -1,0 +1,32 @@
+
+1.name 		= <font size="12" face="Verdana" color="#ff8080">神秘的声音</font>
+1.head		= /res/ui/npc.png
+1.dialog	= <font size="16" face="Verdana" color="#ffffff">\
+%ID%，你终于来了。我们的世界正面临一场浩劫，这片大陆的各种族之间纷争不断，\
+如果任由他们这样下去，这个世界最终将会被这场战争所毁灭，我们需要你，你必须阻止他们！\
+</font><br><font size="12" face="Verdana" color="#00ff00">(点击这里继续)</font>
+
+2.name 		= <font size="12" face="Verdana" color="#80ff80">%ID%</font>
+2.dialog 	= <font size="16" face="Verdana" color="#ffffff">\
+你是谁？我该怎么去做?\
+</font><br><font size="12" face="Verdana" color="#00ff00">(点击这里继续)</font>
+
+3.name 		= <font size="12" face="Verdana" color="#ff8080">神秘的声音</font>
+3.head		= /res/ui/npc.png
+3.dialog	= <font size="16" face="Verdana" color="#ffffff">\
+我将赋予你支配者的能力，而其他一切问题的答案需要你自己去寻找，未来就掌握在你的手中，\
+我们也无法预知一切。\
+</font><br><font size="12" face="Verdana" color="#00ff00">(点击这里继续)</font>
+
+4.name 		= <font size="12" face="Verdana" color="#80ff80">%ID%</font>
+4.dialog	= <font size="16" face="Verdana" color="#ffffff">\
+支配者的能力是什么?我该如何使用支配者的能力?\
+</font><br><font size="12" face="Verdana" color="#00ff00">(点击这里继续)</font>
+
+5.name 		= <font size="12" face="Verdana" color="#ff8080">神秘的声音</font>
+5.head		= /res/ui/npc.png
+5.dialog	= <font size="16" face="Verdana" color="#ffffff">\
+这个世界的万物都着相对应的封印卡片，而支配者的能力就是能够拥有和使用它们。\
+你将可以拥有封印各种族兵种灵魂的士兵卡片，在战斗中将他们召唤出来为你作战；你还将拥有封印各种\
+神奇技能的魔法卡片，可以在战斗中对你的士兵或者敌人的士兵使用。下面我会指导你尝试下如何使用这种能力。\
+</font><br><font size="12" face="Verdana" color="#00ff00">(点击这里继续)</font>
