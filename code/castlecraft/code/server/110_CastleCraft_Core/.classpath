@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="com/fc/castle/data/ExploreStates.java|com/fc/castle/gs/game/Scene.java" kind="src" path="src"/>
+	<classpathentry kind="src" path="res"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/000_Engine_Core"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/002_Engine_Server"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/002_Engine_SQLProxy"/>
+	<classpathentry kind="lib" path="/000_Engine_Core/lib/slf4j-api-1.5.11.jar"/>
+	<classpathentry kind="lib" path="/000_Engine_Core/lib/slf4j-simple-1.5.0.jar"/>
+	<classpathentry kind="lib" path="/000_Engine_Core/lib/mysql-connector-java-5.1.7/mysql-connector-java-5.1.7-bin.jar"/>
+	<classpathentry kind="lib" path="/000_Engine_Core/lib/proxool-0.9.1/lib/proxool-0.9.1.jar"/>
+	<classpathentry kind="lib" path="/000_Engine_Core/lib/proxool-0.9.1/lib/proxool-cglib.jar"/>
+	<classpathentry kind="lib" path="/000_Engine_Core/lib/jexcelapi_2_6_9_1.4/jexcelapi/jxl.jar"/>
+	<classpathentry kind="lib" path="/000_Engine_Core/lib/commons-lang-2.5.jar"/>
+	<classpathentry kind="lib" path="/000_Engine_Core/lib/commons-logging-1.0.3.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
