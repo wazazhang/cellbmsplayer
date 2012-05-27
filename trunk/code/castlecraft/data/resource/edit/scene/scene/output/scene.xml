@@ -1,0 +1,683 @@
+<entry>
+<!--
+<OUTPUT>		.\output\scene.xml
+<IMAGE_OUTPUT>	.\output\
+<FORMAT_NUMBER_ARRAY_1D>    <>,
+<FORMAT_STRING_ARRAY_1D>	<>,
+<FORMAT_ARRAY_1D>			<>,
+<FORMAT_ARRAY_2D>			{<>},
+<FIXED_STRING_ARRAY>		char,
+-->
+<IMAGE_TYPE>png
+</IMAGE_TYPE>
+<IMAGE_TILE>false
+</IMAGE_TILE>
+<IMAGE_GROUP>true
+</IMAGE_GROUP>
+
+
+<resource images_count="2" map_count="0" sprite_count="11" >
+	
+	
+	<images index="0" name="bg" size="2" 
+		output_type=""
+		output_file="">
+		
+		<clip index="0" x="0" y="1" width="1024" height="768" data="" />
+		<clip index="1" x="0" y="769" width="1024" height="768" data="" />
+		<Append data="0,," />
+	</images>
+	
+
+	<images index="1" name="spr_tile" size="30" 
+		output_type=""
+		output_file="">
+		
+		<clip index="0" x="246" y="0" width="64" height="40" data="" />
+		<clip index="1" x="147" y="46" width="14" height="12" data="" />
+		<clip index="2" x="0" y="0" width="58" height="38" data="" />
+		<clip index="3" x="292" y="40" width="64" height="40" data="" />
+		<clip index="4" x="356" y="0" width="66" height="67" data="" />
+		<clip index="5" x="147" y="0" width="99" height="46" data="" />
+		<clip index="6" x="292" y="80" width="77" height="70" data="" />
+		<clip index="7" x="330" y="200" width="64" height="39" data="" />
+		<clip index="8" x="58" y="0" width="43" height="62" data="" />
+		<clip index="9" x="62" y="62" width="46" height="94" data="" />
+		<clip index="10" x="248" y="152" width="82" height="90" data="" />
+		<clip index="11" x="120" y="152" width="128" height="97" data="" />
+		<clip index="12" x="0" y="156" width="120" height="83" data="" />
+		<clip index="13" x="108" y="55" width="32" height="78" data="" />
+		<clip index="14" x="101" y="0" width="46" height="55" data="" />
+		<clip index="15" x="0" y="62" width="62" height="58" data="" />
+		<clip index="16" x="330" y="150" width="65" height="50" data="" />
+		<clip index="17" x="211" y="46" width="81" height="106" data="" />
+		<clip index="18" x="163" y="46" width="48" height="59" data="" />
+		<clip index="19" x="0" y="0" width="0" height="0" data="" />
+		<clip index="20" x="140" y="58" width="23" height="48" data="" />
+		<clip index="21" x="0" y="0" width="0" height="0" data="" />
+		<clip index="22" x="0" y="0" width="0" height="0" data="" />
+		<clip index="23" x="0" y="0" width="0" height="0" data="" />
+		<clip index="24" x="0" y="0" width="0" height="0" data="" />
+		<clip index="25" x="0" y="0" width="0" height="0" data="" />
+		<clip index="26" x="0" y="0" width="0" height="0" data="" />
+		<clip index="27" x="0" y="0" width="0" height="0" data="" />
+		<clip index="28" x="0" y="0" width="0" height="0" data="" />
+		<clip index="29" x="0" y="0" width="0" height="0" data="" />
+		<Append data="0,," />
+	</images>
+	
+
+	
+	
+	
+	
+	<sprite index="0" name="bg"
+		images_name="bg"
+		scene_part_count="1"
+		scene_frame_count="1"
+		cd_part_count="0"
+		cd_frame_count="1"
+		animate_count="1"
+		complexMode="True">
+		
+		<scene_part index="0" tile="0" x="0" y="0" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		
+		<scene_frame index="0" data_size="1" data="0," />
+		
+		
+		<cd_frame index="0" data_size="0" data="" />
+		<frames 
+			counts="1," 
+			names="4,0000," 
+			animates="{0,},"
+			cd_map="{0,},"
+			cd_atk="{0,},"
+			cd_def="{0,},"
+			cd_ext="{0,},"
+			alpha="{1,},"
+			rotate="{0,},"
+			scaleX="{1,},"
+			scaleY="{1,},"
+			shearX="{0,},"
+			shearY="{0,},"
+		/>
+		<Append data="0,," />
+	</sprite>
+	
+
+	<sprite index="1" name="bg2"
+		images_name="bg"
+		scene_part_count="1"
+		scene_frame_count="1"
+		cd_part_count="0"
+		cd_frame_count="1"
+		animate_count="1"
+		complexMode="True">
+		
+		<scene_part index="0" tile="1" x="0" y="0" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		
+		<scene_frame index="0" data_size="1" data="0," />
+		
+		
+		<cd_frame index="0" data_size="0" data="" />
+		<frames 
+			counts="1," 
+			names="4,0000," 
+			animates="{0,},"
+			cd_map="{0,},"
+			cd_atk="{0,},"
+			cd_def="{0,},"
+			cd_ext="{0,},"
+			alpha="{1,},"
+			rotate="{0,},"
+			scaleX="{1,},"
+			scaleY="{1,},"
+			shearX="{0,},"
+			shearY="{0,},"
+		/>
+		<Append data="0,," />
+	</sprite>
+	
+
+	<sprite index="2" name="base"
+		images_name="spr_tile"
+		scene_part_count="1"
+		scene_frame_count="1"
+		cd_part_count="0"
+		cd_frame_count="1"
+		animate_count="1"
+		complexMode="True">
+		
+		<scene_part index="0" tile="10" x="-29" y="-53" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		
+		<scene_frame index="0" data_size="1" data="0," />
+		
+		
+		<cd_frame index="0" data_size="0" data="" />
+		<frames 
+			counts="1," 
+			names="4,0001," 
+			animates="{0,},"
+			cd_map="{0,},"
+			cd_atk="{0,},"
+			cd_def="{0,},"
+			cd_ext="{0,},"
+			alpha="{1,},"
+			rotate="{0,},"
+			scaleX="{1,},"
+			scaleY="{1,},"
+			shearX="{0,},"
+			shearY="{0,},"
+		/>
+		<Append data="0,," />
+	</sprite>
+	
+
+	<sprite index="3" name="enemy"
+		images_name="spr_tile"
+		scene_part_count="9"
+		scene_frame_count="9"
+		cd_part_count="0"
+		cd_frame_count="1"
+		animate_count="2"
+		complexMode="True">
+		
+		<scene_part index="0" tile="9" x="-20" y="-28" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="1" tile="9" x="-20" y="-28" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="2" tile="10" x="-20" y="-28" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="3" tile="11" x="-20" y="-28" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="4" tile="12" x="-20" y="-28" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="5" tile="24" x="-24" y="-24" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="6" tile="24" x="-24" y="-24" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="7" tile="25" x="-24" y="-24" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="8" tile="26" x="-24" y="-24" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		
+		<scene_frame index="0" data_size="1" data="0," />
+		<scene_frame index="1" data_size="1" data="1," />
+		<scene_frame index="2" data_size="1" data="2," />
+		<scene_frame index="3" data_size="1" data="3," />
+		<scene_frame index="4" data_size="1" data="4," />
+		<scene_frame index="5" data_size="1" data="5," />
+		<scene_frame index="6" data_size="1" data="6," />
+		<scene_frame index="7" data_size="1" data="7," />
+		<scene_frame index="8" data_size="1" data="8," />
+		
+		
+		<cd_frame index="0" data_size="0" data="" />
+		<frames 
+			counts="8,6," 
+			names="4,0000,4,0001," 
+			animates="{0,1,2,2,3,3,4,4,},{5,6,7,7,8,8,},"
+			cd_map="{0,0,0,0,0,0,0,0,},{0,0,0,0,0,0,},"
+			cd_atk="{0,0,0,0,0,0,0,0,},{0,0,0,0,0,0,},"
+			cd_def="{0,0,0,0,0,0,0,0,},{0,0,0,0,0,0,},"
+			cd_ext="{0,0,0,0,0,0,0,0,},{0,0,0,0,0,0,},"
+			alpha="{1,1,1,1,1,1,1,1,},{1,1,1,1,1,1,},"
+			rotate="{0,0,0,0,0,0,0,0,},{0,0,0,0,0,0,},"
+			scaleX="{1,1,1,1,1,1,1,1,},{1,1,1,1,1,1,},"
+			scaleY="{1,1,1,1,1,1,1,1,},{1,1,1,1,1,1,},"
+			shearX="{0,0,0,0,0,0,0,0,},{0,0,0,0,0,0,},"
+			shearY="{0,0,0,0,0,0,0,0,},{0,0,0,0,0,0,},"
+		/>
+		<Append data="0,," />
+	</sprite>
+	
+
+	<sprite index="4" name="event"
+		images_name="spr_tile"
+		scene_part_count="20"
+		scene_frame_count="20"
+		cd_part_count="0"
+		cd_frame_count="1"
+		animate_count="20"
+		complexMode="True">
+		
+		<scene_part index="0" tile="0" x="-32" y="-45" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="1" tile="9" x="-32" y="-85" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="2" tile="12" x="-66" y="-85" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="3" tile="11" x="-63" y="-85" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="4" tile="13" x="-16" y="-69" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="5" tile="14" x="-24" y="-48" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="6" tile="1" x="-7" y="-6" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="7" tile="5" x="-65" y="-78" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="8" tile="2" x="-31" y="-47" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="9" tile="10" x="-26" y="-55" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="10" tile="17" x="-30" y="-54" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="11" tile="18" x="-33" y="-57" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="12" tile="6" x="-31" y="-52" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="13" tile="16" x="-33" y="-52" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="14" tile="4" x="-31" y="-53" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="15" tile="3" x="-33" y="-44" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="16" tile="15" x="-32" y="-56" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="17" tile="7" x="-32" y="-42" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="18" tile="8" x="-32" y="-55" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="19" tile="20" x="-24" y="-40" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		
+		<scene_frame index="0" data_size="1" data="0," />
+		<scene_frame index="1" data_size="1" data="1," />
+		<scene_frame index="2" data_size="1" data="2," />
+		<scene_frame index="3" data_size="1" data="3," />
+		<scene_frame index="4" data_size="1" data="4," />
+		<scene_frame index="5" data_size="1" data="5," />
+		<scene_frame index="6" data_size="1" data="6," />
+		<scene_frame index="7" data_size="1" data="7," />
+		<scene_frame index="8" data_size="1" data="8," />
+		<scene_frame index="9" data_size="1" data="9," />
+		<scene_frame index="10" data_size="1" data="10," />
+		<scene_frame index="11" data_size="1" data="11," />
+		<scene_frame index="12" data_size="1" data="12," />
+		<scene_frame index="13" data_size="1" data="13," />
+		<scene_frame index="14" data_size="1" data="14," />
+		<scene_frame index="15" data_size="1" data="15," />
+		<scene_frame index="16" data_size="1" data="16," />
+		<scene_frame index="17" data_size="1" data="17," />
+		<scene_frame index="18" data_size="1" data="18," />
+		<scene_frame index="19" data_size="1" data="19," />
+		
+		
+		<cd_frame index="0" data_size="0" data="" />
+		<frames 
+			counts="1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1," 
+			names="4,0000,4,0001,4,0002,4,0003,4,0004,4,0005,4,0006,4,0007,4,0008,4,0009,4,0010,4,0011,4,0012,4,0013,4,0014,4,0015,4,0016,4,0017,4,0018,4,0019," 
+			animates="{0,},{1,},{2,},{3,},{4,},{5,},{6,},{7,},{8,},{9,},{10,},{11,},{12,},{13,},{14,},{15,},{16,},{17,},{18,},{19,},"
+			cd_map="{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},"
+			cd_atk="{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},"
+			cd_def="{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},"
+			cd_ext="{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},"
+			alpha="{1,},{1,},{1,},{1,},{1,},{1,},{1,},{1,},{1,},{1,},{1,},{1,},{1,},{1,},{1,},{1,},{1,},{1,},{1,},{1,},"
+			rotate="{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},"
+			scaleX="{1,},{1,},{1,},{1,},{1,},{1,},{1,},{1,},{1,},{1,},{1,},{1,},{1,},{1,},{1,},{1,},{1,},{1,},{1,},{1,},"
+			scaleY="{1,},{1,},{1,},{1,},{1,},{1,},{1,},{1,},{1,},{1,},{1,},{1,},{1,},{1,},{1,},{1,},{1,},{1,},{1,},{1,},"
+			shearX="{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},"
+			shearY="{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},{0,},"
+		/>
+		<Append data="0,," />
+	</sprite>
+	
+
+	<sprite index="5" name="explore_challange"
+		images_name="spr_tile"
+		scene_part_count="1"
+		scene_frame_count="1"
+		cd_part_count="0"
+		cd_frame_count="1"
+		animate_count="1"
+		complexMode="True">
+		
+		<scene_part index="0" tile="9" x="-23" y="-87" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		
+		<scene_frame index="0" data_size="1" data="0," />
+		
+		
+		<cd_frame index="0" data_size="0" data="" />
+		<frames 
+			counts="1," 
+			names="4,0001," 
+			animates="{0,},"
+			cd_map="{0,},"
+			cd_atk="{0,},"
+			cd_def="{0,},"
+			cd_ext="{0,},"
+			alpha="{1,},"
+			rotate="{0,},"
+			scaleX="{1,},"
+			scaleY="{1,},"
+			shearX="{0,},"
+			shearY="{0,},"
+		/>
+		<Append data="0,," />
+	</sprite>
+	
+
+	<sprite index="6" name="explore_race"
+		images_name="spr_tile"
+		scene_part_count="6"
+		scene_frame_count="6"
+		cd_part_count="0"
+		cd_frame_count="1"
+		animate_count="6"
+		complexMode="True">
+		
+		<scene_part index="0" tile="15" x="-31" y="-46" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="1" tile="16" x="-31" y="-37" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="2" tile="17" x="-31" y="-45" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="3" tile="18" x="-27" y="-47" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="4" tile="6" x="-29" y="-38" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="5" tile="4" x="-31" y="-46" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		
+		<scene_frame index="0" data_size="1" data="0," />
+		<scene_frame index="1" data_size="1" data="1," />
+		<scene_frame index="2" data_size="1" data="2," />
+		<scene_frame index="3" data_size="1" data="3," />
+		<scene_frame index="4" data_size="1" data="4," />
+		<scene_frame index="5" data_size="1" data="5," />
+		
+		
+		<cd_frame index="0" data_size="0" data="" />
+		<frames 
+			counts="1,1,1,1,1,1," 
+			names="4,0000,4,0001,4,0002,4,0003,4,0004,4,0005," 
+			animates="{0,},{1,},{2,},{3,},{4,},{5,},"
+			cd_map="{0,},{0,},{0,},{0,},{0,},{0,},"
+			cd_atk="{0,},{0,},{0,},{0,},{0,},{0,},"
+			cd_def="{0,},{0,},{0,},{0,},{0,},{0,},"
+			cd_ext="{0,},{0,},{0,},{0,},{0,},{0,},"
+			alpha="{1,},{1,},{1,},{1,},{1,},{1,},"
+			rotate="{0,},{0,},{0,},{0,},{0,},{0,},"
+			scaleX="{1,},{1,},{1,},{1,},{1,},{1,},"
+			scaleY="{1,},{1,},{1,},{1,},{1,},{1,},"
+			shearX="{0,},{0,},{0,},{0,},{0,},{0,},"
+			shearY="{0,},{0,},{0,},{0,},{0,},{0,},"
+		/>
+		<Append data="0,," />
+	</sprite>
+	
+
+	<sprite index="7" name="explore_random"
+		images_name="spr_tile"
+		scene_part_count="3"
+		scene_frame_count="3"
+		cd_part_count="0"
+		cd_frame_count="1"
+		animate_count="3"
+		complexMode="True">
+		
+		<scene_part index="0" tile="7" x="-30" y="-26" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="1" tile="0" x="-24" y="-28" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="2" tile="20" x="-10" y="-42" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		
+		<scene_frame index="0" data_size="1" data="0," />
+		<scene_frame index="1" data_size="1" data="1," />
+		<scene_frame index="2" data_size="1" data="2," />
+		
+		
+		<cd_frame index="0" data_size="0" data="" />
+		<frames 
+			counts="1,1,1," 
+			names="4,0000,4,0001,4,0002," 
+			animates="{0,},{1,},{2,},"
+			cd_map="{0,},{0,},{0,},"
+			cd_atk="{0,},{0,},{0,},"
+			cd_def="{0,},{0,},{0,},"
+			cd_ext="{0,},{0,},{0,},"
+			alpha="{1,},{1,},{1,},"
+			rotate="{0,},{0,},{0,},"
+			scaleX="{1,},{1,},{1,},"
+			scaleY="{1,},{1,},{1,},"
+			shearX="{0,},{0,},{0,},"
+			shearY="{0,},{0,},{0,},"
+		/>
+		<Append data="0,," />
+	</sprite>
+	
+
+	<sprite index="8" name="explore_unknow"
+		images_name="spr_tile"
+		scene_part_count="1"
+		scene_frame_count="1"
+		cd_part_count="0"
+		cd_frame_count="1"
+		animate_count="1"
+		complexMode="True">
+		
+		<scene_part index="0" tile="3" x="-30" y="-30" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		
+		<scene_frame index="0" data_size="1" data="0," />
+		
+		
+		<cd_frame index="0" data_size="0" data="" />
+		<frames 
+			counts="1," 
+			names="4,0000," 
+			animates="{0,},"
+			cd_map="{0,},"
+			cd_atk="{0,},"
+			cd_def="{0,},"
+			cd_ext="{0,},"
+			alpha="{1,},"
+			rotate="{0,},"
+			scaleX="{1,},"
+			scaleY="{1,},"
+			shearX="{0,},"
+			shearY="{0,},"
+		/>
+		<Append data="0,," />
+	</sprite>
+	
+
+	<sprite index="9" name="nature"
+		images_name="spr_tile"
+		scene_part_count="6"
+		scene_frame_count="6"
+		cd_part_count="0"
+		cd_frame_count="1"
+		animate_count="6"
+		complexMode="True">
+		
+		<scene_part index="0" tile="12" x="-55" y="-63" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="1" tile="11" x="-66" y="-70" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="2" tile="13" x="-19" y="-69" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="3" tile="14" x="-25" y="-47" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="4" tile="5" x="-49" y="-23" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="5" tile="1" x="-7" y="-6" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		
+		<scene_frame index="0" data_size="1" data="0," />
+		<scene_frame index="1" data_size="1" data="1," />
+		<scene_frame index="2" data_size="1" data="2," />
+		<scene_frame index="3" data_size="1" data="3," />
+		<scene_frame index="4" data_size="1" data="4," />
+		<scene_frame index="5" data_size="1" data="5," />
+		
+		
+		<cd_frame index="0" data_size="0" data="" />
+		<frames 
+			counts="1,1,1,1,1,1," 
+			names="4,0000,4,0001,4,0002,4,0003,4,0004,4,0005," 
+			animates="{0,},{1,},{2,},{3,},{4,},{5,},"
+			cd_map="{0,},{0,},{0,},{0,},{0,},{0,},"
+			cd_atk="{0,},{0,},{0,},{0,},{0,},{0,},"
+			cd_def="{0,},{0,},{0,},{0,},{0,},{0,},"
+			cd_ext="{0,},{0,},{0,},{0,},{0,},{0,},"
+			alpha="{1,},{1,},{1,},{1,},{1,},{1,},"
+			rotate="{0,},{0,},{0,},{0,},{0,},{0,},"
+			scaleX="{1,},{1,},{1,},{1,},{1,},{1,},"
+			scaleY="{1,},{1,},{1,},{1,},{1,},{1,},"
+			shearX="{0,},{0,},{0,},{0,},{0,},{0,},"
+			shearY="{0,},{0,},{0,},{0,},{0,},{0,},"
+		/>
+		<Append data="0,," />
+	</sprite>
+	
+
+	<sprite index="10" name="village"
+		images_name="spr_tile"
+		scene_part_count="1"
+		scene_frame_count="1"
+		cd_part_count="0"
+		cd_frame_count="1"
+		animate_count="1"
+		complexMode="True">
+		
+		<scene_part index="0" tile="2" x="-29" y="-26" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		
+		<scene_frame index="0" data_size="1" data="0," />
+		
+		
+		<cd_frame index="0" data_size="0" data="" />
+		<frames 
+			counts="1," 
+			names="4,0000," 
+			animates="{0,},"
+			cd_map="{0,},"
+			cd_atk="{0,},"
+			cd_def="{0,},"
+			cd_ext="{0,},"
+			alpha="{1,},"
+			rotate="{0,},"
+			scaleX="{1,},"
+			scaleY="{1,},"
+			shearX="{0,},"
+			shearY="{0,},"
+		/>
+		<Append data="0,," />
+	</sprite>
+	
+
+	
+</resource>
+
+
+
+<level world_count="2">
+
+	
+	<world index="0" name="home" 
+		grid_x_count="22"
+		grid_y_count="16"
+		grid_w="48"
+		grid_h="48"
+		width="1024"
+		height="768"
+		unit_count_map="0"
+		unit_count_sprite="85"
+		waypoint_count="0"
+		region_count="0"
+		data="0,,"
+		terrain="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,">
+		
+		
+		<unit_sprite index="0" spr_name="bg" id="bg2" animate_id="0" frame_id="0" x="0" y="0" images="bg" spr_data="0,," priority="0" />
+		<unit_sprite index="1" spr_name="S001_explore_random" id="explore_random" animate_id="1" frame_id="0" x="804" y="46" images="spr_tile" spr_data="19,explore_type=random,16,event_types=3003," priority="0" />
+		<unit_sprite index="2" spr_name="S002_villige" id="village" animate_id="0" frame_id="0" x="708" y="55" images="spr_tile" spr_data="20,explore_type=village,16,event_types=1001," priority="0" />
+		<unit_sprite index="3" spr_name="S009_nature" id="nature" animate_id="3" frame_id="0" x="96" y="58" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="4" spr_name="S003_nature" id="nature" animate_id="2" frame_id="0" x="531" y="70" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="5" spr_name="S004_nature" id="nature" animate_id="2" frame_id="0" x="498" y="70" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="6" spr_name="S005_nature" id="nature" animate_id="2" frame_id="0" x="596" y="70" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="7" spr_name="S006_nature" id="nature" animate_id="2" frame_id="0" x="563" y="70" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="8" spr_name="S029_nature" id="nature" animate_id="2" frame_id="0" x="27" y="70" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="9" spr_name="S008_explore_random" id="explore_random" animate_id="1" frame_id="0" x="264" y="76" images="spr_tile" spr_data="19,explore_type=random,16,event_types=3003," priority="0" />
+		<unit_sprite index="10" spr_name="S011_nature" id="nature" animate_id="0" frame_id="0" x="944" y="81" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="11" spr_name="S012_explore_unknow" id="explore_unknow" animate_id="0" frame_id="0" x="450" y="95" images="spr_tile" spr_data="19,explore_type=unknow,16,event_types=4001," priority="0" />
+		<unit_sprite index="12" spr_name="S020_nature" id="nature" animate_id="2" frame_id="0" x="70" y="107" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="13" spr_name="S017_explore_random" id="explore_random" animate_id="0" frame_id="0" x="655" y="133" images="spr_tile" spr_data="19,explore_type=random,16,event_types=3002," priority="0" />
+		<unit_sprite index="14" spr_name="S014_nature" id="nature" animate_id="4" frame_id="0" x="796" y="136" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="15" spr_name="S010_nature" id="nature" animate_id="2" frame_id="0" x="28" y="141" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="16" spr_name="S018_village" id="village" animate_id="0" frame_id="0" x="148" y="144" images="spr_tile" spr_data="20,explore_type=village,16,event_types=1001," priority="0" />
+		<unit_sprite index="17" spr_name="S019_nature" id="nature" animate_id="0" frame_id="0" x="366" y="149" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="18" spr_name="S028_nature" id="nature" animate_id="2" frame_id="0" x="927" y="152" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="19" spr_name="S013_nature" id="nature" animate_id="2" frame_id="0" x="78" y="154" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="20" spr_name="S023_nature" id="nature" animate_id="3" frame_id="0" x="481" y="181" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="21" spr_name="S027_explore_random" id="explore_random" animate_id="1" frame_id="0" x="596" y="199" images="spr_tile" spr_data="19,explore_type=random,16,event_types=3003," priority="0" />
+		<unit_sprite index="22" spr_name="S033_explore_random" id="explore_random" animate_id="2" frame_id="0" x="973" y="209" images="spr_tile" spr_data="19,explore_type=random,16,event_types=3001," priority="0" />
+		<unit_sprite index="23" spr_name="S021_nature" id="nature" animate_id="2" frame_id="0" x="22" y="209" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="24" spr_name="S031_nature" id="nature" animate_id="4" frame_id="0" x="367" y="212" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="25" spr_name="S032_explore_random" id="explore_random" animate_id="1" frame_id="0" x="131" y="214" images="spr_tile" spr_data="19,explore_type=random,16,event_types=3003," priority="0" />
+		<unit_sprite index="26" spr_name="S037_village" id="village" animate_id="0" frame_id="0" x="834" y="234" images="spr_tile" spr_data="20,explore_type=village,16,event_types=1001," priority="0" />
+		<unit_sprite index="27" spr_name="S034_explore_random" id="explore_random" animate_id="0" frame_id="0" x="261" y="235" images="spr_tile" spr_data="19,explore_type=random,16,event_types=3002," priority="0" />
+		<unit_sprite index="28" spr_name="S035_explore_random" id="explore_random" animate_id="0" frame_id="0" x="491" y="236" images="spr_tile" spr_data="19,explore_type=random,16,event_types=3002," priority="0" />
+		<unit_sprite index="29" spr_name="S036_explore_random" id="explore_random" animate_id="0" frame_id="0" x="677" y="253" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="30" spr_name="S024_explore_random" id="explore_random" animate_id="2" frame_id="0" x="928" y="270" images="spr_tile" spr_data="19,explore_type=random,16,event_types=3001," priority="0" />
+		<unit_sprite index="31" spr_name="S038_explore_random" id="explore_random" animate_id="0" frame_id="0" x="991" y="273" images="spr_tile" spr_data="19,explore_type=random,16,event_types=3002," priority="0" />
+		<unit_sprite index="32" spr_name="S039_nature" id="nature" animate_id="3" frame_id="0" x="199" y="283" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="33" spr_name="S047_village" id="village" animate_id="0" frame_id="0" x="856" y="294" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="34" spr_name="S040_explore_random" id="explore_random" animate_id="1" frame_id="0" x="433" y="310" images="spr_tile" spr_data="19,explore_type=random,16,event_types=3003," priority="0" />
+		<unit_sprite index="35" spr_name="S041_explore_random" id="explore_random" animate_id="2" frame_id="0" x="784" y="314" images="spr_tile" spr_data="19,explore_type=random,16,event_types=3001," priority="0" />
+		<unit_sprite index="36" spr_name="S042_nature" id="nature" animate_id="3" frame_id="0" x="92" y="316" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="37" spr_name="S043_base" id="base" animate_id="0" frame_id="0" x="558" y="322" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="38" spr_name="S046_nature" id="nature" animate_id="3" frame_id="0" x="144" y="337" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="39" spr_name="S048_nature" id="nature" animate_id="3" frame_id="0" x="202" y="356" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="40" spr_name="S049_explore_unknow" id="explore_unknow" animate_id="0" frame_id="0" x="852" y="358" images="spr_tile" spr_data="19,explore_type=unknow,16,event_types=4001," priority="0" />
+		<unit_sprite index="41" spr_name="S050_explore_random" id="explore_random" animate_id="2" frame_id="0" x="179" y="362" images="spr_tile" spr_data="19,explore_type=random,16,event_types=3001," priority="0" />
+		<unit_sprite index="42" spr_name="S051_nature" id="nature" animate_id="3" frame_id="0" x="733" y="367" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="43" spr_name="S052_nature" id="nature" animate_id="3" frame_id="0" x="619" y="368" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="44" spr_name="S053_explore_random" id="explore_random" animate_id="1" frame_id="0" x="119" y="380" images="spr_tile" spr_data="19,explore_type=random,16,event_types=3003," priority="0" />
+		<unit_sprite index="45" spr_name="S057_explore_random" id="explore_random" animate_id="1" frame_id="0" x="973" y="384" images="spr_tile" spr_data="19,explore_type=random,16,event_types=3003," priority="0" />
+		<unit_sprite index="46" spr_name="S054_nature" id="nature" animate_id="3" frame_id="0" x="485" y="407" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="47" spr_name="S055_nature" id="nature" animate_id="3" frame_id="0" x="537" y="408" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="48" spr_name="S056_village" id="village" animate_id="0" frame_id="0" x="283" y="409" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="49" spr_name="S058_explore_random" id="explore_random" animate_id="2" frame_id="0" x="368" y="414" images="spr_tile" spr_data="19,explore_type=random,16,event_types=3001," priority="0" />
+		<unit_sprite index="50" spr_name="S044_explore_random" id="explore_random" animate_id="1" frame_id="0" x="772" y="416" images="spr_tile" spr_data="19,explore_type=random,16,event_types=3003," priority="0" />
+		<unit_sprite index="51" spr_name="S060_explore_random" id="explore_random" animate_id="0" frame_id="0" x="885" y="429" images="spr_tile" spr_data="19,explore_type=random,16,event_types=3002," priority="0" />
+		<unit_sprite index="52" spr_name="S061_explore_random" id="explore_random" animate_id="2" frame_id="0" x="508" y="440" images="spr_tile" spr_data="19,explore_type=random,16,event_types=3001," priority="0" />
+		<unit_sprite index="53" spr_name="S062_explore_random" id="explore_random" animate_id="2" frame_id="0" x="971" y="442" images="spr_tile" spr_data="19,explore_type=random,16,event_types=3001," priority="0" />
+		<unit_sprite index="54" spr_name="S063_village" id="village" animate_id="0" frame_id="0" x="605" y="456" images="spr_tile" spr_data="20,explore_type=village,16,event_types=1001," priority="0" />
+		<unit_sprite index="55" spr_name="S064_explore_unknow" id="explore_unknow" animate_id="0" frame_id="0" x="130" y="463" images="spr_tile" spr_data="19,explore_type=unknow,16,event_types=4001," priority="0" />
+		<unit_sprite index="56" spr_name="S065_nature" id="nature" animate_id="3" frame_id="0" x="462" y="463" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="57" spr_name="S072_village" id="village" animate_id="0" frame_id="0" x="768" y="471" images="spr_tile" spr_data="20,explore_type=village,16,event_types=1001," priority="0" />
+		<unit_sprite index="58" spr_name="S067_nature" id="nature" animate_id="3" frame_id="0" x="299" y="481" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="59" spr_name="S068_nature" id="nature" animate_id="3" frame_id="0" x="207" y="482" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="60" spr_name="S069_nature" id="nature" animate_id="3" frame_id="0" x="253" y="482" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="61" spr_name="S070_explore_random" id="explore_random" animate_id="0" frame_id="0" x="509" y="495" images="spr_tile" spr_data="19,explore_type=random,16,event_types=3002," priority="0" />
+		<unit_sprite index="62" spr_name="S071_explore_random" id="explore_random" animate_id="1" frame_id="0" x="359" y="498" images="spr_tile" spr_data="19,explore_type=random,16,event_types=3002," priority="0" />
+		<unit_sprite index="63" spr_name="S074_nature" id="nature" animate_id="3" frame_id="0" x="270" y="532" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="64" spr_name="S075_nature" id="nature" animate_id="3" frame_id="0" x="225" y="532" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="65" spr_name="S078_nature" id="nature" animate_id="3" frame_id="0" x="622" y="533" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="66" spr_name="S076_nature" id="nature" animate_id="2" frame_id="0" x="924" y="545" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="67" spr_name="S077_explore_random" id="explore_random" animate_id="0" frame_id="0" x="822" y="547" images="spr_tile" spr_data="19,explore_type=random,16,event_types=3002," priority="0" />
+		<unit_sprite index="68" spr_name="S073_nature" id="nature" animate_id="4" frame_id="0" x="715" y="549" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="69" spr_name="S079_explore_random" id="explore_random" animate_id="2" frame_id="0" x="230" y="560" images="spr_tile" spr_data="19,explore_type=random,16,event_types=3001," priority="0" />
+		<unit_sprite index="70" spr_name="S080_explore_random" id="explore_random" animate_id="2" frame_id="0" x="590" y="567" images="spr_tile" spr_data="19,explore_type=random,16,event_types=3001," priority="0" />
+		<unit_sprite index="71" spr_name="S081_explore_unknow" id="explore_unknow" animate_id="0" frame_id="0" x="454" y="581" images="spr_tile" spr_data="19,explore_type=unknow,16,event_types=4001," priority="0" />
+		<unit_sprite index="72" spr_name="S083_nature" id="nature" animate_id="0" frame_id="0" x="968" y="598" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="73" spr_name="S084_nature" id="nature" animate_id="3" frame_id="0" x="249" y="601" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="74" spr_name="S086_nature" id="nature" animate_id="1" frame_id="0" x="79" y="604" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="75" spr_name="S085_explore_random" id="explore_random" animate_id="1" frame_id="0" x="645" y="614" images="spr_tile" spr_data="19,explore_type=random,16,event_types=3003," priority="0" />
+		<unit_sprite index="76" spr_name="S087_village" id="village" animate_id="0" frame_id="0" x="540" y="615" images="spr_tile" spr_data="20,explore_type=village,16,event_types=1001," priority="0" />
+		<unit_sprite index="77" spr_name="S091_nature" id="nature" animate_id="2" frame_id="0" x="876" y="655" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="78" spr_name="S088_nature" id="nature" animate_id="3" frame_id="0" x="277" y="672" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="79" spr_name="S007_nature" id="nature" animate_id="2" frame_id="0" x="36" y="676" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="80" spr_name="S089_nature" id="nature" animate_id="2" frame_id="0" x="853" y="689" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="81" spr_name="S090_nature" id="nature" animate_id="2" frame_id="0" x="799" y="699" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="82" spr_name="S026_nature" id="nature" animate_id="2" frame_id="0" x="182" y="716" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="83" spr_name="S015_nature" id="nature" animate_id="2" frame_id="0" x="109" y="716" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="84" spr_name="S025_nature" id="nature" animate_id="2" frame_id="0" x="39" y="728" images="spr_tile" spr_data="0,," priority="0" />
+		
+		
+		
+	</world>
+	
+
+	<world index="1" name="world" 
+		grid_x_count="13"
+		grid_y_count="10"
+		grid_w="80"
+		grid_h="80"
+		width="1024"
+		height="768"
+		unit_count_map="0"
+		unit_count_sprite="11"
+		waypoint_count="0"
+		region_count="0"
+		data="0,,"
+		terrain="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,">
+		
+		
+		<unit_sprite index="0" spr_name="bg" id="bg" animate_id="0" frame_id="0" x="0" y="0" images="bg" spr_data="0,," priority="0" />
+		<unit_sprite index="1" spr_name="S007_explore_race" id="explore_race" animate_id="4" frame_id="0" x="609" y="156" images="spr_tile" spr_data="17,explore_type=race,16,event_types=2005," priority="0" />
+		<unit_sprite index="2" spr_name="S010_explore_random" id="explore_random" animate_id="0" frame_id="0" x="281" y="178" images="spr_tile" spr_data="19,explore_type=random,16,event_types=3002," priority="0" />
+		<unit_sprite index="3" spr_name="S008_explore_race" id="explore_race" animate_id="5" frame_id="0" x="420" y="191" images="spr_tile" spr_data="17,explore_type=race,16,event_types=2006," priority="0" />
+		<unit_sprite index="4" spr_name="S009_explore_challange" id="explore_challange" animate_id="0" frame_id="0" x="729" y="194" images="spr_tile" spr_data="22,explore_type=challange,16,event_types=5001," priority="0" />
+		<unit_sprite index="5" spr_name="S006_explore_race" id="explore_race" animate_id="3" frame_id="0" x="238" y="253" images="spr_tile" spr_data="17,explore_type=race,16,event_types=2004," priority="0" />
+		<unit_sprite index="6" spr_name="S002_base" id="base" animate_id="0" frame_id="0" x="474" y="269" images="spr_tile" spr_data="0,," priority="0" />
+		<unit_sprite index="7" spr_name="S005_explore_race" id="explore_race" animate_id="2" frame_id="0" x="282" y="340" images="spr_tile" spr_data="17,explore_type=race,16,event_types=2003," priority="0" />
+		<unit_sprite index="8" spr_name="S003_explore_race" id="explore_race" animate_id="0" frame_id="0" x="616" y="362" images="spr_tile" spr_data="17,explore_type=race,16,event_types=2001," priority="0" />
+		<unit_sprite index="9" spr_name="S011_explore_random" id="explore_random" animate_id="1" frame_id="0" x="686" y="402" images="spr_tile" spr_data="19,explore_type=random,16,event_types=3003," priority="0" />
+		<unit_sprite index="10" spr_name="S004_explore_race" id="explore_race" animate_id="1" frame_id="0" x="449" y="429" images="spr_tile" spr_data="17,explore_type=race,16,event_types=2002," priority="0" />
+		
+		
+		
+	</world>
+	
+
+	
+</level>
+
+
+
+
+</entry>
+
+
+
+
+
