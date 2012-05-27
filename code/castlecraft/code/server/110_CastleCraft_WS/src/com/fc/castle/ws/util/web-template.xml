@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app>
+
+	<!-- #date -->
+	<!-- 服务初始化 -->
+	<servlet>
+		<servlet-name>Init</servlet-name>
+		<servlet-class>com.fc.castle.ws.servlet.Init</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+#servlet_begin
+	<!--
+	=========================================================
+	#name 
+	=========================================================
+	-->
+	<servlet>
+		<servlet-name>#name</servlet-name>
+		<servlet-class>#class</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>#name</servlet-name>
+		<url-pattern>/#name</url-pattern>
+	</servlet-mapping>
+#servlet_end
+
+
+</web-app>

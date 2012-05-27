@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app>
+
+	<!-- Tue Oct 25 15:18:42 CST 2011 -->
+	<!-- 服务初始化 -->
+	<servlet>
+		<servlet-name>Init</servlet-name>
+		<servlet-class>com.fc.castle.ws.servlet.Init</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+
+	<!-- 各种服务 -->
+	<servlet>
+		<servlet-name>WS</servlet-name>
+		<servlet-class>com.fc.castle.ws.servlet.WebService</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>WS</servlet-name>
+		<url-pattern>/WS</url-pattern>
+	</servlet-mapping>
+
+
+
+</web-app>
