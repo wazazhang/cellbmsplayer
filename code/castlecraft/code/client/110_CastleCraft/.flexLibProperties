@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties includeAllClasses="true" useMultiPlatformConfig="false" version="3">
+  <includeClasses>
+    <classEntry path="com.fc.castle.res.CResourceManager"/>
+    <classEntry path="com.fc.castle.res.Res"/>
+    <classEntry path="com.fc.castle.screens.ScreenBattle"/>
+    <classEntry path="com.fc.castle.gfx.battle.StageBattle"/>
+    <classEntry path="com.fc.castle.gfx.battle.BattleBuilding"/>
+    <classEntry path="com.fc.castle.res.CLayoutManager"/>
+    <classEntry path="com.fc.castle.net.client.socket.SocketClient"/>
+    <classEntry path="com.fc.castle.net.client.DataManager"/>
+    <classEntry path="com.fc.castle.ui.FormBattleStartSync"/>
+    <classEntry path="com.fc.castle.gfx.battle.res.AnimateEnum"/>
+    <classEntry path="com.fc.castle.formual.Formual"/>
+    <classEntry path="com.fc.castle.formual.FormualSoldier"/>
+    <classEntry path="com.fc.castle.gfx.battle.res.CBattleResource"/>
+    <classEntry path="com.fc.castle.gfx.battle.BattleMissle"/>
+    <classEntry path="com.fc.castle.gfx.battle.res.EffectInfo"/>
+    <classEntry path="com.fc.castle.gfx.battle.res.UnitInfo"/>
+    <classEntry path="com.fc.castle.gfx.battle.BattleMap"/>
+    <classEntry path="com.fc.castle.gfx.battle.BattleObject"/>
+    <classEntry path="com.fc.castle.gfx.world.StageWorld"/>
+    <classEntry path="com.fc.castle.gfx.world.WorldScene"/>
+    <classEntry path="com.fc.castle.gfx.battle.effect.SoulStars"/>
+    <classEntry path="com.fc.castle.gfx.battle.BattleMapObject"/>
+    <classEntry path="com.fc.castle.gfx.battle.ui.BuildHilight"/>
+    <classEntry path="com.fc.castle.gfx.battle.ui.BuildHilightGrid"/>
+    <classEntry path="com.fc.castle.gfx.battle.BattleMapHoly"/>
+    <classEntry path="com.fc.castlecraft.Config"/>
+    <classEntry path="com.fc.castle.gfx.battle.effect.Transport"/>
+    <classEntry path="com.fc.castle.gfx.battle.buff.Buff"/>
+    <classEntry path="com.fc.castle.formual.FormualObject"/>
+    <classEntry path="com.fc.castle.gfx.battle.effect.EffectNumber"/>
+    <classEntry path="com.fc.castlecraft.AutoLogin"/>
+    <classEntry path="com.fc.castle.ui.FormLogin"/>
+    <classEntry path="com.fc.castle.ui.BaseForm"/>
+    <classEntry path="com.fc.castle.ui.FormReadyForBattle"/>
+    <classEntry path="com.fc.castle.ui.card.CardSlot"/>
+    <classEntry path="com.fc.castle.gfx.battle.BattleSkill"/>
+    <classEntry path="com.fc.castle.ui.card.CardSelectPanel"/>
+    <classEntry path="com.fc.castle.gfx.battle.ui.SystemMenu"/>
+    <classEntry path="com.fc.castle.gfx.battle.ai.SkillState"/>
+    <classEntry path="com.fc.castle.gfx.battle.skill.SpriteSkill"/>
+    <classEntry path="com.fc.castle.gfx.battle.res.SkillBehavior"/>
+    <classEntry path="com.fc.castle.gfx.battle.effect.BuffEffect"/>
+    <classEntry path="com.fc.castle.gfx.battle.skill.SpriteBodySkill"/>
+    <classEntry path="com.fc.castle.gfx.battle.ai.BuildPlane"/>
+    <classEntry path="com.fc.castle.gfx.battle.ai.AIComputer"/>
+    <classEntry path="com.fc.castle.gfx.world.WorldUnit"/>
+    <classEntry path="com.fc.castle.gfx.world.WorldUnitBase"/>
+    <classEntry path="com.fc.castle.gfx.world.res.UnitData"/>
+    <classEntry path="com.fc.castle.gfx.tutorial.NpcDialog"/>
+    <classEntry path="com.fc.castle.gfx.battle.event.SkillBtnDownEvent"/>
+    <classEntry path="com.fc.castle.gfx.battle.event.BuildBtnDownEvent"/>
+    <classEntry path="com.fc.castle.gfx.battle.ui.HelpArrow"/>
+    <classEntry path="com.fc.castle.gfx.battle.event.SoldierDeadEvent"/>
+    <classEntry path="com.fc.castle.ui.HandBook"/>
+    <classEntry path="com.fc.castle.ui.SoldierHandBook"/>
+    <classEntry path="com.fc.castle.ui.BaseTempPlay"/>
+    <classEntry path="com.fc.castlecraft.LanguageManager"/>
+    <classEntry path="com.fc.castle.ui.SoldierTempPlay"/>
+    <classEntry path="com.fc.castle.ui.SkillTempPlay"/>
+    <classEntry path="com.fc.castle.ui.SendMailBox"/>
+    <classEntry path="com.fc.castle.gfx.battle.ui.BattleCompleteForm"/>
+    <classEntry path="com.fc.castle.gfx.tutorial.GuideNode"/>
+    <classEntry path="com.fc.castle.gfx.world.WorldUnitExplore"/>
+    <classEntry path="com.fc.castle.ui.LoadingManager"/>
+    <classEntry path="com.fc.castle.ui.FormShop"/>
+    <classEntry path="com.fc.castle.ui.BaseDialogForm"/>
+    <classEntry path="com.fc.castle.ui.card.CardInfoPanUnit"/>
+    <classEntry path="com.fc.castle.ui.card.CardInfoPanSkill"/>
+    <classEntry path="com.fc.castle.gfx.CAlert"/>
+    <classEntry path="com.fc.castle.gfx.battle.event.APTargetComplateEvent"/>
+  </includeClasses>
+  <includeResources/>
+  <namespaceManifests/>
+</flexLibProperties>
