@@ -677,6 +677,10 @@ public class DataManager
 			}
 			return createSoldiers(types);
 		}
+		@Override
+		public String toString(Object obj) {
+			return null;
+		}
 	}
 	
 	/**
@@ -693,6 +697,10 @@ public class DataManager
 				return new SkillDatas();
 			}
 			return createSkills(types);
+		}
+		@Override
+		public String toString(Object obj) {
+			return null;
 		}
 	}
 
@@ -723,6 +731,10 @@ public class DataManager
 				}
 			}
 			return ret;
+		}
+		@Override
+		public String toString(Object obj) {
+			return null;
 		}
 	}
 	
@@ -755,6 +767,10 @@ public class DataManager
 			}
 			return ret;
 		}
+		@Override
+		public String toString(Object obj) {
+			return null;
+		}
 	}
 	
 	/**
@@ -784,6 +800,10 @@ public class DataManager
 				}
 			}
 			return ret;
+		}
+		@Override
+		public String toString(Object obj) {
+			return null;
 		}
 	}
 	
@@ -822,7 +842,16 @@ public class DataManager
 		public byte[] loadRes(String path, AtomicReference<Float> percent) {
 			return null;
 		}
-	
+		@Override
+		public String getPath() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		@Override
+		public String getResRoot() {
+			// TODO Auto-generated method stub
+			return null;
+		}
 	}
 
 
