@@ -12,7 +12,7 @@ public class WSMySQLConfig extends Config
 	@ConfigField("JDBC驱动")
 	public static String 	DB_DRIVER 		= "com.mysql.jdbc.Driver";
 	
-	public static String 	DB_URL 			= "jdbc:mysql://localhost:3306/castlecraft_00?useUnicode=true&characterEncoding=UTF-8";
+	public static String 	DB_URL 			= "jdbc:mysql://localhost:3306/castle_db?useUnicode=true&characterEncoding=UTF-8";
 	
 	public static String 	DB_USER 		= "root";
 	public static String 	DB_PSWD 		= "";
