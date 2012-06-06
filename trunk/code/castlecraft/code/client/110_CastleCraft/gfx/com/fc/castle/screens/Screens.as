@@ -2,7 +2,6 @@ package com.fc.castle.screens
 {
 	import com.cell.gfx.CellScreen;
 	import com.cell.gfx.CellScreenManager;
-	import com.cell.gfx.IScreenAdapter;
 	import com.fc.castle.net.client.CClient;
 	import com.fc.castle.net.client.http.HttpClient;
 	import com.fc.castle.platform.Platform;
@@ -11,15 +10,15 @@ package com.fc.castle.screens
 	
 	import flash.events.Event;
 
-	public class Screens implements IScreenAdapter
+	public class Screens
 	{
 		
-		public static const SCREEN_LOADING			: String = "ScreenLoading";
-		public static const SCREEN_LOGIN			: String = "ScreenLogin";
-		public static const SCREEN_LOGIN_SOCKET		: String = "ScreenLoginSocket";
-		public static const SCREEN_MAIN_MENU		: String = "ScreenMainMenu";
-		public static const SCREEN_BATTLE			: String = "ScreenBattle";
-		public static const SCREEN_BATTLE_LOADING	: String = "ScreenBattleLoading";
+		public static const SCREEN_LOADING			: Class = ScreenLoading;
+		public static const SCREEN_LOGIN			: Class = ScreenLogin;
+		public static const SCREEN_LOGIN_SOCKET		: Class = ScreenLoginSocket;
+		public static const SCREEN_MAIN_MENU		: Class = ScreenMainMenu;
+		public static const SCREEN_BATTLE			: Class = ScreenBattle;
+		public static const SCREEN_BATTLE_LOADING	: Class = ScreenBattleLoading;
 
 //		--------------------------------------------------------------------------------------------------
 		

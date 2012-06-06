@@ -36,7 +36,8 @@ package
 			AutoLogin.LOGIN_PSWD	= "";
 			AutoLogin.LOCATION		= "zh_CN"; 
 				
-			super(WIDTH, HEIGHT, new Screens(this, WIDTH, HEIGHT, new SinaPlatform()));
+			new Screens(this, WIDTH, HEIGHT, new TestPlatform());
+			super(WIDTH, HEIGHT);
 			
 			changeScreen(Screens.SCREEN_LOGIN);
 			

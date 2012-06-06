@@ -29,7 +29,8 @@ package
 			AutoLogin.LOGIN_PSWD	= "";
 			AutoLogin.LOCATION		= "en_US"; 
 			
-			super(WIDTH, HEIGHT, new Screens(this, WIDTH, HEIGHT, new TestPlatform()));
+			new Screens(this, WIDTH, HEIGHT, new TestPlatform());
+			super(WIDTH, HEIGHT);
 			
 			changeScreen(Screens.SCREEN_LOGIN);
 			
