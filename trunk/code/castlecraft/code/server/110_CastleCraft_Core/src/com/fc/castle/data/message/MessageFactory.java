@@ -69,6 +69,7 @@ public class MessageFactory extends ExternalizableFactory
 		// gen java code
 		{
 			MutualMessageCodeGeneratorJava gen_java = new MutualMessageCodeGeneratorJava(
+					factory,
 					"com.fc.castle.data.message",
 					"",
 					"MessageCodecJava"
@@ -78,7 +79,7 @@ public class MessageFactory extends ExternalizableFactory
 					return date.toString();
 				}
 			};
-			gen_java.genCodeFile(factory, srcdir);
+			gen_java.genCodeFile(srcdir);
 		}
 		// gen as code
 		{
@@ -90,6 +91,7 @@ public class MessageFactory extends ExternalizableFactory
 					"\timport com.fc.castle.data.template.Enums.*;\n" +
 					"";
 			FlashMessageCodeGenerator gen_as = new FlashMessageCodeGenerator(
+					factory,
 					"com.fc.castle.data.message",
 					"MessageCodec",
 					simport,
@@ -103,7 +105,7 @@ public class MessageFactory extends ExternalizableFactory
 			if (args.length > 0) {
 				File flexsrc = new File(args[0], "/core");
 				if (flexsrc.exists()) {
-					gen_as.genCodeFile(factory, flexsrc);
+					gen_as.genCodeFile(flexsrc);
 					System.out.println("nicely done!");
 					return;
 				}
