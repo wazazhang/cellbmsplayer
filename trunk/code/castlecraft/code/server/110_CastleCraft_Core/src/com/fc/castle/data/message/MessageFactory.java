@@ -102,6 +102,7 @@ public class MessageFactory extends ExternalizableFactory
 					return date.toString();
 				}
 			};
+			gen_as.EnableConstruct = true;
 			if (args.length > 0) {
 				File flexsrc = new File(args[0], "/core");
 				if (flexsrc.exists()) {
