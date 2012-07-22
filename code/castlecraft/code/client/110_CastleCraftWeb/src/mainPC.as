@@ -27,7 +27,7 @@ package
 			
 			AutoLogin.SERVER_URL 	= "http://localhost:80/110_CastleCraft_WS";
 			///<TOMCAT_HOME>/webapps/ROOT/CastleCraft
-			AutoLogin.RES_ROOT 		= "E:/Projects/elex_svn/castlecraft/data/resource/";
+			AutoLogin.RES_ROOT 		= "E:/Projects/cellbmsplayer/castlecraft/data/resource/";
 			AutoLogin.LOGIN_USER	= "xxxx";
 			AutoLogin.LOGIN_PSWD	= "";
 			AutoLogin.LOCATION		= "zh_CN"; 
