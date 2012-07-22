@@ -1,0 +1,88 @@
+<entry>
+<!--
+<OUTPUT>		.\output\object.xml
+<IMAGE_OUTPUT>	.\output\
+<FORMAT_NUMBER_ARRAY_1D>    <>,
+<FORMAT_STRING_ARRAY_1D>	<>,
+<FORMAT_ARRAY_1D>			<>,
+<FORMAT_ARRAY_2D>			{<>},
+<FIXED_STRING_ARRAY>		char,
+-->
+<IMAGE_TYPE>png
+</IMAGE_TYPE>
+<IMAGE_TILE>false
+</IMAGE_TILE>
+<IMAGE_GROUP>true
+</IMAGE_GROUP>
+
+
+<resource images_count="1" map_count="0" sprite_count="1" >
+	
+	
+	<images index="0" name="tiles" size="1" 
+		output_type=""
+		output_file="">
+		
+		<clip index="0" x="0" y="1" width="99" height="79" data="" />
+		<Append data="0,," />
+	</images>
+	
+
+	
+	
+	
+	
+	<sprite index="0" name="holy01"
+		images_name="tiles"
+		scene_part_count="1"
+		scene_frame_count="1"
+		cd_part_count="0"
+		cd_frame_count="1"
+		animate_count="1"
+		complexMode="True">
+		
+		<scene_part index="0" tile="0" x="-49" y="-67" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		
+		<scene_frame index="0" data_size="1" data="0," />
+		
+		
+		<cd_frame index="0" data_size="0" data="" />
+		<frames 
+			counts="1," 
+			names="4,0000," 
+			animates="{0,},"
+			cd_map="{0,},"
+			cd_atk="{0,},"
+			cd_def="{0,},"
+			cd_ext="{0,},"
+			alpha="{1,},"
+			rotate="{0,},"
+			scaleX="{1,},"
+			scaleY="{1,},"
+			shearX="{0,},"
+			shearY="{0,},"
+		/>
+		<Append data="0,," />
+	</sprite>
+	
+
+	
+</resource>
+
+
+
+<level world_count="0">
+
+	
+	
+</level>
+
+
+
+
+</entry>
+
+
+
+
+

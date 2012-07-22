@@ -1,0 +1,133 @@
+<entry>
+<!--
+<OUTPUT>		.\output\effect.xml
+<IMAGE_OUTPUT>	.\output\
+<FORMAT_NUMBER_ARRAY_1D>    <>,
+<FORMAT_STRING_ARRAY_1D>	<>,
+<FORMAT_ARRAY_1D>			<>,
+<FORMAT_ARRAY_2D>			{<>},
+<FIXED_STRING_ARRAY>		char,
+-->
+<IMAGE_TYPE>png
+</IMAGE_TYPE>
+<IMAGE_TILE>false
+</IMAGE_TILE>
+<IMAGE_GROUP>true
+</IMAGE_GROUP>
+
+
+<resource images_count="1" map_count="0" sprite_count="1" >
+	
+	
+	<images index="0" name="tiles" size="16" 
+		output_type=""
+		output_file="">
+		
+		<clip index="0" x="0" y="0" width="276" height="276" data="" />
+		<clip index="1" x="276" y="0" width="80" height="51" data="" />
+		<clip index="2" x="276" y="51" width="80" height="51" data="" />
+		<clip index="3" x="276" y="102" width="81" height="64" data="" />
+		<clip index="4" x="276" y="166" width="81" height="64" data="" />
+		<clip index="5" x="356" y="0" width="82" height="73" data="" />
+		<clip index="6" x="357" y="73" width="81" height="74" data="" />
+		<clip index="7" x="357" y="147" width="81" height="74" data="" />
+		<clip index="8" x="438" y="0" width="80" height="57" data="" />
+		<clip index="9" x="438" y="57" width="77" height="56" data="" />
+		<clip index="10" x="438" y="113" width="75" height="53" data="" />
+		<clip index="11" x="438" y="166" width="67" height="47" data="" />
+		<clip index="12" x="438" y="213" width="60" height="45" data="" />
+		<clip index="13" x="357" y="221" width="54" height="34" data="" />
+		<clip index="14" x="357" y="255" width="43" height="16" data="" />
+		<clip index="15" x="357" y="271" width="11" height="7" data="" />
+		<Append data="0,," />
+	</images>
+	
+
+	
+	
+	
+	
+	<sprite index="0" name="health"
+		images_name="tiles"
+		scene_part_count="16"
+		scene_frame_count="16"
+		cd_part_count="0"
+		cd_frame_count="1"
+		animate_count="2"
+		complexMode="True">
+		
+		<scene_part index="0" tile="0" x="-138" y="-138" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="1" tile="15" x="-5" y="-10" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="2" tile="14" x="-23" y="-15" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="3" tile="13" x="-31" y="-32" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="4" tile="12" x="-30" y="-42" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="5" tile="11" x="-32" y="-45" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="6" tile="10" x="-37" y="-53" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="7" tile="9" x="-38" y="-58" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="8" tile="8" x="-40" y="-61" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="9" tile="7" x="-40" y="-78" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="10" tile="6" x="-40" y="-78" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="11" tile="5" x="-40" y="-79" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="12" tile="4" x="-40" y="-80" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="13" tile="3" x="-40" y="-78" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="14" tile="2" x="-40" y="-74" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		<scene_part index="15" tile="1" x="-40" y="-71" trans="0" alpha="1" rotate="1" scaleX="1" scaleY="1" shearX="0" shearY="0" />
+		
+		<scene_frame index="0" data_size="1" data="0," />
+		<scene_frame index="1" data_size="1" data="1," />
+		<scene_frame index="2" data_size="1" data="2," />
+		<scene_frame index="3" data_size="1" data="3," />
+		<scene_frame index="4" data_size="1" data="4," />
+		<scene_frame index="5" data_size="1" data="5," />
+		<scene_frame index="6" data_size="1" data="6," />
+		<scene_frame index="7" data_size="1" data="7," />
+		<scene_frame index="8" data_size="1" data="8," />
+		<scene_frame index="9" data_size="1" data="9," />
+		<scene_frame index="10" data_size="1" data="10," />
+		<scene_frame index="11" data_size="1" data="11," />
+		<scene_frame index="12" data_size="1" data="12," />
+		<scene_frame index="13" data_size="1" data="13," />
+		<scene_frame index="14" data_size="1" data="14," />
+		<scene_frame index="15" data_size="1" data="15," />
+		
+		
+		<cd_frame index="0" data_size="0" data="" />
+		<frames 
+			counts="19,15," 
+			names="3,run,4,body," 
+			animates="{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,},"
+			cd_map="{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},"
+			cd_atk="{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},"
+			cd_def="{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},"
+			cd_ext="{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},"
+			alpha="{0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,0.9,0.8,0.7,0.6,0.5,0.4,0.3,0.2,0.1,},{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,},"
+			rotate="{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},"
+			scaleX="{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,},{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,},"
+			scaleY="{0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,0.5,},{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,},"
+			shearX="{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},"
+			shearY="{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},"
+		/>
+		<Append data="8,[Effect],0,,14,Blend = screen,0,,12,HangOver = 0,0,," />
+	</sprite>
+	
+
+	
+</resource>
+
+
+
+<level world_count="0">
+
+	
+	
+</level>
+
+
+
+
+</entry>
+
+
+
+
+
